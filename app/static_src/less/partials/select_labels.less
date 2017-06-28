@@ -1,12 +1,9 @@
-// variables
-@spacing: 10px;
-
 // TODO:ラベル入力部分の元のCSS削除
 // TODO:スタイルがreact-autosuggestに依存しているので解消
 .react-autosuggest {
   &__container {
     position: relative;
-    margin-bottom: @spacing;
+    margin-bottom: 10px;
   }
   &__input {
     width: 100%;
@@ -26,7 +23,7 @@
     position: absolute;
     width: 100%;
     border: 1px solid @baseGray;
-    background-color: #fff;
+    background-color: @whiteColor;
     z-index: 2;
   }
   &__suggestions-list {
@@ -47,13 +44,13 @@
   }
 
   &__suggestion--focused {
-    background-color: #ddd;
+    background-color: @suggestionFocusBg;
   }
 }
 
 
 .selected-labels {
-  margin-bottom: @spacing;
+  margin-bottom: 10px;
   &-item {
     background-color: @subColor5;
     border-radius: 5px;
