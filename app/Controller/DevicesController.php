@@ -38,6 +38,9 @@ class DevicesController extends AppController
         $installation_id = $this->request->data['installation_id'];
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
         try {
+            if (!$this->User->exists($user_id)) {
+                throw new RuntimeException(__('Parameters were wrong'));
+            }
             $device = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
             /* @var AppMeta $AppMeta */
             $AppMeta = ClassRegistry::init('AppMeta');
