@@ -198,7 +198,7 @@ class Evaluation extends AppModel
                 $evaluator_type_name = __("Final Evaluator");
             } else {
                 if ($evaluate_type == self::TYPE_EVALUATOR) {
-                    $evaluator_type_name = __("評価者{$index_num}");
+                    $evaluator_type_name = __("Evaluator").$index_num;
                 }
             }
         }

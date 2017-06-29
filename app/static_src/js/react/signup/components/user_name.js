@@ -100,7 +100,7 @@ export default class UserName extends React.Component {
                     <div className="signup-checkbox-email-flg">
                         <input type="checkbox" className="signup-checkbox-input" value="1" ref="update_email_flg" />
                         <div className="signup-privacy-policy-label">
-                          {__("I want to receive news and updates by email from Goalous.")}
+                          {__("I want to receive news and updates by email from Goalous.")}
                         </div>
                     </div>
 

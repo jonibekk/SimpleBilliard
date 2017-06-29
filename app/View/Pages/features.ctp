@@ -169,7 +169,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
-                <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messagings') ?></h3>
+                <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messaging') ?></h3>
                 <div class="details">
                     <p><?= __('You can communicate with your team members by Web and Mobile app. No more need to use Email.') ?></p>
                 </div>

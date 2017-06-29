@@ -64,7 +64,7 @@
             'type'      => 'checkbox',
             'label'     => [
                 'class' => null,
-                'text'  => __("I want to receive news and updates by email from Goalous.")
+                'text'  => __("I want to receive news and updates by email from Goalous.")
             ],
             'class'     => '',
             'required'  => true,

@@ -402,7 +402,7 @@ App::uses('AttachedFile', 'Model');
             "Create your password to login to Goalous.": "<?= __("Create your password to login to Goalous.") ?>",
             "Please don't close this window.": "<?= __("Please don't close this window.") ?>",
             "What do you want to call your Goalous team?": "<?= __("What do you want to call your Goalous team?") ?>",
-            "Create a name for your team. A team is a group that can share goals, actions and posts with each other. People outside of the team can't access this information.": "<?= __("Create a name for your team. A team is a group that can share goals, actions and posts  with each other. People outside of the team can't access this information.") ?>",
+            "Create a name for your team. A team is a group that can share goals, actions and posts with each other. People outside of the team can't access this information.": "<?= __("Create a name for your team. A team is a group that can share goals, actions and posts with each other. People outside of the team can't access this information.") ?>",
             "Use 8 or more characters including at least one number.": "<?= __("Use 8 or more characters including at least one number.") ?>",
             "Choose your team's (company's) term": "<?=__("Choose your team's (company's) term") ?>",
             "Your name": "<?= __("Your name") ?>",
