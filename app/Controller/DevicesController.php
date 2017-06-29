@@ -32,7 +32,9 @@ class DevicesController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        $user_id = $this->request->data['user_id']; //TODO: We have to replace it as Session data. see https://jira.goalous.com/browse/GL-5949
+        //TODO: After implementing mobile app force updating,
+        //      have to change only from session to get user id https://jira.goalous.com/browse/GL-5949
+        $user_id = $this->Auth->user('id') ?? $this->request->data['user_id'];
         $installation_id = $this->request->data['installation_id'];
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
         try {
