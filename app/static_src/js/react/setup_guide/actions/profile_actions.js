@@ -29,31 +29,21 @@ export function postProfile(dispatch, form_data) {
     dataType: 'json'
   })
   .then(function (response) {
-    PNotify.removeAll()
     if(response.data.error) {
-      new PNotify({
-          type: 'error',
-          title: cake.word.error,
-          text: __("Failed to save user setting."),
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      new Noty({
+        type: 'error',
+        text: '<h4>'+cake.word.error+'</h4>'+__("Failed to save user setting."),
+      }).show();
       dispatch(enableSubmitButton())
     } else {
       document.location.href = "/setup/?from=profile"
     }
   })
   .catch(function (response) {
-    PNotify.removeAll()
-    new PNotify({
-        type: 'error',
-        title: cake.word.error,
-        text: __("Failed to save user setting."),
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-    })
+    new Noty({
+      type: 'error',
+      text: '<h4>'+cake.word.error+'</h4>'+__("Failed to save user setting."),
+    }).show();
     dispatch(enableSubmitButton())
   })
 }

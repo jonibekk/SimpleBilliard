@@ -147,7 +147,7 @@ class SignupController extends AppController
         $this->Auth->allow();
         //ログインしている場合はこのコントローラの全てのアクションにアクセスできない。
         if ($this->Auth->user()) {
-            $this->Pnotify->outError(__('Invalid screen transition.'));
+            $this->Notification->outError(__('Invalid screen transition.'));
             $this->redirect('/');
         }
     }
@@ -172,7 +172,7 @@ class SignupController extends AppController
             $this->GlEmail->sendEmailVerifyDigit($formatted_code, $email);
             return $this->redirect(['action' => 'auth']);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         return $this->render();
