@@ -132,6 +132,7 @@ class CommentsController extends ApiController
         $this->set(compact('comments'));
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';
+        $this->_decideMobileAppRequest();
         $response = $this->render('Feed/ajax_comments');
         $html = $response->__toString();
 

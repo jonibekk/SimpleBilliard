@@ -30,7 +30,7 @@
             $post_read_count = true;
     }
     ?>
-    <table class="table">
+    <table class="table table-insight-circle-result">
         <tr class="insight-table-header insight-circle-table-header">
             <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __('Circle name') ?>"></i></th>
             <th id="user_count_header">
@@ -64,9 +64,7 @@
                 <?php foreach (['user_count', 'post_count', 'post_read_count', 'engage_percent'] as $key): ?>
                     <td>
                         <div class="insight-circle-value">
-                            <?= h($circle[$key]) ?>
-                            <?php if (strpos($key, '_percent') !== false): ?><span
-                                class="font_12px">%</span><?php endif ?>
+                            <?= h($circle[$key]) ?><?php if (strpos($key, '_percent') !== false): ?><small>%</small><?php endif ?>
                         </div>
                         <?php if (isset($circle["{$key}_cmp"])): ?>
                             <?php if ($circle["{$key}_cmp"] >= 0): ?>
@@ -88,5 +86,4 @@
         <?php endforeach ?>
     </table>
     <?= $this->App->viewEndComment()?>
-
 <?php endif ?>

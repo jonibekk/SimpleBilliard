@@ -52,34 +52,35 @@ class UsersController extends AppController
         }
 
         //account lock check
-        $ip_address = $this->request->clientIp();
-        $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
-        if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+        $ipAddress = $this->request->clientIp();
+        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
+        if ($isAccountLocked) {
+            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
                 ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
         //メアド、パスの認証(セッションのストアはしていない)
-        $user_info = $this->Auth->identify($this->request, $this->response);
-        if (!$user_info) {
-            $this->Pnotify->outError(__("Email address or Password is incorrect."));
+        $userInfo = $this->Auth->identify($this->request, $this->response);
+        if (!$userInfo) {
+            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
+            $this->Notification->outError(__("Email address or Password is incorrect."));
             return $this->render();
         }
         $this->Session->write('preAuthPost', $this->request->data);
 
         //デバイス情報を保存する
-        $user_id = $user_info['id'];
-        $installation_id = $this->request->data['User']['installation_id'];
-        if ($installation_id == "no_value") {
-            $installation_id = null;
+        $user_id = $userInfo['id'];
+        $installationId = $this->request->data['User']['installation_id'];
+        if ($installationId == "no_value") {
+            $installationId = null;
         }
         $app_version = $this->request->data['User']['app_version'];
         if ($app_version == "no_value") {
             $app_version = null;
         }
-        if (!empty($installation_id)) {
+        if (!empty($installationId)) {
             try {
-                $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $app_version);
+                $this->NotifyBiz->saveDeviceInfo($user_id, $installationId, $app_version);
                 //セットアップガイドステータスの更新
                 $this->updateSetupStatusIfNotCompleted();
             } catch (RuntimeException $e) {
@@ -87,25 +88,25 @@ class UsersController extends AppController
                     'where'           => 'login page',
                     'error_msg'       => $e->getMessage(),
                     'user_id'         => $user_id,
-                    'installation_id' => $installation_id,
+                    'installation_id' => $installationId,
                 ]);
             }
         }
 
-        $is_2fa_auth_enabled = true;
+        $is2faAuthEnabled = true;
         // 2要素認証設定OFFの場合
         // 2要素認証設定ONかつ、設定して30日以内の場合
-        if ((is_null($user_info['2fa_secret']) === true) || (empty($user_info['2fa_secret']) === false
-                && $this->GlRedis->isExistsDeviceHash($user_info['DefaultTeam']['id'], $user_info['id']))
+        if ((is_null($userInfo['2fa_secret']) === true) || (empty($userInfo['2fa_secret']) === false
+                && $this->GlRedis->isExistsDeviceHash($userInfo['DefaultTeam']['id'], $userInfo['id']))
         ) {
-            $is_2fa_auth_enabled = false;
+            $is2faAuthEnabled = false;
         }
 
         //２要素設定有効なら
-        if ($is_2fa_auth_enabled) {
-            $this->Session->write('2fa_secret', $user_info['2fa_secret']);
-            $this->Session->write('user_id', $user_info['id']);
-            $this->Session->write('team_id', $user_info['DefaultTeam']['id']);
+        if ($is2faAuthEnabled) {
+            $this->Session->write('2fa_secret', $userInfo['2fa_secret']);
+            $this->Session->write('user_id', $userInfo['id']);
+            $this->Session->write('team_id', $userInfo['DefaultTeam']['id']);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
 
@@ -121,7 +122,7 @@ class UsersController extends AppController
         //仮認証状態か？そうでなければエラー出してリファラリダイレクト
         $is_avail_auth = !empty($this->Session->read('preAuthPost')) ? true : false;
         if (!$is_avail_auth) {
-            $this->Pnotify->outError(__("Error. Try to login again."));
+            $this->Notification->outError(__("Error. Try to login again."));
             return $this->redirect(['action' => 'login']);
         }
 
@@ -132,7 +133,7 @@ class UsersController extends AppController
         $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
             $this->request->clientIp());
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
                 ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
@@ -145,7 +146,7 @@ class UsersController extends AppController
             return $this->_afterAuthSessionStore();
 
         } else {
-            $this->Pnotify->outError(__("Incorrect 2fa code."));
+            $this->Notification->outError(__("Incorrect 2fa code."));
             return $this->render();
         }
     }
@@ -164,7 +165,7 @@ class UsersController extends AppController
         //仮認証状態か？そうでなければエラー出してリファラリダイレクト
         $is_avail_auth = !empty($this->Session->read('preAuthPost')) ? true : false;
         if (!$is_avail_auth) {
-            $this->Pnotify->outError(__("Error. Try to login again."));
+            $this->Notification->outError(__("Error. Try to login again."));
             return $this->redirect(['action' => 'login']);
         }
 
@@ -175,7 +176,7 @@ class UsersController extends AppController
         $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
             $this->request->clientIp());
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
                 ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
@@ -184,14 +185,14 @@ class UsersController extends AppController
         $code = str_replace(' ', '', $this->request->data['User']['recovery_code']);
         $row = $this->User->RecoveryCode->findUnusedCode($this->Session->read('user_id'), $code);
         if (!$row) {
-            $this->Pnotify->outError(__("Incorrect recovery code."));
+            $this->Notification->outError(__("Incorrect recovery code."));
             return $this->render();
         }
 
         // コードを使用済にする
         $res = $this->User->RecoveryCode->useCode($row['RecoveryCode']['id']);
         if (!$res) {
-            $this->Pnotify->outError(__("An error has occurred."));
+            $this->Notification->outError(__("An error has occurred."));
             return $this->render();
         }
 
@@ -215,11 +216,16 @@ class UsersController extends AppController
             }
             $this->_refreshAuth();
             $this->_setAfterLogin();
-            $this->Pnotify->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
+
+            // reset login failed count
+            $ipAddress = $this->request->clientIp();
+            $this->GlRedis->resetLoginFailedCount($this->request->data['User']['email'], $ipAddress);
+
+            $this->Notification->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
                 ['title' => __("Succeeded to login")]);
             return $this->redirect($redirect_url);
         } else {
-            $this->Pnotify->outError(__("Error. Try to login again."));
+            $this->Notification->outError(__("Error. Try to login again."));
             return $this->redirect(['action' => 'login']);
         }
 
@@ -240,7 +246,7 @@ class UsersController extends AppController
             $this->Session->delete($key);
         }
         $this->Cookie->destroy();
-        $this->Pnotify->outInfo(__("See you %s", $user['display_username']),
+        $this->Notification->outInfo(__("See you %s", $user['display_username']),
             ['title' => __("Logged out")]);
         return $this->redirect($this->Auth->logout());
     }
@@ -262,7 +268,7 @@ class UsersController extends AppController
     {
         $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
         if (!($step === 1 or $step === 2)) {
-            $this->Pnotify->outError(__('Invalid access'));
+            $this->Notification->outError(__('Invalid access'));
             return $this->redirect('/');
         }
 
@@ -287,7 +293,7 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
-            $this->Pnotify->outError(__("The invitation token is incorrect. Check your email again."));
+            $this->Notification->outError(__("The invitation token is incorrect. Check your email again."));
             return $this->redirect('/');
         }
 
@@ -326,7 +332,7 @@ class UsersController extends AppController
                     ]);
             } else {
                 //エラーメッセージ
-                $this->Pnotify->outError(__('Failed to save data.'));
+                $this->Notification->outError(__('Failed to save data.'));
                 return $this->render($profileTemplate);
             }
         }
@@ -334,7 +340,7 @@ class UsersController extends AppController
 
         //session存在チェック
         if (!$this->Session->read('data')) {
-            $this->Pnotify->outError(__('Invalid access'));
+            $this->Notification->outError(__('Invalid access'));
             return $this->redirect('/');
         }
 
@@ -381,7 +387,7 @@ class UsersController extends AppController
         // flash削除
         // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
-        $this->Session->delete('Message.pnotify');
+        $this->Session->delete('Message.noty');
 
         //チーム参加
         $invitedTeam = $this->_joinTeam($this->request->params['named']['invite_token']);
@@ -392,9 +398,12 @@ class UsersController extends AppController
             $this->Auth->logout();
             $this->User->delete($userId);
             $this->User->Email->deleteAll(['Email.user_id' => $userId], $cascade = false);
-            $this->Pnotify->outError(__("Failed to register user. Please try again later."));
+            $this->Notification->outError(__("Failed to register user. Please try again later."));
             return $this->redirect("/");
         }
+
+        // Message of team joining
+        $this->Notification->outSuccess(__("Joined %s.", $team['Team']['name']));
 
         //ホーム画面でモーダル表示
         $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
@@ -498,7 +507,7 @@ class UsersController extends AppController
             }
             if (!$last_login) {
                 //ログインがされていなければ、新規ユーザなので「ようこそ」表示
-                $this->Pnotify->outSuccess(__('Succeeded to register!'));
+                $this->Notification->outSuccess(__('Succeeded to register!'));
                 //新規ユーザ登録時のフロー
                 $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
                 /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -507,14 +516,14 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'add_profile']);
             } else {
                 //ログインされていれば、メール追加
-                $this->Pnotify->outSuccess(__('Authenticated your email address.'));
+                $this->Notification->outSuccess(__('Authenticated your email address.'));
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect('/');
             }
         } catch (RuntimeException $e) {
             //例外の場合は、トークン再送信画面へ
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             //トークン再送メージへ
             return $this->redirect(['action' => 'token_resend']);
         }
@@ -534,14 +543,14 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             $this->User->rollback();
             //例外の場合は、トークン再送信画面へ
-            $this->Pnotify->outError($e->getMessage() . "\n" . __("Please cancel changing email address and try again."));
+            $this->Notification->outError($e->getMessage() . "\n" . __("Please cancel changing email address and try again."));
             //トークン再送ページへ
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect(['action' => 'settings']);
         }
         $this->User->commit();
         $this->_autoLogin($this->Auth->user('id'));
-        $this->Pnotify->outSuccess(__("Email address is changed."));
+        $this->Notification->outSuccess(__("Email address is changed."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect(['action' => 'settings']);
     }
@@ -571,7 +580,7 @@ class UsersController extends AppController
             if ($user) {
                 // Send mail containing token
                 $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
-                $this->Pnotify->outSuccess(__("Password reset email has been sent. Please check your email."),
+                $this->Notification->outSuccess(__("Password reset email has been sent. Please check your email."),
                     ['title' => __("Email sent.")]);
             }
             return $this->render('password_reset_request');
@@ -581,7 +590,7 @@ class UsersController extends AppController
         $user_email = $this->User->checkPasswordToken($token);
 
         if (!$user_email) {
-            $this->Pnotify->outError(__("Password code incorrect. The validity period may have expired. Please resend email again."),
+            $this->Notification->outError(__("Password code incorrect. The validity period may have expired. Please resend email again."),
                 ['title' => __("Failed to confirm code.")]);
             return $this->redirect(['action' => 'password_reset']);
         }
@@ -594,7 +603,7 @@ class UsersController extends AppController
         if ($successPasswordReset) {
             // Notify to user reset password
             $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
-            $this->Pnotify->outSuccess(__("Please login with your new password."),
+            $this->Notification->outSuccess(__("Please login with your new password."),
                 ['title' => __('Password is set.')]);
             return $this->redirect(['action' => 'login']);
         }
@@ -614,7 +623,7 @@ class UsersController extends AppController
                 //メールでトークンを送信
                 $this->GlEmail->sendMailEmailTokenResend($email_user['User']['id'],
                     $email_user['Email']['email_token']);
-                $this->Pnotify->outSuccess(__("Confirmation has been sent to your email address."),
+                $this->Notification->outSuccess(__("Confirmation has been sent to your email address."),
                     ['title' => __("Send you an email.")]);
             }
         }
@@ -675,10 +684,10 @@ class UsersController extends AppController
                 // update message search keywords by user id
                 ClassRegistry::init('TopicSearchKeyword')->updateByUserId($this->Auth->user('id'));
 
-                $this->Pnotify->outSuccess(__("Saved user setting."));
+                $this->Notification->outSuccess(__("Saved user setting."));
                 $this->redirect('/users/settings');
             } else {
-                $this->Pnotify->outError(__("Failed to save user setting."));
+                $this->Notification->outError(__("Failed to save user setting."));
             }
             $me = $this->_getMyUserDataForSetting();
             // For updating header user info
@@ -750,11 +759,11 @@ class UsersController extends AppController
         try {
             $this->User->changePassword($this->request->data);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage(), ['title' => __("Failed to save password change.")]);
+            $this->Notification->outError($e->getMessage(), ['title' => __("Failed to save password change.")]);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__("Changed password."));
+        $this->Notification->outSuccess(__("Changed password."));
 
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -772,12 +781,12 @@ class UsersController extends AppController
         try {
             $email_data = $this->User->addEmail($this->request->data, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
 
-        $this->Pnotify->outInfo(__("Confirmation has been sent to your email address."));
+        $this->Notification->outInfo(__("Confirmation has been sent to your email address."));
         $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
             $email_data['Email']['email_token']);
 
@@ -798,7 +807,7 @@ class UsersController extends AppController
         // トークンが有効かどうかチェック
         $confirmRes = $this->Invite->confirmToken($token);
         if ($confirmRes !== true) {
-            $this->Pnotify->outError($confirmRes);
+            $this->Notification->outError($confirmRes);
             return $this->redirect("/");
         }
 
@@ -823,7 +832,7 @@ class UsersController extends AppController
 
         // トークンが自分用に生成されたもうのかどうかチェック
         if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
-            $this->Pnotify->outError(__("This invitation isn't not for you."));
+            $this->Notification->outError(__("This invitation isn't not for you."));
             return $this->redirect("/");
         }
 
@@ -835,12 +844,12 @@ class UsersController extends AppController
             if ($loggedInTeamId) {
                 $this->_switchTeam($loggedInTeamId);
             }
-            $this->Pnotify->outError(__("Failed to join team. Please try again later."));
+            $this->Notification->outError(__("Failed to join team. Please try again later."));
             return $this->redirect("/");
         }
 
         $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-        $this->Pnotify->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
+        $this->Notification->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
         return $this->redirect("/");
     }
 
@@ -936,12 +945,12 @@ class UsersController extends AppController
             $this->User->id = $this->Auth->user('id');
             $this->User->saveField('2fa_secret', $secret_key);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
-        $this->Pnotify->outSuccess(__("Succeeded to save 2-Step Verification."));
+        $this->Notification->outSuccess(__("Succeeded to save 2-Step Verification."));
         $this->Flash->set(null,
             ['element' => 'flash_click_event', 'params' => ['id' => 'ShowRecoveryCodeButton'], 'key' => 'click_event']);
         return $this->redirect($this->referer());
@@ -965,7 +974,7 @@ class UsersController extends AppController
             $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
-        $this->Pnotify->outSuccess(__("Succeeded to cancel 2-Step Verification."));
+        $this->Notification->outSuccess(__("Succeeded to cancel 2-Step Verification."));
         return $this->redirect($this->referer());
     }
 
@@ -1171,7 +1180,7 @@ class UsersController extends AppController
         $userId = Hash::get($namedParams, "user_id");
         if (!$userId || !$this->_setUserPageHeaderInfo($userId)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1265,7 +1274,7 @@ class UsersController extends AppController
         $user_id = Hash::get($this->request->params, "named.user_id");
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, [
@@ -1302,7 +1311,7 @@ class UsersController extends AppController
 
         // validation
         if (!$this->_validateParamsOnActionPage($userId, $pageType, $termId, $goalId)) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
 
@@ -1504,7 +1513,7 @@ class UsersController extends AppController
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
 
@@ -1520,10 +1529,10 @@ class UsersController extends AppController
          */
         $SubscribeEmail = ClassRegistry::init('SubscribeEmail');
         if (!$SubscribeEmail->save($this->request->data)) {
-            $this->Pnotify->outError($SubscribeEmail->validationErrors['email'][0]);
+            $this->Notification->outError($SubscribeEmail->validationErrors['email'][0]);
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__('Registered email address.'));
+        $this->Notification->outSuccess(__('Registered email address.'));
         return $this->redirect($this->referer());
     }
 
@@ -1544,20 +1553,25 @@ class UsersController extends AppController
         }
         $this->set('user', $user);
 
+        $timezone = $this->Team->getTimezone();
         // 評価期間内の投稿数
-        $term_start_date = $this->Team->Term->getCurrentTermData()['start_date'];
-        $term_end_date = $this->Team->Term->getCurrentTermData()['end_date'];
-        $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
+        $termStartTimestamp = AppUtil::getStartTimestampByTimezone($this->Team->Term->getCurrentTermData()['start_date'],
+            $timezone);
+        $termEndTimestamp = AppUtil::getEndTimestampByTimezone($this->Team->Term->getCurrentTermData()['end_date'],
+            $timezone);
+
+        $post_count = $this->Post->getCount($user_id, $termStartTimestamp, $termEndTimestamp);
         $this->set('post_count', $post_count);
 
         // 評価期間内のアクション数
-        $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
+        $action_count = $this->Goal->ActionResult->getCount($user_id, $termStartTimestamp, $termEndTimestamp);
         $this->set('action_count', $action_count);
 
         // 投稿に対するいいねの数
-        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $termStartTimestamp, $termEndTimestamp);
         // コメントに対するいいねの数
-        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $termStartTimestamp,
+            $termEndTimestamp);
         $this->set('like_count', $post_like_count + $comment_like_count);
 
         return true;

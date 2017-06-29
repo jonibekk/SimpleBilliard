@@ -230,6 +230,7 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 
 .panel-body {
     padding: 10px 11px;
+    word-wrap:break-word;
 }
 
 .panel-block {
@@ -1398,7 +1399,7 @@ ul.example-indent {
     position: absolute;
     top: -100%;
     bottom: -100%;
-    margin: auto;   
+    margin: auto;
     width: 100%;
 }
 
@@ -1508,6 +1509,13 @@ ul.example-indent {
     background: #f4edf2;
     border: 1px solid #ddd;
     border-radius: 0;
+}
+
+.feeds-post-goal-buttons {
+    overflow: hidden;
+    clear: both;
+    margin-top: 5px;
+    padding: 5px;
 }
 
 .click-feed-read-more {
@@ -2883,7 +2891,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-name {
-    max-width: 80%;
+    max-width: 74%;
     white-space: nowrap;
     margin-left: 6px;
     overflow: hidden;
@@ -2985,15 +2993,6 @@ Temporary Properties - YOU MUST FIX
 
 .insight-table-header {
     background-color: #f5f5f5;
-}
-
-.insight-circle-table-header th:not(:first-child) {
-    text-align: right;
-
-}
-
-.insight-circle-table-row td:not(:first-child) {
-    text-align: right;
 }
 
 .insight-ranking-table-header th:nth-child(1) {

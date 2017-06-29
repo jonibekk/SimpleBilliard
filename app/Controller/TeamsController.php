@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
+App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
@@ -45,29 +46,31 @@ class TeamsController extends AppController
         // Get timezone label
         $timezoneLabel = $this->getTimezoneLabel($team['timezone']);
         $this->set([
-            'team' => $team,
+            'team'                    => $team,
             'current_term_start_date' => $currentTermStartDate,
-            'current_term_end_date' => $currentTermEndDate,
-            'next_term_start_date' => $nextTermStartDate,
-            'next_term_end_date' => $nextTermEndDate,
-            'changed_term_flg' => $changedTermFlg,
-            'timezone_label' => $timezoneLabel,
+            'current_term_end_date'   => $currentTermEndDate,
+            'next_term_start_date'    => $nextTermStartDate,
+            'next_term_end_date'      => $nextTermEndDate,
+            'changed_term_flg'        => $changedTermFlg,
+            'timezone_label'          => $timezoneLabel,
         ]);
     }
 
     /**
      * Get Label for timezone
+     *
      * @param float $timezone
      *
      * @return mixed
      */
-    private function getTimezoneLabel(float $timezone) {
+    private function getTimezoneLabel(float $timezone)
+    {
         $timezones = AppUtil::getTimezoneList();
         $prefix = "";
         if ($timezone != 0 && abs($timezone) === $timezone) {
             $prefix = '+';
         }
-        $timezone = $prefix.number_format($timezone,1);
+        $timezone = $prefix . number_format($timezone, 1);
         return $timezones[$timezone];
     }
 
@@ -89,12 +92,12 @@ class TeamsController extends AppController
         $TeamService = ClassRegistry::init("TeamService");
 
         if (!$TeamService->add($this->request->data, $this->Auth->user('id'))) {
-            $this->Pnotify->outError(__("Failed to create a team."));
+            $this->Notification->outError(__("Failed to create a team."));
             return $this->render();
         }
         $this->_refreshAuth($this->Auth->user('id'));
         $this->Session->write('current_team_id', $this->Team->getLastInsertID());
-        $this->Pnotify->outSuccess(__("Created a team."));
+        $this->Notification->outSuccess(__("Created a team."));
         return $this->redirect(['action' => 'invite']);
     }
 
@@ -105,9 +108,9 @@ class TeamsController extends AppController
         $team = $this->Team->getById($this->current_team_id);
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
-            $this->Pnotify->outSuccess(__("Changed basic team settings."));
+            $this->Notification->outSuccess(__("Changed basic team settings."));
         } else {
-            $this->Pnotify->outError(__("Failed to change basic team settings."));
+            $this->Notification->outError(__("Failed to change basic team settings."));
         }
 
         // If change timezone, notify team members
@@ -142,13 +145,13 @@ class TeamsController extends AppController
 
         // checking 403
         if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
-            $this->Pnotify->outError(__("You have no right to operate it."));
+            $this->Notification->outError(__("You have no right to operate it."));
             return $this->redirect($this->referer());
         }
 
         // checking can change term setting
         if ($EvaluationService->isStarted()) {
-            $this->Pnotify->outError(__("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term."));
+            $this->Notification->outError(__("The current term has already been evaluated and cannot be changed.  You can still apply changes to the next term."));
             return $this->redirect($this->referer());
         }
 
@@ -156,17 +159,17 @@ class TeamsController extends AppController
         $requestData = Hash::get($this->request->data, 'Team');
         $validRes = $TermService->validateUpdate($requestData);
         if ($validRes !== true) {
-            $this->Pnotify->outError($validRes);
+            $this->Notification->outError($validRes);
             return $this->redirect($this->referer());
         }
 
         // term updating
         if (!$TermService->update($requestData)) {
-            $this->Pnotify->outError(__("Failed to change terms setting."));
+            $this->Notification->outError(__("Failed to change terms setting."));
             return $this->redirect($this->referer());
         }
 
-        $this->Pnotify->outSuccess(__("Changed terms setting."));
+        $this->Notification->outSuccess(__("Changed terms setting."));
 
         // Save changed term info to redis
         $this->GlRedis->saveChangedTerm($this->current_team_id);
@@ -188,7 +191,7 @@ class TeamsController extends AppController
         try {
             $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
 
@@ -201,7 +204,7 @@ class TeamsController extends AppController
         )
         ) {
             $this->Team->rollback();
-            $this->Pnotify->outError(__("Failed to delete a team."));
+            $this->Notification->outError(__("Failed to delete a team."));
             return $this->redirect($this->referer());
         }
         $this->Team->commit();
@@ -224,7 +227,7 @@ class TeamsController extends AppController
             $this->Session->write('current_team_id', null);
             $url = ['controller' => 'teams', 'action' => 'add'];
         }
-        $this->Pnotify->outSuccess(__("Deleted the team."));
+        $this->Notification->outSuccess(__("Deleted the team."));
         return $this->redirect($url);
     }
 
@@ -238,7 +241,7 @@ class TeamsController extends AppController
         try {
             $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
         $border_months_options = $this->Team->getBorderMonthsOptions();
@@ -361,11 +364,11 @@ class TeamsController extends AppController
         $this->Team->begin();
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
-            $this->Pnotify->outSuccess(__("Changed evaluation setting."));
+            $this->Notification->outSuccess(__("Changed evaluation setting."));
             Cache::delete($this->Team->getCacheKey(CACHE_KEY_TEAM_EVAL_SETTING, false), 'team_info');
         } else {
             $this->Team->rollback();
-            $this->Pnotify->outError(__("Failed to change evaluation setting."));
+            $this->Notification->outError(__("Failed to change evaluation setting."));
         }
         return $this->redirect($this->referer());
     }
@@ -378,10 +381,10 @@ class TeamsController extends AppController
             $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
-            $this->Pnotify->outSuccess(__("Changed evaluation score setting."));
+            $this->Notification->outSuccess(__("Changed evaluation score setting."));
         } else {
             $this->Team->rollback();
-            $this->Pnotify->outError(__("Failed to change evaluation score setting."));
+            $this->Notification->outError(__("Failed to change evaluation score setting."));
         }
         return $this->redirect($this->referer());
     }
@@ -394,10 +397,10 @@ class TeamsController extends AppController
             $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
-            $this->Pnotify->outSuccess(__("Saved goal category setting."));
+            $this->Notification->outSuccess(__("Saved goal category setting."));
         } else {
             $this->Team->rollback();
-            $this->Pnotify->outError(__("Failed to save goal category setting."));
+            $this->Notification->outError(__("Failed to save goal category setting."));
         }
         return $this->redirect($this->referer());
 
@@ -408,7 +411,7 @@ class TeamsController extends AppController
         $id = Hash::get($this->request->params, 'named.team_id');
         $this->request->allowMethod(['post']);
         $this->Team->Evaluation->EvaluateScore->setToInactive($id);
-        $this->Pnotify->outSuccess(__("Deleted score definition."));
+        $this->Notification->outSuccess(__("Deleted score definition."));
         return $this->redirect($this->referer());
     }
 
@@ -459,7 +462,7 @@ class TeamsController extends AppController
         $id = Hash::get($this->request->params, 'named.team_id');
         $this->request->allowMethod(['post']);
         $this->Goal->GoalCategory->setToInactive($id);
-        $this->Pnotify->outSuccess(__("Deleted goal category."));
+        $this->Notification->outSuccess(__("Deleted goal category."));
         return $this->redirect($this->referer());
     }
 
@@ -521,14 +524,14 @@ class TeamsController extends AppController
                 throw new RuntimeException(__("Evaluation setting is not active."));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         //start evaluation process
         $this->Team->Evaluation->begin();
         if (!$this->Team->Evaluation->startEvaluation()) {
             $this->Team->Evaluation->rollback();
-            $this->Pnotify->outError(__("Evaluation could not start."));
+            $this->Notification->outError(__("Evaluation could not start."));
             return $this->redirect($this->referer());
         }
         $this->Team->Evaluation->commit();
@@ -536,7 +539,7 @@ class TeamsController extends AppController
         // 評価期間判定キャッシュ削除
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'team_info');
 
-        $this->Pnotify->outSuccess(__("Evaluation started."));
+        $this->Notification->outSuccess(__("Evaluation started."));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
             $this->Team->Term->getCurrentTermId());
         Cache::clear(false, 'team_info');
@@ -569,14 +572,14 @@ class TeamsController extends AppController
 
         //not exists correct email address.
         if (!$email_list) {
-            $this->Pnotify->outError(__("Email address is incorrect."));
+            $this->Notification->outError(__("Email address is incorrect."));
             return $this->redirect($this->referer());
         }
 
         //max 100 invitation
         $max_invitation_count = 100;
         if (count($email_list) > $max_invitation_count) {
-            $this->Pnotify->outError(__("%s invitations are the limits in one time.", $max_invitation_count));
+            $this->Notification->outError(__("%s invitations are the limits in one time.", $max_invitation_count));
             return $this->redirect($this->referer());
         }
 
@@ -597,7 +600,7 @@ class TeamsController extends AppController
                 !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
             );
             if (!$invite) {
-                $this->Pnotify->outError(__("Error, failed to invite."));
+                $this->Notification->outError(__("Error, failed to invite."));
                 return $this->redirect($this->referer());
             }
             //send invite mail
@@ -613,12 +616,12 @@ class TeamsController extends AppController
         }
 
         if (empty($sentEmails)) {
-            $this->Pnotify->outError($already_joined_usr_msg);
+            $this->Notification->outError($already_joined_usr_msg);
             return $this->redirect($this->referer());
         }
 
         $msg = __("Invited %s people.", count($sentEmails)) . "\n" . $already_joined_usr_msg;
-        $this->Pnotify->outSuccess($msg);
+        $this->Notification->outSuccess($msg);
 
         if (!$from_setting) {
             $this->Session->write('referer_status', REFERER_STATUS_SIGNUP_WITH_INVITING);
@@ -799,17 +802,17 @@ class TeamsController extends AppController
         $redirect_url = Router::url("/", true);
         $this->set(compact("redirect_url"));
         if (!$team_id || !$this->request->is('ajax')) {
-            $this->Pnotify->outError(__("Invalid access."));
+            $this->Notification->outError(__("Invalid access."));
             return $this->render();
         }
         //チーム所属チェック
         $my_teams = $this->Team->TeamMember->getActiveTeamList($this->Auth->user('id'));
         if (!array_key_exists($team_id, $my_teams)) {
-            $this->Pnotify->outError(__("You are not a member of this team."));
+            $this->Notification->outError(__("You are not a member of this team."));
             return $this->render();
         }
         $this->_switchTeam($team_id, $this->Auth->user('id'));
-        $this->Pnotify->outSuccess(__("Changed team to %s.", $my_teams[$team_id]));
+        $this->Notification->outSuccess(__("Changed team to %s.", $my_teams[$team_id]));
         return $this->render();
     }
 
@@ -820,15 +823,15 @@ class TeamsController extends AppController
         try {
             $res = $this->Team->Term->changeFreezeStatus($termId);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         if ($res['Term']['evaluate_status'] == Term::STATUS_EVAL_FROZEN) {
-            $this->Pnotify->outSuccess(__("Evaluation suspended."));
+            $this->Notification->outSuccess(__("Evaluation suspended."));
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
                 $this->Team->Term->getCurrentTermId());
         } else {
-            $this->Pnotify->outSuccess(__("Removed evaluation suspension."));
+            $this->Notification->outSuccess(__("Removed evaluation suspension."));
         }
         CAche::clear(false, 'team_info');
         return $this->redirect($this->referer());
@@ -1093,7 +1096,7 @@ class TeamsController extends AppController
             $error_msg = (__("Error, this user already exists."));
             $res['title'] = $error_msg;
             $res['error'] = true;
-            $this->Pnotify->outError($error_msg);
+            $this->Notification->outError($error_msg);
             return $this->_ajaxGetResponse($res);
         }
 
@@ -1102,7 +1105,7 @@ class TeamsController extends AppController
             $error_msg = (__("Error, this invitation already expired, you can't cancel."));
             $res['title'] = $error_msg;
             $res['error'] = true;
-            $this->Pnotify->outError($error_msg);
+            $this->Notification->outError($error_msg);
             return $this->_ajaxGetResponse($res);
         }
 
@@ -1120,7 +1123,7 @@ class TeamsController extends AppController
             if (!$invite) {
                 $error = true;
                 $error_msg = (__("Error, failed to invite."));
-                $this->Pnotify->outError($error_msg);
+                $this->Notification->outError($error_msg);
             }
             //send invite mail
             $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
@@ -1171,7 +1174,7 @@ class TeamsController extends AppController
                 throw new RuntimeException(__("Team vision already exists, new one cannot be made."));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($redirectTo);
         }
 
@@ -1180,9 +1183,9 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
-            $this->Pnotify->outSuccess(__("Team vision is added."));
+            $this->Notification->outSuccess(__("Team vision is added."));
         } else {
-            $this->Pnotify->outError(__("Failed to save team vision."));
+            $this->Notification->outError(__("Failed to save team vision."));
         }
         return $this->redirect($redirectTo);
     }
@@ -1199,16 +1202,16 @@ class TeamsController extends AppController
         try {
             $this->Team->TeamMember->adminCheck();
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             return $this->redirect($redirectTo);
         }
 
         if (!$team_vision_id = Hash::get($this->request->params, 'named.team_vision_id')) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($redirectTo);
         }
         if (!$this->Team->TeamVision->exists($team_vision_id)) {
-            $this->Pnotify->outError(__("Page does not exist."));
+            $this->Notification->outError(__("Page does not exist."));
             return $this->redirect($redirectTo);
         }
 
@@ -1218,9 +1221,9 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
-            $this->Pnotify->outSuccess(__("Updated team vision."));
+            $this->Notification->outSuccess(__("Updated team vision."));
         } else {
-            $this->Pnotify->outError(__("Failed to save team vision."));
+            $this->Notification->outError(__("Failed to save team vision."));
         }
         return $this->redirect($redirectTo);
     }
@@ -1244,7 +1247,7 @@ class TeamsController extends AppController
         $redirectTo = "/teams/main#/group_vision/" . $this->current_team_id;
 
         if (empty($groupList)) {
-            $this->Pnotify->outError(__("Unable to create group vision as you don't belong to this group or the vision already exists."));
+            $this->Notification->outError(__("Unable to create group vision as you don't belong to this group or the vision already exists."));
             return $this->redirect($redirectTo);
         }
 
@@ -1255,9 +1258,9 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
-            $this->Pnotify->outSuccess(__("Added group vision."));
+            $this->Notification->outSuccess(__("Added group vision."));
         } else {
-            $this->Pnotify->outError(__("Failed to save group vision."));
+            $this->Notification->outError(__("Failed to save group vision."));
         }
         return $this->redirect($redirectTo);
     }
@@ -1281,17 +1284,17 @@ class TeamsController extends AppController
         $redirectTo = "http://goalous2/teams/main#/group_vision/" . $this->current_team_id;
 
         if (!$groupVisionId = Hash::get($this->request->params, 'named.group_vision_id')) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($redirectTo);
         }
         if (!$VisionService->existsGroupVision($groupVisionId)) {
-            $this->Pnotify->outError(__("Page does not exist."));
+            $this->Notification->outError(__("Page does not exist."));
             return $this->redirect($redirectTo);
         }
 
         //変更できるのはチーム管理者もしくは、そのグループに所属しているメンバ
         if (!$VisionService->hasPermissionToEdit($groupVisionId)) {
-            $this->Pnotify->outError(__("You don't have a permission."));
+            $this->Notification->outError(__("You don't have a permission."));
             return $this->redirect($redirectTo);
         }
         if ($this->request->is('get')) {
@@ -1300,9 +1303,9 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
-            $this->Pnotify->outSuccess(__("Updated group vision."));
+            $this->Notification->outSuccess(__("Updated group vision."));
         } else {
-            $this->Pnotify->outError(__("Failed to save group vision."));
+            $this->Notification->outError(__("Failed to save group vision."));
         }
         return $this->redirect($redirectTo);
     }
@@ -1413,22 +1416,22 @@ class TeamsController extends AppController
 
         // 週単位、月単位の場合
         if ($date_range_type == 'week' || $date_range_type == 'month') {
-            $target_start_date = $start_date;
-            $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
+            $targetStartDate = $start_date;
+            $targetEndDate = $this->_insightAdjustEndDate($end_date, $date_info['today']);
             for ($i = 0; $i < 2; $i++) {
                 // 指定範囲のデータ
-                $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                $insights[] = $this->_getInsightData($targetStartDate, $targetEndDate, $timezone, $group_id,
                     $cache_expire);
 
                 $next_target = null;
                 if ($date_range_type == 'week') {
-                    $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
+                    $next_target = $this->Team->TeamInsight->getWeekRangeDate($targetStartDate, ['offset' => -1]);
                 } elseif ($date_range_type == 'month') {
-                    $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date,
+                    $next_target = $this->Team->TeamInsight->getMonthRangeDate($targetStartDate,
                         ['offset' => -1]);
                 }
-                $target_start_date = $next_target['start'];
-                $target_end_date = $next_target['end'];
+                $targetStartDate = $next_target['start'];
+                $targetEndDate = $next_target['end'];
 
                 // 古いデータのキャッシュ有効期限は１週間
                 $cache_expire = WEEK;
@@ -2121,18 +2124,18 @@ class TeamsController extends AppController
      * @param      $start_date
      * @param      $end_date
      * @param      $timezone
-     * @param null $group_id
+     * @param null $groupId
      * @param null $cache_expire
      *
      * @return array
      */
-    protected function _getInsightData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
+    protected function _getInsightData($start_date, $end_date, $timezone, $groupId = null, $cache_expire = null)
     {
         // キャッシュにデータがあればそれを返す
         $insight = null;
-        if ($group_id) {
+        if ($groupId) {
             $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $start_date, $end_date,
-                $timezone, $group_id);
+                $timezone, $groupId);
         } else {
             $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $start_date, $end_date, $timezone);
         }
@@ -2140,19 +2143,19 @@ class TeamsController extends AppController
             return $insight;
         }
 
-        $time_adjust = intval($timezone * HOUR);
-        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
-        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+        $timeAdjust = intval($timezone * HOUR);
+        $startTimestamp = strtotime($start_date . " 00:00:00") - $timeAdjust;
+        $endTimestamp = strtotime($end_date . " 23:59:59") - $timeAdjust;
 
         // グループ指定がある場合は、グループに所属する user_id で絞る
-        $user_ids = null;
-        if ($group_id) {
-            $user_ids = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $group_id);
+        $userIds = null;
+        if ($groupId) {
+            $userIds = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $groupId);
         }
 
         // 登録者数
-        if ($group_id) {
-            $total = $this->Team->GroupInsight->getTotal($group_id, $start_date, $end_date, $timezone);
+        if ($groupId) {
+            $total = $this->Team->GroupInsight->getTotal($groupId, $start_date, $end_date, $timezone);
         } else {
             $total = $this->Team->TeamInsight->getTotal($start_date, $end_date, $timezone);
         }
@@ -2160,86 +2163,79 @@ class TeamsController extends AppController
 
         // アクセスユーザー数
         $access_user_count = $this->Team->AccessUser->getUniqueUserCount($start_date, $end_date, $timezone,
-            ['user_id' => $user_ids]);
+            ['user_id' => $userIds]);
 
         // アクション数
-        $action_count = $this->Post->ActionResult->getCount($user_ids, $start_time, $end_time, 'created');
+        $action_count = $this->Post->ActionResult->getCount($userIds, $startTimestamp, $endTimestamp, 'created');
 
         // アクションユーザー数
         $action_user_count = $this->Post->ActionResult->getUniqueUserCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
 
         // 投稿数
-        $post_count = $this->Post->getCount($user_ids, $start_time, $end_time, 'created');
+        $post_count = $this->Post->getCount($userIds, $startTimestamp, $endTimestamp, 'created');
 
         // 投稿ユーザー数
         $post_user_count = $this->Post->getUniqueUserCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
 
         // 投稿いいね数
         $post_like_count = $this->Post->PostLike->getCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         // コメントいいね数
         $comment_like_count = $this->Post->Comment->CommentLike->getCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         // 総イイね数
         $like_count = $post_like_count + $comment_like_count;
 
         // 投稿いいねユーザー数
         $post_like_user_list = $this->Post->PostLike->getUniqueUserList([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         // コメントいいねユーザー数
         $comment_like_user_list = $this->Post->Comment->CommentLike->getUniqueUserList([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
+            'start'   => $startTimestamp,
+            'end'     => $endTimestamp,
+            'user_id' => $userIds
         ]);
         $like_user_count = count(array_unique(array_merge($post_like_user_list, $comment_like_user_list)));
 
         // コメント数
         $comment_count = $this->Post->Comment->getCount([
-            'start'     => $start_time,
-            'end'       => $end_time,
+            'start'     => $startTimestamp,
+            'end'       => $endTimestamp,
             'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
-            'user_id'   => $user_ids
+            'user_id'   => $userIds
         ]);
 
         // コメントユーザー数
         $comment_user_count = $this->Post->Comment->getUniqueUserCount([
-            'start'     => $start_time,
-            'end'       => $end_time,
+            'start'     => $startTimestamp,
+            'end'       => $endTimestamp,
             'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
-            'user_id'   => $user_ids
+            'user_id'   => $userIds
         ]);
 
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
         // メッセージ数
-        $message_count = $this->Post->getMessageCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
-        ]);
-
+        $message_count = $Message->getCount($userIds, $startTimestamp, $endTimestamp);
         // メッセージユーザー数
-        $message_user_count = $this->Post->getMessageUserCount([
-            'start'   => $start_time,
-            'end'     => $end_time,
-            'user_id' => $user_ids
-        ]);
+        $message_user_count = $Message->getUniqueUserCount($userIds, $startTimestamp, $endTimestamp);
 
         // ログイン率
         $access_user_percent = $user_count ? $access_user_count / $user_count * 100 : 0;
@@ -2291,9 +2287,9 @@ class TeamsController extends AppController
         );
 
         // キャッシュに保存
-        if ($group_id) {
+        if ($groupId) {
             $this->GlRedis->saveGroupInsight($this->current_team_id, $start_date, $end_date, $timezone,
-                $group_id, $insight, $cache_expire);
+                $groupId, $insight, $cache_expire);
         } else {
             $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone,
                 $insight, $cache_expire);

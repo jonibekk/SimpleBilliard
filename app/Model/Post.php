@@ -1440,14 +1440,14 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param mixed  $user_id ユーザーIDもしくは'me'を指定する。
-     * @param null   $start_date
-     * @param null   $end_date
+     * @param mixed  $userId ユーザーIDもしくは'me'を指定する。
+     * @param null   $startTimestamp
+     * @param null   $endTimestamp
      * @param string $date_col
      *
      * @return int
      */
-    function getCount($user_id = 'me', $start_date = null, $end_date = null, $date_col = 'modified')
+    function getCount($userId = 'me', $startTimestamp = null, $endTimestamp = null, $date_col = 'created')
     {
         $options = [
             'conditions' => [
@@ -1456,141 +1456,21 @@ class Post extends AppModel
             ]
         ];
         // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
-        if ($user_id == 'me') {
+        if ($userId == 'me') {
             $options['conditions']['user_id'] = $this->my_uid;
-        } elseif ($user_id) {
-            $options['conditions']['user_id'] = $user_id;
+        } elseif ($userId) {
+            $options['conditions']['user_id'] = $userId;
         }
 
         //期間で絞り込む
-        if ($start_date) {
-            $options['conditions']["$date_col >="] = AppUtil::getStartTimestampByTimezone($start_date);
+        if ($startTimestamp) {
+            $options['conditions']["$date_col >="] = $startTimestamp;
         }
-        if ($end_date) {
-            $options['conditions']["$date_col <="] = AppUtil::getEndTimestampByTimezone($end_date);
+        if ($endTimestamp) {
+            $options['conditions']["$date_col <="] = $endTimestamp;
         }
         $res = $this->find('count', $options);
         return $res;
-    }
-
-    /**
-     * メッセージ数（返信も含める）を返す
-     *
-     * @param array $params
-     *
-     * @return int
-     */
-    function getMessageCount($params = [])
-    {
-        $params = array_merge([
-            'user_id' => null,
-            'start'   => null,
-            'end'     => null,
-        ], $params);
-
-        $options = [
-            'conditions' => [
-                'Post.team_id' => $this->current_team_id,
-                'Post.type'    => self::TYPE_MESSAGE
-            ]
-        ];
-
-        if ($params['start'] !== null) {
-            $options['conditions']["Post.created >="] = $params['start'];
-        }
-        if ($params['end'] !== null) {
-            $options['conditions']["Post.created <="] = $params['end'];
-        }
-        if ($params['user_id'] !== null) {
-            $options['conditions']["Post.user_id"] = $params['user_id'];
-        }
-        $count = $this->find('count', $options);
-        if (!$count) {
-            return 0;
-        }
-
-        // ２件目以降のメッセージ
-        $options = [
-            'conditions' => [
-                'Comment.team_id' => $this->current_team_id,
-                'Post.type'       => self::TYPE_MESSAGE
-            ],
-            'contain'    => ['Post'],
-        ];
-
-        if ($params['start'] !== null) {
-            $options['conditions']["Comment.created >="] = $params['start'];
-        }
-        if ($params['end'] !== null) {
-            $options['conditions']["Comment.created <="] = $params['end'];
-        }
-        if ($params['user_id'] !== null) {
-            $options['conditions']["Comment.user_id"] = $params['user_id'];
-        }
-        $count += $this->Comment->find('count', $options);
-        return $count;
-    }
-
-    /**
-     * メッセージ（返信も含める）をしたユニークユーザー数を返す
-     *
-     * @param array $params
-     *
-     * @return int
-     */
-    function getMessageUserCount($params = [])
-    {
-        $params = array_merge([
-            'user_id' => null,
-            'start'   => null,
-            'end'     => null,
-        ], $params);
-
-        $options = [
-            'fields'     => [
-                'Post.user_id',
-                'Post.user_id', // key, value 両方 user_id にする
-            ],
-            'conditions' => [
-                'Post.team_id' => $this->current_team_id,
-                'Post.type'    => self::TYPE_MESSAGE
-            ]
-        ];
-        if ($params['start'] !== null) {
-            $options['conditions']["Post.created >="] = $params['start'];
-        }
-        if ($params['end'] !== null) {
-            $options['conditions']["Post.created <="] = $params['end'];
-        }
-        if ($params['user_id'] !== null) {
-            $options['conditions']["Post.user_id"] = $params['user_id'];
-        }
-        $list1 = $this->find('list', $options);
-
-        // ２件目以降のメッセージ
-        $options = [
-            'fields'     => [
-                'Comment.user_id',
-                'Comment.user_id', // key, value 両方 user_id にする
-            ],
-            'conditions' => [
-                'Comment.team_id' => $this->current_team_id,
-                'Post.type'       => self::TYPE_MESSAGE
-            ],
-            'contain'    => ['Post'],
-        ];
-        if ($params['start'] !== null) {
-            $options['conditions']["Comment.created >="] = $params['start'];
-        }
-        if ($params['end'] !== null) {
-            $options['conditions']["Comment.created <="] = $params['end'];
-        }
-        if ($params['user_id'] !== null) {
-            $options['conditions']["Comment.user_id"] = $params['user_id'];
-        }
-        $list2 = $this->Comment->find('list', $options);
-
-        return count(array_unique(array_merge($list1, $list2)));
     }
 
     /**
@@ -1894,12 +1774,19 @@ class Post extends AppModel
         return $this->find('all', $options);
     }
 
-    public function isPostedCircleForSetupBy($user_id)
+    public function isPostedCircleForSetupBy($userId)
     {
-        $user = $this->User->getById($user_id);
+        $user = $this->User->getById($userId);
+        // for error log in https://goalous.slack.com/archives/C0LV38PC6/p1497843894088450
+        // TODO: I dont't know the cause of above error. So, logging it.
+        if (empty($user)) {
+            $this->log(sprintf("failed to find user! targetUserId: %s, teamId: %s, loggedIn user: %s",
+                $userId, $this->current_team_id, $this->my_uid));
+            $this->log(Debugger::trace());
+        }
         $options = [
             'conditions' => [
-                'Post.user_id'    => $user_id,
+                'Post.user_id'    => $userId,
                 'Post.type'       => self::TYPE_NORMAL,
                 'Post.modified >' => $user['created']
             ],

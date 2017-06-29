@@ -43,7 +43,7 @@ class AppController extends BaseController
         'Paginator',
         'Lang',
         'Cookie',
-        'Pnotify',
+        'Notification',
         'Ogp',
         'Csv',
         'Flash',
@@ -62,7 +62,8 @@ class AppController extends BaseController
         'Post',
         'GlHtml',
         'Lang',
-        'BackBtn'
+        'BackBtn',
+        'PageScript'
     ];
 
     private $merge_uses = [];
@@ -96,32 +97,6 @@ class AppController extends BaseController
      * @var null
      */
     public $notify_setting = null;
-
-    /**
-     * スマホアプリからのリクエストか？
-     * is request from mobile app?
-     *
-     * @var bool
-     */
-    public $is_mb_app = false;
-    /**
-     * iOSスマホアプリからのリクエストか？
-     * is request from mobile app?
-     *
-     * @var bool
-     */
-    public $is_mb_app_ios = false;
-    /**
-     * スマホアプリのUA定義
-     * defined user agents of mobile application
-     *
-     * @var array
-     */
-    private $mobile_app_uas = [
-        'Goalous App iOS',
-        'Goalous App Android'
-    ];
-
     /**
      * ブラウザ情報
      *
@@ -158,6 +133,7 @@ class AppController extends BaseController
 
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
+        $this->_setIsTablet();
 
         // Basic認証を特定の条件でかける
         if ($this->_isBasicAuthRequired()) {
@@ -200,7 +176,7 @@ class AppController extends BaseController
                     if ($this->Auth->user('default_team_id') == $this->current_team_id) {
                         $this->User->updateDefaultTeam(null, true, $login_uid);
                     }
-                    $this->Pnotify->outError(__("Logged out because the team you logged in is deleted."));
+                    $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
                     $this->Auth->logout();
                     return;
                 }
@@ -310,13 +286,15 @@ class AppController extends BaseController
     function _setActionCnt()
     {
         $model = $this;
-        $current_term = $model->Team->Term->getCurrentTermData();
+        $currentTerm = $model->Team->Term->getCurrentTermData();
         Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
         $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
-            function () use ($model, $current_term) {
-                $current_term = $model->Team->Term->getCurrentTermData();
-                $res = $model->Goal->ActionResult->getCount('me', $current_term['start_date'],
-                    $current_term['end_date']);
+            function () use ($model, $currentTerm) {
+                $currentTerm = $model->Team->Term->getCurrentTermData();
+                $timezone = $this->Team->getTimezone();
+                $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
+                $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
+                $res = $model->Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
                 return $res;
             }, 'user_data');
         $this->set(compact('action_count'));
@@ -433,19 +411,6 @@ class AppController extends BaseController
             }
         }
         $this->set('feed_more_read_url', $url);
-    }
-
-    public function _decideMobileAppRequest()
-    {
-        $ua = Hash::get($_SERVER, 'HTTP_USER_AGENT');
-        if (strpos($ua, 'Goalous App') !== false) {
-            $this->is_mb_app = true;
-        }
-        $this->set('is_mb_app', $this->is_mb_app);
-        if (strpos($ua, 'Goalous App iOS') !== false) {
-            $this->is_mb_app_ios = true;
-        }
-        $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
 
     function _switchTeam($team_id, $uid = null)
@@ -590,7 +555,7 @@ class AppController extends BaseController
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
             if (!array_key_exists($request_team_id, $team_list)) {
                 //所属しているチームでは無い場合はエラー表示でtopにリダイレクト
-                $this->Pnotify->outError(__("You don't have access right to this team."));
+                $this->Notification->outError(__("You don't have access right to this team."));
                 $this->redirect('/');
             } else {
                 //チームを切り替え
@@ -837,7 +802,7 @@ class AppController extends BaseController
         try {
             $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
             $set_team_id = !empty($team_list) ? key($team_list) : null;
             $this->Session->write('current_team_id', $set_team_id);
@@ -926,5 +891,4 @@ class AppController extends BaseController
             'action'     => 'login'
         );
     }
-
 }

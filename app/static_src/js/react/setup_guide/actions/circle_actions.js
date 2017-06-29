@@ -39,31 +39,21 @@ export function postCircleCreate(dispatch, circle) {
     dataType: 'json'
   })
   .then(function (response) {
-    PNotify.removeAll()
     if(response.data.error) {
-      new PNotify({
-          type: 'error',
-          title: cake.word.error,
-          text: response.data.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      new Noty({
+        type: 'error',
+        text: '<h4>'+cake.word.error+'</h4>'+response.data.msg,
+      }).show();
     } else {
       document.location.href = "/setup/?from=circle&type=create"
     }
   })
   .catch(function (response) {
     browserHistory.push('/setup')
-    PNotify.removeAll()
-    new PNotify({
-        type: 'error',
-        title: cake.word.error,
-        text: response.data.msg,
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-    })
+    new Noty({
+      type: 'error',
+      text: '<h4>'+cake.word.error+'</h4>'+response.data.msg,
+    }).show();
   })
 }
 
@@ -141,30 +131,21 @@ export function joinCircle(dispatch, circle_id_list) {
     },
     dataType: 'json'
   }).then((response) => {
-    PNotify.removeAll()
     if(response.data.error) {
-      new PNotify({
-          type: 'error',
-          title: cake.word.error,
-          text: response.data.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      new Noty({
+        type: 'error',
+        text: '<h4>'+cake.word.error+'</h4>'+response.data.msg,
+      }).show();
       dispatch(enableJoinCircleButton())
     } else {
       document.location.href = "/setup/?from=circle&type=join"
     }
   }).catch((response) => {
     browserHistory.push('/setup')
-    new PNotify({
-        type: 'error',
-        title: cake.word.error,
-        text: response.data.msg,
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-    })
+    new Noty({
+      type: 'error',
+      text: '<h4>'+cake.word.error+'</h4>'+response.data.msg,
+    }).show();
     dispatch(enableJoinCircleButton())
   })
 }
