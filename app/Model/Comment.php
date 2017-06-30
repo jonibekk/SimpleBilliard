@@ -442,20 +442,20 @@ class Comment extends AppModel
     /**
      * 期間内のいいねの数の合計を取得
      *
-     * @param      $user_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param int      $userId
+     * @param int|null $startTimestamp
+     * @param int|null $endTimestamp
      *
-     * @return mixed
+     * @return int
      */
-    public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
+    public function getLikeCountSumByUserId(int $userId, int $startTimestamp = null, int $endTimestamp = null)
     {
         $options = [
             'fields'     => [
                 'SUM(Comment.comment_like_count) as sum_like',
             ],
             'conditions' => [
-                'Comment.user_id' => $user_id,
+                'Comment.user_id' => $userId,
                 'Comment.team_id' => $this->current_team_id,
                 'Post.type'       => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
             ],
@@ -464,11 +464,11 @@ class Comment extends AppModel
             ]
         ];
         //期間で絞り込む
-        if ($start_date) {
-            $options['conditions']['Comment.modified >'] = $start_date;
+        if ($startTimestamp) {
+            $options['conditions']['Comment.created >'] = $startTimestamp;
         }
-        if ($end_date) {
-            $options['conditions']['Comment.modified <'] = $end_date;
+        if ($endTimestamp) {
+            $options['conditions']['Comment.created <'] = $endTimestamp;
         }
         $res = $this->find('first', $options);
         return $res ? $res[0]['sum_like'] : 0;
