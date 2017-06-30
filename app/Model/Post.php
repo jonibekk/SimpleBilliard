@@ -1536,13 +1536,13 @@ class Post extends AppModel
     /**
      * 期間内のいいねの数の合計を取得
      *
-     * @param      $user_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param int      $user_id
+     * @param int|null $start_timestamp
+     * @param int|null $end_timestamp
      *
-     * @return mixed
+     * @return int
      */
-    public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
+    public function getLikeCountSumByUserId(int $user_id, int $start_timestamp = null, int $end_timestamp = null)
     {
         $options = [
             'fields'     => [
@@ -1555,11 +1555,11 @@ class Post extends AppModel
             ]
         ];
         //期間で絞り込む
-        if ($start_date) {
-            $options['conditions']['modified >'] = AppUtil::getStartTimestampByTimezone($start_date);
+        if ($start_timestamp) {
+            $options['conditions']['created >'] = $start_timestamp;
         }
-        if ($end_date) {
-            $options['conditions']['modified <'] = AppUtil::getEndTimestampByTimezone($end_date);
+        if ($end_timestamp) {
+            $options['conditions']['created <'] = $end_timestamp;
         }
         $res = $this->find('first', $options);
         return $res ? $res[0]['sum_like'] : 0;
