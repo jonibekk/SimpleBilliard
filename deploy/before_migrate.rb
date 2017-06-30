@@ -52,12 +52,8 @@ end
 gulp_command = "gulp build"
 app = search("aws_opsworks_app").first
 
-file "/tmp/chef_debug.json" do
-    content JSON.pretty_generate(app['environment'])
-end
-
-if new_resource.environment["NODE_ENV"] then
-  gulp_command = "NODE_ENV=#{new_resource.environment["NODE_ENV"]} gulp build"
+if app['environment']['NODE_ENV'] then
+  gulp_command = "NODE_ENV=#{app['environment']['NODE_ENV']} gulp build"
 end
 
 bash "run gulp build" do
