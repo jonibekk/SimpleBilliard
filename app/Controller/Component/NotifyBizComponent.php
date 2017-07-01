@@ -1882,68 +1882,96 @@ class NotifyBizComponent extends Component
      * installation_idでNCMBからdevice_tokenをとってきて
      * Deviceに保存する
      *
-     * @param $user_id
-     * @param $installation_id
+     * @param $userId
+     * @param $installationId
      * @param $version
      *
      * @return bool
      */
-    function saveDeviceInfo($user_id, $installation_id, $version = null)
+    function saveDeviceInfo($userId, $installationId, $version = null)
     {
-        if (!$user_id || !$installation_id) {
+        if (!$userId || !$installationId) {
             throw new RuntimeException(__('Parameters were wrong'));
         }
-        //まずinstallation_idとuser_idをキーにしてdbからデータとってくる
-        $device = $this->Device->find('first',
-            ['conditions' => ['user_id' => $user_id, 'installation_id' => $installation_id]]);
+        // getting device token from NCMB
+        $ncDeviceInfo = $this->getDeviceInfo($installationId);
+        if (!isset($ncDeviceInfo['deviceToken'])) {
+            throw new RuntimeException(__('Device Information not exists'));
+        }
+        $deviceToken = $ncDeviceInfo['deviceToken'];
+
+        // find by installation_id
+        // without user_id. cause, if another user logs in Goalous mobile app on same device, record should be updated.
+        // installation id is uniq.
+        $device = $this->Device->find('first', [
+            'conditions' => [
+                'installation_id' => $installationId,
+            ]
+        ]);
+        $osType = $this->_getDeviceOsType($ncDeviceInfo['deviceType']);
         if (empty($device)) {
-            //もしなければNifty CloudからDeviceTokenを取得
-            $nc_device_info = $this->getDeviceInfo($installation_id);
-            if (!isset($nc_device_info['deviceToken'])) {
-                throw new RuntimeException(__('Device Information not exists'));
-            }
-            //device_tokenとuser_idをキーにしてdbからデータ取ってくる
-            $device = $this->Device->find('first',
-                ['conditions' => ['user_id' => $user_id, 'device_token' => $nc_device_info['deviceToken']]]);
-            if (!empty($device)) {
-                //見つかった場合はinstallation_idを保存
-                $this->Device->id = $device['Device']['id'];
-                $device = Hash::merge($device, $this->Device->saveField('installation_id', $installation_id));
-            } else {
-                //見つからない場合は、新規でdevice tokenを保存
-                $device_type = $nc_device_info['deviceType'];
-                App::uses('Device', 'Model');
-                $os_type = Device::OS_TYPE_OTHER;
-                if ($device_type == "android") {
-                    $os_type = Device::OS_TYPE_ANDROID;
-                } elseif ($device_type == "ios") {
-                    $os_type = Device::OS_TYPE_IOS;
-                }
+            // add new record
 
-                $this->Device->create();
-                $device = $this->Device->save([
-                    'Device' => [
-                        'user_id'         => $user_id,
-                        'device_token'    => $nc_device_info['deviceToken'],
-                        'os_type'         => $os_type,
-                        'version'         => $version,
-                        'installation_id' => $installation_id,
-                    ]
-                ]);
-                if (empty($device)) {
-                    throw new RuntimeException(__('Failed to save a Device Information.'));
-                }
-            }
+            $this->Device->create();
+            $device = $this->Device->save([
+                'Device' => [
+                    'user_id'         => $userId,
+                    'device_token'    => $deviceToken,
+                    'os_type'         => $osType,
+                    'version'         => $version,
+                    'installation_id' => $installationId,
+                ]
+            ]);
+        } else {
+            // updating device info on DB
+            $device['Device'] = am($device['Device'], [
+                'user_id'      => $userId,
+                'device_token' => $deviceToken,
+                'os_type'      => $osType,
+                'version'      => $version,
+            ]);
+            // updating modified.
+            unset($device['Device']['modified']);
+            $device = $this->Device->save($device);
         }
 
-        //DBに保存されているバージョンとcurrent_versionが一致しない場合は、dbの情報を更新
-        if ($version !== null && $device['Device']['version'] !== $version) {
-            $this->Device->id = $device['Device']['id'];
-            $device = Hash::merge($device, $this->Device->saveField('version', $version));
+        // saving Device was failed..
+        if (empty($device)) {
+            // logging that saving Device was failure. In most cases Android
+            $this->log(sprintf("Failed to save Device. userId: %s, installationId: %s, version: %s, osType: %s, requestData: %s, validationError: %s",
+                $userId,
+                $installationId,
+                $version,
+                $osType,
+                AppUtil::varExportOneLine($this->Controller->request->data),
+                AppUtil::varExportOneLine($this->Device->validationErrors)
+            ));
+            $this->log(Debugger::trace());
+            throw new RuntimeException(__('Failed to save a Device Information.'));
         }
-        //sessionのアプリバージョン情報を更新
+
+        // updating app version on Session
         $this->Session->write('app_version', $version);
         return $device;
+    }
+
+    /**
+     * getting device os type
+     *
+     * @param string $deviceType
+     *
+     * @return int
+     */
+    private function _getDeviceOsType(string $deviceType): int
+    {
+        App::uses('Device', 'Model');
+        $osType = Device::OS_TYPE_OTHER;
+        if ($deviceType == "android") {
+            $osType = Device::OS_TYPE_ANDROID;
+        } elseif ($deviceType == "ios") {
+            $osType = Device::OS_TYPE_IOS;
+        }
+        return $osType;
     }
 
     /**

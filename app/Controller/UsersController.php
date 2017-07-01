@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Post', 'Model');
+App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
 App::import('Service', 'UserService');
@@ -81,6 +82,8 @@ class UsersController extends AppController
         if (!empty($installationId)) {
             try {
                 $this->NotifyBiz->saveDeviceInfo($user_id, $installationId, $app_version);
+                // Storing installationId for deleting installation id when logout in mobile app.
+                $this->Session->write('installationId', $installationId);
                 //セットアップガイドステータスの更新
                 $this->updateSetupStatusIfNotCompleted();
             } catch (RuntimeException $e) {
@@ -239,6 +242,18 @@ class UsersController extends AppController
     public function logout()
     {
         $user = $this->Auth->user();
+
+        // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
+        // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
+        $installationId = $this->Session->read('installationId');
+        if ($installationId) {
+            /** @var Device $Device */
+            $Device = ClassRegistry::init('Device');
+            $Device->softDeleteAll([
+                'Device.installation_id' => $installationId,
+            ], false);
+        }
+
         foreach ($this->Session->read() as $key => $val) {
             if (in_array($key, ['Config', '_Token', 'Auth'])) {
                 continue;
