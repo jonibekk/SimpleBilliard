@@ -47,7 +47,7 @@
                            'action'     => 'ajax_get_exchange_tkr_modal',
                            'goal_id'    => $goal['Goal']['id']
                        ]) ?>">
-                        <hr class="dashboard-goals-card-horizontal-line">
+                        <hr class="profile-goals-card-horizontal-line">
                         <i class="fa fa-exchange"></i>
                         <span class="ml_2px"><?= __("Change TKR") ?></span>
                     </a>
@@ -63,7 +63,7 @@
                            'action'     => 'ajax_get_exchange_leader_modal',
                            'goal_id'    => $goal['Goal']['id']
                        ]) ?>">
-                        <hr class="dashboard-goals-card-horizontal-line">
+                        <hr class="profile-goals-card-horizontal-line">
                         <i class="fa fa-exchange"></i>
                         <span class="ml_2px"><?= __("Change leader") ?></span>
                     </a>

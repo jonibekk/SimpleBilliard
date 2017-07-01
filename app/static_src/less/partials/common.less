@@ -1,0 +1,317 @@
+/* TODO:今後はcommon.lessにGoalousの共通cssをまとめる */
+
+/* form */
+.gl-form {
+  padding: 4px 0;
+  &-horizontal {
+    padding: 4px 0;
+    font-size: 0;
+    &-col {
+      display: inline-block;
+      width: 50%;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+  }
+  &-label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  &-guide {
+    color: @subColor10;
+    font-size: 12px;
+  }
+}
+
+/* parts */
+.gl-labels {
+  // Eliminate gaps caused by inline-block list
+  font-size: 0px;
+  &-item {
+    background-color: @baseLightGray;
+    color: @keyColor;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 2px 4px;
+    display: inline-block;
+    border-radius: 4px;
+  }
+  &-item + &-item {
+    margin-left: 4px;
+  }
+}
+
+.gl-goal-info-counts {
+  margin: 0;
+  padding: 0;
+  &-title, &-description {
+    display: inline-block;
+    font-size: 13px;
+  }
+  &-description {
+    margin: 0 8px 0 4px;
+  }
+}
+
+.krProgress {
+  padding: 4px 0;
+  cursor: pointer;
+  &-bar {
+    border-radius: 4px;
+    overflow: visible;
+    background-color: @slightGray;
+    text-align: center;
+    position: relative;
+    &Current {
+      //background-color: @subColor14;
+      .horizontal-gradient(@progressBarStart, @progressBarEnd);
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      &.is-incomplete {
+        border-radius: 4px 0 0 4px;
+        // 進捗率を0〜99%で表すために.rate-{0〜99}のclassのスタイルを生成
+        @iterations: 99;
+        .rate (@i) when (@i >= 0) {
+          &.mod-rate@{i} {
+            width: ~"@{i}%";
+          }
+          .rate(@i - 1);
+        }
+        .rate (@iterations);
+      }
+      &.is-complete {
+        border-radius: 4px;
+        width: 100%;
+      }
+    }
+  }
+  &-values {
+    display: flex;
+    color: @subColor3;
+    font-size: 1.1rem;
+    &Left {
+      display: block;
+      text-align: left;
+      flex: 1;
+    }
+    &Right {
+      display: block;
+      text-align: right;
+      flex: 1;
+    }
+  }
+  &-text {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 1.1rem;
+  }
+}
+
+.warning {
+  font-size: 1.2rem;
+  color: @strongRed
+}
+
+.flex {
+  display: flex;
+  &-extend {
+    flex: 1
+  }
+}
+
+.searchBox {
+  width: 100%;
+  border: 1px solid @subColor4;
+  border-collapse: separate;
+  border-radius: 4px;
+  position: relative;
+  display: table;
+  &-input {
+    display: table-cell;
+    width: 100%;
+    background-color: @white;
+    border-radius: 4px;
+    box-shadow: none;
+    transition: none;
+    outline: 0;
+    padding: 8px 8px 8px 30px;
+    font-size: 14px;
+    border: 0;
+    line-height: 18px;
+  }
+  &-button {
+    display: table-cell;
+    width: 40px;
+    text-align: center;
+    background-color: @keyColor;
+    font-size: 16px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    vertical-align: middle;
+    color: @white;
+  }
+  &-search-icon {
+    position: absolute;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .fa {
+      color: @subColor4;
+      font-size: 18px;
+    }
+  }
+  &-remove-icon {
+    position: absolute;
+    float: left;
+    height: 100%;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    cursor: pointer;
+    .fa {
+      color: @subColor3;
+      font-size: 18px;
+    }
+  }
+}
+.uploadFileForm {
+  display: none;
+  &-wrapper {
+    position: relative;
+  }
+  &.mod-dragOver {
+    position: absolute;
+    color: #029acf;
+    vertical-align: middle;
+    display: block;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    background-color: #fff;
+    opacity: 0.8;
+    border: 5px dashed #029acf;
+    border-radius: 4px;
+    z-index: 99;
+  }
+  &-msg {
+    height: 100%;
+    display: table;
+    text-align: center;
+    width: 100%;
+    &-label {
+      height: 100%;
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 3.6rem;
+    }
+  }
+}
+
+.uploadPreviews {
+  &-item {
+    background-color: @smokyWhite;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid @subColor4;
+    margin-bottom: 8px;
+    &-content {
+      display: flex;
+      &-left {
+      }
+      &-right {
+        flex: 1;
+        overflow: hidden;
+        padding-left: 6px;
+        &-inner {
+          display: flex;
+        }
+      }
+    }
+    &-thumbnail {
+      &-wrapper {
+        overflow: hidden;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 40px;
+      }
+      max-width: 40px;
+      max-height: 40px;
+      vertical-align: middle;
+      display: inline-block;
+      transform: rotate(0deg);
+    }
+    &-filename {
+      color: @veryDark;
+      font-weight: bold;
+      font-size: 1.3rem;
+      &.is-error {
+        color: @softRed;
+      }
+    }
+    &-filesize {
+      color: @subColor10;
+      font-size: 1.1rem;
+      font-weight: normal;
+      &-strong {
+        font-weight: bold;
+      }
+    }
+    &-delete {
+      color: @subColor10;
+      text-decoration: none;
+      padding: 0 6px;
+      &:hover, &:active, &:focus {
+        color: inherit;
+      }
+    }
+    &-progressBar {
+      background-color: @progressBarStart;
+      .horizontal-gradient(@progressBarStart, @progressBarEnd);
+      height: 4px;
+      -webkit-transition: width 0.6s ease;
+      transition: width 0.6s ease;
+      border-radius: 2px;
+      // 進捗率を0〜99%で表すために.rate-{0〜99}のclassのスタイルを生成
+      @iterations: 100;
+      .rate (@i) when (@i >= 0) {
+        &.mod-rate@{i} {
+          width: ~"@{i}%";
+        }
+        .rate(@i - 1);
+      }
+      .rate (@iterations);
+    }
+    &-error {
+      font-size: 1.3rem;
+      color: @acidRed;
+    }
+  }
+}
+.container.mod-sp {
+  margin:0;
+  padding:0;
+  box-shadow: 0 0 0;
+  width: 100%;
+}
+
+.loadingImg {
+  text-align: center;
+}
+
+.img-loader {
+  position: absolute;
+  margin: 10px 230px;
+}
