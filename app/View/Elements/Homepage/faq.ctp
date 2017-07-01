@@ -57,7 +57,7 @@
     ],
     [
         'question' => __('Which company offer Goalous?'),
-        'answer'   => __('ISAO, make and deliever "Joyful!". Found on 1999, our sprits are "Open, Challanging, Link".')
+        'answer'   => __('ISAO, make and deliver "Joyful!". Found on 1999, our sprits are "Open, Challanging, Link".')
     ],
 ]
 ?>

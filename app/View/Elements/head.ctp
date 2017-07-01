@@ -42,11 +42,5 @@
     <?= $this->Html->script('vendor/html5shiv')?>
     <?= $this->Html->script('vendor/respond.min')?>
     <![endif]-->
-    <?php //公開環境のみタグを有効化
-    if (PUBLIC_ENV) {
-        /** @noinspection PhpDeprecationInspection */
-        echo $this->element('external_service_tags');
-    }
-    ?>
 </head>
 <?= $this->App->viewEndComment()?>

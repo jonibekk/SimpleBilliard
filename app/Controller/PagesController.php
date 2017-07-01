@@ -21,7 +21,6 @@ App::uses('AppController', 'Controller');
  */
 class PagesController extends AppController
 {
-
     /**
      * Displays a view
      *
@@ -89,7 +88,7 @@ class PagesController extends AppController
                     $this->request->params)
             ]);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
     }
@@ -204,7 +203,7 @@ class PagesController extends AppController
         $this->layout = LAYOUT_HOMEPAGE;
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
-            $this->Pnotify->outError(__('Ooops. Some problems occured.'));
+            $this->Notification->outError(__('Ooops. Some problems occurred.'));
             return $this->redirect($this->referer());
         }
         $this->set(compact('data'));
@@ -215,7 +214,7 @@ class PagesController extends AppController
     {
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
-            $this->Pnotify->outError(__('Ooops. Some problems occured.'));
+            $this->Notification->outError(__('Ooops. Some problems occurred.'));
             return $this->redirect($this->referer());
         }
         $this->Session->delete('contact_form_data');
