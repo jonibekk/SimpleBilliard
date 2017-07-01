@@ -114,7 +114,8 @@
                 </ul>
             </div>
             <a id="NotifyDropDownReadMore" href="#"
-               class="btn btn-link font_bold click-notify-read-more-dropdown none"
+               class="btn btn-link font_bold click-notify-read-more-dropdown"
+               style="display:none;"
                get-url="<?= $this->Html->url([
                    'controller' => 'notifications',
                    'action'     => 'ajax_get_old_notify_more',

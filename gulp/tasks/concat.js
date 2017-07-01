@@ -1,7 +1,6 @@
 import gulp from 'gulp'
 import plumber from 'gulp-plumber'
 import concat from 'gulp-concat'
-import autoprefixer from 'gulp-autoprefixer'
 import duration from 'gulp-duration'
 import ngAnnotate from 'gulp-ng-annotate'
 import config from '../config.js'
@@ -89,13 +88,4 @@ gulp.task('angular_vendor:concat', () => {
     .pipe(concat(config.angular_vendor.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/angular_vendor_cat'))
     .pipe(duration('angular_vendor:concat'))
-})
-
-gulp.task('css:concat', () => {
-  return gulp.src([...config.css.src, config.dest + '/css/*.css'])
-    .pipe(plumber())
-    .pipe(autoprefixer())
-    .pipe(concat(config.css.output.file_name + '.css'))
-    .pipe(gulp.dest(config.dest + '/css_cat'))
-    .pipe(duration('css:concat'))
 })

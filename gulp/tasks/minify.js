@@ -1,7 +1,5 @@
 import gulp from "gulp";
-import cssmin from "gulp-cssmin";
 import rename from "gulp-rename";
-import plumber from "gulp-plumber";
 import uglify from "gulp-uglify";
 import duration from "gulp-duration";
 import config from "../config.js";
@@ -132,17 +130,4 @@ gulp.task("angular_app:uglify", () => {
     }))
     .pipe(gulp.dest(config.angular_app.output.path))
     .pipe(duration('angular_app:uglify'))
-})
-
-gulp.task('css:minify', () => {
-  let obj = gulp.src(config.dest + '/css_cat/*.css').pipe(plumber());
-  if (process.env.NODE_ENV === "production") {
-    obj = obj.pipe(cssmin());
-  }
-
-  return obj.pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.css.output.path))
-    .pipe(duration('css:min'))
 })

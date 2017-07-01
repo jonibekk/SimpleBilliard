@@ -66,7 +66,7 @@ export default class CoachFooter extends React.Component {
     const can_submit_set_as_target = this.state.select_clear_status === TopKeyResult.IS_CLEAR && this.state.select_important_status === TopKeyResult.IS_IMPORTANT
     const can_submit_remove_from_target = this.state.select_clear_status !== null && this.state.select_important_status !== null
     const validation_errors = this.props.validationErrors
-    const loading_image = () => <img src="/img/ajax-loader.gif" className="signup-img-loader"/>;
+    const loading_image = () => <img src="/img/ajax-loader.gif" className="img-loader"/>;
 
     return (
       <div className="goals-approval-detail-choice">
