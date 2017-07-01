@@ -1,0 +1,64 @@
+/* Goal search page css */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import(reference) "../partials/line_number_limit";
+@import "../partials/select_labels";
+
+.goals-page-card-title-wrapper {
+  &:extend(.line-number-wrap);
+}
+
+.goals-page-card-title {
+  line-height: 16px;
+  color: @veryDark;
+  &:hover {
+    color: @serviceColor;
+  }
+}
+
+.goals-page-card-title-text {
+  &:extend(.line-number-limit-2);
+  font-weight: bold;
+}
+
+.goal-search {
+  &-keyword {
+    width: 100%;
+    display: table;
+    border-collapse: separate;
+    border: 1px solid #a8a8a8;
+    border-radius: 4px;
+    &-input {
+      background-color: #fff;
+      border-radius: 4px 0 0 4px;
+      box-shadow: none;
+      -webkit-transition: none;
+      transition: none;
+      outline: 0;
+      padding: 8px;
+      display: table-cell;
+      width: 100%;
+      font-size: 14px;
+      border: 0;
+      line-height: 18px;
+    }
+    &-submit {
+      display: table-cell;
+      width: 40px;
+      text-align: center;
+      background-color: #e5e5e5;
+      font-size: 16px;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+  }
+  &-order-text {
+    cursor: pointer;
+  }
+  &-order-select {
+    display: none;
+    color: @darkGray;
+  }
+}

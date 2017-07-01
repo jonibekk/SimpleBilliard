@@ -63,7 +63,7 @@ class AppController extends BaseController
         'GlHtml',
         'Lang',
         'BackBtn',
-        'PageScript'
+        'PageResource'
     ];
 
     private $merge_uses = [];
