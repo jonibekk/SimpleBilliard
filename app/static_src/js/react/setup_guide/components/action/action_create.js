@@ -79,7 +79,7 @@ export default class ActionCreate extends React.Component {
                   <div className="post-panel-footer none" id="CommonActionFooter">
                     <div className="font_12px" id="CommonActionFormFooter">
                       <a href="#" className="link-red" id="ActionFileAttachButton">
-                        <button type="button" className="btn pull-left photo-up-btn"><i
+                        <button type="button" className="btn pull-left btn-photo-up"><i
                                 className="fa fa-paperclip post-camera-icon"></i>
                         </button>
                       </a>
