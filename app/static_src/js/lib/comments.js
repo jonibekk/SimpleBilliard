@@ -355,8 +355,8 @@ function evCommentLatestView(options) {
                 //一旦非表示
                 $posts.hide();
                 $($obj).before($posts);
-                showMore($posts);
                 $posts.show();
+                showMore($posts);
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
@@ -630,8 +630,8 @@ function evNotifyPost(options) {
                 $(".layout-main").append($posts);
                 $(".layout-main").append(button_notifylist);
 
-                showMore($posts);
                 $posts.show();
+                showMore($posts);
 
                 //リンクを有効化
                 $obj.removeAttr('disabled');
@@ -693,8 +693,8 @@ function evCommentOldView() {
                 //一旦非表示
                 $posts.hide();
                 $("#" + parent_id).before($posts);
+                $posts.show();
                 showMore($posts);
-                $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
