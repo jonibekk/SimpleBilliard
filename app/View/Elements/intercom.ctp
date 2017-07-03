@@ -86,7 +86,10 @@
     <script>
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
-        document.getElementById("IntercomLink").style.display = 'none';
+        var intercomLink = document.getElementById("IntercomLink");
+        if (intercomLink) {
+            intercomLink.style.display = 'none';
+        }
     }
     </script>
 <?php endif; ?>

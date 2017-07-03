@@ -374,8 +374,8 @@ function evCircleFeed(options) {
                 $("#app-view-elements-feed-posts").html($posts);
                 //read moreの情報を差し替え
 
+                $posts.show();
                 showMore($posts);
-                $posts.fadeIn();
 
                 //リンクを有効化
                 $obj.removeAttr('disabled');

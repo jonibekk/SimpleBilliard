@@ -147,8 +147,8 @@ function evFeedMoreView(options) {
                 else {
                     $("#" + parent_id).before($posts);
                 }
+                $posts.show();
                 showMore($posts);
-                $posts.fadeIn();
 
                 //ページ番号をインクリメント
                 next_page_num++;
