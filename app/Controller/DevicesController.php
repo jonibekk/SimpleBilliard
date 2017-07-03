@@ -39,6 +39,7 @@ class DevicesController extends AppController
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
         try {
             if (!$this->User->exists($user_id)) {
+                $this->log(sprintf("user id is invalid. user_id: %s", $user_id));
                 throw new RuntimeException(__('Parameters were wrong'));
             }
             $device = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
