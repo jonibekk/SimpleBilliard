@@ -8,10 +8,11 @@ export default class PhotoUpload extends React.Component {
   render() {
     // TODO:画面遷移を行うとイベントが発火しなくなる為、コード追加(既存バグ)
     // 将来的に廃止
-    $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
-      $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
+    $(document).ready(function () {
+      $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+        $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
+      });
     });
-
     // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
     // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると
     // リサイズ後の画像情報が取得できない。

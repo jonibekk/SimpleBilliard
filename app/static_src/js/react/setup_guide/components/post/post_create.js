@@ -78,7 +78,7 @@ export default class PostCreate extends React.Component {
               <div className="post-panel-footer">
                 <div className="font_12px" id="PostFormFooter">
                   <a href="#" className="link-red" id="PostUploadFileButton">
-                    <button type="button" className="btn pull-left photo-up-btn"><i
+                    <button type="button" className="btn pull-left btn-photo-up"><i
                             className="fa fa-paperclip post-camera-icon"></i>
                     </button>
                   </a>

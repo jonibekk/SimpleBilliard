@@ -31,7 +31,9 @@
     echo $this->fetch('meta');
     echo $this->fetch('css');
 
-    echo $this->Html->css('goalous.min', array('media' => 'screen'));
+    echo $this->Html->css('vendors.min', array('media' => 'screen'));
+    echo $this->Html->css('common.min', array('media' => 'screen'));
+    echo $this->PageResource->outputPageCss();
     echo $this->Html->script('/js/goalous.prerender.min');
 
     ?>
@@ -42,11 +44,5 @@
     <?= $this->Html->script('vendor/html5shiv')?>
     <?= $this->Html->script('vendor/respond.min')?>
     <![endif]-->
-    <?php //公開環境のみタグを有効化
-    if (PUBLIC_ENV) {
-        /** @noinspection PhpDeprecationInspection */
-        echo $this->element('external_service_tags');
-    }
-    ?>
 </head>
 <?= $this->App->viewEndComment()?>

@@ -62,7 +62,7 @@ $this->Form->input('body', [
            id="CommentUploadFileButton_<?= $post_id ?>"
            data-preview-container-id="CommentUploadFilePreview_<?= $post_id ?>"
            data-form-id="CommentAjaxGetNewCommentForm_<?= $post_id ?>">
-            <button type="button" class="btn pull-left photo-up-btn"><i
+            <button type="button" class="btn pull-left btn-photo-up"><i
                     class="fa fa-paperclip post-camera-icon"></i>
             </button>
         </a>

@@ -25,14 +25,10 @@ class Header extends React.Component {
       input && input.focus();
     }
     if (this.props.leave_topic_status == LeaveTopicStatus.ERROR) {
-      PNotify.removeAll();
-      new PNotify({
-        type: 'error',
-        title: cake.word.error,
-        text: this.props.leave_topic_err_msg,
-        delay: 4000,
-        mouse_reset: false
-      })
+      new Noty({
+          type: 'error',
+          text: '<h4>'+cake.word.error+'</h4>'+this.props.leave_topic_err_msg,
+      }).show();
       this.props.dispatch(
         actions.resetLeaveTopicStatus()
       )

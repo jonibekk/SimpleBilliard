@@ -75,6 +75,10 @@ class BaseController extends Controller
      */
     public $is_mb_app_ios = false;
     /**
+     * Request from tablet?
+     */
+    public $is_tablet = false;
+    /**
      * スマホアプリのUA定義
      * defined user agents of mobile application
      *
@@ -269,5 +273,14 @@ class BaseController extends Controller
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
-
+    /**
+     * pass `isTablet` variable to view.
+     * - get browser ua from browscap
+     */
+    public function _setIsTablet()
+    {
+        $browser = $this->getBrowser();
+        $this->is_tablet = $browser['istablet'];
+        $this->set('isTablet', $this->is_tablet);
+    }
 }

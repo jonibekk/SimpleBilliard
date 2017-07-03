@@ -13,7 +13,7 @@ class ActionsController extends ApiController
 {
 
     public $components = [
-        'Pnotify',
+        'Notification',
     ];
 
     /**
@@ -66,7 +66,7 @@ class ActionsController extends ApiController
             $this->Goal->ActionResult->getLastInsertID());
 
         // TODO:削除 APIはステートレスであるべき
-        $this->Pnotify->outSuccess(__("Added an action."));
+        $this->Notification->outSuccess(__("Added an action."));
 
         return $this->_getResponseSuccess(['id' => $newActionId]);
     }

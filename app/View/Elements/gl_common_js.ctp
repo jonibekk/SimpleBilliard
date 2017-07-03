@@ -15,34 +15,35 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <?= $this->element('cake_variables') ?>
+<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 
 <?php
-// 右カラム用js
-if (!empty($display_dashboard)) {
-    echo $this->Html->script('/js/react_kr_column_app.min');
-}
-// ゴール検索
-if (Hash::get($this->request->params, 'controller') === 'goals'
-    && Hash::get($this->request->params, 'action') === 'index'
-) {
-    echo $this->Html->script('/js/react_goal_search_app.min');
-}
-// メッセージ
-if (Hash::get($this->request->params, 'controller') === 'topics')
-{
-    echo $this->Html->script('/js/react_message_app.min');
+// right column react app
+if (!empty($loadRightColumn)) {
+    echo $this->Html->script('/js/react_vendors.min');
+    echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
 }
 
-echo $this->Html->script('/js/ng_vendors.min');
+// Include page specific javascript file
+if (isset($page_js_files) && !empty($page_js_files)) {
+    foreach ($page_js_files as $script) {
+        echo $this->Html->script($script);
+    }
+}
+echo $this->PageResource->getPageScript();
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
-echo $this->Html->script('/js/ng_app.min');
 ?>
 
-<!--suppress JSDuplicatedDeclaration -->
+<?php //公開環境のみタグを有効化
+if (PUBLIC_ENV) {
+    /** @noinspection PhpDeprecationInspection */
+    echo $this->element('intercom');
+}
+?>
 
 <?= $this->Session->flash('click_event') ?>
-<?php echo $this->Session->flash('pnotify');
+<?php echo $this->Session->flash('noty');
 //環境を識別できるようにリボンを表示
 ?>
 <?php if (ENV_NAME == "stg"): ?>

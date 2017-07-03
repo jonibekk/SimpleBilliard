@@ -53,11 +53,11 @@ class LabelInput extends React.Component {
           onSuggestionSelected={(e, {suggestion}) => dispatch(Module.onSuggestionSelected(suggestion))}
           shouldRenderSuggestions={() => true}
         />
-        <ul className="goals-create-selected-labels">
+        <ul className="selected-labels">
           {
             this.props.input_labels.map((v, i) => {
               return (
-                <li key={i} className="goals-create-selected-labels-item">
+                <li key={i} className="selected-labels-item">
                   <span>{v}</span>
                   <a href="#" className="ml_8px" onClick={this.deleteLabel.bind(this)} data-label={v}>
                     <i className="fa fa-times-circle" aria-hidden="true"></i>
