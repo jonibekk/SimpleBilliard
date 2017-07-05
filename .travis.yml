@@ -135,22 +135,15 @@ deploy:
     secret-access-key: $AWS_SECRET_KEY
     app-id: 42c32abd-5bf8-4d36-b3ef-b417425fb7c1
     wait-until-deployed: false
+    region: ap-northeast-1
     on:
       branch: develop
 
   - provider: opsworks
     access-key-id: $AWS_ACCESS_KEY
     secret-access-key: $AWS_SECRET_KEY
-    app-id: 42c32abd-5bf8-4d36-b3ef-b417425fb7c1
-    wait-until-deployed: false
-    region: ap-northeast-1
-    on:
-      branch: add-stack-region-to-travis
-
-  - provider: opsworks
-    access-key-id: $AWS_ACCESS_KEY
-    secret-access-key: $AWS_SECRET_KEY
     app-id: 2481ef12-126f-404c-87da-82fa72097f3b
     wait-until-deployed: false
+    region: ap-northeast-1
     on:
       branch: stage
