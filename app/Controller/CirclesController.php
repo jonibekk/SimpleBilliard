@@ -54,8 +54,9 @@ class CirclesController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $circleId = $this->Circle->getLastInsertID();
         // Notification
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $data['Circle']['id'],
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);
         $this->Notification->outSuccess(__("Created a circle."));
 
