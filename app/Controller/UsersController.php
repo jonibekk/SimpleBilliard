@@ -84,8 +84,6 @@ class UsersController extends AppController
                 $this->NotifyBiz->saveDeviceInfo($user_id, $installationId, $app_version);
                 // Storing installationId for deleting installation id when logout in mobile app.
                 $this->Session->write('installationId', $installationId);
-                //セットアップガイドステータスの更新
-                $this->updateSetupStatusIfNotCompleted();
             } catch (RuntimeException $e) {
                 $this->log([
                     'where'           => 'login page',
@@ -217,6 +215,11 @@ class UsersController extends AppController
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
+            if($this->is_mb_app){
+                //セットアップガイドステータスの更新
+                $this->updateSetupStatusIfNotCompleted();
+            }
+
             $this->_refreshAuth();
             $this->_setAfterLogin();
 
