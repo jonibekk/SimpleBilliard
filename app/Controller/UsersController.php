@@ -215,8 +215,10 @@ class UsersController extends AppController
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
+
             if($this->is_mb_app){
-                //セットアップガイドステータスの更新
+                // If mobile app, updating setup guide for installation of app.
+                // It should be called from here. Because, `updateSetupStatusIfNotCompleted()` uses Session Data.
                 $this->updateSetupStatusIfNotCompleted();
             }
 
