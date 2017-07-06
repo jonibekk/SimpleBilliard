@@ -18,7 +18,6 @@ export default {
     path: process.cwd() + "/app/webroot/js",
     publicPath: '/js/',
     filename: '[name]_app.min.js',
-    jsonpFunction: 'reactVendor'
   },
   module: {
     loaders: [
@@ -44,10 +43,11 @@ export default {
       debug: true
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'react_vendors',
-      filename: 'react_vendors.min.js'
-    }),
+    // If it enable, page get slow. So once I commented these line
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'react_vendors',
+    //   filename: 'react_vendors.min.js'
+    // }),
     new webpack.NoEmitOnErrorsPlugin(),
   ]
 }
