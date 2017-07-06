@@ -181,11 +181,11 @@ $(function () {
 
     // ハンバーガーメニューのサークル未読点描画
     updateNotifyOnHamburger();
+});
 
-    // サークル投稿リアルタイム通知
-    window.addEventListener("load", function() {
-      setupCircleRealtimeNotification();
-    });
+// サークル投稿リアルタイム通知
+window.addEventListener("load", function() {
+  setupCircleRealtimeNotification();
 });
 
 /**
