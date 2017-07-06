@@ -2,17 +2,18 @@
 
 var network_reachable = true;
 
-$(function () {
-    //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
-    window.addEventListener("online", function () {
-        updateNotifyCnt();
-        updateMessageNotifyCnt();
-        network_reachable = true;
-    }, false);
+//Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
+window.addEventListener("online", function () {
+    updateNotifyCnt();
+    updateMessageNotifyCnt();
+    network_reachable = true;
+}, false);
 
-    window.addEventListener("offline", function () {
-        network_reachable = false;
-    }, false);
+window.addEventListener("offline", function () {
+    network_reachable = false;
+}, false);
+
+window.addEventListener('load', function() {
 
     // Pusher
     var pusher = new Pusher(cake.pusher.key);
