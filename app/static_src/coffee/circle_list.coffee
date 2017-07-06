@@ -4,9 +4,9 @@ window.onload = (resizeLoad) ->
   scrollHeight = document.body.scrollTop
   # ヘッダーサブが出現しているかどうかの判定が必要。
   if winWidth < 992 and scrollHeight == 0
-    circleListHeight = winHeight-380 + "px"
+    circleListHeight = winHeight-350 + "px"
   else
-    circleListHeight = winHeight-336 + "px"
+    circleListHeight = winHeight-306 + "px"
   circleListBodys = document.getElementsByClassName ("js-dashboard-circle-list-body")
   if circleListBodys?
     for body, index in circleListBodys
@@ -23,9 +23,9 @@ window.onresize = (resizeChanged) ->
   scrollHeight = document.body.scrollTop
   # ヘッダーサブが出現しているかどうかの判定が必要。
   if winWidth < 992 and scrollHeight == 0
-    circleListHeight = winHeight-380 + "px"
+    circleListHeight = winHeight-350 + "px"
   else
-    circleListHeight = winHeight-336 + "px"
+    circleListHeight = winHeight-306 + "px"
   circleListBodys = document.getElementsByClassName ("js-dashboard-circle-list-body")
   if circleListBodys?
     for body, index in circleListBodys
