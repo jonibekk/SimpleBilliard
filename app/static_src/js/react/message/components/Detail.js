@@ -38,7 +38,7 @@ export default class Detail extends Base {
     let {pusher_info} = this.props.detail;
     // HACK:dependencied to window.Pusher(using in gl_basic.js)
     const self = this;
-    window.addEventListener('load', () => {
+    $(document).ready(function () {
       let pusher = pusher_info.pusher ? pusher_info.pusher : new window.Pusher(cake.pusher.key);
       // Set socket_id
       pusher.connection.bind('connected', function () {
