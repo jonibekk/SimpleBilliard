@@ -20,7 +20,6 @@
 <?php
 // right column react app
 if (!empty($loadRightColumn)) {
-    echo $this->Html->script('/js/react_vendors.min');
     echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
 }
 
