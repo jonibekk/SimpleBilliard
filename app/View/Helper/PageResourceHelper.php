@@ -23,22 +23,17 @@ class PageResourceHelper extends AppHelper
         ],
         'goals' => [
             'default'     => ['/js/goalous_goal.min'],
-            // load react_vendors.min in gl_common_js.ctp when has react multi entries
             'index'       => ['/js/react_goal_search_app.min'],
             'kr_progress' => [
-                '/js/react_vendors.min',
                 '/js/react_kr_column_app.min'
             ],
             'create'      => [
-                '/js/react_vendors.min',
                 '/js/react_goal_create_app.min'
             ],
             'edit'        => [
-                '/js/react_vendors.min',
                 '/js/react_goal_edit_app.min'
             ],
             'approval'    => [
-                '/js/react_vendors.min',
                 '/js/react_goal_approval_app.min'
             ]
         ],
@@ -62,18 +57,15 @@ class PageResourceHelper extends AppHelper
         ],
         'setup' => [
             'default' => [
-                '/js/react_vendors.min',
                 '/js/react_setup_guide_app.min'
             ]
         ],
         'signup' => [
             'default' => [
-                '/js/react_vendors.min',
                 '/js/react_signup_app.min'
             ]
         ],
         'topics' => [
-            // load react_vendors.min in gl_common_js.ctp when has react multi entries
             'default' => ['/js/react_message_app.min']
         ]
     ];
