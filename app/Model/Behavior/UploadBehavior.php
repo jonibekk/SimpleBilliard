@@ -370,7 +370,19 @@ class UploadBehavior extends ModelBehavior
 
     static private function _pathinfo($filename)
     {
-        $pathinfo = pathinfo($filename);
+        // TODO: For researching PHP Notice. See -> https://jira.goalous.com/browse/GL-5973
+        if (is_array($filename)) {
+            CakeLog::error(sprintf('[%s] Array to string conversion. $filename: %s, session user_id: %s, session current_team_id: %s, backtrace: %s',
+                __CLASS__ . "::" . __METHOD__,
+                AppUtil::varExportOneLine($filename),
+                CakeSession::read('Auth.User.id'),
+                CakeSession::read('current_team_id'),
+                Debugger::trace()
+            ));
+            $pathinfo = pathinfo("");
+        } else {
+            $pathinfo = pathinfo($filename);
+        }
         // PHP < 5.2.0 doesn't include 'filename' key in pathinfo. Let's try to fix this.
         if (empty($pathinfo['filename'])) {
             $suffix = !empty($pathinfo['extension']) ? '.' . $pathinfo['extension'] : '';
