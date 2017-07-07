@@ -1,7 +1,6 @@
 /**
  * Dashboardにあるサークルリストのスタイル
  */
-.nav{
 .circle_heading {
   font-weight: bold;
   color: #a5a5a5;
@@ -19,7 +18,7 @@
 }
 
 .circle-list-in-hamburger{
-  position:static;
+  position:static !important;
   margin-top:1rem;
   .circle-layout {
     width: 100%;
@@ -73,7 +72,8 @@
   }
 }
 .dashboard-circle-list-footer {
-  padding: 4px;
+  position: absolute;
+  bottom: -6rem;
 }
 .dashboard-circle-list-seek {
   font-size: 12px;
@@ -228,5 +228,4 @@
       }
     }
   }
-}
 }

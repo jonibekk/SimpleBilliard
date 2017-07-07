@@ -40,3 +40,11 @@ $(function () {
         }
     });
 });
+
+var bindCtrlEnterAction = function (selector, callback) {
+    $(document).on('keydown', selector, function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+            callback.call(this, e);
+        }
+    })
+};

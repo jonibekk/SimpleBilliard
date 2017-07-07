@@ -29,6 +29,7 @@ window.addEventListener("load", function() {
   bindCommentBalancedGallery($('.comment_gallery'));
 });
 
+
 /**
  * Show form and submit button when user click to add new comment
  */

@@ -524,6 +524,26 @@ function changeSizeFeedImageOnlyOne($obj) {
     return false;
 }
 
+var circleList={
+    hamburger:document.getElementsByClassName('layout-circle-hamburger')[0],
+    dashboard:document.getElementsByClassName('dashboard-circle-list-body')[0]
+}
+
+function circleListHeight(){
+    scrollPos = document.body.scrollTop;
+    //ヘッダーサブが出現しているかどうかの判定が必要。
+    if(window.innerWidth < 992 && scrollPos==0){
+        circleList.hamburger.style.height = (window.innerHeight-350)+'px';
+        circleList.dashboard.style.height = (window.innerHeight-375)+'px';
+    }else{
+        circleList.hamburger.style.height = (window.innerHeight-306)+'px';
+        circleList.dashboard.style.height = (window.innerHeight-331)+'px';
+    }
+}
+
+window.onload=function(){circleListHeight()};
+document.body.onresize=function(){circleListHeight()};
+
 
 /* ===========================================================
  * Bootstrap: fileinput.js v3.1.3

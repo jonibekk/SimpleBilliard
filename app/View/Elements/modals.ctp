@@ -17,5 +17,6 @@ echo $this->element('modal_tutorial');
 if ($this->Session->read('current_team_id')) {
     echo $this->element('modal_add_circle');
 }
+echo "<div id='layer-black' onclick='toggleNav()'></div>";
 echo $this->App->viewEndComment();
 
