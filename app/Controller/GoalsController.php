@@ -82,18 +82,18 @@ class GoalsController extends AppController
         // バリデーション
         $errMsg = $this->_validateComplete($goalId);
         if ($errMsg !== true) {
-            $this->Pnotify->outError($errMsg);
+            $this->Notification->outError($errMsg);
             return $this->redirect($this->referer());
         }
 
         // ゴール完了
         if (!$GoalService->complete($goalId)) {
-            $this->Pnotify->outSuccess(__("Internal Server Error."));
+            $this->Notification->outSuccess(__("Internal Server Error."));
             return $this->redirect($this->referer());
         }
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL, $goalId);
-        $this->Pnotify->outSuccess(__("Completed a goal."));
+        $this->Notification->outSuccess(__("Completed a goal."));
         // pusherに通知
         $socketId = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goalId;
@@ -171,18 +171,18 @@ class GoalsController extends AppController
             $this->Goal->isPermittedAdmin($goalId);
             $this->Goal->isNotExistsEvaluation($goalId);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
         $this->request->allowMethod('post', 'delete');
 
         // ゴール削除
         if (!$GoalService->delete($goalId)) {
-            $this->Pnotify->outError(__("An error has occurred."));
+            $this->Notification->outError(__("An error has occurred."));
             return $this->redirect($this->referer());
         }
 
-        $this->Pnotify->outSuccess(__("Deleted a goal."));
+        $this->Notification->outSuccess(__("Deleted a goal."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
@@ -431,7 +431,7 @@ class GoalsController extends AppController
 
         // Goal do not exists
         if (empty($goal)) {
-            $this->Pnotify->outError(__("The goal doesn't exist."));
+            $this->Notification->outError(__("The goal doesn't exist."));
             return $this->redirect($this->referer());
         }
 
@@ -447,13 +447,13 @@ class GoalsController extends AppController
 
         // Check if the goal is completed
         if ($this->Goal->isCompleted($goalId)) {
-            $this->Pnotify->outError(__("You cannot follow or collaborate with a completed goal."));
+            $this->Notification->outError(__("You cannot follow or collaborate with a completed goal."));
             return $this->redirect($this->referer());
         }
 
         // Check if it is an old goal
         if ($this->Goal->isFinished($goalId)) {
-            $this->Pnotify->outError(__("You cannot follow or collaborate with a past goal."));
+            $this->Notification->outError(__("You cannot follow or collaborate with a past goal."));
             return $this->redirect($this->referer());
         }
 
@@ -470,7 +470,7 @@ class GoalsController extends AppController
         $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
 
         //success case.
-        $this->Pnotify->outSuccess(__("Start to collaborate."));
+        $this->Notification->outSuccess(__("Start to collaborate."));
 
         // ダッシュボードのKRキャッシュ削除
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
@@ -508,7 +508,7 @@ class GoalsController extends AppController
 
     function _editCollaboError()
     {
-        $this->Pnotify->outError(__("Failed to collaborate."));
+        $this->Notification->outError(__("Failed to collaborate."));
     }
 
     public function add_key_result()
@@ -537,7 +537,7 @@ class GoalsController extends AppController
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
 
@@ -545,7 +545,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
             $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
-        $this->Pnotify->outSuccess(__("Added a key result."));
+        $this->Notification->outSuccess(__("Added a key result."));
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
@@ -564,7 +564,7 @@ class GoalsController extends AppController
 
         $errMsg = $this->_validateExchangeTkr($krId);
         if (!empty($errMsg)) {
-            $this->Pnotify->outError($errMsg);
+            $this->Notification->outError($errMsg);
             return $this->redirect($this->referer());
         }
 
@@ -573,7 +573,7 @@ class GoalsController extends AppController
 
         // TKRを変更
         if (!$KeyResultService->exchangeTkr($krId, $this->Auth->user('id'))) {
-            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            $this->Notification->outError(__("Some error occurred. Please try again from the start."));
             return $this->redirect($this->referer());
         }
 
@@ -584,7 +584,7 @@ class GoalsController extends AppController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_TKR_EXCHANGED_BY_LEADER, $goalId, null);
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $krId);
-        $this->Pnotify->outSuccess(__("Success."));
+        $this->Notification->outSuccess(__("Success."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));
         if ($paramsReferer['controller'] == 'pages' && $paramsReferer['pass'][0] == 'home') {
@@ -663,13 +663,13 @@ class GoalsController extends AppController
         $changeType = Hash::get($formData, 'change_type');
         $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
-            $this->Pnotify->outError($validationRes);
+            $this->Notification->outError($validationRes);
             return $this->redirect($this->referer());
         }
 
         $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
         if (!$changedLeader) {
-            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            $this->Notification->outError(__("Some error occurred. Please try again from the start."));
             return $this->redirect($this->referer());
         }
 
@@ -677,7 +677,7 @@ class GoalsController extends AppController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'),
             $this->Auth->user('id'));
 
-        $this->Pnotify->outSuccess(__("Changed leader."));
+        $this->Notification->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
     }
 
@@ -698,20 +698,20 @@ class GoalsController extends AppController
         $changeType = $GoalMemberService::CHANGE_LEADER_FROM_GOAL_MEMBER;
         $validationRes = $GoalMemberService->validateChangeLeader($formData, $changeType);
         if ($validationRes !== true) {
-            $this->Pnotify->outError($validationRes);
+            $this->Notification->outError($validationRes);
             return $this->redirect($this->referer());
         }
 
         $changedLeader = $GoalMemberService->changeLeader($formData, $changeType);
         if (!$changedLeader) {
-            $this->Pnotify->outError(__("Some error occurred. Please try again from the start."));
+            $this->Notification->outError(__("Some error occurred. Please try again from the start."));
             return $this->redirect($this->referer());
         }
 
         // 通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, Hash::get($formData, 'Goal.id'));
 
-        $this->Pnotify->outSuccess(__("Changed leader."));
+        $this->Notification->outSuccess(__("Changed leader."));
         return $this->redirect($this->referer());
     }
 
@@ -738,16 +738,16 @@ class GoalsController extends AppController
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL,
                     $key_result['KeyResult']['goal_id'],
                     $kr_id);
-                $this->Pnotify->outSuccess(__("Completed a goal."));
+                $this->Notification->outSuccess(__("Completed a goal."));
             } else {
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
                     $key_result['KeyResult']['goal_id'],
                     $kr_id);
-                $this->Pnotify->outSuccess(__("Completed a key result."));
+                $this->Notification->outSuccess(__("Completed a key result."));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
@@ -788,13 +788,13 @@ class GoalsController extends AppController
             $this->Goal->incomplete($goal['Goal']['id']);
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
-        $this->Pnotify->outSuccess(__("Made a key result uncompleted."));
+        $this->Notification->outSuccess(__("Made a key result uncompleted."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -823,13 +823,13 @@ class GoalsController extends AppController
                 throw new RuntimeException(__("You can't delete achieved KR."));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
 
         if (!$KeyResultService->delete($krId)) {
-            $this->Pnotify->outError(__("An error has occurred."));
+            $this->Notification->outError(__("An error has occurred."));
             return $this->redirect($this->referer());
         }
 
@@ -837,7 +837,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $goalId);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $goalId, $krId);
 
-        $this->Pnotify->outSuccess(__("Deleted a key result."));
+        $this->Notification->outSuccess(__("Deleted a key result."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));
@@ -909,7 +909,7 @@ class GoalsController extends AppController
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
             $this->Goal->ActionResult->rollback();
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
@@ -921,7 +921,7 @@ class GoalsController extends AppController
             $this->_flashClickEvent("ActionListOpen_" . $action['goal_id']);
         }
 
-        $this->Pnotify->outSuccess(__("Deleted an action."));
+        $this->Notification->outSuccess(__("Deleted an action."));
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -939,11 +939,11 @@ class GoalsController extends AppController
         $goalMemberId = $this->request->params['named']['goal_member_id'];
         $this->Goal->GoalMember->id = $goalMemberId;
         if (!$this->Goal->GoalMember->exists()) {
-            $this->Pnotify->outError(__("He/She might quit collaborating."));
+            $this->Notification->outError(__("He/She might quit collaborating."));
         }
         // 権限チェック
         if (!$this->Goal->GoalMember->isOwner($this->Auth->user('id'))) {
-            $this->Pnotify->outError(__("You have no right to operate it."));
+            $this->Notification->outError(__("You have no right to operate it."));
         }
         $goalMember = $this->Goal->GoalMember->findById($goalMemberId);
         if (!empty($goalMember)) {
@@ -953,7 +953,7 @@ class GoalsController extends AppController
 
         // コラボ削除実行
         $this->Goal->GoalMember->delete();
-        $this->Pnotify->outSuccess(__("Quitted a collaborator."));
+        $this->Notification->outSuccess(__("Quitted a collaborator."));
 
         $goalLeaderUserId = Hash::get($goalMember, 'Goal.user_id');
 
@@ -1096,16 +1096,7 @@ class GoalsController extends AppController
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term',
             'can_add_action'));
 
-        $response = null;
-        switch ($view) {
-            case "key_results":
-                $response = $this->render('Goal/key_results');
-                break;
-            default:
-                $response = $this->render('Goal/key_result_items');
-                break;
-        }
-
+        $response = $this->render('Goal/key_results');
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
@@ -1322,7 +1313,7 @@ class GoalsController extends AppController
                 throw new RuntimeException(__("This action can't be edited."));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
@@ -1345,7 +1336,7 @@ class GoalsController extends AppController
         $ar_id = $this->request->params['named']['action_result_id'];
 
         if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
-            $this->Pnotify->outError(__("This action can't be edited."));
+            $this->Notification->outError(__("This action can't be edited."));
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
@@ -1354,11 +1345,11 @@ class GoalsController extends AppController
         if ($this->request->is('put')) {
             $this->request->data['ActionResult']['id'] = $ar_id;
             if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
-                $this->Pnotify->outError(__("Failed to save data."));
+                $this->Notification->outError(__("Failed to save data."));
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect($this->referer());
             }
-            $this->Pnotify->outSuccess(__("Edited the action."));
+            $this->Notification->outSuccess(__("Edited the action."));
             $action = $this->Goal->ActionResult->find('first',
                 ['conditions' => ['ActionResult.id' => $ar_id]]);
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
@@ -1415,7 +1406,7 @@ class GoalsController extends AppController
             __("Measurement(Initial)"),
             __("Due Date"),
             __("Start Date"),
-            __("Desctiption"),
+            __("Description"),
             __("Weight")
         ];
         $user_goals = $this->Goal->getAllUserGoal();
@@ -1496,7 +1487,7 @@ class GoalsController extends AppController
             $goal_id = isset($this->request->data['ActionResult']['goal_id']) ? $this->request->data['ActionResult']['goal_id'] : null;
         }
         if (!$goal_id) {
-            $this->Pnotify->outError(__("Failed to add an action."));
+            $this->Notification->outError(__("Failed to add an action."));
             $this->redirect($this->referer());
         }
 
@@ -1525,7 +1516,7 @@ class GoalsController extends AppController
                 $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($action_result_id,
                     AttachedFile::TYPE_MODEL_ACTION_RESULT);
             }
-            $this->Pnotify->outError($e->getMessage());
+            $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
         $this->Goal->commit();
@@ -1549,7 +1540,7 @@ class GoalsController extends AppController
             $this->Goal->ActionResult->getLastInsertID());
 
         // push
-        $this->Pnotify->outSuccess(__("Added an action."));
+        $this->Notification->outSuccess(__("Added an action."));
         //セットアップガイドステータスの更新
         $this->updateSetupStatusIfNotCompleted();
 
@@ -1561,68 +1552,6 @@ class GoalsController extends AppController
         ] : $this->referer();
         return $this->redirect($url);
 
-    }
-
-    public function ajax_get_my_goals()
-    {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
-
-        $param_named = $this->request->params['named'];
-        $this->_ajaxPreProcess();
-        if (isset($param_named['page']) && !empty($param_named['page'])) {
-            $page_num = $param_named['page'];
-        } else {
-            $page_num = 1;
-        }
-
-        $type = Hash::get($param_named, 'type');
-        if (!$type) {
-            return;
-        }
-
-        //今期、来期のゴールを取得する
-        $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
-
-        if ($type === 'leader') {
-            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
-        } elseif ($type === 'collab') {
-            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
-                $start_date, $end_date);
-        } elseif ($type === 'follow') {
-            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
-                $start_date, $end_date);
-        } elseif ($type === 'my_prev') {
-            $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
-        } else {
-            $goals = [];
-        }
-        $goals = $GoalService->processGoals($goals);
-        $current_term = $this->Goal->Team->Term->getCurrentTermData();
-        // アクション可能なゴール数
-        $userId = $this->Auth->user('id');
-        $canActionGoals = $this->Goal->findActionables($userId);
-        $canActionGoals = Hash::combine($canActionGoals, '{n}.id', '{n}.name');
-        // 完了アクションが可能なゴールIDリスト
-        $canCompleteGoalIds = Hash::extract(
-            $this->Goal->findCanComplete($userId), '{n}.id'
-        );
-        $currentTermId = $this->Team->Term->getCurrentTermId();
-        $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($currentTermId);
-
-        $this->set(compact('goals', 'type', 'current_term', 'canActionGoals', 'canCompleteGoalIds',
-            'isStartedEvaluation'));
-
-        //エレメントの出力を変数に格納する
-        //htmlレンダリング結果
-        $response = $this->render('Goal/my_goal_area_items');
-        $html = $response->__toString();
-        $result = array(
-            'html'  => $html,
-            'count' => count($goals)
-        );
-        return $this->_ajaxGetResponse($result);
     }
 
     function _setGoalAddViewVals()
@@ -1721,7 +1650,7 @@ class GoalsController extends AppController
         $goal_id = Hash::get($this->request->params, "named.goal_id");
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
@@ -1744,7 +1673,7 @@ class GoalsController extends AppController
         $goal_id = Hash::get($this->request->params, "named.goal_id");
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $members = $this->Goal->GoalMember->getGoalMemberByGoalId($goal_id, [
@@ -1775,7 +1704,7 @@ class GoalsController extends AppController
         $goal_id = Hash::get($this->request->params, "named.goal_id");
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         //コラボってる？
@@ -1820,12 +1749,12 @@ class GoalsController extends AppController
         $goalId = Hash::get($namedParams, "goal_id");
         if (!$goalId || !$this->_setGoalPageHeaderInfo($goalId)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $pageType = Hash::get($namedParams, "page_type");
         if (!in_array($pageType, ['list', 'image'])) {
-            $this->Pnotify->outError(__("Invalid screen transition."));
+            $this->Notification->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
         $keyResultId = Hash::get($namedParams, 'key_result_id');

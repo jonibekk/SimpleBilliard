@@ -30,7 +30,6 @@
                     'class'     => 'form-control modal_input-design',
                 ],
                 'class'         => 'form-horizontal',
-                'novalidate'    => true,
                 'type'          => 'file',
                 'id'            => 'AddCircleForm',
             ]); ?>
@@ -155,29 +154,4 @@
         </div>
     </div>
 </div>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(document).ready(function () {
-//        $('#AddCircleForm').bootstrapValidator({
-//            excluded: [':disabled'],
-//            live: 'enabled',
-//
-//            fields: {
-//                "data[Circle][photo]": {
-//
-//                    validators: {
-//                        file: {
-//                            extension: 'jpeg,jpg,png,gif',
-//                            type: 'image/jpeg,image/png,image/gif',
-//                            maxSize: 10485760,   // 10mb
-//                            message: "<?//=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>//"
-//                        }
-//                    }
-//                }
-//            }
-//        });
-    });
-</script>
-
-<?php $this->end() ?>
 <?= $this->App->viewEndComment()?>

@@ -154,7 +154,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
                 <h3 class="title"><i class="fa fa-circle-o"></i><?= __('Sharing at circle.') ?></h3>
                 <div class="details">
-                    <p><?= __('You can share with your project members and with your devision members in circles.') ?></p>
+                    <p><?= __('You can share with your project members and with your division members in circles.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
@@ -169,7 +169,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
-                <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messagings') ?></h3>
+                <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messaging') ?></h3>
                 <div class="details">
                     <p><?= __('You can communicate with your team members by Web and Mobile app. No more need to use Email.') ?></p>
                 </div>

@@ -35,11 +35,11 @@ export default class LabelInput extends React.Component {
           onSuggestionSelected={this.props.onSuggestionSelected}
           shouldRenderSuggestions={this.props.shouldRenderSuggestions}
         />
-        <ul className="goals-create-selected-labels">
+        <ul className="selected-labels">
           {
             this.props.inputLabels.map((v, i) => {
               return (
-                <li key={i} className="goals-create-selected-labels-item">
+                <li key={i} className="selected-labels-item">
                   <span>{v}</span>
                   <a href="#" className="ml_8px" onClick={this.props.onDeleteLabel} data-label={v}>
                     <i className="fa fa-times-circle" aria-hidden="true"></i>

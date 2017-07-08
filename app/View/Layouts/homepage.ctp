@@ -43,7 +43,6 @@
     <?php
     echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('homepage/bootstrap.min');
-    echo $this->Html->css('pnotify.custom.min');
     echo $this->Html->css('homepage/pe-icon-7-stroke');
     echo $this->Html->css('homepage/animate.min');
     echo $this->Html->css('homepage/flexslider');
@@ -59,7 +58,7 @@
     <?php //公開環境のみタグを有効化
     if (PUBLIC_ENV) {
         /** @noinspection PhpDeprecationInspection */
-        echo $this->element('external_service_tags');
+        echo $this->element('intercom');
     }
     ?>
     <!--[if lt IE 9]>
@@ -102,7 +101,7 @@
 <?= $this->element('common_homepage_js') ?>
 <?= $this->fetch('script') ?>
 <?= $this->fetch('modal') ?>
-<?= $this->Session->flash('pnotify') ?>
+<?= $this->Session->flash('noty') ?>
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
