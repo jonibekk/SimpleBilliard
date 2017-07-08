@@ -570,7 +570,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
         $this->notify_option['url_data'] = [
             'controller' => 'users',
-            'action'     => 'view_krs',
+            'action'     => 'view_info',
             'user_id'    => $invite['ToUser']['id']
         ];
         $this->notify_option['model_id'] = null;
