@@ -297,33 +297,6 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         </div>
                     <?php endforeach ?>
                 </div>
-                <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
-                    <?php $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
-                    <?php $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
-                    <div class="col feeds-post-goal-buttons">
-                        <div class="col col-xxs-6 col-xs-4 mr_5px">
-                            <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
-                               class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= h($follow_opt['class']) ?>"
-                            <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
-                            <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
-                            <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
-                            </a>
-                        </div>
-                        <div class="col col-xxs-5 col-xs-4">
-                            <a href="#"
-                               data-url="<?= $this->Html->url([
-                                   'controller' => 'goals',
-                                   'action'     => 'ajax_get_collabo_change_modal',
-                                   'goal_id'    => $post['Goal']['id']
-                               ]) ?>"
-                               data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
-                               class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collab p_8px <?= h($collabo_opt['class']) ?>">
-                                <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
-                                <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
-                            </a>
-                        </div>
-                    </div>
-                <?php endif; ?>
                 <div class="col feeds-post-btns-area">
                     <div class="feeds-post-btns-wrap-left">
                         <a href="#"
