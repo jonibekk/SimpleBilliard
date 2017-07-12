@@ -44,34 +44,34 @@
                             0, 50,
                             "...") ?></h4>
                 </div>
-                <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
-                    <?php $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
-                    <?php $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
-                    <div class="col feeds-post-goal-buttons">
-                        <div class="col col-xxs-6 col-xs-4 w_50per">
-                            <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
-                               class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px width100_per <?= h($follow_opt['class']) ?>"
-                            <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
-                            <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
-                            <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
-                            </a>
-                        </div>
-                        <div class="col col-xxs-5 col-xs-4 w_50per">
-                            <a href="#"
-                               data-url="<?= $this->Html->url([
-                                   'controller' => 'goals',
-                                   'action'     => 'ajax_get_collabo_change_modal',
-                                   'goal_id'    => $post['Goal']['id']
-                               ]) ?>"
-                               data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
-                               class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collab p_8px width100_per <?= h($collabo_opt['class']) ?>">
-                                <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
-                                <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
-                            </a>
-                        </div>
-                    </div>
-                <?php endif; ?>
             </div>
+            <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>
+                <?php $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
+                <?php $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
+                <div class="col feeds-post-goal-buttons">
+                    <div class="col col-xxs-6 col-xs-4 w_50per">
+                        <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
+                           class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px width100_per <?= h($follow_opt['class']) ?>"
+                        <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
+                        <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
+                        <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
+                        </a>
+                    </div>
+                    <div class="col col-xxs-5 col-xs-4 w_50per">
+                        <a href="#"
+                           data-url="<?= $this->Html->url([
+                               'controller' => 'goals',
+                               'action'     => 'ajax_get_collabo_change_modal',
+                               'goal_id'    => $post['Goal']['id']
+                           ]) ?>"
+                           data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
+                           class="btn btn-white bd-circle_22px font_verydark collaborate-button modal-ajax-get-collab p_8px width100_per <?= h($collabo_opt['class']) ?>">
+                            <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
+                            <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </a>
 </div>
