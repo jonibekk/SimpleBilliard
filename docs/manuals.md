@@ -1,18 +1,19 @@
 <hr id="db">
 
 # Connect DB(mysql)
+In this case using PhpStorm  
 
-![conncetDB_1]()
+![conncetDB_1](https://user-images.githubusercontent.com/9262490/28098454-53ff2dde-66f1-11e7-911c-726617633078.png)
 
-![conncetDB_2]()
+![conncetDB_2](https://user-images.githubusercontent.com/9262490/28098514-b95b85ce-66f1-11e7-92f4-364fac83c5cf.png)
 
-![conncetDB_3]()
+![conncetDB_3](https://user-images.githubusercontent.com/9262490/28098535-d35da51a-66f1-11e7-9d45-18cbc1f52752.png)
 
-![conncetDB_4]()
+![conncetDB_4](https://user-images.githubusercontent.com/9262490/28098545-e2bc50ec-66f1-11e7-91a7-8e39470ce8da.png)
 
-![conncetDB_5]()
+![conncetDB_5](https://user-images.githubusercontent.com/9262490/28098555-f0efb262-66f1-11e7-8678-1f62161586f3.png)
 
-![conncetDB_6]()
+![conncetDB_6](https://user-images.githubusercontent.com/9262490/28098560-fa92476c-66f1-11e7-8903-8837c9e2f1a9.png)
 
 <hr id="trouble-shooting">
 
