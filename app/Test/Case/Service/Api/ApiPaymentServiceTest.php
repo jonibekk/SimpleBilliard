@@ -156,11 +156,11 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomerIncorrectCardNumber()
     {
-        $token = $this->getToken("4242424242424241");
-        $email = "test@goalous.com";
+        $token = $this->ApiPaymentService->createToken("4242424242424241", "Goalous Taro", 11, 2026, "123");
 
-        $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
-
-        $this->assertErrorCard($res, "incorrect_number");
+        $this->assertNotNull($token, "Something very wrong happened");
+        $this->assertArrayHasKey("error", $token);
+        $this->assertArrayNotHasKey("token", $token);
+        $this->assertTrue($token["error"]);
     }
 }
