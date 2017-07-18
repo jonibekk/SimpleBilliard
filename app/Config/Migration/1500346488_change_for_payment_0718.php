@@ -137,9 +137,6 @@ class ChangeForPayment0718 extends CakeMigration {
 				),
 			),
 			'create_field' => array(
-				'oauth_tokens' => array(
-					'service_use_status' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'after' => 'modified'),
-				),
 				'team_members' => array(
 					'status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'アクティブステータス(0: 招待中,1: アクティブ,2: インアクティブ)', 'after' => 'comment'),
 				),
@@ -160,7 +157,6 @@ class ChangeForPayment0718 extends CakeMigration {
 				'admin_activity_logs', 'admin_users', 'charge_histories', 'credit_cards', 'invoices', 'paymemt_setting_change_logs', 'payment_settings'
 			),
 			'drop_field' => array(
-				'oauth_tokens' => array('service_use_status'),
 				'team_members' => array('status'),
 				'teams' => array('service_use_status', 'country', 'address', 'service_use_state_start_date', 'free_trial_days', 'indexes' => array('service_use_status')),
 			),
