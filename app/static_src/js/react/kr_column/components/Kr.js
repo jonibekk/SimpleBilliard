@@ -87,7 +87,7 @@ export default class Kr extends React.Component {
           </div>
         </div>
         <div className="dashboard-krs-column-footer">
-          <a href={ (key_result.completed || action_results.length > 0) ? action_list_link : action_post_link }
+          <a href={ (is_complete || action_results.length > 0) ? action_list_link : action_post_link }
              className="action-link">
             <ul className="dashboard-krs-column-subinfos">
               <li className="action-count">
@@ -96,7 +96,7 @@ export default class Kr extends React.Component {
               <span>・</span>
               <li className="action-avators">
                 {/* 最近アクションしたユーザー画像を表示 */}
-                { !key_result.completed && action_results.map((action) => {
+                { !is_complete && action_results.map((action) => {
                   return (
                     <img className="lazy" src={ action.user.small_img_url } key={ action.user.id } />
                   )
