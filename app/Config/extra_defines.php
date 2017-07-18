@@ -69,5 +69,6 @@ define('FORCE_DISABLE_ALL_EXPERIMENTS',
     false);//trueの場合、FORCE_ENABLE_ALL_EXPERIMENTSより優先される。trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が無効化される。
 define('FORCE_ENABLE_ALL_EXPERIMENTS', true);//trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が有効化される
 define('SENTRY_DSN', null);
-define('STRIPE_PK', 'pk_test_0RNcIk55aKfudx3A5mPrubfw');
-define('STRIPE_SK', 'sk_test_TvenYVzRR1Qmwf2Pta50tVuz');
+// Stripe API keys. https://dashboard.stripe.com/account/apikeys
+define('STRIPE_PUBLISHABLE_KEY', 'pk_test_9ne6tSqfUbBXSWqn1XwmeHfb');
+define('STRIPE_SECRET_KEY', 'sk_test_MNu6mPlFZRW6Y4KYAZwhGBsU');

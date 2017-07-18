@@ -1,11 +1,11 @@
 <?php
-App::import('Service', 'AppService');
+App::import('Service', 'ApiService');
 
-class ApiPaymentService extends AppService
+/**
+ * Class ApiPaymentService
+ */
+class ApiPaymentService extends ApiService
 {
-    private $stripePublicKey = STRIPE_PK;
-    private $stripeSecretKey = STRIPE_SK;
-
     /**
      * Generate a Token from Stripe API.
      * This method should not be used on production but only for test cases.
@@ -37,7 +37,7 @@ class ApiPaymentService extends AppService
         );
 
         // Use public key to create token
-        \Stripe\Stripe::setApiKey($this->stripePublicKey);
+        \Stripe\Stripe::setApiKey(STRIPE_PUBLISHABLE_KEY);
 
         try {
             $response = \Stripe\Token::create($request);
@@ -84,7 +84,7 @@ class ApiPaymentService extends AppService
             "description" => $description
         );
 
-        \Stripe\Stripe::setApiKey($this->stripeSecretKey);
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
         try {
             $response = \Stripe\Customer::create($customer);
