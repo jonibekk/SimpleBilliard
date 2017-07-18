@@ -29,9 +29,9 @@ if (isset($page_js_files) && !empty($page_js_files)) {
         echo $this->Html->script($script);
     }
 }
-echo $this->PageResource->getPageScript();
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
+echo $this->PageResource->getPageScript();
 ?>
 
 <?php //公開環境のみタグを有効化
