@@ -1,5 +1,5 @@
 <?php
-App::import('Service', 'ApiService');
+App::import('Service/Api', 'ApiService');
 
 /**
  * Class ApiPaymentService
