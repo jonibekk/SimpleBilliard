@@ -7,6 +7,18 @@ App::import('Service/Api', 'ApiPaymentService');
  */
 class ApiPaymentServiceTest extends GoalousTestCase
 {
+    // Card with specific error for Stripe API test
+    // https://stripe.com/docs/testing#cards-responses
+    // Error Cards
+    const CARD_DECLINED = "4000000000000002";
+    const CARD_INCORRECT_CVC = "4000000000000127";
+    const CARD_EXPIRED = "4000000000000069";
+    const CARD_PROCESSING_ERROR = "4000000000000119";
+    const CARD_INCORRECT_NUMBER = "4242424242424241";
+    // Valid Cards
+    const CARD_VISA = "4012888888881881";
+    const CARD_MASTERCARD = "5555555555554444";
+
     /**
      * Fixtures
      *
@@ -64,7 +76,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_createToken()
     {
-        $res = $this->ApiPaymentService->createToken("4012888888881881", "Goalous Taro", 11, 2026, "123");
+        $res = $this->ApiPaymentService->createToken(self::CARD_VISA, "Goalous Taro", 11, 2026, "123");
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("error", $res);
@@ -77,7 +89,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomer()
     {
-        $token = $this->getToken("4012888888881881");
+        $token = $this->getToken(self::CARD_VISA);
         $email = "test@goalous.com";
 
         $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
@@ -107,7 +119,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_cardDeclined()
     {
-        $token = $this->getToken("4000000000000002");
+        $token = $this->getToken(self::CARD_DECLINED);
         $email = "test@goalous.com";
 
         $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
@@ -120,7 +132,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_incorrectCVC()
     {
-        $token = $this->getToken("4000000000000127");
+        $token = $this->getToken(self::CARD_INCORRECT_CVC);
         $email = "test@goalous.com";
 
         $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
@@ -133,7 +145,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_cardExpired()
     {
-        $token = $this->getToken("4000000000000069");
+        $token = $this->getToken(self::CARD_EXPIRED);
         $email = "test@goalous.com";
 
         $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
@@ -146,7 +158,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_processingError()
     {
-        $token = $this->getToken("4000000000000119");
+        $token = $this->getToken(self::CARD_PROCESSING_ERROR);
         $email = "test@goalous.com";
 
         $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
@@ -159,7 +171,7 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_incorrectCardNumber()
     {
-        $token = $this->ApiPaymentService->createToken("4242424242424241", "Goalous Taro", 11, 2026, "123");
+        $token = $this->ApiPaymentService->createToken(self::CARD_INCORRECT_NUMBER, "Goalous Taro", 11, 2026, "123");
 
         $this->assertNotNull($token, "Something very wrong happened");
         $this->assertArrayHasKey("error", $token);
