@@ -40,6 +40,55 @@ class ApiPaymentServiceTest extends GoalousTestCase
     }
 
     /**
+     * Generate a Token from Stripe API.
+     * This method should not be used on production but only for test cases.
+     * For production use stripe.js instead.
+     *
+     * @param string $cardNumber
+     * @param string $cardHolder
+     * @param int    $expireMonth
+     * @param int    $expireYear
+     * @param string $cvc
+     *
+     * @return array
+     */
+    public function createToken(string $cardNumber, string $cardHolder, int $expireMonth, int $expireYear, string $cvc): array
+    {
+        $result = [
+            "error" => false,
+            "message" => null
+        ];
+
+        $request = array(
+            "card" => array(
+                "number" => $cardNumber,
+                "exp_month" => $expireMonth,
+                "exp_year" => $expireYear,
+                "cvc" => $cvc,
+                "name" => $cardHolder
+            )
+        );
+
+        // Use public key to create token
+        \Stripe\Stripe::setApiKey(STRIPE_PUBLISHABLE_KEY);
+
+        try {
+            $response = \Stripe\Token::create($request);
+
+            $result["token"] = $response->id;
+        }
+        catch (Exception $e) {
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
+        return $result;
+    }
+
+    /**
      * Get a new token for the given credit card.
      *
      * @param string $cardNumber
@@ -48,10 +97,12 @@ class ApiPaymentServiceTest extends GoalousTestCase
      */
     private function getToken(string $cardNumber): array
     {
-        $res = $this->ApiPaymentService->createToken($cardNumber, "Goalous Taro", 11, 2026, "123");
+        $res = $this->createToken($cardNumber, "Goalous Taro", 11, 2026, "123");
 
         $this->assertNotNull($res);
         $this->assertArrayHasKey("token", $res);
+        $this->assertArrayHasKey("error", $res);
+        $this->assertFalse($res["error"]);
 
         return $res;
     }
@@ -69,19 +120,6 @@ class ApiPaymentServiceTest extends GoalousTestCase
         $this->assertArrayNotHasKey("customer_id", $apiResponse);
         $this->assertArrayHasKey("errorCode", $apiResponse);
         $this->assertEquals($errorCode, $apiResponse["errorCode"]);
-    }
-
-    /**
-     * Test Token generation
-     */
-    function test_createToken()
-    {
-        $res = $this->ApiPaymentService->createToken(self::CARD_VISA, "Goalous Taro", 11, 2026, "123");
-
-        $this->assertNotNull($res, "Something very wrong happened");
-        $this->assertArrayHasKey("error", $res);
-        $this->assertArrayHasKey("token", $res);
-        $this->assertFalse($res["error"]);
     }
 
     /**
@@ -164,18 +202,5 @@ class ApiPaymentServiceTest extends GoalousTestCase
         $res = $this->ApiPaymentService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "processing_error");
-    }
-
-    /**
-     * Assert it can handle incorrect card number
-     */
-    function test_registerCustomer_incorrectCardNumber()
-    {
-        $token = $this->ApiPaymentService->createToken(self::CARD_INCORRECT_NUMBER, "Goalous Taro", 11, 2026, "123");
-
-        $this->assertNotNull($token, "Something very wrong happened");
-        $this->assertArrayHasKey("error", $token);
-        $this->assertArrayNotHasKey("token", $token);
-        $this->assertTrue($token["error"]);
     }
 }
