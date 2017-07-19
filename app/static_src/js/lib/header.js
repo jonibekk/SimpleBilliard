@@ -407,10 +407,11 @@ function displaySelectorFluffy(selector) {
     }, 100);
 }
 
+// A global function that shows / hides the mobile navigation when the hamburger icon is tapped.
 function toggleNav(){
     var header = document.getElementsByClassName("header")[0],
-        layerBlack=document.getElementById('layer-black'),
-        menuNotify=document.getElementsByClassName("js-unread-point-on-hamburger")[0];
+        layerBlack = document.getElementById('layerBlack'),
+        menuNotify = document.getElementsByClassName("js-unread-point-on-hamburger")[0],
         navIcon = header.getElementsByClassName('toggle-icon')[0];
     if(header.classList.contains('mod-openNav')){
         header.classList.remove('mod-openNav');
