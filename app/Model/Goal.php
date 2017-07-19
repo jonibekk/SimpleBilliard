@@ -2311,6 +2311,10 @@ class Goal extends AppModel
                 'Goal.completed'     => null,
                 'GoalMember.del_flg' => false
             ],
+            'order'      => [
+                'GoalMember.priority DESC',
+                'Goal.end_date ASC'
+            ]
         ];
         // アクション可能なゴールを抽出(未完了なKRが存在するか)
         $options['conditions'][] = $this->buildSubQueryIncompleteKrExists();
