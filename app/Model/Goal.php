@@ -1080,6 +1080,7 @@ class Goal extends AppModel
             'order'      => [
                 'Goal.completed ASC',
                 'Goal.end_date desc',
+                'GoalMember.priority DESC'
             ],
             'fields'     => [
                 'Goal.id',
@@ -1179,6 +1180,14 @@ class Goal extends AppModel
                     ],
                     'conditions' => ['TargetCollabo.user_id' => $user_id],
                 ],
+            ],
+            'joins'    => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => ['GoalMember.goal_id = Goal.id'],
+                ]
             ]
         ];
         $goals = $this->find('all', $options);
