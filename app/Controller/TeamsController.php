@@ -187,6 +187,14 @@ class TeamsController extends AppController
     {
         $this->request->allowMethod('post');
 
+        // TODO: Disabled to delete team in all case now. see -> https://jira.goalous.com/browse/GL-6022
+        $this->log(sprintf("■ User attempted to delete the team! user_id: %s, team_id: %s, debugger trace: %s",
+            $this->my_uid,
+            var_export(CakeSession::read('current_team_id'), true),
+            Debugger::trace()
+        ));
+        throw new RuntimeException(__('You cannot delete the team. Please contact to Goalous team.'));
+
         // チーム管理者かチェック
         try {
             $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
