@@ -1077,6 +1077,10 @@ class Goal extends AppModel
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
+            'order'      => [
+                'Goal.completed ASC',
+                'Goal.end_date desc',
+            ],
             'fields'     => [
                 'Goal.id',
                 'Goal.user_id',
@@ -1178,6 +1182,7 @@ class Goal extends AppModel
             ]
         ];
         $goals = $this->find('all', $options);
+        #$goals = $this->sortEndDate($goals);
         return Hash::combine($goals, '{n}.Goal.id', '{n}');
     }
 
