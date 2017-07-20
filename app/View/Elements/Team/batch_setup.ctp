@@ -47,14 +47,11 @@
     <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
         <footer>
             <a href="#" class="btn btn-default" data-toggle="modal"
-                data-target="#ModalAddMembersByCsv"><?= __('Add new members.') ?></a>
-            <a href="#" class="btn btn-default" data-toggle="modal"
                 data-target="#ModalEditMembersByCsv"><?= __('Update members information') ?></a>
         </footer>
     <?php endif; ?>
 </section>
 <?= $this->App->viewEndComment()?>
 <?php $this->start('modal') ?>
-<?= $this->element('modal_add_members_by_csv') ?>
 <?= $this->element('modal_edit_members_by_csv') ?>
 <?php $this->end() ?>

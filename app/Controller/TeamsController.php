@@ -637,20 +637,6 @@ class TeamsController extends AppController
         return $this->redirect('/');
     }
 
-    function download_add_members_csv_format()
-    {
-        $team_id = $this->Session->read('current_team_id');
-        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
-
-        $this->layout = false;
-        $filename = 'add_member_csv_format';
-        //heading
-        $th = $this->Team->TeamMember->_getCsvHeading(true);
-        $td = [];
-        $this->set(compact('filename', 'th', 'td'));
-        $this->_setResponseCsv($filename);
-    }
-
     function ajax_upload_update_members_csv()
     {
         $this->request->allowMethod('post');
@@ -684,51 +670,6 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    function ajax_upload_new_members_csv()
-    {
-        $this->request->allowMethod('post');
-        $result = [
-            'error' => false,
-            'css'   => 'alert-success',
-            'title' => __("Registration completed."),
-            'msg'   => '',
-        ];
-        $this->_ajaxPreProcess('post');
-        $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
-        $this->Team->TeamMember->begin();
-        $save_res = $this->Team->TeamMember->saveNewMembersFromCsv($csv);
-        if ($save_res['error']) {
-            $this->Team->TeamMember->rollback();
-            $result['error'] = true;
-            $result['css'] = 'alert-danger';
-            $result['msg'] = $save_res['error_msg'];
-            if ($save_res['error_line_no'] == 0) {
-                $result['title'] = __("Error occurred.");
-            } else {
-                $result['title'] = __("Error in the column %s (Column number included in text).",
-                    $save_res['error_line_no']);
-            }
-        } else {
-            $this->Team->TeamMember->commit();
-            $team = $this->Team->findById($this->Session->read('current_team_id'));
-            //send invite mail
-            foreach ($this->Team->TeamMember->csv_datas as $data) {
-                //save invite mail data
-                $invite = $this->Team->Invite->saveInvite(
-                    $data['Email']['email'],
-                    $this->Team->current_team_id,
-                    $this->Auth->user('id'),
-                    null
-                );
-                //send invite mail
-                $this->GlEmail->sendMailInvite($invite, $team['Team']['name']);
-            }
-
-            $result['msg'] = __("%s members are added.", $save_res['success_count']);
-        }
-        return $this->_ajaxGetResponse($result);
-    }
-
     function download_team_members_csv()
     {
         $team_id = $this->Session->read('current_team_id');
@@ -737,7 +678,7 @@ class TeamsController extends AppController
         $filename = 'team_members_' . date('YmdHis');
 
         //見出し
-        $th = $this->Team->TeamMember->_getCsvHeading(false);
+        $th = $this->Team->TeamMember->_getCsvHeading();
         $td = $this->Team->TeamMember->getAllMembersCsvData();
 
         $this->set(compact('filename', 'th', 'td'));
