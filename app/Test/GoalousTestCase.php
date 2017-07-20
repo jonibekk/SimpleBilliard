@@ -435,7 +435,6 @@ class GoalousTestCase extends CakeTestCase
             'timezone'                     => 9,
             'service_use_status'           => 1,
             'country'                      => 1,
-            'address'                      => 'Lorem ipsum dolor sit amet',
             'service_use_state_start_date' => '2017-07-20',
             'free_trial_days'              => 999,
         ];
