@@ -39,6 +39,15 @@ $(function () {
                 break;
         }
     });
+
+    /* For moving right_column by sub header */
+    // TODO:delete after upgrading native app version
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
+      $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+    if (typeof cake.request_params.after_click !== 'undefined') {
+      $("#" + cake.request_params.after_click).trigger('click');
+    }
 });
 
 var bindCtrlEnterAction = function (selector, callback) {

@@ -102,13 +102,6 @@ $(function () {
         fastClick();
     }
 
-    if (typeof cake.request_params.named.after_click !== 'undefined') {
-        $("#" + cake.request_params.named.after_click).trigger('click');
-    }
-    if (typeof cake.request_params.after_click !== 'undefined') {
-        $("#" + cake.request_params.after_click).trigger('click');
-    }
-
     $(".click-show").on("click", function () {
             $("#PostFormPicture").css("display", "block")
         }
