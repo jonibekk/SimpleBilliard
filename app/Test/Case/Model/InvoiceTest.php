@@ -36,4 +36,6 @@ class InvoiceTest extends CakeTestCase {
 		parent::tearDown();
 	}
 
+	// Please delete when you implement test code
+	public function test_dummy() {}
 }
