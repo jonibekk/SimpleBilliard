@@ -428,11 +428,16 @@ class GoalousTestCase extends CakeTestCase
     function createTeam($data = [])
     {
         $default = [
-            'start_term_month' => 4,
-            'border_months'    => 6,
-            'type'             => 3,
-            'name'             => 'Test Team.',
-            'timezone'         => 9,
+            'start_term_month'             => 4,
+            'border_months'                => 6,
+            'type'                         => 3,
+            'name'                         => 'Test Team.',
+            'timezone'                     => 9,
+            'service_use_status'           => 1,
+            'country'                      => 1,
+            'address'                      => 'Lorem ipsum dolor sit amet',
+            'service_use_state_start_date' => '2017-07-20',
+            'free_trial_days'              => 999,
         ];
         $team = am($default, $data);
         $this->Team->create();
@@ -451,7 +456,7 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->User->save(['active_flg' => true], false);
         $userId = $this->Team->TeamMember->User->getLastInsertId();
         $this->Team->TeamMember->create();
-        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true], false);
+        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true, 'status' => 1], false);
         return $userId;
     }
 
