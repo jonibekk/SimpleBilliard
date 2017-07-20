@@ -13,6 +13,7 @@ class PaymentSettingFixture extends CakeTestFixture {
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
 		'type' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'charge type(0: Invoice, 1: Credit card)'),
+		'currency' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'currencty type(ex 1: yen, 2: US Doller...)'),
 		'amount_per_user' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 10, 'unsigned' => true, 'comment' => 'Service use amount per user'),
 		'payer_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Payer name', 'charset' => 'utf8mb4'),
 		'company_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Company name', 'charset' => 'utf8mb4'),
@@ -38,22 +39,6 @@ class PaymentSettingFixture extends CakeTestFixture {
  * @var array
  */
 	public $records = array(
-		array(
-			'id' => '',
-			'team_id' => '',
-			'type' => 1,
-			'amount_per_user' => 1,
-			'payer_name' => 'Lorem ipsum dolor sit amet',
-			'company_name' => 'Lorem ipsum dolor sit amet',
-			'company_address' => 'Lorem ipsum dolor sit amet',
-			'company_tel' => 'Lorem ipsum dolor sit amet',
-			'payment_base_day' => 1,
-			'email' => 'Lorem ipsum dolor sit amet',
-			'del_flg' => 1,
-			'deleted' => 1,
-			'created' => 1,
-			'modified' => 1
-		),
 	);
 
 }
