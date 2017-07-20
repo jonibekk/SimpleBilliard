@@ -29,9 +29,16 @@ if (isset($page_js_files) && !empty($page_js_files)) {
         echo $this->Html->script($script);
     }
 }
-echo $this->PageResource->getPageScript();
+
+// Loading angular app js for only team members / team visions / group visions page
+if ($this->request->params['controller'] === 'teams' && $this->request->params['action'] === 'main') {
+    echo $this->Html->script('/js/ng_vendors.min');
+    echo $this->Html->script('/js/ng_app.min');
+}
+
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
+echo $this->PageResource->getPageScript();
 ?>
 
 <?php //公開環境のみタグを有効化
