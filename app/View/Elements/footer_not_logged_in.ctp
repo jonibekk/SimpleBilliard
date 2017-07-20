@@ -117,5 +117,4 @@ if (!isset($top_lang)) {
         </div><!--//container-->
     </div><!--//bottom-bar-->
 </footer>
-<div id="layer-black"></div>
 <?= $this->App->viewEndComment() ?>
