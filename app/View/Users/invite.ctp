@@ -2,7 +2,6 @@
 
 <div id="UserInvite">
     <section class="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
-<!--        <h1 class="gl-form-heading">招待先のメールアドレスを入力してください</h1>-->
         <p class="gl-form-description">招待先のメールアドレスを入力してください</p>
         <form class="">
             <div class="mb_16px">
