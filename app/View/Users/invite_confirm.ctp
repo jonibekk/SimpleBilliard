@@ -7,8 +7,8 @@
 <div id="UserInvite">
     <section class="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
         <form class="">
-            <div class="mb_32px">
-                <p class="title">招待先メールアドレス(3)</p>
+            <div class="inviteCfmBlock">
+                <h2 class="title">招待先メールアドレス(3)</h2>
                 <ul class="ml_5px">
                     <li>test1@example.com</li>
                     <li>test1@example.com</li>
@@ -16,8 +16,8 @@
                     <li>test1@example.com</li>
                 </ul>
             </div>
-            <div class="mb_32px">
-                <p class="title">請求料金</p>
+            <div class="inviteCfmBlock mod-bdt">
+                <h2 class="title">請求料金</h2>
                 <div class="ml_5px">
                     <dl class="totalCharge">
                         <dt class="totalCharge-label">請求料金合計</dt>
@@ -62,14 +62,6 @@
                         <i class="fa fa-question-circle mr_4px" aria-hidden="true"></i>詳細はこちら
                     </a>
                 </div>
-<!--                <dl class="totalChargeFormulaDetail">-->
-<!--                    <dt class="totalChargeFormulaDetail-item">3people</dt>-->
-<!--                    <dd class="totalChargeFormulaDetail-description">請求人数</dd>-->
-<!--                    <dt class="totalChargeFormulaDetail-item">¥1,980</dt>-->
-<!--                    <dd class="totalChargeFormulaDetail-description">1ヶ月の利用料金</dd>-->
-<!--                    <dt class="totalChargeFormulaDetail-item">20 days</dt>-->
-<!--                    <dd class="totalChargeFormulaDetail-description">利用日数(日割り)</dd>-->
-<!--                </dl>-->
             </div>
             <div class="serviceTermAgreement mb_8px">
                 <label><input type="checkbox" name="service_term_agreement" class="serviceTermAgreement-cb"><a href="#">利用規約</a>に同意する</label>
