@@ -148,6 +148,27 @@ class GlEmailComponent extends Component
     }
 
     /**
+     * Sending a alert of expires
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $teamName
+     * @param string $expireDate
+     * @param string $mailTemplate
+     */
+    public function sendMailExpireAlert(
+        int $toUid,
+        int $teamId,
+        string $teamName,
+        string $expireDate,
+        string $mailTemplate
+    ) {
+        $item = compact('teamName', 'expireDate');
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにて招待メールを送信
      *
      * @param array $invite_data

@@ -2544,28 +2544,21 @@ class TeamMember extends AppModel
     }
 
     /**
-     * find admin profiles
+     * find admin Ids
      *
      * @param int $teamId
      *
      * @return array
      */
-    function findAdmins(int $teamId): array
+    function findAdminList(int $teamId): array
     {
-
-        $fields = $this->User->profileFields;
-        foreach ($fields as &$field) {
-            $field = 'User.' . $field;
-        }
-        $fields[] = 'Email.email';
-
         $options = [
             'conditions' => [
                 'TeamMember.team_id'    => $teamId,
                 'TeamMember.admin_flg'  => true,
                 'TeamMember.active_flg' => true
             ],
-            'fields'     => $fields,
+            'fields'     => ['TeamMember.user_id'],
             'joins'      => [
                 [
                     'type'       => 'INNER',
@@ -2576,19 +2569,10 @@ class TeamMember extends AppModel
                         'User.active_flg' => true
                     ],
                 ],
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'emails',
-                    'alias'      => 'Email',
-                    'conditions' => [
-                        'User.primary_email_id = Email.id',
-                    ],
-                ],
             ],
         ];
 
-        $res = $this->find('all', $options);
-        debug($res);
+        $res = $this->find('list', $options);
         return $res;
     }
 }

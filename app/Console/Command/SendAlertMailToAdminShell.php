@@ -60,9 +60,9 @@ class SendAlertMailToAdminShell extends AppShell
         $freeTrialTeams = $this->Team->findByServiceUseStatus(Team::SERVICE_USE_STATUS_FREE_TRIAL);
         $targetTeams = $this->filterTargetTeams(Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL, $freeTrialTeams);
         foreach ($targetTeams as $team) {
-            $admins = $this->TeamMember->findAdmins($team['id']);
-            foreach ($admins as $toUser) {
-                $this->sendEmail(1, $toUser, $team);
+            $adminList = $this->TeamMember->findAdminList($team['id']);
+            foreach ($adminList as $toUid) {
+                $this->sendEmail(1, $toUid, $team);
             }
         }
 
