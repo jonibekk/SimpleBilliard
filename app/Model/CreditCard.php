@@ -32,7 +32,7 @@ class CreditCard extends AppModel {
         ],
         'customer_code' => [
             'maxLength' => ['rule' => ['maxLength', 255]],
-            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'isString'  => ['rule' => 'isString'],
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',

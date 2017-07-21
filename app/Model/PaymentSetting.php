@@ -68,7 +68,7 @@ class PaymentSetting extends AppModel {
         ],
         'payer_name' => [
             'maxLength' => ['rule' => ['maxLength', 255]],
-            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'isString'  => ['rule' => 'isString'],
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',
@@ -76,7 +76,7 @@ class PaymentSetting extends AppModel {
         ],
         'company_name' => [
             'maxLength' => ['rule' => ['maxLength', 255]],
-            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'isString'  => ['rule' => 'isString'],
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',
@@ -84,7 +84,7 @@ class PaymentSetting extends AppModel {
         ],
         'company_address' => [
             'maxLength' => ['rule' => ['maxLength', 255]],
-            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'isString'  => ['rule' => 'isString'],
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',
