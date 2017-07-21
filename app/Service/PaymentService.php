@@ -4,6 +4,9 @@ App::uses('Team', 'Model');
 App::uses('PaymentSetting', 'Model');
 App::uses('CreditCard', 'Model');
 
+/**
+ * Class PaymentService
+ */
 class PaymentService extends  AppService
 {
 
@@ -92,7 +95,7 @@ class PaymentService extends  AppService
 
             $PaymentSetting->commit();
             $CreditCard->commit();
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return false;

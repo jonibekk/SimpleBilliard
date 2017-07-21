@@ -1,8 +1,11 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::import('Service/Api', 'ApiPaymentService');
+App::import('Service/Api', 'ApiStripeService');
 App::import('Service', 'PaymentService');
 
+/**
+ * Class PaymentController
+ */
 class PaymentController extends ApiController
 {
     /**
@@ -37,14 +40,14 @@ class PaymentController extends ApiController
         $paymentType = Hash::get($this->request->data, 'Payment.type');
         // Register Credit Card
         if ($paymentType == PaymentSetting::PAYMENT_TYPE_CREDIT_CARD) {
-            /** @var ApiPaymentService $ApiPaymentService */
-            $ApiPaymentService = ClassRegistry::init("ApiPaymentService");
+            /** @var ApiStripeService $ApiStripeService */
+            $ApiStripeService = ClassRegistry::init("ApiStripeService");
             $token = Hash::get($this->request->data, 'Payment.token');
             $email = Hash::get($this->request->data, 'Payment.email');
             $companyName = Hash::get($this->request->data, 'Payment.company_name');
 
             // Register customer at Stripe
-            $stripeResponse = $ApiPaymentService->registerCustomer($token, $email, $companyName);
+            $stripeResponse = $ApiStripeService->registerCustomer($token, $email, $companyName);
             if ($stripeResponse['error'] === true) {
                 return $this->_getResponseBadFail($stripeResponse['message']);
             }
@@ -58,9 +61,9 @@ class PaymentController extends ApiController
 
             // Check if the Payment if in the correct currency
             $currency = Hash::get($this->request->data, 'Payment.currency');
-            if ($stripeResponse['card']['country'] == 'JP' && $currency !== PaymentSetting::CURRENCY_JPY) {
+            if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_JPY) {
                 // Delete customer from Stripe
-                $ApiPaymentService->deleteCustomer($customerID);
+                $ApiStripeService->deleteCustomer($customerID);
 
                 // TODO: Add translation for message
                 return $this->_getResponseBadFail("Your Credit Card does not match your country settings");
@@ -68,9 +71,12 @@ class PaymentController extends ApiController
 
             // Register Payment on database
             $res = ($PaymentService->createCreditCardPayment(Hash::get($this->request->data, 'Payment'), $customerID));
-            if ($res) {
-                return $this->_getResponseSuccess();
+            if (!$res) {
+                return $this->_getResponseBadFail(__("An error occurred while processing."));
             }
+
+            // New Payment registered with sucess
+            return $this->_getResponseSuccess();
         }
 
         // TODO: Register Invoice
