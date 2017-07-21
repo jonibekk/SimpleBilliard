@@ -335,8 +335,12 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false, $teamId = null)
-    {
+    public function getAllMemberUserIdList(
+        $with_me = true,
+        $required_active = true,
+        $required_evaluate = false,
+        $teamId = null
+    ) {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -2508,8 +2512,9 @@ class TeamMember extends AppModel
     /**
      * active admin as team member and user
      *
-     * @param  int  $userId
-     * @param  int  $teamId
+     * @param  int $userId
+     * @param  int $teamId
+     *
      * @return bool
      */
     public function isActiveAdmin(int $userId, int $teamId): bool
@@ -2536,5 +2541,54 @@ class TeamMember extends AppModel
 
         $res = $this->find('first', $options);
         return (bool)$res;
+    }
+
+    /**
+     * find admin profiles
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function findAdmins(int $teamId): array
+    {
+
+        $fields = $this->User->profileFields;
+        foreach ($fields as &$field) {
+            $field = 'User.' . $field;
+        }
+        $fields[] = 'Email.email';
+
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id'    => $teamId,
+                'TeamMember.admin_flg'  => true,
+                'TeamMember.active_flg' => true
+            ],
+            'fields'     => $fields,
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = TeamMember.user_id',
+                        'User.active_flg' => true
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'User.primary_email_id = Email.id',
+                    ],
+                ],
+            ],
+        ];
+
+        $res = $this->find('all', $options);
+        debug($res);
+        return $res;
     }
 }

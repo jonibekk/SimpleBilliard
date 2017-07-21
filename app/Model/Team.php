@@ -602,4 +602,25 @@ class Team extends AppModel
         return $ret;
     }
 
+    /**
+     * @param int   $serviceUseStatus
+     * @param array $fields
+     *
+     * @return array
+     */
+    function findByServiceUseStatus(
+        int $serviceUseStatus,
+        $fields = ['id', 'name', 'service_use_state_start_date', 'free_trial_days', 'timezone']
+    ): array {
+        $options = [
+            'conditions' => [
+                'service_use_status' => $serviceUseStatus
+            ],
+            'fields'     => $fields,
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::extract($res, '{n}.Team');
+        return $res;
+    }
+
 }

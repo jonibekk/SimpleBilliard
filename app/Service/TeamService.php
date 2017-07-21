@@ -43,4 +43,9 @@ class TeamService extends AppService
         return true;
     }
 
+    function findFreeTrialTeams()
+    {
+
+    }
+
 }
