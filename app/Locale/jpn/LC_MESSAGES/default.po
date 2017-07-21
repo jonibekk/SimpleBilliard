@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-19 17:15+0900\n"
+"PO-Revision-Date: 2017-07-21 15:16+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -437,8 +437,6 @@ msgstr "この投稿はあなたのものではありません。"
 msgid "Deleted the post."
 msgstr "投稿を削除しました。"
 
-#, fuzzy
-#| msgid "This goal doesn't exist."
 msgid "This post doesn't exist."
 msgstr "ゴールが存在しません。"
 
@@ -629,18 +627,6 @@ msgstr "%s行目でエラーが見つかりました。"
 
 msgid "%s members updated."
 msgstr "%s人のメンバーを更新しました。"
-
-msgid "Registration completed."
-msgstr "登録が完了しました。"
-
-msgid "Error occurred."
-msgstr "エラーがあります。"
-
-msgid "Error in the column %s (Column number included in text)."
-msgstr "%s行目でエラーが見つかりました。"
-
-msgid "%s members are added."
-msgstr "%s人のメンバーを追加しました。"
 
 msgid "Last evaluation is completed."
 msgstr "正常に最終評価が完了しました。"
@@ -1453,26 +1439,20 @@ msgstr "存在しないメンバーIDです。"
 msgid "Invalid score."
 msgstr "定義されていないスコアです。"
 
-msgid "At least one data is required."
-msgstr "データが１件もありません。"
+msgid "Email(*, Not changed)"
+msgstr "メール(*, 変更できません)"
 
-msgid "This email address is found in this team."
-msgstr "すでにチームに参加しているメールアドレスです。"
+msgid "First Name(*, Not changed)"
+msgstr "ローマ字名(*, 変更できません)"
 
-msgid "This Member ID is found in this team."
-msgstr "すでに存在するメンバーIDです。"
-
-msgid "Email(*)"
-msgstr "メール(*)"
+msgid "Last Name(*, Not changed)"
+msgstr "ローマ字姓(*, 変更できません)"
 
 msgid "Member ID(*)"
 msgstr "メンバーID(*)"
 
-msgid "First Name(*)"
-msgstr "ローマ字名(*)"
-
-msgid "Last Name(*)"
-msgstr "ローマ字姓(*)"
+msgid "Member active status(*)"
+msgstr "メンバーアクティブ状態(*)"
 
 msgid "Administrator(*)"
 msgstr "管理者(*)"
@@ -1482,30 +1462,6 @@ msgstr "評価対象(*)"
 
 msgid "Member Type"
 msgstr "メンバータイプ"
-
-msgid "Language of Local Name"
-msgstr "ローカル姓名の言語コード"
-
-msgid "Local First Name"
-msgstr "ローカル名"
-
-msgid "Local Last Name"
-msgstr "ローカル姓"
-
-msgid "Telephone Number"
-msgstr "電話"
-
-msgid "Gender"
-msgstr "性別"
-
-msgid "Birth Year"
-msgstr "誕生年"
-
-msgid "Birth Month"
-msgstr "誕生月"
-
-msgid "Birthday"
-msgstr "誕生日"
 
 msgid "Group 1"
 msgstr "グループ1"
@@ -1551,18 +1507,6 @@ msgstr "評価者6"
 
 msgid "Evaluator 7"
 msgstr "評価者7"
-
-msgid "Email(*, Not changed)"
-msgstr "メール(*, 変更できません)"
-
-msgid "First Name(*, Not changed)"
-msgstr "ローマ字名(*, 変更できません)"
-
-msgid "Last Name(*, Not changed)"
-msgstr "ローマ字姓(*, 変更できません)"
-
-msgid "Member active status(*)"
-msgstr "メンバーアクティブ状態(*)"
 
 msgid "Member name"
 msgstr "メンバー姓名"
@@ -1638,27 +1582,6 @@ msgstr "グループ名"
 
 msgid "%s is duplicated."
 msgstr "%sが重複しています。"
-
-msgid "%s should be entered in less than 20 characters."
-msgstr "%sは20文字以内で入力してください。"
-
-msgid "Phone number"
-msgstr "電話番号"
-
-msgid ""
-"Telephone number is incorrect. Single-byte number and '-()' are allowed."
-msgstr "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
-
-msgid "Choose 'male' or 'female'."
-msgstr "'male'もしくは'female'で記入してください。"
-
-msgid "It is unsupported language code of the local first name and last name."
-msgstr "姓名にサポートされていない言語が入っています。"
-
-msgid ""
-"If you want to fill in the date of birth, please fill out all of the items "
-"of date."
-msgstr "誕生日を記入する場合は年月日のすべての項目を記入してください。"
 
 msgid "Active status"
 msgstr "メンバーアクティブ状態"
@@ -2524,8 +2447,6 @@ msgstr "すべてのコメントを見る(%s)"
 msgid "more"
 msgstr "もっと見る"
 
-#, fuzzy
-#| msgid "Edit goal"
 msgid "Edit Goal"
 msgstr "ゴールを編集"
 
@@ -2767,81 +2688,6 @@ msgstr "プレス関連のお問い合わせ"
 msgid "Contact for cooperation"
 msgstr "協業のお問い合わせ"
 
-msgid "Toggle navigation"
-msgstr "ナビゲーションの開閉"
-
-msgid "Features"
-msgstr "機能"
-
-msgid "Pricing"
-msgstr "料金"
-
-msgid "Login"
-msgstr "ログイン"
-
-msgid "Create New Team"
-msgstr "新しいチームをつくる"
-
-msgid "Home"
-msgstr "ホーム"
-
-msgid "Create a team"
-msgstr "チームを作成"
-
-msgid "No new message"
-msgstr "未読のメッセージはありません。"
-
-msgid "Mark All as Read"
-msgstr "すべて既読にする"
-
-msgid "No new notification"
-msgstr "未読の通知はありません。"
-
-msgid "See All"
-msgstr "すべて見る"
-
-msgid "User Setting"
-msgstr "ユーザー設定"
-
-msgid "Team Setting"
-msgstr "チーム設定"
-
-msgid "Evaluation"
-msgstr "評価"
-
-msgid "Goal Approval"
-msgstr "ゴール認定"
-
-msgid "User Guide (jp)"
-msgstr "ユーザー利用ガイド"
-
-msgid "How to make a Goal (jp)"
-msgstr "ゴール作成方法"
-
-msgid "Tutorial"
-msgstr "チュートリアル"
-
-msgid "Support"
-msgstr "サポート"
-
-msgid "Logout"
-msgstr "ログアウト"
-
-msgid "Goal"
-msgstr "ゴール"
-
-msgid "Team"
-msgstr "チーム"
-
-msgid "Circle"
-msgstr "サークル"
-
-msgid "Newsfeed"
-msgstr "ニュースフィード"
-
-msgid "Related Goals"
-msgstr "関連ゴール"
-
 msgid "Action list"
 msgstr "アクションリスト"
 
@@ -2865,29 +2711,6 @@ msgstr "例) 最新情報を共有しましょう。"
 
 msgid "Smaller than 10MB"
 msgstr "10MB以下"
-
-msgid "Add new members"
-msgstr "新規メンバーを追加する"
-
-msgid "Download template."
-msgstr "テンプレートをダウンロード"
-
-msgid "Download CSV template and edit it without any change in header."
-msgstr ""
-"CSVフォーマットのテンプレートをダウンロードしてください。テンプレートのヘッ"
-"ダーは変更しないでください。"
-
-msgid "Upload the file."
-msgstr "ファイルのアップロード"
-
-msgid "Upload edited file."
-msgstr "編集したファイルをアップロードしてください。"
-
-msgid "Choose a file"
-msgstr "ファイルを選択"
-
-msgid "Change to another file."
-msgstr "別のファイルに変更する"
 
 msgid "Members in this circle."
 msgstr "このサークルのメンバー"
@@ -2968,11 +2791,17 @@ msgstr ""
 "CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダー"
 "は変更しないでください。"
 
+msgid "Upload the file."
+msgstr "ファイルのアップロード"
+
 msgid "Upload edited users information."
 msgstr "変更したユーザ情報のファイルをアップロードしてください。"
 
 msgid "Choose a file."
 msgstr "ファイルを選択"
+
+msgid "Change to another file."
+msgstr "別のファイルに変更する"
 
 msgid "Members in this topic"
 msgstr "会話のメンバー (%s)"
@@ -3171,6 +3000,12 @@ msgstr "投稿を削除"
 msgid "Do you really want to delete this post?"
 msgstr "本当にこの投稿を削除しますか？"
 
+msgid "Circle"
+msgstr "サークル"
+
+msgid "Goal"
+msgstr "ゴール"
+
 msgid "Team Vision"
 msgstr "チームビジョン"
 
@@ -3368,6 +3203,75 @@ msgstr "フォロワー"
 msgid "KR"
 msgstr "KR"
 
+msgid "Toggle navigation"
+msgstr "ナビゲーションの開閉"
+
+msgid "Features"
+msgstr "機能"
+
+msgid "Pricing"
+msgstr "料金"
+
+msgid "Login"
+msgstr "ログイン"
+
+msgid "Create New Team"
+msgstr "新しいチームをつくる"
+
+msgid "Home"
+msgstr "ホーム"
+
+msgid "Create a team"
+msgstr "チームを作成"
+
+msgid "No new message"
+msgstr "未読のメッセージはありません。"
+
+msgid "Mark All as Read"
+msgstr "すべて既読にする"
+
+msgid "No new notification"
+msgstr "未読の通知はありません。"
+
+msgid "See All"
+msgstr "すべて見る"
+
+msgid "User Setting"
+msgstr "ユーザー設定"
+
+msgid "Team Setting"
+msgstr "チーム設定"
+
+msgid "Evaluation"
+msgstr "評価"
+
+msgid "Goal Approval"
+msgstr "ゴール認定"
+
+msgid "User Guide (jp)"
+msgstr "ユーザー利用ガイド"
+
+msgid "How to make a Goal (jp)"
+msgstr "ゴール作成方法"
+
+msgid "Tutorial"
+msgstr "チュートリアル"
+
+msgid "Support"
+msgstr "サポート"
+
+msgid "Logout"
+msgstr "ログアウト"
+
+msgid "Team"
+msgstr "チーム"
+
+msgid "Newsfeed"
+msgstr "ニュースフィード"
+
+msgid "Related Goals"
+msgstr "関連ゴール"
+
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
 
@@ -3486,29 +3390,22 @@ msgstr "2017年夏まで完全無料！今すぐお試しください。"
 msgid "Are you on Goalous? %s. Any question ? %s."
 msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
 
-msgid "Batch Registration"
-msgstr "一括登録"
+msgid "Batch Update"
+msgstr "一括更新"
 
-msgid "Managed registration and update of team members by CSV."
-msgstr "CSVによる登録と更新を一括で行います。"
+msgid "Managed update of team members by CSV."
+msgstr "CSVによる更新を一括で行います。"
 
 msgid "Download CSV. After editing, upload it."
 msgstr ""
 "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファ"
 "イルをアップロードしてください。"
 
-msgid ""
-"Existing accounts will be updated. Non-registered members will be registered "
-"and get an invitation email."
-msgstr ""
-"すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待"
-"メールが送信されます。"
+msgid "Existing accounts will be updated."
+msgstr "すでに登録済のメンバーはデータ更新されます。"
 
 msgid "This function can be used only by PC."
 msgstr "本機能はPCにてご利用できます。"
-
-msgid "Add new members."
-msgstr "新しいメンバーを追加"
 
 msgid "Update members information"
 msgstr "メンバーの情報を更新"
@@ -3947,8 +3844,6 @@ msgstr "変更した評価データのファイルをアップロードしてく
 msgid "Upload"
 msgstr "アップロード"
 
-#, fuzzy
-#| msgid "Basic settings"
 msgid "Basic info"
 msgstr "基本設定"
 
@@ -4147,6 +4042,12 @@ msgstr "名(%s)"
 
 msgid "eg. Bruce"
 msgstr "例) 太郎"
+
+msgid "Gender"
+msgstr "性別"
+
+msgid "Birthday"
+msgstr "誕生日"
 
 msgid "Hide birth year"
 msgstr "生年を隠す。"
@@ -4993,6 +4894,9 @@ msgstr "今はスキップする"
 
 msgid "Invitation"
 msgstr "招待"
+
+msgid "Batch Registration"
+msgstr "一括登録"
 
 msgid "Pause evaluation"
 msgstr "評価凍結"
