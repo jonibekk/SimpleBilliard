@@ -82,9 +82,6 @@ $(document).ready(function () {
     }
   );
 
-  $(document).on("touchend", "#layer-black", function () {
-    $('.navbar-offcanvas').offcanvas('hide');
-  });
   $(document).on("touchstart", ".nav-back-btn", function () {
     $('.nav-back-btn').addClass('mod-touchstart');
   });

@@ -23,9 +23,9 @@ if (!isset($with_header_menu)) {
     echo newrelic_get_browser_timing_header();
 } ?>
 <?php if ($this->Session->read('Auth.User.id') && $with_header_menu) {
-    echo $this->element('header_logged_in');
+    echo $this->element('header/logged_in');
 } else {
-    echo $this->element('header_not_logged_in');
+    echo $this->element('header/not_logged_in');
 }
 ?>
 <div id="container" class="container">
