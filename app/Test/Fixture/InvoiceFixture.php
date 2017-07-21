@@ -2,7 +2,7 @@
 /**
  * Invoice Fixture
  */
-class InvoiceFixture extends CakeTestFixture {
+class InvoiceFixture extends CakeTestFixtureEx {
 
 /**
  * Fields

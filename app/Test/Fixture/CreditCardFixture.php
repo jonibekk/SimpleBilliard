@@ -2,7 +2,7 @@
 /**
  * CreditCard Fixture
  */
-class CreditCardFixture extends CakeTestFixture {
+class CreditCardFixture extends CakeTestFixtureEx {
 
 /**
  * Fields

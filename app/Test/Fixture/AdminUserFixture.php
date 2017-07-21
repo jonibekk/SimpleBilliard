@@ -2,7 +2,7 @@
 /**
  * AdminUser Fixture
  */
-class AdminUserFixture extends CakeTestFixture {
+class AdminUserFixture extends CakeTestFixtureEx {
 
 /**
  * Fields

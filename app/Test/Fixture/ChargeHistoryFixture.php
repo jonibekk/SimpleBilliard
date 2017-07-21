@@ -2,7 +2,7 @@
 /**
  * ChargeHistory Fixture
  */
-class ChargeHistoryFixture extends CakeTestFixture {
+class ChargeHistoryFixture extends CakeTestFixtureEx {
 
 /**
  * Fields

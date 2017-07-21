@@ -2,7 +2,7 @@
 /**
  * PaymentSettingChangeLog Fixture
  */
-class PaymentSettingChangeLogFixture extends CakeTestFixture {
+class PaymentSettingChangeLogFixture extends CakeTestFixtureEx {
 
 /**
  * Fields

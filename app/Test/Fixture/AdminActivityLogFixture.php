@@ -2,7 +2,7 @@
 /**
  * AdminActivityLog Fixture
  */
-class AdminActivityLogFixture extends CakeTestFixture {
+class AdminActivityLogFixture extends CakeTestFixtureEx {
 
 /**
  * Fields
