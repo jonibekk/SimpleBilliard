@@ -1,8 +1,10 @@
 <?php
+App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * PaymentSetting Fixture
  */
-class PaymentSettingFixture extends CakeTestFixture {
+class PaymentSettingFixture extends CakeTestFixtureEx {
 
 /**
  * Fields
