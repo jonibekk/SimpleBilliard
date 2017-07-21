@@ -1,6 +1,6 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::import('Service/Api', 'ApiStripeService');
+App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
 
 /**
@@ -43,15 +43,15 @@ class PaymentController extends ApiController
         }
 
         // Register Credit Card
-        /** @var ApiStripeService $ApiStripeService */
-        $ApiStripeService = ClassRegistry::init("ApiStripeService");
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
         $token = Hash::get($requestData, 'token');
         $email = Hash::get($requestData, 'email');
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
         $description = "Team ID: $teamId";
 
         // Register customer at Stripe
-        $stripeResponse = $ApiStripeService->registerCustomer($token, $email, $description);
+        $stripeResponse = $CreditCardService->registerCustomer($token, $email, $description);
         if ($stripeResponse['error'] === true) {
             return $this->_getResponseBadFail($stripeResponse['message']);
         }
@@ -67,7 +67,7 @@ class PaymentController extends ApiController
         $currency = Hash::get($requestData, 'currency');
         if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_JPY) {
             // Delete customer from Stripe
-            $ApiStripeService->deleteCustomer($customerID);
+            $CreditCardService->deleteCustomer($customerID);
 
             // TODO: Add translation for message
             return $this->_getResponseBadFail("Your Credit Card does not match your country settings");

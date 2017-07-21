@@ -1,10 +1,10 @@
 <?php
-App::import('Service/Api', 'ApiService');
+App::import('Service', 'AppService');
 
 /**
  * Class ApiStripeService
  */
-class ApiStripeService extends ApiService
+class CreditCardService extends AppService
 {
     /**
      * Accept a credit card token and register it as new customer on Stripe.

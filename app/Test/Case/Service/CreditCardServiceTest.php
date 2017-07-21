@@ -1,11 +1,13 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Service/Api', 'ApiStripeService');
+App::import('Service', 'CreditCardService');
 
 /**
- * Class ApiStripeServiceTest
+ * Class CreditCardServiceTest
+ *
+ * @property CreditCardService $CreditCardService
  */
-class ApiStripeServiceTest extends GoalousTestCase
+class CreditCardServiceTest extends GoalousTestCase
 {
     // Card with specific error for Stripe API test
     // https://stripe.com/docs/testing#cards-responses
@@ -36,7 +38,7 @@ class ApiStripeServiceTest extends GoalousTestCase
     {
         parent::setUp();
 
-        $this->ApiStripeService = ClassRegistry::init('ApiStripeService');
+        $this->CreditCardService = ClassRegistry::init('CreditCardService');
     }
 
     /**
@@ -114,7 +116,7 @@ class ApiStripeServiceTest extends GoalousTestCase
      */
     private function deleteCustomer($customerId)
     {
-        $res = $this->ApiStripeService->deleteCustomer($customerId);
+        $res = $this->CreditCardService->deleteCustomer($customerId);
 
         $this->assertNotNull($res);
         $this->assertArrayHasKey("error", $res);
@@ -146,7 +148,7 @@ class ApiStripeServiceTest extends GoalousTestCase
         $token = $this->getToken(self::CARD_VISA);
         $email = "test@goalous.com";
 
-        $res = $this->ApiStripeService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("customer_id", $res);
@@ -163,7 +165,7 @@ class ApiStripeServiceTest extends GoalousTestCase
         $email = "test@goalous.com";
         $token = "xxxxxxxxxxxx";
 
-        $res = $this->ApiStripeService->registerCustomer($email, $token, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($email, $token, "Goalous TEST");
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayNotHasKey("customer_id", $res);
@@ -178,7 +180,7 @@ class ApiStripeServiceTest extends GoalousTestCase
         $token = $this->getToken(self::CARD_DECLINED);
         $email = "test@goalous.com";
 
-        $res = $this->ApiStripeService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "card_declined");
     }
@@ -191,7 +193,7 @@ class ApiStripeServiceTest extends GoalousTestCase
         $token = $this->getToken(self::CARD_INCORRECT_CVC);
         $email = "test@goalous.com";
 
-        $res = $this->ApiStripeService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "incorrect_cvc");
     }
@@ -204,7 +206,7 @@ class ApiStripeServiceTest extends GoalousTestCase
         $token = $this->getToken(self::CARD_EXPIRED);
         $email = "test@goalous.com";
 
-        $res = $this->ApiStripeService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "expired_card");
     }
@@ -217,7 +219,7 @@ class ApiStripeServiceTest extends GoalousTestCase
         $token = $this->getToken(self::CARD_PROCESSING_ERROR);
         $email = "test@goalous.com";
 
-        $res = $this->ApiStripeService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "processing_error");
     }
