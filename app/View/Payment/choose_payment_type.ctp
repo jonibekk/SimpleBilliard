@@ -2,7 +2,7 @@
 <section class="panel choose-payment">
     <div class="panel-container">
         <h3><?= __('Select Payment Method')?></h3>
-        <div class="payment-option">
+        <div class="payment-option" onClick="window.location='#'">
             <h4><?= __('Credit Card') ?></h4>
             <i class="fa fa-credit-card"></i>
             <p><?= __("Use a credit card to setup automatic, reoccuring payments for your Goalous team.") ?></p>
