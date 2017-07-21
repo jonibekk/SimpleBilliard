@@ -14,7 +14,6 @@ class PaymentController extends ApiController
      * Parameters:
      *
      * Payment.token            Stripe Credit Card Token
-     * Payment.team_id          Team ID
      * Payment.type             Payment Type (0 = Invoice, 1 = Credit Card)
      * Payment.amount_per_user  Amount Per user
      * Payment.payer_name       Credit Card Name or Invoice Payer
@@ -29,6 +28,10 @@ class PaymentController extends ApiController
      */
     function post()
     {
+        // Set teamId for validation
+        $teamId = $this->current_team_id;
+        $this->request->data = Hash::insert($this->request->data, 'Payment.team_id', $teamId);
+
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
         $validation = $PaymentService->validateCreate(Hash::get($this->request->data, 'Payment'));
