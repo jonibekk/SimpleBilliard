@@ -4,7 +4,7 @@ App::uses('Post', 'Model');
 App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
-App::import('Service', 'UserService');
+App::import('Service', 'InvitationService');
 App::import('Service', 'TermService');
 
 /**
@@ -921,8 +921,8 @@ class UsersController extends AppController
         $res = ['results' => []];
         $existparameters = !empty($query['topic_id']) && !empty($query['term']) && !empty($query['page_limit']);
         if ($existparameters) {
-            /** @var UserService $UserService */
-            $UserService = ClassRegistry::init('UserService');
+            /** @var InvitationService $UserService */
+            $UserService = ClassRegistry::init('InvitationService');
             $res['results'] = $UserService->findUsersForAddingOnTopic($query['term'], $query['page_limit'],
                 $query['topic_id'], true);
         }
