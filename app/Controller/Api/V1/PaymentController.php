@@ -70,7 +70,8 @@ class PaymentController extends ApiController
             }
 
             // Register Payment on database
-            $res = ($PaymentService->createCreditCardPayment(Hash::get($this->request->data, 'Payment'), $customerID));
+            $userId = $this->Auth->user('id');
+            $res = ($PaymentService->createCreditCardPayment(Hash::get($this->request->data, 'Payment'), $customerID, $userId));
             if (!$res) {
                 return $this->_getResponseBadFail(__("An error occurred while processing."));
             }

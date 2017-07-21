@@ -63,7 +63,7 @@ class PaymentService extends  AppService
      * @return bool
      * @throws Exception
      */
-    public function createCreditCardPayment($data, $customerCode)
+    public function createCreditCardPayment($data, $customerCode, $userId)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -93,9 +93,17 @@ class PaymentService extends  AppService
                 throw new Exception(sprintf("Failed create credit card. data:%s", var_export($data, true)));
             }
 
+            // Save snapshot
+            /** @var PaymemtSettingChangeLog $PaymemtSettingChangeLog */
+            $PaymemtSettingChangeLog = ClassRegistry::init('PaymemtSettingChangeLog');
+            $PaymemtSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+
+            // Commit changes
             $PaymentSetting->commit();
             $CreditCard->commit();
         } catch (Exception $e) {
+            $CreditCard->rollback();
+            $PaymentSetting->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return false;
