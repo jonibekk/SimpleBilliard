@@ -48,8 +48,6 @@ class PageResourceHelper extends AppHelper
         'teams' => [
             'default' => [
                 '/js/goalous_team.min',
-                '/js/ng_vendors.min',
-                '/js/ng_app.min'
             ]
         ],
         'users' => [
