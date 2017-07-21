@@ -57,4 +57,48 @@ class ApiPaymentService extends ApiService
 
         return $result;
     }
+
+    /**
+     * Delete customer from Stripe
+     *
+     * @param string $customerId
+     *
+     * @return array
+     */
+    public function deleteCustomer(string $customerId): array
+    {
+        $result = [
+            "error" => false,
+            "message" => null
+        ];
+
+        if (empty($customerId)) {
+            $result["error"] = true;
+            $result["message"] = __("Parameter is invalid.");
+
+            return $result;
+        }
+
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        try {
+            $customer = \Stripe\Customer::retrieve($customerId);
+            $response = $customer->delete();
+
+            $result["deleted"] = $response->deleted;
+        }
+        catch (Exception $e) {
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+
+            if (property_exists($e, "stripeCode")) {
+                $result["errorCode"] = $e->stripeCode;
+            }
+
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
+        return $result;
+    }
 }

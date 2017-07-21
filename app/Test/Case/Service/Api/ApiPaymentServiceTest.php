@@ -108,6 +108,22 @@ class ApiPaymentServiceTest extends GoalousTestCase
     }
 
     /**
+     * Delete Stripe Customer
+     * 
+     * @param $customerId
+     */
+    private function deleteCustomer($customerId)
+    {
+        $res = $this->ApiPaymentService->deleteCustomer($customerId);
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("error", $res);
+        $this->assertArrayHasKey("deleted", $res);
+        $this->assertFalse($res["error"]);
+        $this->assertTrue($res["deleted"]);
+    }
+
+    /**
      * Common assertion for bad credit cards
      *
      * @param array  $apiResponse
@@ -135,6 +151,8 @@ class ApiPaymentServiceTest extends GoalousTestCase
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("customer_id", $res);
         $this->assertArrayHasKey("card", $res);
+
+        $this->deleteCustomer($res["customer_id"]);
     }
 
     /**
