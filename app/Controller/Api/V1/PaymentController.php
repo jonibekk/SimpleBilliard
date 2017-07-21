@@ -57,8 +57,8 @@ class PaymentController extends ApiController
         }
 
         // Stripe customer id
-        $customerID = $stripeResponse['customer_id'];
-        if (empty($customerID)) {
+        $customerId = $stripeResponse['customer_id'];
+        if (empty($customerId)) {
             // It never should happen
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
@@ -67,7 +67,7 @@ class PaymentController extends ApiController
         $currency = Hash::get($requestData, 'currency');
         if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_JPY) {
             // Delete customer from Stripe
-            $CreditCardService->deleteCustomer($customerID);
+            $CreditCardService->deleteCustomer($customerId);
 
             // TODO: Add translation for message
             return $this->_getResponseBadFail("Your Credit Card does not match your country settings");
@@ -75,7 +75,7 @@ class PaymentController extends ApiController
 
         // Register Payment on database
         $userId = $this->Auth->user('id');
-        $res = ($PaymentService->createCreditCardPayment($requestData, $customerID, $userId));
+        $res = ($PaymentService->createCreditCardPayment($requestData, $customerId, $userId));
         if (!$res) {
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
