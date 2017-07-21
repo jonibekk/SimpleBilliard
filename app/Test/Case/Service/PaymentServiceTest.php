@@ -16,8 +16,11 @@ class PaymentServiceTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.payment_setting',
+        'app.paymemt_setting_change_log',
         'app.credit_card',
-        'app.team'
+        'app.team',
+        'app.team_member',
+        'app.user'
     );
 
     /**
@@ -287,7 +290,8 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $customerCode = 'cus_B3ygr9hxqg5evH';
 
-        $res = $this->PaymentService->createCreditCardPayment($payment, $customerCode);
+        $userID = $this->createActiveUser(1);
+        $res = $this->PaymentService->createCreditCardPayment($payment, $customerCode, $userID);
         $this->assertTrue($res);
     }
 
@@ -308,7 +312,8 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $customerCode = '';
 
-        $res = $this->PaymentService->createCreditCardPayment($payment, $customerCode);
+        $userID = $this->createActiveUser(1);
+        $res = $this->PaymentService->createCreditCardPayment($payment, $customerCode, $userID);
         $this->assertFalse($res);
     }
 
