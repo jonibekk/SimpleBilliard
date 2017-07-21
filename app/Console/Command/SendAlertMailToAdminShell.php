@@ -48,6 +48,7 @@ class SendAlertMailToAdminShell extends AppShell
 
     public function main()
     {
+        // fetching free trial teams
 
         return;
     }
