@@ -64,6 +64,10 @@ class PaymentController extends ApiController
         }
 
         // Check if the Payment if in the correct currency
+        // The checking of credit card token is made after the customer registration
+        // and a deletion in case of customer do not match the country/currency requirements
+        // because Stripe token can only be used once.
+        // On this case its better to have a pre check of token by the frontend.
         $currency = Hash::get($requestData, 'currency');
         if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_JPY) {
             // Delete customer from Stripe
