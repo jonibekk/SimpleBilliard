@@ -1,9 +1,12 @@
-<button type="button" action="" onclick="toggleNav()"
-        class="<?= $is_mb_app ? "mb-app" : "" ?> header-toggle-icon js-nav-toggle">
+<button id="header-slide-menu" type="button"
+        class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
+        data-toggle="offcanvas"
+        data-disable-scrolling="false"
+        data-target=".navbar-offcanvas">
     <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
     <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
 </button>
-<div id="NavbarOffcanvas">
+<div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px" id="NavbarOffcanvas">
     <ul class="nav navbar-nav">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
             <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
@@ -66,7 +69,7 @@
         <li class="header-search-group">
             <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search"
                   autocomplete="off">
-                <div class="input-group">
+                <div class="input-group nav-search-form-input-group">
                     <div class="input-group-btn nav-search-button-group">
                         <button type="button" id="NavSearchButton"
                                 class="btn nav-search-button dropdown-toggle" data-toggle="dropdown"

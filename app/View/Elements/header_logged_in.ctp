@@ -29,8 +29,8 @@
             if ( $this->BackBtn->checkPage() &&  $is_mb_app) { ?>
                 <?= $this->element('/header_back_btn') ?>
             <?php } else { ?>
-                <?= $this->element('header/navigation'); ?>
-                <?= $this->element('header/logged_in_right'); ?>
+                <?= $this->element('header_navigation'); ?>
+                <?= $this->element('header_logged_in_right'); ?>
             <?php } ?>
         </div>
     </div>

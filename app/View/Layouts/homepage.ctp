@@ -87,7 +87,7 @@
 <div class="wrapper">
 
     <!-- ******HEADER****** -->
-    <?php echo $this->element('header/home'); ?>
+    <?php echo $this->element('header_home'); ?>
 
     <?= $this->element('alert_maint') ?>
     <?= $this->Session->flash(); ?>
