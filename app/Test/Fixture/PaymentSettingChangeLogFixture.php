@@ -1,8 +1,8 @@
 <?php
 /**
- * PaymemtSettingChangeLog Fixture
+ * PaymentSettingChangeLog Fixture
  */
-class PaymemtSettingChangeLogFixture extends CakeTestFixture {
+class PaymentSettingChangeLogFixture extends CakeTestFixture {
 
 /**
  * Fields
