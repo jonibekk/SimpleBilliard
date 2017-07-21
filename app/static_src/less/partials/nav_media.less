@@ -171,6 +171,10 @@
         margin-right: 0
     }
 
+    .navbar-offcanvas {
+        width: auto;
+    }
+
     /*Small*/
     /*Pluginの修正なので、階層構造を使わない形に書き換え予定*/
     .navbar-default .navbar-nav > li > a {
@@ -217,22 +221,25 @@
 
 @media (max-width: 767px) {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-        color: @darkBlack
+        color: #333
     }
 
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
-        color: @acidRed;
+        color: #d9230f;
+        background-color: transparent
     }
 
     .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover {
-        color: @darkBlack;
+        color: #444;
+        background-color: transparent
     }
 
     .navbar-nav .open .dropdown-menu {
         position: static;
         float: none;
         width: auto;
-        margin-top: 0;;
+        margin-top: 0;
+        background-color: transparent;
         border: 0;
         box-shadow: none
     }
@@ -250,23 +257,25 @@
     }
 
     .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {
-        border-color: @goalous
+        border-color: #a91b0c
     }
 
     .navbar-inverse .navbar-nav .open .dropdown-menu .divider {
-        background-color: @goalous
+        background-color: #a91b0c
     }
 
     .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-        color: @white;
+        color: #fff
     }
 
     .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover {
-        color: @goalousHover;
+        color: #fac0ba;
+        background-color: transparent
     }
 
     .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover {
-        color: @cGray;
+        color: #ccc;
+        background-color: transparent
     }
 }
 

@@ -10,7 +10,7 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="dashboard-profile-card">
+<div class="dashboard-profile-card" xmlns="http://www.w3.org/1999/html">
     <div class="dashboard-profile-card-header">
         <div class="text-align_c mb_8px">
             <a class=""

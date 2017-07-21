@@ -73,11 +73,11 @@ const config = {
       node_modules_dir + '/jquery-lazy/jquery.lazy.js',
       node_modules_dir + '/raven-js/dist/raven.js',
       node_modules_dir + '/bootstrap/dist/js/bootstrap.min.js',
+      node_modules_dir + '/jasny-bootstrap/dist/js/jasny-bootstrap.min.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
       node_modules_dir + '/bootstrap-switch/dist/js/bootstrap-switch.js',
       assets_dir + '/js/vendor/bvAddition.js',
       node_modules_dir + '/noty/lib/noty.js',
-      assets_dir + '/js/vendor/fileinput.js',
       assets_dir + '/js/vendor/jquery.nailthumb.1.1.js',
       node_modules_dir + '/autosize/dist/autosize.js',
       assets_dir + '/js/vendor/lightbox-custom.js',
@@ -152,6 +152,7 @@ const config = {
   ],
   css_vendor: {
     src: [
+      node_modules_dir + '/jasny-bootstrap/dist/css/jasny-bootstrap.css',
       node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
