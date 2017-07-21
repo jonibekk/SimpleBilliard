@@ -1,4 +1,5 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * AdminActivityLog Fixture
  */
@@ -29,16 +30,6 @@ class AdminActivityLogFixture extends CakeTestFixtureEx {
  *
  * @var array
  */
-	public $records = array(
-		array(
-			'id' => '',
-			'admin_user_id' => '',
-			'data' => 'Lorem ipsum dolor sit amet',
-			'del_flg' => 1,
-			'deleted' => 1,
-			'created' => 1,
-			'modified' => 1
-		),
-	);
+	public $records = array();
 
 }

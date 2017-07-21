@@ -1,4 +1,5 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * Invoice Fixture
  */
@@ -30,17 +31,6 @@ class InvoiceFixture extends CakeTestFixtureEx {
  *
  * @var array
  */
-	public $records = array(
-		array(
-			'id' => '',
-			'team_id' => '',
-			'payment_setting_id' => '',
-			'credit_status' => 1,
-			'del_flg' => 1,
-			'deleted' => 1,
-			'created' => 1,
-			'modified' => 1
-		),
-	);
+	public $records = array();
 
 }

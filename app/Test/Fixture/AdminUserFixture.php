@@ -1,4 +1,5 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * AdminUser Fixture
  */
@@ -29,17 +30,6 @@ class AdminUserFixture extends CakeTestFixtureEx {
  *
  * @var array
  */
-	public $records = array(
-		array(
-			'id' => '',
-			'email' => 'Lorem ipsum dolor sit amet',
-			'password' => 'Lorem ipsum dolor sit amet',
-			'name' => 'Lorem ipsum dolor sit amet',
-			'del_flg' => 1,
-			'deleted' => 1,
-			'created' => 1,
-			'modified' => 1
-		),
-	);
+	public $records = array();
 
 }

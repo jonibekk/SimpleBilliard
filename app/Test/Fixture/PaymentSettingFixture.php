@@ -1,4 +1,5 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * PaymentSetting Fixture
  */
