@@ -9,7 +9,7 @@
  * @var                    $start_term_month_options
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <section class="panel panel-default">
     <header>
         <h2><?= __("Basic settings") ?></h2>
@@ -96,8 +96,8 @@
         <hr>
         <?=
         $this->Form->input('timezone', [
-            'label'      => __("Timezone"),
-            'type'       => 'select',
+            'label' => __("Timezone"),
+            'type'  => 'select',
         ]) ?>
         <hr>
 
@@ -108,7 +108,7 @@
             'options'    => Team::$TYPE,
             'wrapInput'  => 'team-setting-basic-plan',
             'afterInput' => '<span class="help-block font_11px">'
-                .__("You can use Goalous free of charge until the summer of 2017.") // 同様の文言がteam/add.ctp
+                . __("You can use Goalous free of charge until the summer of 2017.") // 同様の文言がteam/add.ctp
                 // . __("フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
                 // . '<br>'
                 // . __("このプランはチーム作成後にいつでも変更できます。")
@@ -118,21 +118,25 @@
     <footer>
         <fieldset>
             <?=
-                $this->Form->submit(__("Change basic settings"),
+            $this->Form->submit(__("Change basic settings"),
                 ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled'])
             ?>
-            <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
+            <?= __('If you would like to delete the team,') ?> <a
+                href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
+                class="intercom-launcher "><?= __('please contact us.') ?></a>
         </fieldset>
     </footer>
     <?= $this->Form->end(); ?>
-    <?=
-    $this->Form->create('Team', [
-        'class'      => 'none',
-        'novalidate' => true,
-        'id'         => 'TeamDeleteForm',
-        'url'        => ['action' => 'delete_team']
-    ]); ?>
-    <?= $this->Form->end(); ?>
+    <?php
+    // TODO disable deleting a team. see -> https://jira.goalous.com/browse/GL-6022
+    //    echo $this->Form->create('Team', [
+    //        'class'      => 'none',
+    //        'novalidate' => true,
+    //        'id'         => 'TeamDeleteForm',
+    //        'url'        => ['action' => 'delete_team']
+    //    ]);
+    //    echo $this->Form->end();
+    ?>
 </section>
 <?php $this->append('script') ?>
 <script type="text/javascript">
@@ -167,4 +171,4 @@
     });
 </script>
 <?php $this->end() ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
