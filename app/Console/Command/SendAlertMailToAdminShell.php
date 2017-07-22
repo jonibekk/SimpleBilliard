@@ -31,12 +31,27 @@ class SendAlertMailToAdminShell extends AppShell
         'TeamMember'
     ];
 
-    public function startup()
+    var $typeMap = [
+        Team::SERVICE_USE_STATUS_FREE_TRIAL => [
+            'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
+            'mailTemplate' => ""
+        ],
+        Team::SERVICE_USE_STATUS_READ_ONLY  => [
+            'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
+            'mailTemplate' => ""
+        ],
+        Team::SERVICE_USE_STATUS_EXPIRED    => [
+            'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
+            'mailTemplate' => ""
+        ],
+    ];
+
+    function startup()
     {
         parent::startup();
     }
 
-    public function getOptionParser()
+    function getOptionParser()
     {
         $parser = parent::getOptionParser();
 
@@ -47,62 +62,58 @@ class SendAlertMailToAdminShell extends AppShell
         return $parser;
     }
 
-    public function main()
+    function main()
     {
-        $this->sendEmailToFreeTrialTeams();
-        $this->sendEmailToReadOnlyTeams();
-        $this->sendEmailToExpiredTeams();
+        $this->_sendEmails(Team::SERVICE_USE_STATUS_FREE_TRIAL);
+        $this->_sendEmails(Team::SERVICE_USE_STATUS_READ_ONLY);
+        $this->_sendEmails(Team::SERVICE_USE_STATUS_EXPIRED);
         return;
     }
 
-    function sendEmailToFreeTrialTeams()
+    /**
+     * Sending emails
+     *
+     * @param int $serviceUseStatus
+     */
+    function _sendEmails(int $serviceUseStatus)
     {
-        $freeTrialTeams = $this->Team->findByServiceUseStatus(Team::SERVICE_USE_STATUS_FREE_TRIAL);
-        $targetTeams = $this->filterTargetTeams(Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL, $freeTrialTeams);
+        $targetTeams = $this->Team->findByServiceUseStatus($serviceUseStatus);
+        $statusDays = $this->typeMap[$serviceUseStatus]['statusDays'];
+        $mailTemplate = $this->typeMap[$serviceUseStatus]['mailTemplate'];
+
         foreach ($targetTeams as $team) {
+            // In only free trial, fetching the days from DB
+            if ($serviceUseStatus === Team::SERVICE_USE_STATUS_FREE_TRIAL) {
+                $statusDays = $team['free_trial_days'] ?? $statusDays;
+            }
+            if ($this->_isTargetTeam($statusDays, $team) === false) {
+                continue;
+            }
+            $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
             $adminList = $this->TeamMember->findAdminList($team['id']);
             foreach ($adminList as $toUid) {
-                $this->sendEmail(1, $toUid, $team);
+                $this->_sendEmail($mailTemplate, $toUid, $expireDate, $team['name'], $team['id']);
             }
         }
-
-    }
-
-    function sendEmailToReadOnlyTeams()
-    {
-        $readOnlyTeams = $this->Team->findByServiceUseStatus(Team::SERVICE_USE_STATUS_READ_ONLY);
-        $targetTeams = $this->filterTargetTeams(Team::DAYS_SERVICE_USE_STATUS_READ_ONLY, $readOnlyTeams);
-
-    }
-
-    function sendEmailToExpiredTeams()
-    {
-        $expiredTeams = $this->Team->findByServiceUseStatus(Team::SERVICE_USE_STATUS_EXPIRED);
-        $targetTeams = $this->filterTargetTeams(Team::DAYS_SERVICE_USE_STATUS_EXPIRED, $expiredTeams);
-
     }
 
     /**
-     * Filter target teams for sending notification
+     * Is the team target for sending email?
      *
      * @param int   $daysServiceUseStatus
-     * @param array $teams
+     * @param array $team
      *
-     * @return array
+     * @return bool
      */
-    function filterTargetTeams(int $daysServiceUseStatus, array $teams): array
+    function _isTargetTeam(int $daysServiceUseStatus, array $team): bool
     {
-        $filteredTeams = [];
-        foreach ($teams as $team) {
-            $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysServiceUseStatus);
-            $notifyDates = $this->getNotifyDates($expireDate);
-            $todayLocalDate = AppUtil::todayDateYmdLocal($team['timezone']);
-            if (in_array($todayLocalDate, $notifyDates)) {
-                $team['status_use_expired_date'] = $expireDate;
-                $filteredTeams[] = $team;
-            }
+        $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysServiceUseStatus);
+        $notifyDates = $this->_getNotifyDates($expireDate);
+        $todayLocalDate = AppUtil::todayDateYmdLocal($team['timezone']);
+        if (in_array($todayLocalDate, $notifyDates)) {
+            return true;
         }
-        return $filteredTeams;
+        return false;
     }
 
     /**
@@ -112,7 +123,7 @@ class SendAlertMailToAdminShell extends AppShell
      *
      * @return array e.g. ["2017/07/30","2017/07/15"]
      */
-    function getNotifyDates(string $expireDate): array
+    function _getNotifyDates(string $expireDate): array
     {
         $notifyBeforeDays = explode(',', EXPIRE_ALERT_NOTIFY_BEFORE_DAYS);
         $notifyDates = [];
@@ -122,7 +133,7 @@ class SendAlertMailToAdminShell extends AppShell
         return $notifyDates;
     }
 
-    function sendEmail($template, $toUser, $team)
+    function _sendEmail($template, $toUser, $expiredDate, $teamName, $teamId)
     {
 
     }
