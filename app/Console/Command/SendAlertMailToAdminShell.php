@@ -31,24 +31,13 @@ class SendAlertMailToAdminShell extends AppShell
         'TeamMember'
     ];
 
-    var $typeMap = [
-        Team::SERVICE_USE_STATUS_FREE_TRIAL => [
-            'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
-            'mailTemplate' => ""
-        ],
-        Team::SERVICE_USE_STATUS_READ_ONLY  => [
-            'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
-            'mailTemplate' => ""
-        ],
-        Team::SERVICE_USE_STATUS_EXPIRED    => [
-            'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
-            'mailTemplate' => ""
-        ],
-    ];
+    var $typeMap = [];
 
     function startup()
     {
         parent::startup();
+        $this->_setTypeMap();
+
     }
 
     function getOptionParser()
@@ -131,6 +120,24 @@ class SendAlertMailToAdminShell extends AppShell
             $notifyDates[] = AppUtil::dateBefore($expireDate, $notifyBeforeDay);
         }
         return $notifyDates;
+    }
+
+    function _setTypeMap()
+    {
+        $this->typeMap = [
+            Team::SERVICE_USE_STATUS_FREE_TRIAL => [
+                'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
+                'mailTemplate' => ""
+            ],
+            Team::SERVICE_USE_STATUS_READ_ONLY  => [
+                'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
+                'mailTemplate' => ""
+            ],
+            Team::SERVICE_USE_STATUS_EXPIRED    => [
+                'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
+                'mailTemplate' => ""
+            ],
+        ];
     }
 
     function _sendEmail($template, $toUser, $expiredDate, $teamName, $teamId)
