@@ -147,6 +147,14 @@ class GlEmailComponent extends Component
         $this->execSendMailById($this->SendMail->id);
     }
 
+    public function sendMailExpiredAlert($template, $toUser, $expiredDate, $teamName, $teamId)
+    {
+        $item = compact('expiredDate', 'teamName');
+        $this->SendMail->saveMailData($toUser, $template, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+
+    }
+
     /**
      * Sending a alert of expires
      *
@@ -164,7 +172,7 @@ class GlEmailComponent extends Component
         string $mailTemplate
     ) {
         $item = compact('teamName', 'expireDate');
-        $this->SendMail->saveMailData($toUid, $mailTemplate, $item);
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 

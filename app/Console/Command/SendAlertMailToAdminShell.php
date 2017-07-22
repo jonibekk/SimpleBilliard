@@ -1,5 +1,10 @@
 <?php
 App::uses('AppUtil', 'Util');
+App::uses('Controller', 'Core');
+App::uses('AppController', 'Controller');
+App::uses('ComponentCollection', 'Controller');
+App::uses('Component', 'Controller');
+App::uses('GlEmailComponent', 'Controller/Component');
 
 /**
  * # Batch processing for sending e-mail of expires alert.
@@ -21,8 +26,9 @@ App::uses('AppUtil', 'Util');
  * ## Usage
  * Console/cake send_alert_mail_to_admin
  *
- * @property Team       $Team
- * @property TeamMember $TeamMember
+ * @property Team             $Team
+ * @property TeamMember       $TeamMember
+ * @property GlEmailComponent $GlEmail
  */
 class SendAlertMailToAdminShell extends AppShell
 {
@@ -37,7 +43,7 @@ class SendAlertMailToAdminShell extends AppShell
     {
         parent::startup();
         $this->_setTypeMap();
-
+        $this->GlEmail = new GlEmailComponent(new ComponentCollection());
     }
 
     function getOptionParser()
@@ -81,7 +87,7 @@ class SendAlertMailToAdminShell extends AppShell
             $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
             $adminList = $this->TeamMember->findAdminList($team['id']);
             foreach ($adminList as $toUid) {
-                $this->_sendEmail($mailTemplate, $toUid, $expireDate, $team['name'], $team['id']);
+                $this->GlEmail->sendMailExpireAlert($toUid, $team['id'], $team['name'], $expireDate, $mailTemplate);
             }
         }
     }
