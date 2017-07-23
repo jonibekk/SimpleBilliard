@@ -37,9 +37,8 @@ class SendAlertMailToAdminShell extends AppShell
         'TeamMember',
     ];
 
-    public $typeMap = [];
-
-    public $components;
+    private $failedCount = 0;
+    private $succeededCount = 0;
 
     function startup()
     {
@@ -86,6 +85,7 @@ class SendAlertMailToAdminShell extends AppShell
         foreach ($teams as $team) {
             if ($team['service_use_state_start_date'] == null) {
                 $this->log("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is null.");
+                $this->failedCount++;
                 continue;
             }
             // In only free trial, fetching the days from DB
@@ -97,12 +97,29 @@ class SendAlertMailToAdminShell extends AppShell
             }
             $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
             $adminList = $this->TeamMember->findAdminList($team['id']);
-            // sending emails to each admins.
-            foreach ($adminList as $toUid) {
-                $this->GlEmail->sendMailServiceExpireAlert($toUid, $team['id'], $team['name'], $expireDate,
-                    $serviceUseStatus);
+            if (!empty($adminList)) {
+                // sending emails to each admins.
+                foreach ($adminList as $toUid) {
+                    $this->GlEmail->sendMailServiceExpireAlert($toUid, $team['id'], $team['name'], $expireDate,
+                        $serviceUseStatus);
+                }
+                $this->succeededCount++;
+            } else {
+                $this->log("TeamId:{$team['id']} There is no admin..");
+                $this->failedCount++;
             }
         }
+        $msg = sprintf("Sending email for alerting expire has been done. succeeded count:%s, failed count:%s, \$serviceUseStatus:%s",
+            $this->succeededCount,
+            $this->failedCount,
+            $serviceUseStatus
+        );
+        $this->out($msg);
+        // logging only failed.
+        if ($this->failedCount > 0) {
+            $this->log($msg);
+        }
+        $this->_resetCount();
     }
 
     /**
@@ -139,5 +156,11 @@ class SendAlertMailToAdminShell extends AppShell
             $notifyDates[] = AppUtil::dateBefore($expireDate, $notifyBeforeDay);
         }
         return $notifyDates;
+    }
+
+    function _resetCount()
+    {
+        $this->failedCount = 0;
+        $this->succeededCount = 0;
     }
 }
