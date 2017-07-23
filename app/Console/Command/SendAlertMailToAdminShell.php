@@ -71,9 +71,14 @@ class SendAlertMailToAdminShell extends AppShell
      * Sending emails
      *
      * @param int $serviceUseStatus
+     *
+     * @return bool
      */
     function _sendEmails(int $serviceUseStatus)
     {
+        if (!array_key_exists($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS)) {
+            return false;
+        }
         $targetTeams = $this->Team->findByServiceUseStatus($serviceUseStatus);
         $statusDays = Team::$DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
         foreach ($targetTeams as $team) {
