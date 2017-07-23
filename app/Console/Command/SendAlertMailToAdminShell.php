@@ -79,22 +79,22 @@ class SendAlertMailToAdminShell extends AppShell
     function main()
     {
         if (Hash::get($this->params, 'target_status') !== null) {
-            $this->_sendEmails($this->params['target_status']);
+            $this->_mainProcess($this->params['target_status']);
         } else {
-            $this->_sendEmails(Team::SERVICE_USE_STATUS_FREE_TRIAL);
-            $this->_sendEmails(Team::SERVICE_USE_STATUS_READ_ONLY);
-            $this->_sendEmails(Team::SERVICE_USE_STATUS_CANNOT_USE);
+            $this->_mainProcess(Team::SERVICE_USE_STATUS_FREE_TRIAL);
+            $this->_mainProcess(Team::SERVICE_USE_STATUS_READ_ONLY);
+            $this->_mainProcess(Team::SERVICE_USE_STATUS_CANNOT_USE);
         }
     }
 
     /**
-     * Sending emails
+     * Main process
      *
      * @param int $serviceUseStatus
      *
      * @return bool
      */
-    function _sendEmails(int $serviceUseStatus)
+    function _mainProcess(int $serviceUseStatus)
     {
         // validating $serviceUseStatus
         if (!array_key_exists($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS)) {
@@ -102,33 +102,19 @@ class SendAlertMailToAdminShell extends AppShell
             return false;
         }
         $teams = $this->Team->findByServiceUseStatus($serviceUseStatus);
-        $statusDays = Team::$DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
         foreach ($teams as $team) {
             if ($team['service_use_state_start_date'] == null) {
                 $this->log("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is null.");
                 $this->failedCount++;
                 continue;
             }
-            // In only free trial, fetching the days from DB
-            if ($serviceUseStatus === Team::SERVICE_USE_STATUS_FREE_TRIAL) {
-                $statusDays = $team['free_trial_days'] ?? $statusDays;
-            }
-            if ($this->params['force'] === false && $this->_isTargetTeam($statusDays, $team) === false) {
+            $statusDays = $this->_decideStatusDays($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS[$serviceUseStatus],
+                $team);
+            if ($this->_isTargetTeam($statusDays, $team) === false) {
                 continue;
             }
             $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
-            $adminList = $this->TeamMember->findAdminList($team['id']);
-            if (!empty($adminList)) {
-                // sending emails to each admins.
-                foreach ($adminList as $toUid) {
-                    $this->GlEmail->sendMailServiceExpireAlert($toUid, $team['id'], $team['name'], $expireDate,
-                        $serviceUseStatus);
-                }
-                $this->succeededCount++;
-            } else {
-                $this->log("TeamId:{$team['id']} There is no admin..");
-                $this->failedCount++;
-            }
+            $this->_sendingEmailToAdmins($team['id'], $team['name'], $expireDate, $serviceUseStatus);
         }
         $msg = sprintf("Sending email for alerting expire has been done. succeeded count:%s, failed count:%s, \$serviceUseStatus:%s",
             $this->succeededCount,
@@ -144,6 +130,30 @@ class SendAlertMailToAdminShell extends AppShell
     }
 
     /**
+     * Sending Email to admins on the team.
+     *
+     * @param int    $teamId
+     * @param string $teamName
+     * @param string $expireDate
+     * @param int    $serviceUseStatus
+     */
+    function _sendingEmailToAdmins(int $teamId, string $teamName, string $expireDate, int $serviceUseStatus)
+    {
+        $adminList = $this->TeamMember->findAdminList($teamId);
+        if (!empty($adminList)) {
+            // sending emails to each admins.
+            foreach ($adminList as $toUid) {
+                $this->GlEmail->sendMailServiceExpireAlert($toUid, $teamId, $teamName, $expireDate,
+                    $serviceUseStatus);
+            }
+            $this->succeededCount++;
+        } else {
+            $this->log("TeamId:{$teamId} There is no admin..");
+            $this->failedCount++;
+        }
+    }
+
+    /**
      * Is the team target for sending email?
      *
      * @param int   $daysServiceUseStatus
@@ -153,6 +163,9 @@ class SendAlertMailToAdminShell extends AppShell
      */
     function _isTargetTeam(int $daysServiceUseStatus, array $team): bool
     {
+        if ($this->params['force'] === true) {
+            return true;
+        }
         $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysServiceUseStatus);
         $notifyDates = $this->_getNotifyDates($expireDate);
         $todayLocalDate = AppUtil::todayDateYmdLocal($team['timezone']);
@@ -177,6 +190,24 @@ class SendAlertMailToAdminShell extends AppShell
             $notifyDates[] = AppUtil::dateBefore($expireDate, $notifyBeforeDay);
         }
         return $notifyDates;
+    }
+
+    /**
+     *  Decide status days
+     *  In only free trial, fetching the days from DB
+     *
+     * @param int   $serviceUseStatus
+     * @param int   $statusDays
+     * @param array $team
+     *
+     * @return int
+     */
+    function _decideStatusDays(int $serviceUseStatus, int $statusDays, array $team): int
+    {
+        if ($serviceUseStatus === Team::SERVICE_USE_STATUS_FREE_TRIAL) {
+            $statusDays = $team['free_trial_days'] ?? $statusDays;
+        }
+        return $statusDays;
     }
 
     function _resetCount()
