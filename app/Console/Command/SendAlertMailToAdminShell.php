@@ -1,6 +1,5 @@
 <?php
 App::uses('AppUtil', 'Util');
-App::uses('Controller', 'Core');
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
@@ -34,16 +33,19 @@ class SendAlertMailToAdminShell extends AppShell
 {
     public $uses = [
         'Team',
-        'TeamMember'
+        'TeamMember',
     ];
 
-    var $typeMap = [];
+    public $typeMap = [];
+
+    public $components;
 
     function startup()
     {
         parent::startup();
-        $this->_setTypeMap();
+        // initializing component
         $this->GlEmail = new GlEmailComponent(new ComponentCollection());
+        $this->GlEmail->startup(new AppController());
     }
 
     function getOptionParser()
@@ -61,7 +63,7 @@ class SendAlertMailToAdminShell extends AppShell
     {
         $this->_sendEmails(Team::SERVICE_USE_STATUS_FREE_TRIAL);
         $this->_sendEmails(Team::SERVICE_USE_STATUS_READ_ONLY);
-        $this->_sendEmails(Team::SERVICE_USE_STATUS_EXPIRED);
+        $this->_sendEmails(Team::SERVICE_USE_STATUS_CANNOT_USE);
         return;
     }
 
@@ -73,10 +75,11 @@ class SendAlertMailToAdminShell extends AppShell
     function _sendEmails(int $serviceUseStatus)
     {
         $targetTeams = $this->Team->findByServiceUseStatus($serviceUseStatus);
-        $statusDays = $this->typeMap[$serviceUseStatus]['statusDays'];
-        $mailTemplate = $this->typeMap[$serviceUseStatus]['mailTemplate'];
-
+        $statusDays = Team::$DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
         foreach ($targetTeams as $team) {
+            if ($team['service_use_state_start_date'] == null) {
+                continue;
+            }
             // In only free trial, fetching the days from DB
             if ($serviceUseStatus === Team::SERVICE_USE_STATUS_FREE_TRIAL) {
                 $statusDays = $team['free_trial_days'] ?? $statusDays;
@@ -87,7 +90,8 @@ class SendAlertMailToAdminShell extends AppShell
             $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
             $adminList = $this->TeamMember->findAdminList($team['id']);
             foreach ($adminList as $toUid) {
-                $this->GlEmail->sendMailExpireAlert($toUid, $team['id'], $team['name'], $expireDate, $mailTemplate);
+                $this->GlEmail->sendMailServiceExpireAlert($toUid, $team['id'], $team['name'], $expireDate,
+                    $serviceUseStatus);
             }
         }
     }
@@ -126,28 +130,5 @@ class SendAlertMailToAdminShell extends AppShell
             $notifyDates[] = AppUtil::dateBefore($expireDate, $notifyBeforeDay);
         }
         return $notifyDates;
-    }
-
-    function _setTypeMap()
-    {
-        $this->typeMap = [
-            Team::SERVICE_USE_STATUS_FREE_TRIAL => [
-                'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
-                'mailTemplate' => ""
-            ],
-            Team::SERVICE_USE_STATUS_READ_ONLY  => [
-                'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
-                'mailTemplate' => ""
-            ],
-            Team::SERVICE_USE_STATUS_EXPIRED    => [
-                'statusDays'   => Team::DAYS_SERVICE_USE_STATUS_FREE_TRIAL,
-                'mailTemplate' => ""
-            ],
-        ];
-    }
-
-    function _sendEmail($template, $toUser, $expiredDate, $teamName, $teamId)
-    {
-
     }
 }

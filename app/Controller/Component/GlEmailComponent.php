@@ -1,4 +1,5 @@
 <?php
+App::uses('SendMail', 'Model');
 
 /**
  * @author daikihirakata
@@ -162,17 +163,45 @@ class GlEmailComponent extends Component
      * @param int    $teamId
      * @param string $teamName
      * @param string $expireDate
-     * @param string $mailTemplate
+     * @param string $serviceUseStatus
      */
-    public function sendMailExpireAlert(
+    public function sendMailServiceExpireAlert(
         int $toUid,
         int $teamId,
         string $teamName,
         string $expireDate,
-        string $mailTemplate
+        string $serviceUseStatus
     ) {
-        $item = compact('teamName', 'expireDate');
-        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
+        $message = "";
+        $subject = "";
+        switch ($serviceUseStatus) {
+            case Team::SERVICE_USE_STATUS_FREE_TRIAL:
+                $message = "チーム「{$teamName}」のフリートライアルの期限は{$expireDate}です。";
+                $subject = "フリートライアル期限のお知らせ";
+                break;
+            case Team::SERVICE_USE_STATUS_READ_ONLY:
+                $message = "チーム「{$teamName}」は現在、読み取り専用の状態になっております。クレジットカードの決済の期限は{$expireDate}です。\n";
+                $message .= "決済完了後すぐに読み取り専用は解除されます。\n";
+                $message .= "なお、このまま決済頂かない場合は{$expireDate}にご利用ができなくなります。\n";
+                $subject = "現在このチームは読み取り専用の状態になっております";
+                break;
+            case Team::SERVICE_USE_STATUS_CANNOT_USE:
+                $message = "チーム「{$teamName}」は現在、利用できない状態になっております。\n";
+                $message .= "決済完了後すぐにご利用が再開できます。\n";
+                $message .= "なお、このまま決済頂かない場合は{$expireDate}にチームを削除させて頂きます。\n";
+                $subject = "現在このチームは利用できない状態になっております";
+                break;
+        }
+        // TODO: 決済情報入力用のurlは仮です。
+        $url = Router::url(
+            [
+                'admin'      => false,
+                'controller' => 'teams',
+                'action'     => 'payment_setting',
+                'team_id'    => $teamId,
+            ], true);
+        $item = compact('message', 'url', 'subject');
+        $this->SendMail->saveMailData($toUid, SendMail::TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 

@@ -55,13 +55,15 @@ class Team extends AppModel
     const SERVICE_USE_STATUS_FREE_TRIAL = 0;
     const SERVICE_USE_STATUS_PAID = 1;
     const SERVICE_USE_STATUS_READ_ONLY = 2;
-    const SERVICE_USE_STATUS_EXPIRED = 3;
+    const SERVICE_USE_STATUS_CANNOT_USE = 3;
     /**
      * Days of service use status
      */
-    const DAYS_SERVICE_USE_STATUS_FREE_TRIAL = 15;
-    const DAYS_SERVICE_USE_STATUS_READ_ONLY = 30;
-    const DAYS_SERVICE_USE_STATUS_EXPIRED = 90;
+    static public $DAYS_SERVICE_USE_STATUS = [
+        self::SERVICE_USE_STATUS_FREE_TRIAL => 15,
+        self::SERVICE_USE_STATUS_READ_ONLY  => 30,
+        self::SERVICE_USE_STATUS_CANNOT_USE => 90,
+    ];
 
     /**
      * Set Type name | タイプの名前をセット
