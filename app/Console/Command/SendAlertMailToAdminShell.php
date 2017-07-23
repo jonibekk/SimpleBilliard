@@ -10,6 +10,7 @@ App::uses('GlEmailComponent', 'Controller/Component');
  * ## Target status
  * - 0: free trial
  * - 2: read only
+ * - 3: cannot use
  * ## How to notify?
  * - e-mail
  * ## Execution timing
@@ -77,12 +78,14 @@ class SendAlertMailToAdminShell extends AppShell
     function _sendEmails(int $serviceUseStatus)
     {
         if (!array_key_exists($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS)) {
+            $this->log("Sending email for alerting expire was canceled. cause, \$serviceUseStatus was wrong. \$serviceUseStatus:$serviceUseStatus");
             return false;
         }
-        $targetTeams = $this->Team->findByServiceUseStatus($serviceUseStatus);
+        $teams = $this->Team->findByServiceUseStatus($serviceUseStatus);
         $statusDays = Team::$DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
-        foreach ($targetTeams as $team) {
+        foreach ($teams as $team) {
             if ($team['service_use_state_start_date'] == null) {
+                $this->log("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is null.");
                 continue;
             }
             // In only free trial, fetching the days from DB
@@ -94,6 +97,7 @@ class SendAlertMailToAdminShell extends AppShell
             }
             $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
             $adminList = $this->TeamMember->findAdminList($team['id']);
+            // sending emails to each admins.
             foreach ($adminList as $toUid) {
                 $this->GlEmail->sendMailServiceExpireAlert($toUid, $team['id'], $team['name'], $expireDate,
                     $serviceUseStatus);
