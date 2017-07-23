@@ -25,6 +25,9 @@ App::uses('GlEmailComponent', 'Controller/Component');
  *   * If user is admin in multiple teams, it will send multiple e-mails.
  * ## Usage
  * Console/cake send_alert_mail_to_admin
+ * - Options
+ *   -f Force sending emails. If specified it,EXPIRE_ALERT_NOTIFY_BEFORE_DAYS will be ignored.
+ *   -s This is about target "service_use_status". As default, target status is all. status: 0: free trial,2: read only,3:cannot use (choices: 0|2|3)
  *
  * @property Team             $Team
  * @property TeamMember       $TeamMember
@@ -53,7 +56,21 @@ class SendAlertMailToAdminShell extends AppShell
         $parser = parent::getOptionParser();
 
         $options = [
-            'expires' => ['short' => 'e', 'help' => 'Y-m-d', 'required' => false,],
+            'force'         => [
+                'short'   => 'f',
+                'help'    => 'Force sending emails. If specified it, EXPIRE_ALERT_NOTIFY_BEFORE_DAYS will be ignored.',
+                'default' => false,
+                'boolean' => true,
+            ],
+            'target_status' => [
+                'short'   => 's',
+                'help'    => 'This is about target "service_use_status". As default, target status is all. status: 0: free trial,2: read only,3: cannot use',
+                'choices' => [
+                    Team::SERVICE_USE_STATUS_FREE_TRIAL,
+                    Team::SERVICE_USE_STATUS_READ_ONLY,
+                    Team::SERVICE_USE_STATUS_CANNOT_USE
+                ],
+            ],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -61,10 +78,13 @@ class SendAlertMailToAdminShell extends AppShell
 
     function main()
     {
-        $this->_sendEmails(Team::SERVICE_USE_STATUS_FREE_TRIAL);
-        $this->_sendEmails(Team::SERVICE_USE_STATUS_READ_ONLY);
-        $this->_sendEmails(Team::SERVICE_USE_STATUS_CANNOT_USE);
-        return;
+        if (Hash::get($this->params, 'target_status') !== null) {
+            $this->_sendEmails($this->params['target_status']);
+        } else {
+            $this->_sendEmails(Team::SERVICE_USE_STATUS_FREE_TRIAL);
+            $this->_sendEmails(Team::SERVICE_USE_STATUS_READ_ONLY);
+            $this->_sendEmails(Team::SERVICE_USE_STATUS_CANNOT_USE);
+        }
     }
 
     /**
@@ -92,7 +112,7 @@ class SendAlertMailToAdminShell extends AppShell
             if ($serviceUseStatus === Team::SERVICE_USE_STATUS_FREE_TRIAL) {
                 $statusDays = $team['free_trial_days'] ?? $statusDays;
             }
-            if ($this->_isTargetTeam($statusDays, $team) === false) {
+            if ($this->params['force'] === false && $this->_isTargetTeam($statusDays, $team) === false) {
                 continue;
             }
             $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
