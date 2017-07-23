@@ -96,6 +96,7 @@ class SendAlertMailToAdminShell extends AppShell
      */
     function _sendEmails(int $serviceUseStatus)
     {
+        // validating $serviceUseStatus
         if (!array_key_exists($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS)) {
             $this->log("Sending email for alerting expire was canceled. cause, \$serviceUseStatus was wrong. \$serviceUseStatus:$serviceUseStatus");
             return false;
