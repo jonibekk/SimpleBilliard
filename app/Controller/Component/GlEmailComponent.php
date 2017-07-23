@@ -148,14 +148,6 @@ class GlEmailComponent extends Component
         $this->execSendMailById($this->SendMail->id);
     }
 
-    public function sendMailExpiredAlert($template, $toUser, $expiredDate, $teamName, $teamId)
-    {
-        $item = compact('expiredDate', 'teamName');
-        $this->SendMail->saveMailData($toUser, $template, $item, null, $teamId);
-        $this->execSendMailById($this->SendMail->id);
-
-    }
-
     /**
      * Sending a alert of expires
      *
@@ -174,6 +166,7 @@ class GlEmailComponent extends Component
     ) {
         $message = "";
         $subject = "";
+        // TODO: 文言はコーヘイさんに確認を取った上で修正および翻訳します。
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_FREE_TRIAL:
                 $message = "チーム「{$teamName}」のフリートライアルの期限は{$expireDate}です。";
