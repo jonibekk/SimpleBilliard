@@ -1,8 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * CreditCard Fixture
  */
-class CreditCardFixture extends CakeTestFixture {
+class CreditCardFixture extends CakeTestFixtureEx {
 
 /**
  * Fields
@@ -29,17 +30,6 @@ class CreditCardFixture extends CakeTestFixture {
  *
  * @var array
  */
-	public $records = array(
-		array(
-			'id' => '',
-			'team_id' => '',
-			'payment_setting_id' => '',
-			'customer_code' => 'Lorem ipsum dolor sit amet',
-			'del_flg' => 1,
-			'deleted' => 1,
-			'created' => 1,
-			'modified' => 1
-		),
-	);
+	public $records = array();
 
 }
