@@ -2,11 +2,10 @@
 App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
- * PaymemtSettingChangeLog Fixture
+ * PaymentSettingChangeLog Fixture
  */
-class PaymemtSettingChangeLogFixture extends CakeTestFixtureEx
+class PaymentSettingChangeLogFixture extends CakeTestFixtureEx
 {
-
     /**
      * Fields
      *
@@ -60,3 +59,5 @@ class PaymemtSettingChangeLogFixture extends CakeTestFixtureEx
     public $records = array();
 
 }
+
+

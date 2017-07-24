@@ -6,7 +6,6 @@ App::uses('CakeTestFixtureEx', 'Test/Fixture');
  */
 class PaymentSettingFixture extends CakeTestFixtureEx
 {
-
     /**
      * Fields
      *

@@ -16,7 +16,7 @@ class PaymentServiceTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.payment_setting',
-        'app.paymemt_setting_change_log',
+        'app.payment_setting_change_log',
         'app.credit_card',
         'app.team',
         'app.team_member',

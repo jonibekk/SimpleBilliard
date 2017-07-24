@@ -94,9 +94,9 @@ class PaymentService extends AppService
             }
 
             // Save snapshot
-            /** @var PaymemtSettingChangeLog $PaymemtSettingChangeLog */
-            $PaymemtSettingChangeLog = ClassRegistry::init('PaymemtSettingChangeLog');
-            $PaymemtSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
 
             // Commit changes
             $PaymentSetting->commit();

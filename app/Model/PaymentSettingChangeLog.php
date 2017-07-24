@@ -1,12 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
-
 /**
- * PaymemtSettingChangeLog Model
+ * PaymentSettingChangeLog Model
  *
- * @property PaymentSetting $PaymentSetting
  */
-class PaymemtSettingChangeLog extends AppModel
+class PaymentSettingChangeLog extends AppModel
 {
     /**
      * Validation rules

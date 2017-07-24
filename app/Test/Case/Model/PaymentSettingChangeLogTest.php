@@ -1,10 +1,10 @@
 <?php
-App::uses('PaymemtSettingChangeLog', 'Model');
+App::uses('PaymentSettingChangeLog', 'Model');
 
 /**
- * PaymemtSettingChangeLog Test Case
+ * PaymentSettingChangeLog Test Case
  */
-class PaymemtSettingChangeLogTest extends CakeTestCase {
+class PaymentSettingChangeLogTest extends CakeTestCase {
 
 /**
  * Fixtures
@@ -12,7 +12,7 @@ class PaymemtSettingChangeLogTest extends CakeTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'app.paymemt_setting_change_log'
+		'app.payment_setting_change_log'
 	);
 
 /**
@@ -22,7 +22,7 @@ class PaymemtSettingChangeLogTest extends CakeTestCase {
  */
 	public function setUp() {
 		parent::setUp();
-		$this->PaymemtSettingChangeLog = ClassRegistry::init('PaymemtSettingChangeLog');
+		$this->PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
 	}
 
 /**
@@ -31,7 +31,7 @@ class PaymemtSettingChangeLogTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
-		unset($this->PaymemtSettingChangeLog);
+		unset($this->PaymentSettingChangeLog);
 
 		parent::tearDown();
 	}
