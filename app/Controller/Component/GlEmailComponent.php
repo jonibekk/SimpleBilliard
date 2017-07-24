@@ -170,19 +170,19 @@ class GlEmailComponent extends Component
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_FREE_TRIAL:
                 $subject = "フリートライアル期限のお知らせ";
-                $message = "チーム「{$teamName}」のフリートライアルの期限は{$expireDate}です。";
+                $message = "チーム「{$teamName}」のフリートライアルの期限は{$expireDate}です。継続してご利用されたい場合は、有料プランのご契約をお願いいたします。";
                 break;
             case Team::SERVICE_USE_STATUS_READ_ONLY:
                 $subject = "現在このチームは読み取り専用の状態になっております";
-                $message = "チーム「{$teamName}」は現在、読み取り専用の状態になっております。クレジットカードの決済の期限は{$expireDate}です。\n";
-                $message .= "決済完了後すぐに読み取り専用は解除されます。\n";
-                $message .= "なお、このまま決済頂かない場合は{$expireDate}にご利用ができなくなります。\n";
+                $message = "チーム「{$teamName}」は現在、読み取り専用の状態になっております。通常の利用をご希望の場合は、{$expireDate}までに有料プランをご契約ください。\n";
+                $message .= "有料プランのお申込み後、すぐに読み取り専用は解除されます。\n";
+                $message .= "なお、このまま有料プランへのご契約がない場合は、{$expireDate}にご利用ができなくなります。\n";
                 break;
             case Team::SERVICE_USE_STATUS_CANNOT_USE:
                 $subject = "現在このチームは利用できない状態になっております";
-                $message = "チーム「{$teamName}」は現在、利用できない状態になっております。\n";
-                $message .= "決済完了後すぐにご利用が再開できます。\n";
-                $message .= "なお、このまま決済頂かない場合は{$expireDate}にチームを削除させて頂きます。\n";
+                $message = "チーム「{$teamName}」は現在、ご利用できない状態になっております。通常の利用をご希望の場合は、{$expireDate}までに有料プランをご契約ください。\n";
+                $message .= "有料プランのお申込み後、すぐにご利用を再開できます。\n";
+                $message .= "なお、このまま有料プランへのご契約がない場合は、{$expireDate}にチームの情報が削除されます。\n";
                 break;
         }
         // TODO: 決済情報入力用のurlは仮です。
