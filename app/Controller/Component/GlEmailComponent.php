@@ -187,7 +187,7 @@ class GlEmailComponent extends Component
             case Team::SERVICE_USE_STATUS_CANNOT_USE:
                 $subject = __("This team is currently unavailable");
                 $message = __("The team \"%s\" is currently unavailable.", $teamName) . " ";
-                $message .= __("If you would like to use regularly, please sign up a paid plan by %s.",
+                $message .= __("If you would like to use regularly, subscribe to the paid plan by %s.",
                         $expireDate) . "\n";
                 $message .= __("You can resume using it immediately after applying for a paid plan.") . "\n";
                 $message .= __("If you do not have a subscription to a paid plan, the team information will be deleted on %s.",
