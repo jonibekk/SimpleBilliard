@@ -15,7 +15,8 @@
     "oefenweb/cakephp-redis": "~1.1.0",
     "dereuromark/cakephp-url-cache": "~1.0.0",
     "kaz29/cake_slack": "dev-master",
-    "browscap/browscap-php": "dev-master"
+    "browscap/browscap-php": "dev-master",
+    "stripe/stripe-php": "^5.1"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",
