@@ -1,8 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
+
 /**
  * ChargeHistory Fixture
  */
-class ChargeHistoryFixture extends CakeTestFixture {
+class ChargeHistoryFixture extends CakeTestFixtureEx {
 
 /**
  * Fields
@@ -37,24 +38,6 @@ class ChargeHistoryFixture extends CakeTestFixture {
  *
  * @var array
  */
-	public $records = array(
-		array(
-			'id' => '',
-			'team_id' => '',
-			'payment_type' => 1,
-			'charge_type' => 1,
-			'amount_per_user' => 1,
-			'total_amount' => 1,
-			'charge_users' => 1,
-			'currency' => 1,
-			'charge_date' => '2017-07-20',
-			'result_type' => 1,
-			'max_charge_users' => 1,
-			'del_flg' => 1,
-			'deleted' => 1,
-			'created' => 1,
-			'modified' => 1
-		),
-	);
+	public $records = array();
 
 }
