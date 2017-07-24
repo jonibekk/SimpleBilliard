@@ -246,6 +246,12 @@ class TeamTest extends GoalousTestCase
         $this->assertEquals($newTeam['border_months'], 4);
     }
 
+    function test_isReadOnly_readOnly()
+    {
+        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $this->assertTrue($this->Team->isReadOnly($teamId));
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;

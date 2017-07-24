@@ -49,6 +49,21 @@ class Team extends AppModel
         self::OPTION_CHANGE_TERM_FROM_CURRENT => "",
         self::OPTION_CHANGE_TERM_FROM_NEXT    => ""
     ];
+    /**
+     * Service use status
+     */
+    const SERVICE_USE_STATUS_FREE_TRIAL = 0;
+    const SERVICE_USE_STATUS_PAID = 1;
+    const SERVICE_USE_STATUS_READ_ONLY = 2;
+    const SERVICE_USE_STATUS_CANNOT_USE = 3;
+    /**
+     * Days of service use status
+     */
+    const DAYS_SERVICE_USE_STATUS = [
+        self::SERVICE_USE_STATUS_FREE_TRIAL => 15,
+        self::SERVICE_USE_STATUS_READ_ONLY  => 30,
+        self::SERVICE_USE_STATUS_CANNOT_USE => 90,
+    ];
 
     /**
      * Set Type name | タイプの名前をセット
@@ -587,6 +602,24 @@ class Team extends AppModel
         $nextTerms = Hash::extract($ret, '{n}.NextTerm');
         $ret = Hash::merge($teams, $nextTerms);
         return $ret;
+    }
+
+    /**
+     * check team is read only status
+     *
+     * @param int $teamId
+     * @return bool
+     */
+    function isReadOnly(int $teamId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'                 => $teamId,
+                'service_use_status' => self::SERVICE_USE_STATUS_READ_ONLY
+            ],
+            'fields'     => ['id']
+        ];
+        return (bool)$this->findWithoutTeamId('first', $options);
     }
 
 }
