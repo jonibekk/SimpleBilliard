@@ -15,7 +15,7 @@ class BackBtnHelper extends AppHelper
             'goals/create',
             'after_click:SubHeaderMenuGoal',
             'goals/approval/detail',
-            'evaluations/view',
+            'evaluations/view'
         );
         $backButton = true;
 
