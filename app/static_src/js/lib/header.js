@@ -20,7 +20,7 @@ $(function () {
     var click_cnt = 0;
     $(document).on("click", "#click-header-bell", function () {
         click_cnt++;
-        var isExistNewNotify = isExistNewNotify();
+        var isExistNewNotify = ifNewNotify();
         initBellNum();
         initTitle();
 
@@ -29,7 +29,7 @@ $(function () {
             do_reload_header_bellList = false;
         }
 
-        function isExistNewNotify() {
+        function ifNewNotify() {
             var newNotifyCnt = getNotifyCnt();
             if (newNotifyCnt > 0) {
                 return true;
@@ -405,4 +405,27 @@ function displaySelectorFluffy(selector) {
             clearInterval(roop);
         }
     }, 100);
+}
+
+// A global function that shows / hides the mobile navigation when the hamburger icon is tapped.
+function toggleNav(){
+    var header = document.getElementsByClassName("header")[0],
+        layerBlack = document.getElementById('layerBlack'),
+        menuNotify = document.getElementsByClassName("js-unread-point-on-hamburger")[0],
+        navIcon = header.getElementsByClassName('toggle-icon')[0];
+    if(header){
+        if(header.classList.contains('mod-openNav')){
+            header.classList.remove('mod-openNav');
+            layerBlack.classList.remove('mod-openNav'); 
+            menuNotify.classList.remove('is-open');
+            navIcon.classList.remove('fa-arrow-right');
+            navIcon.classList.add('fa-navicon');
+        }else{
+            header.classList.add('mod-openNav'); 
+            layerBlack.classList.add('mod-openNav');
+            menuNotify.classList.add('is-open');
+            navIcon.classList.add('fa-arrow-right');
+            navIcon.classList.remove('fa-navicon');
+        }
+    }
 }

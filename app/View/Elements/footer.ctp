@@ -50,5 +50,4 @@
         </div>
     </div>
 </footer>
-<div id="layer-black"></div>
 <?= $this->App->viewEndComment()?>
