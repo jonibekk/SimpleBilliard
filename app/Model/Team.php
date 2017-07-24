@@ -4,7 +4,6 @@ App::uses('AppModel', 'Model');
 /**
  * Team Model
  *
- * @property Badge             $Badge
  * @property Circle            $Circle
  * @property CommentLike       $CommentLike
  * @property CommentMention    $CommentMention
