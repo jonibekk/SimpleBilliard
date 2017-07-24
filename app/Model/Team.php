@@ -58,7 +58,7 @@ class Team extends AppModel
     /**
      * Days of service use status
      */
-    static public $DAYS_SERVICE_USE_STATUS = [
+    const DAYS_SERVICE_USE_STATUS = [
         self::SERVICE_USE_STATUS_FREE_TRIAL => 15,
         self::SERVICE_USE_STATUS_READ_ONLY  => 30,
         self::SERVICE_USE_STATUS_CANNOT_USE => 90,

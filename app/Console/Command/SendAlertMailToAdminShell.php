@@ -97,7 +97,7 @@ class SendAlertMailToAdminShell extends AppShell
     function _mainProcess(int $serviceUseStatus)
     {
         // validating $serviceUseStatus
-        if (!array_key_exists($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS)) {
+        if (!array_key_exists($serviceUseStatus, Team::DAYS_SERVICE_USE_STATUS)) {
             $this->log("Sending email for alerting expire was canceled. cause, \$serviceUseStatus was wrong. \$serviceUseStatus:$serviceUseStatus");
             return false;
         }
@@ -108,12 +108,13 @@ class SendAlertMailToAdminShell extends AppShell
                 $this->failedCount++;
                 continue;
             }
-            $statusDays = $this->_decideStatusDays($serviceUseStatus, Team::$DAYS_SERVICE_USE_STATUS[$serviceUseStatus],
+            $daysOfStatus = $this->_decideStatusDays($serviceUseStatus,
+                Team::DAYS_SERVICE_USE_STATUS[$serviceUseStatus],
                 $team);
-            if ($this->_isTargetTeam($statusDays, $team) === false) {
+            if ($this->_isTargetTeam($daysOfStatus, $team) === false) {
                 continue;
             }
-            $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
+            $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysOfStatus);
             $this->_sendingEmailToAdmins($team['id'], $team['name'], $expireDate, $serviceUseStatus);
         }
         $msg = sprintf("Sending email for alerting expire has been done. succeeded count:%s, failed count:%s, \$serviceUseStatus:%s",
@@ -156,17 +157,17 @@ class SendAlertMailToAdminShell extends AppShell
     /**
      * Is the team target for sending email?
      *
-     * @param int   $daysServiceUseStatus
+     * @param int   $daysOfStatus
      * @param array $team
      *
      * @return bool
      */
-    function _isTargetTeam(int $daysServiceUseStatus, array $team): bool
+    function _isTargetTeam(int $daysOfStatus, array $team): bool
     {
         if ($this->params['force'] === true) {
             return true;
         }
-        $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysServiceUseStatus);
+        $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysOfStatus);
         $notifyDates = $this->_getNotifyDates($expireDate);
         $todayLocalDate = AppUtil::todayDateYmdLocal($team['timezone']);
         if (in_array($todayLocalDate, $notifyDates)) {
