@@ -611,7 +611,7 @@ class Team extends AppModel
      */
     function findByServiceUseStatus(
         int $serviceUseStatus,
-        $fields = ['id', 'name', 'service_use_state_start_date', 'free_trial_days', 'timezone']
+        array $fields = ['id', 'name', 'service_use_state_start_date', 'free_trial_days', 'timezone']
     ): array {
         $options = [
             'conditions' => [
