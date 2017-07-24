@@ -170,22 +170,28 @@ class GlEmailComponent extends Component
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_FREE_TRIAL:
                 $subject = __("Notice of free trial deadline");
-                $message = __("The deadline for the free trial of the team \"{$teamName}\" is {$expireDate}.") . " ";
+                $message = __("The deadline for the free trial of the team \"%s\" is %s.",
+                        $teamName,
+                        $expireDate) . " ";
                 $message .= __("If you would like to continue using it, please subscribe to the paid plan.") . "\n";
                 break;
             case Team::SERVICE_USE_STATUS_READ_ONLY:
                 $subject = __("This team is currently in read-only status");
-                $message = __("The team \"{$teamName}\" is currently in a read-only state.") . " ";
-                $message .= __("If you would like to use regularly, subscribe to the paid plan by {$expireDate}.") . "\n";
+                $message = __("The team \"%s\" is currently in a read-only state.", $teamName) . " ";
+                $message .= __("If you would like to use regularly, subscribe to the paid plan by %s.",
+                        $expireDate) . "\n";
                 $message .= __("Reading-only will be canceled immediately after subscription to the paid plan.") . "\n";
-                $message .= __("If you do not have a subscription to the paid plan, you will not be able to use it for {$expireDate}.") . "\n";
+                $message .= __("If you do not have a subscription to the paid plan, you will not be able to use it for %s.",
+                        $expireDate) . "\n";
                 break;
             case Team::SERVICE_USE_STATUS_CANNOT_USE:
                 $subject = __("This team is currently unavailable");
-                $message = __("The team \"{$teamName}\" is currently unavailable.") . " ";
-                $message .= __("If you would like to use regularly, please sign up a paid plan by {$expireDate}.") . "\n";
+                $message = __("The team \"%s\" is currently unavailable.", $teamName) . " ";
+                $message .= __("If you would like to use regularly, please sign up a paid plan by %s.",
+                        $expireDate) . "\n";
                 $message .= __("You can resume using it immediately after applying for a paid plan.") . "\n";
-                $message .= __("If you do not have a subscription to a paid plan, the team information will be deleted on {$expireDate}.") . "\n";
+                $message .= __("If you do not have a subscription to a paid plan, the team information will be deleted on %s.",
+                        $expireDate) . "\n";
                 break;
         }
         // TODO: 決済情報入力用のurlは仮です。

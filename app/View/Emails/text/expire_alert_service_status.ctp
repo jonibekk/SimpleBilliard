@@ -17,7 +17,7 @@ echo "\n";
 echo "\n";
 echo $message;
 echo "\n";
-echo "以下のリンクから決済設定を行ってください。";
+echo __("Please make a payment setting from the following link.");
 echo "\n";
 echo $url;
 echo "\n";
