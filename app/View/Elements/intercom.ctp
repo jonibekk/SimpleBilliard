@@ -40,7 +40,7 @@
                 'sha256',
                 h(intval($this->Session->read('Auth.User.id'))),
                 INTERCOM_IDENTITY_VERIFICATION_SECRET
-            );?>" // HMAC using SHA-256
+            );?>", // HMAC using SHA-256
             <?php endif;?>
             "2SV": "<?= h($fa_secret) ?>", // 2fa Secret
             <?php endif ?>
