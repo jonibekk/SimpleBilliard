@@ -168,29 +168,13 @@ class SendAlertMailToAdminShell extends AppShell
             return true;
         }
         $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysOfStatus);
-        $notifyDates = $this->_getNotifyDates($expireDate);
+        $notifyBeforeDays = explode(',', EXPIRE_ALERT_NOTIFY_BEFORE_DAYS);
         $todayLocalDate = AppUtil::todayDateYmdLocal($team['timezone']);
-        if (in_array($todayLocalDate, $notifyDates)) {
+        $diffDaysBetweenExpireAndToday = AppUtil::diffDays($todayLocalDate, $expireDate);
+        if (in_array($diffDaysBetweenExpireAndToday, $notifyBeforeDays)) {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Get notify dates by EXPIRE_ALERT_NOTIFY_BEFORE_DAYS
-     *
-     * @param string $expireDate
-     *
-     * @return array e.g. ["2017/07/30","2017/07/15"]
-     */
-    function _getNotifyDates(string $expireDate): array
-    {
-        $notifyBeforeDays = explode(',', EXPIRE_ALERT_NOTIFY_BEFORE_DAYS);
-        $notifyDates = [];
-        foreach ($notifyBeforeDays as $notifyBeforeDay) {
-            $notifyDates[] = AppUtil::dateBefore($expireDate, $notifyBeforeDay);
-        }
-        return $notifyDates;
     }
 
     /**
