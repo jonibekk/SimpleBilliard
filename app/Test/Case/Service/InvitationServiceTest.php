@@ -31,10 +31,10 @@ class InvitationServiceTest extends GoalousTestCase
 
     /**
      * Validate emails
+     * check empty
      */
-    function test_validateEmails()
+    function test_validateEmails_checkEmpty()
     {
-        /* Check empty */
         $emails = [];
         $errors = $this->InvitationService->validateEmails($emails);
         $this->assertEquals($errors[0], __("Input is required"));
@@ -42,8 +42,14 @@ class InvitationServiceTest extends GoalousTestCase
         $emails = ['', ''];
         $errors = $this->InvitationService->validateEmails($emails);
         $this->assertEquals($errors[0], __("Input is required"));
+    }
 
-        /* Check email format */
+    /**
+     * Validate emails
+     * format
+     */
+    function test_validateEmails_format()
+    {
         $emails = ['a'];
         $errors = $this->InvitationService->validateEmails($emails);
         $this->assertEquals($errors[0], __("Line %d", 1) . "：" . __("Email address is incorrect."));
@@ -66,8 +72,14 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(count($errors), 2);
         $this->assertEquals($errors[0], __("Line %d", 2) . "：" . __("Email address is incorrect."));
         $this->assertEquals($errors[1], __("Line %d", 4) . "：" . __("Email address is incorrect."));
+    }
 
-        /* Check max invitation count */
+    /**
+     * Validate emails
+     * Check max invitation count
+     */
+    function test_validateEmails_maxInvitationCount()
+    {
         $emails = [];
         for ($i = 1; $i <= 100; $i++) {
             $emails[] = sprintf("test%d@example.com", $i);
@@ -79,8 +91,13 @@ class InvitationServiceTest extends GoalousTestCase
         $errors = $this->InvitationService->validateEmails($emails);
         $this->assertEquals($errors[0],
             __("%s invitations are the limits in one time.", InvitationService::MAX_INVITATION_CNT));
-
-        /* Check duplicates */
+    }
+    /**
+     * Validate emails
+     * Check duplicates
+     */
+    function test_validateEmails_duplicate()
+    {
         $duplicateErrMsg = "：" . __("%s is duplicated.", __("Email address"));
         $emails = array_fill(0, 2, 'test@example.com');
         $errors = $this->InvitationService->validateEmails($emails);

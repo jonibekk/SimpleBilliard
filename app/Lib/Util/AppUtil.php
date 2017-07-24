@@ -589,26 +589,26 @@ class AppUtil
      * - Ignore empty line
      * - Trim each line
      *
-     * @param string $emailsStr
+     * @param string $str
      * @param bool   $ignoreEmptyLine
      *
      * @return array
      */
-    static function convStrToArr(string $emailsStr, bool $ignoreEmptyLine = false): array
+    static function convStrToArr(string $str, bool $ignoreEmptyLine = false): array
     {
-        if (empty($emailsStr)) {
+        if (empty($str)) {
             return [];
         }
 
         //一行ずつ処理
         $cr = array("\r\n", "\r"); // 改行コード置換用配列を作成しておく
 
-        $emailsStr = trim($emailsStr); // 文頭文末の空白を削除
+        $str = trim($str); // 文頭文末の空白を削除
 
         // 改行コードを統一
-        $emailsStr = str_replace($cr, "\n", $emailsStr);
+        $str = str_replace($cr, "\n", $str);
         // 改行コードで分割して配列に変換
-        $emails = explode("\n", $emailsStr);
+        $emails = explode("\n", $str);
 
         //一行ずつ処理
         $res = [];
