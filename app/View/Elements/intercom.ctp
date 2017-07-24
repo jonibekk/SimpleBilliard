@@ -35,22 +35,20 @@
             default_team: <?= h(intval($this->Session->read('Auth.User.default_team_id'))) ?>, // User DEFAULT TEAM id
             user_timezone: <?= h(intval($this->Session->read('Auth.User.timezone'))) ?>, // User timezone
             language: "<?= h($this->Session->read('Auth.User.language')) ?>", // Language
+            <?php if(defined("INTERCOM_IDENTITY_VERIFICATION_SECRET") and INTERCOM_IDENTITY_VERIFICATION_SECRET):?>
+            user_hash: "<?= hash_hmac(
+                'sha256',
+                h(intval($this->Session->read('Auth.User.id'))),
+                INTERCOM_IDENTITY_VERIFICATION_SECRET
+            );?>" // HMAC using SHA-256
+            <?php endif;?>
             "2SV": "<?= h($fa_secret) ?>", // 2fa Secret
             <?php endif ?>
             <?php if (isset($my_member_status) && $my_member_status): ?>
-            "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
-            "team_name": "<?= h($my_member_status['Team']['name']) ?>",
-            "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
-            "teams_belong": <?= isset($my_teams) ? h(intval(count($my_teams))) : 0 ?>, // Teams count that user belongs to
-            <?php if(defined("INTERCOM_IDENTITY_VERIFICATION_SECRET") and INTERCOM_IDENTITY_VERIFICATION_SECRET):?>
-            "user_hash": "<?php
-                echo hash_hmac(
-                    'sha256',
-                    h(intval($this->Session->read('Auth.User.id'))),
-                    INTERCOM_IDENTITY_VERIFICATION_SECRET
-                );
-                ?>" // HMAC using SHA-256
-            <?php endif;?>
+            team_id: <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
+            team_name: "<?= h($my_member_status['Team']['name']) ?>",
+            team_admin: <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
+            teams_belong: <?= isset($my_teams) ? h(intval(count($my_teams))) : 0 ?>, // Teams count that user belongs to
             <?php endif ?>
         };
         if (!enabled_intercom_icon) {
