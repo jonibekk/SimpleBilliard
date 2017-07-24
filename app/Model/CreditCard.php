@@ -3,26 +3,26 @@ App::uses('AppModel', 'Model');
 
 /**
  * CreditCard Model
- *
  */
-class CreditCard extends AppModel {
+class CreditCard extends AppModel
+{
 
     public $validate = [
-        'team_id' => [
-            'numeric' => [
+        'team_id'            => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
-            'isUnique'  => [
-                'rule' => ['isUnique', ['team_id', 'team_id'], false],
+            'isUnique' => [
+                'rule'     => ['isUnique', ['team_id', 'team_id'], false],
                 'required' => 'create'
             ],
         ],
         'payment_setting_id' => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
@@ -30,10 +30,10 @@ class CreditCard extends AppModel {
                 'rule'     => 'notBlank',
             ],
         ],
-        'customer_code' => [
+        'customer_code'      => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'isString'  => ['rule' => 'isString'],
-            'notBlank' => [
+            'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],

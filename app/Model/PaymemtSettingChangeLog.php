@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+
 /**
  * PaymemtSettingChangeLog Model
  *
@@ -52,10 +53,10 @@ class PaymemtSettingChangeLog extends AppModel
         /** @noinspection PhpUndefinedFunctionInspection */
         $paymentData = msgpack_pack($payment);
         $data = [
-            'team_id' => $this->current_team_id,
-            'user_id' => $userId,
+            'team_id'            => $this->current_team_id,
+            'user_id'            => $userId,
             'payment_setting_id' => $paymentSettingId,
-            'data'    => base64_encode($paymentData),
+            'data'               => base64_encode($paymentData),
         ];
         $this->create();
         $ret = $this->save($data);

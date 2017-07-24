@@ -18,7 +18,7 @@ class CreditCardService extends AppService
     public function registerCustomer(string $token, string $email, string $description = null): array
     {
         $result = [
-            "error" => false,
+            "error"   => false,
             "message" => null
         ];
 
@@ -30,8 +30,8 @@ class CreditCardService extends AppService
         }
 
         $customer = array(
-            "source" => $token,
-            "email" => $email,
+            "source"      => $token,
+            "email"       => $email,
             "description" => $description
         );
 
@@ -42,8 +42,7 @@ class CreditCardService extends AppService
 
             $result["customer_id"] = $response->id;
             $result["card"] = $response->sources->data[0];
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
 
@@ -68,7 +67,7 @@ class CreditCardService extends AppService
     public function deleteCustomer(string $customerId): array
     {
         $result = [
-            "error" => false,
+            "error"   => false,
             "message" => null
         ];
 
@@ -86,8 +85,7 @@ class CreditCardService extends AppService
             $response = $customer->delete();
 
             $result["deleted"] = $response->deleted;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
 

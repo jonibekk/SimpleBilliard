@@ -7,7 +7,7 @@ App::uses('CreditCard', 'Model');
 /**
  * Class PaymentService
  */
-class PaymentService extends  AppService
+class PaymentService extends AppService
 {
 
     /**
@@ -81,9 +81,9 @@ class PaymentService extends  AppService
 
             // Create CreditCards
             $creditCardData = [
-                'team_id' => $data['team_id'],
+                'team_id'            => $data['team_id'],
                 'payment_setting_id' => $paymentSettingId,
-                'customer_code' => $customerCode
+                'customer_code'      => $customerCode
             ];
 
             $CreditCard->begin();

@@ -3,9 +3,9 @@ App::uses('AppModel', 'Model');
 
 /**
  * PaymentSetting Model
- *
  */
-class PaymentSetting extends AppModel {
+class PaymentSetting extends AppModel
+{
 
     const PAYMENT_TYPE_INVOICE = 0;
     const PAYMENT_TYPE_CREDIT_CARD = 1;
@@ -18,8 +18,8 @@ class PaymentSetting extends AppModel {
     * @var array
     */
     public $validate = [
-        'team_id' => [
-            'numeric' => [
+        'team_id'          => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
@@ -27,8 +27,8 @@ class PaymentSetting extends AppModel {
                 'rule'     => 'notBlank',
             ],
         ],
-        'type' => [
-            'inList' => [
+        'type'             => [
+            'inList'   => [
                 'rule' => [
                     'inList',
                     [
@@ -42,8 +42,8 @@ class PaymentSetting extends AppModel {
                 'rule'     => 'notBlank',
             ],
         ],
-        'currency' => [
-            'inList' => [
+        'currency'         => [
+            'inList'   => [
                 'rule' => [
                     'inList',
                     [
@@ -57,8 +57,8 @@ class PaymentSetting extends AppModel {
                 'rule'     => 'notBlank',
             ],
         ],
-        'amount_per_user' => [
-            'numeric' => [
+        'amount_per_user'  => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
@@ -66,42 +66,42 @@ class PaymentSetting extends AppModel {
                 'rule'     => 'notBlank',
             ],
         ],
-        'payer_name' => [
+        'payer_name'       => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'isString'  => ['rule' => 'isString'],
-            'notBlank' => [
+            'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_name' => [
+        'company_name'     => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'isString'  => ['rule' => 'isString'],
-            'notBlank' => [
+            'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_address' => [
+        'company_address'  => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'isString'  => ['rule' => 'isString'],
-            'notBlank' => [
+            'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_tel' => [
+        'company_tel'      => [
             'maxLength' => ['rule' => ['maxLength', 20]],
-            'notBlank' => [
+            'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
             'phoneNo'   => [
-                'rule'       => 'phoneNo',
+                'rule' => 'phoneNo',
             ],
         ],
         'payment_base_day' => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
@@ -113,8 +113,8 @@ class PaymentSetting extends AppModel {
                 'rule' => ['range', 0, 32]
             ]
         ],
-        'email' => [
-            'notBlank' => [
+        'email'            => [
+            'notBlank'    => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
@@ -126,8 +126,8 @@ class PaymentSetting extends AppModel {
 
     public $validateCreate = [
         'team_id' => [
-            'isUnique'  => [
-                'rule' => ['isUnique', ['team_id', 'team_id'], false],
+            'isUnique' => [
+                'rule'     => ['isUnique', ['team_id', 'team_id'], false],
                 'required' => 'create'
             ],
         ],

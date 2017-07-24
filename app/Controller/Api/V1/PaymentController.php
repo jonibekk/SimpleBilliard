@@ -10,11 +10,8 @@ class PaymentController extends ApiController
 {
     /**
      * Create a new payment register
-     *
-     * Endpoint: /api/v1/payment/creditCard
-     *
+     * Endpoint: /api/v1/payment/credit_card
      * Parameters:
-     *
      * token            Stripe Credit Card Token
      * amount_per_user  Amount Per user
      * payer_name       Credit Card Name or Invoice Payer
@@ -27,7 +24,7 @@ class PaymentController extends ApiController
      *
      * @return CakeResponse
      */
-    function post_creditCard()
+    function post_credit_card()
     {
         // Set teamId and payment type for validation
         $teamId = $this->current_team_id;
