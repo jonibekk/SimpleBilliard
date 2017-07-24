@@ -103,8 +103,8 @@ class SendAlertMailToAdminShell extends AppShell
         }
         $teams = $this->Team->findByServiceUseStatus($serviceUseStatus);
         foreach ($teams as $team) {
-            if ($team['service_use_state_start_date'] == null) {
-                $this->log("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is null.");
+            if ($team['service_use_state_start_date'] == "0000-00-00") {
+                $this->log("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is '0000-00-00'.");
                 $this->failedCount++;
                 continue;
             }
