@@ -584,4 +584,52 @@ class AppUtil
         return $text;
     }
 
+    /**
+     * Convert string to array
+     * - Ignore empty line
+     * - Trim each line
+     *
+     * @param string $str
+     * @param bool   $ignoreEmptyLine
+     *
+     * @return array
+     */
+    static function convStrToArr(string $str, bool $ignoreEmptyLine = false): array
+    {
+        if (empty($str)) {
+            return [];
+        }
+
+        //一行ずつ処理
+        $cr = array("\r\n", "\r"); // 改行コード置換用配列を作成しておく
+
+        $str = trim($str); // 文頭文末の空白を削除
+
+        // 改行コードを統一
+        $str = str_replace($cr, "\n", $str);
+        // 改行コードで分割して配列に変換
+        $emails = explode("\n", $str);
+
+        //一行ずつ処理
+        $res = [];
+        foreach ($emails as $email) {
+            //全角スペースを除去
+            $email = preg_replace('/　/', ' ', $email);
+            //前後スペースを除去
+            $email = trim($email);
+            //空行はスキップ
+            if ($ignoreEmptyLine && empty($email)) {
+                continue;
+            }
+            if (!in_array($email, $res)) {
+                $res[] = $email;
+            }
+        }
+        // 全ての要素の値が空文字だったら空の配列で返す
+        if (empty(array_filter($res))) {
+            return [];
+        }
+        return $res;
+    }
+
 }
