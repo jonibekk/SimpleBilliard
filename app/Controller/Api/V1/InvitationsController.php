@@ -17,6 +17,9 @@ class InvitationsController extends ApiController
         $InvitationService = ClassRegistry::init("InvitationService");
 
         $emailsStr = $this->request->data("emails");
+        if (!is_string($emailsStr)) {
+            return $this->_getResponseValidationFail(["Parameter is invalid"]);
+        }
         // Convert to mail address list.
         $emails = AppUtil::convStrToArr($emailsStr);
         // Validation
