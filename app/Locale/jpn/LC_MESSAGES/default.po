@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-25 01:33+0900\n"
+"PO-Revision-Date: 2017-07-25 01:44+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -875,6 +875,8 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "This team is currently in read-only status"
 msgstr "現在このチームは読み取り専用の状態になっております"
 
+#, fuzzy
+#| msgid "This team is currently in read-only status"
 msgid "The team \"%s\" is currently in a read-only state."
 msgstr "チーム「%s」は現在、読み取り専用の状態になっております。"
 
@@ -896,11 +898,10 @@ msgstr ""
 msgid "This team is currently unavailable"
 msgstr "現在このチームは利用できない状態になっております"
 
+#, fuzzy
+#| msgid "This team is currently unavailable"
 msgid "The team \"%s\" is currently unavailable."
 msgstr "チーム「%s」は現在、ご利用できない状態になっております。"
-
-msgid "If you would like to use regularly, please sign up a paid plan by %s."
-msgstr ""
 
 msgid "You can resume using it immediately after applying for a paid plan."
 msgstr "有料プランのお申込み後、すぐにご利用を再開できます。"
