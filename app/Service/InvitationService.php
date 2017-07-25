@@ -60,7 +60,7 @@ class InvitationService extends AppService
      *
      * @return int
      */
-    function calcChargeUserCount(int $addUserCnt)
+    function calcChargeUserCount(int $addUserCnt) : int 
     {
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
