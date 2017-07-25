@@ -40,6 +40,9 @@ class InvitationsController extends ApiController
         $InvitationService = ClassRegistry::init("InvitationService");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
         $invitationCnt = $this->request->query("invitation_count");
 
         /* These errors are invalid request */
@@ -49,6 +52,11 @@ class InvitationsController extends ApiController
         $invitationCnt = (int)$invitationCnt;
         if ($invitationCnt <= 0) {
             return $this->_getResponseBadFail(__("Parameter is invalid"));
+        }
+
+        // Check permission
+        if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
         }
 
         // Get payment setting by team id
