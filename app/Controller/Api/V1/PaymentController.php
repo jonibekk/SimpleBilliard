@@ -81,7 +81,81 @@ class PaymentController extends ApiController
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
 
-        // New Payment registered with sucess
+        // Apply charge to customer
+        $charge = $this->applyFirstCharge();
+
+        // Error on charging the customer
+        if ($charge['error'] === true) {
+            return $this->_getResponseBadFail($charge['message']);
+        }
+
+        // Charging transaction succeed but payment fail. It can be on cause of fraud or credit transfer.
+        if ($charge['success'] === false) {
+            return $this->_getResponseBadFail($charge['status']);
+        }
+
+        // New Payment registered with success
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Charge the first payment
+     *
+     * @return array
+     */
+    private function applyFirstCharge()
+    {
+        $result = [
+            'error'   => false,
+            'message' => null
+        ];
+
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init('CreditCardService');
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $teamId = $this->current_team_id;
+        $membersCount = count($TeamMember->getActiveTeamMembersList(false));
+
+        // Get Payment settings
+        $paymentSettings = $this->Team->PaymentSetting->getByTeamId($teamId);
+        if (!$paymentSettings) {
+            $result['error'] = true;
+            $result['message'] = __('Payment settings does not exists.');
+
+            return $result;
+        }
+
+        // Get credit card settings
+        if (empty(Hash::get($paymentSettings, 'CreditCard')) || !isset($paymentSettings['CreditCard'][0])) {
+            $result['error'] = true;
+            $result['message'] = __('Credit card settings does not exists.');
+
+            return $result;
+        }
+        $creditCard = $paymentSettings['CreditCard'][0];
+
+        // Calculate value  (Number of Active users X Amount per user)
+        $value = $membersCount * Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
+        $customerId =  Hash::get($creditCard, 'customer_code');
+        $currency = Hash::get($paymentSettings, 'PaymentSetting.currency') == PaymentSetting::CURRENCY_JPY ? 'JPY' : 'USD';
+
+
+        // Apply the user charge on Stripe
+        $charge = $CreditCardService->chargeCustomer($customerId, $currency, $value, 'Test charge');
+
+        if ($charge['error'] === true) {
+            $result['error'] = true;
+            $result['message'] = $charge['message'];
+
+            return $result;
+        }
+
+        // Customer charge processed
+        $result['success'] = $charge['success'];
+        $result['data'] = $charge['paymentDatas'];
+
+        return $result;
     }
 }

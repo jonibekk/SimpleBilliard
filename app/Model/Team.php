@@ -29,6 +29,7 @@ App::uses('AppModel', 'Model');
  * @property GroupInsight      $GroupInsight
  * @property CircleInsight     $CircleInsight
  * @property AccessUser        $AccessUser
+ * @property PaymentSetting    $PaymentSetting
  */
 class Team extends AppModel
 {
@@ -183,6 +184,7 @@ class Team extends AppModel
         'GroupInsight',
         'CircleInsight',
         'AccessUser',
+        'PaymentSetting'
     ];
 
     public $current_team = [];
