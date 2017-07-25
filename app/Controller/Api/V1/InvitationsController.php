@@ -73,7 +73,7 @@ class InvitationsController extends ApiController
         // All days between before payment base date and next payment base date
         $allUseDays = $PaymentService->getAllUseDaysOfMonth();
         // Calc total charge
-        $totalCharge = $PaymentService->calcTotalChargeByAddUsers($chargeUserCnt);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt);
 
         $res = [
             'charge_users_count' => $chargeUserCnt,
