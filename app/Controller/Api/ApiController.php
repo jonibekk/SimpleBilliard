@@ -27,7 +27,6 @@ class ApiController extends BaseController
     ];
     private $merge_helpers = [];
     private $merge_uses = [];
-    private $isProhibittedPost = false;
 
     public function __construct($request = null, $response = null)
     {

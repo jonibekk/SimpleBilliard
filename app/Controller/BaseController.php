@@ -90,6 +90,12 @@ class BaseController extends Controller
         'Goalous App Android'
     ];
 
+    /**
+     * prohibitted post|put|delete in read only term
+     */
+    public $isProhibittedPost = false;
+
+
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);

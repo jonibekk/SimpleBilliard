@@ -158,7 +158,18 @@ class AppController extends BaseController
             if ($notify_id) {
                 $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
-            //ajaxの時以外で実行する
+
+            // prohibit ajax post in read only term
+            if ($this->request->is('ajax') && $this->isProhibittedPostByReadOnly()) {
+                $this->isProhibittedPost = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    // TODO: This word should be replaced after creating word by @kohei
+                    'msg' => __("You may only read your team’s pages.")
+                ]);
+            }
+
+            // by not ajax request
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
                     $this->_setTerm();
@@ -235,6 +246,13 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+    }
+
+    public function invokeAction(CakeRequest $request) {
+        if ($this->isProhibittedPost) {
+            return false;
+        }
+        return parent::invokeAction($request);
     }
 
     public function _setBrowserToSession()
