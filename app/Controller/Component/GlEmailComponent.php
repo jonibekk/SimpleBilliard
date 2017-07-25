@@ -165,7 +165,6 @@ class GlEmailComponent extends Component
         string $serviceUseStatus
     ) {
         $mailTemplate = null;
-        // TODO: 文言はコーヘイさんに確認を取った上で修正および翻訳します。
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_FREE_TRIAL:
                 $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL;
