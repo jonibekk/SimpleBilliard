@@ -212,19 +212,22 @@ class PaymentService extends AppService
             }
         }
 
-        // Get next base date
+        // Move ym
         if ($isNextMonth) {
             // Move next year if December
             list($y, $m) = AppUtil::nextYm($y, $m);
-            $res = AppUtil::dateFromMkTime($y, $m, $paymentBaseDay);
-            if (checkdate($m, $paymentBaseDay, $y) === false) {
-                $res = AppUtil::dateMonthLast($res);
-            }
-        } else {
-            $res = AppUtil::dateFromMkTime($y, $m, $paymentBaseDay);
         }
 
-        return $res;
+        // Get next payment base date
+        if (checkdate($m, $paymentBaseDay, $y) === false) {
+            // If not exist payment base day, set last day of the month.
+            $lastDay = date('t', strtotime(AppUtil::dateFromYMD($y, $m, 1)));
+            $nextBaseDate = AppUtil::dateFromYMD($y, $m, $lastDay);
+        } else {
+            $nextBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
+        }
+
+        return $nextBaseDate;
     }
 
     /**
@@ -239,7 +242,6 @@ class PaymentService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
-
         list($y, $m, $d) = explode('-', $nextBaseDate);
         list($y, $m) = AppUtil::prevYm($y, $m);
 
@@ -247,10 +249,10 @@ class PaymentService extends AppService
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         if (checkdate($m, $paymentBaseDay, $y) === false) {
-            AppUtil::dateFromMkTime($y, $m, 1);
-            $prevBaseDate = AppUtil::dateMonthLast(AppUtil::dateFromMkTime($y, $m, 1));
+            AppUtil::dateFromYMD($y, $m, 1);
+            $prevBaseDate = AppUtil::dateMonthLast(AppUtil::dateFromYMD($y, $m, 1));
         } else {
-            $prevBaseDate = AppUtil::dateFromMkTime($y, $m, $paymentBaseDay);
+            $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
         }
 
         $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
@@ -274,11 +276,12 @@ class PaymentService extends AppService
 
         $paymentSetting = $this->get($Team->current_team_id);
         $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDaysOfMonth);
+
         // Ex. 3people × ¥1,980 × 20 days / 1month
         if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
-            $totalCharge = AppUtil::floor($totalCharge);
+            $totalCharge = AppUtil::floor($totalCharge, 0);
         } else {
-            $totalCharge = AppUtil::floor($totalCharge,3);
+            $totalCharge = AppUtil::floor($totalCharge,2);
         }
         return $totalCharge;
     }

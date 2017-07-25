@@ -325,9 +325,9 @@ class AppUtil
      *
      * @return string
      */
-    static function dateFromMkTime(int $y, int $m, int $d) : string
+    static function dateFromYMD(int $y, int $m, int $d) : string
     {
-        return date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
+        return sprintf("%4d-%02d-%02d", $y, $m, $d);
     }
 
     /**

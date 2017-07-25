@@ -534,7 +534,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, 28);
     }
 
-    public function test_calcTotalChargeByAddUsers()
+    public function test_calcTotalChargeByAddUsers_jpy()
     {
         $teamId = 1;
         $this->Team->current_team_id = $teamId;
@@ -547,22 +547,113 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'payment_base_day' => 1,
             'amount_per_user' => 1980,
-            'currency' => $this->PaymentSetting::CURRENCY_JPY
+            'currency' => PaymentSetting::CURRENCY_JPY
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 1980);
+
+        $currentTimestamp = strtotime("2017-01-01");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 3960);
+
+        $currentTimestamp = strtotime("2017-01-02");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 3832);
+
+        $currentTimestamp = strtotime("2017-01-15");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 2171);
+
+        $currentTimestamp = strtotime("2017-01-31");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 127);
+
+        // If invalid payment base date
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 31,
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+
+        $currentTimestamp = strtotime("2017-04-29");
+        $userCnt = 1;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 66);
+
+        $currentTimestamp = strtotime("2017-04-30");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 3960);
+    }
+
+    public function test_calcTotalChargeByAddUsers_usd()
+    {
+        $teamId = 1;
+        $this->Team->current_team_id = $teamId;
+        $this->Team->id = $teamId;
+        $this->Team->save([
+            'timezone' => 0,
+        ]);
+        $teamId = 1;
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 1,
+            'amount_per_user' => 16,
+            'currency' => PaymentSetting::CURRENCY_USD
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 16);
 
-        $this->assertEquals($res, "¥1,980");
+        $currentTimestamp = strtotime("2017-01-01");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 32);
+
+        $currentTimestamp = strtotime("2017-01-02");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 30.96);
+
+        $currentTimestamp = strtotime("2017-01-15");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 17.54);
+
+        $currentTimestamp = strtotime("2017-01-31");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 1.03);
+
+        // If invalid payment base date
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 31,
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
 
 
-        // TODO: confirm how display label (円 or ¥)
+        $currentTimestamp = strtotime("2017-04-29");
+        $userCnt = 1;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 0.53);
+
+        $currentTimestamp = strtotime("2017-04-30");
+        $userCnt = 2;
+        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
+        $this->assertEquals($res, 32);
     }
 
     /**
