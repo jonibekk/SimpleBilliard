@@ -17,6 +17,10 @@ class TeamMember extends AppModel
     const ADMIN_USER_FLAG = 1;
     const ACTIVE_USER_FLAG = 1;
 
+    const STATUS_INVITED = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
+
     public $myTeams = [];
     /**
      * Validation rules
@@ -85,7 +89,6 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
-
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -335,8 +338,12 @@ class TeamMember extends AppModel
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false, $teamId = null)
-    {
+    public function getAllMemberUserIdList(
+        $with_me = true,
+        $required_active = true,
+        $required_evaluate = false,
+        $teamId = null
+    ) {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -356,6 +363,26 @@ class TeamMember extends AppModel
         }
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    /**
+     * Count charge target users
+     *
+     * @return int
+     */
+    public function countChargeTargetUsers(): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'status'  => [
+                    self::STATUS_INVITED,
+                    self::STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
     }
 
     public function setAdminUserFlag($member_id, $flag)
@@ -1873,8 +1900,9 @@ class TeamMember extends AppModel
     /**
      * active admin as team member and user
      *
-     * @param  int  $userId
-     * @param  int  $teamId
+     * @param  int $userId
+     * @param  int $teamId
+     *
      * @return bool
      */
     public function isActiveAdmin(int $userId, int $teamId): bool

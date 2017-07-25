@@ -52,4 +52,24 @@ class InvitationService extends AppService
 
         return $errors;
     }
+
+    /**
+     * Calc charge user count
+     *
+     * @param int $addUserCnt
+     *
+     * @return int
+     */
+    function calcChargeUserCount(int $addUserCnt)
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $maxChargeUserCnt = $ChargeHistory->getLatestMaxChargeUsers();
+        $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers();
+        $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargeUserCnt;
+        return $chargeUserCnt;
+    }
 }

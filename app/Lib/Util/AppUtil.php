@@ -277,6 +277,60 @@ class AppUtil
     }
 
     /**
+     * Get next month
+     *
+     * @param int $y
+     * @param int $m
+     *
+     * @return array
+     */
+    static function nextYm(int $y, int $m) : array
+    {
+        if ($m == 12) {
+            $y += 1;
+            $m = 1;
+        } else {
+            $m += 1;
+        }
+
+        return [$y, $m];
+    }
+
+    /**
+     * Get previous month
+     *
+     * @param int $y
+     * @param int $m
+     *
+     * @return array
+     */
+    static function prevYm(int $y, int $m) : array
+    {
+        if ($m == 1) {
+            $y -= 1;
+            $m = 12;
+        } else {
+            $m -= 1;
+        }
+
+        return [$y, $m];
+    }
+
+    /**
+     * Date format by year, month, day
+     *
+     * @param int $y
+     * @param int $m
+     * @param int $d
+     *
+     * @return string
+     */
+    static function dateFromMkTime(int $y, int $m, int $d) : string
+    {
+        return date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
+    }
+
+    /**
      * 値が指定した範囲に含まれるか？
      *
      * @param int $target
@@ -630,6 +684,25 @@ class AppUtil
             return [];
         }
         return $res;
+    }
+
+    /**
+     * Check if int
+     *
+     * String type allow compare to `is_int` func
+     * @param $val
+     *
+     * @return bool
+     */
+    static function isInt($val) : bool
+    {
+        if (!is_numeric($val)) {
+            return false;
+        }
+        if (!preg_match("/^[0-9]+$/", $val)) {
+            return false;
+        }
+        return true;
     }
 
 }
