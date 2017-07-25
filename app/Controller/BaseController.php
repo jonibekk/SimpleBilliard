@@ -287,7 +287,7 @@ class BaseController extends Controller
 
     public function isProhibittedPostByReadOnly(): bool
     {
-        if (!($this->isPost() || $this->isPut() || $this->isDelete())) {
+        if (!$this->request->is(['post', 'put', 'delete'])) {
             return false;
         }
 
@@ -296,30 +296,5 @@ class BaseController extends Controller
         if ($isReadOnly) {
             return true;
         }
-    }
-
-    public function isGet()
-    {
-        return $this->request->is('get');
-    }
-
-    public function isPost()
-    {
-        return $this->request->is('post');
-    }
-
-    public function isPut()
-    {
-        return $this->request->is('put');
-    }
-
-    public function isDelete()
-    {
-        return $this->request->is('delete');
-    }
-
-    public function logRequest($type = 'get')
-    {
-        $this->log($type . ": " . var_export($this->request->is($type), true));
     }
 }

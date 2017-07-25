@@ -168,7 +168,7 @@ class AppController extends BaseController
                 // prohibit services uses by team status
                 if ($this->isProhibittedPostByReadOnly()) {
                     // TODO: This word should be replaced after creating word by @kohei
-                    $this->Notification->outError(__("Your team is allowed only to read."));
+                    $this->Notification->outError(__("You may only read your team’s pages."));
                     $this->redirect($this->referer());
                 }
 

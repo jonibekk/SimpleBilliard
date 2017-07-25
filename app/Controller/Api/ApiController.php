@@ -57,7 +57,7 @@ class ApiController extends BaseController
         if ($this->isProhibittedPostByReadOnly()) {
             $this->isProhibittedPost = true;
             // TODO: This word should be replace after creating word by @kohei
-            return $this->_getResponseBadFail(__("Your team is allowed only to read."));
+            return $this->_getResponseBadFail(__("You may only read your team’s pages."));
         }
 
         $this->_setAppLanguage();
