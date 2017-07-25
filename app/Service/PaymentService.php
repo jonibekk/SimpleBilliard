@@ -163,7 +163,7 @@ class PaymentService extends AppService
     }
 
     /**
-     * Create a payment settings as its related credit card
+     * Get use days from current date to next payment base date
      *
      * @param int $currentTimeStamp
      *
@@ -176,12 +176,13 @@ class PaymentService extends AppService
         $timezone = $Team->getTimezone();
         $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
         $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        // Calc use days
         $diffDays = AppUtil::diffDays($localCurrentDate, $nextBaseDate);
         return $diffDays;
     }
 
     /**
-     * Create a payment settings as its related credit card
+     * Get next payment base date
      *
      * @param int $currentTimeStamp
      *
@@ -227,7 +228,7 @@ class PaymentService extends AppService
     }
 
     /**
-     * Create a payment settings as its related credit card
+     * Get total days from previous payment base date to next payment base date
      *
      * @param int $currentTimeStamp
      *

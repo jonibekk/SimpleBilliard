@@ -32,7 +32,7 @@ class InvitationsController extends ApiController
     }
 
     /**
-     * Validation
+     * Get information for displaying invitation confirmation page.
      */
     function get_confirm()
     {
