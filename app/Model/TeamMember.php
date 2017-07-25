@@ -1930,4 +1930,37 @@ class TeamMember extends AppModel
         $res = $this->find('first', $options);
         return (bool)$res;
     }
+
+    /**
+     * find admin Ids
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function findAdminList(int $teamId): array
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id'    => $teamId,
+                'TeamMember.admin_flg'  => true,
+                'TeamMember.active_flg' => true
+            ],
+            'fields'     => ['TeamMember.user_id'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = TeamMember.user_id',
+                        'User.active_flg' => true
+                    ],
+                ],
+            ],
+        ];
+
+        $res = $this->find('list', $options);
+        return $res;
+    }
 }

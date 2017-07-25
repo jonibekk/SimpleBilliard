@@ -24,6 +24,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_NOTIFY = 7;
     const TYPE_TMPL_SETUP = 8;
     const TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE = 9;
+    const TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS = 10;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY               => [
@@ -64,6 +65,11 @@ class SendMail extends AppModel
         self::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE => [
             'subject'  => null,
             'template' => 'email_verify_digit_code',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS  => [
+            'subject'  => null,
+            'template' => 'expire_alert_service_status',
             'layout'   => 'default',
         ],
     ];
