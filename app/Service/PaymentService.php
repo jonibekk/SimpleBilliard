@@ -263,9 +263,9 @@ class PaymentService extends AppService
      * @param int $userCnt
      * @param int $currentTimeStamp
      *
-     * @return string
+     * @return float
      */
-    public function calcTotalChargeByAddUsers(int $userCnt, int $currentTimeStamp = REQUEST_TIMESTAMP): string
+    public function calcTotalChargeByAddUsers(int $userCnt, int $currentTimeStamp = REQUEST_TIMESTAMP) : float
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
@@ -275,8 +275,32 @@ class PaymentService extends AppService
         $paymentSetting = $this->get($Team->current_team_id);
         $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDaysOfMonth);
         // Ex. 3people × ¥1,980 × 20 days / 1month
-        $totalCharge = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($totalCharge);
+        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
+            $totalCharge = AppUtil::floor($totalCharge);
+        } else {
+            $totalCharge = AppUtil::floor($totalCharge,3);
+        }
         return $totalCharge;
+    }
+
+    /**
+     * Format total charge by users count when invite users.
+     *
+     * @param int $userCnt
+     * @param int $currentTimeStamp
+     *
+     * @return string
+     */
+    public function formatTotalChargeByAddUsers(int $userCnt, int $currentTimeStamp = REQUEST_TIMESTAMP) : string
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp);
+        // Format ex 1980 → ¥1,980
+        $res =  PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($totalCharge);
+        return $res;
     }
 
 }
