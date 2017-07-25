@@ -164,34 +164,17 @@ class GlEmailComponent extends Component
         string $expireDate,
         string $serviceUseStatus
     ) {
-        $message = "";
-        $subject = "";
+        $mailTemplate = null;
         // TODO: 文言はコーヘイさんに確認を取った上で修正および翻訳します。
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_FREE_TRIAL:
-                $subject = __("Notice of free trial deadline");
-                $message = __('The deadline for the free trial of the team "%s" is %s.',
-                        $teamName,
-                        $expireDate) . " ";
-                $message .= __("If you would like to continue using it, please subscribe to the paid plan.") . "\n";
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL;
                 break;
             case Team::SERVICE_USE_STATUS_READ_ONLY:
-                $subject = __("This team is currently in read-only status");
-                $message = __('The team "%s" is currently in a read-only state.', $teamName) . " ";
-                $message .= __("If you would like to use regularly, subscribe to the paid plan by %s.",
-                        $expireDate) . "\n";
-                $message .= __("Reading-only will be canceled immediately after subscription to the paid plan.") . "\n";
-                $message .= __("If you do not have a subscription to the paid plan, you will not be able to use it for %s.",
-                        $expireDate) . "\n";
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY;
                 break;
             case Team::SERVICE_USE_STATUS_CANNOT_USE:
-                $subject = __("This team is currently unavailable");
-                $message = __('The team "%s" is currently unavailable.', $teamName) . " ";
-                $message .= __("If you would like to use regularly, subscribe to the paid plan by %s.",
-                        $expireDate) . "\n";
-                $message .= __("You can resume using it immediately after applying for a paid plan.") . "\n";
-                $message .= __("If you do not have a subscription to a paid plan, the team information will be deleted on %s.",
-                        $expireDate) . "\n";
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
                 break;
         }
         // TODO: 決済情報入力用のurlは仮です。
@@ -202,8 +185,8 @@ class GlEmailComponent extends Component
                 'action'     => 'payment_setting',
                 'team_id'    => $teamId,
             ], true);
-        $item = compact('message', 'url', 'subject');
-        $this->SendMail->saveMailData($toUid, SendMail::TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS, $item, null, $teamId);
+        $item = compact('teamName', 'expireDate', 'url');
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
