@@ -41,6 +41,7 @@ class BaseController extends Controller
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
             ]
         ],
+        'Notification',
         'NotifyBiz',
         'GlEmail',
         'Mixpanel',
@@ -282,5 +283,43 @@ class BaseController extends Controller
         $browser = $this->getBrowser();
         $this->is_tablet = $browser['istablet'];
         $this->set('isTablet', $this->is_tablet);
+    }
+
+    public function isProhibittedPostByReadOnly(): bool
+    {
+        if (!($this->isPost() || $this->isPut() || $this->isDelete())) {
+            return false;
+        }
+
+        $teamId = $this->current_team_id;
+        $isReadOnly = $this->Team->isReadOnly($teamId);
+        if ($isReadOnly) {
+            return true;
+        }
+    }
+
+    public function isGet()
+    {
+        return $this->request->is('get');
+    }
+
+    public function isPost()
+    {
+        return $this->request->is('post');
+    }
+
+    public function isPut()
+    {
+        return $this->request->is('put');
+    }
+
+    public function isDelete()
+    {
+        return $this->request->is('delete');
+    }
+
+    public function logRequest($type = 'get')
+    {
+        $this->log($type . ": " . var_export($this->request->is($type), true));
     }
 }

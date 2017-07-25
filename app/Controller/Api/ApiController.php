@@ -27,6 +27,7 @@ class ApiController extends BaseController
     ];
     private $merge_helpers = [];
     private $merge_uses = [];
+    private $isProhibittedPost = false;
 
     public function __construct($request = null, $response = null)
     {
@@ -53,8 +54,22 @@ class ApiController extends BaseController
         if (!$this->Auth->user()) {
             throw new BadRequestException(__('You should be logged in.'), 401);
         }
+        if ($this->isProhibittedPostByReadOnly()) {
+            $this->isProhibittedPost = true;
+            // TODO: This word should be replace after creating word by @kohei
+            return $this->_getResponseBadFail(__("Your team is allowed only to read."));
+        }
+
         $this->_setAppLanguage();
     }
+
+    public function invokeAction(CakeRequest $request) {
+        if ($this->isProhibittedPost) {
+            return false;
+        }
+        return parent::invokeAction($request);
+    }
+ 
 
     /**
      * 成功(Status Code:200)のレスポンスを返す
