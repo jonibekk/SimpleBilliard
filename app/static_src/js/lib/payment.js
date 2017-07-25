@@ -4,15 +4,15 @@ var elements = stripe.elements();
 var card = elements.create('card', {
   style: {
     base: {
-      iconColor: '#666EE8',
-      color: '#31325F',
+      iconColor: '#808080',
+      color: '#808080',
       lineHeight: '40px',
       fontWeight: 300,
       fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
       fontSize: '15px',
 
       '::placeholder': {
-        color: '#CFD7E0',
+        color: '#808080',
       },
     },
   }

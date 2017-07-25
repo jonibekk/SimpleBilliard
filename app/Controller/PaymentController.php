@@ -9,6 +9,6 @@ class PaymentController extends AppController {
 
     public function enterCCInfo() {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('/Payment/enter_credit_card');
+        $this->render('/Payment/credit_card_entry');
     }
 }
