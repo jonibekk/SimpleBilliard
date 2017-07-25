@@ -7,7 +7,8 @@
  * @copyright Copyright 2010 - 2011, Cake Development Corporation (http://cakedc.com)
  * @license   MIT License (http://www.opensource.org/licenses/mit-license.php)
  * @var                    $to_user_name
- * @var                    $message
+ * @var                    $teamName
+ * @var                    $expireDate
  * @var                    $url
  * @var CodeCompletionView $this
  */
