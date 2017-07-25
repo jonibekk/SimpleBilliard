@@ -17,11 +17,15 @@ echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
 echo __('The team "%s" is currently unavailable.', $teamName) . " " .
-    __("If you would like to use regularly, subscribe to the paid plan by %s.", $expireDate);
+    __("If you would like to use regularly, subscribe to the paid plan by %s.",
+        $this->TimeEx->formatDateI18nFromDate($expireDate)
+    );
 echo "\n";
 echo __("You can resume using it immediately after applying for a paid plan.");
 echo "\n";
-echo __("If you do not have a subscription to a paid plan, the team information will be deleted on %s.", $expireDate);
+echo __("If you do not have a subscription to a paid plan, the team information will be deleted on %s.",
+    $this->TimeEx->formatDateI18nFromDate($expireDate)
+);
 echo "\n";
 echo __("Please make a payment setting from the following link.");
 echo "\n";
