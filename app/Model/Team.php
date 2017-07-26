@@ -623,5 +623,5 @@ class Team extends AppModel
         $res = Hash::extract($res, '{n}.Team');
         return $res;
     }
-    
+
 }
