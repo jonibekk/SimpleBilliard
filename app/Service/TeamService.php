@@ -46,6 +46,9 @@ class TeamService extends AppService
 
     /**
      * get team service use status
+     * # Warning
+     * - In Team::getCurrentTeam, use CACHE_KEY_CURRENT_TEAM cache.
+     * - So when change service use status, must delete this team cache.
      *
      * @return void
      */
