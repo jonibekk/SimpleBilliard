@@ -159,8 +159,8 @@ class AppController extends BaseController
                 $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
 
-            // prohibit ajax post in read only term
-            if ($this->request->is('ajax') && $this->isProhibittedPostByReadOnly()) {
+            // prohibit ajax request in read only term
+            if ($this->request->is('ajax') && $this->isProhibittedRequestByReadOnly()) {
                 $this->isProhibittedPost = true;
                 return $this->_ajaxGetResponse([
                     'error' => true,
@@ -176,8 +176,8 @@ class AppController extends BaseController
                 }
                 $this->_setMyTeam();
 
-                // prohibit services uses by team status
-                if ($this->isProhibittedPostByReadOnly()) {
+                // when prohibit request in read only
+                if ($this->isProhibittedRequestByReadOnly()) {
                     // TODO: This word should be replaced after creating word by @kohei
                     $this->Notification->outError(__("You may only read your team’s pages."));
                     $this->redirect($this->referer());
@@ -248,8 +248,15 @@ class AppController extends BaseController
         $this->set('current_global_menu', null);
     }
 
+    /**
+     * This is wrapper parent invokeAction
+     * - it can make execution stop until before render
+     *
+     * @param CakeRequest $request
+     * @return void
+     */
     public function invokeAction(CakeRequest $request) {
-        if ($this->isProhibittedPost) {
+        if ($this->stopInvoke) {
             return false;
         }
         return parent::invokeAction($request);

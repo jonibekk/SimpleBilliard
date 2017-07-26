@@ -625,21 +625,20 @@ class Team extends AppModel
     }
 
     /**
-     * check team is read only status
+     * get service use status
      *
      * @param int $teamId
-     * @return bool
+     * @return int
      */
-    function isReadOnly(int $teamId): bool
+    function getServiceUseStatus(int $teamId): int
     {
         $options = [
             'conditions' => [
                 'id'                 => $teamId,
-                'service_use_status' => self::SERVICE_USE_STATUS_READ_ONLY
             ],
-            'fields'     => ['id']
+            'fields'     => ['service_use_status']
         ];
-        return (bool)$this->findWithoutTeamId('first', $options);
+        return $this->findWithoutTeamId('first', $options);
     }
 
 }

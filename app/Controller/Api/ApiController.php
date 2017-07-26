@@ -37,7 +37,6 @@ class ApiController extends BaseController
 
         Configure::write('Exception.renderer', 'ApiExceptionRenderer');
         Configure::write('Exception.log', false);
-
     }
 
     function beforeFilter()
@@ -53,8 +52,10 @@ class ApiController extends BaseController
         if (!$this->Auth->user()) {
             throw new BadRequestException(__('You should be logged in.'), 401);
         }
-        if ($this->isProhibittedPostByReadOnly()) {
-            $this->isProhibittedPost = true;
+
+        // when prohibit request in read only
+        if ($this->isProhibittedRequestByReadOnly()) {
+            $this->stopInvoke = true;
             // TODO: This word should be replace after creating word by @kohei
             return $this->_getResponseBadFail(__("You may only read your team’s pages."));
         }
@@ -62,8 +63,15 @@ class ApiController extends BaseController
         $this->_setAppLanguage();
     }
 
+    /**
+     * This is wrapper parent invokeAction
+     * - it can make execution stop until before render
+     *
+     * @param CakeRequest $request
+     * @return void
+     */
     public function invokeAction(CakeRequest $request) {
-        if ($this->isProhibittedPost) {
+        if ($this->stopInvoke) {
             return false;
         }
         return parent::invokeAction($request);

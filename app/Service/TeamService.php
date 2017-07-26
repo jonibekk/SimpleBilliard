@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('Team', 'Model');
 
 /**
  * Class TeamService
@@ -41,5 +42,29 @@ class TeamService extends AppService
         }
 
         return true;
+    }
+
+    /**
+     * get team service use status
+     *
+     * @return void
+     */
+    public function getServiceUseStatus(): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $team = $Team->getCurrentTeam();
+        return $team['Team']['service_use_status'];
+    }
+
+    /**
+     * check read onlhy or not
+     *
+     * @return bool
+     */
+    public function isReadOnly(): bool
+    {
+        return $this->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 }

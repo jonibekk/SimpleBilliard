@@ -1,5 +1,6 @@
 <?php
 App::uses('Controller', 'Controller');
+App::import('Service', 'TeamService');
 
 /**
  * Application level Controller
@@ -89,12 +90,10 @@ class BaseController extends Controller
         'Goalous App iOS',
         'Goalous App Android'
     ];
-
     /**
-     * prohibitted post|put|delete in read only term
+     * use it when you need stop after beforender
      */
-    public $isProhibittedPost = false;
-
+    public $stopInvoke = false;
 
     public function __construct($request = null, $response = null)
     {
@@ -291,16 +290,23 @@ class BaseController extends Controller
         $this->set('isTablet', $this->is_tablet);
     }
 
-    public function isProhibittedPostByReadOnly(): bool
+    /**
+     * check prohibitted request in read only term
+     *
+     * @return bool
+     */
+    public function isProhibittedRequestByReadOnly(): bool
     {
         if (!$this->request->is(['post', 'put', 'delete'])) {
             return false;
         }
 
-        $teamId = $this->current_team_id;
-        $isReadOnly = $this->Team->isReadOnly($teamId);
-        if ($isReadOnly) {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->isReadOnly()) {
             return true;
         }
+        return false;
     }
 }
