@@ -16,18 +16,18 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __('The team "%s" is currently unavailable.', $teamName) . " " .
-    __("If you would like to use regularly, subscribe to the paid plan by %s.",
+echo __("The team \"%s\" is currently unavailable.", $teamName) . " " .
+    __("If you would like to restore your team to a regular status, please subscribe to the paid plan by %s.",
         $this->TimeEx->formatDateI18nFromDate($expireDate)
     );
 echo "\n";
-echo __("You can resume using it immediately after applying for a paid plan.");
+echo __("Your team will immediately be able to resume normal use after subscribing to the paid plan.");
 echo "\n";
-echo __("If you do not have a subscription to a paid plan, the team information will be deleted on %s.",
+echo __("If you do not subscribe to the paid plan by %s, all of your team's data will be deleted.",
     $this->TimeEx->formatDateI18nFromDate($expireDate)
 );
 echo "\n";
-echo __("Please make a payment setting from the following link.");
+echo __("You can update your payment setting from the following link:");
 echo "\n";
 echo $url;
 echo "\n";

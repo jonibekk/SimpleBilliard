@@ -16,12 +16,12 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __('The deadline for the free trial of the team "%s" is %s.',
+echo __("The free trial for your team, \"%s\", will end on %s",
         $teamName,
         $this->TimeEx->formatDateI18nFromDate($expireDate)
-    ) . " " . __("If you would like to continue using it, please subscribe to the paid plan.");
+    ) . " " . __("If you would like to continue using Goalous, please subscribe to the paid plan.");
 echo "\n";
-echo __("Please make a payment setting from the following link.");
+echo __("You can update your payment setting from the following link:");
 echo "\n";
 echo $url;
 echo "\n";

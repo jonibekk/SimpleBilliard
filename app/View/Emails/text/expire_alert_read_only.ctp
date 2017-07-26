@@ -16,18 +16,18 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __('The team "%s" is currently in a read-only state.', $teamName) . " " .
-    __("If you would like to use regularly, subscribe to the paid plan by %s.",
+echo __("The team \"%s\" is currently in a read-only state.", $teamName) . " " .
+    __("If you would like to restore your team to a regular status, please subscribe to the paid plan by %s.",
         $this->TimeEx->formatDateI18nFromDate($expireDate)
     );
 echo "\n";
-echo __("Reading-only will be canceled immediately after subscription to the paid plan.");
+echo __("Your team will be able to resume normal use immediately after subscribing to the paid plan.");
 echo "\n";
-echo __("If you do not have a subscription to the paid plan, you will not be able to use it for %s.",
+echo __("If you do not subscribe to the paid plan by %s, your team will no longer have access to Goalous.",
     $this->TimeEx->formatDateI18nFromDate($expireDate)
 );
 echo "\n";
-echo __("Please make a payment setting from the following link.");
+echo __("You can update your payment setting from the following link:");
 echo "\n";
 echo $url;
 echo "\n";
