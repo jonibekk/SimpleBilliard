@@ -111,7 +111,16 @@ export function saveGoal(goalId, addInputData) {
       },
       ({response}) => {
         console.log(response.data)
-        dispatch(invalid(response.data))
+        // when team is in read only
+        if (!response.data.validation_errors) {
+          // Reason to set to validation_errors.key_result.description is that
+          // This field is on to submit button
+          dispatch(invalid({
+            validation_errors: { key_result: {description: response.data.message} }
+          }))
+        } else {
+          dispatch(invalid(response.data))
+        }
       }
     );
   }
