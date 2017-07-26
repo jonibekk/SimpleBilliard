@@ -164,25 +164,16 @@ class GlEmailComponent extends Component
         string $expireDate,
         string $serviceUseStatus
     ) {
-        $message = "";
-        $subject = "";
-        // TODO: 文言はコーヘイさんに確認を取った上で修正および翻訳します。
+        $mailTemplate = null;
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_FREE_TRIAL:
-                $subject = "フリートライアル期限のお知らせ";
-                $message = "チーム「{$teamName}」のフリートライアルの期限は{$expireDate}です。";
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL;
                 break;
             case Team::SERVICE_USE_STATUS_READ_ONLY:
-                $subject = "現在このチームは読み取り専用の状態になっております";
-                $message = "チーム「{$teamName}」は現在、読み取り専用の状態になっております。クレジットカードの決済の期限は{$expireDate}です。\n";
-                $message .= "決済完了後すぐに読み取り専用は解除されます。\n";
-                $message .= "なお、このまま決済頂かない場合は{$expireDate}にご利用ができなくなります。\n";
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY;
                 break;
             case Team::SERVICE_USE_STATUS_CANNOT_USE:
-                $subject = "現在このチームは利用できない状態になっております";
-                $message = "チーム「{$teamName}」は現在、利用できない状態になっております。\n";
-                $message .= "決済完了後すぐにご利用が再開できます。\n";
-                $message .= "なお、このまま決済頂かない場合は{$expireDate}にチームを削除させて頂きます。\n";
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
                 break;
         }
         // TODO: 決済情報入力用のurlは仮です。
@@ -193,8 +184,8 @@ class GlEmailComponent extends Component
                 'action'     => 'payment_setting',
                 'team_id'    => $teamId,
             ], true);
-        $item = compact('message', 'url', 'subject');
-        $this->SendMail->saveMailData($toUid, SendMail::TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS, $item, null, $teamId);
+        $item = compact('teamName', 'expireDate', 'url');
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
