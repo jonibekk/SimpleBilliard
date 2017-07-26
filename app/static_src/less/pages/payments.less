@@ -72,89 +72,16 @@
 
 
 .enter-cc-info{
-    /*form{
-        width:100%;
-        margin:2rem 0 0 0;
-    }
-
-    .group {
-    background: white;
-    border:1px solid @basicGray;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    }
-
-    label {
-    position: relative;
-    color: @basicGray;
-    font-weight: 300;
-    height: 40px;
-    line-height: 40px;
-    margin-left: 20px;
-    display: block;
-    }
-
-    .group label:not(:last-child) {
-    border-bottom: 1px solid #F0F5FA;
-    }
-
-    label > span {
-    width: 20%;
-    text-align: right;
-    float: left;
-    }
-
-    .field {
-    background: transparent;
-    font-weight: 300;
-    border: 0;
-    color: #31325F;
-    outline: none;
-    padding-right: 10px;
-    padding-left: 10px;
-    cursor: text;
-    width: 70%;
-    height: 40px;
-    float: right;
-    }
-
-    .field::-webkit-input-placeholder { color: @basicGray; }
-    .field::-moz-placeholder { color: @basicGray; }
-    .field:-ms-input-placeholder { color: @basicGray; }
-
-    button {
-    float: right;
-    display: block;
-    background: #D9230F;
-    color: white;
-    border-radius: 4px;
-    border: 0;
-    margin-top: 20px;
-    font-size: 15px;
-    font-weight: 400;
-    padding:0 2em;
-    height: 40px;
-    line-height: 38px;
-    outline: none;
-    }
-
-    button:focus {
-    background: #D9230F;
-    }
-
-    button:active {
-    background: #D9230F;
-    } */
+    max-width: 600px;
+    margin: 0 auto;
 
     h3{
-        margin-top:1em;
+        margin:1em 15px;
     }
 
     .outcome {
     float: left;
     width: 100%;
-    padding-top: 8px;
-    min-height: 24px;
     text-align: center;
     }
 
@@ -186,6 +113,7 @@
 
     .form-group{
         margin-bottom:1em;
+        padding:0 15px;
     }
 
     .form-control.cc-field{
@@ -195,7 +123,7 @@
     .payment-info-group{
         background:@baseGray;
         padding:1rem;
-        margin:1rem 0;
+        margin:1rem 15px;
         .cc-info-value{
             float:right;
         }
@@ -205,7 +133,15 @@
         }
     }
 
-    .btn{
-        float:right;
+    .panel-footer{
+        display:flex;
+        justify-content: flex-end;
+        flex-wrap:wrap;
+        .btn{
+            margin:0 0 0 1rem;
+        }
+        .outcome{
+            flex-basis:100%;
+        }
     }
 } 
