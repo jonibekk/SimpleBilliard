@@ -178,4 +178,25 @@ class Email extends AppModel
         }
         return false;
     }
+
+    function findExistUsersByEmail(array $emails): array
+    {
+        $res = $this->find('all', [
+            'fields' => ['Email.email', 'Email.user_id'],
+            'conditions' => [
+                'email' => $emails,
+            ],
+            'joins'      => [
+                'type'       => 'INNER',
+                'table'      => 'users',
+                'alias'      => 'Users',
+                'conditions' => [
+                    'Email.user_id = User.id',
+                    'del_flg' => false
+                ],
+            ]
+        ]);
+
+        return Hash::extract($res, '{n}.Email');
+    }
 }

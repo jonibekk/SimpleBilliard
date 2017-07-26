@@ -16,6 +16,13 @@ class InvitationsController extends ApiController
     {
         /** @var InvitationService $InvitationService */
         $InvitationService = ClassRegistry::init("InvitationService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        // Check permission
+        if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
+        }
 
         $emailsStr = $this->request->data("emails");
         if (!is_string($emailsStr)) {
@@ -43,6 +50,11 @@ class InvitationsController extends ApiController
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
+        // Check permission
+        if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
+        }
+
         $invitationCnt = $this->request->query("invitation_count");
 
         /* These errors are invalid request */
@@ -52,11 +64,6 @@ class InvitationsController extends ApiController
         $invitationCnt = (int)$invitationCnt;
         if ($invitationCnt <= 0) {
             return $this->_getResponseBadFail(__("Parameter is invalid"));
-        }
-
-        // Check permission
-        if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
-            return $this->_getResponseForbidden();
         }
 
         // Get payment setting by team id
@@ -83,5 +90,52 @@ class InvitationsController extends ApiController
         ];
 
         return $this->_getResponseSuccess($res);
+    }
+
+    /**
+     *
+     */
+    function post()
+    {
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init("InvitationService");
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init("Invite");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        // Check permission
+        $userId = $this->Auth->user('id');
+        if (!$TeamMember->isAdmin($userId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Validation
+        $emails = $this->request->data("emails");
+        $errors = $InvitationService->validateEmails($emails);
+        if (!empty($errors)) {
+            return $this->_getResponseValidationFail($errors);
+        }
+
+        // Check permission
+        if (!$TeamMember->isAdmin($userId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Invite
+        if (!$InvitationService->invite($this->current_team_id, $userId, $emails)) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        // Send invitation mail
+        $invitations = $Invite->findByEmails($emails);
+        $teamName = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+        foreach ($invitations as $invitation) {
+            $this->GlEmail->sendMailInvite($invitation, $teamName);
+        }
+
+        return $this->_getResponseSuccess();
     }
 }

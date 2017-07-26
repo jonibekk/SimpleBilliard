@@ -78,6 +78,39 @@ class Invite extends AppModel
     }
 
     /**
+     * Invite bulk
+     *
+     * @param int    $emails
+     * @param int    $teamId
+     * @param int    $fromUserId
+     * @param string $msg
+     *
+     * @return mixed
+     */
+    function saveBulk(int $emails, int $teamId, int $fromUserId, string $msg = "")
+    {
+        // Get emails of registered users
+        $registeredEmails = Hash::combine($this->ToUser->Email->findAllByEmail($emails), '{n}.Email.email',
+            '{n}.Email.user_id');
+
+        // Get invitation token expire
+        $tokenExpire = $this->getTokenExpire(TOKEN_EXPIRE_SEC_INVITE);
+
+        $insertData = [];
+        foreach ($emails as $email) {
+            $insertData[] = [
+                'from_user_id' => $fromUserId,
+                'to_user_id'   => Hash::get($registeredEmails, $email),
+                'team_id'      => $teamId,
+                'email'        => $email,
+                'email_token'  => $tokenExpire,
+                'message'      => $msg,
+            ];
+        }
+        return $this->bulkInsert($insertData);
+    }
+
+    /**
      * トークンのチェック
      *
      * @param $token
@@ -268,6 +301,26 @@ class Invite extends AppModel
             $res[$key]['Invite']['token_expired_flg'] = $token_expired_flg;
             $res[$key]['Invite']['created'] = $time->elapsedTime(h($val['Invite']['created']));
         }
+        return $res;
+    }
+
+    /**
+     * Find by emails and current team
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findByEmails(array $emails): array
+    {
+        $options = [
+            'fields'     => [
+                'id', 'user_id', 'email', 'email_token_expires'],
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'email'   => $emails
+            ]
+        ];
+        $res = $this->find('all', $options);
         return $res;
     }
 
