@@ -6,7 +6,7 @@
             <h4><?= __('Credit Card') ?></h4>
             <i class="fa fa-credit-card"></i>
             <p><?= __("Use a credit card to setup automatic, reoccuring payments for your Goalous team.") ?></p>
-            <a href="#"><?= __('Setup') ?></a>
+            <a href="#" class="payment-option-setup-link"><?= __('Setup') ?></a>
         </div>
         <div class="payment-option upcoming">
             <h4><?= __('Invoice') ?></h4>
