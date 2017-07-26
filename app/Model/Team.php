@@ -623,22 +623,5 @@ class Team extends AppModel
         $res = Hash::extract($res, '{n}.Team');
         return $res;
     }
-
-    /**
-     * get service use status
-     *
-     * @param int $teamId
-     * @return int
-     */
-    function getServiceUseStatus(int $teamId): int
-    {
-        $options = [
-            'conditions' => [
-                'id'                 => $teamId,
-            ],
-            'fields'     => ['service_use_status']
-        ];
-        return $this->findWithoutTeamId('first', $options);
-    }
-
+    
 }
