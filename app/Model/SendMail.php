@@ -24,7 +24,9 @@ class SendMail extends AppModel
     const TYPE_TMPL_NOTIFY = 7;
     const TYPE_TMPL_SETUP = 8;
     const TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE = 9;
-    const TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS = 10;
+    const TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL = 10;
+    const TYPE_TMPL_EXPIRE_ALERT_READ_ONLY = 11;
+    const TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE = 12;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY               => [
@@ -67,9 +69,19 @@ class SendMail extends AppModel
             'template' => 'email_verify_digit_code',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_EXPIRE_ALERT_SERVICE_STATUS  => [
+        self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL      => [
             'subject'  => null,
-            'template' => 'expire_alert_service_status',
+            'template' => 'expire_alert_free_trial',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY       => [
+            'subject'  => null,
+            'template' => 'expire_alert_read_only',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE      => [
+            'subject'  => null,
+            'template' => 'expire_alert_cannot_use',
             'layout'   => 'default',
         ],
     ];
@@ -83,6 +95,9 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __("Authentication for changing email address");
         self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __("Invitation for team");
         self::$TYPE_TMPL[self::TYPE_TMPL_SETUP]['subject'] = __("Could you setup Goalous?");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL]['subject'] = __("Notice of free trial deadline");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY]['subject'] = __("This team is currently in read-only status");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE]['subject'] = __("This team is currently unavailable");
     }
 
     function __construct($id = false, $table = null, $ds = null)
