@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-25 01:44+0900\n"
+"PO-Revision-Date: 2017-07-26 14:56+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -87,6 +87,9 @@ msgstr ""
 
 msgid "You can use Goalous on Web and on Mobile App."
 msgstr "スマホアプリ・ブラウザで利用可能です。"
+
+msgid "You may only read your team’s pages."
+msgstr "あなたのチームはページの読み取りしか許可されていません。"
 
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
@@ -875,8 +878,6 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "This team is currently in read-only status"
 msgstr "現在このチームは読み取り専用の状態になっております"
 
-#, fuzzy
-#| msgid "This team is currently in read-only status"
 msgid "The team \"%s\" is currently in a read-only state."
 msgstr "チーム「%s」は現在、読み取り専用の状態になっております。"
 
@@ -898,8 +899,6 @@ msgstr ""
 msgid "This team is currently unavailable"
 msgstr "現在このチームは利用できない状態になっております"
 
-#, fuzzy
-#| msgid "This team is currently unavailable"
 msgid "The team \"%s\" is currently unavailable."
 msgstr "チーム「%s」は現在、ご利用できない状態になっております。"
 
@@ -4835,6 +4834,29 @@ msgstr "利用規約はこちら。"
 
 msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
+
+msgid "Select Payment Method"
+msgstr "画像を選択"
+
+msgid "Credit Card"
+msgstr ""
+
+msgid ""
+"Use a credit card to setup automatic, reoccuring payments for your Goalous "
+"team."
+msgstr ""
+
+msgid "Setup"
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Setup a monthly invoice with Goalous."
+msgstr ""
+
+msgid "Coming Soon"
+msgstr ""
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"

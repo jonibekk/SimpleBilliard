@@ -110,6 +110,7 @@ export function saveGoal(goalId, addInputData) {
         dispatch(toNextPage())
       },
       ({response}) => {
+        console.log(response.data)
         dispatch(invalid(response.data))
       }
     );
