@@ -56,7 +56,6 @@ class ApiController extends BaseController
         // when prohibit request in read only
         if ($this->isProhibittedRequestByReadOnly()) {
             $this->stopInvoke = true;
-            // TODO: This word should be replace after creating word by @kohei
             return $this->_getResponseBadFail(__("You may only read your team’s pages."));
         }
 

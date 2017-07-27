@@ -161,10 +161,9 @@ class AppController extends BaseController
 
             // prohibit ajax request in read only term
             if ($this->request->is('ajax') && $this->isProhibittedRequestByReadOnly()) {
-                $this->isProhibittedPost = true;
+                $this->stopInvoke = true;
                 return $this->_ajaxGetResponse([
                     'error' => true,
-                    // TODO: This word should be replaced after creating word by @kohei
                     'msg' => __("You may only read your team’s pages.")
                 ]);
             }
@@ -178,7 +177,6 @@ class AppController extends BaseController
 
                 // when prohibit request in read only
                 if ($this->isProhibittedRequestByReadOnly()) {
-                    // TODO: This word should be replaced after creating word by @kohei
                     $this->Notification->outError(__("You may only read your team’s pages."));
                     $this->redirect($this->referer());
                 }
