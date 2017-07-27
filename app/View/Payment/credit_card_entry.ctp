@@ -4,8 +4,8 @@
         <h3><?= __('Enter Payment Information')?></h3>
         <form class="form-horizontal">
             <div class="form-group">
-                <label for="cardholder-name">Name</label>
-                <input name="cardholder-name" class="form-control" />
+                <label for="cardholder-name">Name on card</label>
+                <input name="cardholder-name" class="form-control" placeholder="Jane Doe" />
             </div>
             <div class="form-group">
                 <label>Card</label>
@@ -17,13 +17,17 @@
                 <strong><?= __('Sub Total'); ?>:&nbsp;</strong><span class="cc-info-value">$1999.00</span><br />
                 <strong><?= __('Tax'); ?>:&nbsp;</strong><span class="cc-info-value">$159.92</span><br />
                 <hr>
-                <strong><?= __('Total'); ?>:&nbsp;</strong><span class="cc-info-value">$2158.92</span>
+                <strong><?= __('Total per month'); ?>:&nbsp;</strong><span class="cc-info-value">$2158.92</span>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox">
+                <label>I agree to lorem ipsum dolor sit amet, consectetur adipisicing elit.</label>
             </div>
             <div class="panel-footer setting_pannel-footer">
-                <a class="btn btn-link design-cancel bd-radius_4px" href="/Payment/">
+                <a class="btn btn-link design-cancel bd-radius_4px" href="/Payment/enterCompanyInfo">
                     <?= __("Cancel") ?>
                 </a>
-                <input type="submit" class="btn btn-primary" value="Submit" />
+                <input type="submit" class="btn btn-primary" value="Subscribe" />
                 <div class="outcome">
                     <div class="error" role="alert"></div>
                     <div class="success">
