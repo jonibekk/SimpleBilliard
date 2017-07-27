@@ -23,7 +23,7 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 <!--suppress ALL -->
 <html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
-<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?>">
+<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?> read-only">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
