@@ -277,6 +277,36 @@ class AppUtil
     }
 
     /**
+     * Get year and month by moving month
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $moveMonth
+     *
+     * @return array
+     */
+    static function moveMonthYm(int $year, int $month, int $moveMonth = 1) : array
+    {
+        $date = self::dateFromYMD($year, $month, 1);
+        $date = date('Y-m', strtotime($date. ' '. $moveMonth. ' month'));
+        return explode('-', $date);
+    }
+
+    /**
+     * Date format by year, month, day
+     *
+     * @param int $y
+     * @param int $m
+     * @param int $d
+     *
+     * @return string
+     */
+    static function dateFromYMD(int $y, int $m, int $d) : string
+    {
+        return sprintf("%4d-%02d-%02d", $y, $m, $d);
+    }
+
+    /**
      * 値が指定した範囲に含まれるか？
      *
      * @param int $target
@@ -630,6 +660,25 @@ class AppUtil
             return [];
         }
         return $res;
+    }
+
+    /**
+     * Check if int
+     *
+     * String type allow compare to `is_int` func
+     * @param $val
+     *
+     * @return bool
+     */
+    static function isInt($val) : bool
+    {
+        if (!is_numeric($val)) {
+            return false;
+        }
+        if (!preg_match("/^[0-9]+$/", $val)) {
+            return false;
+        }
+        return true;
     }
 
 }

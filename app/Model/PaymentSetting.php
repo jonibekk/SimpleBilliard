@@ -13,6 +13,11 @@ class PaymentSetting extends AppModel
     const CURRENCY_JPY = 1;
     const CURRENCY_USD = 2;
 
+    const CURRENCY_LABELS = [
+        self::CURRENCY_JPY => "¥",
+        self::CURRENCY_USD => "$",
+    ];
+
     /* Validation rules
     *
     * @var array

@@ -2,6 +2,7 @@
 App::uses('ApiController', 'Controller/Api');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'InvitationService');
+App::import('Service', 'PaymentService');
 
 /**
  * Class InvitationsController
@@ -10,6 +11,7 @@ class InvitationsController extends ApiController
 {
     /**
      * Validation
+     *
      */
     function post_validate()
     {
@@ -28,5 +30,62 @@ class InvitationsController extends ApiController
             return $this->_getResponseValidationFail($errors);
         }
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Get information for displaying invitation confirmation page.
+     * ※ Call this api only if team's plan is paid plan
+     *
+     * @queryParam int invitation_count required
+     */
+    function get_confirm()
+    {
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init("InvitationService");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $invitationCnt = $this->request->query("invitation_count");
+
+        /* These errors are invalid request */
+        if (!AppUtil::isInt($invitationCnt)) {
+            return $this->_getResponseBadFail(__("Parameter is invalid"));
+        }
+        $invitationCnt = (int)$invitationCnt;
+        if ($invitationCnt <= 0) {
+            return $this->_getResponseBadFail(__("Parameter is invalid"));
+        }
+
+        // Check permission
+        if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Get payment setting by team id
+        $paymentSetting = $PaymentService->get($this->current_team_id);
+        // Check if exist payment setting
+        if (empty($paymentSetting)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Calc charge user count
+        $chargeUserCnt = $InvitationService->calcChargeUserCount($invitationCnt);
+        // Get use days from today to next paymant base date
+        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
+        // All days between before payment base date and next payment base date
+        $allUseDays = $PaymentService->getCurrentAllUseDays();
+        // Calc total charge
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+
+        $res = [
+            'charge_users_count' => $chargeUserCnt,
+            'use_days_by_next_base_date' => $useDaysByNext,
+            'all_use_days' => $allUseDays,
+            'total_charge' => $totalCharge,
+        ];
+
+        return $this->_getResponseSuccess($res);
     }
 }

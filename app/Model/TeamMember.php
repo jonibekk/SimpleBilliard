@@ -17,6 +17,10 @@ class TeamMember extends AppModel
     const ADMIN_USER_FLAG = 1;
     const ACTIVE_USER_FLAG = 1;
 
+    const STATUS_INVITED = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
+
     public $myTeams = [];
     /**
      * Validation rules
@@ -85,7 +89,6 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
-
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -360,6 +363,26 @@ class TeamMember extends AppModel
         }
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    /**
+     * Count charge target users
+     *
+     * @return int
+     */
+    public function countChargeTargetUsers(): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'status'  => [
+                    self::STATUS_INVITED,
+                    self::STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
     }
 
     public function setAdminUserFlag($member_id, $flag)
