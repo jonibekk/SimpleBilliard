@@ -42,5 +42,4 @@ class TeamService extends AppService
 
         return true;
     }
-
 }

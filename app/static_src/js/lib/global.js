@@ -548,5 +548,7 @@ function circleListHeight(){
     }
 }
 
-window.onload=function(){circleListHeight()};
-document.body.onresize=function(){circleListHeight()};
+if(circleList.hamburger){
+    window.onload=function(){circleListHeight()};
+    document.body.onresize=function(){circleListHeight()};
+}

@@ -240,11 +240,11 @@ class User extends AppModel
             ]
         ],
         'password'           => [
-            'maxLength' => ['rule' => ['maxLength', 50]],
-            'notBlank'  => [
+            'maxLength'      => ['rule' => ['maxLength', 50]],
+            'notBlank'       => [
                 'rule' => 'notBlank',
             ],
-            'minLength' => [
+            'minLength'      => [
                 'rule' => ['minLength', 8],
             ],
             'passwordPolicy' => [
@@ -399,15 +399,19 @@ class User extends AppModel
                         array_push($this->uids, $entity[$this->alias]['id']);
                     }
                 });
-
         //LocalName取得(まだ取得していないIDのみ)
         foreach ($this->uids as $k => $v) {
             if (array_key_exists($v, $this->local_names)) {
                 unset($this->uids[$k]);
             }
         }
-        $this->local_names = $this->local_names +
-            $this->LocalName->getNames($this->uids, $this->me['language']);
+        // shellによる通知orメール送信時は言語設定がセットされていない時があるが、その場合はローカル名の取得をしない
+        if ($this->me['language']) {
+            $localNames = $this->LocalName->getNames($this->uids, $this->me['language']);
+            if (!empty($localNames)) {
+                $this->local_names += $localNames;
+            }
+        }
         //データにLocalName付与する
         /** @noinspection PhpUnusedParameterInspection */
         $this
