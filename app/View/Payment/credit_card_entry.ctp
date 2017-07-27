@@ -2,10 +2,10 @@
 <?= $this->App->viewStartComment()?>
 <section class="panel enter-cc-info">
         <h3><?= __('Enter Payment Information')?></h3>
-        <form class="form-horizontal">
+        <form class="form-horizontal" name="enterCCInfo">
             <div class="form-group">
-                <label for="cardholder-name">Name</label>
-                <input name="cardholder-name" class="form-control" />
+                <label for="cardholder-name">Name on Card</label>
+                <input name="cardholder-name" class="form-control" placeholder="Jane Doe" />
             </div>
             <div class="form-group">
                 <label>Card</label>
