@@ -4,7 +4,7 @@
         <h3><?= __('Enter Payment Information')?></h3>
         <form class="form-horizontal" name="enterCCInfo">
             <div class="form-group">
-                <label for="cardholder-name">Name on card</label>
+                <label for="cardholder-name">Name on Card</label>
                 <input name="cardholder-name" class="form-control" placeholder="Jane Doe" />
             </div>
             <div class="form-group">
@@ -37,4 +37,3 @@
             </div>
         </form>
 </section>
-<script src="https://js.stripe.com/v3/"></script>

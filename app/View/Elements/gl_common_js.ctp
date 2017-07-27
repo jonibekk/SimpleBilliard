@@ -72,4 +72,6 @@ if (PUBLIC_ENV) {
 </script>
 <?php endif;?>
 
+<script src="https://js.stripe.com/v3/"></script>
+
 <?= $this->App->viewEndComment() ?>
