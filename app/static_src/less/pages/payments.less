@@ -3,6 +3,18 @@
 
 .choose-payment{
     padding: 2rem 0;
+    .form-horizontal{
+        margin-bottom:2rem;
+    }
+    .btn{
+        float:right;
+        margin-top:1rem;
+    }
+    .payment-options{
+        overflow:hidden;
+        height:0px;
+        transition: height .3s;
+    }
 }
 .panel-container{
     max-width:600px;
@@ -62,7 +74,7 @@
             padding-bottom:0;
         }
     }
-    a, .coming-soon{
+    .payment-option-setup-link, .coming-soon{
         position:absolute;
         bottom:1rem;
         left:0;

@@ -1,4 +1,5 @@
 <?php
+App::uses('SendMail', 'Model');
 
 /**
  * @author daikihirakata
@@ -144,6 +145,47 @@ class GlEmailComponent extends Component
                 $token,
             ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_PASSWORD_RESET, ['url' => $url]);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Sending a alert of expires
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $teamName
+     * @param string $expireDate
+     * @param string $serviceUseStatus
+     */
+    public function sendMailServiceExpireAlert(
+        int $toUid,
+        int $teamId,
+        string $teamName,
+        string $expireDate,
+        string $serviceUseStatus
+    ) {
+        $mailTemplate = null;
+        switch ($serviceUseStatus) {
+            case Team::SERVICE_USE_STATUS_FREE_TRIAL:
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL;
+                break;
+            case Team::SERVICE_USE_STATUS_READ_ONLY:
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY;
+                break;
+            case Team::SERVICE_USE_STATUS_CANNOT_USE:
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
+                break;
+        }
+        // TODO: 決済情報入力用のurlは仮です。
+        $url = Router::url(
+            [
+                'admin'      => false,
+                'controller' => 'teams',
+                'action'     => 'payment_setting',
+                'team_id'    => $teamId,
+            ], true);
+        $item = compact('teamName', 'expireDate', 'url');
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
