@@ -277,43 +277,19 @@ class AppUtil
     }
 
     /**
-     * Get next month
+     * Get year and month by moving month
      *
-     * @param int $y
-     * @param int $m
-     *
-     * @return array
-     */
-    static function nextYm(int $y, int $m) : array
-    {
-        if ($m == 12) {
-            $y += 1;
-            $m = 1;
-        } else {
-            $m += 1;
-        }
-
-        return [$y, $m];
-    }
-
-    /**
-     * Get previous month
-     *
-     * @param int $y
-     * @param int $m
+     * @param int $year
+     * @param int $month
+     * @param int $moveMonth
      *
      * @return array
      */
-    static function prevYm(int $y, int $m) : array
+    static function moveMonthYm(int $year, int $month, int $moveMonth = 1) : array
     {
-        if ($m == 1) {
-            $y -= 1;
-            $m = 12;
-        } else {
-            $m -= 1;
-        }
-
-        return [$y, $m];
+        $date = self::dateFromYMD($year, $month, 1);
+        $date = date('Y-m', strtotime($date. ' '. $moveMonth. ' month'));
+        return explode('-', $date);
     }
 
     /**

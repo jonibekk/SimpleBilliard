@@ -20,12 +20,8 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function get($teamId): array
+    public function get(int $teamId): array
     {
-        if (empty($teamId)) {
-            return [];
-        }
-
         // 既にDBからのデータ取得は行っているが情報が存在しなかった場合
         if (array_key_exists($teamId, self::$cacheList) && empty(self::$cacheList[$teamId])) {
             return [];
@@ -169,7 +165,7 @@ class PaymentService extends AppService
      *
      * @return int
      */
-    public function getUseDaysByNext(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    public function getUseDaysByNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): int
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
@@ -215,7 +211,7 @@ class PaymentService extends AppService
         // Move ym
         if ($isNextMonth) {
             // Move next year if December
-            list($y, $m) = AppUtil::nextYm($y, $m);
+            list($y, $m) = AppUtil::moveMonthYm($y, $m);
         }
 
         // Get next payment base date
@@ -232,18 +228,19 @@ class PaymentService extends AppService
 
     /**
      * Get total days from previous payment base date to next payment base date
+     * 現在月度の総利用日数
      *
      * @param int $currentTimeStamp
      *
      * @return int
      */
-    public function getAllUseDaysOfMonth(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
         list($y, $m, $d) = explode('-', $nextBaseDate);
-        list($y, $m) = AppUtil::prevYm($y, $m);
+        list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
 
         $paymentSetting = $this->get($Team->current_team_id);
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
@@ -262,26 +259,33 @@ class PaymentService extends AppService
     /**
      * Calc total charge by users count when invite users.
      *
-     * @param int $userCnt
-     * @param int $currentTimeStamp
+     * @param int  $userCnt
+     * @param int  $currentTimeStamp
+     * @param null $useDaysByNext
+     * @param null $allUseDays
      *
      * @return float
      */
-    public function calcTotalChargeByAddUsers(int $userCnt, int $currentTimeStamp = REQUEST_TIMESTAMP) : float
-    {
+    public function calcTotalChargeByAddUsers
+    (
+        int $userCnt,
+        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        $useDaysByNext = null,
+        $allUseDays = null
+    ): float {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        $useDaysByNext = $this->getUseDaysByNext($currentTimeStamp);
-        $allUseDaysOfMonth = $this->getAllUseDaysOfMonth($currentTimeStamp);
+        $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($currentTimeStamp);
+        $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($currentTimeStamp);
 
         $paymentSetting = $this->get($Team->current_team_id);
-        $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDaysOfMonth);
+        $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
 
         // Ex. 3people × ¥1,980 × 20 days / 1month
         if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
             $totalCharge = AppUtil::floor($totalCharge, 0);
         } else {
-            $totalCharge = AppUtil::floor($totalCharge,2);
+            $totalCharge = AppUtil::floor($totalCharge, 2);
         }
         return $totalCharge;
     }
@@ -289,20 +293,26 @@ class PaymentService extends AppService
     /**
      * Format total charge by users count when invite users.
      *
-     * @param int $userCnt
-     * @param int $currentTimeStamp
+     * @param int  $userCnt
+     * @param int  $currentTimeStamp
+     * @param null $useDaysByNext
+     * @param null $allUseDays
      *
      * @return string
      */
-    public function formatTotalChargeByAddUsers(int $userCnt, int $currentTimeStamp = REQUEST_TIMESTAMP) : string
-    {
+    public function formatTotalChargeByAddUsers(
+        int $userCnt,
+        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        $useDaysByNext = null,
+        $allUseDays = null
+    ): string {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
         $paymentSetting = $this->get($Team->current_team_id);
-        $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp);
+        $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
         // Format ex 1980 → ¥1,980
-        $res =  PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($totalCharge);
+        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($totalCharge);
         return $res;
     }
 

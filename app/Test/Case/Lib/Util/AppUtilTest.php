@@ -193,4 +193,59 @@ class AppUtilTest extends GoalousTestCase
         $res = AppUtil::convStrToArr($emailsStr, true);
         $this->assertEquals($res, ['a', 'b']);
     }
+
+    public function test_moveMonthYm()
+    {
+        /* Move +1 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 2);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 11);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12);
+        $this->assertEquals($y, 2017);
+        $this->assertEquals($m, 1);
+
+        /* Move >12 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, 12);
+        $this->assertEquals($y, 2017);
+        $this->assertEquals($m, 1);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, 12);
+        $this->assertEquals($y, 2017);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, 13);
+        $this->assertEquals($y, 2018);
+        $this->assertEquals($m, 1);
+
+        /* Move -1 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 2, -1);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 1);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, -1);
+        $this->assertEquals($y, 2015);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, -1);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 11);
+
+        /* Move <-12 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, -12);
+        $this->assertEquals($y, 2015);
+        $this->assertEquals($m, 1);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, -12);
+        $this->assertEquals($y, 2015);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, -13);
+        $this->assertEquals($y, 2014);
+        $this->assertEquals($m, 12);
+    }
 }
