@@ -485,19 +485,19 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-02-01");
-        $res = $this->PaymentService->getUseDaysByNext($currentTimestamp);
+        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
         $this->assertEquals($res, 27);
 
         $currentTimestamp = strtotime("2017-02-27");
-        $res = $this->PaymentService->getUseDaysByNext($currentTimestamp);
+        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
         $this->assertEquals($res, 1);
 
         $currentTimestamp = strtotime("2017-02-28");
-        $res = $this->PaymentService->getUseDaysByNext($currentTimestamp);
+        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
         $this->assertEquals($res, 28);
 
         $currentTimestamp = strtotime("2017-03-01");
-        $res = $this->PaymentService->getUseDaysByNext($currentTimestamp);
+        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
         $this->assertEquals($res, 27);
 
     }
@@ -518,19 +518,19 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-01-01");
-        $res = $this->PaymentService->getAllUseDaysOfMonth($currentTimestamp);
+        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
         $this->assertEquals($res, 31);
 
         $currentTimestamp = strtotime("2016-12-31");
-        $res = $this->PaymentService->getAllUseDaysOfMonth($currentTimestamp);
+        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
         $this->assertEquals($res, 31);
 
         $currentTimestamp = strtotime("2017-01-31");
-        $res = $this->PaymentService->getAllUseDaysOfMonth($currentTimestamp);
+        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
         $this->assertEquals($res, 31);
 
         $currentTimestamp = strtotime("2017-02-01");
-        $res = $this->PaymentService->getAllUseDaysOfMonth($currentTimestamp);
+        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
         $this->assertEquals($res, 28);
     }
 

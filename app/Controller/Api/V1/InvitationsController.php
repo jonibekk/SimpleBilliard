@@ -11,6 +11,7 @@ class InvitationsController extends ApiController
 {
     /**
      * Validation
+     *
      */
     function post_validate()
     {
@@ -40,6 +41,9 @@ class InvitationsController extends ApiController
 
     /**
      * Get information for displaying invitation confirmation page.
+     * ※ Call this api only if team's plan is paid plan
+     *
+     * @queryParam int invitation_count required
      */
     function get_confirm()
     {
@@ -76,15 +80,15 @@ class InvitationsController extends ApiController
         // Calc charge user count
         $chargeUserCnt = $InvitationService->calcChargeUserCount($invitationCnt);
         // Get use days from today to next paymant base date
-        $useDaysByNext = $PaymentService->getUseDaysByNext();
+        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
         // All days between before payment base date and next payment base date
-        $allUseDays = $PaymentService->getAllUseDaysOfMonth();
+        $allUseDays = $PaymentService->getCurrentAllUseDays();
         // Calc total charge
-        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
 
         $res = [
             'charge_users_count' => $chargeUserCnt,
-            'use_days' => $useDaysByNext,
+            'use_days_by_next_base_date' => $useDaysByNext,
             'all_use_days' => $allUseDays,
             'total_charge' => $totalCharge,
         ];

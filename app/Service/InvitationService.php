@@ -67,9 +67,9 @@ class InvitationService extends AppService
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
-        $maxChargeUserCnt = $ChargeHistory->getLatestMaxChargeUsers();
+        $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers();
         $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers();
-        $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargeUserCnt;
+        $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
         return $chargeUserCnt;
     }
 
@@ -149,7 +149,7 @@ class InvitationService extends AppService
                 $insertTeamMembers[] = [
                     'user_id' => $userId,
                     'team_id' => $teamId,
-                    'status' => TeamMember::STATUS_INVITED
+                    'status'  => TeamMember::STATUS_INVITED
                 ];
             }
             if (!$TeamMember->bulkInsert($insertTeamMembers)) {
