@@ -14,7 +14,7 @@
                     }
                 ?>
             </select>
-            <input type="submit" value="Submit" class="btn btn-primary">
+            <input type="submit" value="Submit" class="btn btn-primary" disabled="disabled">
         </form>
         <div class="payment-options">
             <div class="payment-option-container">

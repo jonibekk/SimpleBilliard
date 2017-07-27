@@ -51,14 +51,27 @@ if(document.enterCCInfo){
   });
 }
 
+
 if(document.companyLocation){
-  document.companyLocation.addEventListener('submit', function(e){
+  var companyLocation = {
+    form: document.companyLocation,
+    select: document.companyLocation.getElementsByTagName('select')[0],
+    submit: document.companyLocation.getElementsByClassName('btn-primary')[0]
+  };
+  companyLocation.form.addEventListener('submit', function(e){
     e.preventDefault();
-    var selectedCountry = document.companyLocation.getElementsByTagName('select')[0];
-    if(selectedCountry.value == 'JP'){
+    if(companyLocation.select.value == 'JP'){
       document.getElementsByClassName('payment-options')[0].style.height = (document.getElementsByClassName('payment-option-container')[0].clientHeight+20)+'px';
     }else{
       window.location = '/Payment/enterCompanyInfo';
+    }
+  });
+  companyLocation.select.addEventListener('change', function(){
+    console.log(companyLocation.select.value);
+    if(companyLocation.select.value != 'false'){
+      companyLocation.submit.removeAttribute('disabled');
+    }else{
+      companyLocation.submit.setAttribute('disabled','disabled');
     }
   });
 }
