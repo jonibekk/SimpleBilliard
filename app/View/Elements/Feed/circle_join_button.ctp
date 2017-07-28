@@ -9,6 +9,7 @@
  * @var $user_status
  */
 ?>
+<?= $this->App->viewStartComment() ?>
 <?php if ($current_circle && $user_status != 'admin'): ?>
     <?php if ($user_status != 'joined') { ?>
         <div class="panel panel-default">
@@ -21,7 +22,8 @@
                         'action'     => 'join_circle',
                         'circle_id'  => $current_circle['Circle']['id']
                     ]) ?>"
-                       class='btn btn-primary pull-right'>
+                       class='btn btn-primary pull-right'
+                       onclick="this.classList.add('disabled')">
                         <i class="fa fa-user-plus"></i> <?= __('Join circle') ?>
                     </a>
                 </div>
@@ -38,4 +40,4 @@
         <?php endif; ?>
     <?php } ?>
 <?php endif; ?>
-
+<?= $this->App->viewEndComment() ?>

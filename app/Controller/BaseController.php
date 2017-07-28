@@ -315,7 +315,7 @@ class BaseController extends Controller
         if ($this->isExcludeRequestParamInProhibited()) {
             return false;
         }
-        if (!$this->request->is(['post', 'put', 'delete'])) {
+        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
 
