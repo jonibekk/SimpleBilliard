@@ -11,6 +11,8 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::uses('MobileAppVersion', 'Request');
+App::uses('UserAgent', 'Request');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 
@@ -228,6 +230,42 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+
+        // show version expired if Goalous Mobile App version is old GL-5962
+        if (!$this->request->is('ajax')) {
+            $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT'));
+            if ($userAgent->isMobileAppAccess() && $this->isExpiredVersionMobileApp($userAgent)) {
+                $this->renderMobileAppForceUpdate($userAgent);
+            }
+        }
+    }
+
+    /**
+     * return true if Goalous Mobile App version is not supported
+     * @param UserAgent $userAgent
+     *
+     * @return bool
+     */
+    private function isExpiredVersionMobileApp(UserAgent $userAgent): bool
+    {
+        if (!$userAgent->isMobileAppAccess()) {
+            return false;
+        }
+        $versionMobileAppLeast = '';
+        if ($userAgent->isiOSApp()) {
+            $versionMobileAppLeast = MOBILE_APP_IOS_VERSION_SUPPORTING_LEAST;
+        } elseif ($userAgent->isAndroidApp()) {
+            $versionMobileAppLeast = MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST;
+        }
+        return MobileAppVersion::isExpired($versionMobileAppLeast, $userAgent->getMobileAppVersion());
+    }
+
+    private function renderMobileAppForceUpdate(UserAgent $userAgent)
+    {
+        $this->set('userAgent', $userAgent);
+        $this->render('/Pages/app_force_update');
+        $this->response->send();
+        $this->_stop();
     }
 
     public function _setBrowserToSession()
