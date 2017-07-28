@@ -28,9 +28,7 @@ class BackBtnHelper extends AppHelper
                     $backButton = false;
                 }
             } elseif ($pageURL == 'post_permanent'){
-                if(strpos($this->request->here , 'notify_id=' )){
-                    $backButton = false;
-                }
+                $backButton = false;
             }
         }
         // Special case for homepage
