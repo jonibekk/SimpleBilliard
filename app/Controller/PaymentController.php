@@ -16,4 +16,8 @@ class PaymentController extends AppController {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('/Payment/credit_card_entry');
     }
+    public function thankyou() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('/Payment/thank_you');
+    }
 }

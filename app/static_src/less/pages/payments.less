@@ -88,8 +88,6 @@
         width:100%;
     }
 }
-
-
 .enter-cc-info{
     max-width: 500px;
     margin: 0 auto;
@@ -170,4 +168,128 @@
             flex-basis:100%;
         }
     }
-} 
+}
+
+@keyframes confetti1 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-1vh;
+    }
+    100% {
+        transform: rotateX(540deg) rotateZ(360deg);
+        top:60vh;
+    }
+}
+
+@keyframes confetti2 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-2vh;
+    }
+    100% {
+        transform: rotateX(-900deg) rotateZ(-540deg);
+        top:60vh;
+    }
+}
+
+@keyframes confetti3 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-3vh;
+    }
+    100% {
+        transform: rotateX(360deg) rotateZ(-900deg);
+        top:60vh;
+    }
+}
+
+@keyframes confetti4 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-2vh;
+    }
+    100% {
+        transform: rotateX(-720deg) rotateZ(-1080deg);
+        top:60vh;
+    }
+}
+
+.payment-thanks{
+    text-align:center;
+    position:relative;
+    max-width:600px;
+    margin:0 auto;
+    .panel-container{
+        min-height:20rem;
+        padding:2rem 0;
+        position:relative;
+        z-index:2;
+        @media @medium{
+            min-height:30rem;
+        }
+    }
+    .thank-you-headline{
+        color:@goalous;
+        font-weight: 600;
+    }
+    .thank-you-text{
+        font-weight:600;
+        max-width:400px;
+        width:100%;
+        font-size:18px;
+        margin:0 auto 2rem auto;
+    }
+    .confetti-cannon{
+        position:absolute;
+        overflow:hidden;
+        height:100%;
+        width:100%;
+        top:0;
+        left:0;
+        z-index:1;
+        .confetti{
+            transform-origin: 50% 50%;
+            display:block;
+            background-color:@goalous;
+            position:absolute;
+            left:10px;
+            top:-20px;
+            &.confetti-1{
+                animation-name:confetti1;
+                animation-duration: 3s;
+                width:5px;
+                height:10px;
+                animation-timing-function: linear;
+                transition: top 3s ease-in-out;
+            }
+            &.confetti-2{
+                animation-name:confetti2;
+                animation-duration: 3s;
+                width:3px;
+                height:5px;
+                background:yellow;
+                animation-timing-function: ease-in-out;
+                transition: top 4s linear;
+            }
+            &.confetti-3{
+                animation-name:confetti3;
+                animation-duration: 4s;
+                width:5px;
+                height:5px;
+                background:@subColor6;
+                border-radius:50%;
+                animation-timing-function: ease-out;
+                transition: top 5s ease-out;
+            }
+            &.confetti-4{
+                animation-name:confetti4;
+                animation-duration: 5s;
+                width:7px;
+                height:7px;
+                background:@aquaBlue;
+                animation-timing-function: ease-out;
+                transition: top 5s ease-out;
+            }
+        }
+    }
+}
