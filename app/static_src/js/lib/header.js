@@ -415,12 +415,14 @@ function toggleNav(){
         navIcon = header.getElementsByClassName('toggle-icon')[0];
     if(header){
         if(header.classList.contains('mod-openNav')){
+            document.body.classList.remove('modal-open');
             header.classList.remove('mod-openNav');
             layerBlack.classList.remove('mod-openNav'); 
             menuNotify.classList.remove('is-open');
             navIcon.classList.remove('fa-arrow-right');
             navIcon.classList.add('fa-navicon');
         }else{
+            document.body.classList.add('modal-open');
             header.classList.add('mod-openNav'); 
             layerBlack.classList.add('mod-openNav');
             menuNotify.classList.add('is-open');
