@@ -1,7 +1,5 @@
 <section class="panel company-info">
-    <div class="panel-container">
-        <h3><?= __('Enter Company Information')?></h3>
-    </div>
+    <h3><?= __('Enter Company Information')?></h3>
     <?php
         echo $this->Form->create('Payments', [
             'url'           => ['controller' => 'payments', 'action' => 'addCompanyInfo'],
@@ -20,17 +18,19 @@
             'label'                        => __("Company Name"),
             'placeholder'                  => __("ISAO Corporation"),
             "data-bv-notempty-message"     => __("Input is required."),
+            'type'                         => 'text',
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 255,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 255),
         ]);
         ?>
-    <fieldset>
-        <legend><?= __('Company Address');?></legend>
+    <fieldset class="company-info-fieldset">
+        <legend class="company-info-legend"><?= __('Company Address');?></legend>
         <?php
         echo $this->Form->input('company_address',[
             'label'                        => __("Street"),
-            'placeholder'                  => __("ISAO Corporation"),
+            'placeholder'                  => __("1234 Street Name"),
+            'type'                         => 'text',
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 255,
@@ -38,7 +38,8 @@
         ]);
         echo $this->Form->input('company_address',[
             'label'                        => __("State/Province/Region"),
-            'placeholder'                  => __("ISAO Corporation"),
+            'placeholder'                  => __("California"),
+            'type'                         => 'text',
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 255,
@@ -46,7 +47,8 @@
         ]);
         echo $this->Form->input('company_address',[
             'label'                        => __("Postal Code"),
-            'placeholder'                  => __("ISAO Corporation"),
+            'placeholder'                  => __("12345"),
+            'type'                         => 'tel',
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 255,
@@ -54,19 +56,22 @@
         ]);
         echo $this->Form->input('company_address',[
             'label'                        => __("Country"),
-            'placeholder'                  => __("ISAO Corporation"),
+            'placeholder'                  => __("USA"),
+            'type'                         => 'text',
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 255,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 255),
         ]);
-    ?>
-    <fieldset>
-        <legend><?= __('Company Contact');?></legend>
+        ?>
+    </fieldset>
+    <fieldset class="company-info-fieldset">
+        <legend class="company-info-legend"><?= __('Company Contact');?></legend>
         <?php
             echo $this->Form->input('contact_name_first',[
                 'label'                        => __("First Name"),
-                'placeholder'                  => __("ISAO Corporation"),
+                'placeholder'                  => __("John"),
+                'type'                         => 'text',
                 "data-bv-notempty-message"     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 255,
@@ -74,7 +79,8 @@
             ]);
             echo $this->Form->input('contact_name_first',[
                 'label'                        => __("Last Name"),
-                'placeholder'                  => __("ISAO Corporation"),
+                'placeholder'                  => __("Smith"),
+                'type'                         => 'text',
                 "data-bv-notempty-message"     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 255,
@@ -85,7 +91,7 @@
     <?php
         echo $this->Form->input('contact_email',[
             'label'                        => __("Contact Email"),
-            'placeholder'                  => __("ISAO Corporation"),
+            'placeholder'                  => __("name@company.com"),
             'type'                         => 'email',
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
@@ -95,6 +101,7 @@
         echo $this->Form->input('company_phone',[
             'label'                        => __("Company Telephone"),
             'placeholder'                  => __("ISAO Corporation"),
+            'type'                         => 'tel',
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 255,
