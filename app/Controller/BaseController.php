@@ -297,7 +297,7 @@ class BaseController extends Controller
      */
     public function isProhibittedRequestByReadOnly(): bool
     {
-        if (!$this->request->is(['post', 'put', 'delete'])) {
+        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
 
