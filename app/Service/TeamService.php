@@ -50,7 +50,7 @@ class TeamService extends AppService
      * - In Team::getCurrentTeam, use CACHE_KEY_CURRENT_TEAM cache.
      * - So when change service use status, must delete this team cache.
      *
-     * @return void
+     * @return int
      */
     public function getServiceUseStatus(): int
     {
@@ -69,5 +69,10 @@ class TeamService extends AppService
     public function isReadOnly(): bool
     {
         return $this->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+    }
+
+    public function isCannotUseService(): bool
+    {
+        return $this->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
 }

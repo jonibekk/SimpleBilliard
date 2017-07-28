@@ -95,6 +95,20 @@ class BaseController extends Controller
      */
     public $stopInvoke = false;
 
+    /**
+     * This list for excluding from prohibited request
+     *
+     * @var array
+     */
+    private $ignoreProhibitedRequest = [
+        [
+            'controller' => 'payment',
+        ],
+        [
+            'controller' => 'teams',
+        ],
+    ];
+
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
@@ -279,6 +293,7 @@ class BaseController extends Controller
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
+
     /**
      * pass `isTablet` variable to view.
      * - get browser ua from browscap
@@ -291,12 +306,15 @@ class BaseController extends Controller
     }
 
     /**
-     * check prohibitted request in read only term
+     * check prohibited request in read only term
      *
      * @return bool
      */
-    public function isProhibittedRequestByReadOnly(): bool
+    public function isProhibitedRequestByReadOnly(): bool
     {
+        if ($this->isExcludeRequestParamInProhibited()) {
+            return false;
+        }
         if (!$this->request->is(['post', 'put', 'delete'])) {
             return false;
         }
@@ -308,5 +326,50 @@ class BaseController extends Controller
             return true;
         }
         return false;
+    }
+
+    /**
+     * check prohibited request in read only term
+     *
+     * @return bool
+     */
+    public function isProhibitedRequestByCannotUseService(): bool
+    {
+        if ($this->isExcludeRequestParamInProhibited()) {
+            return false;
+        }
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->isCannotUseService()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Request params are excluded request in prohibited?
+     * Decide with $this->excludeRequestParamsInProhibited
+     *
+     * @return bool
+     */
+    private function isExcludeRequestParamInProhibited()
+    {
+        $isExcludeParam = false;
+        foreach ($this->ignoreProhibitedRequest as $param) {
+            foreach ($param as $key => $val) {
+                if ($this->request->param($key) == $val) {
+                    $isExcludeParam = true;
+                } else {
+                    $isExcludeParam = false;
+                    continue;
+                }
+            }
+            if ($isExcludeParam) {
+                return $isExcludeParam;
+            }
+        }
+        return $isExcludeParam;
     }
 }

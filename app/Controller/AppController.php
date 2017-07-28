@@ -21,13 +21,13 @@ App::import('Service', 'GoalService');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent      $Lang
- * @property CookieComponent    $Cookie
- * @property CsvComponent       $Csv
- * @property PnotifyComponent   $Pnotify
- * @property MixpanelComponent  $Mixpanel
- * @property OgpComponent       $Ogp
- * @property BenchmarkComponent $Benchmark
+ * @property LangComponent         $Lang
+ * @property CookieComponent       $Cookie
+ * @property CsvComponent          $Csv
+ * @property NotificationComponent $Notification
+ * @property MixpanelComponent     $Mixpanel
+ * @property OgpComponent          $Ogp
+ * @property BenchmarkComponent    $Benchmark
  */
 class AppController extends BaseController
 {
@@ -160,11 +160,19 @@ class AppController extends BaseController
             }
 
             // prohibit ajax request in read only term
-            if ($this->request->is('ajax') && $this->isProhibittedRequestByReadOnly()) {
+            if ($this->request->is('ajax') && $this->isProhibitedRequestByReadOnly()) {
                 $this->stopInvoke = true;
                 return $this->_ajaxGetResponse([
                     'error' => true,
-                    'msg' => __("You may only read your team’s pages.")
+                    'msg'   => __("You may only read your team’s pages.")
+                ]);
+            }
+            // prohibit ajax request in status of cannot use service
+            if ($this->request->is('ajax') && $this->isProhibitedRequestByCannotUseService()) {
+                $this->stopInvoke = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    'msg'   => __("You cannot use service. pls contact your team admins.")
                 ]);
             }
 
@@ -176,9 +184,14 @@ class AppController extends BaseController
                 $this->_setMyTeam();
 
                 // when prohibit request in read only
-                if ($this->isProhibittedRequestByReadOnly()) {
+                if ($this->isProhibitedRequestByReadOnly()) {
                     $this->Notification->outError(__("You may only read your team’s pages."));
                     $this->redirect($this->referer());
+                }
+                // when prohibit request in status of cannot use service
+                if ($this->isProhibitedRequestByCannotUseService()) {
+                    $this->Notification->outError(__("You cannot use the team. pls contact your team admins."));
+                    $this->redirect(['controller' => 'payment', 'action' => 'cannot_use_service']);
                 }
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
@@ -251,9 +264,11 @@ class AppController extends BaseController
      * - it can make execution stop until before render
      *
      * @param CakeRequest $request
+     *
      * @return void
      */
-    public function invokeAction(CakeRequest $request) {
+    public function invokeAction(CakeRequest $request)
+    {
         if ($this->stopInvoke) {
             return false;
         }
