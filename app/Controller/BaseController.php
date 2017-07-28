@@ -1,5 +1,6 @@
 <?php
 App::uses('Controller', 'Controller');
+App::import('Service', 'TeamService');
 
 /**
  * Application level Controller
@@ -41,6 +42,7 @@ class BaseController extends Controller
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
             ]
         ],
+        'Notification',
         'NotifyBiz',
         'GlEmail',
         'Mixpanel',
@@ -88,6 +90,10 @@ class BaseController extends Controller
         'Goalous App iOS',
         'Goalous App Android'
     ];
+    /**
+     * use it when you need stop after beforender
+     */
+    public $stopInvoke = false;
 
     public function __construct($request = null, $response = null)
     {
@@ -282,5 +288,25 @@ class BaseController extends Controller
         $browser = $this->getBrowser();
         $this->is_tablet = $browser['istablet'];
         $this->set('isTablet', $this->is_tablet);
+    }
+
+    /**
+     * check prohibitted request in read only term
+     *
+     * @return bool
+     */
+    public function isProhibittedRequestByReadOnly(): bool
+    {
+        if (!$this->request->is(['post', 'put', 'delete'])) {
+            return false;
+        }
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->isReadOnly()) {
+            return true;
+        }
+        return false;
     }
 }
