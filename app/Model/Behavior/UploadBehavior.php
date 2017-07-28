@@ -1,12 +1,12 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
+
 use Aws\Common\Aws;
-use Aws\S3;
-use Aws\S3\S3Client;
 use Aws\Common\Enum\Region;
-use Guzzle\Http\EntityBody;
 use Aws\S3\Enum\CannedAcl;
 use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
+use Guzzle\Http\EntityBody;
 
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.
@@ -164,39 +164,46 @@ class UploadBehavior extends ModelBehavior
     /** @noinspection PhpUndefinedClassInspection */
     private function _fetchFromUrl($url)
     {
-        $data = array('remote' => true);
-        $urlExplodedBySlash = explode('/', $url);
-        $data['name'] = end($urlExplodedBySlash);
-        $urlExplodedByDot = explode('.', $url);
-        //サポートしている拡張子かチェック
-        if (in_array($urlExplodedByDot, $this->supportedExtensions)) {
-            $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
-        } else {
-            $data['name'] .= '.' . self::getImgExtensionFromUrl($url);
-            $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . self::getImgExtensionFromUrl($url);
-        }
+        try {
+            $data = array('remote' => true);
+            $urlExplodedBySlash = explode('/', $url);
+            $data['name'] = end($urlExplodedBySlash);
+            $urlExplodedByDot = explode('.', $url);
+            //サポートしている拡張子かチェック
+            if (in_array($urlExplodedByDot, $this->supportedExtensions)) {
+                $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
+            } else {
+                $data['name'] .= '.' . self::getImgExtensionFromUrl($url);
+                $data['tmp_name'] = tempnam(sys_get_temp_dir(),
+                        $data['name']) . '.' . self::getImgExtensionFromUrl($url);
+            }
 
-        $config = [
-            'ssl_verify_host' => false,
-        ];
-        $httpSocket = new HttpSocket($config);
-        $raw = $httpSocket->get($url, array(), array('redirect' => true));
-        /**
-         * @var HttpResponse $response
-         */
-        $response = $httpSocket->response;
-        //404ならnull返す
-        if ($response->code == "404") {
+            $config = [
+                'ssl_verify_host' => false,
+            ];
+            $httpSocket = new HttpSocket($config);
+            $raw = $httpSocket->get($url, array(), array('redirect' => true));
+            /**
+             * @var HttpResponse $response
+             */
+            $response = $httpSocket->response;
+            //404ならnull返す
+            if ($response->code == "404") {
+                return null;
+            }
+            $data['size'] = strlen($raw);
+            if (!isset($response['header']['Content-Type'])) {
+                return null;
+            }
+            $headerContentType = explode(';', $response['header']['Content-Type']);
+            $data['type'] = reset($headerContentType);
+
+            file_put_contents($data['tmp_name'], $raw);
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             return null;
         }
-        $data['size'] = strlen($raw);
-        if (!isset($response['header']['Content-Type'])) {
-            return null;
-        }
-        $headerContentType = explode(';', $response['header']['Content-Type']);
-        $data['type'] = reset($headerContentType);
 
-        file_put_contents($data['tmp_name'], $raw);
         return $data;
     }
 
