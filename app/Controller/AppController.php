@@ -191,7 +191,7 @@ class AppController extends BaseController
                 // when prohibit request in status of cannot use service
                 if ($this->isProhibitedRequestByCannotUseService()) {
                     $this->Notification->outError(__("You cannot use the team. pls contact your team admins."));
-                    $this->redirect(['controller' => 'payment', 'action' => 'cannot_use_service']);
+                    $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
                 }
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);

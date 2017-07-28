@@ -102,7 +102,7 @@ class BaseController extends Controller
      */
     private $ignoreProhibitedRequest = [
         [
-            'controller' => 'payment',
+            'controller' => 'payments',
         ],
         [
             'controller' => 'teams',
