@@ -1,5 +1,5 @@
 if(document.enterCCInfo){
-  var stripe = Stripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+  var stripe = Stripe(cake.stripe_publishable_key);
   var elements = stripe.elements();
 
   var card = elements.create('card', {

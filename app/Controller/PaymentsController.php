@@ -1,5 +1,5 @@
 <?php
-# /app/Controller/PaymentController.php
+# /app/Controller/PaymentsController.php
 
 class PaymentController extends AppController {
     public function apply() {
