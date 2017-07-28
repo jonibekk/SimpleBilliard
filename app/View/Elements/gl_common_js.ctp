@@ -72,6 +72,7 @@ if (PUBLIC_ENV) {
 </script>
 <?php endif;?>
 
+<!-- Required by Stripe.js API to appear on every page for security reasons -->
 <script src="https://js.stripe.com/v3/"></script>
 
 <?= $this->App->viewEndComment() ?>

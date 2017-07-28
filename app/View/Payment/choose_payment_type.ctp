@@ -1,4 +1,3 @@
-<?php echo $this->Html->css('payments.min'); ?>
 <section class="panel choose-payment">
     <div class="panel-container">
         <h3><?= __('Select Payment Method')?></h3>
