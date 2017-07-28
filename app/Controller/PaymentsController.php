@@ -1,7 +1,7 @@
 <?php
 # /app/Controller/PaymentsController.php
 
-class PaymentController extends AppController {
+class PaymentsController extends AppController {
     public function apply() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('/Payment/choose_payment_type');

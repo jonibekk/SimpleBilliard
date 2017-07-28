@@ -55,7 +55,7 @@ if(document.enterCCInfo){
 if(document.companyLocation){
   var companyLocation = {
     form: document.companyLocation,
-    select: document.companyLocation.getElementsByTagName('select')[0],
+    select: document.companyLocation.getElementsByClassName('company-location-select')[0],
     submit: document.companyLocation.getElementsByClassName('btn-primary')[0]
   };
   companyLocation.form.addEventListener('submit', function(e){
@@ -67,7 +67,6 @@ if(document.companyLocation){
     }
   });
   companyLocation.select.addEventListener('change', function(){
-    console.log(companyLocation.select.value);
     if(companyLocation.select.value != 'false'){
       companyLocation.submit.removeAttribute('disabled');
     }else{
