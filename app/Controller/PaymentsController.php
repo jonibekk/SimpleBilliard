@@ -4,14 +4,9 @@ App::uses('AppController', 'Controller');
 
 
 class PaymentsController extends AppController {
-    public $components = ['Lang'];
     public function apply() {
-        if(Configure::read('Config.language')=='jpn'){
             $this->layout = LAYOUT_ONE_COLUMN;
             $this->render('/Payment/choose_payment_type');
-        }else{
-            $this->enterCompanyInfo();
-        }
     }
 
     public function enterCompanyInfo() {
@@ -28,5 +23,13 @@ class PaymentsController extends AppController {
     public function thankyou() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('/Payment/thank_you');
+    }
+
+    public function postCompanyInfo() {
+        $this->enterCCInfo();
+    }
+
+    public function postCCInfo() {
+        $this->thankyou();
     }
 }
