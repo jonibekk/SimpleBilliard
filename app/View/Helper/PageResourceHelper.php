@@ -51,7 +51,8 @@ class PageResourceHelper extends AppHelper
             ]
         ],
         'users' => [
-            'default' => ['/js/goalous_user.min']
+            'default' => ['/js/goalous_user.min'],
+            'invite' => ['/js/react_invite_app.min']
         ],
         'setup' => [
             'default' => [

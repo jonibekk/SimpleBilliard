@@ -9,6 +9,10 @@ App::import('Service', 'PaymentService');
  */
 class InvitationsController extends ApiController
 {
+    public $components = [
+        'Notification',
+    ];
+
     /**
      * Validation
      *
@@ -36,8 +40,31 @@ class InvitationsController extends ApiController
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
         }
-        return $this->_getResponseSuccess();
+        return $this->_getResponseSuccess(compact('emails'));
     }
+
+
+    /**
+     * Get information for invitation input page.
+     */
+    function get_input()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        // Check permission
+        if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
+        }
+
+        $team = Hash::get($Team->getCurrentTeam(), 'Team');
+        return $this->_getResponseSuccess([
+            'team' => $team
+        ]);
+    }
+
 
     /**
      * Get information for displaying invitation confirmation page.
@@ -74,9 +101,11 @@ class InvitationsController extends ApiController
         $paymentSetting = $PaymentService->get($this->current_team_id);
         // Check if exist payment setting
         if (empty($paymentSetting)) {
-            return $this->_getResponseForbidden();
+            return $this->_getResponseSuccess();
         }
 
+        // TODO: Unify naming charge or amount or billing
+        $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
         // Calc charge user count
         $chargeUserCnt = $InvitationService->calcChargeUserCount($invitationCnt);
         // Get use days from today to next paymant base date
@@ -87,6 +116,7 @@ class InvitationsController extends ApiController
         $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
 
         $res = [
+            'amount_per_user' => $amountPerUser,
             'charge_users_count' => $chargeUserCnt,
             'use_days_by_next_base_date' => $useDaysByNext,
             'all_use_days' => $allUseDays,
@@ -109,6 +139,8 @@ class InvitationsController extends ApiController
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
 
         // Check permission
         $userId = $this->Auth->user('id');
@@ -135,11 +167,12 @@ class InvitationsController extends ApiController
 
         // Send invitation mail
         $invitations = $Invite->findByEmails($emails);
-        $teamName = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+        $team = $Team->getCurrentTeam();
         foreach ($invitations as $invitation) {
-            $this->GlEmail->sendMailInvite($invitation, $teamName);
+            $this->GlEmail->sendMailInvite($invitation, Hash::get($team, 'Team.name'));
         }
 
+        $this->Notification->outSuccess(__("Invited %s people.", count($emails)));
         return $this->_getResponseSuccess();
     }
 }
