@@ -36,6 +36,7 @@
     </div>
     <div class="read-only-alert font_verydark">
         <div class="container">
+            <? // TODO: Have to translate by @kohei word ?>
             このチームは、<span class="font_bold">2017年12月20日まで</span>読み取り専用期間です。通常のご利用を再開したい場合は、<a href="">こちら</a>から有料プランを契約してください。
         </div>
     </div>
