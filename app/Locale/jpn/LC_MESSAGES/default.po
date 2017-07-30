@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-25 01:44+0900\n"
+"PO-Revision-Date: 2017-07-26 14:56+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -87,6 +87,9 @@ msgstr ""
 
 msgid "You can use Goalous on Web and on Mobile App."
 msgstr "スマホアプリ・ブラウザで利用可能です。"
+
+msgid "You may only read your team’s pages."
+msgstr "あなたのチームはページの読み取りしか許可されていません。"
 
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
@@ -865,32 +868,26 @@ msgstr ""
 msgid "Notice of free trial deadline"
 msgstr "フリートライアル期限のお知らせ"
 
-msgid "The deadline for the free trial of the team \"%s\" is %s."
+msgid "The free trial for your team, \"%s\", will end on %s"
 msgstr "チーム「%s」のフリートライアルの期限は%sです。"
 
 msgid ""
-"If you would like to continue using it, please subscribe to the paid plan."
+"If you would like to continue using Goalous, please subscribe to the paid plan."
 msgstr "継続してご利用されたい場合は、有料プランのご契約をお願いいたします。"
 
 msgid "This team is currently in read-only status"
 msgstr "現在このチームは読み取り専用の状態になっております"
 
-#, fuzzy
-#| msgid "This team is currently in read-only status"
 msgid "The team \"%s\" is currently in a read-only state."
 msgstr "チーム「%s」は現在、読み取り専用の状態になっております。"
 
-msgid "If you would like to use regularly, subscribe to the paid plan by %s."
+msgid "If you would like to restore your team to a regular status, please subscribe to the paid plan by %s."
 msgstr "通常の利用をご希望の場合は、%sまでに有料プランをご契約ください。"
 
-msgid ""
-"Reading-only will be canceled immediately after subscription to the paid "
-"plan."
+msgid "Your team will be able to resume normal use immediately after subscribing to the paid plan."
 msgstr "有料プランのお申込み後、すぐに読み取り専用は解除されます。"
 
-msgid ""
-"If you do not have a subscription to the paid plan, you will not be able to "
-"use it for %s."
+msgid "If you do not subscribe to the paid plan by %s, your team will no longer have access to Goalous."
 msgstr ""
 "なお、このまま有料プランへのご契約がない場合は、%sにご利用ができなくなりま"
 "す。"
@@ -898,20 +895,14 @@ msgstr ""
 msgid "This team is currently unavailable"
 msgstr "現在このチームは利用できない状態になっております"
 
-#, fuzzy
-#| msgid "This team is currently unavailable"
 msgid "The team \"%s\" is currently unavailable."
 msgstr "チーム「%s」は現在、ご利用できない状態になっております。"
 
-msgid "You can resume using it immediately after applying for a paid plan."
+msgid "Your team will immediately be able to resume normal use after subscribing to the paid plan."
 msgstr "有料プランのお申込み後、すぐにご利用を再開できます。"
 
-msgid ""
-"If you do not have a subscription to a paid plan, the team information will "
-"be deleted on %s."
-msgstr ""
-"なお、このまま有料プランへのご契約がない場合は、%sにチームの情報が削除されま"
-"す。"
+msgid "If you do not subscribe to the paid plan by %s, all of your team's data will be deleted."
+msgstr "なお、このまま有料プランへのご契約がない場合は、%sにチームの情報が削除されます。"
 
 msgid "Confirmation Code for Goalous: %s"
 msgstr "Goalousの認証コード: %s"
@@ -4242,7 +4233,7 @@ msgid ""
 msgstr ""
 "新しいチームを作成する為に以下のコードをGoalousの画面で入力してください。:"
 
-msgid "Please make a payment setting from the following link."
+msgid "You can update your payment setting from the following link:"
 msgstr "以下のリンクから決済設定を行ってください。"
 
 msgid "Hello."
@@ -4835,6 +4826,29 @@ msgstr "利用規約はこちら。"
 
 msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
+
+msgid "Select Payment Method"
+msgstr "画像を選択"
+
+msgid "Credit Card"
+msgstr ""
+
+msgid ""
+"Use a credit card to setup automatic, reoccuring payments for your Goalous "
+"team."
+msgstr ""
+
+msgid "Setup"
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Setup a monthly invoice with Goalous."
+msgstr ""
+
+msgid "Coming Soon"
+msgstr ""
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"

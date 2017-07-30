@@ -158,12 +158,28 @@ class AppController extends BaseController
             if ($notify_id) {
                 $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
-            //ajaxの時以外で実行する
+
+            // prohibit ajax request in read only term
+            if ($this->request->is('ajax') && $this->isProhibittedRequestByReadOnly()) {
+                $this->stopInvoke = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    'msg' => __("You may only read your team’s pages.")
+                ]);
+            }
+
+            // by not ajax request
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
                     $this->_setTerm();
                 }
                 $this->_setMyTeam();
+
+                // when prohibit request in read only
+                if ($this->isProhibittedRequestByReadOnly()) {
+                    $this->Notification->outError(__("You may only read your team’s pages."));
+                    $this->redirect($this->referer());
+                }
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -228,6 +244,20 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+    }
+
+    /**
+     * This is wrapper parent invokeAction
+     * - it can make execution stop until before render
+     *
+     * @param CakeRequest $request
+     * @return void
+     */
+    public function invokeAction(CakeRequest $request) {
+        if ($this->stopInvoke) {
+            return false;
+        }
+        return parent::invokeAction($request);
     }
 
     public function _setBrowserToSession()

@@ -234,6 +234,26 @@ class TimeExHelper extends AppHelper
         return $this->Time->i18nFormat($time, $format);
     }
 
+    public function formatDateI18nFromDate(string $date)
+    {
+        return $this->formatDateI18n(strtotime($date),false);
+    }
+
+    public function formatDatetimeI18nFromDate(string $date)
+    {
+        return $this->formatDatetimeI18n(strtotime($date),false);
+    }
+
+    public function formatFullTimeI18nFromDate(string $date)
+    {
+        return $this->formatFullTimeI18n(strtotime($date),false);
+    }
+
+    public function formatYearDayI18nFromDate(string $date)
+    {
+        return $this->formatYearDayI18n(strtotime($date),false);
+    }
+
     public function getTimezoneText($timezone)
     {
         $sign = "+";
