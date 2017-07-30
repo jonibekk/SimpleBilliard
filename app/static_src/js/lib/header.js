@@ -413,17 +413,21 @@ function toggleNav(){
         layerBlack = document.getElementById('layerBlack'),
         menuNotify = document.getElementsByClassName("js-unread-point-on-hamburger")[0],
         navIcon = header.getElementsByClassName('toggle-icon')[0];
-    if(header.classList.contains('mod-openNav')){
-        header.classList.remove('mod-openNav');
-        layerBlack.classList.remove('mod-openNav'); 
-        menuNotify.classList.remove('is-open');
-        navIcon.classList.remove('fa-arrow-right');
-        navIcon.classList.add('fa-navicon');
-    }else{
-        header.classList.add('mod-openNav'); 
-        layerBlack.classList.add('mod-openNav');
-        menuNotify.classList.add('is-open');
-        navIcon.classList.add('fa-arrow-right');
-        navIcon.classList.remove('fa-navicon');
+    if(header){
+        if(header.classList.contains('mod-openNav')){
+            document.body.classList.remove('modal-open');
+            header.classList.remove('mod-openNav');
+            layerBlack.classList.remove('mod-openNav'); 
+            menuNotify.classList.remove('is-open');
+            navIcon.classList.remove('fa-arrow-right');
+            navIcon.classList.add('fa-navicon');
+        }else{
+            document.body.classList.add('modal-open');
+            header.classList.add('mod-openNav'); 
+            layerBlack.classList.add('mod-openNav');
+            menuNotify.classList.add('is-open');
+            navIcon.classList.add('fa-arrow-right');
+            navIcon.classList.remove('fa-navicon');
+        }
     }
 }

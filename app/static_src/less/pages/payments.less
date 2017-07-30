@@ -1,0 +1,71 @@
+@import "../variables/all";
+@import "../helpers/mixin";
+
+.choose-payment{
+    padding: 2rem 0;
+}
+.panel-container{
+    max-width:600px;
+    width:90%;
+    margin: 0 auto;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-around;
+    @media @small{
+        width:75%;
+    }
+    h3{
+        flex-basis:100%;
+        text-align:center;
+        margin: 0 0 1em 0;
+    }
+    h4{
+        margin-bottom:0;
+    }
+    i{
+        font-size: 3rem;
+        margin: .25em 0;
+    }
+    p{
+        line-height:1.2em;
+    }
+}
+.payment-option{
+    max-width:300px;
+    flex-basis:100%;
+    min-height:175px;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    text-align:center;
+    border:1px solid @cGray;
+    background: @smokyWhite;
+    border-radius: 3px;
+    position:relative;
+    cursor:pointer;
+    @media @medium{
+        flex-basis:45%;
+    }
+    &.upcoming{
+        background:transparent;
+        border: .5rem dashed @cGray;
+        cursor: normal;
+        h4, p, a, i{
+            color:@cGray;
+        }
+    }
+    h4{
+        width:100%;
+    }
+    p{
+        padding-bottom: 2em;
+        &.coming-soon{
+            padding-bottom:0;
+        }
+    }
+    .payment-option-setup-link, .coming-soon{
+        position:absolute;
+        bottom:1rem;
+        left:0;
+        width:100%;
+    }
+}
