@@ -2060,6 +2060,24 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
     }
 
+    function test_updateActiveFlgToStatus_success()
+    {
+        $this->TeamMember->save(['active_flg' => true], false);
+        $teamMemberId = $this->TeamMember->getLastInsertId();
+        $this->TeamMember->updateActiveFlgToStatus();
+        $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
+        $this->assertEqual($newStatus, TeamMember::STATUS_ACTIVE);
+    }
+
+    function test_updateInActiveFlgToStatus_success()
+    {
+        $this->TeamMember->save(['active_flg' => false], false);
+        $teamMemberId = $this->TeamMember->getLastInsertId();
+        $this->TeamMember->updateInactiveFlgToStatus();
+        $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
+        $this->assertEqual($newStatus, TeamMember::STATUS_INACTIVE);
+    }
+
     function _saveEvaluations()
     {
         $records = [

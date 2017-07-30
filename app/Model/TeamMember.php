@@ -17,6 +17,10 @@ class TeamMember extends AppModel
     const ADMIN_USER_FLAG = 1;
     const ACTIVE_USER_FLAG = 1;
 
+    const STATUS_INVITING = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 2;
+
     public $myTeams = [];
     /**
      * Validation rules
@@ -1940,4 +1944,43 @@ class TeamMember extends AppModel
         $res = $this->find('list', $options);
         return $res;
     }
+
+    /**
+     * data migration for shell
+     * - active user -> status active
+     *
+     * @return void
+     */
+    function updateActiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::STATUS_ACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => true
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * data migration for shell
+     * - inactive user -> status inactive
+     *
+     * @return void
+     */
+    function updateInactiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::STATUS_INACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => false
+            ]
+        );
+        return $res;
+    }
+
 }
