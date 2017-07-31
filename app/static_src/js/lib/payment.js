@@ -50,3 +50,27 @@ if(document.enterCCInfo){
     stripe.createToken(card, extraDetails).then(setOutcome);
   });
 }
+
+
+if(document.companyLocation){
+  var companyLocation = {
+    form: document.companyLocation,
+    select: document.companyLocation.getElementsByClassName('company-location-select')[0],
+    submit: document.companyLocation.getElementsByClassName('btn-primary')[0]
+  };
+  companyLocation.form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(companyLocation.select.value == 'JP'){
+      document.getElementsByClassName('payment-options')[0].style.height = (document.getElementsByClassName('payment-option-container')[0].clientHeight+20)+'px';
+    }else{
+      window.location = '/Payment/enterCompanyInfo';
+    }
+  });
+  companyLocation.select.addEventListener('change', function(){
+    if(companyLocation.select.value != 'false'){
+      companyLocation.submit.removeAttribute('disabled');
+    }else{
+      companyLocation.submit.setAttribute('disabled','disabled');
+    }
+  });
+}

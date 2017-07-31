@@ -3,14 +3,25 @@
 
 .choose-payment{
     padding: 2rem 0;
+    .form-horizontal{
+        margin:0 auto 2rem auto;
+        max-width:300px;
+        width:100%;
+    }
+    .btn{
+        float:right;
+        margin:1rem 0 2rem 0;
+    }
+    .payment-options{
+        overflow:hidden;
+        height:0px;
+        transition: height .3s;
+    }
 }
 .panel-container{
     max-width:600px;
     width:90%;
     margin: 0 auto;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: space-around;
     @media @small{
         width:75%;
     }
@@ -29,6 +40,14 @@
     p{
         line-height:1.2em;
     }
+}
+.payment-options{
+    width:100%;
+}
+.payment-option-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-around;
 }
 .payment-option{
     max-width:300px;
@@ -121,7 +140,7 @@
     }
 
     .payment-info-group{
-        background:@baseGray;
+        background:@baseLightGray;
         padding:1rem;
         margin:1rem 15px;
         .cc-info-value{
@@ -130,6 +149,13 @@
         hr{
             border-top:1px dashed @darkBlack;
             margin:.5rem 0;
+        }
+    }
+
+    .checkbox{
+        padding:1rem 15px;
+        input{
+            margin-bottom:1rem;
         }
     }
 
