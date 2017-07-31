@@ -69,3 +69,79 @@
         width:100%;
     }
 }
+
+
+.enter-cc-info{
+    max-width: 500px;
+    margin: 0 auto;
+
+    h3{
+        margin:1em 15px;
+    }
+
+    .outcome {
+    float: left;
+    width: 100%;
+    text-align: center;
+    }
+
+    .success, .error {
+    display: none;
+    font-size: 13px;
+    }
+
+    .success.visible, .error.visible {
+    display: inline;
+    }
+
+    .error {
+    color: #E4584C;
+    }
+
+    .success {
+    color: #666EE8;
+    }
+
+    .success .token {
+    font-weight: 500;
+    font-size: 13px;
+    } 
+
+    form{
+        width:100%;
+    }
+
+    .form-group{
+        margin-bottom:1em;
+        padding:0 15px;
+    }
+
+    .form-control.cc-field{
+        padding:0 1rem;
+    }
+
+    .payment-info-group{
+        background:@baseGray;
+        padding:1rem;
+        margin:1rem 15px;
+        .cc-info-value{
+            float:right;
+        }
+        hr{
+            border-top:1px dashed @darkBlack;
+            margin:.5rem 0;
+        }
+    }
+
+    .panel-footer{
+        display:flex;
+        justify-content: flex-end;
+        flex-wrap:wrap;
+        .btn{
+            margin:0 0 0 1rem;
+        }
+        .outcome{
+            flex-basis:100%;
+        }
+    }
+} 
