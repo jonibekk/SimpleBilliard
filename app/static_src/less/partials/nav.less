@@ -548,6 +548,7 @@
         height:auto;
         width:auto;
         transform:none;
+        overflow-y:visible;
     }
 }
 
@@ -559,6 +560,9 @@
     top:0;
     left:0;
     z-index:2;
+    @media @medium{
+        display:none;
+    }
 }
 
 .js-nav-toggle{
