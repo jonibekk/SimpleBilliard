@@ -176,12 +176,11 @@ class GlEmailComponent extends Component
                 $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
                 break;
         }
-        // TODO: 決済情報入力用のurlは仮です。
         $url = Router::url(
             [
                 'admin'      => false,
-                'controller' => 'teams',
-                'action'     => 'payment_setting',
+                'controller' => 'payments',
+                'action'     => 'index',
                 'team_id'    => $teamId,
             ], true);
         $item = compact('teamName', 'expireDate', 'url');
