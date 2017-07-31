@@ -40,6 +40,7 @@ const config = {
       assets_dir + '/js/lib/posts.js',
       assets_dir + '/js/lib/comments.js',
       assets_dir + '/js/lib/circle.js',
+      assets_dir + '/js/lib/payment.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {

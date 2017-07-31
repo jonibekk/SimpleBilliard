@@ -3,14 +3,25 @@
 
 .choose-payment{
     padding: 2rem 0;
+    .form-horizontal{
+        margin:0 auto 2rem auto;
+        max-width:300px;
+        width:100%;
+    }
+    .btn{
+        float:right;
+        margin:1rem 0 2rem 0;
+    }
+    .payment-options{
+        overflow:hidden;
+        height:0px;
+        transition: height .3s;
+    }
 }
 .panel-container{
     max-width:600px;
     width:90%;
     margin: 0 auto;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: space-around;
     @media @small{
         width:75%;
     }
@@ -29,6 +40,14 @@
     p{
         line-height:1.2em;
     }
+}
+.payment-options{
+    width:100%;
+}
+.payment-option-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-around;
 }
 .payment-option{
     max-width:300px;
@@ -69,3 +88,86 @@
         width:100%;
     }
 }
+
+
+.enter-cc-info{
+    max-width: 500px;
+    margin: 0 auto;
+
+    h3{
+        margin:1em 15px;
+    }
+
+    .outcome {
+    float: left;
+    width: 100%;
+    text-align: center;
+    }
+
+    .success, .error {
+    display: none;
+    font-size: 13px;
+    }
+
+    .success.visible, .error.visible {
+    display: inline;
+    }
+
+    .error {
+    color: #E4584C;
+    }
+
+    .success {
+    color: #666EE8;
+    }
+
+    .success .token {
+    font-weight: 500;
+    font-size: 13px;
+    } 
+
+    form{
+        width:100%;
+    }
+
+    .form-group{
+        margin-bottom:1em;
+        padding:0 15px;
+    }
+
+    .form-control.cc-field{
+        padding:0 1rem;
+    }
+
+    .payment-info-group{
+        background:@baseLightGray;
+        padding:1rem;
+        margin:1rem 15px;
+        .cc-info-value{
+            float:right;
+        }
+        hr{
+            border-top:1px dashed @darkBlack;
+            margin:.5rem 0;
+        }
+    }
+
+    .checkbox{
+        padding:1rem 15px;
+        input{
+            margin-bottom:1rem;
+        }
+    }
+
+    .panel-footer{
+        display:flex;
+        justify-content: flex-end;
+        flex-wrap:wrap;
+        .btn{
+            margin:0 0 0 1rem;
+        }
+        .outcome{
+            flex-basis:100%;
+        }
+    }
+} 

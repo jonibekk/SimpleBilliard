@@ -4,13 +4,13 @@ App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
 
 /**
- * Class PaymentController
+ * Class PaymentsController
  */
-class PaymentController extends ApiController
+class PaymentsController extends ApiController
 {
     /**
      * Create a new payment register
-     * Endpoint: /api/v1/payment/credit_card
+     * Endpoint: /api/v1/payments/credit_card
      * Parameters:
      * token            Stripe Credit Card Token
      * amount_per_user  Amount Per user

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-26 14:56+0900\n"
+"PO-Revision-Date: 2017-07-28 11:03+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3283,6 +3283,9 @@ msgstr "ユーザー設定"
 
 msgid "Team Setting"
 msgstr "チーム設定"
+
+msgid "Billing"
+msgstr "請求"
 
 msgid "Evaluation"
 msgstr "評価"

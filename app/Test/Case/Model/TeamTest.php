@@ -246,6 +246,19 @@ class TeamTest extends GoalousTestCase
         $this->assertEquals($newTeam['border_months'], 4);
     }
 
+    function test_findByServiceUseStatus()
+    {
+        $this->Team->id = 1;
+        $this->Team->saveField('service_use_status', Team::SERVICE_USE_STATUS_FREE_TRIAL);
+        $this->Team->id = 2;
+        $this->Team->saveField('service_use_status', Team::SERVICE_USE_STATUS_FREE_TRIAL);
+        $ret = $this->Team->findByServiceUseStatus(Team::SERVICE_USE_STATUS_FREE_TRIAL);
+        $this->assertCount(2, $ret);
+        $this->Team->id = 1;
+        $ret = $this->Team->saveField('service_use_status', Team::SERVICE_USE_STATUS_READ_ONLY);
+        $this->assertCount(1, $ret);
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;
