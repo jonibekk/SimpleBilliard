@@ -24,7 +24,7 @@
                 <label>I agree to lorem ipsum dolor sit amet, consectetur adipisicing elit.</label>
             </div>
             <div class="panel-footer setting_pannel-footer">
-                <a class="btn btn-link design-cancel bd-radius_4px" href="/Payment/enterCompanyInfo">
+                <a class="btn btn-link design-cancel bd-radius_4px" href="/payments/enterCompanyInfo">
                     <?= __("Cancel") ?>
                 </a>
                 <input type="submit" class="btn btn-primary" value="Subscribe" />
