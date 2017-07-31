@@ -136,4 +136,26 @@ class PaymentSetting extends AppModel
     public $belongsTo = [
         'Team',
     ];
+
+    public $hasMany = [
+        'CreditCard',
+    ];
+
+
+    public function getByTeamId(int $teamId = null)
+    {
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
+            'contain'    => [
+                'CreditCard',
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
 }

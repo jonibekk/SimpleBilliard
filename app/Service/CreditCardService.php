@@ -99,4 +99,59 @@ class CreditCardService extends AppService
 
         return $result;
     }
+
+    /**
+     * Charge an existing customer from Stripe
+     *
+     * @param string $customerId
+     * @param string $currency
+     * @param float  $value
+     * @param string $description
+     *
+     * @return array
+     */
+    public function chargeCustomer(string $customerId, string $currency, float $value, string $description)
+    {
+        $result = [
+            "error"   => false,
+            "message" => null
+        ];
+
+        if (empty($customerId) || empty($currency) || $value <= 0) {
+            $result["error"] = true;
+            $result["message"] = __("Parameter is invalid.");
+
+            return $result;
+        }
+
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        $charge = [
+            'customer' => $customerId,
+            'amount' => $value,
+            'currency' => $currency,
+            'description' => $description
+        ];
+
+        try {
+            $response = \Stripe\Charge::create($charge);
+
+            $result["success"] = $response->paid;
+            $result["paymentId"] = $response->id;
+            $result["status"] = $response->status;
+            $result["paymentData"] = $response;
+        } catch (Exception $e) {
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+
+            if (property_exists($e, "stripeCode")) {
+                $result["errorCode"] = $e->stripeCode;
+            }
+
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
+        return $result;
+    }
 }
