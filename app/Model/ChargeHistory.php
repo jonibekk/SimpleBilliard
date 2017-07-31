@@ -87,8 +87,8 @@ class ChargeHistory extends AppModel
                 'rule' => [
                     'inList',
                     [
-                        PaymentSetting::CURRENCY_JPY,
-                        PaymentSetting::CURRENCY_USD
+                        PaymentSetting::CURRENCY_CODE_JPY,
+                        PaymentSetting::CURRENCY_CODE_USD
                     ]
                 ],
             ],

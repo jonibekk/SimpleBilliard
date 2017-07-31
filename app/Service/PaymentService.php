@@ -126,6 +126,7 @@ class PaymentService extends AppService
     {
         $result = [
             'error'   => false,
+            'errorCode' => 200,
             'message' => null
         ];
 
@@ -137,6 +138,7 @@ class PaymentService extends AppService
             $result['error'] = true;
             $result['field'] = 'chargeType';
             $result['message'] = __('Parameter is invalid.');
+            $result['errorCode'] = 400;
             return $result;
         }
 
@@ -145,6 +147,7 @@ class PaymentService extends AppService
             $result['error'] = true;
             $result['field'] = 'usersCount';
             $result['message'] = __('Parameter is invalid.');
+            $result['errorCode'] = 400;
             return $result;
         }
 
@@ -155,6 +158,7 @@ class PaymentService extends AppService
         if (!$paymentSettings) {
             $result['error'] = true;
             $result['message'] = __('Payment settings does not exists.');
+            $result['errorCode'] = 500;
 
             return $result;
         }
@@ -163,6 +167,7 @@ class PaymentService extends AppService
         if (empty(Hash::get($paymentSettings, 'CreditCard')) || !isset($paymentSettings['CreditCard'][0])) {
             $result['error'] = true;
             $result['message'] = __('Credit card settings does not exists.');
+            $result['errorCode'] = 500;
 
             return $result;
         }
@@ -170,7 +175,7 @@ class PaymentService extends AppService
         $customerId =  Hash::get($creditCard, 'customer_code');
         $amountPerUser = Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
         $currency = Hash::get($paymentSettings, 'PaymentSetting.currency');
-        $currencyName =  $currency== PaymentSetting::CURRENCY_JPY ? 'JPY' : 'USD';
+        $currencyName =  $currency== PaymentSetting::CURRENCY_CODE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
 
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
@@ -227,6 +232,7 @@ class PaymentService extends AppService
 
             $result["error"] = true;
             $result["message"] = $e->getMessage();
+            $result['errorCode'] = 500;
 
             if (property_exists($e, "stripeCode")) {
                 $result["errorCode"] = $e->stripeCode;

@@ -10,8 +10,11 @@ class PaymentSetting extends AppModel
     const PAYMENT_TYPE_INVOICE = 0;
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
-    const CURRENCY_JPY = 1;
-    const CURRENCY_USD = 2;
+    const CURRENCY_CODE_JPY = 1;
+    const CURRENCY_CODE_USD = 2;
+
+    const CURRENCY_JPY = 'JPY';
+    const CURRENCY_USD = 'USD';
 
     const CHARGE_TYPE_MONTHLY_FEE = 0;
     const CHARGE_TYPE_USER_INCREMENT_FEE = 1;
@@ -51,8 +54,8 @@ class PaymentSetting extends AppModel
                 'rule' => [
                     'inList',
                     [
-                        self::CURRENCY_JPY,
-                        self::CURRENCY_USD
+                        self::CURRENCY_CODE_JPY,
+                        self::CURRENCY_CODE_USD
                     ]
                 ],
             ],
@@ -145,12 +148,13 @@ class PaymentSetting extends AppModel
         'CreditCard',
     ];
 
-
-    public function getByTeamId(int $teamId = null)
+    /**
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    public function getByTeamId(int $teamId)
     {
-        if (!$teamId) {
-            $teamId = $this->current_team_id;
-        }
         $options = [
             'conditions' => [
                 'team_id' => $teamId,

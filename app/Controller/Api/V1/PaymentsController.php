@@ -66,7 +66,7 @@ class PaymentsController extends ApiController
         // because Stripe token can only be used once.
         // On this case its better to have a pre check of token by the frontend.
         $currency = Hash::get($requestData, 'currency');
-        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_JPY) {
+        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_CODE_JPY) {
             // Delete customer from Stripe
             $CreditCardService->deleteCustomer($customerId);
 
@@ -92,7 +92,7 @@ class PaymentsController extends ApiController
 
         // Error on charging the customer
         if ($chargeResult['error'] === true) {
-            return $this->_getResponseBadFail($chargeResult['message']);
+            return $this->_getResponse($chargeResult['errorCode'], null, null, $chargeResult['message']);
         }
 
         // Charging transaction succeed but payment fail. It can be on cause of fraud or credit transfer.
