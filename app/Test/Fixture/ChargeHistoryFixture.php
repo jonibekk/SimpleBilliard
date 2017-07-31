@@ -19,7 +19,7 @@ class ChargeHistoryFixture extends CakeTestFixtureEx {
 		'total_amount' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'comment' => 'total amount in a charge'),
 		'charge_users' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'Charge user number'),
 		'currency' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'Team country currency'),
-		'charge_date' => array('type' => 'date', 'null' => false, 'default' => null, 'comment' => 'Charge date'),
+		'charge_datetime' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'Charge datetime unix timestamp'),
 		'result_type' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'Result type(0: Success, 1,2,3...: Failuer each type)'),
 		'max_charge_users' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'チャージした結果のmax支払い人数'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),

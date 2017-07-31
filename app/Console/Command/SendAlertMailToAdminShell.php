@@ -164,7 +164,7 @@ class SendAlertMailToAdminShell extends AppShell
      */
     function _isTargetTeam(int $daysOfStatus, array $team): bool
     {
-        if ($this->params['force'] === true) {
+        if (isset($this->params['force']) && $this->params['force'] === true) {
             return true;
         }
         $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysOfStatus);
