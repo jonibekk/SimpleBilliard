@@ -14,6 +14,10 @@ class PaymentsController extends AppController {
 
     public function enterCompanyInfo() {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('/Payment/credit_card_entry');
+        $this->render('/Payment/company_info');
+    }
+    public function thankyou() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('/Payment/thank_you');
     }
 }

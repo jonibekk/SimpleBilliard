@@ -74,3 +74,20 @@ if(document.companyLocation){
     }
   });
 }
+
+// If .confetti-cannon class exists, make it rain confetti
+var confettiCannon = document.getElementsByClassName('confetti-cannon')[0];
+
+if(confettiCannon){
+  setTimeout(function(){
+    for(i=0;i<(confettiCannon.clientWidth);i++){
+      setTimeout(function(){
+        var confetti = document.createElement("DIV");
+        confetti.classList.add('confetti');
+        confetti.classList.add('confetti-'+parseInt((Math.round(Math.random()*3))+1));
+        confetti.style.left=(Math.round(Math.random()*100))+'vw';
+        confettiCannon.appendChild(confetti);
+      }, (Math.round(Math.random()*1))+(i*5)+(320/confettiCannon.clientWidth));
+    }
+  },1000);
+}
