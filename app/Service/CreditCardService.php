@@ -117,10 +117,27 @@ class CreditCardService extends AppService
             "message" => null
         ];
 
-        if (empty($customerId) || empty($currency) || $value <= 0) {
+        // Validate Customer
+        if (empty($customerId)) {
             $result["error"] = true;
             $result["message"] = __("Parameter is invalid.");
+            $result["field"] = 'customerId';
+            return $result;
+        }
 
+        // validate currency
+        if (empty($currency) || $value <= 0) {
+            $result["error"] = true;
+            $result["message"] = __("Parameter is invalid.");
+            $result["field"] = 'currency';
+            return $result;
+        }
+
+        // Validate Value
+        if ($value <= 0) {
+            $result["error"] = true;
+            $result["message"] = __("Parameter is invalid.");
+            $result["field"] = 'value';
             return $result;
         }
 
