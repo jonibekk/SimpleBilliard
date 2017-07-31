@@ -63,7 +63,7 @@ if(document.companyLocation){
     if(companyLocation.select.value == 'JP'){
       document.getElementsByClassName('payment-options')[0].style.height = (document.getElementsByClassName('payment-option-container')[0].clientHeight+20)+'px';
     }else{
-      window.location = '/Payment/enterCompanyInfo';
+      window.location = '/payments/enterCompanyInfo';
     }
   });
   companyLocation.select.addEventListener('change', function(){
