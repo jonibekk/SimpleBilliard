@@ -13,6 +13,10 @@ class PaymentSetting extends AppModel
     const CURRENCY_JPY = 1;
     const CURRENCY_USD = 2;
 
+    const CHARGE_TYPE_MONTHLY_FEE = 0;
+    const CHARGE_TYPE_USER_INCREMENT_FEE = 1;
+    const CHARGE_TYPE_USER_ACTIVATION_FEE = 2;
+
     /* Validation rules
     *
     * @var array
