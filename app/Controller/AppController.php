@@ -172,7 +172,7 @@ class AppController extends BaseController
                 $this->stopInvoke = true;
                 return $this->_ajaxGetResponse([
                     'error' => true,
-                    'msg'   => __("You cannot use service. pls contact your team admins.")
+                    'msg'   => __("You cannot use service on the team.")
                 ]);
             }
 
@@ -190,8 +190,12 @@ class AppController extends BaseController
                 }
                 // when prohibit request in status of cannot use service
                 if ($this->isProhibitedRequestByCannotUseService()) {
-                    $this->Notification->outError(__("You cannot use the team. pls contact your team admins."));
-                    $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
+                    // if team admin, will be redirected to payments setting page. Otherwise, it will be redirected to the page of notification that the service can not be used.
+                    if ($this->Team->TeamMember->isAdmin($this->Auth->user('id'))) {
+                        $this->redirect(['controller' => 'payments', 'action' => 'index']);
+                    } else {
+                        $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
+                    }
                 }
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);

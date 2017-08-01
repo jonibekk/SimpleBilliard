@@ -97,6 +97,15 @@ class BaseController extends Controller
 
     /**
      * This list for excluding from prohibited request
+     * It's like a cake request params.
+     * If only controller name is specified, including all actions
+     * If you would like to specify several action, refer to the following:
+     * [
+     * 'controller' => 'users', 'action'     => 'settings',
+     * ],
+     * [
+     * 'controller' => 'users', 'action'     => 'view_goals',
+     * ],
      *
      * @var array
      */
