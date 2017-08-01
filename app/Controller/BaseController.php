@@ -378,25 +378,25 @@ class BaseController extends Controller
     /**
      * Request params are excluded request in prohibited?
      * Decide with $this->excludeRequestParamsInProhibited
+     * checking controller and action
+     * if only controller checking and hit it, return true
      *
      * @return bool
      */
-    private function isExcludeRequestParamInProhibited()
+    private function isExcludeRequestParamInProhibited(): bool
     {
-        $isExcludeParam = false;
-        foreach ($this->ignoreProhibitedRequest as $param) {
-            foreach ($param as $key => $val) {
-                if ($this->request->param($key) == $val) {
-                    $isExcludeParam = true;
-                } else {
-                    $isExcludeParam = false;
-                    continue;
-                }
+        foreach ($this->ignoreProhibitedRequest as $ignoreParam) {
+            if ($this->request->param('controller') != $ignoreParam['controller']) {
+                continue;
             }
-            if ($isExcludeParam) {
-                return $isExcludeParam;
+            // if only controller checking and hit, return true
+            if (count($ignoreParam) === 1) {
+                return true;
+            } elseif ($this->request->param('action') == $ignoreParam['action']) {
+                return true;
             }
+            return false;
         }
-        return $isExcludeParam;
+        return false;
     }
 }
