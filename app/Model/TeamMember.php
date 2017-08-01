@@ -17,9 +17,12 @@ class TeamMember extends AppModel
     const ADMIN_USER_FLAG = 1;
     const ACTIVE_USER_FLAG = 1;
 
-    const STATUS_INVITING = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 2;
+    /**
+     * User status valid codes
+     */
+    const USER_STATUS_INVITED = 0;
+    const USER_STATUS_ACTIVE = 1;
+    const USER_STATUS_INACTIVE = 2;
 
     public $myTeams = [];
     /**
@@ -1955,7 +1958,7 @@ class TeamMember extends AppModel
     {
         $res = $this->updateAll(
             [
-                'TeamMember.status' => self::STATUS_ACTIVE
+                'TeamMember.status' => self::USER_STATUS_ACTIVE
             ],
             [
                 'TeamMember.active_flg' => true
@@ -1974,7 +1977,7 @@ class TeamMember extends AppModel
     {
         $res = $this->updateAll(
             [
-                'TeamMember.status' => self::STATUS_INACTIVE
+                'TeamMember.status' => self::USER_STATUS_INACTIVE
             ],
             [
                 'TeamMember.active_flg' => false
@@ -1983,4 +1986,31 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    /**
+     * Get list of team members by its status.
+     *
+     *      USER_STATUS_INVITED = 0;
+     *      USER_STATUS_ACTIVE = 1;
+     *      USER_STATUS_INACTIVE = 2;
+     *
+     * @param      $status
+     * @param null $teamId
+     *
+     * @return array|null
+     */
+    public function getTeamMemberListByStatus($status, $teamId = null)
+    {
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
+        }
+
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.status' => $status,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
 }

@@ -89,6 +89,9 @@ class PageResourceHelper extends AppHelper
         'topics' => [
             'default' => ['topic.min'],
         ],
+        'payments' => [
+            'default' => ['payments.min'],
+        ],
         'setup' => [
             'default' => ['setup_guide.min'],
         ],
