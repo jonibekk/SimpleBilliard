@@ -9,13 +9,13 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 
-<?php if (INTERCOM_APP_ID): ?>
+<?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
 
     <?php
     $fa_secret = 'OFF';
-    if (!empty($this->Session->read('Auth.User.2fa_secret'))):
+    if (!empty($this->Session->read('Auth.User.2fa_secret'))) {
         $fa_secret = 'ON';
-    endif;
+    }
     ?>
     <!-- start Intercom -->
     <script>
@@ -35,13 +35,20 @@
             default_team: <?= h(intval($this->Session->read('Auth.User.default_team_id'))) ?>, // User DEFAULT TEAM id
             user_timezone: <?= h(intval($this->Session->read('Auth.User.timezone'))) ?>, // User timezone
             language: "<?= h($this->Session->read('Auth.User.language')) ?>", // Language
+            <?php if(defined("INTERCOM_IDENTITY_VERIFICATION_SECRET") and INTERCOM_IDENTITY_VERIFICATION_SECRET):?>
+            user_hash: "<?= hash_hmac(
+                'sha256',
+                h(intval($this->Session->read('Auth.User.id'))),
+                INTERCOM_IDENTITY_VERIFICATION_SECRET
+            );?>", // HMAC using SHA-256
+            <?php endif;?>
             "2SV": "<?= h($fa_secret) ?>", // 2fa Secret
             <?php endif ?>
             <?php if (isset($my_member_status) && $my_member_status): ?>
-            "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
-            "team_name": "<?= h($my_member_status['Team']['name']) ?>",
-            "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
-            "teams_belong": <?= isset($my_teams) ? h(intval(count($my_teams))) : 0 ?>, // Teams count that user belongs to
+            team_id: <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
+            team_name: "<?= h($my_member_status['Team']['name']) ?>",
+            team_admin: <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
+            teams_belong: <?= isset($my_teams) ? h(intval(count($my_teams))) : 0 ?>, // Teams count that user belongs to
             <?php endif ?>
         };
         if (!enabled_intercom_icon) {
@@ -74,6 +81,7 @@
                     var x = d.getElementsByTagName('script')[0];
                     x.parentNode.insertBefore(s, x);
                 }
+
                 if (w.attachEvent) {
                     w.attachEvent('onload', l);
                 } else {
@@ -84,13 +92,13 @@
     </script>
     <!-- end Intercom -->
     <script>
-    //intercomのリンクを非表示にする
-    if (enabled_intercom_icon) {
-        var intercomLink = document.getElementById("IntercomLink");
-        if (intercomLink) {
-            intercomLink.style.display = 'none';
+        //intercomのリンクを非表示にする
+        if (enabled_intercom_icon) {
+            var intercomLink = document.getElementById("IntercomLink");
+            if (intercomLink) {
+                intercomLink.style.display = 'none';
+            }
         }
-    }
     </script>
 <?php endif; ?>
 <?= $this->App->viewEndComment() ?>

@@ -516,3 +516,39 @@ function changeSizeFeedImageOnlyOne($obj) {
     });
     return false;
 }
+
+var circleList={
+    hamburger:document.getElementsByClassName('layout-circle-hamburger')[0],
+    dashboard:document.getElementsByClassName('dashboard-circle-list-body')[0],
+    isApp:document.getElementsByClassName('navbar-fixed-top')[0].classList.contains('mb-app-nav')
+}
+
+// Create a conditional that adds extra offset if user is in mobile app
+if(circleList.isApp){
+    var appOffset=50;
+}else{
+    var appOffset=0;
+}
+
+function circleListHeight(){
+    scrollPos = document.body.scrollTop;
+    //ヘッダーサブが出現しているかどうかの判定が必要。
+    if(window.innerWidth < 992 && scrollPos==0){
+        circleList.hamburger.style.height = (window.innerHeight-(350+appOffset))+'px';
+        // Check if dashboard exists before styling it.
+        if(circleList.dashboard){
+            circleList.dashboard.style.height = (window.innerHeight-(375+appOffset))+'px';
+        }
+    }else{
+        circleList.hamburger.style.height = (window.innerHeight-(306+appOffset))+'px';
+        // Check if dashboard exists before styling it.
+        if(circleList.dashboard){
+            circleList.dashboard.style.height = (window.innerHeight-(331+appOffset))+'px';
+        }
+    }
+}
+
+if(circleList.hamburger){
+    window.onload=function(){circleListHeight()};
+    document.body.onresize=function(){circleListHeight()};
+}

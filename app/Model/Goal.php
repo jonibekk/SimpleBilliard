@@ -1191,7 +1191,6 @@ class Goal extends AppModel
             ]
         ];
         $goals = $this->find('all', $options);
-        #$goals = $this->sortEndDate($goals);
         return Hash::combine($goals, '{n}.Goal.id', '{n}');
     }
 
