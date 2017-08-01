@@ -191,7 +191,7 @@ class AppUtilTest extends GoalousTestCase
         /* Ignore empty lines */
         $emailsStr = "\n\n\na\r\n\r\nb\n ";
         $res = AppUtil::convStrToArr($emailsStr, true);
-        $this->assertEquals($res, ['a', 'b']);
+        $this->assertEquals($res, [0 => 'a', 2 => 'b']);
     }
 
     public function test_moveMonthYm()
