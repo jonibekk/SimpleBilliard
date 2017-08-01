@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-28 11:03+0900\n"
+"PO-Revision-Date: 2017-08-01 13:25+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.1\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -90,6 +90,9 @@ msgstr "スマホアプリ・ブラウザで利用可能です。"
 
 msgid "You may only read your team’s pages."
 msgstr "あなたのチームはページの読み取りしか許可されていません。"
+
+msgid "You cannot use service on the team."
+msgstr "このチームは現在、利用できません。"
 
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
@@ -1825,6 +1828,16 @@ msgstr "%sがトピック名を設定しました。: %s"
 
 msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
+
+#, fuzzy
+#| msgid "Page does not exist."
+msgid "Payment settings does not exists."
+msgstr "決済設定が見つかりません。"
+
+#, fuzzy
+#| msgid "This circle does not exist."
+msgid "Credit card settings does not exists."
+msgstr "クレジットカード設定が見つかりません。"
 
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
@@ -4830,6 +4843,19 @@ msgstr "利用規約はこちら。"
 msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
+#, fuzzy
+#| msgid "You cannot access the topic"
+msgid "You cannot use the team"
+msgstr "このチームは現在利用できません。"
+
+#, fuzzy
+#| msgid "Get documentation"
+msgid "Select Country Location"
+msgstr ""
+
+msgid "Choose Country"
+msgstr ""
+
 msgid "Select Payment Method"
 msgstr "画像を選択"
 
@@ -4851,6 +4877,115 @@ msgid "Setup a monthly invoice with Goalous."
 msgstr ""
 
 msgid "Coming Soon"
+msgstr ""
+
+#, fuzzy
+#| msgid "Enter confirmation code"
+msgid "Enter Company Information"
+msgstr ""
+
+#, fuzzy
+#| msgid "Company"
+msgid "Company Name"
+msgstr ""
+
+#, fuzzy
+#| msgid "Email Address"
+msgid "Company Address"
+msgstr ""
+
+msgid "Street"
+msgstr ""
+
+msgid "1234 Street Name"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "Los Angeles"
+msgstr ""
+
+msgid "State/Province/Region"
+msgstr ""
+
+msgid "California"
+msgstr ""
+
+msgid "Postal Code"
+msgstr ""
+
+msgid "12345"
+msgstr ""
+
+#, fuzzy
+#| msgid " count"
+msgid "Country"
+msgstr ""
+
+msgid "USA"
+msgstr ""
+
+#, fuzzy
+#| msgid "Contact"
+msgid "Company Contact"
+msgstr ""
+
+msgid "John"
+msgstr ""
+
+msgid "Smith"
+msgstr ""
+
+#, fuzzy
+#| msgid "Contact"
+msgid "Contact Email"
+msgstr ""
+
+msgid "name@company.com"
+msgstr ""
+
+msgid "Company Telephone"
+msgstr ""
+
+#, fuzzy
+#| msgid "Get more information"
+msgid "Enter Payment Information"
+msgstr ""
+
+msgid "Name on Card"
+msgstr ""
+
+msgid "Price per user"
+msgstr ""
+
+#, fuzzy
+#| msgid "Number of goals"
+msgid "Number of users"
+msgstr ""
+
+#, fuzzy
+#| msgid "Total"
+msgid "Sub Total"
+msgstr ""
+
+msgid "Tax"
+msgstr ""
+
+msgid "Total per month"
+msgstr ""
+
+msgid "Thank You"
+msgstr ""
+
+msgid ""
+"Your transaction was successful. You and your team now have full access to "
+"Goalous."
+msgstr ""
+
+#, fuzzy
+#| msgid "Achieve goal"
+msgid "Go achieve your goal!"
 msgstr ""
 
 msgid " new posts."

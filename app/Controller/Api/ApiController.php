@@ -61,7 +61,7 @@ class ApiController extends BaseController
         // when prohibit request in status of cannot use service
         if ($this->isProhibitedRequestByCannotUseService()) {
             $this->stopInvoke = true;
-            return $this->_getResponseBadFail(__("You cannot use service. pls contact your team admins."));
+            return $this->_getResponseBadFail(__("You cannot use service on the team."));
         }
 
         $this->_setAppLanguage();
