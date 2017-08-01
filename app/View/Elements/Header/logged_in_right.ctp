@@ -215,4 +215,5 @@
     </ul>
 </div>
 </div>
+<div class="header-white-bg"></div>
 <?= $this->App->viewEndComment() ?>
