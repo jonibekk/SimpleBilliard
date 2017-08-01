@@ -17,6 +17,7 @@ class CreditCardServiceTest extends GoalousTestCase
     const CARD_EXPIRED = "4000000000000069";
     const CARD_PROCESSING_ERROR = "4000000000000119";
     const CARD_INCORRECT_NUMBER = "4242424242424241";
+    const CARD_CHARGE_FAIL = "4000000000000341";
     // Valid Cards
     const CARD_VISA = "4012888888881881";
     const CARD_MASTERCARD = "5555555555554444";
@@ -107,6 +108,25 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertFalse($res["error"]);
 
         return $res;
+    }
+
+    /**
+     * Get a customer for a given credit card.
+     * @param string $creditCard
+     *
+     * @return string
+     */
+    private function getCustomer(string $creditCard): string
+    {
+        $token = $this->getToken($creditCard);
+        $email = "test@goalous.com";
+
+        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("customer_id", $res);
+        $this->assertArrayHasKey("card", $res);
+
+        return $res["customer_id"];
     }
 
     /**
@@ -222,5 +242,37 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "processing_error");
+    }
+
+    /**
+     * Assert it can charge the customer with valid credit card.
+     */
+    function test_chargeCustomer()
+    {
+        $customerId = $this->getCustomer(self::CARD_VISA);
+
+        $res = $this->CreditCardService->chargeCustomer($customerId, 'JPY', 30000, "Test charge ¥3000");
+
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("success", $res);
+        $this->assertTrue($res["success"]);
+
+        $this->deleteCustomer($customerId);
+    }
+
+    /**
+     * Assert an error is returned if the credit is rejected.
+     */
+    function test_chargeCustomer_chargeFail()
+    {
+        $customerId = $this->getCustomer(self::CARD_CHARGE_FAIL);
+
+        $res = $this->CreditCardService->chargeCustomer($customerId, 'JPY', 30000, "Test charge ¥3000");
+
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("error", $res);
+        $this->assertTrue($res["error"]);
+
+        $this->deleteCustomer($customerId);
     }
 }
