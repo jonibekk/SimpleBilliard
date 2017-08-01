@@ -18,12 +18,11 @@ class TeamMemberActiveFlgToStatusShell extends AppShell
             $this->TeamMember->begin();
 
             if(!$this->TeamMember->updateActiveFlgToStatus()) {
-                throw new Exception(sprintf("Failed to update active flg to new status. "));
+                throw new Exception(sprintf("Failed to update active flg to new status."));
             }
 
-
-            if (!$this->TeamMember->updateInactiveFlgToStatus(false)) {
-                throw new Exception(sprintf("Failed to update inactive flg to new status. "));
+            if (!$this->TeamMember->updateInactiveFlgToStatus()) {
+                throw new Exception(sprintf("Failed to update inactive flg to new status."));
             }
 
         } catch (Exception $e) {
