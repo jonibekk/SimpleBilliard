@@ -116,6 +116,24 @@ class BaseController extends Controller
         [
             'controller' => 'teams',
         ],
+        [
+            'controller' => 'users',
+            'action'     => 'logout',
+        ],
+        [
+            'controller' => 'terms',
+        ],
+        // TODO: We have to fix it. now, privacy_policy and terms are redirected to home. but they should be appear and important page!
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'privacy_policy',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'terms',
+        ],
     ];
 
     public function __construct($request = null, $response = null)
