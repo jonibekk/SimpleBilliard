@@ -182,18 +182,21 @@ class Email extends AppModel
     function findExistUsersByEmail(array $emails): array
     {
         $res = $this->find('all', [
-            'fields' => ['Email.email', 'Email.user_id'],
+            'fields'     => ['Email.email', 'Email.user_id'],
             'conditions' => [
-                'email' => $emails,
+                'Email.email'   => $emails,
+                'Email.del_flg' => false,
             ],
             'joins'      => [
-                'type'       => 'INNER',
-                'table'      => 'users',
-                'alias'      => 'Users',
-                'conditions' => [
-                    'Email.user_id = User.id',
-                    'del_flg' => false
-                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'User.del_flg' => false
+                    ],
+                ]
             ]
         ]);
 

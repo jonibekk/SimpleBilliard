@@ -148,7 +148,8 @@ const config = {
     'goal_approval',
     'goal_search',
     'kr_column',
-    'message'
+    'message',
+    'invite'
   ],
   css_vendor: {
     src: [

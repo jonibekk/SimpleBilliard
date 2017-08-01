@@ -642,7 +642,7 @@ class AppUtil
 
         //一行ずつ処理
         $res = [];
-        foreach ($emails as $email) {
+        foreach ($emails as $i => $email) {
             //全角スペースを除去
             $email = preg_replace('/　/', ' ', $email);
             //前後スペースを除去
@@ -652,7 +652,7 @@ class AppUtil
                 continue;
             }
             if (!in_array($email, $res)) {
-                $res[] = $email;
+                $res[$i] = $email;
             }
         }
         // 全ての要素の値が空文字だったら空の配列で返す

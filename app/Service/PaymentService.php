@@ -306,13 +306,28 @@ class PaymentService extends AppService
         $useDaysByNext = null,
         $allUseDays = null
     ): string {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-
-        $paymentSetting = $this->get($Team->current_team_id);
         $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
         // Format ex 1980 → ¥1,980
-        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($totalCharge);
+        $res = $this->formatCharge($totalCharge);
+        return $res;
+    }
+
+    /**
+     * Format charge based payment setting
+     * - Number format
+     * - Currency format
+     *
+     * @param int $charge
+     *
+     * @return string
+     */
+    public function formatCharge(int $charge): string
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $paymentSetting = $this->get($Team->current_team_id);
+        // Format ex 1980 → ¥1,980
+        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($charge);
         return $res;
     }
 

@@ -16,13 +16,13 @@ class InvitationService extends AppService
      *
      * @return null
      */
-    function validateEmails(array $emails)
+    function validateEmails($emails)
     {
         /** @var Email $Email */
         $Email = ClassRegistry::init("Email");
 
         /* Check empty */
-        if (empty($emails) || empty(array_filter($emails))) {
+        if (empty($emails) || !is_array($emails) || empty(array_filter($emails))) {
             return [__("Input is required")];
         }
         /* Format validation */
@@ -69,6 +69,11 @@ class InvitationService extends AppService
 
         $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers();
         $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers();
+        // Regard adding users as charge users as it is
+        //  if current users does not over max charged users
+        if ($currentChargeTargetUserCnt - $maxChargedUserCnt >= 0) {
+            return $addUserCnt;
+        }
         $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
         return $chargeUserCnt;
     }
@@ -119,11 +124,12 @@ class InvitationService extends AppService
             }
             /* Insert users table */
             // Get emails of registered users
-            $existEmails = Hash::get($Email->findExistUsersByEmail($emails), '{n}.email');
+            $existEmails = Hash::get($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
             $newEmails = array_diff($emails, $existEmails);
 
             $insertEmails = [];
             foreach ($newEmails as $email) {
+                $User->create();
                 if (!$User->save(['team_id' => $teamId], false)) {
                     throw new Exception(sprintf("Failed to insert users. data:%s",
                             AppUtil::varExportOneLine(compact('emails', 'newEmails', 'teamId', 'fromUserId')))

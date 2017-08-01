@@ -1600,10 +1600,17 @@ class UsersController extends AppController
     /**
      * User invitation form
      *
+     * @param null $page
+     *
      * @return void
      */
-    public function invite()
+    public function invite($step = null)
     {
+        // Deny direct access for confirm page
+        if (!empty($step)) {
+            return $this->redirect('/users/invite');
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
     }
 

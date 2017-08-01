@@ -87,7 +87,7 @@ class Invite extends AppModel
      *
      * @return mixed
      */
-    function saveBulk(int $emails, int $teamId, int $fromUserId, string $msg = "")
+    function saveBulk(array $emails, int $teamId, int $fromUserId, string $msg = "")
     {
         // Get emails of registered users
         $registeredEmails = Hash::combine($this->ToUser->Email->findAllByEmail($emails), '{n}.Email.email',
@@ -313,8 +313,6 @@ class Invite extends AppModel
     function findByEmails(array $emails): array
     {
         $options = [
-            'fields'     => [
-                'id', 'user_id', 'email', 'email_token_expires'],
             'conditions' => [
                 'team_id' => $this->current_team_id,
                 'email'   => $emails
