@@ -1836,7 +1836,7 @@ msgstr "決済設定が見つかりません。"
 
 #, fuzzy
 #| msgid "This circle does not exist."
-msgid "Credit card settings does not exists."
+msgid "Credit card settings does not exist."
 msgstr "クレジットカード設定が見つかりません。"
 
 msgid "Invalid users are included in the destination."
@@ -4851,10 +4851,10 @@ msgstr "このチームは現在利用できません。"
 #, fuzzy
 #| msgid "Get documentation"
 msgid "Select Country Location"
-msgstr ""
+msgstr "国を選択"
 
 msgid "Choose Country"
-msgstr ""
+msgstr "国を選択"
 
 msgid "Select Payment Method"
 msgstr "画像を選択"
@@ -4882,111 +4882,111 @@ msgstr ""
 #, fuzzy
 #| msgid "Enter confirmation code"
 msgid "Enter Company Information"
-msgstr ""
+msgstr "会社情報を入力してください"
 
 #, fuzzy
 #| msgid "Company"
 msgid "Company Name"
-msgstr ""
+msgstr "会社名"
 
 #, fuzzy
 #| msgid "Email Address"
 msgid "Company Address"
-msgstr ""
+msgstr "会社住所"
 
 msgid "Street"
-msgstr ""
+msgstr "建物名など"
 
 msgid "1234 Street Name"
-msgstr ""
+msgstr "20番8号 CSタワー7階"
 
 msgid "City"
-msgstr ""
+msgstr "市区町村"
 
 msgid "Los Angeles"
-msgstr ""
+msgstr "台東区浅草橋5丁目"
 
 msgid "State/Province/Region"
-msgstr ""
+msgstr "都道府県"
 
 msgid "California"
-msgstr ""
+msgstr "東京都"
 
 msgid "Postal Code"
-msgstr ""
+msgstr "郵便番号"
 
 msgid "12345"
-msgstr ""
+msgstr "1100053"
 
 #, fuzzy
 #| msgid " count"
 msgid "Country"
-msgstr ""
+msgstr "国"
 
 msgid "USA"
-msgstr ""
+msgstr "日本"
 
 #, fuzzy
 #| msgid "Contact"
 msgid "Company Contact"
-msgstr ""
+msgstr "会社連絡先"
 
 msgid "John"
-msgstr ""
+msgstr "太郎"
 
 msgid "Smith"
-msgstr ""
+msgstr "佐藤"
 
 #, fuzzy
 #| msgid "Contact"
 msgid "Contact Email"
-msgstr ""
+msgstr "連絡先メール"
 
 msgid "name@company.com"
-msgstr ""
+msgstr "name@company.co.jp"
 
 msgid "Company Telephone"
-msgstr ""
+msgstr "会社連絡先電話番号"
 
 #, fuzzy
 #| msgid "Get more information"
 msgid "Enter Payment Information"
-msgstr ""
+msgstr "決済情報を入力してください"
 
 msgid "Name on Card"
-msgstr ""
+msgstr "名義人名（カード記載と同じ）"
 
 msgid "Price per user"
-msgstr ""
+msgstr "料金（1ユーザー当たり）"
 
 #, fuzzy
 #| msgid "Number of goals"
 msgid "Number of users"
-msgstr ""
+msgstr "ユーザー数"
 
 #, fuzzy
 #| msgid "Total"
 msgid "Sub Total"
-msgstr ""
+msgstr "小計"
 
 msgid "Tax"
-msgstr ""
+msgstr "税金"
 
 msgid "Total per month"
-msgstr ""
+msgstr "合計（月あたり）"
 
 msgid "Thank You"
-msgstr ""
+msgstr "ありがとうございます。"
 
 msgid ""
 "Your transaction was successful. You and your team now have full access to "
 "Goalous."
-msgstr ""
+msgstr "決済に成功しました。Goalousのご利用を開始できます。"
 
 #, fuzzy
 #| msgid "Achieve goal"
 msgid "Go achieve your goal!"
-msgstr ""
+msgstr "いざ、ゴール達成へ！"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"

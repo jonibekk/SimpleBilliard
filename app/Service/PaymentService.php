@@ -166,7 +166,7 @@ class PaymentService extends AppService
         // Get credit card settings
         if (empty(Hash::get($paymentSettings, 'CreditCard')) || !isset($paymentSettings['CreditCard'][0])) {
             $result['error'] = true;
-            $result['message'] = __('Credit card settings does not exists.');
+            $result['message'] = __('Credit card settings does not exist.');
             $result['errorCode'] = 500;
 
             return $result;
