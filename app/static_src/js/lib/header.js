@@ -152,6 +152,17 @@ $(function () {
     });
 });
 
+// If team status is read only, Display read only alert box
+if (cake.is_read_only) {
+    // Because alert box is postion fixed,
+    // so body padding should be resized after window loaded and resized.
+    window.addEventListener("DOMContentLoaded", function(event) {
+        adjustHeaderPosition();
+    });
+    window.addEventListener("resize", function(event) {
+        adjustHeaderPosition();
+    });
+}
 
 /**
  * Initialize page title
@@ -430,4 +441,19 @@ function toggleNav(){
             navIcon.classList.remove('fa-navicon');
         }
     }
+}
+
+/**
+ * adjust header body padding
+ */
+function adjustHeaderPosition() {
+    var body_top_padding = 0;
+    var $navbar = $('.navbar-fixed-top');
+    body_top_padding += parseInt($navbar.outerHeight(true));
+    var $read_only_alert = $('.read-only-alert');
+    if ($read_only_alert) {
+        body_top_padding += parseInt($read_only_alert.outerHeight(true));
+        $read_only_alert.show();
+    }
+    $('body').css('padding-top', body_top_padding);
 }

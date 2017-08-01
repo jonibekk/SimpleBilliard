@@ -188,18 +188,6 @@ $(function () {
     warningCloseModal();
 });
 
-// If team status is read only,
-// Display read only alert box
-$(function() {
-    if (cake.is_read_only) {
-        var $read_only_alert = $('.read-only-alert');
-        var read_only_height = parseInt($read_only_alert.outerHeight(true));
-        var body_padding_top = parseInt($('body').css('padding-top'));
-        $read_only_alert.slideDown('slow');
-        $('body').css('padding-top', read_only_height + body_padding_top);
-    }
-});
-
 var network_reachable = true;
 
 /**

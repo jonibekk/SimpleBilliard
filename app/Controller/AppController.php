@@ -13,6 +13,7 @@ App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
+App::import('Service', 'TeamService');
 
 /**
  * Application Controller
@@ -184,6 +185,7 @@ class AppController extends BaseController
                 /** @var TeamService $TeamService */
                 $TeamService = ClassRegistry::init("TeamService");
                 $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
+                $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;

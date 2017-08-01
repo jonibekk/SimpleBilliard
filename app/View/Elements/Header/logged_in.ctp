@@ -36,8 +36,17 @@
     </div>
     <div class="read-only-alert font_verydark">
         <div class="container">
-            <? // TODO: Have to translate by @kohei word ?>
-            このチームは、<span class="font_bold">2017年12月20日まで</span>読み取り専用期間です。通常のご利用を再開したい場合は、<a href="">こちら</a>から有料プランを契約してください。
+            <?php
+            // TODO: Have to pass trial end date by backend
+            $freeTrialEndDate = '2017/12/21';
+            if ($isTeamAdmin) {
+                // TODO: Have to translate
+                echo __('このチームは、<span class="font_bold">%sまで</span>読み取り専用期間です。それ以降はご利用いただけません。通常のご利用を再開したい場合は、<a href="/payments/apply">こちら</a>から有料プランを契約してください。', $freeTrialEndDate);
+            } else {
+                // TODO: Have to translate
+                echo __('このチームは、<span class="font_bold">%sまで</span>読み取り専用期間です。それ以降はご利用いただけません。通常のご利用を再開したい場合は、チーム管理者にお問い合わせください。', $freeTrialEndDate);
+            }
+            ?>
         </div>
     </div>
 </header>
