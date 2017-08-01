@@ -13,7 +13,7 @@ App::uses('AttachedFile', 'Model');
         env_name: "<?= ENV_NAME ?>",
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
-        is_read_only: "<?= $isReadOnly ?>",
+        is_read_only: "<?= $serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",

@@ -60,14 +60,4 @@ class TeamService extends AppService
         $team = $Team->getCurrentTeam();
         return $team['Team']['service_use_status'];
     }
-
-    /**
-     * check read onlhy or not
-     *
-     * @return bool
-     */
-    public function isReadOnly(): bool
-    {
-        return $this->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
-    }
 }
