@@ -727,7 +727,7 @@ class KeyResultTest extends GoalousTestCase
         $res = $this->KeyResult->countMine();
         $this->assertEquals($res, 3);
     }
-
+ 
     function test_updateTermByGoalId_currentToNext()
     {
         $this->deleteAllTeam();

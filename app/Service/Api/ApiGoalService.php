@@ -236,8 +236,7 @@ class ApiGoalService extends ApiService
             'paging' => [
                 'next' => ''
             ],
-            'count'  => 0,
-            'incomplete_count' => 0
+            'count'  => 0
         ];
 
         // KR一覧レスポンスデータ取得
@@ -259,8 +258,6 @@ class ApiGoalService extends ApiService
 
         // カウント数をセット
         $ret['count'] = $KeyResultService->countMine();
-        // 未完了カウント
-        $ret['incomplete_count'] = $KeyResultService->countIncomplete();
         // KRデータセット
         $ret['data']['krs'] = $krs;
         // Goalデータセット

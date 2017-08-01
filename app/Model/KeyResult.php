@@ -987,7 +987,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    public function countMine($goalId = null): int
+    public function countMine($goalId = null, bool $includeComplete = false): int
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
 
@@ -1013,6 +1013,10 @@ class KeyResult extends AppModel
         // パラメータよりデータ取得条件追加
         if ($goalId) {
             $options['conditions']['KeyResult.goal_id'] = $goalId;
+        }
+
+        if (!$includeComplete) {
+            $options['conditions']['KeyResult.completed'] = null;
         }
 
         $count = $this->find('count', $options);
