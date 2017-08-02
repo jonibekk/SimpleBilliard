@@ -125,12 +125,13 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 }
                 $unitId = $post['ActionResult']['KrProgressLog']['value_unit'];
                 $displayChangeValue .= AppUtil::formatBigFloat($changeValue);
-
-                $currentValue = bcadd($post['ActionResult']['KrProgressLog']['before_value'], $changeValue, 3);
+                
+                // ¥マークをaddする前に数字を3桁区切りに丸める
+                $currentValue = number_format(bcadd($post['ActionResult']['KrProgressLog']['before_value'], $changeValue, 3));
+                $targetValue = number_format($post['ActionResult']['KrProgressLog']['target_value']);
 
                 $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
-                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['KrProgressLog']['target_value']),
-                    $unitId);
+                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($targetValue), $unitId);
                 ?>
                 <?php if ($unitId == KeyResult::UNIT_BINARY): ?>
                     <?php if ($changeValue == 0): ?>
@@ -147,7 +148,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     <?php if ($displayChangeValue === '+0'): ?>
                         </span><?= $displayChangeValue ?><span class="feed-progress-strong">
                     <?php else: ?>
-                        <span class="feed-progress-change"><?= $displayChangeValue ?></span>
+                        <span class="feed-progress-change"><?= number_format($displayChangeValue) ?></span>
                     <?php endif; ?>
                     )&nbsp;
                     </span>
