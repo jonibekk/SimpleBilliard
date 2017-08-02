@@ -121,6 +121,12 @@ class KeyResultService extends AppService
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
         $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'],
             $keyResult['current_value']);
+        
+        // 3桁区切りversion
+        $keyResult['start_value'] = AppUtil::formatThousand($keyResult['start_value']);
+        $keyResult['target_value'] = AppUtil::formatThousand($keyResult['target_value']);
+        $keyResult['current_value'] = AppUtil::formatThousand($keyResult['current_value']);
+
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
