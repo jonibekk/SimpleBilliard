@@ -1949,6 +1949,44 @@ class TeamMember extends AppModel
     }
 
     /**
+     * data migration for shell
+     * - active user -> status active
+     *
+     * @return void
+     */
+    function updateActiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::USER_STATUS_ACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => true
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * data migration for shell
+     * - inactive user -> status inactive
+     *
+     * @return void
+     */
+    function updateInactiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::USER_STATUS_INACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => false
+            ]
+        );
+        return $res;
+    }
+
+    /**
      * Get list of team members by its status.
      *
      *      USER_STATUS_INVITED = 0;
