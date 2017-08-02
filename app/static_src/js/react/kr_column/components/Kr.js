@@ -73,8 +73,6 @@ export default class Kr extends React.Component {
           </div>
           {/* アクションボタンエリア */}
           <div className="right">
-            { !is_complete && (() => {
-              return (
                 <a href={ action_post_link } label="Add Action">
                   <div className="dashboard-krs-column-add-action">
                       <span>+</span>
@@ -82,8 +80,6 @@ export default class Kr extends React.Component {
                   {/* TODO: If another language needed, have to move translation to cake_variables.ctp */}
                   {cake.lang === 'jpn' ? <p>ｱｸｼｮﾝ<br />追加</p> : <p>Add Action</p>}
                 </a>
-              )
-            })()}
           </div>
         </div>
         <div className="dashboard-krs-column-footer">
@@ -96,7 +92,7 @@ export default class Kr extends React.Component {
               <span>・</span>
               <li className="action-avators">
                 {/* 最近アクションしたユーザー画像を表示 */}
-                { !is_complete && action_results.map((action) => {
+                { action_results.map((action) => {
                   return (
                     <img className="lazy" src={ action.user.small_img_url } key={ action.user.id } />
                   )
