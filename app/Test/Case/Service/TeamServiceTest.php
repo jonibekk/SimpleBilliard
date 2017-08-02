@@ -37,11 +37,12 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals($this->TeamService->getServiceUseStatus(), Team::SERVICE_USE_STATUS_FREE_TRIAL);
     }
 
-    function test_isReadOnly_readOnly()
+    function test_getReadOnlyEndDate_success()
     {
-        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY, 'service_use_state_start_date' => '2017-01-10']);
         $this->setDefaultTeamIdAndUid(1, $teamId);
-        $this->assertTrue($this->TeamService->isReadOnly($teamId));
+        $this->TeamService->getReadOnlyEndDate();
+        $this->assertEquals($this->TeamService->getReadOnlyEndDate(), '2017-02-09');
     }
 
 }
