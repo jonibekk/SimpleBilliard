@@ -1079,7 +1079,7 @@ class Goal extends AppModel
             ],
             'order'      => [
                 'Goal.completed ASC',
-                'Goal.end_date desc',
+                'Goal.end_date DESC',
                 'GoalMember.priority DESC'
             ],
             'fields'     => [
