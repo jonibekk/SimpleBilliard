@@ -182,10 +182,8 @@ class AppController extends BaseController
                     $this->redirect($this->referer());
                 }
 
-                /** @var TeamService $TeamService */
-                $TeamService = ClassRegistry::init("TeamService");
-                $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
-                $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
+                // Pass variable about team service use
+                $this->setValsForReadOnlyAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -828,6 +826,16 @@ class AppController extends BaseController
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         return $status;
+    }
+
+    function setValsForReadOnlyAlert()
+    {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
+        $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
+        $this->set('readOnlyEndDate', $TeamService->getReadOnlyEndDate());
     }
 
     public function _setDefaultTeam($team_id)
