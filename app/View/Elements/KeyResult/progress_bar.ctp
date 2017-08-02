@@ -1,7 +1,7 @@
 <?php if (!empty($kr)): ?>
     <?php
-    $currentValue = $this->NumberEx->formatProgressValue($kr['current_value'],
-        $kr['value_unit']);
+    $currentValue = number_format($kr['current_value']);
+    $currentValue = $this->NumberEx->formatProgressValue($currentValue, $kr['value_unit']);
     $shortCurrentValue = $this->NumberEx->shortFormatProgressValue($kr['current_value'],
         $kr['value_unit']);
 
@@ -23,8 +23,10 @@
     } else {
         $progressRate = $this->NumberEx->calcProgressRate($kr['start_value'], $kr['target_value'],
             $kr['current_value']);
-        $startValue = $this->NumberEx->formatProgressValue($kr['start_value'], $kr['value_unit']);
-        $targetValue = $this->NumberEx->formatProgressValue($kr['target_value'], $kr['value_unit']);
+        $startValue = number_format($kr['start_value']);
+        $startValue = $this->NumberEx->formatProgressValue($startValue, $kr['value_unit']);
+        $targetValue = number_format($kr['target_value']);
+        $targetValue = $this->NumberEx->formatProgressValue($targetValue, $kr['value_unit']);
 
         $shortStartValue = $this->NumberEx->shortFormatProgressValue($kr['start_value'], $kr['value_unit']);
         $shortTargetValue = $this->NumberEx->shortFormatProgressValue($kr['target_value'], $kr['value_unit']);
