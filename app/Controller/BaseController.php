@@ -385,17 +385,19 @@ class BaseController extends Controller
      */
     private function isExcludeRequestParamInProhibited(): bool
     {
-        foreach ($this->ignoreProhibitedRequest as $ignoreParam) {
-            if ($this->request->param('controller') != $ignoreParam['controller']) {
-                continue;
-            }
-            // if only controller checking and hit, return true
-            if (count($ignoreParam) === 1) {
-                return true;
-            } elseif ($this->request->param('action') == $ignoreParam['action']) {
-                return true;
-            }
+        $ignoreParamExists = array_search($this->request->param('controller'),
+            Hash::extract($this->ignoreProhibitedRequest, '{n}.controller')
+        );
+        if ($ignoreParamExists === false) {
             return false;
+        }
+
+        foreach ($this->ignoreProhibitedRequest as $ignoreParam) {
+            // filter requested param with $ignoreParam
+            $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
+            if ($intersectedParams == $ignoreParam) {
+                return true;
+            }
         }
         return false;
     }
