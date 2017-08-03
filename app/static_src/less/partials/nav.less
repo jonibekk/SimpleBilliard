@@ -357,8 +357,6 @@
             > a{
                 color: @darkBlack;
                 padding: 2px 0;
-                margin: auto;
-                width: 180px;
                 &:focus, &:hover{
                     background-color:transparent;
                 }
@@ -457,8 +455,6 @@
 
 .navbar-nav {
     margin-top:50px;
-    background-color:@smokyWhite; 
-    height:100%;
     padding:0 10px;
     @media @medium{
         background-color:transparent;
@@ -542,6 +538,8 @@
     z-index:1;
     transition: transform .3s;
     transform:translateX(-200px);
+    overflow-y:scroll;
+    background-color:@smokyWhite;
     .mod-openNav &{
         transform:translateX(0px);
     }
@@ -550,6 +548,23 @@
         height:auto;
         width:auto;
         transform:none;
+        overflow-y:visible;
+    }
+}
+
+.header-white-bg{
+    height:50px;
+    position:absolute;
+    background-color:@white;
+    width:100%;
+    top:0;
+    left:0;
+    z-index:2;
+    &.mod-mb-app{
+        height:75px;
+    }
+    @media @medium{
+        display:none;
     }
 }
 
@@ -560,5 +575,5 @@
 
 .header-right-navigations{
     position:relative;
-    z-index:2;
+    z-index:3;
 }
