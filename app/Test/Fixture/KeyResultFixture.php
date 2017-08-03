@@ -263,6 +263,18 @@ class KeyResultFixture extends CakeTestFixtureEx
             'current_value' => '123456789012343',
             'completed'     => '12345',
         ],
+        [
+            'id'            => '7',
+            'team_id'       => '1',
+            'goal_id'       => '1',
+            'user_id'       => '1',
+            'name'          => 'test',
+            'value_unit'    => '0', // PERCENT
+            'start_value'   => '0',
+            'target_value'  => '100',
+            'current_value' => '100',
+            'completed'     => '1499848170',
+        ],
     ];
 
 }
