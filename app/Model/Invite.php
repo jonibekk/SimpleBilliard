@@ -300,8 +300,8 @@ class Invite extends AppModel
     {
         $options = [
             'conditions' => [
-                'email_verified       ' => false,
-                'email_token_expires <' => $baseTime
+                'Invite.email_verified'        => false,
+                'Invite.email_token_expires >' => $baseTime
             ]
         ];
         $invites = $this->find('all', $options);

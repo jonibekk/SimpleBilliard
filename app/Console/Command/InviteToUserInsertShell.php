@@ -36,21 +36,18 @@ class InviteToUserInsertShell extends AppShell
     {
         $currentTimestamp = $this->params['currentTimestamp'] ?? time();
         $targetInvites = $this->Invite->findUnverifiedBeforeExpired($currentTimestamp);
-        $this->log($targetInvites);
         if (count($targetInvites) === 0) {
             return;
         }
-        return;
 
         try {
             $this->User->begin();
-
-            $newUserInvites = Hash::combine($targetInvites, '{n}.Invite[!to_user_id]', '{n}');
+            $newUserInvites = Hash::combine($targetInvites, '{n}.Invite[to_user_id=].id', '{n}.Invite[to_user_id=]');
             // register new user
             $insertEmails = [];
             foreach ($newUserInvites as $invite) {
-                $teamId = $invite['Invite']['team_id'];
-                $email = $invite['Invite']['email'];
+                $teamId = $invite['team_id'];
+                $email = $invite['email'];
                 $this->User->create();
                 if (!$this->User->save(['team_id' => $teamId], false)) {
                     throw new Exception(sprintf("Failed to insert users. data:%s",
@@ -63,7 +60,7 @@ class InviteToUserInsertShell extends AppShell
                 ];
             }
             /* Insert emails table */
-            if (!$Email->bulkInsert($insertEmails)) {
+            if (!$this->Email->bulkInsert($insertEmails)) {
                 throw new Exception(sprintf("Failed to insert emails. data:%s",
                         AppUtil::varExportOneLine(compact('emails', 'insertEmails', 'teamId')))
                 );
@@ -71,16 +68,17 @@ class InviteToUserInsertShell extends AppShell
 
             /* Insert team_members table */
             // Except for already belonged to target team
+            $emails = Hash::extract($targetInvites, '{n}.Invite.email');
             $targetUserIds = $this->User->findNotBelongToTeamByEmail($emails);
             $insertTeamMembers = [];
             foreach ($targetUserIds as $userId) {
                 $insertTeamMembers[] = [
                     'user_id' => $userId,
                     'team_id' => $teamId,
-                    'status'  => TeamMember::STATUS_INVITED
+                    'status'  => TeamMember::USER_STATUS_INVITED
                 ];
             }
-            if (!$TeamMember->bulkInsert($insertTeamMembers)) {
+            if (!$this->TeamMember->bulkInsert($insertTeamMembers)) {
                 throw new Exception(sprintf("Failed to insert team members. data:%s",
                         AppUtil::varExportOneLine(compact('insertTeamMembers', 'targetInvites')))
                 );
