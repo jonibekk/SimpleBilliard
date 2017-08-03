@@ -271,4 +271,41 @@ class Invite extends AppModel
         return $res;
     }
 
+    /**
+     * Find by emails and current team
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findByEmails(array $emails): array
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'email'   => $emails
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * find unverified invites before token expired
+     *
+     * @param int $baseTime
+     * 
+     * @return array
+     */
+    function findUnverifiedBeforeExpired(int $baseTime): array
+    {
+        $options = [
+            'conditions' => [
+                'email_verified       ' => false,
+                'email_token_expires <' => $baseTime
+            ]
+        ];
+        $invites = $this->find('all', $options);
+        return $invites;
+    }
+
 }
