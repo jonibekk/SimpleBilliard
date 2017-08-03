@@ -385,6 +385,7 @@ class BaseController extends Controller
      */
     private function isExcludeRequestParamInProhibited(): bool
     {
+        // if controller is not much, skip all.
         $ignoreParamExists = array_search($this->request->param('controller'),
             Hash::extract($this->ignoreProhibitedRequest, '{n}.controller')
         );
