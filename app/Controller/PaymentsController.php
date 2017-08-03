@@ -12,22 +12,22 @@ class PaymentsController extends AppController {
         $this->render('choose_payment_type');
     }
 
-    public function enterCCInfo() {
+    public function enter_cc_info() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('credit_card_entry');
     }
 
-    public function enterCompanyInfo() {
+    public function enter_company_info() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('company_info');
     }
 
-    public function thankyou() {
+    public function thank_you() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('thank_you');
     }
 
-    public function paymentHistory() {
+    public function history() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('payment_history');
     }
