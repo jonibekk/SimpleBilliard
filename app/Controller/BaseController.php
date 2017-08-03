@@ -349,7 +349,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->isReadOnly()) {
+        if ($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY) {
             return true;
         }
         return false;

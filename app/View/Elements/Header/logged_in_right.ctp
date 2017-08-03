@@ -224,4 +224,5 @@
         </ul>
     </div>
 </div>
+<div class="header-white-bg <?= $is_mb_app ? "mod-mb-app" : "" ?>"></div>
 <?= $this->App->viewEndComment() ?>
