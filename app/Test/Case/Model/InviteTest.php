@@ -199,4 +199,19 @@ class InviteTest extends GoalousTestCase
         $this->assertEquals($email, $res[0]['Invite']['email']);
     }
 
+    function test_findUnverifiedBeforeExpired()
+    {
+        $baseDate = strtotime('2017-06-20');
+        $verifiedInviteId = $this->createInvite(['email_verified' => true]);
+        $tokenExpiredInviteId = $this->createInvite(['email_token_expires' => $baseDate - DAY]);
+        $targetInviteId = $this->createInvite();
+
+        $result = $this->Invite->findUnverifiedBeforeExpired($baseDate);
+        $resultIds = Hash::extract($result, '{n}.Invite.id');
+
+        $this->assertNotContains($verifiedInviteId, $resultIds);
+        $this->assertNotContains($tokenExpiredInviteId, $resultIds);
+        $this->assertContains($targetInviteId, $resultIds);
+    }
+
 }
