@@ -383,10 +383,14 @@ class KeyResultService extends AppService
             if ($requestData['value_unit'] != $kr['value_unit']) {
                 $updateKr['start_value'] = Hash::get($requestData, 'start_value');
             }
-            // 未完了かつ進捗現在値が目標値に達してたら完了とする
-            if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
-                $updateKr['completed'] = time();
-            }
+        }
+
+        if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
+            // 未完了 && 進捗現在値が目標値に達してたら完了とする
+            $updateKr['completed'] = time();
+        } elseif (!empty($kr['completed']) && $updateKr['target_value'] != $updateKr['current_value']) {
+            // 完了 && 進捗現在値が目標値に未達なら未完了とする
+            $updateKr['completed'] = null;
         }
 
         if (Hash::get($requestData, 'start_date')) {
