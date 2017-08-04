@@ -1657,4 +1657,51 @@ class User extends AppModel
         return $ret;
     }
 
+    /**
+     * Find users not belong to team
+     * filter: emails
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findNotBelongToTeamByEmail(array $emails): array
+    {
+        $options = [
+            'fields'     => [
+                'User.id',
+
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'Email.email' => $emails,
+                        'Email.del_flg' => false,
+                    ]
+
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.team_id' => $this->current_team_id,
+                        'TeamMember.del_flg' => false,
+                    ]
+
+                ],
+            ],
+            'conditions' => [
+                'TeamMember.id' => null,
+                'User.del_flg'   => false,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

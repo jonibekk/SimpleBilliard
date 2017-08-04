@@ -21,6 +21,15 @@
   &:focus {
     text-decoration: none;
   }
+
+  &[disabled] {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: .65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
 }
 
 .btn-dash {
@@ -470,4 +479,31 @@
   outline: none;
   border: 1px solid #ccc;
   background: #f9f9f9;
+}
+
+// ボタン
+.btnGroupForForm {
+  &-next {
+    &:extend(.btn);
+    &[disabled] {
+      &:extend(.btn[disabled]);
+    }
+    background-color: @keyColor;
+    border: none;
+    color: @whiteColor;
+    width: 100%;
+    margin-bottom: @spacing;
+
+  }
+  &-back, &-cancel {
+    &:extend(.btn);
+    color: @keyColor;
+    border-color: @keyColor;
+    box-shadow: none;
+    width: 100%;
+    &:hover {
+      color: @keyColor;
+      text-decoration: none;
+    }
+  }
 }
