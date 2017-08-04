@@ -1,7 +1,7 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel service-disabled">
     <div class="panel-container">
-        <h1 class="service-disabled-headline"><span class="fa fa-lock"></span></h1>
+        <span class="fa fa-lock service-disabled-headline"></span>
         <h3><?= __("Your team no longer has access to Goalous.") ?></h3>
     <?php
         if ($isTeamAdmin) {
