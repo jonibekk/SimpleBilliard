@@ -184,6 +184,40 @@ class KeyResultServiceTest extends GoalousTestCase
         $this->assertEquals($updateKr['current_value'], 0);
         $this->assertEquals($updateKr['target_value'], 1);
 
+        // TKR が完了状態から 編集されて 目標値未達になった場合 (completed -> null)
+        $data = [
+            'id'          => '7',
+            'name'        => 'test',
+            'start_value'   => 10,
+            'target_value'  => 100,
+            'current_value' => 50,
+            'completed'   => time(),
+            'value_unit'  => KeyResult::UNIT_PERCENT,
+            'description' => "This is test.",
+            'start_date'  => date('Y/m/d', 10000),
+            'end_date'    => date('Y/m/d', 19999),
+        ];
+        $this->Term->current_team_id = 1;
+        $updateKr = $this->KeyResultService->buildUpdateKr(7, $data);
+        $this->assertNull($updateKr['completed']);
+
+        // TKR が完了状態から 編集されて 目標値未達になった場合 (completed -> null)
+        $data = [
+            'id'          => '8',
+            'name'        => 'weight diet (completed)',
+            'start_value'   => 80,
+            'target_value'  => 70,
+            'current_value' => 75,
+            'completed'   => time(),
+            'value_unit'  => KeyResult::UNIT_NUMBER,
+            'description' => "This is test.",
+            'start_date'  => date('Y/m/d', 10000),
+            'end_date'    => date('Y/m/d', 19999),
+        ];
+        $this->Term->current_team_id = 1;
+        $updateKr = $this->KeyResultService->buildUpdateKr(8, $data);
+        $this->assertNull($updateKr['completed']);
+
     }
 
     /**
