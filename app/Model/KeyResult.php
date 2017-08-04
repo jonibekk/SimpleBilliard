@@ -994,6 +994,9 @@ class KeyResult extends AppModel
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
 
+        $team = $this->Team->getCurrentTeam();
+        $timezone = (int)Hash::get($team,'Team.timezone');
+        $today = AppUtil::todayDateYmdLocal($timezone);
         $options = [
             'conditions' => [
                 'GoalMember.user_id'    => $this->my_uid,
@@ -1008,6 +1011,15 @@ class KeyResult extends AppModel
                     'alias'      => 'GoalMember',
                     'conditions' => [
                         'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'conditions' => [
+                        'Goal.id = KeyResult.goal_id',
+                        'Goal.end_date >=' => $today,
                     ]
                 ],
             ],
