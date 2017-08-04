@@ -18,9 +18,8 @@ class PaymentsController extends AppController {
     }
 
      public function enter_company_info() {
-        $this->set('teamLang',Configure::read('Config.language'));
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('/Payment/company_info');
+        $this->render('company_info');
     }
 
     public function thank_you() {
