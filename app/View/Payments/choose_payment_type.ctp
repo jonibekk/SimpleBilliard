@@ -1,3 +1,4 @@
+<?= $this->App->viewStartComment() ?>
 <section class="panel choose-payment">
     <div class="panel-container">
         <h3><?= __('Select Country Location')?></h3>
@@ -28,9 +29,10 @@
                     <h4><?= __('Invoice') ?></h4>
                     <i class="fa fa-leaf"></i>
                     <p><?= __("Setup a monthly invoice with Goalous.") ?></p>
-                    <p class="coming-soon"><?= __('Coming Soon') ?></a>
+                    <p class="coming-soon"><?= __('Coming Soon') ?></p>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<?= $this->App->ViewEndComment() ?>

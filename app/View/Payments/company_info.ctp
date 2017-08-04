@@ -124,6 +124,6 @@
         <input type="submit" class="btn btn-primary" value="Next" />
     </div>
     <?php
-            echo $this->Form->end(); 
+            echo $this->Form->end();
     ?>
 </section>

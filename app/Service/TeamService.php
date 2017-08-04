@@ -81,4 +81,9 @@ class TeamService extends AppService
         $readOnlyEndDate = AppUtil::dateAfter($freeTrialStartDate, $readOnlyDays);
         return $readOnlyEndDate;
     }
+
+    public function isCannotUseService(): bool
+    {
+        return $this->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
+    }
 }
