@@ -20,6 +20,11 @@ class PaymentSetting extends AppModel
     const CHARGE_TYPE_USER_INCREMENT_FEE = 1;
     const CHARGE_TYPE_USER_ACTIVATION_FEE = 2;
 
+    const CURRENCY_LABELS = [
+        self::CURRENCY_JPY => "¥",
+        self::CURRENCY_USD => "$",
+    ];
+
     /* Validation rules
     *
     * @var array

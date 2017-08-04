@@ -51,7 +51,8 @@ class PageResourceHelper extends AppHelper
             ]
         ],
         'users' => [
-            'default' => ['/js/goalous_user.min']
+            'default' => ['/js/goalous_user.min'],
+            'invite' => ['/js/react_invite_app.min']
         ],
         'setup' => [
             'default' => [
@@ -104,6 +105,8 @@ class PageResourceHelper extends AppHelper
             'view_posts' => ['user_profile.min'],
             'view_info' => ['user_profile.min'],
             'register_with_invite' => ['signup.min'],
+            'invite' => ['invite.min'],
+            'invite_confirm' => ['invite.min'],
         ],
         'evaluations' => [
             'default' => ['evaluation.min'],

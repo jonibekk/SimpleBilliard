@@ -4,12 +4,59 @@ App::import('Service', 'CreditCardService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('CreditCard', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Class PaymentService
  */
 class PaymentService extends AppService
 {
+    /* Payment settings variable cache */
+    private static $cacheList = [];
+
+    /**
+     * Get payment setting by team id
+     *
+     * @param       $teamId
+     *
+     * @return array
+     */
+    public function get(int $teamId): array
+    {
+        // 既にDBからのデータ取得は行っているが情報が存在しなかった場合
+        if (array_key_exists($teamId, self::$cacheList) && empty(self::$cacheList[$teamId])) {
+            return [];
+        }
+
+        // 既にDBからのデータ取得は行っていて、かつ情報が存在している場合
+        if (!empty(self::$cacheList[$teamId])) {
+            // キャッシュから取得
+            $data = self::$cacheList[$teamId];
+            return $data;
+        }
+
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+
+        $data = self::$cacheList[$teamId] = Hash::extract($PaymentSetting->findByTeamId($teamId), 'PaymentSetting');
+        if (empty($data)) {
+            return [];
+        }
+
+        // キャッシュ変数に保存
+        self::$cacheList[$teamId] = $data;
+
+        // データ拡張
+        return $data;
+    }
+
+    /**
+     * Clear cache
+     */
+    public function clearCachePaymentSettings()
+    {
+        self::$cacheList = [];
+    }
 
     /**
      * Validate for Create
@@ -113,6 +160,179 @@ class PaymentService extends AppService
     }
 
     /**
+     * Get use days from current date to next payment base date
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return int
+     */
+    public function getUseDaysByNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $timezone = $Team->getTimezone();
+        $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
+        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        // Calc use days
+        $diffDays = AppUtil::diffDays($localCurrentDate, $nextBaseDate);
+        return $diffDays;
+    }
+
+    /**
+     * Get next payment base date
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return string
+     */
+    public function getNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): string
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $timezone = $Team->getTimezone();
+        $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
+        list($y, $m, $d) = explode('-', $localCurrentDate);
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
+
+        // Check if next base date is this month or next month.
+        $isNextMonth = false;
+        if ($d - $paymentBaseDay >= 0) {
+            $isNextMonth = true;
+        } else {
+            if (checkdate($m, $paymentBaseDay, $y) === false) {
+                $lastDay = date('t', strtotime($localCurrentDate));
+                if ($lastDay - $d <= 0) {
+                    $isNextMonth = true;
+                }
+            }
+        }
+
+        // Move ym
+        if ($isNextMonth) {
+            // Move next year if December
+            list($y, $m) = AppUtil::moveMonthYm($y, $m);
+        }
+
+        // Get next payment base date
+        if (checkdate($m, $paymentBaseDay, $y) === false) {
+            // If not exist payment base day, set last day of the month.
+            $lastDay = date('t', strtotime(AppUtil::dateFromYMD($y, $m, 1)));
+            $nextBaseDate = AppUtil::dateFromYMD($y, $m, $lastDay);
+        } else {
+            $nextBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
+        }
+
+        return $nextBaseDate;
+    }
+
+    /**
+     * Get total days from previous payment base date to next payment base date
+     * 現在月度の総利用日数
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return int
+     */
+    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        list($y, $m, $d) = explode('-', $nextBaseDate);
+        list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
+
+        if (checkdate($m, $paymentBaseDay, $y) === false) {
+            AppUtil::dateFromYMD($y, $m, 1);
+            $prevBaseDate = AppUtil::dateMonthLast(AppUtil::dateFromYMD($y, $m, 1));
+        } else {
+            $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
+        }
+
+        $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
+        return $res;
+    }
+
+    /**
+     * Calc total charge by users count when invite users.
+     *
+     * @param int  $userCnt
+     * @param int  $currentTimeStamp
+     * @param null $useDaysByNext
+     * @param null $allUseDays
+     *
+     * @return float
+     */
+    public function calcTotalChargeByAddUsers
+    (
+        int $userCnt,
+        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        $useDaysByNext = null,
+        $allUseDays = null
+    ): float {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($currentTimeStamp);
+        $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($currentTimeStamp);
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
+
+        // Ex. 3people × ¥1,980 × 20 days / 1month
+        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
+            $totalCharge = AppUtil::floor($totalCharge, 0);
+        } else {
+            $totalCharge = AppUtil::floor($totalCharge, 2);
+        }
+        return $totalCharge;
+    }
+
+    /**
+     * Format total charge by users count when invite users.
+     *
+     * @param int  $userCnt
+     * @param int  $currentTimeStamp
+     * @param null $useDaysByNext
+     * @param null $allUseDays
+     *
+     * @return string
+     */
+    public function formatTotalChargeByAddUsers(
+        int $userCnt,
+        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        $useDaysByNext = null,
+        $allUseDays = null
+    ): string {
+        $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
+        // Format ex 1980 → ¥1,980
+        $res = $this->formatCharge($totalCharge);
+        return $res;
+    }
+
+    /**
+     * Format charge based payment setting
+     * - Number format
+     * - Currency format
+     *
+     * @param int $charge
+     *
+     * @return string
+     */
+    public function formatCharge(int $charge): string
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $paymentSetting = $this->get($Team->current_team_id);
+        // Format ex 1980 → ¥1,980
+        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($charge);
+        return $res;
+    }
+
+    /*
      * Apply Credit card charge for a specified team.
      *
      * @param int         $teamId

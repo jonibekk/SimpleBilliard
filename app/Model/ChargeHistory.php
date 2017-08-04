@@ -10,6 +10,24 @@ class ChargeHistory extends AppModel
     const TRANSACTION_RESULT_SUCCESS = 1;
     const TRANSACTION_RESULT_FAIL = 2;
 
+    /**
+     * Get latest max charge users
+     *
+     * @return int
+     */
+    function getLatestMaxChargeUsers(): int
+    {
+        $res = $this->find('first',[
+                'fields'     => ['max_charge_users'],
+                'conditions' => [
+                    'team_id' => $this->current_team_id,
+                ],
+                'order'      => ['id' => 'DESC'],
+            ]
+        );
+        return (int)Hash::get($res, 'ChargeHistory.max_charge_users');
+    }
+
     /* Validation rules
     *
     * @var array

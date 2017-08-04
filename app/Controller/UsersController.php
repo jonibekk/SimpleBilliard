@@ -216,7 +216,7 @@ class UsersController extends AppController
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
 
-            if($this->is_mb_app){
+            if ($this->is_mb_app) {
                 // If mobile app, updating setup guide for installation of app.
                 // It should be called from here. Because, `updateSetupStatusIfNotCompleted()` uses Session Data.
                 $this->updateSetupStatusIfNotCompleted();
@@ -1595,5 +1595,34 @@ class UsersController extends AppController
         $this->set('like_count', $post_like_count + $comment_like_count);
 
         return true;
+    }
+
+    /**
+     * User invitation form
+     *
+     * @param null $page
+     *
+     * @return void
+     */
+    public function invite($step = null)
+    {
+        // Deny direct access for confirm page
+        if (!empty($step)) {
+            return $this->redirect('/users/invite');
+        }
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    /**
+     * Test method for showing markup html
+     * TODO:delete
+     * User invitation form
+     *
+     * @return void
+     */
+    public function invite_confirm()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
     }
 }
