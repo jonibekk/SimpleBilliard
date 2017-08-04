@@ -31,7 +31,7 @@
                                     <?= __("Add Key Result") ?></span></a>
         </li>
         <?php if (!Hash::get($goal, 'Evaluation') && $isAfterCurrentTerm): ?>
-            <?php if(Hash::get($goal, 'MyCollabo.type') == GoalMember::TYPE_OWNER): ?>
+            <?php if(Hash::get($goal, 'MyCollabo.0.type') == GoalMember::TYPE_OWNER): ?>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
                        href="/goals/<?= $goal['Goal']['id'] ?>/edit">
