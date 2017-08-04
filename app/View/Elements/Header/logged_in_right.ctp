@@ -89,7 +89,8 @@
             </div>
         </div>
     </div>
-    <div id="HeaderDropdownNotify" class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
+    <div id="HeaderDropdownNotify"
+         class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
@@ -122,7 +123,8 @@
                ]) ?>">
             </a>
 
-            <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>" get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
+            <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
+               get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
                class="call-notifications">
                 <div class="notify-all-view-link">
                     <?= __('See All') ?>
@@ -130,89 +132,97 @@
             </a>
         </div>
     </div>
-    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
-    <a href="#"
-       class="btn-function-header"
-       data-toggle="dropdown"
-       id="header-cog-dropdown">
-        <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
-        <?php if ($all_alert_cnt > 0): ?>
-            <div class="btn btn-xs notify-function-numbers">
+    <div
+        class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
+        <a href="#"
+           class="btn-function-header"
+           data-toggle="dropdown"
+           id="header-cog-dropdown">
+            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+            <?php if ($all_alert_cnt > 0): ?>
+                <div class="btn btn-xs notify-function-numbers">
                  <span>
                    <?= $all_alert_cnt ?>
                  </span>
-            </div>
-        <?php endif; ?>
-    </a>
-    <ul class="header-nav-function-contents dropdown-menu" role="menu"
-        aria-labelledby="dropdownMenu1">
-        <li class="header-nav-function-contents-list">
-            <?= $this->Html->link(__('User Setting'),
-                ['controller' => 'users', 'action' => 'settings'],
-                ['class' => 'header-nav-function-contents-user-setting']) ?>
-        </li>
-        <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
-        if (Hash::get($my_member_status, 'TeamMember.admin_flg') && $my_member_status['TeamMember']['admin_flg']):?>
-            <li class="header-nav-function-contents-list">
-                <?=
-                $this->Html->link(__('Team Setting'),
-                    ['controller' => 'teams', 'action' => 'settings'],
-                    ['class' => 'header-nav-function-contents-team-setting']) ?>
-            </li>
-        <?php endif; ?>
-        <?php if ($is_evaluation_available): ?>
-            <li class="header-nav-function-contents-list">
-                <?=
-                $this->Html->link(__('Evaluation'),
-                    ['controller' => 'evaluations', 'action' => 'index'],
-                    ['class' => 'header-nav-function-contents-evaluation'])
-                ?>
-                <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
-                    <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
-                <?php endif; ?>
-            </li>
-        <?php endif; ?>
-        <li class="header-nav-function-contents-list">
-            <?= $this->Html->link(__('Goal Approval'),
-                ['controller' => 'goals', 'action' => 'approval', 'list'],
-                ['class' => 'header-nav-function-contents-approvement'])
-            ?>
-            <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
-                <div class="header-nav-function-approve-count">
-                    <?php echo $unapproved_cnt; ?>
                 </div>
-            <?php } ?>
-        </li>
-        <li class="header-nav-function-contents-list">
-            <?=
-            $this->Html->link(__('User Guide (jp)'),
-                '/document/UserGuidelines.pdf',
-                ['class' => 'header-nav-function-contents-user-guidelines', 'target' => '_blank']) ?>
-        </li>
-        <li class="header-nav-function-contents-list">
-            <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
-                <?= __('How to make a Goal (jp)') ?>
-            </a>
-        </li>
-        <li class="header-nav-function-contents-list">
-            <a href="#" data-toggle="modal" data-target="#modal_tutorial"
-               class="header-nav-function-contents-tutorial">
-                <?= __('Tutorial') ?>
-            </a>
-        </li>
-        <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
-            <li class="header-nav-function-contents-list" id="IntercomLink">
-                <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
-                   class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
+            <?php endif; ?>
+        </a>
+        <ul class="header-nav-function-contents dropdown-menu" role="menu"
+            aria-labelledby="dropdownMenu1">
+            <li class="header-nav-function-contents-list">
+                <?= $this->Html->link(__('User Setting'),
+                    ['controller' => 'users', 'action' => 'settings'],
+                    ['class' => 'header-nav-function-contents-user-setting']) ?>
             </li>
-        <?php endif; ?>
-        <li class="header-nav-function-contents-list">
-            <?=
-            $this->Html->link(__('Logout'),
-                ['controller' => 'users', 'action' => 'logout'],
-                ['class' => 'header-nav-function-contents-logout']) ?>
-        </li>
-    </ul>
+            <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
+            if (Hash::get($my_member_status, 'TeamMember.admin_flg') && $my_member_status['TeamMember']['admin_flg']):?>
+                <li class="header-nav-function-contents-list">
+                    <?=
+                    $this->Html->link(__('Team Setting'),
+                        ['controller' => 'teams', 'action' => 'settings'],
+                        ['class' => 'header-nav-function-contents-team-setting']) ?>
+                </li>
+                <li class="header-nav-function-contents-list">
+                    <?=
+                    $this->Html->link(__('Billing'),
+                        ['controller' => 'payments', 'action' => 'index'],
+                        ['class' => 'header-nav-function-contents-billing']) ?>
+                </li>
+            <?php endif; ?>
+            <?php if ($is_evaluation_available): ?>
+                <li class="header-nav-function-contents-list">
+                    <?=
+                    $this->Html->link(__('Evaluation'),
+                        ['controller' => 'evaluations', 'action' => 'index'],
+                        ['class' => 'header-nav-function-contents-evaluation'])
+                    ?>
+                    <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
+                        <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
+                    <?php endif; ?>
+                </li>
+            <?php endif; ?>
+            <li class="header-nav-function-contents-list">
+                <?= $this->Html->link(__('Goal Approval'),
+                    ['controller' => 'goals', 'action' => 'approval', 'list'],
+                    ['class' => 'header-nav-function-contents-approvement'])
+                ?>
+                <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
+                    <div class="header-nav-function-approve-count">
+                        <?php echo $unapproved_cnt; ?>
+                    </div>
+                <?php } ?>
+            </li>
+            <li class="header-nav-function-contents-list">
+                <?=
+                $this->Html->link(__('User Guide (jp)'),
+                    '/document/UserGuidelines.pdf',
+                    ['class' => 'header-nav-function-contents-user-guidelines', 'target' => '_blank']) ?>
+            </li>
+            <li class="header-nav-function-contents-list">
+                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
+                    <?= __('How to make a Goal (jp)') ?>
+                </a>
+            </li>
+            <li class="header-nav-function-contents-list">
+                <a href="#" data-toggle="modal" data-target="#modal_tutorial"
+                   class="header-nav-function-contents-tutorial">
+                    <?= __('Tutorial') ?>
+                </a>
+            </li>
+            <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
+                <li class="header-nav-function-contents-list" id="IntercomLink">
+                    <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
+                       class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
+                </li>
+            <?php endif; ?>
+            <li class="header-nav-function-contents-list">
+                <?=
+                $this->Html->link(__('Logout'),
+                    ['controller' => 'users', 'action' => 'logout'],
+                    ['class' => 'header-nav-function-contents-logout']) ?>
+            </li>
+        </ul>
+    </div>
 </div>
-</div>
+<div class="header-white-bg <?= $is_mb_app ? "mod-mb-app" : "" ?>"></div>
 <?= $this->App->viewEndComment() ?>

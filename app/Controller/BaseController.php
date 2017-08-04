@@ -1,5 +1,6 @@
 <?php
 App::uses('Controller', 'Controller');
+App::import('Service', 'TeamService');
 
 /**
  * Application level Controller
@@ -41,6 +42,7 @@ class BaseController extends Controller
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
             ]
         ],
+        'Notification',
         'NotifyBiz',
         'GlEmail',
         'Mixpanel',
@@ -88,6 +90,51 @@ class BaseController extends Controller
         'Goalous App iOS',
         'Goalous App Android'
     ];
+    /**
+     * use it when you need stop after beforender
+     */
+    public $stopInvoke = false;
+
+    /**
+     * This list for excluding from prohibited request
+     * It's like a cake request params.
+     * If only controller name is specified, including all actions
+     * If you would like to specify several action, refer to the following:
+     * [
+     * 'controller' => 'users', 'action'     => 'settings',
+     * ],
+     * [
+     * 'controller' => 'users', 'action'     => 'view_goals',
+     * ],
+     *
+     * @var array
+     */
+    private $ignoreProhibitedRequest = [
+        [
+            'controller' => 'payments',
+        ],
+        [
+            'controller' => 'teams',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'logout',
+        ],
+        [
+            'controller' => 'terms',
+        ],
+        // TODO: We have to fix it. now, privacy_policy and terms are redirected to home. but they should be appear and important page!
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'privacy_policy',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'terms',
+        ],
+    ];
 
     public function __construct($request = null, $response = null)
     {
@@ -98,6 +145,8 @@ class BaseController extends Controller
     function beforeFilter()
     {
         parent::beforeFilter();
+        $this->Security->csrfCheck= false;
+        $this->Security->validatePost= false;
         $this->_setSecurity();
 
         if ($this->Auth->user()) {
@@ -273,6 +322,7 @@ class BaseController extends Controller
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
+
     /**
      * pass `isTablet` variable to view.
      * - get browser ua from browscap
@@ -282,5 +332,76 @@ class BaseController extends Controller
         $browser = $this->getBrowser();
         $this->is_tablet = $browser['istablet'];
         $this->set('isTablet', $this->is_tablet);
+    }
+
+    /**
+     * check prohibited request in read only term
+     *
+     * @return bool
+     */
+    public function isProhibitedRequestByReadOnly(): bool
+    {
+        if ($this->isExcludeRequestParamInProhibited()) {
+            return false;
+        }
+        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
+            return false;
+        }
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * check prohibited request in read only term
+     *
+     * @return bool
+     */
+    public function isProhibitedRequestByCannotUseService(): bool
+    {
+        if ($this->isExcludeRequestParamInProhibited()) {
+            return false;
+        }
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->isCannotUseService()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Request params are excluded request in prohibited?
+     * Decide with $this->excludeRequestParamsInProhibited
+     * checking controller and action
+     * if only controller checking and hit it, return true
+     *
+     * @return bool
+     */
+    private function isExcludeRequestParamInProhibited(): bool
+    {
+        // if controller is not much, skip all.
+        $ignoreParamExists = array_search($this->request->param('controller'),
+            Hash::extract($this->ignoreProhibitedRequest, '{n}.controller')
+        );
+        if ($ignoreParamExists === false) {
+            return false;
+        }
+
+        foreach ($this->ignoreProhibitedRequest as $ignoreParam) {
+            // filter requested param with $ignoreParam
+            $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
+            if ($intersectedParams == $ignoreParam) {
+                return true;
+            }
+        }
+        return false;
     }
 }

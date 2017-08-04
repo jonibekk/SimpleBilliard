@@ -724,10 +724,11 @@ class KeyResultTest extends GoalousTestCase
     {
         $this->setDefault();
         $this->saveKrsForDashboard([['111111', 3], ['222222', 2], ['333333', 1]]);
+        $this->KeyResult->complete(3);
         $res = $this->KeyResult->countMine();
-        $this->assertEquals($res, 3);
+        $this->assertEquals($res, 2);
     }
-
+ 
     function test_updateTermByGoalId_currentToNext()
     {
         $this->deleteAllTeam();

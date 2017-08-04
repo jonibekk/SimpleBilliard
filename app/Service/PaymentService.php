@@ -1,14 +1,62 @@
 <?php
 App::import('Service', 'AppService');
-App::uses('Team', 'Model');
+App::import('Service', 'CreditCardService');
 App::uses('PaymentSetting', 'Model');
+App::uses('Team', 'Model');
 App::uses('CreditCard', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * Class PaymentService
  */
 class PaymentService extends AppService
 {
+    /* Payment settings variable cache */
+    private static $cacheList = [];
+
+    /**
+     * Get payment setting by team id
+     *
+     * @param       $teamId
+     *
+     * @return array
+     */
+    public function get(int $teamId): array
+    {
+        // 既にDBからのデータ取得は行っているが情報が存在しなかった場合
+        if (array_key_exists($teamId, self::$cacheList) && empty(self::$cacheList[$teamId])) {
+            return [];
+        }
+
+        // 既にDBからのデータ取得は行っていて、かつ情報が存在している場合
+        if (!empty(self::$cacheList[$teamId])) {
+            // キャッシュから取得
+            $data = self::$cacheList[$teamId];
+            return $data;
+        }
+
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+
+        $data = self::$cacheList[$teamId] = Hash::extract($PaymentSetting->findByTeamId($teamId), 'PaymentSetting');
+        if (empty($data)) {
+            return [];
+        }
+
+        // キャッシュ変数に保存
+        self::$cacheList[$teamId] = $data;
+
+        // データ拡張
+        return $data;
+    }
+
+    /**
+     * Clear cache
+     */
+    public function clearCachePaymentSettings()
+    {
+        self::$cacheList = [];
+    }
 
     /**
      * Validate for Create
@@ -63,7 +111,7 @@ class PaymentService extends AppService
      * @return bool
      * @throws Exception
      */
-    public function createCreditCardPayment($data, $customerCode, $userId)
+    public function registerCreditCardPayment($data, $customerCode, $userId)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -109,5 +157,307 @@ class PaymentService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get use days from current date to next payment base date
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return int
+     */
+    public function getUseDaysByNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $timezone = $Team->getTimezone();
+        $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
+        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        // Calc use days
+        $diffDays = AppUtil::diffDays($localCurrentDate, $nextBaseDate);
+        return $diffDays;
+    }
+
+    /**
+     * Get next payment base date
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return string
+     */
+    public function getNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): string
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $timezone = $Team->getTimezone();
+        $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
+        list($y, $m, $d) = explode('-', $localCurrentDate);
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
+
+        // Check if next base date is this month or next month.
+        $isNextMonth = false;
+        if ($d - $paymentBaseDay >= 0) {
+            $isNextMonth = true;
+        } else {
+            if (checkdate($m, $paymentBaseDay, $y) === false) {
+                $lastDay = date('t', strtotime($localCurrentDate));
+                if ($lastDay - $d <= 0) {
+                    $isNextMonth = true;
+                }
+            }
+        }
+
+        // Move ym
+        if ($isNextMonth) {
+            // Move next year if December
+            list($y, $m) = AppUtil::moveMonthYm($y, $m);
+        }
+
+        // Get next payment base date
+        if (checkdate($m, $paymentBaseDay, $y) === false) {
+            // If not exist payment base day, set last day of the month.
+            $lastDay = date('t', strtotime(AppUtil::dateFromYMD($y, $m, 1)));
+            $nextBaseDate = AppUtil::dateFromYMD($y, $m, $lastDay);
+        } else {
+            $nextBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
+        }
+
+        return $nextBaseDate;
+    }
+
+    /**
+     * Get total days from previous payment base date to next payment base date
+     * 現在月度の総利用日数
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return int
+     */
+    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        list($y, $m, $d) = explode('-', $nextBaseDate);
+        list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
+
+        if (checkdate($m, $paymentBaseDay, $y) === false) {
+            AppUtil::dateFromYMD($y, $m, 1);
+            $prevBaseDate = AppUtil::dateMonthLast(AppUtil::dateFromYMD($y, $m, 1));
+        } else {
+            $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
+        }
+
+        $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
+        return $res;
+    }
+
+    /**
+     * Calc total charge by users count when invite users.
+     *
+     * @param int  $userCnt
+     * @param int  $currentTimeStamp
+     * @param null $useDaysByNext
+     * @param null $allUseDays
+     *
+     * @return float
+     */
+    public function calcTotalChargeByAddUsers
+    (
+        int $userCnt,
+        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        $useDaysByNext = null,
+        $allUseDays = null
+    ): float {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($currentTimeStamp);
+        $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($currentTimeStamp);
+
+        $paymentSetting = $this->get($Team->current_team_id);
+        $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
+
+        // Ex. 3people × ¥1,980 × 20 days / 1month
+        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
+            $totalCharge = AppUtil::floor($totalCharge, 0);
+        } else {
+            $totalCharge = AppUtil::floor($totalCharge, 2);
+        }
+        return $totalCharge;
+    }
+
+    /**
+     * Format total charge by users count when invite users.
+     *
+     * @param int  $userCnt
+     * @param int  $currentTimeStamp
+     * @param null $useDaysByNext
+     * @param null $allUseDays
+     *
+     * @return string
+     */
+    public function formatTotalChargeByAddUsers(
+        int $userCnt,
+        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        $useDaysByNext = null,
+        $allUseDays = null
+    ): string {
+        $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
+        // Format ex 1980 → ¥1,980
+        $res = $this->formatCharge($totalCharge);
+        return $res;
+    }
+
+    /**
+     * Format charge based payment setting
+     * - Number format
+     * - Currency format
+     *
+     * @param int $charge
+     *
+     * @return string
+     */
+    public function formatCharge(int $charge): string
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $paymentSetting = $this->get($Team->current_team_id);
+        // Format ex 1980 → ¥1,980
+        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($charge);
+        return $res;
+    }
+
+    /*
+     * Apply Credit card charge for a specified team.
+     *
+     * @param int         $teamId
+     * @param int         $chargeType
+     * @param int         $usersCount
+     * @param string      $description
+     *
+     * @return array
+     */
+    public function applyCreditCardCharge(int $teamId, int $chargeType, int $usersCount, string $description)
+    {
+        $result = [
+            'error'   => false,
+            'errorCode' => 200,
+            'message' => null
+        ];
+
+        // Validate payment type
+        if (!($chargeType == PaymentSetting::CHARGE_TYPE_MONTHLY_FEE ||
+            $chargeType == PaymentSetting::CHARGE_TYPE_USER_INCREMENT_FEE ||
+            $chargeType == PaymentSetting::CHARGE_TYPE_USER_ACTIVATION_FEE)) {
+
+            $result['error'] = true;
+            $result['field'] = 'chargeType';
+            $result['message'] = __('Parameter is invalid.');
+            $result['errorCode'] = 400;
+            return $result;
+        }
+
+        // Validate user count
+        if ($usersCount <= 0) {
+            $result['error'] = true;
+            $result['field'] = 'usersCount';
+            $result['message'] = __('Parameter is invalid.');
+            $result['errorCode'] = 400;
+            return $result;
+        }
+
+        // Get Payment settings
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $paymentSettings = $Team->PaymentSetting->getByTeamId($teamId);
+        if (!$paymentSettings) {
+            $result['error'] = true;
+            $result['message'] = __('Payment settings does not exists.');
+            $result['errorCode'] = 500;
+
+            return $result;
+        }
+
+        // Get credit card settings
+        if (empty(Hash::get($paymentSettings, 'CreditCard')) || !isset($paymentSettings['CreditCard'][0])) {
+            $result['error'] = true;
+            $result['message'] = __('Credit card settings does not exist.');
+            $result['errorCode'] = 500;
+
+            return $result;
+        }
+        $creditCard = $paymentSettings['CreditCard'][0];
+        $customerId =  Hash::get($creditCard, 'customer_code');
+        $amountPerUser = Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
+        $currency = Hash::get($paymentSettings, 'PaymentSetting.currency');
+        $currencyName =  $currency== PaymentSetting::CURRENCY_CODE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+
+        // Apply the user charge on Stripe
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
+        $totalAmount = $amountPerUser * $usersCount;
+        $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $totalAmount, $description);
+
+        // Save charge history
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+
+        if ($charge['error'] === true) {
+            $resultType = ChargeHistory::TRANSACTION_RESULT_ERROR;
+            $result['success'] = false;
+        }  else if ($charge['success'] === true) {
+            $resultType = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
+            $result['success'] = true;
+        }  else {
+            $resultType = ChargeHistory::TRANSACTION_RESULT_FAIL;
+            $result['success'] = false;
+        }
+        $result['resultType'] = $resultType;
+
+        $historyData = [
+            'team_id' => $teamId,
+            'payment_type' => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type' => $chargeType,
+            'amount_per_user' => $amountPerUser,
+            'total_amount' => $totalAmount,
+            'charge_users' => $usersCount,
+            'currency' => $currency,
+            'charge_datetime' => time(),
+            'result_type' => $resultType,
+            'max_charge_users' => $usersCount
+        ];
+
+        try {
+            // Create Charge history
+            $ChargeHistory->begin();
+
+            if (!$ChargeHistory->save($historyData)) {
+                $ChargeHistory->rollback();
+                throw new Exception(sprintf("Failed create charge history. data:%s", var_export($historyData, true)));
+            }
+
+            if (isset($charge['paymentData'])) {
+                $result['paymentData'] = $charge['paymentData'];
+            }
+            $ChargeHistory->commit();
+        } catch (Exception $e) {
+            $ChargeHistory->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+            $result['errorCode'] = 500;
+
+            if (property_exists($e, "stripeCode")) {
+                $result["errorCode"] = $e->stripeCode;
+            }
+        }
+        return $result;
     }
 }

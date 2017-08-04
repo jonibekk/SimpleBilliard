@@ -23,15 +23,15 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 <!--suppress ALL -->
 <html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
-<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?>">
+<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?> read-only">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
 <?php if ($this->Session->read('Auth.User.id') && $with_header_menu) {
-    echo $this->element('header/logged_in');
+    echo $this->element('Header/logged_in');
 } else {
-    echo $this->element('header/not_logged_in');
+    echo $this->element('Header/not_logged_in');
 }
 ?>
 
@@ -40,7 +40,7 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 // TODO:Uncomment this after release native app
 //if (!$is_mb_app && $this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
 if ($this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-    echo $this->element('header/sp_feeds_alt');
+    echo $this->element('Header/sp_feeds_alt');
 }
 ?>
 

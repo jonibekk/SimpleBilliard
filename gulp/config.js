@@ -149,7 +149,8 @@ const config = {
     'goal_approval',
     'goal_search',
     'kr_column',
-    'message'
+    'message',
+    'invite'
   ],
   css_vendor: {
     src: [
@@ -182,12 +183,12 @@ const config = {
   less: {
     src: {
       common: assets_dir + '/less/common.less',
-      pages: assets_dir + '/less/pages/*.less',
+      pages: assets_dir + '/less/pages/**/*.less',
     },
     output: {
       path: compiled_assets_dir + '/css/'
     },
-    watch_files: [assets_dir + '/less/**/*.less']
+    watch_files: [assets_dir + '/less/**/**/*.less']
   }
 }
 

@@ -124,6 +124,7 @@ class AppUtilTest extends GoalousTestCase
             240
         );
     }
+
     public function test_getEndDate()
     {
         $res = AppUtil::getEndDate('2016-04-01', 6);
@@ -134,5 +135,117 @@ class AppUtilTest extends GoalousTestCase
 
         $res = AppUtil::getEndDate('2016-04-01', 12);
         $this->assertEquals($res, '2017-03-31');
+    }
+
+    public function test_convStrToArr()
+    {
+        /* Empty */
+        $emailsStr = "";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, []);
+
+        /* Not Empty */
+        $emailsStr = "a";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a']);
+
+        /* Only line feed */
+        $emailsStr = "\r";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, []);
+
+        $emailsStr = "\n";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, []);
+
+        $emailsStr = "\r\n";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, []);
+
+        /* Multi lines */
+        $emailsStr = "a\r\nb";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a', 'b']);
+
+        $emailsStr = "\r\na\r\nb\nc\rd\r";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a', 'b', 'c', 'd']);
+
+        /* Trim */
+        $emailsStr = "a ";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a']);
+
+        $emailsStr = " a";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a']);
+
+        $emailsStr = "   　a 　";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a']);
+
+        $emailsStr = "  a \n bbbbbb \n ccc cc \n ddd　d";
+        $res = AppUtil::convStrToArr($emailsStr);
+        $this->assertEquals($res, ['a', 'bbbbbb', 'ccc cc', 'ddd d']);
+
+        /* Ignore empty lines */
+        $emailsStr = "\n\n\na\r\n\r\nb\n ";
+        $res = AppUtil::convStrToArr($emailsStr, true);
+        $this->assertEquals($res, [0 => 'a', 2 => 'b']);
+    }
+
+    public function test_moveMonthYm()
+    {
+        /* Move +1 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 2);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 11);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12);
+        $this->assertEquals($y, 2017);
+        $this->assertEquals($m, 1);
+
+        /* Move >12 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, 12);
+        $this->assertEquals($y, 2017);
+        $this->assertEquals($m, 1);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, 12);
+        $this->assertEquals($y, 2017);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, 13);
+        $this->assertEquals($y, 2018);
+        $this->assertEquals($m, 1);
+
+        /* Move -1 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 2, -1);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 1);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, -1);
+        $this->assertEquals($y, 2015);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, -1);
+        $this->assertEquals($y, 2016);
+        $this->assertEquals($m, 11);
+
+        /* Move <-12 month  */
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, -12);
+        $this->assertEquals($y, 2015);
+        $this->assertEquals($m, 1);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 12, -12);
+        $this->assertEquals($y, 2015);
+        $this->assertEquals($m, 12);
+
+        list($y, $m) = AppUtil::moveMonthYm(2016, 1, -13);
+        $this->assertEquals($y, 2014);
+        $this->assertEquals($m, 12);
     }
 }

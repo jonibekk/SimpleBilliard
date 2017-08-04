@@ -39,4 +39,13 @@ class CreditCard extends AppModel
             ],
         ],
     ];
+
+    /**
+     * belongsTo associations
+     *
+     * @var array
+     */
+    public $belongsTo = [
+        'PaymentSetting'
+    ];
 }

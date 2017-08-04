@@ -4,13 +4,13 @@ App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
 
 /**
- * Class PaymentController
+ * Class PaymentsController
  */
-class PaymentController extends ApiController
+class PaymentsController extends ApiController
 {
     /**
      * Create a new payment register
-     * Endpoint: /api/v1/payment/credit_card
+     * Endpoint: /api/v1/payments/credit_card
      * Parameters:
      * token            Stripe Credit Card Token
      * amount_per_user  Amount Per user
@@ -66,7 +66,7 @@ class PaymentController extends ApiController
         // because Stripe token can only be used once.
         // On this case its better to have a pre check of token by the frontend.
         $currency = Hash::get($requestData, 'currency');
-        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_JPY) {
+        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_CODE_JPY) {
             // Delete customer from Stripe
             $CreditCardService->deleteCustomer($customerId);
 
@@ -76,12 +76,31 @@ class PaymentController extends ApiController
 
         // Register Payment on database
         $userId = $this->Auth->user('id');
-        $res = ($PaymentService->createCreditCardPayment($requestData, $customerId, $userId));
+        $res = ($PaymentService->registerCreditCardPayment($requestData, $customerId, $userId));
         if (!$res) {
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
 
-        // New Payment registered with sucess
+        // Apply charge to customer
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
+
+        // Apply charge
+        $chargeResult = $PaymentService->applyCreditCardCharge($teamId, PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
+            $membersCount, "Payment for team: $teamId");
+
+        // Error on charging the customer
+        if ($chargeResult['error'] === true) {
+            return $this->_getResponse($chargeResult['errorCode'], null, null, $chargeResult['message']);
+        }
+
+        // Charging transaction succeed but payment fail. It can be on cause of fraud or credit transfer.
+        if ($chargeResult['success'] === false) {
+            return $this->_getResponseBadFail($chargeResult['status']);
+        }
+
+        // New Payment registered with success
         return $this->_getResponseSuccess();
     }
 }

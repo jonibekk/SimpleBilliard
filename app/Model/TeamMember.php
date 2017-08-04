@@ -17,6 +17,13 @@ class TeamMember extends AppModel
     const ADMIN_USER_FLAG = 1;
     const ACTIVE_USER_FLAG = 1;
 
+    /**
+     * User status valid codes
+     */
+    const USER_STATUS_INVITED = 0;
+    const USER_STATUS_ACTIVE = 1;
+    const USER_STATUS_INACTIVE = 2;
+
     public $myTeams = [];
     /**
      * Validation rules
@@ -85,7 +92,6 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
-
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -360,6 +366,26 @@ class TeamMember extends AppModel
         }
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    /**
+     * Count charge target users
+     *
+     * @return int
+     */
+    public function countChargeTargetUsers(): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'status'  => [
+                    self::USER_STATUS_INVITED,
+                    self::USER_STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
     }
 
     public function setAdminUserFlag($member_id, $flag)
@@ -1937,6 +1963,72 @@ class TeamMember extends AppModel
             ],
         ];
 
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * data migration for shell
+     * - active user -> status active
+     *
+     * @return void
+     */
+    function updateActiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::USER_STATUS_ACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => true
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * data migration for shell
+     * - inactive user -> status inactive
+     *
+     * @return void
+     */
+    function updateInactiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::USER_STATUS_INACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => false
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * Get list of team members by its status.
+     *
+     *      USER_STATUS_INVITED = 0;
+     *      USER_STATUS_ACTIVE = 1;
+     *      USER_STATUS_INACTIVE = 2;
+     *
+     * @param      $status
+     * @param null $teamId
+     *
+     * @return array|null
+     */
+    public function getTeamMemberListByStatus($status, $teamId = null)
+    {
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
+        }
+
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.status' => $status,
+            ],
+        ];
         $res = $this->find('list', $options);
         return $res;
     }

@@ -1,35 +1,45 @@
 <?php
 # /app/Controller/PaymentsController.php
-App::uses('AppController', 'Controller');
-
 
 class PaymentsController extends AppController {
-    public function apply() {
-            $this->layout = LAYOUT_ONE_COLUMN;
-            $this->render('/Payment/choose_payment_type');
+    public function index(){
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('index');
     }
 
-    public function enterCompanyInfo() {
-        $this->set('gLang',Configure::read('Config.language'));
+    public function apply() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('choose_payment_type');
+    }
+
+    public function enter_cc_info() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('credit_card_entry');
+    }
+
+     public function enter_company_info() {
+        $this->set('teamLang',Configure::read('Config.language'));
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('/Payment/company_info');
     }
 
-    public function enterCCInfo() {
+    public function thank_you() {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('/Payment/credit_card_entry');
+        $this->render('thank_you');
     }
 
-    public function thankyou() {
+    public function history() {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('/Payment/thank_you');
+        $this->render('payment_history');
     }
 
-    public function postCompanyInfo() {
-        $this->enterCCInfo();
+    public function pricing() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('pricing');
     }
 
-    public function postCCInfo() {
-        $this->thankyou();
+    public function cannot_use_service()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
     }
 }

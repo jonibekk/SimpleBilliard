@@ -623,4 +623,25 @@ class CircleMember extends AppModel
 
         return $is_joined_circle;
     }
+
+    /**
+     * already joined or not
+     *
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function isJoined(int $circleId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'team_id'   => $this->current_team_id,
+                'user_id'   => $userId,
+                'circle_id' => $circleId
+            ],
+        ];
+
+        return (bool)$this->find('first', $options);
+    }
 }

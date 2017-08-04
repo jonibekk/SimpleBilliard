@@ -1221,7 +1221,7 @@ class TeamMemberTest extends GoalousTestCase
             'team_id'           => 1,
             'evaluatee_user_id' => 2,
             'evaluator_user_id' => 1,
-            'term_id'  => 1,
+            'term_id'           => 1,
             'comment'           => null,
             'evaluate_score_id' => null,
             'evaluate_type'     => 0,
@@ -2040,7 +2040,13 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertTrue($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: is not admin
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => false, 'active_flg' => true]);
+        $this->TeamMember->save([
+            'id'         => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'admin_flg'  => false,
+            'active_flg' => true
+        ]);
         $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
@@ -2050,14 +2056,69 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: not active, User: active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => false]);
+        $this->TeamMember->save([
+            'id'         => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'admin_flg'  => true,
+            'active_flg' => false
+        ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: not active, User: not active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => false]);
+        $this->TeamMember->save([
+            'id'         => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'admin_flg'  => true,
+            'active_flg' => false
+        ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+    }
+
+    function test_updateActiveFlgToStatus_success()
+    {
+        $this->TeamMember->save(['active_flg' => true], false);
+        $teamMemberId = $this->TeamMember->getLastInsertId();
+        $this->TeamMember->updateActiveFlgToStatus();
+        $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
+        $this->assertEqual($newStatus, TeamMember::USER_STATUS_ACTIVE);
+    }
+
+    function test_updateInActiveFlgToStatus_success()
+    {
+        $this->TeamMember->save(['active_flg' => false], false);
+        $teamMemberId = $this->TeamMember->getLastInsertId();
+        $this->TeamMember->updateInactiveFlgToStatus();
+        $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
+        $this->assertEqual($newStatus, TeamMember::USER_STATUS_INACTIVE);
+    }
+
+    function test_findAdminList()
+    {
+        // It's expected decrement from list when changed to inactive team member.
+        $retBefore = $this->TeamMember->findAdminList(1);
+        $userId = current($retBefore);
+        $this->TeamMember->updateAll(['TeamMember.active_flg' => false],
+            ['TeamMember.team_id' => 1, 'TeamMember.user_id' => $userId]);
+        $afterOneInactivated = $this->TeamMember->findAdminList(1);
+        $this->assertEquals(count($afterOneInactivated), count($retBefore) - 1);
+
+        // It's expected decrement from list when changed to not admin team member.
+        $userId = current($afterOneInactivated);
+        $this->TeamMember->updateAll(['TeamMember.admin_flg' => false],
+            ['TeamMember.team_id' => 1, 'TeamMember.user_id' => $userId]);
+        $afterOneToNormalMember = $this->TeamMember->findAdminList(1);
+        $this->assertEquals(count($afterOneToNormalMember), count($afterOneInactivated) - 1);
+
+        // It's expected decrement from list when changed to inactive user.
+        $userId = current($afterOneToNormalMember);
+        $this->TeamMember->User->updateAll(['User.active_flg' => false],
+            ['User.id' => $userId]);
+        $afterOneToInactive = $this->TeamMember->findAdminList(1);
+        $this->assertEquals(count($afterOneToInactive), count($afterOneToNormalMember) - 1);
     }
 
     function _saveEvaluations()
@@ -2067,7 +2128,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 2,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'あいうえお',
                 'evaluate_score_id' => 1,
@@ -2077,7 +2138,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'かきくけこ',
                 'evaluate_score_id' => 1,
@@ -2088,7 +2149,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'さしすせそ',
                 'evaluate_score_id' => 1,
@@ -2099,7 +2160,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'たちつてと',
                 'evaluate_score_id' => 1,
@@ -2110,7 +2171,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => 2,
+                'term_id'           => 2,
                 'evaluate_type'     => 0,
                 'comment'           => 'なにぬねの',
                 'evaluate_score_id' => 1,
@@ -2121,7 +2182,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => 2,
+                'term_id'           => 2,
                 'evaluate_type'     => 0,
                 'comment'           => 'はひふへほ',
                 'evaluate_score_id' => 1,
@@ -2132,7 +2193,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => 2,
+                'term_id'           => 2,
                 'evaluate_type'     => 0,
                 'comment'           => 'まみむめも',
                 'evaluate_score_id' => 1,

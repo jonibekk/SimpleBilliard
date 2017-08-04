@@ -13,6 +13,7 @@ App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
+App::import('Service', 'TeamService');
 
 /**
  * Application Controller
@@ -21,13 +22,13 @@ App::import('Service', 'GoalService');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent      $Lang
- * @property CookieComponent    $Cookie
- * @property CsvComponent       $Csv
- * @property PnotifyComponent   $Pnotify
- * @property MixpanelComponent  $Mixpanel
- * @property OgpComponent       $Ogp
- * @property BenchmarkComponent $Benchmark
+ * @property LangComponent         $Lang
+ * @property CookieComponent       $Cookie
+ * @property CsvComponent          $Csv
+ * @property NotificationComponent $Notification
+ * @property MixpanelComponent     $Mixpanel
+ * @property OgpComponent          $Ogp
+ * @property BenchmarkComponent    $Benchmark
  */
 class AppController extends BaseController
 {
@@ -158,12 +159,48 @@ class AppController extends BaseController
             if ($notify_id) {
                 $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
-            //ajaxの時以外で実行する
+
+            // prohibit ajax request in read only term
+            if ($this->request->is('ajax') && $this->isProhibitedRequestByReadOnly()) {
+                $this->stopInvoke = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    'msg'   => __("You may only read your team’s pages.")
+                ]);
+            }
+            // prohibit ajax request in status of cannot use service
+            if ($this->request->is('ajax') && $this->isProhibitedRequestByCannotUseService()) {
+                $this->stopInvoke = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    'msg'   => __("You cannot use service on the team.")
+                ]);
+            }
+
+            // by not ajax request
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
                     $this->_setTerm();
                 }
                 $this->_setMyTeam();
+
+                // when prohibit request in read only
+                if ($this->isProhibitedRequestByReadOnly()) {
+                    $this->Notification->outError(__("You may only read your team’s pages."));
+                    $this->redirect($this->referer());
+                }
+                // when prohibit request in status of cannot use service
+                if ($this->isProhibitedRequestByCannotUseService()) {
+                    // if team admin, will be redirected to payments setting page. Otherwise, it will be redirected to the page of notification that the service can not be used.
+                    if ($this->Team->TeamMember->isAdmin($this->Auth->user('id'))) {
+                        $this->redirect(['controller' => 'payments', 'action' => 'index']);
+                    } else {
+                        $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
+                    }
+                }
+
+                // Pass variable about team service use
+                $this->setValsForReadOnlyAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -228,6 +265,22 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+    }
+
+    /**
+     * This is wrapper parent invokeAction
+     * - it can make execution stop until before render
+     *
+     * @param CakeRequest $request
+     *
+     * @return void
+     */
+    public function invokeAction(CakeRequest $request)
+    {
+        if ($this->stopInvoke) {
+            return false;
+        }
+        return parent::invokeAction($request);
     }
 
     public function _setBrowserToSession()
@@ -792,6 +845,16 @@ class AppController extends BaseController
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         return $status;
+    }
+
+    function setValsForReadOnlyAlert()
+    {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
+        $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
+        $this->set('readOnlyEndDate', $TeamService->getReadOnlyEndDate());
     }
 
     public function _setDefaultTeam($team_id)
