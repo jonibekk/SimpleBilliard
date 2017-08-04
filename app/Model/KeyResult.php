@@ -912,14 +912,17 @@ class KeyResult extends AppModel
 
         $now = time();
         $weekAgoTimestamp = AppUtil::getTimestampByTimezone('-1 week midnight', $currentTerm['timezone']);
-
+        $team = $this->Team->getCurrentTeam();
+        $timezone = (int)Hash::get($team,'Team.timezone');
+        $today = AppUtil::todayDateYmdLocal($timezone);
         $options = [
             'conditions' => [
                 'GoalMember.user_id'    => $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
                 'KeyResult.completed'   => null,
-                'GoalMember.del_flg'    => false
+                'GoalMember.del_flg'    => false,
+                'Goal.end_date >=' => $today
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
