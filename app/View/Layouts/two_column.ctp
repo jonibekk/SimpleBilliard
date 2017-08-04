@@ -21,9 +21,9 @@ if (!isset($with_header_menu)) {
 } ?>
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 <?php if ($this->Session->read('Auth.User.id') && $with_header_menu) {
-    echo $this->element('header_logged_in');
+    echo $this->element('Header/logged_in');
 } else {
-    echo $this->element('header_not_logged_in');
+    echo $this->element('Header/not_logged_in');
 }
 ?>
 <div id="container" class="container">
