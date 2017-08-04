@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.1\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -90,6 +90,9 @@ msgstr "スマホアプリ・ブラウザで利用可能です。"
 
 msgid "You may only read your team’s pages."
 msgstr "あなたのチームはページの読み取りしか許可されていません。"
+
+msgid "You cannot use service on the team."
+msgstr "このチームは現在、利用できません。"
 
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
@@ -1796,11 +1799,15 @@ msgstr "%sがトピック名を設定しました。: %s"
 msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
 
+#, fuzzy
+#| msgid "Page does not exist."
 msgid "Payment settings does not exists."
-msgstr "ページが存在しません。"
+msgstr "決済設定が見つかりません。"
 
-msgid "Credit card settings does not exists."
-msgstr "このサークルは存在しません。"
+#, fuzzy
+#| msgid "This circle does not exist."
+msgid "Credit card settings does not exist."
+msgstr "クレジットカード設定が見つかりません。"
 
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
@@ -3241,7 +3248,7 @@ msgid ""
 "Following this date, you will no longer be able to use Goalous. If you want "
 "to resume normal usage, please <a href=\"/payments/apply\">subscribe</a> to "
 "our payment plan."
-msgstr "このチームは、<strong>%sまで</strong>読み取り専用期間です。それ以降はご利用いただけません。通常のご利用を再開したい場合は、<a href="/payments/apply">こちら</a>から有料プランを契約してください。"
+msgstr "このチームは、<strong>%sまで</strong>読み取り専用期間です。それ以降はご利用いただけません。通常のご利用を再開したい場合は、<a href=\"/payments/apply\">こちら</a>から有料プランを契約してください。"
 
 msgid ""
 "Your team will remain in a read-only state until <strong>%s</strong>. "
@@ -4862,11 +4869,18 @@ msgstr "利用規約はこちら。"
 msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
+#, fuzzy
+#| msgid "You cannot access the topic"
+msgid "You cannot use the team"
+msgstr "このチームは現在利用できません。"
+
+#, fuzzy
+#| msgid "Get documentation"
 msgid "Select Country Location"
-msgstr "資料がほしい"
+msgstr "国を選択"
 
 msgid "Choose Country"
-msgstr ""
+msgstr "国を選択"
 
 msgid "Select Payment Method"
 msgstr "画像を選択"
@@ -4891,94 +4905,114 @@ msgstr ""
 msgid "Coming Soon"
 msgstr ""
 
+#, fuzzy
+#| msgid "Enter confirmation code"
 msgid "Enter Company Information"
-msgstr "確認コードを入力する"
+msgstr "会社情報を入力してください"
 
+#, fuzzy
+#| msgid "Company"
 msgid "Company Name"
-msgstr "■運営会社"
+msgstr "会社名"
 
+#, fuzzy
+#| msgid "Email Address"
 msgid "Company Address"
-msgstr "メールアドレス"
+msgstr "会社住所"
 
 msgid "Street"
-msgstr ""
+msgstr "建物名など"
 
 msgid "1234 Street Name"
-msgstr ""
+msgstr "20番8号 CSタワー7階"
 
 msgid "City"
-msgstr ""
+msgstr "市区町村"
 
 msgid "Los Angeles"
-msgstr ""
+msgstr "台東区浅草橋5丁目"
 
 msgid "State/Province/Region"
-msgstr ""
+msgstr "都道府県"
 
 msgid "California"
-msgstr ""
+msgstr "東京都"
 
 msgid "Postal Code"
-msgstr ""
+msgstr "郵便番号"
 
 msgid "12345"
-msgstr ""
+msgstr "1100053"
 
+#, fuzzy
+#| msgid " count"
 msgid "Country"
-msgstr "件"
+msgstr "国"
 
 msgid "USA"
-msgstr ""
+msgstr "日本"
 
+#, fuzzy
+#| msgid "Contact"
 msgid "Company Contact"
-msgstr "■お問い合わせ"
+msgstr "会社連絡先"
 
 msgid "John"
-msgstr ""
+msgstr "太郎"
 
 msgid "Smith"
-msgstr ""
+msgstr "佐藤"
 
+#, fuzzy
+#| msgid "Contact"
 msgid "Contact Email"
-msgstr "■お問い合わせ"
+msgstr "連絡先メール"
 
 msgid "name@company.com"
-msgstr ""
+msgstr "name@company.co.jp"
 
 msgid "Company Telephone"
-msgstr ""
+msgstr "会社連絡先電話番号"
 
+#, fuzzy
+#| msgid "Get more information"
 msgid "Enter Payment Information"
-msgstr "詳しく知りたい"
+msgstr "決済情報を入力してください"
 
 msgid "Name on Card"
-msgstr ""
+msgstr "名義人名（カード記載と同じ）"
 
 msgid "Price per user"
-msgstr ""
+msgstr "料金（1ユーザー当たり）"
 
+#, fuzzy
+#| msgid "Number of goals"
 msgid "Number of users"
-msgstr "ゴール数"
+msgstr "ユーザー数"
 
+#, fuzzy
+#| msgid "Total"
 msgid "Sub Total"
-msgstr "トータル"
+msgstr "小計"
 
 msgid "Tax"
-msgstr ""
+msgstr "税金"
 
 msgid "Total per month"
-msgstr ""
+msgstr "合計（月あたり）"
 
 msgid "Thank You"
-msgstr ""
+msgstr "ありがとうございます。"
 
 msgid ""
 "Your transaction was successful. You and your team now have full access to "
 "Goalous."
-msgstr ""
+msgstr "決済に成功しました。Goalousのご利用を開始できます。"
 
+#, fuzzy
+#| msgid "Achieve goal"
 msgid "Go achieve your goal!"
-msgstr "ゴールを達成"
+msgstr "いざ、ゴール達成へ！"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"

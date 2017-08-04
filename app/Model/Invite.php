@@ -78,6 +78,39 @@ class Invite extends AppModel
     }
 
     /**
+     * Invite bulk
+     *
+     * @param int    $emails
+     * @param int    $teamId
+     * @param int    $fromUserId
+     * @param string $msg
+     *
+     * @return mixed
+     */
+    function saveBulk(array $emails, int $teamId, int $fromUserId, string $msg = "")
+    {
+        // Get emails of registered users
+        $registeredEmails = Hash::combine($this->ToUser->Email->findAllByEmail($emails), '{n}.Email.email',
+            '{n}.Email.user_id');
+
+        // Get invitation token expire
+        $tokenExpire = $this->getTokenExpire(TOKEN_EXPIRE_SEC_INVITE);
+
+        $insertData = [];
+        foreach ($emails as $email) {
+            $insertData[] = [
+                'from_user_id' => $fromUserId,
+                'to_user_id'   => Hash::get($registeredEmails, $email),
+                'team_id'      => $teamId,
+                'email'        => $email,
+                'email_token'  => $tokenExpire,
+                'message'      => $msg,
+            ];
+        }
+        return $this->bulkInsert($insertData);
+    }
+
+    /**
      * トークンのチェック
      *
      * @param $token

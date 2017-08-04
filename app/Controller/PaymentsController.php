@@ -36,4 +36,9 @@ class PaymentsController extends AppController {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('pricing');
     }
+
+    public function cannot_use_service()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+    }
 }

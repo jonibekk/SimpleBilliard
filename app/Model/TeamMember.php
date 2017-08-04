@@ -92,7 +92,6 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
-
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -367,6 +366,26 @@ class TeamMember extends AppModel
         }
         $res = $this->find('list', $options);
         return $res;
+    }
+
+    /**
+     * Count charge target users
+     *
+     * @return int
+     */
+    public function countChargeTargetUsers(): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'status'  => [
+                    self::USER_STATUS_INVITED,
+                    self::USER_STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
     }
 
     public function setAdminUserFlag($member_id, $flag)
