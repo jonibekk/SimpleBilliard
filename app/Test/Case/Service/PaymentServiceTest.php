@@ -19,6 +19,7 @@ class PaymentServiceTest extends GoalousTestCase
         'app.payment_setting',
         'app.payment_setting_change_log',
         'app.credit_card',
+        'app.charge_history',
         'app.team',
         'app.team_member',
         'app.user'
@@ -36,6 +37,31 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentService = ClassRegistry::init('PaymentService');
         $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
         $this->Team = ClassRegistry::init('Team');
+    }
+
+    /**
+     * Create a credit card payment for test
+     */
+    private function createCreditCardPayment()
+    {
+        $payment = [
+            'token' => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
+            'team_id' => 1,
+            'type' => 1,
+            'amount_per_user' => 1800,
+            'payer_name' => 'Goalous Taro',
+            'company_name' => 'ISAO',
+            'company_address' => 'Here Japan',
+            'company_tel' => '123456789',
+            'email' => 'test@goalous.com',
+            'payment_base_day' => 15,
+            'currency' => 1
+        ];
+        $customerCode = 'cus_B59aNmiTO3IZjg';
+
+        $userID = $this->createActiveUser(1);
+        $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
+        //$this->assertTrue($res);
     }
 
     public function test_validateCreate_validate()
@@ -276,7 +302,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertFalse($res === true);
     }
 
-    public function test_createCreditCardPayment()
+    public function test_registerCreditCardPayment()
     {
         $payment = [
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
@@ -294,11 +320,11 @@ class PaymentServiceTest extends GoalousTestCase
         $customerCode = 'cus_B3ygr9hxqg5evH';
 
         $userID = $this->createActiveUser(1);
-        $res = $this->PaymentService->createCreditCardPayment($payment, $customerCode, $userID);
+        $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
         $this->assertTrue($res);
     }
 
-    public function test_createCreditCardPayment_noCustomerCode()
+    public function test_registerCreditCardPayment_noCustomerCode()
     {
         $payment = [
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
@@ -316,7 +342,7 @@ class PaymentServiceTest extends GoalousTestCase
         $customerCode = '';
 
         $userID = $this->createActiveUser(1);
-        $res = $this->PaymentService->createCreditCardPayment($payment, $customerCode, $userID);
+        $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
         $this->assertFalse($res);
     }
 
@@ -607,8 +633,8 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save([
             'team_id'          => $teamId,
             'payment_base_day' => 1,
-            'amount_per_user' => 16,
-            'currency' => PaymentSetting::CURRENCY_USD
+            'amount_per_user'  => 16,
+            'currency'         => PaymentSetting::CURRENCY_USD
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
@@ -644,7 +670,6 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-
         $currentTimestamp = strtotime("2017-04-29");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
@@ -654,6 +679,20 @@ class PaymentServiceTest extends GoalousTestCase
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
         $this->assertEquals($res, 32);
+    }
+    
+    public function test_applyCreditCardCharge()
+    {
+        $this->createCreditCardPayment();
+
+        $res = $this->PaymentService->applyCreditCardCharge(1, PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
+            30, "Payment TEST");
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("error", $res);
+        $this->assertArrayHasKey("success", $res);
+        $this->assertFalse($res["error"]);
+        $this->assertTrue($res["success"]);
     }
 
     /**

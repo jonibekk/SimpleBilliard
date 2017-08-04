@@ -155,7 +155,7 @@ class InvitationService extends AppService
                 $insertTeamMembers[] = [
                     'user_id' => $userId,
                     'team_id' => $teamId,
-                    'status'  => TeamMember::STATUS_INVITED
+                    'status'  => TeamMember::USER_STATUS_INVITED
                 ];
             }
             if (!$TeamMember->bulkInsert($insertTeamMembers)) {
