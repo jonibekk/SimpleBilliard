@@ -25,6 +25,9 @@ const config = {
         ],
         evaluation: [
             assets_dir + '/js/view/evaluations/*.js',
+        ],
+        payments: [
+            assets_dir + '/js/view/payments/*.js',
         ]
     },
     src: [
@@ -40,7 +43,6 @@ const config = {
       assets_dir + '/js/lib/posts.js',
       assets_dir + '/js/lib/comments.js',
       assets_dir + '/js/lib/circle.js',
-      assets_dir + '/js/lib/payment.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {
@@ -50,6 +52,7 @@ const config = {
       team_script_name: 'goalous_team',
       user_script_name: 'goalous_user',
       evaluation_script_name: 'goalous_evaluation',
+      payments_script_name: 'goalous_payment',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
