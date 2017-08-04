@@ -388,7 +388,7 @@ class KeyResultService extends AppService
         if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
             // 未完了 && 進捗現在値が目標値に達してたら完了とする
             $updateKr['completed'] = time();
-        } elseif (!empty($kr['completed']) && $updateKr['target_value'] > $updateKr['current_value']) {
+        } elseif (!empty($kr['completed']) && $updateKr['target_value'] != $updateKr['current_value']) {
             // 完了 && 進捗現在値が目標値に未達なら未完了とする
             $updateKr['completed'] = null;
         }
