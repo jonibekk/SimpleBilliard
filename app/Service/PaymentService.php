@@ -3,6 +3,7 @@ App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('AppUtil', 'Util');
 
@@ -342,12 +343,12 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function applyCreditCardCharge(int $teamId, int $chargeType, int $usersCount, string $description)
+    public function applyCreditCardCharge(int $teamId, int $chargeType, int $usersCount, string $description = "")
     {
         $result = [
-            'error'   => false,
+            'error'     => false,
             'errorCode' => 200,
-            'message' => null
+            'message'   => null
         ];
 
         // Validate payment type
@@ -392,10 +393,10 @@ class PaymentService extends AppService
             return $result;
         }
         $creditCard = $paymentSettings['CreditCard'][0];
-        $customerId =  Hash::get($creditCard, 'customer_code');
+        $customerId = Hash::get($creditCard, 'customer_code');
         $amountPerUser = Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
         $currency = Hash::get($paymentSettings, 'PaymentSetting.currency');
-        $currencyName =  $currency== PaymentSetting::CURRENCY_CODE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+        $currencyName = $currency == PaymentSetting::CURRENCY_CODE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
 
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
@@ -410,25 +411,27 @@ class PaymentService extends AppService
         if ($charge['error'] === true) {
             $resultType = ChargeHistory::TRANSACTION_RESULT_ERROR;
             $result['success'] = false;
-        }  else if ($charge['success'] === true) {
-            $resultType = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
-            $result['success'] = true;
-        }  else {
-            $resultType = ChargeHistory::TRANSACTION_RESULT_FAIL;
-            $result['success'] = false;
+        } else {
+            if ($charge['success'] === true) {
+                $resultType = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
+                $result['success'] = true;
+            } else {
+                $resultType = ChargeHistory::TRANSACTION_RESULT_FAIL;
+                $result['success'] = false;
+            }
         }
         $result['resultType'] = $resultType;
 
         $historyData = [
-            'team_id' => $teamId,
-            'payment_type' => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type' => $chargeType,
-            'amount_per_user' => $amountPerUser,
-            'total_amount' => $totalAmount,
-            'charge_users' => $usersCount,
-            'currency' => $currency,
-            'charge_datetime' => time(),
-            'result_type' => $resultType,
+            'team_id'          => $teamId,
+            'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type'      => $chargeType,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'charge_users'     => $usersCount,
+            'currency'         => $currency,
+            'charge_datetime'  => time(),
+            'result_type'      => $resultType,
             'max_charge_users' => $usersCount
         ];
 
@@ -459,5 +462,56 @@ class PaymentService extends AppService
             }
         }
         return $result;
+    }
+
+    /**
+     * Find target teams that charge monthly by credit card
+     * main conditions
+     * - payment type: credit card
+     * - have not already charged
+     * - payment base date = execution datetime + team timezone
+     *   EX.
+     *      execution datetime: 2017/9/19 15:00:00
+     *      team timezone: +9 hour(Tokyo)
+     *      payment base day: 20
+     *      2017/9/19 15:00:00 + 9hour = 2017/9/20
+     *      payment base day(20) == get day(20) from 2017/9/20 → charge target team！
+     *
+     * @param string $time
+     *
+     * @return array
+     */
+    public function findMonthlyChargeCcTeams(string $time = REQUEST_TIMESTAMP): array
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+        // Get teams only credit card payment type
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeCcTeams();
+        // Filtering
+        $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
+            $timezone = Hash::get($v, 'Team.timezone');
+            $localCurrentTs = $time + ($timezone * HOUR);
+            $paymentBaseDay = Hash::get($v, 'Payment.payment_base_day');
+            // Check if today is payment base day
+            if ($paymentBaseDay != date('d', $localCurrentTs)) {
+                return false;
+            }
+            // Check if have not already charged
+            $paymentBaseDate = AppUtil::dateFromYMD(
+                date('Y', $localCurrentTs),
+                date('m', $localCurrentTs),
+                $paymentBaseDay
+            );
+            $teamId = Hash::get($v, 'PaymentSetting.team_id');
+            $chargeHistory = $ChargeHistory->getByChargeDate($teamId, $paymentBaseDate);
+            if (!empty($chargeHistory)) {
+                return false;
+            }
+            return true;
+
+        });
+        return $targetChargeTeams;
     }
 }

@@ -388,6 +388,41 @@ class TeamMember extends AppModel
         return $cnt;
     }
 
+    /**
+     * Count charge target users each team
+     *
+     * @param array $teamIds
+     *
+     * @return array
+     */
+    public function countChargeTargetUsersEachTeam(array $teamIds): array
+    {
+        if (empty($teamIds)) {
+            return [];
+        }
+
+        $options = [
+            'fields' => [
+                'team_id',
+                'COUNT(team_id) as cnt'
+            ],
+            'conditions' => [
+                'team_id' => $teamIds,
+                'status'  => [
+                    self::USER_STATUS_INVITED,
+                    self::USER_STATUS_ACTIVE,
+                ],
+            ],
+            'group' => ['team_id']
+        ];
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+
+        return Hash::combine($res, '{n}.TeamMember.team_id', '{n}.0.cnt');
+    }
+
     public function setAdminUserFlag($member_id, $flag)
     {
         $this->deleteCacheMember($member_id);

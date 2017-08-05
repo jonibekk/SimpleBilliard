@@ -680,7 +680,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
         $this->assertEquals($res, 32);
     }
-    
+
     public function test_applyCreditCardCharge()
     {
         $this->createCreditCardPayment();
@@ -693,6 +693,11 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertArrayHasKey("success", $res);
         $this->assertFalse($res["error"]);
         $this->assertTrue($res["success"]);
+    }
+
+    public function test_findMonthlyChargeCcTeams()
+    {
+        // TODO: Add tests
     }
 
     /**

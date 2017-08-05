@@ -149,7 +149,7 @@ class PaymentSetting extends AppModel
         'Team',
     ];
 
-    public $hasMany = [
+    public $hasOne = [
         'CreditCard',
     ];
 
@@ -171,4 +171,50 @@ class PaymentSetting extends AppModel
         $res = $this->find('first', $options);
         return $res;
     }
+
+    /**
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    public function findMonthlyChargeCcTeams()
+    {
+        $options = [
+            'fields'     => [
+                'PaymentSetting.id',
+                'PaymentSetting.team_id',
+                'PaymentSetting.payment_base_day',
+                'Team.timezone',
+            ],
+            'conditions' => [
+                'PaymentSetting.type' => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'PaymentSetting.del_flg' => false
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'credit_cards',
+                    'alias'      => 'CreditCard',
+                    'conditions' => [
+                        'PaymentSetting.id = CreditCard.payment_setting_id',
+                        'CreditCard.del_flg' => false
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'conditions' => [
+                        'PaymentSetting.team_id = Team.id',
+                        'Team.service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+                        'Team.del_flg'            => false,
+                    ],
+                ],
+            ]
+        ];
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
 }
