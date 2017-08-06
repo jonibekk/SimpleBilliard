@@ -476,6 +476,12 @@ class PaymentService extends AppService
      *      payment base day: 20
      *      2017/9/19 15:00:00 + 9hour = 2017/9/20
      *      payment base day(20) == get day(20) from 2017/9/20 → charge target team！
+     * [Note]
+     * We can get target charge teams by using only one SQL.
+     * But some MySQL syntax(EX. INTERVAL) can't use if run unit test
+     * Because unit test use sqlite as DB.
+     * So the reliability of the test is important,
+     * I decided to implement process like this.
      *
      * @param string $time
      *
