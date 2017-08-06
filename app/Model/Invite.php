@@ -338,7 +338,7 @@ class Invite extends AppModel
             ]
         ];
         $invites = $this->find('all', $options);
-        return $invites;
+        return Hash::extract($invites, '{n}.Invite');
     }
 
 }

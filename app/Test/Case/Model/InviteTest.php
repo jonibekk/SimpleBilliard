@@ -207,7 +207,7 @@ class InviteTest extends GoalousTestCase
         $targetInviteId = $this->createInvite();
 
         $result = $this->Invite->findUnverifiedBeforeExpired($baseDate);
-        $resultIds = Hash::extract($result, '{n}.Invite.id');
+        $resultIds = Hash::extract($result, '{n}.id');
 
         $this->assertNotContains($verifiedInviteId, $resultIds);
         $this->assertNotContains($tokenExpiredInviteId, $resultIds);

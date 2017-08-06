@@ -32,6 +32,14 @@ class InviteToUserInsertShell extends AppShell
         return $parser;
     }
 
+    /**
+     * main process
+     * - Get unverified & before expired invites
+     * - (If email not exists, save email record & save user record)
+     * - Save Team Member record
+     *
+     * @return void
+     */
     public function main()
     {
         $currentTimestamp = $this->params['currentTimestamp'] ?? time();
@@ -42,50 +50,56 @@ class InviteToUserInsertShell extends AppShell
 
         try {
             $this->User->begin();
-            $newUserInvites = Hash::combine($targetInvites, '{n}.Invite[to_user_id=].id', '{n}.Invite[to_user_id=]');
+
             // register new user
+            // "to_user_id=/^$/" means to_user_id == null
+            $newUserInvites = Hash::combine($targetInvites, '{n}[to_user_id=/^$/].id', '{n}[to_user_id=/^$/]');
             $insertEmails = [];
             foreach ($newUserInvites as $invite) {
-                $teamId = $invite['team_id'];
-                $email = $invite['email'];
                 $this->User->create();
-                if (!$this->User->save(['team_id' => $teamId], false)) {
+                if (!$this->User->save([], false)) {
                     throw new Exception(sprintf("Failed to insert users. data:%s",
-                            AppUtil::varExportOneLine(compact('emails', 'newEmails', 'teamId', 'fromUserId')))
+                            AppUtil::varExportOneLine(compact('invite')))
+                    );
+                }
+                $newUserId = $this->User->getLastInsertID();
+                $this->Invite->id = $invite['id'];
+                if (!$this->Invite->saveField('to_user_id', $newUserId)) {
+                    throw new Exception(sprintf("Failed to update invite. data:%s",
+                            AppUtil::varExportOneLine(compact('invite', 'newUserId')))
                     );
                 }
                 $insertEmails[] = [
-                    'user_id' => $this->User->getLastInsertID(),
-                    'email'   => $email
+                    'user_id' => $newUserId,
+                    'email'   => $invite['email']
                 ];
             }
+
             /* Insert emails table */
             if (!$this->Email->bulkInsert($insertEmails)) {
                 throw new Exception(sprintf("Failed to insert emails. data:%s",
-                        AppUtil::varExportOneLine(compact('emails', 'insertEmails', 'teamId')))
+                        AppUtil::varExportOneLine(compact('insertEmails', 'newUserInvites')))
                 );
             }
 
             /* Insert team_members table */
-            // Except for already belonged to target team
-            $emails = Hash::extract($targetInvites, '{n}.Invite.email');
-            $targetUserIds = $this->User->findNotBelongToTeamByEmail($emails);
             $insertTeamMembers = [];
-            foreach ($targetUserIds as $userId) {
+            // invites after updating to_user_id
+            $targetInvitesWithToUserId = $this->Invite->findUnverifiedBeforeExpired($currentTimestamp);
+            foreach ($targetInvitesWithToUserId as $invite) {
                 $insertTeamMembers[] = [
-                    'user_id' => $userId,
-                    'team_id' => $teamId,
+                    'user_id' => $invite['to_user_id'],
+                    'team_id' => $invite['team_id'],
                     'status'  => TeamMember::USER_STATUS_INVITED
                 ];
             }
             if (!$this->TeamMember->bulkInsert($insertTeamMembers)) {
                 throw new Exception(sprintf("Failed to insert team members. data:%s",
-                        AppUtil::varExportOneLine(compact('insertTeamMembers', 'targetInvites')))
+                        AppUtil::varExportOneLine(compact('insertTeamMembers', 'targetInvitesWithToUserId')))
                 );
             }
 
         } catch (Exception $e) {
-            // transaction rollback
             $this->User->rollback();
             CakeLog::error($e->getMessage());
             CakeLog::error($e->getTraceAsString());
