@@ -20,6 +20,10 @@ App::uses('Term', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Topic', 'Model');
 App::uses('Message', 'Model');
+App::uses('Invite', 'Model');
+App::uses('PaymentSetting', 'Model');
+App::uses('CreditCard', 'Model');
+App::uses('ChargeHistory', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::uses('AppUtil', 'Util');
@@ -52,6 +56,7 @@ class GoalousTestCase extends CakeTestCase
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->Topic = ClassRegistry::init('Topic');
         $this->Message = ClassRegistry::init('Message');
+        $this->Invite = ClassRegistry::init('Invite');
         $this->GoalService = ClassRegistry::init('GoalService');
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->GlRedis->changeDbSource('redis_test');
@@ -455,7 +460,8 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->User->save(['active_flg' => true], false);
         $userId = $this->Team->TeamMember->User->getLastInsertId();
         $this->Team->TeamMember->create();
-        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true, 'status' => 1], false);
+        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true, 'status' => 1],
+            false);
         return $userId;
     }
 
@@ -588,6 +594,24 @@ class GoalousTestCase extends CakeTestCase
         return $KeyResult->getLastInsertID();
     }
 
+    function createInvite($data = [])
+    {
+        $default = [
+            'from_user_id'        => 1,
+            'to_user_id'          => 2,
+            'team_id'             => 1,
+            'email'               => 'xxxx@isao.co.jp',
+            'message'             => 'Hello',
+            'email_verified'      => false,
+            'email_token'         => 'testnotokenhananndemoiiyo',
+            'email_token_expires' => time() + DAY
+        ];
+        $invite = am($default, $data);
+        $this->Invite->create();
+        $this->Invite->save($invite, false);
+        return $this->Invite->getLastInsertID();
+    }
+
     function _getEndOfMonthDay(int $timezone = 9)
     {
         return date('t', REQUEST_TIMESTAMP + $timezone * HOUR);
@@ -596,6 +620,55 @@ class GoalousTestCase extends CakeTestCase
     function _getLocalTimestamp(int $timezone = 9)
     {
         return REQUEST_TIMESTAMP + $timezone * HOUR;
+    }
+
+    function createCcPaidTeam(
+        array $team = [],
+        array $paymentSetting = [],
+        array $creditCard = [],
+        int $createActiveUserCount = 1
+    ) {
+        $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
+        $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
+        $this->ChargeHistory = $this->ChargeHistory ??ClassRegistry::init('ChargeHistory');
+
+
+        $saveTeam = array_merge(
+            $team,
+            [
+                'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+            ]
+        );
+        $teamId = $this->createTeam($saveTeam);
+
+        $savePaymentSetting = array_merge(
+            [
+                'team_id'          => $teamId,
+                'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'payment_base_day' => 1
+            ],
+            $paymentSetting
+        );
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($savePaymentSetting, false);
+        $paymentSettingId = $this->PaymentSetting->getLastInsertID();
+        $saveCreditCard = array_merge(
+            [
+                'team_id'            => $teamId,
+                'payment_setting_id' => $paymentSettingId,
+            ],
+            $creditCard
+        );
+        $this->CreditCard->create();
+        $this->CreditCard->save($saveCreditCard, false);
+
+        for ($i = 0; $i < $createActiveUserCount; $i++) {
+            $this->createActiveUser($teamId);
+        }
+        return [
+            $teamId,
+            $paymentSettingId,
+        ];
     }
 
 }

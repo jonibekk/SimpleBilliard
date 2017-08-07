@@ -153,7 +153,7 @@ $(function () {
 });
 
 // If team status is read only, Display read only alert box
-if (cake.banner_notification) {
+if (cake.require_banner_notification) {
     // Because alert box is postion fixed,
     // so body padding should be resized after window loaded and resized.
     window.addEventListener("DOMContentLoaded", function(event) {

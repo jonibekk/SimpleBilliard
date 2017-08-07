@@ -39,7 +39,7 @@
             <div class="container">
                 <?php
                     $readOnlyEndDate = $this->TimeEx->formatYearDayI18nFromDate($readOnlyEndDate);
-                    echo __( $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin), $readOnlyEndDate);
+                    echo __( $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $readOnlyEndDate));
                 ?>
             </div>
         </div>

@@ -13,13 +13,7 @@ App::uses('AttachedFile', 'Model');
         env_name: "<?= ENV_NAME ?>",
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
-        banner_notification: function(){
-            if("<?= in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY])?>"){
-                return true;
-            }else{
-                return false;
-            }
-        },
+        require_banner_notification: "<?= in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]) ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
