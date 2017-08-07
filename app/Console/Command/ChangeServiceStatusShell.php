@@ -16,17 +16,10 @@ App::import('Service', 'TeamService');
  * - UTC only
  *
  * @property TeamService $TeamService
- * @property Team        $Team
- * @property GlRedis     $GlRedis
  */
 class ChangeServiceStatusShell extends AppShell
 {
     public $TeamService;
-
-    public $uses = [
-        'Team',
-        'GlRedis',
-    ];
 
     public function startup()
     {
