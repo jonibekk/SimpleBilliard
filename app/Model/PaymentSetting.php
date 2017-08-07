@@ -149,7 +149,7 @@ class PaymentSetting extends AppModel
         'Team',
     ];
 
-    public $hasOne = [
+    public $hasMany = [
         'CreditCard',
     ];
 

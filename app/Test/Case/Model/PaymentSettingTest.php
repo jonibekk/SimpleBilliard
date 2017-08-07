@@ -192,7 +192,9 @@ class PaymentSettingTest extends GoalousTestCase
                 'payment_base_day' => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
             ],
             'CreditCard'     => [
+                [
                 'team_id' => $teamId,
+                ]
             ]
         ], ['validate' => false]);
         $paymentSettingId = $this->PaymentSetting->getLastInsertID();
