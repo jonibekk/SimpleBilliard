@@ -40,14 +40,14 @@
 
 .header-toggle-icon {
   .mixin-header-toggle-icon();
-  background-color: @white;
+  background-color:@white;
   height: 50px;
   line-height: 50px;
-  i {
-    transform: rotate(0deg);
-    transition: transform .3s;
-    .mod-openNav & {
-      transform: rotate(-180deg);
+  i{
+    transform:rotate(0deg);
+    transition:transform .3s;
+    .mod-openNav &{
+      transform:rotate(-180deg);
     }
   }
 }
@@ -280,7 +280,7 @@
 // sp feed alt
 .sp-feed-alt {
   background: #f5f5f5;
-  z-index: 0;
+  z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
 }
 
@@ -421,10 +421,6 @@
   .header-nav-function-contents-anchor();
 }
 
-.dropdown-menu > li > a.header-nav-function-contents-billing {
-  .header-nav-function-contents-anchor();
-}
-
 .dropdown-menu > li > a.header-nav-function-contents-blog {
   .header-nav-function-contents-anchor();
 }
@@ -475,19 +471,4 @@
 .mb-app-nav-icon {
   opacity: 1;
   color: #505050;
-}
-
-.read-only-alert {
-  height: auto;
-  width: 100%;
-  background: @unreadRed;
-  position: fixed;
-  top: 50px;
-  z-index: 1;
-  padding: 10px 0;
-  display: none;
-  color: @darkBlack;
-  .container {
-    margin-top: 0;
-  }
 }
