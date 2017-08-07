@@ -45,6 +45,7 @@ class InviteToUserInsertShell extends AppShell
         $currentTimestamp = $this->params['currentTimestamp'] ?? time();
         $targetInvites = $this->Invite->findUnverifiedBeforeExpired($currentTimestamp);
         if (count($targetInvites) === 0) {
+            $this->out('There is no invites data to create new user.');
             return;
         }
 
@@ -53,33 +54,49 @@ class InviteToUserInsertShell extends AppShell
 
             // register new user
             // "to_user_id=/^$/" means to_user_id == null
+            // if to_user_id isn't null, user already exists in other team.
             $newUserInvites = Hash::combine($targetInvites, '{n}[to_user_id=/^$/].id', '{n}[to_user_id=/^$/]');
             $insertEmails = [];
             foreach ($newUserInvites as $invite) {
+                // Save user
                 $this->User->create();
+
+                // The reason data is empty, at this time there is no user save data.
+                // This data will be registered by user signup.
                 if (!$this->User->save([], false)) {
                     throw new Exception(sprintf("Failed to insert users. data:%s",
                             AppUtil::varExportOneLine(compact('invite')))
                     );
                 }
                 $newUserId = $this->User->getLastInsertID();
+
+                // Update invite
                 $this->Invite->id = $invite['id'];
                 if (!$this->Invite->saveField('to_user_id', $newUserId)) {
                     throw new Exception(sprintf("Failed to update invite. data:%s",
                             AppUtil::varExportOneLine(compact('invite', 'newUserId')))
                     );
                 }
-                $insertEmails[] = [
+
+                // Save email
+                $insertEmail = [
                     'user_id' => $newUserId,
                     'email'   => $invite['email']
                 ];
-            }
+                if (!$this->Email->save($insertEmail)) {
+                    throw new Exception(sprintf("Failed to insert emails. data:%s",
+                            AppUtil::varExportOneLine(compact('insertEmails', 'newUserInvites')))
+                    );
+                }
+                $newEmailId = $this->Email->getLastInsertID();
 
-            /* Insert emails table */
-            if (!$this->Email->bulkInsert($insertEmails)) {
-                throw new Exception(sprintf("Failed to insert emails. data:%s",
-                        AppUtil::varExportOneLine(compact('insertEmails', 'newUserInvites')))
-                );
+                // Update user primary_email_id
+                $this->User->id = $newUserId;
+                if (!$this->User->saveField('primary_email_id', $newEmailId)) {
+                    throw new Exception(sprintf("Failed to update user primary email. data:%s",
+                            AppUtil::varExportOneLine(compact('newUserId', 'newEmailId')))
+                    );
+                }
             }
 
             /* Insert team_members table */
