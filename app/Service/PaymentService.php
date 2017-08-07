@@ -483,11 +483,11 @@ class PaymentService extends AppService
      * So the reliability of the test is important,
      * I decided to implement process like this.
      *
-     * @param string $time
+     * @param int $time
      *
      * @return array
      */
-    public function findMonthlyChargeCcTeams(string $time = REQUEST_TIMESTAMP): array
+    public function findMonthlyChargeCcTeams(int $time = REQUEST_TIMESTAMP): array
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");

@@ -51,7 +51,7 @@ class MonthlyCreditCardChargeShell extends AppShell
         foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
             $chargeMemberCountEachTeam = array_merge(
                 $chargeMemberCountEachTeam,
-                $TeamMember->countChargeTargetUsersEachTeam($teamIds)
+                $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds)
             );
         }
 

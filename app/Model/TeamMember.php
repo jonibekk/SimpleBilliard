@@ -394,6 +394,10 @@ class TeamMember extends AppModel
      * @param array $teamIds
      *
      * @return array
+     * e.g.
+     * TeamA(id:10)]: 5 charge target users.
+     * TeamA(id:13)]: 6 charge target users.
+     * return [10 => 5, 13 => 6];
      */
     public function countChargeTargetUsersEachTeam(array $teamIds): array
     {
