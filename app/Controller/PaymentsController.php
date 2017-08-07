@@ -4,7 +4,7 @@
 class PaymentsController extends AppController {
     public function index(){
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('subscription');
+        $this->render('index');
     }
 
     public function apply() {
