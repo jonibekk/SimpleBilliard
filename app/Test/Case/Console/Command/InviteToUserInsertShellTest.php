@@ -46,4 +46,61 @@ class InviteToUserInsertShellTest extends GoalousTestCase
         $this->Email = ClassRegistry::init('Email');
         $this->Invite = ClassRegistry::init('Invite');
     }
+
+    public function test_main()
+    {
+        $this->resetAllData();
+        $this->InviteToUserInsertShell->params['currentTimestamp'] = strtotime('2017-07-20');
+
+        $teamAId = $this->createTeam();
+        $teamBId = $this->createTeam();
+
+        $teamAnewUserInviteId = $this->createInvite(['team_id' => $teamAId, 'to_user_id' => null, 'email' => 'new_user_team_a@test.com', 'email_token_expires' => strtotime('2017-07-21')]);
+        $teamAexistUserInviteId = $this->createInvite(['team_id' => $teamAId, 'to_user_id' => 1, 'email' => 'exist_user_team_a@test.com', 'email_token_expires' => strtotime('2017-07-21')]);
+        $teamBnewUserInviteId = $this->createInvite(['team_id' => $teamBId, 'to_user_id' => null, 'email' => 'new_user_team_b@test.com', 'email_token_expires' => strtotime('2017-07-21')]);
+        $teamBexistUserInviteId = $this->createInvite(['team_id' => $teamBId, 'to_user_id' => 2, 'email' => 'exist_user_team_b@test.com', 'email_token_expires' => strtotime('2017-07-21')]);
+
+        $this->InviteToUserInsertShell->main();
+
+        /* team A new user */
+        // new email
+        $newEmailId = Hash::get($this->Email->find('first', ['conditions' => ['email' => 'new_user_team_a@test.com']]), 'Email.id');
+        $this->assertNotEmpty($newEmailId);
+        // new user
+        $newUserId = Hash::get($this->User->find('first', ['conditions' => ['primary_email_id' => $newEmailId]]) ,'User.id');
+        $this->assertNotEmpty($newUserId);
+        // udpate invite
+        $this->assertNotEmpty($this->Invite->find('first', ['conditions' => ['id' => $teamAnewUserInviteId, 'team_id' => $teamAId, 'email' => 'new_user_team_a@test.com']]));
+        // new team member
+        $this->assertNotEmpty($this->TeamMember->find('first', ['conditions' => ['team_id' => $teamAId, 'user_id' => $newUserId]]));
+
+        /* team A exist user */
+        // new team member
+        $this->assertNotEmpty($this->TeamMember->find('first', ['conditions' => ['team_id' => $teamAId, 'user_id' => 1]]));
+
+        /* team B new user */
+        // new email
+        $newEmailId = Hash::get($this->Email->find('first', ['conditions' => ['email' => 'new_user_team_b@test.com']]), 'Email.id');
+        $this->assertNotEmpty($newEmailId);
+        // new user
+        $newUserId = Hash::get($this->User->find('first', ['conditions' => ['primary_email_id' => $newEmailId]]) ,'User.id');
+        $this->assertNotEmpty($newUserId);
+        // udpate invite
+        $this->assertNotEmpty($this->Invite->find('first', ['conditions' => ['id' => $teamBnewUserInviteId, 'team_id' => $teamBId, 'email' => 'new_user_team_b@test.com']]));
+        // new team member
+        $this->assertNotEmpty($this->TeamMember->find('first', ['conditions' => ['team_id' => $teamBId, 'user_id' => $newUserId]]));
+
+        /* team B exist user */
+        // new team member
+        $this->assertNotEmpty($this->TeamMember->find('first', ['conditions' => ['team_id' => $teamBId, 'user_id' => 2]]));
+    }
+
+    public function resetAllData()
+    {
+        $this->Team->updateAll(['del_flg' => 1]);
+        $this->Invite->updateAll(['del_flg' => 1]);
+        $this->User->updateAll(['del_flg' => 1]);
+        $this->TeamMember->updateAll(['del_flg' => 1]);
+        $this->Email->updateAll(['del_flg' => 1]);
+    }
 }

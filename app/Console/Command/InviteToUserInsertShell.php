@@ -58,11 +58,11 @@ class InviteToUserInsertShell extends AppShell
             $newUserInvites = Hash::combine($targetInvites, '{n}[to_user_id=/^$/].id', '{n}[to_user_id=/^$/]');
             $insertEmails = [];
             foreach ($newUserInvites as $invite) {
-                // Save user
-                $this->User->create();
 
-                // The reason data is empty, at this time there is no user save data.
+                // Save user
+                // The reason data is empty, at this time there  is no user save data.
                 // This data will be registered by user signup.
+                $this->User->create();
                 if (!$this->User->save([], false)) {
                     throw new Exception(sprintf("Failed to insert users. data:%s",
                             AppUtil::varExportOneLine(compact('invite')))
@@ -83,6 +83,7 @@ class InviteToUserInsertShell extends AppShell
                     'user_id' => $newUserId,
                     'email'   => $invite['email']
                 ];
+                $this->Email->create();
                 if (!$this->Email->save($insertEmail)) {
                     throw new Exception(sprintf("Failed to insert emails. data:%s",
                             AppUtil::varExportOneLine(compact('insertEmails', 'newUserInvites')))
