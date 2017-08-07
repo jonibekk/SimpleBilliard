@@ -34,8 +34,8 @@
             <?php } ?>
         </div>
     </div>
-    <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID){ ?>
-        <div class="read-only-alert font_verydark">
+    <?php if (in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY])){?>
+        <div class="banner-alert font_verydark">
             <div class="container">
                 <?php
                     $readOnlyEndDate = $this->TimeEx->formatYearDayI18nFromDate($readOnlyEndDate);

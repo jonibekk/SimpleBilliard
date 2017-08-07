@@ -450,10 +450,10 @@ function adjustHeaderPosition() {
     var body_top_padding = 0;
     var $navbar = $('.navbar-fixed-top');
     body_top_padding += parseInt($navbar.outerHeight(true));
-    var $read_only_alert = $('.read-only-alert');
-    if ($read_only_alert) {
-        body_top_padding += parseInt($read_only_alert.outerHeight(true));
-        $read_only_alert.show();
+    var $banner_alert = $('.banner-alert');
+    if ($banner_alert) {
+        body_top_padding += parseInt($banner_alert.outerHeight(true));
+        $banner_alert.show();
     }
     $('body').css('padding-top', body_top_padding);
 }

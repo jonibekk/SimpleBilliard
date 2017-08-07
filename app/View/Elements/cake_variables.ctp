@@ -14,10 +14,10 @@ App::uses('AttachedFile', 'Model');
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         banner_notification: function(){
-            if("<?= $serviceUseStatus == Team::SERVICE_USE_STATUS_PAID?>"){
-                return false;
-            }else{
+            if("<?= in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY])?>"){
                 return true;
+            }else{
+                return false;
             }
         },
         message: {
