@@ -626,4 +626,66 @@ class Team extends AppModel
         return $res;
     }
 
+    /**
+     * find team_id list by service_use_status_start_date or less without freetrial
+     *
+     * @param int    $serviceStatus
+     * @param string $targetStartUseService
+     *
+     * @return array
+     */
+    function findTeamListByStartStatusOrLess(int $serviceStatus, string $targetStartUseService): array
+    {
+        $options = [
+            'conditions' => [
+                'service_use_status'              => $serviceStatus,
+                'service_use_state_start_date <=' => $targetStartUseService
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * update service status
+     *
+     * @param int   $toStatus
+     * @param array $targetTeamIds
+     *
+     * @return bool
+     */
+    function updateServiceStatus(int $toStatus, array $targetTeamIds): bool
+    {
+        $statusDays = self::DAYS_SERVICE_USE_STATUS[$toStatus];
+        $ret = $this->updateAll(
+            [
+                'Team.service_use_status'           => $toStatus,
+                'Team.service_use_state_start_date' => "DATE_ADD(Team.service_use_state_start_date,INTERVAL {$statusDays} DAY)"
+            ],
+            [
+                'Team.id' => $targetTeamIds
+            ]
+        );
+        return $ret;
+    }
+
+    function findExpiredTeamListFreeTrial(string $targetDate): array
+    {
+        $serviceDays = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL];
+        $options = [
+            'conditions' => [
+                'service_use_status'              => Team::SERVICE_USE_STATUS_FREE_TRIAL,
+                'service_use_state_start_date <=' => $targetDate,
+
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+
+    }
 }

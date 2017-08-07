@@ -1,5 +1,6 @@
 <?php
 App::uses('AppUtil', 'Util');
+App::import('Service', 'TeamService');
 
 /**
  * Batch for changing service status of team.
@@ -14,17 +15,23 @@ App::uses('AppUtil', 'Util');
  * ## UTC or local date?
  * - UTC only
  *
- * @property Team $Team
+ * @property TeamService $TeamService
+ * @property Team        $Team
+ * @property GlRedis     $GlRedis
  */
 class ChangeServiceStatusShell extends AppShell
 {
+    public $TeamService;
+
     public $uses = [
         'Team',
+        'GlRedis',
     ];
 
     public function startup()
     {
         parent::startup();
+        $this->TeamService = ClassRegistry::init('TeamService');
     }
 
     /**
@@ -34,15 +41,10 @@ class ChangeServiceStatusShell extends AppShell
     {
         $parser = parent::getOptionParser();
         $options = [
-            'targetDate'       => [
+            'targetExpireDate' => [
                 'short'   => 't',
                 'help'    => 'This is target expire date. It automatically will be yesterday UTC as default',
                 'default' => AppUtil::dateYesterday(date('Y-m-d')),
-            ],
-            'currentTimestamp' => [
-                'short'   => 'c',
-                'help'    => 'current timestamp',
-                'default' => REQUEST_TIMESTAMP
             ],
         ];
         $parser->addOptions($options);
@@ -51,8 +53,25 @@ class ChangeServiceStatusShell extends AppShell
 
     function main()
     {
-        debug($this->params);
+        $targetExpireDate = $this->param('targetExpireDate');
+        $this->_changeFreeTrialToReadonly($targetExpireDate);
+        $this->_changeReadonlyToCannotUseService($targetExpireDate);
+        $this->_deleteCannotUseServiceExpired($targetExpireDate);
+    }
 
+    function _changeFreeTrialToReadonly(string $targetExpireDate)
+    {
+
+    }
+
+    function _changeReadonlyToCannotUseService(string $targetExpireDate)
+    {
+        $this->TeamService->changeStatusAllTeamFromReadonlyToCannotUseService($targetExpireDate);
+    }
+
+    function _deleteCannotUseServiceExpired(string $targetExpireDate)
+    {
+        $this->TeamService->deleteTeamCannotUseServiceExpired($targetExpireDate);
     }
 
 }
