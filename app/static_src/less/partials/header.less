@@ -47,7 +47,7 @@
     transform:rotate(0deg);
     transition:transform .3s;
     .mod-openNav &{
-      transform: rotate(-180deg);
+      transform:rotate(-180deg);
     }
   }
 }
@@ -60,8 +60,6 @@
   }
 }
 
-
-
 @media screen and (min-width: 1025px) {
   .header-profile-icon,
   .js-header-link,
@@ -69,8 +67,8 @@
   .header-function-link {
     opacity: 0.54;
     transition: opacity .3s ease;
-    .navbar:hover &{
-      opacity:1;
+    .navbar:hover & {
+      opacity: 1;
     }
   }
 }
