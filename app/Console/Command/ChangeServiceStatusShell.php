@@ -7,11 +7,13 @@ App::import('Service', 'TeamService');
  * # Description
  * ## Usage
  * - Console/cake change_service_status
- * - Console/cake change_service_status -t [target date] -c [current timestamp]
+ * - Console/cake change_service_status -t [target date]
  * ## changing status in the following order:
  * - Free trial -> Read-only -> Cannot use Service -> Deleted
  * ## How to decide expire date
- * - fetching teams.service_use_state_start_date + Team::DAYS_SERVICE_USE_STATUS[status_name]
+ * - [not free trial] fetching teams.service_use_state_start_date + Team::DAYS_SERVICE_USE_STATUS[status_name]
+ * - [free trial] if `teams.free_trial_days` is not null, teams.service_use_state_start_date + `teams.free_trial_days`
+ * - [free trial] if `teams.free_trial_days` is null, teams.service_use_state_start_date + Team::DAYS_SERVICE_USE_STATUS[status_name]
  * ## UTC or local date?
  * - UTC only
  *
