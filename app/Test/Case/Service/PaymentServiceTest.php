@@ -7,6 +7,8 @@ App::import('Service', 'PaymentService');
  *
  * @property PaymentService $PaymentService
  * @property PaymentSetting $PaymentSetting
+ * @property CreditCard     $CreditCard
+ * @property ChargeHistory  $ChargeHistory
  */
 class PaymentServiceTest extends GoalousTestCase
 {
@@ -36,7 +38,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->PaymentService = ClassRegistry::init('PaymentService');
         $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
-        $this->Team = ClassRegistry::init('Team');
+        $this->ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $this->CreditCard = ClassRegistry::init('CreditCard');
+        $this->Team = $this->Team ?? ClassRegistry::init('Team');
     }
 
     /**
@@ -45,17 +49,17 @@ class PaymentServiceTest extends GoalousTestCase
     private function createCreditCardPayment()
     {
         $payment = [
-            'token' => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id' => 1,
-            'type' => 1,
-            'amount_per_user' => 1800,
-            'payer_name' => 'Goalous Taro',
-            'company_name' => 'ISAO',
-            'company_address' => 'Here Japan',
-            'company_tel' => '123456789',
-            'email' => 'test@goalous.com',
+            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
+            'team_id'          => 1,
+            'type'             => 1,
+            'amount_per_user'  => 1800,
+            'payer_name'       => 'Goalous Taro',
+            'company_name'     => 'ISAO',
+            'company_address'  => 'Here Japan',
+            'company_tel'      => '123456789',
+            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
-            'currency' => 1
+            'currency'         => 1
         ];
         $customerCode = 'cus_B59aNmiTO3IZjg';
 
@@ -464,7 +468,6 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
         $this->assertEquals($res, '2017-03-28');
 
-
         $currentTimestamp = strtotime("2017-02-27");
         $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
         $this->assertEquals($res, '2017-02-28');
@@ -572,8 +575,8 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save([
             'team_id'          => $teamId,
             'payment_base_day' => 1,
-            'amount_per_user' => 1980,
-            'currency' => PaymentSetting::CURRENCY_JPY
+            'amount_per_user'  => 1980,
+            'currency'         => PaymentSetting::CURRENCY_JPY
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
@@ -608,7 +611,6 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 31,
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
-
 
         $currentTimestamp = strtotime("2017-04-29");
         $userCnt = 1;
@@ -695,9 +697,204 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res["success"]);
     }
 
-    public function test_findMonthlyChargeCcTeams()
+    public function test_findMonthlyChargeCcTeams_timezone()
     {
-        // TODO: Add tests
+        $this->Team->deleteAll(['del_flg' => false]);
+        $team = ['timezone' => 0];
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam($team);
+        // Data count: 1
+        // timezone: 0.0
+        $time = strtotime('2016-01-01 23:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-01 00:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-12-31 23:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-01-02 00:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        // timezone: +
+        $this->Team->save(['id' => $teamId, 'timezone' => 9.0], false);
+        $time = strtotime('2016-12-31 14:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2016-12-31 15:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-01 14:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-01 15:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        // timezone: +
+        $this->Team->save(['id' => $teamId, 'timezone' => 12.0], false);
+        $time = strtotime('2016-12-31 11:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2016-12-31 12:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-01 11:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-01 12:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        // timezone: -
+        $this->Team->save(['id' => $teamId, 'timezone' => -12.0], false);
+        $time = strtotime('2017-01-01 11:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-01-01 12:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-02 11:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-02 12:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        // timezone: *.5
+        $this->Team->save(['id' => $teamId, 'timezone' => -3.5], false);
+        $time = strtotime('2017-01-01 03:29:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-01-01 03:30:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-02 03:29:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-01-02 03:30:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+    }
+
+    public function test_findMonthlyChargeCcTeams_chargeHistory()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+        $team = ['timezone' => 0];
+        $paymentSetting = ['payment_base_day' => 28];
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paymentSetting);
+        $this->ChargeHistory->clear();
+        $this->ChargeHistory->save([
+            'team_id'            => $teamId,
+            'payment_setting_id' => $paymentSettingId,
+            'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_datetime'    => strtotime('2017-01-28 23:59:59'),
+        ], false);
+        $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
+
+        // Data count: 1
+        $time = strtotime('2017-01-28 00:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-01-28 23:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-02-28 00:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $time = strtotime('2017-02-28 23:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        // Add charge history
+        $this->ChargeHistory->create();
+        $this->ChargeHistory->save([
+            'team_id'            => $teamId,
+            'payment_setting_id' => $paymentSettingId,
+            'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_datetime'    => strtotime('2017-02-28 00:00:00'),
+        ], false);
+        $time = strtotime('2017-01-28 00:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-01-28 23:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-02-28 00:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-02-28 23:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        // Change payment base date
+        // Check if payment base day is 29(Not exist day on Febuary)
+        $this->Team->save(['id' => $teamId, 'timezone' => 9.0]);
+        $this->PaymentSetting->save([
+            'id' => $paymentSettingId,
+            'payment_base_day' => 29
+        ]);
+        $this->ChargeHistory->deleteAll(['del_flg' => false]);
+
+        $time = strtotime('2017-01-27 15:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $this->ChargeHistory->create();
+        $this->ChargeHistory->save([
+            'team_id'            => $teamId,
+            'payment_setting_id' => $paymentSettingId,
+            'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_datetime'    => strtotime('2017-01-28 00:00:00'),
+        ], false);
+
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-02-27 15:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 1);
+
+        $this->ChargeHistory->save([
+            'team_id'            => $teamId,
+            'payment_setting_id' => $paymentSettingId,
+            'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_datetime'    => strtotime('2017-02-28 12:00:00'),
+        ], false);
+
+        $time = strtotime('2017-02-27 15:00:00');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
+
+        $time = strtotime('2017-02-28 14:59:59');
+        $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertEquals(count($res), 0);
     }
 
     /**

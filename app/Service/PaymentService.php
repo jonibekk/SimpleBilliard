@@ -495,21 +495,23 @@ class PaymentService extends AppService
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
         // Get teams only credit card payment type
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeCcTeams();
+
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
             $timezone = Hash::get($v, 'Team.timezone');
             $localCurrentTs = $time + ($timezone * HOUR);
-            $paymentBaseDay = Hash::get($v, 'Payment.payment_base_day');
-            // Check if today is payment base day
-            if ($paymentBaseDay != date('d', $localCurrentTs)) {
-                return false;
-            }
-            // Check if have not already charged
-            $paymentBaseDate = AppUtil::dateFromYMD(
+            $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
+            // Check if today is payment base date
+            $paymentBaseDate = AppUtil::correctInvalidDate(
                 date('Y', $localCurrentTs),
                 date('m', $localCurrentTs),
                 $paymentBaseDay
             );
+            if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
+                return false;
+            }
+
+            // Check if have not already charged
             $teamId = Hash::get($v, 'PaymentSetting.team_id');
             $chargeHistory = $ChargeHistory->getByChargeDate($teamId, $paymentBaseDate);
             if (!empty($chargeHistory)) {

@@ -60,7 +60,7 @@ class PaymentSettingTest extends GoalousTestCase
     public function test_findMonthlyChargeCcTeams_basic()
     {
         $this->Team->deleteAll(['del_flg' => false]);
-        list ($teamId, $paymentSettingId) = $this->setupCcPaidTeam();
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
 
         // data_count: 1
         $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
@@ -77,7 +77,7 @@ class PaymentSettingTest extends GoalousTestCase
         ]);
 
         // data_count: multi
-        list ($teamId, $paymentSettingId) = $this->setupCcPaidTeam();
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
         $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
         $this->assertEquals(count($res), 2);
         $this->assertNotEquals($res[0]['PaymentSetting']['team_id'], $res[1]['PaymentSetting']['team_id']);
@@ -98,7 +98,7 @@ class PaymentSettingTest extends GoalousTestCase
     {
         $this->Team->deleteAll(['del_flg' => false]);
         // Not empty
-        list ($teamId, $paymentSettingId) = $this->setupCcPaidTeam();
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
         $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
 
         // Team.service_use_status = free trial
@@ -157,7 +157,7 @@ class PaymentSettingTest extends GoalousTestCase
     public function test_findMonthlyChargeCcTeams_condPaymentSetting()
     {
         $this->Team->deleteAll(['del_flg' => false]);
-        list ($teamId, $paymentSettingId) = $this->setupCcPaidTeam();
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
 
         // PaymentSetting.type != credit card
         $this->PaymentSetting->create();
@@ -178,40 +178,4 @@ class PaymentSettingTest extends GoalousTestCase
         $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
         $this->assertEmpty($res);
     }
-
-    private function setupCcPaidTeam()
-    {
-        $teamId = $this->createTeam([
-            'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
-        ]);
-        $this->PaymentSetting->create();
-        $this->PaymentSetting->saveAll([
-            'PaymentSetting' => [
-                'team_id'          => $teamId,
-                'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-                'payment_base_day' => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-            ],
-            'CreditCard'     => [
-                [
-                'team_id' => $teamId,
-                ]
-            ]
-        ], ['validate' => false]);
-        $paymentSettingId = $this->PaymentSetting->getLastInsertID();
-        $this->createActiveUser($teamId);
-        $chargeDatetime = time();
-        $this->ChargeHistory->saveAll([
-            [
-                'team_id'         => $teamId,
-                'payment_type'    => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-                'charge_type'     => ChargeHistory::CHARGE_TYPE_MONTHLY,
-                'charge_datetime' => $chargeDatetime,
-            ]
-        ], ['validate' => false]);
-        return [
-            $teamId,
-            $paymentSettingId,
-        ];
-    }
-
 }
