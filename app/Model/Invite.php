@@ -322,4 +322,23 @@ class Invite extends AppModel
         return $res;
     }
 
+    /**
+     * find unverified invites before token expired
+     *
+     * @param int $baseTime
+     * 
+     * @return array
+     */
+    function findUnverifiedBeforeExpired(int $baseTime): array
+    {
+        $options = [
+            'conditions' => [
+                'Invite.email_verified'        => false,
+                'Invite.email_token_expires >' => $baseTime
+            ]
+        ];
+        $invites = $this->find('all', $options);
+        return Hash::extract($invites, '{n}.Invite');
+    }
+
 }
