@@ -54,24 +54,8 @@ class ChangeServiceStatusShell extends AppShell
     function main()
     {
         $targetExpireDate = $this->param('targetExpireDate');
-        $this->_changeFreeTrialToReadonly($targetExpireDate);
-        $this->_changeReadonlyToCannotUseService($targetExpireDate);
-        $this->_deleteCannotUseServiceExpired($targetExpireDate);
-    }
-
-    function _changeFreeTrialToReadonly(string $targetExpireDate)
-    {
-
-    }
-
-    function _changeReadonlyToCannotUseService(string $targetExpireDate)
-    {
+        $this->TeamService->changeStatusAllTeamFromFreeTrialToReadonly($targetExpireDate);
         $this->TeamService->changeStatusAllTeamFromReadonlyToCannotUseService($targetExpireDate);
-    }
-
-    function _deleteCannotUseServiceExpired(string $targetExpireDate)
-    {
         $this->TeamService->deleteTeamCannotUseServiceExpired($targetExpireDate);
     }
-
 }

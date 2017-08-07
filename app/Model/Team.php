@@ -650,15 +650,15 @@ class Team extends AppModel
     }
 
     /**
-     * update service status
+     * update service status from read-only to cannot-use-service
      *
-     * @param int   $toStatus
      * @param array $targetTeamIds
      *
      * @return bool
      */
-    function updateServiceStatus(int $toStatus, array $targetTeamIds): bool
+    function updateServiceStatusFromReadonlyToCannotUseService(array $targetTeamIds): bool
     {
+        $toStatus = self::SERVICE_USE_STATUS_CANNOT_USE;
         $statusDays = self::DAYS_SERVICE_USE_STATUS[$toStatus];
         $ret = $this->updateAll(
             [
@@ -670,22 +670,5 @@ class Team extends AppModel
             ]
         );
         return $ret;
-    }
-
-    function findExpiredTeamListFreeTrial(string $targetDate): array
-    {
-        $serviceDays = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL];
-        $options = [
-            'conditions' => [
-                'service_use_status'              => Team::SERVICE_USE_STATUS_FREE_TRIAL,
-                'service_use_state_start_date <=' => $targetDate,
-
-            ],
-            'fields'     => [
-                'id'
-            ]
-        ];
-        $res = $this->find('list', $options);
-
     }
 }
