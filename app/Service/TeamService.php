@@ -124,6 +124,11 @@ class TeamService extends AppService
             return false;
         }
         $ret = $Team->updateServiceStatusFromReadonlyToCannotUseService($targetTeamList);
+        if ($ret === false) {
+            $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
+                AppUtil::varExportOneLine($targetTeamList)));
+            $this->log(Debugger::trace());
+        }
 
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init("GlRedis");
@@ -172,6 +177,11 @@ class TeamService extends AppService
         }
 
         $ret = $Team->saveAll($saveExpiredTeams, ['validate' => false]);
+        if ($ret === false) {
+            $this->log(sprintf("failed to save changeStatusAllTeamFromFreeTrialToReadonly. saveData: %s",
+                AppUtil::varExportOneLine($saveExpiredTeams)));
+            $this->log(Debugger::trace());
+        }
 
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init("GlRedis");
@@ -204,6 +214,11 @@ class TeamService extends AppService
         }
 
         $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
+        if ($ret === false) {
+            $this->log(sprintf("failed to save deleteTeamCannotUseServiceExpired. targetTeamList: %s",
+                AppUtil::varExportOneLine($targetTeamList)));
+            $this->log(Debugger::trace());
+        }
 
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init("GlRedis");
