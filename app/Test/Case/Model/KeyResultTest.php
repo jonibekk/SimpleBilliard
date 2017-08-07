@@ -728,7 +728,7 @@ class KeyResultTest extends GoalousTestCase
         $res = $this->KeyResult->countMine();
         $this->assertEquals($res, 2);
     }
- 
+
     function test_updateTermByGoalId_currentToNext()
     {
         $this->deleteAllTeam();
@@ -788,7 +788,8 @@ class KeyResultTest extends GoalousTestCase
             $this->KeyResult->Goal->create();
             $this->KeyResult->Goal->save([
                 'id'      => $modelId,
-                'team_id' => 1
+                'team_id' => 1,
+                'end_date' => date('Y-m-d', strtotime('1 day'))
             ], false);
 
             // ゴールメンバー作成
