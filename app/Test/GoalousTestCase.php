@@ -20,6 +20,7 @@ App::uses('Term', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Topic', 'Model');
 App::uses('Message', 'Model');
+App::uses('Invite', 'Model');
 App::uses('PaymentSetting', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
@@ -55,6 +56,7 @@ class GoalousTestCase extends CakeTestCase
         $this->GoalMember = ClassRegistry::init('GoalMember');
         $this->Topic = ClassRegistry::init('Topic');
         $this->Message = ClassRegistry::init('Message');
+        $this->Invite = ClassRegistry::init('Invite');
         $this->GoalService = ClassRegistry::init('GoalService');
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->GlRedis->changeDbSource('redis_test');
@@ -590,6 +592,24 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult->create();
         $KeyResult->save($data, false);
         return $KeyResult->getLastInsertID();
+    }
+
+    function createInvite($data = [])
+    {
+        $default = [
+            'from_user_id'        => 1,
+            'to_user_id'          => 2,
+            'team_id'             => 1,
+            'email'               => 'xxxx@isao.co.jp',
+            'message'             => 'Hello',
+            'email_verified'      => false,
+            'email_token'         => 'testnotokenhananndemoiiyo',
+            'email_token_expires' => time() + DAY
+        ];
+        $invite = am($default, $data);
+        $this->Invite->create();
+        $this->Invite->save($invite, false);
+        return $this->Invite->getLastInsertID();
     }
 
     function _getEndOfMonthDay(int $timezone = 9)
