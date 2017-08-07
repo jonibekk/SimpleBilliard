@@ -20,6 +20,9 @@ App::uses('Term', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Topic', 'Model');
 App::uses('Message', 'Model');
+App::uses('PaymentSetting', 'Model');
+App::uses('CreditCard', 'Model');
+App::uses('ChargeHistory', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::uses('AppUtil', 'Util');
@@ -455,7 +458,8 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->User->save(['active_flg' => true], false);
         $userId = $this->Team->TeamMember->User->getLastInsertId();
         $this->Team->TeamMember->create();
-        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true, 'status' => 1], false);
+        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true, 'status' => 1],
+            false);
         return $userId;
     }
 
@@ -596,6 +600,55 @@ class GoalousTestCase extends CakeTestCase
     function _getLocalTimestamp(int $timezone = 9)
     {
         return REQUEST_TIMESTAMP + $timezone * HOUR;
+    }
+
+    function createCcPaidTeam(
+        array $team = [],
+        array $paymentSetting = [],
+        array $creditCard = [],
+        int $createActiveUserCount = 1
+    ) {
+        $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
+        $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
+        $this->ChargeHistory = $this->ChargeHistory ??ClassRegistry::init('ChargeHistory');
+
+
+        $saveTeam = array_merge(
+            $team,
+            [
+                'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+            ]
+        );
+        $teamId = $this->createTeam($saveTeam);
+
+        $savePaymentSetting = array_merge(
+            [
+                'team_id'          => $teamId,
+                'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'payment_base_day' => 1
+            ],
+            $paymentSetting
+        );
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($savePaymentSetting, false);
+        $paymentSettingId = $this->PaymentSetting->getLastInsertID();
+        $saveCreditCard = array_merge(
+            [
+                'team_id'            => $teamId,
+                'payment_setting_id' => $paymentSettingId,
+            ],
+            $creditCard
+        );
+        $this->CreditCard->create();
+        $this->CreditCard->save($saveCreditCard, false);
+
+        for ($i = 0; $i < $createActiveUserCount; $i++) {
+            $this->createActiveUser($teamId);
+        }
+        return [
+            $teamId,
+            $paymentSettingId,
+        ];
     }
 
 }

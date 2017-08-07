@@ -1,41 +1,181 @@
 <?php
-App::uses('PaymentSetting', 'Model');
+App::uses('GoalousTestCase', 'Test');
+//App::uses('PaymentSetting', 'Model');
+//App::uses('Team', 'Model');
+//App::uses('ChargeHistory', 'Model');
 
 /**
  * PaymentSetting Test Case
- */
-class PaymentSettingTest extends CakeTestCase {
-
-/**
- * Fixtures
  *
- * @var array
+ * @property PaymentSetting PaymentSetting
+ * @property ChargeHistory  ChargeHistory
+ * @property CreditCard     CreditCard
  */
-	public $fixtures = array(
-		'app.payment_setting'
-	);
+class PaymentSettingTest extends GoalousTestCase
+{
 
-/**
- * setUp method
- *
- * @return void
- */
-	public function setUp() {
-		parent::setUp();
-		$this->PaymentSetting = ClassRegistry::init('PaymentSetting');
-	}
+    /**
+     * @var array
+     * Fixtures
+     */
+    public $fixtures = array(
+        'app.payment_setting',
+        'app.charge_history',
+        'app.credit_card',
+        'app.team',
+        'app.team_member',
+        'app.user',
+    );
 
-/**
- * tearDown method
- *
- * @return void
- */
-	public function tearDown() {
-		unset($this->PaymentSetting);
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $this->ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $this->CreditCard = ClassRegistry::init('CreditCard');
+    }
 
-		parent::tearDown();
-	}
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        unset($this->PaymentSetting);
 
-	// Please delete when you implement test code
-	public function test_dummy() {}
+        parent::tearDown();
+    }
+
+    // Please delete when you implement test code
+    public function test_dummy()
+    {
+    }
+
+    public function test_findMonthlyChargeCcTeams_basic()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+
+        // data_count: 1
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0], [
+            'PaymentSetting' => [
+                'id'               => $paymentSettingId,
+                'team_id'          => $teamId,
+                'payment_base_day' => 1,
+            ],
+            'Team'           => [
+                'timezone' => 9.0
+            ],
+        ]);
+
+        // data_count: multi
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEquals(count($res), 2);
+        $this->assertNotEquals($res[0]['PaymentSetting']['team_id'], $res[1]['PaymentSetting']['team_id']);
+        $this->assertEquals($res[1], [
+            'PaymentSetting' => [
+                'id'               => $paymentSettingId,
+                'team_id'          => $teamId,
+                'payment_base_day' => 1,
+            ],
+            'Team'           => [
+                'timezone' => 9.0
+            ],
+        ]);
+
+    }
+
+    public function test_findMonthlyChargeCcTeams_condJoins()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+        // Not empty
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+
+        // Team.service_use_status = free trial
+        $this->Team->create();
+        $this->Team->save([
+            'id'                 => $teamId,
+            'service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL
+        ]);
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+
+        // Team.service_use_status = read only
+        $this->Team->create();
+        $this->Team->save([
+            'id'                 => $teamId,
+            'service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY
+        ]);
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+
+        // Team.service_use_status = can't use service
+        $this->Team->create();
+        $this->Team->save([
+            'id'                 => $teamId,
+            'service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE
+        ]);
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+
+        // Team deleted
+        $this->Team->create();
+        $this->Team->save([
+            'id'                 => $teamId,
+            'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+            'del_flg'            => true
+        ]);
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+
+        // CreditCard deleted
+        $this->Team->create();
+        $this->Team->save([
+            'id'                 => $teamId,
+            'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+            'del_flg'            => false
+        ]);
+        $this->CreditCard->create();
+        $this->CreditCard->updateAll(
+            ['del_flg' => true],
+            ['payment_setting_id' => $paymentSettingId]
+        );
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+    }
+
+    public function test_findMonthlyChargeCcTeams_condPaymentSetting()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+
+        // PaymentSetting.type != credit card
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save([
+            'id'   => $paymentSettingId,
+            'type' => PaymentSetting::PAYMENT_TYPE_INVOICE
+        ], false);
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+
+        // PaymentSetting deleted
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save([
+            'id'      => $paymentSettingId,
+            'type'    => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+            'del_flg' => true
+        ], false);
+        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $this->assertEmpty($res);
+    }
 }
