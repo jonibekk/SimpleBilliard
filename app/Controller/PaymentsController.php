@@ -1,8 +1,12 @@
 <?php
-# /app/Controller/PaymentsController.php
+App::import('Service', 'TeamService');
 
 class PaymentsController extends AppController {
+    public $uses = array('Teams');
     public function index(){
+        $TeamService = ClassRegistry::init("TeamService");
+        $this->set('teamMemberCount', count($this->Team->TeamMember->getAllMemberUserIdList(true, true, true)));
+        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('index');
     }
