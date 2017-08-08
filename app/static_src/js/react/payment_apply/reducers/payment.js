@@ -10,15 +10,7 @@ const initialState = {
   countries: {},
   lang_code: "",
   input_data: {
-    name: "",
-    end_date: "",
-    description: "",
-    key_result: {
-      name: "",
-      start_value: 0,
-      target_value: 100,
-      description: ""
-    }
+    country: "",
   },
   is_disabled_submit: false,
   can_approve: false,
@@ -43,9 +35,11 @@ export default function payment(state = initialState, action) {
         is_disabled_submit: true
       })
     case types.TO_NEXT_PAGE:
+      input_data = Object.assign({}, input_data, action.addData)
       return Object.assign({}, state, {
+        input_data,
         to_next_page: true,
-        is_disabled_submit: false
+        validation_errors: {}
       })
     case types.FETCH_INITIAL_DATA:
       return Object.assign({}, state, action.data, {

@@ -24,7 +24,12 @@ export default class Country extends Base {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.payment.to_next_page) {
-      browserHistory.push(Page.URL_COMPANY)
+      const {payment_type} = nextProps.payment.input_data
+      if (payment_type == PaymentSetting.PAYMENT_TYPE.CREDIT_CARD) {
+        browserHistory.push(Page.URL_COMPANY)
+      } else {
+        browserHistory.push(Page.URL_INVOICE)
+      }
     }
   }
 
@@ -44,7 +49,7 @@ export default class Country extends Base {
   render() {
     const {countries, lang_code, input_data} = this.props.payment
     let is_ja = false;
-    if (input_data.country == "JA") {
+    if (input_data.country == "JP") {
       is_ja = true;
     } else if (input_data.country == "" && lang_code == 'ja') {
       is_ja = true;
@@ -54,7 +59,7 @@ export default class Country extends Base {
     countries_option_el.push(<option value="">{__('Choose Country')}</option>)
     for (const code in countries) {
       countries_option_el.push(
-        <option key={code} value={code} selected={code == "JA" && is_ja ? "selected" : ""}>{countries[code]}</option>
+        <option key={code} value={code} selected={code == "JP" && is_ja ? "selected" : ""}>{countries[code]}</option>
       );
     }
 
@@ -69,12 +74,12 @@ export default class Country extends Base {
             </select>
             {!is_ja &&
             <div className="clearfix">
-              <input type="submit" value="Submit" className="btn btn-primary" disabled="disabled"/>
+              <input type="submit" value="Submit" className="btn btn-primary" disabled={input_data.county == "" ? "disabled" : ""}/>
             </div>
             }
           </form>
           {is_ja &&
-          <div className="payment-option-container">
+          <div className="payment-option-container mt_32px">
             <h3>{__('Select Payment Method')}</h3>
             <div className="payment-option"
                  onClick={(e) => this.props.validatePayment(Page.COUNTY, PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>

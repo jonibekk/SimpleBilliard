@@ -4,6 +4,7 @@ import React from 'react'
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
+import FormTextBox from "~/payment_apply/components/elements/FormTextBox";
 
 export default class Company extends Base {
   constructor(props) {
@@ -41,30 +42,24 @@ export default class Company extends Base {
         <h3>{__("Enter Company Information")}</h3>
         <form className="form-horizontal" name="addCompanyInfo"
               id="PaymentsAddCompanyInfoForm" method="post" acceptCharset="utf-8">
-          <div className="form-group">
-            <label
-              htmlFor="PaymentsCompanyName"
-              className="circle-create-label">
-              {__("Company Name")}
-            </label>
-            <input className="form-control" placeholder="株式会社ISAO"
-                   type="text" id="PaymentsCompanyName"/>
-          </div>
+
+          <FormTextBox
+            id="PaymentsCompanyName"
+            label={__("Company Name")}
+            placeholder="株式会社ISAO"
+            />
           <fieldset className="company-info-fieldset">
             <legend className="company-info-legend">{__("Company Address")}</legend>
-            <div className="form-group">
-              <label htmlFor="PaymentsCompanyZipCode"
-                     className="circle-create-label">{__("ZipCode")}</label>
-              <input
-                name="data[Payments][company_zip_code]" className="form-control" placeholder="000-0000"
-                type="tel" id="PaymentsCompanyZipCode"/>
-            </div>
-            <div className="form-group">
-              <label htmlFor="PaymentsCompanyAddressRegion" className="circle-create-label">{__("Region")}</label>
-              <input
-                name="data[Payments][company_address_region]" className="form-control" placeholder="東京都"
-                type="text" id="PaymentsCompanyAddressRegion"/>
-            </div>
+            <FormTextBox
+              id="PaymentsCompanyZipCode"
+              label={__("Post Code")}
+              placeholder="000-0000"
+            />
+            <FormTextBox
+              id="PaymentsCompanyAddressRegion"
+              label={__("Region")}
+              placeholder="東京都"
+            />
             <div className="form-group">
               <label htmlFor="PaymentsCompanyAddressCity"
                      className="circle-create-label">{__("City")}</label>

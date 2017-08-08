@@ -11,7 +11,7 @@ export function validatePayment(page, addData) {
     const fields = Page.VALIDATION_FIELDS[page].join(',')
     return post(`/api/v1/payments/validate?fields=${fields}`, postData, null,
       (response) => {
-        dispatch(toNextPage())
+        dispatch(toNextPage(addData))
       },
       ({response}) => {
         // when team is in read only
@@ -29,9 +29,10 @@ export function validatePayment(page, addData) {
   }
 }
 
-export function toNextPage() {
+export function toNextPage(addData = {}) {
   return {
-    type: types.TO_NEXT_PAGE
+    type: types.TO_NEXT_PAGE,
+    addData
   }
 }
 

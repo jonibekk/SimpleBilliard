@@ -5,6 +5,7 @@ export const COMPLETE = 'COMPLETE'
 
 export const URL_COUNTY = '/payments/apply'
 export const URL_COMPANY = '/payments/apply/company'
+export const URL_INVOICE = '/payments/apply/invoice'
 export const URL_CREDIT_CARD = '/payments/apply/credit_card'
 export const URL_COMPLETE = '/payments/apply/compete'
 
