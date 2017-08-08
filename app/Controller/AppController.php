@@ -11,6 +11,7 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
@@ -257,6 +258,7 @@ class AppController extends BaseController
                 $this->_setMyCircle();
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
+                $this->_setUserTimeZone();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
             $this->_setMyMemberStatus();
@@ -293,6 +295,12 @@ class AppController extends BaseController
             }
             $this->Session->write('ua', $ua);
         }
+    }
+
+    public function _setUserTimeZone()
+    {
+        $timezone = floatval($this->Auth->user('timezone'));
+        GoalousDateTime::setGlobalTimeZoneByHour($timezone);
     }
 
     public function _setTerm()
