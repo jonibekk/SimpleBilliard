@@ -89,7 +89,7 @@ class TeamFixture extends CakeTestFixtureEx
             'default'  => '0',
             'unsigned' => true,
             'key'      => 'index',
-            'comment'  => 'サービス利用ステータス(0: free trial,1: payed,2: read only,3: service expired)'
+            'comment'  => 'サービス利用ステータス(0: free trial,1: payed,2: read only,3: service expired,4: manual delete,5: auto delete)'
         ),
         'country'                      => array(
             'type'    => 'string',
@@ -106,12 +106,11 @@ class TeamFixture extends CakeTestFixtureEx
             'default' => null,
             'comment' => '各ステートの開始日'
         ),
-        'free_trial_days'              => array(
-            'type'     => 'integer',
-            'null'     => true,
-            'default'  => null,
-            'unsigned' => true,
-            'comment'  => 'フリートライアル日数'
+        'service_use_state_end_date'   => array(
+            'type'    => 'date',
+            'null'    => false,
+            'default' => null,
+            'comment' => '各ステートの終了日'
         ),
         'del_flg'                      => array(
             'type'    => 'boolean',
