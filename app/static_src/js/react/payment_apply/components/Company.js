@@ -40,82 +40,80 @@ export default class Company extends Base {
     return (
       <section className="panel company-info">
         <h3>{__("Enter Company Information")}</h3>
-        <form className="form-horizontal" name="addCompanyInfo"
-              id="PaymentsAddCompanyInfoForm" method="post" acceptCharset="utf-8">
+        <form
+          className="form-horizontal" name="addCompanyInfo"
+          id="PaymentsAddCompanyInfoForm" acceptCharset="utf-8"
+          onSubmit={(e) => this.onSubmit(e)}
+        >
 
           <FormTextBox
             id="PaymentsCompanyName"
+            name="company_name"
             label={__("Company Name")}
             placeholder="株式会社ISAO"
-            />
+          />
           <fieldset className="company-info-fieldset">
             <legend className="company-info-legend">{__("Company Address")}</legend>
             <FormTextBox
-              id="PaymentsCompanyZipCode"
+              id="PaymentsCompanyPostCode"
+              name="company_post_code"
+              type="tel"
               label={__("Post Code")}
               placeholder="000-0000"
+              max_length={16}
             />
             <FormTextBox
               id="PaymentsCompanyAddressRegion"
+              name="company_region"
               label={__("Region")}
               placeholder="東京都"
             />
-            <div className="form-group">
-              <label htmlFor="PaymentsCompanyAddressCity"
-                     className="circle-create-label">{__("City")}</label>
-              <input
-                name="data[Payments][company_address_city]" className="form-control" placeholder="台東区"
-                type="text" id="PaymentsCompanyAddressCity"/>
-            </div>
-            <div className="form-group">
-              <label htmlFor="PaymentsCompanyAddressStreet"
-                     className="circle-create-label">{__("Address")}
-              </label>
-              <input
-                name="data[Payments][company_address_street]" className="form-control" placeholder="台東１－１－１"
-                type="text" id="PaymentsCompanyAddressStreet"/>
-            </div>
+            <FormTextBox
+              id="PaymentsCompanyAddressCity"
+              name="company_address_city"
+              label={__("City")}
+              placeholder="台東区"
+            />
+            <FormTextBox
+              id="PaymentsCompanyAddressStreet"
+              name="company_street"
+              label={__("Address")}
+              placeholder="台東１－１－１"
+            />
           </fieldset>
           <fieldset className="company-info-fieldset">
             <legend className="company-info-legend">Company Contact</legend>
-            <div className="form-group">
-              <label htmlFor="PaymentsContactNameLast"
-                     className="circle-create-label">{__("LastName")}
-              </label>
-              <input
-                name="data[Payments][contact_name_last]" className="form-control" type="text"
-                id="PaymentsContactNameLast"/>
-            </div>
-            <div className="form-group">
-              <label htmlFor="PaymentsContactNameFirst"
-                     className="circle-create-label">{__("FirstName")}
-              </label>
-              <input
-                name="data[Payments][contact_name_first]" className="form-control" type="text"
-                id="PaymentsContactNameFirst"/>
-            </div>
+            <FormTextBox
+              id="PaymentsContactNameLast"
+              name="contact_last_name"
+              label={__("LastName")}
+              placeholder="東京"
+            />
+            <FormTextBox
+              id="PaymentsContactNameFirst"
+              name="contact_first_name"
+              label={__("FirstName")}
+              placeholder="太郎"
+            />
           </fieldset>
-          <div className="form-group">
-            <label htmlFor="PaymentsContactEmail" className="circle-create-label">{__("Contact")}
-              {__("Email")}
-            </label>
-            <input name="data[Payments][contact_email]" className="form-control"
-                   placeholder="name@company.com" type="email"
-                   id="PaymentsContactEmail"/>
-          </div>
-          <div className="form-group">
-            <label htmlFor="PaymentsContactPhone"
-                   className="circle-create-label">{__("Telephone")}
-            </label>
-            <input
-              name="data[Payments][contact_phone]" className="form-control" placeholder="株式会社ISAO"
-
-              type="tel" id="PaymentsContactPhone"/>
-          </div>
+          <FormTextBox
+            id="PaymentsContactEmail"
+            name="contact_first_name"
+            label={__("Email")}
+            type="email"
+            placeholder="name@company.com"
+          />
+          <FormTextBox
+            id="PaymentsContactPhone"
+            name="contact_first_name"
+            type="tel"
+            label={__("Telephone")}
+            placeholder="000-0000-0000"
+          />
           <div className="panel-footer setting_pannel-footer">
-            <a className="btn btn-link design-cancel bd-radius_4px" href="/payments/">
-              {__("Cancel")}</a>
-            <input type="submit" className="btn btn-primary" defaultValue={__("Next")} />
+            <Link to="/payments/apply/country" className="btn btn-link design-cancel bd-radius_4px">
+              {__("Back")}</Link>
+            <input type="submit" className="btn btn-primary" defaultValue={__("Next")}/>
           </div>
         </form>
       </section>

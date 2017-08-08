@@ -11,6 +11,7 @@ export default class Country extends Base {
     super(props);
     this.state = {};
     this.onChange = this.onChange.bind(this)
+    this.choosePaymentType = this.choosePaymentType.bind(this)
 
   }
 
@@ -40,6 +41,10 @@ export default class Country extends Base {
   onSubmit(e) {
     e.preventDefault()
     this.props.validatePayment(Page.COUNTY, {payment_type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD})
+  }
+
+  choosePaymentType(payment_type) {
+    this.props.validatePayment(Page.COUNTY, {payment_type})
   }
 
   onChange(e) {
@@ -82,13 +87,14 @@ export default class Country extends Base {
           <div className="payment-option-container mt_32px">
             <h3>{__('Select Payment Method')}</h3>
             <div className="payment-option"
-                 onClick={(e) => this.props.validatePayment(Page.COUNTY, PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
+                 onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
               <h4>{__('Credit Card')}</h4>
               <i className="fa fa-credit-card"/>
               <p>{__("Use a credit card to setup automatic, reoccuring payments for your Goalous team.")}</p>
-              <a href="/payments/enterCompanyInfo">{__('Setup')}</a>
+              <a href="#">{__('Setup')}</a>
             </div>
-            <div className="payment-option upcoming">
+            <div className="payment-option upcoming"
+                 onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
               <h4>{__('Invoice')}</h4>
               <i className="fa fa-leaf"/>
               <p>{__("Setup a monthly invoice with Goalous.")}</p>

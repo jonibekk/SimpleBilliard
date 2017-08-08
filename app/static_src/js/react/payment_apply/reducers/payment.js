@@ -5,15 +5,21 @@ import * as Page from "../constants/Page";
 const initialState = {
   to_next_page: false,
   validation_errors: {
-    key_result: {}
   },
   countries: {},
   lang_code: "",
   input_data: {
-    country: "",
+    payment_setting: {
+      company_country: "",
+      company_post_code: "",
+      company_region: "",
+      company_city: "",
+      company_street: "",
+      contact_mail: "",
+      company_tel: "",
+    }
   },
   is_disabled_submit: false,
-  can_approve: false,
   redirect_to_home: false
 }
 
