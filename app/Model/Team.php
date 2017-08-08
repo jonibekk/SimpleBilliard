@@ -231,6 +231,15 @@ class Team extends AppModel
             ]
         ];
         $postData = array_merge($postData, $team_member);
+
+        // set free trial start date and end date
+        $postData['Team']['service_use_status'] = self::SERVICE_USE_STATUS_FREE_TRIAL;
+        $postData['Team']['service_use_state_start_date'] = AppUtil::todayDateYmdLocal($postData['Team']['timezone']);
+        $stateDays = self::DAYS_SERVICE_USE_STATUS[self::SERVICE_USE_STATUS_FREE_TRIAL];
+        $stateEndDate = AppUtil::dateAfter($postData['Team']['service_use_state_start_date'],
+            $stateDays);
+        $postData['Team']['service_use_state_end_date'] = $stateEndDate;
+
         $this->saveAll($postData);
         // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
