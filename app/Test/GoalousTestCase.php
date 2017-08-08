@@ -441,7 +441,7 @@ class GoalousTestCase extends CakeTestCase
             'service_use_status'           => 1,
             'country'                      => 1,
             'service_use_state_start_date' => '2017-07-20',
-            'free_trial_days'              => 999,
+            'service_use_state_end_date'   => '2020-07-20',
         ];
         $team = am($default, $data);
         $this->Team->create();
@@ -630,8 +630,7 @@ class GoalousTestCase extends CakeTestCase
     ) {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
-        $this->ChargeHistory = $this->ChargeHistory ??ClassRegistry::init('ChargeHistory');
-
+        $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
 
         $saveTeam = array_merge(
             $team,
