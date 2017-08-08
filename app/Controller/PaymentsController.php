@@ -45,4 +45,9 @@ class PaymentsController extends AppController {
     {
         $this->layout = LAYOUT_ONE_COLUMN;
     }
+
+    public function update_cc_info() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('update_credit_card');
+    }
 }
