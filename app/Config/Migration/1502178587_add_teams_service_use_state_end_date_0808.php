@@ -17,7 +17,7 @@ class AddTeamsServiceUseStateEndDate0808 extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'teams' => array(
-					'service_use_state_end_date' => array('type' => 'date', 'null' => false, 'default' => null, 'comment' => '各ステートの終了日', 'after' => 'service_use_state_start_date'),
+					'service_use_state_end_date' => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '各ステートの終了日', 'after' => 'service_use_state_start_date'),
 				),
 			),
 			'drop_field' => array(

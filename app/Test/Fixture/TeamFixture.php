@@ -108,7 +108,7 @@ class TeamFixture extends CakeTestFixtureEx
         ),
         'service_use_state_end_date'   => array(
             'type'    => 'date',
-            'null'    => false,
+            'null'    => true,
             'default' => null,
             'comment' => '各ステートの終了日'
         ),
