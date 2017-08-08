@@ -3,7 +3,6 @@ import React from 'react'
 /* eslint-enable no-unused-vars */
 import {browserHistory} from "react-router";
 import {MaxLength} from "~/common/constants/App";
-import Page from "~/invite/constants/Page";
 import Base from "~/common/components/Base";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 

@@ -59,8 +59,11 @@
 }
 
 .dashboard-circle-list-body-wrap {
-  overflow: hidden;
+  overflow:hidden;
   width: 100%;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0 !important }
 }
 .dashboard-circle-list-body {
   overflow-y: scroll;
@@ -69,10 +72,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-}
-.dashboard-circle-list-footer {
-  position: absolute;
-  bottom: -6rem;
 }
 .dashboard-circle-list-seek {
   font-size: 12px;
