@@ -8,6 +8,9 @@ if(document.enterCCInfo){
     var stripe = Stripe(cake.stripe_publishable_key);
     var elements = stripe.elements();
 
+    // Stripe Elements API
+    // Custom styling can be passed to options when creating an Element.
+    // Check: https://stripe.com/docs/stripe.js#elements-create
     var card = elements.create('card', {
         style: {
             base: {
@@ -27,10 +30,8 @@ if(document.enterCCInfo){
 
     // Add validator listeners
     var cardName = document.enterCCInfo.querySelector('input[name=cardholder-name]');
-    var checkAccept = document.enterCCInfo.querySelector('input[name=payment-terms]');
     card.on('change', function(event) { validateCreditCardForm(event); });
     cardName.addEventListener('change', validateCreditCardForm);
-    checkAccept.addEventListener('change', validateCreditCardForm);
 
     /**
      * Validate form input and Stripe token results
@@ -45,12 +46,6 @@ if(document.enterCCInfo){
 
         // Validate Card Name
         if (cardName.value.trim() == '') {
-            submitButton.disabled = true;
-            return false;
-        }
-
-        // Require to accept terms
-        if (!checkAccept.checked) {
             submitButton.disabled = true;
             return false;
         }
@@ -91,7 +86,7 @@ if(document.enterCCInfo){
         formData.append('payer_name', cardName.value);
 
         $.ajax({
-            url: document.enterCCInfo.action,
+            url: '/api/v1/payments/update_credit_card',
             method: 'post',
             dataType: 'json',
             processData: false,
