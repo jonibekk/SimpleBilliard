@@ -580,7 +580,7 @@ function evAjaxEditCircleAdminStatus(e) {
 var circleListDashboard=document.getElementsByClassName('dashboard-circle-list-body')[0];
 
 $('.js-dashboard-circle-list.is-hamburger').click(function(){
-    $('.js-nav-toggle').click(); 
+    $('.js-nav-toggle').click();
 });
 
 function circleListHeight(){
