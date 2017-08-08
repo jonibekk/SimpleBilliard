@@ -3,29 +3,29 @@
     <div class="panel-container">
         <h3 class="subscription-status-headline"><?= __("Subscription Status") ?></h3>
         <h4 class="status-text">
-            <?php if($serviceUseStatus==0){ // Free Trial ?>
+            <?php if($serviceUseStatus==Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
                 <i class="fa fa-unlock-alt free-trial"></i>
                 <?= __('Free Trial') ?>
-            <?php }elseif($serviceUseStatus==1){ // Subscribed ?>
+            <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_PAID): ?>
                 <i class="fa fa-check subscribed"></i>
                 <?= __('Subscribed') ?>
-            <?php }elseif($serviceUseStatus==2){ // Read Only ?>
+            <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_READ_ONLY): ?>
                 <i class="fa fa-lock read-only"></i>
                 <?= __('Read Only') ?>
-            <?php }else{ //Deactivated ?>
+            <?php else: ?>
                 <i class="fa fa-lock deactivated"></i>
                 <?= __('Deactivated') ?>
-            <?php } ?>
+            <?php endif; ?>
         </h4>
-        <?php if($serviceUseStatus==0){ // Free Trial ?>
+        <?php if($serviceUseStatus==Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
                 <p class="subscription-status-detail"><?= __('Your team is currently using Goalous as a free trial. Your free trial will end on September 20, 2017'); ?></p>
-            <?php }elseif($serviceUseStatus==1){ // Subscribed  ?>
+        <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_PAID): ?>
                 <p class="subscription-status-detail"><?= __('Your team has full access to Goalous.<br /><br />Go achieve your goal!'); ?></p>
-            <?php }elseif($serviceUseStatus==2){ // Read Only ?>
+        <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_READ_ONLY): ?>
                 <p class="subscription-status-detail"><?= __('Your team can no longer create or edit content on Goalous. Your team account will be deactived on November 20, 2017'); ?></p>
-            <?php }else{ //Deactivated ?>
+        <?php else: //Deactivated ?>
                 <p class="subscription-status-detail"><?= __('Your team no longer has access to  Goalous. Your team account will be deleted on December 20, 2017'); ?></p>
-            <?php } ?>
+        <?php endif; ?>
         <a href="#" class="subscribe-btn btn btn-primary"><?= __('Subscribe') ?></a>
         <div class="team-price-info">
             <h5 class="team-price-info-headline"><?= __('Number of Members')?></h5>

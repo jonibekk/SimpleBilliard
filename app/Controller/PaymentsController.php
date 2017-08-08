@@ -1,5 +1,5 @@
 <?php
-# /app/Controller/PaymentsController.php
+App::import('Service', 'TeamService');
 
 class PaymentsController extends AppController {
     public $uses = array('Teams');
