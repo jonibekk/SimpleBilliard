@@ -1,0 +1,99 @@
+/* eslint-disable no-unused-vars */
+import React from 'react'
+/* eslint-enable no-unused-vars */
+import {browserHistory, Link} from "react-router";
+import * as Page from "../constants/Page";
+import Base from "~/common/components/Base";
+import {PaymentSetting} from "~/common/constants/Model";
+
+export default class Country extends Base {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.onChange = this.onChange.bind(this)
+
+  }
+
+  componentWillMount() {
+    this.props.fetchInitialData(Page.COUNTY)
+  }
+
+  componentDidMount() {
+    super.componentDidMount.apply(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.payment.to_next_page) {
+      browserHistory.push(Page.URL_COMPANY)
+    }
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount.apply(this)
+  }
+
+  onSubmit(e) {
+    e.preventDefault()
+    this.props.validatePayment(Page.COUNTY, {payment_type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD})
+  }
+
+  onChange(e) {
+    this.props.updateInputData({country: e.target.value})
+  }
+
+  render() {
+    const {countries, lang_code, input_data} = this.props.payment
+    let is_ja = false;
+    if (input_data.country == "JA") {
+      is_ja = true;
+    } else if (input_data.country == "" && lang_code == 'ja') {
+      is_ja = true;
+    }
+
+    let countries_option_el = [];
+    countries_option_el.push(<option value="">{__('Choose Country')}</option>)
+    for (const code in countries) {
+      countries_option_el.push(
+        <option key={code} value={code} selected={code == "JA" && is_ja ? "selected" : ""}>{countries[code]}</option>
+      );
+    }
+
+    return (
+      <section className="panel choose-payment">
+        <div className="panel-container">
+          <form className="form-horizontal" name="companyLocation" onSubmit={(e) => this.onSubmit(e)}>
+            <h3>{__('Select Country Location')}</h3>
+            <select name="country" className="form-control setting_input-design company-location-select"
+            onChange={(e) => this.onChange(e)}>
+              {countries_option_el}
+            </select>
+            {!is_ja &&
+            <div className="clearfix">
+              <input type="submit" value="Submit" className="btn btn-primary" disabled="disabled"/>
+            </div>
+            }
+          </form>
+          {is_ja &&
+          <div className="payment-option-container">
+            <h3>{__('Select Payment Method')}</h3>
+            <div className="payment-option"
+                 onClick={(e) => this.props.validatePayment(Page.COUNTY, PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
+              <h4>{__('Credit Card')}</h4>
+              <i className="fa fa-credit-card"/>
+              <p>{__("Use a credit card to setup automatic, reoccuring payments for your Goalous team.")}</p>
+              <a href="/payments/enterCompanyInfo">{__('Setup')}</a>
+            </div>
+            <div className="payment-option upcoming">
+              <h4>{__('Invoice')}</h4>
+              <i className="fa fa-leaf"/>
+              <p>{__("Setup a monthly invoice with Goalous.")}</p>
+              <p className="coming-soon">{__('Coming Soon')}</p>
+            </div>
+          </div>
+          }
+
+        </div>
+      </section>
+    )
+  }
+}

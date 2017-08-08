@@ -103,4 +103,80 @@ class PaymentsController extends ApiController
         // New Payment registered with success
         return $this->_getResponseSuccess();
     }
+
+
+    /**
+     * Goal作成&編集においての初期化処理API
+     * formで利用する値を取得する
+     *
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     *
+     * @param integer|null $id
+     *
+     * @return CakeResponse
+     */
+    function get_init_form()
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+
+        $res = [];
+
+//        /* @var Label $Label */
+//        $Label = ClassRegistry::init('Label');
+
+        if ($this->request->query('data_types')) {
+            $dataTypes = explode(',', $this->request->query('data_types'));
+            if (in_array('all', $dataTypes)) {
+                $dataTypes = 'all';
+            }
+        } else {
+            $dataTypes = 'all';
+        }
+
+        if ($dataTypes == 'all' || in_array('countries', $dataTypes)) {
+            $countries = Configure::read("countries");
+            $res['countries'] = Hash::combine($countries, '{n}.code', '{n}.name');
+        }
+
+        if ($dataTypes == 'all' || in_array('lang_code', $dataTypes)) {
+            App::uses('LangHelper', 'View/Helper');
+            $LangHelper = new LangHelper(new View());
+            $res['lang_code'] = $LangHelper->getLangCode();
+        }
+        return $this->_getResponseSuccess($res);
+    }
+
+
+    /**
+     * ゴール(KR除く)のバリデーションAPI
+     * 成功(Status Code:200)、失敗(Status Code:400)
+     * - fieldsパラメタにカンマ区切りで検査対象フィールドを指定。allもしくは指定なしの場合はすべてのフィールドのvalidationを行う。
+     *
+     * @query_param fields
+     * @return CakeResponse
+     */
+    function post_validate()
+    {
+        $fields = [];
+//        if ($this->request->query('fields')) {
+//            $fields = explode(',', $this->request->query('fields'));
+//            //allが含まれる場合はすべて指定。それ以外はそのまま
+//            $fields = in_array('all', $fields) ? [] : $fields;
+//        }
+//        /** @var GoalService $GoalService */
+//        $GoalService = ClassRegistry::init("GoalService");
+//
+//        $data = $this->request->data;
+//        if (!empty($_FILES['photo'])) {
+//            $data['photo'] = $_FILES['photo'];
+//        }
+//
+//        $validationErrors = $GoalService->validateSave($data, $fields);
+//        if (!empty($validationErrors)) {
+//            return $this->_getResponseValidationFail($validationErrors);
+//        }
+        return $this->_getResponseSuccess();
+    }
+
 }
