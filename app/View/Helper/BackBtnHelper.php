@@ -15,25 +15,25 @@ class BackBtnHelper extends AppHelper
             'goals/create',
             'after_click:SubHeaderMenuGoal',
             'goals/approval/detail',
-            'evaluations/view'
+            'evaluations/view',
         );
-        $backButton = true;
+        $backButton = 'true';
 
         foreach($normalPages as $pageURL){
             if(strpos($this->request->here , $pageURL ) && $pageURL != 'users' && $pageURL != 'post_permanent'){
-                $backButton = false;
+                $backButton = 'false';
             } elseif ($pageURL == 'users'){
                 $userUrlID = substr($this->request->here, strpos($this->request->here, ":") + 1);
                 if ($userUrlID == $this->Session->read('Auth.User.id')){
-                    $backButton = false;
+                    $backButton = 'false';
                 }
             } elseif ($pageURL == 'post_permanent'){
-                $backButton = false;
+                $backButton = 'false';
             }
         }
         // Special case for homepage
         if($this->request->here == "/"){
-            $backButton = false;
+            $backButton = 'false';
         }
         return $backButton;
     }
