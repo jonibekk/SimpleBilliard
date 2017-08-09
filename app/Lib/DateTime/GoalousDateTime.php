@@ -3,54 +3,99 @@
 class GoalousDateTime extends \Carbon\Carbon
 {
     /**
-     * goalous app global timezone
+     * goalous app default time zone of user
      * @var DateTimeZone
      */
-    private static $globalDateTimeZone = null;
+    private static $defaultDateTimeZoneUser = null;
 
-    function __construct($time = null, $tz = null)
+    /**
+     * goalous app default time zone of team
+     * @var DateTimeZone
+     */
+    private static $defaultDateTimeZoneTeam = null;
+
+    /**
+     * set user timezone to current instance
+     * @return self
+     */
+    function setTimeZoneUser(): self
     {
-        parent::__construct($time, $tz);
-        if (is_null($tz) && static::$globalDateTimeZone instanceof DateTimeZone) {
-            $this->setTimezone(static::$globalDateTimeZone);
-            $this->timestamp($this->getTimestamp());
+        if (is_null(static::$defaultDateTimeZoneUser)) {
+            return $this;
         }
+        $this->setTimezone(static::$defaultDateTimeZoneUser);
+        $this->timestamp($this->getTimestamp());
+        return $this;
     }
 
     /**
-     * set GoalousDateTime timezone by specified hour
-     *
-     * @param float $hour
+     * set team timezone to current instance
+     * @return self
      */
-    static function setGlobalTimeZoneByHour(float $hour)
+    function setTimeZoneTeam(): self
+    {
+        if (is_null(static::$defaultDateTimeZoneTeam)) {
+            return $this;
+        }
+        $this->setTimezone(static::$defaultDateTimeZoneTeam);
+        $this->timestamp($this->getTimestamp());
+        return $this;
+    }
+
+    /**
+     * change specify hours to DateTimeZone
+     * @example self::hourToDateTimeZone(1) return new DateTimeZone("+01:00")
+     * @param float $hour
+     *
+     * @return DateTimeZone
+     */
+    static function hourToDateTimeZone(float $hour): DateTimeZone
     {
         $offsetSign = (0 <= $hour) ? '+' : '-';
-        $hourAbs = abs(intval($hour)); // transform example: 5.5 to 5, -5.5 to 5
-        static::$globalDateTimeZone = new DateTimeZone(
+        $hourAbs = abs(intval($hour)); // example: 5.5 to 5, -5.5 to 5
+        return new DateTimeZone(
             sprintf(
-                '%s%02d:%02d',
+                '%s%02d:%02d',  // example: 5.5 to '+05:30', -5.5 to '-05:30'
                 $offsetSign,
-                $hourAbs, // transform example: 5.5 to 5, -5.5 to 5
-                60 * (abs($hour) - $hourAbs) // transform example: 5.5 to (60 * 0.5), -5.5 to (60 * 0.5)
-                )
+                $hourAbs, // example: 5.5 to 5, -5.5 to 5
+                60 * (abs($hour) - $hourAbs) // example: 5.5 to (60 * 0.5), -5.5 to (60 * 0.5)
+            )
         );
     }
 
     /**
-     * set GoalousDateTime timezone by specified string
+     * set user default TimeZone by specified hour
      *
-     * @param string $timezone
+     * @param float $hour
      */
-    static function setGlobalTimeZoneByString(string $timezone)
+    static function setDefaultTimeZoneUserByHour(float $hour)
     {
-        static::$globalDateTimeZone = new DateTimeZone($timezone);
+        static::$defaultDateTimeZoneUser = static::hourToDateTimeZone($hour);
     }
 
     /**
      * @return DateTimeZone|null
      */
-    static function getGlobalTimeZone()
+    static function getDefaultTimeZoneUser()
     {
-        return static::$globalDateTimeZone;
+        return static::$defaultDateTimeZoneUser;
+    }
+
+    /**
+     * set team default TimeZone by specified hour
+     *
+     * @param float $hour
+     */
+    static function setDefaultTimeZoneTeamByHour(float $hour)
+    {
+        static::$defaultDateTimeZoneTeam = static::hourToDateTimeZone($hour);
+    }
+
+    /**
+     * @return DateTimeZone|null
+     */
+    static function getDefaultTimeZoneTeam()
+    {
+        return static::$defaultDateTimeZoneTeam;
     }
 }

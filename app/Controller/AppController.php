@@ -258,7 +258,7 @@ class AppController extends BaseController
                 $this->_setMyCircle();
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
-                $this->_setUserTimeZone();
+                $this->_setTimeZoneEnvironment();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
             $this->_setMyMemberStatus();
@@ -297,10 +297,15 @@ class AppController extends BaseController
         }
     }
 
-    public function _setUserTimeZone()
+    public function _setTimeZoneEnvironment()
     {
-        $timezone = floatval($this->Auth->user('timezone'));
-        GoalousDateTime::setGlobalTimeZoneByHour($timezone);
+        $timezoneUser = floatval($this->Auth->user('timezone'));
+        GoalousDateTime::setDefaultTimeZoneUserByHour($timezoneUser);
+
+        $Team = ClassRegistry::init('Team');
+        $team = $Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+        GoalousDateTime::setDefaultTimeZoneTeamByHour($timezoneTeam);
     }
 
     public function _setTerm()
