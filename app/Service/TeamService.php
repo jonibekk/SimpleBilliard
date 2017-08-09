@@ -62,24 +62,20 @@ class TeamService extends AppService
     }
 
     /**
-     * get team end of read only date
+     * get team end state date
      * # Warning
      * - In Team::getCurrentTeam, use CACHE_KEY_CURRENT_TEAM cache.
      * - So when change service use status, must delete this team cache.
      *
-     * @return string
+     * @return string|null
      */
-    public function getReadOnlyEndDate(): string
+    public function getStateEndDate()
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team"); 
 
         $team = $Team->getCurrentTeam();
-        $freeTrialStartDate = $team['Team']['service_use_state_start_date'];
-        $readOnlyDays = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_READ_ONLY];
-
-        $readOnlyEndDate = AppUtil::dateAfter($freeTrialStartDate, $readOnlyDays);
-        return $readOnlyEndDate;
+        return Hash::get($team, 'Team.service_use_state_end_date');
     }
 
     public function isCannotUseService(): bool

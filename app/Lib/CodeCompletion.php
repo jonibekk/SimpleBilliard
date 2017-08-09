@@ -128,5 +128,10 @@ if (false) {
          */
         var $Post;
 
+        /**
+         * @var BannerHelper
+         */
+        var $Banner;
+
     }
 }
