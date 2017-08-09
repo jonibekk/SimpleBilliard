@@ -67,7 +67,6 @@ class SendAlertMailToAdminShellTest extends GoalousTestCase
      */
     function test_isTargetTeam()
     {
-        // TODO: We have to fix it for using `service_use_state_end_date`.
         $timezone = 9;
         $localTodayDate = AppUtil::todayDateYmdLocal($timezone);
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
