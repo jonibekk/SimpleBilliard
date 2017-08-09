@@ -353,7 +353,7 @@
         }
     }
 }
-.subscription-status{
+.subscription-status, .pricing-info{
     max-width:500px;
     margin: 0 auto;
     padding: 2rem 0;
@@ -424,7 +424,7 @@
 }
 
 .panel-container{
-    .team-price-info-headline{
+    .team-price-info-headline, .pricing-info-per-user-headline{
         text-transform: uppercase;
         font-size: 10px;
         color: @basicGray;
@@ -442,8 +442,28 @@
         font-size: 18px;
     }
 
-    .team-price-info-number{
+    .team-price-info-number, .pricing-info-per-user-number{
         font-size: 20px;
         color: @darkBlack;
+    }
+
+    .pricing-info-feature-item{
+        i{
+            color:@subColor6;
+            font-size: 14px;
+            margin-right: .5rem;
+        }
+    }
+    .pricing-info-footer-legal{
+        margin-top: 20px;
+        font-size: 10px; //10px
+        color:@basicGray;
+    }
+
+    .pricing-info-super-script{
+        font-size: 8px;
+        position:relative;
+        top: -1em;
+        left:2px;
     }
 }

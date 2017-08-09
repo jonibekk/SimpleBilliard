@@ -37,6 +37,9 @@ class PaymentsController extends AppController {
     }
 
     public function pricing() {
+        $TeamService = ClassRegistry::init("TeamService");
+        $this->set('teamMemberCount', count($this->Team->TeamMember->getAllMemberUserIdList(true, true, true)));
+        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('pricing');
     }
