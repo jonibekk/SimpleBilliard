@@ -41,6 +41,7 @@
         [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])) { ?>
         <div class="banner-alert font_verydark">
             <div class="container">
+                <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate) ?>
             </div>
         </div>

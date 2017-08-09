@@ -38,7 +38,8 @@
     "requirejs": "^2.3.3",
     "select2": "^3.5.1",
     "ua-parser-js": "^0.7.12",
-    "validator": "^5.5.0"
+    "validator": "^5.5.0",
+    "js-cookie": "^2.1.4"
   },
   "devDependencies": {
     "accord": "^0.24.1",
