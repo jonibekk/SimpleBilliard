@@ -43,6 +43,7 @@ const config = {
       assets_dir + '/js/lib/posts.js',
       assets_dir + '/js/lib/comments.js',
       assets_dir + '/js/lib/circle.js',
+      assets_dir + '/js/lib/cookie.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {
@@ -100,7 +101,6 @@ const config = {
       node_modules_dir + '/select2/select2.js',
       node_modules_dir + '/requirejs/require.js',
       node_modules_dir + '/exif-js/exif.js',
-      node_modules_dir + '/js-cookie/src/js.cookie.js'
     ],
     output: {
       file_name: 'vendors',

@@ -475,9 +475,9 @@ function resetNavBarPadding() {
  * set cookie for disappearing alert
  */
 function setCookieCloseAlert(){
-  Cookies.set('alertClosed', 1, { expires: 1 });
+  setCookie('alertClosed',1,1);
 }
 
 function isClosedAlert(){
-  return Cookies.get('alertClosed') !== undefined;
+  return getCookie('alertClosed') !== "";
 }
