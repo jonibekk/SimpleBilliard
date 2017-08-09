@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-02 15:34+0900\n"
+"PO-Revision-Date: 2017-08-09 15:57+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -857,6 +857,11 @@ msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
+
+#, fuzzy
+#| msgid "Parameter is invalid."
+msgid "Parameter is invalid"
+msgstr "パラメータが不正です。"
 
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
@@ -1768,6 +1773,15 @@ msgstr "グラフの範囲指定が不正です。"
 
 msgid "The goal is not exist."
 msgstr "このゴールは存在しません。"
+
+msgid "Input is required"
+msgstr "入力必須項目です。"
+
+msgid "Line %d"
+msgstr ""
+
+msgid "Email address"
+msgstr "メールアドレス"
 
 msgid "Incomplete"
 msgstr "未完了"
@@ -3243,19 +3257,6 @@ msgstr "ログイン"
 msgid "Create New Team"
 msgstr "新しいチームをつくる"
 
-msgid ""
-"Your team will remain in a read-only state until <strong>%s</strong>. "
-"Following this date, you will no longer be able to use Goalous. If you want "
-"to resume normal usage, please <a href=\"/payments/apply\">subscribe</a> to "
-"our payment plan."
-msgstr "このチームは、<strong>%sまで</strong>読み取り専用期間です。それ以降はご利用いただけません。通常のご利用を再開したい場合は、<a href=\"/payments/apply\">こちら</a>から有料プランを契約してください。"
-
-msgid ""
-"Your team will remain in a read-only state until <strong>%s</strong>. "
-"Following this date, you will no longer be able to use Goalous. If you want "
-"to resume normal usage, please contact to your team administrators."
-msgstr "このチームは、<strong>%sまで</strong>読み取り専用期間です。それ以降はご利用いただけません。通常のご利用を再開したい場合は、チーム管理者にお問い合わせください。"
-
 msgid "Home"
 msgstr "ホーム"
 
@@ -3587,9 +3588,6 @@ msgstr "例) A〜E, 1〜5"
 msgid "eg. 1 (Numeric)"
 msgstr "例) 1 (数値)"
 
-msgid "Input is required"
-msgstr "入力必須項目です。"
-
 msgid "Please explain the score."
 msgstr "スコアの説明を書きましょう"
 
@@ -3847,9 +3845,6 @@ msgstr "ユニーク"
 
 msgid "Invite members"
 msgstr "メンバーを招待する"
-
-msgid "Email address"
-msgstr "メールアドレス"
 
 msgid ""
 "You can set email addresses by comma(,) separated or by newline separated."
@@ -4381,6 +4376,46 @@ msgstr "ゴール進捗率"
 msgid "There is no KR."
 msgstr "KRが登録されていません"
 
+msgid ""
+"Your team will remain in a read-only state until <strong>%s</strong>. "
+"Following this date, you will no longer be able to use Goalous. If you want "
+"to resume normal usage, please <a href=\"/payments/apply\">subscribe</a> to "
+"our payment plan."
+msgstr ""
+"このチームは、<strong>%sまで</strong>読み取り専用期間です。それ以降はご利用い"
+"ただけません。通常のご利用を再開したい場合は、<a href=\"/payments/apply\">こ"
+"ちら</a>から有料プランを契約してください。"
+
+msgid ""
+"Your team will remain in a read-only state until <strong>%s</strong>. "
+"Following this date, you will no longer be able to use Goalous. If you want "
+"to resume normal usage, please contact to your team administrators."
+msgstr ""
+"このチームは、<strong>%sまで</strong>読み取り専用期間です。それ以降はご利用い"
+"ただけません。通常のご利用を再開したい場合は、チーム管理者にお問い合わせくだ"
+"さい。"
+
+msgid ""
+"Your free trial of Goalous will end on <strong>%s</strong>. Following this "
+"date your team will be in a read-only state, and will not be able to post "
+"new content. If you want to resume normal usage, please <a href=\"/payments/"
+"apply\">subscribe</a> to our payment plan."
+msgstr ""
+"このチームは、<strong>%sまで</strong>フリートライアル期間です。それ以降は読み"
+"取り専用の状態になります。その場合、新規の投稿等はできなくなります。通常のご"
+"利用を再開したい場合は、<a href=\"/payments/apply\">こちら</a>から有料プラン"
+"を契約してください。"
+
+msgid ""
+"Your free trial of Goalous will end on <strong>%s</strong>. Following this "
+"date your team will be in a read-only state, and will not be able to post "
+"new content. If you want to resume normal usage, please contact to your team "
+"administrators."
+msgstr ""
+"このチームは、<strong>%sまで</strong>フリートライアル期間です。それ以降は読み"
+"取り専用の状態になります。その場合、新規の投稿等はできなくなります。通常のご"
+"利用を再開したい場合は、チーム管理者にお問い合わせください。"
+
 msgid "Collaborating"
 msgstr "コラボり中"
 
@@ -4870,9 +4905,22 @@ msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
 #, fuzzy
-#| msgid "You cannot access the topic"
-msgid "You cannot use the team"
-msgstr "このチームは現在利用できません。"
+#| msgid "Your team works better? Easy to know by Goalous."
+msgid "Your team no longer has access to Goalous."
+msgstr "チーム力が向上しているか？これを見れば分かります。"
+
+#, fuzzy
+#| msgid ""
+#| "If you would like to continue using Goalous, please subscribe to the paid "
+#| "plan."
+msgid ""
+"If you want to resume normal usage, please subscribe to our payment plan."
+msgstr "継続してご利用されたい場合は、有料プランのご契約をお願いいたします。"
+
+#, fuzzy
+#| msgid "Unsubscribe"
+msgid "Subscribe"
+msgstr "□配信停止"
 
 #, fuzzy
 #| msgid "Get documentation"
@@ -4952,6 +5000,30 @@ msgstr "国"
 msgid "USA"
 msgstr "日本"
 
+msgid "郵便番号"
+msgstr ""
+
+msgid "000-0000"
+msgstr ""
+
+msgid "都道府県"
+msgstr ""
+
+msgid "東京都"
+msgstr ""
+
+msgid "市区町村"
+msgstr ""
+
+msgid "台東区"
+msgstr ""
+
+msgid "住所"
+msgstr ""
+
+msgid "台東１－１－１"
+msgstr ""
+
 #, fuzzy
 #| msgid "Contact"
 msgid "Company Contact"
@@ -4962,6 +5034,12 @@ msgstr "太郎"
 
 msgid "Smith"
 msgstr "佐藤"
+
+msgid "姓"
+msgstr ""
+
+msgid "名"
+msgstr ""
 
 #, fuzzy
 #| msgid "Contact"
@@ -5001,6 +5079,55 @@ msgstr "税金"
 msgid "Total per month"
 msgstr "合計（月あたり）"
 
+#, fuzzy
+#| msgid "%s Evaluation Status"
+msgid "Subscription Status"
+msgstr "%sの評価状況"
+
+msgid "Free Trial"
+msgstr ""
+
+#, fuzzy
+#| msgid "Unsubscribe"
+msgid "Subscribed"
+msgstr "□配信停止"
+
+#, fuzzy
+#| msgid "Read"
+msgid "Read Only"
+msgstr "既読"
+
+msgid "Deactivated"
+msgstr ""
+
+msgid ""
+"Your team is currently using Goalous as a free trial. Your free trial will "
+"end on September 20, 2017"
+msgstr ""
+
+msgid "Your team has full access to Goalous.<br /><br />Go achieve your goal!"
+msgstr ""
+
+msgid ""
+"Your team can no longer create or edit content on Goalous. Your team account "
+"will be deactived on November 20, 2017"
+msgstr ""
+
+msgid ""
+"Your team no longer has access to  Goalous. Your team account will be "
+"deleted on December 20, 2017"
+msgstr ""
+
+#, fuzzy
+#| msgid "Number of goals"
+msgid "Number of Members"
+msgstr "ユーザー数"
+
+#, fuzzy
+#| msgid "Total"
+msgid "Total Price"
+msgstr "トータル"
+
 msgid "Thank You"
 msgstr "ありがとうございます。"
 
@@ -5013,6 +5140,15 @@ msgstr "決済に成功しました。Goalousのご利用を開始できます�
 #| msgid "Achieve goal"
 msgid "Go achieve your goal!"
 msgstr "いざ、ゴール達成へ！"
+
+msgid "Enter your card information"
+msgstr "カード情報を入力してください"
+
+msgid "Jane Doe"
+msgstr "Jane Doe"
+
+msgid "Card Number"
+msgstr "カード番号"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"
@@ -5262,11 +5398,7 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
-msgid "Enter your card information"
-msgstr "カード情報を入力してください"
-
-msgid "Jane Doe"
-msgstr "Jane Doe"
-
-msgid "Card Number"
-msgstr "カード番号"
+#, fuzzy
+#~| msgid "You cannot access the topic"
+#~ msgid "You cannot use the team"
+#~ msgstr "このチームは現在利用できません。"
