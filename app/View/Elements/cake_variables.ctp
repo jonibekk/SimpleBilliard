@@ -13,6 +13,8 @@ App::uses('AttachedFile', 'Model');
         env_name: "<?= ENV_NAME ?>",
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
+        is_read_only: "<?= $serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY ?>",
+        stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
         require_banner_notification: "<?= in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]) ?>",
         message: {
             validate: {

@@ -66,6 +66,11 @@ class PageResourceHelper extends AppHelper
         ],
         'topics' => [
             'default' => ['/js/react_message_app.min']
+        ],
+        'payments' => [
+            'default' => [],
+            'update_cc_info' => ['https://js.stripe.com/v3/',
+                                 '/js/goalous_payment.min']
         ]
     ];
 

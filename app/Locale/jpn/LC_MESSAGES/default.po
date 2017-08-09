@@ -4980,7 +4980,7 @@ msgid "Enter Payment Information"
 msgstr "決済情報を入力してください"
 
 msgid "Name on Card"
-msgstr "名義人名（カード記載と同じ）"
+msgstr "カード名義人（半角ローマ字）"
 
 msgid "Price per user"
 msgstr "料金（1ユーザー当たり）"
@@ -5261,3 +5261,12 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+msgid "Enter your card information"
+msgstr "カード情報を入力してください"
+
+msgid "Jane Doe"
+msgstr "Jane Doe"
+
+msgid "Card Number"
+msgstr "カード番号"
