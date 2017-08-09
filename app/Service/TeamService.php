@@ -88,42 +88,24 @@ class TeamService extends AppService
     }
 
     /**
-     * find `team.service_use_state_start_date` of status expired team
-     *
-     * @param int    $serviceStatus
-     * @param string $targetExpiredDate
-     *
-     * @return array ['team_id'=>'service_use_state_start_date',...]
-     */
-    public function findServiceStatusExpiredTeamList(int $serviceStatus, string $targetExpiredDate)
-    {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-
-        $statusDays = Team::DAYS_SERVICE_USE_STATUS[$serviceStatus];
-        $targetStartUseService = AppUtil::dateBefore($targetExpiredDate, $statusDays);
-        $ret = $Team->findTeamListByStartStatusOrLess($serviceStatus, $targetStartUseService);
-        return $ret;
-    }
-
-    /**
-     * changing service status from Read-only to Cannot-use-service
+     * changing service status expired teams
      *
      * @param string $targetExpireDate
+     * @param int    $currentStatus
+     * @param int    $nextStatus
      *
      * @return bool
      */
-    public function changeStatusAllTeamFromReadonlyToCannotUseService(string $targetExpireDate): bool
+    public function changeStatusAllTeamExpired(string $targetExpireDate, int $currentStatus, int $nextStatus): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        $targetTeamList = $this->findServiceStatusExpiredTeamList(Team::SERVICE_USE_STATUS_READ_ONLY,
-            $targetExpireDate);
+        $targetTeamList = $Team->findTeamListStatusExpired($currentStatus, $targetExpireDate);
         if (empty($targetTeamList)) {
             return false;
         }
-        $ret = $Team->updateServiceStatusFromReadonlyToCannotUseService($targetTeamList);
+        $ret = $Team->updateServiceStatusAndDates($targetTeamList, $nextStatus);
         if ($ret === false) {
             $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
                 AppUtil::varExportOneLine($targetTeamList)));
@@ -136,60 +118,6 @@ class TeamService extends AppService
         foreach ($targetTeamList as $teamId) {
             $GlRedis->dellKeys("*current_team:team:{$teamId}");
         }
-
-        return $ret;
-    }
-
-    /**
-     * changing status all teams from free-trial to read-only
-     *
-     * @param string $targetExpireDate
-     *
-     * @return bool
-     */
-    public function changeStatusAllTeamFromFreeTrialToReadonly(string $targetExpireDate): bool
-    {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $teams = $Team->findByServiceUseStatus(Team::SERVICE_USE_STATUS_FREE_TRIAL);
-        $statusDays = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL];
-
-        // filtering expired teams
-        $saveExpiredTeams = [];
-        foreach ($teams as $team) {
-            if ($team['free_trial_days'] !== null) {
-                $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $team['free_trial_days']);
-            } else {
-                $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $statusDays);
-            }
-
-            if ($expireDate <= $targetExpireDate) {
-                $saveExpiredTeams[] = [
-                    'id'                           => $team['id'],
-                    'service_use_state_start_date' => $expireDate,
-                    'service_use_status'           => Team::SERVICE_USE_STATUS_READ_ONLY,
-                ];
-            }
-        }
-
-        if (empty($saveExpiredTeams)) {
-            return false;
-        }
-
-        $ret = $Team->saveAll($saveExpiredTeams, ['validate' => false]);
-        if ($ret === false) {
-            $this->log(sprintf("failed to save changeStatusAllTeamFromFreeTrialToReadonly. saveData: %s",
-                AppUtil::varExportOneLine($saveExpiredTeams)));
-            $this->log(Debugger::trace());
-        }
-
-        /** @var GlRedis $GlRedis */
-        $GlRedis = ClassRegistry::init("GlRedis");
-        // delete all team cache
-        foreach ($saveExpiredTeams as $team) {
-            $GlRedis->dellKeys("*current_team:team:{$team['id']}");
-        }
-
         return $ret;
     }
 
@@ -205,7 +133,7 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        $targetTeamList = $this->findServiceStatusExpiredTeamList(
+        $targetTeamList = $Team->findTeamListStatusExpired(
             Team::SERVICE_USE_STATUS_CANNOT_USE,
             $targetExpireDate
         );

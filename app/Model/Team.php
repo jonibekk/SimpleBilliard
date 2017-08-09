@@ -659,20 +659,44 @@ class Team extends AppModel
     }
 
     /**
-     * update service status from read-only to cannot-use-service
+     * find team_id list of status expired
+     *
+     * @param int    $serviceStatus
+     * @param string $targetExpireDate
+     *
+     * @return array
+     */
+    function findTeamListStatusExpired(int $serviceStatus, string $targetExpireDate): array
+    {
+        $options = [
+            'conditions' => [
+                'service_use_status'            => $serviceStatus,
+                'service_use_state_end_date <=' => $targetExpireDate
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * update service status and start,end date
      *
      * @param array $targetTeamIds
+     * @param int   $nextStatus
      *
      * @return bool
      */
-    function updateServiceStatusFromReadonlyToCannotUseService(array $targetTeamIds): bool
+    function updateServiceStatusAndDates(array $targetTeamIds, int $nextStatus): bool
     {
-        $toStatus = self::SERVICE_USE_STATUS_CANNOT_USE;
-        $statusDays = self::DAYS_SERVICE_USE_STATUS[$toStatus];
+        $statusDays = self::DAYS_SERVICE_USE_STATUS[$nextStatus];
         $ret = $this->updateAll(
             [
-                'Team.service_use_status'           => $toStatus,
-                'Team.service_use_state_start_date' => "DATE_ADD(Team.service_use_state_start_date,INTERVAL {$statusDays} DAY)"
+                'Team.service_use_status'           => $nextStatus,
+                'Team.service_use_state_start_date' => "Team.service_use_state_end_date",
+                'Team.service_use_state_end_date'   => "DATE_ADD(Team.service_use_state_end_date,INTERVAL {$statusDays} DAY)",
             ],
             [
                 'Team.id' => $targetTeamIds
