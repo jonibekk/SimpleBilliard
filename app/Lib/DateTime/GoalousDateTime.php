@@ -16,30 +16,41 @@ class GoalousDateTime extends \Carbon\Carbon
 
     /**
      * set user timezone to current instance
-     * @return self
      */
-    function setTimeZoneUser(): self
+    function setTimeZoneUser()
     {
         if (is_null(static::$defaultDateTimeZoneUser)) {
-            return $this;
+            return;
         }
         $this->setTimezone(static::$defaultDateTimeZoneUser);
-        $this->timestamp($this->getTimestamp());
-        return $this;
+        return;
     }
 
     /**
      * set team timezone to current instance
-     * @return self
      */
-    function setTimeZoneTeam(): self
+    function setTimeZoneTeam()
     {
         if (is_null(static::$defaultDateTimeZoneTeam)) {
-            return $this;
+            return;
         }
         $this->setTimezone(static::$defaultDateTimeZoneTeam);
-        $this->timestamp($this->getTimestamp());
-        return $this;
+        return;
+    }
+
+    /**
+     * @override
+     * @param \DateTimeZone|string $value
+     * @return static
+     */
+    function setTimeZone($value)
+    {
+        $result = parent::setTimezone($value);
+        // $this->getTimestamp(); is php original \DateTime method
+        // (this must be called after setTimezone() until php bug fix)
+        // https://bugs.php.net/bug.php?id=74173
+        $this->getTimestamp();
+        return $result;
     }
 
     /**
