@@ -37,7 +37,7 @@ class CreditCardService extends AppService
 
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
-        try {
+         try {
             $response = \Stripe\Customer::create($customer);
 
             $result["customer_id"] = $response->id;
@@ -170,5 +170,31 @@ class CreditCardService extends AppService
         }
 
         return $result;
+    }
+
+    /**
+     * update credit card info
+     *
+     * @param string $customerId
+     * @param string $token
+     *
+     * @return string|true
+     */
+    function update(string $customerId, string $token)
+    {
+        try {
+            \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+            \Stripe\Customer::update($customerId, ['source' => $token]);
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : '';
+            $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s", $customerId, $token, $message, $stripeCode);
+            $this->log(sprintf("[%s]%s", __METHOD__, $errorLog));
+            $this->log($e->getTraceAsString());
+            return $message;
+        }
+
+        // When it doesn's throw exception
+        return true;
     }
 }

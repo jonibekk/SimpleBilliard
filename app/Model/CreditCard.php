@@ -48,4 +48,25 @@ class CreditCard extends AppModel
     public $belongsTo = [
         'PaymentSetting'
     ];
+
+    /**
+     * get customer code by team id
+     *
+     * @param int $teamId
+     * 
+     * @return string
+     */
+    public function getCustomerCode(int $teamId): string
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (!$res) {
+            return '';
+        }
+        return Hash::get($res, 'CreditCard.customer_code');
+    }
 }

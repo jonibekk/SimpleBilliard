@@ -103,4 +103,41 @@ class PaymentsController extends ApiController
         // New Payment registered with success
         return $this->_getResponseSuccess();
     }
+
+    /**
+     * Update credit card info
+     * Endpoint: /api/v1/payments/credit_card
+     * method: PUT
+     *
+     * @return void
+     */
+    function put_credit_card()
+    {
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $token = Hash::get($this->request->data, 'token');
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        // Validation
+        $customerCode = $CreditCardService->getCustomerCode($teamId);
+        if (empty($customerCode)) {
+            return $this->_getResponseNotFound();
+        }
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Update
+        $updateResult = $CreditCardService->update($customerCode, $token);
+        if ($updateResult !== true) {
+            $this->_getResponseBadFail($updateResult);
+        }
+
+        return $this->_getResponseSuccess();
+    }
+
 }
