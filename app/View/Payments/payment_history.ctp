@@ -27,7 +27,7 @@
                 <tr>
                     <td>12345678</td>
                     <td>Jan 31, 2018</td>
-                    <td><span class="fa fa-check payment-success"></span> $19990.00</td>
+                    <td><span class="fa fa-close payment-failed"></span> $19990.00</td>
                     <td><a href="#" class="btn payment-history-view-receipt"><?=__('View');?></a></td>
                 </tr>
                 <tr>
