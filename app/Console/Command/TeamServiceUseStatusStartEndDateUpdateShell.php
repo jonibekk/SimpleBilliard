@@ -1,6 +1,6 @@
 <?php
 
-class TeamServiceUseStatusStartDateUpdateShell extends AppShell
+class TeamServiceUseStatusStartEndDateUpdateShell extends AppShell
 {
 
     var $uses = array(
