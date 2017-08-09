@@ -57,8 +57,9 @@ class TeamTest extends GoalousTestCase
     {
         $postData = [
             'Team' => [
-                'name' => "test",
-                'type' => 1
+                'name'     => "test",
+                'type'     => 1,
+                'timezone' => '+9.0'
             ]
         ];
         $uid = '1';
