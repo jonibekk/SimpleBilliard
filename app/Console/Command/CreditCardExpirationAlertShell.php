@@ -52,7 +52,6 @@ class CreditCardExpirationAlertShell extends AppShell
         }
 
         // Get teams only credit card payment type
-        // @var PaymentSetting $PaymentSetting */
         $targetChargeTeams = $this->PaymentSetting->findMonthlyChargeCcTeams();
         if (empty($targetChargeTeams)) {
             $this->log('Billing team does not exist', LOG_INFO);
