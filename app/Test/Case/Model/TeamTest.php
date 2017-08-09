@@ -259,6 +259,24 @@ class TeamTest extends GoalousTestCase
         $this->assertCount(1, $ret);
     }
 
+    function test_updateAllServiceUseStateStartDate_success()
+    {
+        $freeTrialTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
+        $readOnlyTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_PAID]);
+        $paidTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $cannotUseTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE]);
+
+        $this->Team->updateAllServiceUseStateStartDate(Team::SERVICE_USE_STATUS_FREE_TRIAL, '2017-07-01');
+        $this->Team->updateAllServiceUseStateStartDate(Team::SERVICE_USE_STATUS_PAID, '2017-07-02');
+        $this->Team->updateAllServiceUseStateStartDate(Team::SERVICE_USE_STATUS_READ_ONLY, '2017-07-03');
+        $this->Team->updateAllServiceUseStateStartDate(Team::SERVICE_USE_STATUS_CANNOT_USE, '2017-07-04');
+
+        $this->assertEqual(Hash::get($this->Team->findById($freeTrialTeamId), 'Team.service_use_state_start_date'), '2017-07-01');
+        $this->assertEqual(Hash::get($this->Team->findById($readOnlyTeamId), 'Team.service_use_state_start_date'), '2017-07-02');
+        $this->assertEqual(Hash::get($this->Team->findById($paidTeamId), 'Team.service_use_state_start_date'), '2017-07-03');
+        $this->assertEqual(Hash::get($this->Team->findById($cannotUseTeamId), 'Team.service_use_state_start_date'), '2017-07-04');
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;

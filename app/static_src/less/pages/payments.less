@@ -28,7 +28,6 @@
     }
     h3{
         flex-basis:100%;
-        text-align:center;
         margin: 0 0 1em 0;
     }
     h4{
@@ -56,7 +55,6 @@
     min-height:175px;
     margin-bottom: 2rem;
     padding: 1rem 2rem;
-    text-align:center;
     border:1px solid @cGray;
     background: @smokyWhite;
     border-radius: 3px;
@@ -325,6 +323,7 @@
     font-size: 20px;
 }
 
+
 .payment-history{
     max-width: 800px;
     width: 100%;
@@ -354,6 +353,32 @@
         }
     }
 }
+.subscription-status{
+    max-width:500px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.subscription-status-headline{
+    font-weight: 500;
+}
+
+.status-text{
+    font-weight: 600;
+    i{
+        margin-right: 1rem;
+        &.free-trial, &.subscribed{
+            color:@subColor7;
+        }
+        &.read-only{
+            color: @paleYellow;
+        }
+        &.deactivated{
+            color:@acidRed;
+        }
+    }
+}
+
 
 .history-table-body{
     background-color: @white;
@@ -386,4 +411,35 @@
 
 .payment-success{
     color:@subColor6;
+}
+
+.subscription-status-detail{
+    margin: 1rem 0;
+    line-height: 1.5em;
+    padding-right: 5rem;
+}
+
+.panel-container{
+    .team-price-info-headline{
+        text-transform: uppercase;
+        font-size: 10px;
+        color: @basicGray;
+        font-weight: 600;
+        margin:1rem 0 .5rem 0;
+    }
+
+    .subscribe-btn{
+        margin: 1rem 0;
+    }
+
+    .team-price-info-icon{
+        margin:0 .5rem 0 0;
+        color: @darkBlack;
+        font-size: 18px;
+    }
+
+    .team-price-info-number{
+        font-size: 20px;
+        color: @darkBlack;
+    }
 }

@@ -626,4 +626,25 @@ class Team extends AppModel
         return $res;
     }
 
+    /**
+     * update all team service use status start date
+     *
+     * @param int $serviceUseStatus
+     * @param string $startDate
+     *
+     * @return bool
+     */
+    public function updateAllServiceUseStateStartDate(int $serviceUseStatus, string $startDate): bool
+    {
+        $res = $this->updateAll(
+            [
+                'Team.service_use_state_start_date' => "'$startDate'"
+            ],
+            [
+                'Team.service_use_status' => $serviceUseStatus
+            ]
+        );
+        return $res;
+    }
+
 }
