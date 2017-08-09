@@ -1,7 +1,7 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel payment-history">
     <div class="panel-container">
-        <h3>Payment History</h3>
+        <h3><?= __('Payment History') ?></h3>
         <table class="payment-history-table">
             <thead class="history-table-head">
                 <tr>
