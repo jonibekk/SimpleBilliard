@@ -636,29 +636,6 @@ class Team extends AppModel
     }
 
     /**
-     * find team_id list by service_use_status_start_date or less without freetrial
-     *
-     * @param int    $serviceStatus
-     * @param string $targetStartUseService
-     *
-     * @return array
-     */
-    function findTeamListByStartStatusOrLess(int $serviceStatus, string $targetStartUseService): array
-    {
-        $options = [
-            'conditions' => [
-                'service_use_status'              => $serviceStatus,
-                'service_use_state_start_date <=' => $targetStartUseService
-            ],
-            'fields'     => [
-                'id'
-            ]
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
-    /**
      * find team_id list of status expired
      *
      * @param int    $serviceStatus
