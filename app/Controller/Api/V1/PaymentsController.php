@@ -117,13 +117,7 @@ class PaymentsController extends ApiController
      */
     function get_init_form()
     {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init("GoalService");
-
         $res = [];
-
-//        /* @var Label $Label */
-//        $Label = ClassRegistry::init('Label');
 
         if ($this->request->query('data_types')) {
             $dataTypes = explode(',', $this->request->query('data_types'));
