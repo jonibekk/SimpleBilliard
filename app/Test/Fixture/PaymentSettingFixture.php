@@ -12,35 +12,35 @@ class PaymentSettingFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'               => array(
+        'id'                => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'primary'
         ),
-        'team_id'          => array(
+        'team_id'           => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'key'      => 'index'
         ),
-        'type'             => array(
+        'type'              => array(
             'type'     => 'integer',
             'null'     => false,
             'default'  => '0',
             'unsigned' => true,
             'comment'  => 'charge type(0: Invoice, 1: Credit card)'
         ),
-        'currency'         => array(
+        'currency'          => array(
             'type'     => 'integer',
             'null'     => false,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'currencty type(ex 1: yen, 2: US Doller...)'
         ),
-        'amount_per_user'  => array(
+        'amount_per_user'   => array(
             'type'     => 'integer',
             'null'     => false,
             'default'  => '0',
@@ -48,7 +48,7 @@ class PaymentSettingFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'Service use amount per user'
         ),
-        'payer_name'       => array(
+        'payer_name'        => array(
             'type'    => 'string',
             'null'    => false,
             'default' => null,
@@ -56,7 +56,7 @@ class PaymentSettingFixture extends CakeTestFixtureEx
             'comment' => 'Payer name',
             'charset' => 'utf8mb4'
         ),
-        'company_name'     => array(
+        'company_name'      => array(
             'type'    => 'string',
             'null'    => false,
             'default' => null,
@@ -64,50 +64,79 @@ class PaymentSettingFixture extends CakeTestFixtureEx
             'comment' => 'Company name',
             'charset' => 'utf8mb4'
         ),
-        'company_address'  => array(
+        'company_country'   => array(
             'type'    => 'string',
             'null'    => false,
             'default' => null,
+            'length'  => 2,
             'collate' => 'utf8mb4_general_ci',
-            'comment' => 'Company address',
+            'comment' => 'Company address(country)',
             'charset' => 'utf8mb4'
         ),
-        'company_tel'      => array(
-            'type'    => 'string',
-            'null'    => false,
-            'default' => null,
-            'collate' => 'utf8mb4_general_ci',
-            'comment' => 'Company tel number',
-            'charset' => 'utf8mb4'
+        'company_post_code' => array('type'    => 'string',
+                                     'null'    => false,
+                                     'default' => null,
+                                     'length'  => 16,
+                                     'collate' => 'utf8mb4_general_ci',
+                                     'comment' => 'Company address(post_code)',
+                                     'charset' => 'utf8mb4'
         ),
-        'payment_base_day' => array('type'     => 'integer',
-                                    'null'     => false,
-                                    'default'  => null,
-                                    'unsigned' => true,
-                                    'comment'  => 'Payment base day(1 - 31)'
+        'company_region'    => array('type'    => 'string',
+                                     'null'    => false,
+                                     'default' => null,
+                                     'collate' => 'utf8mb4_general_ci',
+                                     'comment' => 'Company address(region)',
+                                     'charset' => 'utf8mb4'
         ),
-        'email'            => array('type'    => 'string',
-                                    'null'    => false,
-                                    'default' => null,
-                                    'collate' => 'utf8mb4_general_ci',
-                                    'comment' => 'Payer email',
-                                    'charset' => 'utf8mb4'
+        'company_city'      => array('type'    => 'string',
+                                     'null'    => false,
+                                     'default' => null,
+                                     'collate' => 'utf8mb4_general_ci',
+                                     'comment' => 'Company address(city)',
+                                     'charset' => 'utf8mb4'
         ),
-        'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'          => array('type'     => 'integer',
-                                    'null'     => true,
-                                    'default'  => null,
-                                    'unsigned' => true,
-                                    'key'      => 'index'
+        'company_street'    => array('type'    => 'string',
+                                     'null'    => false,
+                                     'default' => null,
+                                     'collate' => 'utf8mb4_general_ci',
+                                     'comment' => 'Company address(street)',
+                                     'charset' => 'utf8mb4'
         ),
-        'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'          => array(
+        'company_tel'       => array('type'    => 'string',
+                                     'null'    => false,
+                                     'default' => null,
+                                     'collate' => 'utf8mb4_general_ci',
+                                     'comment' => 'Company tel number',
+                                     'charset' => 'utf8mb4'
+        ),
+        'payment_base_day'  => array('type'     => 'integer',
+                                     'null'     => false,
+                                     'default'  => null,
+                                     'unsigned' => true,
+                                     'comment'  => 'Payment base day(1 - 31)'
+        ),
+        'email'             => array('type'    => 'string',
+                                     'null'    => false,
+                                     'default' => null,
+                                     'collate' => 'utf8mb4_general_ci',
+                                     'comment' => 'Payer email',
+                                     'charset' => 'utf8mb4'
+        ),
+        'del_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'deleted'           => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'created'           => array('type'     => 'integer',
+                                     'null'     => true,
+                                     'default'  => null,
+                                     'unsigned' => true,
+                                     'key'      => 'index'
+        ),
+        'modified'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'indexes'           => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id' => array('column' => 'team_id', 'unique' => 0),
             'created' => array('column' => 'created', 'unique' => 0)
         ),
-        'tableParameters'  => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+        'tableParameters'   => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**
