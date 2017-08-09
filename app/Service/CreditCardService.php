@@ -171,4 +171,53 @@ class CreditCardService extends AppService
 
         return $result;
     }
+
+    /**
+     * Return a list with all registered customers on Stripe
+     *
+     * @return array
+     */
+    public function listAllCustomers()
+    {
+        $result = [
+            "error"   => false,
+            "message" => null
+        ];
+
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        $list = array();
+        $options = array(
+            "limit" => 100 // 100 is the maximum that can be fetch in as single request. Default is 10
+        );
+
+        try {
+            do {
+                // Get a list of 100 customers
+                $response = \Stripe\Customer::all($options);
+                $list = am($list, $response->data);
+                $hasMore = $response->has_more;
+
+                // If there is more to be fetch, add to the list.
+                if ($hasMore) {
+                    $item = $list[count($list) -1];
+                    $options = am($options, ["starting_after" => $item["id"]]);
+                }
+            } while($hasMore);
+
+            $result["customers"] = $list;
+        }
+        catch (Exception $e) {
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+
+            if (property_exists($e, "stripeCode")) {
+                $result["errorCode"] = $e->stripeCode;
+            }
+
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+        return $result;
+    }
 }

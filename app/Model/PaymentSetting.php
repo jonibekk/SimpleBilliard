@@ -185,6 +185,7 @@ class PaymentSetting extends AppModel
                 'PaymentSetting.team_id',
                 'PaymentSetting.payment_base_day',
                 'Team.timezone',
+                'CreditCard.customer_code',
             ],
             'conditions' => [
                 'PaymentSetting.type' => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
