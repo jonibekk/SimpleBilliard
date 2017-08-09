@@ -85,12 +85,12 @@ export default function payment(state = initial_state, action) {
 }
 
 /**
- * 画面初期化に伴う入力値初期化
- * 既に行っている場合は不要
+ * Set new daeta to input data by page
+ *
  * @param input_data
  * @param page
  * @param add_data
- * @returns {{}}
+ * @returns {*}
  */
 export function updateInputData(input_data, page, add_data) {
   switch (page) {

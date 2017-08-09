@@ -106,10 +106,9 @@ class PaymentsController extends ApiController
 
 
     /**
-     * Goal作成&編集においての初期化処理API
-     * formで利用する値を取得する
+     * Get information for display form
      *
-     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
      *
      * @param integer|null $id
      *

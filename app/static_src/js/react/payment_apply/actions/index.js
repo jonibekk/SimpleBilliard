@@ -1,6 +1,5 @@
 import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
-import {KeyResult} from "~/common/constants/Model";
 import {post} from "../../util/api";
 import axios from "axios";
 
