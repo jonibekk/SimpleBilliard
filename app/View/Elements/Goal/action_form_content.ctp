@@ -1,7 +1,3 @@
-<?php
-$end_date = strtotime($this->goal->goals['Goal']['end_date']);
-$today = strtotime(date('Y-m-d'));
-?>
 <?= $this->App->viewStartComment() ?>
 <div class="tab-pane fade" id="ActionForm">
     <?php if (!isset($canActionGoals) || count($canActionGoals) == 0)://メッセージ一覧ページでは$canActionGoalsがセットされない ?>
@@ -72,7 +68,7 @@ $today = strtotime(date('Y-m-d'));
         </div>
         <!-- 目印 -->
         <div id="ActionUploadFileDropArea" class="action-upload-file-drop-area">
-            <?php if (!$is_edit_mode) : ?>
+            <?php if (!$is_edit_mode): ?>
                 <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
                     <div class="input-group feed-action-goal-select-wrap">
                         <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
@@ -84,7 +80,7 @@ $today = strtotime(date('Y-m-d'));
                             'data-bv-notempty-message' => __("Input is required."),
                             'class'                    => 'form-control js-change-goal',
                             'id'                       => 'GoalSelectOnActionForm',
-                            //'options'                  => $canActionGoals,
+                            'options'                  => $canActionGoals,
                             'target-value'             =>
                                 isset($this->request->data['ActionResult']['key_result_id'])
                                     ? $this->request->data['ActionResult']['key_result_id']
