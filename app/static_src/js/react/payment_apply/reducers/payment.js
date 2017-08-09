@@ -1,8 +1,8 @@
 import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
-// import {KeyResult} from "~/common/constants/Model";
+import {PaymentSetting} from "~/common/constants/Model";
 
-const initialState = {
+const initial_state = {
   to_next_page: false,
   validation_errors: {
   },
@@ -10,6 +10,7 @@ const initialState = {
   lang_code: "",
   input_data: {
     payment_setting: {
+      payment_type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD,
       company_country: "",
       company_post_code: "",
       company_region: "",
@@ -17,21 +18,22 @@ const initialState = {
       company_street: "",
       contact_mail: "",
       company_tel: "",
+    },
+    credit_card: {
+      customer_code: ""
+    },
+    invoice: {
+      //TODO:add
     }
   },
   is_disabled_submit: false,
   redirect_to_home: false
 }
 
-export default function payment(state = initialState, action) {
+export default function payment(state = initial_state, action) {
   let input_data = state.input_data
   switch (action.type) {
     case types.INVALID:
-      return Object.assign({}, state, {
-        validation_errors: action.error.validation_errors,
-        is_disabled_submit: false
-      })
-    case types.MOVE_PAGE_BY_PAYMENT_TYPE:
       return Object.assign({}, state, {
         validation_errors: action.error.validation_errors,
         is_disabled_submit: false
@@ -41,7 +43,8 @@ export default function payment(state = initialState, action) {
         is_disabled_submit: true
       })
     case types.TO_NEXT_PAGE:
-      input_data = Object.assign({}, input_data, action.addData)
+      input_data = updateInputData(input_data, action.page, action.add_data);
+      // input_data = Object.assign({}, input_data, action.add_data)
       return Object.assign({}, state, {
         input_data,
         to_next_page: true,
@@ -60,13 +63,18 @@ export default function payment(state = initialState, action) {
         input_data[action.key] = Object.assign({}, input_data[action.key], action.data)
         state.input_data = input_data
         return Object.assign({}, state)
-      }
-      {
+      } else {
         input_data = Object.assign({}, input_data, action.data)
         return Object.assign({}, state, {
           input_data
         })
       }
+    case types.RESET_STATES:
+      return Object.assign({}, state, {
+        to_next_page: false,
+        validation_errors: {}
+      });
+
     case types.REDIRECT_TO_HOME:
       return Object.assign({}, state, {
         redirect_to_home: true
@@ -81,37 +89,17 @@ export default function payment(state = initialState, action) {
  * 既に行っている場合は不要
  * @param input_data
  * @param page
- * @param data
+ * @param add_data
  * @returns {{}}
  */
-export function initInputData(input_data, page, data) {
+export function updateInputData(input_data, page, add_data) {
   switch (page) {
+    case Page.COUNTY:
+      input_data["payment_setting"] = Object.assign({}, input_data["payment_setting"], add_data);
+      break;
     case Page.COMPANY:
-      if (!input_data.goal_category_id && data.categories.length > 0) {
-        input_data["goal_category_id"] = data.categories[0].id
-      }
       break;
     case Page.CREDIT_CARD:
-      input_data["term_type"] = 'current'
-      if (!input_data.priority && data.priorities.length > 0) {
-        input_data["priority"] = KeyResult.Priority.DEFAULT;
-      }
-      if (!input_data.end_date && Object.keys(data.default_end_dates).length > 0) {
-        input_data["end_date"] = data.default_end_dates.current
-      }
-      break;
-    case Page.COMPLETE:
-      if (Object.keys(input_data.key_result).length > 0 && input_data.key_result.value_unit) {
-        break;
-      }
-      input_data["key_result"] = input_data.key_result || {};
-
-      if (data.units.length > 0) {
-        input_data.key_result["value_unit"] = data.units[0].id
-      }
-      input_data.key_result["start_value"] = 0
-      input_data.key_result["target_value"] = 100
-
       break;
     default:
       return input_data;

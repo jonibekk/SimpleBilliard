@@ -3,23 +3,16 @@ import React from 'react'
 /* eslint-enable no-unused-vars */
 import ReactDOM from "react-dom";
 import {browserHistory, Link} from "react-router";
-import * as Page from "~/goal_create/constants/Page";
-import InvalidMessageBox from "~/common/components/InvalidMessageBox";
-import {MaxLength} from "~/common/constants/App";
+import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 
 export default class CreditCard extends Base {
   constructor(props) {
     super(props);
-    this.state = {
-      showMoreOption: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this)
+    this.state = {};
   }
 
   componentWillMount() {
-    this.props.fetchInitialData(Page.CREDIT_CARD)
   }
 
   componentDidMount() {
@@ -33,120 +26,13 @@ export default class CreditCard extends Base {
   }
 
   componentWillUnmount() {
+    this.props.resetStates();
     super.componentWillUnmount.apply(this)
   }
 
-  getInputDomData() {
-    const photoNode = this.refs.innerPhoto.refs.photo
-    const photo = ReactDOM.findDOMNode(photoNode).files[0]
-    const is_wish_approval = ReactDOM.findDOMNode(this.refs.is_wish_approval).checked
-    if (!photo) {
-      return {is_wish_approval}
-    }
-    return {photo, is_wish_approval}
-  }
-
-  handleSubmit(e) {
-    e.preventDefault()
-    this.props.validatePayment(Page.CREDIT_CARD, this.getInputDomData())
-  }
-
-  handleChange(e) {
-    let data = {[e.target.name]: e.target.value}
-    // 評価期間の選択によって自動的にゴール終了日を切り替える
-    if (e.target.name == "term_type") {
-      data["end_date"] = this.props.payment.default_end_dates[e.target.value]
-    }
-    this.props.updateInputData(data)
-  }
-
-  handleClick(e) {
-    e.preventDefault()
-    this.setState({showMoreOption: true})
-  }
-
   render() {
-    const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "");
-
-    const {input_data, priorities, validation_errors, can_approve, terms} = this.props.payment;
-    let priorityOptions = null;
-    if (priorities.length > 0) {
-      priorityOptions = priorities.map((v) => {
-        return <option key={v.id} value={v.id}>{v.label}</option>
-      });
-    }
-    let termOptions = [];
-    if (Object.keys(terms).length) {
-      termOptions = [
-        <option value="current" key={terms.current.start_date}>
-          {`${__("This Term")} ( ${generateTermRangeFormat(terms.current.start_date, terms.current.end_date) } ) `}
-        </option>,
-        <option value="next" key={terms.next.start_date}>
-          {`${__("Next Term")} ( ${generateTermRangeFormat(terms.next.start_date, terms.next.end_date)} ) `}
-        </option>
-      ]
-    }
-
     return (
-      <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__("Set goal details")}</h1>
-        <p
-          className="goals-create-description">{__("Customize your goal using the below options.")}</p>
-        <form className="goals-create-input"
-              encType="multipart/form-data"
-              method="post"
-              acceptCharset="utf-8"
-              onSubmit={(e) => this.handleSubmit(e)}>
-
-          <PhotoUpload uploadPhoto={input_data.photo} ref="innerPhoto"/>
-          <InvalidMessageBox message={validation_errors.photo}/>
-
-          <label className="goals-create-input-label">{__("Term")}</label>
-          <select name="term_type" className="form-control goals-create-input-form mod-select" ref="term_type"
-                  value={input_data.term_type} onChange={this.handleChange}>
-            { termOptions }
-          </select>
-          <InvalidMessageBox message={validation_errors.term_type}/>
-
-          <div className={`checkbox ${can_approve ? "" : "hide"}`}>
-            <label>
-              <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true" ref="is_wish_approval"/>
-              <span>{__("Wish goal approval")}</span>
-            </label>
-          </div>
-
-          <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
-            <i className="fa fa-eye" aria-hidden="true"/>
-            <span className="goals-create-interactive-link">
-              {__("View more options")}
-              </span>
-          </a>
-          <div className={this.state.showMoreOption ? "" : "hidden"}>
-            <label className="goals-create-input-label">{__("Description")}</label>
-            <textarea
-              name="description"
-              className="goals-create-input-form mod-textarea"
-              value={input_data.description}
-              placeholder={__("Optional")}
-              maxLength={MaxLength.Description}
-              onChange={this.handleChange}
-            />
-            <InvalidMessageBox message={validation_errors.description}/>
-
-            <label className="goals-create-input-label">{__("End date")}</label>
-            <input className="goals-create-input-form" type="date" name="end_date" onChange={this.handleChange}
-                   value={input_data.end_date}/>
-            <InvalidMessageBox message={validation_errors.end_date}/>
-            <label className="goals-create-input-label">{__("Weight")}</label>
-            <select className="goals-create-input-form mod-select" name="priority" ref="priority"
-                    value={input_data.priority} onChange={this.handleChange}>
-              {priorityOptions}
-            </select>
-            <InvalidMessageBox message={validation_errors.priority}/>
-          </div>
-          <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
-          <Link className="goals-create-btn-cancel btn" to={Page.URL_COMPANY}>{__("Back")}</Link>
-        </form>
+      <section className="panel">
       </section>
     )
   }

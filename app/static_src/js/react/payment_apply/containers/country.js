@@ -8,7 +8,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return Object.assign({}, common.getCommonDispatchToProps(dispatch), {
-    movePagePaymentType: (payment_type) => dispatch(actions.movePagePaymentType(payment_type)),
   })
 }
 

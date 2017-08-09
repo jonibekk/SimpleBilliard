@@ -149,33 +149,14 @@ class PaymentsController extends ApiController
 
 
     /**
-     * ゴール(KR除く)のバリデーションAPI
-     * 成功(Status Code:200)、失敗(Status Code:400)
-     * - fieldsパラメタにカンマ区切りで検査対象フィールドを指定。allもしくは指定なしの場合はすべてのフィールドのvalidationを行う。
+     * Validation API
      *
      * @query_param fields
      * @return CakeResponse
      */
     function post_validate()
     {
-        $fields = [];
-//        if ($this->request->query('fields')) {
-//            $fields = explode(',', $this->request->query('fields'));
-//            //allが含まれる場合はすべて指定。それ以外はそのまま
-//            $fields = in_array('all', $fields) ? [] : $fields;
-//        }
-//        /** @var GoalService $GoalService */
-//        $GoalService = ClassRegistry::init("GoalService");
-//
-//        $data = $this->request->data;
-//        if (!empty($_FILES['photo'])) {
-//            $data['photo'] = $_FILES['photo'];
-//        }
-//
-//        $validationErrors = $GoalService->validateSave($data, $fields);
-//        if (!empty($validationErrors)) {
-//            return $this->_getResponseValidationFail($validationErrors);
-//        }
+        // TODO:implemnet
         return $this->_getResponseSuccess();
     }
 

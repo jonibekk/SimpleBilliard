@@ -4,14 +4,13 @@ import {KeyResult} from "~/common/constants/Model";
 import {post} from "../../util/api";
 import axios from "axios";
 
-export function validatePayment(page, addData) {
+export function validatePayment(page, add_data) {
   return (dispatch, getState) => {
 
-    const postData = Object.assign(getState().payment.input_data, addData)
-    const fields = Page.VALIDATION_FIELDS[page].join(',')
-    return post(`/api/v1/payments/validate?fields=${fields}`, postData, null,
+    const postData = Object.assign(getState().payment.input_data, add_data)
+    return post(`/api/v1/payments/validate?page=${page}`, postData, null,
       (response) => {
-        dispatch(toNextPage(addData))
+        dispatch(toNextPage(page, add_data))
       },
       ({response}) => {
         // when team is in read only
@@ -29,10 +28,11 @@ export function validatePayment(page, addData) {
   }
 }
 
-export function toNextPage(addData = {}) {
+export function toNextPage(page, add_data = {}) {
   return {
     type: types.TO_NEXT_PAGE,
-    addData
+    page,
+    add_data
   }
 }
 
@@ -40,53 +40,6 @@ export function invalid(error) {
   return {
     type: types.INVALID,
     error
-  }
-}
-
-export function setKeyword(keyword) {
-  // 最初にフォーカスしてサジェストのリストを全出しした後に↓キーを押すと
-  // なぜか文字列ではなく関数が渡されてくるので文字列チェック
-  keyword = typeof(keyword) == "string" ? keyword : "";
-  return {
-    type: types.SET_KEYWORD,
-    keyword
-  }
-}
-
-export function updateSuggestions(keyword, suggestions) {
-  return {
-    type: types.REQUEST_SUGGEST,
-    suggestions: getSuggestions(keyword, suggestions),
-    keyword
-  }
-}
-export function onSuggestionsFetchRequested(keyword) {
-  return (dispatch, getState) => {
-    dispatch(updateSuggestions(keyword, getState().payment.suggestionsExcludeSelected))
-  }
-}
-export function onSuggestionsClearRequested() {
-  return {
-    type: types.CLEAR_SUGGEST
-  }
-}
-export function onSuggestionSelected(suggestion) {
-  return {
-    type: types.SELECT_SUGGEST,
-    suggestion,
-  }
-}
-
-export function addLabel(label) {
-  return {
-    type: types.ADD_LABEL,
-    label
-  }
-}
-export function deleteLabel(label) {
-  return {
-    type: types.DELETE_LABEL,
-    label
   }
 }
 
@@ -138,32 +91,10 @@ export function savePaymentSetting() {
 export function disableSubmit() {
   return {type: types.DISABLE_SUBMIT}
 }
-
-/**
- * 入力値にマッチしたサジェストのリストを取得
- * 空文字(フォーカス時等でもサジェスト表示許可
- *
- * @param value
- * @param suggestions
- * @returns {*}
- */
-function getSuggestions(value, suggestions) {
-  if (value) {
-    value = value.trim();
-    const regex = new RegExp('^' + value, 'i');
-    suggestions = suggestions.filter((suggestion) => regex.test(suggestion.name));
+export function resetStates() {
+  return (dispatch) => {
+    dispatch({
+      type: types.RESET_STATES
+    })
   }
-
-  // サジェストは10件のみ表示
-  suggestions = suggestions.slice(0, 10)
-  // サジェストをラベル名昇順に並び替え
-  suggestions.sort((a, b) => {
-    return (a.goal_label_count < b.goal_label_count) ? 1 : -1
-  });
-
-  // サジェストの先頭に入力文字列を加える
-  if (value) {
-    suggestions.unshift({name: value})
-  }
-  return suggestions
 }

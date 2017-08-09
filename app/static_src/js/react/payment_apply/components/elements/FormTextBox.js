@@ -1,12 +1,19 @@
 import React from "react";
+import {connect} from "react-redux";
+import {updateInputData} from "~/payment_apply/actions/index";
 
-export default class FormTextBox extends React.Component {
+class FormTextBox extends React.Component {
   constructor(props) {
     super(props);
   }
 
+  onChange(e) {
+    let data = {}
+    data[e.target.name] = e.target.value;
+    this.props.dispatch(updateInputData(data, 'payment_setting'))
+  }
+
   render() {
-    // ビジョンが無かったらエリア非表示
     return (
       <div className="form-group">
         <label htmlFor={this.props.id} className="circle-create-label">
@@ -19,6 +26,7 @@ export default class FormTextBox extends React.Component {
           className="form-control"
           placeholder={this.props.placeholder}
           maxLength={this.props.max_length}
+          onChange={(e) => this.props.onChange(e)}
         />
       </div>
     )
@@ -32,6 +40,7 @@ FormTextBox.propTypes = {
   label: React.PropTypes.string,
   placeholder: React.PropTypes.string,
   max_length: React.PropTypes.number,
+  onChange:React.PropTypes.func,
 };
 FormTextBox.defaultProps = {
   id: "",
@@ -41,4 +50,4 @@ FormTextBox.defaultProps = {
   placeholder:"",
   max_length: 255
 };
-
+export default connect()(FormTextBox);

@@ -35,6 +35,7 @@ export default class Country extends Base {
   }
 
   componentWillUnmount() {
+    this.props.resetStates();
     super.componentWillUnmount.apply(this)
   }
 
@@ -48,23 +49,33 @@ export default class Country extends Base {
   }
 
   onChange(e) {
-    this.props.updateInputData({country: e.target.value})
+    this.props.updateInputData({company_country: e.target.value}, 'payment_setting')
   }
 
   render() {
     const {countries, lang_code, input_data} = this.props.payment
+    if (Object.keys(countries).length == 0) {
+      return (
+        <section className="panel choose-payment">
+          <div className="panel-container">
+          </div>
+        </section>
+      )
+    }
+
     let is_ja = false;
-    if (input_data.country == "JP") {
+    const {company_country} = input_data.payment_setting
+    if (company_country == "JP") {
       is_ja = true;
-    } else if (input_data.country == "" && lang_code == 'ja') {
+    } else if (company_country == "" && lang_code == 'ja') {
       is_ja = true;
     }
 
     let countries_option_el = [];
-    countries_option_el.push(<option value="">{__('Choose Country')}</option>)
+    countries_option_el.push(<option key="" value="">{__('Choose Country')}</option>)
     for (const code in countries) {
       countries_option_el.push(
-        <option key={code} value={code} selected={code == "JP" && is_ja ? "selected" : ""}>{countries[code]}</option>
+        <option key={code} value={code}>{countries[code]}</option>
       );
     }
 
@@ -74,6 +85,7 @@ export default class Country extends Base {
           <form className="form-horizontal" name="companyLocation" onSubmit={(e) => this.onSubmit(e)}>
             <h3>{__('Select Country Location')}</h3>
             <select name="country" className="form-control setting_input-design company-location-select"
+                    defaultValue={is_ja ? "JP" : ""}
             onChange={(e) => this.onChange(e)}>
               {countries_option_el}
             </select>
