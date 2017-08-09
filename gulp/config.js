@@ -145,15 +145,15 @@ const config = {
     ]
   },
   react: [
-    // 'setup_guide',
-    // 'signup',
-    // 'goal_create',
-    // 'goal_edit',
-    // 'goal_approval',
-    // 'goal_search',
-    // 'kr_column',
-    // 'message',
-    // 'invite',
+    'setup_guide',
+    'signup',
+    'goal_create',
+    'goal_edit',
+    'goal_approval',
+    'goal_search',
+    'kr_column',
+    'message',
+    'invite',
     'payment_apply'
   ],
   css_vendor: {
