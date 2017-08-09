@@ -45,6 +45,14 @@ gulp.task('js_evaluation:concat', () => {
     .pipe(duration('js_evaluation:concat'))
 });
 
+gulp.task('js_payment:concat', () => {
+    return gulp.src([...config.js.pages.payments])
+        .pipe(plumber())
+        .pipe(concat(config.js.output.payments_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jspayment_cat'))
+        .pipe(duration('js_payment:concat'))
+});
+
 gulp.task('js:concat', () => {
   return gulp.src([...config.js.src, config.dest + '/js/*.js'])
     .pipe(plumber())

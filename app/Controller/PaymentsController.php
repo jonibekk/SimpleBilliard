@@ -1,10 +1,14 @@
 <?php
-# /app/Controller/PaymentsController.php
+App::import('Service', 'TeamService');
 
 class PaymentsController extends AppController {
+    public $uses = array('Teams');
     public function index(){
+        $TeamService = ClassRegistry::init("TeamService");
+        $this->set('teamMemberCount', count($this->Team->TeamMember->getAllMemberUserIdList(true, true, true)));
+        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('subscription');
+        $this->render('index');
     }
 
     public function apply() {
@@ -17,7 +21,7 @@ class PaymentsController extends AppController {
         $this->render('credit_card_entry');
     }
 
-    public function enter_company_info() {
+     public function enter_company_info() {
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->render('company_info');
     }
@@ -40,5 +44,10 @@ class PaymentsController extends AppController {
     public function cannot_use_service()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    public function update_cc_info() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('update_credit_card');
     }
 }

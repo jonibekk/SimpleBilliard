@@ -307,6 +307,29 @@ class AppUtil
     }
 
     /**
+     * Correct date to the last date of the month if argument date is invalid
+     * e.g.
+     *  2017-02-29(not exist) → 2017-02-28
+     *
+     * @param int $y
+     * @param int $m
+     * @param int $d
+     *
+     * @return string
+     */
+    static function correctInvalidDate(int $y, int $m, int $d) : string
+    {
+        // Check invalid
+        if (checkdate($m, $d, $y) === false) {
+            // If not exist payment base day, set last day of the month.
+            $lastDay = date('t', strtotime(AppUtil::dateFromYMD($y, $m, 1)));
+            return self::dateFromYMD($y, $m, $lastDay);
+        } else {
+            return self::dateFromYMD($y, $m, $d);
+        }
+    }
+
+    /**
      * 値が指定した範囲に含まれるか？
      *
      * @param int $target

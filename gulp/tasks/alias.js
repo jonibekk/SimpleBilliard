@@ -14,7 +14,8 @@ gulp.task('jsbuild', done => {
         'js_user',
         'js_evaluation',
         'js_app',
-        'js_vendor'], done)
+        'js_vendor',
+        'js_payment'], done)
 });
 
 gulp.task('build', done => {
@@ -31,6 +32,7 @@ gulp.task('js', done => {
       'js_app',
       'js_vendor',
       'js_prerender',
+      'js_payment',
       'angular_app',
       'angular_vendor',
       'react'], done)
@@ -82,6 +84,16 @@ gulp.task('js_evaluation', done => {
         'js_evaluation:concat',
         'js_evaluation:uglify',
         'js_evaluation:clean',
+        done
+    );
+});
+
+// js payment
+gulp.task('js_payment', done => {
+    return runSequence(
+        'js_payment:concat',
+        'js_payment:uglify',
+        'js_payment:clean',
         done
     );
 });

@@ -2205,4 +2205,11 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->Team->Evaluation->saveAll($records);
     }
 
+    public function test_countChargeTargetUsersEachTeam()
+    {
+        $this->TeamMember->deleteAll(['TeamMember.del_flg' => false]);
+        $this->createActiveUser(1);
+        $ret = $this->TeamMember->countChargeTargetUsersEachTeam([1,2]);
+        // TODO: Add other pattern tests
+    }
 }
