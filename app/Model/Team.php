@@ -231,6 +231,15 @@ class Team extends AppModel
             ]
         ];
         $postData = array_merge($postData, $team_member);
+
+        // set free trial start date and end date
+        $postData['Team']['service_use_status'] = self::SERVICE_USE_STATUS_FREE_TRIAL;
+        $postData['Team']['service_use_state_start_date'] = AppUtil::todayDateYmdLocal($postData['Team']['timezone']);
+        $stateDays = self::DAYS_SERVICE_USE_STATUS[self::SERVICE_USE_STATUS_FREE_TRIAL];
+        $stateEndDate = AppUtil::dateAfter($postData['Team']['service_use_state_start_date'],
+            $stateDays);
+        $postData['Team']['service_use_state_end_date'] = $stateEndDate;
+
         $this->saveAll($postData);
         // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
@@ -613,7 +622,7 @@ class Team extends AppModel
      */
     function findByServiceUseStatus(
         int $serviceUseStatus,
-        array $fields = ['id', 'name', 'service_use_state_start_date', 'free_trial_days', 'timezone']
+        array $fields = ['id', 'name', 'service_use_state_start_date', 'service_use_state_end_date', 'timezone']
     ): array {
         $options = [
             'conditions' => [
@@ -623,6 +632,34 @@ class Team extends AppModel
         ];
         $res = $this->find('all', $options);
         $res = Hash::extract($res, '{n}.Team');
+        return $res;
+    }
+
+    /**
+     * update all team service use status start date and end date
+     *
+     * @param int    $serviceUseStatus
+     * @param string $startDate
+     *
+     * @return bool
+     */
+    public function updateAllServiceUseStateStartEndDate(int $serviceUseStatus, string $startDate): bool
+    {
+        if ($serviceUseStatus == self::SERVICE_USE_STATUS_PAID) {
+            $endDate = null;
+        } else {
+            $statusDays = self::DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
+            $endDate = AppUtil::dateAfter($startDate, $statusDays);
+        }
+        $res = $this->updateAll(
+            [
+                'Team.service_use_state_start_date' => "'$startDate'",
+                'Team.service_use_state_end_date'   => $endDate ? "'$endDate'" : null,
+            ],
+            [
+                'Team.service_use_status' => $serviceUseStatus
+            ]
+        );
         return $res;
     }
 

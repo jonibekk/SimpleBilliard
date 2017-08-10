@@ -1,4 +1,4 @@
-<?php 
+<?php
 class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
@@ -1563,7 +1563,7 @@ class AppSchema extends CakeSchema {
 		'service_use_status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'index', 'comment' => 'サービス利用ステータス(0: free trial,1: payed,2: read only,3: service expired,4: manual delete,5: auto delete)'),
 		'country' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 2, 'collate' => 'utf8mb4_general_ci', 'comment' => '国コード', 'charset' => 'utf8mb4'),
 		'service_use_state_start_date' => array('type' => 'date', 'null' => false, 'default' => null, 'comment' => '各ステートの開始日'),
-		'free_trial_days' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'フリートライアル日数'),
+		'service_use_state_end_date' => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '各ステートの終了日'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを削除した日付時刻'),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを追加した日付時刻'),

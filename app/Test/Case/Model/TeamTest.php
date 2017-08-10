@@ -57,8 +57,9 @@ class TeamTest extends GoalousTestCase
     {
         $postData = [
             'Team' => [
-                'name' => "test",
-                'type' => 1
+                'name'     => "test",
+                'type'     => 1,
+                'timezone' => '+9.0'
             ]
         ];
         $uid = '1';
@@ -257,6 +258,52 @@ class TeamTest extends GoalousTestCase
         $this->Team->id = 1;
         $ret = $this->Team->saveField('service_use_status', Team::SERVICE_USE_STATUS_READ_ONLY);
         $this->assertCount(1, $ret);
+    }
+
+    function test_updateAllServiceUseStateStartDate_success()
+    {
+        $freeTrialTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
+        $paidTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_PAID]);
+        $readOnlyTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $cannotUseTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE]);
+
+        $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_FREE_TRIAL, '2017-07-01');
+        $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, '2017-07-02');
+        $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_READ_ONLY, '2017-07-03');
+        $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_CANNOT_USE, '2017-07-04');
+
+        $this->assertEqual(
+            Hash::get($this->Team->findById($freeTrialTeamId), 'Team.service_use_state_start_date'),
+            '2017-07-01'
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($freeTrialTeamId), 'Team.service_use_state_end_date'),
+            AppUtil::dateAfter('2017-07-01', Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL])
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($paidTeamId), 'Team.service_use_state_start_date'),
+            '2017-07-02'
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($paidTeamId), 'Team.service_use_state_end_date'),
+            null
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($readOnlyTeamId), 'Team.service_use_state_start_date'),
+            '2017-07-03'
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($readOnlyTeamId), 'Team.service_use_state_end_date'),
+            AppUtil::dateAfter('2017-07-03', Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_READ_ONLY])
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($cannotUseTeamId), 'Team.service_use_state_start_date'),
+            '2017-07-04'
+        );
+        $this->assertEqual(
+            Hash::get($this->Team->findById($cannotUseTeamId), 'Team.service_use_state_end_date'),
+            AppUtil::dateAfter('2017-07-04', Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_CANNOT_USE])
+        );
     }
 
     function _setDefault()
