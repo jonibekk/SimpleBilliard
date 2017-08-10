@@ -2,6 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PaymentService');
 
+// TODO: Create test_validateCreate_validateError_** method related lack of company info and contact person
+
 /**
  * Class PaymentServiceTest
  *
@@ -43,24 +45,44 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team = $this->Team ?? ClassRegistry::init('Team');
     }
 
+    private function createTestPaymentData(array $data): array
+    {
+        $default = [
+            'token'                          => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
+            'type'                           => 1,
+            'amount_per_user'                => 1800,
+            'company_name'                   => 'ISAO',
+            'company_country'                => 'JP',
+            'company_post_code'              => '1110111',
+            'company_region'                 => 'Tokyo',
+            'company_city'                   => 'Taitou-ku',
+            'company_street'                 => '*** ****',
+            'company_tel'                    => '123456789',
+            'contact_person_first_name'      => '太郎',
+            'contact_person_first_name_kana' => 'タロウ',
+            'contact_person_last_name'       => '東京',
+            'contact_person_last_name_kana'  => 'トウキョウ',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
+            'payment_base_day'               => 15,
+            'currency'                       => 1
+        ];
+        return am($default, $data);
+    }
+
     /**
      * Create a credit card payment for test
      */
     private function createCreditCardPayment()
     {
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
+        ]);
         $customerCode = 'cus_B59aNmiTO3IZjg';
 
         $userID = $this->createActiveUser(1);
@@ -68,21 +90,16 @@ class PaymentServiceTest extends GoalousTestCase
         //$this->assertTrue($res);
     }
 
-    public function test_validateCreate_validate()
+    public function test_validateCreate_validate_basic()
     {
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
+            'team_id'          => 10,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
+        ]);
 
         $res = $this->PaymentService->validateCreate($payment);
         $this->assertTrue($res);
@@ -91,19 +108,14 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_validateCreate_validateError_token()
     {
         // No Token
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => '',
             'team_id'          => 1,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
+        ]);
         $res = $this->PaymentService->validateCreate($payment);
         $this->assertFalse($res === true);
     }
@@ -111,18 +123,13 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_validateCreate_validateError_teamId()
     {
         // No team ID
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
+        ]);
         $res = $this->PaymentService->validateCreate($payment);
         $this->assertFalse($res === true);
     }
@@ -130,157 +137,28 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_validateCreate_validateError_wrongType()
     {
         // Wrong type
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 3,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
-        $res = $this->PaymentService->validateCreate($payment);
-        $this->assertFalse($res === true);
-    }
-
-    public function test_validateCreate_validateError_payerName()
-    {
-        $payment = [
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payer_name'       => '',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ];
-
-        $res = $this->PaymentService->validateCreate($payment);
-        $this->assertFalse($res === true);
-    }
-
-    public function test_validateCreate_validateError_companyName()
-    {
-        $payment = [
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => '',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ];
-
-        $res = $this->PaymentService->validateCreate($payment);
-        $this->assertFalse($res === true);
-    }
-
-    public function test_validateCreate_validateError_Address()
-    {
-        $payment = [
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ];
-
-        $res = $this->PaymentService->validateCreate($payment);
-        $this->assertFalse($res === true);
-    }
-
-    public function test_validateCreate_validateError_tel()
-    {
-        $payment = [
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '',
-            'email'            => 'test@goalous.com',
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ];
-
-        $res = $this->PaymentService->validateCreate($payment);
-        $this->assertFalse($res === true);
-    }
-
-    public function test_validateCreate_validateError_noEmail()
-    {
-        $payment = [
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => '',
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ];
-
-        $res = $this->PaymentService->validateCreate($payment);
-        $this->assertFalse($res === true);
-    }
-
-    public function test_validateCreate_validateError_wrongEmail()
-    {
-        $payment = [
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'tesxxxxx.com',
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ];
-
+        ]);
         $res = $this->PaymentService->validateCreate($payment);
         $this->assertFalse($res === true);
     }
 
     public function test_validateCreate_validateError_wrongPaymentDay()
     {
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 33,
             'currency'         => 1
-        ];
+        ]);
 
         $res = $this->PaymentService->validateCreate($payment);
         $this->assertFalse($res === true);
@@ -288,39 +166,29 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_validateCreate_validateError_wrongCurrency()
     {
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 12
-        ];
+        ]);
 
         $res = $this->PaymentService->validateCreate($payment);
         $this->assertFalse($res === true);
     }
 
-    public function test_registerCreditCardPayment()
+    public function test_registerCreditCardPayment_basic()
     {
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
+        ]);
         $customerCode = 'cus_B3ygr9hxqg5evH';
 
         $userID = $this->createActiveUser(1);
@@ -330,19 +198,14 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_registerCreditCardPayment_noCustomerCode()
     {
-        $payment = [
+        $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
             'amount_per_user'  => 1800,
-            'payer_name'       => 'Goalous Taro',
-            'company_name'     => 'ISAO',
-            'company_address'  => 'Here Japan',
-            'company_tel'      => '123456789',
-            'email'            => 'test@goalous.com',
             'payment_base_day' => 15,
             'currency'         => 1
-        ];
+        ]);
         $customerCode = '';
 
         $userID = $this->createActiveUser(1);
@@ -855,7 +718,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if payment base day is 29(Not exist day on Febuary)
         $this->Team->save(['id' => $teamId, 'timezone' => 9.0]);
         $this->PaymentSetting->save([
-            'id' => $paymentSettingId,
+            'id'               => $paymentSettingId,
             'payment_base_day' => 29
         ]);
         $this->ChargeHistory->deleteAll(['del_flg' => false]);

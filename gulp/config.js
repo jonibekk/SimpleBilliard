@@ -154,7 +154,8 @@ const config = {
     'goal_search',
     'kr_column',
     'message',
-    'invite'
+    'invite',
+    'payment_apply'
   ],
   css_vendor: {
     src: [
