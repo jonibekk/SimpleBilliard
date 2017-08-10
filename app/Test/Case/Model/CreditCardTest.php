@@ -14,12 +14,12 @@ class CreditCardTest extends GoalousTestCase {
  */
 	public $fixtures = array(
 		'app.credit_card',
-        'app.payment_setting',
-        'app.payment_setting_change_log',
-        'app.charge_history',
-        'app.team',
-        'app.team_member',
-        'app.user'
+		'app.payment_setting',
+		'app.payment_setting_change_log',
+		'app.charge_history',
+		'app.team',
+		'app.team_member',
+		'app.user'
 	);
 
 /**
