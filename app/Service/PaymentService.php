@@ -569,7 +569,7 @@ class PaymentService extends AppService
     }
 
     /**
-     * Validate model fields
+     * Validate only specified fields and model
      * @param $data
      * @param $fields
      * @param $dataParentKey
@@ -578,10 +578,11 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    private function validateSingleModelFields($data, array $fields, string $dataParentKey, string $modelKey, $model) {
+    private function validateSingleModelFields($data, array $fields, string $dataParentKey, string $modelKey, $model) : array {
         $validationFields = Hash::get($fields, $modelKey) ?? [];
         $this->log(compact('validationFields'));
         $validationBackup = $model->validate;
+        // Set each field rule
         $validationRules = [];
         foreach ($validationFields as $field) {
             $validationRules[$field] = Hash::get($validationBackup, $field);

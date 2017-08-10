@@ -149,15 +149,12 @@ class PaymentsController extends ApiController
         return $this->_getResponseSuccess();
     }
 
-
     /**
      * Get information for display form
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
-     *
-     * @param integer|null $id
-     *
      * @return CakeResponse
+     * @internal     param int|null $id
      */
     function get_init_form()
     {
