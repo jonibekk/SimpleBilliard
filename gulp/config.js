@@ -100,7 +100,7 @@ const config = {
       node_modules_dir + '/fastclick/lib/fastClick.js',
       node_modules_dir + '/select2/select2.js',
       node_modules_dir + '/requirejs/require.js',
-      node_modules_dir + '/exif-js/exif.js',
+      node_modules_dir + '/exif-js/exif.js'
     ],
     output: {
       file_name: 'vendors',
