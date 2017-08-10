@@ -41,7 +41,8 @@ class TeamServiceTest extends GoalousTestCase
     {
         $teamId = $this->createTeam([
             'service_use_status'           => Team::SERVICE_USE_STATUS_READ_ONLY,
-            'service_use_state_start_date' => '2017-01-10'
+            'service_use_state_start_date' => '2017-01-10',
+            'service_use_state_end_date'   => '2017-02-09',
         ]);
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $this->TeamService->getStateEndDate();
