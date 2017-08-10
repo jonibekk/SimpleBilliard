@@ -28,7 +28,7 @@
         <?php endif; ?>
         <div class="team-price-info">
             <h5 class="team-price-info-headline"><?= __('Monthly')?></h5>
-            <span class="team-price-info-number">&yen;1,980 <div class="team-price-info-detail">/member /month<sup class="team-price-info-super-script">1</sup></div></span>
+            <span class="team-price-info-number">&yen;1,980 <div class="team-price-info-detail">/<?= __('member');?> /<?= __('month');?><sup class="team-price-info-super-script">1</sup></div></span>
         </div>
         <div class="team-price-info">
             <h5 class="team-price-info-headline"><?= __('Active Members')?><sup class="team-price-info-super-script">2</sup></h5>
@@ -38,7 +38,7 @@
         <div class="team-price-info">
             <h5 class="team-price-info-headline"><?= __('Estimated Total')?></h5>
             <i class="team-price-info-icon fa fa-credit-card"></i>
-            <span class="team-price-info-number">&yen;9,900<div class="team-price-info-detail">/month</div></span>
+            <span class="team-price-info-number">&yen;9,900<div class="team-price-info-detail">/<?= __('month');?></div></span>
         </div>
         <?php if($serviceUseStatus!=Team::SERVICE_USE_STATUS_PAID): ?>
         <a href="#" class="subscribe-btn btn btn-primary"><?= __('Subscribe') ?></a>
