@@ -91,6 +91,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'timezone' => 9.0
             ],
         ]);
+
     }
 
     public function test_findMonthlyChargeCcTeams_condJoins()

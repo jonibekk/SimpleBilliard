@@ -278,4 +278,5 @@ class PaymentSetting extends AppModel
 
         return $res;
     }
+
 }
