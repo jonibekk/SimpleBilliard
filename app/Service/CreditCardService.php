@@ -178,7 +178,7 @@ class CreditCardService extends AppService
      * @param string $customerId
      * @param string $token
      *
-     * @return string|true
+     * @return array|true
      */
     function update(string $customerId, string $token)
     {
@@ -187,11 +187,11 @@ class CreditCardService extends AppService
             \Stripe\Customer::update($customerId, ['source' => $token]);
         } catch (Exception $e) {
             $message = $e->getMessage();
-            $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : '';
+            $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : null;
             $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s", $customerId, $token, $message, $stripeCode);
             $this->log(sprintf("[%s]%s", __METHOD__, $errorLog));
             $this->log($e->getTraceAsString());
-            return $message;
+            return compact('message', 'stripeCode');
         }
 
         // When it doesn's throw exception

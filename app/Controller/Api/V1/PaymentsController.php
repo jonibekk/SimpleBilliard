@@ -106,15 +106,16 @@ class PaymentsController extends ApiController
 
     /**
      * Update credit card info
-     * Endpoint: /api/v1/payments/credit_card
-     * method: PUT
+     * Endpoint: /api/v1/payments/udpate_credit_card
      *
-     * @return void
+     * @return CakeResponse
      */
-    function put_credit_card()
+    function post_update_credit_card()
     {
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
@@ -123,7 +124,7 @@ class PaymentsController extends ApiController
         $userId = $this->Auth->user('id');
 
         // Validation
-        $customerCode = $CreditCardService->getCustomerCode($teamId);
+        $customerCode = $CreditCard->getCustomerCode($teamId);
         if (empty($customerCode)) {
             return $this->_getResponseNotFound();
         }
@@ -134,7 +135,7 @@ class PaymentsController extends ApiController
         // Update
         $updateResult = $CreditCardService->update($customerCode, $token);
         if ($updateResult !== true) {
-            $this->_getResponseBadFail($updateResult);
+            $this->_getResponseBadFail($updateResult['message']);
         }
 
         return $this->_getResponseSuccess();

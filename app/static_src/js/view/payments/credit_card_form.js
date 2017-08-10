@@ -86,8 +86,8 @@ if(document.enterCCInfo){
         formData.append('payer_name', cardName.value);
 
         $.ajax({
-            url: '/api/v1/payments/credit_card',
-            method: 'put',
+            url: '/api/v1/payments/update_credit_card',
+            method: 'post',
             dataType: 'json',
             processData: false,
             contentType: false,
