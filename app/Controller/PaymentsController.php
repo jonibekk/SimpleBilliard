@@ -13,7 +13,6 @@ class PaymentsController extends AppController {
 
     public function apply() {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('choose_payment_type');
     }
 
     public function enter_cc_info() {
@@ -36,14 +35,10 @@ class PaymentsController extends AppController {
         $this->render('payment_history');
     }
 
-    public function pricing() {
-        $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('pricing');
-    }
-
     public function cannot_use_service()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('cannot_use_service');
     }
 
     public function update_cc_info() {
