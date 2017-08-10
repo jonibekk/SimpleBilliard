@@ -48,4 +48,30 @@ class CreditCard extends AppModel
     public $belongsTo = [
         'PaymentSetting'
     ];
+
+    /**
+     * Find CreditCard within the customer code list.
+     *
+     * @param array $customerCodes
+     *
+     * @return array|null
+     */
+    public function findByCustomerCodes(array $customerCodes)
+    {
+        $options = [
+            'fields'     => [
+                'id',
+                'team_id',
+                'customer_code',
+                'payment_setting_id',
+            ],
+            'conditions' => [
+                'del_flg'    => false,
+                'customer_code'  => $customerCodes,
+            ],
+        ];
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
 }

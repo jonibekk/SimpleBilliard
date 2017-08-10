@@ -281,7 +281,7 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_listAllCustomers()
     {
-        $res = $this->CreditCardService->listAllCustomers();
+        $res = $this->CreditCardService->listCustomers();
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("error", $res);

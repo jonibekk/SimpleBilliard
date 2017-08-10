@@ -174,38 +174,45 @@ class CreditCardService extends AppService
 
     /**
      * Return a list with all registered customers on Stripe
+     * Documentation about the returned data can be found on
+     * https://stripe.com/docs/api#list_customers
+     *
+     * @param string|null $startAfter A cursor for use in pagination.
+     *                                $startAfter is an object ID that defines your place in the list.
+     *                                For instance, if you make a list request and receive 100 objects,
+     *                                ending with obj_foo, your subsequent call can include
+     *                                $startAfter=obj_foo in order to fetch the next page of the list.
      *
      * @return array
      */
-    public function listAllCustomers()
+    public function listCustomers(string $startAfter = null)
     {
         $result = [
             "error"   => false,
-            "message" => null
+            "message" => null,
+            "customers" => []
         ];
 
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
-
-        $list = array();
         $options = array(
-            "limit" => 100 // 100 is the maximum that can be fetch in as single request. Default is 10
+            "limit" => 10 // Process in blocks of 20 accounts
         );
 
+        // If start after is set add as parameter
+        if ($startAfter != null) {
+            $options = am($options, ["starting_after" => $startAfter]);
+        }
+
         try {
-            do {
-                // Get a list of 100 customers
-                $response = \Stripe\Customer::all($options);
-                $list = am($list, $response->data);
-                $hasMore = $response->has_more;
+            // Get the customer list
+            $response = \Stripe\Customer::all($options);
 
-                // If there is more to be fetch, add to the list.
-                if ($hasMore) {
-                    $item = $list[count($list) -1];
-                    $options = am($options, ["starting_after" => $item["id"]]);
-                }
-            } while($hasMore);
-
-            $result["customers"] = $list;
+            // Set the array with format customer_id/customer data
+            foreach ($response->data as $index => $value) {
+                $result["customers"][$value->id] = $value;
+                unset($response->data[$index]);
+            }
+            $result["hasMore"] = $response->has_more;
         }
         catch (Exception $e) {
             $result["error"] = true;

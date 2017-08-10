@@ -38,48 +38,104 @@ class CreditCardExpirationAlertShell extends AppShell
         // Get Customer list from stripe API
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init('CreditCardService');
-        $customerList = $CreditCardService->listAllCustomers();
-        if ($customerList['error']) {
-            $this->log('Error retrieving Stripe customers', LOG_ERR);
-            $this->log($customerList['message'], LOG_ERR);
-            exit;
-        }
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init('CreditCard');
+        $lastCustomer = null;
 
-        // Create a Key/Value of customers_id
-        $stripeCustomers = array();
-        foreach ($customerList['customers'] as $item) {
-            $stripeCustomers[$item->id] = $item;
-        }
+        do {
+            // Call list customer API
+            $respListCustomer = $CreditCardService->listCustomers($lastCustomer);
+            if ($respListCustomer['error']) {
+                $this->log('Error retrieving Stripe customers', LOG_ERR);
+                $this->log($respListCustomer, LOG_ERR);
+                exit;
+            }
 
-        // Get teams only credit card payment type
-        $targetChargeTeams = $this->PaymentSetting->findMonthlyChargeCcTeams();
-        if (empty($targetChargeTeams)) {
-            $this->log('Billing team does not exist', LOG_INFO);
-            exit;
-        }
+            // Get list of customer ids
+            $customerCodeList = array_keys($respListCustomer['customers']);
+            // Match the list on database
+            $registeredCards = $CreditCard->findByCustomerCodes($customerCodeList);
 
+            // Check for expiring cards
+            $this->_checkExpiringCards($registeredCards, $respListCustomer['customers']);
+
+            // If has more set the last Customer id
+            if ($respListCustomer['hasMore']) {
+                $lastCustomer = $customerCodeList[count($customerCodeList)-1];
+            }
+        } while($respListCustomer['hasMore']);
+    }
+
+    /**
+     * Check for expiring credit cards on customer list
+     *
+     * Customer object description can be found on Slack documentation
+     * https://stripe.com/docs/api#customer_object
+     *
+     * @param array $registeredCards - List of credit card registered on Goalous
+     * @param array $customerList    - List of Customers registerd on Slack
+     */
+    private function _checkExpiringCards(array $registeredCards, array $customerList)
+    {
         // Get current month and year
         $now = new DateTime('now');
-        $month = $now->format('n');
-        $year = $now->format('Y');
+        $currentMonth = $now->format('n');
+        $currentYear = $now->format('Y');
 
-        foreach ($targetChargeTeams as $index => $teamInfo) {
-            // Get customer data
-            $custCode = $teamInfo['CreditCard']['customer_code'];
-            $cardData = $stripeCustomers[$custCode];
+        foreach ($registeredCards as $creditCard)
+        {
+            $customerData = $customerList[Hash::get($creditCard, 'CreditCard.customer_code')];
 
-            // Since we do not store the credit card ID on our database,
-            // assume that the current registered credit card is the last
-            // card on the list.
-            $creditCardInfo = $cardData->sources->data[count($cardData->sources->data)-1];
+            // Get the default credit card
+            $creditCardInfo = null;
+            if (count($customerData->sources->data) == 1) {
+                // Single card - this is the default
+                $creditCardInfo = $customerData->sources->data[0];
+            } else {
+                // Look for the default card on the list
+                foreach ($customerData->sources->data as $source) {
+                    if ($source->id == $customerData->default_source) {
+                        $creditCardInfo = $source;
+                    }
+                }
+                // This is a non expected case.
+                // The default card should exists
+                if ($creditCardInfo == null) {
+                    $this->log('Customer without default credit card', LOG_ERR);
+                    $this->log($customerData, LOG_ERR);
+                    continue;
+                }
+            }
+
             $expireYear = $creditCardInfo->exp_year;
             $expireMonth = $creditCardInfo->exp_month;
 
             // Cards that will expire this month
-            if ($expireYear == $year && $expireMonth == $month) {
+            if ($expireYear == $currentYear && $expireMonth == $currentMonth) {
                 $teamId = $teamInfo['PaymentSetting']['team_id'];
-                $this->notifyExpiringCard($teamId, $creditCardInfo);
+                // TODO: Confirm the email text and translations
+                $this->_notifyExpiringCard($teamId, $creditCardInfo);
             }
+            // Credit card already expired
+            else if ($expireYear == $currentYear && $expireMonth > $currentMonth) {
+                $teamId = $teamInfo['PaymentSetting']['team_id'];
+                // TODO: Send email about expired cards
+            }
+
+            // Remove processed from the list
+            unset($customerList[Hash::get($creditCard, 'CreditCard.customer_code')]);
+        }
+
+        // Remaining customers on the list do not have a match on Goalous database
+        // Check if are not test accounts and log otherwihse
+        foreach ($customerList as $customerData) {
+            if (strpos($customerData->description, 'TEST') !== false) {
+                continue;
+            }
+
+            // Log the customer data for later check
+            $this->log('Customer without a match on Goalous database:', LOG_DEBUG);
+            $this->log($customerData, LOG_DEBUG);
         }
     }
 
@@ -89,7 +145,7 @@ class CreditCardExpirationAlertShell extends AppShell
      * @param int $teamId
      * @param     $cardData
      */
-    private function notifyExpiringCard(int $teamId, $cardData)
+    private function _notifyExpiringCard(int $teamId, $cardData)
     {
         // Validate card information
         if ($cardData == null || empty($cardData['last4']) || empty($cardData['brand'])) {

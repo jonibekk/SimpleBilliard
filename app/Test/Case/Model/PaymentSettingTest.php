@@ -74,9 +74,6 @@ class PaymentSettingTest extends GoalousTestCase
             'Team'           => [
                 'timezone' => 9.0
             ],
-            'CreditCard'     => [
-                'customer_code' => null
-            ]
         ]);
 
         // data_count: multi
@@ -93,11 +90,7 @@ class PaymentSettingTest extends GoalousTestCase
             'Team'           => [
                 'timezone' => 9.0
             ],
-            'CreditCard'     => [
-                'customer_code' => null
-            ]
         ]);
-
     }
 
     public function test_findMonthlyChargeCcTeams_condJoins()
