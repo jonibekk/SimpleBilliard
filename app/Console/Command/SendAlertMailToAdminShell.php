@@ -108,14 +108,11 @@ class SendAlertMailToAdminShell extends AppShell
                 $this->failedCount++;
                 continue;
             }
-            $daysOfStatus = $this->_decideStatusDays($serviceUseStatus,
-                Team::DAYS_SERVICE_USE_STATUS[$serviceUseStatus],
-                $team);
-            if ($this->_isTargetTeam($daysOfStatus, $team) === false) {
+            $stateEndDate = $team['service_use_state_end_date'];
+            if ($this->_isTargetTeam($stateEndDate, $team['timezone']) === false) {
                 continue;
             }
-            $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysOfStatus);
-            $this->_sendingEmailToAdmins($team['id'], $team['name'], $expireDate, $serviceUseStatus);
+            $this->_sendingEmailToAdmins($team['id'], $team['name'], $stateEndDate, $serviceUseStatus);
         }
         $msg = sprintf("Sending email for alerting expire has been done. succeeded count:%s, failed count:%s, \$serviceUseStatus:%s",
             $this->succeededCount,
@@ -157,42 +154,23 @@ class SendAlertMailToAdminShell extends AppShell
     /**
      * Is the team target for sending email?
      *
-     * @param int   $daysOfStatus
-     * @param array $team
+     * @param string $stateEndDate
+     * @param float  $timezone
      *
      * @return bool
      */
-    function _isTargetTeam(int $daysOfStatus, array $team): bool
+    function _isTargetTeam(string $stateEndDate, float $timezone): bool
     {
         if (isset($this->params['force']) && $this->params['force'] === true) {
             return true;
         }
-        $expireDate = AppUtil::dateAfter($team['service_use_state_start_date'], $daysOfStatus);
         $notifyBeforeDays = explode(',', EXPIRE_ALERT_NOTIFY_BEFORE_DAYS);
-        $todayLocalDate = AppUtil::todayDateYmdLocal($team['timezone']);
-        $diffDaysBetweenExpireAndToday = AppUtil::diffDays($todayLocalDate, $expireDate);
+        $todayLocalDate = AppUtil::todayDateYmdLocal($timezone);
+        $diffDaysBetweenExpireAndToday = AppUtil::diffDays($todayLocalDate, $stateEndDate);
         if (in_array($diffDaysBetweenExpireAndToday, $notifyBeforeDays)) {
             return true;
         }
         return false;
-    }
-
-    /**
-     *  Decide status days
-     *  In only free trial, fetching the days from DB
-     *
-     * @param int   $serviceUseStatus
-     * @param int   $statusDays
-     * @param array $team
-     *
-     * @return int
-     */
-    function _decideStatusDays(int $serviceUseStatus, int $statusDays, array $team): int
-    {
-        if ($serviceUseStatus === Team::SERVICE_USE_STATUS_FREE_TRIAL) {
-            $statusDays = $team['free_trial_days'] ?? $statusDays;
-        }
-        return $statusDays;
     }
 
     function _resetCount()
