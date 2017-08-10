@@ -522,4 +522,81 @@ class PaymentService extends AppService
         });
         return $targetChargeTeams;
     }
+
+    /**
+     * Payment validation
+     *
+     * @param mixed $data
+     * @param array $fields
+     *
+     * @return array
+     */
+    function validateSave($data, array $fields): array
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init("Invoice");
+
+        $allValidationErrors = [];
+        // PaymentSetting validation
+        if (!empty(Hash::get($fields, 'PaymentSetting'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'payment_setting', 'PaymentSetting', $PaymentSetting)
+            );
+        }
+
+        // CreditCard validation
+        if (!empty(Hash::get($fields, 'CreditCard'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'credit_card', 'CreditCard', $CreditCard)
+            );
+        }
+
+        // Invoice validation
+        if (!empty(Hash::get($fields, 'Invoice'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)
+            );
+        }
+
+        return $allValidationErrors;
+    }
+
+    /**
+     * Validate model fields
+     * @param $data
+     * @param $fields
+     * @param $dataParentKey
+     * @param $modelKey
+     * @param $model
+     *
+     * @return array
+     */
+    private function validateSingleModelFields($data, array $fields, string $dataParentKey, string $modelKey, $model) {
+        $validationFields = Hash::get($fields, $modelKey) ?? [];
+        $this->log(compact('validationFields'));
+        $validationBackup = $model->validate;
+        $validationRules = [];
+        foreach ($validationFields as $field) {
+            $validationRules[$field] = Hash::get($validationBackup, $field);
+        }
+        $model->validate = $validationRules;
+        $checkData = Hash::get($data, $dataParentKey) ?? [];
+        $res = $model->validates($checkData);
+        $model->validate = $validationBackup;
+        if (!$res) {
+            $validationErrors = $this->validationExtract($model->validationErrors);
+            return [$dataParentKey => $validationErrors];
+        }
+        return [];
+
+    }
+
+
 }

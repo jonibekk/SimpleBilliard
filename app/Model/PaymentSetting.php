@@ -21,8 +21,8 @@ class PaymentSetting extends AppModel
     const CHARGE_TYPE_USER_ACTIVATION_FEE = 2;
 
     const CURRENCY_LABELS = [
-        self::CURRENCY_JPY => "¥",
-        self::CURRENCY_USD => "$",
+        self::CURRENCY_CODE_JPY => "¥",
+        self::CURRENCY_CODE_USD => "$",
     ];
 
     function __construct($id = false, $table = null, $ds = null)
