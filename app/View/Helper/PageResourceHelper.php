@@ -194,15 +194,11 @@ class PageResourceHelper extends AppHelper
         if (isset($this->cssMap[$controller][$action])) {
             // Use specified css action
             return $this->_outputCss($this->cssMap[$controller][$action]);
-        } else {
-            if (isset($this->cssMap[$controller]['default'])) {
-                // User default css for the controller
-                return $this->_outputCss($this->cssMap[$controller]['default']);
-            } else {
-                // No page css
-                return '';
-            }
+        } elseif (isset($this->cssMap[$controller]['default'])) {
+            // User default css for the controller
+            return $this->_outputCss($this->cssMap[$controller]['default']);
         }
+        return '';
     }
 
     /**

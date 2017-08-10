@@ -1,3 +1,5 @@
+// TODO.Payment: Translate untranslated sentence
+
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
@@ -10,9 +12,6 @@ export default class Company extends Base {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this)
-  }
-
-  componentWillMount() {
   }
 
   componentDidMount() {
