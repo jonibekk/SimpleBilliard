@@ -67,89 +67,86 @@ class SendAlertMailToAdminShellTest extends GoalousTestCase
      */
     function test_isTargetTeam()
     {
-        $daysOfStatus = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL];
         $timezone = 9;
-        $team = [
-            'service_use_status'           => Team::SERVICE_USE_STATUS_FREE_TRIAL,
-            'service_use_state_start_date' => null,
-            'timezone'                     => $timezone
-        ];
-
         $localTodayDate = AppUtil::todayDateYmdLocal($timezone);
-
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 16);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateBefore($localTodayDate, 1),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "Expired!");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 15);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            $localTodayDate,
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "Just Expired!");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 14);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 1),
+            $timezone
+        );
         $this->assertTrue($isTargetTeam, "1 day before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 13);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 2),
+            $timezone
+        );
         $this->assertTrue($isTargetTeam, "2 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 12);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 3),
+            $timezone
+        );
         $this->assertTrue($isTargetTeam, "3 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 11);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 4),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "4 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 10);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 5),
+            $timezone
+        );
         $this->assertTrue($isTargetTeam, "5 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 9);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 6),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "6 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 8);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 7),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "7 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 7);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 8),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "8 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 6);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 9),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "9 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 5);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 10),
+            $timezone
+        );
         $this->assertTrue($isTargetTeam, "10 days before expires");
 
-        $team['service_use_state_start_date'] = AppUtil::dateBefore($localTodayDate, 4);
-        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam($daysOfStatus, $team);
+        $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
+            AppUtil::dateAfter($localTodayDate, 11),
+            $timezone
+        );
         $this->assertFalse($isTargetTeam, "11 days before expires");
-    }
-
-    /**
-     * フリートライアルの場合かつfree_trial_daysに値が入っていた場合は、free_trial_daysが優先される事をテスト
-     */
-    function test_decideStatusDays()
-    {
-        $team = [
-            'service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL,
-            'free_trial_days'    => null,
-        ];
-
-        $ret = $this->SendAlertMailToAdminShell->_decideStatusDays(Team::SERVICE_USE_STATUS_FREE_TRIAL, 30, $team);
-        $this->assertEquals(30, $ret);
-
-        $team['free_trial_days'] = 6;
-        $ret = $this->SendAlertMailToAdminShell->_decideStatusDays(Team::SERVICE_USE_STATUS_FREE_TRIAL, 30, $team);
-        $this->assertEquals(6, $ret);
-
-        $team['service_use_status'] = Team::SERVICE_USE_STATUS_READ_ONLY;
-        $ret = $this->SendAlertMailToAdminShell->_decideStatusDays(Team::SERVICE_USE_STATUS_READ_ONLY, 15, $team);
-        $this->assertEquals(15, $ret);
 
     }
+
 }
