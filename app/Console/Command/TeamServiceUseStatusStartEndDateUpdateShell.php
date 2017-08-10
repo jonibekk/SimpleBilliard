@@ -1,6 +1,7 @@
 <?php
+App::uses('AppUtil', 'Util');
 
-class TeamServiceUseStatusStartDateUpdateShell extends AppShell
+class TeamServiceUseStatusStartEndDateUpdateShell extends AppShell
 {
 
     var $uses = array(
@@ -44,7 +45,7 @@ class TeamServiceUseStatusStartDateUpdateShell extends AppShell
         try {
             $this->Team->begin();
 
-            if(!$this->Team->updateAllServiceUseStateStartDate(Team::SERVICE_USE_STATUS_FREE_TRIAL, $currentDate)) {
+            if(!$this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_FREE_TRIAL, $currentDate)) {
                 throw new Exception(sprintf("Failed to update service use state start date"));
             }
 
