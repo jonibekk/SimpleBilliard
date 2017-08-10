@@ -858,8 +858,6 @@ msgstr "ゴールとトップKRを変更しました。"
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
 
-#, fuzzy
-#| msgid "Parameter is invalid."
 msgid "Parameter is invalid"
 msgstr "パラメータが不正です。"
 
@@ -1813,13 +1811,9 @@ msgstr "%sがトピック名を設定しました。: %s"
 msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
 
-#, fuzzy
-#| msgid "Page does not exist."
 msgid "Payment settings does not exists."
 msgstr "決済設定が見つかりません。"
 
-#, fuzzy
-#| msgid "This circle does not exist."
 msgid "Credit card settings does not exist."
 msgstr "クレジットカード設定が見つかりません。"
 
@@ -4904,26 +4898,16 @@ msgstr "利用規約はこちら。"
 msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
-#, fuzzy
-#| msgid "Your team works better? Easy to know by Goalous."
 msgid "Your team no longer has access to Goalous."
 msgstr "チーム力が向上しているか？これを見れば分かります。"
 
-#, fuzzy
-#| msgid ""
-#| "If you would like to continue using Goalous, please subscribe to the paid "
-#| "plan."
 msgid ""
 "If you want to resume normal usage, please subscribe to our payment plan."
 msgstr "継続してご利用されたい場合は、有料プランのご契約をお願いいたします。"
 
-#, fuzzy
-#| msgid "Unsubscribe"
 msgid "Subscribe"
 msgstr "□配信停止"
 
-#, fuzzy
-#| msgid "Get documentation"
 msgid "Select Country Location"
 msgstr "国を選択"
 
@@ -4953,18 +4937,12 @@ msgstr ""
 msgid "Coming Soon"
 msgstr ""
 
-#, fuzzy
-#| msgid "Enter confirmation code"
 msgid "Enter Company Information"
 msgstr "会社情報を入力してください"
 
-#, fuzzy
-#| msgid "Company"
 msgid "Company Name"
 msgstr "会社名"
 
-#, fuzzy
-#| msgid "Email Address"
 msgid "Company Address"
 msgstr "会社住所"
 
@@ -4992,8 +4970,6 @@ msgstr "郵便番号"
 msgid "12345"
 msgstr "1100053"
 
-#, fuzzy
-#| msgid " count"
 msgid "Country"
 msgstr "国"
 
@@ -5024,8 +5000,6 @@ msgstr ""
 msgid "台東１－１－１"
 msgstr ""
 
-#, fuzzy
-#| msgid "Contact"
 msgid "Company Contact"
 msgstr "会社連絡先"
 
@@ -5041,8 +5015,6 @@ msgstr ""
 msgid "名"
 msgstr ""
 
-#, fuzzy
-#| msgid "Contact"
 msgid "Contact Email"
 msgstr "連絡先メール"
 
@@ -5052,8 +5024,6 @@ msgstr "name@company.co.jp"
 msgid "Company Telephone"
 msgstr "会社連絡先電話番号"
 
-#, fuzzy
-#| msgid "Get more information"
 msgid "Enter Payment Information"
 msgstr "決済情報を入力してください"
 
@@ -5063,13 +5033,9 @@ msgstr "カード名義人（半角ローマ字）"
 msgid "Price per user"
 msgstr "料金（1ユーザー当たり）"
 
-#, fuzzy
-#| msgid "Number of goals"
 msgid "Number of users"
 msgstr "ユーザー数"
 
-#, fuzzy
-#| msgid "Total"
 msgid "Sub Total"
 msgstr "小計"
 
@@ -5079,21 +5045,15 @@ msgstr "税金"
 msgid "Total per month"
 msgstr "合計（月あたり）"
 
-#, fuzzy
-#| msgid "%s Evaluation Status"
 msgid "Subscription Status"
 msgstr "%sの評価状況"
 
 msgid "Free Trial"
 msgstr ""
 
-#, fuzzy
-#| msgid "Unsubscribe"
 msgid "Subscribed"
 msgstr "□配信停止"
 
-#, fuzzy
-#| msgid "Read"
 msgid "Read Only"
 msgstr "既読"
 
@@ -5118,13 +5078,9 @@ msgid ""
 "deleted on December 20, 2017"
 msgstr ""
 
-#, fuzzy
-#| msgid "Number of goals"
 msgid "Number of Members"
 msgstr "ユーザー数"
 
-#, fuzzy
-#| msgid "Total"
 msgid "Total Price"
 msgstr "トータル"
 
@@ -5136,8 +5092,6 @@ msgid ""
 "Goalous."
 msgstr "決済に成功しました。Goalousのご利用を開始できます。"
 
-#, fuzzy
-#| msgid "Achieve goal"
 msgid "Go achieve your goal!"
 msgstr "いざ、ゴール達成へ！"
 
@@ -5397,8 +5351,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#, fuzzy
-#~| msgid "You cannot access the topic"
-#~ msgid "You cannot use the team"
-#~ msgstr "このチームは現在利用できません。"
