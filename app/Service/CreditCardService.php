@@ -37,7 +37,7 @@ class CreditCardService extends AppService
 
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
-         try {
+        try {
             $response = \Stripe\Customer::create($customer);
 
             $result["customer_id"] = $response->id;
@@ -194,7 +194,7 @@ class CreditCardService extends AppService
             return compact('message', 'stripeCode');
         }
 
-        // When it doesn's throw exception
+        // When it doesn't throw exception
         return true;
     }
 }
