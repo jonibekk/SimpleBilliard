@@ -103,4 +103,54 @@ class PaymentsController extends ApiController
         // New Payment registered with success
         return $this->_getResponseSuccess();
     }
+
+
+    /**
+     * Get information for display form
+     *
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
+     *
+     * @param integer|null $id
+     *
+     * @return CakeResponse
+     */
+    function get_init_form()
+    {
+        $res = [];
+
+        if ($this->request->query('data_types')) {
+            $dataTypes = explode(',', $this->request->query('data_types'));
+            if (in_array('all', $dataTypes)) {
+                $dataTypes = 'all';
+            }
+        } else {
+            $dataTypes = 'all';
+        }
+
+        if ($dataTypes == 'all' || in_array('countries', $dataTypes)) {
+            $countries = Configure::read("countries");
+            $res['countries'] = Hash::combine($countries, '{n}.code', '{n}.name');
+        }
+
+        if ($dataTypes == 'all' || in_array('lang_code', $dataTypes)) {
+            App::uses('LangHelper', 'View/Helper');
+            $LangHelper = new LangHelper(new View());
+            $res['lang_code'] = $LangHelper->getLangCode();
+        }
+        return $this->_getResponseSuccess($res);
+    }
+
+
+    /**
+     * Validation API
+     *
+     * @query_param fields
+     * @return CakeResponse
+     */
+    function post_validate()
+    {
+        // TODO:implemnet
+        return $this->_getResponseSuccess();
+    }
+
 }

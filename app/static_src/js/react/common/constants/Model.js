@@ -57,3 +57,10 @@ export const Team = Object.freeze({
     CANNOT_USE: 3
   }
 })
+
+export const PaymentSetting = Object.freeze({
+  PAYMENT_TYPE: {
+    INVOICE: 0,
+    CREDIT_CARD: 1,
+  }
+})
