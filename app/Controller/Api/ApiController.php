@@ -140,7 +140,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * アクセス権限無しのレスポンスを返sす
+     * アクセス権限無しのレスポンスを返す
      *
      * @param string $message
      *
