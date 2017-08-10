@@ -31,7 +31,7 @@
             <span class="team-price-info-number">&yen;1,980 <div class="team-price-info-detail">/member /month<sup class="team-price-info-super-script">1</sup></div></span>
         </div>
         <div class="team-price-info">
-            <h5 class="team-price-info-headline"><?= __('Members')?></h5>
+            <h5 class="team-price-info-headline"><?= __('Active Members')?><sup class="team-price-info-super-script">2</sup></h5>
             <i class="team-price-info-icon fa fa-user"></i>
             <span class="team-price-info-number"><?= $teamMemberCount ?></span>
         </div>
@@ -43,7 +43,7 @@
         <?php if($serviceUseStatus!=Team::SERVICE_USE_STATUS_PAID): ?>
         <a href="#" class="subscribe-btn btn btn-primary"><?= __('Subscribe') ?></a>
         <ul class="pricing-info-features">
-            <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('100MB file upload');?><sup class="team-price-info-super-script">2</sup></li>
+            <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('100MB file upload');?><sup class="team-price-info-super-script">3</sup></li>
             <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('Unlimited uploads');?></li>
             <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('Chat Messaging');?></li>
             <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('Insight Analytics');?></li>
@@ -52,9 +52,10 @@
         </ul>
         <?php endif; ?>
         <ol class="team-price-info-footer-legal">
-            <li class="team-price-info-footer-legal-item">Adding a user will result in an immediate charge based on the remaining days of your billing period.</li>
+            <li class="team-price-info-footer-legal-item"><?= __('Adding a user will result in an immediate charge based on the remaining days of your billing period.');?></li>
+            <li class="team-price-info-footer-legal-item"><?= __('Active members are those members who have not been deactivated from the team. All active members are able to log in to the team.');?></li>
             <?php if($serviceUseStatus!=Team::SERVICE_USE_STATUS_PAID): ?>
-                <li class="team-price-info-footer-legal-item">Maximum file upload for sharing files is 100MB. Posting photos allows up to 10MB</li>
+                <li class="team-price-info-footer-legal-item"><?= __('Maximum file upload for sharing files is 100MB. Posting photos allows up to 10MB');?></li>
             <?php endif; ?>
         </ol>
     </div>
