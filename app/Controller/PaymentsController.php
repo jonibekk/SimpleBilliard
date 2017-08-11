@@ -35,14 +35,10 @@ class PaymentsController extends AppController {
         $this->render('payment_history');
     }
 
-    public function pricing() {
-        $this->layout = LAYOUT_ONE_COLUMN;
-        $this->render('pricing');
-    }
-
     public function cannot_use_service()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('cannot_use_service');
     }
 
     public function update_cc_info() {
