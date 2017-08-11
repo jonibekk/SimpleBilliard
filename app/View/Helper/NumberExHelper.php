@@ -71,7 +71,7 @@ class NumberExHelper extends AppHelper
      */
     public function formatProgressValue(string $val, int $unit)
     {
-        $val = AppUtil::formatBigFloat($val);
+        $val = AppUtil::formatThousand($val);
         if ($unit == KeyResult::UNIT_BINARY) {
             return !empty($val) ? __("Complete") : __("Incomplete");
         }
