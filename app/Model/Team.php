@@ -669,14 +669,17 @@ class Team extends AppModel
     function updateServiceStatusAndDates(array $targetTeamIds, int $nextStatus): bool
     {
         $statusDays = self::DAYS_SERVICE_USE_STATUS[$nextStatus];
+        // new service_use_state_end_date will be status days + 1 day from old service_use_state_end_date
+        $statusDays++;
         $fields = [
             'Team.service_use_status'           => $nextStatus,
-            'Team.service_use_state_start_date' => "Team.service_use_state_end_date",
+            'Team.service_use_state_start_date' => "DATE_ADD(Team.service_use_state_end_date,INTERVAL 1 DAY)",
             'Team.service_use_state_end_date'   => "DATE_ADD(Team.service_use_state_end_date,INTERVAL {$statusDays} DAY)",
         ];
 
         // TODO: This is for only testing. cause, SqLite doesn't support DATE_ADD. But, this is bad know how..
         if ($this->useDbConfig == 'test') {
+            $fields['Team.service_use_state_start_date'] = "DATE(Team.service_use_state_end_date, '+1 DAY')";
             $fields['Team.service_use_state_end_date'] = "DATE(Team.service_use_state_end_date, '+{$statusDays} DAY')";
         }
 

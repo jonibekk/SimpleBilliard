@@ -35,7 +35,7 @@ class ChangeServiceStatusShell extends AppShell
             'targetExpireDate' => [
                 'short'   => 't',
                 'help'    => 'This is target expire date. It automatically will be yesterday UTC as default',
-                'default' => AppUtil::dateYesterday(date('Y-m-d')),
+                'default' => AppUtil::dateBefore(date('Y-m-d'), 2),
             ],
         ];
         $parser->addOptions($options);

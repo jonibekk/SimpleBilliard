@@ -91,9 +91,9 @@ class ChangeServiceStatusShellTest extends GoalousTestCase
         // service_use_status
         $this->assertEquals(['2', '2', '0'], $statuses);
         // service_use_state_start_date
-        $this->assertEquals(['2017-01-16', '2017-01-17', '2017-01-03'], $startDates);
+        $this->assertEquals(['2017-01-17', '2017-01-18', '2017-01-03'], $startDates);
         // service_use_state_end_date
-        $this->assertEquals(['2017-02-15', '2017-02-16', '2017-01-18'], $endDates);
+        $this->assertEquals(['2017-02-16', '2017-02-17', '2017-01-18'], $endDates);
     }
 
     /**
@@ -133,9 +133,9 @@ class ChangeServiceStatusShellTest extends GoalousTestCase
         // service_use_status
         $this->assertEquals(['3', '3', '2'], $statuses);
         // service_use_state_start_date
-        $this->assertEquals(['2017-01-16', '2017-01-17', '2017-01-03'], $startDates);
+        $this->assertEquals(['2017-01-17', '2017-01-18', '2017-01-03'], $startDates);
         // service_use_state_end_date
-        $this->assertEquals(['2017-04-16', '2017-04-17', '2017-01-18'], $endDates);
+        $this->assertEquals(['2017-04-17', '2017-04-18', '2017-01-18'], $endDates);
     }
 
     /**
