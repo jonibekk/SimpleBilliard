@@ -83,6 +83,7 @@ if(document.enterCCInfo){
 
         var formData = new FormData(document.enterCCInfo);
         formData.append('token', token);
+        // TODO.Payment:  fix because payer_name is old field name.
         formData.append('payer_name', cardName.value);
 
         $.ajax({

@@ -3,7 +3,6 @@ App::uses('AppHelper', 'View/Helper');
 
 /**
  * Helper class to return page specific scripts.
- *
  * Class PageResourceHelper
  */
 class PageResourceHelper extends AppHelper
@@ -14,14 +13,14 @@ class PageResourceHelper extends AppHelper
         // Scripts can be set for each action or
         // a default for the whole controller
         // Action scripts will take the preference.
-        'pages' => [
+        'pages'         => [
             'display' => ['/js/goalous_home.min'],
             'default' => ['/js/goalous_home.min']
         ],
-        'evaluations' => [
+        'evaluations'   => [
             'default' => ['/js/goalous_evaluation.min']
         ],
-        'goals' => [
+        'goals'         => [
             'default'     => ['/js/goalous_goal.min'],
             'index'       => ['/js/react_goal_search_app.min'],
             'kr_progress' => [
@@ -42,84 +41,87 @@ class PageResourceHelper extends AppHelper
         'notifications' => [
             'default' => ['/js/goalous_home.min']
         ],
-        'posts' => [
+        'posts'         => [
             'default' => ['/js/goalous_home.min']
         ],
-        'teams' => [
+        'teams'         => [
             'default' => [
                 '/js/goalous_team.min',
             ]
         ],
-        'users' => [
+        'users'         => [
             'default' => ['/js/goalous_user.min'],
-            'invite' => ['/js/react_invite_app.min']
+            'invite'  => ['/js/react_invite_app.min']
         ],
-        'setup' => [
+        'setup'         => [
             'default' => [
                 '/js/react_setup_guide_app.min'
             ]
         ],
-        'signup' => [
+        'signup'        => [
             'default' => [
                 '/js/react_signup_app.min'
             ]
         ],
-        'topics' => [
+        'topics'        => [
             'default' => ['/js/react_message_app.min']
         ],
-        'payments' => [
-            'default' => [],
-            'update_cc_info' => ['https://js.stripe.com/v3/',
-                                 '/js/goalous_payment.min']
+        'payments'      => [
+            'apply'          => ['/js/react_payment_apply_app.min'],
+            'default'        => [],
+            'update_cc_info' => [
+                'https://js.stripe.com/v3/',
+                '/js/goalous_payment.min'
+            ]
         ]
     ];
 
     private $cssMap = [
-        'pages' => [
+        'pages'         => [
             'default' => ['feed.min']
         ],
-        'goals' => [
-            'index' => ['goal_search.min'],
-            'create' => ['goal_create.min'],
-            'edit' => ['goal_create.min'],
-            'approval' => ['goal_approval.min'],
+        'goals'         => [
+            'index'      => ['goal_search.min'],
+            'create'     => ['goal_create.min'],
+            'edit'       => ['goal_create.min'],
+            'approval'   => ['goal_approval.min'],
             'add_action' => ['feed.min'],
-            'default' => ['goal_detail.min']
+            'default'    => ['goal_detail.min']
         ],
         'notifications' => [
             'default' => ['feed.min']
         ],
-        'posts' => [
+        'posts'         => [
             'default' => ['feed.min']
         ],
-        'topics' => [
+        'topics'        => [
             'default' => ['topic.min'],
         ],
-        'payments' => [
+        'payments'      => [
             'default' => ['payments.min'],
         ],
-        'setup' => [
+        'setup'         => [
             'default' => ['setup_guide.min'],
         ],
-        'signup' => [
+        'signup'        => [
             'default' => ['signup.min'],
         ],
-        'users' => [
-            'view_goals' => ['user_profile.min'],
-            'view_actions' => ['user_profile.min'],
-            'view_posts' => ['user_profile.min'],
-            'view_info' => ['user_profile.min'],
+        'users'         => [
+            'view_goals'           => ['user_profile.min'],
+            'view_actions'         => ['user_profile.min'],
+            'view_posts'           => ['user_profile.min'],
+            'view_info'            => ['user_profile.min'],
             'register_with_invite' => ['signup.min'],
-            'invite' => ['invite.min'],
-            'invite_confirm' => ['invite.min'],
+            'invite'               => ['invite.min'],
+            'invite_confirm'       => ['invite.min'],
         ],
-        'evaluations' => [
+        'evaluations'   => [
             'default' => ['evaluation.min'],
         ],
-        'teams' => [
-            'main' => ['team_members.min', 'team_visions.min'],
+        'teams'         => [
+            'main'     => ['team_members.min', 'team_visions.min'],
             'settings' => ['team_setting.min'],
-            'invite' => ['signup.min'],
+            'invite'   => ['signup.min'],
         ],
     ];
 
@@ -129,7 +131,8 @@ class PageResourceHelper extends AppHelper
      *
      * @return string|void
      */
-    public function getPageScript() {
+    public function getPageScript()
+    {
 
         // Requested controller
         $controller = Hash::get($this->request->params, 'controller');
@@ -144,10 +147,11 @@ class PageResourceHelper extends AppHelper
         if (isset($this->scriptMap[$controller][$action])) {
             // Use specified script action
             return $this->_outputScripts($this->scriptMap[$controller][$action]);
-        }
-        else if ($this->scriptMap[$controller]['default']) {
-            // User default script for the controller
-            return $this->_outputScripts($this->scriptMap[$controller]['default']);
+        } else {
+            if ($this->scriptMap[$controller]['default']) {
+                // User default script for the controller
+                return $this->_outputScripts($this->scriptMap[$controller]['default']);
+            }
         }
     }
 
@@ -159,7 +163,8 @@ class PageResourceHelper extends AppHelper
      *
      * @return string
      */
-    private function _outputScripts(array $scriptList) {
+    private function _outputScripts(array $scriptList)
+    {
         $out = '';
         foreach ($scriptList as $script) {
             $out .= $this->Html->script($script);
@@ -173,7 +178,8 @@ class PageResourceHelper extends AppHelper
      *
      * @return string
      */
-    public function outputPageCss() {
+    public function outputPageCss()
+    {
 
         // Requested controller
         $controller = Hash::get($this->request->params, 'controller');
@@ -188,13 +194,11 @@ class PageResourceHelper extends AppHelper
         if (isset($this->cssMap[$controller][$action])) {
             // Use specified css action
             return $this->_outputCss($this->cssMap[$controller][$action]);
-        } else if (isset($this->cssMap[$controller]['default'])) {
+        } elseif (isset($this->cssMap[$controller]['default'])) {
             // User default css for the controller
             return $this->_outputCss($this->cssMap[$controller]['default']);
-        } else {
-            // No page css
-            return '';
         }
+        return '';
     }
 
     /**
@@ -205,7 +209,8 @@ class PageResourceHelper extends AppHelper
      *
      * @return string
      */
-    private function _outputCss(array $cssList) {
+    private function _outputCss(array $cssList)
+    {
         $out = '';
         foreach ($cssList as $css) {
             $out .= $this->Html->css($css, array('media' => 'screen'));
