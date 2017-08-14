@@ -275,4 +275,17 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $this->deleteCustomer($customerId);
     }
+
+    /**
+     * Assert a list have been returned.
+     */
+    function test_listAllCustomers()
+    {
+        $res = $this->CreditCardService->listCustomers();
+
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("error", $res);
+        $this->assertFalse($res["error"]);
+        $this->assertArrayHasKey("customers", $res);
+    }
 }

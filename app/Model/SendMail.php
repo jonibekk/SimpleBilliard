@@ -27,6 +27,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL = 10;
     const TYPE_TMPL_EXPIRE_ALERT_READ_ONLY = 11;
     const TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE = 12;
+    const TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD = 13;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY               => [
@@ -84,6 +85,11 @@ class SendMail extends AppModel
             'template' => 'expire_alert_cannot_use',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD      => [
+            'subject'  => null,
+            'template' => 'expire_alert_credit_card',
+            'layout'   => 'default',
+        ],
     ];
 
     public function _setTemplateSubject()
@@ -98,6 +104,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL]['subject'] = __("Notice of free trial deadline");
         self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY]['subject'] = __("This team is currently in read-only status");
         self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE]['subject'] = __("This team is currently unavailable");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD]['subject'] = __("Your credit card is about to expire");
     }
 
     function __construct($id = false, $table = null, $ds = null)

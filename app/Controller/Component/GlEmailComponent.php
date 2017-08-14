@@ -189,6 +189,29 @@ class GlEmailComponent extends Component
     }
 
     /**
+     * Send credit card about to expire email alert.
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $brand         Credit card brand (Visa, Master Card, American Express, etc..)
+     * @param string $lastDigits    Last for digits of credit card number
+     */
+    public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits)
+    {
+        $url = Router::url(
+            [
+                'admin'      => false,
+                'controller' => 'payments',
+                'action'     => 'index',
+                'team_id'    => $teamId,
+            ], true);
+        $item = compact('url', 'brand', 'lastDigits');
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD,
+            $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにて招待メールを送信
      *
      * @param array $invite_data
