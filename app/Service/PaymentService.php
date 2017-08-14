@@ -533,6 +533,7 @@ class PaymentService extends AppService
      */
     function validateSave($data, array $fields): array
     {
+        $data = !is_array($data) ? [] : $data;
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var CreditCard $CreditCard */
@@ -567,38 +568,4 @@ class PaymentService extends AppService
 
         return $allValidationErrors;
     }
-
-    /**
-     * Validate only specified fields and model
-     * @param $data
-     * @param $fields
-     * @param $dataParentKey
-     * @param $modelKey
-     * @param $model
-     *
-     * @return array
-     */
-    private function validateSingleModelFields($data, array $fields, string $dataParentKey, string $modelKey, $model) : array {
-        $validationFields = Hash::get($fields, $modelKey) ?? [];
-        $validationBackup = $model->validate;
-        // Set each field rule
-        $validationRules = [];
-        foreach ($validationFields as $field) {
-            $validationRules[$field] = Hash::get($validationBackup, $field);
-        }
-        $model->validate = $validationRules;
-
-        $checkData = Hash::get($data, $dataParentKey) ?? [];
-        $model->set($checkData);
-        $res = $model->validates();
-        $model->validate = $validationBackup;
-        if (!$res) {
-            $validationErrors = $this->validationExtract($model->validationErrors);
-            return [$dataParentKey => $validationErrors];
-        }
-        return [];
-
-    }
-
-
 }

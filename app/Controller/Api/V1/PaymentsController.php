@@ -8,6 +8,7 @@ App::import('Service', 'PaymentService');
  */
 class PaymentsController extends ApiController
 {
+    // Need validation fields for validation API of changing to paid plan
     private $validationFieldsEachPage = [
         'country' => [
             'PaymentSetting' => [
