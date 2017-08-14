@@ -101,9 +101,9 @@ class PaymentsController extends ApiController
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
         $creditCardData = $CreditCardService->retrieveToken($token);
-        if ($creditCardData['creditCard']->country == 'JP' && $currency != PaymentSetting::CURRENCY_CODE_JPY) {
+        if ($creditCardData['creditCard']->country == 'JP' && $currency != PaymentSetting::CURRENCY_TYPE_JPY) {
             // TODO: Add translation for message
-            return $this->_getResponseBadFail("Your Credit Card does not match your country settings");
+            return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
         }
 
         // Register Credit Card to stripe
@@ -122,6 +122,11 @@ class PaymentsController extends ApiController
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
 
+        // Use nested transaction for guarantee of rollback in case of transaction failure
+        /** @var AppModel $AppModel */
+        $AppModel = ClassRegistry::init('AppModel');
+        $AppModel->begin();
+
         // Register Payment on database
         $userId = $this->Auth->user('id');
         $res = ($PaymentService->registerCreditCardPayment($requestData, $customerId, $userId));
@@ -137,7 +142,21 @@ class PaymentsController extends ApiController
         // Team status will be set first in case of any failure team will be able to continue to use.
         $teamData = $this->Team->getCurrentTeam();
         $paymentDate = date('Y-m-d');
-        $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+        try {
+            $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+        }
+        catch (Exception $e) {
+            // Remove the customer from Stripe
+            $CreditCardService->deleteCustomer($customerId);
+            $this->log("Stripe Customer: $customerId deleted due registration error.");
+
+            $AppModel->rollback();
+            $this->log("Error updating team id: $teamId status");
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            return $this->_getResponseBadFail(__("An error occurred while processing."));
+        }
 
         // Apply charge to customer
         $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
@@ -151,10 +170,20 @@ class PaymentsController extends ApiController
         // This is error due problem on Stripe API or database
         // Log Customer ID and Team for later investigation
         if ($chargeResult['error'] === true) {
+
+            if ($chargeResult['success'] === false) {
+                // Customer was not charged so, rollback this transaction
+                $AppModel->rollback();
+                $CreditCardService->deleteCustomer($customerId);
+            }
             $this->log("Error an payment transaction. CustomerID: $customerId, TeamId: $teamId");
             $this->log("RequestData: $requestData");
             return $this->_getResponse($chargeResult['errorCode'], null, null, $chargeResult['message']);
         }
+
+        // Commit Update status and charge transactions
+        // Do not matter if apply charge fail. We still want to have user be able to use
+        $AppModel->commit();
 
         // Charging transaction succeed but payment fail. It can be on cause of fraud or credit transfer.
         if ($chargeResult['success'] === false) {
