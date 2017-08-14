@@ -28,9 +28,18 @@ class PaymentsController extends ApiController
     {
         // Set teamId and payment type for validation
         $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
         $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
+        // Check if is admin
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Validate Data
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
         $validation = $PaymentService->validateCreate($requestData);
@@ -39,16 +48,24 @@ class PaymentsController extends ApiController
             return $this->_getResponseValidationFail($validation);
         }
 
-        // Register Credit Card
+        // Check if the Payment if in the correct currency
+        $token = Hash::get($requestData, 'token');
+        $currency = Hash::get($requestData, 'currency');
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
-        $token = Hash::get($requestData, 'token');
-        $email = Hash::get($requestData, 'email');
+        $creditCardData = $CreditCardService->retrieveToken($token);
+        if ($creditCardData['creditCard']->country == 'JP' && $currency != PaymentSetting::CURRENCY_CODE_JPY) {
+            // TODO: Add translation for message
+            return $this->_getResponseBadFail("Your Credit Card does not match your country settings");
+        }
+
+        // Register Credit Card
+        $contactEmail = Hash::get($requestData, 'contact_person_email');
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
         $description = "Team ID: $teamId";
 
         // Register customer at Stripe
-        $stripeResponse = $CreditCardService->registerCustomer($token, $email, $description);
+        $stripeResponse = $CreditCardService->registerCustomer($token, $contactEmail, $description);
         if ($stripeResponse['error'] === true) {
             return $this->_getResponseBadFail($stripeResponse['message']);
         }
@@ -60,43 +77,49 @@ class PaymentsController extends ApiController
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
 
-        // Check if the Payment if in the correct currency
-        // The checking of credit card token is made after the customer registration
-        // and a deletion in case of customer do not match the country/currency requirements
-        // because Stripe token can only be used once.
-        // On this case its better to have a pre check of token by the frontend.
-        $currency = Hash::get($requestData, 'currency');
-        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_CODE_JPY) {
-            // Delete customer from Stripe
-            $CreditCardService->deleteCustomer($customerId);
-
-            // TODO: Add translation for message
-            return $this->_getResponseBadFail("Your Credit Card does not match your country settings");
-        }
-
         // Register Payment on database
         $userId = $this->Auth->user('id');
         $res = ($PaymentService->registerCreditCardPayment($requestData, $customerId, $userId));
         if (!$res) {
+            // Remove the customer from Stripe
+            $CreditCardService->deleteCustomer($customerId);
+            $this->log("Stripe Customer: $customerId deleted due registration error.");
             return $this->_getResponseBadFail(__("An error occurred while processing."));
         }
 
-        // Apply charge to customer
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
+        // Set team status
+        // Up to this point any failure do not directly affect user accounts or charge its credit card.
+        // Team status will be set first in case of any failure team will be able to continue to use.
+        $teamData = $this->Team->getCurrentTeam();
+        $paymentDate = date('Y-m-d');
+        $this->Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
 
-        // Apply charge
-        $chargeResult = $PaymentService->applyCreditCardCharge($teamId, PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
-            $membersCount, "Payment for team: $teamId");
+        // Apply charge to customer
+        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
+        $currencySymbol = $currency != PaymentSetting::CURRENCY_CODE_JPY ? '¥' : '$';
+        $amountPerUser = $currencySymbol . Hash::get($requestData,'amount_per_user');
+        $paymentDescription = "Team: $teamId Unit: $amountPerUser Users: $membersCount";
+        $chargeResult = $PaymentService->applyCreditCardCharge($teamId,
+            PaymentSetting::CHARGE_TYPE_MONTHLY_FEE, $membersCount, $paymentDescription);
 
         // Error on charging the customer
+        // This is error due problem on Stripe API or database
+        // Log Customer ID and Team for later investigation
         if ($chargeResult['error'] === true) {
+            $this->log("Error an payment transaction. CustomerID: $customerId, TeamId: $teamId");
+            $this->log("RequestData: $requestData");
             return $this->_getResponse($chargeResult['errorCode'], null, null, $chargeResult['message']);
         }
 
         // Charging transaction succeed but payment fail. It can be on cause of fraud or credit transfer.
         if ($chargeResult['success'] === false) {
+            // Set team back to previous status
+            $this->Team->updateAllServiceUseStateStartEndDate(Hash::get($teamData, 'service_use_status'),
+                Hash::get($teamData, 'service_use_state_start_date'));
+
+            // At this point the payment setting is set but the card is not chargeable
+            // the user have to enter an new credit card on the update card screen.
+
             return $this->_getResponseBadFail($chargeResult['status']);
         }
 

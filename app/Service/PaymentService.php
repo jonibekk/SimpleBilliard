@@ -106,13 +106,13 @@ class PaymentService extends AppService
     /**
      * Create a payment settings as its related credit card
      *
-     * @param $data
-     * @param $customerCode
+     * @param        $data
+     * @param string $customerCode
+     * @param int    $userId
      *
      * @return bool
-     * @throws Exception
      */
-    public function registerCreditCardPayment($data, $customerCode, $userId)
+    public function registerCreditCardPayment($data, string $customerCode, int $userId)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
