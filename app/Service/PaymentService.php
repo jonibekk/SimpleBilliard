@@ -329,7 +329,7 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init("Team");
         $paymentSetting = $this->get($Team->current_team_id);
         // Format ex 1980 → ¥1,980
-        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($charge);
+        $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$paymentSetting['currency']] . number_format($charge);
         return $res;
     }
 
@@ -396,7 +396,7 @@ class PaymentService extends AppService
         $customerId = Hash::get($creditCard, 'customer_code');
         $amountPerUser = Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
         $currency = Hash::get($paymentSettings, 'PaymentSetting.currency');
-        $currencyName = $currency == PaymentSetting::CURRENCY_CODE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+        $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
 
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
@@ -580,7 +580,6 @@ class PaymentService extends AppService
      */
     private function validateSingleModelFields($data, array $fields, string $dataParentKey, string $modelKey, $model) : array {
         $validationFields = Hash::get($fields, $modelKey) ?? [];
-        $this->log(compact('validationFields'));
         $validationBackup = $model->validate;
         // Set each field rule
         $validationRules = [];
@@ -588,8 +587,10 @@ class PaymentService extends AppService
             $validationRules[$field] = Hash::get($validationBackup, $field);
         }
         $model->validate = $validationRules;
+
         $checkData = Hash::get($data, $dataParentKey) ?? [];
-        $res = $model->validates($checkData);
+        $model->set($checkData);
+        $res = $model->validates();
         $model->validate = $validationBackup;
         if (!$res) {
             $validationErrors = $this->validationExtract($model->validationErrors);

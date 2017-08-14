@@ -12,7 +12,7 @@ class PaymentsController extends ApiController
         'country' => [
             'PaymentSetting' => [
                 'company_country',
-                'payment_type'
+                'type'
             ],
         ],
         'company' => [
@@ -111,7 +111,7 @@ class PaymentsController extends ApiController
         // because Stripe token can only be used once.
         // On this case its better to have a pre check of token by the frontend.
         $currency = Hash::get($requestData, 'currency');
-        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_CODE_JPY) {
+        if ($stripeResponse['card']['country'] == 'JP' && $currency != PaymentSetting::CURRENCY_TYPE_JPY) {
             // Delete customer from Stripe
             $CreditCardService->deleteCustomer($customerId);
 
