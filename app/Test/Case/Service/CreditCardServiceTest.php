@@ -184,7 +184,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $newCardToken = $this->createToken(self::CARD_MASTERCARD);
 
         $res = $this->CreditCardService->update($customerId, $newCardToken);
-        $this->assertTrue($res);
+        $this->assertFalse($res['error']);
     }
 
     function test_update_invalidToken()
@@ -192,7 +192,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
 
         $res = $this->CreditCardService->update($customerId, 'xxxxxxxxx');
-        $this->assertTrue($res !== true);
+        $this->assertTrue($res['error']);
     }
 
     function test_update_cardDeclined()
@@ -201,7 +201,8 @@ class CreditCardServiceTest extends GoalousTestCase
         $newCardToken = $this->createToken(self::CARD_DECLINED);
 
         $res = $this->CreditCardService->update($customerId, $newCardToken);
-        $this->assertEqual($res['stripeCode'], self::ERR_CODE_CARD_DECLINED);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_DECLINED);
     }
 
     function test_update_incorrectCVC()
@@ -210,7 +211,8 @@ class CreditCardServiceTest extends GoalousTestCase
         $newCardToken = $this->createToken(self::CARD_INCORRECT_CVC);
 
         $res = $this->CreditCardService->update($customerId, $newCardToken);
-        $this->assertEqual($res['stripeCode'], self::ERR_CODE_CARD_INCORRECT_CVC);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_INCORRECT_CVC);
     }
 
     function test_update_cardExpired()
@@ -219,7 +221,8 @@ class CreditCardServiceTest extends GoalousTestCase
         $newCardToken = $this->createToken(self::CARD_EXPIRED);
 
         $res = $this->CreditCardService->update($customerId, $newCardToken);
-        $this->assertEqual($res['stripeCode'], self::ERR_CODE_CARD_EXPIRED);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_EXPIRED);
     }
 
     function test_update_processingError()
@@ -228,7 +231,8 @@ class CreditCardServiceTest extends GoalousTestCase
         $newCardToken = $this->createToken(self::CARD_PROCESSING_ERROR);
 
         $res = $this->CreditCardService->update($customerId, $newCardToken);
-        $this->assertEqual($res['stripeCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
     }
     
     /**

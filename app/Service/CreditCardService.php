@@ -178,9 +178,9 @@ class CreditCardService extends AppService
      * @param string $customerId
      * @param string $token
      *
-     * @return array|true
+     * @return array
      */
-    function update(string $customerId, string $token)
+    function update(string $customerId, string $token): array
     {
         try {
             \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
@@ -191,11 +191,19 @@ class CreditCardService extends AppService
             $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s", $customerId, $token, $message, $stripeCode);
             $this->log(sprintf("[%s]%s", __METHOD__, $errorLog));
             $this->log($e->getTraceAsString());
-            return compact('message', 'stripeCode');
+
+            $result["error"] = true;
+            $result["message"] = $message;
+            $result["errorCode"] = $stripeCode;
+
+            return $result;
         }
 
-        // When it doesn't throw exception
-        return true;
+        $result = [
+            'error' => false,
+            'message' => null
+        ];
+        return $result;
     }
 
     /*
