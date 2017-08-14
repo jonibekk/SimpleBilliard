@@ -10,8 +10,8 @@ class PaymentSetting extends AppModel
     const PAYMENT_TYPE_INVOICE = 0;
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
-    const CURRENCY_CODE_JPY = 1;
-    const CURRENCY_CODE_USD = 2;
+    const CURRENCY_TYPE_JPY = 1;
+    const CURRENCY_TYPE_USD = 2;
 
     const CURRENCY_JPY = 'JPY';
     const CURRENCY_USD = 'USD';
@@ -20,9 +20,9 @@ class PaymentSetting extends AppModel
     const CHARGE_TYPE_USER_INCREMENT_FEE = 1;
     const CHARGE_TYPE_USER_ACTIVATION_FEE = 2;
 
-    const CURRENCY_LABELS = [
-        self::CURRENCY_JPY => "¥",
-        self::CURRENCY_USD => "$",
+    const CURRENCY_SYMBOLS_EACH_TYPE = [
+        self::CURRENCY_TYPE_JPY => "¥",
+        self::CURRENCY_TYPE_USD => "$",
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -74,8 +74,8 @@ class PaymentSetting extends AppModel
                 'rule' => [
                     'inList',
                     [
-                        self::CURRENCY_CODE_JPY,
-                        self::CURRENCY_CODE_USD
+                        self::CURRENCY_TYPE_JPY,
+                        self::CURRENCY_TYPE_USD
                     ]
                 ],
             ],
