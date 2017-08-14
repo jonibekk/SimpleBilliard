@@ -201,7 +201,7 @@ class AppController extends BaseController
                 }
 
                 // Pass variable about team service use
-                $this->setValsForReadOnlyAlert();
+                $this->setValsForAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -860,14 +860,14 @@ class AppController extends BaseController
         return $status;
     }
 
-    function setValsForReadOnlyAlert()
+    function setValsForAlert()
     {
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
         $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
         $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
-        $this->set('readOnlyEndDate', $TeamService->getReadOnlyEndDate());
+        $this->set('stateEndDate', $TeamService->getStateEndDate());
     }
 
     public function _setDefaultTeam($team_id)

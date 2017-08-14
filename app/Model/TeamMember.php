@@ -309,7 +309,7 @@ class TeamMember extends AppModel
         return true;
     }
 
-    public function isAdmin($uid = null)
+    public function isAdmin($uid = null): bool
     {
         if (!$uid) {
             $uid = $this->my_uid;
@@ -322,7 +322,7 @@ class TeamMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        return $res;
+        return (bool)$res;
     }
 
     public function add($uid, $team_id)
@@ -406,7 +406,7 @@ class TeamMember extends AppModel
         }
 
         $options = [
-            'fields' => [
+            'fields'     => [
                 'team_id',
                 'COUNT(team_id) as cnt'
             ],
@@ -417,7 +417,7 @@ class TeamMember extends AppModel
                     self::USER_STATUS_ACTIVE,
                 ],
             ],
-            'group' => ['team_id']
+            'group'      => ['team_id']
         ];
         $res = $this->find('all', $options);
         if (empty($res)) {
@@ -2046,7 +2046,6 @@ class TeamMember extends AppModel
 
     /**
      * Get list of team members by its status.
-     *
      *      USER_STATUS_INVITED = 0;
      *      USER_STATUS_ACTIVE = 1;
      *      USER_STATUS_INACTIVE = 2;
@@ -2065,7 +2064,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status' => $status,
+                'TeamMember.status'  => $status,
             ],
         ];
         $res = $this->find('list', $options);

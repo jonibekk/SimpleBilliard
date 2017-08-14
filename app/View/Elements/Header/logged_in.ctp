@@ -16,9 +16,12 @@
  * @var                    $unapproved_cnt
  * @var                    $all_alert_cnt
  * @var                    $is_mb_app
+ * @var                    $serviceUseStatus
+ * @var                    $isTeamAdmin
+ * @var                    $stateEndDate
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
@@ -26,7 +29,7 @@
         <div class="nav-container header-container">
             <?php
             // Condition that returns true if user is on a sub-page and is viewing on mobile app
-            if ( $this->BackBtn->checkPage() &&  $is_mb_app) { ?>
+            if ($this->BackBtn->checkPage() && $is_mb_app) { ?>
                 <?= $this->element('/header_back_btn') ?>
             <?php } else { ?>
                 <?= $this->element('Header/navigation'); ?>
@@ -34,16 +37,15 @@
             <?php } ?>
         </div>
     </div>
-    <?php if (in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY])){?>
+    <?php if (in_array($serviceUseStatus,
+        [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])) { ?>
         <div class="banner-alert font_verydark">
             <div class="container">
-                <?php
-                    $readOnlyEndDate = $this->TimeEx->formatYearDayI18nFromDate($readOnlyEndDate);
-                    echo $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $readOnlyEndDate);
-                ?>
+                <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate) ?>
             </div>
         </div>
     <?php } ?>
 
 </header>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>
