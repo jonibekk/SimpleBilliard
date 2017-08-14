@@ -612,10 +612,9 @@ class AppModel extends Model
      * @param array $condition
      * @param bool  $withTeamId
      *
-     * @return array
-     * @internal param $id
+     * @return bool
      */
-    function softDeleteAll(array $condition, bool $withTeamId = true)
+    function softDeleteAll(array $condition, bool $withTeamId = true): bool
     {
         if (empty($condition)) {
             return false;

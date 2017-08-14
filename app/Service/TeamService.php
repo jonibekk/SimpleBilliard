@@ -72,7 +72,7 @@ class TeamService extends AppService
     public function getReadOnlyEndDate(): string
     {
         /** @var Team $Team */
-        $Team = ClassRegistry::init("Team"); 
+        $Team = ClassRegistry::init("Team");
 
         $team = $Team->getCurrentTeam();
         $freeTrialStartDate = $team['Team']['service_use_state_start_date'];
@@ -85,5 +85,76 @@ class TeamService extends AppService
     public function isCannotUseService(): bool
     {
         return $this->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
+    }
+
+    /**
+     * changing service status expired teams
+     *
+     * @param string $targetExpireDate
+     * @param int    $currentStatus
+     * @param int    $nextStatus
+     *
+     * @return bool
+     */
+    public function changeStatusAllTeamExpired(string $targetExpireDate, int $currentStatus, int $nextStatus): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $targetTeamList = $Team->findTeamListStatusExpired($currentStatus, $targetExpireDate);
+        if (empty($targetTeamList)) {
+            return false;
+        }
+        $ret = $Team->updateServiceStatusAndDates($targetTeamList, $nextStatus);
+        if ($ret === false) {
+            $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
+                AppUtil::varExportOneLine($targetTeamList)));
+            $this->log(Debugger::trace());
+        }
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
+        // delete all team cache
+        foreach ($targetTeamList as $teamId) {
+            $GlRedis->dellKeys("*current_team:team:{$teamId}");
+        }
+        return $ret;
+    }
+
+    /**
+     * deleting expired team that status is cannot-use-service
+     *
+     * @param string $targetExpireDate
+     *
+     * @return bool
+     */
+    public function deleteTeamCannotUseServiceExpired(string $targetExpireDate): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $targetTeamList = $Team->findTeamListStatusExpired(
+            Team::SERVICE_USE_STATUS_CANNOT_USE,
+            $targetExpireDate
+        );
+        if (empty($targetTeamList)) {
+            return false;
+        }
+
+        $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
+        if ($ret === false) {
+            $this->log(sprintf("failed to save deleteTeamCannotUseServiceExpired. targetTeamList: %s",
+                AppUtil::varExportOneLine($targetTeamList)));
+            $this->log(Debugger::trace());
+        }
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
+        // delete all team cache
+        foreach ($targetTeamList as $teamId) {
+            $GlRedis->dellKeys("*current_team:team:{$teamId}");
+        }
+
+        return $ret;
     }
 }
