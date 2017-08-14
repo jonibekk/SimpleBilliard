@@ -8,6 +8,53 @@ App::import('Service', 'PaymentService');
  */
 class PaymentsController extends ApiController
 {
+    // Need validation fields for validation API of changing to paid plan
+    private $validationFieldsEachPage = [
+        'country' => [
+            'PaymentSetting' => [
+                'company_country',
+                'type'
+            ],
+        ],
+        'company' => [
+            'PaymentSetting' => [
+                'company_name',
+                'company_country',
+                'company_post_code',
+                'company_region',
+                'company_city',
+                'company_street',
+                'company_tel',
+                'contact_person_first_name',
+                'contact_person_first_name_kana',
+                'contact_person_last_name',
+                'contact_person_last_name_kana',
+                'contact_person_tel',
+                'contact_person_email',
+            ]
+        ],
+        'invoice' => [
+            'PaymentSetting' => [
+                'company_name',
+                'company_country',
+                'company_post_code',
+                'company_region',
+                'company_city',
+                'company_street',
+                'company_tel',
+                'contact_person_first_name',
+                'contact_person_first_name_kana',
+                'contact_person_last_name',
+                'contact_person_last_name_kana',
+                'contact_person_tel',
+                'contact_person_email',
+            ],
+            'Invoice' => [
+                // TODO
+            ]
+        ],
+    ];
+
     /**
      * Create a new payment register
      * Endpoint: /api/v1/payments/credit_card
@@ -59,12 +106,10 @@ class PaymentsController extends ApiController
             return $this->_getResponseBadFail("Your Credit Card does not match your country settings");
         }
 
-        // Register Credit Card
-        $contactEmail = Hash::get($requestData, 'contact_person_email');
+        // Register Credit Card to stripe
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
+        $contactEmail = Hash::get($requestData, 'contact_person_email');
         $description = "Team ID: $teamId";
-
-        // Register customer at Stripe
         $stripeResponse = $CreditCardService->registerCustomer($token, $contactEmail, $description);
         if ($stripeResponse['error'] === true) {
             return $this->_getResponseBadFail($stripeResponse['message']);
@@ -96,7 +141,7 @@ class PaymentsController extends ApiController
 
         // Apply charge to customer
         $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
-        $currencySymbol = $currency != PaymentSetting::CURRENCY_CODE_JPY ? '¥' : '$';
+        $currencySymbol = $currency != PaymentSetting::CURRENCY_TYPE_JPY ? '¥' : '$';
         $amountPerUser = $currencySymbol . Hash::get($requestData,'amount_per_user');
         $paymentDescription = "Team: $teamId Unit: $amountPerUser Users: $membersCount";
         $chargeResult = $PaymentService->applyCreditCardCharge($teamId,
@@ -127,18 +172,20 @@ class PaymentsController extends ApiController
         return $this->_getResponseSuccess();
     }
 
-
     /**
      * Get information for display form
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
-     *
-     * @param integer|null $id
-     *
      * @return CakeResponse
+     * @internal     param int|null $id
      */
     function get_init_form()
     {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
         $res = [];
 
         if ($this->request->query('data_types')) {
@@ -160,6 +207,21 @@ class PaymentsController extends ApiController
             $LangHelper = new LangHelper(new View());
             $res['lang_code'] = $LangHelper->getLangCode();
         }
+
+        if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
+            // Get payment setting by team id
+            $paymentSetting = $PaymentService->get($this->current_team_id);
+            $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
+            // Calc charge user count
+            $chargeUserCnt = $TeamMember->countChargeTargetUsers();
+            // Calc total charge
+            $totalCharge = $PaymentService->formatCharge($paymentSetting['amount_per_user'] * $chargeUserCnt);
+            $res = am($res, [
+                'amount_per_user' => $amountPerUser,
+                'charge_users_count' => $chargeUserCnt,
+                'total_charge' => $totalCharge,
+            ]);
+        }
         return $this->_getResponseSuccess($res);
     }
 
@@ -172,7 +234,24 @@ class PaymentsController extends ApiController
      */
     function post_validate()
     {
-        // TODO:implemnet
+        $page = $this->request->query('page');
+        // Required page parameter
+        if (empty($page)) {
+            return $this->_getResponseBadFail(__("Invalid Request"));
+        }
+
+        $validationFields = Hash::get($this->validationFieldsEachPage, $page);
+        if (empty($validationFields)) {
+            return $this->_getResponseBadFail(__("Invalid Request"));
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        $data = $this->request->data;
+        $validationErrors = $PaymentService->validateSave($data, $validationFields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
         return $this->_getResponseSuccess();
     }
 

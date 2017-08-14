@@ -213,7 +213,7 @@ class TimeExHelper extends AppHelper
                 $format = "%Y年%b%e日";
                 break;
             default:
-                $format = "%b %e %Y";
+                $format = "%b %e, %Y";
         }
         return $this->Time->i18nFormat($time, $format);
     }

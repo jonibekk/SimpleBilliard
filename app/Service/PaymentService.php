@@ -329,7 +329,7 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init("Team");
         $paymentSetting = $this->get($Team->current_team_id);
         // Format ex 1980 → ¥1,980
-        $res = PaymentSetting::CURRENCY_LABELS[$paymentSetting['currency']] . number_format($charge);
+        $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$paymentSetting['currency']] . number_format($charge);
         return $res;
     }
 
@@ -396,7 +396,7 @@ class PaymentService extends AppService
         $customerId = Hash::get($creditCard, 'customer_code');
         $amountPerUser = Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
         $currency = Hash::get($paymentSettings, 'PaymentSetting.currency');
-        $currencyName = $currency == PaymentSetting::CURRENCY_CODE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+        $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
 
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
@@ -521,5 +521,51 @@ class PaymentService extends AppService
 
         });
         return $targetChargeTeams;
+    }
+
+    /**
+     * Payment validation
+     *
+     * @param mixed $data
+     * @param array $fields
+     *
+     * @return array
+     */
+    function validateSave($data, array $fields): array
+    {
+        $data = !is_array($data) ? [] : $data;
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init("Invoice");
+
+        $allValidationErrors = [];
+        // PaymentSetting validation
+        if (!empty(Hash::get($fields, 'PaymentSetting'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'payment_setting', 'PaymentSetting', $PaymentSetting)
+            );
+        }
+
+        // CreditCard validation
+        if (!empty(Hash::get($fields, 'CreditCard'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'credit_card', 'CreditCard', $CreditCard)
+            );
+        }
+
+        // Invoice validation
+        if (!empty(Hash::get($fields, 'Invoice'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)
+            );
+        }
+
+        return $allValidationErrors;
     }
 }
