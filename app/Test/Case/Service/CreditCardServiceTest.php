@@ -230,4 +230,17 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->update($customerId, $newCardToken);
         $this->assertEqual($res['stripeCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
     }
+    
+    /**
+     * Assert a list have been returned.
+     */
+    function test_listAllCustomers()
+    {
+        $res = $this->CreditCardService->listCustomers();
+
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("error", $res);
+        $this->assertFalse($res["error"]);
+        $this->assertArrayHasKey("customers", $res);
+    }
 }
