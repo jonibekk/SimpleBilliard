@@ -173,6 +173,40 @@ class CreditCardService extends AppService
     }
 
     /**
+     * update credit card info
+     *
+     * @param string $customerId
+     * @param string $token
+     *
+     * @return array
+     */
+    function update(string $customerId, string $token): array
+    {
+        try {
+            \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+            \Stripe\Customer::update($customerId, ['source' => $token]);
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : null;
+            $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s", $customerId, $token, $message, $stripeCode);
+            $this->log(sprintf("[%s]%s", __METHOD__, $errorLog));
+            $this->log($e->getTraceAsString());
+
+            $result["error"] = true;
+            $result["message"] = $message;
+            $result["errorCode"] = $stripeCode;
+
+            return $result;
+        }
+
+        $result = [
+            'error' => false,
+            'message' => null
+        ];
+        return $result;
+    }
+
+    /*
      * Return a list with all registered customers on Stripe
      * Documentation about the returned data can be found on
      * https://stripe.com/docs/api#list_customers
