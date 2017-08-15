@@ -2306,7 +2306,7 @@ class Goal extends AppModel
                 ]
             ],
             'conditions' => [
-                'Goal.end_date >='   => $currentTerm['start_date'],
+                'Goal.end_date >='   => AppUtil::todayDateYmdLocal($this->Team->getTimezone()),
                 'Goal.end_date <='   => $currentTerm['end_date'],
                 'Goal.completed'     => null,
                 'GoalMember.del_flg' => false
