@@ -202,6 +202,43 @@ class PaymentsController extends ApiController
     }
 
     /**
+     * Update credit card info
+     * Endpoint: /api/v1/payments/udpate_credit_card
+     *
+     * @return CakeResponse
+     */
+    function post_update_credit_card()
+    {
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $token = Hash::get($this->request->data, 'token');
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        // Validation
+        $customerCode = $CreditCard->getCustomerCode($teamId);
+        if (empty($customerCode)) {
+            return $this->_getResponseNotFound();
+        }
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Update
+        $updateResult = $CreditCardService->update($customerCode, $token);
+        if ($updateResult['error'] === true) {
+            $this->_getResponseBadFail($updateResult['message']);
+        }
+
+        return $this->_getResponseSuccess();
+    }
+
+    /**
      * Get information for display form
      *
      * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
@@ -253,7 +290,6 @@ class PaymentsController extends ApiController
         }
         return $this->_getResponseSuccess($res);
     }
-
 
     /**
      * Validation API

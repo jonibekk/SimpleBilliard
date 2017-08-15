@@ -1,10 +1,11 @@
 <?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('CreditCard', 'Model');
 
 /**
  * CreditCard Test Case
  */
-class CreditCardTest extends CakeTestCase {
+class CreditCardTest extends GoalousTestCase {
 
 /**
  * Fixtures
@@ -12,7 +13,13 @@ class CreditCardTest extends CakeTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'app.credit_card'
+		'app.credit_card',
+		'app.payment_setting',
+		'app.payment_setting_change_log',
+		'app.charge_history',
+		'app.team',
+		'app.team_member',
+		'app.user'
 	);
 
 /**
@@ -36,6 +43,9 @@ class CreditCardTest extends CakeTestCase {
 		parent::tearDown();
 	}
 
-	// Please delete when you implement test code
-	public function test_dummy() {}
+	public function test_getCustomerCode()
+	{
+		list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => $customerCode = '111222333aaa']);
+		$this->assertEqual($this->CreditCard->getCustomerCode($teamId), $customerCode);
+	}
 }

@@ -22,6 +22,11 @@ class CreditCardServiceTest extends GoalousTestCase
     const CARD_VISA = "4012888888881881";
     const CARD_MASTERCARD = "5555555555554444";
 
+    const ERR_CODE_CARD_DECLINED = 'card_declined';
+    const ERR_CODE_CARD_INCORRECT_CVC = "incorrect_cvc";
+    const ERR_CODE_CARD_EXPIRED = 'expired_card';
+    const ERR_CODE_CARD_PROCESSING_ERROR = 'processing_error';
+
     /**
      * Fixtures
      *
@@ -40,109 +45,6 @@ class CreditCardServiceTest extends GoalousTestCase
         parent::setUp();
 
         $this->CreditCardService = ClassRegistry::init('CreditCardService');
-    }
-
-    /**
-     * Generate a Token from Stripe API.
-     * This method should not be used on production but only for test cases.
-     * For production use stripe.js instead.
-     *
-     * @param string $cardNumber
-     * @param string $cardHolder
-     * @param int    $expireMonth
-     * @param int    $expireYear
-     * @param string $cvc
-     *
-     * @return array
-     */
-    public function createToken(string $cardNumber, string $cardHolder, int $expireMonth, int $expireYear, string $cvc): array
-    {
-        $result = [
-            "error" => false,
-            "message" => null
-        ];
-
-        $request = array(
-            "card" => array(
-                "number" => $cardNumber,
-                "exp_month" => $expireMonth,
-                "exp_year" => $expireYear,
-                "cvc" => $cvc,
-                "name" => $cardHolder
-            )
-        );
-
-        // Use public key to create token
-        \Stripe\Stripe::setApiKey(STRIPE_PUBLISHABLE_KEY);
-
-        try {
-            $response = \Stripe\Token::create($request);
-
-            $result["token"] = $response->id;
-        }
-        catch (Exception $e) {
-            $result["error"] = true;
-            $result["message"] = $e->getMessage();
-
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get a new token for the given credit card.
-     *
-     * @param string $cardNumber
-     *
-     * @return array
-     */
-    private function getToken(string $cardNumber): array
-    {
-        $res = $this->createToken($cardNumber, "Goalous Taro", 11, 2026, "123");
-
-        $this->assertNotNull($res);
-        $this->assertArrayHasKey("token", $res);
-        $this->assertArrayHasKey("error", $res);
-        $this->assertFalse($res["error"]);
-
-        return $res;
-    }
-
-    /**
-     * Get a customer for a given credit card.
-     * @param string $creditCard
-     *
-     * @return string
-     */
-    private function getCustomer(string $creditCard): string
-    {
-        $token = $this->getToken($creditCard);
-        $email = "test@goalous.com";
-
-        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
-        $this->assertNotNull($res, "Something very wrong happened");
-        $this->assertArrayHasKey("customer_id", $res);
-        $this->assertArrayHasKey("card", $res);
-
-        return $res["customer_id"];
-    }
-
-    /**
-     * Delete Stripe Customer
-     * 
-     * @param $customerId
-     */
-    private function deleteCustomer($customerId)
-    {
-        $res = $this->CreditCardService->deleteCustomer($customerId);
-
-        $this->assertNotNull($res);
-        $this->assertArrayHasKey("error", $res);
-        $this->assertArrayHasKey("deleted", $res);
-        $this->assertFalse($res["error"]);
-        $this->assertTrue($res["deleted"]);
     }
 
     /**
@@ -165,10 +67,10 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_registerCustomer()
     {
-        $token = $this->getToken(self::CARD_VISA);
+        $token = $this->createToken(self::CARD_VISA);
         $email = "test@goalous.com";
 
-        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token, $email, "Goalous TEST");
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("customer_id", $res);
@@ -197,10 +99,10 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_cardDeclined()
     {
-        $token = $this->getToken(self::CARD_DECLINED);
+        $token = $this->createToken(self::CARD_DECLINED);
         $email = "test@goalous.com";
 
-        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token, $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "card_declined");
     }
@@ -210,10 +112,10 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_incorrectCVC()
     {
-        $token = $this->getToken(self::CARD_INCORRECT_CVC);
+        $token = $this->createToken(self::CARD_INCORRECT_CVC);
         $email = "test@goalous.com";
 
-        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token, $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "incorrect_cvc");
     }
@@ -223,10 +125,10 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_cardExpired()
     {
-        $token = $this->getToken(self::CARD_EXPIRED);
+        $token = $this->createToken(self::CARD_EXPIRED);
         $email = "test@goalous.com";
 
-        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token, $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "expired_card");
     }
@@ -236,10 +138,10 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_registerCustomer_processingError()
     {
-        $token = $this->getToken(self::CARD_PROCESSING_ERROR);
+        $token = $this->createToken(self::CARD_PROCESSING_ERROR);
         $email = "test@goalous.com";
 
-        $res = $this->CreditCardService->registerCustomer($token["token"], $email, "Goalous TEST");
+        $res = $this->CreditCardService->registerCustomer($token, $email, "Goalous TEST");
 
         $this->assertErrorCard($res, "processing_error");
     }
@@ -249,7 +151,7 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_chargeCustomer()
     {
-        $customerId = $this->getCustomer(self::CARD_VISA);
+        $customerId = $this->createCustomer(self::CARD_VISA);
 
         $res = $this->CreditCardService->chargeCustomer($customerId, 'JPY', 30000, "Test charge ¥3000");
 
@@ -265,7 +167,7 @@ class CreditCardServiceTest extends GoalousTestCase
      */
     function test_chargeCustomer_chargeFail()
     {
-        $customerId = $this->getCustomer(self::CARD_CHARGE_FAIL);
+        $customerId = $this->createCustomer(self::CARD_CHARGE_FAIL);
 
         $res = $this->CreditCardService->chargeCustomer($customerId, 'JPY', 30000, "Test charge ¥3000");
 
@@ -276,6 +178,63 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->deleteCustomer($customerId);
     }
 
+    function test_update()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $newCardToken = $this->createToken(self::CARD_MASTERCARD);
+
+        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $this->assertFalse($res['error']);
+    }
+
+    function test_update_invalidToken()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+
+        $res = $this->CreditCardService->update($customerId, 'xxxxxxxxx');
+        $this->assertTrue($res['error']);
+    }
+
+    function test_update_cardDeclined()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $newCardToken = $this->createToken(self::CARD_DECLINED);
+
+        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_DECLINED);
+    }
+
+    function test_update_incorrectCVC()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $newCardToken = $this->createToken(self::CARD_INCORRECT_CVC);
+
+        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_INCORRECT_CVC);
+    }
+
+    function test_update_cardExpired()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $newCardToken = $this->createToken(self::CARD_EXPIRED);
+
+        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_EXPIRED);
+    }
+
+    function test_update_processingError()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $newCardToken = $this->createToken(self::CARD_PROCESSING_ERROR);
+
+        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $this->assertTrue($res['error']);
+        $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
+    }
+    
     /**
      * Assert a list have been returned.
      */

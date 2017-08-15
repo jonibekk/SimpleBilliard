@@ -670,4 +670,85 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
+    /**
+     * Generate a Token from Stripe API.
+     * This method should not be used on production but only for test cases.
+     * For production use stripe.js instead.
+     *
+     * @param string $cardNumber
+     * @param string $cardHolder
+     * @param int    $expireMonth
+     * @param int    $expireYear
+     * @param string $cvc
+     *
+     * @return array
+     */
+    public function createToken(string $cardNumber): string
+    {
+        $result = [
+            "error" => false,
+            "message" => null
+        ];
+
+        $request = array(
+            "card" => array(
+                "number" => $cardNumber,
+                "exp_month" => 11,
+                "exp_year" => 2026,
+                "cvc" => "123",
+                "name" => "Goalous Taro"
+            )
+        );
+
+        // Use public key to create token
+        \Stripe\Stripe::setApiKey(STRIPE_PUBLISHABLE_KEY);
+
+        try {
+            $response = \Stripe\Token::create($request);
+            $token = $response->id;
+        }
+        catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return "";
+        }
+
+        return $token;
+    }
+
+    /**
+     * Get a customer for a given credit card.
+     * @param string $creditCard
+     *
+     * @return string
+     */
+    function createCustomer(string $creditCard): string
+    {
+        $token = $this->createToken($creditCard);
+        $email = "test@goalous.com";
+
+        $res = $this->CreditCardService->registerCustomer($token, $email, "Goalous TEST");
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("customer_id", $res);
+        $this->assertArrayHasKey("card", $res);
+
+        return $res["customer_id"];
+    }
+
+    /**
+     * Delete Stripe Customer
+     * 
+     * @param $customerId
+     */
+    function deleteCustomer($customerId)
+    {
+        $res = $this->CreditCardService->deleteCustomer($customerId);
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("error", $res);
+        $this->assertArrayHasKey("deleted", $res);
+        $this->assertFalse($res["error"]);
+        $this->assertTrue($res["deleted"]);
+    }
+
 }
