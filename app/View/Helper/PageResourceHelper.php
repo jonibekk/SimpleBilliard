@@ -67,7 +67,10 @@ class PageResourceHelper extends AppHelper
             'default' => ['/js/react_message_app.min']
         ],
         'payments'      => [
-            'apply'          => ['/js/react_payment_apply_app.min'],
+            'apply'          => [
+                'https://js.stripe.com/v3/',
+                '/js/react_payment_apply_app.min',
+            ],
             'default'        => [],
             'update_cc_info' => [
                 'https://js.stripe.com/v3/',

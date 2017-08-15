@@ -1,16 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
-import {Link} from "react-router";
 import Base from "~/common/components/Base";
 
 export default class Complete extends Base {
   constructor(props) {
     super(props);
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount.apply(this)
   }
 
   render() {
@@ -23,7 +18,8 @@ export default class Complete extends Base {
               __('Your transaction was successful. You and your team now have full access to Goalous.')
             }
           </p>
-          <p className="thank-you-text">{_('Go achieve your goal!')}</p>
+          <p className="thank-you-text">{__('Go achieve your goal!')}</p>
+          <a className="" href="/payments">{__('Move to Billing page')}</a>
         </div>
         <div className="confetti-cannon">
         </div>

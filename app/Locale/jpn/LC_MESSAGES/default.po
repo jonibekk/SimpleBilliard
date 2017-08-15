@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-09 15:57+0900\n"
+"PO-Revision-Date: 2017-08-15 23:20+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1354,6 +1354,9 @@ msgstr "現在このチームは読み取り専用の状態になっておりま
 msgid "This team is currently unavailable"
 msgstr "現在このチームは利用できない状態になっております"
 
+msgid "Your credit card is about to expire"
+msgstr ""
+
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
 
@@ -1776,7 +1779,7 @@ msgid "Input is required"
 msgstr "入力必須項目です。"
 
 msgid "Line %d"
-msgstr ""
+msgstr "%d行目"
 
 msgid "Email address"
 msgstr "メールアドレス"
@@ -2664,6 +2667,33 @@ msgstr "本当にこのコメントを削除しますか？"
 
 msgid "Delete comment"
 msgstr "コメントを削除"
+
+msgid "Card Holder Name"
+msgstr "カード所有者名"
+
+msgid "Card Number"
+msgstr "カード番号"
+
+msgid "Price per user"
+msgstr "料金（1ユーザー当たり）"
+
+msgid "Number of users"
+msgstr "ユーザー数"
+
+msgid "Sub Total"
+msgstr "小計"
+
+msgid "Tax"
+msgstr "税金"
+
+msgid "Total"
+msgstr "トータル"
+
+msgid "I agree with the terms of service"
+msgstr "利用規約に同意する"
+
+msgid "Register"
+msgstr "登録する"
 
 msgid "Circles"
 msgstr "サークル"
@@ -3831,9 +3861,6 @@ msgstr "メンバー（アクティブ）"
 msgid "Members of logged in"
 msgstr "ログインメンバー"
 
-msgid "Total"
-msgstr "トータル"
-
 msgid "Unique"
 msgstr "ユニーク"
 
@@ -4243,6 +4270,14 @@ msgstr ""
 
 msgid "You can update your payment setting from the following link:"
 msgstr "以下のリンクから決済設定を行ってください。"
+
+msgid "Your \"%s\" credit card terminated with \"%s\" will expire soon."
+msgstr ""
+
+#, fuzzy
+#| msgid "Please let us know as soon as possible."
+msgid "Please update your credit card information as soon as possible."
+msgstr "その場合は直ちに以下にご連絡ください。"
 
 msgid "The free trial for your team, \"%s\", will end on %s"
 msgstr "チーム「%s」のフリートライアルの期限は%sです。"
@@ -4937,116 +4972,17 @@ msgstr ""
 msgid "Coming Soon"
 msgstr ""
 
-msgid "Enter Company Information"
-msgstr "会社情報を入力してください"
-
-msgid "Company Name"
-msgstr "会社名"
-
-msgid "Company Address"
-msgstr "会社住所"
-
-msgid "Street"
-msgstr "建物名など"
-
-msgid "1234 Street Name"
-msgstr "20番8号 CSタワー7階"
-
-msgid "City"
-msgstr "市区町村"
-
-msgid "Los Angeles"
-msgstr "台東区浅草橋5丁目"
-
-msgid "State/Province/Region"
-msgstr "都道府県"
-
-msgid "California"
-msgstr "東京都"
-
-msgid "Postal Code"
-msgstr "郵便番号"
-
-msgid "12345"
-msgstr "1100053"
-
-msgid "Country"
-msgstr "国"
-
-msgid "USA"
-msgstr "日本"
-
-msgid "郵便番号"
-msgstr ""
-
-msgid "000-0000"
-msgstr ""
-
-msgid "都道府県"
-msgstr ""
-
-msgid "東京都"
-msgstr ""
-
-msgid "市区町村"
-msgstr ""
-
-msgid "台東区"
-msgstr ""
-
-msgid "住所"
-msgstr ""
-
-msgid "台東１－１－１"
-msgstr ""
-
-msgid "Company Contact"
-msgstr "会社連絡先"
-
-msgid "John"
-msgstr "太郎"
-
-msgid "Smith"
-msgstr "佐藤"
-
-msgid "姓"
-msgstr ""
-
-msgid "名"
-msgstr ""
-
-msgid "Contact Email"
-msgstr "連絡先メール"
-
-msgid "name@company.com"
-msgstr "name@company.co.jp"
-
-msgid "Company Telephone"
-msgstr "会社連絡先電話番号"
-
 msgid "Enter Payment Information"
 msgstr "決済情報を入力してください"
 
 msgid "Name on Card"
 msgstr "カード名義人（半角ローマ字）"
 
-msgid "Price per user"
-msgstr "料金（1ユーザー当たり）"
-
-msgid "Number of users"
-msgstr "ユーザー数"
-
-msgid "Sub Total"
-msgstr "小計"
-
-msgid "Tax"
-msgstr "税金"
-
 msgid "Total per month"
 msgstr "合計（月あたり）"
 
-msgid "Subscription Status"
-msgstr "%sの評価状況"
+msgid "Team Summary"
+msgstr "チーム概要"
 
 msgid "Free Trial"
 msgstr ""
@@ -5078,11 +5014,88 @@ msgid ""
 "deleted on December 20, 2017"
 msgstr ""
 
-msgid "Number of Members"
-msgstr "ユーザー数"
+#, fuzzy
+#| msgid "Month"
+msgid "Monthly"
+msgstr "月"
 
-msgid "Total Price"
-msgstr "トータル"
+#, fuzzy
+#| msgid "Members"
+msgid "member"
+msgstr "メンバー"
+
+#, fuzzy
+#| msgid "Month"
+msgid "month"
+msgstr "月"
+
+msgid "Active Members"
+msgstr "アクティブメンバー"
+
+msgid "Estimated Total"
+msgstr ""
+
+#, fuzzy
+#| msgid "20MB file upload"
+msgid "100MB file upload"
+msgstr "20MB/ファイルのアップロード"
+
+#, fuzzy
+#| msgid "Unlimited file share"
+msgid "Unlimited uploads"
+msgstr "ストレージ無制限のファイル共有"
+
+#, fuzzy
+#| msgid "Messaging"
+msgid "Chat Messaging"
+msgstr "メッセージ"
+
+#, fuzzy
+#| msgid "Administrators"
+msgid "Team Administration"
+msgstr "管理者"
+
+#, fuzzy
+#| msgid "Online user support"
+msgid "Free Online support"
+msgstr "オンラインでのユーザーサポート"
+
+msgid ""
+"Adding a user will result in an immediate charge based on the remaining days "
+"of your billing period."
+msgstr ""
+
+msgid ""
+"Active members are those members who have not been deactivated from the "
+"team. All active members are able to log in to the team."
+msgstr ""
+
+msgid ""
+"Maximum file upload for sharing files is 100MB. Posting photos allows up to "
+"10MB"
+msgstr ""
+
+msgid "Payment History"
+msgstr "請求履歴"
+
+msgid "ID"
+msgstr ""
+
+#, fuzzy
+#| msgid "Due Date"
+msgid "Date"
+msgstr "期限"
+
+msgid "Amount"
+msgstr "金額"
+
+msgid "Receipt"
+msgstr ""
+
+#, fuzzy
+#| msgid "View All"
+msgid "View"
+msgstr "すべて表示"
 
 msgid "Thank You"
 msgstr "ありがとうございます。"
@@ -5100,9 +5113,6 @@ msgstr "カード情報を入力してください"
 
 msgid "Jane Doe"
 msgstr "Jane Doe"
-
-msgid "Card Number"
-msgstr "カード番号"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"
@@ -5351,3 +5361,77 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#, fuzzy
+#~| msgid "Sub Total"
+#~ msgid "Sub total amount"
+#~ msgstr "小計"
+
+#~ msgid "Total amount"
+#~ msgstr "合計"
+
+#~ msgid "Enter Company Information"
+#~ msgstr "会社情報を入力してください"
+
+#~ msgid "Company Name"
+#~ msgstr "会社名"
+
+#~ msgid "Company Address"
+#~ msgstr "会社住所"
+
+#~ msgid "Street"
+#~ msgstr "建物名など"
+
+#~ msgid "1234 Street Name"
+#~ msgstr "20番8号 CSタワー7階"
+
+#~ msgid "City"
+#~ msgstr "市区町村"
+
+#~ msgid "Los Angeles"
+#~ msgstr "台東区浅草橋5丁目"
+
+#~ msgid "State/Province/Region"
+#~ msgstr "都道府県"
+
+#~ msgid "California"
+#~ msgstr "東京都"
+
+#~ msgid "Postal Code"
+#~ msgstr "郵便番号"
+
+#~ msgid "12345"
+#~ msgstr "1100053"
+
+#~ msgid "Country"
+#~ msgstr "国"
+
+#~ msgid "USA"
+#~ msgstr "日本"
+
+#~ msgid "Company Contact"
+#~ msgstr "会社連絡先"
+
+#~ msgid "John"
+#~ msgstr "太郎"
+
+#~ msgid "Smith"
+#~ msgstr "佐藤"
+
+#~ msgid "Contact Email"
+#~ msgstr "連絡先メール"
+
+#~ msgid "name@company.com"
+#~ msgstr "name@company.co.jp"
+
+#~ msgid "Company Telephone"
+#~ msgstr "会社連絡先電話番号"
+
+#~ msgid "Subscription Status"
+#~ msgstr "%sの評価状況"
+
+#~ msgid "Number of Members"
+#~ msgstr "ユーザー数"
+
+#~ msgid "Total Price"
+#~ msgstr "トータル"

@@ -145,8 +145,6 @@ class BaseController extends Controller
     function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->csrfCheck= false;
-        $this->Security->validatePost= false;
         $this->_setSecurity();
 
         if ($this->Auth->user()) {

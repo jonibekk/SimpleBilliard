@@ -7,8 +7,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return Object.assign({}, common.getCommonDispatchToProps(dispatch), {
-  })
+  return common.getCommonDispatchToProps(dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CountryComponent)

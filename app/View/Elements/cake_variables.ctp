@@ -579,6 +579,16 @@ App::uses('AttachedFile', 'Model');
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
+            // Change to paid plan
+            "Card Holder Name": "<?= __("Card Holder Name") ?>",
+            "Card Number": "<?= __("Card Number") ?>",
+            "Price per user": "<?= __("Price per user") ?>",
+            "Number of users": "<?= __("Number of users") ?>",
+            "Sub Total": "<?= __("Sub Total") ?>",
+            "Tax": "<?= __("Tax") ?>",
+            "Total": "<?= __("Total") ?>",
+            "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
+            "Register": "<?= __("Register") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
