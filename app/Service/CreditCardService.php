@@ -159,7 +159,7 @@ class CreditCardService extends AppService
         }
 
         // validate currency
-        if (empty($currency) || $value <= 0) {
+        if (empty($currency)) {
             $result["error"] = true;
             $result["message"] = __("Parameter is invalid.");
             $result["field"] = 'currency';

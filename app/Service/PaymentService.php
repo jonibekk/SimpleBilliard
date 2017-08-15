@@ -5,6 +5,7 @@ App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
+App::uses('ChargeHistory', 'Model');
 App::uses('AppUtil', 'Util');
 
 /**
@@ -132,14 +133,14 @@ class PaymentService extends AppService
             $creditCardData = [
                 'team_id'            => $data['team_id'],
                 'payment_setting_id' => $paymentSettingId,
-                'customer_code'      => $customerCode
+                'customer_code'      => $customerCode,
             ];
 
             $CreditCard->begin();
             if (!$CreditCard->save($creditCardData)) {
                 $CreditCard->rollback();
                 $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create credit card. data:%s", var_export($data, true)));
+                throw new Exception(sprintf("Failed create credit card. data:%s", var_export($creditCardData, true)));
             }
 
             // Save snapshot
@@ -333,7 +334,7 @@ class PaymentService extends AppService
         return $res;
     }
 
-    /*
+    /**
      * Apply Credit card charge for a specified team.
      *
      * @param int         $teamId
@@ -422,12 +423,14 @@ class PaymentService extends AppService
         }
         $result['resultType'] = $resultType;
 
+        // TODO: fix tax amount
         $historyData = [
             'team_id'          => $teamId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
             'charge_type'      => $chargeType,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $totalAmount,
+            'total_amount_including_tax' => $totalAmount,
             'charge_users'     => $usersCount,
             'currency'         => $currency,
             'charge_datetime'  => time(),
@@ -462,6 +465,199 @@ class PaymentService extends AppService
             }
         }
         return $result;
+    }
+
+    /**
+     * Register Credit Card Payment and apply charge in a single transaction.
+     *
+     * @param int    $userId
+     * @param int    $teamId
+     * @param string $creditCardToken
+     * @param array  $paymentData
+     *
+     * @return array
+     */
+    public function registerCreditCardPaymentAndCharge(int $userId, int $teamId, string $creditCardToken, array $paymentData)
+    {
+        $result = [
+            'error'     => false,
+            'errorCode' => 200,
+            'message'   => null
+        ];
+
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        // Register Credit Card to stripe
+        // Set description as "Team ID: 2" to identify it on Stripe Dashboard
+        $contactEmail = Hash::get($paymentData, 'contact_person_email');
+        $customerDescription = "Team ID: $teamId";
+        $stripeResponse = $CreditCardService->registerCustomer($creditCardToken, $contactEmail, $customerDescription);
+        if ($stripeResponse['error'] === true) {
+            $result['error'] = true;
+            $result['message'] = $stripeResponse['message'];
+            $result['errorCode'] = 400;
+            return $result;
+        }
+
+        // Stripe customer id
+        $customerId = $stripeResponse['customer_id'];
+        if (empty($customerId)) {
+            // It never should happen
+            $result['error'] = true;
+            $result['message'] = __("An error occurred while processing.");
+            $result['errorCode'] = 500;
+            return $result;
+        }
+
+        // Variable to later use
+        $result['customerId'] = $customerId;
+        $currency = Hash::get($paymentData, 'currency');
+        $currencySymbol = $currency != PaymentSetting::CURRENCY_TYPE_JPY ? '¥' : '$';
+        $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
+        $amountPerUser = Hash::get($paymentData,'amount_per_user');
+        $formattedAmountPerUser = $currencySymbol . Hash::get($paymentData,'amount_per_user');
+        $totalAmount = $amountPerUser * $membersCount;
+        $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
+        // TODO: fix tax amount
+        $historyData = [
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+            'charge_type'      => PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'total_amount_including_tax' => $totalAmount,
+            'charge_users'     => $membersCount,
+            'currency'         => $currency,
+            'charge_datetime'  => time(),
+            'result_type'      => 0,
+            'max_charge_users' => $membersCount
+        ];
+
+        // Register payment settings
+        try {
+            // Create PaymentSettings
+            $PaymentSetting->begin();
+            if (!$PaymentSetting->save($paymentData)) {
+                throw new Exception(sprintf("Failed create payment settings. data: %s", var_export($paymentData, true)));
+            }
+            $paymentSettingId = $PaymentSetting->getLastInsertID();
+
+            // Create CreditCards
+            $creditCardData = [
+                'team_id'            => $paymentData['team_id'],
+                'payment_setting_id' => $paymentSettingId,
+                'customer_code'      => $customerId
+            ];
+
+            if (!$CreditCard->save($creditCardData)) {
+                throw new Exception(sprintf("Failed create credit card. data:%s", var_export($paymentData, true)));
+            }
+
+            // Save snapshot
+            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+
+            // Set team status
+            // Up to this point any failure do not directly affect user accounts or charge its credit card.
+            // Team status will be set first in case of any failure team will be able to continue to use.
+            $paymentDate = date('Y-m-d');
+            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+
+            // Apply the user charge on Stripe
+            /** @var CreditCardService $CreditCardService */
+            $CreditCardService = ClassRegistry::init("CreditCardService");
+            $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $totalAmount, $paymentDescription);
+
+            // Error charging customer using Stripe API. Might be network,  API problem or card rejected
+            if ($chargeResult['error'] === true || $chargeResult['success'] == false)
+            {
+                // Rollback transaction
+                $PaymentSetting->rollback();
+
+                // Remove the customer from Stripe
+                $CreditCardService->deleteCustomer($customerId);
+
+                // Save history
+                if ($chargeResult['error'] === true) {
+                    $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_ERROR;
+                } else {
+                    $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_FAIL;
+                }
+                $this->_saveChargeHistory($historyData);
+
+                $result['error'] = true;
+                $result['message'] = $chargeResult['message'];
+                $result['errorCode'] = 400;
+                return $result;
+            }
+
+            // Commit changes
+            $PaymentSetting->commit();
+        } catch (Exception $e) {
+            // Remove the customer from Stripe
+            $CreditCardService->deleteCustomer($customerId);
+
+            $PaymentSetting->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+            $result['errorCode'] = 500;
+            return $result;
+        }
+
+        // Save card history
+        // Charge history is kept outside the transaction so in case of history recording
+        // failure, the error will be logged for later investigation but the charging
+        // processes will not be affected.
+        $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
+        $this->_saveChargeHistory($historyData);
+
+        return $result;
+    }
+
+    /**
+     * Save Charge history
+     *
+     * @param $historyData
+     *
+     * @return bool
+     */
+    private function _saveChargeHistory($historyData)
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+
+        try {
+            // Create Charge history
+            $ChargeHistory->begin();
+
+            if (!$ChargeHistory->save($historyData)) {
+                $ChargeHistory->rollback();
+                throw new Exception(sprintf("Failed create charge history. data:%s", var_export($historyData, true)));
+            }
+            $ChargeHistory->commit();
+        } catch (Exception $e) {
+            $ChargeHistory->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            return false;
+        }
+        return true;
     }
 
     /**

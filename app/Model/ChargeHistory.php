@@ -98,6 +98,15 @@ class ChargeHistory extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
+        'total_amount_including_tax'     => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'required' => true,
+                'rule'     => 'notBlank',
+            ],
+        ],
         'charge_users'     => [
             'numeric'  => [
                 'rule' => ['numeric'],
