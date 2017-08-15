@@ -7,8 +7,9 @@
  */
 $goal_id = $goal_id??null;
 $key_result_id = $key_result_id??null;
-$end_date = strtotime($goal['Goal']['end_date']);
-$today = strtotime(date('Y-m-d'));
+$end_date = $goal['Goal']['end_date'];
+$Team = ClassRegistry::init('Team');
+$today = AppUtil::todayDateYmdLocal($Team->getTimezone());
 ?>
 <?= $this->App->viewStartComment() ?>
     <?php if ($end_date > $today): ?>
