@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-19 17:15+0900\n"
+"PO-Revision-Date: 2017-08-15 17:53+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -59,7 +59,9 @@ msgstr "Goalousにプロフィールをいれましょう。"
 msgid "Please install the Goalous mobile application and login."
 msgstr "Goalousアプリをインストールしてログインしましょう。"
 
-msgid "Please create your GOAL."
+#, fuzzy
+#| msgid "Please create your GOAL."
+msgid "Please create your Goal."
 msgstr "Goalousでゴールを登録してみよう。"
 
 msgid "Please action on Goalous."
@@ -2767,81 +2769,6 @@ msgstr "プレス関連のお問い合わせ"
 msgid "Contact for cooperation"
 msgstr "協業のお問い合わせ"
 
-msgid "Toggle navigation"
-msgstr "ナビゲーションの開閉"
-
-msgid "Features"
-msgstr "機能"
-
-msgid "Pricing"
-msgstr "料金"
-
-msgid "Login"
-msgstr "ログイン"
-
-msgid "Create New Team"
-msgstr "新しいチームをつくる"
-
-msgid "Home"
-msgstr "ホーム"
-
-msgid "Create a team"
-msgstr "チームを作成"
-
-msgid "No new message"
-msgstr "未読のメッセージはありません。"
-
-msgid "Mark All as Read"
-msgstr "すべて既読にする"
-
-msgid "No new notification"
-msgstr "未読の通知はありません。"
-
-msgid "See All"
-msgstr "すべて見る"
-
-msgid "User Setting"
-msgstr "ユーザー設定"
-
-msgid "Team Setting"
-msgstr "チーム設定"
-
-msgid "Evaluation"
-msgstr "評価"
-
-msgid "Goal Approval"
-msgstr "ゴール認定"
-
-msgid "User Guide (jp)"
-msgstr "ユーザー利用ガイド"
-
-msgid "How to make a Goal (jp)"
-msgstr "ゴール作成方法"
-
-msgid "Tutorial"
-msgstr "チュートリアル"
-
-msgid "Support"
-msgstr "サポート"
-
-msgid "Logout"
-msgstr "ログアウト"
-
-msgid "Goal"
-msgstr "ゴール"
-
-msgid "Team"
-msgstr "チーム"
-
-msgid "Circle"
-msgstr "サークル"
-
-msgid "Newsfeed"
-msgstr "ニュースフィード"
-
-msgid "Related Goals"
-msgstr "関連ゴール"
-
 msgid "Action list"
 msgstr "アクションリスト"
 
@@ -3171,6 +3098,12 @@ msgstr "投稿を削除"
 msgid "Do you really want to delete this post?"
 msgstr "本当にこの投稿を削除しますか？"
 
+msgid "Circle"
+msgstr "サークル"
+
+msgid "Goal"
+msgstr "ゴール"
+
 msgid "Team Vision"
 msgstr "チームビジョン"
 
@@ -3367,6 +3300,75 @@ msgstr "フォロワー"
 
 msgid "KR"
 msgstr "KR"
+
+msgid "Toggle navigation"
+msgstr "ナビゲーションの開閉"
+
+msgid "Features"
+msgstr "機能"
+
+msgid "Pricing"
+msgstr "料金"
+
+msgid "Login"
+msgstr "ログイン"
+
+msgid "Create New Team"
+msgstr "新しいチームをつくる"
+
+msgid "Home"
+msgstr "ホーム"
+
+msgid "Create a team"
+msgstr "チームを作成"
+
+msgid "No new message"
+msgstr "未読のメッセージはありません。"
+
+msgid "Mark All as Read"
+msgstr "すべて既読にする"
+
+msgid "No new notification"
+msgstr "未読の通知はありません。"
+
+msgid "See All"
+msgstr "すべて見る"
+
+msgid "User Setting"
+msgstr "ユーザー設定"
+
+msgid "Team Setting"
+msgstr "チーム設定"
+
+msgid "Evaluation"
+msgstr "評価"
+
+msgid "Goal Approval"
+msgstr "ゴール認定"
+
+msgid "User Guide (jp)"
+msgstr "ユーザー利用ガイド"
+
+msgid "How to make a Goal (jp)"
+msgstr "ゴール作成方法"
+
+msgid "Tutorial"
+msgstr "チュートリアル"
+
+msgid "Support"
+msgstr "サポート"
+
+msgid "Logout"
+msgstr "ログアウト"
+
+msgid "Team"
+msgstr "チーム"
+
+msgid "Newsfeed"
+msgstr "ニュースフィード"
+
+msgid "Related Goals"
+msgstr "関連ゴール"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"

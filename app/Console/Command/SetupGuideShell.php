@@ -232,7 +232,7 @@ class SetupGuideShell extends AppShell
                 $url = "/setup/app/image";
                 break;
             case 3:
-                $message = __("Please create your GOAL.");
+                $message = __("Please create your Goal.");
                 $url = "/setup/goal/image";
                 break;
             case 4:
