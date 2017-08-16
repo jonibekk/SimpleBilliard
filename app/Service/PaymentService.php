@@ -525,7 +525,7 @@ class PaymentService extends AppService
         $currency = Hash::get($paymentData, 'currency');
         $currencySymbol = $currency != PaymentSetting::CURRENCY_TYPE_JPY ? '¥' : '$';
         $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE));
+        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
         $amountPerUser = Hash::get($paymentData,'amount_per_user');
         $formattedAmountPerUser = $currencySymbol . Hash::get($paymentData,'amount_per_user');
         $totalAmount = $amountPerUser * $membersCount;
