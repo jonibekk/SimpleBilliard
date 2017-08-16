@@ -2015,15 +2015,12 @@ msgstr "最多で"
 msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
-#, fuzzy
-#| msgid "Select a key result (optional)"
+
 msgid "Select a Key Result (optional)"
 msgstr "KRを選択する(オプション)"
 
-#, fuzzy
-#| msgid "Top Key Result"
-msgid "No Key Result"
-msgstr "トップKR"
+msgid "No key result"
+msgstr "KRはありません"
 
 msgid "Add notified parties (optional)"
 msgstr "通知先を追加(オプション)"
@@ -5133,6 +5130,3 @@ msgstr "認定ステータス: %s"
 
 #~ msgid "Delete goal"
 #~ msgstr "ゴールを削除"
-
-#~ msgid "No key result"
-#~ msgstr "KRはありません"
