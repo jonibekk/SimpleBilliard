@@ -49,6 +49,23 @@ class AddInvoceHistories0816 extends CakeMigration {
 					),
 					'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB'),
 				),
+                'invoice_histories_charge_histories' => array(
+                    'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+                    'invoice_history_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'belongsTo InvoiceHistory'),
+                    'charge_history_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'belongsTo ChargeHistory'),
+                    'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+                    'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+                    'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+                    'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+                    'indexes' => array(
+                        'PRIMARY' => array('column' => 'id', 'unique' => 1),
+                        'invoice_history_id_2' => array('column' => array('invoice_history_id', 'charge_history_id'), 'unique' => 1),
+                        'created' => array('column' => 'created', 'unique' => 0),
+                        'invoice_history_id' => array('column' => 'invoice_history_id', 'unique' => 0),
+                        'charge_history_id' => array('column' => 'charge_history_id', 'unique' => 0),
+                    ),
+                    'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB'),
+                ),
 			),
 		),
 		'down' => array(
@@ -64,7 +81,8 @@ class AddInvoceHistories0816 extends CakeMigration {
 				),
 			),
 			'drop_table' => array(
-				'invoice_histories'
+				'invoice_histories',
+                'invoice_histories_charge_histories',
 			),
             'drop_field' => array(
                 'charge_histories' => array('stripe_payment_code'),
