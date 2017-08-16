@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-16 10:59+0900\n"
+"PO-Revision-Date: 2017-08-16 13:23+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -220,7 +220,9 @@ msgstr "評価者の評価を確定しました。"
 msgid "Internal Server Error."
 msgstr "サーバーエラー"
 
-msgid "Completed a goal."
+#, fuzzy
+#| msgid "Completed a goal."
+msgid "Completed a Goal."
 msgstr "ゴールを完了にしました。"
 
 msgid "Not exist"
@@ -229,16 +231,24 @@ msgstr "存在しません。"
 msgid "You have no permission."
 msgstr "権限がありません。"
 
-msgid "Deleted a goal."
+#, fuzzy
+#| msgid "Deleted a goal."
+msgid "Deleted a Goal."
 msgstr "ゴールを削除しました。"
 
-msgid "The goal doesn't exist."
+#, fuzzy
+#| msgid "The goal doesn't exist."
+msgid "The Goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
-msgid "You cannot follow or collaborate with a completed goal."
+#, fuzzy
+#| msgid "You cannot follow or collaborate with a completed goal."
+msgid "You cannot follow or collaborate with a completed Goal."
 msgstr "ゴールが完了しているので、フォロー/コラボすることはできません。"
 
-msgid "You cannot follow or collaborate with a past goal."
+#, fuzzy
+#| msgid "You cannot follow or collaborate with a past goal."
+msgid "You cannot follow or collaborate with a past Goal."
 msgstr "ゴールの終了日が過ぎているので、フォロー/コラボすることはできません。"
 
 msgid "Start to collaborate."
@@ -509,10 +519,14 @@ msgstr "サークルを抜けました。"
 msgid "Invalid Request"
 msgstr "不正なリクエストです。"
 
-msgid "Created a goal."
+#, fuzzy
+#| msgid "Created a goal."
+msgid "Created a Goal."
 msgstr "ゴールの作成が完了しました。"
 
-msgid "Failed to save a goal."
+#, fuzzy
+#| msgid "Failed to save a goal."
+msgid "Failed to save a Goal."
 msgstr "ゴールの保存に失敗しました。"
 
 msgid "Saved user profile."
@@ -590,16 +604,22 @@ msgstr "評価スコア設定を保存しました。"
 msgid "Failed to change evaluation score setting."
 msgstr "評価スコア設定が保存できませんでした。"
 
-msgid "Saved goal category setting."
+#, fuzzy
+#| msgid "Saved goal category setting."
+msgid "Saved Goal category setting."
 msgstr "ゴールカテゴリ設定を保存しました。"
 
-msgid "Failed to save goal category setting."
+#, fuzzy
+#| msgid "Failed to save goal category setting."
+msgid "Failed to save Goal category setting."
 msgstr "ゴールカテゴリ設定が保存できませんでした。"
 
 msgid "Deleted score definition."
 msgstr "スコア定義を削除しました。"
 
-msgid "Deleted goal category."
+#, fuzzy
+#| msgid "Deleted goal category."
+msgid "Deleted Goal category."
 msgstr "ゴールカテゴリを削除しました。"
 
 msgid "Evaluation setting is not active."
@@ -849,7 +869,9 @@ msgstr "データの検証に失敗しました。"
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
 
-msgid "Complete the approval of %d goal(s)."
+#, fuzzy
+#| msgid "Complete the approval of %d goal(s)."
+msgid "Complete the approval of %d Goal(s)."
 msgstr "%d件のゴール認定を完了してください"
 
 msgid "You don't have access right to this page."
@@ -870,7 +892,9 @@ msgstr "保存処理に失敗しました。"
 msgid "Get count over the upper limit"
 msgstr "取得件数が上限を超えています。"
 
-msgid "Saved goal & Top Key Result"
+#, fuzzy
+#| msgid "Saved goal & Top Key Result"
+msgid "Saved Goal & Top Key Result"
 msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
@@ -910,7 +934,9 @@ msgstr "デバイス情報の保存に失敗しました。"
 msgid "Achieved %s!"
 msgstr "%sを達成しました！"
 
-msgid "Achieved a goal."
+#, fuzzy
+#| msgid "Achieved a goal."
+msgid "Achieved a Goal."
 msgstr "ゴール達成しました！"
 
 msgid "Api Endpoint not found."
@@ -1020,16 +1046,22 @@ msgstr "終了日は開始日以降を入力してください。"
 
 #, fuzzy
 #| msgid "Please input goal end date later than key result end date"
-msgid "Please input goal end date later than Key Result end date"
+msgid "Please input Goal end date later than Key Result end date"
 msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
 
-msgid "This goal doesn't exist."
+#, fuzzy
+#| msgid "This goal doesn't exist."
+msgid "This Goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
-msgid "You don't have a permission to edit this goal."
+#, fuzzy
+#| msgid "You don't have a permission to edit this goal."
+msgid "You don't have a permission to edit this Goal."
 msgstr "このゴールの編集の権限がありません。"
 
-msgid "You can't change the goal in the evaluation."
+#, fuzzy
+#| msgid "You can't change the goal in the evaluation."
+msgid "You can't change the Goal in the evaluation."
 msgstr "このゴールは評価中のため、変更できません。"
 
 msgid "Undefined"
@@ -1065,7 +1097,9 @@ msgstr "5(とても高い)"
 msgid "Start date has expired."
 msgstr "開始日が期限を過ぎています。"
 
-msgid "Please input start / end date within start / end date of the goal."
+#, fuzzy
+#| msgid "Please input start / end date within start / end date of the goal."
+msgid "Please input start / end date within start / end date of the Goal."
 msgstr "開始・終了日はゴールの開始・終了日の範囲内で入力してください。"
 
 msgid "Input is required."
@@ -1313,7 +1347,9 @@ msgstr "Facebook"
 msgid "Google"
 msgstr "Google"
 
-msgid "Created a new goal."
+#, fuzzy
+#| msgid "Created a new goal."
+msgid "Created a new Goal."
 msgstr "あたらしいゴールをつくりました。"
 
 msgid "Created a new circle."
@@ -1821,10 +1857,14 @@ msgstr "自己評価をしてください"
 msgid "Please evaluate."
 msgstr "評価をしてください"
 
-msgid "You can't change leader in the goal before current term."
+#, fuzzy
+#| msgid "You can't change leader in the goal before current term."
+msgid "You can't change leader in the Goal before current term."
 msgstr "今期より前のゴールのリーダーは変更できません。"
 
-msgid "You cant't change leader in the goal during the evaluation period."
+#, fuzzy
+#| msgid "You cant't change leader in the goal during the evaluation period."
+msgid "You cant't change leader in the Goal during the evaluation period."
 msgstr "評価期間中のゴールのリーダーは変更できません。"
 
 msgid "Wrong target days."
@@ -1842,7 +1882,9 @@ msgstr "日付指定は評価期間内でなければいけません。"
 msgid "Graph range is wrong."
 msgstr "グラフの範囲指定が不正です。"
 
-msgid "The goal is not exist."
+#, fuzzy
+#| msgid "The goal is not exist."
+msgid "The Goal is not exist."
 msgstr "このゴールは存在しません。"
 
 msgid "Incomplete"
@@ -1893,10 +1935,14 @@ msgstr "トップKRが明確で最重要である。"
 msgid "This Top Key Result is not most important."
 msgstr "トップKRが最重要でない。"
 
-msgid "You have added this goal as a target of evaluation."
+#, fuzzy
+#| msgid "You have added this goal as a target of evaluation."
+msgid "You have added this Goal as a target of evaluation."
 msgstr "あなたはこのゴールを評価対象にしました。"
 
-msgid "You have not added this goal as a target of evaluation."
+#, fuzzy
+#| msgid "You have not added this goal as a target of evaluation."
+msgid "You have not added this Goal as a target of evaluation."
 msgstr "あなたはこのゴールを評価対象にしませんでした。"
 
 msgid "View %s comments"
@@ -2255,13 +2301,19 @@ msgstr "スバらしい"
 msgid "I have no iOS/Android devices"
 msgstr "スマホを持っていない"
 
-msgid "Make a good goal to discuss with your project members."
+#, fuzzy
+#| msgid "Make a good goal to discuss with your project members."
+msgid "Make a good Goal to discuss with your project members."
 msgstr "メンバーとともに価値あるゴールを作ろう。"
 
-msgid "Have a common goal"
+#, fuzzy
+#| msgid "Have a common goal"
+msgid "Have a common Goal"
 msgstr "ゴールを共有する"
 
-msgid "Action for your goal"
+#, fuzzy
+#| msgid "Action for your goal"
+msgid "Action for your Goal"
 msgstr "ゴールにアクションする"
 
 msgid "Let's action to show your activity."
@@ -2484,7 +2536,9 @@ msgstr "画像をアップロードする"
 msgid "This Term"
 msgstr "今期"
 
-msgid "Do you want to evaluate this goal ?"
+#, fuzzy
+#| msgid "Do you want to evaluate this goal ?"
+msgid "Do you want to evaluate this Goal ?"
 msgstr "このゴールを評価対象にしたいですか？"
 
 msgid "View more options"
@@ -2607,7 +2661,9 @@ msgstr "送信する"
 msgid "Role"
 msgstr "役割"
 
-msgid "Confirm this goal"
+#, fuzzy
+#| msgid "Confirm this goal"
+msgid "Confirm this Goal"
 msgstr "ゴール編集の確認"
 
 msgid "Edit goal & Top Key Result"
@@ -2938,7 +2994,9 @@ msgstr "%s人に共有しました"
 msgid "Create a goal."
 msgstr "ゴールを作成する"
 
-msgid "Collaborate with achieving the goal."
+#, fuzzy
+#| msgid "Collaborate with achieving the goal."
+msgid "Collaborate with achieving the Goal."
 msgstr "ゴール達成のために共有しよう。"
 
 msgid "Make your team better by Goalous."
@@ -3126,7 +3184,9 @@ msgstr "チームビジョン"
 msgid "Group Vision"
 msgstr "グループビジョン"
 
-msgid "There is no goal that you can take action."
+#, fuzzy
+#| msgid "There is no goal that you can take action."
+msgid "There is no Goal that you can take action."
 msgstr "アクションできるゴールがありません。"
 
 msgid "View options"
@@ -3147,16 +3207,22 @@ msgstr "TKRを変更"
 msgid "Change leader"
 msgstr "リーダーを変更"
 
-msgid "Delete goal"
+msgid "Delete Goal"
 msgstr "ゴールを削除"
 
-msgid "Do you really want to delete this goal?"
+#, fuzzy
+#| msgid "Do you really want to delete this goal?"
+msgid "Do you really want to delete this Goal?"
 msgstr "本当にこのゴールを削除しますか？"
 
-msgid "Achieve goal"
+#, fuzzy
+#| msgid "Achieve goal"
+msgid "Achieve Goal"
 msgstr "ゴールを達成"
 
-msgid "Do you really want to complete this goal?"
+#, fuzzy
+#| msgid "Do you really want to complete this goal?"
+msgid "Do you really want to complete this Goal?"
 msgstr "このゴールを達成して本当によろしいですか？"
 
 msgid "Edit Top Key Result"
@@ -3257,21 +3323,29 @@ msgstr "例）サービスAの国内市場シェアを増加させる"
 msgid "Unit,start/target value"
 msgstr "単位 開始値/目標値"
 
+#, fuzzy
+#| msgid ""
+#| "Please input start date / end date of KR between start date / end date of "
+#| "the goal."
 msgid ""
 "Please input start date / end date of KR between start date / end date of "
-"the goal."
+"the Goal."
 msgstr "開始日/期限はゴールの開始日/期限の間で入力してください"
 
 msgid "Select the leader name you want to change."
 msgstr "変更したいリーダーの名前を選択してください。"
 
-msgid "Select whether you collaborate or quit this goal."
+#, fuzzy
+#| msgid "Select whether you collaborate or quit this goal."
+msgid "Select whether you collaborate or quit this Goal."
 msgstr "このゴールにコラボるか抜けるかを選択してください。"
 
 msgid "Save & Collaborate"
 msgstr "保存して、コラボる"
 
-msgid "Save & Quit this goal"
+#, fuzzy
+#| msgid "Save & Quit this goal"
+msgid "Save & Quit this Goal"
 msgstr "保存して、ゴールメンバーから抜ける"
 
 msgid "Change Top KR"
@@ -3286,7 +3360,9 @@ msgstr "トップKRとしたいKRを選択してください。"
 msgid "Goal Summary"
 msgstr "ゴール概要"
 
-msgid "Did you achieve the goal?"
+#, fuzzy
+#| msgid "Did you achieve the goal?"
+msgid "Did you achieve the Goal?"
 msgstr "ゴールを達成しましたか？"
 
 msgid "Start date"
@@ -3295,17 +3371,18 @@ msgstr "開始日"
 msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
 
-msgid "Achieve the goal"
+#, fuzzy
+#| msgid "Achieve the goal"
+msgid "Achieve the Goal"
 msgstr "ゴール達成"
 
 msgid "KRs"
 msgstr "KRs"
 
-msgid "Edit a goal"
+#, fuzzy
+#| msgid "Edit a goal"
+msgid "Edit a Goal"
 msgstr "ゴールを編集"
-
-msgid "Delete Goal"
-msgstr "ゴールを削除"
 
 msgid "Acheive Goal"
 msgstr "ゴールを達成"
@@ -3533,17 +3610,25 @@ msgstr "新しいメンバーを追加"
 msgid "Update members information"
 msgstr "メンバーの情報を更新"
 
-msgid "Comfirm to delete goal category"
+#, fuzzy
+#| msgid "Comfirm to delete goal category"
+msgid "Comfirm to delete Goal category"
 msgstr "ゴールカテゴリ削除の確認"
 
+#, fuzzy
+#| msgid ""
+#| "Even if you delete a goal category, there is no affection to the past "
+#| "data."
 msgid ""
-"Even if you delete a goal category, there is no affection to the past data."
+"Even if you delete a Goal category, there is no affection to the past data."
 msgstr "ゴールカテゴリを削除しても、過去のデータには影響ありません。"
 
 msgid "After deleting, you can't select it."
 msgstr "今後、新規に選択はできなくなります。"
 
-msgid "Do you really want to delete the goal category?"
+#, fuzzy
+#| msgid "Do you really want to delete the goal category?"
+msgid "Do you really want to delete the Goal category?"
 msgstr "本当にこのゴールカテゴリを削除しますか？"
 
 msgid "Confirm to delete the score"
@@ -3613,36 +3698,56 @@ msgstr ""
 "上記の変更により、すべてのゴールとKRスケジュールは自動的に次のように更新され"
 "ます。"
 
+#, fuzzy
+#| msgid ""
+#| "The goal that beings in the current term and ends in the next term will "
+#| "be updated to end on the last day of the current term."
 msgid ""
-"The goal that beings in the current term and ends in the next term will be "
+"The Goal that beings in the current term and ends in the next term will be "
 "updated to end on the last day of the current term."
 msgstr ""
 "「開始日が今期に属し、かつ終了日が来期に属するゴール/KR」は、終了日が今期末に"
 "更新されます。"
 
+#, fuzzy
+#| msgid ""
+#| "The goal that begins in the current term and ends beyond the next term "
+#| "will be updated to end on the last day of the current term."
 msgid ""
-"The goal that begins in the current term and ends beyond the next term will "
+"The Goal that begins in the current term and ends beyond the next term will "
 "be updated to end on the last day of the current term."
 msgstr ""
 "「開始日が今期に属し、かつ終了日が来期末を超えるゴール/KR」は、終了日が今期末"
 "に更新されます。"
 
+#, fuzzy
+#| msgid ""
+#| "The goal that beings in the next term and ends beyond the next term will "
+#| "be updated to end on the last day of the next term."
 msgid ""
-"The goal that beings in the next term and ends beyond the next term will be "
+"The Goal that beings in the next term and ends beyond the next term will be "
 "updated to end on the last day of the next term."
 msgstr ""
 "「開始日が来期に属し、かつ終了日が来期末を超えるゴール/KR」は、終了日が来期末"
 "に更新されます。"
 
+#, fuzzy
+#| msgid ""
+#| "If the start date and end date of a goal is both within the current term, "
+#| "or both within the next term, will not be changed."
 msgid ""
-"If the start date and end date of a goal is both within the current term, or "
+"If the start date and end date of a Goal is both within the current term, or "
 "both within the next term, will not be changed."
 msgstr ""
 "「開始日と終了日が共に今期、または来期となるゴール/KR」は、日付の変更はありま"
 "せん。"
 
+#, fuzzy
+#| msgid ""
+#| "The goal that begins and ends beyond the the next term will be updated to "
+#| "match the start and end date of the next term."
 msgid ""
-"The goal that begins and ends beyond the the next term will be updated to "
+"The Goal that begins and ends beyond the the next term will be updated to "
 "match the start and end date of the next term."
 msgstr ""
 "「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終了"
@@ -3729,16 +3834,24 @@ msgstr "評価する"
 msgid "Self evaluation"
 msgstr "自己評価"
 
-msgid "Self evaluation goal score"
+#, fuzzy
+#| msgid "Self evaluation goal score"
+msgid "Self evaluation Goal score"
 msgstr "自己評価ゴールスコア"
 
-msgid "Self evaluation goal score required"
+#, fuzzy
+#| msgid "Self evaluation goal score required"
+msgid "Self evaluation Goal score required"
 msgstr "自己評価ゴールスコア必須"
 
-msgid "Self evaluation goal comment"
+#, fuzzy
+#| msgid "Self evaluation goal comment"
+msgid "Self evaluation Goal comment"
 msgstr "自己評価 ゴール コメント"
 
-msgid "Self evaluation goal comment required"
+#, fuzzy
+#| msgid "Self evaluation goal comment required"
+msgid "Self evaluation Goal comment required"
 msgstr "自己評価 ゴール コメント必須"
 
 msgid "Self evaluation total score"
@@ -3756,16 +3869,24 @@ msgstr "自己評価 トータル コメント 必須"
 msgid "Evaluation by Evaluator"
 msgstr "評価者評価"
 
-msgid "Evaluation goal score by Evaluator"
+#, fuzzy
+#| msgid "Evaluation goal score by Evaluator"
+msgid "Evaluation Goal score by Evaluator"
 msgstr "評価者評価 ゴール スコア"
 
-msgid "Evaluation goal score by Evaluator required"
+#, fuzzy
+#| msgid "Evaluation goal score by Evaluator required"
+msgid "Evaluation Goal score by Evaluator required"
 msgstr "評価者評価 ゴール スコア必須"
 
-msgid "Evaluation goal comment by Evaluator"
+#, fuzzy
+#| msgid "Evaluation goal comment by Evaluator"
+msgid "Evaluation Goal comment by Evaluator"
 msgstr "評価者評価 ゴール コメント"
 
-msgid "Evaluation goal comment by Evaluator required"
+#, fuzzy
+#| msgid "Evaluation goal comment by Evaluator required"
+msgid "Evaluation Goal comment by Evaluator required"
 msgstr "評価者評価 ゴール コメント必須"
 
 msgid "Evaluation total score by Evaluator"
@@ -3837,13 +3958,17 @@ msgstr "前期の最終評価を行う"
 msgid "Perform final evaluation of current term"
 msgstr "今期の最終評価を行う"
 
-msgid "Write a description of the goal category."
+#, fuzzy
+#| msgid "Write a description of the goal category."
+msgid "Write a description of the Goal category."
 msgstr "ゴールカテゴリの説明を書きましょう"
 
 msgid "Goal category settings"
 msgstr "ゴールカテゴリ設定"
 
-msgid "Add a goal category"
+#, fuzzy
+#| msgid "Add a goal category"
+msgid "Add a Goal category"
 msgstr "ゴールカテゴリを追加"
 
 msgid "Reach"
@@ -4380,7 +4505,9 @@ msgstr "下書き保存"
 msgid "Modify and submit"
 msgstr "修正して提出"
 
-msgid "Evaluation of goal"
+#, fuzzy
+#| msgid "Evaluation of goal"
+msgid "Evaluation of Goal"
 msgstr "ゴール評価"
 
 msgid "View results"
@@ -4611,7 +4738,9 @@ msgstr "組織の壁なんて感じない"
 msgid "You will find your job much joyful!"
 msgstr "なんだか、仕事が楽しくなる"
 
-msgid "Make your colleages goal clear."
+#, fuzzy
+#| msgid "Make your colleages goal clear."
+msgid "Make your colleages Goal clear."
 msgstr "一目瞭然、全社員のゴール"
 
 msgid ""
@@ -4727,7 +4856,9 @@ msgstr ""
 "会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインター"
 "フェースを用意しています。"
 
-msgid "Goalous | Enjoy your work. Achieve your goal."
+#, fuzzy
+#| msgid "Goalous | Enjoy your work. Achieve your goal."
+msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
 msgid "Enjoy your work. Achieve your goals."
@@ -5145,6 +5276,9 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Delete goal"
+#~ msgstr "ゴールを削除"
 
 #~ msgid "No key result"
 #~ msgstr "KRはありません"
