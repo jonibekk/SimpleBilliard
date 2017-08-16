@@ -37,9 +37,28 @@ App::uses('AppUtil', 'Util');
  * @property Team        $Team
  * @property GoalService $GoalService
  * @property GlRedis     $GlRedis
+ * @property CreditCardService  $CreditCardService
  */
 class GoalousTestCase extends CakeTestCase
 {
+    // Card with specific error for Stripe API test
+    // https://stripe.com/docs/testing#cards-responses
+    // Error Cards
+    const CARD_DECLINED = "4000000000000002";
+    const CARD_INCORRECT_CVC = "4000000000000127";
+    const CARD_EXPIRED = "4000000000000069";
+    const CARD_PROCESSING_ERROR = "4000000000000119";
+    const CARD_INCORRECT_NUMBER = "4242424242424241";
+    const CARD_CHARGE_FAIL = "4000000000000341";
+    // Valid Cards
+    const CARD_VISA = "4012888888881881";
+    const CARD_MASTERCARD = "5555555555554444";
+
+    const ERR_CODE_CARD_DECLINED = 'card_declined';
+    const ERR_CODE_CARD_INCORRECT_CVC = "incorrect_cvc";
+    const ERR_CODE_CARD_EXPIRED = 'expired_card';
+    const ERR_CODE_CARD_PROCESSING_ERROR = 'processing_error';
+
     /**
      * setUp method
      *
@@ -60,6 +79,7 @@ class GoalousTestCase extends CakeTestCase
         $this->GoalService = ClassRegistry::init('GoalService');
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->GlRedis->changeDbSource('redis_test');
+        $this->CreditCardService = ClassRegistry::init('CreditCardService');
     }
 
     /**
@@ -457,11 +477,11 @@ class GoalousTestCase extends CakeTestCase
     function createActiveUser($teamId)
     {
         $this->Team->TeamMember->User->create();
-        $this->Team->TeamMember->User->save(['active_flg' => true], false);
+        $this->Team->TeamMember->User->save(['active_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE], false);
         $userId = $this->Team->TeamMember->User->getLastInsertId();
         $this->Team->TeamMember->create();
-        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true, 'status' => 1],
-            false);
+        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true,
+                                       'status' => TeamMember::USER_STATUS_ACTIVE], false);
         return $userId;
     }
 

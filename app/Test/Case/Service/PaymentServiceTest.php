@@ -560,6 +560,29 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res["success"]);
     }
 
+    public function test_registerCreditCardPaymentAndCharge()
+    {
+        $token = $this->createToken(self::CARD_MASTERCARD);
+        $userID = $this->createActiveUser(1);
+        $paymentData = $this->createTestPaymentData([
+            'token'            => $token,
+            'team_id'          => 1,
+            'type'             => 1,
+            'amount_per_user'  => 1800,
+            'payment_base_day' => 15,
+            'currency'         => 1,
+        ]);
+
+        $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userID, 1, $token, $paymentData);
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("error", $res);
+        $this->assertArrayHasKey("customerId", $res);
+        $this->assertFalse($res["error"]);
+
+        $this->deleteCustomer($res["customerId"]);
+    }
+
     public function test_findMonthlyChargeCcTeams_timezone()
     {
         $this->Team->deleteAll(['del_flg' => false]);
