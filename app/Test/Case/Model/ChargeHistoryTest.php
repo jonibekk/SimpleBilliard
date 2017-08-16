@@ -1,10 +1,12 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('ChargeHistory', 'Model');
 
 /**
  * ChargeHistory Test Case
+ *
+ * @property ChargeHistory $ChargeHistory
  */
-class ChargeHistoryTest extends CakeTestCase {
+class ChargeHistoryTest extends GoalousTestCase {
 
 /**
  * Fixtures
