@@ -515,6 +515,8 @@ class PaymentService extends AppService
             $result['error'] = true;
             $result['message'] = __("An error occurred while processing.");
             $result['errorCode'] = 500;
+
+            $this->log(sprintf("Error on Stripe call: %s", var_export($stripeResponse, true)));
             return $result;
         }
 
