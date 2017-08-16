@@ -1,34 +1,15 @@
 /**
  * Dashboardにあるサークルリストのスタイル
  */
-
 .circle_heading {
   font-weight: bold;
   color: #a5a5a5;
-  &.is-humberger {
-    padding: 15px 10px 0;
-  }
 }
 .circle-function {
   width: 14px;
   text-align: right;
 }
-.develop--circle-seek {
-  font-size: 12px;
-  line-height: 16px;
-  padding: 10px 0 6px;
-}
-.develop--circle-make {
-  font-size: 12px;
-  line-height: 16px;
-  margin: 15px 0 30px;
-  padding: 6px 0;
-}
-.circle-seek-icon {
-  text-align: center;
-  margin-right: 6px;
-  font-size: 14px;
-}
+
 .circle-make-icon {
   width: 14px;
   font-size: 14px;
@@ -36,19 +17,31 @@
   margin-right: 6px;
 }
 
-.layout-circle-hamburger {
-  width: 199px;
-  padding: 0 10px 9px;
-
+.circle-list-in-hamburger{
+  position:static !important;
+  margin-top:1rem;
   .circle-layout {
     width: 100%;
     height: 30px;
     position: relative;
-    margin: 15px 0;
+    margin: 5px 0 0 0;
   }
 
   .dashboard-circle-list-edit {
     font-size: 14px;
+  }
+  .circle-list-footer{
+    margin-bottom:2rem;
+    .develop--circle-seek, .develop--circle-make {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .circle-seek-icon {
+      text-align: center;
+      margin-right: 6px;
+      font-size: 14px;
+    }
   }
 }
 
@@ -76,9 +69,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-}
-.dashboard-circle-list-footer {
-  padding: 4px;
 }
 .dashboard-circle-list-seek {
   font-size: 12px;

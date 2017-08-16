@@ -26,11 +26,11 @@
         <div class="nav-container header-container">
             <?php
             // Condition that returns true if user is on a sub-page and is viewing on mobile app
-            if ( $this->BackBtn->checkPage() &&  $is_mb_app) { ?>
-                <?= $this->element('/header_back_btn') ?>
+            if ( $this->BackBtn->checkPage() && $is_mb_app) { ?>
+                <?= $this->element('Header/back_btn') ?>
             <?php } else { ?>
-                <?= $this->element('header_navigation'); ?>
-                <?= $this->element('header_logged_in_right'); ?>
+                <?= $this->element('Header/navigation'); ?>
+                <?= $this->element('Header/logged_in_right'); ?>
             <?php } ?>
         </div>
     </div>
