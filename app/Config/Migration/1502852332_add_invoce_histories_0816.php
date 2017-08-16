@@ -26,6 +26,11 @@ class AddInvoceHistories0816 extends CakeMigration {
                     'tax' => array('type' => 'decimal', 'null' => false, 'default' => '0.00', 'length' => '17,2', 'unsigned' => false, 'comment' => 'tax in a charge'),
 				),
 			),
+            'create_field' => array(
+                'charge_histories' => array(
+                    'stripe_payment_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. if invoice, it will be null', 'charset' => 'utf8mb4', 'after' => 'max_charge_users'),
+                ),
+            ),
             'create_table' => array(
 				'invoice_histories' => array(
 					'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
@@ -61,6 +66,9 @@ class AddInvoceHistories0816 extends CakeMigration {
 			'drop_table' => array(
 				'invoice_histories'
 			),
+            'drop_field' => array(
+                'charge_histories' => array('stripe_payment_code'),
+            ),
 		),
 	);
 
