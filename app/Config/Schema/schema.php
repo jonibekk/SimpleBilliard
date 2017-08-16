@@ -803,7 +803,7 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
 		'order_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => '注文登録時のUTC日付'),
-		'system_order_code' => array('type' => 'string', 'null' => false, 'collate' => 'utf8mb4_general_ci', 'comment' => '後払い.comから返される注文ID', 'charset' => 'utf8mb4'),
+		'system_order_code' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '後払い.comから返される注文ID', 'charset' => 'utf8mb4'),
 		'order_status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '後払い.comから返される与信状況。与信OK:1、与信NG:2、与信中:0 '),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
