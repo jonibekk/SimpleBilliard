@@ -85,8 +85,6 @@ export default class CreditCard extends Base {
   render() {
     const {payment} = this.props
     const {validation_errors, error_message} = payment
-    console.log(validation_errors);
-    console.log(error_message);
     return (
       <section className="panel enter-cc-info">
         <h3>{__('Enter Payment Information')}</h3>

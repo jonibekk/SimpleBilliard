@@ -5,8 +5,8 @@ import React from 'react'
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
-import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import FormTextBox from "~/payment_apply/components/elements/FormTextBox";
+import RowMultipleTextBoxes from "~/payment_apply/components/elements/RowMultipleTextBoxes";
 
 export default class Company extends Base {
   constructor(props) {
@@ -41,7 +41,7 @@ export default class Company extends Base {
   }
 
   render() {
-    const {input_data, validation_errors} = this.props.payment;
+    const {input_data, validation_errors, is_disabled_submit} = this.props.payment;
     const {payment_setting} = input_data
     const errors_payment_setting = validation_errors.payment_setting ? validation_errors.payment_setting : {};
 
@@ -105,46 +105,52 @@ export default class Company extends Base {
             />
           </fieldset>
           <fieldset className="company-info-fieldset">
-            <legend className="company-info-legend">Company Contact</legend>
-            <FormTextBox
-              id="PaymentsContactPersonLastName"
-              name="contact_person_last_name"
-              value={payment_setting.contact_person_last_name}
-              label={__("LastName")}
-              placeholder="東京"
-              err_msg={errors_payment_setting.contact_person_last_name}
-              onChange={(e) => this.onChange(e, "payment_setting")}
-            />
-            <FormTextBox
-              id="PaymentsContactPersonFirstName"
-              name="contact_person_first_name"
-              value={payment_setting.contact_person_first_name}
-              label={__("FirstName")}
-              placeholder="太郎"
-              err_msg={errors_payment_setting.contact_person_first_name}
+            <legend className="company-info-legend">{__("Company Contact")}</legend>
+            <RowMultipleTextBoxes
+              label={__("Name")}
+              attributes={[
+                {
+                  id: "PaymentsContactPersonLastName",
+                  name: "contact_person_last_name",
+                  value: payment_setting.contact_person_last_name,
+                  label: __("LastName"),
+                  placeholder: "東京",
+                  err_msg: errors_payment_setting.contact_person_last_name,
+                },
+                {
+                  id: "PaymentsContactPersonFirstName",
+                  name: "contact_person_first_name",
+                  value: payment_setting.contact_person_first_name,
+                  label: __("FirstName"),
+                  placeholder: "太郎",
+                  err_msg: errors_payment_setting.contact_person_first_name,
+                }
+              ]}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
             {payment_setting.company_country == 'JP' &&
-            <div>
-              <FormTextBox
-                id="PaymentsContactPersonLastNameKana"
-                name="contact_person_last_name_kana"
-                value={payment_setting.contact_person_last_name_kana}
-                label={__("LastName Kana")}
-                placeholder="東京"
-                err_msg={errors_payment_setting.contact_person_last_name_kana}
-                onChange={(e) => this.onChange(e, "payment_setting")}
-              />
-              <FormTextBox
-                id="PaymentsContactPersonFirstNameKana"
-                name="contact_person_first_name_kana"
-                value={payment_setting.contact_person_first_name_kana}
-                label={__("FirstName Kana")}
-                placeholder="太郎"
-                err_msg={errors_payment_setting.contact_person_first_name_kana}
-                onChange={(e) => this.onChange(e, "payment_setting")}
-              />
-            </div>
+            <RowMultipleTextBoxes
+              label={__("Name Kana")}
+              attributes={[
+                {
+                  id: "PaymentsContactPersonLastNameKana",
+                  name: "contact_person_last_name_kana",
+                  value: payment_setting.contact_person_last_name_kana,
+                  label: __("LastName Kana"),
+                  placeholder: "東京",
+                  err_msg: errors_payment_setting.contact_person_last_name_kana,
+                },
+                {
+                  id: "PaymentsContactPersonFirstNameKana",
+                  name: "contact_person_first_name_kana",
+                  value: payment_setting.contact_person_first_name_kana,
+                  label: __("FirstName Kana"),
+                  placeholder: "太郎",
+                  err_msg: errors_payment_setting.contact_person_first_name_kana
+                }
+              ]}
+              onChange={(e) => this.onChange(e, "payment_setting")}
+            />
             }
           </fieldset>
           <FormTextBox
@@ -170,7 +176,9 @@ export default class Company extends Base {
           <div className="panel-footer setting_pannel-footer">
             <Link to="/payments/apply" className="btn btn-link design-cancel bd-radius_4px">
               {__("Back")}</Link>
-            <input type="submit" className="btn btn-primary" defaultValue={__("Next")} disabled=""/>
+            <button className="btn btn-primary" disabled={is_disabled_submit ? "disabled" : ""}>
+              {__("Next")}
+            </button>
           </div>
         </form>
       </section>

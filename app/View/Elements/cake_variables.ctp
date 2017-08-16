@@ -579,7 +579,18 @@ App::uses('AttachedFile', 'Model');
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
-            // Change to paid plan
+            /* Change to paid plan */
+            // Input company info
+            "Enter Company Information": "<?= __("Enter Company Information") ?>",
+            "Company Address": "<?= __("Company Address") ?>",
+            "Company Name": "<?= __("Company Name") ?>",
+            "Post Code": "<?= __("Post Code") ?>",
+            "Region": "<?= __("Region") ?>",
+            "City": "<?= __("City") ?>",
+            "Address": "<?= __("Address") ?>",
+            "Company Contact": "<?= __("Company Contact") ?>",
+            "Name Kana": "<?= __("Name Kana") ?>",
+            // Input credit card
             "Card Holder Name": "<?= __("Card Holder Name") ?>",
             "Card Number": "<?= __("Card Number") ?>",
             "Price per user": "<?= __("Price per user") ?>",

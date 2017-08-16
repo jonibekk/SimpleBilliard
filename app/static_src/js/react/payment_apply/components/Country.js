@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
-import ReactDOM from 'react-dom'
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
@@ -36,6 +35,7 @@ export default class Country extends Base {
     }
 
   }
+
   componentWillUnmount() {
     this.props.resetStates();
     super.componentWillUnmount.apply(this)
@@ -43,9 +43,11 @@ export default class Country extends Base {
 
   onSubmit(e) {
     e.preventDefault()
-    this.props.validatePayment(Page.COUNTRY, {payment_setting: {
-      type:PaymentSetting.PAYMENT_TYPE.CREDIT_CARD
-    }});
+    this.props.validatePayment(Page.COUNTRY, {
+      payment_setting: {
+        type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD
+      }
+    });
   }
 
   choosePaymentType(type) {
@@ -100,8 +102,11 @@ export default class Country extends Base {
             </select>
             {!is_ja &&
             <div className="clearfix">
-              <input type="submit" value="Submit" className="btn btn-primary"
-                     disabled={input_data.country == "" ? "disabled" : ""}/>
+              <button
+                className="btn btn-primary"
+                disabled={input_data.country == "" ? "disabled" : ""}>
+                {__("Next")}
+              </button>
             </div>
             }
           </form>

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-15 23:20+0900\n"
+"PO-Revision-Date: 2017-08-16 15:41+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2667,6 +2667,35 @@ msgstr "本当にこのコメントを削除しますか？"
 
 msgid "Delete comment"
 msgstr "コメントを削除"
+
+msgid "Enter Company Information"
+msgstr "会社情報を入力してください"
+
+msgid "Company Address"
+msgstr "会社住所"
+
+msgid "Company Name"
+msgstr "会社名"
+
+#, fuzzy
+#| msgid "Postal Code"
+msgid "Post Code"
+msgstr "郵便番号"
+
+msgid "Region"
+msgstr "都道府県"
+
+msgid "City"
+msgstr "市区町村"
+
+msgid "Address"
+msgstr "番地以降"
+
+msgid "Company Contact"
+msgstr "会社連絡先"
+
+msgid "Name Kana"
+msgstr "名前(カナ)"
 
 msgid "Card Holder Name"
 msgstr "カード所有者名"
@@ -5370,23 +5399,11 @@ msgstr "認定ステータス: %s"
 #~ msgid "Total amount"
 #~ msgstr "合計"
 
-#~ msgid "Enter Company Information"
-#~ msgstr "会社情報を入力してください"
-
-#~ msgid "Company Name"
-#~ msgstr "会社名"
-
-#~ msgid "Company Address"
-#~ msgstr "会社住所"
-
 #~ msgid "Street"
 #~ msgstr "建物名など"
 
 #~ msgid "1234 Street Name"
 #~ msgstr "20番8号 CSタワー7階"
-
-#~ msgid "City"
-#~ msgstr "市区町村"
 
 #~ msgid "Los Angeles"
 #~ msgstr "台東区浅草橋5丁目"
@@ -5397,9 +5414,6 @@ msgstr "認定ステータス: %s"
 #~ msgid "California"
 #~ msgstr "東京都"
 
-#~ msgid "Postal Code"
-#~ msgstr "郵便番号"
-
 #~ msgid "12345"
 #~ msgstr "1100053"
 
@@ -5408,9 +5422,6 @@ msgstr "認定ステータス: %s"
 
 #~ msgid "USA"
 #~ msgstr "日本"
-
-#~ msgid "Company Contact"
-#~ msgstr "会社連絡先"
 
 #~ msgid "John"
 #~ msgstr "太郎"
