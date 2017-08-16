@@ -146,10 +146,10 @@ class SetupController extends AppController
         //FIXME: [END]
         $res = $this->Goal->add(['Goal' => $goal, 'KeyResult' => [$tkr]]);
         if ($res) {
-            $this->Notification->outSuccess($msg = __("Created a goal."));
+            $this->Notification->outSuccess($msg = __("Created a Goal."));
             $error = false;
         } else {
-            $msg = __("Failed to save a goal.");
+            $msg = __("Failed to save a Goal.");
             $error = true;
         }
         $this->updateSetupStatusIfNotCompleted();

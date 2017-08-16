@@ -405,10 +405,10 @@ class TeamsController extends AppController
             $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
-            $this->Notification->outSuccess(__("Saved goal category setting."));
+            $this->Notification->outSuccess(__("Saved Goal category setting."));
         } else {
             $this->Team->rollback();
-            $this->Notification->outError(__("Failed to save goal category setting."));
+            $this->Notification->outError(__("Failed to save Goal category setting."));
         }
         return $this->redirect($this->referer());
 
@@ -470,7 +470,7 @@ class TeamsController extends AppController
         $id = Hash::get($this->request->params, 'named.team_id');
         $this->request->allowMethod(['post']);
         $this->Goal->GoalCategory->setToInactive($id);
-        $this->Notification->outSuccess(__("Deleted goal category."));
+        $this->Notification->outSuccess(__("Deleted Goal category."));
         return $this->redirect($this->referer());
     }
 

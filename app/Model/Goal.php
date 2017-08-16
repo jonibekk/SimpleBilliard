@@ -405,7 +405,7 @@ class Goal extends AppModel
         // 該当ゴールの評価期間取得
         foreach ($keyResults as $kr) {
             if ($date < $kr['end_date']) {
-                $this->invalidate('end_date', __("Please input goal end date later than Key Result end date"));
+                $this->invalidate('end_date', __("Please input Goal end date later than Key Result end date"));
                 return false;
             }
         }
@@ -587,10 +587,10 @@ class Goal extends AppModel
     {
         $this->id = $id;
         if (!$this->exists()) {
-            throw new RuntimeException(__("This goal doesn't exist."));
+            throw new RuntimeException(__("This Goal doesn't exist."));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
-            throw new RuntimeException(__("You don't have a permission to edit this goal."));
+            throw new RuntimeException(__("You don't have a permission to edit this Goal."));
         }
         return true;
     }
@@ -604,7 +604,7 @@ class Goal extends AppModel
         ];
         $res = $this->Evaluation->find('first', $options);
         if (!empty($res)) {
-            throw new RuntimeException(__("You can't change the goal in the evaluation."));
+            throw new RuntimeException(__("You can't change the Goal in the evaluation."));
         }
         return true;
     }
@@ -1879,7 +1879,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__("The goal doesn't exist."));
+            throw new RuntimeException(__("The Goal doesn't exist."));
         }
         $this->id = $goal_id;
         $this->saveField('progress', 100);
@@ -1891,7 +1891,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__("The goal doesn't exist."));
+            throw new RuntimeException(__("The Goal doesn't exist."));
         }
         $goal['Goal']['completed'] = null;
         unset($goal['Goal']['modified']);

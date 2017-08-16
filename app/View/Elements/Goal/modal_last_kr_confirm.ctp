@@ -16,7 +16,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("Did you achieve the goal?") ?></h4>
+            <h4 class="modal-title"><?= __("Did you achieve the Goal?") ?></h4>
         </div>
         <div class="modal-body modal-circle-body">
             <ul class="add-key-result-goal-info">
@@ -66,7 +66,7 @@
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __(
                     "Add Key Result") ?></a>
             <?=
-            $this->Form->submit(__("Achieve the goal"),
+            $this->Form->submit(__("Achieve the Goal"),
                 ['class' => 'btn btn-primary', 'div' => false]) ?>
             <?= $this->Form->end() ?>
         </div>

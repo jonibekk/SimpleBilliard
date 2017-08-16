@@ -41,7 +41,7 @@
                     <p class="mb_8px"><?= __("Current")?> : <?= Hash::get($currentLeader, 'User.display_username') ?></p>
                     <hr>
                     <h5 class="modal-key-result-headings"><?= __("Collaborator") ?></h5>
-                    <p class="mb_8px"><?= __("Select whether you collaborate or quit this goal.")?></p>
+                    <p class="mb_8px"><?= __("Select whether you collaborate or quit this Goal.")?></p>
                     <?=
                     $this->Form->input('GoalMember.role',
                         [
@@ -85,7 +85,7 @@
                         <hr>
                         <p class="text">OR</p>
                     </div>
-                    <?= $this->Form->button(__("Save & Quit this goal"), [
+                    <?= $this->Form->button(__("Save & Quit this Goal"), [
                         'class' => 'btn btn-fullsize-active',
                         'name'  => 'change_type',
                         'value' => GoalMemberService::CHANGE_LEADER_WITH_QUIT,

@@ -112,7 +112,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make your colleages goal clear.') ?></h3>
+                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make your colleages Goal clear.') ?></h3>
                 <div class="details">
                     <p><?= __('Why you work? What you work for? What are you doing? Make them clear to your colleages!') ?></p>
                 </div>

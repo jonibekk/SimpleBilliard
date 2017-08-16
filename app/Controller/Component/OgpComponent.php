@@ -210,7 +210,7 @@ class OgpComponent extends CakeObject
                         case Post::TYPE_GOAL_COMPLETE:
                             $ogp['type'] = 'post_goal_complete';
                             $ogp['title'] = $post['Goal']['name'];
-                            $ogp['description'] = __("Achieved a goal.");
+                            $ogp['description'] = __("Achieved a Goal.");
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
                                 ['style' => 'large']), true);
                             break;

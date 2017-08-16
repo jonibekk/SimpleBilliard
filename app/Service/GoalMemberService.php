@@ -207,13 +207,13 @@ class GoalMemberService extends AppService
         // ゴールが存在するか
         $goal = $Goal->findById($goalId);
         if (empty($goal)) {
-            return __("The goal doesn't exist.");
+            return __("The Goal doesn't exist.");
         }
 
         // 今期以降のゴールか
         $isAfterCurrentGoal = $GoalService->isGoalAfterCurrentTerm($goalId);
         if (!$isAfterCurrentGoal) {
-            return __("You can't change leader in the goal before current term.");
+            return __("You can't change leader in the Goal before current term.");
         }
 
         // 評価開始前か
@@ -224,7 +224,7 @@ class GoalMemberService extends AppService
             if ($isStartedEvaluation) {
                 $this->log(sprintf("[%s]%s", __METHOD__,
                     sprintf("Failed to change leader being evaluating. goalId:%s", $goalId)));
-                return __("You cant't change leader in the goal during the evaluation period.");
+                return __("You cant't change leader in the Goal during the evaluation period.");
             }
         }
 
@@ -235,7 +235,7 @@ class GoalMemberService extends AppService
                 $this->log(sprintf("[%s]%s", __METHOD__,
                     sprintf("Failed to change leader not being goal member. goalId:%s, userId:%s", $goalId,
                         $GoalMember->my_uid)));
-                return __("You don't have a permission to edit this goal.");
+                return __("You don't have a permission to edit this Goal.");
             }
 
             // アクティブなリーダーが存在する場合は、ゴールメンバーである自分にはリーダー変更権限がない
@@ -244,7 +244,7 @@ class GoalMemberService extends AppService
                 $this->log(sprintf("[%s]%s", __METHOD__,
                     sprintf("Failed to change leader existing leader. goalId:%s, userId:%s", $goalId,
                         $GoalMember->my_uid)));
-                return __("You don't have a permission to edit this goal.");
+                return __("You don't have a permission to edit this Goal.");
             }
             // 自分がリーダーのケース
         } else {
@@ -254,7 +254,7 @@ class GoalMemberService extends AppService
                 $this->log(sprintf("[%s]%s", __METHOD__,
                     sprintf("Failed to change leader not being leader. goalId:%s, userId:%s", $goalId,
                         $GoalMember->my_uid)));
-                return __("You don't have a permission to edit this goal.");
+                return __("You don't have a permission to edit this Goal.");
             }
 
             // リーダーを変更して自分がコラボする場合

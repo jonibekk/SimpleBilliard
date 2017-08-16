@@ -39,7 +39,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Goalous | Enjoy your work. Achieve your goal.'),
+        "content"  => __('Goalous | Enjoy your work. Achieve your Goal.'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
-<title><?= __('Goalous | Enjoy your work. Achieve your goal.') ?></title>
+<title><?= __('Goalous | Enjoy your work. Achieve your Goal.') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>

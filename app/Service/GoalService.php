@@ -1062,7 +1062,7 @@ class GoalService extends AppService
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
         if (!$Goal->exists($goalId)) {
-            throw new Exception(__('The goal is not exist.'));
+            throw new Exception(__('The Goal is not exist.'));
         }
         //パラメータバリデーション
         $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);

@@ -96,11 +96,11 @@
                 <li><?= __("The term has changed as above.") ?></li>
             </ul>
             <ol>
-                <li><?= __("The goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term.") ?></li>
-                <li><?= __("The goal that begins in the current term and ends beyond the next term will be updated to end on the last day of the current term.") ?></li>
-                <li><?= __("The goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term.") ?></li>
-                <li><?= __("If the start date and end date of a goal is both within the current term, or both within the next term, will not be changed.") ?></li>
-                <li><?= __("The goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term.") ?></li>
+                <li><?= __("The Goal that beings in the current term and ends in the next term will be updated to end on the last day of the current term.") ?></li>
+                <li><?= __("The Goal that begins in the current term and ends beyond the next term will be updated to end on the last day of the current term.") ?></li>
+                <li><?= __("The Goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term.") ?></li>
+                <li><?= __("If the start date and end date of a Goal is both within the current term, or both within the next term, will not be changed.") ?></li>
+                <li><?= __("The Goal that begins and ends beyond the the next term will be updated to match the start and end date of the next term.") ?></li>
             </ol>
             <fieldset>
                 <input type="checkbox" id="term_agreement" name="term_agreement"> <?= __("I confirm these changes.") ?>

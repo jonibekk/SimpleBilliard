@@ -3,7 +3,7 @@
     <?php if (!isset($canActionGoals) || count($canActionGoals) == 0)://メッセージ一覧ページでは$canActionGoalsがセットされない ?>
         <div class="post-panel-body plr_11px ptb_7px">
             <div class="alert alert-warning" role="alert">
-                <?= __('There is no goal that you can take action.') ?>
+                <?= __('There is no Goal that you can take action.') ?>
                 <a href="/goals/create/step1"
                    class="alert-link"><?= __('Create a goal') ?></a>
             </div>

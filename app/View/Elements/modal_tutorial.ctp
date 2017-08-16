@@ -30,16 +30,16 @@
                 <div class="col-xxs-12 text-align_l setup-tutorial-texts">
                     <div class="tutorial-text1">
                         <div class="setup-tutorial-text-title"><?= __("Create a goal.") ?></div>
-                        <?= __("Make a good goal to discuss with your project members.") ?>
+                        <?= __("Make a good Goal to discuss with your project members.") ?>
                     </div>
 
                     <div class="tutorial-text2 none">
-                        <div class="setup-tutorial-text-title"><?= __("Have a common goal") ?></div>
-                        <?= __("Collaborate with achieving the goal.") ?>
+                        <div class="setup-tutorial-text-title"><?= __("Have a common Goal") ?></div>
+                        <?= __("Collaborate with achieving the Goal.") ?>
                     </div>
 
                     <div class="tutorial-text3 none">
-                        <div class="setup-tutorial-text-title"><?= __("Action for your goal") ?></div>
+                        <div class="setup-tutorial-text-title"><?= __("Action for your Goal") ?></div>
                         <?= __("Let's action to show your activity.") ?>
                     </div>
                     <p class="tutorial-text4 none">

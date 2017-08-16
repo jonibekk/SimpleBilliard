@@ -36,7 +36,7 @@
             <div class="goal-detail-button-wrap mt_18px">
                 <?php if ($is_leader): ?>
                     <div class="col col-xxs-9 col-xs-10">
-                        <?= $this->Html->link(__('Edit a goal'),
+                        <?= $this->Html->link(__('Edit a Goal'),
                             '/goals/' . $goal['Goal']['id'] . '/edit',
                             [
                                 'class'    => 'btn btn-white',
@@ -52,14 +52,14 @@
                                 <?=
                                 $this->Form->postLink(__("Delete Goal"),
                                     ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']],
-                                    ['escape' => false], __("Do you really want to delete this goal?")) ?>
+                                    ['escape' => false], __("Do you really want to delete this Goal?")) ?>
                             </li>
                             <?php if ($isCanComplete): ?>
                                 <li>
                                     <?=
                                     $this->Form->postLink(__("Acheive Goal"),
                                         "/goals/complete/" . $goal['Goal']['id'],
-                                        ['escape' => false], __("Do you really want to complete this goal?")) ?>
+                                        ['escape' => false], __("Do you really want to complete this Goal?")) ?>
                                 </li>
                             <?php endif; ?>
                         </ul>

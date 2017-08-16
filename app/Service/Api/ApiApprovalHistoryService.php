@@ -70,9 +70,9 @@ class ApiApprovalHistoryService extends ApiService
 
         $actionStatus = Hash::get($latestHistory, 'action_status');
         if ($actionStatus == $ApprovalHistory::STATUS_ACTION_IS_TARGET_FOR_EVALUATION) {
-            $statement = __("You have added this goal as a target of evaluation.");
+            $statement = __("You have added this Goal as a target of evaluation.");
         } elseif ($actionStatus == $ApprovalHistory::STATUS_ACTION_IS_NOT_TARGET_FOR_EVALUATION) {
-            $statement = __("You have not added this goal as a target of evaluation.");
+            $statement = __("You have not added this Goal as a target of evaluation.");
         }
 
         return $statement;

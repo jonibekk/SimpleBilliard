@@ -282,7 +282,7 @@ class KeyResult extends AppModel
             return true;
         }
 
-        $this->invalidate('start_date', __("Please input start / end date within start / end date of the goal."));
+        $this->invalidate('start_date', __("Please input start / end date within start / end date of the Goal."));
         return false;
     }
 
