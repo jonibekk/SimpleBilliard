@@ -59,7 +59,7 @@ export default class Company extends Base {
             name="company_name"
             value={payment_setting.company_name}
             label={__("Company Name")}
-            placeholder="株式会社ISAO"
+            placeholder={__("ISAO Corporation")}
             err_msg={errors_payment_setting.company_name}
             onChange={(e) => this.onChange(e, "payment_setting")}
           />
@@ -71,7 +71,7 @@ export default class Company extends Base {
               name="company_post_code"
               value={payment_setting.company_post_code}
               label={__("Post Code")}
-              placeholder="000-0000"
+              placeholder={__("12345")}
               err_msg={errors_payment_setting.company_post_code}
               max_length={16}
               onChange={(e) => this.onChange(e, "payment_setting")}
@@ -80,8 +80,8 @@ export default class Company extends Base {
               id="PaymentsCompanyAddressRegion"
               name="company_region"
               value={payment_setting.company_region}
-              label={__("Region")}
-              placeholder="東京都"
+              label={__("State/Province/Region")}
+              placeholder={__("California")}
               err_msg={errors_payment_setting.company_region}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
@@ -90,7 +90,7 @@ export default class Company extends Base {
               name="company_address_city"
               value={payment_setting.company_address_city}
               label={__("City")}
-              placeholder="台東区"
+              placeholder={__("Los Angeles")}
               err_msg={errors_payment_setting.company_address_city}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
@@ -98,8 +98,8 @@ export default class Company extends Base {
               id="PaymentsCompanyAddressStreet"
               name="company_street"
               value={payment_setting.company_street}
-              label={__("Address")}
-              placeholder="台東１－１－１"
+              label={__("Street")}
+              placeholder={__("1234 Street Name")}
               err_msg={errors_payment_setting.company_street}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
@@ -113,16 +113,14 @@ export default class Company extends Base {
                   id: "PaymentsContactPersonLastName",
                   name: "contact_person_last_name",
                   value: payment_setting.contact_person_last_name,
-                  label: __("LastName"),
-                  placeholder: "東京",
+                  placeholder: __("eg. Jobs"),
                   err_msg: errors_payment_setting.contact_person_last_name,
                 },
                 {
                   id: "PaymentsContactPersonFirstName",
                   name: "contact_person_first_name",
                   value: payment_setting.contact_person_first_name,
-                  label: __("FirstName"),
-                  placeholder: "太郎",
+                  placeholder: __("eg. Bruce"),
                   err_msg: errors_payment_setting.contact_person_first_name,
                 }
               ]}
@@ -136,16 +134,14 @@ export default class Company extends Base {
                   id: "PaymentsContactPersonLastNameKana",
                   name: "contact_person_last_name_kana",
                   value: payment_setting.contact_person_last_name_kana,
-                  label: __("LastName Kana"),
-                  placeholder: "東京",
+                  placeholder: "スズキ",
                   err_msg: errors_payment_setting.contact_person_last_name_kana,
                 },
                 {
                   id: "PaymentsContactPersonFirstNameKana",
                   name: "contact_person_first_name_kana",
                   value: payment_setting.contact_person_first_name_kana,
-                  label: __("FirstName Kana"),
-                  placeholder: "太郎",
+                  placeholder: "タロウ",
                   err_msg: errors_payment_setting.contact_person_first_name_kana
                 }
               ]}
@@ -159,7 +155,7 @@ export default class Company extends Base {
             name="contact_person_email"
             value={payment_setting.contact_person_email}
             label={__("Email")}
-            placeholder="name@company.com"
+            placeholder={__("name@company.com")}
             err_msg={errors_payment_setting.contact_person_email}
             onChange={(e) => this.onChange(e, "payment_setting")}
           />

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-16 15:41+0900\n"
+"PO-Revision-Date: 2017-08-16 16:14+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2677,25 +2677,49 @@ msgstr "会社住所"
 msgid "Company Name"
 msgstr "会社名"
 
+msgid "ISAO Corporation"
+msgstr "株式会社ISAO"
+
 #, fuzzy
 #| msgid "Postal Code"
 msgid "Post Code"
 msgstr "郵便番号"
 
-msgid "Region"
+msgid "12345"
+msgstr "1100053"
+
+msgid "State/Province/Region"
 msgstr "都道府県"
+
+msgid "California"
+msgstr "東京都"
 
 msgid "City"
 msgstr "市区町村"
 
-msgid "Address"
-msgstr "番地以降"
+msgid "Los Angeles"
+msgstr "台東区浅草橋5丁目"
+
+msgid "Street"
+msgstr "建物名など"
+
+msgid "1234 Street Name"
+msgstr "20番8号 CSタワー7階"
 
 msgid "Company Contact"
 msgstr "会社連絡先"
 
+msgid "eg. Jobs"
+msgstr "例) 鈴木"
+
+msgid "eg. Bruce"
+msgstr "例) 太郎"
+
 msgid "Name Kana"
 msgstr "名前(カナ)"
+
+msgid "name@company.com"
+msgstr "name@company.co.jp"
 
 msgid "Card Holder Name"
 msgstr "カード所有者名"
@@ -2930,9 +2954,6 @@ msgstr "■お問い合わせ"
 
 msgid "Company"
 msgstr "■運営会社"
-
-msgid "ISAO Corporation"
-msgstr "株式会社ISAO"
 
 msgid "Login Goalous"
 msgstr "◆Goalousログイン"
@@ -4120,14 +4141,8 @@ msgstr "プロフィール"
 msgid "Last Name(%s)"
 msgstr "姓(%s)"
 
-msgid "eg. Jobs"
-msgstr "例) 鈴木"
-
 msgid "First Name(%s)"
 msgstr "名(%s)"
-
-msgid "eg. Bruce"
-msgstr "例) 太郎"
 
 msgid "Gender"
 msgstr "性別"
@@ -5390,59 +5405,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#, fuzzy
-#~| msgid "Sub Total"
-#~ msgid "Sub total amount"
-#~ msgstr "小計"
-
-#~ msgid "Total amount"
-#~ msgstr "合計"
-
-#~ msgid "Street"
-#~ msgstr "建物名など"
-
-#~ msgid "1234 Street Name"
-#~ msgstr "20番8号 CSタワー7階"
-
-#~ msgid "Los Angeles"
-#~ msgstr "台東区浅草橋5丁目"
-
-#~ msgid "State/Province/Region"
-#~ msgstr "都道府県"
-
-#~ msgid "California"
-#~ msgstr "東京都"
-
-#~ msgid "12345"
-#~ msgstr "1100053"
-
-#~ msgid "Country"
-#~ msgstr "国"
-
-#~ msgid "USA"
-#~ msgstr "日本"
-
-#~ msgid "John"
-#~ msgstr "太郎"
-
-#~ msgid "Smith"
-#~ msgstr "佐藤"
-
-#~ msgid "Contact Email"
-#~ msgstr "連絡先メール"
-
-#~ msgid "name@company.com"
-#~ msgstr "name@company.co.jp"
-
-#~ msgid "Company Telephone"
-#~ msgstr "会社連絡先電話番号"
-
-#~ msgid "Subscription Status"
-#~ msgstr "%sの評価状況"
-
-#~ msgid "Number of Members"
-#~ msgstr "ユーザー数"
-
-#~ msgid "Total Price"
-#~ msgstr "トータル"
