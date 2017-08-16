@@ -131,12 +131,6 @@ export default class CreditCard extends Base {
               disabled={payment.is_disabled_submit ? "disabled" : ""}>
               {__("Register")}
             </button>
-            <div className="outcome">
-              <div className="error" role="alert"></div>
-              <div className="success">
-                Success! Your Stripe token is <span className="token"></span>
-              </div>
-            </div>
           </div>
         </form>
       </section>
