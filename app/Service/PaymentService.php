@@ -337,10 +337,10 @@ class PaymentService extends AppService
     /**
      * Apply Credit card charge for a specified team.
      *
-     * @param int         $teamId
-     * @param int         $chargeType
-     * @param int         $usersCount
-     * @param string      $description
+     * @param int    $teamId
+     * @param int    $chargeType
+     * @param int    $usersCount
+     * @param string $description
      *
      * @return array
      */
@@ -430,7 +430,7 @@ class PaymentService extends AppService
             'charge_type'      => $chargeType,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $totalAmount,
-            'total_amount_including_tax' => $totalAmount,
+            'tax'              => $totalAmount,
             'charge_users'     => $usersCount,
             'currency'         => $currency,
             'charge_datetime'  => time(),
@@ -477,8 +477,12 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function registerCreditCardPaymentAndCharge(int $userId, int $teamId, string $creditCardToken, array $paymentData)
-    {
+    public function registerCreditCardPaymentAndCharge(
+        int $userId,
+        int $teamId,
+        string $creditCardToken,
+        array $paymentData
+    ) {
         $result = [
             'error'     => false,
             'errorCode' => 200,
@@ -526,8 +530,8 @@ class PaymentService extends AppService
         $currencySymbol = $currency != PaymentSetting::CURRENCY_TYPE_JPY ? '¥' : '$';
         $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
         $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
-        $amountPerUser = Hash::get($paymentData,'amount_per_user');
-        $formattedAmountPerUser = $currencySymbol . Hash::get($paymentData,'amount_per_user');
+        $amountPerUser = Hash::get($paymentData, 'amount_per_user');
+        $formattedAmountPerUser = $currencySymbol . Hash::get($paymentData, 'amount_per_user');
         $totalAmount = $amountPerUser * $membersCount;
         $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
         // TODO: fix tax amount
@@ -538,7 +542,7 @@ class PaymentService extends AppService
             'charge_type'      => PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $totalAmount,
-            'total_amount_including_tax' => $totalAmount,
+            'tax'              => $totalAmount,
             'charge_users'     => $membersCount,
             'currency'         => $currency,
             'charge_datetime'  => time(),
@@ -551,7 +555,8 @@ class PaymentService extends AppService
             // Create PaymentSettings
             $PaymentSetting->begin();
             if (!$PaymentSetting->save($paymentData)) {
-                throw new Exception(sprintf("Failed create payment settings. data: %s", var_export($paymentData, true)));
+                throw new Exception(sprintf("Failed create payment settings. data: %s",
+                    var_export($paymentData, true)));
             }
             $paymentSettingId = $PaymentSetting->getLastInsertID();
 
@@ -580,11 +585,11 @@ class PaymentService extends AppService
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
-            $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $totalAmount, $paymentDescription);
+            $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $totalAmount,
+                $paymentDescription);
 
             // Error charging customer using Stripe API. Might be network,  API problem or card rejected
-            if ($chargeResult['error'] === true || $chargeResult['success'] == false)
-            {
+            if ($chargeResult['error'] === true || $chargeResult['success'] == false) {
                 // Rollback transaction
                 $PaymentSetting->rollback();
 
