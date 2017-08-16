@@ -20,10 +20,10 @@
                 <?= __('Goal progress rate') ?>: <?= h($goal['Goal']['progress']) ?>%
             </p>
             <div class="progress mb_0px goals-column-progress-bar goal-detail-goal-progress-bar-wrap">
+                <span class="goal-detail-goal-progress-text"><?= h($goal['Goal']['progress']) ?>%</span>
                 <div class="progress-bar progress-bar-info goal-detail-goal-progress-bar" role="progressbar"
                      aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
                      aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
-                    <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
             <div class="clearfix mt_12px">
