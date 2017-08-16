@@ -2015,7 +2015,6 @@ msgstr "最多で"
 msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
-
 msgid "Select a Key Result (optional)"
 msgstr "KRを選択する(オプション)"
 
@@ -2917,8 +2916,6 @@ msgstr "%s人に共有しました"
 msgid "Create a goal."
 msgstr "ゴールを作成する"
 
-#, fuzzy
-#| msgid "Collaborate with achieving the goal."
 msgid "Collaborate with achieving the Goal."
 msgstr "ゴール達成のために共有しよう。"
 
@@ -3250,8 +3247,6 @@ msgstr "このゴールにコラボるか抜けるかを選択してください
 msgid "Save & Collaborate"
 msgstr "保存して、コラボる"
 
-#, fuzzy
-#| msgid "Save & Quit this goal"
 msgid "Save & Quit this Goal"
 msgstr "保存して、ゴールメンバーから抜ける"
 
@@ -4356,8 +4351,6 @@ msgstr "下書き保存"
 msgid "Modify and submit"
 msgstr "修正して提出"
 
-#, fuzzy
-#| msgid "Evaluation of goal"
 msgid "Evaluation of Goal"
 msgstr "ゴール評価"
 
@@ -4589,8 +4582,6 @@ msgstr "組織の壁なんて感じない"
 msgid "You will find your job much joyful!"
 msgstr "なんだか、仕事が楽しくなる"
 
-#, fuzzy
-#| msgid "Make your colleages goal clear."
 msgid "Make your colleages Goal clear."
 msgstr "一目瞭然、全社員のゴール"
 
@@ -4707,8 +4698,6 @@ msgstr ""
 "会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインター"
 "フェースを用意しています。"
 
-#, fuzzy
-#| msgid "Goalous | Enjoy your work. Achieve your goal."
 msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
