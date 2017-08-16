@@ -3,6 +3,9 @@ import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {connect} from "react-redux";
 import {updateInputData} from "~/payment_apply/actions/index";
 
+/**
+ * Arrange multiple text boxes in one row
+ */
 class RowMultipleTextBoxes extends React.Component {
   constructor(props) {
     super(props);
@@ -50,9 +53,11 @@ class RowMultipleTextBoxes extends React.Component {
 }
 
 RowMultipleTextBoxes.propTypes = {
+  label: React.PropTypes.string,
   attributes: React.PropTypes.array,
 };
 RowMultipleTextBoxes.defaultProps = {
+  label: "",
   attributes: [],
 };
 export default connect()(RowMultipleTextBoxes);
