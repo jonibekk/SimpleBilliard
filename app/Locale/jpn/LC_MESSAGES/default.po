@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-15 17:53+0900\n"
+"PO-Revision-Date: 2017-08-16 10:59+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -247,7 +247,9 @@ msgstr "コラボしました。"
 msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
 
-msgid "Added a key result."
+#, fuzzy
+#| msgid "Added a key result."
+msgid "Added a Key Result."
 msgstr "KRを追加しました。"
 
 msgid "Some error occurred. Please try again from the start."
@@ -262,10 +264,14 @@ msgstr "不正なリクエストです。"
 msgid "Changed leader."
 msgstr "リーダーを変更しました。"
 
-msgid "Completed a key result."
+#, fuzzy
+#| msgid "Completed a key result."
+msgid "Completed a Key Result."
 msgstr "KRを完了にしました。"
 
-msgid "Made a key result uncompleted."
+#, fuzzy
+#| msgid "Made a key result uncompleted."
+msgid "Made a Key Result uncompleted."
 msgstr "KRを未完了にしました。"
 
 msgid "No exist kr."
@@ -274,7 +280,9 @@ msgstr "KRが存在しません。"
 msgid "You can't delete achieved KR."
 msgstr "完了済のKRは削除出来ません。"
 
-msgid "Deleted a key result."
+#, fuzzy
+#| msgid "Deleted a key result."
+msgid "Deleted a Key Result."
 msgstr "KRを削除しました。"
 
 msgid "There is no action."
@@ -1010,7 +1018,9 @@ msgstr "進捗率が高い順"
 msgid "Please input end date after start date."
 msgstr "終了日は開始日以降を入力してください。"
 
-msgid "Please input goal end date later than key result end date"
+#, fuzzy
+#| msgid "Please input goal end date later than key result end date"
+msgid "Please input goal end date later than Key Result end date"
 msgstr "ゴール終了日は全てのKRの終了日より以降の日付を入力してください。"
 
 msgid "This goal doesn't exist."
@@ -1079,7 +1089,9 @@ msgstr "KRのデータがありません。"
 msgid "Failed to save KR."
 msgstr "KRの保存に失敗しました。"
 
-msgid "There is no key result."
+#, fuzzy
+#| msgid "There is no key result."
+msgid "There is no Key Result."
 msgstr "KRが存在しません。"
 
 msgid "Label must be at least %d count."
@@ -2019,11 +2031,15 @@ msgstr "最多で"
 msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
-msgid "Select a key result (optional)"
+#, fuzzy
+#| msgid "Select a key result (optional)"
+msgid "Select a Key Result (optional)"
 msgstr "KRを選択する(オプション)"
 
-msgid "No key result"
-msgstr "KRはありません"
+#, fuzzy
+#| msgid "Top Key Result"
+msgid "No Key Result"
+msgstr "トップKR"
 
 msgid "Add notified parties (optional)"
 msgstr "通知先を追加(オプション)"
@@ -3182,7 +3198,9 @@ msgstr "例） Webサイトの構築をした。"
 msgid "Key Results"
 msgstr "KR"
 
-msgid "Choose a key result to associate."
+#, fuzzy
+#| msgid "Choose a key result to associate."
+msgid "Choose a Key Result to associate."
 msgstr "紐付けるKRを選択しよう。"
 
 msgid "Notified to"
@@ -5127,3 +5145,6 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "No key result"
+#~ msgstr "KRはありません"

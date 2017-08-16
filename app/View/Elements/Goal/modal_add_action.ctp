@@ -91,7 +91,7 @@
                 <div class="form-group">
                     <h5 class="modal-key-result-headings"><?= __('Key Results') ?>
                         <span
-                            class="modal-key-result-headings-description"><?= __('Choose a key result to associate.') ?></span>
+                            class="modal-key-result-headings-description"><?= __('Choose a Key Result to associate.') ?></span>
                     </h5>
 
                     <div class="goal-set-input">

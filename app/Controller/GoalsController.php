@@ -545,7 +545,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
             $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
-        $this->Notification->outSuccess(__("Added a key result."));
+        $this->Notification->outSuccess(__("Added a Key Result."));
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
@@ -743,7 +743,7 @@ class GoalsController extends AppController
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
                     $key_result['KeyResult']['goal_id'],
                     $kr_id);
-                $this->Notification->outSuccess(__("Completed a key result."));
+                $this->Notification->outSuccess(__("Completed a Key Result."));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
@@ -794,7 +794,7 @@ class GoalsController extends AppController
         }
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
-        $this->Notification->outSuccess(__("Made a key result uncompleted."));
+        $this->Notification->outSuccess(__("Made a Key Result uncompleted."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -837,7 +837,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $goalId);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $goalId, $krId);
 
-        $this->Notification->outSuccess(__("Deleted a key result."));
+        $this->Notification->outSuccess(__("Deleted a Key Result."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));

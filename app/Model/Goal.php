@@ -405,7 +405,7 @@ class Goal extends AppModel
         // 該当ゴールの評価期間取得
         foreach ($keyResults as $kr) {
             if ($date < $kr['end_date']) {
-                $this->invalidate('end_date', __("Please input goal end date later than key result end date"));
+                $this->invalidate('end_date', __("Please input goal end date later than Key Result end date"));
                 return false;
             }
         }
