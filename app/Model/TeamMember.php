@@ -330,13 +330,13 @@ class TeamMember extends AppModel
         //if exists update
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
-            $team_member['TeamMember']['active_flg'] = true;
+            $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
             return $this->save($team_member);
         }
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $team_id,
-            'active_flg' => true,
+            'user_id' => $uid,
+            'team_id' => $team_id,
+            'status'  => self::USER_STATUS_ACTIVE,
         ];
         return $this->save($data);
     }
