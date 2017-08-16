@@ -124,12 +124,12 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     $displayChangeValue .= '+';
                 }
                 $unitId = $post['ActionResult']['KrProgressLog']['value_unit'];
-                $displayChangeValue .= AppUtil::formatBigFloat($changeValue);
-
+                $displayChangeValue .= AppUtil::formatThousand($changeValue);
+                
                 $currentValue = bcadd($post['ActionResult']['KrProgressLog']['before_value'], $changeValue, 3);
 
-                $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
-                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['KrProgressLog']['target_value']),
+                $currentValue = $this->NumberEx->addUnit(AppUtil::formatThousand($currentValue), $unitId);
+                $targetValue = $this->NumberEx->addUnit(AppUtil::formatThousand($post['ActionResult']['KrProgressLog']['target_value']),
                     $unitId);
                 ?>
                 <?php if ($unitId == KeyResult::UNIT_BINARY): ?>

@@ -88,6 +88,21 @@ class AppUtil
     }
 
     /**
+     * 少数/整数を表示用にフォーマットするかつ3桁区切りにする
+     * 1234.123000 -> 1,234.123
+     * 1234567890 -> 1,234,567,890
+     *
+     * @param string $val
+     *
+     * @return string
+     */
+    static function formatThousand(string $val): string
+    {
+        $val = number_format($val, 3);
+        return self::formatBigFloat($val);
+    }
+
+    /**
      * 連想配列か判定
      * メモリ増加を防ぐ為参照渡しとする
      *
