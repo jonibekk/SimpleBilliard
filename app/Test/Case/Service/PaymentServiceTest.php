@@ -83,7 +83,7 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
-        $customerCode = 'cus_B59aNmiTO3IZjg';
+        $customerCode = 'cus_BDjPwryGzOQRBI';
 
         $userID = $this->createActiveUser(1);
         $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
