@@ -35,8 +35,6 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 }
 ?>
 
-<?php // spec: Only other mobile app env, and only feed page, displaying subheader. ?>
-
 <div id="container" class="container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
