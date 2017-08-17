@@ -39,6 +39,8 @@ class PagesController extends AppController
             $page = $path[0];
         }
 
+        $this->_handleFromMogileAppRequest();
+
         // Difine URL params for Google analytics.
         $this->_setUrlParams();
 
@@ -245,6 +247,11 @@ class PagesController extends AppController
         ]);
     }
 
+    public function after_click()
+    {
+        
+    }
+
     public function _setUrlParams()
     {
         $url_params = $this->params['url'];
@@ -323,5 +330,10 @@ class PagesController extends AppController
             $i++;
         }
         return $parameters_text;
+    }
+
+    function _handleFromMogileAppRequest()
+    {
+
     }
 }

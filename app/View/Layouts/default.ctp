@@ -36,13 +36,6 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 ?>
 
 <?php // spec: Only other mobile app env, and only feed page, displaying subheader. ?>
-<?php
-// TODO:Uncomment this after release native app
-//if (!$is_mb_app && $this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-if ($this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-    echo $this->element('Header/sp_feeds_alt');
-}
-?>
 
 <div id="container" class="container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">

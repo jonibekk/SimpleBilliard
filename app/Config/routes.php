@@ -94,7 +94,8 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
  */
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/after_click::after_click/*', ['controller' => 'pages', 'action' => 'display', 'home']);
+// TODO: Should delete after implemented app force update
+Router::connect('/after_click:SubHeaderMenuGoal', ['controller' => 'goals', 'action' => 'kr_progress']);
 Router::connect('/common_form/:common_form_type/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display', 'home']);
