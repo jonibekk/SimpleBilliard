@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'PaymentService');
+App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
 
 /**
@@ -25,6 +26,8 @@ class MonthlyInvoiceChargeShell extends AppShell
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var InvoiceService $InvoiceService */
+        $InvoiceService = ClassRegistry::init('InvoiceService');
 
         // Get charge target teams that is not charged yet.
         $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams();
@@ -34,6 +37,7 @@ class MonthlyInvoiceChargeShell extends AppShell
         }
 
         // send invoice via atobarai.com for each teams
+        $InvoiceService->registerOrder(1, []);
 
     }
 }
