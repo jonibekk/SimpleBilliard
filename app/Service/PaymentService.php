@@ -694,13 +694,60 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init("ChargeHistory");
         // Get teams only credit card payment type
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeCcTeams();
 
-        // Filtering
-        $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
+        $targetChargeTeams = $this->_filterTargetChargeTeams($time, $targetChargeTeams);
+        return $targetChargeTeams;
+    }
+
+    /**
+     * Find target teams that charge monthly by invoice
+     * main conditions
+     * - payment type: invoice
+     * - have not already charged
+     * - payment base date = execution datetime + team timezone
+     *   EX.
+     *      execution datetime: 2017/9/19 15:00:00
+     *      team timezone: +9 hour(Tokyo)
+     *      payment base day: 20
+     *      2017/9/19 15:00:00 + 9hour = 2017/9/20
+     *      payment base day(20) == get day(20) from 2017/9/20 → charge target team！
+     * [Note]
+     * We can get target charge teams by using only one SQL.
+     * But some MySQL syntax(EX. INTERVAL) can't use if run unit test
+     * Because unit test use sqlite as DB.
+     * So the reliability of the test is important,
+     * I decided to implement process like this.
+     *
+     * @param int $time
+     *
+     * @return array
+     */
+    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP): array
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        // Get teams only credit card payment type
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeInvoiceTeams();
+        $targetChargeTeams = $this->_filterTargetChargeTeams($time, $targetChargeTeams);
+        return $targetChargeTeams;
+    }
+
+    /**
+     * Filtering target charge teams
+     *
+     * @param int   $time
+     * @param array $teams
+     *
+     * @return array
+     */
+    private function _filterTargetChargeTeams(int $time, array $teams)
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+
+        $teams = array_filter($teams, function ($v) use ($time, $ChargeHistory) {
             $timezone = Hash::get($v, 'Team.timezone');
             $localCurrentTs = $time + ($timezone * HOUR);
             $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
@@ -723,7 +770,7 @@ class PaymentService extends AppService
             return true;
 
         });
-        return $targetChargeTeams;
+        return $teams;
     }
 
     /**
