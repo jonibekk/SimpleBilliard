@@ -326,9 +326,4 @@ class PagesController extends AppController
         }
         return $parameters_text;
     }
-
-    function _handleFromMogileAppRequest()
-    {
-
-    }
 }
