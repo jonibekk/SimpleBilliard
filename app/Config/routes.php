@@ -125,7 +125,7 @@ Router::connect('/:lang/:action', ['controller' => 'pages'],
  */
 Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'display', 'home'], ['lang' => 'ja|en']);
 Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'display'],
-    ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks', 'pass' => ['pagename']]);
+    ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks|app_force_update|app_force_install', 'pass' => ['pagename']]);
 Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'display'],
     [
         'pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks',

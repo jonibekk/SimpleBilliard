@@ -51,6 +51,16 @@ class PagesController extends AppController
             return $this->render('logged_in_home');
         }
 
+        if (in_array($path[0], [
+                'app_force_update',
+                'app_force_install',
+            ])) {
+            // pages app_force_update / app_force_install
+            // both can view on login/logout
+            $this->layout = LAYOUT_NO_HEADER;
+            return $this->render(implode('/', $path));
+        }
+
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
     }
