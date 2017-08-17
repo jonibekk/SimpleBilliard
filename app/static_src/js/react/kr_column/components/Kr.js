@@ -43,7 +43,7 @@ export default class Kr extends React.Component {
               </div>
             </div>
             <div className={`oneline-ellipsis font_12px mt_4px ${!this.state.is_opened_kr && 'none'}`}>
-              <a href={`/goals/view_krs/goal_id:${goal.id}`} className="font_verydark">
+              <a href={`/goals/view_krs/goal_id:${goal.id}`} className="font_lightblue">
                 <i className="fa fa-flag-o mr_4px"></i>
                 <span>{ goal.name }</span>
               </a>

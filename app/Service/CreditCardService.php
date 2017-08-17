@@ -6,6 +6,39 @@ App::import('Service', 'AppService');
  */
 class CreditCardService extends AppService
 {
+    public function retrieveToken(string $token)
+    {
+        $result = [
+            "error"   => false,
+            "message" => null
+        ];
+
+        if (empty($token)) {
+            $result["error"] = true;
+            $result["message"] = __("Parameter is invalid.");
+            return $result;
+        }
+
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        try {
+            $response = \Stripe\Token::retrieve($token);
+            $result['creditCard'] = $response->card;
+        } catch (Exception $e) {
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+
+            if (property_exists($e, "stripeCode")) {
+                $result["errorCode"] = $e->stripeCode;
+            }
+
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
+        return $result;
+    }
+
     /**
      * Accept a credit card token and register it as new customer on Stripe.
      *
@@ -126,7 +159,7 @@ class CreditCardService extends AppService
         }
 
         // validate currency
-        if (empty($currency) || $value <= 0) {
+        if (empty($currency)) {
             $result["error"] = true;
             $result["message"] = __("Parameter is invalid.");
             $result["field"] = 'currency';

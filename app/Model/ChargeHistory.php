@@ -17,24 +17,6 @@ class ChargeHistory extends AppModel
     const CHARGE_TYPE_ADD_USER = 1;
     const CHARGE_TYPE_ACTIVATE_USER = 2;
 
-    /**
-     * Get latest max charge users
-     *
-     * @return int
-     */
-    function getLatestMaxChargeUsers(): int
-    {
-        $res = $this->find('first', [
-                'fields'     => ['max_charge_users'],
-                'conditions' => [
-                    'team_id' => $this->current_team_id,
-                ],
-                'order'      => ['id' => 'DESC'],
-            ]
-        );
-        return (int)Hash::get($res, 'ChargeHistory.max_charge_users');
-    }
-
     /* Validation rules
     *
     * @var array
@@ -98,6 +80,15 @@ class ChargeHistory extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
+        'tax'     => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'required' => true,
+                'rule'     => 'notBlank',
+            ],
+        ],
         'charge_users'     => [
             'numeric'  => [
                 'rule' => ['numeric'],
@@ -146,6 +137,24 @@ class ChargeHistory extends AppModel
             ],
         ],
     ];
+
+    /**
+     * Get latest max charge users
+     *
+     * @return int
+     */
+    function getLatestMaxChargeUsers(): int
+    {
+        $res = $this->find('first', [
+                'fields'     => ['max_charge_users'],
+                'conditions' => [
+                    'team_id' => $this->current_team_id,
+                ],
+                'order'      => ['id' => 'DESC'],
+            ]
+        );
+        return (int)Hash::get($res, 'ChargeHistory.max_charge_users');
+    }
 
     /**
      * Filter: team_id and charge date(Y-m-d 00:00:00　〜　Y-m-d 23:59:59)

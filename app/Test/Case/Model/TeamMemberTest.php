@@ -230,10 +230,10 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->Team->save($data);
         $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
-        $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
+        $this->assertEquals($res['TeamMember']['status'], TeamMember::USER_STATUS_ACTIVE);
         $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
         $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
-        $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
+        $this->assertEquals($res['TeamMember']['status'], TeamMember::USER_STATUS_ACTIVE);
         $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
     }
 

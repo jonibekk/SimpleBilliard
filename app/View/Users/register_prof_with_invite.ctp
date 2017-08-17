@@ -37,8 +37,7 @@
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-            'required'                     => true,
-            'value'                        => viaIsSet($last_name)
+            'required'                     => true
         ]);
         $first_name = $this->Form->input('first_name', [
             'placeholder'                  => __("first name (eg. John)"),
@@ -49,8 +48,7 @@
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-            'required'                     => true,
-            'value'                        => viaIsSet($first_name)
+            'required'                     => true
         ]);
 
         // This column is required by alphabet.
@@ -91,7 +89,6 @@
                         '11' => __('Nov'),
                         '12' => __('Dec'),
                     ],
-                    'default'                  => viaIsSet($birth_day),
                     'class'                    => 'form-control inline-fix signup_input-design',
                     'label'                    => false,
                     'dateFormat'               => 'YMD',
