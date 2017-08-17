@@ -17,29 +17,33 @@ class InvoiceService extends AppService
             'O_ReceiptOrderDate'     => '2017/08/17',
             'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
             'O_SiteId'               => ATOBARAI_SITE_ID,
-            'O_ApiUserId'            => ATOBARAI_API_USER_ID,
+            'O_ApiUserId'            => ATOBARAI_API_USER_ID . "abc",
             'O_UseAmount'            => 2000,
             'C_PostalCode'           => '1720003',
             'C_UnitingAddress'       => '東京都台東区浅草橋1-1-1',
             'C_NameKj'               => '佐藤太郎',
             'C_Phone'                => '03-3333-3333',
-            'C_MailAddress'          => 'test@aaa.com',
+            //            'C_MailAddress'          => 'test@aaa.com',
             'C_EntCustId'            => '1234',
             'I_ItemNameKj_1'         => 'Goalous利用料金',
             'O_ServicesProvidedDate' => '2017/08/17',
             'I_UnitPrice_1'          => 2000,
             'I_ItemNum_1'            => 1,
         ];
-        $atobaraiRet = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
+
+        $retXmlObj = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
+        var_dump((string)$retXmlObj->status);
+        var_dump((string)$retXmlObj->messages->message);
+        var_dump((string)$retXmlObj->messages->message->attributes()->cd);
     }
 
     /**
      * @param string $requestUrl
      * @param array  $data key value array
      *
-     * @return bool|string
+     * @return SimpleXMLElement
      */
-    private function _postRequestForAtobaraiDotCom(string $requestUrl, array $data)
+    private function _postRequestForAtobaraiDotCom(string $requestUrl, array $data): SimpleXMLElement
     {
         $data = http_build_query($data);
 
@@ -57,10 +61,7 @@ class InvoiceService extends AppService
             ]
         ];
         $ret = file_get_contents($requestUrl, false, stream_context_create($context));
-        $retXmlObj = simplexml_load_string($ret);
-        debug($retXmlObj);
-        debug($retXmlObj['status']);
-        return $retXmlObj;
+        return simplexml_load_string($ret);
     }
 
 }

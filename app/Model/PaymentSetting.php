@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Invoice', 'Model');
 
 /**
  * PaymentSetting Model
@@ -300,7 +301,8 @@ class PaymentSetting extends AppModel
                     'alias'      => 'Invoice',
                     'conditions' => [
                         'PaymentSetting.id = Invoice.payment_setting_id',
-                        'Invoice.del_flg' => false
+                        'Invoice.credit_status' => Invoice::CREDIT_STATUS_OK,
+                        'Invoice.del_flg'       => false
                     ],
                 ],
                 [
