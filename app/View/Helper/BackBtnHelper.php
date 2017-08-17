@@ -4,7 +4,7 @@ App::uses('AppHelper', 'View/Helper');
 class BackBtnHelper extends AppHelper
 {
     public $helpers = array('Session');
-    public function checkPage() {
+    public function checkPage():bool {
         //Create array of pages where the normal header should appear
         $normalPages = array(
             'topics',
@@ -15,20 +15,16 @@ class BackBtnHelper extends AppHelper
             'goals/create',
             'after_click:SubHeaderMenuGoal',
             'goals/approval/detail',
-            'evaluations/view'
+            'evaluations/view',
         );
         $backButton = true;
 
         foreach($normalPages as $pageURL){
-            if(strpos($this->request->here , $pageURL ) && $pageURL != 'users' && $pageURL != 'post_permanent'){
+            if(strpos($this->request->here , $pageURL ) && $pageURL != 'users'){
                 $backButton = false;
             } elseif ($pageURL == 'users'){
                 $userUrlID = substr($this->request->here, strpos($this->request->here, ":") + 1);
                 if ($userUrlID == $this->Session->read('Auth.User.id')){
-                    $backButton = false;
-                }
-            } elseif ($pageURL == 'post_permanent'){
-                if(strpos($this->request->here , 'notify_id=' )){
                     $backButton = false;
                 }
             }

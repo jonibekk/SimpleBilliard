@@ -126,6 +126,11 @@ class CircleService extends AppService
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
 
+        // check already joined or not
+        if ($CircleMember->isJoined($circleId, $userId)) {
+            return false;
+        }
+
         // join circle
         $saveData = $this->buildJoinData($circleId, $userId);
         if (!$CircleMember->save($saveData)) {

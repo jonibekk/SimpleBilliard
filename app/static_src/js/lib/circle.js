@@ -576,3 +576,23 @@ function evAjaxEditCircleAdminStatus(e) {
             }).show();
         });
 }
+
+var circleListDashboard=document.getElementsByClassName('dashboard-circle-list-body')[0];
+
+$('.js-dashboard-circle-list.is-hamburger').click(function(){
+    $('.js-nav-toggle').click(); 
+});
+
+function circleListHeight(){
+    scrollPos = document.body.scrollTop;    
+    if(window.innerWidth < 992 && scrollPos==0){
+        circleListDashboard.style.height = (window.innerHeight-(375))+'px';
+    }else{
+        circleListDashboard.style.height = (window.innerHeight-(331))+'px';
+    }
+}
+
+if(circleListDashboard){
+    window.onload=function(){circleListHeight()};
+    document.body.onresize=function(){circleListHeight()};
+}

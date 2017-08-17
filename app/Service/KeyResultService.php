@@ -121,6 +121,10 @@ class KeyResultService extends AppService
         $keyResult['current_value'] = $this->formatBigFloat($keyResult['current_value']);
         $keyResult['progress_rate'] = $NumberEx->calcProgressRate($keyResult['start_value'], $keyResult['target_value'],
             $keyResult['current_value']);
+        // 3桁区切りversion
+        $keyResult['comma_start_value'] = AppUtil::formatThousand($keyResult['start_value']);
+ +      $keyResult['comma_target_value'] = AppUtil::formatThousand($keyResult['target_value']);
+ +      $keyResult['comma_current_value'] = AppUtil::formatThousand($keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
@@ -132,8 +136,8 @@ class KeyResultService extends AppService
             $tailUnit = $unitName;
         }
         $keyResult['start_value_with_unit'] = $headUnit . $keyResult['start_value'] . $tailUnit;
-        $keyResult['target_value_with_unit'] = $headUnit . $keyResult['target_value'] . $tailUnit;
-        $keyResult['current_value_with_unit'] = $headUnit . $keyResult['current_value'] . $tailUnit;
+        $keyResult['target_value_with_unit'] = $headUnit . $keyResult['comma_target_value'] . $tailUnit;
+        $keyResult['current_value_with_unit'] = $headUnit . $keyResult['comma_current_value'] . $tailUnit;
         $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
         $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
         return $keyResult;
@@ -383,10 +387,14 @@ class KeyResultService extends AppService
             if ($requestData['value_unit'] != $kr['value_unit']) {
                 $updateKr['start_value'] = Hash::get($requestData, 'start_value');
             }
-            // 未完了かつ進捗現在値が目標値に達してたら完了とする
-            if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
-                $updateKr['completed'] = time();
-            }
+        }
+
+        if (empty($kr['completed']) && $updateKr['target_value'] == $updateKr['current_value']) {
+            // 未完了 && 進捗現在値が目標値に達してたら完了とする
+            $updateKr['completed'] = time();
+        } elseif (!empty($kr['completed']) && $updateKr['target_value'] != $updateKr['current_value']) {
+            // 完了 && 進捗現在値が目標値に未達なら未完了とする
+            $updateKr['completed'] = null;
         }
 
         if (Hash::get($requestData, 'start_date')) {
