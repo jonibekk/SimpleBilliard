@@ -3,5 +3,7 @@ export const TO_NEXT_PAGE = 'TO_NEXT_PAGE'
 export const INVALID = 'INVALID'
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
 export const DISABLE_SUBMIT = 'DISABLE_SUBMIT';
+export const ENABLE_SUBMIT = 'ENABLE_SUBMIT';
 export const UPDATE_INPUT_DATA = 'UPDATE_INPUT_DATA';
 export const RESET_STATES = 'RESET_STATES';
+export const INIT_STRIPE = 'INIT_STRIPE';
