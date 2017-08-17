@@ -76,59 +76,14 @@ $(function () {
         prevScrollTop = currentScrollTop;
     });
 
-    //SubHeaderMenu
-
-    var showNavFlag = false;
-    var subNavbar = $("#SubHeaderMenu");
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 1) {
-            if (showNavFlag == false) {
-                showNavFlag = true;
-                subNavbar.stop().animate({ "top": "-60" }, 800);
-            }
-        } else {
-            if (showNavFlag) {
-                showNavFlag = false;
-                var scroll_offset = 0;
-                subNavbar.stop().animate({ "top": scroll_offset }, 400);
-            }
-        }
-    });
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 10) {
-            $(".navbar").addClass("mod-box-shadow");
-        } else {
-            $(".navbar").removeClass("mod-box-shadow");
+    $(window).scroll(function () {		
+        if ($(this).scrollTop() > 10) {		
+            $(".navbar").addClass("mod-box-shadow");		
+        } else {		
+            $(".navbar").removeClass("mod-box-shadow");		
         }
     });
 
-    $('#SubHeaderMenu a').click(function () {
-        //既に選択中の場合は何もしない
-        if ($(this).hasClass('sp-feed-active')) {
-            return;
-        }
-
-        if ($(this).attr('id') == 'SubHeaderMenuFeed') {
-            $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
-            $(this).addClass('sp-feed-active');
-            //表示切り換え
-            $('[role="goal_area"]').addClass('visible-md visible-lg');
-            $('[role="main"]').removeClass('visible-md visible-lg');
-        }
-        else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
-            $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
-            $(this).addClass('sp-feed-active');
-            //表示切り換え
-            $('[role="main"]').addClass('visible-md visible-lg');
-            $('[role="goal_area"]').removeClass('visible-md visible-lg');
-            // HACK:reactの進捗グラフをリサイズするため架空要素(表示はしない)のクリックイベントを使用
-            $('.js-flush-chart').trigger('click');
-        }
-        else {
-            //noinspection UnnecessaryReturnStatementJS
-            return;
-        }
-    });
     //チーム切り換え
     $('#SwitchTeam').change(function () {
         var val = $(this).val();
