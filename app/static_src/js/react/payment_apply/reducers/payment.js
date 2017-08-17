@@ -15,19 +15,36 @@ const initial_state = {
   input_data: {
     payment_setting: {
       type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD,
+      company_name: "",
       company_country: "",
       company_post_code: "",
       company_region: "",
       company_city: "",
       company_street: "",
-      contact_mail: "",
       company_tel: "",
+      contact_person_first_name: "",
+      contact_person_first_name_kana: "",
+      contact_person_last_name: "",
+      contact_person_last_name_kana: "",
+      contact_person_tel: "",
+      contact_person_email: "",
     },
     credit_card: {
       customer_code:""
     },
     invoice: {
-      //TODO:add
+      company_name: "",
+      company_post_code: "",
+      company_region: "",
+      company_city: "",
+      company_street: "",
+      company_tel: "",
+      contact_person_first_name: "",
+      contact_person_first_name_kana: "",
+      contact_person_last_name: "",
+      contact_person_last_name_kana: "",
+      contact_person_tel: "",
+      contact_person_email: "",
     }
   },
   is_disabled_submit: false,
@@ -59,7 +76,8 @@ export default function payment(state = initial_state, action) {
       return Object.assign({}, state, {
         input_data,
         to_next_page: true,
-        validation_errors: {}
+        validation_errors: {},
+        is_disabled_submit: false
       })
     case types.FETCH_INITIAL_DATA:
       switch (action.page) {
