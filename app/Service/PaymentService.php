@@ -281,16 +281,37 @@ class PaymentService extends AppService
         $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($currentTimeStamp);
         $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($currentTimeStamp);
 
+        $teamId = $Team->current_team_id;
         $paymentSetting = $this->get($Team->current_team_id);
-        $totalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
-
         // Ex. 3people × ¥1,980 × 20 days / 1month
-        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
-            $totalCharge = AppUtil::floor($totalCharge, 0);
-        } else {
-            $totalCharge = AppUtil::floor($totalCharge, 2);
-        }
+        $subTotalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
+        $subTotalCharge = $this->processDecimalPointForAmount($teamId, $subTotalCharge);
+
+        $tax = $this->calcTax($teamId, $subTotalCharge);
+        $totalCharge = $subTotalCharge + $tax;
         return $totalCharge;
+    }
+
+    /**
+     * Calc decimal point by currency
+     *
+     * @param int   $teamId
+     * @param float $amount
+     *
+     * @return float
+     */
+    public function processDecimalPointForAmount(int $teamId, float $amount) : float
+    {
+        $paymentSetting = $this->get($teamId);
+        // Change decimal point by currency
+        // Ref: No1 in this document
+        // http://confluence.goalous.com/display/GOAL/Specifications+confirmation
+        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
+            $amount = AppUtil::floor($amount, 0);
+        } else {
+            $amount = AppUtil::floor($amount, 2);
+        }
+        return $amount;
     }
 
     /**
@@ -313,6 +334,62 @@ class PaymentService extends AppService
         // Format ex 1980 → ¥1,980
         $res = $this->formatCharge($totalCharge);
         return $res;
+    }
+
+    /**
+     * Calc these by charge user count
+     * ・sub total charge
+     * ・tax
+     * ・total charge(include tax)
+     *
+     * @param int $teamId
+     * @param int $chargeUserCnt
+     *
+     * @return array
+     */
+    public function calcRelatedTotalChargeByUserCnt(int $teamId, int $chargeUserCnt): array
+    {
+        $paymentSetting = $this->get($teamId);
+        $subTotalCharge = $this->processDecimalPointForAmount($teamId, $paymentSetting['amount_per_user'] * $chargeUserCnt);
+        $tax = $this->calcTax($teamId, $subTotalCharge);
+        $totalCharge = $subTotalCharge + $tax;
+
+        return [
+            'sub_total_charge' => $subTotalCharge,
+            'tax' => $tax,
+            'total_charge' => $totalCharge,
+        ];
+    }
+
+    /**
+     * Get tax rate by country code
+     * @param string $countryCode
+     *
+     * @return float
+     */
+    private function getTaxRateByCountryCode(string $countryCode): float
+    {
+        // Get tax_rate by team country
+        $countries = Configure::read("countries");
+        $countries = Hash::combine($countries, '{n}.code', '{n}');
+        $taxRate = Hash::check($countries, $countryCode.'.tax_rate') ? Hash::get($countries, $countryCode.'.tax_rate') : 0;
+        return $taxRate;
+    }
+
+    /**
+     * Calc tax
+     *
+     * @param int   $teamId
+     * @param float $amount
+     *
+     * @return float
+     */
+    public function calcTax(int $teamId , float $amount): float
+    {
+        $paymentSetting = $this->get($teamId);
+        $taxRate = $this->getTaxRateByCountryCode($paymentSetting['company_country'], $amount);
+        $tax = $this->processDecimalPointForAmount($teamId, $amount * $taxRate);
+        return $tax;
     }
 
     /**

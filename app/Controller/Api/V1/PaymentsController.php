@@ -195,12 +195,13 @@ class PaymentsController extends ApiController
             $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();
-            // Calc total charge
-            $totalCharge = $PaymentService->formatCharge($paymentSetting['amount_per_user'] * $chargeUserCnt);
+            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($this->current_team_id, $chargeUserCnt);
             $res = am($res, [
                 'amount_per_user' => $amountPerUser,
                 'charge_users_count' => $chargeUserCnt,
-                'total_charge' => $totalCharge,
+                'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge']),
+                'tax' => $PaymentService->formatCharge($chargeInfo['tax']),
+                'total_charge' => $PaymentService->formatCharge($chargeInfo['total_charge']),
             ]);
         }
         return $this->_getResponseSuccess($res);
