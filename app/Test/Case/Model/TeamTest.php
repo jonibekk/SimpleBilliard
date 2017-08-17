@@ -66,6 +66,14 @@ class TeamTest extends GoalousTestCase
         $res = $this->Team->add($postData, $uid);
         $this->assertTrue($res, "[正常]チーム追加");
 
+        $newTeam = Hash::get($this->Team->findById($this->Team->getLastInsertID()), 'Team');
+        $this->assertEquals($newTeam['service_use_status'], Team::SERVICE_USE_STATUS_FREE_TRIAL);
+        $this->assertEquals($newTeam['service_use_state_start_date'], date('Y-m-d'));
+        $this->assertEquals($newTeam['service_use_state_end_date'], date('Y-m-d', strtotime("+15 days")));
+
+        $newTeamMember = Hash::get($this->Team->TeamMember->findById($this->Team->TeamMember->getLastInsertID()), 'TeamMember');
+        $this->assertEquals($newTeamMember['status'], TeamMember::USER_STATUS_ACTIVE);
+
         // チーム全体サークルが追加されているか
         $this->Team->Circle->current_team_id = $this->Team->getLastInsertID();
         $teamAllCircle = $this->Team->Circle->getTeamAllCircle();
