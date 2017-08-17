@@ -10,17 +10,18 @@ if ($userAgent->isiOSApp()) {
 <div class="panel panel-default">
     <div class="panel-heading">
         <p class="text-center">
-            <?= __("Update to the newest app") ?>
+            <?= __("Install the new app") ?>
         </p>
     </div>
     <div class="panel-body add-team-panel-body"
         <p class="text-center">
-            <?= __("You’re using a version of Goalous that’s no longer supported. Please update to the newest app version to use Goalous. Thanks!") ?>
+            <?= __("You’re using a version of Goalous that’s no longer supported. Please install the new app to use Goalous.") ?>
+            <?= __("After you install the new app, please make sure to uninstall the old app. Thanks!") ?>
         </p>
     </div>
     <div class="panel-body add-team-panel-body text-center">
         <?php if(is_string($mobileAppStoreUrl)): ?>
-        <a href="<?= $mobileAppStoreUrl ?>" class="btn btn-primary"><?= __("Update") ?></a>
+        <a href="<?= $mobileAppStoreUrl ?>" class="btn btn-primary"><?= __("Install") ?></a>
         <?php endif; ?>
     </div>
 </div>
