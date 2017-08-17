@@ -39,8 +39,6 @@ class PagesController extends AppController
             $page = $path[0];
         }
 
-        $this->_handleFromMogileAppRequest();
-
         // Difine URL params for Google analytics.
         $this->_setUrlParams();
 
