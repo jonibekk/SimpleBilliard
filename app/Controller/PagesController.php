@@ -264,7 +264,7 @@ class PagesController extends AppController
             }
 
             if ($this->_parseParameter($request_status) !== $status_from_referer) {
-                return $this->redirect("/${status_from_referer}");
+                return $this->redirect("${status_from_referer}");
             }
             $this->Session->delete('referer_status');
             return true;
