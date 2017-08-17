@@ -2680,8 +2680,6 @@ msgstr "会社名"
 msgid "ISAO Corporation"
 msgstr "株式会社ISAO"
 
-#, fuzzy
-#| msgid "Postal Code"
 msgid "Post Code"
 msgstr "郵便番号"
 
@@ -4318,8 +4316,6 @@ msgstr "以下のリンクから決済設定を行ってください。"
 msgid "Your \"%s\" credit card terminated with \"%s\" will expire soon."
 msgstr ""
 
-#, fuzzy
-#| msgid "Please let us know as soon as possible."
 msgid "Please update your credit card information as soon as possible."
 msgstr "その場合は直ちに以下にご連絡ください。"
 
@@ -5058,18 +5054,12 @@ msgid ""
 "deleted on December 20, 2017"
 msgstr ""
 
-#, fuzzy
-#| msgid "Month"
 msgid "Monthly"
 msgstr "月"
 
-#, fuzzy
-#| msgid "Members"
 msgid "member"
 msgstr "メンバー"
 
-#, fuzzy
-#| msgid "Month"
 msgid "month"
 msgstr "月"
 
@@ -5079,28 +5069,18 @@ msgstr "アクティブメンバー"
 msgid "Estimated Total"
 msgstr ""
 
-#, fuzzy
-#| msgid "20MB file upload"
 msgid "100MB file upload"
 msgstr "20MB/ファイルのアップロード"
 
-#, fuzzy
-#| msgid "Unlimited file share"
 msgid "Unlimited uploads"
 msgstr "ストレージ無制限のファイル共有"
 
-#, fuzzy
-#| msgid "Messaging"
 msgid "Chat Messaging"
 msgstr "メッセージ"
 
-#, fuzzy
-#| msgid "Administrators"
 msgid "Team Administration"
 msgstr "管理者"
 
-#, fuzzy
-#| msgid "Online user support"
 msgid "Free Online support"
 msgstr "オンラインでのユーザーサポート"
 
@@ -5125,8 +5105,6 @@ msgstr "請求履歴"
 msgid "ID"
 msgstr ""
 
-#, fuzzy
-#| msgid "Due Date"
 msgid "Date"
 msgstr "期限"
 
@@ -5136,8 +5114,6 @@ msgstr "金額"
 msgid "Receipt"
 msgstr ""
 
-#, fuzzy
-#| msgid "View All"
 msgid "View"
 msgstr "すべて表示"
 
