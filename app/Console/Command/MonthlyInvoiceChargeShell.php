@@ -25,15 +25,17 @@ class MonthlyInvoiceChargeShell extends AppShell
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
 
         // Get charge target teams
         $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams();
         if (empty($targetChargeTeams)) {
-            $this->log('Billing team does not exist', LOG_INFO);
-            exit;
+            $this->out("Target team doesn't exist.");
+            return;
         }
+
+        // fetching not charged charge_history
+
+        // send invoice via atobarai.com for each teams
 
     }
 }

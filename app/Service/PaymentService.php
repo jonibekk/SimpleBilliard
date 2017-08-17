@@ -694,10 +694,35 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
         // Get teams only credit card payment type
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeCcTeams();
 
-        $targetChargeTeams = $this->_filterTargetChargeTeams($time, $targetChargeTeams);
+        // Filtering
+        $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
+            $timezone = Hash::get($v, 'Team.timezone');
+            $localCurrentTs = $time + ($timezone * HOUR);
+            $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
+            // Check if today is payment base date
+            $paymentBaseDate = AppUtil::correctInvalidDate(
+                date('Y', $localCurrentTs),
+                date('m', $localCurrentTs),
+                $paymentBaseDay
+            );
+            if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
+                return false;
+            }
+
+            // Check if have not already charged
+            $teamId = Hash::get($v, 'PaymentSetting.team_id');
+            $chargeHistory = $ChargeHistory->getByChargeDate($teamId, $paymentBaseDate);
+            if (!empty($chargeHistory)) {
+                return false;
+            }
+            return true;
+
+        });
         return $targetChargeTeams;
     }
 
@@ -728,26 +753,13 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init("InvoiceHistory");
         // Get teams only credit card payment type
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeInvoiceTeams();
-        $targetChargeTeams = $this->_filterTargetChargeTeams($time, $targetChargeTeams);
-        return $targetChargeTeams;
-    }
 
-    /**
-     * Filtering target charge teams
-     *
-     * @param int   $time
-     * @param array $teams
-     *
-     * @return array
-     */
-    private function _filterTargetChargeTeams(int $time, array $teams)
-    {
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init("ChargeHistory");
-
-        $teams = array_filter($teams, function ($v) use ($time, $ChargeHistory) {
+        // Filtering
+        $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $InvoiceHistory) {
             $timezone = Hash::get($v, 'Team.timezone');
             $localCurrentTs = $time + ($timezone * HOUR);
             $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
@@ -763,14 +775,13 @@ class PaymentService extends AppService
 
             // Check if have not already charged
             $teamId = Hash::get($v, 'PaymentSetting.team_id');
-            $chargeHistory = $ChargeHistory->getByChargeDate($teamId, $paymentBaseDate);
-            if (!empty($chargeHistory)) {
+            $invoiceHistory = $InvoiceHistory->getByChargeDate($teamId, $paymentBaseDate);
+            if (!empty($invoiceHistory)) {
                 return false;
             }
             return true;
-
         });
-        return $teams;
+        return $targetChargeTeams;
     }
 
     /**
