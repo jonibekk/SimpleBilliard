@@ -15,7 +15,8 @@ export function validatePayment(page, add_data) {
         dispatch(toNextPage(page, add_data))
       },
       ({response}) => {
-        // when team is in read only
+        // TODO.Payment:process by status code (ex. 403, 404)
+        // If status code is 403, redirect top page.
         if (!response.data.validation_errors) {
           // Reason to set to validation_errors.name is that
           // This field is on to submit button
@@ -103,7 +104,8 @@ export function savePaymentCc(card, extra_details) {
             dispatch(toNextPage(Page.COMPLETE))
           },
           ({response}) => {
-            // when team is in read only
+            // TODO.Payment:process by status code (ex. 403, 404)
+            // If status code is 403, redirect top page.
             if (!response.data.validation_errors) {
               // Reason to set to validation_errors.name is that
               // This field is on to submit button
