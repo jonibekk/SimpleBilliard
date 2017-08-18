@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
+App::import('Service', 'InvoiceService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
@@ -634,6 +635,35 @@ class PaymentService extends AppService
         $this->_saveChargeHistory($historyData);
 
         return $result;
+    }
+
+    public function registerInvoice(int $teamId, int $time, float $timezone)
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        /** @var InvoiceService $InvoiceService */
+        $InvoiceService = ClassRegistry::init('InvoiceService');
+
+        // fetching charge histories
+        $localCurrentTs = $time + ($timezone * HOUR);
+        // end of yesterday
+        $targetEndTs = AppUtil::getEndTimestampByTimezone(AppUtil::dateYmd($localCurrentTs - DAY), $timezone);
+        $previousMonthFirstTs = strtotime("Y-m-01", $targetEndTs);
+        $targetStartTs = AppUtil::correctInvalidDate(
+            date('Y', $previousMonthFirstTs),
+            date('m', $previousMonthFirstTs),
+            date('d', $localCurrentTs)
+        );
+        // if already send an invoice, return
+
+        $targetPaymentHistories = $ChargeHistory->findByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        // save monthly charge
+
+        // add monthly charge into histories array
+
+        // send invoice
+        //$InvoiceService->registerOrder($teamId,$targetPaymentHistories);
+
     }
 
     /**

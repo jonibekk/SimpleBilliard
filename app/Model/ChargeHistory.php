@@ -80,7 +80,7 @@ class ChargeHistory extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'tax'     => [
+        'tax'              => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
@@ -159,7 +159,7 @@ class ChargeHistory extends AppModel
     /**
      * Filter: team_id and charge date(Y-m-d 00:00:00　〜　Y-m-d 23:59:59)
      *
-     * @param int $teamId
+     * @param int    $teamId
      * @param string $date
      *
      * @return array
@@ -169,18 +169,39 @@ class ChargeHistory extends AppModel
         $dateStart = AppUtil::getStartTimestampByTimezone($date);
         $dateEnd = AppUtil::getEndTimestampByTimezone($date);
         $options = [
-            'fields' => [
+            'fields'     => [
                 'id',
                 'charge_datetime'
             ],
             'conditions' => [
-                'team_id' => $teamId,
+                'team_id'            => $teamId,
                 'charge_datetime >=' => $dateStart,
                 'charge_datetime <=' => $dateEnd,
-                'del_flg' => false
+                'del_flg'            => false
             ],
         ];
         return $this->find('first', $options);
+    }
+
+    /**
+     * @param int $teamId
+     * @param int $startTs
+     * @param int $endTs
+     *
+     * @return array
+     */
+    public function findByStartEnd(int $teamId, int $startTs, int $endTs)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'            => $teamId,
+                'charge_datetime >=' => $startTs,
+                'charge_datetime <=' => $endTs,
+            ]
+        ];
+
+        $res = $this->find('all',$options);
+        return Hash::extract($res, '{n}.ChargeHistory');
     }
 
 }

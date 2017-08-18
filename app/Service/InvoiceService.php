@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('Xml', 'Utility');
 
 /**
  * Class InvoiceService
@@ -11,6 +12,14 @@ class InvoiceService extends AppService
     const API_URL_REGISTER_ORDER = ATOBARAI_API_BASE_URL . '/api/order/rest';
     const API_URL_INQUIRY_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
+    /**
+     * register order for 1 team's invoice
+     *
+     * @param int   $teamId
+     * @param array $chargeHistories
+     *
+     * @return bool
+     */
     function registerOrder(int $teamId, array $chargeHistories)
     {
         $data = [
@@ -23,7 +32,7 @@ class InvoiceService extends AppService
             'C_UnitingAddress'       => '東京都台東区浅草橋1-1-1',
             'C_NameKj'               => '佐藤太郎',
             'C_Phone'                => '03-3333-3333',
-            //            'C_MailAddress'          => 'test@aaa.com',
+            'C_MailAddress'          => 'test@aaa.com',
             'C_EntCustId'            => '1234',
             'I_ItemNameKj_1'         => 'Goalous利用料金',
             'O_ServicesProvidedDate' => '2017/08/17',
@@ -31,19 +40,30 @@ class InvoiceService extends AppService
             'I_ItemNum_1'            => 1,
         ];
 
-        $retXmlObj = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
-        var_dump((string)$retXmlObj->status);
-        var_dump((string)$retXmlObj->messages->message);
-        var_dump((string)$retXmlObj->messages->message->attributes()->cd);
+        $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
+
+        if ($resAtobarai['status'] == 'error') {
+            $this->log(sprintf("Request to atobarai.com was failed. errorMsg: %s, teamId: %s, chargeHistories: %s, requestData: %s",
+                AppUtil::varExportOneLine($resAtobarai['messages']),
+                $teamId,
+                $chargeHistories,
+                $data
+            ));
+            return false;
+        }
+
+        // saving data to DB
+        // invoices and chargeHistories
+
     }
 
     /**
      * @param string $requestUrl
      * @param array  $data key value array
      *
-     * @return SimpleXMLElement
+     * @return array response is converted from xml to array
      */
-    private function _postRequestForAtobaraiDotCom(string $requestUrl, array $data): SimpleXMLElement
+    private function _postRequestForAtobaraiDotCom(string $requestUrl, array $data): array
     {
         $data = http_build_query($data);
 
@@ -61,7 +81,9 @@ class InvoiceService extends AppService
             ]
         ];
         $ret = file_get_contents($requestUrl, false, stream_context_create($context));
-        return simplexml_load_string($ret);
+        $xmlArray = Xml::toArray(Xml::build($ret));
+        $ret = Hash::extract($xmlArray, 'response');
+        return $ret;
     }
 
 }
