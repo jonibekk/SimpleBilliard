@@ -81,7 +81,8 @@ class PaymentServiceTest extends GoalousTestCase
             'type'             => 1,
             'amount_per_user'  => 1800,
             'payment_base_day' => 15,
-            'currency'         => 1
+            'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+            'company_country'         => 'JP'
         ]);
         $customerCode = 'cus_BDjPwryGzOQRBI';
 
@@ -439,34 +440,35 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'payment_base_day' => 1,
             'amount_per_user'  => 1980,
-            'currency'         => PaymentSetting::CURRENCY_JPY
+            'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+            'company_country' => 'JP'
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 1980);
+        $this->assertEquals($res, 2138);
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 3960);
+        $this->assertEquals($res, 4276);
 
         $currentTimestamp = strtotime("2017-01-02");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 3832);
+        $this->assertEquals($res, 4138);
 
         $currentTimestamp = strtotime("2017-01-15");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 2171);
+        $this->assertEquals($res, 2344);
 
         $currentTimestamp = strtotime("2017-01-31");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 127);
+        $this->assertEquals($res, 137);
 
         // If invalid payment base date
         $this->PaymentSetting->save([
@@ -478,12 +480,12 @@ class PaymentServiceTest extends GoalousTestCase
         $currentTimestamp = strtotime("2017-04-29");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 66);
+        $this->assertEquals($res, 71);
 
         $currentTimestamp = strtotime("2017-04-30");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 3960);
+        $this->assertEquals($res, 4276);
     }
 
     public function test_calcTotalChargeByAddUsers_usd()
@@ -499,34 +501,35 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'payment_base_day' => 1,
             'amount_per_user'  => 16,
-            'currency'         => PaymentSetting::CURRENCY_USD
+            'currency'         => PaymentSetting::CURRENCY_TYPE_USD,
+            'company_country' => 'JP'
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 16);
+        $this->assertEquals($res, 17.28);
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 32);
+        $this->assertEquals($res, 34.56);
 
         $currentTimestamp = strtotime("2017-01-02");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 30.96);
+        $this->assertEquals($res, 33.43);
 
         $currentTimestamp = strtotime("2017-01-15");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 17.54);
+        $this->assertEquals($res, 18.94);
 
         $currentTimestamp = strtotime("2017-01-31");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 1.03);
+        $this->assertEquals($res, 1.11);
 
         // If invalid payment base date
         $this->PaymentSetting->save([
@@ -538,12 +541,12 @@ class PaymentServiceTest extends GoalousTestCase
         $currentTimestamp = strtotime("2017-04-29");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 0.53);
+        $this->assertEquals($res, 0.57);
 
         $currentTimestamp = strtotime("2017-04-30");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 32);
+        $this->assertEquals($res, 34.56);
     }
 
     public function test_applyCreditCardCharge()
@@ -571,6 +574,7 @@ class PaymentServiceTest extends GoalousTestCase
             'amount_per_user'  => 1800,
             'payment_base_day' => 15,
             'currency'         => 1,
+            'company_country' => 'JP'
         ]);
 
         $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userID, 1, $token, $paymentData);
