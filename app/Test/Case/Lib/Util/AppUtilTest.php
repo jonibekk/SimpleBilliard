@@ -249,11 +249,20 @@ class AppUtilTest extends GoalousTestCase
         $this->assertEquals($m, 12);
     }
 
+    /**
+     * todayDateYmdLocalTest
+     * - Depends on system time
+     * - if system hour is 18
+     *   - overTimezone is "+6"
+     *   - underTimezone is "-19"
+     *
+     * @return void
+     */
     function test_todayDateYmdLocal()
     {
         $nowHour = (int)date("H");
         $utcTimezone = 0;
-        $overTimezone = $nowHour + 1;
+        $overTimezone = 24 - $nowHour;
         $underTimezone = -$nowHour - 1;
         $this->assertEquals(AppUtil::todayDateYmdLocal($utcTimezone), date("Y-m-d"));
         $this->assertEquals(AppUtil::todayDateYmdLocal($overTimezone), date("Y-m-d", strtotime("+1 day")));
