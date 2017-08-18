@@ -230,7 +230,14 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+        $this->redirectIfMobileAppVersionUnsupported();
+    }
 
+    /**
+     * redirect if Mobile App version is unsupported
+     */
+    private function redirectIfMobileAppVersionUnsupported()
+    {
         // GL-5962: show version expired if Goalous Mobile App version is old
         if (!$this->request->is('ajax')) {
             // not redirecting if route is '/app_force_update' or '/app_force_install' (avoiding redirect loop)
@@ -240,10 +247,10 @@ class AppController extends BaseController
                     // https://jira.goalous.com/browse/GL-5962
                     // TODO: delete this "if" process, if old Android App(1.0.2) user is gone.
                     if ($this->isAndroidVersionForceUninstall($userAgent)) {
-                        return $this->redirect('/app_force_install');
+                        $this->redirect('/app_force_install');
                     }
                     if ($this->isExpiredVersionMobileApp($userAgent)) {
-                        return $this->redirect('/app_force_update');
+                        $this->redirect('/app_force_update');
                     }
                 }
             }
