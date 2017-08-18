@@ -273,6 +273,7 @@ class AppController extends BaseController
     /**
      * https://jira.goalous.com/browse/GL-5962
      * return true if Goalous Android App version is deprecated from google play store
+     * temporary support: this method should be deleted on future.
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -282,7 +283,11 @@ class AppController extends BaseController
         if (!$userAgent->isAndroidApp()) {
             return false;
         }
-        /** @see version due to GL-5962 comments */
+        /**
+         * @see version due to https://jira.goalous.com/browse/GL-5962 comments
+         *       this magic number uses only here
+         *       does not need to define somewhere
+         */
         $versionMobileAppLeast = '1.0.4';
         return MobileAppVersion::isExpired($versionMobileAppLeast, $userAgent->getMobileAppVersion());
     }
