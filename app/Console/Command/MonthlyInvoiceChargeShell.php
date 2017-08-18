@@ -72,6 +72,7 @@ class MonthlyInvoiceChargeShell extends AppShell
                 $noMemberTeams[] = $teamId;
                 continue;
             }
+            // TODO: 厳密に未請求のものを対象にするため、invoice_historiesをチェックする
             $targetHistories = $PaymentService->findChargeTargetHistories($teamId, $targetTs, $timezone);
             $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $timezone, $targetHistories);
 
