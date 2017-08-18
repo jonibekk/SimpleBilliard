@@ -83,44 +83,4 @@ class ApiService extends AppService
         ];
         return $ret;
     }
-
-
-    /**
-     * Validate only specified fields and model
-     *
-     * @param $data
-     * @param $fields
-     * @param $dataParentKey
-     * @param $modelKey
-     * @param $model
-     *
-     * @return array
-     */
-    protected function validateSingleModelFields(
-        array $data,
-        array $fields,
-        string $dataParentKey,
-        string $modelKey,
-        $model
-    ): array {
-        $validationFields = Hash::get($fields, $modelKey) ?? [];
-        $validationBackup = $model->validate;
-        // Set each field rule
-        $validationRules = [];
-        foreach ($validationFields as $field) {
-            $validationRules[$field] = Hash::get($validationBackup, $field);
-        }
-        $model->validate = $validationRules;
-
-        $checkData = Hash::get($data, $dataParentKey) ?? [];
-        $model->set($checkData);
-        $res = $model->validates();
-        $model->validate = $validationBackup;
-        if (!$res) {
-            $validationErrors = $this->validationExtract($model->validationErrors);
-            return [$dataParentKey => $validationErrors];
-        }
-        return [];
-
-    }
 }

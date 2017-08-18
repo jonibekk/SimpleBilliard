@@ -135,7 +135,7 @@ CakePlugin::load('UrlCache');
 Configure::write('UrlCache.active', true);
 
 Configure::load("app.php");
-Configure::load("county.php");
+Configure::load("country.php");
 
 /**
  * Goalous独自定数

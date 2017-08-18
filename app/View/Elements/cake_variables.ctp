@@ -13,9 +13,8 @@ App::uses('AttachedFile', 'Model');
         env_name: "<?= ENV_NAME ?>",
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
-        is_read_only: "<?= $serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY ?>",
         stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
-        require_banner_notification: "<?= in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]) ?>",
+        require_banner_notification: "<?= isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]) ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
@@ -579,6 +578,35 @@ App::uses('AttachedFile', 'Model');
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
+            /* Change to paid plan */
+            // Input company info
+            "Enter Company Information": "<?= __("Enter Company Information") ?>",
+            "Company Address": "<?= __("Company Address") ?>",
+            "Company Name": "<?= __("Company Name") ?>",
+            "ISAO Corporation": "<?= __("ISAO Corporation") ?>",
+            "Post Code": "<?= __("Post Code") ?>",
+            "12345": "<?= __("12345") ?>",
+            "State/Province/Region": "<?= __("State/Province/Region") ?>",
+            "California": "<?= __("California") ?>",
+            "City": "<?= __("City") ?>",
+            "Los Angeles": "<?= __("Los Angeles") ?>",
+            "Street": "<?= __("Street") ?>",
+            "1234 Street Name": "<?= __("1234 Street Name") ?>",
+            "Company Contact": "<?= __("Company Contact") ?>",
+            "eg. Jobs": "<?= __("eg. Jobs") ?>",
+            "eg. Bruce": "<?= __("eg. Bruce") ?>",
+            "Name Kana": "<?= __("Name Kana") ?>",
+            "name@company.com": "<?= __("name@company.com") ?>",
+            // Input credit card
+            "Card Holder Name": "<?= __("Card Holder Name") ?>",
+            "Card Number": "<?= __("Card Number") ?>",
+            "Price per user": "<?= __("Price per user") ?>",
+            "Number of users": "<?= __("Number of users") ?>",
+            "Sub Total": "<?= __("Sub Total") ?>",
+            "Tax": "<?= __("Tax") ?>",
+            "Total": "<?= __("Total") ?>",
+            "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
+            "Register": "<?= __("Register") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
