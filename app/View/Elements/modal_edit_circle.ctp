@@ -44,7 +44,6 @@
                         'class'     => 'form-control modal_input-design'
                     ],
                     'class'         => 'form-horizontal',
-                    'novalidate'    => true,
                     'type'          => 'file',
                     'id'            => 'EditCircleForm',
                 ]); ?>
@@ -57,8 +56,7 @@
                         "data-bv-notempty-message"     => __("Input is required."),
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 128,
-                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-                        'required'                     => true,
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128)
                     ]) ?>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
 
@@ -140,6 +138,9 @@
                         </div>
                     </div>
                 </div>
+                <?php // dummy hide submit button for html5 validation ?>
+                <?= $this->Form->submit(__(""),
+                            ['class' => 'none', 'div' => false, 'id' => 'EditCircleFormSubmit']) ?>
                 <?= $this->Form->end(); ?>
             </div>
 
@@ -320,7 +321,7 @@
                 [
                     'id'      => 'EditCircleFormSubmit',
                     'class'   => 'btn btn-primary pull-right',
-                    'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
+                    'onclick' => "document.getElementById('EditCircleFormSubmit').click();",
                     'div'     => false,
                 ]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"

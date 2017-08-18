@@ -8,8 +8,6 @@ insertSpaceTop = (height) ->
   $jsRightSideContainer.css 'top', parseInt($jsRightSideContainer.css('top')) + height + 'px'
   $body = $('body')
   $body.css 'padding-top', parseInt($body.css('padding-top')) + height + 'px'
-  $offcanvas = $('#NavbarOffcanvas')
-  $offcanvas.css 'top', parseInt($offcanvas.css('top')) + height + 'px'
   $spFeedAltSub = $('#SpFeedAltSub')
   $spFeedAltSub.css 'top', parseInt($spFeedAltSub.css('top')) + height + 'px'
   $sidebarSetting = $('#SidebarSetting')

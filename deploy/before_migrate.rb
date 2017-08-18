@@ -50,8 +50,10 @@ end
 
 # gulp buildを環境変数によってproduction,developmentを指定で実行するようにする。環境変数はOpsWorks側で設定可能。環境変数の設定についてはEnvironment Variablesを参照-> http://amzn.to/2mdJ4pq
 gulp_command = "gulp build"
-if new_resource.environment["NODE_ENV"] then
-  gulp_command = "NODE_ENV=#{new_resource.environment["NODE_ENV"]} gulp build"
+app = search("aws_opsworks_app").first
+
+if app['environment']['NODE_ENV'] then
+  gulp_command = "NODE_ENV=#{app['environment']['NODE_ENV']} gulp build"
 end
 
 bash "run gulp build" do

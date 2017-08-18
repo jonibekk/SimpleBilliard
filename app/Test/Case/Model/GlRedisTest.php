@@ -253,10 +253,11 @@ class GlRedisTest extends GoalousTestCase
 
     function testIsAccountLocked()
     {
-        for ($i = 0; $i < 3; $i++) {
-            $this->GlRedis->isAccountLocked('aaa@aaa.com', "111");
+        for ($i = 0; $i < 4; $i++) {
+            $this->GlRedis->incrementLoginFailedCount('aaa@aaa.com', "111");
         }
         $this->assertFalse($this->GlRedis->isAccountLocked('aaa@aaa.com', "111"));
+        $this->GlRedis->incrementLoginFailedCount('aaa@aaa.com', "111");
         $this->assertTrue($this->GlRedis->isAccountLocked('aaa@aaa.com', "111"));
     }
 

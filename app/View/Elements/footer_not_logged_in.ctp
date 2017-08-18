@@ -87,7 +87,7 @@ if (!isset($top_lang)) {
                                         'action'     => 'contact',
                                         'lang'       => $top_lang,
                                         3
-                                    ]) ?>"><?= __('Contact for cooporation') ?></a>
+                                    ]) ?>"><?= __('Contact for cooperation') ?></a>
                             </p>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ if (!isset($top_lang)) {
         <div class="container">
             <div class="row">
                 <div class="pull-left footer-bottom-left">
-                    <small class="copyright">© 2016 ISAO</small>
+                    <small class="copyright">© 2017 ISAO</small>
                     <ul class="footer-lang list-inline">
                         <li><a href="<?= $this->Html->url('/en/') ?>">English (US)</a></li>
                         <li><a href="<?= $this->Html->url('/ja/') ?>">日本語</a></li>
@@ -117,5 +117,4 @@ if (!isset($top_lang)) {
         </div><!--//container-->
     </div><!--//bottom-bar-->
 </footer>
-<div id="layer-black"></div>
 <?= $this->App->viewEndComment() ?>

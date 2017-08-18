@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap', 'jlareau.pnotify'])
+var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap'])
     .run(['$rootScope', '$state', '$stateParams', '$http', '$translate',
         function ($rootScope, $state, $stateParams, $http, $translate) {
 

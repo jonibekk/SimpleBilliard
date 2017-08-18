@@ -11,6 +11,41 @@ gulp.task('js:clean', () => {
     .on('end', () => { gutil.log('----------------- js task finished --------------------------') })
 })
 
+gulp.task('js_home:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jshome_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_home:clean'))
+        .on('end', () => { gutil.log('----------------- js_home task finished --------------------------') })
+});
+
+gulp.task('js_goals:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jsgoals_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_goals:clean'))
+        .on('end', () => { gutil.log('----------------- js_goals task finished --------------------------') })
+});
+
+gulp.task('js_team:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jsteam_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_team:clean'))
+        .on('end', () => { gutil.log('----------------- js_team task finished --------------------------') })
+});
+
+gulp.task('js_user:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jsuser_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_user:clean'))
+        .on('end', () => { gutil.log('----------------- js_user task finished --------------------------') })
+});
+
+gulp.task('js_evaluation:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jseval_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_evaluation:clean'))
+        .on('end', () => { gutil.log('----------------- js_evaluation task finished --------------------------') })
+});
+
 gulp.task('js_vendor:clean', () => {
   return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))

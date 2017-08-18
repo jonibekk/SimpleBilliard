@@ -8,37 +8,22 @@
  * @var CodeCompletionView $this
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <div class="modal fade" tabindex="-1" id="modal_tutorial">
     <div class="modal-dialog modal-tutorial-dialog">
         <div class="modal-content parent-p_0px">
             <div class="modal-body modal-close-base tutorial-body">
                 <div class="tutorial-box1 col-xxs-12">
-                    <?=
-                    $this->Html->image('tutorial/slide01.png',
-                        [
-                            'class' => 'modal-tutorial-image'
-                        ]
-                    )
-                    ?>
+                    <img src="/img/pre-load.svg" class="modal-tutorial-image lazy"
+                         data-original="/img/tutorial/slide01.png">
                 </div>
                 <div class="tutorial-box2 col-xxs-12 none">
-                    <?=
-                    $this->Html->image('tutorial/slide02.png',
-                        [
-                            'class' => 'modal-tutorial-image'
-                        ]
-                    )
-                    ?>
+                    <img src="/img/pre-load.svg" class="modal-tutorial-image lazy"
+                         data-original="/img/tutorial/slide02.png">
                 </div>
                 <div class="tutorial-box3 col-xxs-12 none">
-                    <?=
-                    $this->Html->image('tutorial/slide03.png',
-                        [
-                            'class' => 'modal-tutorial-image'
-                        ]
-                    )
-                    ?>
+                    <img src="/img/pre-load.svg" class="modal-tutorial-image lazy"
+                         data-original="/img/tutorial/slide03.png">
                 </div>
             </div>
             <div class="modal-footer setup-tutorial-modal-footer">
@@ -86,4 +71,4 @@
         </div>
     </div>
 </div>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

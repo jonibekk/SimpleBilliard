@@ -1,16 +1,19 @@
 <hr id="db">
-## DB接続
 
-![fullscreen_6_16_15__4_49_pm](https://cloud.githubusercontent.com/assets/3040037/8178324/e9e8def2-1447-11e5-99b9-4faab152c632.png)
+# Connect DB(mysql)
+In this case using PhpStorm  
 
-![data_sources_and_drivers_and_vagrant_-_goalous2_-____repos_goalous2_](https://cloud.githubusercontent.com/assets/3040037/8178252/47ab49d6-1447-11e5-940e-99c1a863f13e.png)
+![conncetDB_1](https://user-images.githubusercontent.com/9262490/28098454-53ff2dde-66f1-11e7-911c-726617633078.png)
 
-![data_sources_and_drivers_and_vagrant_-_goalous2_-____repos_goalous2_](https://cloud.githubusercontent.com/assets/3040037/8178248/41b0f5d0-1447-11e5-9d77-1dc680b0c0d7.png)
+![conncetDB_2](https://user-images.githubusercontent.com/9262490/28098514-b95b85ce-66f1-11e7-92f4-364fac83c5cf.png)
 
-![data_sources_and_drivers_and_vagrant_-_goalous2_-____repos_goalous2_](https://cloud.githubusercontent.com/assets/3040037/8178243/3938ce1e-1447-11e5-9726-4f4cd0435dcd.png)
+![conncetDB_3](https://user-images.githubusercontent.com/9262490/28098535-d35da51a-66f1-11e7-9d45-18cbc1f52752.png)
 
+![conncetDB_4](https://user-images.githubusercontent.com/9262490/28098545-e2bc50ec-66f1-11e7-91a7-8e39470ce8da.png)
 
-![vagrant_-_goalous2_-____repos_goalous2__and_1__bigplants_daikis-macbook-pro____repos_source-han-code-jp__zsh_](https://cloud.githubusercontent.com/assets/3040037/8178275/6d2e2cbe-1447-11e5-9eb3-803625a86c3e.png)
+![conncetDB_5](https://user-images.githubusercontent.com/9262490/28098555-f0efb262-66f1-11e7-8678-1f62161586f3.png)
+
+![conncetDB_6](https://user-images.githubusercontent.com/9262490/28098560-fa92476c-66f1-11e7-8903-8837c9e2f1a9.png)
 
 <hr id="trouble-shooting">
 

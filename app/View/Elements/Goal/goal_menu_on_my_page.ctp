@@ -31,12 +31,14 @@
                                     <?= __("Add Key Result") ?></span></a>
         </li>
         <?php if (!Hash::get($goal, 'Evaluation') && $isAfterCurrentTerm): ?>
-            <li role="presentation">
-                <a role="menuitem" tabindex="-1"
-                   href="/goals/<?= $goal['Goal']['id'] ?>/edit">
-                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
-                </a>
-            </li>
+            <?php if(Hash::get($goal, 'MyCollabo.0.type') == GoalMember::TYPE_OWNER): ?>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                       href="/goals/<?= $goal['Goal']['id'] ?>/edit">
+                        <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit goal") ?></span>
+                    </a>
+                </li>
+            <?php endif;?>
             <?php if ($goal['Goal']['can_exchange_tkr']): ?>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
@@ -47,7 +49,7 @@
                            'action'     => 'ajax_get_exchange_tkr_modal',
                            'goal_id'    => $goal['Goal']['id']
                        ]) ?>">
-                        <hr class="dashboard-goals-card-horizontal-line">
+                        <hr class="profile-goals-card-horizontal-line">
                         <i class="fa fa-exchange"></i>
                         <span class="ml_2px"><?= __("Change TKR") ?></span>
                     </a>
@@ -63,7 +65,7 @@
                            'action'     => 'ajax_get_exchange_leader_modal',
                            'goal_id'    => $goal['Goal']['id']
                        ]) ?>">
-                        <hr class="dashboard-goals-card-horizontal-line">
+                        <hr class="profile-goals-card-horizontal-line">
                         <i class="fa fa-exchange"></i>
                         <span class="ml_2px"><?= __("Change leader") ?></span>
                     </a>

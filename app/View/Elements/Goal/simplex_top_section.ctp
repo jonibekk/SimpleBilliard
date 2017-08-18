@@ -141,9 +141,9 @@
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
                 <li class="goal-detail-info-followers">
-                    <p><?= __('Followers') ?></p>
+                    <p><?= __('Followers').' ('.count($followers).')'; ?></p>
                     <?php
-                    $follower_view_num = 6;
+                    $follower_view_num = 5;
                     $iterator = $follower_view_num;
                     $over_num = count($followers) - $follower_view_num + 1;
                     ?>

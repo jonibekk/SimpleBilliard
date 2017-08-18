@@ -24,8 +24,7 @@
                     'wrapInput' => 'col col-sm-6',
                     'class'     => 'form-control'
                 ],
-                'class'         => 'form-horizontal validate',
-                'novalidate'    => true
+                'class'         => 'form-horizontal'
             ]); ?>
             <div class="panel-body reset-password-panel-body">
                 <p><?= __("Enter your email address.") ?></p>
@@ -43,7 +42,7 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?= $this->Form->submit(__("Send"),
-                            ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('AppUtil', 'Util');
 
 /**
  * Devices Controller
@@ -22,7 +23,7 @@ class DevicesController extends AppController
      * デバイス情報を追加する
      * POSTのみ受け付ける
      * 以下のフィールドを渡してあげる
-     * $this->request->data['user_id']
+     * $this->request->data['user_id'] // TODO: Security working! It should not be recieved in request param and should not be used.
      * $this->request->data['installation_id']
      * $this->request->data['current_version']
      *
@@ -31,11 +32,16 @@ class DevicesController extends AppController
     public function add()
     {
         $this->request->allowMethod('post');
-        $user_id = $this->request->data['user_id'];
+        //TODO: After implementing mobile app force updating,
+        //      have to change only from session to get user id https://jira.goalous.com/browse/GL-5949
+        $user_id = $this->Auth->user('id') ?? $this->request->data['user_id'];
         $installation_id = $this->request->data['installation_id'];
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
-
         try {
+            if (!$this->User->exists($user_id)) {
+                $this->log(sprintf("user id is invalid. user_id: %s", $user_id));
+                throw new RuntimeException(__('Parameters were wrong'));
+            }
             $device = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
             /* @var AppMeta $AppMeta */
             $AppMeta = ClassRegistry::init('AppMeta');
@@ -71,6 +77,8 @@ class DevicesController extends AppController
                 ]
             ];
         } catch (RuntimeException $e) {
+            $this->log($e->getMessage());
+            $this->log(Debugger::trace());
             $ret_array = [
                 'response' => [
                     'error'             => true,

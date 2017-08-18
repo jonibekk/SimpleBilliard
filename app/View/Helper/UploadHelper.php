@@ -63,6 +63,12 @@ class UploadHelper extends AppHelper
         ],
     ];
 
+    /**
+     * It's for caching expires timestamp.
+     * @var null|int
+     */
+    private $s3Expires = null;
+
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
         $options += array('urlize' => false);
@@ -400,8 +406,7 @@ class UploadHelper extends AppHelper
         $file = str_replace('%2F', '/', $file);
         $path = $bucket . '/' . $file;
 
-        $expires = strtotime('+1 hour');
-
+        $expires = $this->getS3Expires();
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
 
@@ -413,6 +418,41 @@ class UploadHelper extends AppHelper
             . '&Signature=' . $signature;
 
         return $url;
+    }
+
+    /**
+     * calculating expires about s3.
+     * - border hour based.
+     * - if border hour is 6 and current time is 09:00 then result will be 12:00
+     *
+     * @param int $expiresBorderHour It should be 1 to 24
+     * @param int $targetTimestamp
+     *
+     * @return int
+     * @throws Exception
+     */
+    function getS3Expires($expiresBorderHour = 6, $targetTimestamp = REQUEST_TIMESTAMP): int
+    {
+        if ($expiresBorderHour < 1 || $expiresBorderHour > 24) {
+            throw new Exception('Invalid argument: $expiresBorderHour. It received ' . $expiresBorderHour . '. But it should be 1 to 24');
+        }
+        // using the property as cache
+        if ($this->s3Expires) {
+            return $this->s3Expires;
+        }
+
+        $startTodayTimestamp = strtotime("today", $targetTimestamp);
+        $targetExpires = 0;
+
+        // increment hour from start the day, if it's over current time, expires will be that.
+        for ($h = $expiresBorderHour; $h <= 24; $h += $expiresBorderHour) {
+            $targetExpires = strtotime("+{$h} hours", $startTodayTimestamp);
+            if ($targetTimestamp < $targetExpires) {
+                break;
+            }
+        }
+        $this->s3Expires = $targetExpires;
+        return $this->s3Expires;
     }
 
 }

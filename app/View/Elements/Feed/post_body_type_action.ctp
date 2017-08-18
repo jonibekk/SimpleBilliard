@@ -109,7 +109,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         </a>
     <?php endforeach; ?>
 </div>
-<div class="panel-body">
+<div class="panel-body posts-panel-body">
     <?php if (!empty($kr)): ?>
         <div class="col col-xxs-12 feed-contents font_bold">
             <i class="fa fa-key disp_i"></i>&nbsp;<?= h($kr['name']) ?>
@@ -124,12 +124,12 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     $displayChangeValue .= '+';
                 }
                 $unitId = $post['ActionResult']['KrProgressLog']['value_unit'];
-                $displayChangeValue .= AppUtil::formatBigFloat($changeValue);
-
+                $displayChangeValue .= AppUtil::formatThousand($changeValue);
+                
                 $currentValue = bcadd($post['ActionResult']['KrProgressLog']['before_value'], $changeValue, 3);
 
-                $currentValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($currentValue), $unitId);
-                $targetValue = $this->NumberEx->addUnit(AppUtil::formatBigFloat($post['ActionResult']['KrProgressLog']['target_value']),
+                $currentValue = $this->NumberEx->addUnit(AppUtil::formatThousand($currentValue), $unitId);
+                $targetValue = $this->NumberEx->addUnit(AppUtil::formatThousand($post['ActionResult']['KrProgressLog']['target_value']),
                     $unitId);
                 ?>
                 <?php if ($unitId == KeyResult::UNIT_BINARY): ?>
@@ -332,4 +332,3 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
     <?php endif; ?>
 </div>
 <?= $this->App->viewEndComment() ?>
-

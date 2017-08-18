@@ -187,7 +187,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <div class="post-panel-footer">
                     <div class="font_12px" id="PostFormFooter">
                         <a href="#" class="link-red" id="PostUploadFileButton">
-                            <button type="button" class="btn pull-left photo-up-btn"><i
+                            <button type="button" class="btn pull-left btn-photo-up"><i
                                     class="fa fa-paperclip post-camera-icon"></i>
                             </button>
                         </a>

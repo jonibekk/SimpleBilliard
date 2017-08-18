@@ -32,6 +32,7 @@ define('GOOGLE_TAG_MANAGER_ID', null);
 define('MIXPANEL_TOKEN', null);
 define('VWO_ID', null);
 define('INTERCOM_APP_ID', null);
+define('INTERCOM_IDENTITY_VERIFICATION_SECRET', null);
 define('FACEBOOK_APP_ID', null);
 define('FACEBOOK_SECRET_ID', null);
 define('GOOGLE_CLIENT_ID', null);

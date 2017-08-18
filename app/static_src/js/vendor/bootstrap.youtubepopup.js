@@ -47,7 +47,7 @@
           obj.data('YouTube', {
             target: obj
           });
-          $(obj).bind('click.YouTubeModal', function (event) {
+          $(obj).on('click.YouTubeModal', function (event) {
             var youtubeId = options.youtubeId;
             if ($.trim(youtubeId) == '' && obj.is("a")) {
               youtubeId = getYouTubeIdFromUrl(obj.attr("href"));

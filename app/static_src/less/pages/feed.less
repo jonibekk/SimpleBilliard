@@ -1,0 +1,151 @@
+/* Page css: Feed / Circle posts / Post detail / Notification */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import "../partials/postarea";
+@import "../partials/attached_file";
+@import "../partials/action";
+@import(reference) "../partials/avatar";
+@import(reference) "../partials/line_number_limit";
+
+/**
+ * feed.less
+*/
+.post-heading-goal-area {
+  background: @smokyWhite;
+}
+
+.post-heading-goal {
+  line-height: 16px;
+}
+
+.post-heading-goal-wrapper {
+  overflow: hidden;
+  width: 88%;
+}
+
+.post-heading-goal-title {
+  font-weight: bold;
+  color: @darkBlack;
+  font-size: @goalTitleFontSize;
+  max-height: @goalTitleFontSize * @goalTitleLineHeightComputed * @goalTitleLinesToShow;
+  line-height: @goalTitleLineHeightComputed;
+  position: relative;
+  &:before,
+  &:after {
+    background: @goalTitleContainerBgColor;
+    position: absolute;
+  }
+  &:before {
+    content: "...";
+    top: @goalTitleFontSize * @goalTitleLineHeightComputed * (@goalTitleLinesToShow - 1);
+    right: 0;
+  }
+  &:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+  }
+  @goalTitleContainerBgColor: @smokyWhite;
+}
+
+.post-heading-goal-avatar {
+  &:extend(.avatar-rounded-link);
+}
+
+.post-heading-circle-area {
+  background: @smokyWhite;
+}
+
+.post-heading-circle {
+  line-height: 16px;
+}
+
+.post-heading-circle-title {
+  .line-number-limit-2(@smokyWhite);
+  font-weight: bold;
+}
+
+.post-heading-circle-wrapper {
+  &:extend(.line-number-wrap);
+  width: 88%;
+}
+
+.post-heading-circle-avatar {
+  &:extend(.avatar-rounded-link);
+}
+
+.post-submit-button {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.posts-panel-body {
+  padding: 10px 11px 0;
+}
+
+.post-contents {
+  a {
+    color: @subColor4;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: bottom;
+    &:hover,
+    &:target,
+    &:active {
+      color: #91170a;
+    }
+  }
+}
+
+.post-ogp-site-info {
+  overflow: hidden;
+}
+
+.comment-ogp-site-info {
+  overflow: hidden;
+}
+
+.comment-ogp-close {
+  left: 95%;
+  margin-top: 20px;
+  position: absolute;
+  display: block;
+  z-index: 1000;
+}
+
+.comment-contents {
+  a {
+    color: @subColor4;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:hover,
+    &:target,
+    &:active {
+      color: #91170a;
+    }
+  }
+
+  .comment-add-pic {
+    color: #d9230f;
+  }
+}
+
+.feed {
+  &-progress {
+    color: @subColor3;
+    font-size:14px;
+    font-weight: 700;
+    &-strong {
+      color:@veryDark;
+    }
+    &-change {
+      color:@subColor13;
+    }
+  }
+}

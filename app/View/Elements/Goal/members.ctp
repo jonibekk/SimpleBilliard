@@ -42,7 +42,8 @@
                         <?= nl2br(h($member['GoalMember']['description'])) ?>
                     </p>
                 </div>
-                <?php if ($member['User']['id'] == $this->Session->read('Auth.User.id')): ?>
+                <?php // if user is collaborator then, edit own collaborator information. ?>
+                <?php if ($member['User']['id'] == $this->Session->read('Auth.User.id') && $member['GoalMember']['type'] == GoalMember::TYPE_COLLABORATOR): ?>
                     <a class="goal-detail-member-edit btn modal-ajax-get-collab"
                        href="#"
                        data-url="<?= $this->Html->url([

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-26 16:52+0900\n"
+"PO-Revision-Date: 2017-07-19 17:15+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -142,7 +142,7 @@ msgstr "サークルに参加しました。"
 msgid "One or more members must be assigned as circle administrators."
 msgstr "サークル管理者は最低ひとりは必須です。"
 
-msgid "An error occured while processing."
+msgid "An error occurred while processing."
 msgstr "処理中にエラーが発生しました。"
 
 msgid "Success"
@@ -165,6 +165,9 @@ msgstr "設定を更新しました。"
 
 msgid "Error"
 msgstr "エラー"
+
+msgid "Parameters were wrong"
+msgstr "不正なパラメータです。"
 
 msgid "Internal Server Error"
 msgstr "サーバー内部のエラーが発生しました。"
@@ -243,7 +246,7 @@ msgid "Failed to collaborate."
 msgstr "コラボに失敗しました。"
 
 msgid "Added a key result."
-msgstr "達成要素を追加しました。"
+msgstr "KRを追加しました。"
 
 msgid "Some error occurred. Please try again from the start."
 msgstr "エラーが発生しました。もう一度最初から登録してください。"
@@ -258,19 +261,19 @@ msgid "Changed leader."
 msgstr "リーダーを変更しました。"
 
 msgid "Completed a key result."
-msgstr "成果を完了にしました。"
+msgstr "KRを完了にしました。"
 
 msgid "Made a key result uncompleted."
-msgstr "成果を未完了にしました。"
+msgstr "KRを未完了にしました。"
 
 msgid "No exist kr."
 msgstr "KRが存在しません。"
 
 msgid "You can't delete achieved KR."
-msgstr "完了済の成果は削除出来ません。"
+msgstr "完了済のKRは削除出来ません。"
 
 msgid "Deleted a key result."
-msgstr "成果を削除しました。"
+msgstr "KRを削除しました。"
 
 msgid "There is no action."
 msgstr "アクションが存在しません。"
@@ -350,8 +353,8 @@ msgstr "期限"
 msgid "Start Date"
 msgstr "開始日"
 
-msgid "Desctiption"
-msgstr "概要"
+msgid "Description"
+msgstr "詳細"
 
 msgid "Weight"
 msgstr "重要度"
@@ -410,7 +413,7 @@ msgstr "取材したい"
 msgid "Others"
 msgstr "その他"
 
-msgid "Ooops. Some problems occured."
+msgid "Ooops. Some problems occurred."
 msgstr "問題が発生したため、処理が完了しませんでした。"
 
 msgid "Goalous - Thanks for your contact."
@@ -425,7 +428,7 @@ msgstr "投稿に失敗しました。"
 msgid "Posted."
 msgstr "投稿しました。"
 
-msgid "This post doesn't exist."
+msgid "This post no longer exist."
 msgstr "この投稿は存在しません。"
 
 msgid "This isn't your post."
@@ -433,6 +436,11 @@ msgstr "この投稿はあなたのものではありません。"
 
 msgid "Deleted the post."
 msgstr "投稿を削除しました。"
+
+#, fuzzy
+#| msgid "This goal doesn't exist."
+msgid "This post doesn't exist."
+msgstr "ゴールが存在しません。"
 
 msgid "Saved changes."
 msgstr "投稿の変更を保存しました。"
@@ -550,6 +558,9 @@ msgstr "期間設定の変更に失敗しました。"
 
 msgid "Changed terms setting."
 msgstr "期間設定を更新しました。"
+
+msgid "You cannot delete the team. Please contact to Goalous team."
+msgstr "チームを削除する事はできません。Goalousチームにお問い合わせください。"
 
 msgid "Failed to delete a team."
 msgstr "チームの削除に失敗しました。"
@@ -737,6 +748,9 @@ msgid "Failed to register user. Please try again later."
 msgstr ""
 "ユーザー本登録に失敗しました。しばらく時間をおいて再度登録してください。"
 
+msgid "Joined %s."
+msgstr "チーム「%s」に参加しました。"
+
 msgid "Succeeded to register!"
 msgstr "本登録が完了しました！"
 
@@ -795,9 +809,6 @@ msgstr "別のユーザ宛のチーム招待です。"
 msgid "Failed to join team. Please try again later."
 msgstr "チーム参加に失敗しました。しばらく時間をおいて再度登録してください。"
 
-msgid "Joined %s."
-msgstr "チーム「%s」に参加しました。"
-
 msgid "The code is incorrect."
 msgstr "コードが正しくありません。"
 
@@ -809,9 +820,6 @@ msgstr "2段階認証を解除しました。"
 
 msgid "Generated new recovery codes."
 msgstr "新しいリカバリコードを生成しました。"
-
-msgid "Next Term"
-msgstr "来期"
 
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
@@ -874,11 +882,14 @@ msgstr "Goalousの認証コード: %s"
 msgid "日本語"
 msgstr "日本語"
 
+msgid "Information"
+msgstr "お知らせ"
+
+msgid "Notice"
+msgstr "注意"
+
 msgid "Sent file(s)."
 msgstr "ファイルを送信しました。"
-
-msgid "Parameters were wrong"
-msgstr "不正なパラメータです。"
 
 msgid "Device Information not exists"
 msgstr "デバイス情報が見つかりません。"
@@ -891,12 +902,6 @@ msgstr "%sを達成しました！"
 
 msgid "Achieved a goal."
 msgstr "ゴール達成しました！"
-
-msgid "Information"
-msgstr "お知らせ"
-
-msgid "Notice"
-msgstr "注意"
 
 msgid "Api Endpoint not found."
 msgstr "APIが見つかりません。"
@@ -970,6 +975,9 @@ msgstr "完了"
 msgid "0 (Certified exempt)"
 msgstr "0 (認定対象外)"
 
+msgid "Next Term"
+msgstr "来期"
+
 msgid "More Previous"
 msgstr "もっと前"
 
@@ -986,7 +994,7 @@ msgid "Actions number"
 msgstr "アクションが多い順"
 
 msgid "Key results number"
-msgstr "出した成果が多い順"
+msgstr "KRが多い順"
 
 msgid "Followers number"
 msgstr "フォロワーが多い順"
@@ -1064,13 +1072,13 @@ msgid "Please input current value between start value and target value."
 msgstr "現在値は開始値と目標値の範囲内で入力してください。"
 
 msgid "There is no data of KR."
-msgstr "達成要素のデータがありません。"
+msgstr "KRのデータがありません。"
 
 msgid "Failed to save KR."
-msgstr "達成要素の保存に失敗しました。"
+msgstr "KRの保存に失敗しました。"
 
 msgid "There is no key result."
-msgstr "達成要素が存在しません。"
+msgstr "KRが存在しません。"
 
 msgid "Label must be at least %d count."
 msgstr "ラベル登録は最大%d個までです。"
@@ -1566,7 +1574,7 @@ msgid "Number of goals"
 msgstr "ゴール数"
 
 msgid "Number of key results"
-msgstr "出した成果数"
+msgstr "KR数"
 
 msgid "Number of actions"
 msgstr "アクション数"
@@ -1827,7 +1835,7 @@ msgid "Incomplete"
 msgstr "未完了"
 
 msgid "You can't edit achieved KR."
-msgstr "完了済の成果は編集出来ません。"
+msgstr "完了済のKRは編集出来ません。"
 
 msgid "Completed this on %s."
 msgstr "%sに完了した"
@@ -2010,10 +2018,10 @@ msgid "item can only be selected."
 msgstr "項目までしか選択できません"
 
 msgid "Select a key result (optional)"
-msgstr "達成要素を選択する(オプション)"
+msgstr "KRを選択する(オプション)"
 
 msgid "No key result"
-msgstr "達成要素はありません"
+msgstr "KRはありません"
 
 msgid "Add notified parties (optional)"
 msgstr "通知先を追加(オプション)"
@@ -2275,7 +2283,7 @@ msgid "Check your email!"
 msgstr "メールをチェックしよう！"
 
 msgid ""
-"We've sent a six-digit confirmation code to %s. Enter it below to confirm "
+"We've sent a six-digit confirmation code to %s. Enter it below to confirm "
 "your email address."
 msgstr ""
 "%sに6桁の確認コードを送信しました。Eメールを確認して、以下に入力してくださ"
@@ -2287,13 +2295,13 @@ msgstr "あなたの名前は？"
 msgid "Your name will only be displayed to your team on Goalous."
 msgstr "あなたの名前はGoalousのチーム内でのみ表示されます。"
 
-msgid "I want to receive news and updates by email from Goalous."
+msgid "I want to receive news and updates by email from Goalous."
 msgstr "Goalousからのメールによるニュースや更新情報などを受け取る。"
 
 msgid "Set your password"
 msgstr "パスワードを設定しよう"
 
-msgid "Create your password to login to Goalous."
+msgid "Create your password to login to Goalous."
 msgstr "Goalousにログインするパスワードを作成します。"
 
 msgid "Please don't close this window."
@@ -2304,7 +2312,7 @@ msgstr "チームに名前をつけよう"
 
 msgid ""
 "Create a name for your team. A team is a group that can share goals, actions "
-"and posts  with each other. People outside of the team can't access this "
+"and posts with each other. People outside of the team can't access this "
 "information."
 msgstr ""
 "チームは、ゴールやアクション、投稿を共有できる人の集まりです。チーム外の人は"
@@ -2396,7 +2404,8 @@ msgid ""
 "evaluations or any period of time the works best for your company.Choose the "
 "months that start and end your first two terms."
 msgstr ""
-"個人評価や会社の決算などに紐づく期間をチームの期とします。最初の2つの期の開始と終了月を選択してください。"
+"個人評価や会社の決算などに紐づく期間をチームの期とします。最初の2つの期の開始"
+"と終了月を選択してください。"
 
 msgid "What is your goal ?"
 msgstr "あなたのゴールはなんですか？"
@@ -2463,9 +2472,6 @@ msgstr "このゴールを評価対象にしたいですか？"
 msgid "View more options"
 msgstr "オプションを見る"
 
-msgid "Description"
-msgstr "詳細"
-
 msgid "End date"
 msgstr "終了日"
 
@@ -2518,8 +2524,10 @@ msgstr "すべてのコメントを見る(%s)"
 msgid "more"
 msgstr "もっと見る"
 
+#, fuzzy
+#| msgid "Edit goal"
 msgid "Edit Goal"
-msgstr "ゴールを編集する"
+msgstr "ゴールを編集"
 
 msgid "Confirm"
 msgstr "確認"
@@ -2643,7 +2651,7 @@ msgid "All progress of this KR will be reset, is it really OK?"
 msgstr "このKRの全ての進捗がリセットされますが、本当によろしいですか？"
 
 msgid "Updated KR."
-msgstr "達成要素を更新しました。"
+msgstr "KRを更新しました。"
 
 msgid ""
 "If you change the goal term from the next term to this term, the goal and "
@@ -2756,7 +2764,7 @@ msgstr "お問い合わせ"
 msgid "Contact for press"
 msgstr "プレス関連のお問い合わせ"
 
-msgid "Contact for cooporation"
+msgid "Contact for cooperation"
 msgstr "協業のお問い合わせ"
 
 msgid "Toggle navigation"
@@ -2776,6 +2784,9 @@ msgstr "新しいチームをつくる"
 
 msgid "Home"
 msgstr "ホーム"
+
+msgid "Create a team"
+msgstr "チームを作成"
 
 msgid "No new message"
 msgstr "未読のメッセージはありません。"
@@ -3172,8 +3183,11 @@ msgstr "アクションできるゴールがありません。"
 msgid "View options"
 msgstr "オプションを表示"
 
+msgid "Add Action"
+msgstr "アクションを追加"
+
 msgid "Add Key Result"
-msgstr "達成要素を追加"
+msgstr "KRを追加"
 
 msgid "Edit goal"
 msgstr "ゴールを編集"
@@ -3200,22 +3214,25 @@ msgid "Edit Top Key Result"
 msgstr "トップKRを編集する"
 
 msgid "Edit Key Result"
-msgstr "達成要素を編集する"
+msgstr "KRを編集する"
 
 msgid "Uncompete Key Result"
-msgstr "達成要素を未完了にする"
+msgstr "KRを未完了にする"
 
 msgid "Complete Top Key Result"
 msgstr "トップKRを完了にする"
 
 msgid "Complete Key Result"
-msgstr "達成要素を完了にする"
+msgstr "KRを完了にする"
 
 msgid "Delete Key Result"
-msgstr "達成要素を削除する"
+msgstr "KRを削除する"
 
 msgid "Do you really want to delete this Key Result?"
-msgstr "本当にこの成果を削除しますか？"
+msgstr "本当にこのKRを削除しますか？"
+
+msgid "Edit"
+msgstr "編集"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -3230,10 +3247,10 @@ msgid "eg. I completed making the web site."
 msgstr "例） Webサイトの構築をした。"
 
 msgid "Key Results"
-msgstr "達成要素"
+msgstr "KR"
 
 msgid "Choose a key result to associate."
-msgstr "紐付ける成果を選択しよう。"
+msgstr "紐付けるKRを選択しよう。"
 
 msgid "Notified to"
 msgstr "通知先"
@@ -3263,7 +3280,7 @@ msgid "(Today)"
 msgstr "（本日）"
 
 msgid "Weight of Key Result for the Goal"
-msgstr "ゴールにとってこの成果の重要度"
+msgstr "ゴールにとってこのKRの重要度"
 
 msgid "Let's share the actions that you've done today!"
 msgstr "今日やったアクションを共有しよう！"
@@ -3278,10 +3295,10 @@ msgid "Update Top Key Result"
 msgstr "トップKRを更新"
 
 msgid "Update Key Result"
-msgstr "達成要素を更新"
+msgstr "KRを更新"
 
 msgid "KR name"
-msgstr "達成要素名"
+msgstr "KR名"
 
 msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
@@ -3325,19 +3342,28 @@ msgid "Start date"
 msgstr "開始日"
 
 msgid "Whichever you choose, this kr will be finished."
-msgstr "※どちらを選択しても、選択中の成果は「完了」となります。"
+msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
 
 msgid "Achieve the goal"
 msgstr "ゴール達成"
 
 msgid "KRs"
-msgstr ""
+msgstr "KRs"
 
-msgid "Add Reference Values"
-msgstr "基準を追加する"
+msgid "Edit a goal"
+msgstr "ゴールを編集"
 
-msgid "Edit goal"
-msgstr "ゴール編集"
+msgid "Delete Goal"
+msgstr "ゴールを削除"
+
+msgid "Acheive Goal"
+msgstr "ゴールを達成"
+
+msgid "No Labels"
+msgstr "ラベル"
+
+msgid "Followers"
+msgstr "フォロワー"
 
 msgid "KR"
 msgstr "KR"
@@ -3356,21 +3382,6 @@ msgstr ""
 "とができます。ゴールに対して、だれがいつなにをしたかが「フォトアクション」"
 "（画像つきの記事）としてホームフィードに掲載され、みんながたのしくチェックで"
 "きます"
-
-msgid "How to evaluate personal Goals?"
-msgstr "個人の目標評価はどのようにおこなうのですか？"
-
-msgid ""
-"Evaluation can be done at end of term or in next term. There are 2 types of "
-"evaluations, Goal evaluation and total evaluation."
-msgstr ""
-"個人の目標による評価は、期末もしくは来期中に実施することができます。コーチに"
-"よって認定（評価対象として承認）されたゴールに対してのゴール評価と、そのメン"
-"バー個人のトータル評価の2分類があり、あらかじめチーム（組織）で定めたスコアと"
-"コメントを評価者が入力します。コーチは1人のみ、評価者は最大7人まで設定でき"
-"（兼務可能）、評価者は定められた順番で評価を実施できます。さらに設定によっ"
-"て、「自己評価」と「最終者評価（CSVファイルでの一括評価）」を評価者として追加"
-"できます。"
 
 msgid "What should I do if the member leave our company?"
 msgstr "社員が期中で退職したらどうなりますか？"
@@ -3424,10 +3435,9 @@ msgstr ""
 msgid "What should we do after the campaign?"
 msgstr "無償期間（2017年夏まで）の後はどうなりますか？"
 
-msgid "There will appear some limit, but data will not be deleted."
-msgstr ""
-"機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除などせ"
-"ず引き続きご利用いただけます。"
+msgid ""
+"In order to continue using Goalous, you need to purchase a subscription plan."
+msgstr "引き続きご利用いただくには、有料プランのご契約が必要になります。"
 
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
@@ -3454,7 +3464,7 @@ msgid "Which company offer Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
 
 msgid ""
-"ISAO, make and deliever \"Joyful!\". Found on 1999, our sprits are \"Open, "
+"ISAO, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, "
 "Challanging, Link\"."
 msgstr ""
 "\"たのしい！\"をうみだしとどける企業、ISAO（いさお）が運営しております。豊田"
@@ -3540,8 +3550,11 @@ msgstr "2017年夏まで無料でご利用できます。"
 msgid "Change basic settings"
 msgstr "基本設定を更新"
 
-msgid "Delete the team"
-msgstr "チームを削除する"
+msgid "If you would like to delete the team,"
+msgstr "チームの削除を希望する場合は、"
+
+msgid "please contact us."
+msgstr "こちらからお問い合わせください。"
 
 msgid ""
 "If the team is deleted, everything such as posts, actions and goals will be "
@@ -3689,9 +3702,6 @@ msgstr "評価設定"
 
 msgid "Evaluation feature is disabled now. If you would like to use it,"
 msgstr "評価機能は現在無効化されています。もしご利用になりたい場合は、"
-
-msgid "please contact us."
-msgstr "こちらからお問い合わせください。"
 
 msgid "Evaluate"
 msgstr "評価する"
@@ -3936,6 +3946,11 @@ msgstr "変更した評価データのファイルをアップロードしてく
 
 msgid "Upload"
 msgstr "アップロード"
+
+#, fuzzy
+#| msgid "Basic settings"
+msgid "Basic info"
+msgstr "基本設定"
 
 msgid "Team Members"
 msgstr "チームメンバー"
@@ -4357,6 +4372,12 @@ msgstr "アクションを見る"
 msgid "Goal Details"
 msgstr "ゴール詳細"
 
+msgid "You haven't created any actions&hellip; yet."
+msgstr "あなたはまだアクションをしていません。"
+
+msgid "There is no Action."
+msgstr "アクションがありません。"
+
 msgid "View more"
 msgstr "もっと見る"
 
@@ -4366,14 +4387,11 @@ msgstr "これ以上のアクションはありません。"
 msgid "No one is following."
 msgstr "フォロワーはいません。"
 
-msgid "No Labels"
-msgstr "ラベル"
-
 msgid "Goal progress rate"
 msgstr "ゴール進捗率"
 
 msgid "There is no KR."
-msgstr "達成要素は登録されていません"
+msgstr "KRが登録されていません"
 
 msgid "Collaborating"
 msgstr "コラボり中"
@@ -4433,7 +4451,7 @@ msgstr "例）鈴木 いさお"
 msgid "eg. example@goalous.com"
 msgstr "例）example@goalous.com（半角英数字）"
 
-msgid "eg. ISAO Cooporation"
+msgid "eg. ISAO Corporation"
 msgstr "例）株式会社ISAO"
 
 msgid "Company name, Organization name or Something like that."
@@ -4612,7 +4630,7 @@ msgid "Sharing at circle."
 msgstr "共有はサークルで"
 
 msgid ""
-"You can share with your project members and with your devision members in "
+"You can share with your project members and with your division members in "
 "circles."
 msgstr ""
 "部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の"
@@ -4622,8 +4640,8 @@ msgstr ""
 msgid "Let's start conversation about any activities and topics!"
 msgstr "様々な活動や話題をサークルで共有しよう！"
 
-msgid "Messagings"
-msgstr ""
+msgid "Messaging"
+msgstr "メッセージ"
 
 msgid ""
 "You can communicate with your team members by Web and Mobile app. No more "
@@ -4745,7 +4763,7 @@ msgid ""
 "から始まります。"
 msgstr ""
 
-msgid "Make results by coorporation."
+msgid "Make results by cooperation."
 msgstr "協力による成果が出る"
 
 msgid ""
@@ -4886,12 +4904,6 @@ msgstr "あなたのメールアドレス"
 
 msgid " "
 msgstr " "
-
-msgid "Please select the standard start month."
-msgstr "基準となる期の開始月を選択して下さい。"
-
-msgid "Create a team"
-msgstr "チームを作成"
 
 msgid "Create a group vision."
 msgstr "グループビジョンを作成してください"
@@ -5037,7 +5049,7 @@ msgid "Choose a password for login to Goalous"
 msgstr "Goalousのログインパスワードを作成してください。"
 
 msgid "********"
-msgstr ""
+msgstr "********"
 
 msgid "Join Team"
 msgstr "チームに参加"
@@ -5113,27 +5125,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-msgid "Edit"
-msgstr "編集"
-
-msgid "Followers"
-msgstr "フォロワー"
-
-msgid "Add Action"
-msgstr "アクションを追加"
-
-msgid "You haven't created any actions&hellip; yet."
-msgstr "あなたはまだアクションをしていません。"
-
-msgid "There is no Action."
-msgstr "アクションがありません。"
-
-msgid "Edit a goal"
-msgstr "ゴールを編集"
-
-msgid "Delete Goal"
-msgstr "ゴールを削除"
-
-msgid "Acheive Goal"
-msgstr "ゴールを達成"

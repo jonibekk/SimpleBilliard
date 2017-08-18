@@ -1,0 +1,21 @@
+.no-underline {
+  text-decoration: none;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+// TODO:bootstrapのlessファイルを読み込んでextendできるようにする
+// ここで.fa を定義するとデザイン崩れが発生するため、モジュール名を .fa-moduleにしている
+.fa-module {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+

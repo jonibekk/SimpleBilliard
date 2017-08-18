@@ -500,6 +500,14 @@ class NotifySetting extends AppModel
             }
         }
         $title = null;
+
+        // getting goalName.
+        $goalName = null;
+        if(Hash::get($options,'goal_id')){
+            $goal = $this->User->Goal->findById($options['goal_id']);
+            $goalName = Hash::get($goal,'Goal.name');
+        }
+
         switch ($type) {
             case self::TYPE_FEED_POST:
                 // 共有先ユーザー名 + サークル名
@@ -649,49 +657,47 @@ class NotifySetting extends AppModel
             case self::TYPE_MY_GOAL_FOLLOW:
                 // この通知で必要なオプション値
                 //   - goal_id: フォローしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has followed <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has followed <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_MY_GOAL_COLLABORATE:
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_MY_GOAL_CHANGED_BY_LEADER:
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を変更したゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has changed information on <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has changed information on <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_MEMBER_CHANGE_KR:
@@ -713,129 +719,129 @@ class NotifySetting extends AppModel
             case self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象にしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has evaluated <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has evaluated <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
                 // この通知で必要なオプション値
                 //   - goal_id: 修正依頼をしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> requested <span class="notify-card-head-target">%2$s</span> to modify.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> requested <span class="notify-card-head-target">%2$s</span> to modify.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象外にしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has not evaluated <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has not evaluated <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_COACHEE_CREATE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 新しく作成したゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> created <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> created <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_COACHEE_COLLABORATE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_COACHEE_CHANGE_ROLE:
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_COACHEE_CHANGE_GOAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を修正したゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has reapplied <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_COACHEE_WITHDRAW_APPROVAL:
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象にしたゴールID
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has withdrawn <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has withdrawn <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_EVALUATION_START:
@@ -892,17 +898,17 @@ class NotifySetting extends AppModel
             case self::TYPE_FEED_CAN_SEE_ACTION:
                 // この通知で必要なオプション値
                 //   - goal_id: アクションしたゴール
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> added an action on<span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> added an action on<span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
 
                 break;
@@ -925,17 +931,17 @@ class NotifySetting extends AppModel
                 }
                 break;
             case self::TYPE_APPROVAL_COMMENT:
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_COACHEE_EXCHANGE_TKR:
@@ -965,17 +971,17 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT:
             case self::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER:
-                $goal = $this->User->Goal->findById($options['goal_id']);
+
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has changed the term of <span class="notify-card-head-target">%2$s</span> from the next term to this term.',
                         $user_text,
-                        $goal['Goal']['name']);
+                        $goalName);
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has changed the term of <span class="notify-card-head-target">%2$s</span> from the next term to this term.',
                         h($user_text),
-                        h($goal['Goal']['name']));
+                        h($goalName));
                 }
                 break;
             case self::TYPE_CHANGED_TEAM_BASIC_SETTING:

@@ -64,6 +64,12 @@
 /** @noinspection PhpIncludeInspection */
 require ROOT . '/Vendor/autoload.php';
 
+// disable default locale setting for japanese file name problem
+// 元々、日本語ファイルで問題あり。"あabcあ.png" が basename() で"abcあ.png"と扱われていた。 HTTP/2移行後から、日本語ファイル名が正しく扱われるようになった。<- 何が影響しているか判断できない。nginx? OS?
+// 正しくないファイル名をhashしたものをs3に保存していたため、HTTP/2移行後から日本語ファイルの画像がリンク切れを起こすようになった。
+// よって、元の(正しくない)設定に戻す。
+setlocale(LC_ALL,"");
+
 // CakePHPのオートローダーをいったん削除し、composerより先に評価されるように先頭に追加する
 // https://github.com/composer/composer/commit/c80cb76b9b5082ecc3e5b53b1050f76bb27b127b を参照
 spl_autoload_unregister(array('App', 'load'));

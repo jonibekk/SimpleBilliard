@@ -59,7 +59,7 @@ $this->Form->create('Post', [
 
 <div class="none" id="PostEdit_<?= $post['Post']['id'] ?>">
     <a href="#" class="target-show-this-del font_12px" target-id="PostFormImage_<?= $post['Post']['id'] ?>">
-        <button type="button" class="btn pull-left photo-up-btn">
+        <button type="button" class="btn pull-left btn-photo-up">
             <i class="fa fa-camera post-camera-icon"></i>
         </button>
 

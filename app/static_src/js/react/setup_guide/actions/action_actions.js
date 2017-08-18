@@ -76,15 +76,10 @@ export function submitAction(dispatch, refs, socket_id, goal_id) {
     let msg = ''
     if(response.data.error) {
       browserHistory.push('/setup')
-      PNotify.removeAll()
-      new PNotify({
-          type: 'error',
-          title: cake.word.error,
-          text: response.data.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      new Noty({
+        type: 'error',
+        text: '<h4>'+cake.word.error+'</h4>'+this.response.data.msg,
+      }).show();
     } else {
       document.location.href = "/setup/?from=action"
     }
@@ -92,14 +87,9 @@ export function submitAction(dispatch, refs, socket_id, goal_id) {
   })
   .catch(function (response) {
     browserHistory.push('/setup')
-    PNotify.removeAll()
-    new PNotify({
+    new Noty({
         type: 'error',
-        title: cake.word.error,
-        text: __("Failed to add an action."),
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-    })
+        text: '<h4>'+cake.word.error+'</h4>'+__("Failed to add an action."),
+    }).show();
   })
 }

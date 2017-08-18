@@ -38,30 +38,20 @@ export function createGoal(goal) {
   .then(function (response) {
     if(response.data.error) {
       browserHistory.push('/setup')
-      PNotify.removeAll()
-      new PNotify({
-          type: 'error',
-          title: cake.word.error,
-          text: __("Failed to add an action."),
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      new Noty({
+        type: 'error',
+        text: '<h4>'+cake.word.error+'</h4>'+__("Failed to add an action."),
+      }).show();
     } else {
       document.location.href = "/setup/?from=goal"
     }
   })
   .catch(function (response) {
     browserHistory.push('/setup')
-    PNotify.removeAll()
-    new PNotify({
-        type: 'error',
-        title: cake.word.error,
-        text: __("Failed to add an action."),
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-    })
+    new Noty({
+      type: 'error',
+      text: '<h4>'+cake.word.error+'</h4>'+__("Failed to add an action."),
+    }).show();
   })
   return {
     type: CREATE_GOAL

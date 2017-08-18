@@ -20,8 +20,9 @@ if (!isset($page_type)) {
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <script>
-        sendToGoogleTagManager("<?= $page_type ?>");
-
+        window.addEventListener("load", function(){
+            sendToGoogleTagManager("<?= $page_type ?>");
+        });
         function sendToGoogleTagManager(page_type) {
             dataLayer = [{
                 "loggedIn": "<?= $this->Session->read('Auth.User.id') ? "true" : "false"?>",

@@ -1,0 +1,270 @@
+/**
+ * Setup guide page css
+ */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import "../partials/postarea";
+@import "../partials/attached_file";
+@import(reference) "../partials/btn";
+
+.setup-container {
+  overflow: hidden;
+}
+
+.setup-inner {
+  padding: 20px 0 25px;
+  margin: 0 auto;
+  width: 94%;
+}
+
+.setup-status {
+  overflow: hidden;
+  position: relative;
+  height: 60px;
+}
+
+.setup-status-wrapper-progress {
+  height: 100%;
+  width: 65%;
+  float: left;
+  position: relative;
+}
+
+.setup-status-progress {
+  width: 100%;
+  bottom: 0;
+  margin-bottom: 0 !important;
+  position: absolute;
+}
+
+.setup-status-number {
+  height: 100%;
+  width: 35%;
+  float: left;
+  position: relative;
+}
+
+.setup-status-number-elem {
+  font-size: 50px;
+  color: @serviceColor;
+  font-weight: 400;
+}
+
+.setup-status-completed {
+  height: 100%;
+  width: 35%;
+  float: left;
+  position: relative;
+}
+
+.setup-status-completed-text {
+  width: 100%;
+  bottom: 0;
+  margin-bottom: 0!important;
+  position: absolute;
+  color: #51A7F9;
+}
+
+.setup-status-footer {
+  color: @subColor4;
+}
+
+.setup-items {
+  margin-bottom: 20px;
+}
+
+.setup-items-item {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+  padding: 9px;
+  background-color: #fff;
+  border: 2px solid @subColor4;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  &:active, &:hover, &:focus {
+    border-color: @subColor3;
+  }
+}
+
+
+.setup-items-circle-item {
+  height: 65px;
+}
+
+.setup-items-item-radius-number {
+  background-color: @subColor4;
+  border: 1px solid @subColor4;
+  border-radius: 50%;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  color: #fff;
+  font-size: @fontLarge;
+}
+
+.setup-items-item-pic {
+}
+
+.setup-items-item-explain {
+  width: 67%;
+  margin-left: 10px;
+}
+
+.setup-items-item-to-right {
+  color: @subColor4;
+}
+
+.setup-items-item-pic-img {
+  height: 50px;
+  width: auto;
+}
+
+.setup-items-item-icon-fa {
+  font-size: 45px;
+  color: @subColor1;
+}
+.setup-form-arrow {
+  margin: 22px 5px 0;
+}
+
+.setup-explain {
+  width: 100%;
+  height: auto;
+  margin: 40px 0;
+}
+
+.setup-explain-img {
+  width: 70%;
+  display: block;
+  height: auto;
+}
+
+.setup-image-box {
+  background-size: 100%;
+  background-position: 0 50%;
+  max-width: 100%;
+  height: 400px;
+  margin: 0 auto;
+}
+
+.setup-back-btn {
+  &:extend(.btn);
+  border-color: @subColor1;
+  color: @subColor1;
+  width: 25%;
+  &:hover {
+    color: @subColor2;
+  }
+}
+
+
+.setup-back-btn-full {
+  &:extend(.btn);
+  border-color: @subColor1;
+  color: @subColor1;
+  width: 100%;
+  &:hover {
+    color: @subColor2;
+  }
+}
+
+
+.setup-next-btn {
+  &:extend(.btn);
+  width: 70%;
+}
+
+.setup-app-index-image {
+  .setup-image-box;
+  background-image: url(../img/setup/setup_app.png);
+}
+
+.setup-flex-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-content: space-between; /* Safari */
+  align-content: space-between;
+}
+
+.setup-profile-add-picture-container {
+  .setup-flex-container;
+}
+
+.setup-profile-add-picture-thumbnail {
+  -webkit-order: 1;
+  order: 1;
+  -webkit-flex-basis: auto;
+  flex-basis: auto;
+}
+
+.setup-profile-add-picture-upload-btn {
+  -webkit-order: 2;
+  order: 2;
+  -webkit-flex-basis: auto;
+  flex-basis: auto;
+}
+
+.setup-items-select-circle {
+  color: @subColor1;
+  padding: 5px;
+  width: 80%;
+}
+
+.setup-items-select-circle-check {
+  width: auto;
+  color: #51A7F9;
+  padding: 5px;
+}
+
+.setup-circle-public-group {
+  border-top: 1px solid #d2d4d5;
+  border-bottom: 1px solid #d2d4d5;
+}
+
+.select2-container {
+  width: 100%;
+}
+
+.setup-items-item-complete-check {
+  color: #51A7F9;
+}
+
+.setup-guide-file-preview {
+  float: left;
+  width: 96px;
+  height: 96px;
+  display: inline-block;
+}
+
+.setup-guide-file-select-btn {
+  margin-top: 28px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.setup-items-header-comment {
+  margin-top: 30px;
+}
+
+.setup-post-form {
+  margin: 25px 0 25px;
+}
+
+.setup-profile-form {
+  margin-bottom: 30px;
+}
+
+.setup-progress-bar-info {
+  background-color: #51A7F9;
+}
