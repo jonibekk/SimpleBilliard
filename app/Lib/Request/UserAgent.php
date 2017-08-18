@@ -43,6 +43,12 @@ class UserAgent
      */
     private $mobileAppVersion = '';
 
+    /**
+     * parse User-Agent Header string
+     * @param null|string $userAgent
+     *
+     * @return UserAgent
+     */
     static function detect($userAgent = null): self
     {
         if (!is_string($userAgent)) {
@@ -51,12 +57,18 @@ class UserAgent
         return new self($userAgent);
     }
 
+    /**
+     * @param string $userAgent
+     */
     public function __construct(string $userAgent)
     {
         $this->userAgent = $userAgent;
         $this->parseUserAgent();
     }
 
+    /**
+     * detecting device
+     */
     private function parseUserAgent()
     {
         $this->isiOSAccess       = (false !== strpos($this->userAgent, self::USER_AGENT_APP_IOS));
@@ -68,6 +80,10 @@ class UserAgent
         }
     }
 
+    /**
+     * return device type of User-Agent
+     * @return string
+     */
     private function getAppUserAgent(): string
     {
         if ($this->isiOSAccess) {
@@ -79,6 +95,9 @@ class UserAgent
         return '';
     }
 
+    /**
+     * parse environment, app version from User-Agent
+     */
     private function parseMobileAppUserAgent()
     {
         // ex: parsing User-Agent
@@ -94,26 +113,46 @@ class UserAgent
         $this->mobileAppVersion     = trim($goalousAppUserAgent[1]);
     }
 
+    /**
+     * return app version
+     * @return string
+     */
     public function getMobileAppVersion(): string
     {
         return $this->mobileAppVersion;
     }
 
+    /**
+     * return true if access from mobile app
+     * @return bool
+     */
     public function isMobileAppAccess(): bool
     {
         return $this->isMobileAppAccess;
     }
 
+    /**
+     * return true if iOS app access
+     * @return bool
+     */
     public function isiOSApp(): bool
     {
         return $this->isiOSAccess;
     }
 
+    /**
+     * return true if Android app access
+     * @return bool
+     */
     public function isAndroidApp(): bool
     {
         return $this->isAndroidAccess;
     }
 
+    /**
+     * return environment of App User-Agent header
+     * @return string
+     */
     public function getMobileAppEnvironment(): string
     {
         return $this->mobileAppEnvironment;
