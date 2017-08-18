@@ -306,7 +306,7 @@ class PaymentService extends AppService
         // Change decimal point by currency
         // Ref: No1 in this document
         // http://confluence.goalous.com/display/GOAL/Specifications+confirmation
-        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
+        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_TYPE_JPY) {
             $amount = AppUtil::floor($amount, 0);
         } else {
             $amount = AppUtil::floor($amount, 2);
@@ -480,7 +480,7 @@ class PaymentService extends AppService
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount, $paymentSettings);
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount, Hash::get($paymentSettings, 'PaymentSetting'));
 
         $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'], $description);
 
