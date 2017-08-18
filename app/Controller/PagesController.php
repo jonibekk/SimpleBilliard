@@ -9,6 +9,7 @@
  */
 
 App::uses('AppController', 'Controller');
+App::uses('PaymentSetting', 'Model');
 
 /**
  * Static content controller
@@ -33,7 +34,7 @@ class PagesController extends AppController
     public function home()
     {
         // Display lp top page if not logged in
-        if (!$this->Auth->user()) {
+        if (!$this->isLoggedIn()) {
             $this->layout = LAYOUT_HOMEPAGE;
             return $this->render('home');
         }
@@ -52,6 +53,10 @@ class PagesController extends AppController
     {
         $path = func_get_args();
         $page = $path[0];
+
+        if ($page === 'pricing') {
+            $this->_setAmountPerUser();
+        }
 
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
@@ -319,8 +324,14 @@ class PagesController extends AppController
         return $parameters_text;
     }
 
-    function _isLpAccess($page)
+    function _setAmountPerUser()
     {
-        return in_array($page, LP_PAGES);
+        $amountPerUser = PaymentSetting::AMOUNT_PER_USER;
+        if ($this->isLoggedIn()) {
+            /** @var PaymentSetting $PaymentSetting */
+            $PaymentSetting = ClassRegistry::init("PaymentSetting");
+            $amountPerUser = $PaymentSetting->getAmountPerUser($this->current_team_id);
+        }
+        $this->set(compact('amountPerUser'));
     }
 }

@@ -402,4 +402,14 @@ class BaseController extends Controller
         }
         return false;
     }
+
+    /**
+     * check is logged in or not
+     *
+     * @return bool
+     */
+    public function isLoggedIn(): bool
+    {
+        return (bool)$this->Auth->user();
+    }
 }

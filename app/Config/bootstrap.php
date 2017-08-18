@@ -244,10 +244,6 @@ define('REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV', '?st=inv_no&from=csv');
 
 define('SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS', 1209600); //2 weeks
 
-define('LP_PAGES', [
-    'features', 'pricing', 'terms', 'privacy_policy', 'law', 'contact', 'contact_confirm', 'contact_send', 'contact_thanks'
-]);
-
 /**
  * 共通関数
  */
