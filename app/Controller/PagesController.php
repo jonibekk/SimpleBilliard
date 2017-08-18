@@ -30,26 +30,28 @@ class PagesController extends AppController
      * @internal param \What $mixed page to display
      * @return $this->redirect('/') or void
      */
-    public function display()
+    public function home()
     {
-        $path = func_get_args();
-        $page = $subpage = null;
-
-        if (!empty($path[0])) {
-            $page = $path[0];
+        // Display lp top page if not logged in
+        if (!$this->Auth->user()) {
+            $this->layout = LAYOUT_HOMEPAGE;
+            return $this->render('home');
         }
 
-        // Difine URL params for Google analytics.
+        // Define URL params for Google analytics.
         $this->_setUrlParams();
 
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
+        $this->_setTopAllContentIfLoggedIn();
 
-        //ログインしているかつ、topの場合はフィード表示
-        if ($this->Auth->user() && $path[0] === 'home') {
-            $this->_setTopAllContentIfLoggedIn();
-            return $this->render('logged_in_home');
-        }
+        return $this->render('logged_in_home');
+    }
+
+    public function lp()
+    {
+        $path = func_get_args();
+        $page = $path[0];
 
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
@@ -247,31 +249,23 @@ class PagesController extends AppController
 
     public function _setUrlParams()
     {
-        $url_params = $this->params['url'];
+        $parsed_referer_url = Router::parse($this->referer('/', true));
+        $request_status = $this->params['url'];
+        $status_from_referer = $this->_defineStatusFromReferer();
 
-        if ($this->Auth->user()) {
-            $parsed_referer_url = Router::parse($this->referer('/', true));
-            $request_status = viaIsSet($url_params);
-            $status_from_referer = $this->_defineStatusFromReferer();
-
-            // When parametes separated from google analitics already exists,
-            // ignore redirect for google analitics.
-            $reserved_params = ['notify_id', 'common_form', 'team_id', 'from'];
-            foreach ($reserved_params as $param) {
-                if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
-                    return true;
-                }
+        // When parametes separated from google analitics already exists,
+        // ignore redirect for google analitics.
+        $reserved_params = ['notify_id', 'common_form', 'team_id', 'from'];
+        foreach ($reserved_params as $param) {
+            if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
+                return true;
             }
+        }
 
-            if ($this->_parseParameter($request_status) !== $status_from_referer) {
-                return $this->redirect("/${status_from_referer}");
-            }
-            $this->Session->delete('referer_status');
-            return true;
+        if ($this->_parseParameter($request_status) !== $status_from_referer) {
+            return $this->redirect("/${status_from_referer}");
         }
-        if ($url_params) {
-            return $this->redirect('/');
-        }
+        $this->Session->delete('referer_status');
         return true;
     }
 
@@ -323,5 +317,10 @@ class PagesController extends AppController
             $i++;
         }
         return $parameters_text;
+    }
+
+    function _isLpAccess($page)
+    {
+        return in_array($page, LP_PAGES);
     }
 }

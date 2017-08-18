@@ -227,7 +227,7 @@ class AppController extends BaseController
                     $this->Session->read('current_team_id'));
                 $this->set(compact('is_isao_user'));
                 //getting notification without hide circle in home.
-                if ($this->request->params['controller'] == 'pages' && $this->request->params['pass'][0] == 'home') {
+                if ($this->request->params['controller'] == 'pages' && $this->request->params['action'] == 'home') {
                     $my_channels_json = $this->User->getMyChannelsJson(true);
                 } else {
                     $my_channels_json = $this->User->getMyChannelsJson();
