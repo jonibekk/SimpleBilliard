@@ -35,14 +35,6 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 }
 ?>
 
-<?php // spec: Only other mobile app env, and only feed page, displaying subheader. ?>
-<?php
-// TODO:Uncomment this after release native app
-//if (!$is_mb_app && $this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-if ($this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-    echo $this->element('Header/sp_feeds_alt');
-}
-?>
 <?php 
 // TODO: .container is too general of a class for the main body container.
 //       We should update .container styles to .body-container styles.
