@@ -5,6 +5,7 @@ import {browserHistory, Link} from "react-router";
 import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
+import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
 
 export default class CreditCard extends Base {
   constructor(props) {
@@ -103,16 +104,13 @@ export default class CreditCard extends Base {
             <div id="card-element" className="form-control cc-field"></div>
             <InvalidMessageBox message={error_message}/>
           </div>
-          <div className="payment-info-group">
-            <strong>{__('Price per user')}:&nbsp;</strong><span
-            className="cc-info-value">{payment.amount_per_user}</span><br/>
-            <strong>{__('Number of users')}:&nbsp;</strong><span
-            className="cc-info-value">{payment.charge_users_count}</span><br/>
-            <strong>{__('Sub Total')}:&nbsp;</strong><span className="cc-info-value">$1999.00</span><br/>
-            <strong>{__('Tax')}:&nbsp;</strong><span className="cc-info-value">$159.92</span><br/>
-            <hr/>
-            <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{payment.total_charge}</span>
-          </div>
+          <ConfirmCharge
+            amount_per_user={payment.amount_per_user}
+            charge_users_count={payment.charge_users_count}
+            sub_total_charge={payment.sub_total_charge}
+            tax={payment.tax}
+            total_charge={payment.total_charge}
+          />
           <div className="checkbox">
             <input
               type="checkbox"

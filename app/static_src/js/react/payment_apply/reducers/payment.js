@@ -11,7 +11,10 @@ const initial_state = {
   lang_code: "",
   amount_per_user: "",
   charge_users_count: 0,
+  sub_total_charge: "",
+  tax: "",
   total_charge: "",
+  is_same_as_company_info: false,
   input_data: {
     payment_setting: {
       type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD,
@@ -94,6 +97,12 @@ export default function payment(state = initial_state, action) {
             validation_errors: {},
             is_disabled_submit: true
           })
+        case Page.CONFIRM:
+          return Object.assign({}, state, action.data, {
+            to_next_page: false,
+            validation_errors: {},
+            is_disabled_submit: false
+          })
       }
     case types.UPDATE_INPUT_DATA:
       if (action.key) {
@@ -117,6 +126,22 @@ export default function payment(state = initial_state, action) {
     case types.INIT_STRIPE:
       return Object.assign({}, state, {
         stripe: action.stripe,
+      });
+    case types.SET_BILLING_SAME_AS_COMPANY:
+      for(const key in input_data.invoice) {
+        input_data['invoice'][key] = input_data['payment_setting'][key]
+      }
+      return Object.assign({}, state, {
+        input_data,
+        is_same_as_company_info: true
+      });
+    case types.RESET_BILLING:
+      for(const key in input_data.invoice) {
+        input_data['invoice'][key] = "";
+      }
+      return Object.assign({}, state, {
+        input_data,
+        is_same_as_company_info: false
       });
     default:
       return state;

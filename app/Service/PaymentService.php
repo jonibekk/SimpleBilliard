@@ -387,7 +387,7 @@ class PaymentService extends AppService
     public function calcTax(int $teamId , float $amount): float
     {
         $paymentSetting = $this->get($teamId);
-        $taxRate = $this->getTaxRateByCountryCode($paymentSetting['company_country'], $amount);
+        $taxRate = $this->getTaxRateByCountryCode($paymentSetting['company_country']);
         $tax = $this->processDecimalPointForAmount($teamId, $amount * $taxRate);
         return $tax;
     }

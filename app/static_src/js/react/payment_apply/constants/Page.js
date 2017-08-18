@@ -20,4 +20,7 @@ export const INITIAL_DATA_TYPES = {
   [CREDIT_CARD]: [
     "charge",
   ],
+  [CONFIRM]: [
+    "charge",
+  ],
 }

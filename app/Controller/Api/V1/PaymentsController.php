@@ -24,7 +24,6 @@ class PaymentsController extends ApiController
                 'company_region',
                 'company_city',
                 'company_street',
-                'company_tel',
                 'contact_person_first_name',
                 'contact_person_first_name_kana',
                 'contact_person_last_name',
@@ -34,14 +33,12 @@ class PaymentsController extends ApiController
             ]
         ],
         'invoice' => [
-            'PaymentSetting' => [
+            'Invoice' => [
                 'company_name',
-                'company_country',
                 'company_post_code',
                 'company_region',
                 'company_city',
                 'company_street',
-                'company_tel',
                 'contact_person_first_name',
                 'contact_person_first_name_kana',
                 'contact_person_last_name',
@@ -49,9 +46,6 @@ class PaymentsController extends ApiController
                 'contact_person_tel',
                 'contact_person_email',
             ],
-            'Invoice' => [
-                // TODO
-            ]
         ],
     ];
 
@@ -114,6 +108,19 @@ class PaymentsController extends ApiController
 
         // New Payment registered with success
         return $this->_getResponseSuccess();
+    }
+
+
+    /**
+     * Register invoice info
+     * Endpoint: /api/v1/payments/invoice
+     *
+     * @return CakeResponse
+     */
+    function post_invoice()
+    {
+        // TODO.Payment: implement
+        $this->_getResponseSuccess();
     }
 
     /**

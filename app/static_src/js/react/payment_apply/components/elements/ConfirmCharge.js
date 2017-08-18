@@ -1,7 +1,5 @@
 import React from "react";
-import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import {connect} from "react-redux";
-import {updateInputData} from "~/payment_apply/actions/index";
 
 class ConfirmCharge extends React.Component {
   constructor(props) {
@@ -12,13 +10,13 @@ class ConfirmCharge extends React.Component {
     return (
       <div className="payment-info-group">
         <strong>{__('Price per user')}:&nbsp;</strong><span
-        className="cc-info-value">{payment.amount_per_user}</span><br/>
+        className="cc-info-value">{this.props.amount_per_user}</span><br/>
         <strong>{__('Number of users')}:&nbsp;</strong><span
-        className="cc-info-value">{payment.charge_users_count}</span><br/>
-        <strong>{__('Sub Total')}:&nbsp;</strong><span className="cc-info-value">$1999.00</span><br/>
-        <strong>{__('Tax')}:&nbsp;</strong><span className="cc-info-value">$159.92</span><br/>
+        className="cc-info-value">{this.props.charge_users_count}</span><br/>
+        <strong>{__('Sub Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.sub_total_charge}</span><br/>
+        <strong>{__('Tax')}:&nbsp;</strong><span className="cc-info-value">{this.props.tax}</span><br/>
         <hr/>
-        <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{payment.total_charge}</span>
+        <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.total_charge}</span>
       </div>
     )
 
@@ -28,11 +26,16 @@ class ConfirmCharge extends React.Component {
 ConfirmCharge.propTypes = {
   amount_per_user: React.PropTypes.string,
   charge_users_count: React.PropTypes.number,
-  max_length: React.PropTypes.number,
+  sub_total_charge: React.PropTypes.string,
+  tax: React.PropTypes.string,
+  total_charge: React.PropTypes.string,
 };
 ConfirmCharge.defaultProps = {
   amount_per_user: "",
   charge_users_count: 0,
-  max_length: 255
+  sub_total_charge: "",
+  tax: "",
+  total_charge: "",
+
 };
 export default connect()(ConfirmCharge);

@@ -11,9 +11,6 @@ import RowMultipleTextBoxes from "~/payment_apply/components/elements/RowMultipl
 export default class Invoice extends Base {
   constructor(props) {
     super(props);
-    this.state = {
-      is_same_as_company_info: false
-    }
     this.onChange = this.onChange.bind(this)
   }
 
@@ -42,17 +39,17 @@ export default class Invoice extends Base {
     data[e.target.name] = e.target.value;
     this.props.updateInputData(data, parent_key)
   }
+
   onCheck(e) {
     if (e.target.checked) {
       this.props.setBillingSameAsCompany()
     } else {
       this.props.resetBilling()
     }
-    this.setState({is_same_as_company_info: e.target.checked})
   }
 
   render() {
-    const {input_data, validation_errors, is_disabled_submit} = this.props.payment;
+    const {input_data, validation_errors, is_disabled_submit, is_same_as_company_info} = this.props.payment;
     const {invoice} = input_data
     const errors_invoice = validation_errors.invoice ? validation_errors.invoice : {};
 
@@ -69,7 +66,7 @@ export default class Invoice extends Base {
               <input
                 type="checkbox" id="checkSameAsCompanyInfo"
                 onChange={this.onCheck.bind(this)}
-              />会社情報と同じにする
+              />{__("Same as company information")}
             </label>
           </div>
           <FormTextBox
@@ -78,6 +75,7 @@ export default class Invoice extends Base {
             value={invoice.company_name}
             label={__("Company Name")}
             placeholder={__("ISAO Corporation")}
+            disabled={is_same_as_company_info}
             err_msg={errors_invoice.company_name}
             onChange={(e) => this.onChange(e, "invoice")}
           />
@@ -90,6 +88,7 @@ export default class Invoice extends Base {
               value={invoice.company_post_code}
               label={__("Post Code")}
               placeholder={__("12345")}
+              disabled={is_same_as_company_info}
               err_msg={errors_invoice.company_post_code}
               max_length={16}
               onChange={(e) => this.onChange(e, "invoice")}
@@ -100,16 +99,18 @@ export default class Invoice extends Base {
               value={invoice.company_region}
               label={__("State/Province/Region")}
               placeholder={__("California")}
+              disabled={is_same_as_company_info}
               err_msg={errors_invoice.company_region}
               onChange={(e) => this.onChange(e, "invoice")}
             />
             <FormTextBox
               id="PaymentsBillingCompanyAddressCity"
-              name="company_address_city"
-              value={invoice.company_address_city}
+              name="company_city"
+              value={invoice.company_city}
               label={__("City")}
               placeholder={__("Los Angeles")}
-              err_msg={errors_invoice.company_address_city}
+              disabled={is_same_as_company_info}
+              err_msg={errors_invoice.company_city}
               onChange={(e) => this.onChange(e, "invoice")}
             />
             <FormTextBox
@@ -118,6 +119,7 @@ export default class Invoice extends Base {
               value={invoice.company_street}
               label={__("Street")}
               placeholder={__("1234 Street Name")}
+              disabled={is_same_as_company_info}
               err_msg={errors_invoice.company_street}
               onChange={(e) => this.onChange(e, "invoice")}
             />
@@ -132,6 +134,7 @@ export default class Invoice extends Base {
                   name: "contact_person_last_name",
                   value: invoice.contact_person_last_name,
                   placeholder: __("eg. Jobs"),
+                  disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_last_name,
                 },
                 {
@@ -139,6 +142,7 @@ export default class Invoice extends Base {
                   name: "contact_person_first_name",
                   value: invoice.contact_person_first_name,
                   placeholder: __("eg. Bruce"),
+                  disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_first_name,
                 }
               ]}
@@ -152,6 +156,7 @@ export default class Invoice extends Base {
                   name: "contact_person_last_name_kana",
                   value: invoice.contact_person_last_name_kana,
                   placeholder: "スズキ",
+                  disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_last_name_kana,
                 },
                 {
@@ -159,6 +164,7 @@ export default class Invoice extends Base {
                   name: "contact_person_first_name_kana",
                   value: invoice.contact_person_first_name_kana,
                   placeholder: "タロウ",
+                  disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_first_name_kana
                 }
               ]}
@@ -172,6 +178,7 @@ export default class Invoice extends Base {
             value={invoice.contact_person_email}
             label={__("Email")}
             placeholder={__("name@company.com")}
+            disabled={is_same_as_company_info}
             err_msg={errors_invoice.contact_person_email}
             onChange={(e) => this.onChange(e, "invoice")}
           />
@@ -182,6 +189,7 @@ export default class Invoice extends Base {
             value={invoice.contact_person_tel}
             label={__("Telephone")}
             placeholder="000-0000-0000"
+            disabled={is_same_as_company_info}
             err_msg={errors_invoice.contact_person_tel}
             onChange={(e) => this.onChange(e, "invoice")}
           />

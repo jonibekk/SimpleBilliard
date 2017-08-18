@@ -5,11 +5,11 @@ import {browserHistory, Link} from "react-router";
 import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
+import {PaymentSetting} from "~/common/constants/Model";
 
 export default class Confirm extends Base {
   constructor(props) {
     super(props);
-    this.onChange = this.onChange.bind(this)
   }
 
   componentWillMount() {
@@ -40,17 +40,21 @@ export default class Confirm extends Base {
     const {payment} = this.props
     return (
       <section className="panel enter-cc-info">
-        <h3>{__('Enter Payment Information')}</h3>
-        <form id="enterCCInfo" className="form-horizontal" name=""
+        <h3>{__('Confirm charge')}</h3>
+        <form className="form-horizontal"
               onSubmit={(e) => this.onSubmit(e)}>
-          <ConfirmCharge />
+          <ConfirmCharge
+            amount_per_user={payment.amount_per_user}
+            charge_users_count={payment.charge_users_count}
+            sub_total_charge={payment.sub_total_charge}
+            tax={payment.tax}
+            total_charge={payment.total_charge}
+          />
           <div className="panel-footer setting_pannel-footer">
-            <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/company">
+            <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/invoice">
               {__("Back")}
             </Link>
-            <button
-              className="btn btn-primary"
-              disabled={payment.is_disabled_submit ? "disabled" : ""}>
+            <button className="btn btn-primary">
               {__("Register")}
             </button>
           </div>

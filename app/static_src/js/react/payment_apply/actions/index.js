@@ -122,6 +122,33 @@ export function savePaymentCc(card, extra_details) {
   }
 }
 
+export function savePaymentInvoice() {
+  return (dispatch, getState) => {
+    dispatch(disableSubmit())
+    // Send the token to your server
+    const post_data = getState().payment.input_data
+    return post("/api/v1/payments/invoice", post_data, null,
+      (response) => {
+        dispatch(toNextPage(Page.COMPLETE))
+      },
+      ({response}) => {
+        // TODO.Payment:process by status code (ex. 403, 404)
+        // If status code is 403, redirect top page.
+        if (!response.data.validation_errors) {
+          // Reason to set to validation_errors.name is that
+          // This field is on to submit button
+          dispatch(invalid({
+            message: response.data.message
+          }))
+        } else {
+          dispatch(invalid(response.data))
+        }
+      }
+    );
+
+  }
+}
+
 export function disableSubmit() {
   return {type: types.DISABLE_SUBMIT}
 }
@@ -136,3 +163,20 @@ export function resetStates() {
     })
   }
 }
+
+export function resetBilling() {
+  return (dispatch) => {
+    dispatch({
+      type: types.RESET_BILLING
+    })
+  }
+}
+
+export function setBillingSameAsCompany() {
+  return (dispatch) => {
+    dispatch({
+      type: types.SET_BILLING_SAME_AS_COMPANY
+    })
+  }
+}
+

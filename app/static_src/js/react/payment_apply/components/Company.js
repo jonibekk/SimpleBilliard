@@ -93,11 +93,11 @@ export default class Company extends Base {
             />
             <FormTextBox
               id="PaymentsCompanyAddressCity"
-              name="company_address_city"
-              value={payment_setting.company_address_city}
+              name="company_city"
+              value={payment_setting.company_city}
               label={__("City")}
               placeholder={__("Los Angeles")}
-              err_msg={errors_payment_setting.company_address_city}
+              err_msg={errors_payment_setting.company_city}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
             <FormTextBox

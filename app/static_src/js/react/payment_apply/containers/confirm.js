@@ -9,8 +9,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return Object.assign({}, common.getCommonDispatchToProps(dispatch), {
-    resetBilling: () => dispatch(actions.resetBilling()),
-    setBillingSameAsCompany: () => dispatch(actions.setBillingSameAsCompany()),
+    savePaymentInvoice: () => dispatch(actions.savePaymentInvoice()),
   });
 }
 
