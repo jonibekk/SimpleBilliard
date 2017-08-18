@@ -214,6 +214,7 @@ class PaymentSetting extends AppModel
 
     public $hasMany = [
         'CreditCard',
+        'Invoice',
     ];
 
     /**
@@ -221,7 +222,7 @@ class PaymentSetting extends AppModel
      *
      * @return array|null
      */
-    public function getByTeamId(int $teamId)
+    public function getCcByTeamId(int $teamId)
     {
         $options = [
             'conditions' => [

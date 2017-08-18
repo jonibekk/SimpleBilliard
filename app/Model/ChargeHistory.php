@@ -190,18 +190,48 @@ class ChargeHistory extends AppModel
      *
      * @return array
      */
-    public function findByStartEnd(int $teamId, int $startTs, int $endTs)
+    public function findForInvoiceByStartEnd(int $teamId, int $startTs, int $endTs)
     {
         $options = [
             'conditions' => [
                 'team_id'            => $teamId,
+                'payment_type'       => self::PAYMENT_TYPE_INVOICE,
                 'charge_datetime >=' => $startTs,
                 'charge_datetime <=' => $endTs,
             ]
         ];
 
-        $res = $this->find('all',$options);
+        $res = $this->find('all', $options);
         return Hash::extract($res, '{n}.ChargeHistory');
+    }
+
+    /**
+     * @param int $teamId
+     * @param int $subTotalCharge
+     * @param int $tax
+     * @param int $amountPerUser
+     * @param int $usersCount
+     *
+     * @return mixed
+     */
+    public function addInvoiceCharge(int $teamId, int $subTotalCharge, int $tax, int $amountPerUser, int $usersCount)
+    {
+        $historyData = [
+            'team_id'          => $teamId,
+            'payment_type'     => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'charge_type'      => self::CHARGE_TYPE_MONTHLY,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $subTotalCharge,
+            'tax'              => $tax,
+            'charge_users'     => $usersCount,
+            'currency'         => 1, // TODO: fix it.
+            'charge_datetime'  => time(),
+            'result_type'      => self::TRANSACTION_RESULT_SUCCESS,
+            'max_charge_users' => $usersCount
+        ];
+        $ret = $this->save($historyData);
+        $ret = Hash::extract($ret, 'ChargeHistory');
+        return $ret;
     }
 
 }

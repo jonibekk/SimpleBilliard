@@ -1,6 +1,9 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Xml', 'Utility');
+App::uses('InvoiceHistory', 'Model');
+App::uses('Invoice', 'Model');
+App::uses('Team', 'Model');
 
 /**
  * Class InvoiceService
@@ -15,30 +18,53 @@ class InvoiceService extends AppService
     /**
      * register order for 1 team's invoice
      *
-     * @param int   $teamId
-     * @param array $chargeHistories
+     * @param int    $teamId
+     * @param array  $chargeHistories
+     * @param string $orderDate
      *
      * @return bool
      */
-    function registerOrder(int $teamId, array $chargeHistories)
+    function registerOrder(int $teamId, array $chargeHistories, string $orderDate)
     {
+        /** @var  Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $team = $Team->getById($teamId);
+        $invoiceInfo = $Invoice->getByTeamId($teamId);
+        $companyAddress = $invoiceInfo['company_region'] . $invoiceInfo['company_city'] . $invoiceInfo['company_street'];
+        $contactName = $invoiceInfo['contact_person_last_name'] . $invoiceInfo['contact_person_first_name'];
+        $amountTotal = 0;
+        foreach ($chargeHistories as $history) {
+            $amountTotal += $history['total_amount'] + $history['tax'];
+        }
+
+        // TODO: なぜか会社名が反映されない
         $data = [
-            'O_ReceiptOrderDate'     => '2017/08/17',
+            'O_ReceiptOrderDate'     => $orderDate,
+            'O_ServicesProvidedDate' => $orderDate,
             'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
             'O_SiteId'               => ATOBARAI_SITE_ID,
-            'O_ApiUserId'            => ATOBARAI_API_USER_ID . "abc",
-            'O_UseAmount'            => 2000,
-            'C_PostalCode'           => '1720003',
-            'C_UnitingAddress'       => '東京都台東区浅草橋1-1-1',
-            'C_NameKj'               => '佐藤太郎',
-            'C_Phone'                => '03-3333-3333',
-            'C_MailAddress'          => 'test@aaa.com',
-            'C_EntCustId'            => '1234',
-            'I_ItemNameKj_1'         => 'Goalous利用料金',
-            'O_ServicesProvidedDate' => '2017/08/17',
-            'I_UnitPrice_1'          => 2000,
-            'I_ItemNum_1'            => 1,
+            'O_ApiUserId'            => ATOBARAI_API_USER_ID,
+            'O_UseAmount'            => $amountTotal,
+            'O_Ent_Note'             => "ご請求対象チーム名: " . $team['name'],
+            'C_PostalCode'           => $invoiceInfo['company_post_code'],
+            'C_UnitingAddress'       => $companyAddress,
+            'C_CorporateName'        => $invoiceInfo['company_name'],
+            'C_NameKj'               => $contactName,
+            'C_Phone'                => $invoiceInfo['contact_person_tel'],
+            'C_MailAddress'          => $invoiceInfo['contact_person_email'],
+            'C_EntCustId'            => $teamId,
         ];
+
+        $itemIndex = 1;
+        foreach ($chargeHistories as $history) {
+            // TODO: 商品名を正しくする
+            $data["I_ItemNameKj_{$itemIndex}"] = "Goalous利用料金";
+            $data["I_UnitPrice_{$itemIndex}"] = $history['total_amount'] + $history['tax'];
+            $data["I_ItemNum_{$itemIndex}"] = 1;
+            $itemIndex++;
+        }
 
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
 
@@ -52,8 +78,8 @@ class InvoiceService extends AppService
             return false;
         }
 
-        // saving data to DB
-        // invoices and chargeHistories
+        // TODO: saving data to DB
+        // TODO: invoices and chargeHistories
 
     }
 
@@ -84,6 +110,20 @@ class InvoiceService extends AppService
         $xmlArray = Xml::toArray(Xml::build($ret));
         $ret = Hash::extract($xmlArray, 'response');
         return $ret;
+    }
+
+    /**
+     * @param int    $teamId
+     * @param string $date
+     *
+     * @return bool
+     */
+    function isSentInvoice(int $teamId, string $date): bool
+    {
+        /** @var InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        return (bool)$InvoiceHistory->getByOrderDate($teamId, $date);
+
     }
 
 }

@@ -45,6 +45,8 @@ class MonthlyInvoiceChargeShell extends AppShell
         $targetTs = $this->param('targetTimestamp');
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
 
         // Get charge target teams that is not charged yet.
         $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams($targetTs);
@@ -53,11 +55,34 @@ class MonthlyInvoiceChargeShell extends AppShell
             return;
         }
 
+        // [Efficient processing]
+        // This is why it is inefficient to throw SQL for each team and get the number of users
+        $teamIds = Hash::extract($targetChargeTeams, '{n}.PaymentSetting.team_id');
+        $chargeMemberCountEachTeam = [];
+        foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
+            $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
+        }
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
-            $timezone = Hash::get($team, 'team.timezone');
-            $PaymentService->registerInvoice($teamId, $targetTs, $timezone);
+            $timezone = Hash::get($team, 'Team.timezone');
+
+            $chargeMemberCount = Hash::get($chargeMemberCountEachTeam, $teamId);
+            // Check if exist member
+            if (empty($chargeMemberCount)) {
+                $noMemberTeams[] = $teamId;
+                continue;
+            }
+            $targetHistories = $PaymentService->findChargeTargetHistories($teamId, $targetTs, $timezone);
+            $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $timezone, $targetHistories);
+
         }
 
+        if (!empty($noMemberTeams)) {
+            $this->log(
+                sprintf('There are teams with no members. team_ids:',
+                    AppUtil::varExportOneLine($noMemberTeams)
+                )
+            );
+        }
     }
 }

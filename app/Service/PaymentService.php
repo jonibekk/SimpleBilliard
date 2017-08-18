@@ -458,7 +458,7 @@ class PaymentService extends AppService
         // Get Payment settings
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
-        $paymentSettings = $Team->PaymentSetting->getByTeamId($teamId);
+        $paymentSettings = $Team->PaymentSetting->getCcByTeamId($teamId);
         if (!$paymentSettings) {
             $result['error'] = true;
             $result['message'] = __('Payment settings does not exists.');
@@ -719,33 +719,90 @@ class PaymentService extends AppService
         return $result;
     }
 
-    public function registerInvoice(int $teamId, int $time, float $timezone)
-    {
+    /**
+     * @param int   $teamId
+     * @param int   $chargeMemberCount
+     * @param int   $time
+     * @param float $timezone
+     * @param array $targetHistories
+     *
+     * @return bool
+     */
+    public function registerInvoice(
+        int $teamId,
+        int $chargeMemberCount,
+        int $time,
+        float $timezone,
+        array $targetHistories = []
+    ) {
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
         /** @var InvoiceService $InvoiceService */
         $InvoiceService = ClassRegistry::init('InvoiceService');
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
 
-        $localCurrentTs = $time + ($timezone * HOUR);
+        $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
+        if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
+            return false;
+        }
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount);
+        $paymentSetting = $PaymentSetting->getByTeamId($teamId);
+        $ChargeHistory->begin();
+        try {
+            // save monthly charge
+            $monthlyChargeHistory = $ChargeHistory->addInvoiceCharge(
+                $teamId,
+                $chargeInfo['sub_total_charge'],
+                $chargeInfo['tax'],
+                $paymentSetting['amount_per_user'],
+                $chargeMemberCount
+            );
+            if (!$monthlyChargeHistory) {
+                throw new Exception(AppUtil::varExportOneLine($ChargeHistory->validationErrors));
+            }
+            $targetHistories = am($targetHistories, [$monthlyChargeHistory]);
 
+            // send invoice
+            if ($InvoiceService->registerOrder($teamId, $targetHistories, $localCurrentDate) === false) {
+                throw new Exception("Failed to register order.");
+            }
+        } catch (Exception $e) {
+            $ChargeHistory->rollback();
+            $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorMsg: %s",
+                $teamId,
+                $e->getMessage()
+            ));
+            return;
+        }
+        $ChargeHistory->commit();
+    }
+
+    /**
+     * @param int   $teamId
+     * @param int   $time
+     * @param float $timezone
+     *
+     * @return array
+     */
+    public function findChargeTargetHistories(int $teamId, int $time, float $timezone)
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // fetching charge histories
-        $targetEndTs = AppUtil::getEndTimestampByTimezone(AppUtil::dateYmd($localCurrentTs - DAY), $timezone);
-        $previousMonthFirstTs = strtotime("Y-m-01", $targetEndTs);
-        $targetStartTs = AppUtil::correctInvalidDate(
+        $yesterdayLocalDate = AppUtil::dateYesterday($localCurrentDate);
+        $targetEndTs = AppUtil::getEndTimestampByTimezone($yesterdayLocalDate, $timezone);
+        $previousMonthFirstTs = strtotime("-1 month", strtotime(date('Y-m-01', strtotime($yesterdayLocalDate))));
+        $targetStartDate = AppUtil::correctInvalidDate(
             date('Y', $previousMonthFirstTs),
             date('m', $previousMonthFirstTs),
-            date('d', $localCurrentTs)
+            date('d', strtotime($localCurrentDate))
         );
-
-        $targetPaymentHistories = $ChargeHistory->findByStartEnd($teamId, $targetStartTs, $targetEndTs);
-        // save monthly charge
-
-        // add monthly charge into histories array
-
-        // send invoice
-        //$InvoiceService->registerOrder($teamId,$targetPaymentHistories);
-
+        $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
+        $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        return $targetPaymentHistories;
     }
 
     /**
@@ -887,7 +944,7 @@ class PaymentService extends AppService
 
             // Check if have not already charged
             $teamId = Hash::get($v, 'PaymentSetting.team_id');
-            $invoiceHistory = $InvoiceHistory->getByChargeDate($teamId, $paymentBaseDate);
+            $invoiceHistory = $InvoiceHistory->getByOrderDate($teamId, $paymentBaseDate);
             if (!empty($invoiceHistory)) {
                 return false;
             }

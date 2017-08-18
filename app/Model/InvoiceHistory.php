@@ -60,7 +60,7 @@ class InvoiceHistory extends AppModel
      *
      * @return array
      */
-    public function getByChargeDate(int $teamId, string $date): array
+    public function getByOrderDate(int $teamId, string $date): array
     {
         $options = [
             'fields'     => [
