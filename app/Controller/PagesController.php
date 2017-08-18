@@ -256,7 +256,7 @@ class PagesController extends AppController
 
             // When parametes separated from google analitics already exists,
             // ignore redirect for google analitics.
-            $reserved_params = ['notify_id', 'after_click', 'common_form', 'team_id', 'from'];
+            $reserved_params = ['notify_id', 'common_form', 'team_id', 'from'];
             foreach ($reserved_params as $param) {
                 if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
                     return true;
