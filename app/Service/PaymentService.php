@@ -301,7 +301,7 @@ class PaymentService extends AppService
      *
      * @return float
      */
-    public function processDecimalPointForAmount(int $teamId, float $amount) : float
+    public function processDecimalPointForAmount(int $teamId, float $amount): float
     {
         $paymentSetting = $this->get($teamId);
         // Change decimal point by currency
@@ -352,19 +352,21 @@ class PaymentService extends AppService
     public function calcRelatedTotalChargeByUserCnt(int $teamId, int $chargeUserCnt, array $paymentSetting = []): array
     {
         $paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
-        $subTotalCharge = $this->processDecimalPointForAmount($teamId, $paymentSetting['amount_per_user'] * $chargeUserCnt);
+        $subTotalCharge = $this->processDecimalPointForAmount($teamId,
+            $paymentSetting['amount_per_user'] * $chargeUserCnt);
         $tax = $this->calcTax($teamId, $subTotalCharge);
         $totalCharge = $subTotalCharge + $tax;
 
         return [
             'sub_total_charge' => $subTotalCharge,
-            'tax' => $tax,
-            'total_charge' => $totalCharge,
+            'tax'              => $tax,
+            'total_charge'     => $totalCharge,
         ];
     }
 
     /**
      * Get tax rate by country code
+     *
      * @param string $countryCode
      *
      * @return float
@@ -374,7 +376,8 @@ class PaymentService extends AppService
         // Get tax_rate by team country
         $countries = Configure::read("countries");
         $countries = Hash::combine($countries, '{n}.code', '{n}');
-        $taxRate = Hash::check($countries, $countryCode.'.tax_rate') ? Hash::get($countries, $countryCode.'.tax_rate') : 0;
+        $taxRate = Hash::check($countries, $countryCode . '.tax_rate') ? Hash::get($countries,
+            $countryCode . '.tax_rate') : 0;
         return $taxRate;
     }
 
@@ -386,7 +389,7 @@ class PaymentService extends AppService
      *
      * @return float
      */
-    public function calcTax(int $teamId , float $amount): float
+    public function calcTax(int $teamId, float $amount): float
     {
         $paymentSetting = $this->get($teamId);
         $taxRate = $this->getTaxRateByCountryCode($paymentSetting['company_country'], $amount);
@@ -481,9 +484,11 @@ class PaymentService extends AppService
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount, Hash::get($paymentSettings, 'PaymentSetting'));
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
+            Hash::get($paymentSettings, 'PaymentSetting'));
 
-        $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'], $description);
+        $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
+            $description);
 
         // Save charge history
         /** @var ChargeHistory $ChargeHistory */
@@ -721,9 +726,10 @@ class PaymentService extends AppService
         /** @var InvoiceService $InvoiceService */
         $InvoiceService = ClassRegistry::init('InvoiceService');
 
-        // fetching charge histories
         $localCurrentTs = $time + ($timezone * HOUR);
-        // end of yesterday
+        // if already send an invoice, return
+
+        // fetching charge histories
         $targetEndTs = AppUtil::getEndTimestampByTimezone(AppUtil::dateYmd($localCurrentTs - DAY), $timezone);
         $previousMonthFirstTs = strtotime("Y-m-01", $targetEndTs);
         $targetStartTs = AppUtil::correctInvalidDate(
@@ -731,7 +737,6 @@ class PaymentService extends AppService
             date('m', $previousMonthFirstTs),
             date('d', $localCurrentTs)
         );
-        // if already send an invoice, return
 
         $targetPaymentHistories = $ChargeHistory->findByStartEnd($teamId, $targetStartTs, $targetEndTs);
         // save monthly charge
