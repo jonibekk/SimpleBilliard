@@ -439,7 +439,8 @@ $config['countries'] = [
     ],
     [
         "code" => "JP",
-        "name" => "Japan"
+        "name" => "Japan",
+        "tax_rate" => 0.08
     ],
     [
         "code" => "JE",
