@@ -235,4 +235,44 @@ class PaymentsController extends ApiController
         return $this->_getResponseSuccess();
     }
 
+    /**
+     * Update Payer info
+     *
+     * @return CakeResponse
+     */
+    function post_update_payer_info()
+    {
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        // Check if is admin
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        // Validate input
+        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        $data = array('payment_setting' => $this->request->data);
+        $validationErrors = $PaymentService->validateSave($data, $validationFields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+
+        // Update payer info
+        $result = $PaymentService->updatePayerInfo($teamId, $this->request->data);
+        if ($result !== true) {
+            if (empty($result['errorCode'])) {
+                return $this->_getResponseValidationFail($result);
+            } else {
+                return $this->_getResponse($result['errorCode'], null, null, $result['message']);
+            }
+        }
+        return $this->_getResponseSuccess();
+    }
+
 }

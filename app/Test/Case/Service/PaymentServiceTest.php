@@ -783,6 +783,36 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals(count($res), 0);
     }
 
+    public function test_updatePayerInfo()
+    {
+        $payment = $this->createTestPaymentData([
+            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
+            'team_id'          => 1,
+            'type'             => 1,
+            'amount_per_user'  => 1800,
+            'payment_base_day' => 15,
+            'currency'         => 1
+        ]);
+        $customerCode = 'cus_B3ygr9hxqg5evH';
+
+        $userID = $this->createActiveUser(1);
+        $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
+
+        $updateData = [
+            'company_name'                   => 'ISAO',
+            'company_country'                => 'US',
+            'company_region'                 => 'NY',
+            'company_city'                   => 'Central Park',
+            'company_street'                 => 'Somewhere',
+            'company_tel'                    => '123456789',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
+        ];
+
+        $res = $this->PaymentService->updatePayerInfo(1, $updateData);
+        $this->assertTrue($res);
+    }
+
     /**
      * tearDown method
      *
