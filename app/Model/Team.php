@@ -227,6 +227,7 @@ class Team extends AppModel
                 [
                     'user_id'   => $uid,
                     'admin_flg' => true,
+                    'status'    => TeamMember::USER_STATUS_ACTIVE
                 ]
             ]
         ];

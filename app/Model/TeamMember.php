@@ -339,8 +339,6 @@ class TeamMember extends AppModel
             'user_id'    => $uid,
             'team_id'    => $team_id,
             'status'     => self::USER_STATUS_ACTIVE,
-            // TODO: Must delete when replacing active_flg -> status
-            'active_flg' => true,
         ];
         return $this->save($data);
     }
