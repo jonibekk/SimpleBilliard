@@ -608,6 +608,8 @@ App::uses('AttachedFile', 'Model');
             "Total": "<?= __("Total") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
+            "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
+            "Same as company information": "<?= __("Same as company information") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
