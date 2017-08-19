@@ -139,11 +139,12 @@ Configure::load("country.php");
 
 // Autoload model constants
 spl_autoload_register(function($class) {
-    if (strpos($class, "Goalous") !== 0) {
+    // Get filePath path by namespace
+    // e.g. 「Goalous\Model\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
+    if (!preg_match("/Model\\\\Enum\\\\[A-Za-z]+/", $class, $match)) {
         return;
     }
-    $filePath = str_replace('Goalous', '', $class);
-    $filePath = APP. DS. str_replace('\\', DS, $filePath).'.php' ;
+    $filePath = APP. DS. str_replace('\\', DS, $match[0]).'.php' ;
     if (file_exists($filePath)) {
         return include $filePath;
     }

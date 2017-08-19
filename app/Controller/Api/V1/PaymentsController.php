@@ -103,7 +103,7 @@ class PaymentsController extends ApiController
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
         $creditCardData = $CreditCardService->retrieveToken($token);
-        if ($creditCardData['creditCard']->country == 'JP' && $currency != Enum\PaymentSetting::CURRENCY_JPY) {
+        if ($creditCardData['creditCard']->country == 'JP' && $currency != Enum\PaymentSetting\Currency::JPY) {
             // TODO: Add translation for message
             return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
         }
