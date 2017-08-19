@@ -137,6 +137,18 @@ Configure::write('UrlCache.active', true);
 Configure::load("app.php");
 Configure::load("country.php");
 
+// Autoload model constants
+spl_autoload_register(function($class) {
+    if (strpos($class, "Goalous") !== 0) {
+        return;
+    }
+    $filePath = str_replace('Goalous', '', $class);
+    $filePath = APP. DS. str_replace('\\', DS, $filePath).'.php' ;
+    if (file_exists($filePath)) {
+        return include $filePath;
+    }
+});
+
 /**
  * Goalous独自定数
  */

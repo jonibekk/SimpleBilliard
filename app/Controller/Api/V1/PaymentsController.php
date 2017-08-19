@@ -3,6 +3,8 @@ App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class PaymentsController
  */
@@ -101,7 +103,7 @@ class PaymentsController extends ApiController
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
         $creditCardData = $CreditCardService->retrieveToken($token);
-        if ($creditCardData['creditCard']->country == 'JP' && $currency != PaymentSetting::CURRENCY_TYPE_JPY) {
+        if ($creditCardData['creditCard']->country == 'JP' && $currency != Enum\PaymentSetting::CURRENCY_JPY) {
             // TODO: Add translation for message
             return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
         }
