@@ -300,13 +300,13 @@ class PaymentService extends AppService
      *
      * @return float
      */
-    public function processDecimalPointForAmount(int $teamId, float $amount) : float
+    public function processDecimalPointForAmount(int $teamId, float $amount): float
     {
         $paymentSetting = $this->get($teamId);
         // Change decimal point by currency
         // Ref: No1 in this document
         // http://confluence.goalous.com/display/GOAL/Specifications+confirmation
-        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_JPY) {
+        if ($paymentSetting['currency'] == PaymentSetting::CURRENCY_TYPE_JPY) {
             $amount = AppUtil::floor($amount, 0);
         } else {
             $amount = AppUtil::floor($amount, 2);
@@ -342,37 +342,62 @@ class PaymentService extends AppService
      * ・tax
      * ・total charge(include tax)
      *
-     * @param int $teamId
-     * @param int $chargeUserCnt
+     * @param int   $teamId
+     * @param int   $chargeUserCnt
+     * @param array $paymentSetting
      *
      * @return array
      */
-    public function calcRelatedTotalChargeByUserCnt(int $teamId, int $chargeUserCnt): array
+    public function calcRelatedTotalChargeByUserCnt(int $teamId, int $chargeUserCnt, array $paymentSetting = []): array
     {
-        $paymentSetting = $this->get($teamId);
-        $subTotalCharge = $this->processDecimalPointForAmount($teamId, $paymentSetting['amount_per_user'] * $chargeUserCnt);
-        $tax = $this->calcTax($teamId, $subTotalCharge);
-        $totalCharge = $subTotalCharge + $tax;
+        try {
+            if ($chargeUserCnt == 0) {
+                throw new Exception(sprintf("Invalid user count. %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt', 'paymentSetting'))
+                ));
+            }
+            $paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
+            if (empty($paymentSetting)) {
+                throw new Exception(sprintf("Not exist payment setting data. %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt'))
+                ));
+            }
 
-        return [
-            'sub_total_charge' => $subTotalCharge,
-            'tax' => $tax,
-            'total_charge' => $totalCharge,
-        ];
+            $subTotalCharge = $this->processDecimalPointForAmount($teamId,
+                $paymentSetting['amount_per_user'] * $chargeUserCnt);
+            $tax = $this->calcTax($teamId, $subTotalCharge);
+            $totalCharge = $subTotalCharge + $tax;
+            $res = [
+                'sub_total_charge' => $subTotalCharge,
+                'tax'              => $tax,
+                'total_charge'     => $totalCharge,
+            ];
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $res = [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+            ];
+        }
+        return $res;
     }
 
     /**
      * Get tax rate by country code
+     *
      * @param string $countryCode
      *
      * @return float
      */
-    private function getTaxRateByCountryCode(string $countryCode): float
+    public function getTaxRateByCountryCode(string $countryCode): float
     {
         // Get tax_rate by team country
         $countries = Configure::read("countries");
         $countries = Hash::combine($countries, '{n}.code', '{n}');
-        $taxRate = Hash::check($countries, $countryCode.'.tax_rate') ? Hash::get($countries, $countryCode.'.tax_rate') : 0;
+        $taxRate = Hash::check($countries, $countryCode . '.tax_rate') ? Hash::get($countries,
+            $countryCode . '.tax_rate') : 0;
         return $taxRate;
     }
 
@@ -384,10 +409,13 @@ class PaymentService extends AppService
      *
      * @return float
      */
-    public function calcTax(int $teamId , float $amount): float
+    public function calcTax(int $teamId, float $amount): float
     {
         $paymentSetting = $this->get($teamId);
         $taxRate = $this->getTaxRateByCountryCode($paymentSetting['company_country']);
+        if ($taxRate == 0) {
+            return 0;
+        }
         $tax = $this->processDecimalPointForAmount($teamId, $amount * $taxRate);
         return $tax;
     }
@@ -479,8 +507,11 @@ class PaymentService extends AppService
         // Apply the user charge on Stripe
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
-        $totalAmount = $amountPerUser * $usersCount;
-        $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $totalAmount, $description);
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
+            Hash::get($paymentSettings, 'PaymentSetting'));
+
+        $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
+            $description);
 
         // Save charge history
         /** @var ChargeHistory $ChargeHistory */
@@ -500,14 +531,13 @@ class PaymentService extends AppService
         }
         $result['resultType'] = $resultType;
 
-        // TODO: fix tax amount
         $historyData = [
             'team_id'          => $teamId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
             'charge_type'      => $chargeType,
             'amount_per_user'  => $amountPerUser,
-            'total_amount'     => $totalAmount,
-            'tax'              => $totalAmount,
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
             'charge_users'     => $usersCount,
             'currency'         => $currency,
             'charge_datetime'  => time(),
@@ -609,17 +639,15 @@ class PaymentService extends AppService
         $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
         $amountPerUser = Hash::get($paymentData, 'amount_per_user');
         $formattedAmountPerUser = $currencySymbol . Hash::get($paymentData, 'amount_per_user');
-        $totalAmount = $amountPerUser * $membersCount;
-        $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
-        // TODO: fix tax amount
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
         $historyData = [
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
             'charge_type'      => PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
             'amount_per_user'  => $amountPerUser,
-            'total_amount'     => $totalAmount,
-            'tax'              => $totalAmount,
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
             'charge_users'     => $membersCount,
             'currency'         => $currency,
             'charge_datetime'  => time(),
@@ -662,7 +690,8 @@ class PaymentService extends AppService
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
-            $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $totalAmount,
+            $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
+            $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
                 $paymentDescription);
 
             // Error charging customer using Stripe API. Might be network,  API problem or card rejected
