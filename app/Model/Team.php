@@ -720,4 +720,23 @@ class Team extends AppModel
         );
         return $res;
     }
+
+    /**
+     * Check if paid plan
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isPaidPlan(int $teamId): bool
+    {
+        $team = $this->getById($teamId);
+        if (empty($team)) {
+            return false;
+        }
+        if (Hash::get($team, 'service_use_status') == self::SERVICE_USE_STATUS_PAID) {
+            return true;
+        }
+        return false;
+    }
 }

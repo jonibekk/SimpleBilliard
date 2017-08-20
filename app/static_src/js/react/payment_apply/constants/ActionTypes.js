@@ -9,3 +9,4 @@ export const RESET_STATES = 'RESET_STATES';
 export const INIT_STRIPE = 'INIT_STRIPE';
 export const SET_BILLING_SAME_AS_COMPANY = 'SET_BILLING_SAME_AS_COMPANY';
 export const RESET_BILLING = 'RESET_BILLING';
+export const SAVING = 'SAVING';

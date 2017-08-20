@@ -8,15 +8,20 @@ class ConfirmCharge extends React.Component {
 
   render() {
     return (
-      <div className="payment-info-group">
-        <strong>{__('Price per user')}:&nbsp;</strong><span
-        className="cc-info-value">{this.props.amount_per_user}</span><br/>
-        <strong>{__('Number of users')}:&nbsp;</strong><span
-        className="cc-info-value">{this.props.charge_users_count}</span><br/>
-        <strong>{__('Sub Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.sub_total_charge}</span><br/>
-        <strong>{__('Tax')}:&nbsp;</strong><span className="cc-info-value">{this.props.tax}</span><br/>
-        <hr/>
-        <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.total_charge}</span>
+      <div>
+        <div className="payment-info-group">
+          <strong>{__('Price per user')}:&nbsp;</strong><span
+          className="cc-info-value">{this.props.amount_per_user}</span><br/>
+          <strong>{__('Number of users')}:&nbsp;</strong><span
+          className="cc-info-value">{this.props.charge_users_count}</span><br/>
+          <strong>{__('Sub Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.sub_total_charge}</span><br/>
+          <strong>{__('Tax')}:&nbsp;</strong><span className="cc-info-value">{this.props.tax}</span><br/>
+          <hr/>
+          <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.total_charge}</span>
+        </div>
+        <div className="form-group">
+          <a href="/terms">{__("The terms of service")}</a>
+        </div>
       </div>
     )
 

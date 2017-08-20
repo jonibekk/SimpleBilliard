@@ -15,6 +15,7 @@ const initial_state = {
   tax: "",
   total_charge: "",
   is_same_as_company_info: false,
+  is_saving: false,
   input_data: {
     payment_setting: {
       type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD,
@@ -63,7 +64,13 @@ export default function payment(state = initial_state, action) {
       return Object.assign({}, state, {
         validation_errors,
         error_message,
-        is_disabled_submit: false
+        is_disabled_submit: false,
+        is_saving: false
+      })
+    case types.SAVING:
+      return Object.assign({}, state, {
+        is_disabled_submit: true,
+        is_saving: true
       })
     case types.DISABLE_SUBMIT:
       return Object.assign({}, state, {
@@ -80,7 +87,8 @@ export default function payment(state = initial_state, action) {
         input_data,
         to_next_page: true,
         validation_errors: {},
-        is_disabled_submit: false
+        is_disabled_submit: false,
+        is_saving: true
       })
     case types.FETCH_INITIAL_DATA:
       switch (action.page) {
@@ -95,7 +103,7 @@ export default function payment(state = initial_state, action) {
           return Object.assign({}, state, action.data, {
             to_next_page: false,
             validation_errors: {},
-            is_disabled_submit: true
+            is_disabled_submit: false
           })
         case Page.CONFIRM:
           return Object.assign({}, state, action.data, {
@@ -121,7 +129,8 @@ export default function payment(state = initial_state, action) {
     case types.RESET_STATES:
       return Object.assign({}, state, {
         to_next_page: false,
-        validation_errors: {}
+        validation_errors: {},
+        is_saving: false,
       });
     case types.INIT_STRIPE:
       return Object.assign({}, state, {
@@ -159,7 +168,7 @@ export default function payment(state = initial_state, action) {
 export function updateInputData(input_data, page, add_data) {
   switch (page) {
     case Page.COUNTRY:
-      input_data["payment_setting"] = Object.assign({}, input_data["payment_setting"], add_data);
+      input_data["payment_setting"] = Object.assign({}, input_data["payment_setting"], add_data["payment_setting"]);
       break;
     case Page.COMPANY:
       break;

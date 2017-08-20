@@ -6,6 +6,7 @@ import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
+import LoadingButton from "~/common/components/LoadingButton";
 
 export default class CreditCard extends Base {
   constructor(props) {
@@ -64,15 +65,7 @@ export default class CreditCard extends Base {
 
   onChange(e) {
     const name = e.target.getAttribute('name');
-    if (e.target.type == "checkbox") {
-      if (e.target.checked) {
-        this.props.enableSubmit()
-      } else {
-        this.props.disableSubmit()
-      }
-    } else {
-      this.setState({[name]: e.target.value})
-    }
+    this.setState({[name]: e.target.value})
   }
 
   onSubmit(e) {
@@ -111,24 +104,23 @@ export default class CreditCard extends Base {
             tax={payment.tax}
             total_charge={payment.total_charge}
           />
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              name="agreed_charge"
-              onChange={this.onChange}
-            />
-            <label>{__("I agree with the terms of service")}</label>
-            {/* TODO.Payment:Terms of service display */}
-          </div>
           <div className="panel-footer setting_pannel-footer">
             <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/company">
               {__("Back")}
             </Link>
-            <button
-              className="btn btn-primary"
-              disabled={payment.is_disabled_submit ? "disabled" : ""}>
-              {__("Register")}
-            </button>
+            {(() => {
+              if (payment.is_saving) {
+                return <LoadingButton/>
+              } else {
+                return (
+                  <button
+                    className="btn btn-primary"
+                    disabled={payment.is_disabled_submit ? "disabled" : ""}>
+                    {__("Register")}
+                  </button>
+                )
+              }
+            })()}
           </div>
         </form>
       </section>
