@@ -67,13 +67,12 @@ class InvoiceService extends AppService
         }
 
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
-
         if ($resAtobarai['status'] == 'error') {
             $this->log(sprintf("Request to atobarai.com was failed. errorMsg: %s, teamId: %s, chargeHistories: %s, requestData: %s",
                 AppUtil::varExportOneLine($resAtobarai['messages']),
                 $teamId,
-                $chargeHistories,
-                $data
+                AppUtil::varExportOneLine($chargeHistories),
+                AppUtil::varExportOneLine($data)
             ));
             return false;
         }

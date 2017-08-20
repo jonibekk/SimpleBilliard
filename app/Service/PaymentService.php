@@ -802,6 +802,8 @@ class PaymentService extends AppService
         );
         $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
         $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        debug($targetStartTs);
+        debug($targetEndTs);
         return $targetPaymentHistories;
     }
 
