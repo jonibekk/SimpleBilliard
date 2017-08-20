@@ -44,7 +44,6 @@ class InvoiceService extends AppService
             $amountTotal += $history['total_amount'] + $history['tax'];
         }
 
-        // TODO: なぜか会社名が反映されない
         $data = [
             'O_ReceiptOrderDate'     => $orderDate,
             'O_ServicesProvidedDate' => $orderDate,
@@ -81,14 +80,13 @@ class InvoiceService extends AppService
             ));
             return false;
         }
-        // TODO: saving invoice_history data to DB
+        // TODO: have to add an error handling
         $invoiceHistory = $InvoiceHistory->save([
             'team_id'           => $teamId,
             'order_date'        => $orderDate,
             'system_order_code' => $resAtobarai['systemOrderId'],
             'order_status'      => $resAtobarai['orderStatus']['@cd'],
         ]);
-        // TODO: invoices and chargeHistories
         $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
         $invoiceHistoriesChargeHistories = [];
         foreach ($chargeHistories as $history) {
