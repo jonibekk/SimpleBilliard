@@ -392,6 +392,7 @@ class Team extends AppModel
     }
 
     /**
+     * TODO: move to service layter
      * @return null
      */
     function getCurrentTeam()
@@ -404,6 +405,17 @@ class Team extends AppModel
                 }, 'team_info');
         }
         return $this->current_team;
+    }
+
+    /**
+     * TODO: move to service layter
+     *
+     * @return null
+     */
+    function resetCurrentTeam()
+    {
+        $this->current_team = [];
+        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false));
     }
 
     /**

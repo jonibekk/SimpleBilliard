@@ -769,6 +769,9 @@ class PaymentService extends AppService
         $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
         $this->_saveChargeHistory($historyData);
 
+        // Delete cache
+        $Team->resetCurrentTeam();
+
         return $result;
     }
 
