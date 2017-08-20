@@ -356,20 +356,24 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Invalid user count. %s",
                     AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt', 'paymentSetting'))
                 ));
-            }$paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
-        if (empty($paymentSetting)) {
+            }
+            $paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
+            if (empty($paymentSetting)) {
                 throw new Exception(sprintf("Not exist payment setting data. %s",
                     AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt'))
                 ));
-            }$subTotalCharge = $this->processDecimalPointForAmount($teamId, $paymentSetting['amount_per_user'] * $chargeUserCnt);
-        $tax = $this->calcTax($teamId, $subTotalCharge);
-        $totalCharge = $subTotalCharge + $tax;
+            }
+            $subTotalCharge = $this->processDecimalPointForAmount($teamId,
+                $paymentSetting['amount_per_user'] * $chargeUserCnt);
+            $tax = $this->calcTax($teamId, $subTotalCharge);
+            $totalCharge = $subTotalCharge + $tax;
 
-        $res = [
-            'sub_total_charge' => $subTotalCharge,
-            'tax' => $tax,
-            'total_charge' => $totalCharge,
-        ];} catch (Exception $e) {
+            $res = [
+                'sub_total_charge' => $subTotalCharge,
+                'tax'              => $tax,
+                'total_charge'     => $totalCharge,
+            ];
+        } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             $res = [
@@ -822,8 +826,6 @@ class PaymentService extends AppService
         );
         $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
         $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
-        debug($targetStartTs);
-        debug($targetEndTs);
         return $targetPaymentHistories;
     }
 

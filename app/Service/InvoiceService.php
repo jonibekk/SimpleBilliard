@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::uses('Xml', 'Utility');
 App::uses('InvoiceHistory', 'Model');
+App::uses('InvoiceHistoriesChargeHistory', 'Model');
 App::uses('Invoice', 'Model');
 App::uses('Team', 'Model');
 
@@ -28,6 +29,10 @@ class InvoiceService extends AppService
     {
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        /** @var  InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
         $team = $Team->getById($teamId);
@@ -76,9 +81,23 @@ class InvoiceService extends AppService
             ));
             return false;
         }
-
-        // TODO: saving data to DB
+        // TODO: saving invoice_history data to DB
+        $invoiceHistory = $InvoiceHistory->save([
+            'team_id'           => $teamId,
+            'order_date'        => $orderDate,
+            'system_order_code' => $resAtobarai['systemOrderId'],
+            'order_status'      => $resAtobarai['orderStatus']['@cd'],
+        ]);
         // TODO: invoices and chargeHistories
+        $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
+        $invoiceHistoriesChargeHistories = [];
+        foreach ($chargeHistories as $history) {
+            $invoiceHistoriesChargeHistories[] = [
+                'invoice_history_id' => $invoiceHistoryId,
+                'charge_history_id'  => $history['id'],
+            ];
+        }
+        $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
 
     }
 
