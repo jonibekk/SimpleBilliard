@@ -351,17 +351,34 @@ class PaymentService extends AppService
      */
     public function calcRelatedTotalChargeByUserCnt(int $teamId, int $chargeUserCnt, array $paymentSetting = []): array
     {
-        $paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
-        $subTotalCharge = $this->processDecimalPointForAmount($teamId,
-            $paymentSetting['amount_per_user'] * $chargeUserCnt);
+        try {
+            if ($chargeUserCnt == 0) {
+                throw new Exception(sprintf("Invalid user count. %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt', 'paymentSetting'))
+                ));
+            }$paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
+        if (empty($paymentSetting)) {
+                throw new Exception(sprintf("Not exist payment setting data. %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt'))
+                ));
+            }$subTotalCharge = $this->processDecimalPointForAmount($teamId, $paymentSetting['amount_per_user'] * $chargeUserCnt);
         $tax = $this->calcTax($teamId, $subTotalCharge);
         $totalCharge = $subTotalCharge + $tax;
 
-        return [
+        $res = [
             'sub_total_charge' => $subTotalCharge,
-            'tax'              => $tax,
-            'total_charge'     => $totalCharge,
-        ];
+            'tax' => $tax,
+            'total_charge' => $totalCharge,
+        ];} catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $res = [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+            ];
+        }
+        return $res;
     }
 
     /**
@@ -371,7 +388,7 @@ class PaymentService extends AppService
      *
      * @return float
      */
-    private function getTaxRateByCountryCode(string $countryCode): float
+    public function getTaxRateByCountryCode(string $countryCode): float
     {
         // Get tax_rate by team country
         $countries = Configure::read("countries");
@@ -393,6 +410,9 @@ class PaymentService extends AppService
     {
         $paymentSetting = $this->get($teamId);
         $taxRate = $this->getTaxRateByCountryCode($paymentSetting['company_country'], $amount);
+        if ($taxRate == 0) {
+            return 0;
+        }
         $tax = $this->processDecimalPointForAmount($teamId, $amount * $taxRate);
         return $tax;
     }
