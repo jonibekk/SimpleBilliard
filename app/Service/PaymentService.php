@@ -14,6 +14,7 @@ App::uses('AppUtil', 'Util');
 class PaymentService extends AppService
 {
     const AMOUNT_PER_USER_JPY = 1980;
+    // TODO.Payment: Fix amount per user case $ after final decision
     const AMOUNT_PER_USER_USD = 16;
 
     /* Payment settings variable cache */
@@ -289,7 +290,7 @@ class PaymentService extends AppService
         $subTotalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
         $subTotalCharge = $this->processDecimalPointForAmount($paymentSetting['currency'], $subTotalCharge);
 
-        $tax = $this->calcTax($paymentSetting['company_country'], $paymentSetting['currency'], $subTotalCharge);
+        $tax = $this->calcTax($paymentSetting['company_country'], $subTotalCharge);
         $totalCharge = $subTotalCharge + $tax;
         return $totalCharge;
     }
@@ -366,7 +367,7 @@ class PaymentService extends AppService
 
             $subTotalCharge = $this->processDecimalPointForAmount($paymentSetting['currency'],
                 $paymentSetting['amount_per_user'] * $chargeUserCnt);
-            $tax = $this->calcTax($paymentSetting['company_country'], $paymentSetting['currency'], $subTotalCharge);
+            $tax = $this->calcTax($paymentSetting['company_country'], $subTotalCharge);
             $totalCharge = $subTotalCharge + $tax;
             $res = [
                 'sub_total_charge' => $subTotalCharge,
@@ -430,13 +431,13 @@ class PaymentService extends AppService
      * Calc tax
      *
      * @param string $country
-     * @param int    $currency
      * @param float  $amount
      *
      * @return float
      */
-    public function calcTax(string $country, int $currency, float $amount): float
+    public function calcTax(string $country, float $amount): float
     {
+        $currency = $this->getCurrencyTypeByCountry($country);
         $taxRate = $this->getTaxRateByCountryCode($country);
         if ($taxRate == 0) {
             return 0;
