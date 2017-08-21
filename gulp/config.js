@@ -2,6 +2,12 @@ const assets_dir = './app/static_src'
 const compiled_assets_dir = './app/webroot'
 const node_modules_dir = './node_modules'
 const config = {
+  argOptions: {
+    string: ['react_app'],
+    default: {
+      react_app: "",
+    }
+  },
   assets_dir,
   compiled_assets_dir,
   compiled_js_dir: compiled_assets_dir + '/js',

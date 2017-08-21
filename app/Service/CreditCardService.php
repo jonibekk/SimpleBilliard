@@ -135,15 +135,16 @@ class CreditCardService extends AppService
 
     /**
      * Charge an existing customer from Stripe
+     * TODO.Payment: method argument $currencyName is unnecessary. because $currencyName is got by payment_settings.currency
      *
      * @param string $customerId
-     * @param string $currency
+     * @param string $currencyName
      * @param float  $value
      * @param string $description
      *
      * @return array
      */
-    public function chargeCustomer(string $customerId, string $currency, float $value, string $description)
+    public function chargeCustomer(string $customerId, string $currencyName, float $value, string $description)
     {
         $result = [
             "error"   => false,
@@ -159,7 +160,7 @@ class CreditCardService extends AppService
         }
 
         // validate currency
-        if (empty($currency)) {
+        if (empty($currencyName)) {
             $result["error"] = true;
             $result["message"] = __("Parameter is invalid.");
             $result["field"] = 'currency';
@@ -177,9 +178,9 @@ class CreditCardService extends AppService
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
         $charge = [
-            'customer' => $customerId,
-            'amount' => $value,
-            'currency' => $currency,
+            'customer'    => $customerId,
+            'amount'      => $value,
+            'currency'    => $currencyName,
             'description' => $description
         ];
 

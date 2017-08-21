@@ -392,6 +392,7 @@ class Team extends AppModel
     }
 
     /**
+     * TODO: move to service layter
      * @return null
      */
     function getCurrentTeam()
@@ -404,6 +405,17 @@ class Team extends AppModel
                 }, 'team_info');
         }
         return $this->current_team;
+    }
+
+    /**
+     * TODO: move to service layter
+     *
+     * @return null
+     */
+    function resetCurrentTeam()
+    {
+        $this->current_team = [];
+        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false));
     }
 
     /**
@@ -719,5 +731,24 @@ class Team extends AppModel
             ]
         );
         return $res;
+    }
+
+    /**
+     * Check if paid plan
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isPaidPlan(int $teamId): bool
+    {
+        $team = $this->getById($teamId);
+        if (empty($team)) {
+            return false;
+        }
+        if (Hash::get($team, 'service_use_status') == self::SERVICE_USE_STATUS_PAID) {
+            return true;
+        }
+        return false;
     }
 }
