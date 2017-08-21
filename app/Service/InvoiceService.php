@@ -38,13 +38,10 @@ class InvoiceService extends AppService
         $Team = ClassRegistry::init('Team');
         $team = $Team->getById($teamId);
         $invoiceInfo = $Invoice->getByTeamId($teamId);
-        $companyAddress = $invoiceInfo['company_region'] . $invoiceInfo['company_city'] . $invoiceInfo['company_street'];
-        $contactName = $invoiceInfo['contact_person_last_name'] . $invoiceInfo['contact_person_first_name'];
-        $amountTotal = 0;
-        foreach ($targetChargeHistories as $history) {
-            $amountTotal += $history['total_amount'] + $history['tax'];
-        }
-        $amountTotal += $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
+
+        // calc amount total
+        $addedUserAmount = $this->getAddedUserAmount($targetChargeHistories);
+        $amountTotal = $addedUserAmount + $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
 
         $data = [
             'O_ReceiptOrderDate'     => $orderDate,
@@ -55,19 +52,15 @@ class InvoiceService extends AppService
             'O_UseAmount'            => $amountTotal,
             'O_Ent_Note'             => "ご請求対象チーム名: " . $team['name'],
             'C_PostalCode'           => $invoiceInfo['company_post_code'],
-            'C_UnitingAddress'       => $companyAddress,
+            'C_UnitingAddress'       => $this->getCompanyAddress($invoiceInfo),
             'C_CorporateName'        => $invoiceInfo['company_name'],
-            'C_NameKj'               => $contactName,
+            'C_NameKj'               => $this->getContactNameKj($invoiceInfo),
             'C_Phone'                => $invoiceInfo['contact_person_tel'],
             'C_MailAddress'          => $invoiceInfo['contact_person_email'],
             'C_EntCustId'            => $teamId,
         ];
 
         // for added users charge
-        $addedUserAmount = 0;
-        foreach ($targetChargeHistories as $history) {
-            $addedUserAmount = $history['total_amount'] + $history['tax'];
-        }
         $data["I_ItemNameKj_0"] = "Goalous追加利用料";
         $data["I_UnitPrice_0"] = $addedUserAmount;
         $data["I_ItemNum_0"] = 1;
@@ -125,6 +118,40 @@ class InvoiceService extends AppService
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
         return (bool)$InvoiceHistory->getByOrderDate($teamId, $date);
 
+    }
+
+    /**
+     * @param array $invoice
+     *
+     * @return string
+     */
+    function getCompanyAddress(array $invoice): string
+    {
+        return $invoice['company_region'] . $invoice['company_city'] . $invoice['company_street'];
+    }
+
+    /**
+     * @param array $invoice
+     *
+     * @return string
+     */
+    function getContactNameKj(array $invoice): string
+    {
+        return $invoice['contact_person_last_name'] . $invoice['contact_person_first_name'];
+    }
+
+    /**
+     * @param array $targetChargeHistories
+     *
+     * @return int
+     */
+    function getAddedUserAmount(array $targetChargeHistories): int
+    {
+        $addedUserAmount = 0;
+        foreach ($targetChargeHistories as $history) {
+            $addedUserAmount = $history['total_amount'] + $history['tax'];
+        }
+        return $addedUserAmount;
     }
 
 }
