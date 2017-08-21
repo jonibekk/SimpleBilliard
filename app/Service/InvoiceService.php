@@ -71,7 +71,6 @@ class InvoiceService extends AppService
         $data["I_ItemNameKj_1"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
         $data["I_UnitPrice_1"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
         $data["I_ItemNum_1"] = 1;
-
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
         $resAtobarai = am($resAtobarai, ['requestData' => $data]);
         return $resAtobarai;

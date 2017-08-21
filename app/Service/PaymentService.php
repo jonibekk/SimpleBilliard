@@ -846,6 +846,37 @@ class PaymentService extends AppService
             );
             $monthlyChargeHistory['monthlyEndDate'] = AppUtil::dateYesterday($nextBaseDate);
 
+            // save the invoice history
+            $invoiceHistoryData = [
+                'team_id'           => $teamId,
+                'order_date'        => $localCurrentDate,
+                'system_order_code' => 'temporary',
+            ];
+            $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);
+            if (!$invoiceHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceHistory. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoryData),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+                ));
+            }
+
+            // save invoice histories and charge histories relation
+            $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
+            $invoiceHistoriesChargeHistories = [];
+            foreach (am($targetChargeHistories, [$monthlyChargeHistory]) as $history) {
+                $invoiceHistoriesChargeHistories[] = [
+                    'invoice_history_id' => $invoiceHistoryId,
+                    'charge_history_id'  => $history['id'],
+                ];
+            }
+            $resSaveInvoiceChargeHistory = $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
+            if (!$resSaveInvoiceChargeHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceChargeHistories. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoriesChargeHistories),
+                    AppUtil::varExportOneLine($InvoiceHistoriesChargeHistory->validationErrors)
+                ));
+            }
+
             // send invoice to atobarai.com
             $resAtobarai = $InvoiceService->registerOrder(
                 $teamId,
@@ -860,40 +891,6 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($resAtobarai['requestData'])
                 ));
             }
-            // add monthly charge to target charge histories.
-            array_push($targetChargeHistories, $monthlyChargeHistory);
-
-            // save the invoice history
-            $invoiceHistoryData = [
-                'team_id'           => $teamId,
-                'order_date'        => $localCurrentDate,
-                'system_order_code' => $resAtobarai['systemOrderId'],
-                'order_status'      => $resAtobarai['orderStatus']['@cd'],
-            ];
-            $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);
-            if (!$invoiceHistory) {
-                throw new Exception(sprintf("Failed save an InvoiceHistory. saveData: %s, validationErrors: %s",
-                    AppUtil::varExportOneLine($invoiceHistoryData),
-                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
-                ));
-            }
-
-            // save invoice histories and charge histories relation
-            $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
-            $invoiceHistoriesChargeHistories = [];
-            foreach ($targetChargeHistories as $history) {
-                $invoiceHistoriesChargeHistories[] = [
-                    'invoice_history_id' => $invoiceHistoryId,
-                    'charge_history_id'  => $history['id'],
-                ];
-            }
-            $resSaveInvoiceChargeHistory = $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
-            if (!$resSaveInvoiceChargeHistory) {
-                throw new Exception(sprintf("Failed save an InvoiceChargeHistories. saveData: %s, validationErrors: %s",
-                    AppUtil::varExportOneLine($invoiceHistoriesChargeHistories),
-                    AppUtil::varExportOneLine($InvoiceHistoriesChargeHistory->validationErrors)
-                ));
-            }
 
         } catch (Exception $e) {
             $ChargeHistory->rollback();
@@ -903,6 +900,22 @@ class PaymentService extends AppService
             ));
             return false;
         }
+        // update system order code
+        $InvoiceHistory->id = $invoiceHistoryId;
+        $invoiceHistoryUpdate = [
+            'id'                => $invoiceHistoryId,
+            'system_order_code' => $resAtobarai['systemOrderId'],
+            'order_status'      => $resAtobarai['orderStatus']['@cd'],
+        ];
+        $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate);
+        if (!$resUpdate) {
+            $this->log(sprintf("Failed update invoice history. teamId: %s, data: %s, validationErrors: %s",
+                $teamId,
+                AppUtil::varExportOneLine($invoiceHistoryUpdate),
+                AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+            ));
+        }
+
         $ChargeHistory->commit();
         return true;
     }
