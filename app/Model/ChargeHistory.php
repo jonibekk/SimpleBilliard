@@ -211,11 +211,18 @@ class ChargeHistory extends AppModel
      * @param int $tax
      * @param int $amountPerUser
      * @param int $usersCount
+     * @param int $currencyType
      *
      * @return mixed
      */
-    public function addInvoiceCharge(int $teamId, int $subTotalCharge, int $tax, int $amountPerUser, int $usersCount)
-    {
+    public function addInvoiceCharge(
+        int $teamId,
+        int $subTotalCharge,
+        int $tax,
+        int $amountPerUser,
+        int $usersCount,
+        int $currencyType = PaymentSetting::CURRENCY_TYPE_JPY
+    ) {
         $historyData = [
             'team_id'          => $teamId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_INVOICE,
@@ -224,7 +231,7 @@ class ChargeHistory extends AppModel
             'total_amount'     => $subTotalCharge,
             'tax'              => $tax,
             'charge_users'     => $usersCount,
-            'currency'         => 1, // TODO: fix it.
+            'currency'         => $currencyType,
             'charge_datetime'  => time(),
             'result_type'      => self::TRANSACTION_RESULT_SUCCESS,
             'max_charge_users' => $usersCount

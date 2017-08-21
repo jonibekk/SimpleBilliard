@@ -747,8 +747,8 @@ class PaymentService extends AppService
      * @param int   $teamId
      * @param int   $chargeMemberCount
      * @param int   $time
+     * @param array $targetChargeHistories
      * @param float $timezone
-     * @param array $targetHistories
      *
      * @return bool
      */
@@ -756,15 +756,19 @@ class PaymentService extends AppService
         int $teamId,
         int $chargeMemberCount,
         int $time,
-        float $timezone,
-        array $targetHistories = []
-    ) {
+        array $targetChargeHistories = [],
+        float $timezone = 9
+    ): bool {
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
         /** @var InvoiceService $InvoiceService */
         $InvoiceService = ClassRegistry::init('InvoiceService');
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        /** @var  InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
 
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
@@ -784,23 +788,65 @@ class PaymentService extends AppService
                 $chargeMemberCount
             );
             if (!$monthlyChargeHistory) {
-                throw new Exception(AppUtil::varExportOneLine($ChargeHistory->validationErrors));
+                throw new Exception(sprintf("Failed to save monthly charge history. validationErrors: %s"),
+                    AppUtil::varExportOneLine($ChargeHistory->validationErrors)
+                );
             }
-            $targetHistories = am($targetHistories, [$monthlyChargeHistory]);
+            // add monthly charge to target charge histories.
+            array_push($targetChargeHistories, $monthlyChargeHistory);
 
-            // send invoice
-            if ($InvoiceService->registerOrder($teamId, $targetHistories, $localCurrentDate) === false) {
-                throw new Exception("Failed to register order.");
+            // send invoice to atobarai.com
+            $resAtobarai = $InvoiceService->registerOrder($teamId, $targetChargeHistories, $localCurrentDate);
+            if ($resAtobarai['status'] == 'error') {
+                throw new Exception(sprintf("Request to atobarai.com was failed. errorMsg: %s, chargeHistories: %s, requestData: %s",
+                    AppUtil::varExportOneLine($resAtobarai['messages']),
+                    AppUtil::varExportOneLine($targetChargeHistories),
+                    AppUtil::varExportOneLine($resAtobarai['data'])
+                ));
             }
+
+            // save the invoice history
+            $invoiceHistoryData = [
+                'team_id'           => $teamId,
+                'order_date'        => $localCurrentDate,
+                'system_order_code' => $resAtobarai['systemOrderId'],
+                'order_status'      => $resAtobarai['orderStatus']['@cd'],
+            ];
+            $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);
+            if (!$invoiceHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceHistory. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoryData),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+                ));
+            }
+
+            // save invoice histories and charge histories relation
+            $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
+            $invoiceHistoriesChargeHistories = [];
+            foreach ($targetChargeHistories as $history) {
+                $invoiceHistoriesChargeHistories[] = [
+                    'invoice_history_id' => $invoiceHistoryId,
+                    'charge_history_id'  => $history['id'],
+                ];
+            }
+            $resSaveInvoiceChargeHistory = $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
+            if (!$resSaveInvoiceChargeHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceChargeHistories. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoriesChargeHistories),
+                    AppUtil::varExportOneLine($InvoiceHistoriesChargeHistory->validationErrors)
+                ));
+            }
+
         } catch (Exception $e) {
             $ChargeHistory->rollback();
-            $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorMsg: %s",
+            $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorDetail: %s",
                 $teamId,
                 $e->getMessage()
             ));
-            return;
+            return false;
         }
         $ChargeHistory->commit();
+        return true;
     }
 
     /**
@@ -810,7 +856,7 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function findChargeTargetHistories(int $teamId, int $time, float $timezone)
+    public function findChargeTargetHistories(int $teamId, int $time, float $timezone = 9)
     {
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
@@ -938,11 +984,12 @@ class PaymentService extends AppService
      * So the reliability of the test is important,
      * I decided to implement process like this.
      *
-     * @param int $time
+     * @param int      $time
+     * @param int|null $targetTimezone
      *
      * @return array
      */
-    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP): array
+    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP, int $targetTimezone = null): array
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -952,28 +999,34 @@ class PaymentService extends AppService
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeInvoiceTeams();
 
         // Filtering
-        $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $InvoiceHistory) {
-            $timezone = Hash::get($v, 'Team.timezone');
-            $localCurrentTs = $time + ($timezone * HOUR);
-            $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
-            // Check if today is payment base date
-            $paymentBaseDate = AppUtil::correctInvalidDate(
-                date('Y', $localCurrentTs),
-                date('m', $localCurrentTs),
-                $paymentBaseDay
-            );
-            if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
-                return false;
-            }
+        $targetChargeTeams = array_filter($targetChargeTeams,
+            function ($v) use ($time, $targetTimezone, $InvoiceHistory) {
+                if (is_null($targetTimezone) === false) {
+                    $timezone = $targetTimezone;
+                } else {
+                    $timezone = Hash::get($v, 'Team.timezone');
+                }
 
-            // Check if have not already charged
-            $teamId = Hash::get($v, 'PaymentSetting.team_id');
-            $invoiceHistory = $InvoiceHistory->getByOrderDate($teamId, $paymentBaseDate);
-            if (!empty($invoiceHistory)) {
-                return false;
-            }
-            return true;
-        });
+                $localCurrentTs = $time + ($timezone * HOUR);
+                $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
+                // Check if today is payment base date
+                $paymentBaseDate = AppUtil::correctInvalidDate(
+                    date('Y', $localCurrentTs),
+                    date('m', $localCurrentTs),
+                    $paymentBaseDay
+                );
+                if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
+                    return false;
+                }
+
+                // Check if have not already charged
+                $teamId = Hash::get($v, 'PaymentSetting.team_id');
+                $invoiceHistory = $InvoiceHistory->getByOrderDate($teamId, $paymentBaseDate);
+                if (!empty($invoiceHistory)) {
+                    return false;
+                }
+                return true;
+            });
         return $targetChargeTeams;
     }
 

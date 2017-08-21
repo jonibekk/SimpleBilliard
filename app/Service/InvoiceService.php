@@ -23,16 +23,12 @@ class InvoiceService extends AppService
      * @param array  $chargeHistories
      * @param string $orderDate
      *
-     * @return bool
+     * @return array responce from atobarai.com
      */
-    function registerOrder(int $teamId, array $chargeHistories, string $orderDate)
+    function registerOrder(int $teamId, array $chargeHistories, string $orderDate): array
     {
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
-        /** @var  InvoiceHistory $InvoiceHistory */
-        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
-        /** @var  InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
-        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
         $team = $Team->getById($teamId);
@@ -71,32 +67,8 @@ class InvoiceService extends AppService
         }
 
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
-        if ($resAtobarai['status'] == 'error') {
-            $this->log(sprintf("Request to atobarai.com was failed. errorMsg: %s, teamId: %s, chargeHistories: %s, requestData: %s",
-                AppUtil::varExportOneLine($resAtobarai['messages']),
-                $teamId,
-                AppUtil::varExportOneLine($chargeHistories),
-                AppUtil::varExportOneLine($data)
-            ));
-            return false;
-        }
-        // TODO: have to add an error handling
-        $invoiceHistory = $InvoiceHistory->save([
-            'team_id'           => $teamId,
-            'order_date'        => $orderDate,
-            'system_order_code' => $resAtobarai['systemOrderId'],
-            'order_status'      => $resAtobarai['orderStatus']['@cd'],
-        ]);
-        $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
-        $invoiceHistoriesChargeHistories = [];
-        foreach ($chargeHistories as $history) {
-            $invoiceHistoriesChargeHistories[] = [
-                'invoice_history_id' => $invoiceHistoryId,
-                'charge_history_id'  => $history['id'],
-            ];
-        }
-        $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
-
+        $resAtobarai = am($resAtobarai, ['requestData' => $data]);
+        return $resAtobarai;
     }
 
     /**

@@ -64,7 +64,6 @@ class MonthlyInvoiceChargeShell extends AppShell
         }
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
-            $timezone = Hash::get($team, 'Team.timezone');
 
             $chargeMemberCount = Hash::get($chargeMemberCountEachTeam, $teamId);
             // Check if exist member
@@ -73,8 +72,8 @@ class MonthlyInvoiceChargeShell extends AppShell
                 continue;
             }
             // TODO: 厳密に未請求のものを対象にするため、invoice_historiesをチェックする
-            $targetHistories = $PaymentService->findChargeTargetHistories($teamId, $targetTs, $timezone);
-            $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $timezone, $targetHistories);
+            $targetHistories = $PaymentService->findChargeTargetHistories($teamId, $targetTs);
+            $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $targetHistories);
 
         }
 
@@ -85,5 +84,7 @@ class MonthlyInvoiceChargeShell extends AppShell
                 )
             );
         }
+
+        $this->out(sprintf("Done to send invoices."));
     }
 }
