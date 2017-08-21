@@ -1044,6 +1044,33 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
+    public function test_updatePayerInfo()
+    {
+        $this->createCreditCardPayment();
+        $updateData = [
+            'company_name'                   => 'ISAO',
+            'company_country'                => 'US',
+            'company_region'                 => 'NY',
+            'company_city'                   => 'Central Park',
+            'company_street'                 => 'Somewhere',
+            'company_tel'                    => '123456789',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
+        ];
+
+        // Update payment data
+        $res = $this->PaymentService->updatePayerInfo(1, $updateData);
+        $this->assertTrue($res);
+
+        // Retrieve data from db
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        $data = Hash::get($PaymentSetting->getByTeamId(1), "PaymentSetting");
+
+        // Compare updated with saved data
+        $data = array_intersect_key($data, $updateData);
+        $this->assertEquals($updateData, $data);
+    }
+
     /**
      * tearDown method
      *

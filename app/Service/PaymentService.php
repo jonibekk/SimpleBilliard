@@ -865,6 +865,43 @@ class PaymentService extends AppService
     }
 
     /**
+     * Update Payment settings payer info.
+     *
+     * @param int   $teamId
+     * @param array $payerData
+     *
+     * @return array|bool
+     */
+    public function updatePayerInfo(int $teamId, array $payerData)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        $paySetting = $PaymentSetting->getByTeamId($teamId);
+
+        $data = am(Hash::get($paySetting, 'PaymentSetting'), $payerData);
+
+        // Check if payment exists
+        if (empty($paySetting)) {
+            $PaymentSetting->invalidate(null, __('Payment settings does not exists.'));
+            return $PaymentSetting->validationErrors;
+        }
+
+        try {
+            // Update PaymentSettings
+            $PaymentSetting->begin();
+            $PaymentSetting->save($data);
+            $PaymentSetting->commit();
+        } catch (Exception $e) {
+            $PaymentSetting->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
+        }
+        return true;
+    }
+
+    /**
      * Payment validation
      *
      * @param mixed $data
