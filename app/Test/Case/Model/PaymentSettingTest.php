@@ -178,4 +178,10 @@ class PaymentSettingTest extends GoalousTestCase
         $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
         $this->assertEmpty($res);
     }
+
+    public function test_getAmountPerUser()
+    {
+        // TODO: implement after review.
+        $this->markTestIncomplete('test not implemented.');
+    }
 }

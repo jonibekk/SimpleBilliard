@@ -314,6 +314,12 @@ class TeamTest extends GoalousTestCase
         );
     }
 
+    public function test_getCountry()
+    {
+        // TODO: implement after review.
+        $this->markTestIncomplete('test not implemented.');
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;
