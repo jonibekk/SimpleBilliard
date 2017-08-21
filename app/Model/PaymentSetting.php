@@ -25,12 +25,6 @@ class PaymentSetting extends AppModel
         self::CURRENCY_TYPE_USD => "$",
     ];
 
-    /**
-     * Default amount per user
-     * if exist data in db, prioritize db data
-     */
-    const AMOUNT_PER_USER = 1980;
-
     function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
@@ -283,28 +277,6 @@ class PaymentSetting extends AppModel
         $res = $this->find('all', $options);
 
         return $res;
-    }
-
-    /**
-     * get team amount per user
-     *
-     * @param int $teamId
-     *
-     * @return int
-     */
-    public function getAmountPerUser(int $teamId): int
-    {
-        $options = [
-            'conditions' => [
-                'team_id' => $teamId
-            ],
-            'fields'     => ['amount_per_user']
-        ];
-        $res = $this->find('first', $options);
-        if (!$res) {
-            return self::AMOUNT_PER_USER;
-        }
-        return $res['amount_per_user'];
     }
 
 }

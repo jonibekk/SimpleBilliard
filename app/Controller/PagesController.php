@@ -326,11 +326,12 @@ class PagesController extends AppController
 
     function _setAmountPerUser()
     {
-        $amountPerUser = PaymentSetting::AMOUNT_PER_USER;
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
         if ($this->isLoggedIn()) {
-            /** @var PaymentSetting $PaymentSetting */
-            $PaymentSetting = ClassRegistry::init("PaymentSetting");
-            $amountPerUser = $PaymentSetting->getAmountPerUser($this->current_team_id);
+            $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
         }
         $this->set(compact('amountPerUser'));
     }

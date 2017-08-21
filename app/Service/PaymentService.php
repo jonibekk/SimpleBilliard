@@ -17,6 +17,12 @@ class PaymentService extends AppService
     private static $cacheList = [];
 
     /**
+     * Default amount per user
+     * if exist data in db, prioritize db data
+     */
+    const AMOUNT_PER_USER_JPY = 1980;
+
+    /**
      * Get payment setting by team id
      *
      * @param       $teamId
@@ -876,5 +882,30 @@ class PaymentService extends AppService
         }
 
         return $allValidationErrors;
+    }
+
+    /**
+     * get team amount per user
+     *
+     * @param int $teamId
+     *
+     * @return int
+     */
+    public function getAmountPerUser(int $teamId): int
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId
+            ],
+            'fields'     => ['amount_per_user']
+        ];
+        $res = $PaymentSetting->find('first', $options);
+        if (!$res) {
+            return self::AMOUNT_PER_USER_JPY;
+        }
+        return $res['amount_per_user'];
     }
 }
