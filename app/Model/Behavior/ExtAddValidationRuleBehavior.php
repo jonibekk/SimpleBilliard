@@ -1,6 +1,8 @@
 <?php
 App::uses('AddValidationRuleBehavior', 'Cakeplus.Model/Behavior');
 
+use Goalous\Model\Enum;
+
 /**
  * Created by PhpStorm.
  * User: daikihirakata
@@ -38,6 +40,23 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
             }
         }
         return false;
+    }
+
+    /**
+     * Check if value exist in enum values
+     *
+     * @param Model $Model
+     * @param       $value
+     * @param       $enumClass
+     *
+     * @return bool
+     * @internal param array $field
+     */
+    function inEnumList(Model $Model, $value, $enumClass) {
+        $value = array_shift($value);
+        $enumClass = "Goalous\\Model\\Enum\\".$enumClass;
+        $constants = call_user_func([$enumClass, 'toArray']);
+        return in_array($value, $constants);
     }
 
     /**

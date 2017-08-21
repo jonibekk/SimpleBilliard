@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Model\Enum as Enum;
 /**
  * PaymentSetting Model
  */
@@ -54,13 +55,9 @@ class PaymentSetting extends AppModel
             ],
         ],
         'type'     => [
-            'inList'   => [
+            'inEnumList'   => [
                 'rule' => [
-                    'inList',
-                    [
-                        self::PAYMENT_TYPE_INVOICE,
-                        self::PAYMENT_TYPE_CREDIT_CARD
-                    ]
+                    'inEnumList', "PaymentSetting\Type"
                 ],
             ],
             'notBlank' => [
