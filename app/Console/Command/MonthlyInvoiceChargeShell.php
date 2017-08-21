@@ -71,8 +71,8 @@ class MonthlyInvoiceChargeShell extends AppShell
                 $noMemberTeams[] = $teamId;
                 continue;
             }
-            $targetHistories = $PaymentService->findTargetChargeHistories($teamId, $targetTs);
-            $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $targetHistories);
+            $targetChargeHistories = $PaymentService->findTargetChargeHistories($teamId, $targetTs);
+            $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $targetChargeHistories);
         }
 
         if (!empty($noMemberTeams)) {

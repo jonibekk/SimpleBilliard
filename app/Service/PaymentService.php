@@ -145,7 +145,8 @@ class PaymentService extends AppService
             if (!$CreditCard->save($creditCardData)) {
                 $CreditCard->rollback();
                 $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create credit card. data:%s", AppUtil::varExportOneLine($creditCardData)));
+                throw new Exception(sprintf("Failed create credit card. data:%s",
+                    AppUtil::varExportOneLine($creditCardData)));
             }
 
             // Save snapshot
@@ -579,7 +580,8 @@ class PaymentService extends AppService
 
             if (!$ChargeHistory->save($historyData)) {
                 $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s", AppUtil::varExportOneLine($historyData)));
+                throw new Exception(sprintf("Failed create charge history. data:%s",
+                    AppUtil::varExportOneLine($historyData)));
             }
 
             if (isset($charge['paymentData'])) {
@@ -702,7 +704,8 @@ class PaymentService extends AppService
             ];
 
             if (!$CreditCard->save($creditCardData)) {
-                throw new Exception(sprintf("Failed create credit card. data:%s", AppUtil::varExportOneLine($paymentData)));
+                throw new Exception(sprintf("Failed create credit card. data:%s",
+                    AppUtil::varExportOneLine($paymentData)));
             }
 
             // Save snapshot
@@ -757,7 +760,7 @@ class PaymentService extends AppService
             $this->log($e->getTraceAsString());
 
             $result['error'] = true;
-            $result['message'] = __("Failed to register paid plan.")." ".__("Please try again later.");
+            $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
             $result['errorCode'] = 500;
             return $result;
         }
@@ -819,6 +822,7 @@ class PaymentService extends AppService
             // save monthly charge
             $monthlyChargeHistory = $ChargeHistory->addInvoiceMonthlyCharge(
                 $teamId,
+                $time,
                 $chargeInfo['sub_total_charge'],
                 $chargeInfo['tax'],
                 $paymentSetting['amount_per_user'],
@@ -829,11 +833,24 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($ChargeHistory->validationErrors)
                 );
             }
-            // add monthly charge to target charge histories.
-            array_push($targetChargeHistories, $monthlyChargeHistory);
+
+            // monthly dates
+            $monthlyChargeHistory['monthlyStartDate'] = $localCurrentDate;
+            $nextMonthTs = strtotime('+ 1 month', $localCurrentDate);
+            $nextBaseDate = AppUtil::correctInvalidDate(
+                date('Y', $nextMonthTs),
+                date('m', $nextMonthTs),
+                $paymentSetting['payment_base_day']
+            );
+            $monthlyChargeHistory['monthlyEndDate'] = AppUtil::dateYesterday($nextBaseDate);
 
             // send invoice to atobarai.com
-            $resAtobarai = $InvoiceService->registerOrder($teamId, $targetChargeHistories, $localCurrentDate);
+            $resAtobarai = $InvoiceService->registerOrder(
+                $teamId,
+                $targetChargeHistories,
+                $monthlyChargeHistory,
+                $localCurrentDate
+            );
             if ($resAtobarai['status'] == 'error') {
                 throw new Exception(sprintf("Request to atobarai.com was failed. errorMsg: %s, chargeHistories: %s, requestData: %s",
                     AppUtil::varExportOneLine($resAtobarai['messages']),
@@ -841,6 +858,8 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($resAtobarai['data'])
                 ));
             }
+            // add monthly charge to target charge histories.
+            array_push($targetChargeHistories, $monthlyChargeHistory);
 
             // save the invoice history
             $invoiceHistoryData = [
@@ -936,7 +955,8 @@ class PaymentService extends AppService
 
             if (!$ChargeHistory->save($historyData)) {
                 $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s", AppUtil::varExportOneLine($historyData)));
+                throw new Exception(sprintf("Failed create charge history. data:%s",
+                    AppUtil::varExportOneLine($historyData)));
             }
             $ChargeHistory->commit();
         } catch (Exception $e) {

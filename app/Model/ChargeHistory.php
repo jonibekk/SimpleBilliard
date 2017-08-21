@@ -199,6 +199,7 @@ class ChargeHistory extends AppModel
             'conditions' => [
                 'ChargeHistory.team_id'            => $teamId,
                 'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
+                'ChargeHistory.charge_type'        => [self::CHARGE_TYPE_ACTIVATE_USER, self::CHARGE_TYPE_ADD_USER],
                 'ChargeHistory.charge_datetime >=' => $startTs,
                 'ChargeHistory.charge_datetime <=' => $endTs,
                 'InvoiceHistoriesChargeHistory.id' => null,
@@ -231,6 +232,7 @@ class ChargeHistory extends AppModel
 
     /**
      * @param int $teamId
+     * @param int $time
      * @param int $subTotalCharge
      * @param int $tax
      * @param int $amountPerUser
@@ -241,6 +243,7 @@ class ChargeHistory extends AppModel
      */
     public function addInvoiceMonthlyCharge(
         int $teamId,
+        int $time,
         int $subTotalCharge,
         int $tax,
         int $amountPerUser,
@@ -256,7 +259,7 @@ class ChargeHistory extends AppModel
             'tax'              => $tax,
             'charge_users'     => $usersCount,
             'currency'         => $currencyType,
-            'charge_datetime'  => time(),
+            'charge_datetime'  => $time,
             'result_type'      => self::TRANSACTION_RESULT_SUCCESS,
             'max_charge_users' => $usersCount
         ];

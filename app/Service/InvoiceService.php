@@ -20,13 +20,18 @@ class InvoiceService extends AppService
      * register order for 1 team's invoice via atobarai.com
      *
      * @param int    $teamId
-     * @param array  $chargeHistories
+     * @param array  $targetChargeHistories
+     * @param array  $monthlyChargeHistory
      * @param string $orderDate
      *
      * @return array responce from atobarai.com
      */
-    function registerOrder(int $teamId, array $chargeHistories, string $orderDate): array
-    {
+    function registerOrder(
+        int $teamId,
+        array $targetChargeHistories,
+        array $monthlyChargeHistory,
+        string $orderDate
+    ): array {
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         /** @var Team $Team */
@@ -36,9 +41,10 @@ class InvoiceService extends AppService
         $companyAddress = $invoiceInfo['company_region'] . $invoiceInfo['company_city'] . $invoiceInfo['company_street'];
         $contactName = $invoiceInfo['contact_person_last_name'] . $invoiceInfo['contact_person_first_name'];
         $amountTotal = 0;
-        foreach ($chargeHistories as $history) {
+        foreach ($targetChargeHistories as $history) {
             $amountTotal += $history['total_amount'] + $history['tax'];
         }
+        $amountTotal += $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
 
         $data = [
             'O_ReceiptOrderDate'     => $orderDate,
@@ -57,14 +63,21 @@ class InvoiceService extends AppService
             'C_EntCustId'            => $teamId,
         ];
 
-        $itemIndex = 1;
-        foreach ($chargeHistories as $history) {
-            // TODO: 商品名を正しくする
-            $data["I_ItemNameKj_{$itemIndex}"] = "Goalous利用料金";
-            $data["I_UnitPrice_{$itemIndex}"] = $history['total_amount'] + $history['tax'];
-            $data["I_ItemNum_{$itemIndex}"] = 1;
-            $itemIndex++;
+        // for added users charge
+        $addedUserAmount = 0;
+        foreach ($targetChargeHistories as $history) {
+            $addedUserAmount = $history['total_amount'] + $history['tax'];
         }
+        $data["I_ItemNameKj_0"] = "Goalous追加利用料";
+        $data["I_UnitPrice_0"] = $addedUserAmount;
+        $data["I_ItemNum_0"] = 1;
+
+        // for monthly charge
+        $monthlyStartDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
+        $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
+        $data["I_ItemNameKj_1"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
+        $data["I_UnitPrice_1"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
+        $data["I_ItemNum_1"] = 1;
 
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
         $resAtobarai = am($resAtobarai, ['requestData' => $data]);
