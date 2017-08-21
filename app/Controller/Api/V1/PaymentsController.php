@@ -238,11 +238,15 @@ class PaymentsController extends ApiController
     /**
      * Update Payer info
      *
+     * @param int $teamId
+     *
      * @return CakeResponse
      */
-    function post_update_payer_info()
+    function put_company_info(int $teamId)
     {
-        $teamId = $this->current_team_id;
+        if ($teamId != $this->current_team_id) {
+            return $this->_getResponseNotFound();
+        }
         $userId = $this->Auth->user('id');
 
         // Check if is admin

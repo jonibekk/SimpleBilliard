@@ -785,19 +785,7 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_updatePayerInfo()
     {
-        $payment = $this->createTestPaymentData([
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ]);
-        $customerCode = 'cus_B3ygr9hxqg5evH';
-
-        $userID = $this->createActiveUser(1);
-        $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
-
+        $this->createCreditCardPayment();
         $updateData = [
             'company_name'                   => 'ISAO',
             'company_country'                => 'US',
@@ -809,8 +797,17 @@ class PaymentServiceTest extends GoalousTestCase
             'contact_person_email'           => 'test@example.com',
         ];
 
+        // Update payment data
         $res = $this->PaymentService->updatePayerInfo(1, $updateData);
         $this->assertTrue($res);
+
+        // Retrieve data from db
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        $data = Hash::get($PaymentSetting->getByTeamId(1), "PaymentSetting");
+
+        // Compare updated with saved data
+        $data = array_intersect_key($data, $updateData);
+        $this->assertEquals($updateData, $data);
     }
 
     /**
