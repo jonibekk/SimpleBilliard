@@ -9,7 +9,7 @@
         </select>
     </div>
     <h3>請求先情報</h3>
-    <form class="form-horizontal" name="addCompanyInfo" id="PaymentsAddCompanyInfoForm" accept-charset="utf-8">
+    <form class="form-horizontal" name="" id="" accept-charset="utf-8">
         <div class="form-group">
             <label for="PaymentsCompanyName" class="circle-create-label">会社名</label>
             <input
