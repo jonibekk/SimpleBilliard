@@ -657,7 +657,6 @@ class PaymentService extends AppService
             $this->log(sprintf("Error on Stripe call: %s", var_export($stripeResponse, true)));
             return $result;
         }
-        $this->log(compact('customerId'));
 
         // Variable to later use
         $result['customerId'] = $customerId;
