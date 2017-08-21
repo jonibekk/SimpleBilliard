@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('Invoice', 'Model');
 
+use Goalous\Model\Enum as Enum;
 /**
  * PaymentSetting Model
  */
@@ -51,18 +52,13 @@ class PaymentSetting extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
         'type'                           => [
-            'inList'   => [
+            'inEnumList'   => [
                 'rule' => [
-                    'inList',
-                    [
-                        self::PAYMENT_TYPE_INVOICE,
-                        self::PAYMENT_TYPE_CREDIT_CARD
-                    ]
+                    'inEnumList', "PaymentSetting\Type"
                 ],
             ],
             'notBlank' => [
@@ -81,7 +77,6 @@ class PaymentSetting extends AppModel
                 ],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -90,7 +85,6 @@ class PaymentSetting extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -99,7 +93,6 @@ class PaymentSetting extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
             'range'    => [
@@ -149,18 +142,8 @@ class PaymentSetting extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_tel'                    => [
-            'maxLength' => ['rule' => ['maxLength', 20]],
-            'notBlank'  => [
-                'required' => true,
-                'rule'     => 'notBlank',
-            ],
-            'phoneNo'   => [
-                'rule' => 'phoneNo',
-            ],
-        ],
-        'contact_person_first_name'      => [
-            'maxLength' => ['rule' => ['maxLength', 128]],
+        'contact_person_first_name'         => [
+            'maxLength'    => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
@@ -202,7 +185,7 @@ class PaymentSetting extends AppModel
     public $validateCreate = [
         'team_id' => [
             'isUnique' => [
-                'rule'     => ['isUnique', ['team_id', 'team_id'], false],
+                'rule'     => ['isUnique', ['team_id']],
                 'required' => 'create'
             ],
         ],

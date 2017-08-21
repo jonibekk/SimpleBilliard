@@ -18,8 +18,10 @@ class FormTextBox extends React.Component {
           id={this.props.id}
           type={this.props.type}
           name={this.props.name}
+          value={this.props.value}
           className="form-control"
           placeholder={this.props.placeholder}
+          disabled={this.props.disabled ? true : false}
           maxLength={this.props.max_length}
           onChange={(e) => this.props.onChange(e)}
         />
@@ -34,8 +36,10 @@ FormTextBox.propTypes = {
   id: React.PropTypes.string,
   name: React.PropTypes.string,
   type: React.PropTypes.string,
+  value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   label: React.PropTypes.string,
   placeholder: React.PropTypes.string,
+  disabled: React.PropTypes.bool,
   err_msg: React.PropTypes.string,
   max_length: React.PropTypes.number,
 };
@@ -45,6 +49,7 @@ FormTextBox.defaultProps = {
   type: "text",
   label: "",
   placeholder: "",
+  disabled: false,
   err_msg: "",
   max_length: 255
 };
