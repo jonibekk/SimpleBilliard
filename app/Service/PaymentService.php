@@ -901,7 +901,6 @@ class PaymentService extends AppService
             return false;
         }
         // update system order code
-        $InvoiceHistory->id = $invoiceHistoryId;
         $invoiceHistoryUpdate = [
             'id'                => $invoiceHistoryId,
             'system_order_code' => $resAtobarai['systemOrderId'],
@@ -909,7 +908,7 @@ class PaymentService extends AppService
         ];
         $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate);
         if (!$resUpdate) {
-            $this->log(sprintf("Failed update invoice history. teamId: %s, data: %s, validationErrors: %s",
+            $this->log(sprintf("Failed update invoice history. It should be recovered!!! teamId: %s, data: %s, validationErrors: %s",
                 $teamId,
                 AppUtil::varExportOneLine($invoiceHistoryUpdate),
                 AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
