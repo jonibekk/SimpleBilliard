@@ -663,8 +663,6 @@ class PaymentService extends AppService
         $result['customerId'] = $customerId;
 
         $companyCountry = Hash::get($paymentData, 'company_country');
-        $timezone = $Team->getTimezone();
-        $paymentData['payment_base_day'] = AppUtil::todayDateYmdLocal($timezone);
         $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserByCountry($companyCountry);
         $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
 

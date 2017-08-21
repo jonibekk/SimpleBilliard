@@ -109,6 +109,8 @@ class PaymentsController extends ApiController
         }
 
         // Register credit card, and apply payment
+        $timezone = $this->Team->getTimezone();
+        $requestData['payment_base_day'] = date('d',strtotime(AppUtil::todayDateYmdLocal($timezone)));
         $res = $PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $requestData);
         if ($res['error'] === true) {
             return $this->_getResponse($res['errorCode'], null, null, $res['message']);
