@@ -49,6 +49,11 @@ class PagesController extends AppController
         return $this->render('logged_in_home');
     }
 
+    /**
+     * Display lp pages other than top page
+     *
+     * @return void
+     */
     public function lp()
     {
         $path = func_get_args();
