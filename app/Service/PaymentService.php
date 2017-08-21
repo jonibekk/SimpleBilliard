@@ -836,7 +836,7 @@ class PaymentService extends AppService
 
             // monthly dates
             $monthlyChargeHistory['monthlyStartDate'] = $localCurrentDate;
-            $nextMonthTs = strtotime('+ 1 month', $localCurrentDate);
+            $nextMonthTs = strtotime('+ 1 month', strtotime($localCurrentDate));
             $nextBaseDate = AppUtil::correctInvalidDate(
                 date('Y', $nextMonthTs),
                 date('m', $nextMonthTs),
@@ -855,7 +855,7 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Request to atobarai.com was failed. errorMsg: %s, chargeHistories: %s, requestData: %s",
                     AppUtil::varExportOneLine($resAtobarai['messages']),
                     AppUtil::varExportOneLine($targetChargeHistories),
-                    AppUtil::varExportOneLine($resAtobarai['data'])
+                    AppUtil::varExportOneLine($resAtobarai['requestData'])
                 ));
             }
             // add monthly charge to target charge histories.
