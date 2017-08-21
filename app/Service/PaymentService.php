@@ -865,7 +865,7 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function findChargeTargetHistories(int $teamId, int $time, float $timezone = 9)
+    public function findTargetChargeHistories(int $teamId, int $time, float $timezone = 9)
     {
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');

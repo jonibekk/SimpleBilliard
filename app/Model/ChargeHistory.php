@@ -184,6 +184,9 @@ class ChargeHistory extends AppModel
     }
 
     /**
+     * find target histories for invoice.
+     * It should be not charged yet.
+     *
      * @param int $teamId
      * @param int $startTs
      * @param int $endTs
@@ -194,13 +197,34 @@ class ChargeHistory extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id'            => $teamId,
-                'payment_type'       => self::PAYMENT_TYPE_INVOICE,
-                'charge_datetime >=' => $startTs,
-                'charge_datetime <=' => $endTs,
-            ]
+                'ChargeHistory.team_id'            => $teamId,
+                'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
+                'ChargeHistory.charge_datetime >=' => $startTs,
+                'ChargeHistory.charge_datetime <=' => $endTs,
+                'InvoiceHistoriesChargeHistory.id' => null,
+                'InvoiceHistory.id'                => null,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'invoice_histories_charge_histories',
+                    'alias'      => 'InvoiceHistoriesChargeHistory',
+                    'conditions' => [
+                        'ChargeHistory.id = InvoiceHistoriesChargeHistory.charge_history_id',
+                        'InvoiceHistoriesChargeHistory.del_flg' => false,
+                    ]
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'invoice_histories',
+                    'alias'      => 'InvoiceHistory',
+                    'conditions' => [
+                        'InvoiceHistory.id = InvoiceHistoriesChargeHistory.invoice_history_id',
+                        'InvoiceHistory.del_flg' => false,
+                    ]
+                ],
+            ],
         ];
-
         $res = $this->find('all', $options);
         return Hash::extract($res, '{n}.ChargeHistory');
     }
