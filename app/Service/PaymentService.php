@@ -744,6 +744,11 @@ class PaymentService extends AppService
     }
 
     /**
+     * Register Invoice including requesting to atobarai.com and saving data in the following:
+     * - charge_histories -> monthly charge
+     * - invoice_histories -> status of response of atobarai.com
+     * - invoice_histories_charge_histories -> intermediate table for invoice_histories and charge_histories.
+     *
      * @param int   $teamId
      * @param int   $chargeMemberCount
      * @param int   $time
