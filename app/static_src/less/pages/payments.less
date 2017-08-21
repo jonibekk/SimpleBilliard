@@ -1,6 +1,9 @@
 @import "../variables/all";
 @import "../helpers/mixin";
 
+// TODO: Class name might as well rename like this. this is based on our style guide and easy to understand relation.
+// e.g. 「.subscription-status, .pricing-info」→「.subscriptionStatus, .pricingInfo」
+
 .choose-payment{
     padding: 2rem 0;
     .form-horizontal{
@@ -344,16 +347,48 @@
 }
 
 .payment-history-table-head{
-    background-color:@baseGray;
-    font-weight: 600;
-    td{
-        border-right: 1px solid @white;
-        &:last-of-type{
-            border-right: none;
-        }
+  background-color:@baseGray;
+  font-weight: 600;
+  td{
+    border-right: 1px solid @white;
+    &:last-of-type{
+      border-right: none;
     }
+  }
 }
-.subscription-status, .pricing-info{
+
+.payment-history-table-body{
+  background-color: @white;
+  color:@darkBlack;
+  tr{
+    border-bottom: 1px solid @baseGray;
+    td{
+      border-right: 1px solid @baseGray;
+      &:last-of-type{
+        border-right:none;
+      }
+    }
+  }
+}
+
+.payment-history-view-receipt-btn{
+  padding: .25rem 0;
+  width: 5rem;
+  text-align:center;
+  display:block;
+  margin: 0 auto;
+  border-color: @darkBlack;
+  background-color: @white;
+  transition: background-color .3s, border-color .3s;
+  &:hover{
+    border-color: @basicPink;
+    background-color: @basicPink;
+  }
+}
+
+
+
+.subscription-status, .pricing-info, .paymentMethod{
     max-width:500px;
     margin: 0 auto;
     padding: 2rem 0;
@@ -376,36 +411,6 @@
         &.deactivated{
             color:@acidRed;
         }
-    }
-}
-
-
-.payment-history-table-body{
-    background-color: @white;
-    color:@darkBlack;
-    tr{
-        border-bottom: 1px solid @baseGray;
-        td{
-            border-right: 1px solid @baseGray;
-            &:last-of-type{
-                border-right:none;
-            }
-        }
-    }
-}
-
-.payment-history-view-receipt{
-    padding: .25rem 0;
-    width: 5rem;
-    text-align:center;
-    display:block;
-    margin: 0 auto;
-    border-color: @darkBlack;
-    background-color: @white;
-    transition: background-color .3s, border-color .3s;
-    &:hover{
-        border-color: @basicPink;
-        background-color: @basicPink;
     }
 }
 
@@ -476,4 +481,39 @@
         position:relative;
         top: -.5em;
     }
+}
+
+/* Payment method */
+.paymentMethod-inner {
+  padding: 0 15px;
+}
+
+.paymentMethod-cc-table{
+  &:extend(.payment-history-table all);
+  font-size:13px;
+}
+
+.paymentMethod-cc-table-head{
+  &:extend(.payment-history-table-head all);
+}
+
+.paymentMethod-cc-table-body{
+  &:extend(.payment-history-table-body all);
+  tr{
+    border-bottom: 1px solid @baseGray;
+    td{
+      padding: 4px 8px;
+      border-right: 1px solid @baseGray;
+      &:last-of-type{
+        border-right:none;
+      }
+    }
+  }
+}
+.paymentMethod-cc-table-expireDate {
+  display: inline-block;
+  line-height:38px;
+  &.mod-alert {
+    color: @strongRed;
+  }
 }
