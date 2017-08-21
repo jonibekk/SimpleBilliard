@@ -900,7 +900,10 @@ class PaymentService extends AppService
             ));
             return false;
         }
-        // update system order code
+
+        $ChargeHistory->commit();
+
+        // update system order code.
         $invoiceHistoryUpdate = [
             'id'                => $invoiceHistoryId,
             'system_order_code' => $resAtobarai['systemOrderId'],
@@ -915,7 +918,6 @@ class PaymentService extends AppService
             ));
         }
 
-        $ChargeHistory->commit();
         return true;
     }
 
