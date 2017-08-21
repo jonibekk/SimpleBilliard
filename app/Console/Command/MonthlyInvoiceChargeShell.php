@@ -76,9 +76,7 @@ class MonthlyInvoiceChargeShell extends AppShell
                 $noMemberTeams[] = $teamId;
                 continue;
             }
-            $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $targetTs);
-            $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs,
-                $targetChargeHistories);
+            $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs);
             if ($retRegistration === true) {
                 $this->out(sprintf('Order registration was succeeded! teamId: %s', $teamId));
             } else {

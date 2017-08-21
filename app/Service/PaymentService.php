@@ -784,10 +784,9 @@ class PaymentService extends AppService
      * - invoice_histories -> status of response of atobarai.com
      * - invoice_histories_charge_histories -> intermediate table for invoice_histories and charge_histories.
      *
-     * @param int   $teamId
-     * @param int   $chargeMemberCount
-     * @param int   $time
-     * @param array $targetChargeHistories
+     * @param int $teamId
+     * @param int $chargeMemberCount
+     * @param int $time
      *
      * @return bool
      * @internal param float $timezone
@@ -795,8 +794,7 @@ class PaymentService extends AppService
     public function registerInvoice(
         int $teamId,
         int $chargeMemberCount,
-        int $time,
-        array $targetChargeHistories = []
+        int $time
     ): bool {
         // Invoices for only Japanese team. So, $timezone will be always Japan time.
         $timezone = 9;
@@ -811,6 +809,8 @@ class PaymentService extends AppService
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
         /** @var  InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
         $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
 
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
@@ -819,6 +819,9 @@ class PaymentService extends AppService
         }
         $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount);
         $paymentSetting = $PaymentSetting->getByTeamId($teamId);
+
+        $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+
         $ChargeHistory->begin();
         try {
             // save monthly charge
@@ -912,8 +915,8 @@ class PaymentService extends AppService
      * target date range is from previous monthly charge data to yesterday.
      * target histories should be not invoiced yet.
      *
-     * @param int   $teamId
-     * @param int   $time
+     * @param int $teamId
+     * @param int $time
      *
      * @return array
      */
