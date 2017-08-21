@@ -855,6 +855,10 @@ class PaymentService extends AppService
     }
 
     /**
+     * Get target charge histories
+     * target date range is from previous monthly charge data to yesterday.
+     * target histories should be not invoiced yet.
+     *
      * @param int   $teamId
      * @param int   $time
      * @param float $timezone
@@ -870,6 +874,8 @@ class PaymentService extends AppService
         $yesterdayLocalDate = AppUtil::dateYesterday($localCurrentDate);
         $targetEndTs = AppUtil::getEndTimestampByTimezone($yesterdayLocalDate, $timezone);
         $previousMonthFirstTs = strtotime("-1 month", strtotime(date('Y-m-01', strtotime($yesterdayLocalDate))));
+
+        // target start date will be base day in previous month
         $targetStartDate = AppUtil::correctInvalidDate(
             date('Y', $previousMonthFirstTs),
             date('m', $previousMonthFirstTs),

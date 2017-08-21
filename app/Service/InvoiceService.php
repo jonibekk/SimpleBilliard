@@ -17,7 +17,7 @@ class InvoiceService extends AppService
     const API_URL_INQUIRY_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
     /**
-     * register order for 1 team's invoice
+     * register order for 1 team's invoice via atobarai.com
      *
      * @param int    $teamId
      * @param array  $chargeHistories
