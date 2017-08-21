@@ -3,6 +3,7 @@ App::uses('AppModel', 'Model');
 App::uses('Invoice', 'Model');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * PaymentSetting Model
  */
@@ -52,16 +53,17 @@ class PaymentSetting extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'type'                           => [
-            'inEnumList'   => [
+            'inEnumList' => [
                 'rule' => [
-                    'inEnumList', "PaymentSetting\Type"
+                    'inEnumList',
+                    "PaymentSetting\Type"
                 ],
             ],
-            'notBlank' => [
+            'notBlank'   => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
@@ -77,7 +79,7 @@ class PaymentSetting extends AppModel
                 ],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'amount_per_user'                => [
@@ -85,7 +87,7 @@ class PaymentSetting extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'payment_base_day'               => [
@@ -93,7 +95,7 @@ class PaymentSetting extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
             'range'    => [
                 // allow 1 ~ 31
@@ -142,8 +144,8 @@ class PaymentSetting extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_first_name'         => [
-            'maxLength'    => ['rule' => ['maxLength', 128]],
+        'contact_person_first_name'      => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
@@ -220,9 +222,11 @@ class PaymentSetting extends AppModel
     }
 
     /**
-     * @return array|null
+     * @param int $paymentType
+     *
+     * @return array
      */
-    public function findMonthlyChargeCcTeams()
+    public function findMonthlyChargeTeams(int $paymentType): array
     {
         $options = [
             'fields'     => [
@@ -232,19 +236,10 @@ class PaymentSetting extends AppModel
                 'Team.timezone',
             ],
             'conditions' => [
-                'PaymentSetting.type'    => self::PAYMENT_TYPE_CREDIT_CARD,
+                'PaymentSetting.type'    => $paymentType,
                 'PaymentSetting.del_flg' => false
             ],
             'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'credit_cards',
-                    'alias'      => 'CreditCard',
-                    'conditions' => [
-                        'PaymentSetting.id = CreditCard.payment_setting_id',
-                        'CreditCard.del_flg' => false
-                    ],
-                ],
                 [
                     'type'       => 'INNER',
                     'table'      => 'teams',
@@ -257,50 +252,28 @@ class PaymentSetting extends AppModel
                 ],
             ]
         ];
-        $res = $this->find('all', $options);
-
-        return $res;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function findMonthlyChargeInvoiceTeams()
-    {
-        $options = [
-            'fields'     => [
-                'PaymentSetting.id',
-                'PaymentSetting.team_id',
-                'PaymentSetting.payment_base_day',
-                'Team.timezone',
-            ],
-            'conditions' => [
-                'PaymentSetting.type'    => self::PAYMENT_TYPE_INVOICE,
-                'PaymentSetting.del_flg' => false
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'invoices',
-                    'alias'      => 'Invoice',
-                    'conditions' => [
-                        'PaymentSetting.id = Invoice.payment_setting_id',
-                        'Invoice.credit_status' => Invoice::CREDIT_STATUS_OK,
-                        'Invoice.del_flg'       => false
-                    ],
+        if ($paymentType == self::PAYMENT_TYPE_CREDIT_CARD) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'credit_cards',
+                'alias'      => 'CreditCard',
+                'conditions' => [
+                    'PaymentSetting.id = CreditCard.payment_setting_id',
+                    'CreditCard.del_flg' => false
                 ],
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'teams',
-                    'alias'      => 'Team',
-                    'conditions' => [
-                        'PaymentSetting.team_id = Team.id',
-                        'Team.service_use_status' => Team::SERVICE_USE_STATUS_PAID,
-                        'Team.del_flg'            => false,
-                    ],
+            ];
+        } else {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'invoices',
+                'alias'      => 'Invoice',
+                'conditions' => [
+                    'PaymentSetting.id = Invoice.payment_setting_id',
+                    'Invoice.credit_status' => Invoice::CREDIT_STATUS_OK,
+                    'Invoice.del_flg'       => false
                 ],
-            ]
-        ];
+            ];
+        }
         $res = $this->find('all', $options);
 
         return $res;
