@@ -788,17 +788,19 @@ class PaymentService extends AppService
      * @param int   $chargeMemberCount
      * @param int   $time
      * @param array $targetChargeHistories
-     * @param float $timezone
      *
      * @return bool
+     * @internal param float $timezone
      */
     public function registerInvoice(
         int $teamId,
         int $chargeMemberCount,
         int $time,
-        array $targetChargeHistories = [],
-        float $timezone = 9
+        array $targetChargeHistories = []
     ): bool {
+        // Invoices for only Japanese team. So, $timezone will be always Japan time.
+        $timezone = 9;
+
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
         /** @var InvoiceService $InvoiceService */
@@ -912,12 +914,14 @@ class PaymentService extends AppService
      *
      * @param int   $teamId
      * @param int   $time
-     * @param float $timezone
      *
      * @return array
      */
-    public function findTargetChargeHistories(int $teamId, int $time, float $timezone = 9)
+    public function findTargetInvoiceChargeHistories(int $teamId, int $time)
     {
+        // Invoices for only Japanese team. So, $timezone will be always Japan time.
+        $timezone = 9;
+
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
@@ -1047,12 +1051,12 @@ class PaymentService extends AppService
      * So the reliability of the test is important,
      * I decided to implement process like this.
      *
-     * @param int      $time
-     * @param int|null $targetTimezone
+     * @param int $time
      *
      * @return array
+     * @internal param int|null $targetTimezone
      */
-    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP, int $targetTimezone = null): array
+    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP): array
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1063,12 +1067,9 @@ class PaymentService extends AppService
 
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
-            function ($v) use ($time, $targetTimezone, $InvoiceHistory) {
-                if (is_null($targetTimezone) === false) {
-                    $timezone = $targetTimezone;
-                } else {
-                    $timezone = Hash::get($v, 'Team.timezone');
-                }
+            function ($v) use ($time, $InvoiceHistory) {
+                // Invoices for only Japanese team. So, $timezone will be always Japan time.
+                $timezone = 9;
 
                 $localCurrentTs = $time + ($timezone * HOUR);
                 $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
