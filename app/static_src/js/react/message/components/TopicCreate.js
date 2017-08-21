@@ -3,7 +3,7 @@ import ReactDom from "react-dom";
 import {browserHistory, Link} from "react-router";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
-import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
+import LoadingButton from "~/common/components/LoadingButton";
 import {nl2br} from "~/util/element";
 import {isMobileApp, disableAsyncEvents, isIOSApp} from "~/util/base";
 import Base from "~/common/components/Base";

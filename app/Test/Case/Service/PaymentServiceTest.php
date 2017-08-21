@@ -2,7 +2,9 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PaymentService');
 
-// TODO: Create test_validateCreate_validateError_** method related lack of company info and contact person
+// TODO.Payment: there are these things
+// ・Create test_validateCreate_validateError_** method related lack of company info and contact person
+// ・Add unit test related calculate tax or charge after decide specification the tax_rate of foreign countries
 
 /**
  * Class PaymentServiceTest
@@ -82,7 +84,7 @@ class PaymentServiceTest extends GoalousTestCase
             'amount_per_user'  => 1800,
             'payment_base_day' => 15,
             'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
-            'company_country'         => 'JP'
+            'company_country'  => 'JP'
         ]);
         $customerCode = 'cus_BDjPwryGzOQRBI';
 
@@ -441,7 +443,7 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 1,
             'amount_per_user'  => 1980,
             'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
-            'company_country' => 'JP'
+            'company_country'  => 'JP'
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
@@ -502,34 +504,34 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 1,
             'amount_per_user'  => 16,
             'currency'         => PaymentSetting::CURRENCY_TYPE_USD,
-            'company_country' => 'JP'
+            'company_country'  => 'US'
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 17.28);
+        $this->assertEquals($res, 16);
 
         $currentTimestamp = strtotime("2017-01-01");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 34.56);
+        $this->assertEquals($res, 32);
 
         $currentTimestamp = strtotime("2017-01-02");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 33.43);
+        $this->assertEquals($res, 30.96);
 
         $currentTimestamp = strtotime("2017-01-15");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 18.94);
+        $this->assertEquals($res, 17.54);
 
         $currentTimestamp = strtotime("2017-01-31");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 1.11);
+        $this->assertEquals($res, 1.03);
 
         // If invalid payment base date
         $this->PaymentSetting->save([
@@ -541,12 +543,12 @@ class PaymentServiceTest extends GoalousTestCase
         $currentTimestamp = strtotime("2017-04-29");
         $userCnt = 1;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 0.57);
+        $this->assertEquals($res, 0.53);
 
         $currentTimestamp = strtotime("2017-04-30");
         $userCnt = 2;
         $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 34.56);
+        $this->assertEquals($res, 32.0);
     }
 
     public function test_applyCreditCardCharge()
@@ -574,7 +576,7 @@ class PaymentServiceTest extends GoalousTestCase
             'amount_per_user'  => 1800,
             'payment_base_day' => 15,
             'currency'         => 1,
-            'company_country' => 'JP'
+            'company_country'  => 'JP'
         ]);
 
         $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userID, 1, $token, $paymentData);
@@ -785,6 +787,261 @@ class PaymentServiceTest extends GoalousTestCase
         $time = strtotime('2017-02-28 14:59:59');
         $res = $this->PaymentService->findMonthlyChargeCcTeams($time);
         $this->assertEquals(count($res), 0);
+    }
+
+    public function test_calcRelatedTotalChargeByUserCnt_invalid()
+    {
+        $this->PaymentService->clearCachePaymentSettings();
+        $teamId = 1;
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 10);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 0,
+            'tax'              => 0,
+            'total_charge'     => 0,
+        ]);
+
+        $this->Team->current_team_id = $teamId;
+        $this->Team->id = $teamId;
+        // Sample price
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 1,
+            'amount_per_user'  => 100,
+            'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+            'company_country'  => 'JP'
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 0);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 0,
+            'tax'              => 0,
+            'total_charge'     => 0,
+        ]);
+    }
+
+    public function test_calcRelatedTotalChargeByUserCnt_jp()
+    {
+        $teamId = 1;
+        $this->Team->current_team_id = $teamId;
+        $this->Team->id = $teamId;
+        // Sample price
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 1,
+            'amount_per_user'  => 100,
+            'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+            'company_country'  => 'JP'
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 1);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 100.0,
+            'tax'              => 8.0,
+            'total_charge'     => 108.0,
+        ]);
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 10);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 1000.0,
+            'tax'              => 80.0,
+            'total_charge'     => 1080.0,
+        ]);
+
+        // Standard price
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'amount_per_user'  => 1980,
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 1);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 1980.0,
+            'tax'              => 158.0,
+            'total_charge'     => 2138.0,
+        ]);
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 10);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 19800.0,
+            'tax'              => 1584.0,
+            'total_charge'     => 21384.0,
+        ]);
+    }
+
+    public function test_calcRelatedTotalChargeByUserCnt_us()
+    {
+        $teamId = 1;
+        $this->Team->current_team_id = $teamId;
+        $this->Team->id = $teamId;
+        // Standard price
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 1,
+            'amount_per_user'  => 17,
+            'currency'         => PaymentSetting::CURRENCY_TYPE_USD,
+            'company_country'  => 'PH'
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 1);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 17.0,
+            'tax'              => 0,
+            'total_charge'     => 17.0,
+        ]);
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, 10);
+        $this->assertEquals($res, [
+            'sub_total_charge' => 170.0,
+            'tax'              => 0.0,
+            'total_charge'     => 170.0,
+        ]);
+    }
+
+    public function test_getTaxRateByCountryCode()
+    {
+        $res = $this->PaymentService->getTaxRateByCountryCode('JP');
+        $this->assertEquals($res, 0.08);
+        $res = $this->PaymentService->getTaxRateByCountryCode('US');
+        $this->assertEquals($res, 0);
+        $res = $this->PaymentService->getTaxRateByCountryCode('VN');
+        $this->assertEquals($res, 0);
+    }
+
+    public function test_calcTax_jp()
+    {
+        $companyCountry = 'JP';
+        $res = $this->PaymentService->calcTax($companyCountry, 100);
+        $this->assertEquals($res, 8);
+
+        $res = $this->PaymentService->calcTax($companyCountry, 1);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->calcTax($companyCountry, 12);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->calcTax($companyCountry, 13);
+        $this->assertEquals($res, 1);
+    }
+
+    public function test_calcTax_us()
+    {
+        $companyCountry = 'UK';
+        $res = $this->PaymentService->calcTax($companyCountry, 100);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->calcTax($companyCountry, 1000);
+        $this->assertEquals($res, 0);
+    }
+
+    public function test_processDecimalPointForAmount_jp()
+    {
+        $currencyType = PaymentSetting::CURRENCY_TYPE_JPY;
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 100);
+        $this->assertEquals($res, 100);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 1);
+        $this->assertEquals($res, 1);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.1);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.01);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.99);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 9.9);
+        $this->assertEquals($res, 9);
+
+    }
+
+    public function test_processDecimalPointForAmount_us()
+    {
+        $currencyType = PaymentSetting::CURRENCY_TYPE_USD;
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 100);
+        $this->assertEquals($res, 100);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 1);
+        $this->assertEquals($res, 1);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.1);
+        $this->assertEquals($res, 0.1);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.01);
+        $this->assertEquals($res, 0.01);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.001);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.999);
+        $this->assertEquals($res, 0.99);
+
+        $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 9.9);
+        $this->assertEquals($res, 9.9);
+    }
+
+    public function test_getAmountPerUserByCountry()
+    {
+        $county = 'JP';
+        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_JPY);
+
+        $county = 'US';
+        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_USD);
+
+        $county = 'PH';
+        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_USD);
+    }
+
+    public function test_getCurrencyTypeByCountry()
+    {
+        $county = 'JP';
+        $res = $this->PaymentService->getCurrencyTypeByCountry($county);
+        $this->assertEquals($res, PaymentSetting::CURRENCY_TYPE_JPY);
+
+        $county = 'US';
+        $res = $this->PaymentService->getCurrencyTypeByCountry($county);
+        $this->assertEquals($res, PaymentSetting::CURRENCY_TYPE_USD);
+
+        $county = 'PH';
+        $res = $this->PaymentService->getCurrencyTypeByCountry($county);
+        $this->assertEquals($res, PaymentSetting::CURRENCY_TYPE_USD);
+    }
+
+    public function test_checkIllegalChoiceCountry()
+    {
+        $ccCounty = 'JP';
+        $companyCountry = 'JP';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertTrue($res);
+
+        $ccCounty = 'JP';
+        $companyCountry = 'US';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertFalse($res);
+
+        $ccCounty = 'UK';
+        $companyCountry = 'US';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertTrue($res);
+
+        $ccCounty = 'US';
+        $companyCountry = 'US';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertTrue($res);
+
+        $ccCounty = 'PH';
+        $companyCountry = 'JP';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertFalse($res);
     }
 
     /**

@@ -5,6 +5,8 @@ import {browserHistory, Link} from "react-router";
 import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
+import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
+import LoadingButton from "~/common/components/LoadingButton";
 
 export default class CreditCard extends Base {
   constructor(props) {
@@ -63,15 +65,7 @@ export default class CreditCard extends Base {
 
   onChange(e) {
     const name = e.target.getAttribute('name');
-    if (e.target.type == "checkbox") {
-      if (e.target.checked) {
-        this.props.enableSubmit()
-      } else {
-        this.props.disableSubmit()
-      }
-    } else {
-      this.setState({[name]: e.target.value})
-    }
+    this.setState({[name]: e.target.value})
   }
 
   onSubmit(e) {
@@ -103,34 +97,30 @@ export default class CreditCard extends Base {
             <div id="card-element" className="form-control cc-field"></div>
             <InvalidMessageBox message={error_message}/>
           </div>
-          <div className="payment-info-group">
-            <strong>{__('Price per user')}:&nbsp;</strong><span
-            className="cc-info-value">{payment.amount_per_user}</span><br/>
-            <strong>{__('Number of users')}:&nbsp;</strong><span
-            className="cc-info-value">{payment.charge_users_count}</span><br/>
-            <strong>{__('Sub Total')}:&nbsp;</strong><span className="cc-info-value">$1999.00</span><br/>
-            <strong>{__('Tax')}:&nbsp;</strong><span className="cc-info-value">$159.92</span><br/>
-            <hr/>
-            <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{payment.total_charge}</span>
-          </div>
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              name="agreed_charge"
-              onChange={this.onChange}
-            />
-            <label>{__("I agree with the terms of service")}</label>
-            {/* TODO.Payment:Terms of service display */}
-          </div>
+          <ConfirmCharge
+            amount_per_user={payment.amount_per_user}
+            charge_users_count={payment.charge_users_count}
+            sub_total_charge={payment.sub_total_charge}
+            tax={payment.tax}
+            total_charge={payment.total_charge}
+          />
           <div className="panel-footer setting_pannel-footer">
             <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/company">
               {__("Back")}
             </Link>
-            <button
-              className="btn btn-primary"
-              disabled={payment.is_disabled_submit ? "disabled" : ""}>
-              {__("Register")}
-            </button>
+            {(() => {
+              if (payment.is_saving) {
+                return <LoadingButton/>
+              } else {
+                return (
+                  <button
+                    className="btn btn-primary"
+                    disabled={payment.is_disabled_submit ? "disabled" : ""}>
+                    {__("Register")}
+                  </button>
+                )
+              }
+            })()}
           </div>
         </form>
       </section>

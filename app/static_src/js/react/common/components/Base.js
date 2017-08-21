@@ -11,6 +11,7 @@ export default class Base extends React.Component {
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.onBeforeUnloadHandler.bind(this))
+    window.scrollTo(0, 0)
   }
 
   componentWillUnmount() {
