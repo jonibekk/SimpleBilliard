@@ -26,14 +26,8 @@ export default class Country extends Base {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.payment.to_next_page) {
-      const {type} = nextProps.payment.input_data.payment_setting
-      if (type == PaymentSetting.PAYMENT_TYPE.CREDIT_CARD) {
-        browserHistory.push(Page.URL_COMPANY)
-      } else {
-        browserHistory.push(Page.URL_INVOICE)
-      }
+      browserHistory.push(Page.URL_COMPANY)
     }
-
   }
 
   componentWillUnmount() {
@@ -120,12 +114,12 @@ export default class Country extends Base {
               <p>{__("Use a credit card to setup automatic, reoccuring payments for your Goalous team.")}</p>
               <a href="#">{__('Setup')}</a>
             </div>
-            <div className="payment-option upcoming"
+            <div className="payment-option"
                  onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
               <h4>{__('Invoice')}</h4>
               <i className="fa fa-leaf"/>
               <p>{__("Setup a monthly invoice with Goalous.")}</p>
-              <p className="coming-soon">{__('Coming Soon')}</p>
+              <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
             </div>
           </div>
           }

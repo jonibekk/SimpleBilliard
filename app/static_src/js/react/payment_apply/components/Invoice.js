@@ -5,11 +5,10 @@ import React from 'react'
 import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
-import {PaymentSetting} from "~/common/constants/Model";
 import FormTextBox from "~/payment_apply/components/elements/FormTextBox";
 import RowMultipleTextBoxes from "~/payment_apply/components/elements/RowMultipleTextBoxes";
 
-export default class Company extends Base {
+export default class Invoice extends Base {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this)
@@ -21,12 +20,7 @@ export default class Company extends Base {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.payment.to_next_page) {
-      const {type} = nextProps.payment.input_data.payment_setting
-      if (type == PaymentSetting.PAYMENT_TYPE.CREDIT_CARD) {
-        browserHistory.push(Page.URL_CREDIT_CARD)
-      } else {
-        browserHistory.push(Page.URL_INVOICE)
-      }
+      browserHistory.push(Page.URL_CONFIRM)
     }
   }
 
@@ -37,7 +31,7 @@ export default class Company extends Base {
 
   onSubmit(e) {
     e.preventDefault()
-    this.props.validatePayment(Page.COMPANY)
+    this.props.validatePayment(Page.INVOICE)
   }
 
   onChange(e, parent_key) {
@@ -46,68 +40,88 @@ export default class Company extends Base {
     this.props.updateInputData(data, parent_key)
   }
 
+  onCheck(e) {
+    if (e.target.checked) {
+      this.props.setBillingSameAsCompany()
+    } else {
+      this.props.resetBilling()
+    }
+  }
+
   render() {
-    const {input_data, validation_errors, is_disabled_submit} = this.props.payment;
-    const {payment_setting} = input_data
-    const errors_payment_setting = validation_errors.payment_setting ? validation_errors.payment_setting : {};
+    const {input_data, validation_errors, is_disabled_submit, is_same_as_company_info} = this.props.payment;
+    const {invoice} = input_data
+    const errors_invoice = validation_errors.invoice ? validation_errors.invoice : {};
 
     return (
       <section className="panel company-info">
-        <h3>{__("Enter Company Information")}</h3>
+        <h3>{__("Enter Billing Information")}</h3>
         <form
-          className="form-horizontal" name="addCompanyInfo"
-          id="PaymentsAddCompanyInfoForm" acceptCharset="utf-8"
+          className="form-horizontal" name="addInvoiceInfo"
+          id="PaymentsAddInvoiceInfoForm" acceptCharset="utf-8"
           onSubmit={(e) => this.onSubmit(e)}
         >
-
+          <div className="form-group">
+            <label htmlFor="checkSameAsCompanyInfo">
+              <input
+                type="checkbox" id="checkSameAsCompanyInfo"
+                onChange={this.onCheck.bind(this)}
+              />{__("Same as company information")}
+            </label>
+          </div>
           <FormTextBox
-            id="PaymentsCompanyName"
+            id="PaymentsBillingCompanyName"
             name="company_name"
-            value={payment_setting.company_name}
+            value={invoice.company_name}
             label={__("Company Name")}
             placeholder={__("ISAO Corporation")}
-            err_msg={errors_payment_setting.company_name}
-            onChange={(e) => this.onChange(e, "payment_setting")}
+            disabled={is_same_as_company_info}
+            err_msg={errors_invoice.company_name}
+            onChange={(e) => this.onChange(e, "invoice")}
           />
           <fieldset className="company-info-fieldset">
             <legend className="company-info-legend">{__("Company Address")}</legend>
             <FormTextBox
-              id="PaymentsCompanyPostCode"
+              id="PaymentsBillingCompanyPostCode"
               type="tel"
               name="company_post_code"
-              value={payment_setting.company_post_code}
+              value={invoice.company_post_code}
               label={__("Post Code")}
               placeholder={__("12345")}
-              err_msg={errors_payment_setting.company_post_code}
+              disabled={is_same_as_company_info}
+              err_msg={errors_invoice.company_post_code}
               max_length={16}
-              onChange={(e) => this.onChange(e, "payment_setting")}
+              onChange={(e) => this.onChange(e, "invoice")}
             />
             <FormTextBox
-              id="PaymentsCompanyAddressRegion"
+              id="PaymentsBillingCompanyAddressRegion"
               name="company_region"
-              value={payment_setting.company_region}
+              value={invoice.company_region}
               label={__("State/Province/Region")}
               placeholder={__("California")}
-              err_msg={errors_payment_setting.company_region}
-              onChange={(e) => this.onChange(e, "payment_setting")}
+              disabled={is_same_as_company_info}
+              err_msg={errors_invoice.company_region}
+              onChange={(e) => this.onChange(e, "invoice")}
             />
             <FormTextBox
-              id="PaymentsCompanyAddressCity"
+              id="PaymentsBillingCompanyAddressCity"
               name="company_city"
-              value={payment_setting.company_city}
+              value={invoice.company_city}
               label={__("City")}
               placeholder={__("Los Angeles")}
-              err_msg={errors_payment_setting.company_city}
-              onChange={(e) => this.onChange(e, "payment_setting")}
+              disabled={is_same_as_company_info}
+              err_msg={errors_invoice.company_city}
+              onChange={(e) => this.onChange(e, "invoice")}
             />
             <FormTextBox
-              id="PaymentsCompanyAddressStreet"
+              id="PaymentsBillingCompanyAddressStreet"
               name="company_street"
-              value={payment_setting.company_street}
+              value={invoice.company_street}
               label={__("Street")}
               placeholder={__("1234 Street Name")}
-              err_msg={errors_payment_setting.company_street}
-              onChange={(e) => this.onChange(e, "payment_setting")}
+              disabled={is_same_as_company_info}
+              err_msg={errors_invoice.company_street}
+              onChange={(e) => this.onChange(e, "invoice")}
             />
           </fieldset>
           <fieldset className="company-info-fieldset">
@@ -118,65 +132,69 @@ export default class Company extends Base {
                 {
                   id: "PaymentsContactPersonLastName",
                   name: "contact_person_last_name",
-                  value: payment_setting.contact_person_last_name,
+                  value: invoice.contact_person_last_name,
                   placeholder: __("eg. Jobs"),
-                  err_msg: errors_payment_setting.contact_person_last_name,
+                  disabled:is_same_as_company_info,
+                  err_msg: errors_invoice.contact_person_last_name,
                 },
                 {
                   id: "PaymentsContactPersonFirstName",
                   name: "contact_person_first_name",
-                  value: payment_setting.contact_person_first_name,
+                  value: invoice.contact_person_first_name,
                   placeholder: __("eg. Bruce"),
-                  err_msg: errors_payment_setting.contact_person_first_name,
+                  disabled:is_same_as_company_info,
+                  err_msg: errors_invoice.contact_person_first_name,
                 }
               ]}
-              onChange={(e) => this.onChange(e, "payment_setting")}
+              onChange={(e) => this.onChange(e, "invoice")}
             />
-            {payment_setting.company_country == 'JP' &&
             <RowMultipleTextBoxes
               label={__("Name Kana")}
               attributes={[
                 {
                   id: "PaymentsContactPersonLastNameKana",
                   name: "contact_person_last_name_kana",
-                  value: payment_setting.contact_person_last_name_kana,
+                  value: invoice.contact_person_last_name_kana,
                   placeholder: "スズキ",
-                  err_msg: errors_payment_setting.contact_person_last_name_kana,
+                  disabled:is_same_as_company_info,
+                  err_msg: errors_invoice.contact_person_last_name_kana,
                 },
                 {
                   id: "PaymentsContactPersonFirstNameKana",
                   name: "contact_person_first_name_kana",
-                  value: payment_setting.contact_person_first_name_kana,
+                  value: invoice.contact_person_first_name_kana,
                   placeholder: "タロウ",
-                  err_msg: errors_payment_setting.contact_person_first_name_kana
+                  disabled:is_same_as_company_info,
+                  err_msg: errors_invoice.contact_person_first_name_kana
                 }
               ]}
-              onChange={(e) => this.onChange(e, "payment_setting")}
+              onChange={(e) => this.onChange(e, "invoice")}
             />
-            }
           </fieldset>
           <FormTextBox
-            id="PaymentsContactPersonEmail"
+            id="PaymentsBillingContactPersonEmail"
             type="email"
             name="contact_person_email"
-            value={payment_setting.contact_person_email}
+            value={invoice.contact_person_email}
             label={__("Email")}
             placeholder={__("name@company.com")}
-            err_msg={errors_payment_setting.contact_person_email}
-            onChange={(e) => this.onChange(e, "payment_setting")}
+            disabled={is_same_as_company_info}
+            err_msg={errors_invoice.contact_person_email}
+            onChange={(e) => this.onChange(e, "invoice")}
           />
           <FormTextBox
-            id="PaymentsContactPersonPhone"
+            id="PaymentsBillingContactPersonPhone"
             type="tel"
             name="contact_person_tel"
-            value={payment_setting.contact_person_tel}
+            value={invoice.contact_person_tel}
             label={__("Telephone")}
             placeholder="000-0000-0000"
-            err_msg={errors_payment_setting.contact_person_tel}
-            onChange={(e) => this.onChange(e, "payment_setting")}
+            disabled={is_same_as_company_info}
+            err_msg={errors_invoice.contact_person_tel}
+            onChange={(e) => this.onChange(e, "invoice")}
           />
           <div className="panel-footer setting_pannel-footer">
-            <Link to="/payments/apply" className="btn btn-link design-cancel bd-radius_4px">
+            <Link to="/payments/apply/company" className="btn btn-link design-cancel bd-radius_4px">
               {__("Back")}</Link>
             <button className="btn btn-primary" disabled={is_disabled_submit ? "disabled" : ""}>
               {__("Next")}
