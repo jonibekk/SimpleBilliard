@@ -1016,6 +1016,34 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, PaymentSetting::CURRENCY_TYPE_USD);
     }
 
+    public function test_checkIllegalChoiceCountry()
+    {
+        $ccCounty = 'JP';
+        $companyCountry = 'JP';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertTrue($res);
+
+        $ccCounty = 'JP';
+        $companyCountry = 'US';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertFalse($res);
+
+        $ccCounty = 'UK';
+        $companyCountry = 'US';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertTrue($res);
+
+        $ccCounty = 'US';
+        $companyCountry = 'US';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertTrue($res);
+
+        $ccCounty = 'PH';
+        $companyCountry = 'JP';
+        $res = $this->PaymentService->checkIllegalChoiceCountry($ccCounty, $companyCountry);
+        $this->assertFalse($res);
+    }
+
     /**
      * tearDown method
      *

@@ -102,7 +102,9 @@ class PaymentsController extends ApiController
         $companyCountry = Hash::get($requestData, 'company_country');
         $creditCardData = $CreditCardService->retrieveToken($token);
 
-        if ($creditCardData['creditCard']->country !== $companyCountry) {
+        // Check to prevent illegal choice of dollar or yen
+        $ccCountry = $creditCardData['creditCard']->country;
+        if (!$PaymentService->checkIllegalChoiceCountry($ccCountry, $companyCountry)) {
             // TODO.Payment: Add translation for message
             return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
         }

@@ -909,4 +909,22 @@ class PaymentService extends AppService
 
         return $allValidationErrors;
     }
+
+    /**
+     * Check to prevent illegal choice of dollar or yen
+     *
+     * @param string $ccCountry
+     * @param string $companyCountry
+     *
+     * @return bool
+     */
+    function checkIllegalChoiceCountry(string $ccCountry, string $companyCountry): bool
+    {
+        if (($ccCountry === 'JP' && $companyCountry !== 'JP')
+            || ($ccCountry !== 'JP' && $companyCountry === 'JP')
+        ) {
+            return false;
+        }
+        return true;
+    }
 }
