@@ -54,6 +54,8 @@ class MonthlyInvoiceChargeShell extends AppShell
             $this->out("Target team doesn't exist.");
             return;
         }
+        $this->out('count $targetChargeTeams is ' . count($targetChargeTeams));
+        $this->out($targetChargeTeams);
 
         // [Efficient processing]
         // This is why it is inefficient to throw SQL for each team and get the number of users
@@ -62,6 +64,9 @@ class MonthlyInvoiceChargeShell extends AppShell
         foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
             $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
         }
+        $this->out('$chargeMemberCountEachTeam');
+        $this->out($chargeMemberCountEachTeam);
+
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
 
@@ -72,7 +77,13 @@ class MonthlyInvoiceChargeShell extends AppShell
                 continue;
             }
             $targetChargeHistories = $PaymentService->findTargetChargeHistories($teamId, $targetTs);
-            $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs, $targetChargeHistories);
+            $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs,
+                $targetChargeHistories);
+            if ($retRegistration === true) {
+                $this->out(sprintf('Order registration was succeeded! teamId: %s', $teamId));
+            } else {
+                $this->out(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
+            }
         }
 
         if (!empty($noMemberTeams)) {
