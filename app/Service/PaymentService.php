@@ -144,7 +144,7 @@ class PaymentService extends AppService
             if (!$CreditCard->save($creditCardData)) {
                 $CreditCard->rollback();
                 $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create credit card. data:%s", var_export($creditCardData, true)));
+                throw new Exception(sprintf("Failed create credit card. data:%s", AppUtil::varExportOneLine($creditCardData)));
             }
 
             // Save snapshot
@@ -578,7 +578,7 @@ class PaymentService extends AppService
 
             if (!$ChargeHistory->save($historyData)) {
                 $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s", var_export($historyData, true)));
+                throw new Exception(sprintf("Failed create charge history. data:%s", AppUtil::varExportOneLine($historyData)));
             }
 
             if (isset($charge['paymentData'])) {
@@ -654,7 +654,7 @@ class PaymentService extends AppService
             $result['message'] = __("An error occurred while processing.");
             $result['errorCode'] = 500;
 
-            $this->log(sprintf("Error on Stripe call: %s", var_export($stripeResponse, true)));
+            $this->log(sprintf("Error on Stripe call: %s", AppUtil::varExportOneLine($stripeResponse)));
             return $result;
         }
 
@@ -689,7 +689,7 @@ class PaymentService extends AppService
             $PaymentSetting->begin();
             if (!$PaymentSetting->save($paymentData)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
-                    var_export($paymentData, true)));
+                    AppUtil::varExportOneLine($paymentData)));
             }
             $paymentSettingId = $PaymentSetting->getLastInsertID();
 
@@ -701,7 +701,7 @@ class PaymentService extends AppService
             ];
 
             if (!$CreditCard->save($creditCardData)) {
-                throw new Exception(sprintf("Failed create credit card. data:%s", var_export($paymentData, true)));
+                throw new Exception(sprintf("Failed create credit card. data:%s", AppUtil::varExportOneLine($paymentData)));
             }
 
             // Save snapshot
@@ -792,7 +792,7 @@ class PaymentService extends AppService
 
             if (!$ChargeHistory->save($historyData)) {
                 $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s", var_export($historyData, true)));
+                throw new Exception(sprintf("Failed create charge history. data:%s", AppUtil::varExportOneLine($historyData)));
             }
             $ChargeHistory->commit();
         } catch (Exception $e) {
