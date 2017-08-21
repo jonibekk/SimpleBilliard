@@ -11,6 +11,8 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::uses('MobileAppVersion', 'Request');
+App::uses('UserAgent', 'Request');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 
@@ -228,6 +230,73 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+        $this->redirectIfMobileAppVersionUnsupported();
+    }
+
+    /**
+     * redirect if Mobile App version is unsupported
+     */
+    private function redirectIfMobileAppVersionUnsupported()
+    {
+        // GL-5962: show version expired if Goalous Mobile App version is old
+        if (!$this->request->is('ajax')) {
+            // not redirecting if route is '/app_force_update' or '/app_force_install' (avoiding redirect loop)
+            if (!in_array(Router::url(), ['/app_force_update', '/app_force_install'])) {
+                $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT'));
+                if ($userAgent->isMobileAppAccess()) {
+                    // https://jira.goalous.com/browse/GL-5962
+                    // TODO: delete this "if" process, if old Android App(1.0.2) user is gone.
+                    if ($this->isAndroidVersionForceUninstall($userAgent)) {
+                        $this->redirect('/app_force_install');
+                    }
+                    if ($this->isExpiredVersionMobileApp($userAgent)) {
+                        $this->redirect('/app_force_update');
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * return true if Goalous Mobile App version is not supported
+     * @param UserAgent $userAgent
+     *
+     * @return bool
+     */
+    private function isExpiredVersionMobileApp(UserAgent $userAgent): bool
+    {
+        if (!$userAgent->isMobileAppAccess()) {
+            return false;
+        }
+        $versionMobileAppLeast = '';
+        if ($userAgent->isiOSApp()) {
+            $versionMobileAppLeast = MOBILE_APP_IOS_VERSION_SUPPORTING_LEAST;
+        } elseif ($userAgent->isAndroidApp()) {
+            $versionMobileAppLeast = MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST;
+        }
+        return MobileAppVersion::isExpired($versionMobileAppLeast, $userAgent->getMobileAppVersion());
+    }
+
+    /**
+     * https://jira.goalous.com/browse/GL-5962
+     * return true if Goalous Android App version is deprecated from google play store
+     * temporary support: this method should be deleted on future.
+     * @param UserAgent $userAgent
+     *
+     * @return bool
+     */
+    private function isAndroidVersionForceUninstall(UserAgent $userAgent): bool
+    {
+        if (!$userAgent->isAndroidApp()) {
+            return false;
+        }
+        /**
+         * @see version due to https://jira.goalous.com/browse/GL-5962 comments
+         *       this magic number uses only here
+         *       does not need to define somewhere
+         */
+        $versionMobileAppLeast = '1.0.4';
+        return MobileAppVersion::isExpired($versionMobileAppLeast, $userAgent->getMobileAppVersion());
     }
 
     public function _setBrowserToSession()
