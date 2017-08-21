@@ -646,11 +646,11 @@ class NotifySetting extends AppModel
             case self::TYPE_CIRCLE_ADD_USER:
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> add <span class="notify-card-head-target">you </span>to the circle.',
+                        '<span class="notify-card-head-target">%1$s</span> added <span class="notify-card-head-target">you </span>to the circle.',
                         $user_text);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> add <span class="notify-card-head-target">you </span>to the circle.',
+                        '<span class="notify-card-head-target">%1$s</span> added <span class="notify-card-head-target">you </span>to the circle.',
                         h($user_text));
                 }
                 break;
