@@ -9,7 +9,6 @@
  */
 
 App::uses('AppController', 'Controller');
-App::uses('PaymentSetting', 'Model');
 App::import('Service', 'PaymentService');
 
 /**
