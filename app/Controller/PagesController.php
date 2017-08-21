@@ -10,6 +10,7 @@
 
 App::uses('AppController', 'Controller');
 App::uses('PaymentSetting', 'Model');
+App::import('Service', 'PaymentService');
 
 /**
  * Static content controller
@@ -324,15 +325,16 @@ class PagesController extends AppController
         return $parameters_text;
     }
 
+    /**
+     * set view amount per user
+     *
+     * @return void
+     */
     function _setAmountPerUser()
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
-
-        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
-        if ($this->isLoggedIn()) {
-            $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
-        }
+        $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
         $this->set(compact('amountPerUser'));
     }
 }
