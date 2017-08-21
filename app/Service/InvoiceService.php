@@ -67,7 +67,7 @@ class InvoiceService extends AppService
 
         // for monthly charge
         $monthlyStartDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
-        $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
+        $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyEndDate']));
         $data["I_ItemNameKj_1"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
         $data["I_UnitPrice_1"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
         $data["I_ItemNum_1"] = 1;
@@ -149,7 +149,7 @@ class InvoiceService extends AppService
     {
         $addedUserAmount = 0;
         foreach ($targetChargeHistories as $history) {
-            $addedUserAmount = $history['total_amount'] + $history['tax'];
+            $addedUserAmount += $history['total_amount'] + $history['tax'];
         }
         return $addedUserAmount;
     }

@@ -791,11 +791,8 @@ class PaymentService extends AppService
      * @return bool
      * @internal param float $timezone
      */
-    public function registerInvoice(
-        int $teamId,
-        int $chargeMemberCount,
-        int $time
-    ): bool {
+    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time): bool
+    {
         // Invoices for only Japanese team. So, $timezone will be always Japan time.
         $timezone = 9;
 

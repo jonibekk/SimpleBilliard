@@ -55,7 +55,7 @@ class MonthlyInvoiceChargeShell extends AppShell
             return;
         }
         $this->out('count $targetChargeTeams is ' . count($targetChargeTeams));
-        $this->out($targetChargeTeams);
+        $this->out(print_r($targetChargeTeams, true));
 
         // [Efficient processing]
         // This is why it is inefficient to throw SQL for each team and get the number of users
@@ -65,7 +65,7 @@ class MonthlyInvoiceChargeShell extends AppShell
             $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
         }
         $this->out('$chargeMemberCountEachTeam');
-        $this->out($chargeMemberCountEachTeam);
+        $this->out(print_r($chargeMemberCountEachTeam, true));
 
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
