@@ -780,7 +780,7 @@ class PaymentService extends AppService
         $ChargeHistory->begin();
         try {
             // save monthly charge
-            $monthlyChargeHistory = $ChargeHistory->addInvoiceCharge(
+            $monthlyChargeHistory = $ChargeHistory->addInvoiceMonthlyCharge(
                 $teamId,
                 $chargeInfo['sub_total_charge'],
                 $chargeInfo['tax'],

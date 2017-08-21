@@ -215,7 +215,7 @@ class ChargeHistory extends AppModel
      *
      * @return mixed
      */
-    public function addInvoiceCharge(
+    public function addInvoiceMonthlyCharge(
         int $teamId,
         int $subTotalCharge,
         int $tax,
