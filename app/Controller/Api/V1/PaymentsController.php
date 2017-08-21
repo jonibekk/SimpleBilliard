@@ -82,8 +82,7 @@ class PaymentsController extends ApiController
 
         // Check if not already paid plan
         if ($this->Team->isPaidPlan($teamId)) {
-            $this->Notification->outError(__("You have already registered the paid plan."));
-            return $this->_getResponseForbidden();
+            return $this->_getResponseForbidden(__("You have already registered the paid plan."));
         }
 
         // Validate Data
