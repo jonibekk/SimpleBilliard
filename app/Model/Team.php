@@ -56,6 +56,7 @@ class Team extends AppModel
     const SERVICE_USE_STATUS_PAID = 1;
     const SERVICE_USE_STATUS_READ_ONLY = 2;
     const SERVICE_USE_STATUS_CANNOT_USE = 3;
+    const SERVICE_USE_STATUS_CREDIT_CARD_EXPIRATION = 4;
     /**
      * Days of service use status
      */

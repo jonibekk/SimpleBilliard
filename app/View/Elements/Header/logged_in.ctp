@@ -38,7 +38,7 @@
         </div>
     </div>
     <?php if (in_array($serviceUseStatus,
-        [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])) { ?>
+        [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY, Team::SERVICE_USE_STATUS_CREDIT_CARD_EXPIRATION])) { ?>
         <div class="banner-alert font_verydark">
             <div class="container">
                 <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
