@@ -791,7 +791,6 @@ class PaymentService extends AppService
             $ChargeHistory->begin();
 
             if (!$ChargeHistory->save($historyData)) {
-                $this->log($ChargeHistory->validationErrors);
                 $ChargeHistory->rollback();
                 throw new Exception(sprintf("Failed create charge history. data:%s", var_export($historyData, true)));
             }
