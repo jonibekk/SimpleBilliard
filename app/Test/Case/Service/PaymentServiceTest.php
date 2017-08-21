@@ -1071,6 +1071,12 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($updateData, $data);
     }
 
+    public function test_getAmountPerUser()
+    {
+        // TODO: implement after review.
+        $this->markTestIncomplete('test not implemented.');
+    }
+
     /**
      * tearDown method
      *
