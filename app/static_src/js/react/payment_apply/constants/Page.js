@@ -9,6 +9,7 @@ export const URL_COUNTRY = '/payments/apply'
 export const URL_COMPANY = '/payments/apply/company'
 export const URL_INVOICE = '/payments/apply/invoice'
 export const URL_CREDIT_CARD = '/payments/apply/credit_card'
+export const URL_CONFIRM = '/payments/apply/confirm'
 export const URL_COMPLETE = '/payments/apply/complete'
 
 export const INITIAL_DATA_TYPES = {
@@ -17,6 +18,9 @@ export const INITIAL_DATA_TYPES = {
     'lang_code'
   ],
   [CREDIT_CARD]: [
+    "charge",
+  ],
+  [CONFIRM]: [
     "charge",
   ],
 }

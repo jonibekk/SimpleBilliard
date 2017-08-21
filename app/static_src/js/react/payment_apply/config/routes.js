@@ -15,6 +15,8 @@ import createReducer from '../reducers/index'
 import CountryContainer from '../containers/country'
 import CompanyContainer from '../containers/company'
 import CreditCardContainer from '../containers/credit_card'
+import InvoiceContainer from '../containers/invoice'
+import ConfirmContainer from '../containers/confirm'
 import CompleteContainer from '../containers/complete'
 
 const DevTools = createDevTools(
@@ -50,7 +52,8 @@ export default class Routes extends Component {
               <Route path="apply" component={CountryContainer} />
               <Route path="apply/company" component={CompanyContainer} />
               <Route path="apply/credit_card" component={CreditCardContainer} />
-              {/*<Route path="apply/invoice" component={CreditCardContainer} />*/}
+              <Route path="apply/invoice" component={InvoiceContainer} />
+              <Route path="apply/confirm" component={ConfirmContainer} />
               <Route path="apply/complete" component={CompleteContainer} />
             </Route>
           </Router>

@@ -2,6 +2,7 @@ import * as types from "../constants/ActionTypes";
 import * as Page from "../constants/Page";
 import {post} from "../../util/api";
 import axios from "axios";
+import queryString from "query-string";
 
 export function validatePayment(page, add_data) {
   return (dispatch, getState) => {
@@ -62,9 +63,16 @@ export function updateInputData(data, key) {
 }
 
 export function fetchInitialData(page) {
-  const dataTypes = Page.INITIAL_DATA_TYPES[page]
-  return (dispatch) => {
-    return axios.get(`/api/v1/payments/init_form?data_types=${dataTypes}`)
+  let params = {
+    data_types: Page.INITIAL_DATA_TYPES[page].join()
+  }
+
+  return (dispatch, getState) => {
+    if (page == Page.CONFIRM || page == Page.CREDIT_CARD) {
+      params['company_country'] = getState().payment.input_data.payment_setting.company_country
+    }
+    const query_params = queryString.stringify(params)
+    return axios.get(`/api/v1/payments/init_form?${query_params}`)
       .then((response) => {
         let data = response.data.data
         dispatch({
@@ -80,13 +88,13 @@ export function fetchInitialData(page) {
 
 export function savePaymentCc(card, extra_details) {
   return (dispatch, getState) => {
+    dispatch({type: types.SAVING})
     // First, validate card holder name
     if (extra_details.name == "") {
       return dispatch(invalid({
         validation_errors: {name: __("Input is required")}
       }))
     }
-    dispatch(disableSubmit())
     const stripe = getState().payment.stripe
     // Request new token from Stripe then validate it
     stripe.createToken(card, extra_details).then((result) => {
@@ -122,6 +130,33 @@ export function savePaymentCc(card, extra_details) {
   }
 }
 
+export function savePaymentInvoice() {
+  return (dispatch, getState) => {
+    dispatch({type: types.SAVING})
+    // Send the token to your server
+    const post_data = getState().payment.input_data
+    return post("/api/v1/payments/invoice", post_data, null,
+      (response) => {
+        dispatch(toNextPage(Page.COMPLETE))
+      },
+      ({response}) => {
+        // TODO.Payment:process by status code (ex. 403, 404)
+        // If status code is 403, redirect top page.
+        if (!response.data.validation_errors) {
+          // Reason to set to validation_errors.name is that
+          // This field is on to submit button
+          dispatch(invalid({
+            message: response.data.message
+          }))
+        } else {
+          dispatch(invalid(response.data))
+        }
+      }
+    );
+
+  }
+}
+
 export function disableSubmit() {
   return {type: types.DISABLE_SUBMIT}
 }
@@ -136,3 +171,20 @@ export function resetStates() {
     })
   }
 }
+
+export function resetBilling() {
+  return (dispatch) => {
+    dispatch({
+      type: types.RESET_BILLING
+    })
+  }
+}
+
+export function setBillingSameAsCompany() {
+  return (dispatch) => {
+    dispatch({
+      type: types.SET_BILLING_SAME_AS_COMPANY
+    })
+  }
+}
+
