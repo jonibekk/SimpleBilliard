@@ -25,6 +25,8 @@ class PaymentServiceTest extends GoalousTestCase
         'app.payment_setting',
         'app.payment_setting_change_log',
         'app.credit_card',
+        'app.invoice',
+        'app.invoice_history',
         'app.charge_history',
         'app.team',
         'app.team_member',
@@ -851,8 +853,8 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Standard price
         $this->PaymentSetting->save([
-            'team_id'          => $teamId,
-            'amount_per_user'  => 1980,
+            'team_id'         => $teamId,
+            'amount_per_user' => 1980,
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
@@ -1048,14 +1050,14 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $this->createCreditCardPayment();
         $updateData = [
-            'company_name'                   => 'ISAO',
-            'company_country'                => 'US',
-            'company_region'                 => 'NY',
-            'company_city'                   => 'Central Park',
-            'company_street'                 => 'Somewhere',
-            'company_tel'                    => '123456789',
-            'contact_person_tel'             => '123456789',
-            'contact_person_email'           => 'test@example.com',
+            'company_name'         => 'ISAO',
+            'company_country'      => 'US',
+            'company_region'       => 'NY',
+            'company_city'         => 'Central Park',
+            'company_street'       => 'Somewhere',
+            'company_tel'          => '123456789',
+            'contact_person_tel'   => '123456789',
+            'contact_person_email' => 'test@example.com',
         ];
 
         // Update payment data
@@ -1063,12 +1065,40 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res);
 
         // Retrieve data from db
+        /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $data = Hash::get($PaymentSetting->getByTeamId(1), "PaymentSetting");
+        $data = Hash::get($PaymentSetting->getCcByTeamId(1), "PaymentSetting");
 
         // Compare updated with saved data
         $data = array_intersect_key($data, $updateData);
         $this->assertEquals($updateData, $data);
+    }
+
+    function test_findMonthlyChargeInvoiceTeams()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+
+        $team = ['timezone' => 0];
+        $paymentSetting = ['payment_base_day' => 1];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        // time is difference as base date
+        $time = strtotime('2017-01-02') + (9 * HOUR);
+        $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertEmpty($res);
+
+        // time is same as base date
+        $time = strtotime('2017-01-01') + (9 * HOUR);
+        $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertNotEmpty($res);
+
+        $this->addInvoiceHistory($teamId, [
+            'order_date'        => '2017-01-01',
+            'system_order_code' => "test",
+        ]);
+        $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertEmpty($res);
     }
 
     /**
