@@ -6,7 +6,7 @@
 <?= $this->App->viewStartComment()?>
 <?= $this->Html->script('homepage/jquery-1.12.4.min') ?>
 <?= $this->Html->script('homepage/bootstrap.min') ?>
-<?= $this->Html->script('vendor/bootstrapValidator.min') ?>
+<?= $this->Html->script('vendor/bootstrapValidator') ?>
 <?= $this->Html->script('homepage/bootstrap-hover-dropdown.min') ?>
 <?= $this->Html->script('homepage/jquery.inview.min') ?>
 <?= $this->Html->script('homepage/isMobile') ?>

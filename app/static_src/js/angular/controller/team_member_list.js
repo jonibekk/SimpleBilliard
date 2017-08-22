@@ -38,7 +38,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             $scope.group_id = null;
             $scope.invite_msg = [];
             $scope.invite_loader = [];
-
+            $scope.isDisabled = true;
         };
         init();
 
@@ -116,7 +116,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         };
 
         // cancel invite or re-invite
-        $scope.settingInvite = function (index, invite_id, action_flg) {
+        $scope.updateInvite = function (index, invite_id, action_flg) {
             $scope.invite_loader[index] = true;
             var change_active_flag_url = url_list.am + invite_id + '/' + action_flg;
             $http.get(change_active_flag_url).success(function (data) {
@@ -128,6 +128,12 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                     location.reload();
                 }
             });
+        };
+
+        $scope.editInviteEmail = function(){
+            reinviteUser.username.removeAttribute('disabled');
+            reinviteUser.username.classList.add('focused');
+            reinviteUser.username.focus();
         };
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {

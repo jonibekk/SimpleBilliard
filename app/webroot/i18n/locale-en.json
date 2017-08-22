@@ -3,21 +3,26 @@
   "FILTER_COACH_NAME": "Coach Name",
   "FILTER_GROUP_NAME": "Group Name",
   "FILTER_ADMIN": "Admin",
-  "FILTER_TWO_STEP": "2 Step Auth",
-  "FILTER_INVITES": "pending",
-  "PLACEHOLDER_NAME_FIELD": "Please Input Member Name.",
-  "PLACEHOLDER_COACH_NAME_FIELD": "Please Input Coach User Name.",
+  "FILTER_TWO_STEP": "Two Step Authorization",
+  "FILTER_INVITES": "Pending",
+  "PLACEHOLDER_NAME_FIELD": "Please input member name.",
+  "PLACEHOLDER_COACH_NAME_FIELD": "Please input coach name.",
   "TEAM_VISION": {
-    "ARCHIVE_FAILED_MASSAGE": "Failed.",
-    "ARCHIVE_SUCCESS_MASSAGE": "Success.",
-    "DELETE_FAILED_MASSAGE": "Failed.",
-    "DELETE_SUCCESS_MASSAGE": "Success."
+    "HEADLINE": "Team Vision",
+    "ADD_VISION":"Add Vision",
+    "VIEW_ARCHIVE":"View Archive",
+    "ARCHIVE_FAILED_MESSAGE": "Failed.",
+    "ARCHIVE_SUCCESS_MESSAGE": "Success.",
+    "DELETE_FAILED_MESSAGE": "Failed.",
+    "DELETE_SUCCESS_MESSAGE": "Success."
   },
   "GROUP_VISION": {
-    "ARCHIVE_FAILED_MASSAGE": "Failed.",
-    "ARCHIVE_SUCCESS_MASSAGE": "Success.",
-    "DELETE_FAILED_MASSAGE": "Failed.",
-    "DELETE_SUCCESS_MASSAGE": "Success."
+    "HEADLINE": "Group Vision",
+    "ADD_VISION":"Add Vision",
+    "ARCHIVE_FAILED_MESSAGE": "Failed.",
+    "ARCHIVE_SUCCESS_MESSAGE": "Success.",
+    "DELETE_FAILED_MESSAGE": "Failed.",
+    "DELETE_SUCCESS_MESSAGE": "Success."
   },
   "TEAM_MEMBER_LIST": {
     "MEMBER_LIST": "Member List",

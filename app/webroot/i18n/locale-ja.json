@@ -8,16 +8,21 @@
   "PLACEHOLDER_NAME_FIELD": "名前を入力してください",
   "PLACEHOLDER_COACH_NAME_FIELD": "コーチの名前を入力してください",
   "TEAM_VISION": {
-    "ARCHIVE_FAILED_MASSAGE": "管理者以外の方にはアーカイブできません",
-    "ARCHIVE_SUCCESS_MASSAGE": "チームビジョンをアーカイブしました",
-    "DELETE_FAILED_MASSAGE": "管理者以外の方には削除できません",
-    "DELETE_SUCCESS_MASSAGE": "チームビジョンを削除しました"
+    "HEADLINE": "チームビジョン",
+    "ADD_VISION": "ビジョンを追加",
+    "VIEW_ARCHIVE":"アーカイブを見る",
+    "ARCHIVE_FAILED_MESSAGE": "管理者以外の方にはアーカイブできません",
+    "ARCHIVE_SUCCESS_MESSAGE": "チームビジョンをアーカイブしました",
+    "DELETE_FAILED_MESSAGE": "管理者以外の方には削除できません",
+    "DELETE_SUCCESS_MESSAGE": "チームビジョンを削除しました"
   },
   "GROUP_VISION": {
-    "ARCHIVE_FAILED_MASSAGE": "管理者以外の方にはアーカイブできません",
-    "ARCHIVE_SUCCESS_MASSAGE": "グループビジョンをアーカイブしました",
-    "DELETE_FAILED_MASSAGE": "管理者以外の方には削除できません",
-    "DELETE_SUCCESS_MASSAGE": "グループビジョンを削除しました"
+    "HEADLINE": "グループビジョン",
+    "ADD_VISION": "ビジョンを追加",
+    "ARCHIVE_FAILED_MESSAGE": "管理者以外の方にはアーカイブできません",
+    "ARCHIVE_SUCCESS_MESSAGE": "グループビジョンをアーカイブしました",
+    "DELETE_FAILED_MESSAGE": "管理者以外の方には削除できません",
+    "DELETE_SUCCESS_MESSAGE": "グループビジョンを削除しました"
   },
   "TEAM_MEMBER_LIST": {
     "MEMBER_LIST": "メンバー一覧",
