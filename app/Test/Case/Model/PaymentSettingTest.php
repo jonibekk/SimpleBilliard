@@ -184,7 +184,8 @@ class PaymentSettingTest extends GoalousTestCase
     {
         $this->Team->deleteAll(['del_flg' => false]);
         $team = ['timezone' => 0];
-        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team);
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_NG];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, [], $invoice);
         $firstRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
         $this->assertEmpty($firstRes, "It will be empty. cause, credit_status != Invoice::CREDIT_STATUS_OK");
         /** @var Invoice $Invoice */
