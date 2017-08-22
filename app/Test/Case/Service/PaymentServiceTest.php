@@ -986,18 +986,18 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, 9.9);
     }
 
-    public function test_getAmountPerUserByCountry()
+    public function test_getDefaultAmountPerUserByCountry()
     {
         $county = 'JP';
-        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $res = $this->PaymentService->getDefaultAmountPerUserByCountry($county);
         $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_JPY);
 
         $county = 'US';
-        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $res = $this->PaymentService->getDefaultAmountPerUserByCountry($county);
         $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_USD);
 
         $county = 'PH';
-        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $res = $this->PaymentService->getDefaultAmountPerUserByCountry($county);
         $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_USD);
     }
 
@@ -1069,6 +1069,11 @@ class PaymentServiceTest extends GoalousTestCase
         // Compare updated with saved data
         $data = array_intersect_key($data, $updateData);
         $this->assertEquals($updateData, $data);
+    }
+
+    public function test_getAmountPerUser()
+    {
+        // TODO: implement test code
     }
 
     /**
