@@ -32,17 +32,18 @@ App::uses('AppUtil', 'Util');
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
- * @property Term              $Term
- * @property GoalMember        $GoalMember
- * @property Team              $Team
- * @property GoalService       $GoalService
- * @property GlRedis           $GlRedis
- * @property CreditCardService $CreditCardService
- * @property PaymentSetting    $PaymentSetting
- * @property CreditCard        $CreditCard
- * @property ChargeHistory     $ChargeHistory
- * @property Invoice           $Invoice
- * @property InvoiceHistory    $InvoiceHistory
+ * @property Term                          $Term
+ * @property GoalMember                    $GoalMember
+ * @property Team                          $Team
+ * @property GoalService                   $GoalService
+ * @property GlRedis                       $GlRedis
+ * @property CreditCardService             $CreditCardService
+ * @property PaymentSetting                $PaymentSetting
+ * @property CreditCard                    $CreditCard
+ * @property ChargeHistory                 $ChargeHistory
+ * @property Invoice                       $Invoice
+ * @property InvoiceHistory                $InvoiceHistory
+ * @property InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -749,9 +750,23 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
+    function addInvoiceHistoryAndChargeHistory($teamId, $invoiceHistory = [], $chargeHistory = [])
+    {
+        $this->addInvoiceHistory($teamId, $invoiceHistory);
+        $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
+        $this->addChargeHistory($teamId, $chargeHistory);
+        $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->InvoiceHistoriesChargeHistory->save([
+            'invoice_history_id' => $invoiceHistoryId,
+            'charge_history_id'  => $chargeHistoryId,
+        ]);
+    }
+
     function addInvoiceHistory($teamId, $invoiceHistory = [])
     {
         $this->InvoiceHistory = $this->InvoiceHistory ?? ClassRegistry::init('InvoiceHistory');
+        $this->InvoiceHistory->clear();
         $saveInvoiceHistory = am(
             [
                 'team_id' => $teamId,
@@ -759,6 +774,22 @@ class GoalousTestCase extends CakeTestCase
             $invoiceHistory
         );
         return $this->InvoiceHistory->save($saveInvoiceHistory);
+    }
+
+    function addChargeHistory($teamId, $chargeHistory = [])
+    {
+        $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
+        $this->ChargeHistory->clear();
+        $saveChargeHistory = am(
+            [
+                'team_id'     => $teamId,
+                'currency'    => PaymentSetting::CURRENCY_TYPE_JPY,
+                'result_type' => ChargeHistory::TRANSACTION_RESULT_SUCCESS,
+            ],
+            $chargeHistory
+        );
+        return $this->ChargeHistory->save($saveChargeHistory);
+
     }
 
     /**

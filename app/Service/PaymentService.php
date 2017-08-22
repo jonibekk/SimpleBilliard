@@ -815,7 +815,7 @@ class PaymentService extends AppService
             return false;
         }
         $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount);
-        $paymentSetting = $PaymentSetting->getCcByTeamId($teamId);
+        $paymentSetting = $PaymentSetting->getByTeamId($teamId);
 
         $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
 
