@@ -62,4 +62,28 @@ class UserService extends AppService
         return $newUsers;
     }
 
+    /**
+     * get country as team member
+     * - If team has country, use team country
+     * - If not, use use country
+     *
+     * @param int|null $teamId
+     */
+    function getCountryAsMember(int $teamId = null)
+    {
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $userCountryCode = $Lang->getUserCountryCode();
+        $teamCountryCode = "";
+        if ($teamId) {
+            /** @var Team $Team */
+            $Team = ClassRegistry::init("Team");
+            $teamCountryCode = $Team->getCountry($teamId);
+        }
+
+        $countryCode = $teamCountryCode ?? $userCountryCode;
+        $country = $Lang->getCountryByCode($countryCode);
+        return $country;
+    }
+
 }

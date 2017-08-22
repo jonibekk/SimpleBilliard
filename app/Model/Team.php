@@ -762,7 +762,6 @@ class Team extends AppModel
     public function getCountry(int $teamId)
     {
         $res = $this->getByid($teamId);
-        $this->log($res);
         if (!empty($res['country'])) {
             return $res['country'];
         }

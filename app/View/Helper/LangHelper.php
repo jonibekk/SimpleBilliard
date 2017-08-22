@@ -23,6 +23,11 @@ class LangHelper extends AppHelper
         }
     }
 
+    /**
+     * get user country by lang code
+     *
+     * @return void
+     */
     public function getUserCountryCode()
     {
         $langCode = $this->getLangCode();
@@ -32,4 +37,21 @@ class LangHelper extends AppHelper
             return 'US';
         }
     }
+
+    /**
+     * get country by country code
+     *
+     * @param string $countryCode
+     * @return array|null
+     */
+    public function getCountryByCode(string $countryCode)
+    {
+        $countries = Configure::read("countries");
+        $combined = Hash::combine($countries, "{n}[code=${countryCode}].code", "{n}[code=${countryCode}]");
+        if (!$combined || empty($combined[$countryCode])) {
+            return null;
+        }
+        return $combined[$countryCode];
+    }
+
 }

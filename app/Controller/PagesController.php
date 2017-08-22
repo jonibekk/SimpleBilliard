@@ -10,6 +10,7 @@
 
 App::uses('AppController', 'Controller');
 App::import('Service', 'PaymentService');
+App::import('Service', 'UserService');
 
 /**
  * Static content controller
@@ -338,7 +339,17 @@ class PagesController extends AppController
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+
         $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
-        $this->set(compact('amountPerUser'));
+        $country = $UserService->getCountryAsMember($this->current_team_id);
+        if (!$country) {
+            $price = AppUtil::formatThousand($amountPerUser);
+        } else {
+            $price = AppUtil::formatMoney($amountPerUser, $country['currency_symbol'], $country['symbol_position']);
+        }
+
+        $this->set(compact('price'));
     }
 }

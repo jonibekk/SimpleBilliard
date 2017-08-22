@@ -95,8 +95,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="content">
                 <div class="price-figure">
                     <!-- ここを単調に翻訳すると$1,980になるので、翻訳保留。 -->
-                    <span class="currency">¥
-                        <div class="pricing-line-through"></div></span><span class="number"><?= AppUtil::formatThousand($amountPerUser) ?></span><span
+                        <span class="number"><?= $price ?></span><span
                         class="unit"><?= __('/mon') ?></span>
                 </div>
                 <i class="fa fa-arrow-down pricing-figure-mid-icon"></i>
