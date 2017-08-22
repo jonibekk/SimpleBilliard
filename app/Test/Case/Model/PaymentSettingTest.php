@@ -22,6 +22,7 @@ class PaymentSettingTest extends GoalousTestCase
         'app.payment_setting',
         'app.charge_history',
         'app.credit_card',
+        'app.invoice',
         'app.team',
         'app.team_member',
         'app.user',
@@ -177,5 +178,20 @@ class PaymentSettingTest extends GoalousTestCase
         ], false);
         $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
+    }
+
+    public function test_findMonthlyChargeTeams()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+        $team = ['timezone' => 0];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team);
+        $firstRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
+        $this->assertEmpty($firstRes, "It will be empty. cause, credit_status != Invoice::CREDIT_STATUS_OK");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        $Invoice->id = $invoiceId;
+        $Invoice->saveField('credit_status', Invoice::CREDIT_STATUS_OK);
+        $secondRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
+        $this->assertNotEmpty($secondRes);
     }
 }

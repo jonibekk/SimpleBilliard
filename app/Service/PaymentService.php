@@ -1153,7 +1153,6 @@ class PaymentService extends AppService
         $InvoiceHistory = ClassRegistry::init("InvoiceHistory");
         // Get teams only credit card payment type
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
-
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
@@ -1195,7 +1194,7 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $paySetting = $PaymentSetting->getByTeamId($teamId);
+        $paySetting = $PaymentSetting->getCcByTeamId($teamId);
 
         $data = am(Hash::get($paySetting, 'PaymentSetting'), $payerData);
 
