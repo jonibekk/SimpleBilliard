@@ -80,7 +80,7 @@ class ChargeHistory extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'tax'     => [
+        'tax'              => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
@@ -159,7 +159,7 @@ class ChargeHistory extends AppModel
     /**
      * Filter: team_id and charge date(Y-m-d 00:00:00　〜　Y-m-d 23:59:59)
      *
-     * @param int $teamIds
+     * @param int    $teamId
      * @param string $date
      *
      * @return array
@@ -169,18 +169,104 @@ class ChargeHistory extends AppModel
         $dateStart = AppUtil::getStartTimestampByTimezone($date);
         $dateEnd = AppUtil::getEndTimestampByTimezone($date);
         $options = [
-            'fields' => [
+            'fields'     => [
                 'id',
                 'charge_datetime'
             ],
             'conditions' => [
-                'team_id' => $teamId,
+                'team_id'            => $teamId,
                 'charge_datetime >=' => $dateStart,
                 'charge_datetime <=' => $dateEnd,
-                'del_flg' => false
+                'del_flg'            => false
             ],
         ];
         return $this->find('first', $options);
+    }
+
+    /**
+     * find target histories for invoice.
+     * It should be not charged yet.
+     *
+     * @param int $teamId
+     * @param int $startTs
+     * @param int $endTs
+     *
+     * @return array
+     */
+    public function findForInvoiceByStartEnd(int $teamId, int $startTs, int $endTs)
+    {
+        $options = [
+            'conditions' => [
+                'ChargeHistory.team_id'            => $teamId,
+                'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
+                'ChargeHistory.charge_type'        => [self::CHARGE_TYPE_ACTIVATE_USER, self::CHARGE_TYPE_ADD_USER],
+                'ChargeHistory.charge_datetime >=' => $startTs,
+                'ChargeHistory.charge_datetime <=' => $endTs,
+                'InvoiceHistoriesChargeHistory.id' => null,
+                'InvoiceHistory.id'                => null,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'invoice_histories_charge_histories',
+                    'alias'      => 'InvoiceHistoriesChargeHistory',
+                    'conditions' => [
+                        'ChargeHistory.id = InvoiceHistoriesChargeHistory.charge_history_id',
+                        'InvoiceHistoriesChargeHistory.del_flg' => false,
+                    ]
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'invoice_histories',
+                    'alias'      => 'InvoiceHistory',
+                    'conditions' => [
+                        'InvoiceHistory.id = InvoiceHistoriesChargeHistory.invoice_history_id',
+                        'InvoiceHistory.del_flg' => false,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.ChargeHistory');
+    }
+
+    /**
+     * @param int $teamId
+     * @param int $time
+     * @param int $subTotalCharge
+     * @param int $tax
+     * @param int $amountPerUser
+     * @param int $usersCount
+     * @param int $currencyType
+     *
+     * @return mixed
+     */
+    public function addInvoiceMonthlyCharge(
+        int $teamId,
+        int $time,
+        int $subTotalCharge,
+        int $tax,
+        int $amountPerUser,
+        int $usersCount,
+        int $currencyType = PaymentSetting::CURRENCY_TYPE_JPY
+    ) {
+        $historyData = [
+            'team_id'          => $teamId,
+            'payment_type'     => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'charge_type'      => self::CHARGE_TYPE_MONTHLY,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $subTotalCharge,
+            'tax'              => $tax,
+            'charge_users'     => $usersCount,
+            'currency'         => $currencyType,
+            'charge_datetime'  => $time,
+            'result_type'      => self::TRANSACTION_RESULT_SUCCESS,
+            'max_charge_users' => $usersCount
+        ];
+        $this->clear();
+        $ret = $this->save($historyData);
+        $ret = Hash::extract($ret, 'ChargeHistory');
+        return $ret;
     }
 
 }

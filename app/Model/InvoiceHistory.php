@@ -23,6 +23,7 @@ class InvoiceHistory extends AppModel
         'system_order_code' => [
             'notBlank' => [
                 'rule' => ['notBlank'],
+                'on'   => 'update',
             ],
         ],
         'order_status'      => [
@@ -51,4 +52,28 @@ class InvoiceHistory extends AppModel
             'order'      => ''
         ]
     ];
+
+    /**
+     * Filter: team_id and charge date
+     *
+     * @param int    $teamId
+     * @param string $date
+     *
+     * @return array
+     */
+    public function getByOrderDate(int $teamId, string $date): array
+    {
+        $options = [
+            'fields'     => [
+                'id',
+                'order_date'
+            ],
+            'conditions' => [
+                'team_id'    => $teamId,
+                'order_date' => $date,
+            ],
+        ];
+        return $this->find('first', $options);
+    }
+
 }
