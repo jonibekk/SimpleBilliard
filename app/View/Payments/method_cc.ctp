@@ -1,7 +1,11 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel paymentMethod">
     <div class="paymentMethod-inner">
-        <select class="form-control mb_32px">
+        <?php
+         // TODO: add onChange event for moving other page when select option
+        //  Or change UI from pull down to tabs or drop down menu.
+        ?>
+        <select class="form-control">
             <option><?=__("Subscription")?></option>
             <option><?=__("Invoice history")?></option>
             <option><?=__("Payment method")?>1</option>
@@ -20,33 +24,33 @@
             <tr>
                 <td>VISA *******1234</td>
                 <td>
-                    <span class="paymentMethod-cc-table-expireDate">Jan 31, 2018</span>
-                    <a href="#" class="btn btn-primary pull-right"><?=__('Update Card');?></a>
+                    <span class="paymentMethod-cc-table-expireDate  mr_8px">Jan 31, 2018</span>
                 </td>
             </tr>
             </tbody>
         </table>
         <!-- normal end-->
         <!-- card expire start-->
-        <table class="paymentMethod-cc-table">
-            <thead class="paymentMethod-cc-table-head">
-            <tr>
-                <td><?= __('Card');?></td>
-                <td><?= __('Expire');?></td>
-            </tr>
-            </thead>
-            <tbody class="paymentMethod-cc-table-body">
-            <tr>
-                <td>VISA *******1234</td>
-                <td>
-                    <span class="paymentMethod-cc-table-expireDate mod-alert">Jan 31, 2018</span>
-                    <a href="#" class="btn btn-primary pull-right"><?=__('Update Card');?></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<!--        <table class="paymentMethod-cc-table">-->
+<!--            <thead class="paymentMethod-cc-table-head">-->
+<!--            <tr>-->
+<!--                <td>--><?//= __('Card');?><!--</td>-->
+<!--                <td>--><?//= __('Expire');?><!--</td>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody class="paymentMethod-cc-table-body">-->
+<!--            <tr>-->
+<!--                <td>VISA *******1234</td>-->
+<!--                <td>-->
+<!--                    <span class="paymentMethod-cc-table-expireDate mod-alert mr_8px">Jan 31, 2018</span>-->
+<!--                    <a href="#" class="btn btn-primary">--><?//=__('Update Card');?><!--</a>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
         <div class="has-error">
-            <small class="help-block"><?=__("Card is expired. You must update card information.")?></small>
+            <small class="help-block"><?=__("Card is expired. Please update your card's information.")?></small>
         </div>
         <!-- card expire end-->
     </div>
