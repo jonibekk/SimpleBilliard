@@ -7,6 +7,7 @@ class PaymentsController extends AppController
     public $uses = [
         'ChargeHistory'
     ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -36,7 +37,7 @@ class PaymentsController extends AppController
         if (empty($type)) {
             return $this->render('method_cc');
         }
-        return $this->render('method_'.$type);
+        return $this->render('method_' . $type);
         // end
 
         // TODO.Payment: release comment out.
@@ -45,6 +46,7 @@ class PaymentsController extends AppController
 
     /**
      * Register paid plan(SPA)
+     *
      * @param null $step
      *
      * @return \Cake\Network\Response|null
@@ -75,9 +77,15 @@ class PaymentsController extends AppController
             $this->Notification->outError(__("You have no permission."));
             return $this->redirect('/');
         }
-        $histories = $this->ChargeHistory->find('all');
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $histories = Hash::extract($this->ChargeHistory->find('all'), '{n}.ChargeHistory');
+        $paymentSetting = $PaymentService->get($this->current_team_id);
+        foreach ($histories as &$v) {
+            $v['total'] = $PaymentService->formatCharge($v['total_amount'] + $v['tax'], $paymentSetting['currency']);
+        }
         $this->set(compact('histories'));
-        $this->render('payment_history');
     }
 
     public function cannot_use_service()
