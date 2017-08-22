@@ -1178,8 +1178,19 @@ class PaymentServiceTest extends GoalousTestCase
             'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
         ]);
         $res = $this->PaymentService->registerInvoice($teamId, 10, $time);
-        debug($res);
-
+        $this->assertTrue($res);
+        // checking invoiceHistory
+        /** @var InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        $this->assertCount(1, $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]));
+        // checking chargeHistory
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $this->assertCount(3, $ChargeHistory->find('all', ['conditions' => ['team_id' => $teamId]]));
+        // checking invoiceHistory and chargeHistory relation
+        /** @var InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->assertCount(3, $InvoiceHistoriesChargeHistory->find('all'));
     }
 
     function _addInvoiceChargeHistory($teamId, $data)
