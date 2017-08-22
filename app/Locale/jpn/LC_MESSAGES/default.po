@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-16 16:14+0900\n"
+"PO-Revision-Date: 2017-08-20 16:06+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -424,6 +424,9 @@ msgstr "問題が発生したため、処理が完了しませんでした。"
 
 msgid "Goalous - Thanks for your contact."
 msgstr "【Goalous】お問い合わせありがとうございました"
+
+msgid "You have already registered the paid plan."
+msgstr "既に有料プランの登録が済んでいます。"
 
 msgid "Due to using an old URL, you have been redirected to this page."
 msgstr "古いURLにアクセスされたので、このページにリダイレクトされました。"
@@ -860,6 +863,9 @@ msgstr "フォロー中ではありません。"
 
 msgid "Parameter is invalid"
 msgstr "パラメータが不正です。"
+
+msgid "Your Credit Card does not match your country settings"
+msgstr ""
 
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
@@ -1820,6 +1826,12 @@ msgstr "決済設定が見つかりません。"
 msgid "Credit card settings does not exist."
 msgstr "クレジットカード設定が見つかりません。"
 
+msgid "Failed to register paid plan."
+msgstr "有料プランの登録に失敗しました。"
+
+msgid "Please try again later."
+msgstr "しばらく時間をおいて再度登録してください。"
+
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
 
@@ -2746,6 +2758,12 @@ msgstr "利用規約に同意する"
 msgid "Register"
 msgstr "登録する"
 
+msgid "Enter Billing Information"
+msgstr "請求先情報を入力してください"
+
+msgid "Same as company information"
+msgstr "会社情報と同じにする"
+
 msgid "Circles"
 msgstr "サークル"
 
@@ -3379,12 +3397,6 @@ msgstr "ログアウト"
 
 msgid "Team"
 msgstr "チーム"
-
-msgid "Newsfeed"
-msgstr "ニュースフィード"
-
-msgid "Related Goals"
-msgstr "関連ゴール"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"

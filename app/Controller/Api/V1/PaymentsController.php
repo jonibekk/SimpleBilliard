@@ -8,6 +8,12 @@ App::import('Service', 'PaymentService');
  */
 class PaymentsController extends ApiController
 {
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->_checkAdmin();
+    }
+
     // Need validation fields for validation API of changing to paid plan
     private $validationFieldsEachPage = [
         'country' => [
@@ -24,7 +30,6 @@ class PaymentsController extends ApiController
                 'company_region',
                 'company_city',
                 'company_street',
-                'company_tel',
                 'contact_person_first_name',
                 'contact_person_first_name_kana',
                 'contact_person_last_name',
@@ -34,14 +39,12 @@ class PaymentsController extends ApiController
             ]
         ],
         'invoice' => [
-            'PaymentSetting' => [
+            'Invoice' => [
                 'company_name',
-                'company_country',
                 'company_post_code',
                 'company_region',
                 'company_city',
                 'company_street',
-                'company_tel',
                 'contact_person_first_name',
                 'contact_person_first_name_kana',
                 'contact_person_last_name',
@@ -49,9 +52,6 @@ class PaymentsController extends ApiController
                 'contact_person_tel',
                 'contact_person_email',
             ],
-            'Invoice' => [
-                // TODO
-            ]
         ],
     ];
 
@@ -86,6 +86,11 @@ class PaymentsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
+        // Check if not already paid plan
+        if ($this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden(__("You have already registered the paid plan."));
+        }
+
         // Validate Data
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
@@ -96,17 +101,23 @@ class PaymentsController extends ApiController
         }
 
         // Check if the Payment if in the correct currency
-        $token = Hash::get($requestData, 'token');
-        $currency = Hash::get($requestData, 'currency');
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
+
+        $token = Hash::get($requestData, 'token');
+        $companyCountry = Hash::get($requestData, 'company_country');
         $creditCardData = $CreditCardService->retrieveToken($token);
-        if ($creditCardData['creditCard']->country == 'JP' && $currency != PaymentSetting::CURRENCY_TYPE_JPY) {
-            // TODO: Add translation for message
+
+        // Check to prevent illegal choice of dollar or yen
+        $ccCountry = $creditCardData['creditCard']->country;
+        if (!$PaymentService->checkIllegalChoiceCountry($ccCountry, $companyCountry)) {
+            // TODO.Payment: Add translation for message
             return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
         }
 
         // Register credit card, and apply payment
+        $timezone = $this->Team->getTimezone();
+        $requestData['payment_base_day'] = date('d',strtotime(AppUtil::todayDateYmdLocal($timezone)));
         $res = $PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $requestData);
         if ($res['error'] === true) {
             return $this->_getResponse($res['errorCode'], null, null, $res['message']);
@@ -114,6 +125,19 @@ class PaymentsController extends ApiController
 
         // New Payment registered with success
         return $this->_getResponseSuccess();
+    }
+
+
+    /**
+     * Register invoice info
+     * Endpoint: /api/v1/payments/invoice
+     *
+     * @return CakeResponse
+     */
+    function post_invoice()
+    {
+        // TODO.Payment: implement
+        $this->_getResponseSuccess();
     }
 
     /**
@@ -191,17 +215,23 @@ class PaymentsController extends ApiController
 
         if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
             // Get payment setting by team id
-            $paymentSetting = $PaymentService->get($this->current_team_id);
-            $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
+            $companyCountry = $this->request->query('company_country');
+            $amountPerUser = $PaymentService->getAmountPerUserByCountry($companyCountry);
+            $currencyType = $PaymentService->getCurrencyTypeByCountry($companyCountry);
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();
-            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($this->current_team_id, $chargeUserCnt);
-            $res = am($res, [
+            $paymentSetting = [
+                'currency' => $currencyType,
                 'amount_per_user' => $amountPerUser,
+                'company_country' => $companyCountry
+            ];
+            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($this->current_team_id, $chargeUserCnt, $paymentSetting);
+            $res = am($res, [
+                'amount_per_user' => $PaymentService->formatCharge($amountPerUser, $currencyType),
                 'charge_users_count' => $chargeUserCnt,
-                'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge']),
-                'tax' => $PaymentService->formatCharge($chargeInfo['tax']),
-                'total_charge' => $PaymentService->formatCharge($chargeInfo['total_charge']),
+                'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $currencyType),
+                'tax' => $PaymentService->formatCharge($chargeInfo['tax'], $currencyType),
+                'total_charge' => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
             ]);
         }
         return $this->_getResponseSuccess($res);
@@ -232,6 +262,50 @@ class PaymentsController extends ApiController
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
+        }
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Update Payer info
+     *
+     * @param int $teamId
+     *
+     * @return CakeResponse
+     */
+    function put_company_info(int $teamId)
+    {
+        if ($teamId != $this->current_team_id) {
+            return $this->_getResponseNotFound();
+        }
+        $userId = $this->Auth->user('id');
+
+        // Check if is admin
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        // Validate input
+        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        $data = array('payment_setting' => $this->request->data);
+        $validationErrors = $PaymentService->validateSave($data, $validationFields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+
+        // Update payer info
+        $result = $PaymentService->updatePayerInfo($teamId, $this->request->data);
+        if ($result !== true) {
+            if (empty($result['errorCode'])) {
+                return $this->_getResponseValidationFail($result);
+            } else {
+                return $this->_getResponse($result['errorCode'], null, null, $result['message']);
+            }
         }
         return $this->_getResponseSuccess();
     }

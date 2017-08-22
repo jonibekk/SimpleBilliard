@@ -1,16 +1,23 @@
 import path from "path";
 import webpack from "webpack";
 import config from "./config.js";
+import minimist from "minimist";
 
 function getReactEntries() {
+  // Can specify watching react app as option
+  // e.g. "gulp watch --react_app signup"
+  const argv = minimist(process.argv.slice(2), config.argOptions);
+
   let entries = {};
   // hot reload用設定
   const devClient = [
     'webpack/hot/dev-server',
     'webpack-hot-middleware/client',
   ];
+
+  const react_apps = argv.react_app ? [argv.react_app] : config.react;
   // entrypointを動的に作成。(hot reload用設定もentrypoint毎に付加しなければならない)
-  config.react.map((app_name) => {
+  react_apps.map((app_name) => {
     entries[`react_${app_name}`] = [...devClient, `./js/react/${app_name}/app.js`];
   });
   return entries;
