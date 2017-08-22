@@ -130,6 +130,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             });
         };
 
+        // Enable email field so user can edit before resending invite.
         $scope.editInviteEmail = function(){
             reinviteUser.username.removeAttribute('disabled');
             reinviteUser.username.classList.add('focused');

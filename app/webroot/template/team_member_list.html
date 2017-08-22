@@ -162,6 +162,7 @@
         <table class="table team_member_table">
             <tr ng-repeat="item in invite_list | filter:name_field">
                 <td>
+                    <!-- TODO: Add function to ng-submit when Invite API has been fixed -->
                     <form name="reinviteUser" class="team-member-invite-form" ng-submit="">
                         <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email">
                         <button type="submit" class="btn btn-primary team-member-invited-submit">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</button>
