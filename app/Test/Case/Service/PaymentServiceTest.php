@@ -1136,10 +1136,6 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
         $this->assertCount(2, $res);
 
-        $this->addInvoiceHistory($teamId, [
-            'order_date'        => '2017-01-01',
-            'system_order_code' => "test",
-        ]);
         $this->addInvoiceHistoryAndChargeHistory($teamId,
             [
                 'order_date'        => '2016-12-01',
@@ -1159,6 +1155,30 @@ class PaymentServiceTest extends GoalousTestCase
 
         $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
         $this->assertCount(2, $res);
+
+    }
+
+    function test_registerInvoice()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $time = strtotime('2016-12-31') - (9 * HOUR);
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getEndTimestampByTimezone('2016-12-30', 9)
+        ]);
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertCount(1, $res);
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
+        ]);
+        $res = $this->PaymentService->registerInvoice($teamId, 10, $time);
+        debug($res);
 
     }
 

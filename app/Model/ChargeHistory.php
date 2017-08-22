@@ -263,6 +263,7 @@ class ChargeHistory extends AppModel
             'result_type'      => self::TRANSACTION_RESULT_SUCCESS,
             'max_charge_users' => $usersCount
         ];
+        $this->clear();
         $ret = $this->save($historyData);
         $ret = Hash::extract($ret, 'ChargeHistory');
         return $ret;

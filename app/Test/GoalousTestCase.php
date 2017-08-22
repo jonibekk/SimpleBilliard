@@ -722,7 +722,10 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'          => $teamId,
                 'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-                'payment_base_day' => 1
+                'payment_base_day' => 1,
+                'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+                'amount_per_user'  => 1980,
+                'company_country'  => 'JP',
             ],
             $paymentSetting
         );
@@ -731,8 +734,20 @@ class GoalousTestCase extends CakeTestCase
         $paymentSettingId = $this->PaymentSetting->getLastInsertID();
         $saveInvoice = array_merge(
             [
-                'team_id'            => $teamId,
-                'payment_setting_id' => $paymentSettingId,
+                'team_id'                        => $teamId,
+                'payment_setting_id'             => $paymentSettingId,
+                'credit_status'                  => Invoice::CREDIT_STATUS_OK,
+                'company_name'                   => "株式会社これなんで商会",
+                'company_post_code'              => "123-4567",
+                'company_region'                 => "東京都",
+                'company_city'                   => "台東区",
+                'company_street'                 => "浅草橋1-2-3",
+                'contact_person_first_name'      => "ゴラ男",
+                'contact_person_first_name_kana' => "ごらお",
+                'contact_person_last_name'       => "ゴラ橋",
+                'contact_person_last_name_kana'  => "ごらはし",
+                'contact_person_tel'             => "03-1234-5678",
+                'contact_person_email'           => "test@goalous.com",
             ],
             $invoice
         );
