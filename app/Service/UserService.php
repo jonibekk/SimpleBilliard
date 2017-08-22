@@ -81,7 +81,7 @@ class UserService extends AppService
             $teamCountryCode = $Team->getCountry($teamId);
         }
 
-        $countryCode = $teamCountryCode ?? $userCountryCode;
+        $countryCode = $teamCountryCode ?: $userCountryCode;
         $country = $Lang->getCountryByCode($countryCode);
         return $country;
     }
