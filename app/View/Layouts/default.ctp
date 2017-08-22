@@ -35,15 +35,6 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 }
 ?>
 
-<?php // spec: Only other mobile app env, and only feed page, displaying subheader. ?>
-<?php
-// TODO:Uncomment this after release native app
-//if (!$is_mb_app && $this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-if ($this->request->params['controller'] === 'pages' && $this->request->params['action'] === 'display') {
-    echo $this->element('Header/sp_feeds_alt');
-}
-?>
-
 <div id="container" class="container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
@@ -75,9 +66,9 @@ if ($this->request->params['controller'] === 'pages' && $this->request->params['
 <!-- END fetch modal -->
 
 <?php
-// TODO: Should change to not importing this file in mb app.
-//       But we should change after changing progress link in mb app footer.
-echo $this->element('gl_common_js', ['loadRightColumn' => true]);
+// Only from mobile app, don't load dashboard
+$displayDashboard = !$is_mb_app;
+echo $this->element('gl_common_js', ['loadRightColumn' => $displayDashboard]);
 ?>
 
 <!-- START fetch script -->

@@ -94,7 +94,6 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
  */
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/after_click::after_click/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/common_form/:common_form_type/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display', 'home']);
@@ -108,6 +107,12 @@ Router::connect('/goals/:id/edit',
 );
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);
 Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'action' => 'add_members']);
+
+/**
+ * Redirect
+ */
+// TODO: Should delete after implemented app force update
+Router::redirect('/after_click:SubHeaderMenuGoal', ['controller' => 'goals', 'action' => 'kr_progress']);
 
 /**
  * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している
@@ -132,6 +137,8 @@ Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'displ
         'lang'     => 'ja|en',
         'pass'     => ['pagename']
     ]);
+Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'app_version_unsupported'],
+    ['pagename' => 'app_force_update|app_force_install', 'pass' => ['pagename']]);
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

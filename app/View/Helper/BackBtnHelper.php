@@ -13,7 +13,6 @@ class BackBtnHelper extends AppHelper
             'goals/kr_progress', 
             'post_permanent',
             'goals/create',
-            'after_click:SubHeaderMenuGoal',
             'goals/approval/detail',
             'evaluations/view',
         );

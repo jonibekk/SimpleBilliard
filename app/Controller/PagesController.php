@@ -55,6 +55,16 @@ class PagesController extends AppController
         return $this->render(implode('/', $path));
     }
 
+    public function app_version_unsupported()
+    {
+        $path = func_get_args();
+
+        // pages app_force_update / app_force_install
+        // both can view on login/logout
+        $this->layout = LAYOUT_NO_HEADER;
+        return $this->render(implode('/', $path));
+    }
+
     function _setTopAllContentIfLoggedIn()
     {
         // プロフィール作成モードの場合、ビューモードに切り替え
@@ -256,7 +266,7 @@ class PagesController extends AppController
 
             // When parametes separated from google analitics already exists,
             // ignore redirect for google analitics.
-            $reserved_params = ['notify_id', 'after_click', 'common_form', 'team_id', 'from'];
+            $reserved_params = ['notify_id', 'common_form', 'team_id', 'from'];
             foreach ($reserved_params as $param) {
                 if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
                     return true;
@@ -264,7 +274,7 @@ class PagesController extends AppController
             }
 
             if ($this->_parseParameter($request_status) !== $status_from_referer) {
-                return $this->redirect("/${status_from_referer}");
+                return $this->redirect("${status_from_referer}");
             }
             $this->Session->delete('referer_status');
             return true;
