@@ -45,7 +45,8 @@ class InvoiceService extends AppService
 
         $data = [
             'O_ReceiptOrderDate'     => $orderDate,
-            'O_ServicesProvidedDate' => $orderDate,
+            'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + (9 * HOUR)),
+            // provided date cannot be specified past date
             'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
             'O_SiteId'               => ATOBARAI_SITE_ID,
             'O_ApiUserId'            => ATOBARAI_API_USER_ID,
@@ -84,6 +85,13 @@ class InvoiceService extends AppService
      */
     private function _postRequestForAtobaraiDotCom(string $requestUrl, array $data): array
     {
+        /** @var  Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        // TODO.Payment: This is bad know how. We should use mock on testing. We can try to use https://packagist.org/packages/phake/phake#v2.3.2
+        if ($Invoice->useDbConfig == 'test') {
+            return $this->getAtobaraiResponseForTest();
+        }
+
         $data = http_build_query($data);
 
         // header
@@ -103,6 +111,21 @@ class InvoiceService extends AppService
         $xmlArray = Xml::toArray(Xml::build($ret));
         $ret = Hash::extract($xmlArray, 'response');
         return $ret;
+    }
+
+    function getAtobaraiResponseForTest()
+    {
+        $data = [
+            'status'        => 'success',
+            'orderId'       => '',
+            'systemOrderId' => 'AK23553506',
+            'messages'      => '',
+            'orderStatus'   => [
+                '@cd' => '0',
+                '@'   => '与信中'
+            ]
+        ];
+        return $data;
     }
 
     /**

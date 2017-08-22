@@ -897,6 +897,7 @@ class PaymentService extends AppService
         $ChargeHistory->begin();
         try {
             // save monthly charge
+            $ChargeHistory->clear();
             $monthlyChargeHistory = $ChargeHistory->addInvoiceMonthlyCharge(
                 $teamId,
                 $time,
@@ -927,6 +928,7 @@ class PaymentService extends AppService
                 'order_date'        => $localCurrentDate,
                 'system_order_code' => 'temporary',
             ];
+            $InvoiceHistory->clear();
             $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);
             if (!$invoiceHistory) {
                 throw new Exception(sprintf("Failed save an InvoiceHistory. saveData: %s, validationErrors: %s",
@@ -944,6 +946,7 @@ class PaymentService extends AppService
                     'charge_history_id'  => $history['id'],
                 ];
             }
+            $InvoiceHistoriesChargeHistory->clear();
             $resSaveInvoiceChargeHistory = $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
             if (!$resSaveInvoiceChargeHistory) {
                 throw new Exception(sprintf("Failed save an InvoiceChargeHistories. saveData: %s, validationErrors: %s",
@@ -984,6 +987,7 @@ class PaymentService extends AppService
             'system_order_code' => $resAtobarai['systemOrderId'],
             'order_status'      => $resAtobarai['orderStatus']['@cd'],
         ];
+        $InvoiceHistory->clear();
         $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate);
         if (!$resUpdate) {
             $this->log(sprintf("Failed update invoice history. It should be recovered!!! teamId: %s, data: %s, validationErrors: %s",
