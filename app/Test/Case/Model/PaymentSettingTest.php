@@ -22,6 +22,7 @@ class PaymentSettingTest extends GoalousTestCase
         'app.payment_setting',
         'app.charge_history',
         'app.credit_card',
+        'app.invoice',
         'app.team',
         'app.team_member',
         'app.user',
@@ -63,7 +64,7 @@ class PaymentSettingTest extends GoalousTestCase
         list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
 
         // data_count: 1
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEquals(count($res), 1);
         $this->assertEquals($res[0], [
             'PaymentSetting' => [
@@ -78,7 +79,7 @@ class PaymentSettingTest extends GoalousTestCase
 
         // data_count: multi
         list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEquals(count($res), 2);
         $this->assertNotEquals($res[0]['PaymentSetting']['team_id'], $res[1]['PaymentSetting']['team_id']);
         $this->assertEquals($res[1], [
@@ -99,7 +100,7 @@ class PaymentSettingTest extends GoalousTestCase
         $this->Team->deleteAll(['del_flg' => false]);
         // Not empty
         list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
         // Team.service_use_status = free trial
         $this->Team->create();
@@ -107,7 +108,7 @@ class PaymentSettingTest extends GoalousTestCase
             'id'                 => $teamId,
             'service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL
         ]);
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
 
         // Team.service_use_status = read only
@@ -116,7 +117,7 @@ class PaymentSettingTest extends GoalousTestCase
             'id'                 => $teamId,
             'service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY
         ]);
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
 
         // Team.service_use_status = can't use service
@@ -125,7 +126,7 @@ class PaymentSettingTest extends GoalousTestCase
             'id'                 => $teamId,
             'service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE
         ]);
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
 
         // Team deleted
@@ -135,7 +136,7 @@ class PaymentSettingTest extends GoalousTestCase
             'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
             'del_flg'            => true
         ]);
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
 
         // CreditCard deleted
@@ -150,7 +151,7 @@ class PaymentSettingTest extends GoalousTestCase
             ['del_flg' => true],
             ['payment_setting_id' => $paymentSettingId]
         );
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
     }
 
@@ -165,7 +166,7 @@ class PaymentSettingTest extends GoalousTestCase
             'id'   => $paymentSettingId,
             'type' => PaymentSetting::PAYMENT_TYPE_INVOICE
         ], false);
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
 
         // PaymentSetting deleted
@@ -175,8 +176,24 @@ class PaymentSettingTest extends GoalousTestCase
             'type'    => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
             'del_flg' => true
         ], false);
-        $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
+        $res = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
         $this->assertEmpty($res);
+    }
+
+    public function test_findMonthlyChargeTeams()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+        $team = ['timezone' => 0];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_NG];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, [], $invoice);
+        $firstRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
+        $this->assertEmpty($firstRes, "It will be empty. cause, credit_status != Invoice::CREDIT_STATUS_OK");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        $Invoice->id = $invoiceId;
+        $Invoice->saveField('credit_status', Invoice::CREDIT_STATUS_OK);
+        $secondRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
+        $this->assertNotEmpty($secondRes);
     }
 
     public function test_getAmountPerUser()
@@ -187,7 +204,7 @@ class PaymentSettingTest extends GoalousTestCase
             'team_id'         => 999,
             'amount_per_user' => $expectedAmount
         ], false);
-        
+
         $res = $this->PaymentSetting->getAmountPerUser(999);
         $this->assertEquals($res, $expectedAmount);
     }

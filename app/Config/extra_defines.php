@@ -66,7 +66,8 @@ define('CACHE_HOMEPAGE', false);
 define('SETUP_GUIDE_NOTIFY_DAYS', "2,5,10");
 define('SETUP_GUIDE_NOTIFY_HOUR', "11");
 define('SETUP_GUIDE_NOTIFY_URL', "http://192.168.50.4");
-define('EXPIRE_ALERT_NOTIFY_BEFORE_DAYS', "10,5,3,2,1"); // it should be comma separated values. It means each num is timing of notify before expired in all statuses.
+define('EXPIRE_ALERT_NOTIFY_BEFORE_DAYS',
+    "10,5,3,2,1"); // it should be comma separated values. It means each num is timing of notify before expired in all statuses.
 define('FORCE_DISABLE_ALL_EXPERIMENTS',
     false);//trueの場合、FORCE_ENABLE_ALL_EXPERIMENTSより優先される。trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が無効化される。
 define('FORCE_ENABLE_ALL_EXPERIMENTS', true);//trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が有効化される
@@ -74,3 +75,9 @@ define('SENTRY_DSN', null);
 // Stripe API keys. https://dashboard.stripe.com/account/apikeys
 define('STRIPE_PUBLISHABLE_KEY', 'pk_test_9ne6tSqfUbBXSWqn1XwmeHfb');
 define('STRIPE_SECRET_KEY', 'sk_test_MNu6mPlFZRW6Y4KYAZwhGBsU');
+define('ATOBARAI_API_BASE_URL', 'https://www1.atobarai-dev.jp');
+define('ATOBARAI_ENTERPRISE_ID', '11528');
+define('ATOBARAI_SITE_ID', '13868');
+define('ATOBARAI_API_USER_ID', '10141');
+
+

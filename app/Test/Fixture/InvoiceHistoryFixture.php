@@ -33,7 +33,7 @@ class InvoiceHistoryFixture extends CakeTestFixtureEx
             'null'    => false,
             'default' => null,
             'key'     => 'index',
-            'comment' => '注文登録時のUTC日付'
+            'comment' => '注文登録時のローカル日付'
         ],
         'system_order_code' => [
             'type'    => 'string',
