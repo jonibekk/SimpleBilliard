@@ -278,4 +278,28 @@ class PaymentSetting extends AppModel
 
         return $res;
     }
+
+    /**
+     * get amount per user by team id
+     *
+     * @param int $teamId
+     *
+     * @return int|null
+     */
+    public function getAmountPerUser(int $teamId)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId
+            ],
+            'fields'     => ['amount_per_user']
+        ];
+        $res = $this->find('first', $options);
+        if (!$res) {
+            return null;
+        }
+
+        return Hash::get($res, 'PaymentSetting.amount_per_user');
+    }
+
 }

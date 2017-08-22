@@ -402,4 +402,33 @@ class BaseController extends Controller
         }
         return false;
     }
+
+    /**
+     * check is logged in or not
+     *
+     * @return bool
+     */
+    public function isLoggedIn(): bool
+    {
+        return (bool)$this->Auth->user();
+    }
+
+    /*
+     * check prohibited request in read only term
+     *
+     * @param array $actionMethods
+     *
+     * @return bool
+     */
+    protected function _isAdmin(array $actionMethods = []): bool
+    {
+        if (!empty($actionMethods) && !in_array($this->request->action, $actionMethods)) {
+            return true;
+        }
+
+        // Check if team administrator
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+        return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
+    }
 }

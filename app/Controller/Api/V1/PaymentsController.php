@@ -8,6 +8,12 @@ App::import('Service', 'PaymentService');
  */
 class PaymentsController extends ApiController
 {
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->_checkAdmin();
+    }
+
     // Need validation fields for validation API of changing to paid plan
     private $validationFieldsEachPage = [
         'country' => [
@@ -210,7 +216,7 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
             // Get payment setting by team id
             $companyCountry = $this->request->query('company_country');
-            $amountPerUser = $PaymentService->getAmountPerUserByCountry($companyCountry);
+            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($companyCountry);
             $currencyType = $PaymentService->getCurrencyTypeByCountry($companyCountry);
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();
