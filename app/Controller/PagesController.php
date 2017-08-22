@@ -344,7 +344,7 @@ class PagesController extends AppController
 
         $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
         $country = $UserService->getCountryAsMember($this->current_team_id);
-        if (!$country) {
+        if (!$country || empty($country['currency_symbol']) || empty($country['symbol_position'])) {
             $price = AppUtil::formatThousand($amountPerUser);
         } else {
             $price = AppUtil::formatMoney($amountPerUser, $country['currency_symbol'], $country['symbol_position']);

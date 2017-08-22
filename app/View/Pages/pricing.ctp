@@ -101,7 +101,6 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <i class="fa fa-arrow-down pricing-figure-mid-icon"></i>
                 <div class="price-figure">
                     <p><?= __('Per User') ?></p>
-                    <span class="currency"><?= __('¥') ?></span>
                     <span class="number">0</span>
                     <span class="unit"><?= __('/mon') ?></span>
                 </div>
