@@ -308,4 +308,29 @@ class ApiController extends BaseController
         $this->Auth->loginAction = null;
     }
 
+
+    /**
+     * Check permission if team administrator
+     * [How to use]
+     * ・Check in all action methods
+     * 　Not set argument.
+     * 　e.g. `$this->_checkAdmin();`
+     * ・Check in specified action methods
+     * 　set argument as array.
+     * 　e.g.
+     *    check method: index, create
+     *    not check method: update
+     *    `$this->_checkAdmin(['index', 'create']);`
+     *
+     * @param array $actionMethods
+     *
+     * @return CakeResponse
+     */
+    protected function _checkAdmin(array $actionMethods = [])
+    {
+        if (!$this->_isAdmin($actionMethods)) {
+            $this->stopInvoke = true;
+            return $this->_getResponseForbidden();
+        }
+    }
 }

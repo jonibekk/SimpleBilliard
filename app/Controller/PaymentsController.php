@@ -3,6 +3,12 @@ App::import('Service', 'TeamService');
 
 class PaymentsController extends AppController {
 
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->_checkAdmin();
+    }
+
     /**
      * Display billing information
      */
