@@ -159,7 +159,7 @@ class ChargeHistory extends AppModel
     /**
      * Filter: team_id and charge date(Y-m-d 00:00:00　〜　Y-m-d 23:59:59)
      *
-     * @param int $teamId
+     * @param int $teamIds
      * @param string $date
      *
      * @return array
