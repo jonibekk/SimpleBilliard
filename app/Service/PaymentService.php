@@ -851,7 +851,7 @@ class PaymentService extends AppService
             $invoiceHistoryData = [
                 'team_id'           => $teamId,
                 'order_date'        => $localCurrentDate,
-                'system_order_code' => 'temporary',
+                'system_order_code' => '',
             ];
             $InvoiceHistory->clear();
             $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);

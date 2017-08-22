@@ -113,6 +113,12 @@ class InvoiceService extends AppService
         return $ret;
     }
 
+    /**
+     * This is for only testing!
+     * Don't use it for production.
+     *
+     * @return array
+     */
     function getAtobaraiResponseForTest()
     {
         $data = [

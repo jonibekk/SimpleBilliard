@@ -23,6 +23,7 @@ class InvoiceHistory extends AppModel
         'system_order_code' => [
             'notBlank' => [
                 'rule' => ['notBlank'],
+                'on'   => 'update',
             ],
         ],
         'order_status'      => [
