@@ -46,7 +46,6 @@ export default class CreditCard extends Base {
           },
         },
       },
-      hidePostalCode: true
     });
     card.mount('#card-element');
     this.setState({card});
