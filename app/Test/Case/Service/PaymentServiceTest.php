@@ -1073,8 +1073,7 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_getAmountPerUser()
     {
-        // TODO: implement after review.
-        $this->markTestIncomplete('test not implemented.');
+        // TODO: implement test code
     }
 
     /**

@@ -65,7 +65,7 @@ class UserService extends AppService
     /**
      * get country as team member
      * - If team has country, use team country
-     * - If not, use use country
+     * - If not, use user country
      *
      * @param int|null $teamId
      */
