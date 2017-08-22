@@ -68,8 +68,9 @@ class TeamTest extends GoalousTestCase
 
         $newTeam = $this->Team->getById($this->Team->getLastInsertID());
         $this->assertEquals($newTeam['service_use_status'], Team::SERVICE_USE_STATUS_FREE_TRIAL);
-        $this->assertEquals($newTeam['service_use_state_start_date'], date('Y-m-d'));
-        $this->assertEquals($newTeam['service_use_state_end_date'], date('Y-m-d', strtotime("+15 days")));
+        $this->assertEquals($newTeam['service_use_state_start_date'], AppUtil::todayDateYmdLocal(9.0));
+        $stateDays = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL];
+        $this->assertEquals($newTeam['service_use_state_end_date'], AppUtil::dateAfter($newTeam['service_use_state_start_date'], $stateDays));
 
         $newTeamMember = $this->Team->TeamMember->getById($this->Team->TeamMember->getLastInsertID());
         $this->assertEquals($newTeamMember['status'], TeamMember::USER_STATUS_ACTIVE);
@@ -312,6 +313,16 @@ class TeamTest extends GoalousTestCase
             Hash::get($this->Team->findById($cannotUseTeamId), 'Team.service_use_state_end_date'),
             AppUtil::dateAfter('2017-07-04', Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_CANNOT_USE])
         );
+    }
+
+    public function test_getCountry()
+    {
+        $teamId = $this->createTeam(['country' => 'JP']);
+        $this->assertEqual($this->Team->getCountry($teamId), 'JP');
+        $teamId = $this->createTeam(['country' => 'US']);
+        $this->assertEqual($this->Team->getCountry($teamId), 'US');
+        $teamId = $this->createTeam(['country' => null]);
+        $this->assertEqual($this->Team->getCountry($teamId), null);
     }
 
     function _setDefault()

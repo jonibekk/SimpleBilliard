@@ -410,7 +410,7 @@ class PaymentService extends AppService
      *
      * @return int
      */
-    public function getAmountPerUserByCountry(string $countryCode): int
+    public function getDefaultAmountPerUserByCountry(string $countryCode): int
     {
         return $countryCode === 'JP' ? self::AMOUNT_PER_USER_JPY : self::AMOUNT_PER_USER_USD;
     }
@@ -662,7 +662,7 @@ class PaymentService extends AppService
         $result['customerId'] = $customerId;
 
         $companyCountry = Hash::get($paymentData, 'company_country');
-        $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserByCountry($companyCountry);
+        $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
         $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
 
         $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
@@ -865,6 +865,43 @@ class PaymentService extends AppService
     }
 
     /**
+     * Update Payment settings payer info.
+     *
+     * @param int   $teamId
+     * @param array $payerData
+     *
+     * @return array|bool
+     */
+    public function updatePayerInfo(int $teamId, array $payerData)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        $paySetting = $PaymentSetting->getByTeamId($teamId);
+
+        $data = am(Hash::get($paySetting, 'PaymentSetting'), $payerData);
+
+        // Check if payment exists
+        if (empty($paySetting)) {
+            $PaymentSetting->invalidate(null, __('Payment settings does not exists.'));
+            return $PaymentSetting->validationErrors;
+        }
+
+        try {
+            // Update PaymentSettings
+            $PaymentSetting->begin();
+            $PaymentSetting->save($data);
+            $PaymentSetting->commit();
+        } catch (Exception $e) {
+            $PaymentSetting->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
+        }
+        return true;
+    }
+
+    /**
      * Payment validation
      *
      * @param mixed $data
@@ -910,7 +947,7 @@ class PaymentService extends AppService
         return $allValidationErrors;
     }
 
-    /**
+    /*
      * Check to prevent illegal choice of dollar or yen
      *
      * @param string $ccCountry
@@ -927,4 +964,47 @@ class PaymentService extends AppService
         }
         return true;
     }
+
+    /**
+     * get amount per user
+     * # case1. not specified teamId
+     *  - get default amount by using user lang setting
+     * # case2. exist team amount per user data
+     *  - get data from payment_settings record
+     * # caes3. exist only team country code
+     *  - get default amount by useing team country code
+     *
+     * @param int|null $teamId
+     *
+     * @return int
+     */
+    function getAmountPerUser($teamId): int
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+
+        $userCountryCode = $Lang->getUserCountryCode();
+        $defaultAamountPerUser = $this->getDefaultAmountPerUserByCountry($userCountryCode);
+
+        if (!$teamId) {
+            return $defaultAamountPerUser;
+        }
+
+        $teamAmountPerUser = $PaymentSetting->getAmountPerUser($teamId);
+        if ($teamAmountPerUser !== null) {
+            return $teamAmountPerUser;
+        }
+
+        $teamCountry = $Team->getCountry($teamId);
+        if ($teamCountry) {
+            return $this->getDefaultAmountPerUserByCountry($teamCountry);
+        }
+
+        return $defaultAamountPerUser;
+    }
+
 }

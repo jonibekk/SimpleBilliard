@@ -8,6 +8,12 @@ App::import('Service', 'PaymentService');
  */
 class PaymentsController extends ApiController
 {
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->_checkAdmin();
+    }
+
     // Need validation fields for validation API of changing to paid plan
     private $validationFieldsEachPage = [
         'country' => [
@@ -210,7 +216,7 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
             // Get payment setting by team id
             $companyCountry = $this->request->query('company_country');
-            $amountPerUser = $PaymentService->getAmountPerUserByCountry($companyCountry);
+            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($companyCountry);
             $currencyType = $PaymentService->getCurrencyTypeByCountry($companyCountry);
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();
@@ -256,6 +262,50 @@ class PaymentsController extends ApiController
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
+        }
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Update Payer info
+     *
+     * @param int $teamId
+     *
+     * @return CakeResponse
+     */
+    function put_company_info(int $teamId)
+    {
+        if ($teamId != $this->current_team_id) {
+            return $this->_getResponseNotFound();
+        }
+        $userId = $this->Auth->user('id');
+
+        // Check if is admin
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        // Validate input
+        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        $data = array('payment_setting' => $this->request->data);
+        $validationErrors = $PaymentService->validateSave($data, $validationFields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+
+        // Update payer info
+        $result = $PaymentService->updatePayerInfo($teamId, $this->request->data);
+        if ($result !== true) {
+            if (empty($result['errorCode'])) {
+                return $this->_getResponseValidationFail($result);
+            } else {
+                return $this->_getResponse($result['errorCode'], null, null, $result['message']);
+            }
         }
         return $this->_getResponseSuccess();
     }
