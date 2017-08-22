@@ -867,6 +867,9 @@ msgstr "パラメータが不正です。"
 msgid "Your Credit Card does not match your country settings"
 msgstr ""
 
+msgid "Invoice payment are available for Japan only"
+msgstr ""
+
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
 
