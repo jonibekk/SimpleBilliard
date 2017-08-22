@@ -21,6 +21,24 @@ class PaymentsController extends AppController {
     }
 
     /**
+     * Display billing information
+     */
+    public function method(){
+        $this->layout = LAYOUT_ONE_COLUMN;
+        // TODO.Payment:Change view dynamically and must delete
+        // start
+        $type = $this->request->query('type');
+        if (empty($type)) {
+            return $this->render('method_cc');
+        }
+        return $this->render('method_'.$type);
+        // end
+
+        // TODO.Payment: release comment out.
+//        $this->render('method');
+    }
+
+    /**
      * Register paid plan(SPA)
      * @param null $step
      *
