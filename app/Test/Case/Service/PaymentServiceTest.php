@@ -592,6 +592,28 @@ class PaymentServiceTest extends GoalousTestCase
         $this->deleteCustomer($res["customerId"]);
     }
 
+    public function test_registerInvoicePayment()
+    {
+        $userID = $this->createActiveUser(1);
+        $paymentData = $this->createTestPaymentData([
+            'team_id'          => 1,
+            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'amount_per_user'  => 1800,
+            'payment_base_day' => 15,
+            'currency'         => 1,
+            'company_country'  => 'JP'
+        ]);
+        unset($paymentData['token']);
+
+        $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("error", $res);
+        $this->assertArrayHasKey("errorCode", $res);
+        $this->assertFalse($res["error"]);
+        $this->assertEquals(200, $res["errorCode"]);
+    }
+
     public function test_findMonthlyChargeCcTeams_timezone()
     {
         $this->Team->deleteAll(['del_flg' => false]);
