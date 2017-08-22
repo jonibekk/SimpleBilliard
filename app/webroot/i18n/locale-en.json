@@ -40,7 +40,6 @@
     "TO_CHANGE_TO_NOT_ADMIN": "Remove admin",
     "TO_CHANGE_TO_EVALUATEE": "Add in evaluatee",
     "TO_CHANGE_TO_NOT_EVALUATEE": "Remove from the evaluation",
-    "CANCEL_THE_INVITATION": "Cancel the invitation",
     "INVITE_AGAIN": "Invite again"
   },
   "ACCESS_MESSAGE_DETAIL_MESSAGE": "Access Failed."
