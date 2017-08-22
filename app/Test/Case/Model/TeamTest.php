@@ -67,18 +67,10 @@ class TeamTest extends GoalousTestCase
         $this->assertTrue($res, "[正常]チーム追加");
 
         $newTeam = $this->Team->getById($this->Team->getLastInsertID());
-        $this->assertEquals(
-            $newTeam['service_use_status'],
-            Team::SERVICE_USE_STATUS_FREE_TRIAL
-        );
-        $this->assertEquals(
-            $newTeam['service_use_state_start_date'],
-            date('Y-m-d', time() + (9 * HOUR))
-        );
-        $this->assertEquals(
-            $newTeam['service_use_state_end_date'],
-            date('Y-m-d', strtotime("+15 days", time() + (9 * HOUR)))
-        );
+        $this->assertEquals($newTeam['service_use_status'], Team::SERVICE_USE_STATUS_FREE_TRIAL);
+        $this->assertEquals($newTeam['service_use_state_start_date'], AppUtil::todayDateYmdLocal(9.0));
+        $stateDays = Team::DAYS_SERVICE_USE_STATUS[Team::SERVICE_USE_STATUS_FREE_TRIAL];
+        $this->assertEquals($newTeam['service_use_state_end_date'], AppUtil::dateAfter($newTeam['service_use_state_start_date'], $stateDays));
 
         $newTeamMember = $this->Team->TeamMember->getById($this->Team->TeamMember->getLastInsertID());
         $this->assertEquals($newTeamMember['status'], TeamMember::USER_STATUS_ACTIVE);

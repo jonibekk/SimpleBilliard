@@ -935,6 +935,31 @@ class AppController extends BaseController
     }
 
     /**
+     * Check permission if team administrator
+     * [How to use]
+     * ・Check in all action methods
+     * 　Not set argument.
+     * 　e.g. `$this->_checkAdmin();`
+     * ・Check in specified action methods
+     * 　set argument as array.
+     * 　e.g.
+     *    check method: index, create
+     *    not check method: update
+     *    `$this->_checkAdmin(['index', 'create']);`
+     *
+     * @param array $actionMethods
+     *
+     * @return \Cake\Network\Response|null
+     */
+    protected function _checkAdmin(array $actionMethods = [])
+    {
+        if (!$this->_isAdmin($actionMethods)) {
+            $this->Notification->outError(__("You have no permission."));
+            return $this->redirect('/');
+        }
+    }
+
+    /**
      * Setup Authentication Component
      *
      * @return void

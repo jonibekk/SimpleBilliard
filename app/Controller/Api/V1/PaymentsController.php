@@ -8,6 +8,12 @@ App::import('Service', 'PaymentService');
  */
 class PaymentsController extends ApiController
 {
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->_checkAdmin();
+    }
+
     // Need validation fields for validation API of changing to paid plan
     private $validationFieldsEachPage = [
         'country' => [
