@@ -440,7 +440,9 @@ $config['countries'] = [
     [
         "code" => "JP",
         "name" => "Japan",
-        "tax_rate" => 0.08
+        "tax_rate" => 0.08,
+        "currency_symbol" => "¥",
+        "symbol_position" => "before"
     ],
     [
         "code" => "JE",
@@ -928,7 +930,9 @@ $config['countries'] = [
     ],
     [
         "code" => "US",
-        "name" => "United States"
+        "name" => "United States",
+        "currency_symbol" => "$",
+        "symbol_position" => "before"
     ],
     [
         "code" => "UM",

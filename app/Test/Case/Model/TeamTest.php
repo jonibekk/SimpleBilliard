@@ -315,6 +315,16 @@ class TeamTest extends GoalousTestCase
         );
     }
 
+    public function test_getCountry()
+    {
+        $teamId = $this->createTeam(['country' => 'JP']);
+        $this->assertEqual($this->Team->getCountry($teamId), 'JP');
+        $teamId = $this->createTeam(['country' => 'US']);
+        $this->assertEqual($this->Team->getCountry($teamId), 'US');
+        $teamId = $this->createTeam(['country' => null]);
+        $this->assertEqual($this->Team->getCountry($teamId), null);
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;

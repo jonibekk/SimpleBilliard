@@ -178,4 +178,25 @@ class PaymentSettingTest extends GoalousTestCase
         $res = $this->PaymentSetting->findMonthlyChargeCcTeams();
         $this->assertEmpty($res);
     }
+
+    public function test_getAmountPerUser()
+    {
+        $expectedAmount = 1500;
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save([
+            'team_id'         => 999,
+            'amount_per_user' => $expectedAmount
+        ], false);
+        
+        $res = $this->PaymentSetting->getAmountPerUser(999);
+        $this->assertEquals($res, $expectedAmount);
+    }
+
+    public function test_getAmountPerUser_null()
+    {
+        $this->PaymentSetting->deleteAll(['PaymentSetting.del_flg' => false]);
+
+        $res = $this->PaymentSetting->getAmountPerUser(999);
+        $this->assertEquals($res, null);
+    }
 }

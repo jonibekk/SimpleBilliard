@@ -404,6 +404,16 @@ class BaseController extends Controller
     }
 
     /**
+     * check is logged in or not
+     *
+     * @return bool
+     */
+    public function isLoggedIn(): bool
+    {
+        return (bool)$this->Auth->user();
+    }
+
+    /*
      * check prohibited request in read only term
      *
      * @param array $actionMethods

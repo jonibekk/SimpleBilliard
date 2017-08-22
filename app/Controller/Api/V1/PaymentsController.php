@@ -216,7 +216,7 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
             // Get payment setting by team id
             $companyCountry = $this->request->query('company_country');
-            $amountPerUser = $PaymentService->getAmountPerUserByCountry($companyCountry);
+            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($companyCountry);
             $currencyType = $PaymentService->getCurrencyTypeByCountry($companyCountry);
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();

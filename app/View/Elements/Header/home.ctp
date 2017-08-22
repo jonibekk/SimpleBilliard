@@ -39,7 +39,7 @@ if (!isset($top_lang)) {
                     <li class="nav-item" id="h-nav-features">
                         <?= $this->Html->link(__('Features'), [
                             'controller' => 'pages',
-                            'action'     => 'display',
+                            'action'     => 'lp',
                             'pagename'   => 'features',
                             'lang'       => $top_lang,
                         ]); ?>
@@ -47,7 +47,7 @@ if (!isset($top_lang)) {
                     <li class="nav-item" id="h-nav-pricing">
                         <?= $this->Html->link(__('Pricing'), [
                             'controller' => 'pages',
-                            'action'     => 'display',
+                            'action'     => 'lp',
                             'pagename'   => 'pricing',
                             'lang'       => $top_lang,
                         ]); ?>
