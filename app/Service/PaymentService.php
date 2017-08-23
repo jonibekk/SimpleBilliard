@@ -1189,11 +1189,12 @@ class PaymentService extends AppService
      * Update Payment settings payer info.
      *
      * @param int   $teamId
+     * @param int   $userId
      * @param array $payerData
      *
      * @return array|bool
      */
-    public function updatePayerInfo(int $teamId, array $payerData)
+    public function updatePayerInfo(int $teamId, int $userId, array $payerData)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1210,13 +1211,62 @@ class PaymentService extends AppService
         try {
             // Update PaymentSettings
             $PaymentSetting->begin();
-            $PaymentSetting->save($data);
+
+            // Save Payment Settings
+            if (!$PaymentSetting->save($data)) {
+                throw new Exception(sprintf("Fail to update payment settings. data: %s",
+                    AppUtil::varExportOneLine($data)));
+            }
+            $paymentSettingId = $PaymentSetting->getLastInsertID();
+
+            // Save snapshot
+            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+
             $PaymentSetting->commit();
         } catch (Exception $e) {
             $PaymentSetting->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
 
+            return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
+        }
+        return true;
+    }
+
+    /**
+     * Update invoice company information
+     *
+     * @param int   $teamId
+     * @param array $invoiceData
+     *
+     * @return array|bool
+     */
+    public function updateInvoice(int $teamId, array $invoiceData)
+    {
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        $invoice = $Invoice->getByTeamId($teamId);
+
+        // Check if payment exists
+        if (empty($invoice)) {
+            $Invoice->invalidate(null, __('Payment settings does not exists.'));
+            return $Invoice->validationErrors;
+        }
+        $data = am($invoice, $invoiceData);
+
+        try {
+            $Invoice->begin();
+            if (!$Invoice->save($data)) {
+                throw new Exception(sprintf("Fail to update invoice. data: %s",
+                    AppUtil::varExportOneLine($data)));
+            }
+            $Invoice->commit();
+        } catch (Exception $e) {
+            $Invoice->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
         }
         return true;
