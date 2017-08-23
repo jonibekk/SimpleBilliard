@@ -57,6 +57,34 @@
                     </p>
                 </div>
             </div>
+            <hr>
+
+            <div class="form-group">
+
+                <label class="col col-sm-3 control-label form-label"><?= __("Plan") ?></label>
+
+                <div class="col col-sm-6">
+
+                    <p class="form-control-static">
+
+                        <?php if($serviceUseStatus==Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
+                            <?= __('Free Trial') ?>
+                        <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_PAID): ?>
+                            <?= __('Subscribed') ?>
+                        <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_READ_ONLY): ?>
+                            <?= __('Read Only') ?>
+                        <?php else: ?>
+                            <?= __('Deactivated') ?>
+                        <?php endif; ?>
+                        <?php if($isTeamAdmin && $serviceUseStatus!=Team::SERVICE_USE_STATUS_PAID):?>
+                            &dash;&nbsp;<a href="/payments"><?= __('Upgrade Plan');?></a>
+                        <?php endif; ?>
+
+                    </p>
+
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
