@@ -458,11 +458,10 @@ class PaymentService extends AppService
      *
      * @return string
      */
-    public function formatCharge(int $charge, int $currencyType): string
+    public function formatCharge(float $charge, int $currencyType): string
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        $paymentSetting = $this->get($Team->current_team_id);
         // Format ex 1980 → ¥1,980
         $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . number_format($charge);
         return $res;

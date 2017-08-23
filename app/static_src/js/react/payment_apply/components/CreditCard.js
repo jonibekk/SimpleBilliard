@@ -45,7 +45,7 @@ export default class CreditCard extends Base {
             color: '#808080',
           },
         },
-      }
+      },
     });
     card.mount('#card-element');
     this.setState({card});
