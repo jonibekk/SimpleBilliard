@@ -1,7 +1,9 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Invoice', 'Model');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * PaymentSetting Model
  */
@@ -46,26 +48,27 @@ class PaymentSetting extends AppModel
     * @var array
     */
     public $validate = [
-        'team_id'          => [
+        'team_id'                        => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
-        'type'     => [
-            'inEnumList'   => [
+        'type'                           => [
+            'inEnumList' => [
                 'rule' => [
-                    'inEnumList', "PaymentSetting\Type"
+                    'inEnumList',
+                    "PaymentSetting\Type"
                 ],
             ],
-            'notBlank' => [
+            'notBlank'   => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'currency'         => [
+        'currency'                       => [
             'inList'   => [
                 'rule' => [
                     'inList',
@@ -76,30 +79,30 @@ class PaymentSetting extends AppModel
                 ],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
-        'amount_per_user'  => [
+        'amount_per_user'                => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
-        'payment_base_day' => [
+        'payment_base_day'               => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
             'range'    => [
                 // allow 1 ~ 31
                 'rule' => ['range', 0, 32]
             ]
         ],
-        'company_name'     => [
+        'company_name'                   => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'isString'  => ['rule' => 'isString'],
             'notBlank'  => [
@@ -107,70 +110,70 @@ class PaymentSetting extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_country'  => [
+        'company_country'                => [
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_post_code'       => [
-            'maxLength'    => ['rule' => ['maxLength', 16]],
+        'company_post_code'              => [
+            'maxLength' => ['rule' => ['maxLength', 16]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_region'       => [
-            'maxLength'    => ['rule' => ['maxLength', 255]],
+        'company_region'                 => [
+            'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'rcacequired' => true,
-                'rule'     => 'notBlank',
+                'rule'        => 'notBlank',
             ],
         ],
-        'company_city'       => [
-            'maxLength'    => ['rule' => ['maxLength', 255]],
+        'company_city'                   => [
+            'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_street'       => [
-            'maxLength'    => ['rule' => ['maxLength', 255]],
+        'company_street'                 => [
+            'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_first_name'         => [
-            'maxLength'    => ['rule' => ['maxLength', 128]],
+        'contact_person_first_name'      => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_first_name_kana'         => [
-            'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notBlank'     => ['rule' => 'notBlank'],
+        'contact_person_first_name_kana' => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notBlank'  => ['rule' => 'notBlank'],
         ],
-        'contact_person_last_name'         => [
-            'maxLength'    => ['rule' => ['maxLength', 128]],
+        'contact_person_last_name'       => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_last_name_kana'         => [
-            'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notBlank'     => ['rule' => 'notBlank'],
+        'contact_person_last_name_kana'  => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notBlank'  => ['rule' => 'notBlank'],
         ],
-        'contact_person_tel'       => [
-            'maxLength'    => ['rule' => ['maxLength', 20]],
+        'contact_person_tel'             => [
+            'maxLength' => ['rule' => ['maxLength', 20]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_email' => [
+        'contact_person_email'           => [
             'notBlank'    => [
                 'required' => true,
                 'rule'     => 'notBlank',
@@ -196,6 +199,7 @@ class PaymentSetting extends AppModel
 
     public $hasMany = [
         'CreditCard',
+        'Invoice',
     ];
 
     /**
@@ -203,7 +207,7 @@ class PaymentSetting extends AppModel
      *
      * @return array|null
      */
-    public function getByTeamId(int $teamId)
+    public function getCcByTeamId(int $teamId)
     {
         $options = [
             'conditions' => [
@@ -218,11 +222,11 @@ class PaymentSetting extends AppModel
     }
 
     /**
-     * @param int $teamId
+     * @param int $paymentType
      *
-     * @return array|null
+     * @return array
      */
-    public function findMonthlyChargeCcTeams()
+    public function findMonthlyChargeTeams(int $paymentType): array
     {
         $options = [
             'fields'     => [
@@ -232,19 +236,10 @@ class PaymentSetting extends AppModel
                 'Team.timezone',
             ],
             'conditions' => [
-                'PaymentSetting.type'    => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'PaymentSetting.type'    => $paymentType,
                 'PaymentSetting.del_flg' => false
             ],
             'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'credit_cards',
-                    'alias'      => 'CreditCard',
-                    'conditions' => [
-                        'PaymentSetting.id = CreditCard.payment_setting_id',
-                        'CreditCard.del_flg' => false
-                    ],
-                ],
                 [
                     'type'       => 'INNER',
                     'table'      => 'teams',
@@ -257,6 +252,28 @@ class PaymentSetting extends AppModel
                 ],
             ]
         ];
+        if ($paymentType == self::PAYMENT_TYPE_CREDIT_CARD) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'credit_cards',
+                'alias'      => 'CreditCard',
+                'conditions' => [
+                    'PaymentSetting.id = CreditCard.payment_setting_id',
+                    'CreditCard.del_flg' => false
+                ],
+            ];
+        } else {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'invoices',
+                'alias'      => 'Invoice',
+                'conditions' => [
+                    'PaymentSetting.id = Invoice.payment_setting_id',
+                    'Invoice.credit_status' => Invoice::CREDIT_STATUS_OK,
+                    'Invoice.del_flg'       => false
+                ],
+            ];
+        }
         $res = $this->find('all', $options);
 
         return $res;
@@ -266,6 +283,7 @@ class PaymentSetting extends AppModel
      * get amount per user by team id
      *
      * @param int $teamId
+     *
      * @return int|null
      */
     public function getAmountPerUser(int $teamId)

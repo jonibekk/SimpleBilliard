@@ -573,6 +573,20 @@ class AppModel extends Model
     }
 
     /**
+     * find single record by teamId
+     *
+     * @param int   $teamId
+     * @param array $fields
+     *
+     * @return array
+     */
+    function getByTeamId(int $teamId, array $fields = [])
+    {
+        $ret = $this->findByTeamId($teamId, $fields);
+        return reset($ret);
+    }
+
+    /**
      * 論理削除
      *
      * @param int  $id
