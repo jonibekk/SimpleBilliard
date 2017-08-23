@@ -70,7 +70,3 @@ define('FORCE_DISABLE_ALL_EXPERIMENTS',
     false);//trueの場合、FORCE_ENABLE_ALL_EXPERIMENTSより優先される。trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が無効化される。
 define('FORCE_ENABLE_ALL_EXPERIMENTS', true);//trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が有効化される
 define('SENTRY_DSN', null);
-define('MOBILE_APP_IOS_VERSION_SUPPORTING_LEAST', "1.0.0");
-define('MOBILE_APP_IOS_STORE_URL', "https://itunes.apple.com/app/goalous-business-sns/id1060474459");
-define('MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST', "1.0.4");
-define('MOBILE_APP_ANDROID_STORE_URL', "https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous2");
