@@ -983,17 +983,12 @@ class PostsController extends AppController
             throw new NotFoundException(__("This file doesn't exist."));
         }
 
-        // safari は日本語ファイル名が文字化けするので特別扱い
-        $browser = $this->getBrowser();
-        if ($browser['browser'] == 'Safari') {
-            $this->response->header('Content-Disposition',
-                sprintf('attachment; filename="%s";', $file['AttachedFile']['attached_file_name']));
-        } else {
-            $this->response->header('Content-Disposition',
-                sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
-                    $file['AttachedFile']['attached_file_name'],
-                    rawurlencode($file['AttachedFile']['attached_file_name'])));
-        }
+        // Set header to prevent file name garbled
+        $this->response->header('Content-Disposition',
+            sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                $file['AttachedFile']['attached_file_name'],
+                rawurlencode($file['AttachedFile']['attached_file_name'])));
+
         $this->response->type('application/octet-stream');
         $this->response->length(strlen($res->body));
         $this->response->body($res->body);
