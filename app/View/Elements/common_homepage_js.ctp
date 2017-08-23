@@ -4,6 +4,7 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
+<?php /* TODO: Update assets to reference NPM instead of static files */ ?>
 <?= $this->Html->script('homepage/jquery-1.12.4.min') ?>
 <?= $this->Html->script('homepage/bootstrap.min') ?>
 <?= $this->Html->script('vendor/bootstrapValidator') ?>
