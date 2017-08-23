@@ -184,7 +184,8 @@ class PaymentSettingTest extends GoalousTestCase
     {
         $this->Team->deleteAll(['del_flg' => false]);
         $team = ['timezone' => 0];
-        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team);
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_NG];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, [], $invoice);
         $firstRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
         $this->assertEmpty($firstRes, "It will be empty. cause, credit_status != Invoice::CREDIT_STATUS_OK");
         /** @var Invoice $Invoice */
@@ -193,5 +194,26 @@ class PaymentSettingTest extends GoalousTestCase
         $Invoice->saveField('credit_status', Invoice::CREDIT_STATUS_OK);
         $secondRes = $this->PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
         $this->assertNotEmpty($secondRes);
+    }
+
+    public function test_getAmountPerUser()
+    {
+        $expectedAmount = 1500;
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save([
+            'team_id'         => 999,
+            'amount_per_user' => $expectedAmount
+        ], false);
+
+        $res = $this->PaymentSetting->getAmountPerUser(999);
+        $this->assertEquals($res, $expectedAmount);
+    }
+
+    public function test_getAmountPerUser_null()
+    {
+        $this->PaymentSetting->deleteAll(['PaymentSetting.del_flg' => false]);
+
+        $res = $this->PaymentSetting->getAmountPerUser(999);
+        $this->assertEquals($res, null);
     }
 }

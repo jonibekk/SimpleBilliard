@@ -3,19 +3,19 @@
     <div class="col-xs-4">
         <a href="/teams/add_team_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button"
            ng-class="{disabled: !(isTeamAdmin && teamVisionCount == 0)}">
-            <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
+            <i class="fa fa-plus-circle font_brownRed"></i>&nbsp;{{ 'TEAM_VISION.ADD_VISION' | translate}}</a>
     </div>
 
     <div class="col-xs-offset-4 col-xs-4">
         <a class="pull-right font_verydark" ng-if="archive_flag === false"
-           ui-sref="vision_archive({team_id:team_id, active_flg:0})"><i class="fa fa-eye"></i> アーカイブを見る</a>
+           ui-sref="vision_archive({team_id:team_id, active_flg:0})"><i class="fa fa-eye"></i> {{ 'TEAM_VISION.VIEW_ARCHIVE' | translate}}</a>
     </div>
 </div>
 
 
 <div class="teamvision-list-panel-base">
     <div class="teamvision-list-panel-head">
-        <i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )
+        <i class="fa fa-rocket"></i> {{ 'TEAM_VISION.HEADLINE' | translate}}  ( {{teamVisionCount}} )
     </div>
 
 

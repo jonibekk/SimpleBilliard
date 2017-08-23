@@ -88,6 +88,7 @@ class InvoiceService extends AppService
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         // TODO.Payment: This is bad know how. We should use mock on testing. We can try to use https://packagist.org/packages/phake/phake#v2.3.2
+        // see detail -> #18 on http://bit.ly/2g1MkWR
         if ($Invoice->useDbConfig == 'test') {
             return $this->getAtobaraiResponseForTest();
         }
@@ -113,6 +114,12 @@ class InvoiceService extends AppService
         return $ret;
     }
 
+    /**
+     * This is for only testing!
+     * Don't use it for production.
+     *
+     * @return array
+     */
     function getAtobaraiResponseForTest()
     {
         $data = [
