@@ -609,6 +609,32 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res === true);
     }
 
+    public function test_updateInvoice()
+    {
+        $userID = $this->createActiveUser(1);
+        $paymentData = $this->createTestPaymentData([
+            'team_id'          => 1,
+            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'amount_per_user'  => 1800,
+            'payment_base_day' => 15,
+            'currency'         => 1,
+            'company_country'  => 'JP'
+        ]);
+        unset($paymentData['token']);
+
+        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
+
+        $newData = $this->createTestPaymentData([
+            'contact_person_first_name'      => 'Tonny',
+            'contact_person_first_name_kana' => 'トニー',
+            'contact_person_last_name'       => 'Stark',
+            'contact_person_last_name_kana'  => 'スターク',
+        ]);
+
+        $res = $this->PaymentService->updateInvoice(1, $newData);
+        $this->assertTrue($res === true);
+    }
+
     public function test_findMonthlyChargeCcTeams_timezone()
     {
         $this->Team->deleteAll(['del_flg' => false]);
@@ -1079,7 +1105,8 @@ class PaymentServiceTest extends GoalousTestCase
         ];
 
         // Update payment data
-        $res = $this->PaymentService->updatePayerInfo(1, $updateData);
+        $userId = $this->createActiveUser(1);
+        $res = $this->PaymentService->updatePayerInfo(1, $userId, $updateData);
         $this->assertTrue($res);
 
         // Retrieve data from db
