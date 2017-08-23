@@ -786,16 +786,19 @@ class PaymentService extends AppService
      * @param int   $teamId
      * @param array $paymentData
      *
-     * @return array
+     * @return
+     *
+     * $result = [
+     *       'errorCode' => 200,
+     *       'message'   => null
+     *  ];
+     *
+     * or
+     *
+     * true
      */
     public function registerInvoicePayment(int $userId, int $teamId, array $paymentData)
     {
-        $result = [
-            'error'     => false,
-            'errorCode' => 200,
-            'message'   => null
-        ];
-
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var TeamMember $TeamMember */
@@ -847,13 +850,13 @@ class PaymentService extends AppService
             $PaymentSetting->rollback();
 
             // TODO: Payment: add message translations
-            $result['error'] = true;
+            $result = [];
             $result['errorCode'] = 500;
             $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
             return $result;
         }
 
-        return $result;
+        return true;
     }
 
     /**

@@ -606,12 +606,7 @@ class PaymentServiceTest extends GoalousTestCase
         unset($paymentData['token']);
 
         $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
-
-        $this->assertNotNull($res);
-        $this->assertArrayHasKey("error", $res);
-        $this->assertArrayHasKey("errorCode", $res);
-        $this->assertFalse($res["error"]);
-        $this->assertEquals(200, $res["errorCode"]);
+        $this->assertTrue($res === true);
     }
 
     public function test_findMonthlyChargeCcTeams_timezone()
