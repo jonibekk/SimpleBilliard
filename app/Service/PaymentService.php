@@ -667,7 +667,8 @@ class PaymentService extends AppService
         $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
         $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
 
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
+        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+        $membersCount = $membersCount[$teamId];
         $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
         $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
         $historyData = [
@@ -784,16 +785,19 @@ class PaymentService extends AppService
      * @param int   $teamId
      * @param array $paymentData
      *
-     * @return array
+     * @return
+     *
+     * $result = [
+     *       'errorCode' => 200,
+     *       'message'   => null
+     *  ];
+     *
+     * or
+     *
+     * true
      */
     public function registerInvoicePayment(int $userId, int $teamId, array $paymentData)
     {
-        $result = [
-            'error'     => false,
-            'errorCode' => 200,
-            'message'   => null
-        ];
-
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var TeamMember $TeamMember */
@@ -803,7 +807,8 @@ class PaymentService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
 
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
+        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+        $membersCount = $membersCount[$teamId];
 
         try {
             $PaymentSetting->begin();
@@ -843,13 +848,14 @@ class PaymentService extends AppService
         } catch (Exception $e) {
             $PaymentSetting->rollback();
 
-            $result['error'] = true;
+            // TODO: Payment: add message translations
+            $result = [];
             $result['errorCode'] = 500;
             $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
             return $result;
         }
 
-        return $result;
+        return true;
     }
 
     /**

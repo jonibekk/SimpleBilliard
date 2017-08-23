@@ -177,7 +177,7 @@ class PaymentsController extends ApiController
         $requestData['type'] = PaymentSetting::PAYMENT_TYPE_INVOICE;
 
         $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $requestData);
-        if ($regResponse['error'] === true) {
+        if ($regResponse !== true) {
             return $this->_getResponse($regResponse['errorCode'], null, null, $regResponse['message']);
         }
 
