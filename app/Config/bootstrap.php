@@ -155,7 +155,6 @@ define('TOKEN_EXPIRE_SEC_INVITE', 1209600); //2weeks
 define('LAYOUT_ONE_COLUMN', "one_column");
 define('LAYOUT_TWO_COLUMN', "two_column");
 define('LAYOUT_HOMEPAGE', "homepage");
-define('LAYOUT_NO_HEADER', "no_header");
 //セッションのモード
 define('MODE_NEW_PROFILE', 1);
 define('MODE_NEW_TEAM', 2);

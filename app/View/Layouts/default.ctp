@@ -66,9 +66,9 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 <!-- END fetch modal -->
 
 <?php
-// Only from mobile app, don't load dashboard
-$displayDashboard = !$is_mb_app;
-echo $this->element('gl_common_js', ['loadRightColumn' => $displayDashboard]);
+// TODO: Should change to not importing this file in mb app.
+//       But we should change after changing progress link in mb app footer.
+echo $this->element('gl_common_js', ['loadRightColumn' => true]);
 ?>
 
 <!-- START fetch script -->
