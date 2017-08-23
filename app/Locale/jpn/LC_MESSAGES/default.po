@@ -870,6 +870,12 @@ msgstr ""
 msgid "Invoice payment are available for Japan only"
 msgstr ""
 
+msgid "Failed to register paid plan."
+msgstr ""
+
+msgid "Please try again later."
+msgstr ""
+
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
 

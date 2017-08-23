@@ -668,7 +668,8 @@ class PaymentService extends AppService
         $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
         $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
 
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
+        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+        $membersCount = $membersCount[$teamId];
         $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
         $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
         $historyData = [
@@ -804,7 +805,8 @@ class PaymentService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
 
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
+        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+        $membersCount = $membersCount[$teamId];
 
         try {
             $PaymentSetting->begin();
@@ -844,6 +846,7 @@ class PaymentService extends AppService
         } catch (Exception $e) {
             $PaymentSetting->rollback();
 
+            // TODO: Payment: add message translations
             $result['error'] = true;
             $result['errorCode'] = 500;
             $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
