@@ -57,15 +57,6 @@
                     </p>
                 </div>
             </div>
-            <hr>
-            <div class="form-group">
-                <label class="col col-sm-3 control-label form-label"><?= __("Plan") ?></label>
-                <div class="col col-sm-6">
-                    <p class="form-control-static">
-                        <?= __("Free Campaign") ?>
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
 </div>
