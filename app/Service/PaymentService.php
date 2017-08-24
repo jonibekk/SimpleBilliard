@@ -1177,6 +1177,18 @@ class PaymentService extends AppService
      *   ...
      *   $db = $Invite->getDataSource();
      *   $PaymentService->charge(~, $db
+     * ■Don't commit/rollback in the caller because commit/rollback done in this method.
+     *   e.g. don't this
+     *   try {
+     *      $Invite->begin();
+     *      // Save other data
+     *      $PaymentService->charge(**)
+     *      × $Invite->commit():
+     *   } catch (Exception $e) {
+     *      × $Invite->rollback():
+     *   }
+     *
+     *
      * ■Must catch Exception and handling in the caller
      *
      * @param int                               $teamId
