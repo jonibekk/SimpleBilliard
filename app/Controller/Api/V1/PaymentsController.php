@@ -79,13 +79,6 @@ class PaymentsController extends ApiController
         $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
-        }
-
         // Check if not already paid plan
         if ($this->Team->isPaidPlan($teamId)) {
             return $this->_getResponseForbidden(__("You have already registered the paid plan."));
@@ -140,13 +133,6 @@ class PaymentsController extends ApiController
         $userId = $this->Auth->user('id');
         $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_INVOICE);
-
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
-        }
 
         // Check if not already paid plan
         if ($this->Team->isPaidPlan($teamId)) {
@@ -288,13 +274,6 @@ class PaymentsController extends ApiController
         }
         $userId = $this->Auth->user('id');
 
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
-        }
-
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
@@ -373,19 +352,12 @@ class PaymentsController extends ApiController
         $CreditCardService = ClassRegistry::init("CreditCardService");
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init("TeamMember");
-
         $token = Hash::get($this->request->data, 'token');
-        $userId = $this->Auth->user('id');
 
         // Validation
         $customerCode = $CreditCard->getCustomerCode($teamId);
         if (empty($customerCode)) {
             return $this->_getResponseNotFound();
-        }
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
         }
 
         // Update
