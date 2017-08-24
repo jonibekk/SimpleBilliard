@@ -111,6 +111,10 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             });
         };
 
+        $scope.activate = function (index, team_member_id) {
+            window.location.href = url_list.activate_team_member + team_member_id;
+        };
+
         // cancel invite or re-invite
         $scope.updateInvite = function (index, invite_id, action_flg) {
             $scope.invite_loader[index] = true;

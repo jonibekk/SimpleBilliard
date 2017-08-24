@@ -200,6 +200,7 @@ App::uses('AttachedFile', 'Model');
                 'action'     => 'ajax_validate_email_can_invite'
             ]) ?>",
             inactivate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_inactivate_team_member'])?>/",
+            activate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'activate_team_member'])?>/",
             route_url: "<?= Router::fullbaseUrl() ?>"
         },
         data: {
