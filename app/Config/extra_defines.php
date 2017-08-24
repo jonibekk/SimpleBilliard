@@ -79,5 +79,8 @@ define('ATOBARAI_API_BASE_URL', 'https://www1.atobarai-dev.jp');
 define('ATOBARAI_ENTERPRISE_ID', '11528');
 define('ATOBARAI_SITE_ID', '13868');
 define('ATOBARAI_API_USER_ID', '10141');
-
+define('MOBILE_APP_IOS_VERSION_SUPPORTING_LEAST', "1.1.2");
+define('MOBILE_APP_IOS_STORE_URL', "https://itunes.apple.com/app/goalous-business-sns/id1060474459");
+define('MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST', "1.0.4");
+define('MOBILE_APP_ANDROID_STORE_URL', "https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous2");
 
