@@ -786,14 +786,11 @@ class PaymentService extends AppService
      * @param array $paymentData
      *
      * @return
-     *
      * $result = [
      *       'errorCode' => 200,
      *       'message'   => null
      *  ];
-     *
      * or
-     *
      * true
      */
     public function registerInvoicePayment(int $userId, int $teamId, array $paymentData)
@@ -1204,15 +1201,31 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $paySetting = $PaymentSetting->getCcByTeamId($teamId);
-
-        $data = am(Hash::get($paySetting, 'PaymentSetting'), $payerData);
+        $paySetting = Hash::get($PaymentSetting->getCcByTeamId($teamId), 'PaymentSetting');
 
         // Check if payment exists
         if (empty($paySetting)) {
-            $PaymentSetting->invalidate(null, __('Payment settings does not exists.'));
-            return $PaymentSetting->validationErrors;
+            return ['errorCode' => 400, 'message' => __('Payment settings does not exists.')];
         }
+
+        $data = [
+            'id'                             => $paySetting['id'],
+            'team_id'                        => $paySetting['team_id'],
+            'type'                           => $paySetting['type'],
+            'company_name'                   => $payerData['company_name'],
+            'company_country'                => $payerData['company_country'],
+            'company_post_code'              => $payerData['company_post_code'],
+            'company_region'                 => $payerData['company_region'],
+            'company_city'                   => $payerData['company_city'],
+            'company_street'                 => $payerData['company_street'],
+            'company_tel'                    => $payerData['company_tel'],
+            'contact_person_first_name'      => $payerData['contact_person_first_name'],
+            'contact_person_first_name_kana' => $payerData['contact_person_first_name_kana'],
+            'contact_person_last_name'       => $payerData['contact_person_last_name'],
+            'contact_person_last_name_kana'  => $payerData['contact_person_last_name_kana'],
+            'contact_person_tel'             => $payerData['contact_person_tel'],
+            'contact_person_email'           => $payerData['contact_person_email'],
+        ];
 
         try {
             // Update PaymentSettings
@@ -1257,10 +1270,23 @@ class PaymentService extends AppService
 
         // Check if payment exists
         if (empty($invoice)) {
-            $Invoice->invalidate(null, __('Payment settings does not exists.'));
-            return $Invoice->validationErrors;
+            return ['errorCode' => 400, 'message' => __('Payment settings does not exists.')];
         }
-        $data = am($invoice, $invoiceData);
+        $data = [
+            'id'                             => $invoice['id'],
+            'team_id'                        => $invoice['team_id'],
+            'company_name'                   => $invoiceData['company_name'],
+            'company_post_code'              => $invoiceData['company_post_code'],
+            'company_region'                 => $invoiceData['company_region'],
+            'company_city'                   => $invoiceData['company_city'],
+            'company_street'                 => $invoiceData['company_street'],
+            'contact_person_first_name'      => $invoiceData['contact_person_first_name'],
+            'contact_person_first_name_kana' => $invoiceData['contact_person_first_name_kana'],
+            'contact_person_last_name'       => $invoiceData['contact_person_last_name'],
+            'contact_person_last_name_kana'  => $invoiceData['contact_person_last_name_kana'],
+            'contact_person_tel'             => $invoiceData['contact_person_tel'],
+            'contact_person_email'           => $invoiceData['contact_person_email'],
+        ];
 
         try {
             $Invoice->begin();

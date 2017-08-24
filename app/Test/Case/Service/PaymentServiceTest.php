@@ -623,7 +623,6 @@ class PaymentServiceTest extends GoalousTestCase
         unset($paymentData['token']);
 
         $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
-
         $newData = $this->createTestPaymentData([
             'contact_person_first_name'      => 'Tonny',
             'contact_person_first_name_kana' => 'トニー',
@@ -633,6 +632,34 @@ class PaymentServiceTest extends GoalousTestCase
 
         $res = $this->PaymentService->updateInvoice(1, $newData);
         $this->assertTrue($res === true);
+    }
+
+    public function test_updateInvoice_missingFields()
+    {
+        $userID = $this->createActiveUser(1);
+        $paymentData = $this->createTestPaymentData([
+            'team_id'          => 1,
+            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'amount_per_user'  => 1800,
+            'payment_base_day' => 15,
+            'currency'         => 1,
+            'company_country'  => 'JP'
+        ]);
+        unset($paymentData['token']);
+
+        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
+        $newData = $this->createTestPaymentData([
+            'contact_person_first_name'      => '',
+            'contact_person_first_name_kana' => '',
+            'contact_person_last_name'       => '',
+            'contact_person_last_name_kana'  => '',
+        ]);
+
+        $res = $this->PaymentService->updateInvoice(1, $newData);
+        
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("errorCode", $res);
+        $this->assertArrayHasKey("message", $res);
     }
 
     public function test_findMonthlyChargeCcTeams_timezone()
@@ -1094,14 +1121,19 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $this->createCreditCardPayment();
         $updateData = [
-            'company_name'         => 'ISAO',
-            'company_country'      => 'US',
-            'company_region'       => 'NY',
-            'company_city'         => 'Central Park',
-            'company_street'       => 'Somewhere',
-            'company_tel'          => '123456789',
-            'contact_person_tel'   => '123456789',
-            'contact_person_email' => 'test@example.com',
+            'company_name'                   => 'ISAO',
+            'company_post_code'              => '000000',
+            'company_country'                => 'US',
+            'company_region'                 => 'NY',
+            'company_city'                   => 'Central Park',
+            'company_street'                 => 'Somewhere',
+            'company_tel'                    => '123456789',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
+            'contact_person_first_name'      => 'Tonny',
+            'contact_person_first_name_kana' => 'トニー',
+            'contact_person_last_name'       => 'Stark',
+            'contact_person_last_name_kana'  => 'スターク',
         ];
 
         // Update payment data
@@ -1117,6 +1149,34 @@ class PaymentServiceTest extends GoalousTestCase
         // Compare updated with saved data
         $data = array_intersect_key($data, $updateData);
         $this->assertEquals($updateData, $data);
+    }
+
+    public function test_updatePayerInfo_missingFields()
+    {
+        $this->createCreditCardPayment();
+        $updateData = [
+            'company_name'                   => 'ISAO',
+            'company_post_code'              => '',
+            'company_country'                => '',
+            'company_region'                 => '',
+            'company_city'                   => '',
+            'company_street'                 => '',
+            'company_tel'                    => '',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
+            'contact_person_first_name'      => 'Tonny',
+            'contact_person_first_name_kana' => 'トニー',
+            'contact_person_last_name'       => 'Stark',
+            'contact_person_last_name_kana'  => 'スターク',
+        ];
+
+        // Update payment data
+        $userId = $this->createActiveUser(1);
+        $res = $this->PaymentService->updatePayerInfo(1, $userId, $updateData);
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("errorCode", $res);
+        $this->assertArrayHasKey("message", $res);
     }
 
     function test_findMonthlyChargeInvoiceTeams()
