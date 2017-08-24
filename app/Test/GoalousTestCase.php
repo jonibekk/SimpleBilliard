@@ -32,12 +32,18 @@ App::uses('AppUtil', 'Util');
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
- * @property Term        $Term
- * @property GoalMember  $GoalMember
- * @property Team        $Team
- * @property GoalService $GoalService
- * @property GlRedis     $GlRedis
- * @property CreditCardService  $CreditCardService
+ * @property Term                          $Term
+ * @property GoalMember                    $GoalMember
+ * @property Team                          $Team
+ * @property GoalService                   $GoalService
+ * @property GlRedis                       $GlRedis
+ * @property CreditCardService             $CreditCardService
+ * @property PaymentSetting                $PaymentSetting
+ * @property CreditCard                    $CreditCard
+ * @property ChargeHistory                 $ChargeHistory
+ * @property Invoice                       $Invoice
+ * @property InvoiceHistory                $InvoiceHistory
+ * @property InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -480,8 +486,12 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->User->save(['active_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE], false);
         $userId = $this->Team->TeamMember->User->getLastInsertId();
         $this->Team->TeamMember->create();
-        $this->Team->TeamMember->save(['user_id' => $userId, 'team_id' => $teamId, 'active_flg' => true,
-                                       'status' => TeamMember::USER_STATUS_ACTIVE], false);
+        $this->Team->TeamMember->save([
+            'user_id'    => $userId,
+            'team_id'    => $teamId,
+            'active_flg' => true,
+            'status'     => TeamMember::USER_STATUS_ACTIVE
+        ], false);
         return $userId;
     }
 
@@ -690,6 +700,113 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
+    function createInvoicePaidTeam(
+        array $team = [],
+        array $paymentSetting = [],
+        array $invoice = [],
+        int $createActiveUserCount = 1
+    ) {
+        $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
+        $this->Invoice = $this->Invoice ?? ClassRegistry::init('Invoice');
+        $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
+
+        $saveTeam = array_merge(
+            $team,
+            [
+                'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+            ]
+        );
+        $teamId = $this->createTeam($saveTeam);
+
+        $savePaymentSetting = array_merge(
+            [
+                'team_id'          => $teamId,
+                'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+                'payment_base_day' => 1,
+                'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+                'amount_per_user'  => 1980,
+                'company_country'  => 'JP',
+            ],
+            $paymentSetting
+        );
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($savePaymentSetting, false);
+        $paymentSettingId = $this->PaymentSetting->getLastInsertID();
+        $saveInvoice = array_merge(
+            [
+                'team_id'                        => $teamId,
+                'payment_setting_id'             => $paymentSettingId,
+                'credit_status'                  => Invoice::CREDIT_STATUS_OK,
+                'company_name'                   => "株式会社これなんで商会",
+                'company_post_code'              => "123-4567",
+                'company_region'                 => "東京都",
+                'company_city'                   => "台東区",
+                'company_street'                 => "浅草橋1-2-3",
+                'contact_person_first_name'      => "ゴラ男",
+                'contact_person_first_name_kana' => "ごらお",
+                'contact_person_last_name'       => "ゴラ橋",
+                'contact_person_last_name_kana'  => "ごらはし",
+                'contact_person_tel'             => "03-1234-5678",
+                'contact_person_email'           => "test@goalous.com",
+            ],
+            $invoice
+        );
+        $this->Invoice->create();
+        $this->Invoice->save($saveInvoice, false);
+        $invoiceId = $this->Invoice->getLastInsertID();
+
+        for ($i = 0; $i < $createActiveUserCount; $i++) {
+            $this->createActiveUser($teamId);
+        }
+        return [
+            $teamId,
+            $paymentSettingId,
+            $invoiceId
+        ];
+    }
+
+    function addInvoiceHistoryAndChargeHistory($teamId, $invoiceHistory = [], $chargeHistory = [])
+    {
+        $this->addInvoiceHistory($teamId, $invoiceHistory);
+        $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
+        $this->addChargeHistory($teamId, $chargeHistory);
+        $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->InvoiceHistoriesChargeHistory->save([
+            'invoice_history_id' => $invoiceHistoryId,
+            'charge_history_id'  => $chargeHistoryId,
+        ]);
+    }
+
+    function addInvoiceHistory($teamId, $invoiceHistory = [])
+    {
+        $this->InvoiceHistory = $this->InvoiceHistory ?? ClassRegistry::init('InvoiceHistory');
+        $this->InvoiceHistory->clear();
+        $saveInvoiceHistory = am(
+            [
+                'team_id' => $teamId,
+            ],
+            $invoiceHistory
+        );
+        return $this->InvoiceHistory->save($saveInvoiceHistory);
+    }
+
+    function addChargeHistory($teamId, $chargeHistory = [])
+    {
+        $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
+        $this->ChargeHistory->clear();
+        $saveChargeHistory = am(
+            [
+                'team_id'     => $teamId,
+                'currency'    => PaymentSetting::CURRENCY_TYPE_JPY,
+                'result_type' => ChargeHistory::TRANSACTION_RESULT_SUCCESS,
+            ],
+            $chargeHistory
+        );
+        return $this->ChargeHistory->save($saveChargeHistory);
+
+    }
+
     /**
      * Generate a Token from Stripe API.
      * This method should not be used on production but only for test cases.
@@ -706,17 +823,17 @@ class GoalousTestCase extends CakeTestCase
     public function createToken(string $cardNumber): string
     {
         $result = [
-            "error" => false,
+            "error"   => false,
             "message" => null
         ];
 
         $request = array(
             "card" => array(
-                "number" => $cardNumber,
+                "number"    => $cardNumber,
                 "exp_month" => 11,
-                "exp_year" => 2026,
-                "cvc" => "123",
-                "name" => "Goalous Taro"
+                "exp_year"  => 2026,
+                "cvc"       => "123",
+                "name"      => "Goalous Taro"
             )
         );
 
@@ -726,8 +843,7 @@ class GoalousTestCase extends CakeTestCase
         try {
             $response = \Stripe\Token::create($request);
             $token = $response->id;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return "";
@@ -738,6 +854,7 @@ class GoalousTestCase extends CakeTestCase
 
     /**
      * Get a customer for a given credit card.
+     *
      * @param string $creditCard
      *
      * @return string
@@ -757,7 +874,7 @@ class GoalousTestCase extends CakeTestCase
 
     /**
      * Delete Stripe Customer
-     * 
+     *
      * @param $customerId
      */
     function deleteCustomer($customerId)

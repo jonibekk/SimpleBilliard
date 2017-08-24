@@ -752,4 +752,20 @@ class Team extends AppModel
         }
         return false;
     }
+
+    /**
+     * get country by team id
+     *
+     * @param int $teamId
+     * 
+     * @return string|null
+     */
+    public function getCountry(int $teamId)
+    {
+        $res = $this->getByid($teamId);
+        if (!empty($res['country'])) {
+            return $res['country'];
+        }
+        return null;
+    }
 }

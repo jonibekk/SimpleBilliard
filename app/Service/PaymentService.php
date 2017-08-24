@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
+App::import('Service', 'InvoiceService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
@@ -144,7 +145,8 @@ class PaymentService extends AppService
             if (!$CreditCard->save($creditCardData)) {
                 $CreditCard->rollback();
                 $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create credit card. data:%s", AppUtil::varExportOneLine($creditCardData)));
+                throw new Exception(sprintf("Failed create credit card. data:%s",
+                    AppUtil::varExportOneLine($creditCardData)));
             }
 
             // Save snapshot
@@ -364,11 +366,11 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt'))
                 ));
             }
-
             $subTotalCharge = $this->processDecimalPointForAmount($paymentSetting['currency'],
                 $paymentSetting['amount_per_user'] * $chargeUserCnt);
             $tax = $this->calcTax($paymentSetting['company_country'], $subTotalCharge);
             $totalCharge = $subTotalCharge + $tax;
+
             $res = [
                 'sub_total_charge' => $subTotalCharge,
                 'tax'              => $tax,
@@ -410,7 +412,7 @@ class PaymentService extends AppService
      *
      * @return int
      */
-    public function getAmountPerUserByCountry(string $countryCode): int
+    public function getDefaultAmountPerUserByCountry(string $countryCode): int
     {
         return $countryCode === 'JP' ? self::AMOUNT_PER_USER_JPY : self::AMOUNT_PER_USER_USD;
     }
@@ -456,11 +458,10 @@ class PaymentService extends AppService
      *
      * @return string
      */
-    public function formatCharge(int $charge, int $currencyType): string
+    public function formatCharge(float $charge, int $currencyType): string
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        $paymentSetting = $this->get($Team->current_team_id);
         // Format ex 1980 → ¥1,980
         $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . number_format($charge);
         return $res;
@@ -508,7 +509,7 @@ class PaymentService extends AppService
         // Get Payment settings
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
-        $paymentSettings = $Team->PaymentSetting->getByTeamId($teamId);
+        $paymentSettings = $Team->PaymentSetting->getCcByTeamId($teamId);
         if (!$paymentSettings) {
             $result['error'] = true;
             $result['message'] = __('Payment settings does not exists.');
@@ -578,7 +579,8 @@ class PaymentService extends AppService
 
             if (!$ChargeHistory->save($historyData)) {
                 $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s", AppUtil::varExportOneLine($historyData)));
+                throw new Exception(sprintf("Failed create charge history. data:%s",
+                    AppUtil::varExportOneLine($historyData)));
             }
 
             if (isset($charge['paymentData'])) {
@@ -662,10 +664,11 @@ class PaymentService extends AppService
         $result['customerId'] = $customerId;
 
         $companyCountry = Hash::get($paymentData, 'company_country');
-        $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserByCountry($companyCountry);
+        $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
         $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
 
-        $membersCount = count($TeamMember->getTeamMemberListByStatus(TeamMember::USER_STATUS_ACTIVE, $teamId));
+        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+        $membersCount = $membersCount[$teamId];
         $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
         $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
         $historyData = [
@@ -701,7 +704,8 @@ class PaymentService extends AppService
             ];
 
             if (!$CreditCard->save($creditCardData)) {
-                throw new Exception(sprintf("Failed create credit card. data:%s", AppUtil::varExportOneLine($paymentData)));
+                throw new Exception(sprintf("Failed create credit card. data:%s",
+                    AppUtil::varExportOneLine($paymentData)));
             }
 
             // Save snapshot
@@ -756,7 +760,7 @@ class PaymentService extends AppService
             $this->log($e->getTraceAsString());
 
             $result['error'] = true;
-            $result['message'] = __("Failed to register paid plan.")." ".__("Please try again later.");
+            $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
             $result['errorCode'] = 500;
             return $result;
         }
@@ -772,6 +776,267 @@ class PaymentService extends AppService
         $Team->resetCurrentTeam();
 
         return $result;
+    }
+
+    /**
+     * Create Payment Setting, Invoice records and register an invoice for the team.
+     *
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $paymentData
+     *
+     * @return
+     *
+     * $result = [
+     *       'errorCode' => 200,
+     *       'message'   => null
+     *  ];
+     *
+     * or
+     *
+     * true
+     */
+    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+        $membersCount = $membersCount[$teamId];
+
+        try {
+            $PaymentSetting->begin();
+
+            // Save Payment Settings
+            if (!$PaymentSetting->save($paymentData)) {
+                throw new Exception(sprintf("Failed create payment settings. data: %s",
+                    AppUtil::varExportOneLine($paymentData)));
+            }
+            $paymentSettingId = $PaymentSetting->getLastInsertID();
+
+            // Create Invoice
+            $invoiceData = $paymentData;
+            $invoiceData['payment_setting_id'] = $paymentSettingId;
+            $invoiceData['credit_status'] = Invoice::CREDIT_STATUS_WAITING;
+            if (!$Invoice->save($invoiceData)) {
+                throw new Exception(sprintf("Failed create invoice record. data: %s",
+                    AppUtil::varExportOneLine($paymentData)));
+            }
+
+            // Save snapshot
+            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+
+            // Set team status
+            $paymentDate = date('Y-m-d');
+            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
+            if ($res == false) {
+                throw new Exception(sprintf("Error creating invoice payment: ",
+                    AppUtil::varExportOneLine($paymentData)));
+            }
+
+            $PaymentSetting->commit();
+        } catch (Exception $e) {
+            $PaymentSetting->rollback();
+
+            // TODO: Payment: add message translations
+            $result = [];
+            $result['errorCode'] = 500;
+            $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
+            return $result;
+        }
+
+        return true;
+    }
+
+    /**
+     * Register Invoice including requesting to atobarai.com and saving data in the following:
+     * - charge_histories -> monthly charge
+     * - invoice_histories -> status of response of atobarai.com
+     * - invoice_histories_charge_histories -> intermediate table for invoice_histories and charge_histories.
+     *
+     * @param int $teamId
+     * @param int $chargeMemberCount
+     * @param int $time
+     *
+     * @return bool
+     * @internal param float $timezone
+     */
+    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time): bool
+    {
+        // Invoices for only Japanese team. So, $timezone will be always Japan time.
+        $timezone = 9;
+
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        /** @var InvoiceService $InvoiceService */
+        $InvoiceService = ClassRegistry::init('InvoiceService');
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        /** @var  InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+
+        $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
+        // if already send an invoice, return
+        if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
+            return false;
+        }
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount);
+        $paymentSetting = $PaymentSetting->getByTeamId($teamId);
+
+        $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+
+        $ChargeHistory->begin();
+        try {
+            // save monthly charge
+            $ChargeHistory->clear();
+            $monthlyChargeHistory = $ChargeHistory->addInvoiceMonthlyCharge(
+                $teamId,
+                $time,
+                $chargeInfo['sub_total_charge'],
+                $chargeInfo['tax'],
+                $paymentSetting['amount_per_user'],
+                $chargeMemberCount
+            );
+            if (!$monthlyChargeHistory) {
+                throw new Exception(sprintf("Failed to save monthly charge history. validationErrors: %s"),
+                    AppUtil::varExportOneLine($ChargeHistory->validationErrors)
+                );
+            }
+
+            // monthly dates
+            $monthlyChargeHistory['monthlyStartDate'] = $localCurrentDate;
+            $nextMonthTs = strtotime('+ 1 month', strtotime($localCurrentDate));
+            $nextBaseDate = AppUtil::correctInvalidDate(
+                date('Y', $nextMonthTs),
+                date('m', $nextMonthTs),
+                $paymentSetting['payment_base_day']
+            );
+            $monthlyChargeHistory['monthlyEndDate'] = AppUtil::dateYesterday($nextBaseDate);
+
+            // save the invoice history
+            $invoiceHistoryData = [
+                'team_id'           => $teamId,
+                'order_date'        => $localCurrentDate,
+                'system_order_code' => '',
+            ];
+            $InvoiceHistory->clear();
+            $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);
+            if (!$invoiceHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceHistory. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoryData),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+                ));
+            }
+
+            // save invoice histories and charge histories relation
+            $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
+            $invoiceHistoriesChargeHistories = [];
+            foreach (am($targetChargeHistories, [$monthlyChargeHistory]) as $history) {
+                $invoiceHistoriesChargeHistories[] = [
+                    'invoice_history_id' => $invoiceHistoryId,
+                    'charge_history_id'  => $history['id'],
+                ];
+            }
+            $InvoiceHistoriesChargeHistory->clear();
+            $resSaveInvoiceChargeHistory = $InvoiceHistoriesChargeHistory->saveAll($invoiceHistoriesChargeHistories);
+            if (!$resSaveInvoiceChargeHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceChargeHistories. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoriesChargeHistories),
+                    AppUtil::varExportOneLine($InvoiceHistoriesChargeHistory->validationErrors)
+                ));
+            }
+
+            // send invoice to atobarai.com
+            $resAtobarai = $InvoiceService->registerOrder(
+                $teamId,
+                $targetChargeHistories,
+                $monthlyChargeHistory,
+                $localCurrentDate
+            );
+            if ($resAtobarai['status'] == 'error') {
+                throw new Exception(sprintf("Request to atobarai.com was failed. errorMsg: %s, chargeHistories: %s, requestData: %s",
+                    AppUtil::varExportOneLine($resAtobarai['messages']),
+                    AppUtil::varExportOneLine($targetChargeHistories),
+                    AppUtil::varExportOneLine($resAtobarai['requestData'])
+                ));
+            }
+
+        } catch (Exception $e) {
+            $ChargeHistory->rollback();
+            $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorDetail: %s",
+                $teamId,
+                $e->getMessage()
+            ));
+            return false;
+        }
+
+        $ChargeHistory->commit();
+
+        // update system order code.
+        $invoiceHistoryUpdate = [
+            'id'                => $invoiceHistoryId,
+            'system_order_code' => $resAtobarai['systemOrderId'],
+            'order_status'      => $resAtobarai['orderStatus']['@cd'],
+        ];
+        $InvoiceHistory->clear();
+        $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate);
+        if (!$resUpdate) {
+            $this->log(sprintf("Failed update invoice history. It should be recovered!!! teamId: %s, data: %s, validationErrors: %s",
+                $teamId,
+                AppUtil::varExportOneLine($invoiceHistoryUpdate),
+                AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+            ));
+        }
+
+        return true;
+    }
+
+    /**
+     * Get target charge histories
+     * target date range is from previous monthly charge data to yesterday.
+     * target histories should be not invoiced yet.
+     *
+     * @param int $teamId
+     * @param int $time
+     *
+     * @return array
+     */
+    public function findTargetInvoiceChargeHistories(int $teamId, int $time)
+    {
+        // Invoices for only Japanese team. So, $timezone will be always Japan time.
+        $timezone = 9;
+
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
+        // fetching charge histories
+        $yesterdayLocalDate = AppUtil::dateYesterday($localCurrentDate);
+        $targetEndTs = AppUtil::getEndTimestampByTimezone($yesterdayLocalDate, $timezone);
+        $previousMonthFirstTs = strtotime("-1 month", strtotime(date('Y-m-01', strtotime($yesterdayLocalDate))));
+
+        // target start date will be base day in previous month
+        $targetStartDate = AppUtil::correctInvalidDate(
+            date('Y', $previousMonthFirstTs),
+            date('m', $previousMonthFirstTs),
+            date('d', strtotime($localCurrentDate))
+        );
+        $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
+        $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        return $targetPaymentHistories;
     }
 
     /**
@@ -792,7 +1057,8 @@ class PaymentService extends AppService
 
             if (!$ChargeHistory->save($historyData)) {
                 $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s", AppUtil::varExportOneLine($historyData)));
+                throw new Exception(sprintf("Failed create charge history. data:%s",
+                    AppUtil::varExportOneLine($historyData)));
             }
             $ChargeHistory->commit();
         } catch (Exception $e) {
@@ -835,7 +1101,7 @@ class PaymentService extends AppService
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
         // Get teams only credit card payment type
-        $targetChargeTeams = $PaymentSetting->findMonthlyChargeCcTeams();
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
@@ -865,6 +1131,67 @@ class PaymentService extends AppService
     }
 
     /**
+     * Find target teams that charge monthly by invoice
+     * main conditions
+     * - payment type: invoice
+     * - have not already charged
+     * - payment base date = execution datetime + team timezone
+     *   EX.
+     *      execution datetime: 2017/9/19 15:00:00
+     *      team timezone: +9 hour(Tokyo)
+     *      payment base day: 20
+     *      2017/9/19 15:00:00 + 9hour = 2017/9/20
+     *      payment base day(20) == get day(20) from 2017/9/20 → charge target team！
+     * [Note]
+     * We can get target charge teams by using only one SQL.
+     * But some MySQL syntax(EX. INTERVAL) can't use if run unit test
+     * Because unit test use sqlite as DB.
+     * So the reliability of the test is important,
+     * I decided to implement process like this.
+     *
+     * @param int $time
+     *
+     * @return array
+     * @internal param int|null $targetTimezone
+     */
+    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP): array
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init("InvoiceHistory");
+        // Get teams only credit card payment type
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
+        // Filtering
+        $targetChargeTeams = array_filter($targetChargeTeams,
+            function ($v) use ($time, $InvoiceHistory) {
+                // Invoices for only Japanese team. So, $timezone will be always Japan time.
+                $timezone = 9;
+
+                $localCurrentTs = $time + ($timezone * HOUR);
+                $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
+                // Check if today is payment base date
+                $paymentBaseDate = AppUtil::correctInvalidDate(
+                    date('Y', $localCurrentTs),
+                    date('m', $localCurrentTs),
+                    $paymentBaseDay
+                );
+                if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
+                    return false;
+                }
+
+                // Check if have not already charged
+                $teamId = Hash::get($v, 'PaymentSetting.team_id');
+                $invoiceHistory = $InvoiceHistory->getByOrderDate($teamId, $paymentBaseDate);
+                if (!empty($invoiceHistory)) {
+                    return false;
+                }
+                return true;
+            });
+        return $targetChargeTeams;
+    }
+
+    /**
      * Update Payment settings payer info.
      *
      * @param int   $teamId
@@ -876,7 +1203,7 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $paySetting = $PaymentSetting->getByTeamId($teamId);
+        $paySetting = $PaymentSetting->getCcByTeamId($teamId);
 
         $data = am(Hash::get($paySetting, 'PaymentSetting'), $payerData);
 
@@ -947,7 +1274,7 @@ class PaymentService extends AppService
         return $allValidationErrors;
     }
 
-    /**
+    /*
      * Check to prevent illegal choice of dollar or yen
      *
      * @param string $ccCountry
@@ -964,4 +1291,47 @@ class PaymentService extends AppService
         }
         return true;
     }
+
+    /**
+     * get amount per user
+     * # case1. not specified teamId
+     *  - get default amount by using user lang setting
+     * # case2. exist team amount per user data
+     *  - get data from payment_settings record
+     * # caes3. exist only team country code
+     *  - get default amount by useing team country code
+     *
+     * @param int|null $teamId
+     *
+     * @return int
+     */
+    function getAmountPerUser($teamId): int
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+
+        $userCountryCode = $Lang->getUserCountryCode();
+        $defaultAamountPerUser = $this->getDefaultAmountPerUserByCountry($userCountryCode);
+
+        if (!$teamId) {
+            return $defaultAamountPerUser;
+        }
+
+        $teamAmountPerUser = $PaymentSetting->getAmountPerUser($teamId);
+        if ($teamAmountPerUser !== null) {
+            return $teamAmountPerUser;
+        }
+
+        $teamCountry = $Team->getCountry($teamId);
+        if ($teamCountry) {
+            return $this->getDefaultAmountPerUserByCountry($teamCountry);
+        }
+
+        return $defaultAamountPerUser;
+    }
+
 }

@@ -76,3 +76,36 @@
 .team-members-list-conditions-input {
   font-family: fontawesome;
 }
+
+.team-member-invite-form{
+  float:left;
+  width: 100%;
+}
+
+.team-member-invited-submit{
+  opacity: 0;
+  width:0;
+  transition: opacity .3s;
+}
+
+.team-member-invited-name{
+  background:transparent;
+  border: none;
+  color:@darkBlack;
+  border:1px solid;
+  border-color: @white;
+  padding: 8px 10px 8px 0px;
+  transition: padding .3s, border-color .3s;
+  border-radius: 4px;
+  &.focused{
+    border-color: @acidRed;
+    padding: 8px 10px;
+    outline:none;
+    +.team-member-invited-submit{
+      opacity: 1;
+      width:auto;
+    }
+  }
+}
+
+

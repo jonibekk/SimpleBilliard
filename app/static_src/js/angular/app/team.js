@@ -282,4 +282,5 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
         });
         $translateProvider.preferredLanguage('ja');
         $translateProvider.fallbackLanguage('en');
+        $translateProvider.useSanitizeValueStrategy('escape');
     }]);

@@ -268,4 +268,12 @@ class AppUtilTest extends GoalousTestCase
         $this->assertEquals(AppUtil::todayDateYmdLocal($overTimezone), date("Y-m-d", strtotime("+1 day")));
         $this->assertEquals(AppUtil::todayDateYmdLocal($underTimezone), date("Y-m-d", strtotime("-1 day")));
     }
+
+    function test_formatMoney()
+    {
+        $res = AppUtil::formatMoney(20000, "¥", "before");
+        $this->assertEquals($res, "¥20,000");
+        $res = AppUtil::formatMoney(190, "$", "after");
+        $this->assertEquals($res, "190$");
+    }
 }

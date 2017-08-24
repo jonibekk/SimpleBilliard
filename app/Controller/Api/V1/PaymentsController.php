@@ -136,8 +136,54 @@ class PaymentsController extends ApiController
      */
     function post_invoice()
     {
-        // TODO.Payment: implement
-        $this->_getResponseSuccess();
+        // Set teamId and payment type for validation
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+        $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
+        $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_INVOICE);
+
+        // Check if is admin
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if not already paid plan
+        if ($this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden(__("You have already registered the paid plan."));
+        }
+
+        // Validate input
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        $data = array('payment_setting' => $this->request->data);
+        $validationErrors = $PaymentService->validateSave($data, $validationFields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+
+        // Check if the country is Japan
+        if ($requestData['company_country'] != 'JP') {
+            // TODO.Payment: Add translation for message
+            return $this->_getResponseBadFail(__("Invoice payment are available for Japan only"));
+        }
+
+        // Register invoice
+        // Invoices for only Japanese team. So, $timezone will be always Japan time.
+        $timezone = 9;
+        $requestData['payment_base_day'] = date('d',strtotime(AppUtil::todayDateYmdLocal($timezone)));
+        $requestData['currency'] = PaymentSetting::CURRENCY_TYPE_JPY;
+        $requestData['type'] = PaymentSetting::PAYMENT_TYPE_INVOICE;
+
+        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $requestData);
+        if ($regResponse !== true) {
+            return $this->_getResponse($regResponse['errorCode'], null, null, $regResponse['message']);
+        }
+
+        // New Payment registered with success
+        return $this->_getResponseSuccess();
     }
 
     /**
@@ -216,7 +262,7 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
             // Get payment setting by team id
             $companyCountry = $this->request->query('company_country');
-            $amountPerUser = $PaymentService->getAmountPerUserByCountry($companyCountry);
+            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($companyCountry);
             $currencyType = $PaymentService->getCurrencyTypeByCountry($companyCountry);
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();

@@ -25,6 +25,9 @@ class PaymentServiceTest extends GoalousTestCase
         'app.payment_setting',
         'app.payment_setting_change_log',
         'app.credit_card',
+        'app.invoice',
+        'app.invoice_history',
+        'app.invoice_histories_charge_history',
         'app.charge_history',
         'app.team',
         'app.team_member',
@@ -589,6 +592,23 @@ class PaymentServiceTest extends GoalousTestCase
         $this->deleteCustomer($res["customerId"]);
     }
 
+    public function test_registerInvoicePayment()
+    {
+        $userID = $this->createActiveUser(1);
+        $paymentData = $this->createTestPaymentData([
+            'team_id'          => 1,
+            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'amount_per_user'  => 1800,
+            'payment_base_day' => 15,
+            'currency'         => 1,
+            'company_country'  => 'JP'
+        ]);
+        unset($paymentData['token']);
+
+        $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
+        $this->assertTrue($res === true);
+    }
+
     public function test_findMonthlyChargeCcTeams_timezone()
     {
         $this->Team->deleteAll(['del_flg' => false]);
@@ -851,8 +871,8 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Standard price
         $this->PaymentSetting->save([
-            'team_id'          => $teamId,
-            'amount_per_user'  => 1980,
+            'team_id'         => $teamId,
+            'amount_per_user' => 1980,
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
@@ -986,18 +1006,18 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, 9.9);
     }
 
-    public function test_getAmountPerUserByCountry()
+    public function test_getDefaultAmountPerUserByCountry()
     {
         $county = 'JP';
-        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $res = $this->PaymentService->getDefaultAmountPerUserByCountry($county);
         $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_JPY);
 
         $county = 'US';
-        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $res = $this->PaymentService->getDefaultAmountPerUserByCountry($county);
         $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_USD);
 
         $county = 'PH';
-        $res = $this->PaymentService->getAmountPerUserByCountry($county);
+        $res = $this->PaymentService->getDefaultAmountPerUserByCountry($county);
         $this->assertEquals($res, PaymentService::AMOUNT_PER_USER_USD);
     }
 
@@ -1048,14 +1068,14 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $this->createCreditCardPayment();
         $updateData = [
-            'company_name'                   => 'ISAO',
-            'company_country'                => 'US',
-            'company_region'                 => 'NY',
-            'company_city'                   => 'Central Park',
-            'company_street'                 => 'Somewhere',
-            'company_tel'                    => '123456789',
-            'contact_person_tel'             => '123456789',
-            'contact_person_email'           => 'test@example.com',
+            'company_name'         => 'ISAO',
+            'company_country'      => 'US',
+            'company_region'       => 'NY',
+            'company_city'         => 'Central Park',
+            'company_street'       => 'Somewhere',
+            'company_tel'          => '123456789',
+            'contact_person_tel'   => '123456789',
+            'contact_person_email' => 'test@example.com',
         ];
 
         // Update payment data
@@ -1063,12 +1083,151 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res);
 
         // Retrieve data from db
+        /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $data = Hash::get($PaymentSetting->getByTeamId(1), "PaymentSetting");
+        $data = Hash::get($PaymentSetting->getCcByTeamId(1), "PaymentSetting");
 
         // Compare updated with saved data
         $data = array_intersect_key($data, $updateData);
         $this->assertEquals($updateData, $data);
+    }
+
+    function test_findMonthlyChargeInvoiceTeams()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 1];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        // time is difference as base date
+        $time = strtotime('2017-01-02') - (9 * HOUR);
+        $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertEmpty($res);
+
+        // time is same as base date
+        $time = strtotime('2017-01-01') - (9 * HOUR);
+        $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertNotEmpty($res);
+
+        $this->addInvoiceHistory($teamId, [
+            'order_date'        => '2017-01-01',
+            'system_order_code' => "test",
+        ]);
+        $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertEmpty($res);
+    }
+
+    function test_findTargetInvoiceChargeHistories()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $time = strtotime('2016-12-31') - (9 * HOUR);
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+        // expected scope is from 2016-11-30 - 2016-12-30
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-12-31', 9)
+        ]);
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertEmpty($res, "2016-12-31 is out of scope");
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getEndTimestampByTimezone('2016-12-30', 9)
+        ]);
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertCount(1, $res);
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
+        ]);
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertCount(2, $res);
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-29', 9)
+        ]);
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertCount(2, $res);
+
+        $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_date'        => '2016-12-01',
+                'system_order_code' => "test",
+            ],
+            [
+                'payment_type'     => ChargeHistory::PAYMENT_TYPE_INVOICE,
+                'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
+                'amount_per_user'  => 1980,
+                'total_amount'     => 3960,
+                'tax'              => 310,
+                'charge_users'     => 2,
+                'max_charge_users' => 2,
+                'charge_datetime'  => AppUtil::getEndTimestampByTimezone('2016-12-01', 9)
+            ]
+        );
+
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertCount(2, $res);
+
+    }
+
+    function test_registerInvoice()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $time = strtotime('2016-12-31') - (9 * HOUR);
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getEndTimestampByTimezone('2016-12-30', 9)
+        ]);
+        $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+        $this->assertCount(1, $res);
+
+        $this->_addInvoiceChargeHistory($teamId, [
+            'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
+        ]);
+        $res = $this->PaymentService->registerInvoice($teamId, 10, $time);
+        $this->assertTrue($res);
+        // checking invoiceHistory
+        /** @var InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        $this->assertCount(1, $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]));
+        // checking chargeHistory
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $this->assertCount(3, $ChargeHistory->find('all', ['conditions' => ['team_id' => $teamId]]));
+        // checking invoiceHistory and chargeHistory relation
+        /** @var InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->assertCount(3, $InvoiceHistoriesChargeHistory->find('all'));
+    }
+
+    function _addInvoiceChargeHistory($teamId, $data)
+    {
+        $data = am([
+            'payment_type'     => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
+            'amount_per_user'  => 1980,
+            'total_amount'     => 3960,
+            'tax'              => 310,
+            'charge_users'     => 2,
+            'max_charge_users' => 2,
+            'charge_datetime'  => ""
+        ], $data);
+        return $this->addChargeHistory($teamId, $data);
+    }
+
+    public function test_getAmountPerUser()
+    {
+        // TODO: implement test code
     }
 
     /**

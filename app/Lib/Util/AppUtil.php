@@ -719,4 +719,24 @@ class AppUtil
         return true;
     }
 
+    /**
+     * format money string
+     * - format as thousand comma
+     * - add symbol before of after
+     *
+     * @param int $amount
+     * @param string $symbol
+     * @param string $beforeAfter
+     *
+     * @return string
+     */
+    static function formatMoney(int $amount, string $symbol, string $beforeAfter): string
+    {
+        $amountWithComma = self::formatThousand($amount);
+        if ($beforeAfter == 'before') {
+            return "${symbol}${amountWithComma}";
+        }
+        return "${amountWithComma}${symbol}";
+    }
+
 }
