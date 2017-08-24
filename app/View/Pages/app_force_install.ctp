@@ -21,7 +21,7 @@ if ($userAgent->isiOSApp()) {
     </div>
     <div class="panel-body add-team-panel-body text-center">
         <?php if(is_string($mobileAppStoreUrl)): ?>
-        <a href="<?= $mobileAppStoreUrl ?>" class="btn btn-primary"><?= __("Install") ?></a>
+        <a href="<?= $mobileAppStoreUrl ?>" class="btn btn-primary" target="_blank"><?= __("Install") ?></a>
         <?php endif; ?>
     </div>
 </div>
