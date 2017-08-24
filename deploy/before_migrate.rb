@@ -107,3 +107,11 @@ template "/home/deploy/.bash_profile" do
   mode 0644
   source ".bash_profile"
 end
+# /var/log/goalousディレクトリ作成
+directory "/var/log/goalous" do
+    owner 'deploy'
+    group 'www-data'
+    mode 0775
+    action :create
+    not_if {::File.exists?("/var/log/goalous")}
+end
