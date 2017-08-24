@@ -213,8 +213,14 @@ class PaymentSetting extends AppModel
             'conditions' => [
                 'team_id' => $teamId,
             ],
-            'contain'    => [
-                'CreditCard',
+            'joins'    => [
+                'table' => 'credit_cards',
+                'alias' => 'CreditCard',
+                'type' => 'INNER',
+                'conditions' => [
+                    'PaymentSetting.team_id = CreditCard.team_id',
+                    'del_flg' => false
+                ]
             ]
         ];
         $res = $this->find('first', $options);
@@ -300,6 +306,22 @@ class PaymentSetting extends AppModel
         }
 
         return Hash::get($res, 'PaymentSetting.amount_per_user');
+    }
+
+    /**
+     * Get by team id
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    public function getUnique(int $teamId): array
+    {
+        $res = $this->findByTeamId($teamId);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::get($res, 'PaymentSetting');
     }
 
 }

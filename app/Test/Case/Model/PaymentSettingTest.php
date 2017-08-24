@@ -216,4 +216,14 @@ class PaymentSettingTest extends GoalousTestCase
         $res = $this->PaymentSetting->getAmountPerUser(999);
         $this->assertEquals($res, null);
     }
+
+    public function test_getCcByTeamId()
+    {
+        // TODO.Payment: implement test code
+    }
+
+    public function test_getUnique()
+    {
+        // TODO.Payment: implement test code
+    }
 }

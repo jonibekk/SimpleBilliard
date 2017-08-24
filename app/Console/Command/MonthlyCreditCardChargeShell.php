@@ -2,6 +2,8 @@
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * The shell for creating next next term
  * Console/cake monthly credit card charge

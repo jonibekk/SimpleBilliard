@@ -33,6 +33,8 @@ class UsersController extends AppController
             'accept_invite', 'register_with_invite', 'registration_with_set_password', 'two_fa_auth',
             'two_fa_auth_recovery',
             'add_subscribe_email', 'ajax_validate_email');
+
+        $this->_checkAdmin(['invite']);
     }
 
     /**
@@ -1601,18 +1603,6 @@ class UsersController extends AppController
             return $this->redirect('/users/invite');
         }
 
-        $this->layout = LAYOUT_ONE_COLUMN;
-    }
-
-    /**
-     * Test method for showing markup html
-     * TODO:delete
-     * User invitation form
-     *
-     * @return void
-     */
-    public function invite_confirm()
-    {
         $this->layout = LAYOUT_ONE_COLUMN;
     }
 }

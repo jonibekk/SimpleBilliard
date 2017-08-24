@@ -1210,8 +1210,14 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_getAmountPerUser()
     {
-        // TODO: implement test code
+        // TODO.Payment: implement test code
     }
+
+    public function test_charge()
+    {
+        // TODO.Payment: implement test code
+    }
+
 
     /**
      * tearDown method

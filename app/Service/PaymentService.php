@@ -9,6 +9,8 @@ App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class PaymentService
  */
@@ -470,137 +472,149 @@ class PaymentService extends AppService
     /**
      * Apply Credit card charge for a specified team.
      *
-     * @param int    $teamId
-     * @param int    $chargeType
-     * @param int    $usersCount
-     * @param string $description
+     * @param int                               $teamId
+     * @param Enum\ChargeHistory\ChargeType|int $chargeType
+     * @param int                               $usersCount
+     * @param DataSource                        $db
      *
      * @return array
+     * @throws Exception
      */
-    public function applyCreditCardCharge(int $teamId, int $chargeType, int $usersCount, string $description = "")
-    {
-        $result = [
-            'error'     => false,
-            'errorCode' => 200,
-            'message'   => null
-        ];
-
-        // Validate payment type
-        if (!($chargeType == PaymentSetting::CHARGE_TYPE_MONTHLY_FEE ||
-            $chargeType == PaymentSetting::CHARGE_TYPE_USER_INCREMENT_FEE ||
-            $chargeType == PaymentSetting::CHARGE_TYPE_USER_ACTIVATION_FEE)) {
-
-            $result['error'] = true;
-            $result['field'] = 'chargeType';
-            $result['message'] = __('Parameter is invalid.');
-            $result['errorCode'] = 400;
-            return $result;
-        }
-
-        // Validate user count
-        if ($usersCount <= 0) {
-            $result['error'] = true;
-            $result['field'] = 'usersCount';
-            $result['message'] = __('Parameter is invalid.');
-            $result['errorCode'] = 400;
-            return $result;
-        }
-
-        // Get Payment settings
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
-        $paymentSettings = $Team->PaymentSetting->getCcByTeamId($teamId);
-        if (!$paymentSettings) {
-            $result['error'] = true;
-            $result['message'] = __('Payment settings does not exists.');
-            $result['errorCode'] = 500;
-
-            return $result;
-        }
-
-        // Get credit card settings
-        if (empty(Hash::get($paymentSettings, 'CreditCard')) || !isset($paymentSettings['CreditCard'][0])) {
-            $result['error'] = true;
-            $result['message'] = __('Credit card settings does not exist.');
-            $result['errorCode'] = 500;
-
-            return $result;
-        }
-        $creditCard = $paymentSettings['CreditCard'][0];
-        $customerId = Hash::get($creditCard, 'customer_code');
-        $amountPerUser = Hash::get($paymentSettings, 'PaymentSetting.amount_per_user');
-        $currency = Hash::get($paymentSettings, 'PaymentSetting.currency');
-        $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
-
-        // Apply the user charge on Stripe
-        /** @var CreditCardService $CreditCardService */
-        $CreditCardService = ClassRegistry::init("CreditCardService");
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
-            Hash::get($paymentSettings, 'PaymentSetting'));
-
-        $charge = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
-            $description);
-
-        // Save charge history
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init('ChargeHistory');
-
-        if ($charge['error'] === true) {
-            $resultType = ChargeHistory::TRANSACTION_RESULT_ERROR;
-            $result['success'] = false;
-        } else {
-            if ($charge['success'] === true) {
-                $resultType = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
-                $result['success'] = true;
-            } else {
-                $resultType = ChargeHistory::TRANSACTION_RESULT_FAIL;
-                $result['success'] = false;
-            }
-        }
-        $result['resultType'] = $resultType;
-
-        $historyData = [
-            'team_id'          => $teamId,
-            'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'      => $chargeType,
-            'amount_per_user'  => $amountPerUser,
-            'total_amount'     => $chargeInfo['sub_total_charge'],
-            'tax'              => $chargeInfo['tax'],
-            'charge_users'     => $usersCount,
-            'currency'         => $currency,
-            'charge_datetime'  => time(),
-            'result_type'      => $resultType,
-            'max_charge_users' => $usersCount
-        ];
-
+    public function applyCreditCardCharge(
+        int $teamId,
+        Enum\ChargeHistory\ChargeType $chargeType,
+        int $usersCount,
+        DataSource $db
+    ) {
         try {
-            // Create Charge history
-            $ChargeHistory->begin();
+            // Validate user count
+            if ($usersCount <= 0) {
+                throw new Exception(
+                    sprintf("Charge user count is 0. data:%s",
+                        AppUtil::varExportOneLine(compact('teamId', 'chargeType', 'usersCount'))
+                    )
+                );
+            }
 
+            // Get Payment settings
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
+            $paymentSettings = $Team->PaymentSetting->getCcByTeamId($teamId);
+            if (empty($paymentSettings)) {
+                throw new Exception(
+                    sprintf("Payment setting or Credit card settings does not exist. data:%s",
+                        AppUtil::varExportOneLine(compact('teamId', 'chargeType', 'usersCount'))
+                    )
+                );
+            }
+
+            $creditCard = Hash::get($paymentSettings, 'CreditCard');
+            $customerId = Hash::get($creditCard, 'customer_code');
+            $paySetting = Hash::get($paymentSettings, 'PaymentSetting');
+            $amountPerUser = Hash::get($paySetting, 'amount_per_user');
+            $currency = Hash::get($paySetting, 'currency');
+            $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+
+            // Apply the user charge on Stripe
+            /** @var CreditCardService $CreditCardService */
+            $CreditCardService = ClassRegistry::init("CreditCardService");
+            $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
+                $paySetting);
+
+            $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId);
+            // ChargeHistory temporary insert
+            $historyData = [
+                'team_id'          => $teamId,
+                'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'charge_type'      => $chargeType,
+                'amount_per_user'  => $amountPerUser,
+                'total_amount'     => $chargeInfo['sub_total_charge'],
+                'tax'              => $chargeInfo['tax'],
+                'charge_users'     => $usersCount,
+                'currency'         => $currency,
+                'charge_datetime'  => time(),
+                'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
+                'max_charge_users' => $maxChargeUserCnt
+            ];
+
+            /** @var ChargeHistory $ChargeHistory */
+            $ChargeHistory = ClassRegistry::init('ChargeHistory');
             if (!$ChargeHistory->save($historyData)) {
-                $ChargeHistory->rollback();
                 throw new Exception(sprintf("Failed create charge history. data:%s",
                     AppUtil::varExportOneLine($historyData)));
             }
 
-            if (isset($charge['paymentData'])) {
-                $result['paymentData'] = $charge['paymentData'];
+            $paymentDescription = "Team: $teamId Unit: $amountPerUser Users: $usersCount";
+            $chargeRes = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
+                $paymentDescription);
+
+            // Save charge history
+            if ($chargeRes['error'] === true) {
+
+                /* Transaction rollback */
+                $db->rollback();
+
+                throw new Exception(
+                    sprintf("Failed create charge history. data:%s",
+                        AppUtil::varExportOneLine(
+                            compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
+                        )
+                    )
+                );
             }
-            $ChargeHistory->commit();
+
+            /* Transaction commit */
+            // [Important]
+            // Charge history updating is out of transaction.
+            // Because it should refund charge if include updating in transaction.
+            $db->commit();
+
+            if ($chargeRes['success'] === true) {
+                $resultType = Enum\ChargeHistory\ResultType::SUCCESS;
+            } else {
+                $resultType = Enum\ChargeHistory\ResultType::FAIL;
+            }
+
+            $historyId = $ChargeHistory->getLastInsertID();
+            // Create Charge history
+            if (!$ChargeHistory->save(['id' => $historyId, 'result_type' => $resultType])) {
+
+                /* TODO.Payment: Insert error log to table */
+
+                throw new Exception(sprintf("Failed update charge history. data:%s",
+                    AppUtil::varExportOneLine($historyData)));
+            }
+
+            if (isset($chargeRes['paymentData'])) {
+                $result['paymentData'] = $chargeRes['paymentData'];
+            }
         } catch (Exception $e) {
-            $ChargeHistory->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-
-            $result["error"] = true;
-            $result["message"] = $e->getMessage();
-            $result['errorCode'] = 500;
-
-            if (property_exists($e, "stripeCode")) {
-                $result["errorCode"] = $e->stripeCode;
-            }
+            throw $e;
         }
-        return $result;
+    }
+
+    /**
+     * Get charge max user cnt by charge type
+     *
+     * @param int                           $teamId
+     * @param Enum\ChargeHistory\ChargeType $chargeType
+     * @param int                           $usersCount
+     *
+     * @return array
+     */
+    public function getChargeMaxUserCnt(
+        int $teamId,
+        Enum\ChargeHistory\ChargeType $chargeType,
+        int $usersCount
+    ) {
+        if ($chargeType == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            return $usersCount;
+        }
+
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+        $latestMaxChargeUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
+        return $latestMaxChargeUserCnt + $usersCount;
     }
 
     /**
@@ -736,9 +750,9 @@ class PaymentService extends AppService
 
                 // Save history
                 if ($chargeResult['error'] === true) {
-                    $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_ERROR;
+                    $historyData['result_type'] = Enum\ChargeHistory\ResultType::ERROR;
                 } else {
-                    $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_FAIL;
+                    $historyData['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
                 }
                 $this->_saveChargeHistory($historyData);
 
@@ -768,7 +782,7 @@ class PaymentService extends AppService
         // Charge history is kept outside the transaction so in case of history recording
         // failure, the error will be logged for later investigation but the charging
         // processes will not be affected.
-        $historyData['result_type'] = ChargeHistory::TRANSACTION_RESULT_SUCCESS;
+        $historyData['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
         $this->_saveChargeHistory($historyData);
 
         // Delete cache
@@ -934,8 +948,11 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function findTargetInvoiceChargeHistories(int $teamId, int $time)
-    {
+    public
+    function findTargetInvoiceChargeHistories(
+        int $teamId,
+        int $time
+    ) {
         // Invoices for only Japanese team. So, $timezone will be always Japan time.
         $timezone = 9;
 
@@ -1145,6 +1162,87 @@ class PaymentService extends AppService
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
         }
         return true;
+    }
+
+    /**
+     * Charge
+     *
+     * @param int                               $teamId
+     * @param Enum\ChargeHistory\ChargeType|int $chargeType
+     * @param int                               $usersCount
+     * @param DataSource                        $db
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function charge(
+        int $teamId,
+        Enum\ChargeHistory\ChargeType $chargeType,
+        int $usersCount,
+        DataSource $db
+    ) {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+
+        $paymentSetting = $PaymentSetting->getUnique($teamId);
+        if (empty($paymentSetting)) {
+            throw new Exception(
+                sprintf("Payment setting doesn't exist. data:%s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeType', 'usersCount'))
+                )
+            );
+        }
+
+        if (Hash::get($paymentSetting, 'type') == Enum\PaymentSetting\Type::CREDIT_CARD) {
+            $res = $this->applyCreditCardCharge(
+                $teamId,
+                $chargeType,
+                $usersCount,
+                $db
+            );
+            if ($res['error']) {
+                throw new Exception(
+                    sprintf("Not exist payment setting. data:%s",
+                        AppUtil::varExportOneLine(compact('teamId', 'chargeType', 'usersCount'))
+                    )
+                );
+            }
+        } else {
+            /** @var ChargeHistory $ChargeHistory */
+            $ChargeHistory = ClassRegistry::init("ChargeHistory");
+
+            try {
+
+                // Apply the user charge on Stripe
+                $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
+                    $paymentSetting);
+
+                $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId);
+                // Insert ChargeHistory
+                $historyData = [
+                    'team_id'          => $teamId,
+                    'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                    'charge_type'      => $chargeType,
+                    'amount_per_user'  => $paymentSetting['amount_per_user'],
+                    'total_amount'     => $chargeInfo['sub_total_charge'],
+                    'tax'              => $chargeInfo['tax'],
+                    'charge_users'     => $usersCount,
+                    'currency'         => $paymentSetting['currency'],
+                    'charge_datetime'  => time(),
+                    'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+                    'max_charge_users' => $maxChargeUserCnt
+                ];
+                if (!$ChargeHistory->save($historyData)) {
+                    throw new Exception(
+                        sprintf("Failed to create charge history. data:%s",
+                            AppUtil::varExportOneLine(compact('historyData'))
+                        )
+                    );
+                }
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
     }
 
     /**

@@ -799,7 +799,7 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'     => $teamId,
                 'currency'    => PaymentSetting::CURRENCY_TYPE_JPY,
-                'result_type' => ChargeHistory::TRANSACTION_RESULT_SUCCESS,
+                'result_type' => Enum\ChargeHistory\ResultType::SUCCESS,
             ],
             $chargeHistory
         );
