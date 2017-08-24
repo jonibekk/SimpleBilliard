@@ -120,12 +120,11 @@
                             aria-labelledby="dropdownMenu1">
                             <li role="presentation" ng-if="item.TeamMember.active_flg == true">
                                 <a role="menuitem" tabindex="-1"
-                                   ng-click="setActiveFlag($index, item.TeamMember.id, 'OFF')">{{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_INACTIVE' | translate}}</a>
+                                   ng-click="inactivate($index, item.TeamMember.id)">{{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_INACTIVE' | translate}}</a>
                             </li>
 
                             <li role="presentation" ng-if="item.TeamMember.active_flg == false">
-                                <a role="menuitem" tabindex="-1"
-                                   ng-click="setActiveFlag($index, item.TeamMember.id, 'ON')">{{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_ACTIVE' | translate}}</a>
+                                {{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_ACTIVE' | translate}}
                             </li>
 
                             <li role="presentation" ng-if="item.TeamMember.admin_flg == false">

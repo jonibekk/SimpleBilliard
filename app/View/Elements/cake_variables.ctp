@@ -120,7 +120,6 @@ App::uses('AttachedFile', 'Model');
             ])?>/",
             m: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_current_team_admin_list'])?>/",
             n: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_member'])?>/",
-            o: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_active_flag'])?>/",
             p: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_admin_user_flag'])?>/",
             q: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_term_start_end_by_edit'])?>",
@@ -200,6 +199,7 @@ App::uses('AttachedFile', 'Model');
                 'controller' => 'teams',
                 'action'     => 'ajax_validate_email_can_invite'
             ]) ?>",
+            inactivate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_inactivate_team_member'])?>/",
             route_url: "<?= Router::fullbaseUrl() ?>"
         },
         data: {

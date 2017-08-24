@@ -104,14 +104,10 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             });
         };
 
-        $scope.setActiveFlag = function (index, member_id, active_flg) {
-            var change_active_flag_url = url_list.o + member_id + '/' + active_flg;
-            $http.get(change_active_flag_url).success(function (data) {
-                var active_show_flg = false;
-                if (active_flg === 'ON') {
-                    active_show_flg = true;
-                }
-                $scope.team_list[index].TeamMember.active_flg = active_show_flg;
+        $scope.inactivate = function (index, team_member_id) {
+            var inactivate_url = url_list.inactivate_team_member + team_member_id;
+            $http.get(inactivate_url).success(function (data) {
+                $scope.team_list[index].TeamMember.active_flg = false;
             });
         };
 

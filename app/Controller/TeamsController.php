@@ -1026,10 +1026,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_set_current_team_active_flag($member_id, $active_flg)
+    function ajax_inactivate_team_member($teamMemberId)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setActiveFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->inactivate($teamMemberId);
         return $this->_ajaxGetResponse($res);
     }
 
