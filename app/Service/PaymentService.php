@@ -1165,7 +1165,19 @@ class PaymentService extends AppService
     }
 
     /**
-     * Charge
+     * Charge single
+     * [Important]
+     * Charge processing is complicated transaction.
+     * Especially if team's payment type is credit card,
+     * ChargeHistory updating is out of transaction after call Stripe Charge API.
+     * So if use this method, be aware of the following points
+     * ■Set argument to datasource that is already used for beginning transaction
+     *   e.g.
+     *   $Invite->begin();
+     *   ...
+     *   $db = $Invite->getDataSource();
+     *   $PaymentService->charge(~, $db
+     * ■Must catch Exception and handling in the caller
      *
      * @param int                               $teamId
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
@@ -1239,7 +1251,12 @@ class PaymentService extends AppService
                         )
                     );
                 }
+
+                // Transaction commit
+                $db->commit();
             } catch (Exception $e) {
+                // Transaction rollback
+                $db->rollback();
                 throw $e;
             }
         }
