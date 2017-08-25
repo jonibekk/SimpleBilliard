@@ -153,4 +153,82 @@ class InvoiceServiceTest extends GoalousTestCase
         $res = $this->InvoiceService->registerOrder($teamId,$targetChargeHistories,$monthlyChargeHistory,$orderDate);
         $this->assertEquals($expectedRequestData,$res['requestData']);
     }
+
+    public function test_inquireCreditStatus()
+    {
+        $this->Team->deleteAll(['del_flg' => false]);
+
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        $targetChargeHistories = [
+            (int) 0 => [
+                'id' => '1',
+                'team_id' => $teamId,
+                'user_id' => null,
+                'payment_type' => '0',
+                'charge_type' => '2',
+                'amount_per_user' => '1980',
+                'total_amount' => '1980',
+                'tax' => '158',
+                'charge_users' => '1',
+                'currency' => '1',
+                'charge_datetime' => '1483109999',
+                'result_type' => '1',
+                'max_charge_users' => '1',
+                'stripe_payment_code' => null,
+                'del_flg' => false,
+                'deleted' => null,
+                'created' => '1503384766',
+                'modified' => '1503384766'
+            ],
+            (int) 1 => [
+                'id' => '2',
+                'team_id' => $teamId,
+                'user_id' => null,
+                'payment_type' => '0',
+                'charge_type' => '2',
+                'amount_per_user' => '1980',
+                'total_amount' => '3960',
+                'tax' => '310',
+                'charge_users' => '2',
+                'currency' => '1',
+                'charge_datetime' => '1480431600',
+                'result_type' => '1',
+                'max_charge_users' => '2',
+                'stripe_payment_code' => null,
+                'del_flg' => false,
+                'deleted' => null,
+                'created' => '1503384766',
+                'modified' => '1503384766'
+            ]
+        ];
+        $monthlyChargeHistory = [
+            'team_id' => (int) $teamId,
+            'payment_type' => (int) 0,
+            'charge_type' => (int) 0,
+            'amount_per_user' => (int) 1980,
+            'total_amount' => (int) 19800,
+            'tax' => (int) 1584,
+            'charge_users' => (int) 10,
+            'currency' => (int) 1,
+            'charge_datetime' => (int) 1483110000,
+            'result_type' => (int) 1,
+            'max_charge_users' => (int) 10,
+            'modified' => (int) 1503384766,
+            'created' => (int) 1503384766,
+            'id' => '3',
+            'monthlyStartDate' => '2016-12-31',
+            'monthlyEndDate' => '2017-01-30'
+        ];
+
+        $orderDate = "2016-12-31";
+        $res = $this->InvoiceService->registerOrder($teamId,$targetChargeHistories,$monthlyChargeHistory,$orderDate);
+        $orderId = $res['systemOrderId'];
+
+        $res = $this->InvoiceService->inquireCreditStatus($orderId);
+        $this->assertEquals($res['status'], 'success');
+    }
 }

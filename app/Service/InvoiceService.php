@@ -14,7 +14,7 @@ App::uses('Team', 'Model');
 class InvoiceService extends AppService
 {
     const API_URL_REGISTER_ORDER = ATOBARAI_API_BASE_URL . '/api/order/rest';
-    const API_URL_INQUIRY_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
+    const API_URL_INQUIRE_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
     /**
      * register order for 1 team's invoice via atobarai.com
@@ -87,6 +87,25 @@ class InvoiceService extends AppService
         // request to atobarai.com
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
         $resAtobarai = am($resAtobarai, ['requestData' => $data]);
+        return $resAtobarai;
+    }
+
+    /**
+     * Check credit status at Atobarai.com
+     *
+     * @param string $orderCode
+     *
+     * @return array
+     */
+    public function inquireCreditStatus(string $orderCode): array
+    {
+        $data = [
+            'EnterpriseId' => ATOBARAI_ENTERPRISE_ID,
+            'ApiUserId'    => ATOBARAI_API_USER_ID,
+            'OrderId[]'    => $orderCode,
+        ];
+
+        $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_INQUIRE_CREDIT_STATUS, $data);
         return $resAtobarai;
     }
 
