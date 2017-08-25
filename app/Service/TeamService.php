@@ -153,4 +153,47 @@ class TeamService extends AppService
 
         return $ret;
     }
+
+    /**
+     * Update Service Use Status
+     *
+     * @param int    $teamId
+     * @param int    $serviceUseStatus
+     * @param string $startDate
+     *
+     * @return bool
+     */
+    public function updateServiceUseStatus(int $teamId, int $serviceUseStatus, string $startDate): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        if ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
+            $endDate = null;
+        } else {
+            $statusDays = Team::DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
+            $endDate = AppUtil::dateAfter($startDate, $statusDays);
+        }
+
+        $data = [
+            'id' => $teamId,
+            'service_use_status' => $serviceUseStatus,
+            'service_use_state_start_date' => "'$startDate'",
+            'service_use_state_end_date'   => $endDate ? "'$endDate'" : null,
+        ];
+
+        try {
+            if (!$Team->save($data)) {
+                throw new Exception(sprintf("Failed update Team use status. data: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($data),
+                    AppUtil::varExportOneLine($Team->validationErrors)));
+            }
+        }
+        catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return false;
+        }
+        return true;
+    }
 }

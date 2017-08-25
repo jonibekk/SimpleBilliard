@@ -49,4 +49,15 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals($this->TeamService->getStateEndDate(), '2017-02-09');
     }
 
+    function test_updateServiceUseStatus_success()
+    {
+        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+
+        $res = $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_PAID, date('Y-m-d'));
+
+        $this->assertTrue($res === true);
+        $this->assertEquals($this->TeamService->getServiceUseStatus(), Team::SERVICE_USE_STATUS_PAID);
+    }
+
 }

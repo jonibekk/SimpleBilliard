@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
+App::import('Service', 'TeamService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
@@ -635,6 +636,8 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         // Register Credit Card to stripe
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
@@ -717,7 +720,7 @@ class PaymentService extends AppService
             // Up to this point any failure do not directly affect user accounts or charge its credit card.
             // Team status will be set first in case of any failure team will be able to continue to use.
             $paymentDate = date('Y-m-d');
-            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+            $TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_PAID, $paymentDate);
 
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
@@ -801,8 +804,8 @@ class PaymentService extends AppService
         $TeamMember = ClassRegistry::init('TeamMember');
         /** @var Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
         $membersCount = $membersCount[$teamId];
@@ -833,7 +836,7 @@ class PaymentService extends AppService
 
             // Set team status
             $paymentDate = date('Y-m-d');
-            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+            $TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_PAID, $paymentDate);
 
             $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
             if ($res == false) {
