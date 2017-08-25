@@ -191,9 +191,11 @@ const config = {
     src: {
       common: assets_dir + '/less/common.less',
       pages: assets_dir + '/less/pages/**/*.less',
+      homepage: assets_dir + '/less/homepage/**/*.less'
     },
     output: {
-      path: compiled_assets_dir + '/css/'
+      path: compiled_assets_dir + '/css/',
+      homepage: compiled_assets_dir + '/css/homepage/'
     },
     watch_files: [assets_dir + '/less/**/**/*.less']
   }
