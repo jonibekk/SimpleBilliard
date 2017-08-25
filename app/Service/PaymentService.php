@@ -495,9 +495,9 @@ class PaymentService extends AppService
             }
 
             // Get Payment settings
-            /** @var Team $Team */
-            $Team = ClassRegistry::init('Team');
-            $paymentSettings = $Team->PaymentSetting->getCcByTeamId($teamId);
+            /** @var PaymentSetting $PaymentSetting */
+            $PaymentSetting = ClassRegistry::init('PaymentSetting');
+            $paymentSettings = $PaymentSetting->getCcByTeamId($teamId);
             if (empty($paymentSettings)) {
                 throw new Exception(
                     sprintf("Payment setting or Credit card settings does not exist. data:%s",
@@ -574,7 +574,7 @@ class PaymentService extends AppService
             }
 
             $historyId = $ChargeHistory->getLastInsertID();
-            // Create Charge history
+            // Update Charge history
             if (!$ChargeHistory->save(['id' => $historyId, 'result_type' => $resultType])) {
 
                 /* TODO.Payment: Insert error log to table */
@@ -583,7 +583,7 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($historyData)));
             }
 
-            if (isset($chargeRes['paymentData'])) {
+            if (!empty($chargeRes['paymentDate'])) {
                 $result['paymentData'] = $chargeRes['paymentData'];
             }
         } catch (Exception $e) {
@@ -946,8 +946,7 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public
-    function findTargetInvoiceChargeHistories(
+    public function findTargetInvoiceChargeHistories(
         int $teamId,
         int $time
     ) {
