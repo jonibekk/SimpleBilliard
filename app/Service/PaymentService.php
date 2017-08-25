@@ -475,7 +475,6 @@ class PaymentService extends AppService
      * @param int                               $teamId
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
-     * @param DataSource                        $db
      *
      * @return array
      * @throws Exception
@@ -483,8 +482,7 @@ class PaymentService extends AppService
     public function applyCreditCardCharge(
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
-        int $usersCount,
-        DataSource $db
+        int $usersCount
     ) {
         try {
             // Validate user count
@@ -552,7 +550,7 @@ class PaymentService extends AppService
             if ($chargeRes['error'] === true) {
 
                 /* Transaction rollback */
-                $db->rollback();
+                $this->TransactionManager->rollback();
 
                 throw new Exception(
                     sprintf("Failed create charge history. data:%s",
@@ -567,7 +565,7 @@ class PaymentService extends AppService
             // [Important]
             // Charge history updating is out of transaction.
             // Because it should refund charge if include updating in transaction.
-            $db->commit();
+            $this->TransactionManager->commit();
 
             if ($chargeRes['success'] === true) {
                 $resultType = Enum\ChargeHistory\ResultType::SUCCESS;
@@ -1194,7 +1192,6 @@ class PaymentService extends AppService
      * @param int                               $teamId
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
-     * @param DataSource                        $db
      *
      * @return array
      * @throws Exception
@@ -1202,8 +1199,7 @@ class PaymentService extends AppService
     public function charge(
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
-        int $usersCount,
-        DataSource $db
+        int $usersCount
     ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1221,8 +1217,7 @@ class PaymentService extends AppService
             $res = $this->applyCreditCardCharge(
                 $teamId,
                 $chargeType,
-                $usersCount,
-                $db
+                $usersCount
             );
             if ($res['error']) {
                 throw new Exception(
@@ -1263,12 +1258,7 @@ class PaymentService extends AppService
                         )
                     );
                 }
-
-                // Transaction commit
-                $db->commit();
             } catch (Exception $e) {
-                // Transaction rollback
-                $db->rollback();
                 throw $e;
             }
         }

@@ -116,7 +116,7 @@ class InvitationService extends AppService
         $PaymentService = ClassRegistry::init('PaymentService');
 
         try {
-            $Invite->begin();
+            $this->TransactionManager->begin();
             /* Delete old invitations if already invited past */
             if (!$Invite->softDeleteAll(['email' => $emails])) {
                 throw new Exception(sprintf("Failed to reset old invitattions. data:%s",
@@ -174,16 +174,15 @@ class InvitationService extends AppService
             /* Charge if paid plan */
             if ($Team->isPaidPlan($teamId)) {
                 $chargeUserCnt = count($targetUserIds);
-                $db = $Invite->getDataSource();
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
                     $teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
-                    $chargeUserCnt,
-                    $db
+                    $chargeUserCnt
                 );
             }
-
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
+            $this->TransactionManager->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return false;
