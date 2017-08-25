@@ -987,7 +987,6 @@ class PaymentService extends AppService
         $invoiceHistoryUpdate = [
             'id'                => $invoiceHistoryId,
             'system_order_code' => $resAtobarai['systemOrderId'],
-            'order_status'      => $resAtobarai['orderStatus']['@cd'],
         ];
         $InvoiceHistory->clear();
         $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate);
