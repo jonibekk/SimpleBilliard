@@ -159,6 +159,11 @@ class PaymentsController extends ApiController
         $teamId = $this->current_team_id;
         $userId = $this->Auth->user('id');
 
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
         // Validation
         $customerCode = $CreditCard->getCustomerCode($teamId);
         if (empty($customerCode)) {
@@ -278,14 +283,13 @@ class PaymentsController extends ApiController
         if ($teamId != $this->current_team_id) {
             return $this->_getResponseNotFound();
         }
-        $userId = $this->Auth->user('id');
 
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
             return $this->_getResponseForbidden();
         }
+
+        $userId = $this->Auth->user('id');
 
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
@@ -301,11 +305,7 @@ class PaymentsController extends ApiController
         // Update payer info
         $result = $PaymentService->updatePayerInfo($teamId, $this->request->data);
         if ($result !== true) {
-            if (empty($result['errorCode'])) {
-                return $this->_getResponseValidationFail($result);
-            } else {
-                return $this->_getResponse($result['errorCode'], null, null, $result['message']);
-            }
+            return $this->_getResponseInternalServerError();
         }
         return $this->_getResponseSuccess();
     }

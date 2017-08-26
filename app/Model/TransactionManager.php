@@ -11,11 +11,14 @@ class TransactionManager extends AppModel
 
     public function begin()
     {
-        if (!is_null(self::$dataSource)) {
+        if (self::$transactionFlg) {
             return false;
         }
 
-        self::$dataSource = $this->getDataSource();
+        if (is_null(self::$dataSource)) {
+            self::$dataSource = $this->getDataSource();
+        }
+
         self::$dataSource->begin($this);
         self::$transactionFlg = true;
         return true;

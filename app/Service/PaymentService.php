@@ -519,12 +519,12 @@ class PaymentService extends AppService
             $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
                 $paySetting);
 
-            $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId);
+            $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
             // ChargeHistory temporary insert
             $historyData = [
                 'team_id'          => $teamId,
                 'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-                'charge_type'      => $chargeType,
+                'charge_type'      => $chargeType->getValue(),
                 'amount_per_user'  => $amountPerUser,
                 'total_amount'     => $chargeInfo['sub_total_charge'],
                 'tax'              => $chargeInfo['tax'],
@@ -542,6 +542,7 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($historyData)));
             }
 
+            /* Charge */
             $paymentDescription = "Team: $teamId Unit: $amountPerUser Users: $usersCount";
             $chargeRes = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
                 $paymentDescription);
@@ -553,7 +554,7 @@ class PaymentService extends AppService
                 $this->TransactionManager->rollback();
 
                 throw new Exception(
-                    sprintf("Failed create charge history. data:%s",
+                    sprintf("Failed to charge. data:%s",
                         AppUtil::varExportOneLine(
                             compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
                         )
@@ -575,16 +576,13 @@ class PaymentService extends AppService
 
             $historyId = $ChargeHistory->getLastInsertID();
             // Update Charge history
-            if (!$ChargeHistory->save(['id' => $historyId, 'result_type' => $resultType])) {
+            $updateHistory = ['id' => $historyId, 'result_type' => $resultType];
+            if (!$ChargeHistory->save($updateHistory, false)) {
 
                 /* TODO.Payment: Insert error log to table */
 
                 throw new Exception(sprintf("Failed update charge history. data:%s",
-                    AppUtil::varExportOneLine($historyData)));
-            }
-
-            if (!empty($chargeRes['paymentDate'])) {
-                $result['paymentData'] = $chargeRes['paymentData'];
+                    AppUtil::varExportOneLine($updateHistory)));
             }
         } catch (Exception $e) {
             throw $e;
@@ -605,7 +603,7 @@ class PaymentService extends AppService
         Enum\ChargeHistory\ChargeType $chargeType,
         int $usersCount
     ) {
-        if ($chargeType == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
             return $usersCount;
         }
 
@@ -686,7 +684,7 @@ class PaymentService extends AppService
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'      => PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
@@ -1034,7 +1032,7 @@ class PaymentService extends AppService
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
         // Get teams only credit card payment type
-        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\PaymentSetting\Type::CREDIT_CARD());
 
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
@@ -1094,7 +1092,7 @@ class PaymentService extends AppService
         /** @var InvoiceHistory $InvoiceHistory */
         $InvoiceHistory = ClassRegistry::init("InvoiceHistory");
         // Get teams only credit card payment type
-        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(PaymentSetting::PAYMENT_TYPE_INVOICE);
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\PaymentSetting\Type::INVOICE());
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
@@ -1134,29 +1132,33 @@ class PaymentService extends AppService
      */
     public function updatePayerInfo(int $teamId, array $payerData)
     {
-        /** @var PaymentSetting $PaymentSetting */
-        $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $paySetting = $PaymentSetting->getCcByTeamId($teamId);
-
-        $data = am(Hash::get($paySetting, 'PaymentSetting'), $payerData);
-
-        // Check if payment exists
-        if (empty($paySetting)) {
-            $PaymentSetting->invalidate(null, __('Payment settings does not exists.'));
-            return $PaymentSetting->validationErrors;
-        }
-
         try {
-            // Update PaymentSettings
-            $PaymentSetting->begin();
-            $PaymentSetting->save($data);
-            $PaymentSetting->commit();
+            /** @var PaymentSetting $PaymentSetting */
+            $PaymentSetting = ClassRegistry::init("PaymentSetting");
+            $paySetting = $PaymentSetting->getUnique($teamId);
+            // Check if payment exists
+            if (empty($paySetting)) {
+                throw new Exception(
+                    sprintf("Payment setting doesn't exist. data:%s",
+                        AppUtil::varExportOneLine(compact('teamId', 'chargeType', 'usersCount'))
+                    )
+
+                );
+            }
+
+            $payerData['team_id'] = $teamId;
+            if (!$PaymentSetting->save($payerData, false)) {
+                throw new Exception(
+                    sprintf("Failed to update company info. data:%s",
+                        AppUtil::varExportOneLine(compact('teamId', 'payerData'))
+                    )
+                );
+            }
         } catch (Exception $e) {
-            $PaymentSetting->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
 
-            return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
+            return false;
         }
         return true;
     }
@@ -1184,8 +1186,6 @@ class PaymentService extends AppService
      *   } catch (Exception $e) {
      *      × $Invite->rollback():
      *   }
-     *
-     *
      * ■Must catch Exception and handling in the caller
      *
      * @param int                               $teamId
@@ -1235,7 +1235,7 @@ class PaymentService extends AppService
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
                     $paymentSetting);
 
-                $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId);
+                $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
                 // Insert ChargeHistory
                 $historyData = [
                     'team_id'          => $teamId,

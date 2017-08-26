@@ -26,7 +26,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -38,7 +37,6 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -50,7 +48,6 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -59,7 +56,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -68,7 +64,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -77,7 +72,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -86,7 +80,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -101,7 +94,6 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -110,16 +102,17 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'result_type'      => [
-            'numeric'  => [
-                'rule' => ['numeric'],
+        'payment_type'     => [
+            'inEnumList' => [
+                'rule' => [
+                    'inEnumList',
+                    "ChargeHistory\ResultType"
+                ],
             ],
-            'notBlank' => [
-                'required' => true,
+            'notBlank'   => [
                 'rule'     => 'notBlank',
             ],
         ],
