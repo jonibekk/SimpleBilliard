@@ -19,11 +19,11 @@ export function validatePayment(page, add_data) {
         // TODO.Payment:process by status code (ex. 403, 404)
         // If status code is 403, redirect top page.
         if (!response.data.validation_errors) {
-          // Reason to set to validation_errors.name is that
-          // This field is on to submit button
-          dispatch(invalid({
-            validation_errors: {name: response.data.message}
-          }))
+          new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
+          }).show();
+          dispatch(invalid(response.data))
         } else {
           dispatch(invalid(response.data))
         }
@@ -112,14 +112,12 @@ export function savePaymentCc(card, extra_details) {
             dispatch(toNextPage(Page.COMPLETE))
           },
           ({response}) => {
-            // TODO.Payment:process by status code (ex. 403, 404)
-            // If status code is 403, redirect top page.
             if (!response.data.validation_errors) {
-              // Reason to set to validation_errors.name is that
-              // This field is on to submit button
-              dispatch(invalid({
-                message: response.data.message
-              }))
+              new Noty({
+                type: 'error',
+                text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
+              }).show();
+              dispatch(invalid(response.data))
             } else {
               dispatch(invalid(response.data))
             }
@@ -140,14 +138,12 @@ export function savePaymentInvoice() {
         dispatch(toNextPage(Page.COMPLETE))
       },
       ({response}) => {
-        // TODO.Payment:process by status code (ex. 403, 404)
-        // If status code is 403, redirect top page.
         if (!response.data.validation_errors) {
-          // Reason to set to validation_errors.name is that
-          // This field is on to submit button
-          dispatch(invalid({
-            message: response.data.message
-          }))
+          new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
+          }).show();
+          dispatch(invalid(response.data))
         } else {
           dispatch(invalid(response.data))
         }
