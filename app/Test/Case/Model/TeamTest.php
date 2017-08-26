@@ -1,6 +1,8 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Team', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Team Test Case
  *
@@ -323,6 +325,26 @@ class TeamTest extends GoalousTestCase
         $this->assertEqual($this->Team->getCountry($teamId), 'US');
         $teamId = $this->createTeam(['country' => null]);
         $this->assertEqual($this->Team->getCountry($teamId), null);
+    }
+
+    public function test_updatePaidPlan()
+    {
+        $teamId = 1;
+        $fields = [
+            'service_use_status' => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_state_start_date' => '2017-01-01',
+            'service_use_state_end_date' => '2017-01-16',
+        ];
+        $this->Team->updateAll($fields, ['id' => $teamId]);
+        $startDate = '2017-01-15';
+        $res = $this->Team->updatePaidPlan($teamId, $startDate);
+        $this->assertTrue($res);
+        $team = $this->Team->getById($teamId, array_keys($fields));
+        $this->assertEquals($team, [
+            'service_use_status' => Enum\Team\ServiceUseStatus::PAID,
+            'service_use_state_start_date' => $startDate,
+            'service_use_state_end_date' => null,
+        ]);
     }
 
     function _setDefault()

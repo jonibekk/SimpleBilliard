@@ -726,8 +726,11 @@ class PaymentService extends AppService
             // Set team status
             // Up to this point any failure do not directly affect user accounts or charge its credit card.
             // Team status will be set first in case of any failure team will be able to continue to use.
-            $paymentDate = date('Y-m-d');
-            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+            $timezone = $Team->getTimezone();
+            $date = AppUtil::todayDateYmdLocal($timezone);
+            if (!$Team->updatePaidPlan($teamId, $date)) {
+                throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
+            }
 
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
@@ -842,8 +845,12 @@ class PaymentService extends AppService
             $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
 
             // Set team status
-            $paymentDate = date('Y-m-d');
-            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+            $timezone = $Team->getTimezone();
+            $date = AppUtil::todayDateYmdLocal($timezone);
+            if (!$Team->updatePaidPlan($teamId, $date)) {
+                throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
+            }
+
 
             $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
             if ($res == false) {
