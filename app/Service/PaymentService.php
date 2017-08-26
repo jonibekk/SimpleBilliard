@@ -74,7 +74,7 @@ class PaymentService extends AppService
      *
      * @return array|bool
      */
-    public function validateCreate($data)
+    public function validateCreateCc($data)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -82,16 +82,12 @@ class PaymentService extends AppService
         // Validates model
         $PaymentSetting->set($data);
         $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateCreate);
-        if (!$PaymentSetting->validates()) {
-            return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
-        }
 
-        // Validate if team exists
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $teamId = Hash::get($data, 'team_id');
-        if ($Team->exists($teamId) === false) {
-            $PaymentSetting->invalidate('team_id', __("Not exist"));
+        $companyCountry = Hash::get($data, 'company_country');
+        if ($companyCountry === 'JP') {
+            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
+        }
+        if (!$PaymentSetting->validates()) {
             return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
         }
 
@@ -105,8 +101,6 @@ class PaymentService extends AppService
                 return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
             }
         }
-
-        // TODO: Validate INVOICE data
 
         return true;
     }
@@ -1442,6 +1436,10 @@ class PaymentService extends AppService
         $allValidationErrors = [];
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
+            $companyCountry = Hash::get($data, 'payment_setting.company_country');
+            if ($companyCountry === 'JP') {
+                $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
+            }
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'payment_setting', 'PaymentSetting', $PaymentSetting)
@@ -1458,6 +1456,11 @@ class PaymentService extends AppService
 
         // Invoice validation
         if (!empty(Hash::get($fields, 'Invoice'))) {
+            $companyCountry = Hash::get($data, 'payment_setting.company_country');
+            if ($companyCountry === 'JP') {
+                $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
+            }
+
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)

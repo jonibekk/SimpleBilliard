@@ -31,9 +31,7 @@ class PaymentsController extends ApiController
                 'company_city',
                 'company_street',
                 'contact_person_first_name',
-                'contact_person_first_name_kana',
                 'contact_person_last_name',
-                'contact_person_last_name_kana',
                 'contact_person_tel',
                 'contact_person_email',
             ]
@@ -46,9 +44,7 @@ class PaymentsController extends ApiController
                 'company_city',
                 'company_street',
                 'contact_person_first_name',
-                'contact_person_first_name_kana',
                 'contact_person_last_name',
-                'contact_person_last_name_kana',
                 'contact_person_tel',
                 'contact_person_email',
             ],
@@ -87,7 +83,7 @@ class PaymentsController extends ApiController
         // Validate Data
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
-        $validation = $PaymentService->validateCreate($requestData);
+        $validation = $PaymentService->validateCreateCc($requestData);
 
         if ($validation !== true) {
             return $this->_getResponseValidationFail($validation);
@@ -110,7 +106,7 @@ class PaymentsController extends ApiController
 
         // Register credit card, and apply payment
         $timezone = $this->Team->getTimezone();
-        $requestData['payment_base_day'] = date('d',strtotime(AppUtil::todayDateYmdLocal($timezone)));
+        $requestData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
         $res = $PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $requestData);
         if ($res['error'] === true) {
             return $this->_getResponse($res['errorCode'], null, null, $res['message']);
@@ -158,7 +154,7 @@ class PaymentsController extends ApiController
         // Register invoice
         // Invoices for only Japanese team. So, $timezone will be always Japan time.
         $timezone = 9;
-        $requestData['payment_base_day'] = date('d',strtotime(AppUtil::todayDateYmdLocal($timezone)));
+        $requestData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
         $requestData['currency'] = PaymentSetting::CURRENCY_TYPE_JPY;
         $requestData['type'] = PaymentSetting::PAYMENT_TYPE_INVOICE;
 
@@ -215,17 +211,18 @@ class PaymentsController extends ApiController
             // Calc charge user count
             $chargeUserCnt = $TeamMember->countChargeTargetUsers();
             $paymentSetting = [
-                'currency' => $currencyType,
+                'currency'        => $currencyType,
                 'amount_per_user' => $amountPerUser,
                 'company_country' => $companyCountry
             ];
-            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($this->current_team_id, $chargeUserCnt, $paymentSetting);
+            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($this->current_team_id, $chargeUserCnt,
+                $paymentSetting);
             $res = am($res, [
-                'amount_per_user' => $PaymentService->formatCharge($amountPerUser, $currencyType),
+                'amount_per_user'    => $PaymentService->formatCharge($amountPerUser, $currencyType),
                 'charge_users_count' => $chargeUserCnt,
-                'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $currencyType),
-                'tax' => $PaymentService->formatCharge($chargeInfo['tax'], $currencyType),
-                'total_charge' => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
+                'sub_total_charge'   => $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $currencyType),
+                'tax'                => $PaymentService->formatCharge($chargeInfo['tax'], $currencyType),
+                'total_charge'       => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
             ]);
         }
         return $this->_getResponseSuccess($res);
@@ -250,9 +247,33 @@ class PaymentsController extends ApiController
             return $this->_getResponseBadFail(__("Invalid Request"));
         }
 
+        $data = $this->request->data;
+        if ($page === 'company') {
+            $companyCountry = Hash::get($data, 'payment_setting.company_country');
+            if (empty($companyCountry)) {
+                return $this->_getResponseBadFail(__("Invalid Request"));
+            }
+            if ($companyCountry === 'JP') {
+                $validationFields['PaymentSetting'] = am(
+                    $validationFields['PaymentSetting'],
+                    [
+                        'contact_person_last_name_kana',
+                        'contact_person_first_name_kana',
+                    ]
+                );
+            }
+        } elseif ($page === 'invoice') {
+            $validationFields['Invoice'] = am(
+                $validationFields['Invoice'],
+                [
+                    'contact_person_last_name_kana',
+                    'contact_person_first_name_kana',
+                ]
+            );
+        }
+
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
-        $data = $this->request->data;
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
@@ -320,7 +341,6 @@ class PaymentsController extends ApiController
         if (!$this->Team->isPaidPlan($teamId)) {
             return $this->_getResponseForbidden();
         }
-
 
         $userId = $this->Auth->user('id');
 

@@ -108,7 +108,7 @@ class PaymentServiceTest extends GoalousTestCase
             'currency'         => 1
         ]);
 
-        $res = $this->PaymentService->validateCreate($payment);
+        $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertTrue($res);
     }
 
@@ -123,7 +123,7 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
-        $res = $this->PaymentService->validateCreate($payment);
+        $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertFalse($res === true);
     }
 
@@ -137,7 +137,7 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
-        $res = $this->PaymentService->validateCreate($payment);
+        $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertFalse($res === true);
     }
 
@@ -152,7 +152,7 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
-        $res = $this->PaymentService->validateCreate($payment);
+        $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertFalse($res === true);
     }
 
@@ -167,7 +167,7 @@ class PaymentServiceTest extends GoalousTestCase
             'currency'         => 1
         ]);
 
-        $res = $this->PaymentService->validateCreate($payment);
+        $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertFalse($res === true);
     }
 
@@ -182,7 +182,7 @@ class PaymentServiceTest extends GoalousTestCase
             'currency'         => 12
         ]);
 
-        $res = $this->PaymentService->validateCreate($payment);
+        $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertFalse($res === true);
     }
 
@@ -714,7 +714,7 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $res = $this->PaymentService->updateInvoice(1, $newData);
-        
+
         $this->assertNotNull($res);
         $this->assertArrayHasKey("errorCode", $res);
         $this->assertArrayHasKey("message", $res);
