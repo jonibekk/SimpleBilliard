@@ -272,6 +272,11 @@ class PaymentsController extends ApiController
         if ($teamId != $this->current_team_id) {
             return $this->_getResponseNotFound();
         }
+
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden();
+        }
         $userId = $this->Auth->user('id');
 
         /** @var PaymentService $PaymentService */
@@ -311,6 +316,14 @@ class PaymentsController extends ApiController
             return $this->_getResponseNotFound();
         }
 
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+
+        $userId = $this->Auth->user('id');
+
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
@@ -324,11 +337,7 @@ class PaymentsController extends ApiController
 
         $result = $PaymentService->updateInvoice($teamId, $this->request->data);
         if ($result !== true) {
-            if (empty($result['errorCode'])) {
-                return $this->_getResponseValidationFail($result);
-            } else {
-                return $this->_getResponse($result['errorCode'], null, null, $result['message']);
-            }
+            return $this->_getResponseInternalServerError();
         }
 
         return $this->_getResponseSuccess();

@@ -28,6 +28,7 @@ App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Model\Enum as Enum;
 /**
  * CakeTestCase class
  *
@@ -72,7 +73,7 @@ class GoalousTestCase extends CakeTestCase
      */
     public function setUp()
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2024M');
         parent::setUp();
         Cache::config('user_data', ['prefix' => ENV_NAME . ':test:cache_user_data:']);
         Cache::config('team_info', ['prefix' => ENV_NAME . ':test:cache_team_info:']);
@@ -674,7 +675,10 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'          => $teamId,
                 'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-                'payment_base_day' => 1
+                'payment_base_day' => 1,
+                'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+                'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+                'company_country'  => 'JP',
             ],
             $paymentSetting
         );
@@ -685,6 +689,7 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'            => $teamId,
                 'payment_setting_id' => $paymentSettingId,
+                'customer_code' => 'cus_BDjPwryGzOQRBI',
             ],
             $creditCard
         );
@@ -799,7 +804,7 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'     => $teamId,
                 'currency'    => PaymentSetting::CURRENCY_TYPE_JPY,
-                'result_type' => ChargeHistory::TRANSACTION_RESULT_SUCCESS,
+                'result_type' => Enum\ChargeHistory\ResultType::SUCCESS,
             ],
             $chargeHistory
         );
@@ -844,8 +849,8 @@ class GoalousTestCase extends CakeTestCase
             $response = \Stripe\Token::create($request);
             $token = $response->id;
         } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            $this->Team->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->Team->log($e->getTraceAsString());
             return "";
         }
 
