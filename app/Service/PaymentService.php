@@ -1212,8 +1212,7 @@ class PaymentService extends AppService
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $paySetting = Hash::get($PaymentSetting->getCcByTeamId($teamId), 'PaymentSetting');
-
+        $paySetting = $PaymentSetting->getUnique($teamId);
         // Check if payment exists
         if (empty($paySetting)) {
             return ['errorCode' => 400, 'message' => __('Payment settings does not exists.')];
@@ -1259,7 +1258,7 @@ class PaymentService extends AppService
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
 
-            return false;
+            return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
         }
         return true;
     }
