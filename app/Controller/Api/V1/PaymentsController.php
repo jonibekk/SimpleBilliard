@@ -277,6 +277,7 @@ class PaymentsController extends ApiController
         if (!$this->Team->isPaidPlan($teamId)) {
             return $this->_getResponseForbidden();
         }
+        $userId = $this->Auth->user('id');
 
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
