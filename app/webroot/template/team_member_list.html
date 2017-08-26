@@ -162,9 +162,13 @@
         <table class="table team_member_table">
             <tr ng-repeat="item in invite_list | filter:name_field">
                 <td>
-                    <p>{{ item.Invite.email }}</p>
+                    <!-- TODO: Add function to ng-submit when Invite API has been fixed -->
+                    <form name="reinviteUser" class="team-member-invite-form" ng-submit="">
+                        <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email">
+                        <button type="submit" class="btn btn-primary team-member-invited-submit">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</button>
+                    </form>
 
-                    <div ng-bind-html="item.Invite.created" class="left_align"></div>
+                    <div ng-bind-html="item.Invite.created"></div>
                     <div ng-if="item.Invite.token_expired_flg == true && item.Invite.del_flg == false" class="expired_invite left_align"> Expired </div>
                 </td>
                 <td>
@@ -190,7 +194,7 @@
 
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1"
-                                       ng-click="settingInvite($index, item.Invite.id, 'Invited')">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</a>
+                                       ng-click="editInviteEmail(true)">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</a>
                                 </li>
 
                             </ul>

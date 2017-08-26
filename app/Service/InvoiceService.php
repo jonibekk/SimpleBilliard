@@ -32,6 +32,8 @@ class InvoiceService extends AppService
         array $monthlyChargeHistory,
         string $orderDate
     ): array {
+        // fix timezone as japan time
+        $timezone = 9;
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         /** @var Team $Team */
@@ -45,7 +47,7 @@ class InvoiceService extends AppService
 
         $data = [
             'O_ReceiptOrderDate'     => $orderDate,
-            'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + (9 * HOUR)),
+            'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + ($timezone * HOUR)),
             // provided date cannot be specified past date
             'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
             'O_SiteId'               => ATOBARAI_SITE_ID,
@@ -56,22 +58,33 @@ class InvoiceService extends AppService
             'C_UnitingAddress'       => $this->getCompanyAddress($invoiceInfo),
             'C_CorporateName'        => $invoiceInfo['company_name'],
             'C_NameKj'               => $this->getContactNameKj($invoiceInfo),
+            'C_NameKn'               => $this->getContactNameKana($invoiceInfo),
+            'C_CpNameKj'             => $this->getContactNameKj($invoiceInfo),
             'C_Phone'                => $invoiceInfo['contact_person_tel'],
             'C_MailAddress'          => $invoiceInfo['contact_person_email'],
             'C_EntCustId'            => $teamId,
         ];
 
         // for added users charge
-        $data["I_ItemNameKj_0"] = "Goalous追加利用料";
-        $data["I_UnitPrice_0"] = $addedUserAmount;
-        $data["I_ItemNum_0"] = 1;
+        $itemIndex = 0;
+        if (!empty($targetChargeHistories)) {
+            foreach ($targetChargeHistories as $targetChargeHistory) {
+                $chargeDate = date('n/j', $targetChargeHistory['charge_datetime'] + ($timezone * HOUR));
+                $data["I_ItemNameKj_{$itemIndex}"] = "{$chargeDate} Goalous追加利用料";
+                $data["I_UnitPrice_{$itemIndex}"] = $targetChargeHistory['total_amount'] + $targetChargeHistory['tax'];
+                $data["I_ItemNum_{$itemIndex}"] = 1;
+                $itemIndex++;
+            }
+        }
 
         // for monthly charge
         $monthlyStartDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
         $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyEndDate']));
-        $data["I_ItemNameKj_1"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
-        $data["I_UnitPrice_1"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
-        $data["I_ItemNum_1"] = 1;
+        $data["I_ItemNameKj_{$itemIndex}"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
+        $data["I_UnitPrice_{$itemIndex}"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
+        $data["I_ItemNum_{$itemIndex}"] = 1;
+
+        // request to atobarai.com
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
         $resAtobarai = am($resAtobarai, ['requestData' => $data]);
         return $resAtobarai;
@@ -167,6 +180,19 @@ class InvoiceService extends AppService
     function getContactNameKj(array $invoice): string
     {
         return $invoice['contact_person_last_name'] . $invoice['contact_person_first_name'];
+    }
+
+    /**
+     * @param array $invoice
+     *
+     * @return string
+     */
+    function getContactNameKana(array $invoice): string
+    {
+        if (!$invoice['contact_person_last_name_kana'] || !$invoice['contact_person_first_name_kana']) {
+            return "";
+        }
+        return $invoice['contact_person_last_name_kana'] . $invoice['contact_person_first_name_kana'];
     }
 
     /**

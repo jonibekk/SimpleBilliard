@@ -867,6 +867,15 @@ msgstr "パラメータが不正です。"
 msgid "Your Credit Card does not match your country settings"
 msgstr ""
 
+msgid "Invoice payment are available for Japan only"
+msgstr ""
+
+msgid "Failed to register paid plan."
+msgstr ""
+
+msgid "Please try again later."
+msgstr ""
+
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
 
@@ -3398,6 +3407,12 @@ msgstr "ログアウト"
 msgid "Team"
 msgstr "チーム"
 
+msgid "Newsfeed"
+msgstr "ニュースフィード"
+
+msgid "Related Goals"
+msgstr "関連ゴール"
+
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
 
@@ -4520,6 +4535,36 @@ msgstr "%s時間前"
 
 msgid "Your Notifications"
 msgstr "すべてのお知らせ"
+
+msgid "Install the new app"
+msgstr "新しいアプリをインストールしてください"
+
+msgid ""
+"You’re using a version of Goalous that’s no longer supported. Please install "
+"the new app to use Goalous."
+msgstr ""
+"サポートされなくなったGoalousのバージョンを使用しています。Goalousを使用する"
+"には、新しいアプリをインストールしてください。"
+
+msgid ""
+"After you install the new app, please make sure to uninstall the old app. "
+"Thanks!"
+msgstr ""
+"新しいアプリをインストールした後に、古いアプリをアンインストールしてくださ"
+"い。ありがとうございます！"
+
+msgid "Install"
+msgstr "インストールする"
+
+msgid "Update to the newest app"
+msgstr "最新のアプリに更新してください"
+
+msgid ""
+"You’re using a version of Goalous that’s no longer supported. Please update "
+"to the newest app version to use Goalous. Thanks!"
+msgstr ""
+"サポートされなくなったGoalousのバージョンを使用しています。Goalousを使用する"
+"には、最新のアプリバージョンに更新してください。ありがとうございます！"
 
 msgid "We accept consultation of introduction."
 msgstr "導入のご相談を受け付けています。"

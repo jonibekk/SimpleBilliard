@@ -133,15 +133,11 @@ const config = {
   },
   angular_vendor: {
     src: [
-      assets_dir + '/js/vendor/angular/angular.js',
-      assets_dir + '/js/vendor/angular/angular-ui-router.js',
-      assets_dir + '/js/vendor/angular/angular-route.js',
-      assets_dir + '/js/vendor/angular/angular-translate.js',
-      assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js',
-      assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js',
-      assets_dir + '/js/vendor/angular/angular-sanitize.js',
-      assets_dir + '/js/vendor/angular/pusher-angular.min.js',
-      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js'
+      node_modules_dir + '/angular/angular.js',
+      node_modules_dir + '/angular-ui-router/release/angular-ui-router.js',
+      node_modules_dir + '/angular-translate/dist/angular-translate.js',
+      node_modules_dir + '/angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
+      node_modules_dir + '/angular-ui-bootstrap/ui-bootstrap.js'
     ],
     output: {
       file_name: 'ng_vendors',
