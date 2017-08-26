@@ -20,7 +20,6 @@ class Invoice extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],

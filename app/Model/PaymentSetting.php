@@ -59,7 +59,6 @@ class PaymentSetting extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
