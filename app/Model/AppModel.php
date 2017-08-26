@@ -110,6 +110,8 @@ class AppModel extends Model
 
     /**
      * トランザクション開始
+     * @deprecated
+     * TODO: Delete this method and use TransactionManager
      */
     function begin()
     {
@@ -119,6 +121,8 @@ class AppModel extends Model
 
     /**
      * トランザクションコミット
+     * @deprecated
+     * TODO: Delete this method and use TransactionManager
      */
     function commit()
     {
@@ -128,6 +132,8 @@ class AppModel extends Model
 
     /**
      * トランザクションロールバック
+     * @deprecated
+     * TODO: Delete this method and use TransactionManager
      */
     function rollback()
     {

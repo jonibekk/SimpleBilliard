@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PaymentService');
+use Goalous\Model\Enum as Enum;
 
 // TODO.Payment: there are these things
 // ・Create test_validateCreate_validateError_** method related lack of company info and contact person
@@ -554,18 +555,75 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, 32.0);
     }
 
-    public function test_applyCreditCardCharge()
+    public function test_applyCreditCardCharge_exception()
     {
-        $this->createCreditCardPayment();
+        $teamId = 1;
+        try {
+            $res = null;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),0);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertTrue(strpos($res, 'Charge user count is 0') !== false);
 
-        $res = $this->PaymentService->applyCreditCardCharge(1, PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
-            30, "Payment TEST");
+        try {
+            $res = null;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEquals(strpos($res, 'Payment setting or Credit card settings does not exist.'), 0);
 
-        $this->assertNotNull($res);
-        $this->assertArrayHasKey("error", $res);
-        $this->assertArrayHasKey("success", $res);
-        $this->assertFalse($res["error"]);
-        $this->assertTrue($res["success"]);
+
+        try {
+            $res = null;
+            $savePaymentSetting = [
+                    'team_id'          => $teamId,
+                    'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                    'payment_base_day' => 1
+            ];
+            $this->PaymentSetting->create();
+            $this->PaymentSetting->save($savePaymentSetting, false);
+
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEquals(strpos($res, 'Payment setting or Credit card settings does not exist.'), 0);
+
+
+        try {
+            $res = null;
+            list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEquals(strpos($res, 'Failed to charge.'), 0);
+
+        try {
+            $res = null;
+            list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEquals(strpos($res, 'Failed to charge.'), 0);
+    }
+
+
+    public function test_applyCreditCardCharge_normal()
+    {
+        // TODO.Payment: implement after created data class
+        // Check if saved each data are expected
+        // PaymentSetting, CreditCard, ChargeHistory etc
+    }
+
+    public function test_applyCreditCardCharge_trn()
+    {
+        // TODO.Payment: implement after created data class
+        // Check if transaction is working and updated charge history is out of transaction
+
     }
 
     public function test_registerCreditCardPaymentAndCharge()
@@ -1142,10 +1200,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res);
 
         // Retrieve data from db
-        /** @var PaymentSetting $PaymentSetting */
-        $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        $data = Hash::get($PaymentSetting->getCcByTeamId(1), "PaymentSetting");
-
+        $data = $this->PaymentSetting->getUnique(1);
         // Compare updated with saved data
         $data = array_intersect_key($data, $updateData);
         $this->assertEquals($updateData, $data);
@@ -1312,10 +1367,21 @@ class PaymentServiceTest extends GoalousTestCase
         return $this->addChargeHistory($teamId, $data);
     }
 
+    public function test_getChargeMaxUserCnt()
+    {
+        // TODO.Payment: implement test code
+    }
+
     public function test_getAmountPerUser()
     {
-        // TODO: implement test code
+        // TODO.Payment: implement test code
     }
+
+    public function test_charge()
+    {
+        // TODO.Payment: implement test code
+    }
+
 
     /**
      * tearDown method
