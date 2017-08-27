@@ -1369,9 +1369,59 @@ class PaymentServiceTest extends GoalousTestCase
         return $this->addChargeHistory($teamId, $data);
     }
 
-    public function test_getChargeMaxUserCnt()
+    public function test_getChargeMaxUserCnt_noChargeHistory()
     {
-        // TODO.Payment: implement test code
+        $teamId = 1;
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
+        $this->assertEquals($res, 3);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 3);
+        $this->assertEquals($res, 3);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), 3);
+        $this->assertEquals($res, 3);
+
+    }
+
+    public function test_getChargeMaxUserCnt_existChargeHistory()
+    {
+        $teamId = 1;
+        $data = [
+            'team_id'          => $teamId,
+            'charge_datetime'  => strtotime('2017-08-01'),
+            'max_charge_users' => 10.
+        ];
+        $this->ChargeHistory->save($data, false);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+        $this->assertEquals($res, 0);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
+        $this->assertEquals($res, 3);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 3);
+        $this->assertEquals($res, 13);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), 3);
+        $this->assertEquals($res, 13);
+
+        $data = [
+            'team_id'          => $teamId,
+            'charge_datetime'  => strtotime('2017-08-02'),
+            'max_charge_users' => 5.
+        ];
+        $this->ChargeHistory->save($data, false);
+
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 3);
+        $this->assertEquals($res, 8);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), 20);
+        $this->assertEquals($res, 25);
+
     }
 
     public function test_getAmountPerUser()
