@@ -59,7 +59,7 @@ class TeamMemberService extends AppService
      *
      * @return void
      */
-    public function validateActivation(int $teamId, int $teamMemberId)
+    public function validateActivation(int $teamId, int $teamMemberId): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");

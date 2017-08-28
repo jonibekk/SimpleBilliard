@@ -2111,7 +2111,7 @@ class TeamMember extends AppModel
                 'team_id' => $teamId
             ]
         ];
-        return $this->find('first', $options);
+        return (bool)$this->find('first', $options);
     }
 
     /**
@@ -2129,7 +2129,6 @@ class TeamMember extends AppModel
                 'status' => self::USER_STATUS_INACTIVE
             ]
         ];
-
         return (bool)$this->find('first', $options);
     }
 }
