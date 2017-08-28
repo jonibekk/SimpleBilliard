@@ -948,15 +948,14 @@ class AppController extends BaseController
             if (!is_null($dateCreditCardExpire)) {
                 $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_CLEAR);
                 $dateCreditCardExpireBeforeOneMonth = $dateCreditCardExpire->copy()->subMonth(1);
-                if (!is_null($dateCreditCardExpire)) {
+                if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpire)) {
+                    // team credit card has been expired
+                    $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
                     $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
-                    if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpire)) {
-                        // team credit card has been expired
-                        $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
-                    } else if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
-                        // team credit card expire in 1 month at least
-                        $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
-                    }
+                } else if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
+                    // team credit card expire in 1 month at least
+                    $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
+                    $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
                 }
             }
         }
