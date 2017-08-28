@@ -200,6 +200,10 @@ class InquireInvoiceCreditStatusShell extends AppShell
 
         $invoiceHistory['order_status'] = $creditStatus;
         $invoice = $Invoice->getByTeamId($invoiceHistory['team_id']);
+        if (empty($invoice)) {
+            $this->log("Invoice not found for invoice history: " . AppUtil::varExportOneLine($invoiceHistory));
+            return false;
+        }
         $invoice['credit_status'] = $creditStatus;
 
         try {
