@@ -15,6 +15,7 @@ App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'CreditCardService');
 
 /**
  * Application Controller
@@ -868,6 +869,28 @@ class AppController extends BaseController
         $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
         $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
         $this->set('stateEndDate', $TeamService->getStateEndDate());
+
+        // check if team credit card expire in one month
+        if ($this->_isAdmin()) {
+            /** @var CreditCardService $CreditCardService */
+            $CreditCardService = ClassRegistry::init("CreditCardService");
+            $dateNow = GoalousDateTime::now();
+            $dateCreditCardExpire = $CreditCardService->getExpirationDateTimeOfTeamCreditCard($this->current_team_id);
+            if (!is_null($dateCreditCardExpire)) {
+                $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_CLEAR);
+                $dateCreditCardExpireBeforeOneMonth = $dateCreditCardExpire->copy()->subMonth(1);
+                if (!is_null($dateCreditCardExpire)) {
+                    $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                    if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpire)) {
+                        // team credit card has been expired
+                        $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
+                    } else if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
+                        // team credit card expire in 1 month at least
+                        $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
+                    }
+                }
+            }
+        }
     }
 
     public function _setDefaultTeam($team_id)
