@@ -2359,6 +2359,10 @@ body {
     width: 80%;
     margin: 0 auto;
 }
+.termsOfService {
+    width: 80%;
+    margin: 3rem auto;
+}
 
 .contact-form-checkbox {
     text-align: center;
