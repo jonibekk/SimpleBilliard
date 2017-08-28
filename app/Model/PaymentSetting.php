@@ -208,6 +208,7 @@ class PaymentSetting extends AppModel
             'fields' => [
                 'PaymentSetting.id',
                 'PaymentSetting.team_id',
+                'PaymentSetting.type',
                 'PaymentSetting.currency',
                 'PaymentSetting.amount_per_user',
                 'PaymentSetting.payment_base_day',
