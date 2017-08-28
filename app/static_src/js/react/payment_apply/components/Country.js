@@ -6,6 +6,7 @@ import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
 import {PaymentSetting} from "~/common/constants/Model";
+import InvalidMessageBox from "~/common/components/InvalidMessageBox";
 
 export default class Country extends Base {
   constructor(props) {
@@ -54,7 +55,7 @@ export default class Country extends Base {
   }
 
   render() {
-    const {countries, lang_code, input_data} = this.props.payment
+    const {countries, lang_code, input_data, validation_errors} = this.props.payment
     if (Object.keys(countries).length == 0) {
       return (
         <section className="panel choose-payment">
@@ -80,6 +81,8 @@ export default class Country extends Base {
       );
     }
 
+    const errors_payment_setting = validation_errors.payment_setting ? validation_errors.payment_setting : {};
+
     return (
       <section className="panel choose-payment">
         <div className="panel-container">
@@ -94,6 +97,8 @@ export default class Country extends Base {
             >
               {countries_option_el}
             </select>
+            <InvalidMessageBox message={errors_payment_setting.company_country}/>
+
             {!is_ja &&
             <div className="clearfix">
               <button

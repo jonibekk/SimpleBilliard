@@ -373,13 +373,15 @@ class TeamMember extends AppModel
     /**
      * Count charge target users
      *
+     * @param int $teamId
+     *
      * @return int
      */
-    public function countChargeTargetUsers(): int
+    public function countChargeTargetUsers(int $teamId): int
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id,
+                'team_id' => $teamId,
                 'status'  => [
                     self::USER_STATUS_INVITED,
                     self::USER_STATUS_ACTIVE,

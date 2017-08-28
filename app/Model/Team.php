@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+use Goalous\Model\Enum as Enum;
 
 /**
  * Team Model
@@ -772,10 +773,34 @@ class Team extends AppModel
     }
 
     /**
+     * Update paid plan
+     *
+     * @param int    $teamId
+     * @param string $date
+     *
+     * @return bool
+     */
+    public function updatePaidPlan(int $teamId, string $date): bool
+    {
+        $data = [
+            'service_use_status' => Enum\Team\ServiceUseStatus::PAID,
+            'service_use_state_start_date' => $date,
+            'service_use_state_end_date' => null
+        ];
+        $this->clear();
+        $this->id = $teamId;
+        $res = $this->save($data, false);
+        if (empty($res)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * get country by team id
      *
      * @param int $teamId
-     * 
+     *
      * @return string|null
      */
     public function getCountry(int $teamId)
