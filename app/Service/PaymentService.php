@@ -948,7 +948,7 @@ class PaymentService extends AppService
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
 
-        $timezone = $Team->getTimezone();
+        $timezone = $Team->getById($teamId)['timezone'];
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
         if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
