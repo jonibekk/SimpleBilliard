@@ -215,7 +215,7 @@ class PaymentsController extends ApiController
         }
 
         // Update
-        $updateResult = $CreditCardService->update($customerCode, $token);
+        $updateResult = $CreditCardService->update($customerCode, $token, $teamId);
         if ($updateResult['error'] === true) {
             $this->_getResponseBadFail($updateResult['message']);
         }
