@@ -60,16 +60,6 @@ class Invoice extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_tel'                    => [
-            'maxLength' => ['rule' => ['maxLength', 20]],
-            'notBlank'  => [
-                'required' => true,
-                'rule'     => 'notBlank',
-            ],
-            'phoneNo'   => [
-                'rule' => 'phoneNo',
-            ],
-        ],
         'contact_person_first_name'      => [
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [

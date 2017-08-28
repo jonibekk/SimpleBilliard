@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 
+use Goalous\Model\Enum as Enum;
 /**
  * Class ApiStripeService
  */

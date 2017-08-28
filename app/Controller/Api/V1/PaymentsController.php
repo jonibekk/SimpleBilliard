@@ -79,13 +79,6 @@ class PaymentsController extends ApiController
         $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
-        }
-
         // Check if not already paid plan
         if ($this->Team->isPaidPlan($teamId)) {
             return $this->_getResponseForbidden(__("You have already registered the paid plan."));
@@ -127,7 +120,6 @@ class PaymentsController extends ApiController
         return $this->_getResponseSuccess();
     }
 
-
     /**
      * Register invoice info
      * Endpoint: /api/v1/payments/invoice
@@ -141,13 +133,6 @@ class PaymentsController extends ApiController
         $userId = $this->Auth->user('id');
         $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_INVOICE);
-
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
-        }
 
         // Check if not already paid plan
         if ($this->Team->isPaidPlan($teamId)) {
@@ -183,43 +168,6 @@ class PaymentsController extends ApiController
         }
 
         // New Payment registered with success
-        return $this->_getResponseSuccess();
-    }
-
-    /**
-     * Update credit card info
-     * Endpoint: /api/v1/payments/udpate_credit_card
-     *
-     * @return CakeResponse
-     */
-    function post_update_credit_card()
-    {
-        /** @var CreditCardService $CreditCardService */
-        $CreditCardService = ClassRegistry::init("CreditCardService");
-        /** @var CreditCard $CreditCard */
-        $CreditCard = ClassRegistry::init("CreditCard");
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init("TeamMember");
-
-        $token = Hash::get($this->request->data, 'token');
-        $teamId = $this->current_team_id;
-        $userId = $this->Auth->user('id');
-
-        // Validation
-        $customerCode = $CreditCard->getCustomerCode($teamId);
-        if (empty($customerCode)) {
-            return $this->_getResponseNotFound();
-        }
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
-            return $this->_getResponseForbidden();
-        }
-
-        // Update
-        $updateResult = $CreditCardService->update($customerCode, $token, $teamId);
-        if ($updateResult['error'] === true) {
-            $this->_getResponseBadFail($updateResult['message']);
-        }
-
         return $this->_getResponseSuccess();
     }
 
@@ -324,14 +272,12 @@ class PaymentsController extends ApiController
         if ($teamId != $this->current_team_id) {
             return $this->_getResponseNotFound();
         }
-        $userId = $this->Auth->user('id');
 
-        // Check if is admin
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!$TeamMember->isActiveAdmin($userId, $teamId)) {
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
             return $this->_getResponseForbidden();
         }
+        $userId = $this->Auth->user('id');
 
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
@@ -345,7 +291,7 @@ class PaymentsController extends ApiController
         }
 
         // Update payer info
-        $result = $PaymentService->updatePayerInfo($teamId, $this->request->data);
+        $result = $PaymentService->updatePayerInfo($teamId, $userId, $this->request->data);
         if ($result !== true) {
             if (empty($result['errorCode'])) {
                 return $this->_getResponseValidationFail($result);
@@ -356,4 +302,79 @@ class PaymentsController extends ApiController
         return $this->_getResponseSuccess();
     }
 
+    /**
+     * Update invoice info
+     * Endpoint: /api/v1/payments/{$teamId}/invoice
+     *
+     * @param int $teamId
+     *
+     * @return CakeResponse
+     */
+    function put_invoice(int $teamId)
+    {
+        if ($teamId != $this->current_team_id) {
+            return $this->_getResponseNotFound();
+        }
+
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+
+        $userId = $this->Auth->user('id');
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        // Validate input
+        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        $data = array('payment_setting' => $this->request->data);
+        $validationErrors = $PaymentService->validateSave($data, $validationFields);
+        if (!empty($validationErrors)) {
+            return $this->_getResponseValidationFail($validationErrors);
+        }
+
+        $result = $PaymentService->updateInvoice($teamId, $this->request->data);
+        if ($result !== true) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Update credit card info
+     * Endpoint: /api/v1/payments/{$teamId}/credit_card
+     *
+     * @param int $teamId
+     *
+     * @return CakeResponse
+     */
+    function put_credit_card(int $teamId)
+    {
+        if ($teamId != $this->current_team_id) {
+            return $this->_getResponseNotFound();
+        }
+
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        $token = Hash::get($this->request->data, 'token');
+
+        // Validation
+        $customerCode = $CreditCard->getCustomerCode($teamId);
+        if (empty($customerCode)) {
+            return $this->_getResponseNotFound();
+        }
+
+        // Update
+        $updateResult = $CreditCardService->update($customerCode, $token);
+        if ($updateResult['error'] === true) {
+            $this->_getResponseBadFail($updateResult['message']);
+        }
+
+        return $this->_getResponseSuccess();
+    }
 }

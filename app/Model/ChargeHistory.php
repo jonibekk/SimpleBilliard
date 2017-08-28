@@ -1,18 +1,17 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Model\Enum as Enum;
 /**
  * ChargeHistory Model
  */
 class ChargeHistory extends AppModel
 {
-    const TRANSACTION_RESULT_ERROR = 0;
-    const TRANSACTION_RESULT_SUCCESS = 1;
-    const TRANSACTION_RESULT_FAIL = 2;
-
+    // TODO.Payment: Change to enum and remove defined these
     const PAYMENT_TYPE_INVOICE = 0;
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
+    // TODO.Payment: Change to enum and remove defined these
     const CHARGE_TYPE_MONTHLY = 0;
     const CHARGE_TYPE_ADD_USER = 1;
     const CHARGE_TYPE_ACTIVATE_USER = 2;
@@ -27,38 +26,28 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
         'payment_type'     => [
-            'inList'   => [
+            'inEnumList' => [
                 'rule' => [
-                    'inList',
-                    [
-                        PaymentSetting::PAYMENT_TYPE_INVOICE,
-                        PaymentSetting::PAYMENT_TYPE_CREDIT_CARD
-                    ]
+                    'inEnumList',
+                    "PaymentSetting\Type"
                 ],
             ],
-            'notBlank' => [
-                'required' => true,
+            'notBlank'   => [
                 'rule'     => 'notBlank',
             ],
         ],
         'charge_type'      => [
-            'inList'   => [
+            'inEnumList' => [
                 'rule' => [
-                    'inList',
-                    [
-                        PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
-                        PaymentSetting::CHARGE_TYPE_USER_INCREMENT_FEE,
-                        PaymentSetting::CHARGE_TYPE_USER_ACTIVATION_FEE
-                    ]
+                    'inEnumList',
+                    "ChargeHistory\ChargeType"
                 ],
             ],
-            'notBlank' => [
-                'required' => true,
+            'notBlank'   => [
                 'rule'     => 'notBlank',
             ],
         ],
@@ -67,7 +56,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -76,7 +64,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -85,7 +72,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -94,7 +80,6 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -109,7 +94,6 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -118,16 +102,17 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'result_type'      => [
-            'numeric'  => [
-                'rule' => ['numeric'],
+        'payment_type'     => [
+            'inEnumList' => [
+                'rule' => [
+                    'inEnumList',
+                    "ChargeHistory\ResultType"
+                ],
             ],
-            'notBlank' => [
-                'required' => true,
+            'notBlank'   => [
                 'rule'     => 'notBlank',
             ],
         ],
@@ -141,14 +126,16 @@ class ChargeHistory extends AppModel
     /**
      * Get latest max charge users
      *
+     * @param int $teamId
+     *
      * @return int
      */
-    function getLatestMaxChargeUsers(): int
+    function getLatestMaxChargeUsers(int $teamId): int
     {
         $res = $this->find('first', [
                 'fields'     => ['max_charge_users'],
                 'conditions' => [
-                    'team_id' => $this->current_team_id,
+                    'team_id' => $teamId,
                 ],
                 'order'      => ['id' => 'DESC'],
             ]
@@ -260,7 +247,7 @@ class ChargeHistory extends AppModel
             'charge_users'     => $usersCount,
             'currency'         => $currencyType,
             'charge_datetime'  => $time,
-            'result_type'      => self::TRANSACTION_RESULT_SUCCESS,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $usersCount
         ];
         $this->clear();
@@ -268,5 +255,4 @@ class ChargeHistory extends AppModel
         $ret = Hash::extract($ret, 'ChargeHistory');
         return $ret;
     }
-
 }

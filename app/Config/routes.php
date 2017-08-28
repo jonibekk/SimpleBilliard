@@ -137,6 +137,8 @@ Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'lp'],
         'lang'     => 'ja|en',
         'pass'     => ['pagename']
     ]);
+Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'app_version_unsupported'],
+    ['pagename' => 'app_force_update|app_force_install', 'pass' => ['pagename']]);
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

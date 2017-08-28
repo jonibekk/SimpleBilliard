@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 App::uses('Invoice', 'Model');
 
 use Goalous\Model\Enum as Enum;
-
 /**
  * PaymentSetting Model
  */
@@ -18,10 +17,6 @@ class PaymentSetting extends AppModel
 
     const CURRENCY_JPY = 'JPY';
     const CURRENCY_USD = 'USD';
-
-    const CHARGE_TYPE_MONTHLY_FEE = 0;
-    const CHARGE_TYPE_USER_INCREMENT_FEE = 1;
-    const CHARGE_TYPE_USER_ACTIVATION_FEE = 2;
 
     const CURRENCY_SYMBOLS_EACH_TYPE = [
         self::CURRENCY_TYPE_JPY => "¥",
@@ -210,11 +205,28 @@ class PaymentSetting extends AppModel
     public function getCcByTeamId(int $teamId)
     {
         $options = [
-            'conditions' => [
-                'team_id' => $teamId,
+            'fields' => [
+                'PaymentSetting.id',
+                'PaymentSetting.team_id',
+                'PaymentSetting.currency',
+                'PaymentSetting.amount_per_user',
+                'PaymentSetting.payment_base_day',
+                'PaymentSetting.company_country',
+                'CreditCard.customer_code'
             ],
-            'contain'    => [
-                'CreditCard',
+            'conditions' => [
+                'PaymentSetting.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'credit_cards',
+                    'alias'      => 'CreditCard',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'PaymentSetting.team_id = CreditCard.team_id',
+                        'CreditCard.del_flg' => false
+                    ]
+                ]
             ]
         ];
         $res = $this->find('first', $options);
@@ -226,7 +238,7 @@ class PaymentSetting extends AppModel
      *
      * @return array
      */
-    public function findMonthlyChargeTeams(int $paymentType): array
+    public function findMonthlyChargeTeams(Enum\PaymentSetting\Type $paymentType): array
     {
         $options = [
             'fields'     => [
@@ -236,7 +248,7 @@ class PaymentSetting extends AppModel
                 'Team.timezone',
             ],
             'conditions' => [
-                'PaymentSetting.type'    => $paymentType,
+                'PaymentSetting.type'    => $paymentType->getValue(),
                 'PaymentSetting.del_flg' => false
             ],
             'joins'      => [
@@ -252,7 +264,7 @@ class PaymentSetting extends AppModel
                 ],
             ]
         ];
-        if ($paymentType == self::PAYMENT_TYPE_CREDIT_CARD) {
+        if ($paymentType->getValue() == Enum\PaymentSetting\Type::CREDIT_CARD) {
             $options['joins'][] = [
                 'type'       => 'INNER',
                 'table'      => 'credit_cards',
@@ -300,6 +312,22 @@ class PaymentSetting extends AppModel
         }
 
         return Hash::get($res, 'PaymentSetting.amount_per_user');
+    }
+
+    /**
+     * Get by team id
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    public function getUnique(int $teamId): array
+    {
+        $res = $this->findByTeamId($teamId);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::get($res, 'PaymentSetting');
     }
 
 }

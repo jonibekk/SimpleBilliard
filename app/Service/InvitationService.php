@@ -2,6 +2,8 @@
 App::import('Service', 'AppService');
 App::uses('Email', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class InvitationService
  */
@@ -56,18 +58,19 @@ class InvitationService extends AppService
     /**
      * Calc charge user count
      *
+     * @param int $teamId
      * @param int $addUserCnt
      *
      * @return int
      */
-    function calcChargeUserCount(int $addUserCnt): int
+    function calcChargeUserCount(int $teamId, int $addUserCnt): int
     {
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
-        $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers();
+        $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
         $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers();
         // Regard adding users as charge users as it is
         //  if current users does not over max charged users
@@ -105,11 +108,15 @@ class InvitationService extends AppService
         $User = ClassRegistry::init("User");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
 
         try {
-            $Invite->begin();
+            $this->TransactionManager->begin();
             /* Delete old invitations if already invited past */
             if (!$Invite->softDeleteAll(['email' => $emails])) {
                 throw new Exception(sprintf("Failed to reset old invitattions. data:%s",
@@ -164,13 +171,18 @@ class InvitationService extends AppService
                 );
             }
 
-            /* TODO: Charge if paid plan */
-            // Charge if credit card
-            // Add charge history
-
-            $Invite->commit();
+            /* Charge if paid plan */
+            if ($Team->isPaidPlan($teamId)) {
+                $chargeUserCnt = count($targetUserIds);
+                // [Important] Transaction commit in this method
+                $PaymentService->charge(
+                    $teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    $chargeUserCnt
+                );
+            }
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $Invite->rollback();
+            $this->TransactionManager->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return false;
