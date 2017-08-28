@@ -18,6 +18,14 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_checkAdmin([
+            'ajax_set_current_team_admin_user_flag',
+            'ajax_set_current_team_evaluation_flag',
+            'ajax_inactivate_team_member',
+            'activate_team_member',
+            'activate_confirm_with_payment',
+            'activate_with_payment'
+        ]);
     }
 
     /**
@@ -2628,40 +2636,33 @@ class TeamsController extends AppController
 
     /**
      * Activate team member action
-     * # Free trial case
-     *  - Activate team member only
-     *  - reload page
-     * # Paid & not charge case
-     *  - Activate team member only
-     *  - Reload page
      * # Paid & charge case
      *  - Activate team member & charge card|invoice
      *  - Redirect confirmation page
+     * # Paid & not charge case
+     *  - Activate team member only
+     *  - Reload page
+     * # Free trial case
+     *  - Activate team member only
+     *  - Reload page
      *
      * @param int $teamMemberId
      * @return void
      */
     function activate_team_member(int $teamMemberId)
     {
-        $userId = $this->Auth->user('id');
-        $teamId = $this->current_team_id;
-
-        // Check 403
-        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
-            $this->Notification->outError(__("You have no right to operate it."));
-            return $this->redirect($this->referer());
-        }
-
-        // Check plan
-        if (!$this->Team->isFreeTrial($teamId) && !$this->Team->isPaidPlan($teamId)) {
-            $this->Notification->outError(__("You have no right to operate it."));
-            return $this->redirect($this->referer());
-        }
-
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
 
         // Paid charge case
         if ($PaymentService->isChargingUserActivation($teamId)) {
@@ -2677,7 +2678,6 @@ class TeamsController extends AppController
             $this->Notification->outSuccess(__("Failed to activate team member."));
         }
         return $this->redirect($this->referer());
-
     }
 
     /**
@@ -2689,14 +2689,18 @@ class TeamsController extends AppController
      */
     function activate_confirm_with_payment(int $teamMemberId)
     {
-        $userId = $this->Auth->user('id');
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
         $teamId = $this->current_team_id;
 
-        // Check 403
-        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
-            $this->Notification->outError(__("You have no right to operate it."));
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }
+
+        return $this->render();
     }
 
     /**
@@ -2708,18 +2712,19 @@ class TeamsController extends AppController
      */
     function activate_with_payment(int $teamMmemberId)
     {
-        $userId = $this->Auth->user('id');
-        $teamId = $this->current_team_id;
-
-        // Check 403
-        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
-            $this->Notification->outError(__("You have no right to operate it."));
-            return $this->redirect($this->referer());
-        }
 
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init("TeamMemberService");
 
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // Activate
         if ($TeamMemberService->activate($teamId, $teamMemberId)) {
             // TODO: Should display translation correctry by @kohei
             $this->Notification->outSuccess(__("Changed active status inactive to active."));

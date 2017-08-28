@@ -48,4 +48,39 @@ class TeamMemberService extends AppService
         $this->TransactionManager->commit();
         return true;
     }
+
+    /**
+     * Validate activate
+     * - Check team plan
+     * - Check being team member
+     * - Check can activate status
+     *
+     * @param int $teamMemberId
+     *
+     * @return void
+     */
+    public function validateActivation(int $teamId, int $teamMemberId)
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        // Check team plan
+        if (!$Team->isFreeTrial($teamId) && !$Team->isPaidPlan($teamId)) {
+            return false;
+        }
+
+        // Check is team member
+        if (!$TeamMember->isTeamMember($teamId, $teamMemberId)) {
+            return false;
+        }
+
+        // Check inactive
+        if (!$TeamMember->isInactive($teamMemberId)) {
+            return false;
+        }
+
+        return true;
+    }
 }
