@@ -9,6 +9,13 @@ App::import('Service', 'TeamService');
 /**
  * Class InquireInvoiceCreditStatusShell
  *
+ * - Check invoice_histories table for order status as CREDIT_STATUS_WAITING
+ * - Inquire theses these invoices orders with Atobarai.com API
+ * - Send email with credit results in case of credit denied or on the first time
+ * the credit is approved.
+ * - Save credit result status.
+ * - Set account as ready-only in case of credit denied.
+ *
  * @property Invoice        $Invoice
  * @property InvoiceHistory $InvoiceHistory
  * @property InvoiceService $InvoiceService
@@ -38,24 +45,42 @@ class InquireInvoiceCreditStatusShell extends AppShell
      */
     public function main()
     {
+        $this->out('Starting credit inquire batch.');
         // Get the waiting for approval invoices
         $orders = $this->InvoiceHistory->getByOrderStatus(Invoice::CREDIT_STATUS_WAITING);
+
+        $count = 1;
+        $this->out('Number of invoice orders is: ' . count($orders));
         foreach ($orders as $order) {
+            $this->out(sprintf('- Processing %d of %d orders', $count, count($orders)));
+            $count++;
+
             $invoiceHistory = Hash::get($order, 'InvoiceHistory');
-            $orderCode = $invoiceHistory['system_order_code'];
+            if (empty($invoiceHistory)) {
+                $this->log("Error getting order history: Order: " . AppUtil::varExportOneLine($order));
+                continue;
+            }
+            $orderCode = Hash::get($invoiceHistory, 'system_order_code');
 
             // check status at Atobarai.com
             $status = $this->InvoiceService->inquireCreditStatus($orderCode);
 
             // Wrong response, try again on the next batch
+            // TODO.Payment:save error log to db
             if (empty($status) || $status['status'] == 'error') {
-                $this->log("Error inquiring credit status: " . AppUtil::varExportOneLine($status), LOG_WARNING);
+                $this->log("Error inquiring credit status: " . AppUtil::varExportOneLine($status));
+                $this->out(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
                 continue;
             }
 
             // Process status
-            $this->_processCreditStatus($invoiceHistory, $status);
+            if ($this->_processCreditStatus($invoiceHistory, $status)) {
+                $this->out(sprintf('Invoice order inquired with success. OrderCode: %s', $orderCode));
+            } else {
+                $this->out(sprintf('Invoice order failed to process. OrderCode: %s', $orderCode));
+            }
         }
+        $this->out('Done inquiring invoice orders.');
     }
 
     /**
@@ -63,15 +88,17 @@ class InquireInvoiceCreditStatusShell extends AppShell
      *
      * @param array $invoiceHistory
      * @param array $inquireResult
+     *
+     * @return bool
      */
-    private function _processCreditStatus(array $invoiceHistory, array $inquireResult)
+    private function _processCreditStatus(array $invoiceHistory, array $inquireResult): bool
     {
         // Wrong status
         $result = Hash::get($inquireResult, 'results.result');
         if ($result == null) {
             $this->log("Credit inquire result not found: " .
                 AppUtil::varExportOneLine($inquireResult));
-            return;
+            return false;
         }
 
         // Order status not available
@@ -79,42 +106,60 @@ class InquireInvoiceCreditStatusShell extends AppShell
         if ($orderStatus == null) {
             $this->log("Credit inquire order status not found: " .
                 AppUtil::varExportOneLine($inquireResult));
-            return;
+            return false;
         }
 
         // Waiting for credit check, do nothing
         if ($orderStatus == Invoice::CREDIT_STATUS_WAITING) {
             // Nothing to do right now.
-            return;
+            return false;
         }
 
         // Check for valid order status
         if (!($orderStatus == Invoice::CREDIT_STATUS_NG || $orderStatus == Invoice::CREDIT_STATUS_OK)) {
             $this->log("Invalid order status: " .
                 AppUtil::varExportOneLine($inquireResult));
-            return;
+            return false;
         }
 
         // Get invoice
-        $teamId = $invoiceHistory['team_id'];
+        $teamId = Hash::get($invoiceHistory, 'team_id');
         $invoice = $this->Invoice->getByTeamId($teamId);
-        $serviceUseStatus = $orderStatus == Invoice::CREDIT_STATUS_OK ?
-            Team::SERVICE_USE_STATUS_PAID : Team::SERVICE_USE_STATUS_READ_ONLY;
 
-        // Send email for the first time the credit is approved or when the credit is declined
-        if (($orderStatus == Invoice::CREDIT_STATUS_OK && $invoice['credit_status'] == Invoice::CREDIT_STATUS_WAITING)
-            || $orderStatus == Invoice::CREDIT_STATUS_NG) {
+        // Credit accepted
+        if ($orderStatus == Invoice::CREDIT_STATUS_OK) {
+            // Invoice status is waiting, means it is the first time
+            if (Hash::get($invoice, 'credit_status') == Invoice::CREDIT_STATUS_WAITING) {
+                // Send notification email
+                $this->_sendCreditStatusNotification($teamId, $orderStatus);
+
+                // Update credit status for invoices tables
+                $this->_updateCreditStatus($invoiceHistory, $orderStatus);
+            }
+            return true;
+        }
+
+        // Credit denied
+        if ($orderStatus == Invoice::CREDIT_STATUS_NG) {
+            // Get timezone
+            $timezone = $this->TeamService->getTeamTimezone($teamId);
+            if ($timezone === null) {
+                $this->log("Invalid timezone for team: " . $teamId);
+                return false;
+            }
+
             // Send notification email
             $this->_sendCreditStatusNotification($teamId, $orderStatus);
+
+            // Update credit status for invoices tables
+            $this->_updateCreditStatus($invoiceHistory, $orderStatus);
+
+            // Set service to ready only
+            $startDate = AppUtil::todayDateYmdLocal($timezone);
+            $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_READ_ONLY, $startDate);
         }
 
-        // Update credit status for invoices tables
-        $this->_updateCreditStatus($invoiceHistory, $orderStatus);
-
-        // Set service status to ready only if credit status is NG
-        if ($orderStatus == Invoice::CREDIT_STATUS_NG) {
-            $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_READ_ONLY, date('Y-m-d'));
-        }
+        return true;
     }
 
     /**

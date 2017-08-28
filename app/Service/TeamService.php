@@ -196,4 +196,28 @@ class TeamService extends AppService
         }
         return true;
     }
+
+    /**
+     * Get given team timezone.
+     * It will return null in case of the error on the query.
+     *
+     * @param int $teamId
+     *
+     * @return int|null
+     */
+    public function getTeamTimezone(int $teamId)  {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        try {
+            $team = $Team->findById($teamId);
+            return Hash::get($team, 'Team.timezone');
+        }
+        catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+
+            return null;
+        }
+    }
 }
