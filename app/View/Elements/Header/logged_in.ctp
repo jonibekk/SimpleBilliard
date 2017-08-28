@@ -42,7 +42,7 @@
         <div class="banner-alert font_verydark">
             <div class="container">
                 <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate) ?>
+                <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate, $statusPaymentFailed ?? false) ?>
             </div>
         </div>
     <?php } ?>

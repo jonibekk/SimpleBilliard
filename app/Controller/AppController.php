@@ -17,6 +17,7 @@ App::uses('UserAgent', 'Request');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'ChargeHistoryService');
 
 /**
  * Application Controller
@@ -934,9 +935,18 @@ class AppController extends BaseController
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
+        $serviceUseStatus = $TeamService->getServiceUseStatus();
         $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
         $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
         $this->set('stateEndDate', $TeamService->getStateEndDate());
+
+        $isAdmin = $this->_isAdmin();
+        if ($isAdmin && $serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
+            // show message if team last creditcard payment failed
+            /** @var ChargeHistoryService $ChargeHistoryService */
+            $ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
+            $this->set('statusPaymentFailed', $ChargeHistoryService->isLatestChargeFailed($this->current_team_id));
+        }
     }
 
     public function _setDefaultTeam($team_id)

@@ -18,12 +18,19 @@ class BannerHelper extends AppHelper
      * @param int    $serviceUseStatus
      * @param bool   $isTeamAdmin
      * @param string $stateEndDate
+     * @param bool   $statusPaymentFailed
      *
      * @return string
      */
-    public function getBannerMessage(int $serviceUseStatus, bool $isTeamAdmin, string $stateEndDate): string
+    public function getBannerMessage(int $serviceUseStatus, bool $isTeamAdmin, string $stateEndDate, bool $statusPaymentFailed): string
     {
         $stateEndDate = $this->TimeEx->formatYearDayI18nFromDate($stateEndDate);
+
+        if ($statusPaymentFailed) {
+            // TODO: need to decide priority of message
+            // TODO: this message string is temporary
+            return __('Your team latest payment failed.');
+        }
 
         if ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY) {
             if ($isTeamAdmin) {
