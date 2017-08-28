@@ -101,22 +101,16 @@ CakeLog::config('debug', [
     'engine' => LOG_ENGINE,
     'types'  => ['notice', 'info', 'debug'],
     'file'   => 'debug',
-    'size'   => '20MB',
-    'rotate' => 20
 ]);
 CakeLog::config('error', [
     'engine' => LOG_ENGINE,
     'types'  => ['warning', 'error', 'critical', 'alert'],
     'file'   => 'error',
-    'size'   => '20MB',
-    'rotate' => 20
 ]);
 CakeLog::config('emergency', [
     'engine' => LOG_ENGINE,
     'types'  => ['emergency'],
     'file'   => 'emergency',
-    'size'   => '20MB',
-    'rotate' => 20
 ]);
 
 Configure::write('Asset.timestamp', 'force');
