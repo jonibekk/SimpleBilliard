@@ -82,5 +82,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/terms') ?>"/>
 <?php $this->end() ?>
 <?= $this->App->viewStartComment()?>
-<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/<?= $short_lang ?>_terms.md"></div>
+<p class="termsOfService">
+    <?= nl2br($terms)?>
+</p>
 <?= $this->App->viewEndComment()?>
