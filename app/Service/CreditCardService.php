@@ -77,6 +77,8 @@ class CreditCardService extends AppService
             $response = \Stripe\Customer::create($customer);
 
             $result["customer_id"] = $response->id;
+            // TODO: must research better way of getting default_source than [0]
+            // e.g. should be like $response->sources->retrieve()
             $result["card"] = $response->sources->data[0];
         } catch (Exception $e) {
             $result["error"] = true;
@@ -117,6 +119,8 @@ class CreditCardService extends AppService
         $response = \Stripe\Customer::retrieve($customerId);
         $CreditCardService->cacheTeamCreditCardExpiration($response, $teamId);
 
+        // TODO: must research better way of getting default_source than [0]
+        // e.g. should be like $response->sources->retrieve()
         $card = $response->sources->data[0];
         return self::getRealExpireDateTimeFromCreditCardExpireDate($card['exp_year'], $card['exp_month']);
     }
@@ -128,6 +132,8 @@ class CreditCardService extends AppService
      */
     public function cacheTeamCreditCardExpiration(\Stripe\Customer $customer, int $teamId)
     {
+        // TODO: must research better way of getting default_source than [0]
+        // e.g. should be like $response->sources->retrieve()
         $card = $customer->sources->data[0];
         $data = [
             'error' => is_null($card),
