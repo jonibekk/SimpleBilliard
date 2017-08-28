@@ -782,6 +782,9 @@ class PaymentService extends AppService
             $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
                 $paymentDescription);
 
+            // Delete cache
+            $Team->resetCurrentTeam();
+
             // Error charging customer using Stripe API. Might be network,  API problem or card rejected
             if ($chargeResult['error'] === true || $chargeResult['success'] == false) {
                 // Rollback transaction
@@ -827,9 +830,6 @@ class PaymentService extends AppService
         $historyData['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
         $this->_saveChargeHistory($historyData);
 
-        // Delete cache
-        $Team->resetCurrentTeam();
-
         return $result;
     }
 
@@ -867,6 +867,7 @@ class PaymentService extends AppService
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
+            $paymentData['amount_per_user'] = self::AMOUNT_PER_USER_JPY;
             // Create Payment Setting
             if (!$PaymentSetting->save($paymentData, false)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
@@ -904,6 +905,8 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
             }
 
+            // Delete cache
+            $Team->resetCurrentTeam();
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
