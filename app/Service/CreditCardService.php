@@ -143,7 +143,7 @@ class CreditCardService extends AppService
 
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
-        $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_STRIPE_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
+        $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
         $this->log("cache credit card expiration date to redis: {$keyRedisCache}", LOG_INFO);
         Cache::set('duration', self::CACHE_TTL_SECONDS_TEAM_CREDIT_CARD_EXPIRE_DATE, 'user_data');
         Cache::write($keyRedisCache, msgpack_pack($data), 'user_data');
@@ -159,7 +159,7 @@ class CreditCardService extends AppService
     {
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
-        $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_STRIPE_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
+        $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
         $cachedCreditCardExpireData = Cache::read($keyRedisCache, 'user_data');
         if (false !== $cachedCreditCardExpireData) {
             $expireDates = msgpack_unpack($cachedCreditCardExpireData);
@@ -327,7 +327,7 @@ class CreditCardService extends AppService
             \Stripe\Customer::update($customerId, ['source' => $token]);
 
             $CreditCard = ClassRegistry::init("CreditCard");
-            $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_STRIPE_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
+            $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
             Cache::delete($keyRedisCache, 'user_data');
         } catch (Exception $e) {
             $message = $e->getMessage();

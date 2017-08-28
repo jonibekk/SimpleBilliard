@@ -244,7 +244,7 @@ define('CACHE_KEY_MY_KR_COUNT', 'my_kr_count');
 define('CACHE_KEY_IS_STARTED_EVALUATION', 'is_started_evaluation');
 define('CACHE_KEY_MY_ACTIONABLE_GOALS', 'my_goals_for_top_action');
 define('CACHE_KEY_BEFORE_CHANGE_TIMEZONE', 'before_change_timezone');
-define('CACHE_KEY_STRIPE_TEAM_CREDIT_CARD_EXPIRE_DATE', 'stripe_team_credit_card_expire_date');
+define('CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE', 'team_credit_card_expire_date');
 
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');
