@@ -44,5 +44,6 @@ yarn-error.log
 /app/webroot/css/*.min.css
 /app/webroot/css/homepage/styles.min.css
 /app/webroot/js/*.js
+/app/webroot/js/homepage/goalous_homepage.min.js
 # for Translation | 翻訳関連
 /app/Locale/**/*.pot

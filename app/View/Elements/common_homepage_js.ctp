@@ -16,7 +16,7 @@
 <?= $this->Html->script('homepage/jquery.fitvids') ?>
 <?= $this->Html->script('homepage/jquery.flexslider-min') ?>
 <?= $this->Html->script('homepage/marked.min') ?>
-<?= $this->Html->script('homepage/main') ?>
+<?= $this->Html->script('homepage/goalous_homepage.min') ?>
 <?= $this->Html->script('homepage/froogaloop2.min') ?>
 <?= $this->Html->script('homepage/vimeo') ?>
 <?= $this->Html->script('homepage/require') ?>

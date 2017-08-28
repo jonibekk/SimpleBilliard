@@ -16,24 +16,27 @@ const config = {
     pages: {
         feed: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/feed/*.js',
+            assets_dir + '/js/view/feed/*.js'
         ],
         goals: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/goals/*.js',
+            assets_dir + '/js/view/goals/*.js'
         ],
         team: [
             assets_dir + '/js/view/teams/*.js',
         ],
         user: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/users/*.js',
+            assets_dir + '/js/view/users/*.js'
         ],
         evaluation: [
-            assets_dir + '/js/view/evaluations/*.js',
+            assets_dir + '/js/view/evaluations/*.js'
         ],
         payments: [
-            assets_dir + '/js/view/payments/*.js',
+            assets_dir + '/js/view/payments/*.js'
+        ],
+        homepage: [
+            assets_dir + '/js/view/homepage/*.js'
         ]
     },
     src: [
@@ -60,6 +63,7 @@ const config = {
       user_script_name: 'goalous_user',
       evaluation_script_name: 'goalous_evaluation',
       payments_script_name: 'goalous_payment',
+      homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [

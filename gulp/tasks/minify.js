@@ -97,6 +97,19 @@ gulp.task("js_payment:uglify", () => {
         .pipe(duration('js_payment:uglify'));
 });
 
+gulp.task("js_homepage:uglify", () => {
+    let obj = gulp.src(config.dest + "/jshomepage_cat/" + config.js.output.homepage_script_name + '.js');
+    if (process.env.NODE_ENV === "production") {
+        obj = obj.pipe(uglify());
+    }
+
+    return obj.pipe(rename({
+        suffix: '.min'
+    }))
+        .pipe(gulp.dest(config.js.output.path+'/homepage/'))
+        .pipe(duration('js_homepage:uglify'));
+});
+
 gulp.task("js_vendor:uglify", () => {
   return gulp.src(config.dest + "/js_vendor_cat/" + config.js_vendor.output.file_name + '.js')
     .pipe(uglify())

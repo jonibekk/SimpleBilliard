@@ -53,6 +53,13 @@ gulp.task('js_payment:clean', () => {
         .on('end', () => { gutil.log('----------------- js_payment task finished --------------------------') })
 });
 
+gulp.task('js_homepage:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jshomepage_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_homepage:clean'))
+        .on('end', () => { gutil.log('----------------- js_homepage task finished --------------------------') })
+});
+
 gulp.task('js_vendor:clean', () => {
   return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))
