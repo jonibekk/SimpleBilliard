@@ -2641,17 +2641,27 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        // Paid status case
         if ($this->Team->isPaidPlan($teamId)) {
             // TODO: implement payment logic
-        } else if ($this->Team->isFreeTrial($teamId)) {
-            $this->Team->TeamMember->activate($teamMemberId);
-        } else {
-            $this->Notification->outError(__("You have no right to operate it."));
-            return $this->redirect($this->referer());
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+            $this->redirect($this->referer());
         }
 
-        // TODO: Should display translation correctry by @kohei
-        $this->Notification->outSuccess(__("Changed active status inactive to active."));
-        $this->redirect($this->referer());
+        // Free trial status case
+        if ($this->Team->isFreeTrial($teamId)) {
+            if ($this->Team->TeamMember->activate($teamMemberId)) {
+                // TODO: Should display translation correctry by @kohei
+                $this->Notification->outSuccess(__("Changed active status inactive to active."));
+            } else {
+                // TODO: Should display translation correctry by @kohei
+                $this->Notification->outSuccess(__("Failed to activate team member."));
+            }
+            $this->redirect($this->referer());
+        }
+
+        // Other plan
+        $this->Notification->outError(__("You have no right to operate it."));
+        return $this->redirect($this->referer());
     }
 }
