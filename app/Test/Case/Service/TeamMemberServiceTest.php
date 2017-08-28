@@ -15,8 +15,7 @@ class TeamMemberServiceTest extends GoalousTestCase
     public $fixtures = array(
         'app.user',
         'app.team',
-        'app.goal',
-        'app.key_result',
+        'app.team_member',
     );
 
     /**
@@ -69,8 +68,8 @@ class TeamMemberServiceTest extends GoalousTestCase
     public function test_validateActivation_notAllowdTeamMemberStatus()
     {
         $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
-        $teamMemberAId = $this->createTeamMember($teamAId, 1, TeamMember::USER_STATUS_INVITED);
-        $teamMemberBId = $this->createTeamMember($teamBId, 1, TeamMember::USER_STATUS_ACTIVE);
+        $teamMemberAId = $this->createTeamMember($teamId, 1, TeamMember::USER_STATUS_INVITED);
+        $teamMemberBId = $this->createTeamMember($teamId, 1, TeamMember::USER_STATUS_ACTIVE);
         $this->assertFalse($this->TeamMemberService->validateActivation($teamId, $teamMemberAId));
         $this->assertFalse($this->TeamMemberService->validateActivation($teamId, $teamMemberBId));
     }
