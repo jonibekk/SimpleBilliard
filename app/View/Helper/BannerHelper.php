@@ -53,9 +53,11 @@ class BannerHelper extends AppHelper
         if ($isTeamAdmin) {
             switch ($teamCreditCardStatus) {
                 case Team::STATUS_CREDIT_CARD_EXPIRED:
+                    // TODO: this is temporary message. message needs fix
                     return __('Your credit card expired. you will no longer be able to use Goalous. Update credit card from <a href="#">here</a>.',
                         $teamCreditCardExpireDate);
                 case Team::STATUS_CREDIT_CARD_EXPIRE_SOON:
+                    // TODO: this is temporary message. message needs fix
                     return __('Your credit card expires on <strong>%s</strong>. Following this date, you will no longer be able to use Goalous. Update credit card from <a href="#">here</a>.',
                         $teamCreditCardExpireDate);
             }
