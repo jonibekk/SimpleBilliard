@@ -1,8 +1,6 @@
 <?php
 App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
-use Goalous\Model\Enum as Enum;
-
 /**
  * PaymentSetting Fixture
  */
@@ -211,82 +209,6 @@ class PaymentSettingFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = [
-        [
-            'id'                             => 1,
-            'team_id'                        => 1,
-            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY,
-            'amount_per_user'                => 1980,
-            'company_name'                   => 'TestCompany Ltd.',
-            'company_country'                => '',
-            'company_post_code'              => '',
-            'company_region'                 => '',
-            'company_city'                   => '',
-            'company_street'                 => '',
-            'company_tel'                    => '',
-            'contact_person_first_name'      => '',
-            'contact_person_first_name_kana' => '',
-            'contact_person_last_name'       => '',
-            'contact_person_last_name_kana'  => '',
-            'contact_person_tel'             => '',
-            'contact_person_email'           => '',
-            'payment_base_day'               => 1500000000,
-            'del_flg'                        => 0,
-            'deleted'                        => null,
-            'created'                        => 1500000000,
-            'modified'                       => 1500000000,
-        ],
-        [
-            'id'                             => 2,
-            'team_id'                        => 2,
-            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY,
-            'amount_per_user'                => 1980,
-            'company_name'                   => 'TestCompany Team2 Ltd.',
-            'company_country'                => '',
-            'company_post_code'              => '',
-            'company_region'                 => '',
-            'company_city'                   => '',
-            'company_street'                 => '',
-            'company_tel'                    => '',
-            'contact_person_first_name'      => '',
-            'contact_person_first_name_kana' => '',
-            'contact_person_last_name'       => '',
-            'contact_person_last_name_kana'  => '',
-            'contact_person_tel'             => '',
-            'contact_person_email'           => '',
-            'payment_base_day'               => 1500000000,
-            'del_flg'                        => 0,
-            'deleted'                        => null,
-            'created'                        => 1500000000,
-            'modified'                       => 1500000000,
-        ],
-        [
-            'id'                             => 3,
-            'team_id'                        => 3,
-            'type'                           => Enum\PaymentSetting\Type::INVOICE,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY,
-            'amount_per_user'                => 1980,
-            'company_name'                   => 'TestCompany Team3 Ltd.',
-            'company_country'                => '',
-            'company_post_code'              => '',
-            'company_region'                 => '',
-            'company_city'                   => '',
-            'company_street'                 => '',
-            'company_tel'                    => '',
-            'contact_person_first_name'      => '',
-            'contact_person_first_name_kana' => '',
-            'contact_person_last_name'       => '',
-            'contact_person_last_name_kana'  => '',
-            'contact_person_tel'             => '',
-            'contact_person_email'           => '',
-            'payment_base_day'               => 1500000000,
-            'del_flg'                        => 0,
-            'deleted'                        => null,
-            'created'                        => 1500000000,
-            'modified'                       => 1500000000,
-        ],
-    ];
+    public $records = array();
 
 }

@@ -44,27 +44,6 @@ class CreditCardFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = [
-        [
-            'id'                 => 1,
-            'team_id'            => 1,
-            'payment_setting_id' => 1,
-            'customer_code'      => 'cus_XXXXXXXXXX',
-            'del_flg'            => 0,
-            'deleted'            => null,
-            'created'            => 1500000000,
-            'modified'           => 1500000000,
-        ],
-        [
-            'id'                 => 2,
-            'team_id'            => 2,
-            'payment_setting_id' => 2,
-            'customer_code'      => 'cus_XXXXXXXXXX',
-            'del_flg'            => 0,
-            'deleted'            => null,
-            'created'            => 1500000000,
-            'modified'           => 1500000000,
-        ],
-    ];
+    public $records = array();
 
 }

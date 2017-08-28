@@ -1,7 +1,5 @@
 <?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
-use Goalous\Model\Enum as Enum;
-
 /**
  * ChargeHistory Fixture
  */
@@ -130,69 +128,6 @@ class ChargeHistoryFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = [
-        // for team id 1
-        [
-            'id'                  => 1,
-            'team_id'             => 1,
-            'user_id'             => 1,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-            'amount_per_user'     => 1980,
-            'total_amount'        => 1980,
-            'tax'                 => 0,
-            'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
-            'charge_datetime'     => 1500000000,
-            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
-            'max_charge_users'    => 1,
-            'stripe_payment_code' => '',
-            'del_flg'             => 0,
-            'deleted'             => null,
-            'created'             => 1500000000,
-            'modified'            => 1500000000,
-        ],
-        // for team id 2
-        [
-            'id'                  => 2,
-            'team_id'             => 2,
-            'user_id'             => 2,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-            'amount_per_user'     => 1980,
-            'total_amount'        => 1980,
-            'tax'                 => 0,
-            'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
-            'charge_datetime'     => 1500000001,
-            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
-            'max_charge_users'    => 1,
-            'stripe_payment_code' => '',
-            'del_flg'             => 1,
-            'deleted'             => 1500000000,
-            'created'             => 1500000000,
-            'modified'            => 1500000000,
-        ],
-        [
-            'id'                  => 3,
-            'team_id'             => 2,
-            'user_id'             => 2,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-            'amount_per_user'     => 1980,
-            'total_amount'        => 1980,
-            'tax'                 => 0,
-            'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
-            'charge_datetime'     => 1500000001,
-            'result_type'         => Enum\ChargeHistory\ResultType::FAIL,
-            'max_charge_users'    => 1,
-            'stripe_payment_code' => '',
-            'del_flg'             => 0,
-            'deleted'             => null,
-            'created'             => 1500000001,
-            'modified'            => 1500000001,
-        ],
-    ];
+    public $records = array();
 
 }
