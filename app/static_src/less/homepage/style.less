@@ -1064,7 +1064,24 @@ select {
     text-shadow: none;
 }
 .features-promo .features-video {
-    padding-top: 60px;
+    margin-top:60px;
+    padding:0;
+}
+.features-video, .modal-body{
+    .video-container{
+        width:100%;
+        padding-top: 56.25%;
+        display: block;
+        height: 0;
+        position:relative;
+        iframe{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top:0;
+            left:0;
+        }
+    }
 }
 .features {
     padding-top: 80px;
