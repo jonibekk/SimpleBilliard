@@ -8,7 +8,7 @@ import gutil from 'gulp-util';
 
 gulp.task('jsbuild', done => {
     return runSequence([
-        'js_home',
+        'js_feed',
         'js_goals',
         'js_team',
         'js_user',
@@ -24,7 +24,7 @@ gulp.task('build', done => {
 
 gulp.task('js', done => {
   return runSequence([
-      'js_home',
+      'js_feed',
       'js_goals',
       'js_team',
       'js_user',
@@ -39,11 +39,11 @@ gulp.task('js', done => {
 });
 
 // js home
-gulp.task('js_home', done => {
+gulp.task('js_feed', done => {
   return runSequence(
-    'js_home:concat',
-    'js_home:uglify',
-    'js_home:clean',
+    'js_feed:concat',
+    'js_feed:uglify',
+    'js_feed:clean',
     done
   );
 });

@@ -5,12 +5,12 @@ import duration from 'gulp-duration'
 import ngAnnotate from 'gulp-ng-annotate'
 import config from '../config.js'
 
-gulp.task('js_home:concat', () => {
-    return gulp.src([...config.js.pages.home])
+gulp.task('js_feed:concat', () => {
+    return gulp.src([...config.js.pages.feed])
         .pipe(plumber())
-        .pipe(concat(config.js.output.home_script_name + '.js'))
-        .pipe(gulp.dest(config.dest + '/jshome_cat'))
-        .pipe(duration('js_home:concat'))
+        .pipe(concat(config.js.output.feed_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jsfeed_cat'))
+        .pipe(duration('js_feed:concat'))
 });
 
 gulp.task('js_goals:concat', () => {

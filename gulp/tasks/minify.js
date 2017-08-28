@@ -19,8 +19,8 @@ gulp.task("js:uglify", () => {
     .pipe(duration('js:uglify'));
 })
 
-gulp.task("js_home:uglify", () => {
-    let obj = gulp.src(config.dest + "/jshome_cat/" + config.js.output.home_script_name + '.js');
+gulp.task("js_feed:uglify", () => {
+    let obj = gulp.src(config.dest + "/jsfeed_cat/" + config.js.output.feed_script_name + '.js');
     if (process.env.NODE_ENV === "production") {
         obj = obj.pipe(uglify());
     }
@@ -29,7 +29,7 @@ gulp.task("js_home:uglify", () => {
         suffix: '.min'
     }))
         .pipe(gulp.dest(config.js.output.path))
-        .pipe(duration('js_home:uglify'));
+        .pipe(duration('js_feed:uglify'));
 });
 
 gulp.task("js_goals:uglify", () => {

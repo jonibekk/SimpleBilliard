@@ -14,9 +14,9 @@ const config = {
   dest: assets_dir + '/dest',
   js: {
     pages: {
-        home: [
+        feed: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/home/*.js',
+            assets_dir + '/js/view/feed/*.js',
         ],
         goals: [
             assets_dir + '/js/lib/actions.js',
@@ -54,7 +54,7 @@ const config = {
     ],
     output: {
       file_name: 'goalous',
-      home_script_name: 'goalous_home',
+      feed_script_name: 'goalous_feed',
       goals_script_name: 'goalous_goal',
       team_script_name: 'goalous_team',
       user_script_name: 'goalous_user',

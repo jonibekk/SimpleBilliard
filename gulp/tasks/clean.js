@@ -11,11 +11,11 @@ gulp.task('js:clean', () => {
     .on('end', () => { gutil.log('----------------- js task finished --------------------------') })
 })
 
-gulp.task('js_home:clean', () => {
-    return gulp.src([config.dest + '/js', config.dest + '/jshome_cat'], { read: false })
+gulp.task('js_feed:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jsfeed_cat'], { read: false })
         .pipe(rimraf({ force: true }))
-        .pipe(duration('js_home:clean'))
-        .on('end', () => { gutil.log('----------------- js_home task finished --------------------------') })
+        .pipe(duration('js_feed:clean'))
+        .on('end', () => { gutil.log('----------------- js_feed task finished --------------------------') })
 });
 
 gulp.task('js_goals:clean', () => {
