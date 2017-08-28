@@ -15,9 +15,12 @@ class InvoiceHistory extends AppModel
      * @var array
      */
     public $validate = [
-        'order_date'        => [
-            'date' => [
-                'rule' => ['date'],
+        'order_datetime'    => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'rule' => 'notBlank',
             ],
         ],
         'system_order_code' => [
