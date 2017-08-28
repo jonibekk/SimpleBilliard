@@ -416,7 +416,7 @@ class Team extends AppModel
     function resetCurrentTeam()
     {
         $this->current_team = [];
-        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false));
+        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false), 'team_info');
     }
 
     /**

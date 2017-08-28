@@ -5,6 +5,7 @@ import {Link} from "react-router";
 import {MaxLength} from "~/common/constants/App";
 import Base from "~/common/components/Base";
 import {Team} from "~/common/constants/Model";
+import LoadingButton from "~/common/components/LoadingButton";
 
 export default class Confirm extends Base {
   constructor(props) {
@@ -50,7 +51,7 @@ export default class Confirm extends Base {
   }
 
   render() {
-    const {confirm_data, emails, team} = this.props.invite
+    const {confirm_data, emails, team, is_saving} = this.props.invite
     let emails_el = [];
     for (const i in emails) {
       emails_el.push(
@@ -135,7 +136,7 @@ export default class Confirm extends Base {
           }
           <div className="btnGroupForForm">
             <button type="submit" className="btnGroupForForm-next" ref="submit"
-                    disabled={(is_paid_plan && !this.state.check_agreement) ? "disabled" : ""}>
+                    disabled={(is_paid_plan && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
               送信する
             </button>
             <Link className="btnGroupForForm-cancel" to="/users/invite">戻る</Link>

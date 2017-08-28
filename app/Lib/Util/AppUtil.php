@@ -689,9 +689,7 @@ class AppUtil
             if ($ignoreEmptyLine && empty($email)) {
                 continue;
             }
-            if (!in_array($email, $res)) {
-                $res[$i] = $email;
-            }
+            $res[$i] = $email;
         }
         // 全ての要素の値が空文字だったら空の配列で返す
         if (empty(array_filter($res))) {
