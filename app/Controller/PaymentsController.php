@@ -2,6 +2,8 @@
 App::import('Service', 'TeamService');
 App::uses('PaymentSetting', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 class PaymentsController extends AppController
 {
     public $uses = [
@@ -20,10 +22,39 @@ class PaymentsController extends AppController
      */
     public function index()
     {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+        /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
-        $this->set('teamMemberCount', count($this->Team->TeamMember->getAllMemberUserIdList(true, true, true)));
-        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
-        $this->render('index');
+
+        $teamId = $this->current_team_id;
+        $payment = $PaymentService->get($teamId);
+        $chargeMemberCount = $this->Team->TeamMember->countChargeTargetUsers($teamId);
+        if (empty($payment)) {
+            App::uses('LangHelper', 'View/Helper');
+            $Lang = new LangHelper(new View());
+            $userCountryCode = $Lang->getUserCountryCode();
+            $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
+            $currencyType = $userCountryCode == 'JP' ? Enum\PaymentSetting\Currency::JPY : Enum\PaymentSetting\Currency::USD;
+            $subTotal = $PaymentService->formatCharge($amountPerUser * $chargeMemberCount, $currencyType);
+            $amountPerUser = $PaymentService->formatCharge($amountPerUser, $currencyType);
+        } else {
+            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount,
+                $payment);
+            $subTotal = $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $payment['currency']);
+            $amountPerUser = $PaymentService->formatCharge($payment['amount_per_user'], $payment['currency']);
+        }
+        $serviceUseStatus = $TeamService->getServiceUseStatus();
+        $this->set(compact(
+            'payment',
+            'chargeMemberCount',
+            'serviceUseStatus',
+            'chargeInfo',
+            'subTotal',
+            'amountPerUser'
+        ));
     }
 
     /**
