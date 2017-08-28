@@ -116,8 +116,8 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         };
 
         $scope.activate = function (index, team_member_id) {
-            location.reload();
-            // window.location.href = url_list.activate_team_member + team_member_id;
+            // TODO: Should chage get request to post request
+            window.location.href = url_list.activate_team_member + team_member_id;
         };
 
         // cancel invite or re-invite

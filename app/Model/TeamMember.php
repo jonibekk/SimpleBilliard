@@ -438,6 +438,20 @@ class TeamMember extends AppModel
     }
 
     /**
+     * Activate taem member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function activate(int $teamMemberId): bool
+    {
+        $this->deleteCacheMember($teamMemberId);
+        $this->id = $teamMemberId;
+        return (bool)$this->saveField('status', self::USER_STATUS_ACTIVE);
+    }
+
+    /**
      * Inactivate taem member
      *
      * @param int $teamMemberId

@@ -2623,4 +2623,35 @@ class TeamsController extends AppController
             $this->Session->write('current_team_id', $this->orig_team_id);
         }
     }
+
+    /**
+     * Activate team member action
+     *
+     * @param int $teamMemberId
+     * @return void
+     */
+    function activate_team_member(int $teamMemberId)
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        // Check 403
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
+            $this->Notification->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->Team->isPaidPlan($teamId)) {
+            // TODO: implement payment logic
+        } else if ($this->Team->isFreeTrial($teamId)) {
+            $this->Team->TeamMember->activate($teamMemberId);
+        } else {
+            $this->Notification->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
+        }
+
+        // TODO: Should display translation correctry by @kohei
+        $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        $this->redirect($this->referer());
+    }
 }

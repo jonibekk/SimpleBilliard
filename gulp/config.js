@@ -111,8 +111,7 @@ const config = {
     output: {
       file_name: 'vendors',
       path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/angular/**/*.js']
+    }
   },
   coffee: {
     src: [assets_dir + '/coffee/**/*.coffee'],

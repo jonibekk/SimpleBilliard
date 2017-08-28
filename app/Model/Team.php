@@ -753,6 +753,25 @@ class Team extends AppModel
     }
 
     /**
+     * Check free trial plan or not
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isFreeTrial(int $teamId): bool
+    {
+        $team = $this->getById($teamId);
+        if (empty($team)) {
+            return false;
+        }
+        if (Hash::get($team, 'service_use_status') == self::SERVICE_USE_STATUS_FREE_TRIAL) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * get country by team id
      *
      * @param int $teamId
