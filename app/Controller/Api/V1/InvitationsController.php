@@ -113,7 +113,7 @@ class InvitationsController extends ApiController
         // TODO: Unify naming charge or amount or billing
         $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
         // Calc charge user count
-        $chargeUserCnt = $InvitationService->calcChargeUserCount($this->current_team_id, $invitationCnt);
+        $chargeUserCnt = $PaymentService->calcChargeUserCount($this->current_team_id, $invitationCnt);
         // Get use days from today to next paymant base date
         $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
         // All days between before payment base date and next payment base date

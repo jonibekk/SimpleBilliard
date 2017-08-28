@@ -5,6 +5,8 @@ App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'PaymentService');
+App::import('Service', 'TeamMemberService');
 
 /**
  * Teams Controller
@@ -2626,6 +2628,15 @@ class TeamsController extends AppController
 
     /**
      * Activate team member action
+     * # Free trial case
+     *  - Activate team member only
+     *  - reload page
+     * # Paid & not charge case
+     *  - Activate team member only
+     *  - Reload page
+     * # Paid & charge case
+     *  - Activate team member & charge card|invoice
+     *  - Redirect confirmation page
      *
      * @param int $teamMemberId
      * @return void
@@ -2641,27 +2652,82 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        // Paid status case
-        if ($this->Team->isPaidPlan($teamId)) {
-            // TODO: implement payment logic
+        // Check plan
+        if (!$this->Team->isFreeTrial($teamId) && !$this->Team->isPaidPlan($teamId)) {
+            $this->Notification->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        // Paid charge case
+        if ($PaymentService->isChargingUserActivation($teamId)) {
+            return $this->redirect('/teams/activate_confirm_with_payment');
+        }
+
+        // Paid or free trial case
+        if ($TeamMemberService->activate($teamId, $teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
-            $this->redirect($this->referer());
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Failed to activate team member."));
         }
-
-        // Free trial status case
-        if ($this->Team->isFreeTrial($teamId)) {
-            if ($this->Team->TeamMember->activate($teamMemberId)) {
-                // TODO: Should display translation correctry by @kohei
-                $this->Notification->outSuccess(__("Changed active status inactive to active."));
-            } else {
-                // TODO: Should display translation correctry by @kohei
-                $this->Notification->outSuccess(__("Failed to activate team member."));
-            }
-            $this->redirect($this->referer());
-        }
-
-        // Other plan
-        $this->Notification->outError(__("You have no right to operate it."));
         return $this->redirect($this->referer());
+
+    }
+
+    /**
+     * Activate team member confirmation page
+     *
+     * @param int $teamMemberId
+     *
+     * @return CakeResponse
+     */
+    function activate_confirm_with_payment(int $teamMemberId)
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        // Check 403
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
+            $this->Notification->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
+        }
+    }
+
+    /**
+     * Activate team member with payment
+     *
+     * @param int $teamId
+     *
+     * @return void
+     */
+    function activate_with_payment(int $teamMmemberId)
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        // Check 403
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
+            $this->Notification->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
+        }
+
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        if ($TeamMemberService->activate($teamId, $teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+        }
+
+        return $this->redirect('/teams/main');
     }
 }
