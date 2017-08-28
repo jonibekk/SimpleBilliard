@@ -60,4 +60,13 @@ class ChargeHistoryTest extends GoalousTestCase
     {
         // TODO.Payment: implement test code
     }
+
+    public function test_getLastChargeHistoryByTeamId()
+    {
+        $chargeHistory = $this->ChargeHistory->getLastChargeHistoryByTeamId(1);
+        $this->assertEquals(1, $chargeHistory['ChargeHistory']['id']);
+
+        $chargeHistory = $this->ChargeHistory->getLastChargeHistoryByTeamId(2);
+        $this->assertEquals(3, $chargeHistory['ChargeHistory']['id']);
+    }
 }

@@ -143,6 +143,18 @@ class ChargeHistory extends AppModel
         return (int)Hash::get($res, 'ChargeHistory.max_charge_users');
     }
 
+    function getLastChargeHistoryByTeamId(int $teamId): array
+    {
+        $res = $this->find('first', [
+                'conditions' => [
+                    'team_id' => $teamId,
+                ],
+                'order'      => ['created' => 'DESC'],
+            ]
+        );
+        return $res;
+    }
+
     /**
      * Filter: team_id and charge date(Y-m-d 00:00:00　〜　Y-m-d 23:59:59)
      *
