@@ -139,12 +139,12 @@ class CreditCardService extends AppService
      *
      * @param string $customerId
      * @param string $currencyName
-     * @param float  $value
+     * @param float  $amount
      * @param string $description
      *
      * @return array
      */
-    public function chargeCustomer(string $customerId, string $currencyName, float $value, string $description)
+    public function chargeCustomer(string $customerId, string $currencyName, float $amount, string $description)
     {
         $result = [
             "error"   => false,
@@ -168,7 +168,7 @@ class CreditCardService extends AppService
         }
 
         // Validate Value
-        if ($value <= 0) {
+        if ($amount <= 0) {
             $result["error"] = true;
             $result["message"] = __("Parameter is invalid.");
             $result["field"] = 'value';
@@ -177,9 +177,17 @@ class CreditCardService extends AppService
 
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
+        // Stripe specification
+        // Ref: https://stripe.com/docs/currencies#zero-decimal
+        if ($currencyName === PaymentSetting::CURRENCY_USD) {
+            $amount = (int)$amount * 100;
+        } else {
+            $amount = (int)$amount;
+        }
+
         $charge = [
             'customer'    => $customerId,
-            'amount'      => $value,
+            'amount'      => $amount,
             'currency'    => $currencyName,
             'description' => $description
         ];
@@ -199,7 +207,12 @@ class CreditCardService extends AppService
                 $result["errorCode"] = $e->stripeCode;
             }
 
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log(sprintf("[%s]%s  data:%s",
+                __METHOD__,
+                $e->getMessage(),
+                AppUtil::varExportOneLine(compact('charge')
+                )
+            ));
             $this->log($e->getTraceAsString());
         }
 
@@ -222,7 +235,8 @@ class CreditCardService extends AppService
         } catch (Exception $e) {
             $message = $e->getMessage();
             $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : null;
-            $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s", $customerId, $token, $message, $stripeCode);
+            $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s",
+                $customerId, $token, $message, $stripeCode);
             $this->log(sprintf("[%s]%s", __METHOD__, $errorLog));
             $this->log($e->getTraceAsString());
 
@@ -234,7 +248,7 @@ class CreditCardService extends AppService
         }
 
         $result = [
-            'error' => false,
+            'error'   => false,
             'message' => null
         ];
         return $result;
@@ -256,8 +270,8 @@ class CreditCardService extends AppService
     public function listCustomers(string $startAfter = null)
     {
         $result = [
-            "error"   => false,
-            "message" => null,
+            "error"     => false,
+            "message"   => null,
             "customers" => []
         ];
 
@@ -281,8 +295,7 @@ class CreditCardService extends AppService
                 unset($response->data[$index]);
             }
             $result["hasMore"] = $response->has_more;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
 

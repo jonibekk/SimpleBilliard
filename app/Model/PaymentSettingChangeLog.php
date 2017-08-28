@@ -43,15 +43,14 @@ class PaymentSettingChangeLog extends AppModel
      */
     function saveSnapshot($paymentSettingId, $userId)
     {
-        $payment = $this->PaymentSetting->findById($paymentSettingId);
-        $payment = Hash::get($payment, 'PaymentSetting');
+        $payment = $this->PaymentSetting->getById($paymentSettingId);
         if (empty($payment)) {
             return false;
         }
         /** @noinspection PhpUndefinedFunctionInspection */
         $paymentData = msgpack_pack($payment);
         $data = [
-            'team_id'            => $this->current_team_id,
+            'team_id'            => Hash::get($payment, 'team_id'),
             'user_id'            => $userId,
             'payment_setting_id' => $paymentSettingId,
             'data'               => base64_encode($paymentData),

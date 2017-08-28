@@ -380,4 +380,20 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return false;
     }
 
+    /**
+     * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
+     *
+     * @param Model $Model
+     * @param array $value
+     *
+     * @return bool
+     */
+    function katakanaOnly(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $value)
+    {
+        $value = array_shift($value);
+        return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
+    }
 }

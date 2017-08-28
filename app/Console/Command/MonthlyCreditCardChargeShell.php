@@ -2,6 +2,8 @@
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * The shell for creating next next term
  * Console/cake monthly credit card charge
@@ -67,7 +69,7 @@ class MonthlyCreditCardChargeShell extends AppShell
             // Charge
             $PaymentService->applyCreditCardCharge(
                 $teamId,
-                PaymentSetting::CHARGE_TYPE_MONTHLY_FEE,
+                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $chargeMemberCount
             );
         }

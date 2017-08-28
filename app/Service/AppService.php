@@ -1,5 +1,7 @@
 <?php
 App::uses('GlRedis', 'Model');
+App::uses('TransactionManager', 'Model');
+
 /**
  * Created by PhpStorm.
  * User: yoshidam2
@@ -13,6 +15,14 @@ App::uses('GlRedis', 'Model');
  */
 class AppService extends CakeObject
 {
+    /** @var TransactionManager $TransactionManager */
+    protected $TransactionManager = null;
+
+    function __construct()
+    {
+        $this->TransactionManager = ClassRegistry::init("TransactionManager");
+    }
+
     /**
      * バリデーションメッセージの展開
      * key:valueの形にして1フィールド1メッセージにする

@@ -13,6 +13,12 @@ class InvitationsController extends ApiController
         'Notification',
     ];
 
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->_checkAdmin();
+    }
+
     /**
      * Validation
      *
@@ -107,7 +113,7 @@ class InvitationsController extends ApiController
         // TODO: Unify naming charge or amount or billing
         $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
         // Calc charge user count
-        $chargeUserCnt = $InvitationService->calcChargeUserCount($invitationCnt);
+        $chargeUserCnt = $InvitationService->calcChargeUserCount($this->current_team_id, $invitationCnt);
         // Get use days from today to next paymant base date
         $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
         // All days between before payment base date and next payment base date
@@ -153,11 +159,6 @@ class InvitationsController extends ApiController
         $errors = $InvitationService->validateEmails($emails);
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
-        }
-
-        // Check permission
-        if (!$TeamMember->isAdmin($userId)) {
-            return $this->_getResponseForbidden();
         }
 
         // Invite
