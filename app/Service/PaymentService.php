@@ -110,7 +110,7 @@ class PaymentService extends AppService
      *
      * @param $data
      *
-     * @return array|bool
+     * @return array
      */
     public function validateCreateInvoice($data): array
     {
