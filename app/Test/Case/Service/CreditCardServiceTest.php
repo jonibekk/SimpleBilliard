@@ -246,26 +246,16 @@ class CreditCardServiceTest extends GoalousTestCase
     function test_cacheTeamCreditCardExpiration()
     {
         $testingTeamId = 3;
-        $source = new \Stripe\Collection();
-        $source->object = 'list';
-        $source->data = [
-            [
-                "id" => "card_1Aub2NAM8AoVOHcF5e9D3PwG",
-                // using 'exp_month', 'exp_year' on the test
-                "exp_month" => 8,
-                "exp_year" => 2018,
-            ]
-        ];
-        $customer = new \Stripe\Customer();
-        $customer->id = 'cus_XXXXXXXXX';
-        $customer->default_source = 'card_1Aub2NAM8AoVOHcF5e9D3PwG';
-        $customer->sources = $source;
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
         $CreditCard->current_team_id = $testingTeamId;
-        $this->CreditCardService->cacheTeamCreditCardExpiration($customer, $testingTeamId);
+        $this->CreditCardService->cacheTeamCreditCardExpiration([
+            'error' => false,
+            'year'  => 2018,
+            'month' => 8,
+        ], $testingTeamId);
 
-        $key = $CreditCard->getCacheKey(CACHE_KEY_STRIPE_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, true);
+        $key = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, true);
         $cachedCreditCardExpireData = Cache::read($key, 'user_data');
         $creditCardExpireData = msgpack_unpack($cachedCreditCardExpireData);
         $this->assertFalse($creditCardExpireData['error']);
@@ -293,24 +283,14 @@ class CreditCardServiceTest extends GoalousTestCase
     function test_getExpirationDateTimeOfTeamCreditCardFromCache()
     {
         $testingTeamId = 3;
-        $source = new \Stripe\Collection();
-        $source->object = 'list';
-        $source->data = [
-            [
-                "id" => "card_1Aub2NAM8AoVOHcF5e9D3PwG",
-                // using 'exp_month', 'exp_year' on the test
-                "exp_month" => 8,
-                "exp_year" => 2019,
-            ]
-        ];
-        $customer = new \Stripe\Customer();
-        $customer->id = 'cus_XXXXXXXXX';
-        $customer->default_source = 'card_1Aub2NAM8AoVOHcF5e9D3PwG';
-        $customer->sources = $source;
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
         $CreditCard->current_team_id = $testingTeamId;
-        $this->CreditCardService->cacheTeamCreditCardExpiration($customer, $testingTeamId);
+        $this->CreditCardService->cacheTeamCreditCardExpiration([
+            'error' => false,
+            'year'  => 2019,
+            'month' => 8,
+        ], $testingTeamId);
         $d = $this->CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($testingTeamId);
 
         $this->assertTrue(

@@ -115,32 +115,38 @@ class CreditCardService extends AppService
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
         $customerId = $CreditCard->getCustomerCode($teamId);
-        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
-        $response = \Stripe\Customer::retrieve($customerId);
-        $CreditCardService->cacheTeamCreditCardExpiration($response, $teamId);
 
-        // TODO: must research better way of getting default_source than [0]
-        // e.g. should be like $response->sources->retrieve()
-        $card = $response->sources->data[0];
-        return self::getRealExpireDateTimeFromCreditCardExpireDate($card['exp_year'], $card['exp_month']);
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        try {
+            $response = \Stripe\Customer::retrieve($customerId);
+            // TODO: must research better way of getting default_source than [0]
+            // e.g. should be like $response->sources->retrieve()
+            $card = $response->sources->data[0];
+            $CreditCardService->cacheTeamCreditCardExpiration([
+                'error' => is_null($card),
+                'year'  => $card['exp_year'] ?? 0,
+                'month' => $card['exp_month'] ?? 0,
+            ], $teamId);
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $CreditCardService->cacheTeamCreditCardExpiration([
+                'error' => true,
+                'year'  => 0,
+                'month' => 0,
+            ], $teamId);
+        }
+        return $CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($teamId);
     }
 
     /**
      * cache team credit card expiration data by array
-     * @param \Stripe\Customer $customer
-     * @param int              $teamId
+     * @param array $data
+     * @param int   $teamId
      */
-    public function cacheTeamCreditCardExpiration(\Stripe\Customer $customer, int $teamId)
+    public function cacheTeamCreditCardExpiration(array $data, int $teamId)
     {
-        // TODO: must research better way of getting default_source than [0]
-        // e.g. should be like $response->sources->retrieve()
-        $card = $customer->sources->data[0];
-        $data = [
-            'error' => is_null($card),
-            'year' => $card['exp_year'] ?? 0,
-            'month' => $card['exp_month'] ?? 0,
-        ];
-
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
         $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
