@@ -85,7 +85,7 @@ directory "#{release_path}/app/tmp" do
   group 'www-data'
   mode 0777
   action :create
-  not_if {::File.exists?("#{release_path}/app/tmp")}
+  not_if {::Dir.exists?("#{release_path}/app/tmp")}
 end
 
 # 外部API用Keyの定義
@@ -113,5 +113,5 @@ directory "/var/log/goalous" do
     group 'www-data'
     mode 0775
     action :create
-    not_if {::File.exists?("/var/log/goalous")}
+    not_if {::Dir.exists?("/var/log/goalous")}
 end
