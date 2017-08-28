@@ -88,26 +88,26 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <p>You use all features of Goalous for a 15-day free trial. Give it a try!</p>
         <div class="pricing-card">
             <h3>Standard</h3>
-            <h3 class="thin">&yen;1,900</h3>
+            <h3 class="normal-weight">&yen;1,900</h3>
             <p>Per active member, per month</p>
-            <button class="red">Start 15-day Free Trial</button>
+            <button class="btn btn-cta btn-cta-primary">Start 15-day Free Trial</button>
             <div class="hr"></div>
             <p>Goalous is a lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi omnis commodi aliquam, animi sit nesciunt in eos officiis illo. Officiis distinctio harum maiores voluptatem odio, quasi labore omnis, nemo at?</p>
         </div>
         <div class="feature-category">
-            <img src="#"/> <strong>Goal Features</strong>
+            <strong class="icon-heart">Goal Features</strong>
             <ul>
                 <li>Unlimited team, goal, photo, and video storage</li>
             </ul>
         </div>
         <div class="feature-category">
-            <img src="#"/> <strong>Communication Features</strong>
+            <strong class="icon-message">Communication Features</strong>
             <ul>
                 <li>Live chat messaging</li>
             </ul>
         </div>
         <div class="feature-category">
-            <img src="#"/> <strong>Security Features</strong>
+            <strong class="icon-lock">Security Features</strong>
             <ul>
                 <li>Encrypted storage</li>
             </ul>
@@ -116,14 +116,17 @@ for ($i = 0; $i < $num_ogp; $i++) {
 </section>
 
 <section id="faqs">
-    <details class="question">
-        <summary>What are my payment options?<span class="toggle-arrow"></span></summary>
-        <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
-    </details>
-    <details class="question">
-        <summary>What are my payment options>?<span class="toggle-arrow"></span></summary>
-        <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
-    </details>
+    <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <details class="question" open>
+            <summary>What are my payment options?<span class="fa fa-angle-down"></span></summary>
+            <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+        </details>
+        <details class="question" open>
+            <summary>What are my payment options?<span class="fa fa-angle-down"></span></summary>
+            <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+        </details>
+    </div>
 </section>
 
 <?= $this->App->viewEndComment()?>

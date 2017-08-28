@@ -1091,80 +1091,6 @@ select {
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
-/* ======= Price Plan Section ======= */
-
-.price-plan {
-    padding: 80px 0;
-}
-.price-plan .title {
-    font-size: 28px;
-    margin-bottom: 15px;
-}
-.price-plan .intro {
-    font-size: 18px;
-    line-height: 1.5;
-    color: @basicGray;
-    margin-bottom: 30px;
-}
-.price-plan .item .heading {
-    background: @darkBlack;
-    color: @white;
-    font-size: 22px;
-    padding: 10px 0;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 4px;
-    background-clip: padding-box;
-    margin-bottom: 0;
-    text-transform: uppercase;
-    position: relative;
-}
-.price-plan .item .heading .label {
-    border-radius: 4px;
-    background-clip: padding-box;
-    background: @serviceColor;
-    color: @white;
-    font-size: 12px;
-    position: absolute;
-    padding: 5px 10px;
-    right: 15px;
-    top: 11px;
-}
-.price-plan .item .content {
-    background: @smokyWhite;
-    padding: 30px;
-}
-.price-plan .item .price-figure .currency {
-    font-size: 18px;
-    position: relative;
-    top: -15px;
-    margin-right: 5px;
-}
-.price-plan .item .price-figure .number {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 60px;
-}
-.price-plan .item .price-figure .unit {
-    font-size: 12px;
-    color: #bfbfbf;
-    text-transform: uppercase;
-}
-.price-plan .item .feature-list li {
-    padding: 10px 0;
-}
-.price-plan .item .btn {
-    font-weight: bold;
-    font-size: 16px;
-    padding-left: 45px;
-    padding-right: 45px;
-}
-.price-plan .item .btn .extra {
-    text-transform: none;
-    font-weight: normal;
-    font-size: 12px;
-}
-
 /* ======= Blog Section ======= */
 
 .blog {
@@ -1577,11 +1503,6 @@ select {
     .press li.break {
         clear: left;
     }
-    .price-plan .item .heading .label {
-        padding: 5px;
-        right: 10px;
-        font-size: 11px;
-    }
     .contact-main .item {
         margin-bottom: 15px;
     }
@@ -1632,11 +1553,6 @@ select {
     }
     .press li a img {
         max-width: 160px;
-    }
-    .price-plan .item .heading .label {
-        padding: 5px 10px;
-        right: 15px;
-        font-size: 12px;
     }
     .contact-main .item {
         margin-bottom: 30px;
@@ -1871,20 +1787,6 @@ select {
     color: @white;
 }
 
-.pricing-line-through {
-    position: absolute;
-    border-top: 2px solid @serviceColor;
-    border-bottom: 2px solid @serviceColor;
-    transform: rotate(-12deg);
-    height: 12px;
-    width: 228px;
-    top: 4px;
-    left: -24px;
-}
-
-.pricing-figure-mid-icon {
-    margin: 12px;
-}
 .app-banner-wrap {
     width: 100%;
     font-size: 0;
@@ -1911,10 +1813,6 @@ select {
         display: block;
         float: none !important;
         text-align: center;
-    }
-    .price-plan .item .heading .label {
-        padding: 5px;
-        right: 8px;
     }
     .footer .bottom-bar .social {
         display: block;
@@ -1946,16 +1844,6 @@ body {
     margin: 0 auto;
 }
 
-.pricing-signup {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.pricing-signup:focus {
-    color: @white;
-}
-
 .document-download-icon {
     border-radius: 4px;
     background: @serviceColor;
@@ -1982,4 +1870,76 @@ body {
 
 .btn-block + .contact-confirm-send {
     margin: 16px 0 0;
+}
+
+details{
+    transition: height .3s;
+    summary{
+        list-style-type: none;
+        transition: height .3s;
+        &::-webkit-details-marker {
+            display:none;
+        }
+    }
+}
+
+#pricingDetail{
+    .normal-weight{
+        font-weight: 500;
+    }
+    .pricing-card{
+        border: 1px solid @cGray;
+        padding: 10px; 
+        text-align:center;
+        border-radius: 4px;
+    }
+    .hr{
+        border-top: 1px solid @cGray;
+        margin: 10px auto;
+        width: 30px;
+        display:block;
+    }
+    .feature-category{
+        border-bottom: 1px solid @cGray;
+        margin: 10px 10px;
+        padding-bottom: 10px;
+        &:last-of-type{
+            border-bottom: none;
+        }
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding-left: 10px;
+        }
+        li{
+            position: relative;
+            &:before{
+                content: "-";
+                position: absolute;
+                left: -10px;
+            }
+        }
+    }
+}
+
+#faqs{
+    .question{
+        float:left;
+        width: 100%;
+        position:relative;
+        margin: 10px 0;
+        summary{
+            width: 100%;
+            font-weight: 800;
+            padding: 7px 0;
+            .fa{ // down arrow
+                font-size: 30px;
+                background-color: @lighterGray;
+                padding: 1px 5px;
+                position: absolute;
+                right: 0;
+                top:0;
+            }
+        }
+    }
 }
