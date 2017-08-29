@@ -143,6 +143,14 @@ class ChargeHistory extends AppModel
         return (int)Hash::get($res, 'ChargeHistory.max_charge_users');
     }
 
+    /**
+     * returns last ChargeHistory of team
+     * if team has no ChargeHistory, this returns empty array
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
     function getLastChargeHistoryByTeamId(int $teamId): array
     {
         $res = $this->find('first', [
@@ -152,6 +160,9 @@ class ChargeHistory extends AppModel
                 'order'      => ['created' => 'DESC'],
             ]
         );
+        if ($res === false) {
+            return [];
+        }
         return $res;
     }
 
