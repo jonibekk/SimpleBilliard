@@ -256,12 +256,12 @@ class CircleMember extends AppModel
         $keyword_conditions = $this->User->makeUserNameConditions($keyword);
         $options = [
             'conditions' => [
-                'TeamMember.team_id'     => $this->current_team_id,
-                'TeamMember.status'      => TeamMember::USER_STATUS_ACTIVE,
-                'NOT'                    => [
+                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
+                'NOT'                => [
                     'TeamMember.user_id' => $member_list
                 ],
-                'OR'                     => $keyword_conditions,
+                'OR'                 => $keyword_conditions,
             ],
             'limit'      => $limit,
             'contain'    => [

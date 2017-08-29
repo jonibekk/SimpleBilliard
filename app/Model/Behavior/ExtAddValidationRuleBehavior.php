@@ -307,7 +307,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         // This method is for to activate sisuation
         // So it's not needed in to inactivate situation
         if (isset($Model->data['TeamMember']['status'])
-            && $Model->data['TeamMember']['status'] == TeamMember::USER_STATUS_ACTIVE
+            && $Model->data['TeamMember']['status'] == TeamMember::USER_STATUS_INACTIVE
         ) {
             return true;
         }

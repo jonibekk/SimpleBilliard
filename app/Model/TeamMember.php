@@ -23,10 +23,6 @@ class TeamMember extends AppModel
     const USER_STATUS_INVITED = 0;
     const USER_STATUS_ACTIVE = 1;
     const USER_STATUS_INACTIVE = 2;
-    function a()
-    {
-        TeamMember::USER_STATUS_ACTIVE;
-    }
 
     public $myTeams = [];
     /**
@@ -220,7 +216,7 @@ class TeamMember extends AppModel
         if (empty($this->myStatusWithTeam['Team'])) {
             throw new RuntimeException(__("There is no team."));
         }
-        if (!$this->myStatusWithTeam['TeamMember']['status']) {
+        if ($this->myStatusWithTeam['TeamMember']['status'] != self::USER_STATUS_ACTIVE) {
             throw new RuntimeException(__("You can't access to this team. Your account has been disabled."));
         }
         return true;
@@ -1529,7 +1525,7 @@ class TeamMember extends AppModel
             'first_name'            => __("First Name(*, Not changed)"),
             'last_name'             => __("Last Name(*, Not changed)"),
             'member_no'             => __("Member ID(*)"),
-            'status'            => __("Member active status(*)"),
+            'status'                => __("Member active status(*)"),
             'admin_flg'             => __("Administrator(*)"),
             'evaluation_enable_flg' => __("Evaluated(*)"),
             'member_type'           => __("Member Type"),
@@ -1860,7 +1856,7 @@ class TeamMember extends AppModel
         $res = $this->find('first', $options);
         $evaluation_flg = false;
         if (isset($res['TeamMember']['status'])
-            && $res['TeamMember']['status'] === self::USER_STATUS_ACTIVE
+            && $res['TeamMember']['status'] == self::USER_STATUS_ACTIVE
             && isset($res['TeamMember']['evaluation_enable_flg']) === true
             && $res['TeamMember']['evaluation_enable_flg'] === true
         ) {
