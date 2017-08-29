@@ -52,7 +52,7 @@ class UserAgent
     static function detect($userAgent = null): self
     {
         if (!is_string($userAgent)) {
-            $userAgent = Hash::get($_SERVER, 'HTTP_USER_AGENT');
+            $userAgent = Hash::get($_SERVER, 'HTTP_USER_AGENT') ?? '';
         }
         return new self($userAgent);
     }

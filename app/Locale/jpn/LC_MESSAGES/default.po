@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-17 16:45+0900\n"
+"PO-Revision-Date: 2017-08-21 10:52+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -437,10 +437,8 @@ msgstr "この投稿はあなたのものではありません。"
 msgid "Deleted the post."
 msgstr "投稿を削除しました。"
 
-#, fuzzy
-#| msgid "This goal doesn't exist."
 msgid "This post doesn't exist."
-msgstr "ゴールが存在しません。"
+msgstr "投稿が存在しません。"
 
 msgid "Saved changes."
 msgstr "投稿の変更を保存しました。"
@@ -1137,8 +1135,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> add <span class=\"notify-"
-"card-head-target\">you </span>to the circle."
+"<span class=\"notify-card-head-target\">%1$s</span> added <span class="
+"\"notify-card-head-target\">you </span>to the circle."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルに<span class="
 "\"notify-card-head-target\">あなた</span>を追加しました。"
@@ -5155,3 +5153,14 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#, fuzzy
+#~| msgid "Update"
+#~ msgid "Update Card"
+#~ msgstr "更新"
+
+#~ msgid "Newsfeed"
+#~ msgstr "ニュースフィード"
+
+#~ msgid "Related Goals"
+#~ msgstr "関連ゴール"
