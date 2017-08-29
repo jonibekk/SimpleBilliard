@@ -86,7 +86,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container text-center">
         <h2 class="title"><?= __('It\'s all free') ?></h2>
         <p class="intro">
-        <?= __('Released sale, It\'s all free until the summer of 2017!') ?>
+        <?= __('Official Release Sale, Free until the end of summer 2017!') ?>
         </p>
         <div class="item col-xs-12 col-md-6 col-md-offset-3">
             <h3 class="heading"><?= __('Plus') ?><span class="label label-custom"><?= __(
@@ -107,12 +107,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     <span class="unit"><?= __('/mon') ?></span>
                 </div>
                 <ul class="list-unstyled feature-list">
-                    <li><?= __('Unlimeted members a team') ?></li>
+                    <li><?= __('Unlimited members per team') ?></li>
                     <li><?= __('20MB file upload') ?></li>
                     <li><?= __('Unlimited file share') ?></li>
                     <li><?= __('Chat message') ?></li>
                     <li><?= __('Insight Analytics') ?></li>
-                    <li><?= __('Team Controll') ?></li>
+                    <li><?= __('Team Control') ?></li>
                     <li><?= __('Online user support') ?></li>
                 </ul>
                 <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
@@ -124,7 +124,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     <?= __('Start now') ?>
                     <br/>
                     <span class="extra">
-                            <?= __('Feel free to ask us') ?>
+                            <?= __('Feel free to ask us any questions') ?>
                         </span>
                 </a>
             </div><!--//content-->

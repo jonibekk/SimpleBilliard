@@ -92,9 +92,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h2 class="title"><?= __('Contact us about Goalous') ?></h2>
                 <p class="contact-list">
                     <?=
-                    __('Goalous is managed by ISAO, Visionary Company which make jobs joyful in the world') .
+                    __('Goalous is managed by ISAO, a visionary company that brings joy to work around the world.') .
                     '<br>' .
-                    __('Feel free to ask us.');
+                    __('Feel free to contact us.');
                     ?>
                 </p>
             </div>
@@ -158,7 +158,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     'options' => $type_options, // PagesController - ln.184,
                     'value'   => $selected_type,
                     'label'   => [
-                        'text'  => __('Which item you want to ask'),
+                        'text'  => __('What is your question about?'),
                         'class' => 'control-label lp-contact-control-label',
                         'empty' => false,
                     ],
@@ -175,7 +175,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     'rows'        => 8,
                     'placeholder' => __('eg. We want to use it. So, we need more explanation in detail.'),
                     'label'       => [
-                        'text'  => __('What you ask (3,000 characters are limit)'),
+                        'text'  => __('Question (3,000 character limit)'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
                 ]);
@@ -202,12 +202,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     ],
                     [
                         'name'        => __('Makoto Yoshioka'),
-                        'description' => __('Sales person with full of Joyful'),
+                        'description' => __('Sales person full of joy'),
                         'img'         => 'homepage/people/sales3.jpg',
                     ],
                     [
                         'name'        => __('Yusuke Ishihara'),
-                        'description' => __('I\'m a DJ from teens'),
+                        'description' => __('A DJ since my teens'),
                         'img'         => 'homepage/people/sales4.jpg',
                     ],
                 ]
