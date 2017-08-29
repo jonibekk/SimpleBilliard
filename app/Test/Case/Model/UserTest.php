@@ -1085,14 +1085,14 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'status' => TeamMember::USER_STATUS_ACTIVE],
             $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted());
         // assign team_id
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'status' => TeamMember::USER_STATUS_ACTIVE],
             $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted($team_id));
 
@@ -1100,7 +1100,7 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => true], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'status' => TeamMember::USER_STATUS_ACTIVE],
             $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
 
@@ -1116,7 +1116,7 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => false],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'status' => TeamMember::USER_STATUS_ACTIVE],
             $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
     }

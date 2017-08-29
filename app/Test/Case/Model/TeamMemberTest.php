@@ -148,7 +148,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                 ]
             ],
             'Team'       => [
@@ -183,7 +183,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                     'admin_flg'  => false,
                 ]
             ],
@@ -203,7 +203,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                     'admin_flg'  => true,
                 ]
             ],
@@ -2010,7 +2010,7 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
 
         // TeamMember: active admin, User: active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => true]);
+        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
         $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
         $this->assertTrue($this->TeamMember->isActiveAdmin(1, 1));
 
@@ -2020,13 +2020,13 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'admin_flg'  => false,
-            'active_flg' => true
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ]);
-        $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
+        $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: active, User: not active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => true]);
+        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
@@ -2055,7 +2055,7 @@ class TeamMemberTest extends GoalousTestCase
 
     function test_updateActiveFlgToStatus_success()
     {
-        $this->TeamMember->save(['active_flg' => true], false);
+        $this->TeamMember->save(['status' => TeamMember::USER_STATUS_ACTIVE], false);
         $teamMemberId = $this->TeamMember->getLastInsertId();
         $this->TeamMember->updateActiveFlgToStatus();
         $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');

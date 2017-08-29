@@ -496,8 +496,6 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->save([
             'team_id'    => $teamId,
             'user_id'    => $userId,
-            // TODO: Should delete active flg
-            'active_flg' => true,
             'status'     => $status
         ], false);
         return $this->Team->TeamMember->getLastInsertId();;
