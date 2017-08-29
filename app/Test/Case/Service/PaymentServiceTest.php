@@ -714,7 +714,7 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $res = $this->PaymentService->updateInvoice(1, $newData);
-        
+
         $this->assertNotNull($res);
         $this->assertArrayHasKey("errorCode", $res);
         $this->assertArrayHasKey("message", $res);
@@ -1254,7 +1254,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($res);
 
         $this->addInvoiceHistory($teamId, [
-            'order_date'        => '2017-01-01',
+            'order_datetime'        => $time,
             'system_order_code' => "test",
         ]);
         $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
@@ -1297,7 +1297,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $this->addInvoiceHistoryAndChargeHistory($teamId,
             [
-                'order_date'        => '2016-12-01',
+                'order_datetime'        => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
                 'system_order_code' => "test",
             ],
             [
