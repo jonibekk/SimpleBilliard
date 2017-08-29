@@ -33,6 +33,7 @@ App::import('Service', 'CreditCardService');
  * @property MixpanelComponent     $Mixpanel
  * @property OgpComponent          $Ogp
  * @property BenchmarkComponent    $Benchmark
+ * @property PaymentSetting        $PaymentSetting
  */
 class AppController extends BaseController
 {
@@ -71,7 +72,9 @@ class AppController extends BaseController
         'PageResource'
     ];
 
-    private $merge_uses = [];
+    private $merge_uses = [
+        'PaymentSetting'
+    ];
 
     //基本タイトル
     public $title_for_layout;
@@ -299,6 +302,7 @@ class AppController extends BaseController
 
     /**
      * return true if Goalous Mobile App version is not supported
+     *
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -321,6 +325,7 @@ class AppController extends BaseController
      * https://jira.goalous.com/browse/GL-5962
      * return true if Goalous Android App version is deprecated from google play store
      * temporary support: this method should be deleted on future.
+     *
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -939,8 +944,10 @@ class AppController extends BaseController
         $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
         $this->set('stateEndDate', $TeamService->getStateEndDate());
 
+        $paymentSetting = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
+
         // check if team credit card expire in one month
-        if ($this->_isAdmin()) {
+        if ($this->_isAdmin() && !empty($paymentSetting)) {
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
             $dateNow = GoalousDateTime::now();
