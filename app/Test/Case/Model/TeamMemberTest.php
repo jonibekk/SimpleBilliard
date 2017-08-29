@@ -94,7 +94,7 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 2);
 
-        $this->TeamMember->saveField('active_flg', false);
+        $this->TeamMember->saveField('status', TeamMember::USER_STATUS_INACTIVE);
         $this->TeamMember->myTeams = null;
         Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
@@ -1333,6 +1333,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'       => $user_id,
             'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ];
         $this->TeamMember->save($params);
         $res = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
@@ -1350,6 +1351,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'       => $user_id,
             'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ];
         $this->TeamMember->save($params);
         $res = $this->TeamMember->getMyMembersList($coach_user_id);
@@ -1369,7 +1371,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'status' => TeamMember::USER_STATUS_INACTIVE,
+            'status' => TeamMember::USER_STATUS_ACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -1562,7 +1564,7 @@ class TeamMemberTest extends GoalousTestCase
         $member_id = 999;
         $params = [
             'id'        => $member_id,
-            'admin_flg' => 0,
+            'admin_flg' => 0
         ];
         $this->TeamMember->save($params);
         $this->TeamMember->setAdminUserFlag($member_id, 'ON');
@@ -1900,13 +1902,13 @@ class TeamMemberTest extends GoalousTestCase
         $members = $this->TeamMember->find('all', [
             'fields' => [
                 'TeamMember.team_id',
-                'TeamMember.active_flg',
+                'TeamMember.status',
             ],
         ]);
 
         $counts = [];
         foreach ($members as $v) {
-            if (!$v['TeamMember']['active_flg']) {
+            if (!$v['TeamMember']['status']) {
                 continue;
             }
             if (!isset($counts[$v['TeamMember']['team_id']])) {
@@ -2037,7 +2039,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'admin_flg'  => true,
-            'status' => TeamMembere::USER_STATUS_INACTIVE
+            'status' => TeamMember::USER_STATUS_INACTIVE
         ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
