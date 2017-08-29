@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PaymentService');
+
 use Goalous\Model\Enum as Enum;
 
 // TODO.Payment: there are these things
@@ -560,7 +561,7 @@ class PaymentServiceTest extends GoalousTestCase
         $teamId = 1;
         try {
             $res = null;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),0);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
@@ -568,34 +569,32 @@ class PaymentServiceTest extends GoalousTestCase
 
         try {
             $res = null;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
         $this->assertEquals(strpos($res, 'Payment setting or Credit card settings does not exist.'), 0);
-
 
         try {
             $res = null;
             $savePaymentSetting = [
-                    'team_id'          => $teamId,
-                    'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-                    'payment_base_day' => 1
+                'team_id'          => $teamId,
+                'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'payment_base_day' => 1
             ];
             $this->PaymentSetting->create();
             $this->PaymentSetting->save($savePaymentSetting, false);
 
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
         $this->assertEquals(strpos($res, 'Payment setting or Credit card settings does not exist.'), 0);
 
-
         try {
             $res = null;
             list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
@@ -604,13 +603,12 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = null;
             list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
         $this->assertEquals(strpos($res, 'Failed to charge.'), 0);
     }
-
 
     public function test_applyCreditCardCharge_normal()
     {
@@ -719,7 +717,7 @@ class PaymentServiceTest extends GoalousTestCase
 //        ]);
 //
 //        $res = $this->PaymentService->updateInvoice(1, $newData);
-//
+        //
 //        $this->assertNotNull($res);
 //        $this->assertArrayHasKey("errorCode", $res);
 //        $this->assertArrayHasKey("message", $res);
@@ -1259,7 +1257,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($res);
 
         $this->addInvoiceHistory($teamId, [
-            'order_date'        => '2017-01-01',
+            'order_datetime'    => $time,
             'system_order_code' => "test",
         ]);
         $res = $this->PaymentService->findMonthlyChargeInvoiceTeams($time);
@@ -1298,11 +1296,11 @@ class PaymentServiceTest extends GoalousTestCase
             'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-29', 9)
         ]);
         $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
-        $this->assertCount(2, $res);
+        $this->assertCount(3, $res);
 
         $this->addInvoiceHistoryAndChargeHistory($teamId,
             [
-                'order_date'        => '2016-12-01',
+                'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
                 'system_order_code' => "test",
             ],
             [
@@ -1318,7 +1316,7 @@ class PaymentServiceTest extends GoalousTestCase
         );
 
         $res = $this->PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
-        $this->assertCount(2, $res);
+        $this->assertCount(3, $res);
 
     }
 
@@ -1381,10 +1379,12 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            3);
         $this->assertEquals($res, 3);
 
     }
@@ -1405,10 +1405,12 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            3);
         $this->assertEquals($res, 13);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            3);
         $this->assertEquals($res, 13);
 
         $data = [
@@ -1418,11 +1420,12 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $this->ChargeHistory->save($data, false);
 
-
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            3);
         $this->assertEquals($res, 8);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), 20);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            20);
         $this->assertEquals($res, 25);
 
     }
@@ -1436,7 +1439,6 @@ class PaymentServiceTest extends GoalousTestCase
     {
         // TODO.Payment: implement test code
     }
-
 
     /**
      * tearDown method
