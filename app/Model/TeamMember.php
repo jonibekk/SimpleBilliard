@@ -15,7 +15,6 @@ App::uses('View', 'View');
 class TeamMember extends AppModel
 {
     const ADMIN_USER_FLAG = 1;
-    const ACTIVE_USER_FLAG = 1;
 
     /**
      * User status valid codes
@@ -24,6 +23,10 @@ class TeamMember extends AppModel
     const USER_STATUS_INVITED = 0;
     const USER_STATUS_ACTIVE = 1;
     const USER_STATUS_INACTIVE = 2;
+    function a()
+    {
+        TeamMember::USER_STATUS_ACTIVE;
+    }
 
     public $myTeams = [];
     /**
@@ -39,14 +42,6 @@ class TeamMember extends AppModel
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
-        ],
-        'active_flg'            => [
-            'isVerifiedEmail' => [
-                'rule' => ['isVerifiedEmail']
-            ],
-            'boolean'         => [
-                'rule' => ['boolean'],
-            ]
         ],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
@@ -105,8 +100,8 @@ class TeamMember extends AppModel
             function () use ($model, $uid) {
                 $options = [
                     'conditions' => [
-                        'TeamMember.user_id'    => $uid,
-                        'TeamMember.active_flg' => true
+                        'TeamMember.user_id' => $uid,
+                        'TeamMember.status'  => self::USER_STATUS_ACTIVE
                     ],
                     'fields'     => ['TeamMember.team_id', 'Team.name'],
                     'contain'    => ['Team']
@@ -128,7 +123,7 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'active_flg' => true,
+                'status' => self::USER_STATUS_ACTIVE,
                 'team_id'    => $this->current_team_id
             ],
             'fields'     => ['user_id', 'user_id']
@@ -225,7 +220,7 @@ class TeamMember extends AppModel
         if (empty($this->myStatusWithTeam['Team'])) {
             throw new RuntimeException(__("There is no team."));
         }
-        if (!$this->myStatusWithTeam['TeamMember']['active_flg']) {
+        if (!$this->myStatusWithTeam['TeamMember']['status']) {
             throw new RuntimeException(__("You can't access to this team. Your account has been disabled."));
         }
         return true;
@@ -258,15 +253,15 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'TeamMember.team_id'    => $team_id,
-                'TeamMember.user_id'    => $uid,
-                'TeamMember.active_flg' => true,
+                'TeamMember.team_id' => $team_id,
+                'TeamMember.user_id' => $uid,
+                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
             ],
             'fields'     => ['TeamMember.id', 'TeamMember.user_id', 'TeamMember.team_id'],
             'contain'    => [
                 'User' => [
                     'conditions' => [
-                        'User.active_flg' => true,
+                        'User.status' => self::USER_STATUS_ACTIVE,
                     ],
                     'fields'     => ['User.id']
                 ],
@@ -332,8 +327,6 @@ class TeamMember extends AppModel
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
             $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
-            // TODO: Must delete when replacing active_flg -> status
-            $team_member['TeamMember']['active_flg'] = true;
             return $this->save($team_member);
         }
         $data = [
@@ -353,13 +346,12 @@ class TeamMember extends AppModel
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
-                'team_id'    => $teamId,
-                'active_flg' => true,
+                'team_id'    => $teamId
             ],
             'fields'     => ['user_id'],
         ];
         if ($required_active) {
-            $options['conditions']['active_flg'] = true;
+            $options['conditions']['status'] = self::USER_STATUS_ACTIVE;
         }
         if ($required_evaluate) {
             $options['conditions']['evaluation_enable_flg'] = true;
@@ -721,7 +713,7 @@ class TeamMember extends AppModel
     public function activateMembers($user_ids, $team_id = null)
     {
         $team_id = !$team_id ? $this->current_team_id : $team_id;
-        return $this->updateAll(['TeamMember.active_flg' => true],
+        return $this->updateAll(['TeamMember.status' => self::USER_STATUS_ACTIVE],
             ['TeamMember.team_id' => $team_id, 'TeamMember.user_id' => $user_ids]);
     }
 
@@ -998,7 +990,7 @@ class TeamMember extends AppModel
             }
             $this->csv_member_ids[] = $row['member_no'];
             $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
-            $this->csv_datas[$key]['TeamMember']['active_flg'] = strtolower($row['active_flg']) == "on" ? true : false;
+            $this->csv_datas[$key]['TeamMember']['status'] = strtolower($row['status']) == "on" ? self::USER_STATUS_ACTIVE : self::USER_STATUS_INACTIVE;
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
             if (Hash::get($row, 'member_type')) {
@@ -1034,7 +1026,7 @@ class TeamMember extends AppModel
         //require least 1 or more admin and active check
         $exists_admin_active = false;
         foreach ($this->csv_datas as $k => $v) {
-            if ($v['TeamMember']['admin_flg'] && $v['TeamMember']['active_flg']) {
+            if ($v['TeamMember']['status'] && $v['TeamMember']['status'] == self::USER_STATUS_ACTIVE) {
                 $exists_admin_active = true;
             }
         }
@@ -1234,8 +1226,8 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['last_name'] = Hash::get($v, 'User.last_name') ? $v['User']['last_name'] : null;
             $this->csv_datas[$k]['member_no'] = Hash::get($v,
                 'TeamMember.member_no') ? $v['TeamMember']['member_no'] : null;
-            $this->csv_datas[$k]['active_flg'] = Hash::get($v,
-                'TeamMember.active_flg') && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['status'] = Hash::get($v,
+                'TeamMember.status') && $v['TeamMember']['status'] == self::USER_STATUS_ACTIVE ? 'ON' : 'OFF';
             $this->csv_datas[$k]['admin_flg'] = Hash::get($v,
                 'TeamMember.admin_flg') && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
@@ -1312,7 +1304,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.team_id' => $team_id,
             ],
-            'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
+            'fields'     => ['member_no', 'coach_user_id', 'status', 'admin_flg', 'evaluation_enable_flg'],
             'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
@@ -1537,7 +1529,7 @@ class TeamMember extends AppModel
             'first_name'            => __("First Name(*, Not changed)"),
             'last_name'             => __("Last Name(*, Not changed)"),
             'member_no'             => __("Member ID(*)"),
-            'active_flg'            => __("Member active status(*)"),
+            'status'            => __("Member active status(*)"),
             'admin_flg'             => __("Administrator(*)"),
             'evaluation_enable_flg' => __("Evaluated(*)"),
             'member_type'           => __("Member Type"),
@@ -1707,16 +1699,6 @@ class TeamMember extends AppModel
             ],
         ];
         $validateOfUpdate = [
-            'active_flg' => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
-                    'message' => __("%s is required.", __("Active status"))
-                ],
-                'isOnOrOff' => [
-                    'rule'    => 'isOnOrOff',
-                    'message' => __("%s must be either 'ON' or 'OFF'.", __('Active status'))
-                ],
-            ],
         ];
         $validate = $common_validate + $validateOfUpdate;
         $this->validateBackup = $this->validate;
@@ -1787,7 +1769,7 @@ class TeamMember extends AppModel
             'fields'     => ['user_id'],
             'conditions' => [
                 'TeamMember.coach_user_id' => $user_id,
-                'active_flg'               => 1,
+                'status'                   => self::USER_STATUS_ACTIVE,
                 'evaluation_enable_flg'    => 1,
             ],
         ];
@@ -1870,15 +1852,15 @@ class TeamMember extends AppModel
     function getEvaluationEnableFlg($user_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'evaluation_enable_flg'],
+            'fields'     => ['status', 'evaluation_enable_flg'],
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
             ],
         ];
         $res = $this->find('first', $options);
         $evaluation_flg = false;
-        if (isset($res['TeamMember']['active_flg']) === true
-            && $res['TeamMember']['active_flg'] === true
+        if (isset($res['TeamMember']['status'])
+            && $res['TeamMember']['status'] === self::USER_STATUS_ACTIVE
             && isset($res['TeamMember']['evaluation_enable_flg']) === true
             && $res['TeamMember']['evaluation_enable_flg'] === true
         ) {
@@ -1913,8 +1895,8 @@ class TeamMember extends AppModel
     {
         return $this->find('count', [
             'conditions' => [
-                'TeamMember.team_id'    => $team_id,
-                'TeamMember.active_flg' => true,
+                'TeamMember.team_id' => $team_id,
+                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
             ],
         ]);
     }
@@ -1944,7 +1926,7 @@ class TeamMember extends AppModel
                 'TeamMember.team_id',
                 'TeamMember.user_id',
                 'Team.name',
-                'TeamMember.active_flg',
+                'TeamMember.status',
                 'TeamMember.admin_flg',
             ],
             'contain'    => ['Team']
@@ -1957,7 +1939,7 @@ class TeamMember extends AppModel
         }
         if ($reformat_for_shell) {
             $teams = Hash::format($teams,
-                ['{n}.Team.name', '{n}.Team.id', '{n}.TeamMember.active_flg', '{n}.TeamMember.admin_flg'],
+                ['{n}.Team.name', '{n}.Team.id', '{n}.TeamMember.status', '{n}.TeamMember.admin_flg'],
                 'TeamName:%s, TeamId:%s, TeamMemberActive:%s, TeamAdmin:%s'
             );
         }
@@ -1976,9 +1958,9 @@ class TeamMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'TeamMember.user_id'    => $userId,
-                'TeamMember.admin_flg'  => true,
-                'TeamMember.active_flg' => true
+                'TeamMember.user_id'   => $userId,
+                'TeamMember.admin_flg' => true,
+                'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
             'fields'     => ['TeamMember.id'],
             'joins'      => [
@@ -2009,9 +1991,9 @@ class TeamMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'TeamMember.team_id'    => $teamId,
-                'TeamMember.admin_flg'  => true,
-                'TeamMember.active_flg' => true
+                'TeamMember.team_id'   => $teamId,
+                'TeamMember.admin_flg' => true,
+                'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
             'fields'     => ['TeamMember.user_id'],
             'joins'      => [

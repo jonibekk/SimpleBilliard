@@ -448,7 +448,7 @@ class User extends AppModel
             'contain'    => [
                 'TeamMember' => [
                     'conditions' => [
-                        'TeamMember.active_flg' => true
+                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
                     ],
                     'fields'     => [
                         'TeamMember.id',
@@ -1618,10 +1618,10 @@ class User extends AppModel
     {
         $options = [
             'conditions' => [
-                'User.id'               => $userIds,
-                'User.active_flg'       => true,
-                'TeamMember.team_id'    => $this->current_team_id,
-                'TeamMember.active_flg' => true,
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
             ],
             'joins'      => [
                 [

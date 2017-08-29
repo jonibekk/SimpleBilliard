@@ -641,10 +641,10 @@ class GoalMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'GoalMember.goal_id'    => $goal_id,
-                'GoalMember.team_id'    => $this->current_team_id,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true,
+                'GoalMember.goal_id' => $goal_id,
+                'GoalMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
+                'User.active_flg'    => true,
             ],
             'fields'     => [
                 'GoalMember.user_id',
@@ -1067,10 +1067,10 @@ class GoalMember extends AppModel
 
         $options = [
             'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => $GoalMember::TYPE_OWNER,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true,
+                'GoalMember.goal_id' => $goalId,
+                'GoalMember.type'    => $GoalMember::TYPE_OWNER,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
+                'User.active_flg'    => true,
             ],
             'fields'     => [
                 'GoalMember.id',
@@ -1116,11 +1116,11 @@ class GoalMember extends AppModel
 
         $res = $this->find('first', [
             'conditions' => [
-                'GoalMember.id'         => $goalMemberId,
-                'GoalMember.type'       => self::TYPE_COLLABORATOR,
-                'Goal.id'               => $goalId,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
+                'GoalMember.id'     => $goalMemberId,
+                'GoalMember.type'   => self::TYPE_COLLABORATOR,
+                'Goal.id'           => $goalId,
+                'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE,
+                'User.active_flg'   => true
             ],
             'fields'     => [
                 'GoalMember.id'
@@ -1168,10 +1168,10 @@ class GoalMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'GoalMember.type'       => self::TYPE_COLLABORATOR,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
+                'GoalMember.goal_id' => $goalId,
+                'GoalMember.type'    => self::TYPE_COLLABORATOR,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
+                'User.active_flg'    => true
             ],
             'fields'     => [
                 'GoalMember.id',
@@ -1244,9 +1244,9 @@ class GoalMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'GoalMember.goal_id'    => $goalId,
-                'TeamMember.active_flg' => true,
-                'User.active_flg'       => true
+                'GoalMember.goal_id' => $goalId,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
+                'User.active_flg'    => true
             ],
             'fields'     => ['GoalMember.user_id'],
             'joins'      => [
