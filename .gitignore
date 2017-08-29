@@ -45,3 +45,4 @@ yarn-error.log
 /app/webroot/js/*.js
 # for Translation | 翻訳関連
 /app/Locale/**/*.pot
+package-lock.json
