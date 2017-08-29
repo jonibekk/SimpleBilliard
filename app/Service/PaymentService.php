@@ -4,6 +4,7 @@ App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
+App::uses('TransactionManager', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
@@ -880,9 +881,6 @@ class PaymentService extends AppService
      */
     public function registerInvoice(int $teamId, int $chargeMemberCount, int $time): bool
     {
-        // Invoices for only Japanese team. So, $timezone will be always Japan time.
-        $timezone = 9;
-
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
         /** @var InvoiceService $InvoiceService */
@@ -895,6 +893,13 @@ class PaymentService extends AppService
         $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var  Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TransactionManager $TransactionManager */
+        $TransactionManager = ClassRegistry::init('TransactionManager');
+
+        $team = $Team->getById($teamId);
+        $timezone = $team['timezone'];
 
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
@@ -906,7 +911,7 @@ class PaymentService extends AppService
 
         $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
 
-        $ChargeHistory->begin();
+        $TransactionManager->begin();
         try {
             // save monthly charge
             $ChargeHistory->clear();
@@ -937,7 +942,7 @@ class PaymentService extends AppService
             // save the invoice history
             $invoiceHistoryData = [
                 'team_id'           => $teamId,
-                'order_date'        => $localCurrentDate,
+                'order_datetime'        => $time,
                 'system_order_code' => '',
             ];
             $InvoiceHistory->clear();
@@ -983,7 +988,7 @@ class PaymentService extends AppService
             }
 
         } catch (Exception $e) {
-            $ChargeHistory->rollback();
+            $TransactionManager->rollback();
             $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorDetail: %s",
                 $teamId,
                 $e->getMessage()
@@ -991,7 +996,7 @@ class PaymentService extends AppService
             return false;
         }
 
-        $ChargeHistory->commit();
+        $TransactionManager->commit();
 
         // update system order code.
         $invoiceHistoryUpdate = [
@@ -1173,8 +1178,7 @@ class PaymentService extends AppService
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
-                // Invoices for only Japanese team. So, $timezone will be always Japan time.
-                $timezone = 9;
+                $timezone = Hash::get($v, 'Team.timezone');
 
                 $localCurrentTs = $time + ($timezone * HOUR);
                 $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
