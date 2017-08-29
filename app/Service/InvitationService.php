@@ -33,7 +33,7 @@ class InvitationService extends AppService
         $errors = [];
         $Email->validate = [
             'email' => [
-                'maxLength' => ['rule' => ['maxLength', 200]],
+                'maxLength' => ['rule' => ['maxLength', 255]],
                 'notBlank'  => ['rule' => 'notBlank',],
                 'email'     => ['rule' => ['email'],],
             ],

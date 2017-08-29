@@ -21,7 +21,7 @@ class Email extends AppModel
             ],
         ],
         'email'          => [
-            'maxLength'     => ['rule' => ['maxLength', 200]],
+            'maxLength'     => ['rule' => ['maxLength', 255]],
             'notBlank'      => [
                 'rule' => 'notBlank',
             ],
@@ -43,7 +43,7 @@ class Email extends AppModel
             ],
         ],
         'email'   => [
-            'maxLength' => ['rule' => ['maxLength', 200]],
+            'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'rule' => 'notBlank',
             ],
