@@ -28,35 +28,35 @@
     //     'answer'   => __('Evaluation can be done at end of term or in next term. There are 2 types of evaluations, Goal evaluation and total evaluation.')
     // ],
     [
-        'question' => __('What should I do if the member leave our company?'),
-        'answer'   => __('Team administrator can make the member left deactivated. Those members can\'t access your team but the posts they did would remain your team.')
+        'question' => __('What should I do if a member leaves our company?'),
+        'answer'   => __('The team administrator can can change the member to deactivated status. Deactivated members are unable to acess Goalous but their posting history remains.')
     ],
     [
         'question' => __('I\'m concerned about security and backup systems.'),
-        'answer'   => __('We save data as distribution. We reserve backups everyday. Using SSL, 2-Step Verification and Login lock, you can use Goalous with safe.')
+        'answer'   => __('We have a distributed back-up system, back-ups are done everyday. Goalous can be used securely With SSL, 2-Step Verification and Login Lock.')
     ],
     [
-        'question' => __('Is there apps for smartphone and tablet?'),
-        'answer'   => __('You can download Goalous on AppStore and PlayStore. You can use our application on your mobile. Also, you can access to Goalous on your mobile browser.')
+        'question' => __('Are there apps for smartphone and tablet?'),
+        'answer'   => __('Goalous can be used on your smartphone! You can download the App through PlayStore and AppStore. You can also access Goalous on your mobile browser')
     ],
     [
-        'question' => __('Can we ask you to explain more in detail?'),
-        'answer'   => __('Sure! Please contact with us from contact form. We are looking forward your contact!')
+        'question' => __('Could you give a more detailed explanation?'),
+        'answer'   => __('Sure! Please contact us using the contact form. We are looking forward to hearing from you.')
     ],
     [
-        'question' => __('What should we do after the campaign?'),
-        'answer'   => __('In order to continue using Goalous, you need to purchase a subscription plan.')
+        'question' => __('What happens after the free campaign?'),
+        'answer'   => __('In order to continue using Goalous, please purchase a subscription plan.')
     ],
     [
         'question' => __('Can we customize Goalous?'),
-        'answer'   => __('Definitely not, but we hope to get your feedback. If we find it as good idea, we immediately accept it.')
+        'answer'   => __('We are unable to accept customize requests at this time. We would love to hear your feedback though! We are implementing new ideas constantly.')
     ],
     [
-        'question' => __('Could we ask you to support us?'),
-        'answer'   => __('After logged in, you can get contact with us by support tool. We can help you as soon as possible.')
+        'question' => __('How can we receive support?'),
+        'answer'   => __('After you login, please contact us using the support tool. We will help you as soon as possible.')
     ],
     [
-        'question' => __('Which company offer Goalous?'),
+        'question' => __('What company manages Goalous?'),
         'answer'   => __('ISAO, make and deliver "Joyful!". Found on 1999, our sprits are "Open, Challanging, Link".')
     ],
 ]
@@ -96,7 +96,7 @@
 
         </div><!--//row-->
         <div class="more text-center col-md-6 col-md-offset-3">
-            <h4 class="title"><?= __('Any other question?') ?></h4>
+            <h4 class="title"><?= __('Any other questions?') ?></h4>
             <?= $this->Html->link(__('Contact us'), array('controller' => 'contact'),
                 array('class' => 'btn btn-cta btn-cta-secondary btn-lg btn-block')); ?>
         </div>
