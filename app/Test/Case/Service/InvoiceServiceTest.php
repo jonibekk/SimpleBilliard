@@ -243,9 +243,9 @@ class InvoiceServiceTest extends GoalousTestCase
         // Create invoice and invoice history
         list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
         $this->addInvoiceHistory($teamId, [
-            'order_date'        => '2017-01-01',
+            'order_datetime'    => time(),
             'system_order_code' => "test",
-            'order_status' => Enum\Invoice\CreditStatus::WAITING,
+            'order_status'      => Enum\Invoice\CreditStatus::WAITING,
         ]);
 
         // Get the histories
