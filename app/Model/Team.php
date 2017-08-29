@@ -57,6 +57,14 @@ class Team extends AppModel
     const SERVICE_USE_STATUS_PAID = 1;
     const SERVICE_USE_STATUS_READ_ONLY = 2;
     const SERVICE_USE_STATUS_CANNOT_USE = 3;
+
+    /**
+     * Team credit card status
+     */
+    const STATUS_CREDIT_CARD_CLEAR       = 0;
+    const STATUS_CREDIT_CARD_EXPIRED     = 1;
+    const STATUS_CREDIT_CARD_EXPIRE_SOON = 2;
+
     /**
      * Days of service use status
      */

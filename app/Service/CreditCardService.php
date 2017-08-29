@@ -6,6 +6,8 @@ App::import('Service', 'AppService');
  */
 class CreditCardService extends AppService
 {
+    const CACHE_TTL_SECONDS_TEAM_CREDIT_CARD_EXPIRE_DATE = 7 * 86400;
+
     public function retrieveToken(string $token)
     {
         $result = [
@@ -74,6 +76,8 @@ class CreditCardService extends AppService
             $response = \Stripe\Customer::create($customer);
 
             $result["customer_id"] = $response->id;
+            // TODO: must research better way of getting default_source than [0]
+            // e.g. should be like $response->sources->retrieve()
             $result["card"] = $response->sources->data[0];
         } catch (Exception $e) {
             $result["error"] = true;
@@ -88,6 +92,112 @@ class CreditCardService extends AppService
         }
 
         return $result;
+    }
+
+    /**
+     * get credit card expire datetime from cache or Stripe api
+     *
+     * @param int $teamId
+     *
+     * @return GoalousDateTime|null
+     */
+    public function getExpirationDateTimeOfTeamCreditCard(int $teamId)
+    {
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init("CreditCardService");
+        $expiration = $CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($teamId);
+        if ($expiration instanceof GoalousDateTime) {
+            return $expiration;
+        }
+
+        // no redis cache, fetch card expiration from StripeAPI
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        $customerId = $CreditCard->getCustomerCode($teamId);
+
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        try {
+            $response = \Stripe\Customer::retrieve($customerId);
+            // TODO: must research better way of getting default_source than [0]
+            // e.g. should be like $response->sources->retrieve()
+            $card = $response->sources->data[0];
+            $CreditCardService->cacheTeamCreditCardExpiration([
+                'error' => is_null($card),
+                'year'  => $card['exp_year'] ?? 0,
+                'month' => $card['exp_month'] ?? 0,
+            ], $teamId);
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $CreditCardService->cacheTeamCreditCardExpiration([
+                'error' => true,
+                'year'  => 0,
+                'month' => 0,
+            ], $teamId);
+        }
+        return $CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($teamId);
+    }
+
+    /**
+     * cache team credit card expiration data by array
+     * @param array $data
+     * @param int   $teamId
+     */
+    public function cacheTeamCreditCardExpiration(array $data, int $teamId)
+    {
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
+        $this->log("cache credit card expiration date to redis: {$keyRedisCache}", LOG_INFO);
+        Cache::set('duration', self::CACHE_TTL_SECONDS_TEAM_CREDIT_CARD_EXPIRE_DATE, 'user_data');
+        Cache::write($keyRedisCache, msgpack_pack($data), 'user_data');
+    }
+
+    /**
+     * get team credit card expiration date by GoalousDateTime
+     * @param int $teamId
+     *
+     * @return GoalousDateTime|null
+     */
+    public function getExpirationDateTimeOfTeamCreditCardFromCache(int $teamId)
+    {
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
+        $cachedCreditCardExpireData = Cache::read($keyRedisCache, 'user_data');
+        if (false !== $cachedCreditCardExpireData) {
+            $expireDates = msgpack_unpack($cachedCreditCardExpireData);
+            if ($expireDates['error']) {
+                return null;
+            }
+            return self::getRealExpireDateTimeFromCreditCardExpireDate($expireDates['year'], $expireDates['month']);
+        }
+        return null;
+    }
+
+    /**
+     * get "real" credit card expire datetime by GoalousDateTime
+     * e.g. if StripeApi return
+     *  - exp_year = 2018
+     *  - exp_month = 8
+     * the card "real" expire datetime is "9/1/2018 00:00:00"
+     *
+     * in this example, this method returns
+     *     new GoalousDateTime("9/1/2018 00:00:00");
+     *
+     * @param int $year
+     * @param int $month
+     *
+     * @return GoalousDateTime
+     */
+    public function getRealExpireDateTimeFromCreditCardExpireDate(int $year, int $month): GoalousDateTime
+    {
+        return GoalousDateTime::create(
+            $year,
+            $month,
+            1, 0, 0, 0
+        )->addMonth(1);
     }
 
     /**
@@ -224,14 +334,19 @@ class CreditCardService extends AppService
      *
      * @param string $customerId
      * @param string $token
+     * @param int $teamId
      *
      * @return array
      */
-    function update(string $customerId, string $token): array
+    function update(string $customerId, string $token, int $teamId): array
     {
         try {
             \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
             \Stripe\Customer::update($customerId, ['source' => $token]);
+
+            $CreditCard = ClassRegistry::init("CreditCard");
+            $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
+            Cache::delete($keyRedisCache, 'user_data');
         } catch (Exception $e) {
             $message = $e->getMessage();
             $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : null;
