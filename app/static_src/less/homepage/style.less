@@ -1889,17 +1889,6 @@ body {
     margin: 16px 0 0;
 }
 
-details{
-    transition: height .3s;
-    summary{
-        list-style-type: none;
-        transition: height .3s;
-        &::-webkit-details-marker {
-            display:none;
-        }
-    }
-}
-
 #pricingDetail{
     .normal-weight{
         font-weight: 500;
@@ -1909,6 +1898,7 @@ details{
         padding: 10px; 
         text-align:center;
         border-radius: 4px;
+        margin-bottom: 20px;
     }
     .hr{
         border-top: 1px solid @cGray;
@@ -1920,20 +1910,53 @@ details{
         border-bottom: 1px solid @cGray;
         margin: 10px 10px;
         padding-bottom: 10px;
+        .icon{
+            &:before{
+                color:@white;
+                font-family: FontAwesome;
+                border-radius: 50%;
+                display: block;
+                font-size: 10px;
+                float: left;
+                text-align: center;
+                padding: 3px 0;
+                width: 20px;
+                margin-right: 5px;
+            }
+        }
+        .icon-heart{
+            &:before{
+                content: '\f004';
+                background-color:@acidRed;
+            }
+        }
+        .icon-message{
+            &:before{
+                content: '\f086';
+                background-color:@subColor13;
+            }
+        }
+        .icon-lock{
+            &:before{
+                content: '\f023';
+                background-color:@subColor6;
+            }
+        }
         &:last-of-type{
             border-bottom: none;
         }
         ul{
             list-style-type: none;
-            margin: 0;
-            padding-left: 10px;
+            margin: 5px 0 0 0;
+            padding-left: 25px;
         }
         li{
             position: relative;
             &:before{
-                content: "-";
+                content: '\f00c';
+                font-family:FontAwesome;
                 position: absolute;
-                left: -10px;
+                left: -23px;
             }
         }
     }
@@ -1944,19 +1967,40 @@ details{
         float:left;
         width: 100%;
         position:relative;
-        margin: 10px 0;
-        summary{
+        margin: 0;
+        .question-entry{
             width: 100%;
-            font-weight: 800;
-            padding: 7px 0;
-            .fa{ // down arrow
+            padding: 6px 0;
+            &:hover{
+                cursor:pointer;
+            }
+            .fa{
                 font-size: 30px;
-                background-color: @lighterGray;
-                padding: 1px 5px;
                 position: absolute;
                 right: 0;
                 top:0;
+                transition: transform .3s;
+                transform: rotate(0deg);
             }
         }
+        .answer{
+            height: 0px;
+            overflow: hidden;
+            transition: height .3s;
+        }
+        &.active{
+            .fa{
+                transform: rotate(180deg);
+            }
+        }
+    }
+}
+
+#pricingDetail, #faqs{
+    .container{
+        max-width: 600px;
+        width: 100%;
+        display: block;
+        margin: 0 auto;
     }
 }

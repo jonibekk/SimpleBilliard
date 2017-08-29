@@ -1902,16 +1902,6 @@ body {
 .btn-block + .contact-confirm-send {
   margin: 16px 0 0;
 }
-details {
-  transition: height .3s;
-}
-details summary {
-  list-style-type: none;
-  transition: height .3s;
-}
-details summary::-webkit-details-marker {
-  display: none;
-}
 #pricingDetail .normal-weight {
   font-weight: 500;
 }
@@ -1920,6 +1910,7 @@ details summary::-webkit-details-marker {
   padding: 10px;
   text-align: center;
   border-radius: 4px;
+  margin-bottom: 20px;
 }
 #pricingDetail .hr {
   border-top: 1px solid #ccc;
@@ -1932,38 +1923,80 @@ details summary::-webkit-details-marker {
   margin: 10px 10px;
   padding-bottom: 10px;
 }
+#pricingDetail .feature-category .icon:before {
+  color: #fff;
+  font-family: FontAwesome;
+  border-radius: 50%;
+  display: block;
+  font-size: 10px;
+  float: left;
+  text-align: center;
+  padding: 3px 0;
+  width: 20px;
+  margin-right: 5px;
+}
+#pricingDetail .feature-category .icon-heart:before {
+  content: '\f004';
+  background-color: #d9230f;
+}
+#pricingDetail .feature-category .icon-message:before {
+  content: '\f086';
+  background-color: #0094ed;
+}
+#pricingDetail .feature-category .icon-lock:before {
+  content: '\f023';
+  background-color: #099f3f;
+}
 #pricingDetail .feature-category:last-of-type {
   border-bottom: none;
 }
 #pricingDetail .feature-category ul {
   list-style-type: none;
-  margin: 0;
-  padding-left: 10px;
+  margin: 5px 0 0 0;
+  padding-left: 25px;
 }
 #pricingDetail .feature-category li {
   position: relative;
 }
 #pricingDetail .feature-category li:before {
-  content: "-";
+  content: '\f00c';
+  font-family: FontAwesome;
   position: absolute;
-  left: -10px;
+  left: -23px;
 }
 #faqs .question {
   float: left;
   width: 100%;
   position: relative;
-  margin: 10px 0;
+  margin: 0;
 }
-#faqs .question summary {
+#faqs .question .question-entry {
   width: 100%;
-  font-weight: 800;
-  padding: 7px 0;
+  padding: 6px 0;
 }
-#faqs .question summary .fa {
+#faqs .question .question-entry:hover {
+  cursor: pointer;
+}
+#faqs .question .question-entry .fa {
   font-size: 30px;
-  background-color: #dcddde;
-  padding: 1px 5px;
   position: absolute;
   right: 0;
   top: 0;
+  transition: transform .3s;
+  transform: rotate(0deg);
+}
+#faqs .question .answer {
+  height: 0px;
+  overflow: hidden;
+  transition: height .3s;
+}
+#faqs .question.active .fa {
+  transform: rotate(180deg);
+}
+#pricingDetail .container,
+#faqs .container {
+  max-width: 600px;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
 }

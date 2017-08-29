@@ -95,19 +95,19 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p>Goalous is a lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi omnis commodi aliquam, animi sit nesciunt in eos officiis illo. Officiis distinctio harum maiores voluptatem odio, quasi labore omnis, nemo at?</p>
         </div>
         <div class="feature-category">
-            <strong class="icon-heart">Goal Features</strong>
+            <strong class="icon icon-heart">Goal Features</strong>
             <ul>
                 <li>Unlimited team, goal, photo, and video storage</li>
             </ul>
         </div>
         <div class="feature-category">
-            <strong class="icon-message">Communication Features</strong>
+            <strong class="icon icon-message">Communication Features</strong>
             <ul>
                 <li>Live chat messaging</li>
             </ul>
         </div>
         <div class="feature-category">
-            <strong class="icon-lock">Security Features</strong>
+            <strong class="icon icon-lock">Security Features</strong>
             <ul>
                 <li>Encrypted storage</li>
             </ul>
@@ -118,14 +118,20 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <section id="faqs">
     <div class="container">
         <h2>Frequently Asked Questions</h2>
-        <details class="question" open>
-            <summary>What are my payment options?<span class="fa fa-angle-down"></span></summary>
-            <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
-        </details>
-        <details class="question" open>
-            <summary>What are my payment options?<span class="fa fa-angle-down"></span></summary>
-            <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
-        </details>
+        <div class="question">
+            <p class="question-entry"><strong>What are my payment options?</strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong>What are my payment options?</strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+            </div>
+        </div>
     </div>
 </section>
 
