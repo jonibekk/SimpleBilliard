@@ -75,7 +75,7 @@ class PaymentService extends AppService
      *
      * @return array|bool
      */
-    public function validateCreate($data)
+    public function validateCreateCc($data)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -83,16 +83,12 @@ class PaymentService extends AppService
         // Validates model
         $PaymentSetting->set($data);
         $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateCreate);
-        if (!$PaymentSetting->validates()) {
-            return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
-        }
 
-        // Validate if team exists
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $teamId = Hash::get($data, 'team_id');
-        if ($Team->exists($teamId) === false) {
-            $PaymentSetting->invalidate('team_id', __("Not exist"));
+        $companyCountry = Hash::get($data, 'company_country');
+        if ($companyCountry === 'JP') {
+            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
+        }
+        if (!$PaymentSetting->validates()) {
             return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
         }
 
@@ -107,9 +103,55 @@ class PaymentService extends AppService
             }
         }
 
-        // TODO: Validate INVOICE data
-
         return true;
+    }
+
+    /**
+     * Validate for Create
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    public function validateCreateInvoice($data): array
+    {
+        $data = is_array($data) ? $data : [];
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init("Invoice");
+
+        $allValidationErrors = [];
+
+        // Validates PaymentSetting model
+        $checkData = Hash::get($data, 'payment_setting') ?? [];
+        $PaymentSetting->set($checkData);
+
+        $companyCountry = Hash::get($data, 'payment_setting.company_country');
+        if ($companyCountry === 'JP') {
+            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
+        }
+        if (!$PaymentSetting->validates()) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $PaymentSetting->_validationExtract($PaymentSetting->validationErrors)
+            );
+        }
+
+        // Validates Invoice model
+        $checkData = Hash::get($data, 'invoice') ?? [];
+        $Invoice->set($checkData);
+        if ($companyCountry === 'JP') {
+            $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
+        }
+        if (!$Invoice->validates()) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $Invoice->_validationExtract($Invoice->validationErrors)
+            );
+        }
+
+        return $allValidationErrors;
     }
 
     /**
@@ -727,8 +769,11 @@ class PaymentService extends AppService
             // Set team status
             // Up to this point any failure do not directly affect user accounts or charge its credit card.
             // Team status will be set first in case of any failure team will be able to continue to use.
-            $paymentDate = date('Y-m-d');
-            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
+            $timezone = $Team->getTimezone();
+            $date = AppUtil::todayDateYmdLocal($timezone);
+            if (!$Team->updatePaidPlan($teamId, $date)) {
+                throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
+            }
 
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
@@ -737,6 +782,9 @@ class PaymentService extends AppService
             $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
             $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
                 $paymentDescription);
+
+            // Delete cache
+            $Team->resetCurrentTeam();
 
             // Error charging customer using Stripe API. Might be network,  API problem or card rejected
             if ($chargeResult['error'] === true || $chargeResult['success'] == false) {
@@ -783,9 +831,6 @@ class PaymentService extends AppService
         $historyData['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
         $this->_saveChargeHistory($historyData);
 
-        // Delete cache
-        $Team->resetCurrentTeam();
-
         return $result;
     }
 
@@ -795,16 +840,11 @@ class PaymentService extends AppService
      * @param int   $userId
      * @param int   $teamId
      * @param array $paymentData
+     * @param array $invoiceData
      *
-     * @return
-     * $result = [
-     *       'errorCode' => 200,
-     *       'message'   => null
-     *  ];
-     * or
-     * true
+     * @return bool
      */
-    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData)
+    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData, array $invoiceData)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -814,53 +854,66 @@ class PaymentService extends AppService
         $Invoice = ClassRegistry::init('Invoice');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
+        /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+        $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
 
-        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
-        $membersCount = $membersCount[$teamId];
+        $membersCount = $TeamMember->countChargeTargetUsers($teamId);
 
         try {
-            $PaymentSetting->begin();
+            $this->TransactionManager->begin();
 
-            // Save Payment Settings
-            if (!$PaymentSetting->save($paymentData)) {
+            // Prepare data for saving
+            $timezone = $Team->getTimezone();
+            $paymentData['team_id'] = $teamId;
+            $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
+            $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
+            $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
+            $paymentData['amount_per_user'] = self::AMOUNT_PER_USER_JPY;
+            // Create Payment Setting
+            if (!$PaymentSetting->save($paymentData, false)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
                     AppUtil::varExportOneLine($paymentData)));
             }
             $paymentSettingId = $PaymentSetting->getLastInsertID();
 
-            // Create Invoice
-            $invoiceData = $paymentData;
+            // Prepare data for saving
+            $invoiceData['team_id'] = $teamId;
             $invoiceData['payment_setting_id'] = $paymentSettingId;
-            $invoiceData['credit_status'] = Invoice::CREDIT_STATUS_WAITING;
-            if (!$Invoice->save($invoiceData)) {
+            $invoiceData['credit_status'] = Enum\Invoice\CreditStatus::WAITING;
+            // Create Invoice
+            if (!$Invoice->save($invoiceData, false)) {
                 throw new Exception(sprintf("Failed create invoice record. data: %s",
-                    AppUtil::varExportOneLine($paymentData)));
+                    AppUtil::varExportOneLine($invoiceData)));
             }
 
             // Save snapshot
-            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
-            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
-            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
-
-            // Set team status
-            $paymentDate = date('Y-m-d');
-            $Team->updateAllServiceUseStateStartEndDate(Team::SERVICE_USE_STATUS_PAID, $paymentDate);
-
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
-            if ($res == false) {
-                throw new Exception(sprintf("Error creating invoice payment: ",
-                    AppUtil::varExportOneLine($paymentData)));
+            if (!$PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId)) {
+                throw new Exception(sprintf("Failed to create payment setting change log. data: %s",
+                    AppUtil::varExportOneLine(compact('paymentSettingId', 'userId'))
+                ));
             }
 
-            $PaymentSetting->commit();
-        } catch (Exception $e) {
-            $PaymentSetting->rollback();
+            // Set team status
+            $timezone = $Team->getTimezone();
+            $date = AppUtil::todayDateYmdLocal($timezone);
+            if (!$Team->updatePaidPlan($teamId, $date)) {
+                throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
+            }
 
-            // TODO: Payment: add message translations
-            $result = [];
-            $result['errorCode'] = 500;
-            $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
-            return $result;
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
+            if ($res === false) {
+                throw new Exception(sprintf("Error creating invoice payment: ",
+                    AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
+            }
+
+            // Delete cache
+            $Team->resetCurrentTeam();
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return false;
         }
 
         return true;
@@ -881,6 +934,8 @@ class PaymentService extends AppService
      */
     public function registerInvoice(int $teamId, int $chargeMemberCount, int $time): bool
     {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
         /** @var InvoiceService $InvoiceService */
@@ -893,14 +948,8 @@ class PaymentService extends AppService
         $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
-        /** @var  Team $Team */
-        $Team = ClassRegistry::init('Team');
-        /** @var TransactionManager $TransactionManager */
-        $TransactionManager = ClassRegistry::init('TransactionManager');
 
-        $team = $Team->getById($teamId);
-        $timezone = $team['timezone'];
-
+        $timezone = $Team->getById($teamId)['timezone'];
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
         if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
@@ -911,7 +960,7 @@ class PaymentService extends AppService
 
         $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
 
-        $TransactionManager->begin();
+        $this->TransactionManager->begin();
         try {
             // save monthly charge
             $ChargeHistory->clear();
@@ -988,7 +1037,7 @@ class PaymentService extends AppService
             }
 
         } catch (Exception $e) {
-            $TransactionManager->rollback();
+            $this->TransactionManager->rollback();
             $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorDetail: %s",
                 $teamId,
                 $e->getMessage()
@@ -996,7 +1045,7 @@ class PaymentService extends AppService
             return false;
         }
 
-        $TransactionManager->commit();
+        $this->TransactionManager->commit();
 
         // update system order code.
         $invoiceHistoryUpdate = [
@@ -1303,8 +1352,7 @@ class PaymentService extends AppService
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
         int $usersCount
-    )
-    {
+    ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
 
@@ -1439,6 +1487,10 @@ class PaymentService extends AppService
         $allValidationErrors = [];
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
+            $companyCountry = Hash::get($data, 'payment_setting.company_country');
+            if ($companyCountry === 'JP') {
+                $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
+            }
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'payment_setting', 'PaymentSetting', $PaymentSetting)
@@ -1455,6 +1507,11 @@ class PaymentService extends AppService
 
         // Invoice validation
         if (!empty(Hash::get($fields, 'Invoice'))) {
+            $companyCountry = Hash::get($data, 'payment_setting.company_country');
+            if ($companyCountry === 'JP') {
+                $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
+            }
+
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)

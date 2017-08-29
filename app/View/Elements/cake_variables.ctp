@@ -14,7 +14,11 @@ App::uses('AttachedFile', 'Model');
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
-        require_banner_notification: "<?= isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]) ?>",
+        require_banner_notification: "<?=
+            (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])
+            || isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON])
+            )
+            ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
@@ -173,9 +177,8 @@ App::uses('AttachedFile', 'Model');
             ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
             ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url([
-                'controller' => 'teams',
-                'action'     => 'settings',
-                '#'          => 'invite_member'
+                'controller' => 'users',
+                'action'     => 'invite',
             ]) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",

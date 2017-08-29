@@ -1642,6 +1642,22 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $terms_of_services = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'text_ja' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'body of terms of service(ja)', 'charset' => 'utf8mb4'),
+		'text_en' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'body of terms of service(en)', 'charset' => 'utf8mb4'),
+		'start_date' => array('type' => 'date', 'null' => false, 'default' => null, 'key' => 'index', 'comment' => 'application start date of terms of service'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'start_date' => array('column' => 'start_date', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $tkr_change_logs = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
@@ -1747,6 +1763,7 @@ class AppSchema extends CakeSchema {
 		'auto_language_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自動言語設定フラグ(Onの場合はブラウザから言語を取得する)'),
 		'romanize_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'ローマ字表記フラグ(Onの場合は自分の名前がアプリ内で英語表記になる)。local_first_name,local_last_nameが入力されていても、first_name,last_nameがつかわれる。'),
 		'update_email_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '更新情報メールフラグ(Onの場合はアプリから更新情報がメールで届く)'),
+		'agreed_terms_of_service_id' => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '同意した最新の利用規約ID'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザが退会した日付時刻'),
 		'gender_type' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => '性別(1:男,2:女)'),

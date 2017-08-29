@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'CreditCardService');
 
 /**
@@ -165,7 +166,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_MASTERCARD);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
         $this->assertFalse($res['error']);
 
         $this->deleteCustomer($customerId);
@@ -175,7 +176,7 @@ class CreditCardServiceTest extends GoalousTestCase
     {
         $customerId = $this->createCustomer(self::CARD_VISA);
 
-        $res = $this->CreditCardService->update($customerId, 'xxxxxxxxx');
+        $res = $this->CreditCardService->update($customerId, 'xxxxxxxxx', 3);
         $this->assertTrue($res['error']);
 
         $this->deleteCustomer($customerId);
@@ -186,7 +187,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_DECLINED);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_DECLINED);
 
@@ -198,7 +199,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_INCORRECT_CVC);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_INCORRECT_CVC);
 
@@ -210,7 +211,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_EXPIRED);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_EXPIRED);
 
@@ -222,7 +223,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_PROCESSING_ERROR);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken);
+        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
 
@@ -240,5 +241,60 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertArrayHasKey("error", $res);
         $this->assertFalse($res["error"]);
         $this->assertArrayHasKey("customers", $res);
+    }
+
+    function test_cacheTeamCreditCardExpiration()
+    {
+        $testingTeamId = 3;
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        $CreditCard->current_team_id = $testingTeamId;
+        $this->CreditCardService->cacheTeamCreditCardExpiration([
+            'error' => false,
+            'year'  => 2018,
+            'month' => 8,
+        ], $testingTeamId);
+
+        $key = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, true);
+        $cachedCreditCardExpireData = Cache::read($key, 'user_data');
+        $creditCardExpireData = msgpack_unpack($cachedCreditCardExpireData);
+        $this->assertFalse($creditCardExpireData['error']);
+        $this->assertEquals(2018, $creditCardExpireData['year']);
+        $this->assertEquals(8, $creditCardExpireData['month']);
+
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $newCardToken = $this->createToken(self::CARD_MASTERCARD);
+        $this->CreditCardService->update($customerId, $newCardToken, $testingTeamId);
+        $this->assertFalse(Cache::read($key, 'user_data'));
+    }
+
+    function test_getRealExpireDateTimeFromCreditCardExpireDate()
+    {
+        $expireDate = $this->CreditCardService->getRealExpireDateTimeFromCreditCardExpireDate(2018, 9);
+        self::assertTrue(
+            $expireDate->equalTo(new GoalousDateTime('2018-10-01 00:00:00'))
+        );
+        $expireDate = $this->CreditCardService->getRealExpireDateTimeFromCreditCardExpireDate(2018, 12);
+        self::assertTrue(
+            $expireDate->equalTo(new GoalousDateTime('2019-01-01 00:00:00'))
+        );
+    }
+
+    function test_getExpirationDateTimeOfTeamCreditCardFromCache()
+    {
+        $testingTeamId = 3;
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init("CreditCard");
+        $CreditCard->current_team_id = $testingTeamId;
+        $this->CreditCardService->cacheTeamCreditCardExpiration([
+            'error' => false,
+            'year'  => 2019,
+            'month' => 8,
+        ], $testingTeamId);
+        $d = $this->CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($testingTeamId);
+
+        $this->assertTrue(
+            (new GoalousDateTime('2019-09-01 00:00:00'))->equalTo($d)
+        );
     }
 }
