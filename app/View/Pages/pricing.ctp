@@ -134,5 +134,5 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div>
     </div>
 </section>
-
+<?= $this->element('Homepage/signup') ?>
 <?= $this->App->viewEndComment()?>
