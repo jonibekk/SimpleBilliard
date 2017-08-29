@@ -61,7 +61,8 @@ class TeamMemberTest extends GoalousTestCase
     {
         $uid = '1';
         $data = [
-            'TeamMember' => [['user_id' => $uid,]],
+            'TeamMember' => [
+                ['user_id' => $uid, 'status' => TeamMember::USER_STATUS_ACTIVE]],
             'Team'       => [
                 'name' => 'test'
             ]
@@ -128,7 +129,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => false,
+                    'status' => TeamMember::USER_STATUS_INACTIVE,
                 ]
             ],
             'Team'       => [
@@ -1368,7 +1369,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'active_flg'            => 1,
+            'status' => TeamMember::USER_STATUS_INACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -1385,7 +1386,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'active_flg'            => 0,
+            'status' => TeamMember::USER_STATUS_INACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->current_team_id = $team_id;
@@ -1402,7 +1403,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'active_flg'            => 1,
+            'status'            => TeamMember::USER_STATUS_ACTIVE,
             'evaluation_enable_flg' => 0
         ];
         $this->TeamMember->current_team_id = $team_id;
@@ -2036,7 +2037,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'admin_flg'  => true,
-            'active_flg' => false
+            'status' => TeamMembere::USER_STATUS_INACTIVE
         ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
@@ -2047,7 +2048,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'    => 1,
             'team_id'    => 1,
             'admin_flg'  => true,
-            'active_flg' => false
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
@@ -2064,7 +2065,7 @@ class TeamMemberTest extends GoalousTestCase
 
     function test_updateInActiveFlgToStatus_success()
     {
-        $this->TeamMember->save(['active_flg' => false], false);
+        $this->TeamMember->save(['status' => TeamMember::USER_STATUS_INACTIVE], false);
         $teamMemberId = $this->TeamMember->getLastInsertId();
         $this->TeamMember->updateInactiveFlgToStatus();
         $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
@@ -2076,7 +2077,7 @@ class TeamMemberTest extends GoalousTestCase
         // It's expected decrement from list when changed to inactive team member.
         $retBefore = $this->TeamMember->findAdminList(1);
         $userId = current($retBefore);
-        $this->TeamMember->updateAll(['TeamMember.active_flg' => false],
+        $this->TeamMember->updateAll(['TeamMember.status' => TeamMember::USER_STATUS_INACTIVE],
             ['TeamMember.team_id' => 1, 'TeamMember.user_id' => $userId]);
         $afterOneInactivated = $this->TeamMember->findAdminList(1);
         $this->assertEquals(count($afterOneInactivated), count($retBefore) - 1);
