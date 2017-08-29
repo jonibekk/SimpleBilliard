@@ -988,7 +988,7 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
             $this->csv_datas[$key]['TeamMember']['status'] = strtolower($row['status']) == "on" ? self::USER_STATUS_ACTIVE : self::USER_STATUS_INACTIVE;
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
-            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
+            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'ON' ? true : false;
             if (Hash::get($row, 'member_type')) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             } else {
@@ -1022,7 +1022,7 @@ class TeamMember extends AppModel
         //require least 1 or more admin and active check
         $exists_admin_active = false;
         foreach ($this->csv_datas as $k => $v) {
-            if ($v['TeamMember']['status'] && $v['TeamMember']['status'] == self::USER_STATUS_ACTIVE) {
+            if ($v['TeamMember']['admin_flg'] && $v['TeamMember']['status'] == self::USER_STATUS_ACTIVE) {
                 $exists_admin_active = true;
             }
         }
