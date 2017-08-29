@@ -2292,6 +2292,9 @@ class Goal extends AppModel
     function findActionables(int $userId): array
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
+        $timezone = $this->Team->getTimezone();
+        $today = AppUtil::todayDateYmdLocal($timezone);
+
         $options = [
             'joins'      => [
                 [
@@ -2308,6 +2311,7 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.end_date >='   => AppUtil::todayDateYmdLocal($this->Team->getTimezone()),
                 'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.end_date >='   => $today,
                 'Goal.completed'     => null,
                 'GoalMember.del_flg' => false
             ],
@@ -2341,6 +2345,9 @@ class Goal extends AppModel
     function isActionable(int $userId, int $goalId): bool
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
+        $timezone = $this->Team->getTimezone();
+        $today = AppUtil::todayDateYmdLocal($timezone);
+
         $options = [
             'joins'      => [
                 [
@@ -2358,6 +2365,7 @@ class Goal extends AppModel
                 'Goal.id'            => $goalId,
                 'Goal.end_date >='   => $currentTerm['start_date'],
                 'Goal.end_date <='   => $currentTerm['end_date'],
+                'Goal.end_date >='   => $today,
                 'Goal.completed'     => null,
                 'GoalMember.del_flg' => false
             ],

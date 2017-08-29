@@ -187,7 +187,7 @@ class GoalsController extends AppController
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
+            $this->redirect('/goals/kr_progress');
         } else {
             $userId = $this->Auth->user('id');
             return $this->redirect(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $userId]);
@@ -548,7 +548,7 @@ class GoalsController extends AppController
         $this->Notification->outSuccess(__("Added a Key Result."));
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
+            $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());
         }
@@ -588,7 +588,7 @@ class GoalsController extends AppController
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));
         if ($paramsReferer['controller'] == 'pages' && $paramsReferer['pass'][0] == 'home') {
-            return $this->redirect('/after_click:SubHeaderMenuGoal');
+            return $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());
         }
@@ -766,7 +766,7 @@ class GoalsController extends AppController
 
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
+            $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());
         }
@@ -798,7 +798,7 @@ class GoalsController extends AppController
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
+            $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());
         }
@@ -842,7 +842,7 @@ class GoalsController extends AppController
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));
         if ($paramsReferer['controller'] == 'pages' && $paramsReferer['pass'][0] == 'home') {
-            $this->redirect('/after_click:SubHeaderMenuGoal');
+            $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());
         }
