@@ -14,10 +14,15 @@ export function validateInvitation() {
         dispatch(toNextPage(response.data.data))
       },
       ({response}) => {
-        /* eslint-disable no-console */
-        console.log("validate failed");
-        /* eslint-enable no-console */
-        dispatch(invalid(response.data))
+        if (!response.data.validation_errors) {
+          new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
+          }).show();
+          dispatch(invalid(response.data))
+        } else {
+          dispatch(invalid(response.data))
+        }
       }
     );
   }
@@ -77,7 +82,7 @@ export function fetchConfirmInitialData() {
 
 export function saveInvitation() {
   return (dispatch, getState) => {
-    dispatch(disableSubmit())
+    dispatch({type: types.SAVING})
     const post_data = {
       emails: getState().invite.emails
     }
@@ -86,7 +91,15 @@ export function saveInvitation() {
         dispatch({type: types.REDIRECT_TO_HOME})
       },
       ({response}) => {
-        dispatch(invalid(response.data))
+        if (!response.data.validation_errors) {
+          new Noty({
+            type: 'error',
+            text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
+          }).show();
+          dispatch(invalid(response.data))
+        } else {
+          dispatch(invalid(response.data))
+        }
       }
     );
   }

@@ -21,7 +21,7 @@ class Email extends AppModel
             ],
         ],
         'email'          => [
-            'maxLength'     => ['rule' => ['maxLength', 200]],
+            'maxLength'     => ['rule' => ['maxLength', 255]],
             'notBlank'      => [
                 'rule' => 'notBlank',
             ],
@@ -43,7 +43,7 @@ class Email extends AppModel
             ],
         ],
         'email'   => [
-            'maxLength' => ['rule' => ['maxLength', 200]],
+            'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'rule' => 'notBlank',
             ],
@@ -199,7 +199,48 @@ class Email extends AppModel
                 ]
             ]
         ]);
-
         return Hash::extract($res, '{n}.Email');
+    }
+
+    /**
+     * Get existed data by target team
+     *
+     * @param int   $teamId
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findExistByTeamId(int $teamId, array $emails): array
+    {
+        $res = $this->find('all', [
+            'fields'     => ['Email.email', 'Email.user_id'],
+            'conditions' => [
+                'Email.email'   => $emails,
+                'Email.del_flg' => false,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'User.del_flg' => false
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'Email.user_id = TeamMember.user_id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.del_flg' => false
+                    ],
+                ]
+            ]
+        ]);
+
+        return Hash::extract($res, '{n}.Email.email') ?? [];
     }
 }

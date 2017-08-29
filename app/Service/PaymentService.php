@@ -1059,6 +1059,7 @@ class PaymentService extends AppService
                 AppUtil::varExportOneLine($invoiceHistoryUpdate),
                 AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
             ));
+            return false;
         }
 
         return true;

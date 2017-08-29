@@ -148,4 +148,15 @@ class EmailTest extends GoalousTestCase
         $this->assertTrue($res);
     }
 
+
+    function test_findExistUsersByEmail()
+    {
+        // TODO.Payment:add unit tests
+    }
+
+    function test_findExistByTeamId()
+    {
+        // TODO.Payment:add unit tests
+    }
+
 }
