@@ -136,9 +136,8 @@ class PaymentsController extends ApiController
         // Validate input
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
-        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
         $requestData = $this->request->data;
-        $validationErrors = $PaymentService->validateCreateInvoice($requestData, $validationFields);
+        $validationErrors = $PaymentService->validateCreateInvoice($requestData);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
         }
