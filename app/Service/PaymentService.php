@@ -1451,14 +1451,14 @@ class PaymentService extends AppService
         ];
 
         try {
-            $Invoice->begin();
+            $this->TransactionManager->begin();
             if (!$Invoice->save($data)) {
                 throw new Exception(sprintf("Fail to update invoice. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
-            $Invoice->commit();
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $Invoice->rollback();
+            $this->TransactionManager->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
