@@ -39,6 +39,7 @@
     <?php
         if (in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])
             || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
+            || (isset($statusPaymentFailed) && $statusPaymentFailed)
         ) {
     ?>
         <div class="banner-alert font_verydark">
