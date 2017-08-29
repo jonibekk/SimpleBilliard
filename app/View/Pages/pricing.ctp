@@ -88,8 +88,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <p>You use all features of Goalous for a 15-day free trial. Give it a try!</p>
         <div class="pricing-card">
             <h3>Standard</h3>
-            <h3 class="normal-weight">&yen;1,900</h3>
-            <p>Per active member, per month</p>
+            <p><span class="price-text">&yen;1,900</span>
+            Per active member, per month</p>
             <button class="btn btn-cta btn-cta-primary">Start 15-day Free Trial</button>
             <div class="hr"></div>
             <p>Goalous is a lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi omnis commodi aliquam, animi sit nesciunt in eos officiis illo. Officiis distinctio harum maiores voluptatem odio, quasi labore omnis, nemo at?</p>
