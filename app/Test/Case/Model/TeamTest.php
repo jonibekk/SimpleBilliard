@@ -317,6 +317,30 @@ class TeamTest extends GoalousTestCase
         );
     }
 
+    public function test_isPaidPlan()
+    {
+        $freeTrialTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
+        $this->assertFalse($this->Team->isPaidPlan($freeTrialTeamId));
+        $paidPlanTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_PAID]);
+        $this->assertTrue($this->Team->isPaidPlan($paidPlanTeamId));
+        $readOnlyTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $this->assertFalse($this->Team->isPaidPlan($readOnlyTeamId));
+        $cantUseTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE]);
+        $this->assertFalse($this->Team->isPaidPlan($cantUseTeamId));
+    }
+
+    public function test_isFreeTrial()
+    {
+        $freeTrialTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
+        $this->assertTrue($this->Team->isFreeTrial($freeTrialTeamId));
+        $paidPlanTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_PAID]);
+        $this->assertFalse($this->Team->isFreeTrial($paidPlanTeamId));
+        $readOnlyTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $this->assertFalse($this->Team->isFreeTrial($readOnlyTeamId));
+        $cantUseTeamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE]);
+        $this->assertFalse($this->Team->isFreeTrial($cantUseTeamId));
+    }
+
     public function test_getCountry()
     {
         $teamId = $this->createTeam(['country' => 'JP']);

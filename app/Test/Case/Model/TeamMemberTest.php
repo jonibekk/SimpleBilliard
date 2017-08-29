@@ -1586,44 +1586,19 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertEquals(0, $res['TeamMember']['admin_flg']);
     }
 
-    function testSetActiveFlagPatternON()
+    function test_inactivate()
     {
-        $member_id = 999;
-        $this->TeamMember->User->save([
-            'id'         => $member_id,
-            'first_name' => 'test',
-            'last_name'  => 'test',
-        ]);
-        $this->TeamMember->User->Email->save([
-            'user_id'        => $member_id,
-            'email_verified' => true
-        ], false);
+        $memberId = 999;
         $params = [
-            'id'         => $member_id,
-            'user_id'    => $member_id,
-            'active_flg' => 0,
-        ];
-        $this->TeamMember->save($params, false);
-        $this->TeamMember->setActiveFlag($member_id, 'ON');
-
-        $options['conditions']['id'] = $member_id;
-        $res = $this->TeamMember->find('first', $options);
-        $this->assertEquals(1, $res['TeamMember']['active_flg']);
-    }
-
-    function testSetActiveFlagPatternOFF()
-    {
-        $member_id = 999;
-        $params = [
-            'id'         => $member_id,
-            'active_flg' => 0,
+            'id'     => $memberId,
+            'status' => TeamMember::USER_STATUS_ACTIVE,
         ];
         $this->TeamMember->save($params);
-        $this->TeamMember->setActiveFlag($member_id, 'OFF');
+        $this->TeamMember->inactivate($memberId);
 
-        $options['conditions']['id'] = $member_id;
+        $options['conditions']['id'] = $memberId;
         $res = $this->TeamMember->find('first', $options);
-        $this->assertEquals(0, $res['TeamMember']['active_flg']);
+        $this->assertEquals(TeamMember::USER_STATUS_INACTIVE, $res['TeamMember']['status']);
     }
 
     function testSetEvaluationEnableFlagPatternON()
@@ -1826,7 +1801,7 @@ class TeamMemberTest extends GoalousTestCase
     {
         $team_id = 999;
         $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'fields'     => ['id', 'status', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],

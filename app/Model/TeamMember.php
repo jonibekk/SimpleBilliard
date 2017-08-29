@@ -440,12 +440,32 @@ class TeamMember extends AppModel
         return $this->saveField('admin_flg', $flag);
     }
 
-    public function setActiveFlag($member_id, $flag)
+    /**
+     * Activate taem member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function activate(int $teamMemberId): bool
     {
-        $this->deleteCacheMember($member_id);
-        $this->id = $member_id;
-        $flag = $flag == 'ON' ? 1 : 0;
-        return $this->saveField('active_flg', $flag, true);
+        $this->deleteCacheMember($teamMemberId);
+        $this->id = $teamMemberId;
+        return (bool)$this->saveField('status', self::USER_STATUS_ACTIVE);
+    }
+
+    /**
+     * Inactivate taem member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function inactivate(int $teamMemberId): bool
+    {
+        $this->deleteCacheMember($teamMemberId);
+        $this->id = $teamMemberId;
+        return (bool)$this->saveField('status', self::USER_STATUS_INACTIVE);
     }
 
     public function setEvaluationFlag($member_id, $flag)
@@ -528,7 +548,7 @@ class TeamMember extends AppModel
     public function defineTeamMemberOption($team_id)
     {
         $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'fields'     => ['id', 'status', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],

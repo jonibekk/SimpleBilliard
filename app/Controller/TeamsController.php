@@ -1026,10 +1026,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_set_current_team_active_flag($member_id, $active_flg)
+    function ajax_inactivate_team_member($teamMemberId)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setActiveFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->inactivate($teamMemberId);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -2622,5 +2622,46 @@ class TeamsController extends AppController
             }
             $this->Session->write('current_team_id', $this->orig_team_id);
         }
+    }
+
+    /**
+     * Activate team member action
+     *
+     * @param int $teamMemberId
+     * @return void
+     */
+    function activate_team_member(int $teamMemberId)
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        // Check 403
+        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
+            $this->Notification->outError(__("You do not have permission to do this."));
+            return $this->redirect($this->referer());
+        }
+
+        // Paid status case
+        if ($this->Team->isPaidPlan($teamId)) {
+            // TODO: implement payment logic
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+            $this->redirect($this->referer());
+        }
+
+        // Free trial status case
+        if ($this->Team->isFreeTrial($teamId)) {
+            if ($this->Team->TeamMember->activate($teamMemberId)) {
+                // TODO: Should display translation correctry by @kohei
+                $this->Notification->outSuccess(__("Changed active status inactive to active."));
+            } else {
+                // TODO: Should display translation correctry by @kohei
+                $this->Notification->outSuccess(__("Failed to activate team member."));
+            }
+            $this->redirect($this->referer());
+        }
+
+        // Other plan
+        $this->Notification->outError(__("You do not have permission to do this."));
+        return $this->redirect($this->referer());
     }
 }

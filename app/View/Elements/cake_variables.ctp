@@ -124,7 +124,6 @@ App::uses('AttachedFile', 'Model');
             ])?>/",
             m: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_current_team_admin_list'])?>/",
             n: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_member'])?>/",
-            o: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_active_flag'])?>/",
             p: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_admin_user_flag'])?>/",
             q: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_term_start_end_by_edit'])?>",
@@ -203,6 +202,8 @@ App::uses('AttachedFile', 'Model');
                 'controller' => 'teams',
                 'action'     => 'ajax_validate_email_can_invite'
             ]) ?>",
+            inactivate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_inactivate_team_member'])?>/",
+            activate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'activate_team_member'])?>/",
             route_url: "<?= Router::fullbaseUrl() ?>"
         },
         data: {
@@ -615,6 +616,13 @@ App::uses('AttachedFile', 'Model');
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
+        },
+        const: {
+            USER_STATUS: {
+                INVITED: "<?= TeamMember::USER_STATUS_INVITED ?>",
+                ACTIVE: "<?= TeamMember::USER_STATUS_ACTIVE ?>",
+                INACTIVE: "<?= TeamMember::USER_STATUS_INACTIVE ?>",
+            },
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
