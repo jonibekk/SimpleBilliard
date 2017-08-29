@@ -2637,7 +2637,7 @@ class TeamsController extends AppController
 
         // Check 403
         if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
-            $this->Notification->outError(__("You have no right to operate it."));
+            $this->Notification->outError(__("You do not have permission to do this."));
             return $this->redirect($this->referer());
         }
 
@@ -2661,7 +2661,7 @@ class TeamsController extends AppController
         }
 
         // Other plan
-        $this->Notification->outError(__("You have no right to operate it."));
+        $this->Notification->outError(__("You do not have permission to do this."));
         return $this->redirect($this->referer());
     }
 }

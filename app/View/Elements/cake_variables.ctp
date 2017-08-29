@@ -617,6 +617,13 @@ App::uses('AttachedFile', 'Model');
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
         },
+        const: {
+            USER_STATUS: {
+                INVITED: "<?= TeamMember::USER_STATUS_INVITED ?>",
+                ACTIVE: "<?= TeamMember::USER_STATUS_ACTIVE ?>",
+                INACTIVE: "<?= TeamMember::USER_STATUS_INACTIVE ?>",
+            },
+        },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
         new_notify_message_cnt: <?=isset($new_notify_message_cnt) ? $new_notify_message_cnt : 0?>,

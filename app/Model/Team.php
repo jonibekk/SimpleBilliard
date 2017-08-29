@@ -751,14 +751,8 @@ class Team extends AppModel
      */
     public function isPaidPlan(int $teamId): bool
     {
-        $team = $this->getById($teamId);
-        if (empty($team)) {
-            return false;
-        }
-        if (Hash::get($team, 'service_use_status') == self::SERVICE_USE_STATUS_PAID) {
-            return true;
-        }
-        return false;
+        $status = $this->getServiceUseStatus($teamId);
+        return $status == self::SERVICE_USE_STATUS_PAID;
     }
 
     /**
@@ -770,14 +764,8 @@ class Team extends AppModel
      */
     public function isFreeTrial(int $teamId): bool
     {
-        $team = $this->getById($teamId);
-        if (empty($team)) {
-            return false;
-        }
-        if (Hash::get($team, 'service_use_status') == self::SERVICE_USE_STATUS_FREE_TRIAL) {
-            return true;
-        }
-        return false;
+        $status = $this->getServiceUseStatus($teamId);
+        return $status == self::SERVICE_USE_STATUS_FREE_TRIAL;
     }
 
     /**
@@ -816,6 +804,22 @@ class Team extends AppModel
         $res = $this->getByid($teamId);
         if (!empty($res['country'])) {
             return $res['country'];
+        }
+        return null;
+    }
+
+    /**
+     * Get service use status by team id
+     *
+     * @param int $teamId
+     *
+     * @return int|null
+     */
+    public function getServiceUseStatus(int $teamId)
+    {
+        $res = $this->getById($teamId);
+        if (!empty($res['service_use_status'])) {
+            return $res['service_use_status'];
         }
         return null;
     }
