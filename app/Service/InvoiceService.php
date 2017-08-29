@@ -32,13 +32,12 @@ class InvoiceService extends AppService
         array $monthlyChargeHistory,
         string $orderDate
     ): array {
-        // fix timezone as japan time
-        $timezone = 9;
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
         $team = $Team->getById($teamId);
+        $timezone = $team['timezone'];
         $invoiceInfo = $Invoice->getByTeamId($teamId);
 
         // calc amount total
