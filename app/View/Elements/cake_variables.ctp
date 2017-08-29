@@ -173,9 +173,8 @@ App::uses('AttachedFile', 'Model');
             ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
             ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url([
-                'controller' => 'teams',
-                'action'     => 'settings',
-                '#'          => 'invite_member'
+                'controller' => 'users',
+                'action'     => 'invite',
             ]) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",

@@ -85,6 +85,7 @@ export default function payment(state = initial_state, action) {
         input_data,
         to_next_page: true,
         validation_errors: {},
+        error_message: "",
         is_disabled_submit: false,
         is_saving: true
       })
@@ -96,17 +97,20 @@ export default function payment(state = initial_state, action) {
             input_data,
             to_next_page: false,
             validation_errors: {},
+            error_message: ""
           })
         case Page.CREDIT_CARD:
           return Object.assign({}, state, action.data, {
             to_next_page: false,
             validation_errors: {},
+            error_message: "",
             is_disabled_submit: false
           })
         case Page.CONFIRM:
           return Object.assign({}, state, action.data, {
             to_next_page: false,
             validation_errors: {},
+            error_message: "",
             is_disabled_submit: false
           })
       }
