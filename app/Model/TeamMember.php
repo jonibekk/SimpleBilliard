@@ -19,6 +19,7 @@ class TeamMember extends AppModel
 
     /**
      * User status valid codes
+     * TODO.Payment: delete and move to enum
      */
     const USER_STATUS_INVITED = 0;
     const USER_STATUS_ACTIVE = 1;

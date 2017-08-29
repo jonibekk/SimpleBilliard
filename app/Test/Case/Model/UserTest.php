@@ -1162,4 +1162,9 @@ class UserTest extends GoalousTestCase
         $after_list = $this->User->filterActiveUserList([1, 2, 3, 4, 5]);
         $this->assertEquals(count($current_list), count($after_list) + 1);
     }
+
+    function test_findNotBelongToTeamByEmail()
+    {
+        // TODO.Payment:add unit tests
+    }
 }

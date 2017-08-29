@@ -99,12 +99,13 @@ class Invite extends AppModel
         $insertData = [];
         foreach ($emails as $email) {
             $insertData[] = [
-                'from_user_id' => $fromUserId,
-                'to_user_id'   => Hash::get($registeredEmails, $email),
-                'team_id'      => $teamId,
-                'email'        => $email,
-                'email_token'  => $tokenExpire,
-                'message'      => $msg,
+                'from_user_id'        => $fromUserId,
+                'to_user_id'          => Hash::get($registeredEmails, $email),
+                'team_id'             => $teamId,
+                'email'               => $email,
+                'email_token'         => $this->generateToken(),
+                'email_token_expires' => $tokenExpire,
+                'message'             => $msg,
             ];
         }
         return $this->bulkInsert($insertData);
@@ -306,6 +307,7 @@ class Invite extends AppModel
 
     /**
      * Find by emails and current team
+     *
      * @param array $emails
      *
      * @return array
@@ -326,7 +328,7 @@ class Invite extends AppModel
      * find unverified invites before token expired
      *
      * @param int $baseTime
-     * 
+     *
      * @return array
      */
     function findUnverifiedBeforeExpired(int $baseTime): array

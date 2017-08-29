@@ -336,7 +336,7 @@ class Team extends AppModel
             $validate_backup = $this->TeamMember->User->Email->validate;
             $this->TeamMember->User->Email->validate = [
                 'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'maxLength' => ['rule' => ['maxLength', 255]],
                     'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
@@ -424,7 +424,7 @@ class Team extends AppModel
     function resetCurrentTeam()
     {
         $this->current_team = [];
-        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false));
+        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false), 'team_info');
     }
 
     /**

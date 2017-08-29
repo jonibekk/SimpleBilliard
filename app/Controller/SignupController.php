@@ -218,7 +218,7 @@ class SignupController extends AppController
         $this->User->Email->create(['email' => $email]);
         $this->Email->validate = [
             'email' => [
-                'maxLength' => ['rule' => ['maxLength', 200]],
+                'maxLength' => ['rule' => ['maxLength', 255]],
                 'notBlank'  => ['rule' => 'notBlank',],
                 'email'     => ['rule' => ['email'],],
             ],

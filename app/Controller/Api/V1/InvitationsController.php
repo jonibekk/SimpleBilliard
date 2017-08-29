@@ -42,7 +42,7 @@ class InvitationsController extends ApiController
         // Convert to mail address list.
         $emails = AppUtil::convStrToArr($emailsStr);
         // Validation
-        $errors = $InvitationService->validateEmails($emails);
+        $errors = $InvitationService->validateEmails($this->current_team_id, $emails);
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
         }
@@ -156,7 +156,7 @@ class InvitationsController extends ApiController
 
         // Validation
         $emails = $this->request->data("emails");
-        $errors = $InvitationService->validateEmails($emails);
+        $errors = $InvitationService->validateEmails($this->current_team_id, $emails);
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
         }
