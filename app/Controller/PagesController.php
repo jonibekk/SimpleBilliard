@@ -18,11 +18,13 @@ App::import('Service', 'UserService');
  *
  * @package       app.Controller
  * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
- * @property User $User
+ * @property User  $User
+ * @property TermsOfService TermsOfService
  * @noinspection  PhpInconsistentReturnPointsInspection
  */
 class PagesController extends AppController
 {
+    public $uses = ['TermsOfService'];
     /**
      * Displays a view
      *
@@ -62,10 +64,31 @@ class PagesController extends AppController
 
         if ($page === 'pricing') {
             $this->_setAmountPerUser();
+        } elseif ($page === 'terms') {
+            $this->_setTerms();
         }
 
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
+    }
+
+    /**
+     * Display lp pages other than top page
+     *
+     * @return void
+     */
+    private function _setTerms()
+    {
+        $terms = $this->TermsOfService->getCurrent();
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $lang = $Lang->getLangCode();
+
+        if ($lang === $Lang::LANG_CODE_JP) {
+            $this->set('terms', $terms['text_ja']);
+        } else {
+            $this->set('terms', (empty($terms['text_en']) ? $terms['text_ja'] : $terms['text_en']));
+        }
     }
 
     public function app_version_unsupported()

@@ -59,7 +59,6 @@ class PaymentSetting extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
@@ -146,20 +145,12 @@ class PaymentSetting extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_first_name_kana' => [
-            'maxLength' => ['rule' => ['maxLength', 128]],
-            'notBlank'  => ['rule' => 'notBlank'],
-        ],
         'contact_person_last_name'       => [
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
-        ],
-        'contact_person_last_name_kana'  => [
-            'maxLength' => ['rule' => ['maxLength', 128]],
-            'notBlank'  => ['rule' => 'notBlank'],
         ],
         'contact_person_tel'             => [
             'maxLength' => ['rule' => ['maxLength', 20]],
@@ -176,6 +167,25 @@ class PaymentSetting extends AppModel
             'emailsCheck' => [
                 'rule' => ['emailsCheck']
             ],
+        ],
+    ];
+
+    public $validateJp = [
+        'contact_person_first_name_kana' => [
+            'notBlank'  => [
+                'required' => true,
+                'rule' => 'notBlank'
+            ],
+            'katakanaOnly' => ['rule' => ['katakanaOnly']],
+            'maxLength' => ['rule' => ['maxLength', 128]],
+        ],
+        'contact_person_last_name_kana'  => [
+            'notBlank'  => [
+                'required' => true,
+                'rule' => 'notBlank'
+            ],
+            'katakanaOnly' => ['rule' => ['katakanaOnly']],
+            'maxLength' => ['rule' => ['maxLength', 128]],
         ],
     ];
 
