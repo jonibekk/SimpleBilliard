@@ -76,4 +76,20 @@ class InvoiceHistory extends AppModel
         return $this->find('first', $options);
     }
 
+    /**
+     * Return list of invoice history by their order status
+     *
+     * @param int $creditStatus
+     *
+     * @return array
+     */
+    public function getByOrderStatus(int $creditStatus): array
+    {
+        $options = [
+            'conditions' => [
+                'order_status'    => $creditStatus,
+            ],
+        ];
+        return $this->find('all', $options);
+    }
 }

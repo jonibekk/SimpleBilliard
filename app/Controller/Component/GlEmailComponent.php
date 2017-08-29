@@ -336,4 +336,30 @@ class GlEmailComponent extends Component
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
     }
+
+    /**
+     * Send email to team admin with credit check result
+     *
+     * @param int $toUid
+     * @param int $teamId
+     * @param int $creditStatus
+     */
+    public function sendMailCreditStatusNotification(int $toUid, int $teamId, int $creditStatus)
+    {
+        $url = Router::url(
+            [
+                'admin'      => false,
+                'controller' => 'payments',
+                'action'     => 'index',
+                'team_id'    => $teamId,
+            ], true);
+
+        $template = ($creditStatus == Invoice::CREDIT_STATUS_OK) ?
+            Sendmail::TYPE_TMPL_CREDIT_STATUS_APPROVED :
+            Sendmail::TYPE_TMPL_CREDIT_STATUS_DENIED;
+
+        $item = compact('url');
+        $this->SendMail->saveMailData($toUid, $template, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
 }
