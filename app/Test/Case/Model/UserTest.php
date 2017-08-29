@@ -705,7 +705,7 @@ class UserTest extends GoalousTestCase
         $this->User->TeamMember->save([
             'user_id'    => '14',
             'team_id'    => '1',
-            'active_flg' => 1,
+            'status' => TeamMember::USER_STATUS_ACTIVE,
         ]);
 
         $users = $this->User->getUsersSelectOnly('first', 10, $post_id, true);

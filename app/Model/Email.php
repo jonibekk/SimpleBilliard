@@ -129,7 +129,7 @@ class Email extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        if (isset($res['User']['TeamMember'][0]['status']) && $res['User']['TeamMember'][0]['status' === TeamMember::USER_STATUS_ACTIVE]) {
+        if (isset($res['User']['TeamMember'][0]['status']) && $res['User']['TeamMember'][0]['status'] == TeamMember::USER_STATUS_ACTIVE) {
             return true;
         }
         return false;

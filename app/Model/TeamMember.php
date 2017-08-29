@@ -257,7 +257,7 @@ class TeamMember extends AppModel
             'contain'    => [
                 'User' => [
                     'conditions' => [
-                        'User.status' => self::USER_STATUS_ACTIVE,
+                        'User.active_flg' => true,
                     ],
                     'fields'     => ['User.id']
                 ],
