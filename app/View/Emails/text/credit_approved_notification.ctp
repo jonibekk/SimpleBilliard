@@ -12,16 +12,12 @@
  * @var                    $url
  * @var CodeCompletionView $this
  *
- *  * TODO: Create email body
+ * TODO: Create email body
  */
 
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("Your \"%s\" credit card terminated with \"%s\" will expire soon.", $brand, $lastDigits);
-echo __("Please update your credit card information as soon as possible.");
+echo __("Your credit was approved. You will receive your payment slip soon.");
 echo "\n";
-echo __("You can update your payment setting from the following link:");
-echo "\n";
-echo $url;
 echo "\n";

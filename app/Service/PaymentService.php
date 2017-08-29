@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
+App::import('Service', 'TeamService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
@@ -687,6 +688,8 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         // Register Credit Card to stripe
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
