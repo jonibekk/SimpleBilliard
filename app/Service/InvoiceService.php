@@ -228,4 +228,58 @@ class InvoiceService extends AppService
         return $addedUserAmount;
     }
 
+    /**
+     * Update invoice and invoice history tables with credit status
+     *
+     * @param int   $invoiceHistoryId
+     * @param int   $creditStatus
+     *
+     * @return bool
+     */
+    public function updateCreditStatus(int $invoiceHistoryId, int $creditStatus): bool
+    {
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+
+        // Get invoice history
+        $invoiceHistory = $InvoiceHistory->getById($invoiceHistoryId);
+        if (empty($invoiceHistory)) {
+            return false;
+        }
+
+        $invoiceHistory['order_status'] = $creditStatus;
+        $invoice = $Invoice->getByTeamId($invoiceHistory['team_id']);
+        if (empty($invoice)) {
+            $this->log("Invoice not found for invoice history. TeamId: " . $invoiceHistory['team_id']);
+            return false;
+        }
+        $invoice['credit_status'] = $creditStatus;
+
+        try {
+            $InvoiceHistory->begin();
+
+            if (!$InvoiceHistory->save($invoiceHistory)) {
+                throw new Exception(sprintf("Failed to save Invoice history. data: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistory),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)));
+            }
+
+            if (!$Invoice->save($invoice)) {
+                throw new Exception(sprintf("Failed to save Invoice order status. data: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoice),
+                    AppUtil::varExportOneLine($Invoice->validationErrors)));
+            }
+
+            $InvoiceHistory->commit();
+        } catch (Exception $e) {
+            $InvoiceHistory->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return false;
+        }
+        return true;
+    }
+
 }

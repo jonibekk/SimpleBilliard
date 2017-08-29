@@ -2,6 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'InvoiceService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class PaymentServiceTest
  *
@@ -50,7 +52,7 @@ class InvoiceServiceTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function test_registerOrder()
+    public function test_registerOrder()
     {
         $this->Team->deleteAll(['del_flg' => false]);
 
@@ -160,7 +162,7 @@ class InvoiceServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
         list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         $targetChargeHistories = [
@@ -230,5 +232,38 @@ class InvoiceServiceTest extends GoalousTestCase
 
         $res = $this->InvoiceService->inquireCreditStatus($orderId);
         $this->assertEquals($res['status'], 'success');
+    }
+
+    public function test_updateCreditStatus()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::WAITING];
+
+        // Create invoice and invoice history
+        list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+        $this->addInvoiceHistory($teamId, [
+            'order_date'        => '2017-01-01',
+            'system_order_code' => "test",
+            'order_status' => Enum\Invoice\CreditStatus::WAITING,
+        ]);
+
+        // Get the histories
+        $orders = $this->InvoiceHistory->getByOrderStatus(Enum\Invoice\CreditStatus::WAITING)[0];
+        $invoiceHistoryId = Hash::get($orders, 'InvoiceHistory.id');
+
+        // Update status
+        $res = $this->InvoiceService->updateCreditStatus($invoiceHistoryId, Enum\Invoice\CreditStatus::OK);
+        $this->assertTrue($res);
+
+        // Get updated value
+        $order = $this->InvoiceHistory->getById($invoiceHistoryId);
+        $invoice = $this->Invoice->getByTeamId($teamId);
+        $this->assertEquals(Enum\Invoice\CreditStatus::OK, Hash::get($order, 'order_status'));
+        $this->assertEquals(Enum\Invoice\CreditStatus::OK, Hash::get($invoice, 'credit_status'));
+        
+        // Test invalid ID
+        $res = $this->InvoiceService->updateCreditStatus(98766, Enum\Invoice\CreditStatus::OK);
+        $this->assertFalse($res);
     }
 }

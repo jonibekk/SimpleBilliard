@@ -6,6 +6,8 @@ App::uses('GlEmailComponent', 'Controller/Component');
 App::import('Service', 'InvoiceService');
 App::import('Service', 'TeamService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class InquireInvoiceCreditStatusShell
  *
@@ -47,7 +49,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
     {
         $this->out('Starting credit inquire batch.');
         // Get the waiting for approval invoices
-        $orders = $this->InvoiceHistory->getByOrderStatus(Invoice::CREDIT_STATUS_WAITING);
+        $orders = $this->InvoiceHistory->getByOrderStatus(Enum\Invoice\CreditStatus::WAITING);
 
         $count = 1;
         $this->out('Number of invoice orders is: ' . count($orders));
@@ -110,13 +112,13 @@ class InquireInvoiceCreditStatusShell extends AppShell
         }
 
         // Waiting for credit check, do nothing
-        if ($orderStatus == Invoice::CREDIT_STATUS_WAITING) {
+        if ($orderStatus == Enum\Invoice\CreditStatus::WAITING) {
             // Nothing to do right now.
             return false;
         }
 
         // Check for valid order status
-        if (!($orderStatus == Invoice::CREDIT_STATUS_NG || $orderStatus == Invoice::CREDIT_STATUS_OK)) {
+        if (!($orderStatus == Enum\Invoice\CreditStatus::NG || $orderStatus == Enum\Invoice\CreditStatus::OK)) {
             $this->log("Invalid order status: " .
                 AppUtil::varExportOneLine($inquireResult));
             return false;
@@ -127,20 +129,20 @@ class InquireInvoiceCreditStatusShell extends AppShell
         $invoice = $this->Invoice->getByTeamId($teamId);
 
         // Credit accepted
-        if ($orderStatus == Invoice::CREDIT_STATUS_OK) {
+        if ($orderStatus == Enum\Invoice\CreditStatus::OK) {
             // Invoice status is waiting, means it is the first time
-            if (Hash::get($invoice, 'credit_status') == Invoice::CREDIT_STATUS_WAITING) {
+            if (Hash::get($invoice, 'credit_status') == Enum\Invoice\CreditStatus::WAITING) {
                 // Send notification email
                 $this->_sendCreditStatusNotification($teamId, $orderStatus);
 
                 // Update credit status for invoices tables
-                $this->_updateCreditStatus($invoiceHistory, $orderStatus);
+                $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $orderStatus);
             }
             return true;
         }
 
         // Credit denied
-        if ($orderStatus == Invoice::CREDIT_STATUS_NG) {
+        if ($orderStatus == Enum\Invoice\CreditStatus::NG) {
             // Get timezone
             $timezone = $this->TeamService->getTeamTimezone($teamId);
             if ($timezone === null) {
@@ -152,11 +154,11 @@ class InquireInvoiceCreditStatusShell extends AppShell
             $this->_sendCreditStatusNotification($teamId, $orderStatus);
 
             // Update credit status for invoices tables
-            $this->_updateCreditStatus($invoiceHistory, $orderStatus);
+            $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $orderStatus);
 
             // Set service to ready only
             $startDate = AppUtil::todayDateYmdLocal($timezone);
-            $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_READ_ONLY, $startDate);
+            $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $startDate);
         }
 
         return true;
@@ -181,53 +183,5 @@ class InquireInvoiceCreditStatusShell extends AppShell
         } else {
             $this->log("TeamId:{$teamId} There is no admin..", LOG_WARNING);
         }
-    }
-
-    /**
-     * Update invoice and invoice history tables with credit status
-     *
-     * @param array $invoiceHistory
-     * @param int   $creditStatus
-     *
-     * @return bool
-     */
-    private function _updateCreditStatus(array $invoiceHistory, int $creditStatus): bool
-    {
-        /** @var Invoice $Invoice */
-        $Invoice = ClassRegistry::init('Invoice');
-        /** @var  InvoiceHistory $InvoiceHistory */
-        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
-
-        $invoiceHistory['order_status'] = $creditStatus;
-        $invoice = $Invoice->getByTeamId($invoiceHistory['team_id']);
-        if (empty($invoice)) {
-            $this->log("Invoice not found for invoice history: " . AppUtil::varExportOneLine($invoiceHistory));
-            return false;
-        }
-        $invoice['credit_status'] = $creditStatus;
-
-        try {
-            $InvoiceHistory->begin();
-
-            if (!$InvoiceHistory->save($invoiceHistory)) {
-                throw new Exception(sprintf("Failed to save Invoice history. data: %s, validationErrors: %s",
-                    AppUtil::varExportOneLine($invoiceHistory),
-                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)));
-            }
-
-            if (!$Invoice->save($invoice)) {
-                throw new Exception(sprintf("Failed to save Invoice order status. data: %s, validationErrors: %s",
-                    AppUtil::varExportOneLine($invoice),
-                    AppUtil::varExportOneLine($Invoice->validationErrors)));
-            }
-
-            $InvoiceHistory->commit();
-        } catch (Exception $e) {
-            $InvoiceHistory->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-            return false;
-        }
-        return true;
     }
 }
