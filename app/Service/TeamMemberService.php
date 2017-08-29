@@ -11,6 +11,7 @@ class TeamMemberService extends AppService
      * Activate team member
      *
      * @param int $teamId
+     * @param int $teamMemberId
      *
      * @return bool
      */
