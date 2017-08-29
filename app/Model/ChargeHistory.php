@@ -180,20 +180,18 @@ class ChargeHistory extends AppModel
      * It should be not charged yet.
      *
      * @param int $teamId
-     * @param int $startTs
-     * @param int $endTs
+     * @param int $timestamp
      *
      * @return array
      */
-    public function findForInvoiceByStartEnd(int $teamId, int $startTs, int $endTs)
+    public function findForInvoiceBeforeTs(int $teamId, int $timestamp)
     {
         $options = [
             'conditions' => [
                 'ChargeHistory.team_id'            => $teamId,
                 'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
                 'ChargeHistory.charge_type'        => [self::CHARGE_TYPE_ACTIVATE_USER, self::CHARGE_TYPE_ADD_USER],
-                'ChargeHistory.charge_datetime >=' => $startTs,
-                'ChargeHistory.charge_datetime <=' => $endTs,
+                'ChargeHistory.charge_datetime <=' => $timestamp,
                 'InvoiceHistoriesChargeHistory.id' => null,
                 'InvoiceHistory.id'                => null,
             ],

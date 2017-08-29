@@ -991,7 +991,7 @@ class PaymentService extends AppService
             // save the invoice history
             $invoiceHistoryData = [
                 'team_id'           => $teamId,
-                'order_datetime'        => $time,
+                'order_datetime'    => $time,
                 'system_order_code' => '',
             ];
             $InvoiceHistory->clear();
@@ -1088,16 +1088,8 @@ class PaymentService extends AppService
         // fetching charge histories
         $yesterdayLocalDate = AppUtil::dateYesterday($localCurrentDate);
         $targetEndTs = AppUtil::getEndTimestampByTimezone($yesterdayLocalDate, $timezone);
-        $previousMonthFirstTs = strtotime("-1 month", strtotime(date('Y-m-01', strtotime($yesterdayLocalDate))));
 
-        // target start date will be base day in previous month
-        $targetStartDate = AppUtil::correctInvalidDate(
-            date('Y', $previousMonthFirstTs),
-            date('m', $previousMonthFirstTs),
-            date('d', strtotime($localCurrentDate))
-        );
-        $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
-        $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        $targetPaymentHistories = $ChargeHistory->findForInvoiceBeforeTs($teamId, $targetEndTs);
         return $targetPaymentHistories;
     }
 
