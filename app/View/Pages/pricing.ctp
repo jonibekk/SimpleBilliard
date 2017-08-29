@@ -81,55 +81,60 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/pricing') ?>"/>
 <?php $this->end() ?>
 <?= $this->App->viewStartComment()?>
-<!-- ******PRICE PLAN****** -->
-<section id="price-plan" class="price-plan section">
-    <div class="container text-center">
-        <h2 class="title"><?= __('It\'s all free') ?></h2>
-        <p class="intro">
-        <?= __('Released sale, It\'s all free until the summer of 2017!') ?>
-        </p>
-        <div class="item col-xs-12 col-md-6 col-md-offset-3">
-            <h3 class="heading"><?= __('Plus') ?><span class="label label-custom"><?= __(
-                        'Campaign') ?></span>
-            </h3>
-            <div class="content">
-                <div class="price-figure">
-                    <!-- ここを単調に翻訳すると$1,980になるので、翻訳保留。 -->
-                        <span class="number"><?= $price ?></span><span
-                        class="unit"><?= __('/mon') ?></span>
-                </div>
-                <i class="fa fa-arrow-down pricing-figure-mid-icon"></i>
-                <div class="price-figure">
-                    <p><?= __('Per User') ?></p>
-                    <span class="number">0</span>
-                    <span class="unit"><?= __('/mon') ?></span>
-                </div>
-                <ul class="list-unstyled feature-list">
-                    <li><?= __('Unlimeted members a team') ?></li>
-                    <li><?= __('20MB file upload') ?></li>
-                    <li><?= __('Unlimited file share') ?></li>
-                    <li><?= __('Chat message') ?></li>
-                    <li><?= __('Insight Analytics') ?></li>
-                    <li><?= __('Team Controll') ?></li>
-                    <li><?= __('Online user support') ?></li>
-                </ul>
-                <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
-                   href="<?= $this->Html->url([
-                       'controller' => 'signup',
-                       'action'     => 'email',
-                       '?'          => ['type' => 'pricing_plus']
-                   ]) ?>">
-                    <?= __('Start now') ?>
-                    <br/>
-                    <span class="extra">
-                            <?= __('Feel free to ask us') ?>
-                        </span>
-                </a>
-            </div><!--//content-->
-        </div><!--//item-->
-    </div><!--//row-->
-    </div><!--//container-->
-</section><!--//price-plan-->
 
+<section id="pricingDetail">
+    <div class="container">
+        <h2><?= __('Pricing Guide');?></h2>
+        <p><?= __('You use all features of Goalous for a 15-day free trial. Give it a try!');?></p>
+        <div class="pricing-card">
+            <h3><?= __('Standard');?></h3>
+            <p><span class="price-text">&yen;1,900</span>
+            <?= __('Per active member, per month');?></p>
+            <button class="btn btn-cta btn-cta-primary"><?= __('Start 15-day Free Trial');?></button>
+            <div class="hr"></div>
+            <!-- TODO: Replace placement text -->
+            <p>Goalous is a lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi omnis commodi aliquam, animi sit nesciunt in eos officiis illo. Officiis distinctio harum maiores voluptatem odio, quasi labore omnis, nemo at?</p>
+        </div>
+        <!-- TODO: Replace placement text -->
+        <div class="feature-category">
+            <strong class="icon icon-heart">Goal Features</strong>
+            <ul>
+                <li>Unlimited team, goal, photo, and video storage</li>
+            </ul>
+        </div>
+        <div class="feature-category">
+            <strong class="icon icon-message">Communication Features</strong>
+            <ul>
+                <li>Live chat messaging</li>
+            </ul>
+        </div>
+        <div class="feature-category">
+            <strong class="icon icon-lock">Security Features</strong>
+            <ul>
+                <li>Encrypted storage</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="faqs">
+    <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="question">
+            <p class="question-entry"><strong>What are my payment options?</strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong>What are my payment options?</strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+            </div>
+        </div>
+    </div>
+</section>
 <?= $this->element('Homepage/signup') ?>
 <?= $this->App->viewEndComment()?>
