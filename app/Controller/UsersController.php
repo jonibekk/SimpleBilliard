@@ -7,6 +7,8 @@ App::import('Service', 'GoalService');
 App::import('Service', 'UserService');
 App::import('Service', 'TermService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Users Controller
  *
@@ -1615,6 +1617,8 @@ class UsersController extends AppController
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
+        $user_id = Hash::get($this->request->params, "named.user_id");
+        $user = $this->User->TeamMember->getByUserId($user_id);
         $teamId = $this->current_team_id;
         $payment = $PaymentService->get($teamId);
         $chargeMemberCount = $this->Team->TeamMember->countChargeTargetUsers($teamId);
@@ -1634,6 +1638,7 @@ class UsersController extends AppController
         }
         $serviceUseStatus = $TeamService->getServiceUseStatus();
         $this->set(compact(
+            'user',
             'payment',
             'chargeMemberCount',
             'serviceUseStatus',
@@ -1641,6 +1646,7 @@ class UsersController extends AppController
             'subTotal',
             'amountPerUser'
         ));
+        $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render('confirm_activation');
     }
 }

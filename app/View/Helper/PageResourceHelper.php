@@ -117,6 +117,7 @@ class PageResourceHelper extends AppHelper
             'register_with_invite' => ['signup.min'],
             'invite'               => ['invite.min'],
             'invite_confirm'       => ['invite.min'],
+            'confirm_activation'   => ['invite.min']
         ],
         'evaluations'   => [
             'default' => ['evaluation.min'],
