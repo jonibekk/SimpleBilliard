@@ -25,8 +25,8 @@ class ChargeHistoryService extends AppService
             // no payment settings, no failed
             return false;
         }
-        if (!(new Enum\PaymentSetting\Type(intval($teamPaymentSetting['PaymentSetting']['type'])))
-            ->equals(Enum\PaymentSetting\Type::CREDIT_CARD())) {
+        $typePaymentSetting = intval($teamPaymentSetting['PaymentSetting']['type']);
+        if ($typePaymentSetting !== Enum\PaymentSetting\Type::CREDIT_CARD) {
             // if team paying type is not creditcard
             return false;
         }
@@ -38,7 +38,7 @@ class ChargeHistoryService extends AppService
             return false;
         }
 
-        return (new Enum\ChargeHistory\ResultType(intval($chargeHistory['ChargeHistory']['result_type'])))
-            ->equals(Enum\ChargeHistory\ResultType::FAIL());
+        $resultTypeChargeHistory = intval($chargeHistory['ChargeHistory']['result_type']);
+        return $resultTypeChargeHistory === Enum\ChargeHistory\ResultType::FAIL;
     }
 }
