@@ -33,7 +33,7 @@
     ],
     [
         'question' => __('I\'m concerned about security and backup systems.'),
-        'answer'   => __('We have a distributed back-up system, back-ups are done everyday.  Goalous can be used securely With SSL, 2-Step Verification and Login Lock.')
+        'answer'   => __('We have a distributed back-up system, back-ups are done everyday. Goalous can be used securely With SSL, 2-Step Verification and Login Lock.')
     ],
     [
         'question' => __('Are there apps for smartphone and tablet?'),
