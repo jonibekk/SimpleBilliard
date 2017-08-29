@@ -75,6 +75,9 @@ class PageResourceHelper extends AppHelper
             'update_cc_info' => [
                 'https://js.stripe.com/v3/',
                 '/js/goalous_payment.min'
+            ],
+            'method' => [
+                '/js/goalous_payment.min',
             ]
         ]
     ];

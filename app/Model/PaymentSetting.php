@@ -244,6 +244,25 @@ class PaymentSetting extends AppModel
     }
 
     /**
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    public function getInvoiceByTeamId(int $teamId)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
+            'contain'    => [
+                'Invoice',
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
      * @param int $paymentType
      *
      * @return array

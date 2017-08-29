@@ -4,10 +4,16 @@ App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
+/**
+ * Class PaymentsController
+ *
+ * @property PaymentSetting $PaymentSetting
+ */
 class PaymentsController extends AppController
 {
     public $uses = [
-        'ChargeHistory'
+        'ChargeHistory',
+        'PaymentSetting',
     ];
 
     public function beforeFilter()
@@ -62,7 +68,17 @@ class PaymentsController extends AppController
      */
     public function method()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
         // TODO.Payment:Change view dynamically and must delete
+
+        /** @var PaymentSetting $PaymentSetting */
+        $paymentSettings = $this->PaymentSetting->getByTeamId($this->current_team_id);
+
+        // Invoice
+        if ($paymentSettings['type'] == PaymentSetting::PAYMENT_TYPE_INVOICE) {
+            return $this->_invoice();
+        }
+
         // start
         $type = $this->request->query('type');
         if (empty($type)) {
@@ -73,6 +89,27 @@ class PaymentsController extends AppController
 
         // TODO.Payment: release comment out.
 //        $this->render('method');
+    }
+
+    private function _invoice()
+    {
+        // Payment data
+        $paymentSettings = $this->PaymentSetting->getInvoiceByTeamId($this->current_team_id);
+        $invoice = Hash::get($paymentSettings, 'Invoice')[0];
+
+        $this->set(compact('invoice'));
+
+        return $this->render('method_invoice');
+    }
+
+    private function _creditCard()
+    {
+        $paymentSettings = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
+        $creditCard = Hash::get($paymentSettings, 'CreditCard')[0];
+
+        $this->set(compact('creditCard'));
+
+        return $this->render('method_cc');
     }
 
     /**

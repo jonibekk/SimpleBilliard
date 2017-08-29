@@ -335,14 +335,16 @@ class PaymentsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        $userId = $this->Auth->user('id');
-
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
         // Validate input
         $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        // Its an update that means the invoice country IS already JP
+        // setting there to avoid creating another validation method.
+        $this->request->data['company_country'] = 'JP';
         $data = array('payment_setting' => $this->request->data);
+
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);

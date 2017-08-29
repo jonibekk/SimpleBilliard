@@ -1,16 +1,7 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel paymentMethod">
     <div class="paymentMethod-inner">
-        <?php
-         // TODO: add onChange event for moving other page when select option
-        //  Or change UI from pull down to tabs or drop down menu.
-        ?>
-        <select class="form-control">
-            <option><?=__("Subscription")?></option>
-            <option><?=__("Invoice history")?></option>
-            <option><?=__("Payment method")?>1</option>
-            <option><?=__("Settings")?>1</option>
-        </select>
+        <?= $this->element('Payment/method_select') ?>
         <h3 class=""><?= __("Credit Card")?></h3>
         <!-- canormal start-->
         <table class="paymentMethod-cc-table">
