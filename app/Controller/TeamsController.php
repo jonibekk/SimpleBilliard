@@ -1285,7 +1285,7 @@ class TeamsController extends AppController
             $this->User->Email->create(['email' => $email]);
             $this->User->Email->validate = [
                 'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'maxLength' => ['rule' => ['maxLength', 255]],
                     'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
@@ -2647,6 +2647,7 @@ class TeamsController extends AppController
      *  - Reload page
      *
      * @param int $teamMemberId
+     *
      * @return void
      */
     function activate_team_member(int $teamMemberId)

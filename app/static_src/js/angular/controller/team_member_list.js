@@ -5,14 +5,10 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         var all_member_list = [];
         $scope.display_inactive_users = false;
 
-        var USER_STATUS_INVITED = '0';
-        var USER_STATUS_ACTIVE = '1';
-        var USER_STATUS_INACTIVE = '2';
-
         function ActiveMemberList (member_list) {
             var active_member_list = [];
             angular.forEach(member_list, function(value){
-                if (value.TeamMember.status == USER_STATUS_ACTIVE) {
+                if (value.TeamMember.status == cake.const.USER_STATUS.ACTIVE) {
                     this.push(value);
                 }
             }, active_member_list);
@@ -111,7 +107,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         $scope.inactivate = function (index, team_member_id) {
             var inactivate_url = url_list.inactivate_team_member + team_member_id;
             $http.get(inactivate_url).success(function (data) {
-                $scope.team_list[index].TeamMember.status = USER_STATUS_INACTIVE;
+                $scope.team_list[index].TeamMember.status = cake.const.USER_STATUS.INACTIVE;
             });
         };
 

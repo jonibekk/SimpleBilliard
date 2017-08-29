@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PaymentService');
 App::uses('Email', 'Model');
 
 use Goalous\Model\Enum as Enum;
@@ -14,11 +15,12 @@ class InvitationService extends AppService
     /**
      * Validate emails
      *
+     * @param int   $teamId
      * @param array $emails
      *
-     * @return null
+     * @return array
      */
-    function validateEmails($emails)
+    function validateEmails(int $teamId, $emails): array
     {
         /** @var Email $Email */
         $Email = ClassRegistry::init("Email");
@@ -29,6 +31,13 @@ class InvitationService extends AppService
         }
         /* Format validation */
         $errors = [];
+        $Email->validate = [
+            'email' => [
+                'maxLength' => ['rule' => ['maxLength', 255]],
+                'notBlank'  => ['rule' => 'notBlank',],
+                'email'     => ['rule' => ['email'],],
+            ],
+        ];
         foreach ($emails as $i => $email) {
             if (empty($email)) {
                 continue;
@@ -47,11 +56,20 @@ class InvitationService extends AppService
             return [__("%s invitations are the limits in one time.", self::MAX_INVITATION_CNT)];
         }
 
-        $duplicateEmails = array_diff_key($emails, array_unique($emails));
+        $uniqueEmails = array_unique($emails);
+        $duplicateEmails = array_diff_key($emails, $uniqueEmails);
         foreach ($duplicateEmails as $i => $duplicateEmail) {
             $errors[] = __("Line %d", $i + 1) . "：" . __("%s is duplicated.", __("Email address"));
         }
+        if (!empty($errors)) {
+            return $errors;
+        }
 
+        $existEmails = $Email->findExistByTeamId($teamId, $emails);
+        $errEmails = array_intersect($emails, $existEmails);
+        foreach ($errEmails as $i => $mail) {
+            $errors[] = __("Line %d", $i + 1) . "：" . __("This email address has already been used. Use another email address.");
+        }
         return $errors;
     }
 
@@ -72,8 +90,6 @@ class InvitationService extends AppService
      */
     function invite(int $teamId, int $fromUserId, array $emails): bool
     {
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init("ChargeHistory");
         /** @var Invite $Invite */
         $Invite = ClassRegistry::init("Invite");
         /** @var Email $Email */
@@ -84,19 +100,11 @@ class InvitationService extends AppService
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        /** @var PaymentSetting $PaymentSetting */
-        $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
 
         try {
             $this->TransactionManager->begin();
-            /* Delete old invitations if already invited past */
-            if (!$Invite->softDeleteAll(['email' => $emails])) {
-                throw new Exception(sprintf("Failed to reset old invitattions. data:%s",
-                        AppUtil::varExportOneLine(compact('emails', 'teamId')))
-                );
-            }
             /* Insert invitations table */
             if (!$Invite->saveBulk($emails, $teamId, $fromUserId)) {
                 throw new Exception(sprintf("Failed to insert invitations. data:%s",
@@ -105,16 +113,15 @@ class InvitationService extends AppService
             }
             /* Insert users table */
             // Get emails of registered users
-            $existEmails = Hash::get($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
+            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
             $newEmails = array_diff($emails, $existEmails);
 
             $insertEmails = [];
             foreach ($newEmails as $email) {
                 $User->create();
-                if (!$User->save(['team_id' => $teamId], false)) {
-                    throw new Exception(sprintf("Failed to insert users. data:%s",
-                            AppUtil::varExportOneLine(compact('emails', 'newEmails', 'teamId', 'fromUserId')))
-                    );
+                // There is nothing to specify for saving user table
+                if (!$User->save([], false)) {
+                    throw new Exception("Failed to insert users.");
                 }
                 $insertEmails[] = [
                     'user_id' => $User->getLastInsertID(),
@@ -122,15 +129,23 @@ class InvitationService extends AppService
                 ];
             }
             /* Insert emails table */
-            if (!$Email->bulkInsert($insertEmails)) {
-                throw new Exception(sprintf("Failed to insert emails. data:%s",
-                        AppUtil::varExportOneLine(compact('emails', 'insertEmails', 'teamId')))
-                );
+            if (!empty($insertEmails)) {
+                if (!$Email->bulkInsert($insertEmails)) {
+                    throw new Exception(sprintf("Failed to insert emails. data:%s",
+                            AppUtil::varExportOneLine(compact('emails', 'insertEmails', 'teamId')))
+                    );
+                }
             }
 
             /* Insert team_members table */
             // Except for already belonged to target team
-            $targetUserIds = $User->findNotBelongToTeamByEmail($emails);
+            $targetUserIds = $User->findNotBelongToTeamByEmail($teamId, $emails);
+            if (count($targetUserIds) != count($emails)) {
+                throw new Exception(sprintf("Inconsistent users and emails. data:%s",
+                    AppUtil::varExportOneLine(compact('emails', 'targetUserIds', 'teamId')))
+                );
+            }
+
             $insertTeamMembers = [];
             foreach ($targetUserIds as $userId) {
                 $insertTeamMembers[] = [
