@@ -5,7 +5,7 @@ var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bo
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
 
-            $http.get(cake.url.j).success(function (data) {
+            $http.get(cake.url.j).then(function (data) {
 
                 $rootScope.team_id = data.current_team_id;
                 $rootScope.login_user_id = data.login_user_id;

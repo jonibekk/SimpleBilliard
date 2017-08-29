@@ -2701,6 +2701,8 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        // TODO.Payment: Should implement confirm backend after frontend PR merged
+
         return $this->render();
     }
 

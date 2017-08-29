@@ -23,7 +23,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         }
 
         function getAllTeamMember () {
-            $http.get(url_list.i).success(function (data) {
+            $http.get(url_list.i).then(function (data) {
                 setTeamMemberList(data.user_info);
             });
         };
@@ -51,7 +51,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                 $scope.name_field_show = false;
                 $scope.coach_name_field_show = false;
                 $scope.group_field_show = true;
-                $http.get(url_list.k).success(function (data) {
+                $http.get(url_list.k).then(function (data) {
                     $scope.group_list = data;
                 });
                 getAllTeamMember();
@@ -61,25 +61,25 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                 $scope.name_field_show = false;
                 $scope.coach_name_field_show = true;
                 $scope.group_field_show = false;
-                $http.get(url_list.i).success(function (data) {
+                $http.get(url_list.i).then(function (data) {
                     setTeamMemberList(data.user_info);
                 });
 
             } else if (filter_name === 'two_step') {
                 init();
-                $http.get(url_list.l).success(function (data) {
+                $http.get(url_list.l).then(function (data) {
                     setTeamMemberList(data.user_info);
                 });
 
             } else if (filter_name === 'team_admin') {
                 init();
-                $http.get(url_list.m).success(function (data) {
+                $http.get(url_list.m).then(function (data) {
                     setTeamMemberList(data.user_info);
                 });
 
             } else if (filter_name === 'invite') {
                 $scope.invite_box_show = true;
-                $http.get(url_list.t).success(function (data) {
+                $http.get(url_list.t).then(function (data) {
                     var invite_list = data.user_info;
                     angular.forEach(invite_list, function(val, key){
                         invite_list[key].Invite.created = $sce.trustAsHtml(val.Invite.created);
@@ -88,7 +88,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                 });
             } else {
                 init();
-                $http.get(url_list.i).success(function (data) {
+                $http.get(url_list.i).then(function (data) {
                     setTeamMemberList(data.user_info);
                 });
             }
@@ -99,14 +99,14 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             if ($scope.group_id === null) {
                 get_group_url = url_list.i;
             }
-            $http.get(get_group_url).success(function (data) {
+            $http.get(get_group_url).then(function (data) {
                 setTeamMemberList(data.user_info);
             });
         };
 
         $scope.inactivate = function (index, team_member_id) {
             var inactivate_url = url_list.inactivate_team_member + team_member_id;
-            $http.get(inactivate_url).success(function (data) {
+            $http.get(inactivate_url).then(function (data) {
                 $scope.team_list[index].TeamMember.status = cake.const.USER_STATUS.INACTIVE;
             });
         };
@@ -120,7 +120,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         $scope.updateInvite = function (index, invite_id, action_flg) {
             $scope.invite_loader[index] = true;
             var change_active_flag_url = url_list.am + invite_id + '/' + action_flg;
-            $http.get(change_active_flag_url).success(function (data) {
+            $http.get(change_active_flag_url).then(function (data) {
                 $scope.invite_loader[index] = false;
                 if (data.error != true) {
                     $scope.invite_msg[index] = action_flg;
@@ -140,7 +140,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
             var change_admin_user_flag_url = url_list.p + member_id + '/' + admin_flg;
-            $http.get(change_admin_user_flag_url).success(function (data) {
+            $http.get(change_admin_user_flag_url).then(function (data) {
 
                 var admin_show_flg = false;
                 if (admin_flg === 'ON') {
@@ -163,7 +163,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         $scope.setEvaluationFlag = function (index, member_id, evaluation_flg) {
 
             var change_evaluation_flag_url = url_list.q + member_id + '/' + evaluation_flg;
-            $http.get(change_evaluation_flag_url).success(function (data) {
+            $http.get(change_evaluation_flag_url).then(function (data) {
 
                 var show_evaluation_flg = false;
                 if (evaluation_flg === 'ON') {
