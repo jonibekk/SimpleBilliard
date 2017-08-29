@@ -195,7 +195,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __("Move closer to your company's vision.") ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'Everyone can know the company vision and can make their goals. Goalous lets them see their improvement and how close they are to the vision. The more they use Goalous the closer they can get to that vision.') ?></p>
+                            'Everyone can know the company vision and can make their Goals. Goalous lets them see their improvement and how close they are to the vision. The more they use Goalous the closer they can get to that vision.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">

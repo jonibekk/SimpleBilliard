@@ -112,7 +112,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make employees goals transparent and clear.') ?></h3>
+                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make employees Goals transparent and clear.') ?></h3>
                 <div class="details">
                     <p><?= __('What are you working on it? Why are you working on it? Make what you are doing clear to your colleagues.') ?></p>
                 </div>
@@ -171,7 +171,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messaging') ?></h3>
                 <div class="details">
-                    <p><?= __('Communicate with your team members using the Web and Mobile app. No longer necessary to use e-mail.') ?></p>
+                    <p><?= __('Communicate with your team members using the Web and Mobile app. No longer necessary to use Email.') ?></p>
                 </div>
             </div><!--//content-->
             <div
@@ -190,9 +190,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <div class="details">
                     <p>
                         <?=
-                        __('Having a performance meeting where you ask "What have you done this quarter" is pointless! Through Goalous you already know their goals and actions.') .
+                        __('Having a performance meeting where you ask "What have you done this quarter" is pointless! Through Goalous you already know their Goals and Actions.') .
                         '<br>' .
-                        __('You have already known their goals and actions.')
+                        __('You have already known their Goals and Actions.')
                         ?>
                     </p>
                 </div>
@@ -233,9 +233,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         <h3 class="title"><?= __('Goal Collaboration') ?></h3>
                         <p class="desc">
                             <?=
-                            __('You can easily find common points in other divisions or other floors. Suddenly, these common points can lead you more efficiently to your goals.') .
+                            __('You can easily find common points in other divisions or other floors. Suddenly, these common points can lead you more efficiently to your Goals.') .
                             '<br>' .
-                            __('To help each other, then you can achieve your goals.')
+                            __('To help each other, then you can achieve your Goals.')
                             ?>
                         </p>
                     </div><!--//content-->
