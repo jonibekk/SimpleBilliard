@@ -18,8 +18,7 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("Your \"%s\" credit card terminated with \"%s\" will expire soon.", $brand, $lastDigits);
-echo __("Please update your credit card information as soon as possible.");
+echo __("Unfortunately your credit was declined. Please contact Goalous sales team.");
 echo "\n";
 echo __("You can update your payment setting from the following link:");
 echo "\n";

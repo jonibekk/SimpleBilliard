@@ -2,8 +2,10 @@
 App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
+App::import('Service', 'TeamService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
+App::uses('TransactionManager', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
@@ -687,6 +689,8 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         // Register Credit Card to stripe
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
@@ -990,7 +994,7 @@ class PaymentService extends AppService
             // save the invoice history
             $invoiceHistoryData = [
                 'team_id'           => $teamId,
-                'order_date'        => $localCurrentDate,
+                'order_datetime'    => $time,
                 'system_order_code' => '',
             ];
             $InvoiceHistory->clear();
@@ -1088,16 +1092,8 @@ class PaymentService extends AppService
         // fetching charge histories
         $yesterdayLocalDate = AppUtil::dateYesterday($localCurrentDate);
         $targetEndTs = AppUtil::getEndTimestampByTimezone($yesterdayLocalDate, $timezone);
-        $previousMonthFirstTs = strtotime("-1 month", strtotime(date('Y-m-01', strtotime($yesterdayLocalDate))));
 
-        // target start date will be base day in previous month
-        $targetStartDate = AppUtil::correctInvalidDate(
-            date('Y', $previousMonthFirstTs),
-            date('m', $previousMonthFirstTs),
-            date('d', strtotime($localCurrentDate))
-        );
-        $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
-        $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        $targetPaymentHistories = $ChargeHistory->findForInvoiceBeforeTs($teamId, $targetEndTs);
         return $targetPaymentHistories;
     }
 
@@ -1227,8 +1223,7 @@ class PaymentService extends AppService
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
-                // Invoices for only Japanese team. So, $timezone will be always Japan time.
-                $timezone = 9;
+                $timezone = Hash::get($v, 'Team.timezone');
 
                 $localCurrentTs = $time + ($timezone * HOUR);
                 $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
@@ -1452,14 +1447,14 @@ class PaymentService extends AppService
         ];
 
         try {
-            $Invoice->begin();
+            $this->TransactionManager->begin();
             if (!$Invoice->save($data)) {
                 throw new Exception(sprintf("Fail to update invoice. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
-            $Invoice->commit();
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $Invoice->rollback();
+            $this->TransactionManager->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];

@@ -14,7 +14,7 @@ App::uses('Team', 'Model');
 class InvoiceService extends AppService
 {
     const API_URL_REGISTER_ORDER = ATOBARAI_API_BASE_URL . '/api/order/rest';
-    const API_URL_INQUIRY_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
+    const API_URL_INQUIRE_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
     /**
      * register order for 1 team's invoice via atobarai.com
@@ -32,13 +32,12 @@ class InvoiceService extends AppService
         array $monthlyChargeHistory,
         string $orderDate
     ): array {
-        // fix timezone as japan time
-        $timezone = 9;
         /** @var  Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
         $team = $Team->getById($teamId);
+        $timezone = $team['timezone'];
         $invoiceInfo = $Invoice->getByTeamId($teamId);
 
         // calc amount total
@@ -87,6 +86,25 @@ class InvoiceService extends AppService
         // request to atobarai.com
         $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
         $resAtobarai = am($resAtobarai, ['requestData' => $data]);
+        return $resAtobarai;
+    }
+
+    /**
+     * Check credit status at Atobarai.com
+     *
+     * @param string $orderCode
+     *
+     * @return array
+     */
+    public function inquireCreditStatus(string $orderCode): array
+    {
+        $data = [
+            'EnterpriseId' => ATOBARAI_ENTERPRISE_ID,
+            'ApiUserId'    => ATOBARAI_API_USER_ID,
+            'OrderId[]'    => $orderCode,
+        ];
+
+        $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_INQUIRE_CREDIT_STATUS, $data);
         return $resAtobarai;
     }
 
@@ -207,6 +225,60 @@ class InvoiceService extends AppService
             $addedUserAmount += $history['total_amount'] + $history['tax'];
         }
         return $addedUserAmount;
+    }
+
+    /**
+     * Update invoice and invoice history tables with credit status
+     *
+     * @param int   $invoiceHistoryId
+     * @param int   $creditStatus
+     *
+     * @return bool
+     */
+    public function updateCreditStatus(int $invoiceHistoryId, int $creditStatus): bool
+    {
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+
+        // Get invoice history
+        $invoiceHistory = $InvoiceHistory->getById($invoiceHistoryId);
+        if (empty($invoiceHistory)) {
+            return false;
+        }
+
+        $invoiceHistory['order_status'] = $creditStatus;
+        $invoice = $Invoice->getByTeamId($invoiceHistory['team_id']);
+        if (empty($invoice)) {
+            $this->log("Invoice not found for invoice history. TeamId: " . $invoiceHistory['team_id']);
+            return false;
+        }
+        $invoice['credit_status'] = $creditStatus;
+
+        try {
+            $InvoiceHistory->begin();
+
+            if (!$InvoiceHistory->save($invoiceHistory)) {
+                throw new Exception(sprintf("Failed to save Invoice history. data: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistory),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)));
+            }
+
+            if (!$Invoice->save($invoice)) {
+                throw new Exception(sprintf("Failed to save Invoice order status. data: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoice),
+                    AppUtil::varExportOneLine($Invoice->validationErrors)));
+            }
+
+            $InvoiceHistory->commit();
+        } catch (Exception $e) {
+            $InvoiceHistory->rollback();
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return false;
+        }
+        return true;
     }
 
 }

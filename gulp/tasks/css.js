@@ -25,18 +25,21 @@ gulp.task('css_vendor', () => {
 })
 
 gulp.task('less:common', () => {
-    buildLess(config.less.src.common)
+    buildLess(config.less.src.common, false)
 })
 gulp.task('less:pages', () => {
   glob(config.less.src.pages, null, function (er, files) {
     files.forEach(function (file) {
-      buildLess(file)
+      buildLess(file, false)
     })
     // console.log(files)
   })
 })
+gulp.task('less:homepage', () => {
+    buildLess(config.less.src.homepage, true)
+})
 
-function buildLess(filePath) {
+function buildLess(filePath, isHomepage) {
   let fileName = filePath.replace(/^.*[\\\/]/, '');
   fileName = fileName.replace(/.less/, '');
 
@@ -50,8 +53,13 @@ function buildLess(filePath) {
     obj = obj.pipe(cssmin());
   }
 
-  return obj.pipe(rename({suffix: '.min'}))
+  if (isHomepage){
+    return obj.pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest(config.less.output.homepage))
+    .pipe(duration('buildLess:' + fileName))
+  }else{
+    return obj.pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest(config.less.output.path))
     .pipe(duration('buildLess:' + fileName))
-
+  }
 }

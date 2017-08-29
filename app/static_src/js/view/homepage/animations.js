@@ -17,22 +17,6 @@ $(document).ready(function() {
         });
 
 
-        /* Animate elements in #why (homepage) */
-        /*
-        $('#why .benefits').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInLeft delayp1');}
-        });
-
-        $('#why .testimonials').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInRight delayp3');}
-        });
-
-         $('#why .btn').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInUp delayp6');}
-        });
-        */
-
-
         /* Animate elements in #video (homepage) */
         $('#video .title').css('opacity', 0).one('inview', function(isInView) {
             if (isInView) {
@@ -45,18 +29,6 @@ $(document).ready(function() {
                 $(this).addClass('animated fadeInRight delayp3');
             }
         });
-
-
-        /* Animate elements in #faq */
-        /*
-        $('#faq .panel').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInUp delayp1');}
-        });
-
-        $('#faq .more').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInUp delayp3');}
-        });
-        */
 
 
         /* Animate elements in #features-promo */
@@ -72,19 +44,6 @@ $(document).ready(function() {
             }
         });
 
-        /*
-        $('#features-promo .video-container').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInUp delayp6');}
-        });
-
-        $('#features .from-left').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInLeft delayp1');}
-        });
-
-        $('#features .from-right').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInRight delayp3');}
-        });
-        */
         $('.home-page .from-left').css('opacity', 0).one('inview', function(isInView) {
             if (isInView) {
                 $(this).addClass('animated fadeInLeft delayp6');
@@ -146,13 +105,6 @@ $(document).ready(function() {
                 $(this).addClass('animated fadeInDown delayp6');
             }
         });
-
-        /* Animate elements in #blog-list */
-        /*
-        $('#blog-list .post').css('opacity', 0).one('inview', function(isInView) {
-            if (isInView) {$(this).addClass('animated fadeInUp delayp1');}
-        });
-        */
 
         /* Animate elements in #contact-main */
         $('#contact-main .item .icon').css('opacity', 0).one('inview', function(isInView) {
