@@ -84,16 +84,18 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
 <section id="pricingDetail">
     <div class="container">
-        <h2>Pricing Guide</h2>
-        <p>You use all features of Goalous for a 15-day free trial. Give it a try!</p>
+        <h2><?= __('Pricing Guide');?></h2>
+        <p><?= __('You use all features of Goalous for a 15-day free trial. Give it a try!');?></p>
         <div class="pricing-card">
-            <h3>Standard</h3>
+            <h3><?= __('Standard');?></h3>
             <p><span class="price-text">&yen;1,900</span>
-            Per active member, per month</p>
-            <button class="btn btn-cta btn-cta-primary">Start 15-day Free Trial</button>
+            <?= __('Per active member, per month');?></p>
+            <button class="btn btn-cta btn-cta-primary"><?= __('Start 15-day Free Trial');?></button>
             <div class="hr"></div>
+            <!-- TODO: Replace placement text -->
             <p>Goalous is a lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi omnis commodi aliquam, animi sit nesciunt in eos officiis illo. Officiis distinctio harum maiores voluptatem odio, quasi labore omnis, nemo at?</p>
         </div>
+        <!-- TODO: Replace placement text -->
         <div class="feature-category">
             <strong class="icon icon-heart">Goal Features</strong>
             <ul>
