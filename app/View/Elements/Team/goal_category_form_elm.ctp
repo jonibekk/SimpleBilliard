@@ -47,7 +47,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                         'div'                          => false,
                         'label'                        => false,
                         'class'                        => 'form-control',
-                        'placeholder'                  => __('Write a description of the goal category.'),
+                        'placeholder'                  => __('Write a description of the Goal category.'),
                         'data-bv-notempty-message'     => __("Input is required."),
                         'required'                     => true,
                         'data-bv-stringlength'         => 'true',

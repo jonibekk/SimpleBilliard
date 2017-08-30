@@ -54,7 +54,7 @@ class Post extends AppModel
 
     function _setTypeMessage()
     {
-        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __("Created a new goal.");
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __("Created a new Goal.");
         self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __("Created a new circle.");
     }
 
