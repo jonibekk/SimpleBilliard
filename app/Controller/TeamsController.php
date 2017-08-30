@@ -2660,13 +2660,13 @@ class TeamsController extends AppController
         $teamId = $this->current_team_id;
 
         // Validate activation
-        if (!$TeamMemberService->validateActivation($teamMemberId)) {
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
             $this->Notification->outSuccess(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }
 
         // Paid charge case
-        if ($PaymentService->isChargingUserActivation($teamId)) {
+        if ($PaymentService->isChargeUserActivation($teamId)) {
             return $this->redirect('/teams/activate_confirm_with_payment');
         }
 
@@ -2696,7 +2696,7 @@ class TeamsController extends AppController
         $teamId = $this->current_team_id;
 
         // Validate activation
-        if (!$TeamMemberService->validateActivation($teamMemberId)) {
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
             $this->Notification->outSuccess(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }
@@ -2722,7 +2722,7 @@ class TeamsController extends AppController
         $teamId = $this->current_team_id;
 
         // Validate activation
-        if (!$TeamMemberService->validateActivation($teamMemberId)) {
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
             $this->Notification->outSuccess(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }

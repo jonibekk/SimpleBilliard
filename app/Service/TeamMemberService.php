@@ -2,6 +2,8 @@
 App::import('Service', 'AppService');
 App::uses('TeamMember', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class TeamMemberService
  */
