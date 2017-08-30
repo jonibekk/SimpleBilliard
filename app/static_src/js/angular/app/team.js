@@ -6,16 +6,15 @@ var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bo
             $rootScope.$stateParams = $stateParams;
 
             $http.get(cake.url.j).then(function (data) {
+                $rootScope.team_id = data.data.current_team_id;
+                $rootScope.login_user_id = data.data.login_user_id;
+                $rootScope.login_user_admin_flg = data.data.login_user_admin_flg;
 
-                $rootScope.team_id = data.current_team_id;
-                $rootScope.login_user_id = data.login_user_id;
-                $rootScope.login_user_admin_flg = data.login_user_admin_flg;
-
-                $rootScope.login_user_language = data.login_user_language;
+                $rootScope.login_user_language = data.data.login_user_language;
                 if ($rootScope.login_user_language === 'eng') {
                     $translate.use('en');
                 }
-                $rootScope.admin_user_cnt = data.admin_user_cnt;
+                $rootScope.admin_user_cnt = data.data.admin_user_cnt;
             });
         }]
 );

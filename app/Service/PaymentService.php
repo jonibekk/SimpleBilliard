@@ -1594,11 +1594,13 @@ class PaymentService extends AppService
 
         $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
         $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers($teamId);
+
         // Regard adding users as charge users as it is
         //  if current users does not over max charged users
         if ($currentChargeTargetUserCnt - $maxChargedUserCnt >= 0) {
             return $addUserCnt;
         }
+
         $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
         return $chargeUserCnt;
     }
