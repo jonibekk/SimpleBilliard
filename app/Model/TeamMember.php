@@ -40,6 +40,12 @@ class TeamMember extends AppModel
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'status'                => [
+            'inEnumList' => [
+                'rule' => [
+                    'inEnumList',
+                    "TeamMember\Status"
+                ],
+            ],
             'isVerifiedEmail' => [
                 'rule' => ['isVerifiedEmail']
             ]
@@ -993,7 +999,7 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
             $this->csv_datas[$key]['TeamMember']['status'] = strtolower($row['status']) == "on" ? self::USER_STATUS_ACTIVE : self::USER_STATUS_INACTIVE;
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
-            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'ON' ? true : false;
+            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
             if (Hash::get($row, 'member_type')) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             } else {
@@ -1228,7 +1234,7 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['member_no'] = Hash::get($v,
                 'TeamMember.member_no') ? $v['TeamMember']['member_no'] : null;
             $this->csv_datas[$k]['status'] = Hash::get($v,
-                'TeamMember.status') && $v['TeamMember']['status'] == self::USER_STATUS_ACTIVE ? 'ON' : 'OFF';
+                'TeamMember.status')  == self::USER_STATUS_ACTIVE ? 'ON' : 'OFF';
             $this->csv_datas[$k]['admin_flg'] = Hash::get($v,
                 'TeamMember.admin_flg') && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
@@ -1700,6 +1706,16 @@ class TeamMember extends AppModel
             ],
         ];
         $validateOfUpdate = [
+            'status' => [
+                'notBlank'  => [
+                    'rule'    => 'notBlank',
+                    'message' => __("%s is required.", __("Active status"))
+                ],
+                'isOnOrOff' => [
+                    'rule'    => 'isOnOrOff',
+                    'message' => __("%s must be either 'ON' or 'OFF'.", __('Active status'))
+                ],
+            ],
         ];
         $validate = $common_validate + $validateOfUpdate;
         $this->validateBackup = $this->validate;
