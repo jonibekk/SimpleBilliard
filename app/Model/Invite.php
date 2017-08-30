@@ -60,6 +60,7 @@ class Invite extends AppModel
 
         $data = [];
         $data['Invite']['from_user_id'] = $from_uid;
+        $data['Invite']['to_user_id'] = 0;
         $data['Invite']['team_id'] = $team_id;
         $data['Invite']['email'] = $email;
         $data['Invite']['email_token'] = $this->generateToken();
@@ -283,11 +284,24 @@ class Invite extends AppModel
     function getInviteUserList($team_id)
     {
         $options = [
-            'fields'     => ['email', 'created', 'id', 'del_flg', 'email_token_expires'],
+            'fields'     => [
+                'Invite.email', 'Invite.created', 'Invite.id', 'Invite.del_flg', 'Invite.email_token_expires',
+                'Email.user_id',
+            ],
             'order'      => 'Invite.created DESC',
             'conditions' => [
-                'team_id'        => $team_id,
-                'email_verified' => 0
+                'Invite.team_id'        => $team_id,
+                'Invite.email_verified' => 0
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Invite.email = Email.email',
+                    ],
+                ]
             ]
         ];
         $res = $this->find('all', $options);
