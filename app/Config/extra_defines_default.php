@@ -10,7 +10,6 @@
 if (file_exists(APP . 'Config/extra_defines.php')) {
     require_once(APP . 'Config/extra_defines.php');
 }
-var_dump(file_exists(APP . 'Config/extra_defines.php'));
 if (!defined('PUBLIC_ENV')) {
     define('PUBLIC_ENV', false);
 }
