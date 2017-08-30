@@ -937,6 +937,9 @@ class AppController extends BaseController
 
     function setValsForAlert()
     {
+        // TODO.Payment: must refactoring.
+        // Acquire only necessary information when necessary
+
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
