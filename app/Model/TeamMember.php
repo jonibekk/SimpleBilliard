@@ -239,17 +239,17 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isActive($uid, $team_id = null)
+    public function isActive($uid, $teamId = null)
     {
-        if (!$team_id) {
+        if (!$teamId) {
             if (!$this->current_team_id) {
                 return false;
             }
-            $team_id = $this->current_team_id;
+            $teamId = $this->current_team_id;
         }
-        $is_default = false;
-        if ($uid == $this->my_uid && $team_id == $this->current_team_id) {
-            $is_default = true;
+        $isDefault = false;
+        if ($uid == $this->my_uid && $teamId == $this->current_team_id) {
+            $isDefault = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
             if ($res !== false) {
                 if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
@@ -260,7 +260,7 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'TeamMember.team_id' => $team_id,
+                'TeamMember.team_id' => $teamId,
                 'TeamMember.user_id' => $uid,
                 'TeamMember.status'  => self::USER_STATUS_ACTIVE,
             ],
@@ -278,7 +278,7 @@ class TeamMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        if ($is_default) {
+        if ($isDefault) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
         if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {

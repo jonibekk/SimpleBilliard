@@ -135,10 +135,10 @@ class Email extends AppModel
         return false;
     }
 
-    function getEmailsBelongTeamByEmail($emails, $team_id = null)
+    function getEmailsBelongTeamByEmail($emails, $teamId = null)
     {
-        if (!$team_id) {
-            $team_id = $this->current_team_id;
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
         }
         $options = [
             'conditions' => [
@@ -150,7 +150,7 @@ class Email extends AppModel
                 'User' => [
                     'TeamMember' => [
                         'conditions' => [
-                            'TeamMember.team_id' => $team_id,
+                            'TeamMember.team_id' => $teamId,
                             'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
                         ],
                         'fields'     => ['id']
