@@ -19,6 +19,9 @@ Berksfile.lock
 .buildpath
 junit.xml
 .DS_Store
+# php defines
+/app/Config/extra_defines.php
+
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
 /.idea
