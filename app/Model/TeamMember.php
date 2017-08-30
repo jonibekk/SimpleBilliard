@@ -39,6 +39,11 @@ class TeamMember extends AppModel
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
+        'status'                => [
+            'isVerifiedEmail' => [
+                'rule' => ['isVerifiedEmail']
+            ]
+        ],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'             => ['boolean' => ['rule' => ['boolean'],],],

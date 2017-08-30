@@ -1335,7 +1335,7 @@ class TeamMemberTest extends GoalousTestCase
             'coach_user_id' => $coach_user_id,
             'status' => TeamMember::USER_STATUS_ACTIVE
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $res = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
         $this->assertEquals($coach_user_id, $res);
 
@@ -1353,7 +1353,7 @@ class TeamMemberTest extends GoalousTestCase
             'coach_user_id' => $coach_user_id,
             'status' => TeamMember::USER_STATUS_ACTIVE
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $res = $this->TeamMember->getMyMembersList($coach_user_id);
         $this->assertContains($user_id, $res);
     }
@@ -1596,7 +1596,7 @@ class TeamMemberTest extends GoalousTestCase
             'id'     => $memberId,
             'status' => TeamMember::USER_STATUS_ACTIVE,
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $this->TeamMember->inactivate($memberId);
 
         $options['conditions']['id'] = $memberId;
