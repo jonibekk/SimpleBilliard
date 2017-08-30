@@ -47,3 +47,4 @@ yarn-error.log
 /app/webroot/js/homepage/goalous_homepage.min.js
 # for Translation | 翻訳関連
 /app/Locale/**/*.pot
+package-lock.json
