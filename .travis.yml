@@ -37,6 +37,8 @@ before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
   - chmod -R 777 ./app/tmp
+  - sudo mkdir /var/log/goalous
+  - sudo chmod -R 777 /var/log/goalous
   - echo "<?php
     class DATABASE_CONFIG {
     private \$identities = array(
