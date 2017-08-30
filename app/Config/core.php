@@ -19,7 +19,7 @@
  * In development mode, you need to click the flash message to continue.
  */
 //外部ツールのKeyを取得
-require_once "extra_defines.php";
+require_once "extra_defines_default.php";
 
 Configure::write('debug', DEBUG_MODE);
 
