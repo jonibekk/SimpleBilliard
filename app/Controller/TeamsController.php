@@ -2016,15 +2016,6 @@ class TeamsController extends AppController
     }
 
     /**
-    * Confirm User Activation
-    *
-    **/
-    public function confirm_user_activation()
-    {
-        $this->layout = LAYOUT_ONE_COLUMN;
-    }
-
-    /**
      * insight 系処理の日付データを返す
      *
      * @param $timezone
@@ -2719,10 +2710,12 @@ class TeamsController extends AppController
      *
      * @return CakeResponse
      */
-    function confirm_activation(int $teamMemberId)
+    function confirm_user_activation(int $teamMemberId)
     {
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init("TeamMemberService");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
 
         $teamId = $this->current_team_id;
 
@@ -2732,8 +2725,19 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        // TODO.Payment: Should implement confirm backend after frontend PR merged
+        $user = $this->Team->TeamMember->getUserById($teamMemberId);
+        $displayUserName = $user['display_username'];
 
+        $paymentSetting = $PaymentService->get($this->current_team_id);
+        $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user'], $paymentSetting['currency']);
+        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
+        $allUseDays = $PaymentService->getCurrentAllUseDays();
+        $currency = new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers(1, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+
+        $this->set(compact('displayUserName', 'amountPerUser', 'useDaysByNext', 'totalCharge'));
+
+        $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
