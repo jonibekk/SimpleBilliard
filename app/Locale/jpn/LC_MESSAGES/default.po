@@ -2762,7 +2762,7 @@ msgid "Total"
 msgstr "トータル"
 
 msgid "Telephone"
-msgstr ""
+msgstr "電話番号"
 
 msgid "I agree with the terms of service"
 msgstr "利用規約に同意する"
