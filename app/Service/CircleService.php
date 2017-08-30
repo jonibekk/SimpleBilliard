@@ -343,7 +343,6 @@ class CircleService extends AppService
         }
 
         $showForAllFeedFlg = $this->isExperimentMode ? true : false;
-        $getNotificationFlg = $this->isExperimentMode ? true : false;
 
         $saveData = [
             'circle_id'             => $circleId,
@@ -351,7 +350,7 @@ class CircleService extends AppService
             'user_id'               => $userId,
             'admin_flg'             => $isAdmin,
             'show_for_all_feed_flg' => $showForAllFeedFlg,
-            'get_notification_flg'  => $getNotificationFlg,
+            'get_notification_flg'  => true,
         ];
         return $saveData;
     }
