@@ -49,7 +49,7 @@ export default class Routes extends Component {
               <Route path="invite/confirm" component={ConfirmContainer} />
             </Route>
           </Router>
-           <DevTools />
+           {/*<DevTools />*/}
         </div>
       </Provider>
     );

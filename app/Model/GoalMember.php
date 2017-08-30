@@ -637,11 +637,11 @@ class GoalMember extends AppModel
      *
      * @return array
      */
-    function findActiveByGoalId($goal_id, $type = null)
+    function findActiveByGoalId($goalId, $type = null)
     {
         $options = [
             'conditions' => [
-                'GoalMember.goal_id' => $goal_id,
+                'GoalMember.goal_id' => $goalId,
                 'GoalMember.team_id' => $this->current_team_id,
                 'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
                 'User.active_flg'    => true,
