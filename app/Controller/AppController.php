@@ -242,7 +242,7 @@ class AppController extends BaseController
         if (!$this->request->is('ajax')) {
             // not redirecting if route is '/app_force_update' or '/app_force_install' (avoiding redirect loop)
             if (!in_array(Router::url(), ['/app_force_update', '/app_force_install'])) {
-                $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT'));
+                $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT') ?? '');
                 if ($userAgent->isMobileAppAccess()) {
                     // https://jira.goalous.com/browse/GL-5962
                     // TODO: delete this "if" process, if old Android App(1.0.2) user is gone.

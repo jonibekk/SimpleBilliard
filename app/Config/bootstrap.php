@@ -68,17 +68,17 @@ require ROOT . '/Vendor/autoload.php';
 // 元々、日本語ファイルで問題あり。"あabcあ.png" が basename() で"abcあ.png"と扱われていた。 HTTP/2移行後から、日本語ファイル名が正しく扱われるようになった。<- 何が影響しているか判断できない。nginx? OS?
 // 正しくないファイル名をhashしたものをs3に保存していたため、HTTP/2移行後から日本語ファイルの画像がリンク切れを起こすようになった。
 // よって、元の(正しくない)設定に戻す。
-setlocale(LC_ALL,"");
+setlocale(LC_ALL, "");
 
 // CakePHPのオートローダーをいったん削除し、composerより先に評価されるように先頭に追加する
 // https://github.com/composer/composer/commit/c80cb76b9b5082ecc3e5b53b1050f76bb27b127b を参照
-spl_autoload_unregister(array('App', 'load'));
-spl_autoload_register(array('App', 'load'), true, true);
+spl_autoload_unregister(['App', 'load']);
+spl_autoload_register(['App', 'load'], true, true);
 
-Configure::write('Dispatcher.filters', array(
+Configure::write('Dispatcher.filters', [
     'AssetDispatcher',
     'CacheDispatcher'
-));
+]);
 
 //slack setting
 Configure::write('Slack', [
@@ -92,16 +92,26 @@ Configure::write('Slack', [
  * Configures default file logging options
  */
 App::uses('CakeLog', 'Log');
-CakeLog::config('debug', array(
+// changing path of error log, cause, doc root is changed every time of deployment by opsworks
+CakeLog::config('custom_path', [
     'engine' => LOG_ENGINE,
-    'types'  => array('notice', 'info', 'debug'),
+    'path'   => '/var/log/goalous/'
+]);
+CakeLog::config('debug', [
+    'engine' => LOG_ENGINE,
+    'types'  => ['notice', 'info', 'debug'],
     'file'   => 'debug',
-));
-CakeLog::config('error', array(
+]);
+CakeLog::config('error', [
     'engine' => LOG_ENGINE,
-    'types'  => array('warning', 'error', 'critical', 'alert', 'emergency'),
+    'types'  => ['warning', 'error', 'critical', 'alert'],
     'file'   => 'error',
-));
+]);
+CakeLog::config('emergency', [
+    'engine' => LOG_ENGINE,
+    'types'  => ['emergency'],
+    'file'   => 'emergency',
+]);
 
 Configure::write('Asset.timestamp', 'force');
 
