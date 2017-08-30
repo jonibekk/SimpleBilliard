@@ -5,6 +5,8 @@ App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'PaymentService');
+App::import('Service', 'TeamMemberService');
 
 /**
  * Teams Controller
@@ -16,6 +18,14 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_checkAdmin([
+            'ajax_set_current_team_admin_user_flag',
+            'ajax_set_current_team_evaluation_flag',
+            'ajax_inactivate_team_member',
+            'activate_team_member',
+            'activate_confirm_with_payment',
+            'activate_with_payment'
+        ]);
     }
 
     /**
@@ -2626,42 +2636,106 @@ class TeamsController extends AppController
 
     /**
      * Activate team member action
+     * # Paid & charge case
+     *  - Activate team member & charge card|invoice
+     *  - Redirect confirmation page
+     * # Paid & not charge case
+     *  - Activate team member only
+     *  - Reload page
+     * # Free trial case
+     *  - Activate team member only
+     *  - Reload page
      *
      * @param int $teamMemberId
+     *
      * @return void
      */
     function activate_team_member(int $teamMemberId)
     {
-        $userId = $this->Auth->user('id');
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
         $teamId = $this->current_team_id;
 
-        // Check 403
-        if (!$this->Team->TeamMember->isActiveAdmin($userId, $teamId)) {
-            $this->Notification->outError(__("You do not have permission to do this."));
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }
 
-        // Paid status case
-        if ($this->Team->isPaidPlan($teamId)) {
-            // TODO: implement payment logic
+        // Paid charge case
+        if ($PaymentService->isChargeUserActivation($teamId)) {
+            return $this->redirect('/teams/confirm_activation');
+        }
+
+        // Paid or free trial case
+        if ($this->Team->TeamMember->activate($teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
-            $this->redirect($this->referer());
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Failed to activate team member."));
         }
-
-        // Free trial status case
-        if ($this->Team->isFreeTrial($teamId)) {
-            if ($this->Team->TeamMember->activate($teamMemberId)) {
-                // TODO: Should display translation correctry by @kohei
-                $this->Notification->outSuccess(__("Changed active status inactive to active."));
-            } else {
-                // TODO: Should display translation correctry by @kohei
-                $this->Notification->outSuccess(__("Failed to activate team member."));
-            }
-            $this->redirect($this->referer());
-        }
-
-        // Other plan
-        $this->Notification->outError(__("You do not have permission to do this."));
         return $this->redirect($this->referer());
+    }
+
+    /**
+     * Activate team member confirmation page
+     *
+     * @param int $teamMemberId
+     *
+     * @return CakeResponse
+     */
+    function confirm_activation(int $teamMemberId)
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // TODO.Payment: Should implement confirm backend after frontend PR merged
+
+        return $this->render();
+    }
+
+    /**
+     * Activate team member with payment
+     *
+     * @param int $teamId
+     *
+     * @return void
+     */
+    function activate_with_payment(int $teamMmemberId)
+    {
+
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // Activate
+        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+        }
+
+        return $this->redirect('/teams/main');
     }
 }

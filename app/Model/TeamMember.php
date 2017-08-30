@@ -2095,4 +2095,41 @@ class TeamMember extends AppModel
         $res = $this->find('list', $options);
         return $res;
     }
+
+    /**
+     * Is team member or not
+     *
+     * @param int $teamId
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function isTeamMember(int $teamId, int $teamMemberId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id' => $teamMemberId,
+                'team_id' => $teamId
+            ]
+        ];
+        return (bool)$this->find('first', $options);
+    }
+
+    /**
+     * Is inactive team member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function isInactive(int $teamMemberId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'     => $teamMemberId,
+                'status' => self::USER_STATUS_INACTIVE
+            ]
+        ];
+        return (bool)$this->find('first', $options);
+    }
 }

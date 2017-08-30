@@ -2187,4 +2187,26 @@ class TeamMemberTest extends GoalousTestCase
         $ret = $this->TeamMember->countChargeTargetUsersEachTeam([1,2]);
         // TODO: Add other pattern tests
     }
+
+    public function test_isTeamMember()
+    {
+        $teamId = 1;
+        $userId = 1;
+        $teamMemberId = $this->createTeamMember($teamId, $userId);
+        $this->assertTrue($this->TeamMember->isTeamMember($teamId, $teamMemberId));
+
+        $otherTeamId = 2;
+        $userId = 2;
+        $otherTeamMemberId = $this->createTeamMember($otherTeamId, $userId);
+        $this->assertFalse($this->TeamMember->isTeamMember($teamId, $otherTeamMemberId));
+    }
+
+    public function test_isInactive()
+    {
+        $activeTeamMemberId = $this->createTeamMember(1, 1, TeamMember::USER_STATUS_ACTIVE);
+        $this->assertFalse($this->TeamMember->isInactive($activeTeamMemberId));
+
+        $inactiveTeamMemberId = $this->createTeamMember(2, 2, TeamMember::USER_STATUS_INACTIVE);
+        $this->assertTrue($this->TeamMember->isInactive($inactiveTeamMemberId));
+    }
 }
