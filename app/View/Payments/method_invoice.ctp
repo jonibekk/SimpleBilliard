@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array   $invoice
+ */
+?>
 <?= $this->App->viewStartComment() ?>
 <section class="panel company-info paymentMethod">
     <div class="form-group">

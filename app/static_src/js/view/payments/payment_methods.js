@@ -42,24 +42,25 @@ if(document.editInvoiceForm) {
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             if (xhr.status === 200) {
-                var userInfo = JSON.parse(xhr.responseText);
-                console.log(userInfo);
+                // Updated, redirect to payment pages
+                window.location.href = '/payments';
             }
             else {
-                console.log('Request failed.  Returned status of ' + xhr.status);
-
                 let response  = JSON.parse(xhr.response);
                 let fields = Object.keys(response.validation_errors.payment_setting);
                 fields.forEach(function (item) {
                     setError(item, response.validation_errors.payment_setting[item]);
                 });
-
-                console.log('Message: ' + response);
             }
         };
         xhr.send(urlEncode(data));
     });
 
+    /**
+     * Show validation error on field
+     * @param fieldName
+     * @param message
+     */
     function setError(fieldName, message) {
         let field = document.editInvoiceForm.querySelector('input[name=' + fieldName + ']');
         field.parentNode.className += ' has-error';
@@ -69,6 +70,10 @@ if(document.editInvoiceForm) {
         field.parentNode.appendChild(error);
     }
 
+    /**
+     * Remove validation error from field
+     * @param e
+     */
     function removeError(e) {
         let field = e.target;
         field.parentNode.className = field.parentNode.className.replace('has-error', '');
@@ -76,18 +81,5 @@ if(document.editInvoiceForm) {
         if (error) {
             error.remove();
         }
-    }
-
-    function urlEncode(object) {
-        var encodedString = '';
-        for (var prop in object) {
-            if (object.hasOwnProperty(prop)) {
-                if (encodedString.length > 0) {
-                    encodedString += '&';
-                }
-                encodedString += encodeURI(prop + '=' + object[prop]);
-            }
-        }
-        return encodedString;
     }
 }

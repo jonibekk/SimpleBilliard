@@ -75,20 +75,14 @@ class PaymentsController extends AppController
         $paymentSettings = $this->PaymentSetting->getByTeamId($this->current_team_id);
 
         // Invoice
-        if ($paymentSettings['type'] == PaymentSetting::PAYMENT_TYPE_INVOICE) {
+        if ($paymentSettings['type'] == Enum\PaymentSetting\Type::INVOICE) {
             return $this->_invoice();
         }
-
-        // start
-        $type = $this->request->query('type');
-        if (empty($type)) {
-            return $this->render('method_cc');
+        else if ($paymentSettings['type'] == Enum\PaymentSetting\Type::CREDIT_CARD) {
+            return $this->_creditCard();
         }
-        return $this->render('method_' . $type);
-        // end
 
-        // TODO.Payment: release comment out.
-//        $this->render('method');
+        return $this->redirect('/payments');
     }
 
     private function _invoice()
@@ -104,11 +98,34 @@ class PaymentsController extends AppController
 
     private function _creditCard()
     {
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init('CreditCardService');
+
+        // Get customer id
         $paymentSettings = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
-        $creditCard = Hash::get($paymentSettings, 'CreditCard')[0];
+        $customerCode = Hash::get($paymentSettings, 'CreditCard.customer_code');
 
-        $this->set(compact('creditCard'));
+        // Get card data from API
+        $creditCard = $CreditCardService->retrieveCreditCard($customerCode);
+        if ($creditCard['error'] === true) {
+            CakeLog::error("Error retrieving credit card for customer: $customerCode");
+            return $this->redirect('/payments');
+        }
+        $creditCard = $creditCard['creditCard'];
 
+        // Get Credit card info
+        $brand = $creditCard->brand;
+        $lastDigits = $creditCard->last4;
+        $expYear = $creditCard->exp_year;
+        $expMonth = $creditCard->exp_month;
+        $expMonthName = date('F', mktime(0, 0, 0, $expMonth, 10, $expYear));
+
+        // Check if the card is expired
+        $dateNow = GoalousDateTime::now();
+        $expDate = $CreditCardService->getRealExpireDateTimeFromCreditCardExpireDate($expYear, $expMonth);
+        $isExpired = $dateNow->greaterThanOrEqualTo($expDate);
+
+        $this->set(compact('brand', 'expMonth', 'expYear', 'lastDigits', 'expMonthName', 'isExpired'));
         return $this->render('method_cc');
     }
 
@@ -163,7 +180,6 @@ class PaymentsController extends AppController
 
     public function update_cc_info()
     {
-        // TODO.Payment: Check access permission
         $this->render('update_credit_card');
     }
 }
