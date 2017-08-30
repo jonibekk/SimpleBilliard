@@ -1984,6 +1984,15 @@ class TeamsController extends AppController
     }
 
     /**
+    * Confirm User Activation
+    *
+    **/
+    public function confirm_activation()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    /**
      * insight 系処理の日付データを返す
      *
      * @param $timezone

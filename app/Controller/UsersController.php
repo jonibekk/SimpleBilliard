@@ -1607,10 +1607,4 @@ class UsersController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
     }
-
-    public function confirm_activation()
-    {
-        $this->layout = LAYOUT_ONE_COLUMN;
-        return $this->render('confirm_activation');
-    }
 }

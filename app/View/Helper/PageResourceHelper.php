@@ -116,8 +116,7 @@ class PageResourceHelper extends AppHelper
             'view_info'            => ['user_profile.min'],
             'register_with_invite' => ['signup.min'],
             'invite'               => ['invite.min'],
-            'invite_confirm'       => ['invite.min'],
-            'confirm_activation'   => ['invite.min']
+            'invite_confirm'       => ['invite.min']
         ],
         'evaluations'   => [
             'default' => ['evaluation.min'],
@@ -126,6 +125,7 @@ class PageResourceHelper extends AppHelper
             'main'     => ['team_members.min', 'team_visions.min'],
             'settings' => ['team_setting.min'],
             'invite'   => ['signup.min'],
+            'confirm_activation'   => ['invite.min']
         ],
     ];
 
