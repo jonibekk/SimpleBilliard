@@ -2,6 +2,8 @@
 App::import('Service', 'AppService');
 App::uses('TeamMember', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class TeamMemberService
  */
@@ -15,7 +17,7 @@ class TeamMemberService extends AppService
      *
      * @return bool
      */
-    public function activate(int $teamId, int $teamMemberId): bool
+    public function activateWithPayment(int $teamId, int $teamMemberId): bool
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");

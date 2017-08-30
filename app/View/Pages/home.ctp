@@ -143,7 +143,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 </div>
                 <?= $this->Form->end(); ?>
                 <span class="lp-signup-form-footer-notice">
-                  <?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact us') . '</a>') ?></span>
+                  <?= __('Are you on Goalous? %s. Any questions ? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact us') . '</a>') ?></span>
             </div>
         </div>
     </div>
@@ -160,7 +160,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p class="col-md-6 col-sm-9">
                 <?=
                 $this->Html->link(
-                    __('We appeared on a magazine. - Gekkan Jinji Management Feb. -'),
+                    __('Goalous was featured in a magazine - Gekkan Jinji Management Feb. -'),
                     'http://blog.isao.co.jp/press_jinjimanage_20160205/',
                     ['target' => '_blank']
                 );
@@ -174,7 +174,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p class="col-md-6 col-sm-9">
                 <?=
                 $this->Html->link(
-                    __('We appeared on a web media. - Hito to shigoto no kenkyujo by Idem -'),
+                    __('Goalous was featured in a web publication - Hito to shigoto no kenkyujo by Idem -'),
                     'https://apj.aidem.co.jp/column/597//',
                     ['target' => '_blank']
                 );
@@ -187,15 +187,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <!-- ******WHY****** -->
 <section id="why" class="why section">
     <div class="container">
-        <h2 class="title text-center"><?= __('You can definitely change your organization by Goalous.') ?></h2>
+        <h2 class="title text-center"><?= __('Your organization can be changed by Goalous!') ?></h2>
         <p class="intro text-center"><?= __('Achieve Goals, make your team open, let your job become joyful!') ?></p>
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('Get progress to Vision.') ?></h3>
+                <h3 class="title"><?= __("Move closer to your company's vision.") ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'Every one knows Vision and make their Goals. Goalous let them improve themselves.') ?></p>
+                            'Everyone can know the company vision and can make their Goals. Goalous lets them see their improvement and how close they are to the vision. The more they use Goalous the closer they can get to that vision.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
@@ -212,10 +212,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="item row flex from-right">
             <div class="content col-md-5 col-sm-5 col-xs-12 col-left">
-                <h3 class="title"><?= __('You can reduce the words, What is that?') ?></h3>
+                <h3 class="title"><?= __('The phrase "I don know what that is, what they do" goes away.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'What did your colleages did today? Share on Goalous and get to know more and more.') ?></p>
+                            'What did your colleagues did today? Share on Goalous and get to know more and more.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
@@ -233,10 +233,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('Make results by cooperation.') ?></h3>
+                <h3 class="title"><?= __('Cooperate, get results.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently.') ?></p>
+                            'To achieve the team vision, the team must know what each other is doing. By using Goalous to know clearly what each other is doing, the team can succeeded efficiently.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
@@ -293,7 +293,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
                 <h3><?= __('Wherever, Whenever, from your smartphone.') ?></h3>
-                <p class="lead-text"><?= __('You can get iOS and Android apps.') ?></p>
+                <p class="lead-text"><?= __('iOS and Android apps avaliable.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
                     'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
@@ -355,10 +355,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __('Fryer (pdf)') ?>
+                    <?= __('Flyer (pdf)') ?>
                 </dt>
                 <dd>
-                    <?= __('This is Goalous flyer.') ?>
+                    <?= __('Goalous Flyer (Japanese)') ?>
                     <br>
                     <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i
                             class="fa fa-arrow-down document-download-icon"></i>
