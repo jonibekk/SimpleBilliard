@@ -1997,7 +1997,7 @@ class TeamsController extends AppController
     * Confirm User Activation
     *
     **/
-    public function confirm_activation()
+    public function confirm_user_activation()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
     }
