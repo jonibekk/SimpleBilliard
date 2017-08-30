@@ -16,6 +16,13 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+
+        if (in_array($this->request->params['action'], [
+            'ajax_invite_setting',
+        ])) {
+            $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
+        }
     }
 
     /**
@@ -1033,54 +1040,145 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_invite_setting($invite_id, $action_flg)
+    function ajax_invite_setting($user_id, $action_flg)
     {
         $this->_ajaxPreProcess();
+        /** @var TransactionManager $TransactionManager */
+        $TransactionManager = ClassRegistry::init('TransactionManager');
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init('Invite');
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        $inviteData = $Invite->find('first', [
+            'fields' => ['*'],
+            'conditions' => [
+                'Invite.team_id'        => $this->current_team_id,
+                'Invite.email_verified' => 0,
+                'Email.user_id'         => $user_id,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Invite.email = Email.email',
+                    ],
+                ]
+            ]
+        ]);
+
+        if (empty($inviteData)) {
+            return $this->_ajaxGetResponse([
+                'title' => __('Parameter is invalid'),
+                'error' => true,
+            ]);
+        }
         $error = false;
         $error_msg = '';
-        $invite_data = $this->Team->Invite->findById($invite_id);
 
         // if already joined throw error, already exists
-        if ($invite_data['Invite']['email_verified']) {
+        if ($inviteData['Invite']['email_verified']) {
             $error_msg = (__("Error, this user already exists."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
             $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
+            return $this->_ajaxGetResponse([
+                'title' => $error_msg,
+                'error' => true,
+            ]);
         }
 
-        // if already expired throw error, you can't cancel
-        if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
-            $error_msg = (__("Error, this invitation already expired, you can't cancel."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
+        if ($action_flg == 'Canceled') {
+            if ($inviteData['Invite']['email_token_expires'] < REQUEST_TIMESTAMP) {
+                // if already expired throw error, you can't cancel
+                $error_msg = (__("Error, this invitation already expired, you can't cancel."));
+                $error = true;
+                $this->Notification->outError($error_msg);
+            } else {
+                // cancel the old invite
+                $this->Team->Invite->delete($inviteData['Invite']['id']);
+            }
+            return $this->_ajaxGetResponse([
+                'title' => $error_msg,
+                'error' => $error,
+            ]);
         }
-
-        // for cancel the old invite
-        $res = $this->Team->Invite->delete($invite_id);
 
         if ($action_flg == 'Invited') {
-            //save invite mail data
-            $invite = $this->Team->Invite->saveInvite(
-                $invite_data['Invite']['email'],
-                $invite_data['Invite']['team_id'],
-                $invite_data['Invite']['from_user_id'],
-                !empty($invite_data['Invite']['message']) ? $invite_data['Invite']['message'] : null
-            );
-            if (!$invite) {
-                $error = true;
-                $error_msg = (__("Error, failed to invite."));
-                $this->Notification->outError($error_msg);
+            try {
+                $TransactionManager->begin();
+                //save invite mail data
+                $requestedEmail = $this->request->data('email');
+                if (is_null($requestedEmail)) {
+                    $error_msg = __("Invalid email format");
+                    throw new RuntimeException($error_msg);
+                }
+                if (!$this->isEmailValidFormat($requestedEmail)) {
+                    $error_msg = __("Invalid email format");
+                    throw new RuntimeException($error_msg);
+                }
+                if ($Email->isVerified($requestedEmail)) {
+                    $error_msg = __("Registered email");
+                    throw new RuntimeException($error_msg);
+                }
+                $invite = $this->Team->Invite->saveInvite(
+                    $requestedEmail,
+                    $inviteData['Invite']['team_id'],
+                    $inviteData['Invite']['from_user_id'],
+                    !empty($inviteData['Invite']['message']) ? $inviteData['Invite']['message'] : null
+                );
+                $emailData = $inviteData['Email'];
+                $emailData['email'] = $requestedEmail;
+                $Email->save($emailData);
+
+                if (!$invite) {
+                    $error_msg = __("Error, failed to invite.");
+                    $this->Notification->outError($error_msg);
+                    throw new RuntimeException($error_msg);
+                }
+
+                // cancel the old invite
+                $this->Team->Invite->delete($inviteData['Invite']['id']);
+
+                //send invite mail
+                $teamName = $this->Team->TeamMember->myTeams[$this->current_team_id];
+                $this->GlEmail->sendMailInvite($invite, $teamName);
+
+                $TransactionManager->commit();
+            } catch (Exception $e) {
+                $TransactionManager->rollback();
+                CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                CakeLog::error($e->getTraceAsString());
+                $error     = true;
+                $error_msg = empty($error_msg) ? __("Error, failed to invite.") : $error_msg;
             }
-            //send invite mail
-            $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
-            $this->GlEmail->sendMailInvite($invite, $team_name);
         }
-        $res['title'] = $error_msg;
-        $res['error'] = $error;
-        return $this->_ajaxGetResponse($res);
+        return $this->_ajaxGetResponse([
+            'title' => $error_msg,
+            'error' => $error,
+        ]);
+    }
+
+    /**
+     * return if string $email is valid email format
+     * @param string $email
+     *
+     * @return bool
+     */
+    private function isEmailValidFormat(string $email): bool
+    {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init("Email");
+        $Email->validate = [
+            'email' => [
+                'maxLength' => ['rule' => ['maxLength', 255]],
+                'notBlank'  => ['rule' => 'notBlank',],
+                'email'     => ['rule' => ['email'],],
+            ],
+        ];
+
+        $Email->set(['email' => $email]);
+        return $Email->validates(['fieldList' => ['email']]);
     }
 
     function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
