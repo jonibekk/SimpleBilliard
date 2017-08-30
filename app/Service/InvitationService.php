@@ -74,32 +74,6 @@ class InvitationService extends AppService
     }
 
     /**
-     * Calc charge user count
-     *
-     * @param int $teamId
-     * @param int $addUserCnt
-     *
-     * @return int
-     */
-    function calcChargeUserCount(int $teamId, int $addUserCnt): int
-    {
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init("ChargeHistory");
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init("TeamMember");
-
-        $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
-        $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers($teamId);
-        // Regard adding users as charge users as it is
-        //  if current users does not over max charged users
-        if ($currentChargeTargetUserCnt - $maxChargedUserCnt >= 0) {
-            return $addUserCnt;
-        }
-        $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
-        return $chargeUserCnt;
-    }
-
-    /**
      * Invite users bulk
      * - Update DB
      *  - invitations

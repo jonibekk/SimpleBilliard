@@ -1347,7 +1347,7 @@ class PaymentService extends AppService
     public function charge(
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
-        int $usersCount
+        int $usersCount = 1
     ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1577,4 +1577,44 @@ class PaymentService extends AppService
         return $defaultAamountPerUser;
     }
 
+    /**
+     * Calc charge user count
+     *
+     * @param int $teamId
+     * @param int $addUserCnt
+     *
+     * @return int
+     */
+    function calcChargeUserCount(int $teamId, int $addUserCnt): int
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
+        $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers($teamId);
+
+        // Regard adding users as charge users as it is
+        //  if current users does not over max charged users
+        if ($currentChargeTargetUserCnt - $maxChargedUserCnt >= 0) {
+            return $addUserCnt;
+        }
+
+        $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
+        return $chargeUserCnt;
+    }
+
+    /**
+     * Is charge user activation or not
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    function isChargeUserActivation(int $teamId): bool
+    {
+        $chargeUserCount = $this->calcChargeUserCount($teamId, 1);
+        return $chargeUserCount === 1;
+    }
 }
