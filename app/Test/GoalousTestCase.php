@@ -486,14 +486,21 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->TeamMember->User->create();
         $this->Team->TeamMember->User->save(['active_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE], false);
         $userId = $this->Team->TeamMember->User->getLastInsertId();
+        $this->createTeamMember($teamId, $userId);
+        return $userId;
+    }
+
+    function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
+    {
         $this->Team->TeamMember->create();
         $this->Team->TeamMember->save([
-            'user_id'    => $userId,
             'team_id'    => $teamId,
+            'user_id'    => $userId,
+            // TODO: Should delete active flg
             'active_flg' => true,
-            'status'     => TeamMember::USER_STATUS_ACTIVE
+            'status'     => $status
         ], false);
-        return $userId;
+        return $this->Team->TeamMember->getLastInsertId();;
     }
 
     function createTopicAndMessages($teamid, $userId, $subUserId, $latestMessageDatetime)

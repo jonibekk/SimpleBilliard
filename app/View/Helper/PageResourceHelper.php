@@ -14,8 +14,8 @@ class PageResourceHelper extends AppHelper
         // a default for the whole controller
         // Action scripts will take the preference.
         'pages'         => [
-            'display' => ['/js/goalous_home.min'],
-            'default' => ['/js/goalous_home.min']
+            'display' => ['/js/goalous_feed.min'],
+            'default' => ['/js/goalous_feed.min']
         ],
         'evaluations'   => [
             'default' => ['/js/goalous_evaluation.min']
@@ -37,12 +37,12 @@ class PageResourceHelper extends AppHelper
             ]
         ],
         // Notifications and posts uses the same base script
-        // as pages (goalous_home.min)
+        // as pages (goalous_feed.min)
         'notifications' => [
-            'default' => ['/js/goalous_home.min']
+            'default' => ['/js/goalous_feed.min']
         ],
         'posts'         => [
-            'default' => ['/js/goalous_home.min']
+            'default' => ['/js/goalous_feed.min']
         ],
         'teams'         => [
             'default' => [
@@ -116,7 +116,7 @@ class PageResourceHelper extends AppHelper
             'view_info'            => ['user_profile.min'],
             'register_with_invite' => ['signup.min'],
             'invite'               => ['invite.min'],
-            'invite_confirm'       => ['invite.min'],
+            'invite_confirm'       => ['invite.min']
         ],
         'evaluations'   => [
             'default' => ['evaluation.min'],
@@ -125,6 +125,7 @@ class PageResourceHelper extends AppHelper
             'main'     => ['team_members.min', 'team_visions.min'],
             'settings' => ['team_setting.min'],
             'invite'   => ['signup.min'],
+            'confirm_activation'   => ['invite.min']
         ],
     ];
 

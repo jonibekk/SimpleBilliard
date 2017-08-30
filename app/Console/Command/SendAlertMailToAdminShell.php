@@ -15,7 +15,7 @@ App::uses('GlEmailComponent', 'Controller/Component');
  * - e-mail
  * ## Execution timing
  * - It's defined in the following.
- *    app/Config/extra_defines.php
+ *    app/Config/extra_defines_default.php
  *   EXPIRE_ALERT_NOTIFY_BEFORE_DAYS
  *    Expire alert will be send in specified days before expires. That days should be comma separated.
  *      ex) EXPIRE_ALERT_NOTIFY_BEFORE_DAYS=10,5,3,2,1
