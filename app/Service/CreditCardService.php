@@ -393,6 +393,15 @@ class CreditCardService extends AppService
 
         try {
             $response = \Stripe\Customer::retrieve($customerId);
+
+            // Check for deleted customer
+            if ($response->deleted === true) {
+                $result["error"] = true;
+                $result["message"] = __("Not found");
+                $result["errorCode"] = 404;
+                return $result;
+            }
+
             $result['customer'] = $response;
         } catch (Exception $e) {
             $result["error"] = true;
