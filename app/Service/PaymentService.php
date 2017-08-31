@@ -1633,7 +1633,7 @@ class PaymentService extends AppService
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
         $paymentSettings = $PaymentSetting->getByTeamId($teamId);
 
-        if (empty($paymentSettings['type'])) {
+        if (empty($paymentSettings)) {
             return null;
         }
 

@@ -80,7 +80,7 @@ class PaymentsController extends AppController
         $paymentType = $PaymentService->getPaymentType($this->current_team_id);
 
         // Credit Card payment
-        if ($paymentType != Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if ($paymentType == Enum\PaymentSetting\Type::CREDIT_CARD) {
             return $this->_creditCard();
         }
 
@@ -92,7 +92,7 @@ class PaymentsController extends AppController
     {
         // Payment data
         $paymentSettings = $this->PaymentSetting->getInvoiceByTeamId($this->current_team_id);
-        $invoice = Hash::get($paymentSettings, 'Invoice')[0];
+        $invoice = Hash::get($paymentSettings, 'Invoice');
 
         $this->set(compact('invoice'));
 
@@ -111,7 +111,7 @@ class PaymentsController extends AppController
         // Get card data from API
         $creditCard = $CreditCardService->retrieveCreditCard($customerCode);
         if ($creditCard['error'] === true) {
-            CakeLog::error("Error retrieving credit card for customer: $customerCode");
+            CakeLog::error("Error retrieving credit card for customerCode: $customerCode");
             return $this->redirect('/payments');
         }
         $creditCard = $creditCard['creditCard'];

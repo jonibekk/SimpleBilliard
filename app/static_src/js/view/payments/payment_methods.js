@@ -76,7 +76,7 @@ if(document.editInvoiceForm) {
      */
     function removeError(e) {
         let field = e.target;
-        field.parentNode.className = field.parentNode.className.replace('has-error', '');
+        field.parentNode.className.remove('has-error');
         let error = field.parentNode.querySelector('small');
         if (error) {
             error.remove();
