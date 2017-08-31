@@ -14,8 +14,8 @@ class PageResourceHelper extends AppHelper
         // a default for the whole controller
         // Action scripts will take the preference.
         'pages'         => [
-            'display' => ['/js/goalous_home.min'],
-            'default' => ['/js/goalous_home.min']
+            'display' => ['/js/goalous_feed.min'],
+            'default' => ['/js/goalous_feed.min']
         ],
         'evaluations'   => [
             'default' => ['/js/goalous_evaluation.min']
@@ -37,12 +37,12 @@ class PageResourceHelper extends AppHelper
             ]
         ],
         // Notifications and posts uses the same base script
-        // as pages (goalous_home.min)
+        // as pages (goalous_feed.min)
         'notifications' => [
-            'default' => ['/js/goalous_home.min']
+            'default' => ['/js/goalous_feed.min']
         ],
         'posts'         => [
-            'default' => ['/js/goalous_home.min']
+            'default' => ['/js/goalous_feed.min']
         ],
         'teams'         => [
             'default' => [

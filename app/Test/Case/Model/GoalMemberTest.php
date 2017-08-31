@@ -267,7 +267,7 @@ class GoalMemberTest extends GoalousTestCase
         $teamMemberData = [
             'team_id'    => 1,
             'user_id'    => 100,
-            'active_flg' => true
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ];
         $this->GoalMember->User->TeamMember->save($teamMemberData, false);
         $actual = $this->GoalMember->findActiveByGoalId(200, GoalMember::TYPE_COLLABORATOR);
@@ -469,7 +469,7 @@ class GoalMemberTest extends GoalousTestCase
         $this->GoalMember->Goal->save(['id' => 1, 'team_id' => 1], false);
         foreach ($userIds as $userId) {
             $this->GoalMember->Team->TeamMember->create();
-            $this->GoalMember->Team->TeamMember->save(['team_id' => 1, 'user_id' => $userId, 'active_flg' => true],
+            $this->GoalMember->Team->TeamMember->save(['team_id' => 1, 'user_id' => $userId, 'status' => TeamMember::USER_STATUS_ACTIVE],
                 false);
             $this->GoalMember->User->create();
             $this->GoalMember->User->save(['id' => $userId, 'team_id' => 1, 'active_flg' => true], false);

@@ -8,6 +8,8 @@ App::import('Service', 'EvaluationService');
 App::import('Service', 'PaymentService');
 App::import('Service', 'TeamMemberService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Teams Controller
  *
@@ -116,7 +118,22 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
         $team = $this->Team->getById($this->current_team_id);
-        if ($this->Team->save($this->request->data)) {
+        $updateData = Hash::get($this->request->data, 'Team');
+        if (empty($updateData)) {
+            $this->Notification->outError(__("Failed to change basic team settings."));
+            return $this->redirect($this->referer());
+        }
+
+        $updateFields = [
+            'name',
+            'photo_file_name',
+        ];
+        $isPaidPlan = Hash::get($team, 'service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        if (!$isPaidPlan) {
+            $updateFields[] = 'timezone';
+        }
+
+        if ($this->Team->save($updateData, $updateFields)) {
             Cache::clear(false, 'team_info');
             $this->Notification->outSuccess(__("Changed basic team settings."));
         } else {
@@ -324,6 +341,9 @@ class TeamsController extends AppController
 
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
+        $isPaidPlan = Hash::get($team, 'Team.service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        // Get timezone label
+        $timezoneLabel = $this->getTimezoneLabel($team['Team']['timezone']);
 
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
@@ -354,7 +374,9 @@ class TeamsController extends AppController
             'nextTermStartYm',
             'nextTermEndYm',
             'termLength',
-            'isStartedEvaluation'
+            'isStartedEvaluation',
+            'isPaidPlan',
+            'timezoneLabel'
         ));
 
         return $this->render();
@@ -1093,10 +1115,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
+    function ajax_set_current_team_admin_user_flag($member_id, $adminFlg)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $adminFlg);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -1997,7 +2019,7 @@ class TeamsController extends AppController
     * Confirm User Activation
     *
     **/
-    public function confirm_activation()
+    public function confirm_user_activation()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
     }

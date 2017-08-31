@@ -123,22 +123,22 @@ class Email extends AppModel
                 'User' => [
                     'TeamMember' => [
                         'conditions' => ['TeamMember.team_id' => $team_id],
-                        'fields'     => ['id', 'active_flg']
+                        'fields'     => ['id', 'status']
                     ]
                 ]
             ]
         ];
         $res = $this->find('first', $options);
-        if (isset($res['User']['TeamMember'][0]['active_flg']) && $res['User']['TeamMember'][0]['active_flg']) {
+        if (isset($res['User']['TeamMember'][0]['status']) && $res['User']['TeamMember'][0]['status'] == TeamMember::USER_STATUS_ACTIVE) {
             return true;
         }
         return false;
     }
 
-    function getEmailsBelongTeamByEmail($emails, $team_id = null)
+    function getEmailsBelongTeamByEmail($emails, $teamId = null)
     {
-        if (!$team_id) {
-            $team_id = $this->current_team_id;
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
         }
         $options = [
             'conditions' => [
@@ -149,7 +149,10 @@ class Email extends AppModel
             'contain'    => [
                 'User' => [
                     'TeamMember' => [
-                        'conditions' => ['TeamMember.team_id' => $team_id, 'TeamMember.active_flg' => 1],
+                        'conditions' => [
+                            'TeamMember.team_id' => $teamId,
+                            'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
+                        ],
                         'fields'     => ['id']
                     ]
                 ]

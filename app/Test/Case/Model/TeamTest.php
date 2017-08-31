@@ -24,6 +24,7 @@ class TeamTest extends GoalousTestCase
         'app.circle_member',
         'app.team_member',
         'app.term',
+        'app.email'
     );
 
     /**

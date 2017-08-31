@@ -367,22 +367,24 @@ class PaymentService extends AppService
     /**
      * Format total charge by users count when invite users.
      *
-     * @param int  $userCnt
-     * @param int  $currentTimeStamp
-     * @param null $useDaysByNext
-     * @param null $allUseDays
+     * @param int                          $userCnt
+     * @param Enum\PaymentSetting\Currency $currency
+     * @param int                          $currentTimeStamp
+     * @param null                         $useDaysByNext
+     * @param null                         $allUseDays
      *
      * @return string
      */
     public function formatTotalChargeByAddUsers(
         int $userCnt,
+        Enum\PaymentSetting\Currency $currency,
         int $currentTimeStamp = REQUEST_TIMESTAMP,
         $useDaysByNext = null,
         $allUseDays = null
     ): string {
         $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
         // Format ex 1980 → ¥1,980
-        $res = $this->formatCharge($totalCharge);
+        $res = $this->formatCharge($totalCharge, $currency->getValue());
         return $res;
     }
 
