@@ -236,13 +236,13 @@ class InvitationsController extends ApiController
 
             $requestedEmail = $this->request->data('email');
             if (is_null($requestedEmail)) {
-                $this->_getResponseBadFail('Parameter email not found');
+                return $this->_getResponseBadFail('Parameter email not found');
             }
             if (!$this->isEmailValidFormat($requestedEmail)) {
-                $this->_getResponseBadFail('Invalid email format');
+                return $this->_getResponseBadFail('Invalid email format');
             }
             if ($Email->isVerified($requestedEmail)) {
-                $this->_getResponseBadFail('Email registered');
+                return $this->_getResponseBadFail('Email registered');
             }
             // create invitation data
             $invite = $this->Team->Invite->saveInvite(
@@ -263,7 +263,7 @@ class InvitationsController extends ApiController
                 throw new RuntimeException('Error, failed to invite');
             }
             // cancel old invitation
-            // this method return false if delete success...
+            // this method return false even if delete(=del_flag) success...
             $Invite->delete($inviteData['Invite']['id']);
 
             //send invite mail
@@ -274,7 +274,7 @@ class InvitationsController extends ApiController
             $TransactionManager->rollback();
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
-            return $this->_getResponseBadFail('Error, failed to invite');
+            return $this->_getResponseInternalServerError('Error, failed to invite');
         }
 
         return $this->_getResponseSuccess([
