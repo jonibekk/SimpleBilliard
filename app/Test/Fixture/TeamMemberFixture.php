@@ -70,13 +70,6 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => '職種ID(belongsToでJobCategoryモデルに関連)'
         ),
-        'active_flg'            => array(
-            'type'    => 'boolean',
-            'null'    => false,
-            'default' => '1',
-            'key'     => 'index',
-            'comment' => '有効フラグ(Offの場合はチームにログイン不可。チームメンバーによる当該メンバーのチーム内のコンテンツへのアクセスは可能。当該メンバーへの如何なる発信は不可)'
-        ),
         'invitation_flg'        => array(
             'type'    => 'boolean',
             'null'    => false,
@@ -159,7 +152,6 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'coach_user_id'   => array('column' => 'coach_user_id', 'unique' => 0),
             'job_category_id' => array('column' => 'job_category_id', 'unique' => 0),
             'del_flg'         => array('column' => 'del_flg', 'unique' => 0),
-            'active_flg'      => array('column' => 'active_flg', 'unique' => 0),
             'admin_flg'       => array('column' => 'admin_flg', 'unique' => 0),
             'member_type_id'  => array('column' => 'member_type_id', 'unique' => 0),
             'member_no'       => array('column' => 'member_no', 'unique' => 0)
