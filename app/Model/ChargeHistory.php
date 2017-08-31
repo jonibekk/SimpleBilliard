@@ -145,6 +145,29 @@ class ChargeHistory extends AppModel
     }
 
     /**
+     * returns last ChargeHistory of team
+     * if team has no ChargeHistory, this returns empty array
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function getLastChargeHistoryByTeamId(int $teamId): array
+    {
+        $res = $this->find('first', [
+                'conditions' => [
+                    'team_id' => $teamId,
+                ],
+                'order'      => ['created' => 'DESC'],
+            ]
+        );
+        if ($res === false) {
+            return [];
+        }
+        return $res;
+    }
+
+    /**
      * Filter: team_id and charge date(Y-m-d 00:00:00　〜　Y-m-d 23:59:59)
      *
      * @param int    $teamId
