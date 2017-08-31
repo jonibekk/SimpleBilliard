@@ -1,6 +1,7 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel subscription-status">
     <div class="panel-container">
+        <?= $this->element('Payment/method_select') ?>
         <h3 class="subscription-status-headline"><?= __("Team Summary") ?></h3>
         <h4 class="status-text">
             <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
