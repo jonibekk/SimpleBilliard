@@ -2761,6 +2761,9 @@ msgstr "税金"
 msgid "Total"
 msgstr "トータル"
 
+msgid "Telephone"
+msgstr "電話番号"
+
 msgid "I agree with the terms of service"
 msgstr "利用規約に同意する"
 
@@ -2769,6 +2772,9 @@ msgstr "登録する"
 
 msgid "Enter Billing Information"
 msgstr "請求先情報を入力してください"
+
+msgid "Billing Information"
+msgstr "請求先情報"
 
 msgid "Same as company information"
 msgstr "会社情報と同じにする"

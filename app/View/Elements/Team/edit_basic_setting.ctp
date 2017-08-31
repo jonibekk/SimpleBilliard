@@ -94,11 +94,20 @@
         </div>
 
         <hr>
-        <?=
-        $this->Form->input('timezone', [
-            'label' => __("Timezone"),
-            'type'  => 'select',
-        ]) ?>
+        <?php if ($isPaidPlan) :?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __("Timezone") ?></label>
+                    <p class="form-control-static">
+                        <?= $timezoneLabel ?>
+                    </p>
+            </div>
+        <?php else: ?>
+            <?=
+            $this->Form->input('timezone', [
+                'label' => __("Timezone"),
+                'type'  => 'select',
+            ]) ?>
+        <?php endif;?>
     </div>
     <footer>
         <fieldset>
