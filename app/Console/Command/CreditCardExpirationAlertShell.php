@@ -100,8 +100,7 @@ class CreditCardExpirationAlertShell extends AppShell
                 // This is a non expected case.
                 // The default card should exists
                 if ($creditCardInfo == null) {
-                    $this->log('Customer without default credit card', LOG_ERR);
-                    $this->log($customerData, LOG_ERR);
+                    CakeLog::error('Customer without default credit card: '.$customerData->id);
                     continue;
                 }
             }
@@ -117,7 +116,6 @@ class CreditCardExpirationAlertShell extends AppShell
             }
             // Credit card already expired
             else if ($expireYear == $currentYear && $expireMonth > $currentMonth) {
-                $teamId = $teamInfo['PaymentSetting']['team_id'];
                 // TODO: Send email about expired cards
             }
 
