@@ -222,4 +222,14 @@ class InviteTest extends GoalousTestCase
         $this->assertNotContains($tokenExpiredInviteId, $resultIds);
         $this->assertContains($targetInviteId, $resultIds);
     }
+
+    function test_getUnverifiedWithEmailByUserId()
+    {
+        // case regular
+        $result = $this->Invite->getUnverifiedWithEmailByUserId(1, 1);
+        $this->assertEquals('from@email.com', $result['Email']['email']);
+        // case not found
+        $result = $this->Invite->getUnverifiedWithEmailByUserId(100, 100);
+        $this->assertEquals([], $result);
+    }
 }
