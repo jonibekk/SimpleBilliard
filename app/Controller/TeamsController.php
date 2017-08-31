@@ -1065,6 +1065,24 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * TODO: delete this API if used place migrated to
+     * /api/v1/invitations/reInvite
+     *
+     * @deprecated
+     * @param $user_id
+     * @param $action_flg
+     *
+     * @return CakeResponse|null
+     */
+    function ajax_invite_setting($user_id, $action_flg)
+    {
+        return $this->_ajaxGetResponse([
+            'title' => 'this API is deprecated',
+            'error' => true,
+        ]);
+    }
+
     function ajax_set_current_team_admin_user_flag($member_id, $adminFlg)
     {
         $this->_ajaxPreProcess();
