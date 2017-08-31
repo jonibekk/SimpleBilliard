@@ -201,6 +201,12 @@ class InvitationsController extends ApiController
         $InvitationService = ClassRegistry::init('InvitationService');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
 
         $userId         = $this->request->data('user_id');
         $requestedEmail = $this->request->data('email');
@@ -212,19 +218,25 @@ class InvitationsController extends ApiController
         }
 
         $inviteData = $Invite->getUnverifiedWithEmailByUserId($userId, $this->current_team_id);
+        if ($Email->isVerified($requestedEmail)) {
+            return $this->_getResponseBadFail("Error, this user already exists.");
+        }
         if (empty($inviteData)) {
             return $this->_getResponseNotFound();
         }
+        if (empty($User->getById($userId))) {
+            return $this->_getResponseNotFound();
+        }
+        if (empty($TeamMember->getWithTeam($this->current_team_id, $userId))) {
+            return $this->_getResponseNotFound();
+        }
+
         // if already joined, throw error, already exists
         if ($inviteData['Invite']['email_verified']) {
             return $this->_getResponseBadFail("Error, this user already exists.");
         }
 
-        if (!$InvitationService->reInvite(
-            $inviteData['Invite'],
-            $inviteData['Email'],
-            $requestedEmail)
-        ) {
+        if (!$InvitationService->reInvite($inviteData['Invite'], $inviteData['Email'], $requestedEmail)) {
             return $this->_getResponseInternalServerError('Error, failed to invite');
         }
 

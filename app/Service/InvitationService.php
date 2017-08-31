@@ -194,10 +194,6 @@ class InvitationService extends AppService
         /** @var Invite $Invite */
         $Invite = ClassRegistry::init('Invite');
 
-        // TODO: check if user exists and TeamMember
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
         try {
             $TransactionManager->begin();
             // create invitation data
