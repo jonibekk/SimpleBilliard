@@ -213,8 +213,9 @@ class InvitationsController extends ApiController
         if (intval($userId) <= 0) {
             return $this->_getResponseBadFail('Invalid user_id');
         }
-        if (!$this->isEmailValidFormat($requestedEmail)) {
-            return $this->_getResponseBadFail('Invalid email format');
+        $validateErrors = $this->validateEmail($requestedEmail);
+        if (!empty($validateErrors)) {
+            return $this->_getResponseBadFail($validateErrors['email'][0]);
         }
 
         $inviteData = $Invite->getUnverifiedWithEmailByUserId($userId, $this->current_team_id);
@@ -256,21 +257,19 @@ class InvitationsController extends ApiController
      * return if string $email is valid email format
      * @param string $email
      *
-     * @return bool
+     * @return array
      */
-    private function isEmailValidFormat(string $email): bool
+    private function validateEmail(string $email): array
     {
         /** @var Email $Email */
         $Email = ClassRegistry::init("Email");
         $Email->validate = [
-            'email' => [
-                'maxLength' => ['rule' => ['maxLength', 255]],
-                'notBlank'  => ['rule' => 'notBlank',],
-                'email'     => ['rule' => ['email'],],
-            ],
+            'maxLength'     => ['rule' => ['maxLength', 255]],
+            'notBlank'      => ['rule' => 'notBlank',],
+            'email'         => ['rule' => ['email'],],
         ];
-
         $Email->set(['email' => $email]);
-        return $Email->validates(['fieldList' => ['email']]);
+        $Email->validates();
+        return $Email->validationErrors;
     }
 }
