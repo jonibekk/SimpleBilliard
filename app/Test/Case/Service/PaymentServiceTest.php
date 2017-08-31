@@ -1440,6 +1440,31 @@ class PaymentServiceTest extends GoalousTestCase
         // TODO.Payment: implement test code
     }
 
+    public function test_getPaymentType_creditCard()
+    {
+        $this->createCreditCardPayment();
+
+        $res = $this->PaymentService->getPaymentType(1);
+        $this->assertEquals(Enum\PaymentSetting\Type::CREDIT_CARD, $res);
+    }
+
+    public function test_getPaymentType_invoice()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        $res = $this->PaymentService->getPaymentType(1);
+        $this->assertEquals(Enum\PaymentSetting\Type::INVOICE, $res);
+    }
+
+    public function test_getPaymentType_noPayment()
+    {
+        $res = $this->PaymentService->getPaymentType(1);
+        $this->assertNull($res);
+    }
+
     /**
      * tearDown method
      *

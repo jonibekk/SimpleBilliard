@@ -2,6 +2,9 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
+App::uses('PaymentSetting', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class PaymentsController
@@ -335,14 +338,20 @@ class PaymentsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        $userId = $this->Auth->user('id');
-
+        // Check if the team is of invoice payment
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
+        if ($PaymentService->getPaymentType($teamId) != Enum\PaymentSetting\Type::INVOICE) {
+            return $this->_getResponseForbidden();
+        }
 
         // Validate input
         $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        // Its an update that means the invoice country IS already JP
+        // setting there to avoid creating another validation method.
+        $this->request->data['company_country'] = 'JP';
         $data = array('payment_setting' => $this->request->data);
+
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
@@ -370,6 +379,18 @@ class PaymentsController extends ApiController
             return $this->_getResponseNotFound();
         }
 
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if the team is of Credit card payment
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        if ($PaymentService->getPaymentType($teamId) != Enum\PaymentSetting\Type::CREDIT_CARD) {
+            return $this->_getResponseForbidden();
+        }
+
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
         /** @var CreditCard $CreditCard */
@@ -383,9 +404,9 @@ class PaymentsController extends ApiController
         }
 
         // Update
-        $updateResult = $CreditCardService->update($customerCode, $token);
+        $updateResult = $CreditCardService->updateCreditCard($customerCode, $token, $teamId);
         if ($updateResult['error'] === true) {
-            $this->_getResponseBadFail($updateResult['message']);
+            return $this->_getResponseBadFail($updateResult['message']);
         }
 
         return $this->_getResponseSuccess();

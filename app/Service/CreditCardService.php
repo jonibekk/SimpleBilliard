@@ -338,7 +338,7 @@ class CreditCardService extends AppService
      *
      * @return array
      */
-    function update(string $customerId, string $token, int $teamId): array
+    function updateCreditCard(string $customerId, string $token, int $teamId): array
     {
         try {
             \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
@@ -352,8 +352,8 @@ class CreditCardService extends AppService
             $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : null;
             $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s",
                 $customerId, $token, $message, $stripeCode);
-            $this->log(sprintf("[%s]%s", __METHOD__, $errorLog));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $errorLog));
+            CakeLog::error($e->getTraceAsString());
 
             $result["error"] = true;
             $result["message"] = $message;
@@ -367,6 +367,99 @@ class CreditCardService extends AppService
             'message' => null
         ];
         return $result;
+    }
+
+    /**
+     * Retrieve a single customer from Stripe
+     *
+     * @param string $customerId
+     *
+     * @return array
+     */
+    public function retrieveCustomer(string $customerId)
+    {
+        $result = [
+            "error"   => false,
+            "message" => null
+        ];
+
+        if (empty($customerId)) {
+            $result["error"] = true;
+            $result["message"] = __("Parameter is invalid.");
+            return $result;
+        }
+
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+        try {
+            $response = \Stripe\Customer::retrieve($customerId);
+
+            // Check for deleted customer
+            if ($response->deleted === true) {
+                $result["error"] = true;
+                $result["message"] = __("Not found");
+                $result["errorCode"] = 404;
+                return $result;
+            }
+
+            $result['customer'] = $response;
+        } catch (Exception $e) {
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+
+            if (property_exists($e, "stripeCode")) {
+                $result["errorCode"] = $e->stripeCode;
+            }
+
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve the default credit card from given customer.
+     * If the default credit card is not stored on customer object
+     * (maybe due a large number of registered credit cards), a
+     * new api call will be made to Stripe.
+     *
+     * @param string $customerId
+     *
+     * @return array
+     */
+    public function retrieveCreditCard(string $customerId)
+    {
+        // Retrieve the customer
+        $response = $this->retrieveCustomer($customerId);
+        if ($response['error'] === true) {
+            return $response;
+        }
+
+        $result = [
+            "error"   => false,
+            "message" => null
+        ];
+        $defaultSource = $response['customer']->default_source;
+
+        // Try to get the credit card from the list on customer object
+        foreach ($response['customer']->sources->data as $source) {
+            if ($source->id == $defaultSource) {
+                $result['creditCard'] = $source;
+                return $result;
+            }
+        }
+
+        // Call retrieve api otherwise
+        try {
+            $creditCard = $response['customer']->sources->retrieve($defaultSource);
+            $result['creditCard'] = $creditCard;
+            return $result;
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return $result;
+        }
     }
 
     /*
