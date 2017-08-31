@@ -60,7 +60,6 @@ class Invite extends AppModel
 
         $data = [];
         $data['Invite']['from_user_id'] = $from_uid;
-        $data['Invite']['to_user_id'] = 0;
         $data['Invite']['team_id'] = $team_id;
         $data['Invite']['email'] = $email;
         $data['Invite']['email_token'] = $this->generateToken();
