@@ -950,7 +950,6 @@ class AppController extends BaseController
         $paymentSetting = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
 
         // check if team credit card expire in one month
-        return;
         if ($this->_isAdmin() && !empty($paymentSetting)) {
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
