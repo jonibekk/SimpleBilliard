@@ -4,10 +4,16 @@ App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
+/**
+ * Class PaymentsController
+ *
+ * @property PaymentSetting $PaymentSetting
+ */
 class PaymentsController extends AppController
 {
     public $uses = [
-        'ChargeHistory'
+        'ChargeHistory',
+        'PaymentSetting',
     ];
 
     public function beforeFilter()
@@ -62,17 +68,68 @@ class PaymentsController extends AppController
      */
     public function method()
     {
-        // TODO.Payment:Change view dynamically and must delete
-        // start
-        $type = $this->request->query('type');
-        if (empty($type)) {
-            return $this->render('method_cc');
-        }
-        return $this->render('method_' . $type);
-        // end
+        $this->layout = LAYOUT_ONE_COLUMN;
 
-        // TODO.Payment: release comment out.
-//        $this->render('method');
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($this->current_team_id)) {
+            // Redirect to payment page
+            return $this->redirect('/payments');
+        }
+
+        $PaymentService = ClassRegistry::init("PaymentService");
+        $paymentType = $PaymentService->getPaymentType($this->current_team_id);
+
+        // Credit Card payment
+        if ($paymentType == Enum\PaymentSetting\Type::CREDIT_CARD) {
+            return $this->_creditCard();
+        }
+
+        // Invoice
+        return $this->_invoice();
+    }
+
+    private function _invoice()
+    {
+        // Payment data
+        $paymentSettings = $this->PaymentSetting->getInvoiceByTeamId($this->current_team_id);
+        $invoice = Hash::get($paymentSettings, 'Invoice');
+
+        $this->set(compact('invoice'));
+
+        return $this->render('method_invoice');
+    }
+
+    private function _creditCard()
+    {
+        /** @var CreditCardService $CreditCardService */
+        $CreditCardService = ClassRegistry::init('CreditCardService');
+
+        // Get customer id
+        $paymentSettings = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
+        $customerCode = Hash::get($paymentSettings, 'CreditCard.customer_code');
+
+        // Get card data from API
+        $creditCard = $CreditCardService->retrieveCreditCard($customerCode);
+        if ($creditCard['error'] === true) {
+            CakeLog::error("Error retrieving credit card for customerCode: $customerCode");
+            return $this->redirect('/payments');
+        }
+        $creditCard = $creditCard['creditCard'];
+
+        // Get Credit card info
+        $brand = $creditCard->brand;
+        $lastDigits = $creditCard->last4;
+        $expYear = $creditCard->exp_year;
+        $expMonth = $creditCard->exp_month;
+        $expMonthName = date('F', mktime(0, 0, 0, $expMonth, 10, $expYear));
+
+        // Check if the card is expired
+        $dateNow = GoalousDateTime::now();
+        $expDate = $CreditCardService->getRealExpireDateTimeFromCreditCardExpireDate($expYear, $expMonth);
+        $isExpired = $dateNow->greaterThanOrEqualTo($expDate);
+
+        $this->set(compact('brand', 'expMonth', 'expYear', 'lastDigits', 'expMonthName', 'isExpired'));
+        return $this->render('method_cc');
     }
 
     /**
@@ -126,7 +183,6 @@ class PaymentsController extends AppController
 
     public function update_cc_info()
     {
-        // TODO.Payment: Check access permission
         $this->render('update_credit_card');
     }
 }

@@ -166,7 +166,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_MASTERCARD);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
+        $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertFalse($res['error']);
 
         $this->deleteCustomer($customerId);
@@ -176,7 +176,7 @@ class CreditCardServiceTest extends GoalousTestCase
     {
         $customerId = $this->createCustomer(self::CARD_VISA);
 
-        $res = $this->CreditCardService->update($customerId, 'xxxxxxxxx', 3);
+        $res = $this->CreditCardService->updateCreditCard($customerId, 'xxxxxxxxx', 3);
         $this->assertTrue($res['error']);
 
         $this->deleteCustomer($customerId);
@@ -187,7 +187,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_DECLINED);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
+        $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_DECLINED);
 
@@ -199,7 +199,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_INCORRECT_CVC);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
+        $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_INCORRECT_CVC);
 
@@ -211,7 +211,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_EXPIRED);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
+        $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_EXPIRED);
 
@@ -223,11 +223,49 @@ class CreditCardServiceTest extends GoalousTestCase
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_PROCESSING_ERROR);
 
-        $res = $this->CreditCardService->update($customerId, $newCardToken, 3);
+        $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
 
         $this->deleteCustomer($customerId);
+    }
+
+    function test_retrieveCustomer()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+
+        $res = $this->CreditCardService->retrieveCustomer($customerId);
+        $this->assertFalse($res["error"]);
+        $this->assertArrayHasKey("customer", $res);
+
+        $this->deleteCustomer($customerId);
+    }
+
+    function test_retrieveCustomer_invalidId()
+    {
+        $customerId = 'xxxxxx';
+
+        $res = $this->CreditCardService->retrieveCustomer($customerId);
+        $this->assertTrue($res["error"] === true);
+    }
+
+    function test_retrieveCreditCard()
+    {
+        $customerId = $this->createCustomer(self::CARD_VISA);
+
+        $res = $this->CreditCardService->retrieveCreditCard($customerId);
+        $this->assertFalse($res["error"]);
+        $this->assertArrayHasKey("creditCard", $res);
+
+        $this->deleteCustomer($customerId);
+    }
+
+    function test_retrieveCreditCard_invalidId()
+    {
+        $customerId = 'xxxxxx';
+
+        $res = $this->CreditCardService->retrieveCreditCard($customerId);
+        $this->assertTrue($res["error"] === true);
     }
     
     /**
@@ -264,7 +302,7 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $customerId = $this->createCustomer(self::CARD_VISA);
         $newCardToken = $this->createToken(self::CARD_MASTERCARD);
-        $this->CreditCardService->update($customerId, $newCardToken, $testingTeamId);
+        $this->CreditCardService->updateCreditCard($customerId, $newCardToken, $testingTeamId);
         $this->assertFalse(Cache::read($key, 'user_data'));
     }
 

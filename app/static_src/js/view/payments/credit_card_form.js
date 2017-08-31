@@ -81,28 +81,30 @@ if(document.enterCCInfo){
      */
     function updateCreditCard(token) {
 
-        var formData = new FormData(document.enterCCInfo);
-        formData.append('token', token);
-        // TODO.Payment:  fix because payer_name is old field name.
-        formData.append('payer_name', cardName.value);
+        let data = {
+            'data[_Token][key]': cake.data.csrf_token.key,
+            'token': token.id,
+            'payer_name': cardName.value
+        };
 
-        $.ajax({
-            url: '/api/v1/payments/update_credit_card',
-            method: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            data: formData,
-            timeout: 300000 //5min
-        }).done(function (data) {
-            // TODO: Redirect to next page
-        }).fail(function (data) {
-            // Display error message
-            new Noty({
-                type: 'error',
-                text: '<h4>'+cake.word.error+'</h4>' + data.statusText,
-            }).show();
-        });
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/credit_card');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Go back to payment method page
+                window.location.href = '/payments/method';
+            }
+            else {
+                let response  = JSON.parse(xhr.response);
+                // Display error message
+                new Noty({
+                    type: 'error',
+                    text: '<h4>'+cake.word.error+'</h4>' + response.message,
+                }).show();
+            }
+        };
+        xhr.send(urlEncode(data));
     }
 
     /**
@@ -117,5 +119,5 @@ if(document.enterCCInfo){
         stripe.createToken(card, extraDetails).then(validateCreditCardForm);
     });
 
-    validateCreditCardForm();
+    validateCreditCardForm(null);
 }
