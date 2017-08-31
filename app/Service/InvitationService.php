@@ -2,6 +2,10 @@
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('Email', 'Model');
+App::uses('AppController', 'Controller');
+App::uses('ComponentCollection', 'Controller');
+App::uses('Component', 'Controller');
+App::uses('GlEmailComponent', 'Controller/Component');
 
 use Goalous\Model\Enum as Enum;
 
@@ -176,6 +180,71 @@ class InvitationService extends AppService
             $this->log($e->getTraceAsString());
             return false;
         }
+        return true;
+    }
+
+    function reInvite(array $inviteData, array $emailData, string $email): bool
+    {
+        /** @var TransactionManager $TransactionManager */
+        $TransactionManager = ClassRegistry::init('TransactionManager');
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init('Invite');
+
+        // TODO: check if user exists and TeamMember
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        try {
+            $TransactionManager->begin();
+            // create invitation data
+            $inviteNew = $Team->Invite->saveInvite(
+                $email,
+                $inviteData['team_id'],
+                $inviteData['from_user_id'],
+                !empty($inviteData['message']) ? $inviteData['message'] : null
+            );
+            if (false === $inviteNew) {
+                CakeLog::error(sprintf("[%s]%s data:%s", __METHOD__,
+                    'DB error, insert new invite failed',
+                    AppUtil::varExportOneLine([
+                        'invites.id' => $inviteData['id'],
+                        'email'      => $email,
+                    ])));
+                throw new RuntimeException('DB error, insert new invite failed');
+            }
+            // update emails.email
+            $emailData['email'] = $email;
+            if (false === $Email->save($emailData)) {
+                CakeLog::error(sprintf("[%s]%s data:%s", __METHOD__,
+                    'DB error, update email failed',
+                    AppUtil::varExportOneLine([
+                        'invites.id' => $inviteData['id'],
+                        'email'      => $email,
+                    ])));
+                throw new RuntimeException('DB error, update email failed');
+            }
+            // cancel old invitation
+            // this method return false even if delete(update del_flag=1) success...
+            $Invite->delete($inviteData['id']);
+
+            $TransactionManager->commit();
+        } catch (Exception $e) {
+            $TransactionManager->rollback();
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return false;
+        }
+        CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
+            'Re-invite succeed',
+            AppUtil::varExportOneLine([
+                    'old.invites.id' => $inviteData['id'],
+                    'new.invites.id' => $inviteNew['Invite']['id'],
+                    'email'          => $email,
+            ])));
         return true;
     }
 }
