@@ -149,7 +149,7 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
+            am: "api/v1/invitations/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
