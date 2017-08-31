@@ -185,4 +185,9 @@ class PaymentsController extends AppController
     {
         $this->render('update_credit_card');
     }
+
+    public function contact_settings()
+    {
+        $this->render('contact_settings');
+    }
 }
