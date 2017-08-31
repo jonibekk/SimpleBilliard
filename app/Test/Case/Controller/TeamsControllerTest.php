@@ -186,7 +186,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
             'TeamMember' => [
                 [
                     'user_id'    => 2,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                     'admin_flg'  => true,
                 ]
             ],
@@ -234,7 +234,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
             'TeamMember' => [
                 [
                     'user_id'    => 2,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                     'admin_flg'  => true,
                 ]
             ],

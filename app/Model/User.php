@@ -448,7 +448,7 @@ class User extends AppModel
             'contain'    => [
                 'TeamMember' => [
                     'conditions' => [
-                        'TeamMember.active_flg' => true
+                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
                     ],
                     'fields'     => [
                         'TeamMember.id',
@@ -1618,10 +1618,10 @@ class User extends AppModel
     {
         $options = [
             'conditions' => [
-                'User.id'               => $userIds,
-                'User.active_flg'       => true,
-                'TeamMember.team_id'    => $this->current_team_id,
-                'TeamMember.active_flg' => true,
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
             ],
             'joins'      => [
                 [
@@ -1660,11 +1660,13 @@ class User extends AppModel
     /**
      * Find users not belong to team
      * filter: emails
+     *
+     * @param int   $teamId
      * @param array $emails
      *
      * @return array
      */
-    function findNotBelongToTeamByEmail(array $emails): array
+    function findNotBelongToTeamByEmail(int $teamId, array $emails): array
     {
         $options = [
             'fields'     => [
@@ -1689,7 +1691,7 @@ class User extends AppModel
                     'alias'      => 'TeamMember',
                     'conditions' => [
                         'TeamMember.user_id = User.id',
-                        'TeamMember.team_id' => $this->current_team_id,
+                        'TeamMember.team_id' => $teamId,
                         'TeamMember.del_flg' => false,
                     ]
 

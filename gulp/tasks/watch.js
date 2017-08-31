@@ -22,7 +22,7 @@ gulp.task('js:watch', () => {
 })
 
 gulp.task('angular_app:watch', () => {
-  const watcher = gulp.watch(config.angular_app.watch_files, ['angular_app'])
+  const watcher = gulp.watch([...config.angular_app.watch_files], ['angular_app'])
 
   watcher.on('change', event => {
     /* eslint-disable no-console */

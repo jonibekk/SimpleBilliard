@@ -3,12 +3,12 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         var url_list = cake.url;
         var active_member_list = [];
         var all_member_list = [];
-        $scope.disp_active_flag = '1';
+        $scope.display_inactive_users = false;
 
         function ActiveMemberList (member_list) {
             var active_member_list = [];
             angular.forEach(member_list, function(value){
-                if (value.TeamMember.active_flg === true) {
+                if (value.TeamMember.status == cake.const.USER_STATUS.ACTIVE) {
                     this.push(value);
                 }
             }, active_member_list);
@@ -104,15 +104,16 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             });
         };
 
-        $scope.setActiveFlag = function (index, member_id, active_flg) {
-            var change_active_flag_url = url_list.o + member_id + '/' + active_flg;
-            $http.get(change_active_flag_url).success(function (data) {
-                var active_show_flg = false;
-                if (active_flg === 'ON') {
-                    active_show_flg = true;
-                }
-                $scope.team_list[index].TeamMember.active_flg = active_show_flg;
+        $scope.inactivate = function (index, team_member_id) {
+            var inactivate_url = url_list.inactivate_team_member + team_member_id;
+            $http.get(inactivate_url).success(function (data) {
+                $scope.team_list[index].TeamMember.status = cake.const.USER_STATUS.INACTIVE;
             });
+        };
+
+        $scope.activate = function (index, team_member_id) {
+            // TODO: Should chage get request to post request
+            window.location.href = url_list.activate_team_member + team_member_id;
         };
 
         // cancel invite or re-invite
@@ -175,9 +176,9 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         };
 
         $scope.viewMemberlistChange = function() {
-            if ($scope.disp_active_flag === 0) {
+            if ($scope.display_inactive_users) {
                 $scope.team_list = all_member_list;
-            } else if ($scope.disp_active_flag === 1) {
+            } else {
                 $scope.team_list = active_member_list;
             }
         }

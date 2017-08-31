@@ -14,26 +14,29 @@ const config = {
   dest: assets_dir + '/dest',
   js: {
     pages: {
-        home: [
+        feed: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/home/*.js',
+            assets_dir + '/js/view/feed/*.js'
         ],
         goals: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/goals/*.js',
+            assets_dir + '/js/view/goals/*.js'
         ],
         team: [
             assets_dir + '/js/view/teams/*.js',
         ],
         user: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/users/*.js',
+            assets_dir + '/js/view/users/*.js'
         ],
         evaluation: [
-            assets_dir + '/js/view/evaluations/*.js',
+            assets_dir + '/js/view/evaluations/*.js'
         ],
         payments: [
-            assets_dir + '/js/view/payments/*.js',
+            assets_dir + '/js/view/payments/*.js'
+        ],
+        homepage: [
+            assets_dir + '/js/view/homepage/*.js'
         ]
     },
     src: [
@@ -54,12 +57,13 @@ const config = {
     ],
     output: {
       file_name: 'goalous',
-      home_script_name: 'goalous_home',
+      feed_script_name: 'goalous_feed',
       goals_script_name: 'goalous_goal',
       team_script_name: 'goalous_team',
       user_script_name: 'goalous_user',
       evaluation_script_name: 'goalous_evaluation',
       payments_script_name: 'goalous_payment',
+      homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
@@ -111,8 +115,7 @@ const config = {
     output: {
       file_name: 'vendors',
       path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/vendor/*.js']
+    }
   },
   coffee: {
     src: [assets_dir + '/coffee/**/*.coffee'],
@@ -128,7 +131,7 @@ const config = {
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
-      assets_dir + '/js/vendor/angular/**/*.js'
+      assets_dir + '/js/angular/**/*.js'
     ]
   },
   angular_vendor: {
@@ -191,9 +194,11 @@ const config = {
     src: {
       common: assets_dir + '/less/common.less',
       pages: assets_dir + '/less/pages/**/*.less',
+      homepage: assets_dir + '/less/homepage/**/*.less'
     },
     output: {
-      path: compiled_assets_dir + '/css/'
+      path: compiled_assets_dir + '/css/',
+      homepage: compiled_assets_dir + '/css/homepage/'
     },
     watch_files: [assets_dir + '/less/**/**/*.less']
   }

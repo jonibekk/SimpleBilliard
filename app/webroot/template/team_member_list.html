@@ -41,10 +41,10 @@
     <div class="checkbox">
         <label>
             <input type="checkbox"
-                   ng-model="disp_active_flag"
+                   ng-model="display_inactive_users"
                    ng-click="viewMemberlistChange()"
-                   ng-true-value="0"
-                   ng-false-value="1"
+                   ng-true-value="true"
+                   ng-false-value="false"
                    class="checkbox">
 
             <p>{{ 'TEAM_MEMBER_LIST.SHOW_INACTIVE_MEMBERS' | translate}}</p>
@@ -63,9 +63,9 @@
     </section>
     <div class="col-xs-12">
         <section class="team_member_table">
-            <div ng-repeat="item in team_list | filter:name_field"
-                 ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
-                 ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''" class="team-members-card">
+            <div ng-repeat="item in team_list | filter:name_field === true"
+                 ng-if="item.TeamMember.status == '1' || display_inactive_users"
+                 ng-class="item.TeamMember.status == '2' ? 'disable_member' : ''" class="team-members-card">
 
                 <div class="team-members-card-avatar-box">
                     <a ng-href="{{item.User.user_page_url}}">
@@ -118,14 +118,15 @@
 
                         <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                             aria-labelledby="dropdownMenu1">
-                            <li role="presentation" ng-if="item.TeamMember.active_flg == true">
+                            <li role="presentation" ng-if="item.TeamMember.status == 1">
                                 <a role="menuitem" tabindex="-1"
-                                   ng-click="setActiveFlag($index, item.TeamMember.id, 'OFF')">{{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_INACTIVE' | translate}}</a>
+                                   ng-click="inactivate($index, item.TeamMember.id)">{{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_INACTIVE' | translate}}</a>
                             </li>
 
-                            <li role="presentation" ng-if="item.TeamMember.active_flg == false">
+                            <li role="presentation" ng-if="item.TeamMember.status == 2">
                                 <a role="menuitem" tabindex="-1"
-                                   ng-click="setActiveFlag($index, item.TeamMember.id, 'ON')">{{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_ACTIVE' | translate}}</a>
+                                   ng-click="activate($index, item.TeamMember.id)">
+                                    {{ 'TEAM_MEMBER_LIST.TO_CHANGE_TO_ACTIVE' | translate}}</a>
                             </li>
 
                             <li role="presentation" ng-if="item.TeamMember.admin_flg == false">

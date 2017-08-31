@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * ChargeHistory Model
  */
@@ -26,7 +27,7 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'payment_type'     => [
@@ -37,7 +38,7 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'charge_type'      => [
@@ -48,7 +49,7 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'amount_per_user'  => [
@@ -56,7 +57,7 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'total_amount'     => [
@@ -64,7 +65,7 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'tax'              => [
@@ -72,7 +73,7 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'charge_users'     => [
@@ -80,7 +81,7 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'currency'         => [
@@ -94,7 +95,7 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'charge_datetime'  => [
@@ -102,7 +103,7 @@ class ChargeHistory extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'payment_type'     => [
@@ -113,7 +114,7 @@ class ChargeHistory extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'max_charge_users' => [
@@ -176,8 +177,12 @@ class ChargeHistory extends AppModel
      */
     public function getByChargeDate(int $teamId, string $date): array
     {
-        $dateStart = AppUtil::getStartTimestampByTimezone($date);
-        $dateEnd = AppUtil::getEndTimestampByTimezone($date);
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $team = $Team->getById($teamId);
+
+        $dateStart = AppUtil::getStartTimestampByTimezone($date, $team['timezone']);
+        $dateEnd = AppUtil::getEndTimestampByTimezone($date, $team['timezone']);
         $options = [
             'fields'     => [
                 'id',
@@ -198,20 +203,18 @@ class ChargeHistory extends AppModel
      * It should be not charged yet.
      *
      * @param int $teamId
-     * @param int $startTs
-     * @param int $endTs
+     * @param int $timestamp
      *
      * @return array
      */
-    public function findForInvoiceByStartEnd(int $teamId, int $startTs, int $endTs)
+    public function findForInvoiceBeforeTs(int $teamId, int $timestamp)
     {
         $options = [
             'conditions' => [
                 'ChargeHistory.team_id'            => $teamId,
                 'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
                 'ChargeHistory.charge_type'        => [self::CHARGE_TYPE_ACTIVATE_USER, self::CHARGE_TYPE_ADD_USER],
-                'ChargeHistory.charge_datetime >=' => $startTs,
-                'ChargeHistory.charge_datetime <=' => $endTs,
+                'ChargeHistory.charge_datetime <=' => $timestamp,
                 'InvoiceHistoriesChargeHistory.id' => null,
                 'InvoiceHistory.id'                => null,
             ],

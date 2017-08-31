@@ -46,7 +46,7 @@
     echo $this->Html->css('homepage/pe-icon-7-stroke');
     echo $this->Html->css('homepage/animate.min');
     echo $this->Html->css('homepage/flexslider');
-    echo $this->Html->css('homepage/styles');
+    echo $this->Html->css('homepage/style.min');
     echo $this->fetch('css');
     ?>
     <!-- END CSS -->

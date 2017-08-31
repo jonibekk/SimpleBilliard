@@ -11,6 +11,8 @@
  * @var                    $expireDate
  * @var                    $url
  * @var CodeCompletionView $this
+ *
+ *  * TODO: Create email body
  */
 
 echo __('Hello %s.', $to_user_name);

@@ -89,16 +89,16 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="features-intro col-md-5 col-sm-6 col-xs-12">
                 <h2 class="title"><?= __('You can improve your job and organization!') ?></h2>
                 <ul class="list-unstyled features-list">
-                    <li><i class="fa fa-check"></i><?= __('Make a dicision much faster.') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Make decisions quicker.') ?></li>
                     <li><i class="fa fa-check"></i><?= __('Make your company vision clear to the employees.') ?></li>
-                    <li><i class="fa fa-check"></i><?= __('Make evaluation clear.') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Make performance evaluations transparent') ?></li>
                     <li><i class="fa fa-check"></i><?= __('Make your organization more flat.') ?></li>
-                    <li><i class="fa fa-check"></i><?= __('You will find your job much joyful!') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Your work becomes joyful!') ?></li>
                 </ul>
             </div><!--//intro-->
             <div class="features-video col-md-7 col-sm-6 col-xs-12 col-xs-offset-0">
                 <div class="video-container">
-                    <iframe width="720" height="405" src="https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=1"
+                    <iframe width="720" height="405" src="https://www.youtube.com/embed/<?= $this->Lang->getLangCode()=='jp' ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>?rel=0"
                             frameborder="0" allowfullscreen></iframe>
                 </div><!--//video-container-->
             </div><!--//video-->
@@ -112,9 +112,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make your colleages goal clear.') ?></h3>
+                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make employees Goals transparent and clear.') ?></h3>
                 <div class="details">
-                    <p><?= __('Why you work? What you work for? What are you doing? Make them clear to your colleages!') ?></p>
+                    <p><?= __('What are you working on it? Why are you working on it? Make what you are doing clear to your colleagues.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
@@ -129,13 +129,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
-                <h3 class="title"><i class="fa fa-image"></i><?= __('How visible photo actions are!') ?></h3>
+                <h3 class="title"><i class="fa fa-image"></i><?= __('A Picture is worth a thousand words! Photo Actions.') ?></h3>
                 <div class="details">
                     <p>
                         <?=
-                        __('Reporting, sharing and appealing, everything should be done as photo action!') .
+                        __('Reporting, Sharing, Self-promotion! It all should be done through photos!') .
                         '<br>' .
-                        __('We really believe you will like photo action!')
+                        __('Take a fun photo after a meeting and suddenly your work has become more joyful!')
                         ?>
                     </p>
                 </div>
@@ -152,9 +152,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-circle-o"></i><?= __('Sharing at circle.') ?></h3>
+                <h3 class="title"><i class="fa fa-circle-o"></i><?= __('Sharing in a circle.') ?></h3>
                 <div class="details">
-                    <p><?= __('You can share with your project members and with your division members in circles.') ?></p>
+                    <p><?= __('Create circles, and share with project members division members or anyone in the company.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
@@ -171,7 +171,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messaging') ?></h3>
                 <div class="details">
-                    <p><?= __('You can communicate with your team members by Web and Mobile app. No more need to use Email.') ?></p>
+                    <p><?= __('Communicate with your team members using the Web and Mobile app. No longer necessary to use Email.') ?></p>
                 </div>
             </div><!--//content-->
             <div
@@ -186,13 +186,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-shield"></i><?= __('Evaluate reasonably and concretely.') ?></h3>
+                <h3 class="title"><i class="fa fa-shield"></i><?= __('Evaluations with evidence!') ?></h3>
                 <div class="details">
                     <p>
                         <?=
-                        __('Ridiculous is meeting for evaluation!') .
+                        __('Having a performance meeting where you ask "What have you done this quarter" is pointless! Through Goalous you already know their Goals and Actions.') .
                         '<br>' .
-                        __('You have already known their goals and actions.')
+                        __('You have already known their Goals and Actions.')
                         ?>
                     </p>
                 </div>
@@ -209,7 +209,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-line-chart"></i><?= __('Insight') ?></h3>
                 <div class="details">
-                    <p><?= __('Is it really effective? Just check insight and ranking in Goalous!') ?></p>
+                    <p><?= __('Is the work really effective? Check Goalous for the insight and ranking to see actual engagement.') ?></p>
                 </div>
             </div><!--//content-->
             <div
@@ -221,7 +221,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//figure-->
         </div><!--//item-->
         <div class="container text-center">
-            <h2 class="title"><?= __('There are many other features in Goalous.') ?></h2></div>
+            <h2 class="title"><?= __('Goalous: even more features to make your work joyful.') ?></h2></div>
         <div class="row">
             <div class="benefits col-md-12">
 
@@ -230,12 +230,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         <i class="fa fa-child"></i>
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
-                        <h3 class="title"><?= __('Collaborating in Goal') ?></h3>
+                        <h3 class="title"><?= __('Goal Collaboration') ?></h3>
                         <p class="desc">
                             <?=
-                            __('You can meet people in another division or another floor.') .
+                            __('You can easily find common points in other divisions or other floors. Suddenly, these common points can lead you more efficiently to your Goals.') .
                             '<br>' .
-                            __('To help each other, then you can achieve your goals.')
+                            __('To help each other, then you can achieve your Goals.')
                             ?>
                         </p>
                     </div><!--//content-->
@@ -246,7 +246,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Coach') ?></h3>
-                        <p class="desc"><?= __('You can set your coach. Who is for your best?') ?></p>
+                        <p class="desc"><?= __('Find the best coach for you, and set them as your coach.') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
                 <div class="item clearfix">
@@ -255,7 +255,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Profile') ?></h3>
-                        <p class="desc"><?= __('You can know everyone in your company. That\'s nice, isn\'t it?') ?></p>
+                        <p class="desc"><?= __('Company database at your fingers. Pictures together with names, what are their goals in their work and what actions have they done? All viewable through Goalous.') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
                 <div class="item clearfix">
@@ -264,7 +264,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Vision') ?></h3>
-                        <p class="desc"><?= __('Employees really know the company vision? Make it more known.') ?></p>
+                        <p class="desc"><?= __('Do your employees really know the Company Vision? Make it more known!') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
             </div>

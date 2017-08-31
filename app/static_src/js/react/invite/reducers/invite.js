@@ -10,6 +10,7 @@ const initialState = {
   input_data: {
     emails: "",
   },
+  is_saving: false,
   redirect_to_home: false
 }
 
@@ -19,6 +20,7 @@ export default function invite(state = initialState, action) {
     case types.INVALID:
       return Object.assign({}, state, {
         validation_errors: action.error.validation_errors,
+        is_saving: false
       })
     case types.TO_NEXT_PAGE:
       return Object.assign({}, state, {
@@ -45,8 +47,14 @@ export default function invite(state = initialState, action) {
       })
     case types.REDIRECT_TO_HOME:
       return Object.assign({}, state, {
-        redirect_to_home: true
+        redirect_to_home: true,
+        is_saving: false
       })
+    case types.SAVING:
+      return Object.assign({}, state, {
+        is_saving: true
+      })
+
     default:
       return state;
   }

@@ -373,7 +373,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'TopicMember.team_id = TeamMember.team_id',
                         'TopicMember.user_id = TeamMember.user_id',
-                        'TeamMember.active_flg' => true
+                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
                 [

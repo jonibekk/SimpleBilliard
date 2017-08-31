@@ -4,6 +4,8 @@ App::uses('AppUtil', 'Util');
 App::import('Service', 'InvitationService');
 App::import('Service', 'PaymentService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class InvitationsController
  */
@@ -42,7 +44,7 @@ class InvitationsController extends ApiController
         // Convert to mail address list.
         $emails = AppUtil::convStrToArr($emailsStr);
         // Validation
-        $errors = $InvitationService->validateEmails($emails);
+        $errors = $InvitationService->validateEmails($this->current_team_id, $emails);
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
         }
@@ -104,22 +106,22 @@ class InvitationsController extends ApiController
         }
 
         // Get payment setting by team id
-        $paymentSetting = $PaymentService->get($this->current_team_id);
+        $paySetting = $PaymentService->get($this->current_team_id);
         // Check if exist payment setting
-        if (empty($paymentSetting)) {
+        if (empty($paySetting)) {
             return $this->_getResponseSuccess();
         }
 
-        // TODO: Unify naming charge or amount or billing
-        $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user']);
+        $amountPerUser = $PaymentService->formatCharge($paySetting['amount_per_user'], $paySetting['currency']);
         // Calc charge user count
-        $chargeUserCnt = $InvitationService->calcChargeUserCount($this->current_team_id, $invitationCnt);
+        $chargeUserCnt = $PaymentService->calcChargeUserCount($this->current_team_id, $invitationCnt);
         // Get use days from today to next paymant base date
         $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
         // All days between before payment base date and next payment base date
         $allUseDays = $PaymentService->getCurrentAllUseDays();
         // Calc total charge
-        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+        $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
 
         $res = [
             'amount_per_user' => $amountPerUser,
@@ -156,7 +158,7 @@ class InvitationsController extends ApiController
 
         // Validation
         $emails = $this->request->data("emails");
-        $errors = $InvitationService->validateEmails($emails);
+        $errors = $InvitationService->validateEmails($this->current_team_id, $emails);
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
         }

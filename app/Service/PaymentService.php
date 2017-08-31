@@ -2,8 +2,10 @@
 App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
+App::import('Service', 'TeamService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
+App::uses('TransactionManager', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
@@ -365,22 +367,24 @@ class PaymentService extends AppService
     /**
      * Format total charge by users count when invite users.
      *
-     * @param int  $userCnt
-     * @param int  $currentTimeStamp
-     * @param null $useDaysByNext
-     * @param null $allUseDays
+     * @param int                          $userCnt
+     * @param Enum\PaymentSetting\Currency $currency
+     * @param int                          $currentTimeStamp
+     * @param null                         $useDaysByNext
+     * @param null                         $allUseDays
      *
      * @return string
      */
     public function formatTotalChargeByAddUsers(
         int $userCnt,
+        Enum\PaymentSetting\Currency $currency,
         int $currentTimeStamp = REQUEST_TIMESTAMP,
         $useDaysByNext = null,
         $allUseDays = null
     ): string {
         $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
         // Format ex 1980 → ¥1,980
-        $res = $this->formatCharge($totalCharge);
+        $res = $this->formatCharge($totalCharge, $currency->getValue());
         return $res;
     }
 
@@ -687,6 +691,8 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         // Register Credit Card to stripe
         // Set description as "Team ID: 2" to identify it on Stripe Dashboard
@@ -990,7 +996,7 @@ class PaymentService extends AppService
             // save the invoice history
             $invoiceHistoryData = [
                 'team_id'           => $teamId,
-                'order_date'        => $localCurrentDate,
+                'order_datetime'    => $time,
                 'system_order_code' => '',
             ];
             $InvoiceHistory->clear();
@@ -1059,6 +1065,7 @@ class PaymentService extends AppService
                 AppUtil::varExportOneLine($invoiceHistoryUpdate),
                 AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
             ));
+            return false;
         }
 
         return true;
@@ -1087,16 +1094,8 @@ class PaymentService extends AppService
         // fetching charge histories
         $yesterdayLocalDate = AppUtil::dateYesterday($localCurrentDate);
         $targetEndTs = AppUtil::getEndTimestampByTimezone($yesterdayLocalDate, $timezone);
-        $previousMonthFirstTs = strtotime("-1 month", strtotime(date('Y-m-01', strtotime($yesterdayLocalDate))));
 
-        // target start date will be base day in previous month
-        $targetStartDate = AppUtil::correctInvalidDate(
-            date('Y', $previousMonthFirstTs),
-            date('m', $previousMonthFirstTs),
-            date('d', strtotime($localCurrentDate))
-        );
-        $targetStartTs = AppUtil::getStartTimestampByTimezone($targetStartDate, $timezone);
-        $targetPaymentHistories = $ChargeHistory->findForInvoiceByStartEnd($teamId, $targetStartTs, $targetEndTs);
+        $targetPaymentHistories = $ChargeHistory->findForInvoiceBeforeTs($teamId, $targetEndTs);
         return $targetPaymentHistories;
     }
 
@@ -1226,8 +1225,7 @@ class PaymentService extends AppService
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
-                // Invoices for only Japanese team. So, $timezone will be always Japan time.
-                $timezone = 9;
+                $timezone = Hash::get($v, 'Team.timezone');
 
                 $localCurrentTs = $time + ($timezone * HOUR);
                 $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
@@ -1351,7 +1349,7 @@ class PaymentService extends AppService
     public function charge(
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
-        int $usersCount
+        int $usersCount = 1
     ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1451,14 +1449,14 @@ class PaymentService extends AppService
         ];
 
         try {
-            $Invoice->begin();
+            $this->TransactionManager->begin();
             if (!$Invoice->save($data)) {
                 throw new Exception(sprintf("Fail to update invoice. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
-            $Invoice->commit();
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $Invoice->rollback();
+            $this->TransactionManager->rollback();
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
@@ -1581,4 +1579,64 @@ class PaymentService extends AppService
         return $defaultAamountPerUser;
     }
 
+    /**
+     * Calc charge user count
+     *
+     * @param int $teamId
+     * @param int $addUserCnt
+     *
+     * @return int
+     */
+    function calcChargeUserCount(int $teamId, int $addUserCnt): int
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $maxChargedUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
+        $currentChargeTargetUserCnt = $TeamMember->countChargeTargetUsers($teamId);
+
+        // Regard adding users as charge users as it is
+        //  if current users does not over max charged users
+        if ($currentChargeTargetUserCnt - $maxChargedUserCnt >= 0) {
+            return $addUserCnt;
+        }
+
+        $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
+        return $chargeUserCnt;
+    }
+
+    /**
+     * Is charge user activation or not
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    function isChargeUserActivation(int $teamId): bool
+    {
+        $chargeUserCount = $this->calcChargeUserCount($teamId, 1);
+        return $chargeUserCount === 1;
+    }
+
+    /**
+     * Return Payment type: INVOICE / CREDIT_CARD
+     *
+     * @param int $teamId
+     *
+     * @return null
+     */
+    function getPaymentType(int $teamId)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $paymentSettings = $PaymentSetting->getByTeamId($teamId);
+
+        if (empty($paymentSettings)) {
+            return null;
+        }
+
+        return $paymentSettings['type'];
+    }
 }

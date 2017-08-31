@@ -245,6 +245,53 @@ class PaymentSetting extends AppModel
     }
 
     /**
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    public function getInvoiceByTeamId(int $teamId)
+    {
+        $options = [
+            'fields' => [
+                'PaymentSetting.id',
+                'PaymentSetting.team_id',
+                'PaymentSetting.currency',
+                'PaymentSetting.amount_per_user',
+                'PaymentSetting.payment_base_day',
+                'PaymentSetting.company_country',
+                'Invoice.credit_status',
+                'Invoice.company_name',
+                'Invoice.company_post_code',
+                'Invoice.company_region',
+                'Invoice.company_city',
+                'Invoice.company_street',
+                'Invoice.contact_person_first_name',
+                'Invoice.contact_person_first_name_kana',
+                'Invoice.contact_person_last_name',
+                'Invoice.contact_person_last_name_kana',
+                'Invoice.contact_person_tel',
+                'Invoice.contact_person_email',
+            ],
+            'conditions' => [
+                'PaymentSetting.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'invoices',
+                    'alias'      => 'Invoice',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'PaymentSetting.team_id = Invoice.team_id',
+                        'Invoice.del_flg' => false
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
      * @param int $paymentType
      *
      * @return array

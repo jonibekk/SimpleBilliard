@@ -336,7 +336,7 @@ class Team extends AppModel
             $validate_backup = $this->TeamMember->User->Email->validate;
             $this->TeamMember->User->Email->validate = [
                 'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'maxLength' => ['rule' => ['maxLength', 255]],
                     'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
@@ -424,7 +424,7 @@ class Team extends AppModel
     function resetCurrentTeam()
     {
         $this->current_team = [];
-        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false));
+        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false), 'team_info');
     }
 
     /**
@@ -751,14 +751,21 @@ class Team extends AppModel
      */
     public function isPaidPlan(int $teamId): bool
     {
-        $team = $this->getById($teamId);
-        if (empty($team)) {
-            return false;
-        }
-        if (Hash::get($team, 'service_use_status') == self::SERVICE_USE_STATUS_PAID) {
-            return true;
-        }
-        return false;
+        $status = $this->getServiceUseStatus($teamId);
+        return $status == self::SERVICE_USE_STATUS_PAID;
+    }
+
+    /**
+     * Check free trial plan or not
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isFreeTrial(int $teamId): bool
+    {
+        $status = $this->getServiceUseStatus($teamId);
+        return $status == self::SERVICE_USE_STATUS_FREE_TRIAL;
     }
 
     /**
@@ -797,6 +804,22 @@ class Team extends AppModel
         $res = $this->getByid($teamId);
         if (!empty($res['country'])) {
             return $res['country'];
+        }
+        return null;
+    }
+
+    /**
+     * Get service use status by team id
+     *
+     * @param int $teamId
+     *
+     * @return int|null
+     */
+    public function getServiceUseStatus(int $teamId)
+    {
+        $res = $this->getById($teamId);
+        if (!empty($res['service_use_status'])) {
+            return $res['service_use_status'];
         }
         return null;
     }

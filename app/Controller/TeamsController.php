@@ -5,6 +5,10 @@ App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'PaymentService');
+App::import('Service', 'TeamMemberService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Teams Controller
@@ -16,6 +20,14 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_checkAdmin([
+            'ajax_set_current_team_admin_user_flag',
+            'ajax_set_current_team_evaluation_flag',
+            'ajax_inactivate_team_member',
+            'activate_team_member',
+            'activate_confirm_with_payment',
+            'activate_with_payment'
+        ]);
     }
 
     /**
@@ -106,7 +118,22 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
         $team = $this->Team->getById($this->current_team_id);
-        if ($this->Team->save($this->request->data)) {
+        $updateData = Hash::get($this->request->data, 'Team');
+        if (empty($updateData)) {
+            $this->Notification->outError(__("Failed to change basic team settings."));
+            return $this->redirect($this->referer());
+        }
+
+        $updateFields = [
+            'name',
+            'photo_file_name',
+        ];
+        $isPaidPlan = Hash::get($team, 'service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        if (!$isPaidPlan) {
+            $updateFields[] = 'timezone';
+        }
+
+        if ($this->Team->save($updateData, $updateFields)) {
             Cache::clear(false, 'team_info');
             $this->Notification->outSuccess(__("Changed basic team settings."));
         } else {
@@ -314,6 +341,9 @@ class TeamsController extends AppController
 
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
+        $isPaidPlan = Hash::get($team, 'Team.service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        // Get timezone label
+        $timezoneLabel = $this->getTimezoneLabel($team['Team']['timezone']);
 
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
@@ -344,7 +374,9 @@ class TeamsController extends AppController
             'nextTermStartYm',
             'nextTermEndYm',
             'termLength',
-            'isStartedEvaluation'
+            'isStartedEvaluation',
+            'isPaidPlan',
+            'timezoneLabel'
         ));
 
         return $this->render();
@@ -1026,10 +1058,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_set_current_team_active_flag($member_id, $active_flg)
+    function ajax_inactivate_team_member($teamMemberId)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setActiveFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->inactivate($teamMemberId);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -1083,10 +1115,10 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
+    function ajax_set_current_team_admin_user_flag($member_id, $adminFlg)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $adminFlg);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -1275,7 +1307,7 @@ class TeamsController extends AppController
             $this->User->Email->create(['email' => $email]);
             $this->User->Email->validate = [
                 'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'maxLength' => ['rule' => ['maxLength', 255]],
                     'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
@@ -1984,6 +2016,15 @@ class TeamsController extends AppController
     }
 
     /**
+    * Confirm User Activation
+    *
+    **/
+    public function confirm_user_activation()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    /**
      * insight 系処理の日付データを返す
      *
      * @param $timezone
@@ -2622,5 +2663,110 @@ class TeamsController extends AppController
             }
             $this->Session->write('current_team_id', $this->orig_team_id);
         }
+    }
+
+    /**
+     * Activate team member action
+     * # Paid & charge case
+     *  - Activate team member & charge card|invoice
+     *  - Redirect confirmation page
+     * # Paid & not charge case
+     *  - Activate team member only
+     *  - Reload page
+     * # Free trial case
+     *  - Activate team member only
+     *  - Reload page
+     *
+     * @param int $teamMemberId
+     *
+     * @return void
+     */
+    function activate_team_member(int $teamMemberId)
+    {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // Paid charge case
+        if ($PaymentService->isChargeUserActivation($teamId)) {
+            return $this->redirect('/teams/confirm_activation');
+        }
+
+        // Paid or free trial case
+        if ($this->Team->TeamMember->activate($teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+        }
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * Activate team member confirmation page
+     *
+     * @param int $teamMemberId
+     *
+     * @return CakeResponse
+     */
+    function confirm_activation(int $teamMemberId)
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // TODO.Payment: Should implement confirm backend after frontend PR merged
+
+        return $this->render();
+    }
+
+    /**
+     * Activate team member with payment
+     *
+     * @param int $teamId
+     *
+     * @return void
+     */
+    function activate_with_payment(int $teamMmemberId)
+    {
+
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // Activate
+        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+        }
+
+        return $this->redirect('/teams/main');
     }
 }

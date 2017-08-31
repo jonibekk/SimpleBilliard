@@ -15,9 +15,12 @@ class InvoiceHistory extends AppModel
      * @var array
      */
     public $validate = [
-        'order_date'        => [
-            'date' => [
-                'rule' => ['date'],
+        'order_datetime'    => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notBlank' => [
+                'rule' => 'notBlank',
             ],
         ],
         'system_order_code' => [
@@ -63,17 +66,41 @@ class InvoiceHistory extends AppModel
      */
     public function getByOrderDate(int $teamId, string $date): array
     {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $team = $Team->getById($teamId);
+
+        $dateStart = AppUtil::getStartTimestampByTimezone($date, $team['timezone']);
+        $dateEnd = AppUtil::getEndTimestampByTimezone($date, $team['timezone']);
+
         $options = [
             'fields'     => [
                 'id',
-                'order_date'
+                'order_datetime'
             ],
             'conditions' => [
-                'team_id'    => $teamId,
-                'order_date' => $date,
+                'team_id'           => $teamId,
+                'order_datetime >=' => $dateStart,
+                'order_datetime <=' => $dateEnd,
             ],
         ];
         return $this->find('first', $options);
     }
 
+    /**
+     * Return list of invoice history by their order status
+     *
+     * @param int $creditStatus
+     *
+     * @return array
+     */
+    public function getByOrderStatus(int $creditStatus): array
+    {
+        $options = [
+            'conditions' => [
+                'order_status'    => $creditStatus,
+            ],
+        ];
+        return $this->find('all', $options);
+    }
 }
