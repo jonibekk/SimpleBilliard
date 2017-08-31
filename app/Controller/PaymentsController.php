@@ -76,6 +76,7 @@ class PaymentsController extends AppController
             return $this->redirect('/payments');
         }
 
+        /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
         $paymentType = $PaymentService->getPaymentType($this->current_team_id);
 
@@ -188,6 +189,27 @@ class PaymentsController extends AppController
 
     public function contact_settings()
     {
-        $this->render('contact_settings');
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($this->current_team_id)) {
+            // Redirect to payment page
+            return $this->redirect('/payments');
+        }
+
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $setting = $PaymentSetting->getByTeamId($this->current_team_id);
+
+        // Get country list
+        $countries = Configure::read("countries");
+        $countries = array_map(function($tag) {
+            return array(
+                'name' => $tag['name'],
+                'value' => $tag['code']
+            );
+        }, $countries);
+
+        $this->set(compact('setting', 'countries'));
+
+        return $this->render('contact_settings');
     }
 }

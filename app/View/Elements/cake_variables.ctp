@@ -613,6 +613,7 @@ App::uses('AttachedFile', 'Model');
             "Register": "<?= __("Register") ?>",
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
+            "Update completed": "<?= __("Update completed") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

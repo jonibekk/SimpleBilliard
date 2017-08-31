@@ -43,7 +43,12 @@ if(document.editInvoiceForm) {
         xhr.onload = function() {
             if (xhr.status === 200) {
                 // Updated, redirect to payment pages
-                window.location.href = '/payments';
+                new Noty({
+                    type: 'success',
+                    text: __("Update completed"),
+                }).on('onClose', function() {
+                    window.location.href = '/payments';
+                }).show();
             }
             else {
                 let response  = JSON.parse(xhr.response);
@@ -55,31 +60,4 @@ if(document.editInvoiceForm) {
         };
         xhr.send(urlEncode(data));
     });
-
-    /**
-     * Show validation error on field
-     * @param fieldName
-     * @param message
-     */
-    function setError(fieldName, message) {
-        let field = document.editInvoiceForm.querySelector('input[name=' + fieldName + ']');
-        field.parentNode.className += ' has-error';
-        let error = document.createElement('small');
-        error.className = 'help-block';
-        error.innerHTML = message;
-        field.parentNode.appendChild(error);
-    }
-
-    /**
-     * Remove validation error from field
-     * @param e
-     */
-    function removeError(e) {
-        let field = e.target;
-        field.parentNode.className.remove('has-error');
-        let error = field.parentNode.querySelector('small');
-        if (error) {
-            error.remove();
-        }
-    }
 }
