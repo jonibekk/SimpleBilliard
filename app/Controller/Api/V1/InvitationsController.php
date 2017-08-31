@@ -190,39 +190,28 @@ class InvitationsController extends ApiController
      * re-inviting user
      *
      * this API takes id of user_id
-     * @param int $userId
      *
      * @return CakeResponse
      */
-    public function post_reInvite(int $userId)
+    public function post_reInvite()
     {
-        /** @var TransactionManager $TransactionManager */
-        $TransactionManager = ClassRegistry::init('TransactionManager');
         /** @var Invite $Invite */
         $Invite = ClassRegistry::init('Invite');
-        /** @var Email $Email */
-        $Email = ClassRegistry::init('Email');
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init('InvitationService');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
 
-        $inviteData = $Invite->find('first', [
-            'fields' => ['*'],
-            'conditions' => [
-                'Invite.team_id'        => $this->current_team_id,
-                'Invite.email_verified' => 0,
-                'Email.user_id'         => $userId,
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'emails',
-                    'alias'      => 'Email',
-                    'conditions' => [
-                        'Invite.email = Email.email',
-                    ],
-                ]
-            ]
-        ]);
+        $userId         = $this->request->data('user_id');
+        $requestedEmail = $this->request->data('email');
+        if (intval($userId) <= 0) {
+            return $this->_getResponseBadFail('Invalid user_id');
+        }
+        if (!$this->isEmailValidFormat($requestedEmail)) {
+            return $this->_getResponseBadFail('Invalid email format');
+        }
+
+        $inviteData = $Invite->getUnverifiedWithEmailByUserId($userId, $this->current_team_id);
         if (empty($inviteData)) {
             return $this->_getResponseNotFound();
         }
@@ -231,50 +220,19 @@ class InvitationsController extends ApiController
             return $this->_getResponseBadFail("Error, this user already exists.");
         }
 
-        try {
-            $TransactionManager->begin();
-
-            $requestedEmail = $this->request->data('email');
-            if (is_null($requestedEmail)) {
-                return $this->_getResponseBadFail('Parameter email not found');
-            }
-            if (!$this->isEmailValidFormat($requestedEmail)) {
-                return $this->_getResponseBadFail('Invalid email format');
-            }
-            if ($Email->isVerified($requestedEmail)) {
-                return $this->_getResponseBadFail('Email registered');
-            }
-            // create invitation data
-            $invite = $this->Team->Invite->saveInvite(
-                $requestedEmail,
-                $inviteData['Invite']['team_id'],
-                $inviteData['Invite']['from_user_id'],
-                !empty($inviteData['Invite']['message']) ? $inviteData['Invite']['message'] : null
-            );
-            if (false === $invite) {
-                CakeLog::error('DB error, insert new invite failed');
-                throw new RuntimeException('Error, failed to invite');
-            }
-            // update emails.email
-            $emailData = $inviteData['Email'];
-            $emailData['email'] = $requestedEmail;
-            if (false === $Email->save($emailData)) {
-                CakeLog::error('DB error, update email failed');
-                throw new RuntimeException('Error, failed to invite');
-            }
-            // cancel old invitation
-            // this method return false even if delete(=del_flag) success...
-            $Invite->delete($inviteData['Invite']['id']);
-
-            //send invite mail
-            $this->GlEmail->sendMailInvite($invite, $Team->getCurrentTeam()['Team']['name']);
-
-            $TransactionManager->commit();
-        } catch (Exception $e) {
-            $TransactionManager->rollback();
-            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::error($e->getTraceAsString());
+        if (!$InvitationService->reInvite(
+            $inviteData['Invite'],
+            $inviteData['Email'],
+            $requestedEmail)
+        ) {
             return $this->_getResponseInternalServerError('Error, failed to invite');
+        }
+
+        // Send invitation mail
+        $invitations = $Invite->findByEmails([$requestedEmail]);
+        $team = $Team->getCurrentTeam();
+        foreach ($invitations as $invitation) {
+            $this->GlEmail->sendMailInvite($invitation, Hash::get($team, 'Team.name'));
         }
 
         return $this->_getResponseSuccess([
