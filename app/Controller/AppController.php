@@ -20,6 +20,8 @@ App::import('Service', 'TeamService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Application Controller
  * Add your application-wide methods in the class below, your controllers
@@ -750,9 +752,9 @@ class AppController extends BaseController
                 //相手が現在のチームに所属しているか確認
                 $options = array(
                     'conditions' => array(
-                        'user_id'    => $id,
-                        'team_id'    => $this->Session->read('current_team_id'),
-                        'active_flg' => true,
+                        'user_id' => $id,
+                        'team_id' => $this->Session->read('current_team_id'),
+                        'status'  => Enum\TeamMember\Status::ACTIVE,
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
