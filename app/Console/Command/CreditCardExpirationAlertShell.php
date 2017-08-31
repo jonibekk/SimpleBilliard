@@ -114,10 +114,6 @@ class CreditCardExpirationAlertShell extends AppShell
                 // TODO: Confirm the email text and translations
                 $this->_notifyExpiringCard($teamId, $creditCardInfo);
             }
-            // Credit card already expired
-            else if ($expireYear == $currentYear && $expireMonth > $currentMonth) {
-                // TODO: Send email about expired cards
-            }
 
             // Remove processed from the list
             unset($customerList[Hash::get($creditCard, 'CreditCard.customer_code')]);
