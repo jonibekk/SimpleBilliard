@@ -69,20 +69,23 @@ class PaymentsController extends AppController
     public function method()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        // TODO.Payment:Change view dynamically and must delete
 
-        /** @var PaymentSetting $PaymentSetting */
-        $paymentSettings = $this->PaymentSetting->getByTeamId($this->current_team_id);
-
-        // Invoice
-        if ($paymentSettings['type'] == Enum\PaymentSetting\Type::INVOICE) {
-            return $this->_invoice();
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($this->current_team_id)) {
+            // Redirect to payment page
+            return $this->redirect('/payments');
         }
-        else if ($paymentSettings['type'] == Enum\PaymentSetting\Type::CREDIT_CARD) {
+
+        $PaymentService = ClassRegistry::init("PaymentService");
+        $paymentType = $PaymentService->getPaymentType($this->current_team_id);
+
+        // Credit Card payment
+        if ($paymentType != Enum\PaymentSetting\Type::CREDIT_CARD) {
             return $this->_creditCard();
         }
 
-        return $this->redirect('/payments');
+        // Invoice
+        return $this->_invoice();
     }
 
     private function _invoice()

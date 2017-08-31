@@ -2,6 +2,9 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
+App::uses('PaymentSetting', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class PaymentsController
@@ -335,8 +338,12 @@ class PaymentsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
+        // Check if the team is of invoice payment
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
+        if ($PaymentService->getPaymentType($teamId) != Enum\PaymentSetting\Type::INVOICE) {
+            return $this->_getResponseForbidden();
+        }
 
         // Validate input
         $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
@@ -370,6 +377,18 @@ class PaymentsController extends ApiController
     {
         if ($teamId != $this->current_team_id) {
             return $this->_getResponseNotFound();
+        }
+
+        // Check if paid plan
+        if (!$this->Team->isPaidPlan($teamId)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if the team is of Credit card payment
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        if ($PaymentService->getPaymentType($teamId) != Enum\PaymentSetting\Type::CREDIT_CARD) {
+            return $this->_getResponseForbidden();
         }
 
         /** @var CreditCardService $CreditCardService */

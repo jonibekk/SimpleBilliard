@@ -1617,4 +1617,24 @@ class PaymentService extends AppService
         $chargeUserCount = $this->calcChargeUserCount($teamId, 1);
         return $chargeUserCount === 1;
     }
+
+    /**
+     * Return Payment type: INVOICE / CREDIT_CARD
+     *
+     * @param int $teamId
+     *
+     * @return null
+     */
+    function getPaymentType(int $teamId)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $paymentSettings = $PaymentSetting->getByTeamId($teamId);
+
+        if (empty($paymentSettings['type'])) {
+            return null;
+        }
+
+        return $paymentSettings['type'];
+    }
 }
