@@ -1077,8 +1077,14 @@ class TeamsController extends AppController
      */
     function ajax_invite_setting($user_id, $action_flg)
     {
+        CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
+            'called deprecated method',
+            AppUtil::varExportOneLine([
+                'user_id'    => $user_id,
+                'action_flg' => $action_flg,
+            ])));
         return $this->_ajaxGetResponse([
-            'title' => 'this API is deprecated',
+            'title' => __("Some error occurred. Please try again from the start."),
             'error' => true,
         ]);
     }
