@@ -290,7 +290,8 @@ class Invite extends AppModel
             'order'      => 'Invite.created DESC',
             'conditions' => [
                 'Invite.team_id'        => $team_id,
-                'Invite.email_verified' => 0
+                'Invite.email_verified' => 0,
+                'Invite.del_flg'        => 0,
             ],
             'joins'      => [
                 [
@@ -374,6 +375,7 @@ class Invite extends AppModel
             'conditions' => [
                 'Invite.team_id'        => $teamId,
                 'Invite.email_verified' => 0,
+                'Invite.del_flg'        => 0,
                 'Email.user_id'         => $userId,
             ],
             'joins'      => [
