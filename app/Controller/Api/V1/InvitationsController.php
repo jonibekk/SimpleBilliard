@@ -8,6 +8,8 @@ use Goalous\Model\Enum as Enum;
 
 /**
  * Class InvitationsController
+ *
+ * @property NotificationComponent $Notification
  */
 class InvitationsController extends ApiController
 {
@@ -177,5 +179,77 @@ class InvitationsController extends ApiController
 
         $this->Notification->outSuccess(__("Invited %s people.", count($emails)));
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * re-inviting user
+     *
+     * this API takes id of user_id
+     *
+     * @return CakeResponse
+     */
+    public function post_reInvite()
+    {
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init('Invite');
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init('InvitationService');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        $userId         = $this->request->data('user_id');
+        $requestedEmail = $this->request->data('email') ?? '';
+        if (!AppUtil::isInt($userId)) {
+            return $this->_getResponseBadFail(__('Param is incorrect'));
+        }
+
+        $extractedEmailValidationErrors = $InvitationService->validateEmail($requestedEmail);
+        if (!empty($extractedEmailValidationErrors)) {
+            return $this->_getResponseValidationFail($extractedEmailValidationErrors);
+        }
+
+        $inviteData = $Invite->getUnverifiedWithEmailByUserId($userId, $this->current_team_id);
+        if ($Email->isVerified($requestedEmail)) {
+            return $this->_getResponseBadFail(__("Error, this user already exists."));
+        }
+        if (empty($inviteData)) {
+            return $this->_getResponseNotFound();
+        }
+        if (empty($User->getById($userId))) {
+            return $this->_getResponseNotFound();
+        }
+        if (empty($TeamMember->getWithTeam($this->current_team_id, $userId))) {
+            return $this->_getResponseNotFound();
+        }
+
+        // if already joined, throw error, already exists
+        if ($inviteData['Invite']['email_verified']) {
+            return $this->_getResponseBadFail(__("Error, this user already exists."));
+        }
+
+        if (!$InvitationService->reInvite($inviteData['Invite'], $inviteData['Email'], $requestedEmail)) {
+            $this->Notification->outError(__('Error, failed to invite.'));
+            return $this->_getResponseInternalServerError(__('Error, failed to invite'));
+        }
+
+        // Send invitation mail
+        $invitations = $Invite->findByEmails([$requestedEmail]);
+        $team = $Team->getCurrentTeam();
+        foreach ($invitations as $invitation) {
+            $this->GlEmail->sendMailInvite($invitation, Hash::get($team, 'Team.name'));
+        }
+
+        $messageSuccess = __("Invited %s people.", 1);
+        $this->Notification->outSuccess($messageSuccess);
+
+        return $this->_getResponseSuccess([
+            'message' => $messageSuccess,
+        ]);
     }
 }

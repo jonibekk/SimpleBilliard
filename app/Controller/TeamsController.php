@@ -1065,54 +1065,28 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_invite_setting($invite_id, $action_flg)
+    /**
+     * TODO: delete this API if used place migrated to
+     * /api/v1/invitations/reInvite
+     *
+     * @deprecated
+     * @param $user_id
+     * @param $action_flg
+     *
+     * @return CakeResponse|null
+     */
+    function ajax_invite_setting($user_id, $action_flg)
     {
-        $this->_ajaxPreProcess();
-        $error = false;
-        $error_msg = '';
-        $invite_data = $this->Team->Invite->findById($invite_id);
-
-        // if already joined throw error, already exists
-        if ($invite_data['Invite']['email_verified']) {
-            $error_msg = (__("Error, this user already exists."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
-        }
-
-        // if already expired throw error, you can't cancel
-        if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
-            $error_msg = (__("Error, this invitation already expired, you can't cancel."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
-        }
-
-        // for cancel the old invite
-        $res = $this->Team->Invite->delete($invite_id);
-
-        if ($action_flg == 'Invited') {
-            //save invite mail data
-            $invite = $this->Team->Invite->saveInvite(
-                $invite_data['Invite']['email'],
-                $invite_data['Invite']['team_id'],
-                $invite_data['Invite']['from_user_id'],
-                !empty($invite_data['Invite']['message']) ? $invite_data['Invite']['message'] : null
-            );
-            if (!$invite) {
-                $error = true;
-                $error_msg = (__("Error, failed to invite."));
-                $this->Notification->outError($error_msg);
-            }
-            //send invite mail
-            $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
-            $this->GlEmail->sendMailInvite($invite, $team_name);
-        }
-        $res['title'] = $error_msg;
-        $res['error'] = $error;
-        return $this->_ajaxGetResponse($res);
+        CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
+            'called deprecated method',
+            AppUtil::varExportOneLine([
+                'user_id'    => $user_id,
+                'action_flg' => $action_flg,
+            ])));
+        return $this->_ajaxGetResponse([
+            'title' => __("Some error occurred. Please try again from the start."),
+            'error' => true,
+        ]);
     }
 
     function ajax_set_current_team_admin_user_flag($member_id, $adminFlg)
