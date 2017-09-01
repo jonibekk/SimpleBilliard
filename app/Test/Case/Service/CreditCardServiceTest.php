@@ -331,8 +331,25 @@ class CreditCardServiceTest extends GoalousTestCase
         ], $testingTeamId);
         $d = $this->CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($testingTeamId);
 
+        $this->assertFalse($d['error']);
         $this->assertTrue(
-            (new GoalousDateTime('2019-09-01 00:00:00'))->equalTo($d)
+            (new GoalousDateTime('2019-09-01 00:00:00'))->equalTo($d['expire'])
         );
+
+        $this->CreditCardService->cacheTeamCreditCardExpiration([
+            'error' => true,
+            'year'  => 0,
+            'month' => 0,
+        ], $testingTeamId);
+        $d = $this->CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($testingTeamId);
+
+        $this->assertTrue($d['error']);
+        $this->assertNull($d['expire']);
+
+        $cacheKey = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, true);
+        Cache::delete($cacheKey, 'user_data');
+        $d = $this->CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($testingTeamId);
+        $this->assertFalse($d['error']);
+        $this->assertNull($d['expire']);
     }
 }
