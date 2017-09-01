@@ -243,4 +243,22 @@ class InvitationService extends AppService
             ])));
         return true;
     }
+
+    /**
+     */
+    public function validateEmail(string $email): array
+    {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init("Email");
+        $Email->validate = [
+            'email' => [
+                'maxLength'     => ['rule' => ['maxLength', 255]],
+                'notBlank'      => ['rule' => 'notBlank',],
+                'email'         => ['rule' => ['email'],],
+            ],
+        ];
+        $Email->set(['email' => $email]);
+        $Email->validates();
+        return $this->validationExtract($Email->validationErrors);
+    }
 }
