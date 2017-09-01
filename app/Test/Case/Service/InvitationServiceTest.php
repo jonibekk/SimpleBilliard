@@ -226,4 +226,12 @@ class InvitationServiceTest extends GoalousTestCase
         // TODO.Payment: add unit test cases related charge
     }
 
+    function test_validateEmail()
+    {
+        $extractedEmailValidationErrors = $this->InvitationService->validateEmail('example@example.com');
+        $this->assertEquals([], $extractedEmailValidationErrors);
+
+        $extractedEmailValidationErrors = $this->InvitationService->validateEmail('not_email_format');
+        $this->assertEquals(1, count($extractedEmailValidationErrors['email']));
+    }
 }
