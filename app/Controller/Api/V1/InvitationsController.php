@@ -8,6 +8,8 @@ use Goalous\Model\Enum as Enum;
 
 /**
  * Class InvitationsController
+ *
+ * @property NotificationComponent $Notification
  */
 class InvitationsController extends ApiController
 {
@@ -202,18 +204,19 @@ class InvitationsController extends ApiController
         $Email = ClassRegistry::init('Email');
 
         $userId         = $this->request->data('user_id');
-        $requestedEmail = $this->request->data('email');
-        if (intval($userId) <= 0) {
-            return $this->_getResponseBadFail('Invalid user_id');
+        $requestedEmail = $this->request->data('email') ?? '';
+        if (!AppUtil::isInt($userId)) {
+            return $this->_getResponseBadFail(__('Param is incorrect'));
         }
-        $validateErrors = $this->validateEmail($requestedEmail);
-        if (!empty($validateErrors)) {
-            return $this->_getResponseBadFail($validateErrors['email'][0]);
+
+        $extractedEmailValidationErrors = $InvitationService->validateEmail($requestedEmail);
+        if (!empty($extractedEmailValidationErrors)) {
+            return $this->_getResponseValidationFail($extractedEmailValidationErrors);
         }
 
         $inviteData = $Invite->getUnverifiedWithEmailByUserId($userId, $this->current_team_id);
         if ($Email->isVerified($requestedEmail)) {
-            return $this->_getResponseBadFail("Error, this user already exists.");
+            return $this->_getResponseBadFail(__("Error, this user already exists."));
         }
         if (empty($inviteData)) {
             return $this->_getResponseNotFound();
@@ -227,11 +230,12 @@ class InvitationsController extends ApiController
 
         // if already joined, throw error, already exists
         if ($inviteData['Invite']['email_verified']) {
-            return $this->_getResponseBadFail("Error, this user already exists.");
+            return $this->_getResponseBadFail(__("Error, this user already exists."));
         }
 
         if (!$InvitationService->reInvite($inviteData['Invite'], $inviteData['Email'], $requestedEmail)) {
-            return $this->_getResponseInternalServerError('Error, failed to invite');
+            $this->Notification->outError(__('Error, failed to invite.'));
+            return $this->_getResponseInternalServerError(__('Error, failed to invite'));
         }
 
         // Send invitation mail
@@ -241,28 +245,11 @@ class InvitationsController extends ApiController
             $this->GlEmail->sendMailInvite($invitation, Hash::get($team, 'Team.name'));
         }
 
-        return $this->_getResponseSuccess([
-            'message' => 'Invite succeed'
-        ]);
-    }
+        $messageSuccess = __("Invited %s people.", 1);
+        $this->Notification->outSuccess($messageSuccess);
 
-    /**
-     * return if string $email is valid email format
-     * @param string $email
-     *
-     * @return array
-     */
-    private function validateEmail(string $email): array
-    {
-        /** @var Email $Email */
-        $Email = ClassRegistry::init("Email");
-        $Email->validate = [
-            'maxLength'     => ['rule' => ['maxLength', 255]],
-            'notBlank'      => ['rule' => 'notBlank',],
-            'email'         => ['rule' => ['email'],],
-        ];
-        $Email->set(['email' => $email]);
-        $Email->validates();
-        return $Email->validationErrors;
+        return $this->_getResponseSuccess([
+            'message' => $messageSuccess,
+        ]);
     }
 }
