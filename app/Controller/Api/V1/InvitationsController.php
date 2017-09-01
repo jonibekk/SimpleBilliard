@@ -19,13 +19,6 @@ class InvitationsController extends ApiController
     {
         parent::beforeFilter();
         $this->_checkAdmin();
-
-        if (in_array($this->request->params['action'], [
-            'post_reInvite',
-        ])) {
-            $this->Security->validatePost = false;
-            $this->Security->csrfCheck = false;
-        }
     }
 
     /**
