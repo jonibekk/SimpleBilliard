@@ -259,6 +259,7 @@ class AppController extends BaseController
 
     /**
      * return true if Goalous Mobile App version is not supported
+     *
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -281,6 +282,7 @@ class AppController extends BaseController
      * https://jira.goalous.com/browse/GL-5962
      * return true if Goalous Android App version is deprecated from google play store
      * temporary support: this method should be deleted on future.
+     *
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -533,7 +535,8 @@ class AppController extends BaseController
         $excludeEnvs = [
             'local',
             'isao',
-            'www'
+            'www',
+            'stg',
         ];
 
         // 特定の環境を除外
