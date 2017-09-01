@@ -185,8 +185,6 @@ class InvitationService extends AppService
 
     function reInvite(array $inviteData, array $emailData, string $email): bool
     {
-        /** @var TransactionManager $TransactionManager */
-        $TransactionManager = ClassRegistry::init('TransactionManager');
         /** @var Email $Email */
         $Email = ClassRegistry::init('Email');
         /** @var Team $Team */
@@ -195,7 +193,7 @@ class InvitationService extends AppService
         $Invite = ClassRegistry::init('Invite');
 
         try {
-            $TransactionManager->begin();
+            $this->TransactionManager->begin();
             // create invitation data
             $inviteNew = $Team->Invite->saveInvite(
                 $email,
@@ -204,32 +202,30 @@ class InvitationService extends AppService
                 !empty($inviteData['message']) ? $inviteData['message'] : null
             );
             if (false === $inviteNew) {
-                CakeLog::error(sprintf("[%s]%s data:%s", __METHOD__,
+                throw new RuntimeException(sprintf("[%s]%s data:%s", __METHOD__,
                     'DB error, insert new invite failed',
                     AppUtil::varExportOneLine([
                         'invites.id' => $inviteData['id'],
                         'email'      => $email,
                     ])));
-                throw new RuntimeException('DB error, insert new invite failed');
             }
             // update emails.email
             $emailData['email'] = $email;
             if (false === $Email->save($emailData)) {
-                CakeLog::error(sprintf("[%s]%s data:%s", __METHOD__,
+                throw new RuntimeException(sprintf("[%s]%s data:%s", __METHOD__,
                     'DB error, update email failed',
                     AppUtil::varExportOneLine([
                         'invites.id' => $inviteData['id'],
                         'email'      => $email,
                     ])));
-                throw new RuntimeException('DB error, update email failed');
             }
             // cancel old invitation
             // this method return false even if delete(update del_flag=1) success...
             $Invite->delete($inviteData['id']);
 
-            $TransactionManager->commit();
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $TransactionManager->rollback();
+            $this->TransactionManager->rollback();
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
             return false;
@@ -245,6 +241,11 @@ class InvitationService extends AppService
     }
 
     /**
+     * validate email string
+     * return array for {Controller}->_getResponseValidationFail()
+     * @param string $email
+     *
+     * @return array
      */
     public function validateEmail(string $email): array
     {

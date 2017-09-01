@@ -234,4 +234,9 @@ class InvitationServiceTest extends GoalousTestCase
         $extractedEmailValidationErrors = $this->InvitationService->validateEmail('not_email_format');
         $this->assertEquals(1, count($extractedEmailValidationErrors['email']));
     }
+
+    function test_reInvite()
+    {
+        // TODO: should write test
+    }
 }
