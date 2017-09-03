@@ -164,7 +164,7 @@ class ChargeHistory extends AppModel
         if ($res === false) {
             return [];
         }
-        return $res;
+        return Hash::get($res, 'ChargeHistory') ?? [];
     }
 
     /**

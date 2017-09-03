@@ -13,8 +13,10 @@ use Goalous\Model\Enum as Enum;
  *
  * @property PaymentService $PaymentService
  * @property PaymentSetting $PaymentSetting
+ * @property PaymentSettingChangeLog $PaymentSettingChangeLog
  * @property CreditCard     $CreditCard
  * @property ChargeHistory  $ChargeHistory
+ * @property TeamMember  $TeamMember
  */
 class PaymentServiceTest extends GoalousTestCase
 {
@@ -33,6 +35,8 @@ class PaymentServiceTest extends GoalousTestCase
         'app.charge_history',
         'app.team',
         'app.team_member',
+        'app.job_category',
+        'app.member_type',
         'app.user'
     );
 
@@ -47,24 +51,24 @@ class PaymentServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->PaymentService = ClassRegistry::init('PaymentService');
         $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $this->PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
         $this->ChargeHistory = ClassRegistry::init('ChargeHistory');
         $this->CreditCard = ClassRegistry::init('CreditCard');
         $this->Team = $this->Team ?? ClassRegistry::init('Team');
+        $this->TeamMember = $this->TeamMember ?? ClassRegistry::init('TeamMember');
     }
 
     private function createTestPaymentData(array $data): array
     {
         $default = [
-            'token'                          => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'type'                           => 1,
-            'amount_per_user'                => 1800,
+            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'amount_per_user'                => PaymentService::AMOUNT_PER_USER_JPY,
             'company_name'                   => 'ISAO',
             'company_country'                => 'JP',
             'company_post_code'              => '1110111',
             'company_region'                 => 'Tokyo',
             'company_city'                   => 'Taitou-ku',
             'company_street'                 => '*** ****',
-            'company_tel'                    => '123456789',
             'contact_person_first_name'      => '太郎',
             'contact_person_first_name_kana' => 'タロウ',
             'contact_person_last_name'       => '東京',
@@ -72,7 +76,26 @@ class PaymentServiceTest extends GoalousTestCase
             'contact_person_tel'             => '123456789',
             'contact_person_email'           => 'test@example.com',
             'payment_base_day'               => 15,
-            'currency'                       => 1
+            'currency'                       => Enum\PaymentSetting\Currency::JPY
+        ];
+        return am($default, $data);
+    }
+
+    private function createTestPaymentDataForReg(array $data = []): array
+    {
+        $default = [
+            'company_name'                   => 'ISAO',
+            'company_country'                => 'JP',
+            'company_post_code'              => '1110111',
+            'company_region'                 => 'Tokyo',
+            'company_city'                   => 'Taitou-ku',
+            'company_street'                 => 'Chuo1-2-3',
+            'contact_person_first_name'      => '太郎',
+            'contact_person_first_name_kana' => 'タロウ',
+            'contact_person_last_name'       => '東京',
+            'contact_person_last_name_kana'  => 'トウキョウ',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
         ];
         return am($default, $data);
     }
@@ -86,7 +109,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
             'company_country'  => 'JP'
@@ -104,7 +127,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 10,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
@@ -120,7 +143,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => '',
             'team_id'          => 1,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
@@ -134,7 +157,7 @@ class PaymentServiceTest extends GoalousTestCase
         $payment = $this->createTestPaymentData([
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
@@ -149,7 +172,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 3,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
@@ -163,7 +186,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 33,
             'currency'         => 1
         ]);
@@ -178,7 +201,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 12
         ]);
@@ -193,7 +216,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
@@ -210,7 +233,7 @@ class PaymentServiceTest extends GoalousTestCase
             'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
             'team_id'          => 1,
             'type'             => 1,
-            'amount_per_user'  => 1800,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'payment_base_day' => 15,
             'currency'         => 1
         ]);
@@ -559,9 +582,11 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_applyCreditCardCharge_exception()
     {
         $teamId = 1;
+        $userId = 2;
         try {
             $res = null;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0,
+                $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
@@ -569,7 +594,8 @@ class PaymentServiceTest extends GoalousTestCase
 
         try {
             $res = null;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+                $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
@@ -585,7 +611,8 @@ class PaymentServiceTest extends GoalousTestCase
             $this->PaymentSetting->create();
             $this->PaymentSetting->save($savePaymentSetting, false);
 
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+                $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
@@ -594,7 +621,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = null;
             list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+                $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
@@ -603,47 +631,618 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = null;
             list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1);
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+                $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
         }
         $this->assertEquals(strpos($res, 'Failed to charge.'), 0);
     }
 
-    public function test_applyCreditCardCharge_normal()
+    public function test_applyCreditCardCharge_jp()
     {
-        // TODO.Payment: implement after created data class
-        // Check if saved each data are expected
-        // PaymentSetting, CreditCard, ChargeHistory etc
+        /* Case charge user:1 country:JPY */
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $chargeUserCnt = 1;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'total_amount'     => PaymentService::AMOUNT_PER_USER_JPY * $chargeUserCnt,
+            'tax'              => $this->PaymentService->calcTax('JP', PaymentService::AMOUNT_PER_USER_JPY),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+
+        /* Case charge user:multiple country:JPY */
+        $res = "";
+        try {
+            $chargeUserCnt = 100;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $totalAmount = PaymentService::AMOUNT_PER_USER_JPY * $chargeUserCnt;
+        $expected = [
+            'id'               => 2,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax('JP', $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+
+        /* Case max charge user */
+        $res = "";
+        try {
+            $chargeUserCnt = 99;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $totalAmount = PaymentService::AMOUNT_PER_USER_JPY * $chargeUserCnt;
+        $expected = [
+            'id'               => 3,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax('JP', $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => 199,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
     }
 
-    public function test_applyCreditCardCharge_trn()
+    public function test_applyCreditCardCharge_foreign()
     {
-        // TODO.Payment: implement after created data class
-        // Check if transaction is working and updated charge history is out of transaction
+        $companyCountry = 'US';
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [
+            'amount_per_user' => PaymentService::AMOUNT_PER_USER_USD,
+            'currency'        => Enum\PaymentSetting\Currency::USD,
+            'company_country' => $companyCountry
+        ]);
+        $userId = $this->createActiveUser($teamId);
+
+        /* Case charge user:1*/
+        $res = "";
+        try {
+            $chargeUserCnt = 1;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $totalAmount = PaymentService::AMOUNT_PER_USER_USD * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->currency, 'usd');
+
+
+        /* Case charge user:multiple*/
+        $res = "";
+        try {
+            $chargeUserCnt = 9;
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $totalAmount = PaymentService::AMOUNT_PER_USER_USD * $chargeUserCnt;
+        $expected = [
+            'id'               => 2,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->currency, 'usd');
 
     }
 
-    public function test_registerCreditCardPaymentAndCharge()
+    public function test_charge_ccJp()
     {
-        $token = $this->createToken(self::CARD_MASTERCARD);
-        $userID = $this->createActiveUser(1);
-        $paymentData = $this->createTestPaymentData([
-            'token'            => $token,
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => 1800,
-            'payment_base_day' => 15,
-            'currency'         => 1,
-            'company_country'  => 'JP'
+        $companyCountry = 'JP';
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [
+            'type' => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'company_country' => $companyCountry
+        ]);
+        $userId = $this->createActiveUser($teamId);
+        try {
+            $res = "";
+            $chargeUserCnt = 1;
+            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt, $userId);
+
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']));
+
+
+        try {
+            $res = "";
+            $chargeUserCnt = 1000;
+            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt, $userId);
+
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 2,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt + 1,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']));
+    }
+
+
+    public function test_charge_ccForeign()
+    {
+        $companyCountry = 'PH';
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [
+            'type' => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'company_country' => $companyCountry,
+            'currency' => Enum\PaymentSetting\Currency::USD,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
+        ]);
+        $userId = $this->createActiveUser($teamId);
+        try {
+            $res = "";
+            $chargeUserCnt = 1;
+            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt, $userId);
+
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'tax'              => 0,
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->currency, 'usd');
+
+
+        try {
+            $res = "";
+            $chargeUserCnt = 1000;
+            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt, $userId);
+
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 2,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt + 1,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->currency, 'usd');
+    }
+
+    public function test_charge_invoice()
+    {
+        $companyCountry = 'JP';
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam();
+        $userId = $this->createActiveUser($teamId);
+
+        // Charge user:1
+        try {
+            $res = "";
+            $chargeUserCnt = 1;
+            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt, $userId);
+
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+
+        // Charge user:multiple
+        try {
+            $res = "";
+            $chargeUserCnt = 1;
+            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt, $userId);
+
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'amount_per_user'  => $amountPerUser,
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt + 1,
+        ];
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+
+    }
+
+
+    public function test_registerCreditCardPaymentAndCharge_jp()
+    {
+        $token = 'tok_jp';
+        $teamId = 1;
+        $this->Team->clear();
+        $this->Team->id = 1;
+        $this->Team->save([
+            'service_use_status' => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_state_start_date' => '2017/8/1',
+            'service_use_state_end_date' => '2017/8/15'
+        ], false);
+
+        $userId = $this->createActiveUser($teamId);
+        $paymentData = $this->createTestPaymentDataForReg([]);
+
+        $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $paymentData);
+        // Check response success
+        $this->assertNotNull($res);
+        $this->assertFalse($res["error"]);
+        $this->assertArrayHasKey("customerId", $res);
+
+        // Check saved PaymentSetting data
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $this->assertNotEmpty($paySetting);
+        $this->assertEquals(array_intersect_key($paySetting, $paymentData), $paymentData);
+        $this->assertEquals($paySetting['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+
+        $timezone = $this->Team->getTimezone();
+        $this->assertEquals($paySetting['payment_base_day'], date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
+        $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paySetting['amount_per_user'], PaymentService::AMOUNT_PER_USER_JPY);
+
+        // Check saved CreditCard data
+        $cc = $this->CreditCard->getByTeamId($teamId);
+        $this->assertNotEmpty($cc);
+        $this->assertEquals($cc['payment_setting_id'], $paySetting['id']);
+        $this->assertEquals($cc['customer_code'], $res["customerId"]);
+
+        // Check if saved customer into Stripe
+        $customer = \Stripe\Customer::retrieve($cc['customer_code']);
+        $this->assertEquals($customer->id, $cc['customer_code']);
+        $this->assertNotEmpty($customer->sources->data[0]);
+
+        // Check saved PaymentSettingChangeLog data
+        $payLog = $this->PaymentSettingChangeLog->getLatest($teamId);
+        $this->assertNotEmpty($payLog);
+        $this->assertEquals($payLog['team_id'], $teamId);
+        $this->assertEquals($payLog['user_id'], $userId);
+        $this->assertEquals($payLog['payment_setting_id'], $paySetting['id']);
+        $this->assertEquals($payLog['plain_data'], $paySetting);
+
+        // Check saved ChargeHistory data
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($history['charge_datetime'] <= time());
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => $paySetting['type'],
+            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => $paySetting['amount_per_user'],
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($paySetting['company_country'], $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $this->assertEquals(array_intersect_key($history, $expected), $expected);
+        $this->assertTrue($history['charge_datetime'] <= time());
+        $this->assertNotEmpty($history['stripe_payment_code']);
+
+        $chargeRes = \Stripe\Charge::retrieve($history['stripe_payment_code']);
+        $this->assertNotEmpty($chargeRes);
+        $this->assertEquals($chargeRes->amount, ($history['total_amount'] + $history['tax']));
+        $this->assertEquals($chargeRes->currency, 'jpy');
+
+        // Check if team status updated
+        $team = $this->Team->getById($teamId);
+        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertNull($team['service_use_state_end_date']);
+
+
+        $this->deleteCustomer($res["customerId"]);
+    }
+
+    public function test_registerCreditCardPaymentAndCharge_foreign()
+    {
+        $token = 'tok_au';
+        $teamId = 1;
+        $this->Team->clear();
+        $this->Team->id = 1;
+        $this->Team->save([
+            'service_use_status' => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_state_start_date' => '2017/8/1',
+            'service_use_state_end_date' => '2017/8/15'
+        ], false);
+
+        $userId = $this->createActiveUser($teamId);
+        $paymentData = $this->createTestPaymentDataForReg([
+            'company_country' => 'US'
         ]);
 
-        $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userID, 1, $token, $paymentData);
-
+        $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $paymentData);
+        // Check response success
         $this->assertNotNull($res);
-        $this->assertArrayHasKey("error", $res);
-        $this->assertArrayHasKey("customerId", $res);
         $this->assertFalse($res["error"]);
+        $this->assertArrayHasKey("customerId", $res);
+
+        // Check saved PaymentSetting data
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $this->assertNotEmpty($paySetting);
+        $this->assertEquals(array_intersect_key($paySetting, $paymentData), $paymentData);
+        $this->assertEquals($paySetting['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+
+        $timezone = $this->Team->getTimezone();
+        $this->assertEquals($paySetting['payment_base_day'], date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
+        $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::USD);
+        $this->assertEquals($paySetting['amount_per_user'], PaymentService::AMOUNT_PER_USER_USD);
+
+        // Check saved CreditCard data
+        $cc = $this->CreditCard->getByTeamId($teamId);
+        $this->assertNotEmpty($cc);
+        $this->assertEquals($cc['payment_setting_id'], $paySetting['id']);
+        $this->assertEquals($cc['customer_code'], $res["customerId"]);
+
+        // Check if saved customer into Stripe
+        $customer = \Stripe\Customer::retrieve($cc['customer_code']);
+        $this->assertEquals($customer->id, $cc['customer_code']);
+        $this->assertNotEmpty($customer->sources->data[0]);
+
+        // Check saved PaymentSettingChangeLog data
+        $payLog = $this->PaymentSettingChangeLog->getLatest($teamId);
+        $this->assertNotEmpty($payLog);
+        $this->assertEquals($payLog['team_id'], $teamId);
+        $this->assertEquals($payLog['user_id'], $userId);
+        $this->assertEquals($payLog['payment_setting_id'], $paySetting['id']);
+        $this->assertEquals($payLog['plain_data'], $paySetting);
+
+        // Check saved ChargeHistory data
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($history['charge_datetime'] <= time());
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
+        $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => $paySetting['type'],
+            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => $paySetting['amount_per_user'],
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($paySetting['company_country'], $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $this->assertEquals(array_intersect_key($history, $expected), $expected);
+        $this->assertTrue($history['charge_datetime'] <= time());
+        $this->assertNotEmpty($history['stripe_payment_code']);
+
+        $chargeRes = \Stripe\Charge::retrieve($history['stripe_payment_code']);
+        $this->assertNotEmpty($chargeRes);
+        $this->assertEquals($chargeRes->amount, ($history['total_amount'] + $history['tax']) * 100);
+        $this->assertEquals($chargeRes->currency, 'usd');
+
+        // Check if team status updated
+        $team = $this->Team->getById($teamId);
+        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertNull($team['service_use_state_end_date']);
+
 
         $this->deleteCustomer($res["customerId"]);
     }
@@ -653,14 +1252,14 @@ class PaymentServiceTest extends GoalousTestCase
         // TODO.Payment: fix test and add all pattern test
 
 //        $userID = $this->createActiveUser(1);
-//        $paymentData = $this->createTestPaymentData([
-//            'team_id'          => 1,
-//            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-//            'amount_per_user'  => 1800,
-//            'payment_base_day' => 15,
-//            'currency'         => 1,
-//            'company_country'  => 'JP'
-//        ]);
+        $paymentData = $this->createTestPaymentData([
+            'team_id'          => 1,
+            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'payment_base_day' => 15,
+            'currency'         => 1,
+            'company_country'  => 'JP'
+        ]);
 //        unset($paymentData['token']);
 //
 //        $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
@@ -674,7 +1273,7 @@ class PaymentServiceTest extends GoalousTestCase
 //        $paymentData = $this->createTestPaymentData([
 //            'team_id'          => 1,
 //            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-//            'amount_per_user'  => 1800,
+//            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
 //            'payment_base_day' => 15,
 //            'currency'         => 1,
 //            'company_country'  => 'JP'
@@ -701,7 +1300,7 @@ class PaymentServiceTest extends GoalousTestCase
 //        $paymentData = $this->createTestPaymentData([
 //            'team_id'          => 1,
 //            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-//            'amount_per_user'  => 1800,
+//            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
 //            'payment_base_day' => 15,
 //            'currency'         => 1,
 //            'company_country'  => 'JP'
@@ -1435,11 +2034,6 @@ class PaymentServiceTest extends GoalousTestCase
         // TODO.Payment: implement test code
     }
 
-    public function test_charge()
-    {
-        // TODO.Payment: implement test code
-    }
-
     public function test_getPaymentType_creditCard()
     {
         $this->createCreditCardPayment();
@@ -1463,6 +2057,34 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $res = $this->PaymentService->getPaymentType(1);
         $this->assertNull($res);
+    }
+
+    public function test_calcChargeUserCount_basic()
+    {
+        $teamId = $this->createTeam();
+        $this->createActiveUser($teamId);
+        $res = $this->PaymentService->calcChargeUserCount($teamId, 1);
+        $this->assertEquals($res, 1);
+
+        $this->ChargeHistory->clear();
+        $this->ChargeHistory->save([
+            'team_id' => $teamId,
+            'max_charge_users' => 2
+        ], false);
+        $res = $this->PaymentService->calcChargeUserCount($teamId, 1);
+        $this->assertEquals($res, 0);
+
+        $this->createActiveUser($teamId);
+        $res = $this->PaymentService->calcChargeUserCount($teamId, 1);
+        $this->assertEquals($res, 1);
+
+        $this->ChargeHistory->clear();
+        $this->ChargeHistory->save([
+            'team_id' => $teamId,
+            'max_charge_users' => 5
+        ], false);
+        $res = $this->PaymentService->calcChargeUserCount($teamId, 10);
+        $this->assertEquals($res, 7);
     }
 
     /**

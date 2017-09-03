@@ -128,10 +128,10 @@ class ChargeHistoryTest extends GoalousTestCase
         ], false);
 
         $chargeHistory = $this->ChargeHistory->getLastChargeHistoryByTeamId(1);
-        $this->assertEquals(1, $chargeHistory['ChargeHistory']['id']);
+        $this->assertEquals(1, $chargeHistory['id']);
 
         $chargeHistory = $this->ChargeHistory->getLastChargeHistoryByTeamId(2);
-        $this->assertEquals(3, $chargeHistory['ChargeHistory']['id']);
+        $this->assertEquals(3, $chargeHistory['id']);
 
         $chargeHistory = $this->ChargeHistory->getLastChargeHistoryByTeamId(3);
         $this->assertEquals([], $chargeHistory);
