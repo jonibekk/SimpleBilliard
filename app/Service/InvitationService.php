@@ -161,11 +161,13 @@ class InvitationService extends AppService
             }
 
             /* Charge if paid plan */
-            if ($Team->isPaidPlan($teamId)) {
-                $chargeUserCnt = count($targetUserIds);
+            $addUserCnt = count($targetUserIds);
+            $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $addUserCnt);
+            if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
-                    $teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    $teamId,
+                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                     $chargeUserCnt
                 );
             }

@@ -111,25 +111,30 @@ class InvitationsController extends ApiController
         if (empty($paySetting)) {
             return $this->_getResponseSuccess();
         }
-
-        $amountPerUser = $PaymentService->formatCharge($paySetting['amount_per_user'], $paySetting['currency']);
         // Calc charge user count
         $chargeUserCnt = $PaymentService->calcChargeUserCount($this->current_team_id, $invitationCnt);
-        // Get use days from today to next paymant base date
-        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
-        // All days between before payment base date and next payment base date
-        $allUseDays = $PaymentService->getCurrentAllUseDays();
-        // Calc total charge
-        $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
-        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+        if ($chargeUserCnt == 0) {
+            $res = [
+                'charge_users_count' => 0,
+            ];
+        } else {
+            $amountPerUser = $PaymentService->formatCharge($paySetting['amount_per_user'], $paySetting['currency']);
+            // Get use days from today to next paymant base date
+            $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
+            // All days between before payment base date and next payment base date
+            $allUseDays = $PaymentService->getCurrentAllUseDays();
+            // Calc total charge
+            $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
+            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
 
-        $res = [
-            'amount_per_user' => $amountPerUser,
-            'charge_users_count' => $chargeUserCnt,
-            'use_days_by_next_base_date' => $useDaysByNext,
-            'all_use_days' => $allUseDays,
-            'total_charge' => $totalCharge,
-        ];
+            $res = [
+                'amount_per_user' => $amountPerUser,
+                'charge_users_count' => $chargeUserCnt,
+                'use_days_by_next_base_date' => $useDaysByNext,
+                'all_use_days' => $allUseDays,
+                'total_charge' => $totalCharge,
+            ];
+        }
 
         return $this->_getResponseSuccess($res);
     }
