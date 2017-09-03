@@ -299,7 +299,6 @@ class PaymentService extends AppService
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         if (checkdate($m, $paymentBaseDay, $y) === false) {
-            AppUtil::dateFromYMD($y, $m, 1);
             $prevBaseDate = AppUtil::dateMonthLast(AppUtil::dateFromYMD($y, $m, 1));
         } else {
             $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
@@ -499,17 +498,17 @@ class PaymentService extends AppService
      * - Number format
      * - Currency format
      *
-     * @param int $charge
-     * @param int $currencyType
+     * @param float|int $charge
+     * @param int       $currencyType
      *
      * @return string
      */
     public function formatCharge(float $charge, int $currencyType): string
     {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
         // Format ex 1980 → ¥1,980
-        $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . number_format($charge);
+        $num = number_format($charge, 2);
+        $num = preg_replace("/\.?0+$/", "", $num);
+        $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . $num;
         return $res;
     }
 
@@ -703,7 +702,8 @@ class PaymentService extends AppService
             // Set description as "Team ID: 2" to identify it on Stripe Dashboard
             $contactEmail = Hash::get($paymentData, 'contact_person_email');
             $customerDescription = "Team ID: $teamId";
-            $stripeResponse = $CreditCardService->registerCustomer($creditCardToken, $contactEmail, $customerDescription);
+            $stripeResponse = $CreditCardService->registerCustomer($creditCardToken, $contactEmail,
+                $customerDescription);
             if ($stripeResponse['error'] === true) {
                 $result['error'] = true;
                 $result['message'] = $stripeResponse['message'];
@@ -717,7 +717,8 @@ class PaymentService extends AppService
             // Stripe customer id
             $customerId = $stripeResponse['customer_id'];
             if (empty($customerId)) {
-                throw new Exception(sprintf("Error on Stripe call. stripeResponse:%s",  AppUtil::varExportOneLine($stripeResponse)));
+                throw new Exception(sprintf("Error on Stripe call. stripeResponse:%s",
+                    AppUtil::varExportOneLine($stripeResponse)));
             }
 
             // Variable to later use
@@ -1116,8 +1117,7 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public
-    function findTargetInvoiceChargeHistories(
+    public function findTargetInvoiceChargeHistories(
         int $teamId,
         int $time
     ) {
@@ -1158,8 +1158,7 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public
-    function findMonthlyChargeCcTeams(
+    public function findMonthlyChargeCcTeams(
         int $time = REQUEST_TIMESTAMP
     ): array {
         /** @var PaymentSetting $PaymentSetting */
@@ -1220,8 +1219,7 @@ class PaymentService extends AppService
      * @return array
      * @internal param int|null $targetTimezone
      */
-    public
-    function findMonthlyChargeInvoiceTeams(
+    public function findMonthlyChargeInvoiceTeams(
         int $time = REQUEST_TIMESTAMP
     ): array {
         /** @var PaymentSetting $PaymentSetting */
@@ -1267,8 +1265,7 @@ class PaymentService extends AppService
      *
      * @return array|bool
      */
-    public
-    function updatePayerInfo(
+    public function updatePayerInfo(
         int $teamId,
         int $userId,
         array $payerData

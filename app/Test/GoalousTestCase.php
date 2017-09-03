@@ -908,7 +908,7 @@ class GoalousTestCase extends CakeTestCase
      *
      * @param $customerId
      */
-    function deleteCustomer($customerId)
+    function test_deleteCustomer($customerId)
     {
         $res = $this->CreditCardService->deleteCustomer($customerId);
 

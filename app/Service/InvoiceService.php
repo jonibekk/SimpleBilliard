@@ -187,6 +187,7 @@ class InvoiceService extends AppService
     }
 
     /**
+     * TODO.Payment: add space between field
      * @param array $invoice
      *
      * @return string
@@ -197,6 +198,7 @@ class InvoiceService extends AppService
     }
 
     /**
+     * TODO.Payment: add space between field
      * @param array $invoice
      *
      * @return string
@@ -207,6 +209,7 @@ class InvoiceService extends AppService
     }
 
     /**
+     * TODO.Payment: add space between field
      * @param array $invoice
      *
      * @return string
