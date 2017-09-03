@@ -283,11 +283,25 @@ class Invite extends AppModel
     function getInviteUserList($team_id)
     {
         $options = [
-            'fields'     => ['email', 'created', 'id', 'del_flg', 'email_token_expires'],
+            'fields'     => [
+                'Invite.email', 'Invite.created', 'Invite.id', 'Invite.del_flg', 'Invite.email_token_expires',
+                'Email.user_id',
+            ],
             'order'      => 'Invite.created DESC',
             'conditions' => [
-                'team_id'        => $team_id,
-                'email_verified' => 0
+                'Invite.team_id'        => $team_id,
+                'Invite.email_verified' => 0,
+                'Invite.del_flg'        => 0,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Invite.email = Email.email',
+                    ],
+                ]
             ]
         ];
         $res = $this->find('all', $options);
@@ -343,4 +357,37 @@ class Invite extends AppModel
         return Hash::extract($invites, '{n}.Invite');
     }
 
+    /**
+     * find unverified Invite with Email by users.id
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function getUnverifiedWithEmailByUserId(int $userId, int $teamId): array
+    {
+        return $this->find('first', [
+            'fields' => [
+                    'Invite.id', 'Invite.from_user_id', 'Invite.to_user_id', 'Invite.team_id', 'Invite.email',
+                    'Invite.email_verified', 'Invite.message',
+                    'Email.id', 'Email.email'
+                ],
+            'conditions' => [
+                'Invite.team_id'        => $teamId,
+                'Invite.email_verified' => 0,
+                'Invite.del_flg'        => 0,
+                'Email.user_id'         => $userId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Invite.email = Email.email',
+                    ],
+                ]
+            ]
+        ]);
+    }
 }

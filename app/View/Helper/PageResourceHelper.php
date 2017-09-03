@@ -78,7 +78,13 @@ class PageResourceHelper extends AppHelper
             ],
             'method' => [
                 '/js/goalous_payment.min',
-            ]
+            ],
+            'contact_settings' => [
+                '/js/goalous_payment.min',
+            ],
+            'index' => [
+                '/js/goalous_payment.min',
+            ],
         ]
     ];
 

@@ -5,9 +5,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <section class="panel company-info paymentMethod">
-    <div class="form-group">
-        <?= $this->element('Payment/method_select') ?>
-    </div>
+    <?= $this->element('Payment/method_select') ?>
     <h3><?= __("Billing Information") ?></h3>
     <form class="form-horizontal" name="editInvoiceForm" id="editInvoiceForm" accept-charset="utf-8">
         <div class="form-group">
