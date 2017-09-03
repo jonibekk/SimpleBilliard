@@ -1153,7 +1153,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
         $this->assertNull($team['service_use_state_end_date']);
 
-        $this->CreditCardService->deleteCustomer($res["customer_id"]);
+        $this->deleteCustomer($res["customerId"]);
     }
 
     public function test_registerCreditCardPaymentAndCharge_foreign()
@@ -1245,7 +1245,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
         $this->assertNull($team['service_use_state_end_date']);
 
-        $this->CreditCardService->deleteCustomer($res["customer_id"]);
+        $this->deleteCustomer($res["customerId"]);
     }
 
     public function test_registerInvoicePayment()
