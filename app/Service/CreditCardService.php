@@ -334,6 +334,11 @@ class CreditCardService extends AppService
             $result["status"] = $response->status;
             $result["paymentData"] = $response;
         } catch(\Stripe\Error\Card $e) {
+            /**
+             * in this catch case, API request is success
+             * but credit card can not use for charge
+             * @see https://stripe.com/docs/api#error_handling
+             */
             $result["isApiRequestSucceed"] = true;
             $result["success"] = false;
             $result["error"] = true;
