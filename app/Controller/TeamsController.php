@@ -2751,7 +2751,8 @@ class TeamsController extends AppController
         }
 
         // Activate
-        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId)) {
+        $userId = $this->Auth->user('id');
+        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId, $userId)) {
             // TODO: Should display translation correctry by @kohei
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
         } else {

@@ -68,7 +68,7 @@ export default class Confirm extends Base {
               {emails_el}
             </ul>
           </div>
-          {is_paid_plan &&
+          {(is_paid_plan && confirm_data.charge_users_count > 0) &&
           <div className="inviteCfmBlock mod-bdt">
             <h2 className="title">請求料金</h2>
             <div className="ml_5px">
