@@ -139,7 +139,6 @@ App::build([
     'Service' => ['%s' . 'Service' . DS]
 ], App::REGISTER);
 
-
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
 CakePlugin::load('UrlCache');
