@@ -34,8 +34,8 @@ class CreditCardService extends AppService
                 $result["errorCode"] = $e->stripeCode;
             }
 
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
         }
 
         return $result;
@@ -87,8 +87,8 @@ class CreditCardService extends AppService
                 $result["errorCode"] = $e->stripeCode;
             }
 
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
         }
 
         return $result;
@@ -128,8 +128,8 @@ class CreditCardService extends AppService
                 'month' => $card['exp_month'] ?? 0,
             ], $teamId);
         } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
             $CreditCardService->cacheTeamCreditCardExpiration([
                 'error' => true,
                 'year'  => 0,
@@ -149,7 +149,7 @@ class CreditCardService extends AppService
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
         $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
-        $this->log("cache credit card expiration date to redis: {$keyRedisCache}", LOG_INFO);
+        CakeLog::error("cache credit card expiration date to redis: {$keyRedisCache}", LOG_INFO);
         Cache::set('duration', self::CACHE_TTL_SECONDS_TEAM_CREDIT_CARD_EXPIRE_DATE, 'user_data');
         Cache::write($keyRedisCache, msgpack_pack($data), 'user_data');
     }
@@ -236,8 +236,8 @@ class CreditCardService extends AppService
                 $result["errorCode"] = $e->stripeCode;
             }
 
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
         }
 
         return $result;
@@ -317,13 +317,13 @@ class CreditCardService extends AppService
                 $result["errorCode"] = $e->stripeCode;
             }
 
-            $this->log(sprintf("[%s]%s  data:%s",
+            CakeLog::emergency(sprintf("[%s]%s  data:%s",
                 __METHOD__,
                 $e->getMessage(),
                 AppUtil::varExportOneLine(compact('charge')
                 )
             ));
-            $this->log($e->getTraceAsString());
+            CakeLog::emergency($e->getTraceAsString());
         }
 
         return $result;
@@ -352,8 +352,8 @@ class CreditCardService extends AppService
             $stripeCode = property_exists($e, "stripeCode") ? $e->stripeCode : null;
             $errorLog = sprintf("Failed to update credit card info. customerId: %s, token: %s, message: %s, stripeCode: %s",
                 $customerId, $token, $message, $stripeCode);
-            CakeLog::error(sprintf("[%s]%s", __METHOD__, $errorLog));
-            CakeLog::error($e->getTraceAsString());
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $errorLog));
+            CakeLog::emergency($e->getTraceAsString());
 
             $result["error"] = true;
             $result["message"] = $message;
@@ -511,8 +511,8 @@ class CreditCardService extends AppService
                 $result["errorCode"] = $e->stripeCode;
             }
 
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
         }
         return $result;
     }

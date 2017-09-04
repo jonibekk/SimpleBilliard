@@ -2,6 +2,10 @@
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('Email', 'Model');
+App::uses('AppController', 'Controller');
+App::uses('ComponentCollection', 'Controller');
+App::uses('Component', 'Controller');
+App::uses('GlEmailComponent', 'Controller/Component');
 
 use Goalous\Model\Enum as Enum;
 
@@ -68,7 +72,8 @@ class InvitationService extends AppService
         $existEmails = $Email->findExistByTeamId($teamId, $emails);
         $errEmails = array_intersect($emails, $existEmails);
         foreach ($errEmails as $i => $mail) {
-            $errors[] = __("Line %d", $i + 1) . "：" . __("This email address has already been used. Use another email address.");
+            $errors[] = __("Line %d",
+                    $i + 1) . "：" . __("This email address has already been used. Use another email address.");
         }
         return $errors;
     }
@@ -142,7 +147,7 @@ class InvitationService extends AppService
             $targetUserIds = $User->findNotBelongToTeamByEmail($teamId, $emails);
             if (count($targetUserIds) != count($emails)) {
                 throw new Exception(sprintf("Inconsistent users and emails. data:%s",
-                    AppUtil::varExportOneLine(compact('emails', 'targetUserIds', 'teamId')))
+                        AppUtil::varExportOneLine(compact('emails', 'targetUserIds', 'teamId')))
                 );
             }
 
@@ -161,12 +166,15 @@ class InvitationService extends AppService
             }
 
             /* Charge if paid plan */
-            if ($Team->isPaidPlan($teamId)) {
-                $chargeUserCnt = count($targetUserIds);
+            $addUserCnt = count($targetUserIds);
+            $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $addUserCnt);
+            if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
-                    $teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
-                    $chargeUserCnt
+                    $teamId,
+                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    $chargeUserCnt,
+                    $fromUserId
                 );
             }
             $this->TransactionManager->commit();
@@ -177,5 +185,86 @@ class InvitationService extends AppService
             return false;
         }
         return true;
+    }
+
+    function reInvite(array $inviteData, array $emailData, string $email): bool
+    {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init('Invite');
+
+        try {
+            $this->TransactionManager->begin();
+            // create invitation data
+            $inviteNew = $Team->Invite->saveInvite(
+                $email,
+                $inviteData['team_id'],
+                $inviteData['from_user_id'],
+                !empty($inviteData['message']) ? $inviteData['message'] : null
+            );
+            if (false === $inviteNew) {
+                throw new RuntimeException(sprintf("[%s]%s data:%s", __METHOD__,
+                    'DB error, insert new invite failed',
+                    AppUtil::varExportOneLine([
+                        'invites.id' => $inviteData['id'],
+                        'email'      => $email,
+                    ])));
+            }
+            // update emails.email
+            $emailData['email'] = $email;
+            if (false === $Email->save($emailData)) {
+                throw new RuntimeException(sprintf("[%s]%s data:%s", __METHOD__,
+                    'DB error, update email failed',
+                    AppUtil::varExportOneLine([
+                        'invites.id' => $inviteData['id'],
+                        'email'      => $email,
+                    ])));
+            }
+            // cancel old invitation
+            // this method return false even if delete(update del_flag=1) success...
+            $Invite->delete($inviteData['id']);
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return false;
+        }
+        CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
+            'Re-invite succeed',
+            AppUtil::varExportOneLine([
+                'old.invites.id' => $inviteData['id'],
+                'new.invites.id' => $inviteNew['Invite']['id'],
+                'email'          => $email,
+            ])));
+        return true;
+    }
+
+    /**
+     * validate email string
+     * return array for {Controller}->_getResponseValidationFail()
+     *
+     * @param string $email
+     *
+     * @return array
+     */
+    public function validateEmail(string $email): array
+    {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init("Email");
+        $Email->validate = [
+            'email' => [
+                'maxLength' => ['rule' => ['maxLength', 255]],
+                'notBlank'  => ['rule' => 'notBlank',],
+                'email'     => ['rule' => ['email'],],
+            ],
+        ];
+        $Email->set(['email' => $email]);
+        $Email->validates();
+        return $this->validationExtract($Email->validationErrors);
     }
 }

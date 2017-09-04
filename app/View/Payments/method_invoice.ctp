@@ -1,6 +1,6 @@
 <?php
 /**
- * @var array   $invoice
+ * @var array $invoice
  */
 ?>
 <?= $this->App->viewStartComment() ?>
@@ -13,7 +13,7 @@
             <input
                     type="text" id="PaymentsCompanyName" name="company_name" value="<?= $invoice['company_name'] ?>"
                     required class="form-control"
-                    placeholder="株式会社ISAO" maxlength="255">
+                    placeholder="<?= __("ISAO Corporation") ?>" maxlength="255">
         </div>
         <fieldset class="company-info-fieldset">
             <legend class="company-info-legend"><?= __("Company Address") ?></legend>
@@ -21,7 +21,7 @@
                 <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Post Code") ?></label>
                 <input type="tel" id="PaymentsCompanyPostCode" name="company_post_code"
                        value="<?= $invoice['company_post_code'] ?>" required
-                       class="form-control" placeholder="1100053" maxlength="16">
+                       class="form-control" placeholder="<?= __("12345") ?>" maxlength="16">
             </div>
             <div class="form-group">
                 <label for="PaymentsCompanyAddressRegion"
@@ -30,7 +30,7 @@
                        id="company_region"
                        name="company_region" value="<?= $invoice['company_region'] ?>" required
                        class="form-control"
-                       placeholder="東京都"
+                       placeholder="<?= __("California") ?>"
                        maxlength="255">
             </div>
             <div class="form-group">
@@ -40,7 +40,7 @@
                        id="PaymentsCompanyAddressCity"
                        name="company_city" value="<?= $invoice['company_city'] ?>" required
                        class="form-control"
-                       placeholder="台東区浅草橋5丁目"
+                       placeholder="<?= __("Los Angeles") ?>"
                        maxlength="255">
             </div>
             <div class="form-group">
@@ -50,7 +50,7 @@
                        id="PaymentsCompanyAddressStreet"
                        name="company_street"
                        value="<?= $invoice['company_street'] ?>" required class="form-control"
-                       placeholder="20番8号 CSタワー7階"
+                       placeholder="<?= __("1234 Street Name") ?>"
                        maxlength="255">
             </div>
         </fieldset>
@@ -61,13 +61,13 @@
                 <div class="flex">
                     <input type="text" id="PaymentsContactPersonLastName" name="contact_person_last_name"
                            value="<?= $invoice['contact_person_last_name'] ?>" required class="form-control   mr_8px"
-                           placeholder="例) 鈴木">
+                           placeholder="<?= __("Smith") ?>">
                     <input type="text"
                            id="PaymentsContactPersonFirstName"
                            name="contact_person_first_name"
                            value="<?= $invoice['contact_person_first_name'] ?>" required
                            class="form-control  "
-                           placeholder="例) 太郎">
+                           placeholder="<?= __("John") ?>">
                 </div>
             </div>
             <div class="form-group">

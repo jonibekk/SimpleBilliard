@@ -59,7 +59,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertArrayHasKey("customer_id", $res);
         $this->assertArrayHasKey("card", $res);
 
-        $this->deleteCustomer($res["customer_id"]);
+        $this->CreditCardService->deleteCustomer($res["customer_id"]);
     }
 
     /**
@@ -142,7 +142,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertArrayHasKey("success", $res);
         $this->assertTrue($res["success"]);
 
-        $this->deleteCustomer($customerId);
+        // TODO.Payment: Add unit test case if foreign country and check currency
     }
 
     /**
@@ -157,8 +157,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("error", $res);
         $this->assertTrue($res["error"]);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_update()
@@ -168,8 +166,6 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertFalse($res['error']);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_update_invalidToken()
@@ -178,8 +174,6 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $res = $this->CreditCardService->updateCreditCard($customerId, 'xxxxxxxxx', 3);
         $this->assertTrue($res['error']);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_update_cardDeclined()
@@ -190,8 +184,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_DECLINED);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_update_incorrectCVC()
@@ -202,8 +194,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_INCORRECT_CVC);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_update_cardExpired()
@@ -214,8 +204,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_EXPIRED);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_update_processingError()
@@ -226,8 +214,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->updateCreditCard($customerId, $newCardToken, 3);
         $this->assertTrue($res['error']);
         $this->assertEqual($res['errorCode'], self::ERR_CODE_CARD_PROCESSING_ERROR);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_retrieveCustomer()
@@ -237,8 +223,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->retrieveCustomer($customerId);
         $this->assertFalse($res["error"]);
         $this->assertArrayHasKey("customer", $res);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_retrieveCustomer_invalidId()
@@ -256,8 +240,6 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->retrieveCreditCard($customerId);
         $this->assertFalse($res["error"]);
         $this->assertArrayHasKey("creditCard", $res);
-
-        $this->deleteCustomer($customerId);
     }
 
     function test_retrieveCreditCard_invalidId()
@@ -267,11 +249,11 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->retrieveCreditCard($customerId);
         $this->assertTrue($res["error"] === true);
     }
-    
+
     /**
      * Assert a list have been returned.
      */
-    function test_listAllCustomers()
+    function test_listCustomers()
     {
         $res = $this->CreditCardService->listCustomers();
 
@@ -334,5 +316,15 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertTrue(
             (new GoalousDateTime('2019-09-01 00:00:00'))->equalTo($d)
         );
+    }
+
+    function test_retrieveToken()
+    {
+        // TODO.Payment: add unit tests.
+    }
+
+    function test_updateCreditCard()
+    {
+        // TODO.Payment: add unit tests.
     }
 }

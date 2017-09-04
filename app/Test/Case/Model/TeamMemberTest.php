@@ -2194,4 +2194,13 @@ class TeamMemberTest extends GoalousTestCase
         $inactiveTeamMemberId = $this->createTeamMember(2, 2, TeamMember::USER_STATUS_INACTIVE);
         $this->assertTrue($this->TeamMember->isInactive($inactiveTeamMemberId));
     }
+
+    public function test_getUserById()
+    {
+        $userId = $this->createActiveUser(1);
+        $tmId = $this->TeamMember->getLastInsertId();
+
+        $res = $this->TeamMember->getUserById($tmId);
+        $this->assertEquals($res['id'], $userId);
+    }
 }

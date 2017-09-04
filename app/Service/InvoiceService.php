@@ -25,6 +25,7 @@ class InvoiceService extends AppService
      * @param string $orderDate
      *
      * @return array responce from atobarai.com
+     * @throws Exception
      */
     function registerOrder(
         int $teamId,
@@ -36,57 +37,62 @@ class InvoiceService extends AppService
         $Invoice = ClassRegistry::init('Invoice');
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
-        $team = $Team->getById($teamId);
-        $timezone = $team['timezone'];
-        $invoiceInfo = $Invoice->getByTeamId($teamId);
 
-        // calc amount total
-        $addedUserAmount = $this->getAddedUserAmount($targetChargeHistories);
-        $amountTotal = $addedUserAmount + $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
+        try {
+            $team = $Team->getById($teamId);
+            $timezone = $team['timezone'];
+            $invoiceInfo = $Invoice->getByTeamId($teamId);
 
-        $data = [
-            'O_ReceiptOrderDate'     => $orderDate,
-            'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + ($timezone * HOUR)),
-            // provided date cannot be specified past date
-            'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
-            'O_SiteId'               => ATOBARAI_SITE_ID,
-            'O_ApiUserId'            => ATOBARAI_API_USER_ID,
-            'O_UseAmount'            => $amountTotal,
-            'O_Ent_Note'             => "ご請求対象チーム名: " . $team['name'],
-            'C_PostalCode'           => $invoiceInfo['company_post_code'],
-            'C_UnitingAddress'       => $this->getCompanyAddress($invoiceInfo),
-            'C_CorporateName'        => $invoiceInfo['company_name'],
-            'C_NameKj'               => $this->getContactNameKj($invoiceInfo),
-            'C_NameKn'               => $this->getContactNameKana($invoiceInfo),
-            'C_CpNameKj'             => $this->getContactNameKj($invoiceInfo),
-            'C_Phone'                => $invoiceInfo['contact_person_tel'],
-            'C_MailAddress'          => $invoiceInfo['contact_person_email'],
-            'C_EntCustId'            => $teamId,
-        ];
+            // calc amount total
+            $addedUserAmount = $this->getAddedUserAmount($targetChargeHistories);
+            $amountTotal = $addedUserAmount + $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
 
-        // for added users charge
-        $itemIndex = 0;
-        if (!empty($targetChargeHistories)) {
-            foreach ($targetChargeHistories as $targetChargeHistory) {
-                $chargeDate = date('n/j', $targetChargeHistory['charge_datetime'] + ($timezone * HOUR));
-                $data["I_ItemNameKj_{$itemIndex}"] = "{$chargeDate} Goalous追加利用料";
-                $data["I_UnitPrice_{$itemIndex}"] = $targetChargeHistory['total_amount'] + $targetChargeHistory['tax'];
-                $data["I_ItemNum_{$itemIndex}"] = 1;
-                $itemIndex++;
+            $data = [
+                'O_ReceiptOrderDate'     => $orderDate,
+                'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + ($timezone * HOUR)),
+                // provided date cannot be specified past date
+                'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
+                'O_SiteId'               => ATOBARAI_SITE_ID,
+                'O_ApiUserId'            => ATOBARAI_API_USER_ID,
+                'O_UseAmount'            => $amountTotal,
+                'O_Ent_Note'             => "ご請求対象チーム名: " . $team['name'],
+                'C_PostalCode'           => $invoiceInfo['company_post_code'],
+                'C_UnitingAddress'       => $this->getCompanyAddress($invoiceInfo),
+                'C_CorporateName'        => $invoiceInfo['company_name'],
+                'C_NameKj'               => $this->getContactNameKj($invoiceInfo),
+                'C_NameKn'               => $this->getContactNameKana($invoiceInfo),
+                'C_CpNameKj'             => $this->getContactNameKj($invoiceInfo),
+                'C_Phone'                => $invoiceInfo['contact_person_tel'],
+                'C_MailAddress'          => $invoiceInfo['contact_person_email'],
+                'C_EntCustId'            => $teamId,
+            ];
+
+            // for added users charge
+            $itemIndex = 0;
+            if (!empty($targetChargeHistories)) {
+                foreach ($targetChargeHistories as $targetChargeHistory) {
+                    $chargeDate = date('n/j', $targetChargeHistory['charge_datetime'] + ($timezone * HOUR));
+                    $data["I_ItemNameKj_{$itemIndex}"] = "{$chargeDate} Goalous追加利用料";
+                    $data["I_UnitPrice_{$itemIndex}"] = $targetChargeHistory['total_amount'] + $targetChargeHistory['tax'];
+                    $data["I_ItemNum_{$itemIndex}"] = 1;
+                    $itemIndex++;
+                }
             }
+
+            // for monthly charge
+            $monthlyStartDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
+            $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyEndDate']));
+            $data["I_ItemNameKj_{$itemIndex}"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
+            $data["I_UnitPrice_{$itemIndex}"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
+            $data["I_ItemNum_{$itemIndex}"] = 1;
+
+            // request to atobarai.com
+            $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
+            $resAtobarai = am($resAtobarai, ['requestData' => $data]);
+            return $resAtobarai;
+        } catch (Exception $e) {
+            throw $e;
         }
-
-        // for monthly charge
-        $monthlyStartDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
-        $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyEndDate']));
-        $data["I_ItemNameKj_{$itemIndex}"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
-        $data["I_UnitPrice_{$itemIndex}"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
-        $data["I_ItemNum_{$itemIndex}"] = 1;
-
-        // request to atobarai.com
-        $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
-        $resAtobarai = am($resAtobarai, ['requestData' => $data]);
-        return $resAtobarai;
     }
 
     /**
@@ -181,6 +187,7 @@ class InvoiceService extends AppService
     }
 
     /**
+     * TODO.Payment: add space between field
      * @param array $invoice
      *
      * @return string
@@ -191,6 +198,7 @@ class InvoiceService extends AppService
     }
 
     /**
+     * TODO.Payment: add space between field
      * @param array $invoice
      *
      * @return string
@@ -201,6 +209,7 @@ class InvoiceService extends AppService
     }
 
     /**
+     * TODO.Payment: add space between field
      * @param array $invoice
      *
      * @return string
@@ -230,8 +239,8 @@ class InvoiceService extends AppService
     /**
      * Update invoice and invoice history tables with credit status
      *
-     * @param int   $invoiceHistoryId
-     * @param int   $creditStatus
+     * @param int $invoiceHistoryId
+     * @param int $creditStatus
      *
      * @return bool
      */
@@ -251,7 +260,7 @@ class InvoiceService extends AppService
         $invoiceHistory['order_status'] = $creditStatus;
         $invoice = $Invoice->getByTeamId($invoiceHistory['team_id']);
         if (empty($invoice)) {
-            $this->log("Invoice not found for invoice history. TeamId: " . $invoiceHistory['team_id']);
+            CakeLog::error("Invoice not found for invoice history. TeamId: " . $invoiceHistory['team_id']);
             return false;
         }
         $invoice['credit_status'] = $creditStatus;
@@ -274,8 +283,8 @@ class InvoiceService extends AppService
             $InvoiceHistory->commit();
         } catch (Exception $e) {
             $InvoiceHistory->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
             return false;
         }
         return true;

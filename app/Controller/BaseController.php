@@ -429,6 +429,9 @@ class BaseController extends Controller
         // Check if team administrator
         $userId = $this->Auth->user('id');
         $teamId = $this->current_team_id;
+        if (empty($userId) || empty($teamId)) {
+            return false;
+        }
         return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
     }
 }

@@ -14,10 +14,11 @@ class TeamMemberService extends AppService
      *
      * @param int $teamId
      * @param int $teamMemberId
+     * @param int $opeUserId
      *
      * @return bool
      */
-    public function activateWithPayment(int $teamId, int $teamMemberId): bool
+    public function activateWithPayment(int $teamId, int $teamMemberId, int $opeUserId): bool
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
@@ -38,7 +39,10 @@ class TeamMemberService extends AppService
             // Charge if paid plan
             if ($Team->isPaidPlan($teamId)) {
                 $PaymentService->charge(
-                    $teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE()
+                    $teamId,
+                    Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                    1,
+                    $opeUserId
                 );
             }
         } catch (Exception $e) {

@@ -19,10 +19,12 @@ class BannerHelper extends AppHelper
      * @param bool   $isTeamAdmin
      * @param string $stateEndDate
      * @param int    $teamCreditCardStatus
+     * @param string $teamCreditCardExpireDate
+     * @param bool   $statusPaymentFailed
      *
      * @return string
      */
-    public function getBannerMessage(int $serviceUseStatus, bool $isTeamAdmin, string $stateEndDate, int $teamCreditCardStatus, string $teamCreditCardExpireDate): string
+    public function getBannerMessage(int $serviceUseStatus, bool $isTeamAdmin, string $stateEndDate, int $teamCreditCardStatus, string $teamCreditCardExpireDate, bool $statusPaymentFailed): string
     {
         // TODO: this Helper needs to be mode flexibility
         // if developer adding another banner message pattern next time
@@ -30,6 +32,12 @@ class BannerHelper extends AppHelper
         //  public function getBannerMessage(InterfaceBannerMessage $bannerMessage): string
 
         $stateEndDate = $this->TimeEx->formatYearDayI18nFromDate($stateEndDate);
+
+        if ($statusPaymentFailed) {
+            // TODO: need to decide priority of message
+            // TODO: this message string is temporary
+            return __('Your team latest payment failed.');
+        }
 
         switch ($serviceUseStatus) {
             case Team::SERVICE_USE_STATUS_READ_ONLY:

@@ -15,9 +15,9 @@ App::uses('AttachedFile', 'Model');
         sentry_dsn: "<?= SENTRY_DSN ?>",
         stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
         require_banner_notification: "<?=
-            (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])
-            || isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON])
-            )
+            (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]))
+            || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
+            || (isset($statusPaymentFailed) && $statusPaymentFailed)
             ?>",
         message: {
             validate: {
@@ -149,7 +149,7 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
+            am: "api/v1/invitations/reInvite",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
@@ -613,6 +613,7 @@ App::uses('AttachedFile', 'Model');
             "Register": "<?= __("Register") ?>",
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
+            "Update completed": "<?= __("Update completed") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

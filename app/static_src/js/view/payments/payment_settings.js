@@ -1,13 +1,15 @@
 
 // Edit Invoice info
-if(document.editInvoiceForm) {
+if(document.editPaySettingsForm) {
 
     let fields = [
         'company_name',
+        'company_country',
         'company_post_code',
         'company_region',
         'company_city',
         'company_street',
+        'company_tel',
         'contact_person_last_name',
         'contact_person_first_name',
         'contact_person_last_name_kana',
@@ -16,14 +18,14 @@ if(document.editInvoiceForm) {
         'contact_person_tel'
     ];
 
-    let allFields = document.editInvoiceForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
+    let allFields = document.editPaySettingsForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
     for(var i = 0; i < allFields.length; i++) {
         allFields[i].addEventListener('change', removeError);
     }
 
-    document.editInvoiceForm.addEventListener('submit', function(e) {
+    document.editPaySettingsForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         var data = {
             'data[_Token][key]': cake.data.csrf_token.key
         };
@@ -32,7 +34,7 @@ if(document.editInvoiceForm) {
         }
 
         let xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/invoice');
+        xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/company_info');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             if (xhr.status === 200) {
@@ -59,7 +61,6 @@ if(document.editInvoiceForm) {
                         text: response.message ? response.message : xhr.statusText
                     }).show();
                 }
-
             }
         };
         xhr.send(urlEncode(data));
