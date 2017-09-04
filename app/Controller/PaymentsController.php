@@ -195,7 +195,7 @@ class PaymentsController extends AppController
     public function receipt($historyId)
     {
         // If remove comment out, you can check on /payments/receipt
-        // $this->layout = 'pdf/one_column';
-        // $this->render('pdf/receipt');
+         $this->layout = 'pdf/one_column';
+         $this->render('pdf/receipt');
     }
 }
