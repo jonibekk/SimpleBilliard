@@ -66,6 +66,8 @@ class GoalousTestCase extends CakeTestCase
     const ERR_CODE_CARD_EXPIRED = 'expired_card';
     const ERR_CODE_CARD_PROCESSING_ERROR = 'processing_error';
 
+    private $testCustomersList = array();
+
     /**
      * setUp method
      *
@@ -97,6 +99,7 @@ class GoalousTestCase extends CakeTestCase
     public function tearDown()
     {
         $this->_clearCache();
+        $this->_deleteAllTestCustomers();
         parent::tearDown();
     }
 
@@ -879,7 +882,21 @@ class GoalousTestCase extends CakeTestCase
         $this->assertArrayHasKey("customer_id", $res);
         $this->assertArrayHasKey("card", $res);
 
+        // Set a list of customers to delete later
+        $this->testCustomersList[$res["customer_id"]] = $res["customer_id"];
+
         return $res["customer_id"];
+    }
+
+    /**
+     * Delete all test customers created with createCustomer function.
+     */
+    private function _deleteAllTestCustomers()
+    {
+        foreach ($this->testCustomersList as $customerId) {
+            $this->CreditCardService->deleteCustomer($customerId);
+            unset($this->testCustomersList[$customerId]);
+        }
     }
 
     /**
