@@ -182,6 +182,7 @@ class CreditCardService extends AppService
                 'expire' => null,
             ];
         }
+        // cached as error, stripe api is failed
         $expireDates = msgpack_unpack($cachedCreditCardExpireData);
         if ($expireDates['error']) {
             return [
@@ -189,6 +190,7 @@ class CreditCardService extends AppService
                 'expire' => null,
             ];
         }
+        // credit card expire date cached successfully
         return [
             'error'  => false,
             'expire' => self::getRealExpireDateTimeFromCreditCardExpireDate($expireDates['year'], $expireDates['month']),
