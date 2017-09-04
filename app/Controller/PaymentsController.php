@@ -192,10 +192,19 @@ class PaymentsController extends AppController
         $this->render('contact_settings');
     }
 
-    public function receipt($historyId)
+    /**
+     * output receipt pdf
+     * **Only used by outputing pdf**
+     *
+     * @param int $historyId
+     *
+     * @return \Cake\Network\Response
+     */
+    public function receipt(int $historyId)
     {
         // If remove comment out, you can check on /payments/receipt
         // $this->layout = 'pdf/one_column';
         // $this->render('pdf/receipt');
+        return $this->render();
     }
 }
