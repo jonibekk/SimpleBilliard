@@ -38,7 +38,7 @@ class ChargeHistoryService extends AppService
             return false;
         }
 
-        $resultTypeChargeHistory = intval($chargeHistory['ChargeHistory']['result_type']);
+        $resultTypeChargeHistory = intval($chargeHistory['result_type']);
         return $resultTypeChargeHistory === Enum\ChargeHistory\ResultType::FAIL;
     }
 }
