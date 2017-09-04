@@ -140,9 +140,10 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("success", $res);
+        $this->assertTrue($res["isApiRequestSucceed"]);
         $this->assertTrue($res["success"]);
-
         // TODO.Payment: Add unit test case if foreign country and check currency
+        $this->assertFalse($res["error"]);
     }
 
     /**
@@ -156,6 +157,8 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("error", $res);
+        $this->assertTrue($res["isApiRequestSucceed"]);
+        $this->assertFalse($res["success"]);
         $this->assertTrue($res["error"]);
     }
 

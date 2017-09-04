@@ -595,7 +595,7 @@ class PaymentService extends AppService
                 $paymentDescription);
 
             // Save charge history
-            if ($chargeRes['error'] === true) {
+            if ($chargeRes['isApiRequestSucceed'] === false) {
                 throw new Exception(
                     sprintf("Failed to charge. data:%s",
                         AppUtil::varExportOneLine(
