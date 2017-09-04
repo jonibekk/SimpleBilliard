@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a3ea2e1b3f1282454af6aee23153dfa",
+    "content-hash": "1237d3360e6818503b35a66c9f24c384",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -178,7 +178,7 @@
                 "get_browser",
                 "user agent"
             ],
-            "time": "2016-08-08 08:16:41"
+            "time": "2016-08-08T08:16:41+00:00"
         },
         {
             "name": "cakedc/migrations",
@@ -544,6 +544,42 @@
             "time": "2015-04-15T10:05:49+00:00"
         },
         {
+            "name": "friendsofcake/cakepdf",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfCake/CakePdf.git",
+                "reference": "82750dd13574a084daeff21fc76fabf40352bfeb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfCake/CakePdf/zipball/82750dd13574a084daeff21fc76fabf40352bfeb",
+                "reference": "82750dd13574a084daeff21fc76fabf40352bfeb",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "*",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "ceeram/cakepdf": "self.version"
+            },
+            "suggest": {
+                "dompdf/dompdf": "When using DomPDF as engine."
+            },
+            "type": "cakephp-plugin",
+            "extra": {
+                "installer-name": "CakePdf"
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "CakePHP plugin for creating and/or rendering Pdf, several Pdf engines supported.",
+            "homepage": "https://github.com/FriendsOfCake/CakePdf",
+            "time": "2015-05-31T18:06:35+00:00"
+        },
+        {
             "name": "guzzle/guzzle",
             "version": "v3.9.3",
             "source": {
@@ -891,7 +927,7 @@
                 "chatops",
                 "debug"
             ],
-            "time": "2015-03-18 09:06:50"
+            "time": "2015-03-18T09:06:50+00:00"
         },
         {
             "name": "mimmi20/wurfl-constants",
@@ -2812,7 +2848,6 @@
             ],
             "description": "Twitter Bootstrap theme for ApiGen",
             "homepage": "http://apigen.org/",
-            "abandoned": "apigen/apigen",
             "time": "2015-10-11T14:52:50+00:00"
         },
         {
@@ -2861,7 +2896,6 @@
             ],
             "description": "Default theme for ApiGen",
             "homepage": "http://apigen.org/",
-            "abandoned": "apigen/apigen",
             "time": "2015-10-11T14:55:30+00:00"
         },
         {
@@ -2869,12 +2903,12 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kherge-php/json.git",
+                "url": "https://github.com/kherge-abandoned/php-json.git",
                 "reference": "60c696c9370a1e5136816ca557c17f82a6fa83f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kherge-php/json/zipball/60c696c9370a1e5136816ca557c17f82a6fa83f1",
+                "url": "https://api.github.com/repos/kherge-abandoned/php-json/zipball/60c696c9370a1e5136816ca557c17f82a6fa83f1",
                 "reference": "60c696c9370a1e5136816ca557c17f82a6fa83f1",
                 "shasum": ""
             },
@@ -2922,7 +2956,6 @@
                 "schema",
                 "validate"
             ],
-            "abandoned": "kherge/json",
             "time": "2013-10-30T16:51:34+00:00"
         },
         {
@@ -2980,7 +3013,6 @@
                 "phar",
                 "update"
             ],
-            "abandoned": true,
             "time": "2013-11-09T17:13:13+00:00"
         },
         {
@@ -3032,7 +3064,6 @@
                 "semantic",
                 "version"
             ],
-            "abandoned": true,
             "time": "2014-05-27T05:29:25+00:00"
         },
         {

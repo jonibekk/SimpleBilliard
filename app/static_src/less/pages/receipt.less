@@ -1,0 +1,29 @@
+@import "../variables/all";
+@import "../helpers/mixin";
+
+.pdfReceipt {
+  padding: 30px;
+  header {
+    padding: 30px 0;
+    border-bottom: solid @subColor2 1px;
+    display: flex;
+    .logo {
+      height: 50px;
+      width: auto;
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+    .status-block {
+      margin-left: auto;
+      width: 130px;
+      border: 2px solid @subColor7;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+    }
+  }
+}

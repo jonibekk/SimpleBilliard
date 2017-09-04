@@ -139,6 +139,7 @@ App::build([
     'Service' => ['%s' . 'Service' . DS]
 ], App::REGISTER);
 
+
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
 CakePlugin::load('UrlCache');
@@ -146,6 +147,27 @@ Configure::write('UrlCache.active', true);
 
 Configure::load("app.php");
 Configure::load("country.php");
+
+// CakePdf setting
+CakePlugin::load('CakePdf', ['bootstrap' => true, 'routes' => true]);
+Configure::write('CakePdf', array(
+    'engine' => 'CakePdf.WkHtmlToPdf',
+    'binary' => ROOT . '/etc/wkhtmltopdf.sh', // For ubuntu, wrapped by shell
+    'options' => array(
+        'print-media-type' => false,
+        'outline' => true,
+        'dpi' => 96
+    ),
+    'margin' => array(
+        'bottom' => 5,
+        'left' => 5,
+        'right' => 5,
+        'top' => 5
+    ),
+    'orientation' => 'portrait',
+    'encoding'=>'UTF-8',
+    'pageSize'=>'A4',
+));
 
 // Autoload model constants
 spl_autoload_register(function($class) {

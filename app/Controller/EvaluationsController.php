@@ -23,7 +23,7 @@ class EvaluationsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         try {
-            $this->Evaluation->checkAvailViewEvaluationList();
+            // $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
                 throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
             }

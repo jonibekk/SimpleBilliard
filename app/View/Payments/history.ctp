@@ -18,7 +18,7 @@
                     <td><?= $this->TimeEx->formatYearDayI18n($v['charge_datetime']) ?></td>
                     <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check payment-success" : "fa fa-close payment-failed"?>
                     <td><span class="<?=$resultIconClass?>"></span><?= $v['total']?></td>
-                    <td><a href="#" class="btn payment-history-view-receipt-btn"><?=__('View');?></a></td>
+                    <td><a href="/payments/receipt/1" class="btn payment-history-view-receipt-btn"><?=__('View');?></a></td>
                 </tr>
             <?php endforeach;?>
             </tbody>

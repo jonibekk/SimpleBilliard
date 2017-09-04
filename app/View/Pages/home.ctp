@@ -271,7 +271,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         <div class="modal-body">
                             <div class="video-container">
                                 <iframe id="promoVideo" 
-                                    data-src="<?= $this->Lang->getLangCode()=='jp' ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
+                                    data-src="<?= $this->Lang->getLangCode()=='ja' ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
                                     width="720" 
                                     height="405" 
                                     frameborder="0" 

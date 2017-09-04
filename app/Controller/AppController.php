@@ -56,7 +56,7 @@ class AppController extends BaseController
         'Ogp',
         'Csv',
         'Flash',
-        //        'Benchmark',
+        'RequestHandler'
     ];
     private $merge_helpers = [
         'Session',

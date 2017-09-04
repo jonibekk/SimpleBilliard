@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'TeamService');
+App::import('Service', 'PaymentService');
 App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
@@ -189,5 +190,12 @@ class PaymentsController extends AppController
     public function contact_settings()
     {
         $this->render('contact_settings');
+    }
+
+    public function receipt($historyId)
+    {
+        // If remove comment out, you can check on /payments/receipt
+        // $this->layout = 'pdf/one_column';
+        // $this->render('pdf/receipt');
     }
 }
