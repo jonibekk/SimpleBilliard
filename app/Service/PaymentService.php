@@ -156,6 +156,7 @@ class PaymentService extends AppService
     }
 
     /**
+     * // TODO: This method has not been referred from anywhere (except Test), What is purpose?
      * Create a payment settings as its related credit card
      *
      * @param        $data
@@ -173,7 +174,7 @@ class PaymentService extends AppService
 
         try {
             // Create PaymentSettings
-            $PaymentSetting->begin();
+            $this->TransactionManager->begin();
             if (!$PaymentSetting->save($data)) {
                 $PaymentSetting->rollback();
                 throw new Exception(sprintf("Failed create payment settings. data:%s", var_export($data, true)));
@@ -187,7 +188,6 @@ class PaymentService extends AppService
                 'customer_code'      => $customerCode,
             ];
 
-            $CreditCard->begin();
             if (!$CreditCard->save($creditCardData)) {
                 $CreditCard->rollback();
                 $PaymentSetting->rollback();
@@ -201,13 +201,11 @@ class PaymentService extends AppService
             $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
 
             // Commit changes
-            $PaymentSetting->commit();
-            $CreditCard->commit();
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $CreditCard->rollback();
-            $PaymentSetting->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
             return false;
         }
         return true;
@@ -301,7 +299,6 @@ class PaymentService extends AppService
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         if (checkdate($m, $paymentBaseDay, $y) === false) {
-            AppUtil::dateFromYMD($y, $m, 1);
             $prevBaseDate = AppUtil::dateMonthLast(AppUtil::dateFromYMD($y, $m, 1));
         } else {
             $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
@@ -425,8 +422,8 @@ class PaymentService extends AppService
                 'total_charge'     => $totalCharge,
             ];
         } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
             $res = [
                 'sub_total_charge' => 0,
                 'tax'              => 0,
@@ -501,17 +498,17 @@ class PaymentService extends AppService
      * - Number format
      * - Currency format
      *
-     * @param int $charge
-     * @param int $currencyType
+     * @param float|int $charge
+     * @param int       $currencyType
      *
      * @return string
      */
     public function formatCharge(float $charge, int $currencyType): string
     {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
         // Format ex 1980 → ¥1,980
-        $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . number_format($charge);
+        $num = number_format($charge, 2);
+        $num = preg_replace("/\.?0+$/", "", $num);
+        $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . $num;
         return $res;
     }
 
@@ -521,6 +518,7 @@ class PaymentService extends AppService
      * @param int                               $teamId
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
+     * @param int                               $opeUserId
      *
      * @return array
      * @throws Exception
@@ -528,7 +526,8 @@ class PaymentService extends AppService
     public function applyCreditCardCharge(
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
-        int $usersCount
+        int $usersCount,
+        int $opeUserId
     ) {
         try {
             // Validate user count
@@ -569,6 +568,7 @@ class PaymentService extends AppService
             // ChargeHistory temporary insert
             $historyData = [
                 'team_id'          => $teamId,
+                'user_id'          => $opeUserId,
                 'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
                 'charge_type'      => $chargeType->getValue(),
                 'amount_per_user'  => $amountPerUser,
@@ -583,6 +583,7 @@ class PaymentService extends AppService
 
             /** @var ChargeHistory $ChargeHistory */
             $ChargeHistory = ClassRegistry::init('ChargeHistory');
+            $ChargeHistory->clear();
             if (!$ChargeHistory->save($historyData)) {
                 throw new Exception(sprintf("Failed create charge history. data:%s",
                     AppUtil::varExportOneLine($historyData)));
@@ -595,10 +596,6 @@ class PaymentService extends AppService
 
             // Save charge history
             if ($chargeRes['error'] === true) {
-
-                /* Transaction rollback */
-                $this->TransactionManager->rollback();
-
                 throw new Exception(
                     sprintf("Failed to charge. data:%s",
                         AppUtil::varExportOneLine(
@@ -614,23 +611,25 @@ class PaymentService extends AppService
             // Because it should refund charge if include updating in transaction.
             $this->TransactionManager->commit();
 
-            if ($chargeRes['success'] === true) {
-                $resultType = Enum\ChargeHistory\ResultType::SUCCESS;
+            $updateHistory = [];
+            if ($chargeRes['success']) {
+                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
+                $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
             } else {
-                $resultType = Enum\ChargeHistory\ResultType::FAIL;
+                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
             }
 
             $historyId = $ChargeHistory->getLastInsertID();
             // Update Charge history
-            $updateHistory = ['id' => $historyId, 'result_type' => $resultType];
+            $ChargeHistory->clear();
+            $ChargeHistory->id = $historyId;
             if (!$ChargeHistory->save($updateHistory, false)) {
-
-                /* TODO.Payment: Insert error log to table */
-
                 throw new Exception(sprintf("Failed update charge history. data:%s",
                     AppUtil::varExportOneLine($updateHistory)));
             }
         } catch (Exception $e) {
+            /* Transaction rollback */
+            $this->TransactionManager->rollback();
             throw $e;
         }
     }
@@ -677,6 +676,7 @@ class PaymentService extends AppService
     ) {
         $result = [
             'error'     => false,
+            // TODO: fix key name to `statusCode`. 200 is not error code
             'errorCode' => 200,
             'message'   => null
         ];
@@ -693,61 +693,47 @@ class PaymentService extends AppService
         $TeamMember = ClassRegistry::init('TeamMember');
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init('TeamService');
-
-        // Register Credit Card to stripe
-        // Set description as "Team ID: 2" to identify it on Stripe Dashboard
-        $contactEmail = Hash::get($paymentData, 'contact_person_email');
-        $customerDescription = "Team ID: $teamId";
-        $stripeResponse = $CreditCardService->registerCustomer($creditCardToken, $contactEmail, $customerDescription);
-        if ($stripeResponse['error'] === true) {
-            $result['error'] = true;
-            $result['message'] = $stripeResponse['message'];
-            $result['errorCode'] = 400;
-            return $result;
-        }
-
-        // Stripe customer id
-        $customerId = $stripeResponse['customer_id'];
-        if (empty($customerId)) {
-            // It never should happen
-            $result['error'] = true;
-            $result['message'] = __("An error occurred while processing.");
-            $result['errorCode'] = 500;
-
-            $this->log(sprintf("Error on Stripe call: %s", AppUtil::varExportOneLine($stripeResponse)));
-            return $result;
-        }
-
-        // Variable to later use
-        $result['customerId'] = $customerId;
-
-        $companyCountry = Hash::get($paymentData, 'company_country');
-        $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
-        $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
-
-        $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
-        $membersCount = $membersCount[$teamId];
-        $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
-        $historyData = [
-            'team_id'          => $teamId,
-            'user_id'          => $userId,
-            'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-            'amount_per_user'  => $amountPerUser,
-            'total_amount'     => $chargeInfo['sub_total_charge'],
-            'tax'              => $chargeInfo['tax'],
-            'charge_users'     => $membersCount,
-            'currency'         => $currency,
-            'charge_datetime'  => time(),
-            'result_type'      => 0,
-            'max_charge_users' => $membersCount
-        ];
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
 
         // Register payment settings
         try {
+            // Register Credit Card to stripe
+            // Set description as "Team ID: 2" to identify it on Stripe Dashboard
+            $contactEmail = Hash::get($paymentData, 'contact_person_email');
+            $customerDescription = "Team ID: $teamId";
+            $stripeResponse = $CreditCardService->registerCustomer($creditCardToken, $contactEmail,
+                $customerDescription);
+            if ($stripeResponse['error'] === true) {
+                $result['error'] = true;
+                $result['message'] = $stripeResponse['message'];
+                $result['errorCode'] = 400;
+                return $result;
+            }
+
             // Create PaymentSettings
-            $PaymentSetting->begin();
+            $this->TransactionManager->begin();
+
+            // Stripe customer id
+            $customerId = $stripeResponse['customer_id'];
+            if (empty($customerId)) {
+                throw new Exception(sprintf("Error on Stripe call. stripeResponse:%s",
+                    AppUtil::varExportOneLine($stripeResponse)));
+            }
+
+            // Variable to later use
+            $result['customerId'] = $customerId;
+
+            $companyCountry = Hash::get($paymentData, 'company_country');
+            $paymentData['team_id'] = $teamId;
+            $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
+            $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
+            $timezone = $Team->getTimezone();
+            $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
+            $paymentData['type'] = Enum\PaymentSetting\Type::CREDIT_CARD;
+
+            // Create PaymentSetting
+            $PaymentSetting->create();
             if (!$PaymentSetting->save($paymentData)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
                     AppUtil::varExportOneLine($paymentData)));
@@ -756,11 +742,11 @@ class PaymentService extends AppService
 
             // Create CreditCards
             $creditCardData = [
-                'team_id'            => $paymentData['team_id'],
+                'team_id'            => $teamId,
                 'payment_setting_id' => $paymentSettingId,
                 'customer_code'      => $customerId
             ];
-
+            $CreditCard->create();
             if (!$CreditCard->save($creditCardData)) {
                 throw new Exception(sprintf("Failed create credit card. data:%s",
                     AppUtil::varExportOneLine($paymentData)));
@@ -780,11 +766,42 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
+            /* Create charge history */
+            // [Note]
+            // ChargeHistory result_type will be updated after charge
+            $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
+            $membersCount = $membersCount[$teamId];
+            $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
+            $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
+            $historyData = [
+                'team_id'          => $teamId,
+                'user_id'          => $userId,
+                'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'amount_per_user'  => $amountPerUser,
+                'total_amount'     => $chargeInfo['sub_total_charge'],
+                'tax'              => $chargeInfo['tax'],
+                'charge_users'     => $membersCount,
+                'currency'         => $currency,
+                'charge_datetime'  => time(),
+                'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
+                'max_charge_users' => $membersCount
+            ];
+
+            $ChargeHistory->create();
+            if (!$ChargeHistory->save($historyData)) {
+                $ChargeHistory->rollback();
+                throw new Exception(sprintf("Failed create charge history. data:%s",
+                    AppUtil::varExportOneLine($historyData)));
+            }
+            $historyId = $ChargeHistory->getLastInsertID();
+
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
             $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
             $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
+            // Charge
             $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
                 $paymentDescription);
 
@@ -792,36 +809,28 @@ class PaymentService extends AppService
             $Team->resetCurrentTeam();
 
             // Error charging customer using Stripe API. Might be network,  API problem or card rejected
-            if ($chargeResult['error'] === true || $chargeResult['success'] == false) {
+            if ($chargeResult['error'] === true) {
                 // Rollback transaction
                 $PaymentSetting->rollback();
 
                 // Remove the customer from Stripe
                 $CreditCardService->deleteCustomer($customerId);
 
-                // Save history
-                if ($chargeResult['error'] === true) {
-                    $historyData['result_type'] = Enum\ChargeHistory\ResultType::ERROR;
-                } else {
-                    $historyData['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
-                }
-                $this->_saveChargeHistory($historyData);
-
                 $result['error'] = true;
                 $result['message'] = $chargeResult['message'];
-                $result['errorCode'] = 400;
+                $result['errorCode'] = 500;
                 return $result;
             }
 
             // Commit changes
-            $PaymentSetting->commit();
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
             // Remove the customer from Stripe
             $CreditCardService->deleteCustomer($customerId);
 
-            $PaymentSetting->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
 
             $result['error'] = true;
             $result['message'] = __("Failed to register paid plan.") . " " . __("Please try again later.");
@@ -829,12 +838,31 @@ class PaymentService extends AppService
             return $result;
         }
 
-        // Save card history
-        // Charge history is kept outside the transaction so in case of history recording
-        // failure, the error will be logged for later investigation but the charging
-        // processes will not be affected.
-        $historyData['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
-        $this->_saveChargeHistory($historyData);
+        // [Important]
+        // Updating ChargeHistory is not include transaction.
+        // Because we avoid to refund charge.
+        // If this process failed, Return success abd we recovery data later.
+        try {
+            // Save history
+            $updateHistory = [];
+            if ($chargeResult['success']) {
+                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
+                $updateHistory['stripe_payment_code'] = $chargeResult['paymentId'];
+            } else {
+                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
+            }
+
+            $ChargeHistory->clear();
+            $ChargeHistory->id = $historyId;
+            if (!$ChargeHistory->save($updateHistory)) {
+                throw new Exception(sprintf("Failed update result type of charge history. data:%",
+                    AppUtil::varExportOneLine(compact('historyId', 'updateHistory'))));
+            }
+        } catch (Exception $e) {
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            return $result;
+        }
 
         return $result;
     }
@@ -916,8 +944,8 @@ class PaymentService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
             return false;
         }
 
@@ -1043,31 +1071,39 @@ class PaymentService extends AppService
 
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            $this->log(sprintf("Failed monthly charge of invoice. teamId: %s, errorDetail: %s",
+            CakeLog::emergency(sprintf("Failed monthly charge of invoice. teamId: %s, errorDetail: %s",
                 $teamId,
                 $e->getMessage()
             ));
+            CakeLog::emergency($e->getTraceAsString());
             return false;
         }
 
         $this->TransactionManager->commit();
 
-        // update system order code.
-        $invoiceHistoryUpdate = [
-            'id'                => $invoiceHistoryId,
-            'system_order_code' => $resAtobarai['systemOrderId'],
-        ];
-        $InvoiceHistory->clear();
-        $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate);
-        if (!$resUpdate) {
-            $this->log(sprintf("Failed update invoice history. It should be recovered!!! teamId: %s, data: %s, validationErrors: %s",
-                $teamId,
-                AppUtil::varExportOneLine($invoiceHistoryUpdate),
-                AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
-            ));
-            return false;
+        // [Important]
+        // Updating ChargeHistory is not include transaction.
+        // Because It got necessary to rollback even atobarai.com data if include.
+        // If this process failed, Return success abd we recovery data later.
+        try {
+            // update system order code.
+            $invoiceHistoryUpdate = [
+                'id'                => $invoiceHistoryId,
+                'system_order_code' => $resAtobarai['systemOrderId'],
+            ];
+            $InvoiceHistory->clear();
+            $resUpdate = $InvoiceHistory->save($invoiceHistoryUpdate, false);
+            if (!$resUpdate) {
+                throw new Exception(sprintf("Failed update invoice history. It should be recovered!!! teamId: %s, data: %s, validationErrors: %s",
+                    $teamId,
+                    AppUtil::varExportOneLine($invoiceHistoryUpdate),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+                ));
+            }
+        } catch (Exception $e) {
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
         }
-
         return true;
     }
 
@@ -1100,38 +1136,6 @@ class PaymentService extends AppService
     }
 
     /**
-     * Save Charge history
-     *
-     * @param $historyData
-     *
-     * @return bool
-     */
-    private function _saveChargeHistory($historyData)
-    {
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init('ChargeHistory');
-
-        try {
-            // Create Charge history
-            $ChargeHistory->begin();
-
-            if (!$ChargeHistory->save($historyData)) {
-                $ChargeHistory->rollback();
-                throw new Exception(sprintf("Failed create charge history. data:%s",
-                    AppUtil::varExportOneLine($historyData)));
-            }
-            $ChargeHistory->commit();
-        } catch (Exception $e) {
-            $ChargeHistory->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Find target teams that charge monthly by credit card
      * main conditions
      * - payment type: credit card
@@ -1154,8 +1158,9 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function findMonthlyChargeCcTeams(int $time = REQUEST_TIMESTAMP): array
-    {
+    public function findMonthlyChargeCcTeams(
+        int $time = REQUEST_TIMESTAMP
+    ): array {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var ChargeHistory $ChargeHistory */
@@ -1214,8 +1219,9 @@ class PaymentService extends AppService
      * @return array
      * @internal param int|null $targetTimezone
      */
-    public function findMonthlyChargeInvoiceTeams(int $time = REQUEST_TIMESTAMP): array
-    {
+    public function findMonthlyChargeInvoiceTeams(
+        int $time = REQUEST_TIMESTAMP
+    ): array {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var InvoiceHistory $InvoiceHistory */
@@ -1259,8 +1265,11 @@ class PaymentService extends AppService
      *
      * @return array|bool
      */
-    public function updatePayerInfo(int $teamId, int $userId, array $payerData)
-    {
+    public function updatePayerInfo(
+        int $teamId,
+        int $userId,
+        array $payerData
+    ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         $paySetting = $PaymentSetting->getUnique($teamId);
@@ -1306,8 +1315,8 @@ class PaymentService extends AppService
 
             $PaymentSetting->commit();
         } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
 
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
         }
@@ -1342,6 +1351,7 @@ class PaymentService extends AppService
      * @param int                               $teamId
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
+     * @param int                               $opeUserId
      *
      * @return array
      * @throws Exception
@@ -1349,7 +1359,8 @@ class PaymentService extends AppService
     public function charge(
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
-        int $usersCount = 1
+        int $usersCount = 1,
+        int $opeUserId
     ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1367,7 +1378,8 @@ class PaymentService extends AppService
             $res = $this->applyCreditCardCharge(
                 $teamId,
                 $chargeType,
-                $usersCount
+                $usersCount,
+                $opeUserId
             );
             if ($res['error']) {
                 throw new Exception(
@@ -1390,8 +1402,9 @@ class PaymentService extends AppService
                 // Insert ChargeHistory
                 $historyData = [
                     'team_id'          => $teamId,
+                    'user_id'          => $opeUserId,
                     'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-                    'charge_type'      => $chargeType,
+                    'charge_type'      => $chargeType->getValue(),
                     'amount_per_user'  => $paymentSetting['amount_per_user'],
                     'total_amount'     => $chargeInfo['sub_total_charge'],
                     'tax'              => $chargeInfo['tax'],
@@ -1422,8 +1435,10 @@ class PaymentService extends AppService
      *
      * @return array|bool
      */
-    public function updateInvoice(int $teamId, array $invoiceData)
-    {
+    public function updateInvoice(
+        int $teamId,
+        array $invoiceData
+    ) {
         /** @var Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         $invoice = $Invoice->getByTeamId($teamId);
@@ -1457,8 +1472,8 @@ class PaymentService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
             return ['errorCode' => 500, 'message' => __("An error occurred while processing.")];
         }
         return true;
@@ -1491,7 +1506,8 @@ class PaymentService extends AppService
             }
             $allValidationErrors = am(
                 $allValidationErrors,
-                $this->validateSingleModelFields($data, $fields, 'payment_setting', 'PaymentSetting', $PaymentSetting)
+                $this->validateSingleModelFields($data, $fields, 'payment_setting', 'PaymentSetting',
+                    $PaymentSetting)
             );
         }
 

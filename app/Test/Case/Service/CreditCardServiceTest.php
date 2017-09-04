@@ -59,7 +59,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertArrayHasKey("customer_id", $res);
         $this->assertArrayHasKey("card", $res);
 
-        $this->deleteCustomer($res["customer_id"]);
+        $this->CreditCardService->deleteCustomer($res["customer_id"]);
     }
 
     /**
@@ -141,6 +141,8 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("success", $res);
         $this->assertTrue($res["success"]);
+
+        // TODO.Payment: Add unit test case if foreign country and check currency
     }
 
     /**
@@ -247,11 +249,11 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->retrieveCreditCard($customerId);
         $this->assertTrue($res["error"] === true);
     }
-    
+
     /**
      * Assert a list have been returned.
      */
-    function test_listAllCustomers()
+    function test_listCustomers()
     {
         $res = $this->CreditCardService->listCustomers();
 
@@ -314,5 +316,15 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertTrue(
             (new GoalousDateTime('2019-09-01 00:00:00'))->equalTo($d)
         );
+    }
+
+    function test_retrieveToken()
+    {
+        // TODO.Payment: add unit tests.
+    }
+
+    function test_updateCreditCard()
+    {
+        // TODO.Payment: add unit tests.
     }
 }

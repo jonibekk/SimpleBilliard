@@ -72,7 +72,8 @@ class InvitationService extends AppService
         $existEmails = $Email->findExistByTeamId($teamId, $emails);
         $errEmails = array_intersect($emails, $existEmails);
         foreach ($errEmails as $i => $mail) {
-            $errors[] = __("Line %d", $i + 1) . "：" . __("This email address has already been used. Use another email address.");
+            $errors[] = __("Line %d",
+                    $i + 1) . "：" . __("This email address has already been used. Use another email address.");
         }
         return $errors;
     }
@@ -146,7 +147,7 @@ class InvitationService extends AppService
             $targetUserIds = $User->findNotBelongToTeamByEmail($teamId, $emails);
             if (count($targetUserIds) != count($emails)) {
                 throw new Exception(sprintf("Inconsistent users and emails. data:%s",
-                    AppUtil::varExportOneLine(compact('emails', 'targetUserIds', 'teamId')))
+                        AppUtil::varExportOneLine(compact('emails', 'targetUserIds', 'teamId')))
                 );
             }
 
@@ -165,12 +166,15 @@ class InvitationService extends AppService
             }
 
             /* Charge if paid plan */
-            if ($Team->isPaidPlan($teamId)) {
-                $chargeUserCnt = count($targetUserIds);
+            $addUserCnt = count($targetUserIds);
+            $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $addUserCnt);
+            if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
-                    $teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
-                    $chargeUserCnt
+                    $teamId,
+                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    $chargeUserCnt,
+                    $fromUserId
                 );
             }
             $this->TransactionManager->commit();
@@ -233,9 +237,9 @@ class InvitationService extends AppService
         CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
             'Re-invite succeed',
             AppUtil::varExportOneLine([
-                    'old.invites.id' => $inviteData['id'],
-                    'new.invites.id' => $inviteNew['Invite']['id'],
-                    'email'          => $email,
+                'old.invites.id' => $inviteData['id'],
+                'new.invites.id' => $inviteNew['Invite']['id'],
+                'email'          => $email,
             ])));
         return true;
     }
@@ -243,6 +247,7 @@ class InvitationService extends AppService
     /**
      * validate email string
      * return array for {Controller}->_getResponseValidationFail()
+     *
      * @param string $email
      *
      * @return array
@@ -253,9 +258,9 @@ class InvitationService extends AppService
         $Email = ClassRegistry::init("Email");
         $Email->validate = [
             'email' => [
-                'maxLength'     => ['rule' => ['maxLength', 255]],
-                'notBlank'      => ['rule' => 'notBlank',],
-                'email'         => ['rule' => ['email'],],
+                'maxLength' => ['rule' => ['maxLength', 255]],
+                'notBlank'  => ['rule' => 'notBlank',],
+                'email'     => ['rule' => ['email'],],
             ],
         ];
         $Email->set(['email' => $email]);

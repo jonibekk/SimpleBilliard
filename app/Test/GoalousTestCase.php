@@ -26,9 +26,11 @@ App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
+App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * CakeTestCase class
  *
@@ -45,6 +47,7 @@ use Goalous\Model\Enum as Enum;
  * @property Invoice                       $Invoice
  * @property InvoiceHistory                $InvoiceHistory
  * @property InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory
+ * @property PaymentService                $PaymentService
  */
 class GoalousTestCase extends CakeTestCase
 {
@@ -60,6 +63,7 @@ class GoalousTestCase extends CakeTestCase
     // Valid Cards
     const CARD_VISA = "4012888888881881";
     const CARD_MASTERCARD = "5555555555554444";
+    const CARD_ = "5555555555554444";
 
     const ERR_CODE_CARD_DECLINED = 'card_declined';
     const ERR_CODE_CARD_INCORRECT_CVC = "incorrect_cvc";
@@ -497,9 +501,9 @@ class GoalousTestCase extends CakeTestCase
     {
         $this->Team->TeamMember->create();
         $this->Team->TeamMember->save([
-            'team_id'    => $teamId,
-            'user_id'    => $userId,
-            'status'     => $status
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'status'  => $status
         ], false);
         return $this->Team->TeamMember->getLastInsertId();;
     }
@@ -682,9 +686,9 @@ class GoalousTestCase extends CakeTestCase
         $savePaymentSetting = array_merge(
             [
                 'team_id'          => $teamId,
-                'type'             => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 1,
-                'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+                'currency'         => Enum\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
                 'company_country'  => 'JP',
             ],
@@ -697,7 +701,7 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'            => $teamId,
                 'payment_setting_id' => $paymentSettingId,
-                'customer_code' => 'cus_BDjPwryGzOQRBI',
+                'customer_code'      => 'cus_BDjPwryGzOQRBI',
             ],
             $creditCard
         );
@@ -734,9 +738,9 @@ class GoalousTestCase extends CakeTestCase
         $savePaymentSetting = array_merge(
             [
                 'team_id'          => $teamId,
-                'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
+                'type'             => Enum\PaymentSetting\Type::INVOICE,
                 'payment_base_day' => 1,
-                'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
+                'currency'         => Enum\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => 1980,
                 'company_country'  => 'JP',
             ],
