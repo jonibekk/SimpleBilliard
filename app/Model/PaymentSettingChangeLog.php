@@ -59,4 +59,31 @@ class PaymentSettingChangeLog extends AppModel
         $ret = $this->save($data);
         return $ret;
     }
+
+    /**
+     * LatestSnapShot
+     *
+     * @param int $teamId
+     *
+     * @return array
+     * @internal param $goalId
+     */
+    function getLatest(int $teamId): array
+    {
+        $data = $this->find('first', [
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
+            'order'      => ['id' => 'desc']
+        ]);
+
+        if (empty($data)) {
+            return $data;
+        }
+
+        $data = Hash::extract($data, 'PaymentSettingChangeLog');
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $data['plain_data'] = msgpack_unpack(base64_decode($data['data']));
+        return $data;
+    }
 }

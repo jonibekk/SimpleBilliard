@@ -42,13 +42,13 @@
         // Acquire only necessary information when necessary
 
         if (in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_READ_ONLY])
-        || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
+            || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
+            || (isset($statusPaymentFailed) && $statusPaymentFailed)
         ) : ?>
         <div class="banner-alert font_verydark">
             <div class="container">
-                <button type="button" class="close js-disappear-banner" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate, $teamCreditCardStatus ?? Team::STATUS_CREDIT_CARD_CLEAR, $teamCreditCardExpireDate ?? '') ?>
+                <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate, $teamCreditCardStatus ?? Team::STATUS_CREDIT_CARD_CLEAR, $teamCreditCardExpireDate ?? '', $statusPaymentFailed ?? false) ?>
             </div>
         </div>
         <?php endif; ?>

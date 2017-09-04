@@ -1065,54 +1065,28 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_invite_setting($invite_id, $action_flg)
+    /**
+     * TODO: delete this API if used place migrated to
+     * /api/v1/invitations/reInvite
+     *
+     * @deprecated
+     * @param $user_id
+     * @param $action_flg
+     *
+     * @return CakeResponse|null
+     */
+    function ajax_invite_setting($user_id, $action_flg)
     {
-        $this->_ajaxPreProcess();
-        $error = false;
-        $error_msg = '';
-        $invite_data = $this->Team->Invite->findById($invite_id);
-
-        // if already joined throw error, already exists
-        if ($invite_data['Invite']['email_verified']) {
-            $error_msg = (__("Error, this user already exists."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
-        }
-
-        // if already expired throw error, you can't cancel
-        if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
-            $error_msg = (__("Error, this invitation already expired, you can't cancel."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
-        }
-
-        // for cancel the old invite
-        $res = $this->Team->Invite->delete($invite_id);
-
-        if ($action_flg == 'Invited') {
-            //save invite mail data
-            $invite = $this->Team->Invite->saveInvite(
-                $invite_data['Invite']['email'],
-                $invite_data['Invite']['team_id'],
-                $invite_data['Invite']['from_user_id'],
-                !empty($invite_data['Invite']['message']) ? $invite_data['Invite']['message'] : null
-            );
-            if (!$invite) {
-                $error = true;
-                $error_msg = (__("Error, failed to invite."));
-                $this->Notification->outError($error_msg);
-            }
-            //send invite mail
-            $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
-            $this->GlEmail->sendMailInvite($invite, $team_name);
-        }
-        $res['title'] = $error_msg;
-        $res['error'] = $error;
-        return $this->_ajaxGetResponse($res);
+        CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
+            'called deprecated method',
+            AppUtil::varExportOneLine([
+                'user_id'    => $user_id,
+                'action_flg' => $action_flg,
+            ])));
+        return $this->_ajaxGetResponse([
+            'title' => __("Some error occurred. Please try again from the start."),
+            'error' => true,
+        ]);
     }
 
     function ajax_set_current_team_admin_user_flag($member_id, $adminFlg)
@@ -2016,15 +1990,6 @@ class TeamsController extends AppController
     }
 
     /**
-    * Confirm User Activation
-    *
-    **/
-    public function confirm_user_activation()
-    {
-        $this->layout = LAYOUT_ONE_COLUMN;
-    }
-
-    /**
      * insight 系処理の日付データを返す
      *
      * @param $timezone
@@ -2692,13 +2657,13 @@ class TeamsController extends AppController
 
         // Validate activation
         if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
-            $this->Notification->outSuccess(__("Failed to activate team member."));
+            $this->Notification->outError(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }
 
         // Paid charge case
         if ($PaymentService->isChargeUserActivation($teamId)) {
-            return $this->redirect('/teams/confirm_activation');
+            return $this->redirect(['action' => 'confirm_user_activation', $teamMemberId]);
         }
 
         // Paid or free trial case
@@ -2707,7 +2672,7 @@ class TeamsController extends AppController
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
         } else {
             // TODO: Should display translation correctry by @kohei
-            $this->Notification->outSuccess(__("Failed to activate team member."));
+            $this->Notification->outError(__("Failed to activate team member."));
         }
         return $this->redirect($this->referer());
     }
@@ -2719,21 +2684,41 @@ class TeamsController extends AppController
      *
      * @return CakeResponse
      */
-    function confirm_activation(int $teamMemberId)
+    function confirm_user_activation(int $teamMemberId)
     {
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init("TeamMemberService");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
 
         $teamId = $this->current_team_id;
 
         // Validate activation
         if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
-            $this->Notification->outSuccess(__("Failed to activate team member."));
+            $this->Notification->outError(__("Failed to activate team member."));
             return $this->redirect($this->referer());
         }
 
-        // TODO.Payment: Should implement confirm backend after frontend PR merged
+        if (!$PaymentService->isChargeUserActivation($teamId)) {
+            $this->Notification->outError(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
 
+        // User
+        $user = $this->Team->TeamMember->getUserById($teamMemberId);
+        $displayUserName = $user['display_username'];
+
+        // Payment info
+        $paymentSetting = $PaymentService->get($this->current_team_id);
+        $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user'], $paymentSetting['currency']);
+        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
+        $allUseDays = $PaymentService->getCurrentAllUseDays();
+        $currency = new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers(1, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+
+        $this->set(compact('teamMemberId', 'displayUserName', 'amountPerUser', 'useDaysByNext', 'totalCharge'));
+
+        $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
@@ -2744,13 +2729,15 @@ class TeamsController extends AppController
      *
      * @return void
      */
-    function activate_with_payment(int $teamMmemberId)
+    function activate_with_payment()
     {
-
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init("TeamMemberService");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
 
         $teamId = $this->current_team_id;
+        $teamMemberId = Hash::get($this->request->data, 'TeamMember.id');
 
         // Validate activation
         if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
@@ -2758,13 +2745,19 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        if (!$PaymentService->isChargeUserActivation($teamId)) {
+            $this->Notification->outError(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
         // Activate
-        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId)) {
+        $userId = $this->Auth->user('id');
+        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId, $userId)) {
             // TODO: Should display translation correctry by @kohei
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
         } else {
             // TODO: Should display translation correctry by @kohei
-            $this->Notification->outSuccess(__("Failed to activate team member."));
+            $this->Notification->outError(__("Failed to activate team member."));
         }
 
         return $this->redirect('/teams/main');

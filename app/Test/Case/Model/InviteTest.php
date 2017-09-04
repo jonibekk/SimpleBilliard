@@ -5,6 +5,7 @@ App::uses('Invite', 'Model');
  * Invite Test Case
  *
  * @property  Invite $Invite
+ * @property  Email  $Email
  */
 class InviteTest extends GoalousTestCase
 {
@@ -33,6 +34,7 @@ class InviteTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Invite = ClassRegistry::init('Invite');
+        $this->Email  = ClassRegistry::init('Email');
     }
 
     /**
@@ -43,6 +45,7 @@ class InviteTest extends GoalousTestCase
     public function tearDown()
     {
         unset($this->Invite);
+        unset($this->Email);
 
         parent::tearDown();
     }
@@ -189,14 +192,20 @@ class InviteTest extends GoalousTestCase
     function testGetInviteUserList()
     {
         $team_id = '999';
-        $email = 'test999@isao.co.jp';
-        $params = [
+        $email   = 'test999@isao.co.jp';
+        $user_id = 20;
+        $this->Invite->save([
             'team_id' => $team_id,
-            'email'   => $email
-        ];
-        $this->Invite->save($params);
+            'email'   => $email,
+        ]);
+        $this->Email->save([
+            'email'   => $email,
+            'user_id' => $user_id,
+        ]);
+
         $res = $this->Invite->getInviteUserList($team_id);
         $this->assertEquals($email, $res[0]['Invite']['email']);
+        $this->assertEquals(20, $res[0]['Email']['user_id']);
     }
 
     function test_findUnverifiedBeforeExpired()
@@ -214,4 +223,13 @@ class InviteTest extends GoalousTestCase
         $this->assertContains($targetInviteId, $resultIds);
     }
 
+    function test_getUnverifiedWithEmailByUserId()
+    {
+        // case regular
+        $result = $this->Invite->getUnverifiedWithEmailByUserId(1, 1);
+        $this->assertEquals('from@email.com', $result['Email']['email']);
+        // case not found
+        $result = $this->Invite->getUnverifiedWithEmailByUserId(100, 100);
+        $this->assertEquals([], $result);
+    }
 }

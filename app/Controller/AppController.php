@@ -17,7 +17,10 @@ App::uses('UserAgent', 'Request');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Application Controller
@@ -749,9 +752,9 @@ class AppController extends BaseController
                 //相手が現在のチームに所属しているか確認
                 $options = array(
                     'conditions' => array(
-                        'user_id'    => $id,
-                        'team_id'    => $this->Session->read('current_team_id'),
-                        'active_flg' => true,
+                        'user_id' => $id,
+                        'team_id' => $this->Session->read('current_team_id'),
+                        'status'  => Enum\TeamMember\Status::ACTIVE,
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
@@ -943,14 +946,22 @@ class AppController extends BaseController
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        $this->set('serviceUseStatus', $TeamService->getServiceUseStatus());
+        $serviceUseStatus = $TeamService->getServiceUseStatus();
+        $this->set('serviceUseStatus', $serviceUseStatus);
         $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
         $this->set('stateEndDate', $TeamService->getStateEndDate());
 
-        $paymentSetting = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
+        $isAdmin = $this->_isAdmin();
+        if ($isAdmin && $serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
+            // show message if team last creditcard payment failed
+            /** @var ChargeHistoryService $ChargeHistoryService */
+            $ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
+            $this->set('statusPaymentFailed', $ChargeHistoryService->isLatestChargeFailed($this->current_team_id));
+        }
 
+        $paymentSetting = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
         // check if team credit card expire in one month
-        if ($this->_isAdmin() && !empty($paymentSetting)) {
+        if ($isAdmin && !empty($paymentSetting)) {
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
             $dateNow = GoalousDateTime::now();

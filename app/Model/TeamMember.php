@@ -2131,4 +2131,30 @@ class TeamMember extends AppModel
         ];
         return (bool)$this->find('first', $options);
     }
+
+    /**
+     * Get user data by team member id
+     *
+     * @param int $teamMemberId
+     *
+     * @return array
+     */
+    public function getUserById(int $teamMemberId): array
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.id' => $teamMemberId
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (!empty($res['User'])) {
+            return $res['User'];
+        }
+        return [];
+    }
 }
