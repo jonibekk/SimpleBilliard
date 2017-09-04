@@ -51,7 +51,7 @@ function setError(fieldName, message) {
  */
 function removeError(e) {
     let field = e.target;
-    field.parentNode.className.remove('has-error');
+    field.parentNode.className = field.parentNode.className.replace('has-error', '');
     let error = field.parentNode.querySelector('small');
     if (error) {
         error.remove();

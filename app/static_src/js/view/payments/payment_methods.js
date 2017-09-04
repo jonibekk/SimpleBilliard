@@ -2,40 +2,34 @@
 // Edit Invoice info
 if(document.editInvoiceForm) {
 
-    let companyName = document.editInvoiceForm.querySelector('input[name=company_name]');
-    let postalCode = document.editInvoiceForm.querySelector('input[name=company_post_code]');
-    let region = document.editInvoiceForm.querySelector('input[name=company_region]');
-    let city = document.editInvoiceForm.querySelector('input[name=company_city]');
-    let street = document.editInvoiceForm.querySelector('input[name=company_street]');
-    let lastName = document.editInvoiceForm.querySelector('input[name=contact_person_last_name]');
-    let firstName = document.editInvoiceForm.querySelector('input[name=contact_person_first_name]');
-    let lastNameKana = document.editInvoiceForm.querySelector('input[name=contact_person_last_name_kana]');
-    let firstNameKana = document.editInvoiceForm.querySelector('input[name=contact_person_first_name_kana]');
-    let email = document.editInvoiceForm.querySelector('input[name=contact_person_email]');
-    let telephone = document.editInvoiceForm.querySelector('input[name=contact_person_tel]');
+    let fields = [
+        'company_name',
+        'company_post_code',
+        'company_region',
+        'company_city',
+        'company_street',
+        'contact_person_last_name',
+        'contact_person_first_name',
+        'contact_person_last_name_kana',
+        'contact_person_first_name_kana',
+        'contact_person_email',
+        'contact_person_tel'
+    ];
 
-    let allFields = document.editInvoiceForm.querySelectorAll('input[type=text]');
+    let allFields = document.editInvoiceForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
     for(var i = 0; i < allFields.length; i++) {
-        allFields[i].addEventListener('input', removeError);
+        allFields[i].addEventListener('change', removeError);
     }
 
     document.editInvoiceForm.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        let data = {
-            'data[_Token][key]': cake.data.csrf_token.key,
-            'company_name': companyName.value,
-            'company_post_code': postalCode.value,
-            'company_region': region.value,
-            'company_city': city.value,
-            'company_street': street.value,
-            'contact_person_last_name': lastName.value,
-            'contact_person_first_name': firstName.value,
-            'contact_person_last_name_kana': lastNameKana.value,
-            'contact_person_first_name_kana': firstNameKana.value,
-            'contact_person_email': email.value,
-            'contact_person_tel': telephone.value
+        
+        var data = {
+            'data[_Token][key]': cake.data.csrf_token.key
         };
+        for(var i = 0; i < fields.length; i++) {
+            data[fields[i]] = document.getElementsByName(fields[i])[0].value;
+        }
 
         let xhr = new XMLHttpRequest();
         xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/invoice');
@@ -52,10 +46,20 @@ if(document.editInvoiceForm) {
             }
             else {
                 let response  = JSON.parse(xhr.response);
-                let fields = Object.keys(response.validation_errors.payment_setting);
-                fields.forEach(function (item) {
-                    setError(item, response.validation_errors.payment_setting[item]);
-                });
+                // Validation errors
+                if (response.validation_errors) {
+                    let fields = Object.keys(response.validation_errors.payment_setting);
+                    fields.forEach(function (item) {
+                        setError(item, response.validation_errors.payment_setting[item]);
+                    });
+                } else {
+                    // Any other error
+                    new Noty({
+                        type: 'error',
+                        text: response.message ? response.message : xhr.statusText
+                    }).show();
+                }
+
             }
         };
         xhr.send(urlEncode(data));
