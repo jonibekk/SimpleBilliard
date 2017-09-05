@@ -165,7 +165,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                 </h5>
                 <div class="mb_4px">
                     <span
-                        class="help-block font_12px"><?= __("Please input start date / end date of KR between start date / end date of the goal.") ?></span>
+                        class="help-block font_12px"><?= __("Please input start date / end date of KR between start date / end date of the Goal.") ?></span>
                 </div>
 
                 <div class="goal-set-input">
