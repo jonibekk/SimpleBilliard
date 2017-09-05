@@ -412,7 +412,7 @@ class Team extends AppModel
                 function () use ($model) {
                     return $model->findById($model->current_team_id);
                 }, 'team_info');
-        }
+            }
         return $this->current_team;
     }
 

@@ -74,15 +74,15 @@ class SignupController extends AppController
             ],
         ],
         'Team'      => [
-            'name'             => [
+            'name'          => [
                 'isString'  => [
                     'rule' => ['isString',],
                 ],
                 'maxLength' => ['rule' => ['maxLength', 128]],
                 'notBlank'  => ['rule' => ['notBlank'],],
             ],
-            'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
-            'timezone'         => [
+            'border_months' => ['numeric' => ['rule' => ['numeric'],],],
+            'timezone'      => [
                 'numeric' => [
                     'rule'       => ['numeric'],
                     'allowEmpty' => true,
@@ -91,14 +91,14 @@ class SignupController extends AppController
         ],
         'Term'      => [
             'next_start_ym' => [
-                'notBlank'            => [
+                'notBlank'     => [
                     'required' => 'update',
                     'rule'     => 'notBlank',
                 ],
-                'dateYm'             => [
+                'dateYm'       => [
                     'rule' => ['date', 'ym'],
                 ],
-                'startEndDate'       => [
+                'startEndDate' => [
                     'rule' => ['customValidNextStartDateInSignup']
                 ],
             ]
@@ -135,8 +135,8 @@ class SignupController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        //ISAO環境では新規登録画面でBasic認証を有効にする
-        if (!$this->is_mb_app && ENV_NAME == "isao" && $this->request->params['action'] == 'email') {
+
+        if ($this->_isBasicAuthRequiredOnSignup()) {
             $this->_setBasicAuth();
         }
 
@@ -150,6 +150,28 @@ class SignupController extends AppController
             $this->Notification->outError(__('Invalid screen transition.'));
             $this->redirect('/');
         }
+    }
+
+    /**
+     * @return bool
+     */
+    function _isBasicAuthRequiredOnSignup(): bool
+    {
+        if ($this->is_mb_app) {
+            return false;
+        }
+
+        // target env
+        if (!in_array(ENV_NAME, ['isao', 'stg'])) {
+            return false;
+        }
+
+        // target actions
+        if (!in_array($this->request->params['action'], ['email'])) {
+            return false;
+        }
+
+        return true;
     }
 
     public function email()
@@ -441,7 +463,8 @@ class SignupController extends AppController
             $this->Session->delete('data');
 
         } catch (RuntimeException $e) {
-            $this->log(sprintf("Failed to signup. requestData: %s sessionData: %s", var_export($requestData, true), var_export($sessionData, true)));
+            $this->log(sprintf("Failed to signup. requestData: %s sessionData: %s", var_export($requestData, true),
+                var_export($sessionData, true)));
             $res['error'] = true;
             $res['message'] = $e->getMessage();
             $this->User->rollback();

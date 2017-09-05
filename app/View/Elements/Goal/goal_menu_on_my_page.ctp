@@ -74,18 +74,18 @@
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                    __("Delete goal") . '</span>',
+                    __("Delete Goal") . '</span>',
                     ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']],
-                    ['escape' => false], __("Do you really want to delete this goal?")) ?>
+                    ['escape' => false], __("Do you really want to delete this Goal?")) ?>
             </li>
         <?php endif; ?>
         <?php if (in_array($goal['Goal']['id'], $canCompleteGoalIds)): ?>
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-hand-stop-o"></i><span class="ml_5px">' .
-                    __("Achieve goal") . '</span>',
+                    __("Achieve Goal") . '</span>',
                     "/goals/complete/" . $goal['Goal']['id'],
-                    ['escape' => false], __("Do you really want to complete this goal?")) ?>
+                    ['escape' => false], __("Do you really want to complete this Goal?")) ?>
             </li>
         <?php endif; ?>
     </ul>

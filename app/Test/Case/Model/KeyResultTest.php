@@ -615,7 +615,7 @@ class KeyResultTest extends GoalousTestCase
             'end_date'   => AppUtil::dateYmd(strtotime($endDate))
         ]);
 
-        $correctErrMsg = __("Please input start / end date within start / end date of the goal.");
+        $correctErrMsg = __("Please input start / end date within start / end date of the Goal.");
 
         // 開始/終了日がゴールの開始/終了日と同じ
         $updateKr['goal_id'] = 1;

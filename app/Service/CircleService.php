@@ -22,7 +22,7 @@ class CircleService extends AppService
      *
      * @return bool
      */
-    function create(array $data, int $myUserId,  array $memberUserIds = []): bool
+    function create(array $data, int $myUserId, array $memberUserIds = []): bool
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -36,7 +36,8 @@ class CircleService extends AppService
 
             // create circle
             if (!$Circle->add($data, $myUserId)) {
-                throw new Exception(sprintf("Failed to create a circle. data:%s userId:%d", var_export($data, true), $myUserId));
+                throw new Exception(sprintf("Failed to create a circle. data:%s userId:%d", var_export($data, true),
+                    $myUserId));
             }
             $newCircleId = $Circle->getLastInsertID();
 
@@ -51,13 +52,14 @@ class CircleService extends AppService
             // build save data
             $saveData = [];
             array_unshift($memberUserIds, $myUserId);
-            foreach($memberUserIds as $userId) {
+            foreach ($memberUserIds as $userId) {
                 $isAdmin = ($userId == $myUserId);
                 $saveData[] = $this->buildJoinData($newCircleId, $userId, $isAdmin);
             }
             // save
             if (!$CircleMember->bulkInsert($saveData)) {
-                throw new Exception(sprintf("Failed to add members to circle. circleId:%d data:%s", $newCircleId, var_export($saveData, true)));
+                throw new Exception(sprintf("Failed to add members to circle. circleId:%d data:%s", $newCircleId,
+                    var_export($saveData, true)));
             }
 
             $CircleMember->updateCounterCache(['circle_id' => $newCircleId]);
@@ -75,7 +77,7 @@ class CircleService extends AppService
         }
 
         // Delete joined members circles cache
-        foreach($memberUserIds as $userId) {
+        foreach ($memberUserIds as $userId) {
             $this->deleteUserCirclesCache($userId);
         }
 
@@ -86,8 +88,8 @@ class CircleService extends AppService
     /**
      * Validate create circle
      *
-     * @param  array  $circle
-     * @param  array  $members
+     * @param  array $circle
+     * @param  array $members
      *
      * @return true|string
      */
@@ -162,15 +164,16 @@ class CircleService extends AppService
             $CircleMember->begin();
 
             // build save data
-            foreach($circleIds as $circleId) {
+            foreach ($circleIds as $circleId) {
                 $saveData[] = $this->buildJoinData($circleId, $userId);
             }
             // join
             if (!$CircleMember->bulkInsert($saveData)) {
-                throw new Exception(sprintf("Failed to add members to circle. circleIds:%s data:%s", var_export($circleIds, true), var_export($saveData, true)));
+                throw new Exception(sprintf("Failed to add members to circle. circleIds:%s data:%s",
+                    var_export($circleIds, true), var_export($saveData, true)));
             }
 
-            foreach($circleIds as $circleId) {
+            foreach ($circleIds as $circleId) {
                 $CircleMember->updateCounterCache(['circle_id' => $circleId]);
             }
 
@@ -195,7 +198,7 @@ class CircleService extends AppService
      * - Delete my circles cache
      *
      * @param array $circles
-     * @param int $userId
+     * @param int   $userId
      *
      * @return bool
      */
@@ -234,12 +237,13 @@ class CircleService extends AppService
 
             $saveData = [];
             // build save data
-            foreach($memberUserIds as $userId) {
+            foreach ($memberUserIds as $userId) {
                 $saveData[] = $this->buildJoinData($circleId, $userId);
             }
             // save
             if (!$CircleMember->bulkInsert($saveData)) {
-                throw new Exception(sprintf("Failed to add members to circle. circleId:%d data:%s", $circleId, var_export($saveData, true)));
+                throw new Exception(sprintf("Failed to add members to circle. circleId:%d data:%s", $circleId,
+                    var_export($saveData, true)));
             }
 
             $CircleMember->updateCounterCache(['circle_id' => $circleId]);
@@ -254,7 +258,7 @@ class CircleService extends AppService
         $CircleMember->commit();
 
         // Delete joined members circles cache
-        foreach($memberUserIds as $userId) {
+        foreach ($memberUserIds as $userId) {
             $this->deleteUserCirclesCache($userId);
         }
 
@@ -306,7 +310,8 @@ class CircleService extends AppService
         }
 
         // Check can join member
-        $usersExist = $CircleMember->find('count', ['conditions' => ['user_id' => $memberUserIds, 'circle_id' => $circleId]]);
+        $usersExist = $CircleMember->find('count',
+            ['conditions' => ['user_id' => $memberUserIds, 'circle_id' => $circleId]]);
         if ($usersExist > 0) {
             return __("Failed to add circle member(s.)");
         }
@@ -333,12 +338,11 @@ class CircleService extends AppService
         $CircleMember = ClassRegistry::init('CircleMember');
 
         if ($this->isExperimentMode === null) {
-            $isExperimentMode = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_OFF);
+            $isExperimentMode = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON);
             $this->isExperimentMode = $isExperimentMode;
         }
 
-        $showForAllFeedFlg = $this->isExperimentMode ? false : true;
-        $getNotificationFlg = $this->isExperimentMode ? false : true;
+        $showForAllFeedFlg = $this->isExperimentMode ? true : false;
 
         $saveData = [
             'circle_id'             => $circleId,
@@ -346,7 +350,7 @@ class CircleService extends AppService
             'user_id'               => $userId,
             'admin_flg'             => $isAdmin,
             'show_for_all_feed_flg' => $showForAllFeedFlg,
-            'get_notification_flg'  => $getNotificationFlg,
+            'get_notification_flg'  => true,
         ];
         return $saveData;
     }
@@ -355,6 +359,7 @@ class CircleService extends AppService
      * extract user ids from select2 string
      *
      * @param  array ['user_{user_id}']
+     *
      * @return array [{user_id}]
      */
     function extractUserIds(string $userListStr): array
@@ -368,6 +373,7 @@ class CircleService extends AppService
 
     /**
      * Delete user's circles cache
+     *
      * @param [type] $userId [description]
      */
     function deleteUserCirclesCache(int $userId)
