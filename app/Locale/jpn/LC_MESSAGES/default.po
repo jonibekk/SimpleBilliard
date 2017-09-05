@@ -3431,7 +3431,7 @@ msgstr ""
 "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
 msgid "What should we do after the campaign?"
-msgstr "無償期間（2017年夏まで）の後はどうなりますか？"
+msgstr "無償期間（2017年9月30日まで）の後はどうなりますか？"
 
 msgid ""
 "In order to continue using Goalous, you need to purchase a subscription plan."
@@ -3455,7 +3455,7 @@ msgid ""
 "After logged in, you can get contact with us by support tool. We can help "
 "you as soon as possible."
 msgstr ""
-"2017年夏までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用"
+"2017年9月30日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用"
 "できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
 
 msgid "Which company offer Goalous?"
@@ -3478,8 +3478,8 @@ msgstr "その他のご質問はありますか？"
 msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
-msgid "It's free until the summer of 2017! Try it!"
-msgstr "2017年夏まで完全無料！今すぐお試しください。"
+msgid "It's free till September 30, 2017! Try it out!"
+msgstr "2017年9月30日まで完全無料！今すぐお試しください。"
 
 msgid "Are you on Goalous? %s. Any question ? %s."
 msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
@@ -3542,8 +3542,8 @@ msgstr "チーム画像"
 msgid "Plan"
 msgstr "プラン"
 
-msgid "You can use Goalous free of charge until the summer of 2017."
-msgstr "2017年夏まで無料でご利用できます。"
+msgid "You can use Goalous free of charge till September 30, 2017."
+msgstr "2017年9月30日まで無料でご利用できます。"
 
 msgid "Change basic settings"
 msgstr "基本設定を更新"
@@ -4850,9 +4850,9 @@ msgstr "料金・価格 | Goalous(ゴーラス)"
 msgid "It's all free"
 msgstr "今だけ、有料プランも完全無料"
 
-msgid "Released sale, It's all free until the summer of 2017!"
+msgid "Released sale, It's all free till September 30, 2017!"
 msgstr ""
-"リリース記念で2017年夏までPlusをご利用いただけます。フィードバックをお待ちし"
+"リリース記念で2017年9月30日までPlusをご利用いただけます。フィードバックをお待ちし"
 "ております。"
 
 msgid "Plus"
@@ -5153,14 +5153,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#, fuzzy
-#~| msgid "Update"
-#~ msgid "Update Card"
-#~ msgstr "更新"
-
-#~ msgid "Newsfeed"
-#~ msgstr "ニュースフィード"
-
-#~ msgid "Related Goals"
-#~ msgstr "関連ゴール"
