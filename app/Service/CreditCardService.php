@@ -359,7 +359,7 @@ class CreditCardService extends AppService
      *
      * @return array
      */
-    function updateCreditCard(string $customerId, string $token, int $teamId): array
+    public function updateCreditCard(string $customerId, string $token, int $teamId): array
     {
         try {
             \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);

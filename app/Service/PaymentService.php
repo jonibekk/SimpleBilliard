@@ -156,62 +156,6 @@ class PaymentService extends AppService
     }
 
     /**
-     * // TODO: This method has not been referred from anywhere (except Test), What is purpose?
-     * Create a payment settings as its related credit card
-     *
-     * @param        $data
-     * @param string $customerCode
-     * @param int    $userId
-     *
-     * @return bool
-     */
-    public function registerCreditCardPayment($data, string $customerCode, int $userId)
-    {
-        /** @var PaymentSetting $PaymentSetting */
-        $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        /** @var CreditCard $CreditCard */
-        $CreditCard = ClassRegistry::init("CreditCard");
-
-        try {
-            // Create PaymentSettings
-            $this->TransactionManager->begin();
-            if (!$PaymentSetting->save($data)) {
-                $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create payment settings. data:%s", var_export($data, true)));
-            }
-            $paymentSettingId = $PaymentSetting->getLastInsertID();
-
-            // Create CreditCards
-            $creditCardData = [
-                'team_id'            => $data['team_id'],
-                'payment_setting_id' => $paymentSettingId,
-                'customer_code'      => $customerCode,
-            ];
-
-            if (!$CreditCard->save($creditCardData)) {
-                $CreditCard->rollback();
-                $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create credit card. data:%s",
-                    AppUtil::varExportOneLine($creditCardData)));
-            }
-
-            // Save snapshot
-            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
-            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
-            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
-
-            // Commit changes
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::emergency($e->getTraceAsString());
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Get use days from current date to next payment base date
      *
      * @param int $currentTimeStamp
@@ -891,6 +835,11 @@ class PaymentService extends AppService
         $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
 
         $membersCount = $TeamMember->countChargeTargetUsers($teamId);
+        // Count should never be zero.
+        if ($membersCount == 0) {
+            CakeLog::emergency(sprintf("[%s] Invalid member count for teamId: %s", __METHOD__, $teamId));
+            return false;
+        }
 
         try {
             $this->TransactionManager->begin();
@@ -903,7 +852,7 @@ class PaymentService extends AppService
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
             $paymentData['amount_per_user'] = self::AMOUNT_PER_USER_JPY;
             // Create Payment Setting
-            if (!$PaymentSetting->save($paymentData, false)) {
+            if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
                     AppUtil::varExportOneLine($paymentData)));
             }
@@ -914,7 +863,7 @@ class PaymentService extends AppService
             $invoiceData['payment_setting_id'] = $paymentSettingId;
             $invoiceData['credit_status'] = Enum\Invoice\CreditStatus::WAITING;
             // Create Invoice
-            if (!$Invoice->save($invoiceData, false)) {
+            if (!$Invoice->save($invoiceData, true)) {
                 throw new Exception(sprintf("Failed create invoice record. data: %s",
                     AppUtil::varExportOneLine($invoiceData)));
             }
