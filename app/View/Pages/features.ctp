@@ -98,7 +98,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//intro-->
             <div class="features-video col-md-7 col-sm-6 col-xs-12 col-xs-offset-0">
                 <div class="video-container">
-                    <iframe width="720" height="405" src="https://www.youtube.com/embed/<?= $this->Lang->getLangCode()=='ja' ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>?rel=0"
+                    <iframe width="720" height="405" src="https://www.youtube.com/embed/<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>?rel=0"
                             frameborder="0" allowfullscreen></iframe>
                 </div><!--//video-container-->
             </div><!--//video-->
