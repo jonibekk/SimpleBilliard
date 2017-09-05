@@ -1279,6 +1279,12 @@ class PaymentServiceTest extends GoalousTestCase
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var CreditCard $CreditCard */
+        $CreditCard     = ClassRegistry::init("CreditCard");
+        /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+        $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
 
         $token = 'tok_chargeCustomerFail';
         $teamId = 1;
@@ -1293,13 +1299,21 @@ class PaymentServiceTest extends GoalousTestCase
         $userId = $this->createActiveUser($teamId);
         $paymentData = $this->createTestPaymentDataForReg([]);
 
+        $countBeforeRollbackPaymentSetting          = $PaymentSetting->find('count');
+        $countBeforeRollbackCreditCard              = $CreditCard->find('count');
+        $countBeforeRollbackPaymentSettingChangeLog = $PaymentSettingChangeLog->find('count');
+        $countBeforeRollbackTeamMember              = $TeamMember->find('count');
+
         $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $paymentData);
         // Check response failed
         $this->assertTrue($res['error']);
         $this->assertEquals(500, $res['errorCode']);
 
         // check if payment_settings is rollback
-        $this->assertEquals(0, $PaymentSetting->find('count'));
+        $this->assertEquals($countBeforeRollbackPaymentSetting, $PaymentSetting->find('count'));
+        $this->assertEquals($countBeforeRollbackCreditCard,     $CreditCard->find('count'));
+        $this->assertEquals($countBeforeRollbackPaymentSettingChangeLog, $PaymentSettingChangeLog->find('count'));
+        $this->assertEquals($countBeforeRollbackTeamMember,     $TeamMember->find('count'));
     }
 
     public function test_registerInvoicePayment()
