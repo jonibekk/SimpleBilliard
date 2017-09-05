@@ -140,7 +140,7 @@ Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'lp'],
 Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'app_version_unsupported'],
     ['pagename' => 'app_force_update|app_force_install', 'pass' => ['pagename']]);
 
-// Allow 'pdf' extension
+// Allow '.pdf' extension
 Router::parseExtensions('pdf');
 
 /**
