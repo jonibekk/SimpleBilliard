@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'InvitationService');
 
 use Goalous\Model\Enum as Enum;
@@ -235,8 +236,48 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(1, count($extractedEmailValidationErrors['email']));
     }
 
-    function test_reInvite()
+    function test_reInvite_success()
     {
-        // TODO: should write test
+        $userIdFrom = 1;
+        $userId = 1;
+        $teamId = 1;
+        $emailFirst     = 'reInviteTest@example.com';
+        $emailReInvite = 'reInviteTestAgain@example.com';
+        $inviteData = $this->Invite->save([
+            'from_user_id'        => $userIdFrom,
+            'to_user_id'          => null,
+            'team_id'             => $teamId,
+            'email'               => $emailFirst,
+            'message'             => '',
+            'email_verified'      => false,
+            'email_token'         => 'token',
+            'email_token_expires' => GoalousDateTime::now()->getTimestamp(),
+            'del_flg'             => false,
+            'deleted'             => null,
+            'created'             => GoalousDateTime::now()->getTimestamp(),
+            'modified'            => GoalousDateTime::now()->getTimestamp(),
+        ]);
+        $insertedInviteId = $inviteData['Invite']['id'];
+        $emailData = $this->Email->save([
+            'user_id'             => $userId,
+            'email'               => $emailFirst,
+            'email_verified'      => false,
+            'email_token'         => '12345678',
+            'email_token_expires' => GoalousDateTime::now()->getTimestamp(),
+            'del_flg'             => false,
+            'deleted'             => null,
+            'created'             => GoalousDateTime::now()->getTimestamp(),
+            'modified'            => GoalousDateTime::now()->getTimestamp(),
+        ]);
+        $result = $this->InvitationService->reInvite($inviteData['Invite'], $emailData['Email'], $emailReInvite);
+        $this->assertTrue($result);
+        $inviteData   = $this->Invite->findById($insertedInviteId);
+        $reInviteData = $this->Invite->findById($insertedInviteId + 1)['Invite'];
+
+        $this->assertEquals([], $inviteData);
+
+        $this->assertEquals(false, $reInviteData['del_flg']);
+        $this->assertEquals($emailReInvite, $reInviteData['email']);
+        $this->assertNull($reInviteData['deleted']);
     }
 }
