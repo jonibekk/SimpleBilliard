@@ -19,8 +19,7 @@ use Goalous\Model\Enum as Enum;
 class PaymentService extends AppService
 {
     const AMOUNT_PER_USER_JPY = 1980;
-    // TODO.Payment: Fix amount per user case $ after final decision
-    const AMOUNT_PER_USER_USD = 16;
+    const AMOUNT_PER_USER_USD = 19;
 
     /* Payment settings variable cache */
     private static $cacheList = [];
