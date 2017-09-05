@@ -3,7 +3,7 @@ App::uses('AppHelper', 'View/Helper');
 
 class LangHelper extends AppHelper
 {
-    const LANG_CODE_JP = 'jp';
+    const LANG_CODE_JP = 'ja';
     const LANG_CODE_EN = 'en';
 
     /**

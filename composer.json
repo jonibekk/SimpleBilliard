@@ -18,7 +18,8 @@
     "browscap/browscap-php": "dev-master",
     "stripe/stripe-php": "^5.1",
     "nesbot/carbon": "^1.22",
-    "myclabs/php-enum": "^1.5"
+    "myclabs/php-enum": "^1.5",
+    "friendsofcake/cakepdf": "1.0.3"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",

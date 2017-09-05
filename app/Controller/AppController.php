@@ -56,7 +56,8 @@ class AppController extends BaseController
         'Ogp',
         'Csv',
         'Flash',
-        //        'Benchmark',
+        // CakePdf required it.
+        'RequestHandler'
     ];
     private $merge_helpers = [
         'Session',
