@@ -136,7 +136,6 @@ class SendAlertMailToAdminShell extends AppShell
                 continue;
             }
             $this->_sendingEmailToAdmins($team['id'], $team['name'], $stateEndDate, $serviceUseStatus);
-            // break;// TODO: for test remove this
         }
         $msg = sprintf("Sending email for alerting expire has been done. succeeded count:%s, failed count:%s, \$serviceUseStatus:%s",
             $this->succeededCount,
