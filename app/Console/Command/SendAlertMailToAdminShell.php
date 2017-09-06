@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
+App::uses('GoalousDateTime', 'DateTime');
 
 /**
  * # Batch processing for sending e-mail of expires alert.
@@ -43,6 +44,11 @@ class SendAlertMailToAdminShell extends AppShell
     private $failedCount = 0;
     private $succeededCount = 0;
 
+    /**
+     * @var GoalousDateTime requested date time
+     */
+    private $dateTimeRequest = '';
+
     function startup()
     {
         parent::startup();
@@ -71,6 +77,10 @@ class SendAlertMailToAdminShell extends AppShell
                     Team::SERVICE_USE_STATUS_CANNOT_USE
                 ],
             ],
+            'simulate_current_date' => [
+                'help'    => 'this batch simulate current date of option parameter',
+                'default' => null,
+            ],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -78,6 +88,16 @@ class SendAlertMailToAdminShell extends AppShell
 
     function main()
     {
+        $canOverWriteCurrentDate = !in_array(ENV_NAME, ['www', 'isao']);
+        $dateSimulateCurrent = Hash::get($this->params, 'simulate_current_date');
+        if ($canOverWriteCurrentDate && $dateSimulateCurrent !== null) {
+            GoalousDateTime::setTestNow($dateSimulateCurrent);
+        } else if (!$canOverWriteCurrentDate && $dateSimulateCurrent !== null) {
+            $this->out(sprintf("cant simulate current date in this env(%s)!", ENV_NAME));
+            die();
+        }
+        $this->dateTimeRequest = GoalousDateTime::now();
+        $this->out(sprintf("current date is: %s", $this->dateTimeRequest->format('Y-m-d')));
         if (Hash::get($this->params, 'target_status') !== null) {
             $this->_mainProcess($this->params['target_status']);
         } else {
@@ -109,10 +129,14 @@ class SendAlertMailToAdminShell extends AppShell
                 continue;
             }
             $stateEndDate = $team['service_use_state_end_date'];
-            if ($this->_isTargetTeam($stateEndDate, $team['timezone']) === false) {
+            if (false === $this->_isTargetTeam(
+                    $this->dateTimeRequest->copy()->setTimeZoneByHour($team['timezone'])->format('Y-m-d'),
+                    $stateEndDate
+                )) {
                 continue;
             }
             $this->_sendingEmailToAdmins($team['id'], $team['name'], $stateEndDate, $serviceUseStatus);
+            // break;// TODO: for test remove this
         }
         $msg = sprintf("Sending email for alerting expire has been done. succeeded count:%s, failed count:%s, \$serviceUseStatus:%s",
             $this->succeededCount,
@@ -154,19 +178,18 @@ class SendAlertMailToAdminShell extends AppShell
     /**
      * Is the team target for sending email?
      *
-     * @param string $stateEndDate
-     * @param float  $timezone
+     * @param string $currentDate       "Y-m-d"
+     * @param string $teamsStateEndDate "Y-m-d"
      *
      * @return bool
      */
-    function _isTargetTeam(string $stateEndDate, float $timezone): bool
+    function _isTargetTeam(string $currentDate, string $teamsStateEndDate): bool
     {
         if (isset($this->params['force']) && $this->params['force'] === true) {
             return true;
         }
         $notifyBeforeDays = explode(',', EXPIRE_ALERT_NOTIFY_BEFORE_DAYS);
-        $todayLocalDate = AppUtil::todayDateYmdLocal($timezone);
-        $diffDaysBetweenExpireAndToday = AppUtil::diffDays($todayLocalDate, $stateEndDate);
+        $diffDaysBetweenExpireAndToday = AppUtil::diffDays($currentDate, $teamsStateEndDate);
         if (in_array($diffDaysBetweenExpireAndToday, $notifyBeforeDays)) {
             return true;
         }
