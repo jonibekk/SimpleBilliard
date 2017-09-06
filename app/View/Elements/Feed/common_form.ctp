@@ -98,24 +98,20 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     ],
                     'id'            => 'PostDisplayForm',
                     'type'          => 'file',
-                    'novalidate'    => true,
                     'class'         => 'form-feed-notify'
                 ]); ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <?=
                     $this->Form->input('body', [
-                        'id'                           => 'CommonPostBody',
-                        'label'                        => false,
-                        'type'                         => 'textarea',
-                        'wrap'                         => 'soft',
-                        'rows'                         => 1,
-                        'placeholder'                  => __("Write something..."),
-                        'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                        "required"                     => true,
-                        'data-bv-notempty-message'     => __("Input is required."),
-                        'data-bv-stringlength'         => 'true',
-                        'data-bv-stringlength-max'     => 10000,
-                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 10000),
+                        'id'          => 'CommonPostBody',
+                        'label'       => false,
+                        'type'        => 'textarea',
+                        'wrap'        => 'soft',
+                        'rows'        => 1,
+                        'placeholder' => __("Write something..."),
+                        'class'       => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
+                        "required"    => true,
+                        'maxlength'   => 10000,
                     ])
                     ?>
 
@@ -197,8 +193,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                             $this->Form->submit($is_edit_mode ? __("Save") : __("Post"),
                                 [
                                     'class'    => 'btn btn-primary pull-right post-submit-button',
-                                    'id'       => 'PostSubmit',
-                                    'disabled' => $is_edit_mode ? '' : 'disabled'
+                                    'id'       => 'PostSubmit'
                                 ]) ?>
                         </div>
                     </div>

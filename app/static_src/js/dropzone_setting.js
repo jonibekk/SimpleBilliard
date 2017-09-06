@@ -486,14 +486,6 @@ $(function () {
 
       // フォームをsubmit可能にする
       $('#PostSubmit').off('click', $uploadFileForm._forbitSubmit);
-
-      // 投稿文が入力されていれば submit ボタンを有効化、空であれば無効化
-      if ($('#CommonPostBody').val().length == 0) {
-        $('#PostSubmit').attr('disabled', 'disabled');
-      }
-      else {
-        $('#PostSubmit').removeAttr('disabled');
-      }
     },
     afterError: function (file) {
       var $preview = $(file.previewTemplate);

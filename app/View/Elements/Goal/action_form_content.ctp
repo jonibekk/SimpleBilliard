@@ -26,7 +26,6 @@
             'data-is-edit' => $is_edit_mode,
             'id'               => 'CommonActionDisplayForm',
             'type'             => 'file',
-            'novalidate'       => true,
             'class'            => 'form-feed-notify action-form'
         ]); ?>
         <div class="post-panel-body plr_11px ptb_7px">
@@ -51,18 +50,15 @@
              class="panel-body action-form-panel-body none pull-left action-input-name">
             <?=
             $this->Form->input('name', [
-                'id'                           => 'CommonActionName',
-                'label'                        => false,
-                'type'                         => 'textarea',
-                'wrap'                         => 'soft',
-                'rows'                         => 1,
-                'required'                     => true,
-                'placeholder'                  => __("Write an action..."),
-                'class'                        => 'form-control',
-                'data-bv-notempty-message'     => __("Input is required."),
-                'data-bv-stringlength'         => 'true',
-                'data-bv-stringlength-max'     => 10000,
-                'data-bv-stringlength-message' => __("It's over limit characters (%s).", 10000),
+                'id'          => 'CommonActionName',
+                'label'       => false,
+                'type'        => 'textarea',
+                'wrap'        => 'soft',
+                'rows'        => 1,
+                'required'    => true,
+                'placeholder' => __("Write an action..."),
+                'class'       => 'form-control',
+                'maxlength'   => 10000
             ])
             ?>
         </div>
@@ -77,7 +73,6 @@
                             'label'                    => false,
                             'div'                      => false,
                             'required'                 => true,
-                            'data-bv-notempty-message' => __("Input is required."),
                             'class'                    => 'form-control js-change-goal',
                             'id'                       => 'GoalSelectOnActionForm',
                             'options'                  => $canActionGoals,
