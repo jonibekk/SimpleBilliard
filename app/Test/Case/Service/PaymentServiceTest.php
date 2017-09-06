@@ -2210,59 +2210,49 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-01-30 14:59:59'));
-        $this->assertEquals($res, '$0.51');
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-01-30 14:59:59'));
-        $this->assertEquals($res, '$1.03');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 14:59:59'));
+        $this->assertEquals($res, '$0.61');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-01-30 15:00:00'));
-        $this->assertEquals($res, '$16');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 14:59:59'));
+        $this->assertEquals($res, '$1.22');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-01-30 15:00:00'));
-        $this->assertEquals($res, '$48');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 15:00:00'));
+        $this->assertEquals($res, '$'.$amountPerUser);
+
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 15:00:00'));
+        $this->assertEquals($res, '$57');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-02-27 23:59:59'));
-        $this->assertEquals($res, '$0.57');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-02-27 23:59:59'));
+        $this->assertEquals($res, '$0.67');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-02-28 00:00:00'));
-        $this->assertEquals($res, '$16');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-02-28 00:00:00'));
+        $this->assertEquals($res, '$'.$amountPerUser);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-03-31 03:29:59'));
-        $this->assertEquals($res, '$0.51');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-03-31 03:29:59'));
+        $this->assertEquals($res, '$0.61');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-03-31 03:30:00'));
-        $this->assertEquals($res, '$16');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-03-31 03:30:00'));
+        $this->assertEquals($res, '$'.$amountPerUser);
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-04-01 03:30:00'));
-        $this->assertEquals($res, '$15.46');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-04-01 03:30:00'));
+        $this->assertEquals($res, '$18.36');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-08-31 11:59:59'));
-        $this->assertEquals($res, '$0.51');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-08-31 11:59:59'));
+        $this->assertEquals($res, '$0.61');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-08-31 12:00:00'));
-        $this->assertEquals($res, '$16');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-08-31 12:00:00'));
+        $this->assertEquals($res, '$'.$amountPerUser);
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(12, Enum\PaymentSetting\Currency::USD(),
-            strtotime('2017-09-10 12:00:00'));
-        $this->assertEquals($res, '$128');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(12, Enum\PaymentSetting\Currency::USD(), strtotime('2017-09-10 12:00:00'));
+        $this->assertEquals($res, '$152');
 
     }
 
