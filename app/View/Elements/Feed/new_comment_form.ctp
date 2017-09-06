@@ -24,7 +24,6 @@ $this->Form->create('Comment', [
     'id'              => "{$prefix}CommentAjaxGetNewCommentForm_{$post_id}",
     'class'           => 'form-feed-notify ajax-add-comment comment-form',
     'type'            => 'file',
-    'novalidate'      => true,
     'error-msg-id'    => $prefix . 'CommentFormErrorMsg_' . $post_id,
     'submit-id'       => $prefix . 'CommentSubmit_' . $post_id,
     'first-form-id'   => $prefix . 'NewCommentForm_' . $post_id,
@@ -33,19 +32,16 @@ $this->Form->create('Comment', [
 <?php $this->Form->unlockField('socket_id') ?>
 <?=
 $this->Form->input('body', [
-    'id'                           => "{$prefix}CommentFormBody_{$post_id}",
-    'label'                        => false,
-    'type'                         => 'textarea',
-    'wrap'                         => 'soft',
-    'rows'                         => 1,
-    'required'                     => true,
-    'placeholder'                  => __("Comment"),
-    'class'                        => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
-    'target-id'                    => "{$prefix}CommentSubmit_{$post_id}",
-    'data-bv-notempty-message'     => __("Input is required."),
-    'data-bv-stringlength'         => 'true',
-    'data-bv-stringlength-max'     => 5000,
-    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5000),
+    'id'          => "{$prefix}CommentFormBody_{$post_id}",
+    'label'       => false,
+    'type'        => 'textarea',
+    'wrap'        => 'soft',
+    'rows'        => 1,
+    'required'    => true,
+    'placeholder' => __("Comment"),
+    'class'       => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
+    'target-id'   => "{$prefix}CommentSubmit_{$post_id}",
+    'maxlength'   => 5000,
 ])
 ?>
 <?= $this->Form->hidden('site_info_url', ['id' => "CommentSiteInfoUrl_{$post_id}"]) ?>
@@ -73,8 +69,7 @@ $this->Form->input('body', [
         <?=
         $this->Form->submit(__("Comment"),
             ['class'    => 'btn btn-primary submit-btn comment-submit-button',
-             'id'       => "{$prefix}CommentSubmit_{$post_id}",
-             'disabled' => 'disabled'
+             'id'       => "{$prefix}CommentSubmit_{$post_id}"
             ]) ?>
     </div>
     <div class="clearfix"></div>

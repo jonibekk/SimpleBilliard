@@ -63,14 +63,15 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
-                replace_elm.children("form").bootstrapValidator().on('success.form.bv', function (e) {
+                replace_elm.children("form").submit(function(e) {
                     // アップロードファイルの有効期限が切れていなければコメント投稿
                     var res = checkUploadFileExpire($(this).attr('id'));
                     if (res) {
-                        validatorCallback(e)
+                        validatorCallback(e);
                     }
                     return res;
                 });
+
                 $('#' + click_target_id).trigger('click').focus();
 
                 var $uploadFileForm = $(document).data('uploadFileForm');
