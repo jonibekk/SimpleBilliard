@@ -26,7 +26,6 @@
             'data-is-edit' => $is_edit_mode,
             'id'               => 'CommonActionDisplayForm',
             'type'             => 'file',
-            'novalidate'       => true,
             'class'            => 'form-feed-notify action-form'
         ]); ?>
         <div class="post-panel-body plr_11px ptb_7px">
@@ -58,7 +57,8 @@
                 'rows'        => 1,
                 'required'    => true,
                 'placeholder' => __("Write an action..."),
-                'class'       => 'form-control'
+                'class'       => 'form-control',
+                'maxlength'   => 10000
             ])
             ?>
         </div>
