@@ -881,7 +881,7 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId);
             if ($res === false) {
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
@@ -906,14 +906,15 @@ class PaymentService extends AppService
      * - invoice_histories -> status of response of atobarai.com
      * - invoice_histories_charge_histories -> intermediate table for invoice_histories and charge_histories.
      *
-     * @param int $teamId
-     * @param int $chargeMemberCount
-     * @param int $time
+     * @param int      $teamId
+     * @param int      $chargeMemberCount
+     * @param int      $time
+     * @param int|null $userId
      *
      * @return bool
      * @internal param float $timezone
      */
-    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time): bool
+    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
@@ -951,7 +952,8 @@ class PaymentService extends AppService
                 $chargeInfo['sub_total_charge'],
                 $chargeInfo['tax'],
                 $paymentSetting['amount_per_user'],
-                $chargeMemberCount
+                $chargeMemberCount,
+                $userId
             );
             if (!$monthlyChargeHistory) {
                 throw new Exception(sprintf("Failed to save monthly charge history. validationErrors: %s"),
