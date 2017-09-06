@@ -1640,11 +1640,18 @@ class PaymentService extends AppService
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
 
         $history = $ChargeHistory->getForReceipt($historyId);
-        $history = $this->processForReceiet($history);
+        $history = $this->processForReceipt($history);
         return $history;
     }
 
-    function processForReceiet(array $history): array
+    /**
+     * Process history data for receipt
+     *
+     * @param array $history
+     *
+     * @return array
+     */
+    function processForReceipt(array $history): array
     {
         $TimeEx = new TimeExHelper(new View());
 
