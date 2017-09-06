@@ -100,27 +100,6 @@ class PaymentServiceTest extends GoalousTestCase
         return am($default, $data);
     }
 
-    /**
-     * Create a credit card payment for test
-     */
-    private function createCreditCardPayment()
-    {
-        $payment = $this->createTestPaymentData([
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-            'payment_base_day' => 15,
-            'currency'         => PaymentSetting::CURRENCY_TYPE_JPY,
-            'company_country'  => 'JP'
-        ]);
-        $customerCode = 'cus_BDjPwryGzOQRBI';
-
-        $userID = $this->createActiveUser(1);
-        $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
-        //$this->assertTrue($res);
-    }
-
     public function test_validateCreate_validate_basic()
     {
         $payment = $this->createTestPaymentData([
@@ -208,40 +187,6 @@ class PaymentServiceTest extends GoalousTestCase
 
         $res = $this->PaymentService->validateCreateCc($payment);
         $this->assertFalse($res === true);
-    }
-
-    public function test_registerCreditCardPayment_basic()
-    {
-        $payment = $this->createTestPaymentData([
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ]);
-        $customerCode = 'cus_B3ygr9hxqg5evH';
-
-        $userID = $this->createActiveUser(1);
-        $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
-        $this->assertTrue($res);
-    }
-
-    public function test_registerCreditCardPayment_noCustomerCode()
-    {
-        $payment = $this->createTestPaymentData([
-            'token'            => 'tok_1Ahqr1AM8AoVOHcFBeqD77cx',
-            'team_id'          => 1,
-            'type'             => 1,
-            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-            'payment_base_day' => 15,
-            'currency'         => 1
-        ]);
-        $customerCode = '';
-
-        $userID = $this->createActiveUser(1);
-        $res = $this->PaymentService->registerCreditCardPayment($payment, $customerCode, $userID);
-        $this->assertFalse($res);
     }
 
     public function test_getNextBaseDate_basic()
@@ -1250,77 +1195,147 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_registerInvoicePayment()
     {
-        // TODO.Payment: fix test and add all pattern test
+        $teamId = 1;
+        $this->Team->clear();
+        $this->Team->id = $teamId;
+        $this->Team->save([
+            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_state_start_date' => '2017/8/1',
+            'service_use_state_end_date'   => '2017/8/15'
+        ], false);
 
-//        $userID = $this->createActiveUser(1);
-        $paymentData = $this->createTestPaymentData([
-            'team_id'          => 1,
-            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-            'payment_base_day' => 15,
-            'currency'         => 1,
-            'company_country'  => 'JP'
-        ]);
-//        unset($paymentData['token']);
-//
-//        $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
-//        $this->assertTrue($res);
+        $userId = $this->createActiveUser($teamId);
+        $paymentData = $invoiceData = $this->createTestPaymentDataForReg([]);
+
+        // Register invoice
+        $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData);
+        $this->assertTrue($res === true);
+
+        // Check team status
+        $team = $this->Team->getById($teamId);
+        $timezone = $this->Team->getTimezone();
+        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertNull($team['service_use_state_end_date']);
+
+        // Check if payment settings was created
+        $paymentSettings = $this->PaymentSetting->getUnique($teamId);
+        $this->assertNotEmpty($paymentSettings);
+        $this->assertEquals($paymentData, array_intersect_key($paymentSettings, $paymentData));
+        $this->assertEquals($paymentSettings['payment_base_day'], date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
+        $this->assertEquals($paymentSettings['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paymentSettings['amount_per_user'], PaymentService::AMOUNT_PER_USER_JPY);
+
+        // Check if PaymentSettingChangeLog was created
+        $payLog = $this->PaymentSettingChangeLog->getLatest($teamId);
+        $this->assertNotEmpty($payLog);
+        $this->assertEquals($payLog['team_id'], $teamId);
+        $this->assertEquals($payLog['user_id'], $userId);
+        $this->assertEquals($payLog['payment_setting_id'], $paymentSettings['id']);
+        $this->assertEquals($payLog['plain_data'], $paymentSettings);
+
+        // Check if invoice was created
+        $Invoice = ClassRegistry::init('Invoice');
+        $invoice = $Invoice->getByTeamId(1);
+        $data = array_intersect_key($invoice, $invoiceData);
+        $this->assertEquals(array_intersect_key($invoiceData, $data), $data);
+        $this->assertEquals($paymentSettings['id'], $invoice['payment_setting_id']);
+        $this->assertEquals(Enum\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
+
+        // Check invoice history was created
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        $this->assertCount(1, $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]));
+
+        // Check invoice charge history was created
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->assertCount(1, $InvoiceHistoriesChargeHistory->find('all'));
+
+        // Check saved ChargeHistory data
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($history['charge_datetime'] <= time());
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => $paymentSettings['type'],
+            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => $paymentSettings['amount_per_user'],
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($paymentSettings['company_country'], $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $this->assertEquals(array_intersect_key($history, $expected), $expected);
+        $this->assertTrue($history['charge_datetime'] <= time());
+    }
+
+    public function test_registerInvoicePayment_emptyData()
+    {
+        $userID = $this->createActiveUser(1);
+        $paymentData = $invoiceData = [];
+
+        // Register invoice
+        $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
+        $this->assertFalse($res === true);
+    }
+
+    public function test_registerInvoicePayment_invalidTeam()
+    {
+        $userID = $this->createActiveUser(1);
+        $paymentData = $invoiceData = $this->createTestPaymentData([]);
+
+        // Register invoice
+        $res = $this->PaymentService->registerInvoicePayment($userID, 999, $paymentData, $invoiceData);
+        $this->assertFalse($res === true);
     }
 
     public function test_updateInvoice()
     {
-        // TODO.Payment: fix test and add all pattern test
-//        $userID = $this->createActiveUser(1);
-//        $paymentData = $this->createTestPaymentData([
-//            'team_id'          => 1,
-//            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-//            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-//            'payment_base_day' => 15,
-//            'currency'         => 1,
-//            'company_country'  => 'JP'
-//        ]);
-//        unset($paymentData['token']);
-//
-//        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
-//        $newData = $this->createTestPaymentData([
-//            'contact_person_first_name'      => 'Tonny',
-//            'contact_person_first_name_kana' => 'トニー',
-//            'contact_person_last_name'       => 'Stark',
-//            'contact_person_last_name_kana'  => 'スターク',
-//        ]);
-//
-//        $res = $this->PaymentService->updateInvoice(1, $newData);
-//        $this->assertTrue($res === true);
+        $userID = $this->createActiveUser(1);
+        $paymentData = $invoiceData = $this->createTestPaymentData([]);
+        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
+
+        // update invoice
+        $newData = $this->createTestPaymentData([
+            'contact_person_first_name'      => 'Tonny',
+            'contact_person_first_name_kana' => 'トニー',
+            'contact_person_last_name'       => 'Stark',
+            'contact_person_last_name_kana'  => 'スターク',
+        ]);
+        $res = $this->PaymentService->updateInvoice(1, $newData);
+        $this->assertTrue($res === true);
+
+        // Assert data was updated
+        $Invoice = ClassRegistry::init('Invoice');
+        $invoice = $Invoice->getByTeamId(1);
+        $data = array_intersect_key($invoice, $newData);
+        $newData = array_intersect_key($newData, $data);
+        $this->assertEquals($data, $newData);
     }
 
     public function test_updateInvoice_missingFields()
     {
-        // TODO.Payment: fix test and add all pattern test
+        $userID = $this->createActiveUser(1);
+        $paymentData = $invoiceData = $this->createTestPaymentData([]);
+        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
 
-//        $userID = $this->createActiveUser(1);
-//        $paymentData = $this->createTestPaymentData([
-//            'team_id'          => 1,
-//            'type'             => PaymentSetting::PAYMENT_TYPE_INVOICE,
-//            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-//            'payment_base_day' => 15,
-//            'currency'         => 1,
-//            'company_country'  => 'JP'
-//        ]);
-//        unset($paymentData['token']);
-//
-//        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData);
-//        $newData = $this->createTestPaymentData([
-//            'contact_person_first_name'      => '',
-//            'contact_person_first_name_kana' => '',
-//            'contact_person_last_name'       => '',
-//            'contact_person_last_name_kana'  => '',
-//        ]);
-//
-//        $res = $this->PaymentService->updateInvoice(1, $newData);
-        //
-//        $this->assertNotNull($res);
-//        $this->assertArrayHasKey("errorCode", $res);
-//        $this->assertArrayHasKey("message", $res);
+        $newData = $this->createTestPaymentData([
+            'contact_person_first_name'      => '',
+            'contact_person_first_name_kana' => '',
+            'contact_person_last_name'       => '',
+            'contact_person_last_name_kana'  => '',
+        ]);
+        $res = $this->PaymentService->updateInvoice(1, $newData);
+
+        $this->assertNotNull($res);
+        $this->assertArrayHasKey("errorCode", $res);
+        $this->assertArrayHasKey("message", $res);
+        $this->assertEquals(500, $res['errorCode']);
     }
 
     public function test_findMonthlyChargeCcTeams_timezone()
@@ -1780,7 +1795,7 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_updatePayerInfo()
     {
-        $this->createCreditCardPayment();
+        list($teamId) = $this->createCcPaidTeam();
         $updateData = [
             'company_name'                   => 'ISAO',
             'company_post_code'              => '000000',
@@ -1798,12 +1813,12 @@ class PaymentServiceTest extends GoalousTestCase
         ];
 
         // Update payment data
-        $userId = $this->createActiveUser(1);
-        $res = $this->PaymentService->updatePayerInfo(1, $userId, $updateData);
+        $userId = $this->createActiveUser($teamId);
+        $res = $this->PaymentService->updatePayerInfo($teamId, $userId, $updateData);
         $this->assertTrue($res);
 
         // Retrieve data from db
-        $data = $this->PaymentSetting->getUnique(1);
+        $data = $this->PaymentSetting->getUnique($teamId);
         // Compare updated with saved data
         $data = array_intersect_key($data, $updateData);
         $this->assertEquals($updateData, $data);
@@ -1811,7 +1826,7 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_updatePayerInfo_missingFields()
     {
-        $this->createCreditCardPayment();
+        list($teamId) = $this->createCcPaidTeam();
         $updateData = [
             'company_name'                   => 'ISAO',
             'company_post_code'              => '',
@@ -1829,12 +1844,13 @@ class PaymentServiceTest extends GoalousTestCase
         ];
 
         // Update payment data
-        $userId = $this->createActiveUser(1);
-        $res = $this->PaymentService->updatePayerInfo(1, $userId, $updateData);
+        $userId = $this->createActiveUser($teamId);
+        $res = $this->PaymentService->updatePayerInfo($teamId, $userId, $updateData);
 
         $this->assertNotNull($res);
         $this->assertArrayHasKey("errorCode", $res);
         $this->assertArrayHasKey("message", $res);
+        $this->assertEquals(500, $res['errorCode']);
     }
 
     function test_findMonthlyChargeInvoiceTeams()
@@ -2032,9 +2048,9 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_getPaymentType_creditCard()
     {
-        $this->createCreditCardPayment();
+        list($teamId) = $this->createCcPaidTeam();
 
-        $res = $this->PaymentService->getPaymentType(1);
+        $res = $this->PaymentService->getPaymentType($teamId);
         $this->assertEquals(Enum\PaymentSetting\Type::CREDIT_CARD, $res);
     }
 
@@ -2052,6 +2068,12 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_getPaymentType_noPayment()
     {
         $res = $this->PaymentService->getPaymentType(1);
+        $this->assertNull($res);
+    }
+
+    public function test_getPaymentType_creditCard_invalidTeamId()
+    {
+        $res = $this->PaymentService->getPaymentType(999999);
         $this->assertNull($res);
     }
 
@@ -2120,42 +2142,50 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-01-31 14:59:59'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-01-31 14:59:59'));
         $this->assertEquals($res, '¥68');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-01-31 14:59:59'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-01-31 14:59:59'));
         $this->assertEquals($res, '¥137');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-01-31 15:00:00'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-01-31 15:00:00'));
         $this->assertEquals($res, '¥2,138');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-01-31 15:00:00'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-01-31 15:00:00'));
         $this->assertEquals($res, '¥6,415');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-02-28 23:59:59'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-02-28 23:59:59'));
         $this->assertEquals($res, '¥75');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-03-01 00:00:00'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-03-01 00:00:00'));
         $this->assertEquals($res, '¥2,138');
-
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-04-01 03:29:59'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-04-01 03:29:59'));
         $this->assertEquals($res, '¥68');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-04-01 03:30:00'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-04-01 03:30:00'));
         $this->assertEquals($res, '¥2,138');
-
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-09-01 11:59:59'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-09-01 11:59:59'));
         $this->assertEquals($res, '¥68');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(), strtotime('2017-09-01 12:00:00'));
+        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
+            strtotime('2017-09-01 12:00:00'));
         $this->assertEquals($res, '¥2,138');
 
     }
@@ -2170,59 +2200,59 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->id = $teamId;
         $this->Team->saveField('timezone', 9.0);
         $data = $this->createTestPaymentData([
-            'team_id' => $teamId,
+            'team_id'          => $teamId,
             'payment_base_day' => 31,
-            'company_country' => 'US',
-            'amount_per_user' => PaymentService::AMOUNT_PER_USER_USD,
-            'currency' => Enum\PaymentSetting\Currency::USD
+            'company_country'  => 'US',
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
+            'currency'         => Enum\PaymentSetting\Currency::USD
         ]);
         $this->PaymentSetting->create();
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
+        $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
+
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 14:59:59'));
-        $this->assertEquals($res, '$0.51');
+        $this->assertEquals($res, '$0.61');
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 14:59:59'));
-        $this->assertEquals($res, '$1.03');
+        $this->assertEquals($res, '$1.22');
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 15:00:00'));
-        $this->assertEquals($res, '$16');
+        $this->assertEquals($res, '$'.$amountPerUser);
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 15:00:00'));
-        $this->assertEquals($res, '$48');
+        $this->assertEquals($res, '$57');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-02-27 23:59:59'));
-        $this->assertEquals($res, '$0.57');
+        $this->assertEquals($res, '$0.67');
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-02-28 00:00:00'));
-        $this->assertEquals($res, '$16');
-
+        $this->assertEquals($res, '$'.$amountPerUser);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-03-31 03:29:59'));
-        $this->assertEquals($res, '$0.51');
+        $this->assertEquals($res, '$0.61');
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-03-31 03:30:00'));
-        $this->assertEquals($res, '$16');
+        $this->assertEquals($res, '$'.$amountPerUser);
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-04-01 03:30:00'));
-        $this->assertEquals($res, '$15.46');
-
+        $this->assertEquals($res, '$18.36');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-08-31 11:59:59'));
-        $this->assertEquals($res, '$0.51');
+        $this->assertEquals($res, '$0.61');
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-08-31 12:00:00'));
-        $this->assertEquals($res, '$16');
+        $this->assertEquals($res, '$'.$amountPerUser);
 
         $res = $this->PaymentService->formatTotalChargeByAddUsers(12, Enum\PaymentSetting\Currency::USD(), strtotime('2017-09-10 12:00:00'));
-        $this->assertEquals($res, '$128');
+        $this->assertEquals($res, '$152');
 
     }
 
@@ -2421,12 +2451,60 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_getAmountPerUser()
     {
-        // TODO.Payment:Add unit tests
+        list($teamId) = $this->createCcPaidTeam([],
+            ['company_country' => 'US', 'amount_per_user' => PaymentService::AMOUNT_PER_USER_USD], []);
+        $res = $this->PaymentService->getAmountPerUser($teamId);
+        $this->assertEquals(PaymentService::AMOUNT_PER_USER_USD, $res);
+
+        list($teamId) = $this->createCcPaidTeam([],
+            ['company_country' => 'JP', 'amount_per_user' => PaymentService::AMOUNT_PER_USER_JPY], []);
+        $res = $this->PaymentService->getAmountPerUser($teamId);
+        $this->assertEquals(PaymentService::AMOUNT_PER_USER_JPY, $res);
+
+        // Assert value based on user lang settings
+        $Lang = new LangHelper(new View());
+        $userCountryCode = $Lang->getUserCountryCode();
+        $res = $this->PaymentService->getAmountPerUser(null);
+        if ($userCountryCode == 'JP') {
+            $this->assertEquals(PaymentService::AMOUNT_PER_USER_JPY, $res);
+        } else {
+            $this->assertEquals(PaymentService::AMOUNT_PER_USER_USD, $res);
+        }
     }
 
     public function test_isChargeUserActivation()
     {
-        // TODO.Payment:Add unit tests
+        // Setup team and paid plan
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        // No history expect true
+        $res = $this->PaymentService->isChargeUserActivation($teamId);
+        $this->assertTrue($res === true);
+
+        // Create payment history
+        $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
+                'system_order_code' => "test",
+            ],
+            [
+                'payment_type'     => ChargeHistory::PAYMENT_TYPE_INVOICE,
+                'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
+                'amount_per_user'  => 1980,
+                'total_amount'     => 3960,
+                'tax'              => 310,
+                'charge_users'     => 2,
+                'max_charge_users' => 2,
+                'charge_datetime'  => AppUtil::getEndTimestampByTimezone('2016-12-01', 9)
+            ]
+        );
+
+        // Already paid, expect false
+        $res = $this->PaymentService->isChargeUserActivation($teamId);
+        $this->assertFalse($res === true);
     }
 
     /**

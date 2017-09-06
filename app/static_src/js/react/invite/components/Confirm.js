@@ -63,24 +63,24 @@ export default class Confirm extends Base {
       <section className="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
         <form onSubmit={(e) => this.onSubmit(e)}>
           <div className="inviteCfmBlock">
-            <h2 className="title">招待先メールアドレス({emails.length})</h2>
+            <h2 className="title">{__("Email Address")}({emails.length})</h2>
             <ul className="ml_5px">
               {emails_el}
             </ul>
           </div>
           {(is_paid_plan && confirm_data.charge_users_count > 0) &&
           <div className="inviteCfmBlock mod-bdt">
-            <h2 className="title">請求料金</h2>
+            <h2 className="title">{__("Billing")}</h2>
             <div className="ml_5px">
               <dl className="totalCharge">
-                <dt className="totalCharge-label">請求料金合計</dt>
+                <dt className="totalCharge-label">{__("Total")}</dt>
                 <dd className="totalCharge-value">{confirm_data.total_charge}</dd>
               </dl>
               <div className="totalChargeFormula mb_12px">
                 <div className="totalChargeFormula-block">
                   <span className="totalChargeFormula-num">
                     {confirm_data.charge_users_count}
-                    <span className="totalChargeFormula-unit">people</span>
+                    <span className="totalChargeFormula-unit">{__("people")}</span>
                   </span>
                 </div>
                 <div className="totalChargeFormula-block">
@@ -95,22 +95,22 @@ export default class Confirm extends Base {
                 <div className="totalChargeFormula-block">
                   <div className="totalChargeFormula-fraction">
                     <span className="totalChargeFormula-num">{confirm_data.use_days_by_next_base_date}<span
-                      className="totalChargeFormula-unit">days</span></span>
+                      className="totalChargeFormula-unit">{__("days")}</span></span>
                     <span className="totalChargeFormula-fraction-exp"/>
                     <span className="totalChargeFormula-num">1<span
-                      className="totalChargeFormula-unit">month</span></span>
+                      className="totalChargeFormula-unit">{__("month")}</span></span>
                   </div>
                 </div>
               </div>
               <table className="totalChargeFormulaDetail mb_16px">
                 <tbody>
                 <tr>
-                  <th className="totalChargeFormulaDetail-item">{confirm_data.charge_users_count} people</th>
-                  <td className="totalChargeFormulaDetail-description">：請求人数</td>
+                  <th className="totalChargeFormulaDetail-item">{confirm_data.charge_users_count} {__("people")}</th>
+                  <td className="totalChargeFormulaDetail-description">：{__("Number of users")}</td>
                 </tr>
                 <tr>
                   <th className="totalChargeFormulaDetail-item">{confirm_data.amount_per_user}</th>
-                  <td className="totalChargeFormulaDetail-description">：1ヶ月の利用料金</td>
+                  <td className="totalChargeFormulaDetail-description">：{__("Price per user")}</td>
                 </tr>
                 <tr>
                   <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} days</th>
@@ -118,8 +118,8 @@ export default class Confirm extends Base {
                 </tr>
                 </tbody>
               </table>
-              <a href>
-                <i className="fa fa-question-circle mr_4px" aria-hidden="true"/>詳細はこちら
+              <a href="/pricing">
+                <i className="fa fa-question-circle mr_4px" aria-hidden="true"/>{__("View details")}
               </a>
             </div>
           </div>
@@ -130,16 +130,16 @@ export default class Confirm extends Base {
               <input
                 type="checkbox" name="service_term_agreement" className="serviceTermAgreement-cb"
                 onChange={(e) => this.onCheckAgreement(e)}
-              />請求内容を確認しました
+              />{__("I confirmed the billing content")}
             </label>
           </div>
           }
           <div className="btnGroupForForm">
             <button type="submit" className="btnGroupForForm-next" ref="submit"
                     disabled={(is_paid_plan && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
-              送信する
+              {__("Send")}
             </button>
-            <Link className="btnGroupForForm-cancel" to="/users/invite">戻る</Link>
+            <Link className="btnGroupForForm-cancel" to="/users/invite">{__("Back")}</Link>
           </div>
         </form>
       </section>
