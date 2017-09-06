@@ -91,9 +91,13 @@ class SendAlertMailToAdminShell extends AppShell
     {
         $canOverWriteCurrentDate = !in_array(ENV_NAME, ['www', 'isao']);
         $dateSimulateCurrent = Hash::get($this->params, 'simulate_current_date');
-        if ($canOverWriteCurrentDate && $dateSimulateCurrent !== null) {
+        if ($canOverWriteCurrentDate && !empty($dateSimulateCurrent)) {
+            if (false === strtotime($dateSimulateCurrent)) {
+                $this->out("--simulate_current_date value must be date time format");
+                die();
+            }
             GoalousDateTime::setTestNow($dateSimulateCurrent);
-        } else if (!$canOverWriteCurrentDate && $dateSimulateCurrent !== null) {
+        } else if (!$canOverWriteCurrentDate && !empty($dateSimulateCurrent)) {
             $this->out(sprintf("cant simulate current date in this env(%s)!", ENV_NAME));
             die();
         }
