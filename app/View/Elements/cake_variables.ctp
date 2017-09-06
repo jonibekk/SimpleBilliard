@@ -602,7 +602,7 @@ App::uses('AttachedFile', 'Model');
             "Name Kana": "<?= __("Name Kana") ?>",
             "name@company.com": "<?= __("name@company.com") ?>",
             // Input credit card
-            "Card Holder Name": "<?= __("Card Holder Name") ?>",
+            "Name on Card": "<?= __("Name on Card") ?>",
             "Card Number": "<?= __("Card Number") ?>",
             "Price per user": "<?= __("Price per user") ?>",
             "Number of users": "<?= __("Number of users") ?>",
@@ -613,6 +613,13 @@ App::uses('AttachedFile', 'Model');
             "Register": "<?= __("Register") ?>",
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
+            "Invite members": "<?= __("Invite members") ?>",
+            "Email Address": "<?= __("Email Address") ?>",
+            "You can set email addresses by comma(,) separated or by newline separated.": "<?= __("You can set email addresses by comma(,) separated or by newline separated.") ?>",
+            "I confirmed the billing content": "<?= __("I confirmed the billing content") ?>",
+            "days": "<?= __("days") ?>",
+            "month": "<?= __("month") ?>",
+            "View details": "<?= __("View details") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
