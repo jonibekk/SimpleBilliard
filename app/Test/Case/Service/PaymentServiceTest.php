@@ -1197,7 +1197,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $teamId = 1;
         $this->Team->clear();
-        $this->Team->id = 1;
+        $this->Team->id = $teamId;
         $this->Team->save([
             'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',

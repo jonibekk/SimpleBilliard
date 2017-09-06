@@ -937,8 +937,9 @@ class PaymentService extends AppService
         if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
             return false;
         }
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount);
+
         $paymentSetting = $PaymentSetting->getByTeamId($teamId);
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
 
         $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
 
