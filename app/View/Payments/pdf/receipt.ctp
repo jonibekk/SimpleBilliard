@@ -8,7 +8,9 @@
             );
             ?>
         </figure>
+        <?php if (!$history['PaymentSetting']['is_card']): ?>
         <h2 class="receipt-status"><?= __("PAID") ?></h2>
+        <?php endif; ?>
     </header>
     <div class="invoice-overview">
         <div class="overview-item">
@@ -25,7 +27,13 @@
         </div>
         <div class="overview-item">
             <h3><?= __('Billed To');?></h3>
-            <p><?= $history['ChargeHistory']['total_with_currency'] ?> charged to card ending in <?= $history['CreditCard']['last4'] ?></p>
+            <p>
+            <?php if ($history['PaymentSetting']['is_card']): ?>
+            <?= $history['ChargeHistory']['total_with_currency'] ?> charged to card ending in <?= $history['CreditCard']['last4'] ?>
+            <?php else: ?>
+            <?= $history['ChargeHistory']['total_with_currency'] ?> charged
+            <?php endif; ?>
+            </p>
             <p><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
         </div>
     </div>
@@ -36,7 +44,13 @@
                 <th><?= __('Term');?></th>
                 <th><?= __('Amount');?></th>
                 <tr>
-                    <td>Monthly</td>
+                    <td>
+                        <?php if($history['ChargeHistory']['is_monthly']): ?>
+                            Monthly
+                        <?php else: ?>
+                            Add member(s)
+                        <?php endif; ?>
+                    </td>
                     <td><?= $history['ChargeHistory']['charge_users'] ?> members</td>
                     <td><?= $history['ChargeHistory']['term'] ?></td>
                     <td><?= $history['ChargeHistory']['sub_total_with_currency'] ?></td>
