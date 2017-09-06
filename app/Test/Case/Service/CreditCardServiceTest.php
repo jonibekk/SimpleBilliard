@@ -136,17 +136,31 @@ class CreditCardServiceTest extends GoalousTestCase
     {
         $customerId = $this->createCustomer(self::CARD_VISA);
 
-        $res = $this->CreditCardService->chargeCustomer($customerId, 'JPY', 30000, "Test charge ¥3000");
+        $amount = 30000;
+        $description = "Test charge ¥".$amount;
+        $currency = 'JPY';
+        $res = $this->CreditCardService->chargeCustomer($customerId, $currency, $amount, $description);
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("success", $res);
         $this->assertTrue($res["success"]);
         $this->assertEquals('succeeded', $res['status']);
+        $this->assertEquals($currency, strtoupper($res['paymentData']->currency));
+        $this->assertEquals($description, $res['paymentData']->description);
+        $this->assertEquals($customerId, $res['paymentData']->customer);
+        $this->assertEquals($amount, $res['paymentData']->amount);
 
-        $res = $this->CreditCardService->chargeCustomer($customerId, 'USD', 3000, "Test charge $3000");
+        $amount = 666;
+        $description = "Test charge $".$amount;
+        $currency = 'USD';
+        $res = $this->CreditCardService->chargeCustomer($customerId, $currency, $amount, $description);
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("success", $res);
         $this->assertTrue($res["success"]);
         $this->assertEquals('succeeded', $res['status']);
+        $this->assertEquals($currency, strtoupper($res['paymentData']->currency));
+        $this->assertEquals($description, $res['paymentData']->description);
+        $this->assertEquals($customerId, $res['paymentData']->customer);
+        $this->assertEquals($amount, $res['paymentData']->amount);
     }
 
     /**
