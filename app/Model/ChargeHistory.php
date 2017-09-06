@@ -284,4 +284,69 @@ class ChargeHistory extends AppModel
         $ret = Hash::extract($ret, 'ChargeHistory');
         return $ret;
     }
+
+    /**
+     * Get data for receipt
+     *
+     * @param int $historyId
+     *
+     * @return array
+     */
+    public function getForReceipt(int $historyId): array
+    {
+        $options = [
+            'conditions' => [
+                'ChargeHistory.id' => $historyId,
+            ],
+            'fields'     => [
+                'ChargeHistory.*',
+                'Team.*',
+                'PaymentSetting.*',
+                'CreditCard.*',
+                'Invoice.*',
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'ChargeHistory.team_id = Team.id'
+                    ]
+                ],
+                [
+                    'table'      => 'payment_settings',
+                    'alias'      => 'PaymentSetting',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'ChargeHistory.team_id = PaymentSetting.team_id',
+                        'PaymentSetting.del_flg' => false
+                    ]
+                ],
+                [
+                    'table'      => 'credit_cards',
+                    'alias'      => 'CreditCard',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'ChargeHistory.team_id = CreditCard.team_id',
+                        'CreditCard.del_flg' => false
+                    ]
+                ],
+                [
+                    'table'      => 'invoices',
+                    'alias'      => 'Invoice',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'ChargeHistory.team_id = Invoice.team_id',
+                        'Invoice.del_flg' => false
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (!$res) {
+            return [];
+        }
+        return $res;
+    }
 }

@@ -202,10 +202,11 @@ class PaymentsController extends AppController
      */
     public function receipt(int $historyId)
     {
-        // TODO.Payment: Should implement passing history vals to pdf after @joshua implement.
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
 
-        // If remove comment out, you can check on /payments/receipt
-        // $this->layout = 'pdf/one_column';
-        // return $this->render('pdf/receipt');
+        $history = $PaymentService->getReceipt($historyId);
+        $this->set(compact('history'));
+        return $this->render();
     }
 }

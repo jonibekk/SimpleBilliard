@@ -10,6 +10,7 @@ App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
 App::uses('AppUtil', 'Util');
+App::import('View', 'Helper/TimeExHelper');
 
 use Goalous\Model\Enum as Enum;
 
@@ -223,18 +224,17 @@ class PaymentService extends AppService
     }
 
     /**
-     * Get total days from previous payment base date to next payment base date
-     * 現在月度の総利用日数
+     * Get previous base date by next base date
      *
-     * @param int $currentTimeStamp
+     * @param string $nextBaseDate
      *
-     * @return int
+     * @return string
      */
-    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    public function getPreviousBaseDate(string $nextBaseDate): string
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+
         list($y, $m, $d) = explode('-', $nextBaseDate);
         list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
 
@@ -246,6 +246,21 @@ class PaymentService extends AppService
         } else {
             $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
         }
+        return $prevBaseDate;
+    }
+
+    /**
+     * Get total days from previous payment base date to next payment base date
+     * 現在月度の総利用日数
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return int
+     */
+    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    {
+        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        $prevBaseDate = $this->getPreviousBaseDate($nextBaseDate);
 
         $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
         return $res;
@@ -1610,5 +1625,54 @@ class PaymentService extends AppService
         }
 
         return $paymentSettings['type'];
+    }
+
+    /**
+     * Get a history by id
+     *
+     * @param int $historyId
+     *
+     * @return array
+     */
+    function getReceipt(int $historyId): array
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+
+        $history = $ChargeHistory->getForReceipt($historyId);
+        $history = $this->processForReceiet($history);
+        return $history;
+    }
+
+    function processForReceiet(array $history): array
+    {
+        $TimeEx = new TimeExHelper(new View());
+
+        $localChargeDate = $TimeEx->formatYearDayI18n($history['ChargeHistory']['charge_datetime']);
+        $history['ChargeHistory']['local_charge_date'] = $localChargeDate;
+        $subTotalCharge = $history['ChargeHistory']['total_amount'] - $history['ChargeHistory']['tax'];
+        $currency = $this->getCurrencyTypeByCountry($history['PaymentSetting']['company_country']);
+        $history['ChargeHistory']['sub_total_with_currency'] = $this->formatCharge($subTotalCharge, $currency);
+        $history['ChargeHistory']['tax_with_currency'] = $this->formatCharge($history['ChargeHistory']['tax'], $currency);
+        $history['ChargeHistory']['total_with_currency'] = $this->formatCharge($history['ChargeHistory']['total_amount'], $currency);
+
+        if (true or $isCreditCard) {
+            /** @var CreditCardService $CreditCardService */
+            $CreditCardService = ClassRegistry::init('CreditCardService');
+
+            $creditCard = $CreditCardService->retrieveCreditCard($history['CreditCard']['customer_code']);
+            $creditCard = $creditCard['creditCard'];
+            $history['CreditCard']['last4'] = $creditCard->last4;
+        }
+
+        if (true or $isMonthly) {
+            $nextBaseDate = $this->getNextBaseDate($history['ChargeHistory']['charge_datetime']);
+            $prevBaseDate = $this->getPreviousBaseDate($nextBaseDate);
+            $prevBaseDate = $TimeEx->formatYearDayI18nFromDate($prevBaseDate);
+            $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
+
+            $history['ChargeHistory']['term'] = "$prevBaseDate - $endBaseDate";
+        }
+        return $history;
     }
 }

@@ -12,47 +12,44 @@
     </header>
     <div class="invoice-overview">
         <div class="overview-item">
-            <h3><?= __('Invoice ID');?></h3>
-            <strong>12345678</strong>
+            <h3>Payment ID</h3>
+            <strong><?= $history['ChargeHistory']['id'] ?></strong>
         </div>
         <div class="overview-item">
-            <h3><?= __('Invoice Date');?></h3>
-            <strong>Sept 30, 2017</strong>
+            <h3>Payment Date</h3>
+            <strong><?= $history['ChargeHistory']['local_charge_date'] ?></strong>
         </div>
         <div class="overview-item">
             <h3><?= __('Team Name');?></h3>
-            <strong>ISAO Corporation</strong>
+            <strong><?= $history['Team']['name'] ?></strong>
         </div>
         <div class="overview-item">
             <h3><?= __('Billed To');?></h3>
-            <p>$235.50 charged to card ending in 0000</p>
-            <p>kikuchik@isao.co.jp <br /> ISAO Corporation</p>
+            <p><?= $history['ChargeHistory']['total_with_currency'] ?> charged to card ending in <?= $history['CreditCard']['last4'] ?></p>
+            <p><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
         </div>
     </div>
     <div class="invoice-table">
-        <header>
-            Aug 1, 2017 - Sep 1, 2017
-        </header>
         <table>
             <tbody>
                 <th colspan="2">Type</th>
-                <th><?= __('Time Period');?></th>
+                <th><?= __('Term');?></th>
                 <th><?= __('Amount');?></th>
                 <tr>
-                    <td><?= __('Monthly');?></td>
-                    <td>100 members</td>
-                    <td>Jul 1, 2017 - August 1, 2017</td>
-                    <td>$1800.00</td>
+                    <td>Monthly</td>
+                    <td><?= $history['ChargeHistory']['charge_users'] ?> members</td>
+                    <td><?= $history['ChargeHistory']['term'] ?></td>
+                    <td><?= $history['ChargeHistory']['sub_total_with_currency'] ?></td>
                 </tr>
                 <tr>
-                    <td colspan="3"><?=__('Tax');?></td>
-                    <td>$180</td>
+                    <td colspan="3">Tax</td>
+                    <td><?= $history['ChargeHistory']['tax_with_currency'] ?></td>
                 </tr>
             </tbody>
         </table>
         <footer>
-            <strong class="total-label"><?=__('Total');?></strong>
-            <strong class="total-amount">$1890.00</strong>
+            <strong class="total-label">Total</strong>
+            <strong class="total-amount"><?= $history['ChargeHistory']['total_with_currency'] ?></strong>
         </footer>
     </div>
     <div class="invoice-contact">
