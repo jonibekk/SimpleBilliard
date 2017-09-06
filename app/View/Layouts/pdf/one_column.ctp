@@ -10,9 +10,7 @@ echo $this->Html->css('receipt.min', ['fullBase' => true]);
 </head>
 <body class="body">
   <div class="pdf-container">
-    <section class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
       <?= $this->fetch('content'); ?>
-    </section>
   </div>
 </body>
 </html>

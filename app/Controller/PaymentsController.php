@@ -206,7 +206,6 @@ class PaymentsController extends AppController
 
         // If remove comment out, you can check on /payments/receipt
         // $this->layout = 'pdf/one_column';
-        // $this->render('pdf/receipt');
-        return $this->render();
+        // return $this->render('pdf/receipt');
     }
 }
