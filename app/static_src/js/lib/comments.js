@@ -191,7 +191,6 @@ function getAjaxFormReplaceElm() {
  */
 function addComment(e) {
     e.preventDefault();
-    console.trace();
 
     attrUndefinedCheck(e.target, 'error-msg-id');
     var result_msg_id = $(e.target).attr('error-msg-id');
