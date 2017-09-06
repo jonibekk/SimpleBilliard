@@ -1631,6 +1631,11 @@ class PaymentService extends AppService
      */
     function isChargeUserActivation(int $teamId): bool
     {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        if (!$Team->isPaidPlan($teamId)) {
+            return false;
+        }
         $chargeUserCount = $this->calcChargeUserCount($teamId, 1);
         return $chargeUserCount === 1;
     }

@@ -81,11 +81,11 @@ export default class CreditCard extends Base {
     const {validation_errors, error_message} = payment
     return (
       <section className="panel enter-cc-info">
-        <h3>{__('Enter Payment Information')}</h3>
+        <h3>{__('Enter your card information')}</h3>
         <form id="enterCCInfo" className="form-horizontal" name=""
               onSubmit={(e) => this.onSubmit(e)}>
           <div className="form-group">
-            <label htmlFor="cardholder-name">{__('Card Holder Name')}</label>
+            <label htmlFor="cardholder-name">{__('Name on Card')}</label>
             <input
               name="card_holder_name"
               className="form-control" placeholder="Jane Doe"
