@@ -127,7 +127,7 @@ class ApiApprovalHistoryServiceTest extends GoalousTestCase
             ]
         );
         $ret = $this->ApiApprovalHistoryService->getLatestCoachActionStatement(1,1);
-        $this->assertEquals('You have added this goal as a target of evaluation.',$ret);
+        $this->assertEquals('You have added this Goal as a target of evaluation.',$ret);
 
         $ApprovalHistory->save(
             [
@@ -139,6 +139,6 @@ class ApiApprovalHistoryServiceTest extends GoalousTestCase
             ]
         );
         $ret = $this->ApiApprovalHistoryService->getLatestCoachActionStatement(2,2);
-        $this->assertEquals('You have not added this goal as a target of evaluation.',$ret);
+        $this->assertEquals('You have not added this Goal as a target of evaluation.',$ret);
     }
 }

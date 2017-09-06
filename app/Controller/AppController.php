@@ -609,7 +609,8 @@ class AppController extends BaseController
         $excludeEnvs = [
             'local',
             'isao',
-            'www'
+            'www',
+            'stg',
         ];
 
         // 特定の環境を除外

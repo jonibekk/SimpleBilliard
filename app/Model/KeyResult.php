@@ -282,7 +282,7 @@ class KeyResult extends AppModel
             return true;
         }
 
-        $this->invalidate('start_date', __("Please input start / end date within start / end date of the goal."));
+        $this->invalidate('start_date', __("Please input start / end date within start / end date of the Goal."));
         return false;
     }
 
@@ -722,7 +722,7 @@ class KeyResult extends AppModel
     {
         $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
-            throw new RuntimeException(__("There is no key result."));
+            throw new RuntimeException(__("There is no Key Result."));
         }
         $this->id = $kr_id;
         $this->saveField('current_value', $current_kr['KeyResult']['target_value']);
@@ -735,7 +735,7 @@ class KeyResult extends AppModel
     {
         $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
-            throw new RuntimeException(__("There is no key result."));
+            throw new RuntimeException(__("There is no Key Result."));
         }
         $current_kr['KeyResult']['completed'] = null;
         unset($current_kr['KeyResult']['modified']);
