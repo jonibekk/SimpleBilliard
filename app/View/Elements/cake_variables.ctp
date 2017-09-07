@@ -613,6 +613,7 @@ App::uses('AttachedFile', 'Model');
             "Register": "<?= __("Register") ?>",
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
+            "Update completed": "<?= __("Update completed") ?>",
             "Invite members": "<?= __("Invite members") ?>",
             "Email Address": "<?= __("Email Address") ?>",
             "You can set email addresses by comma(,) separated or by newline separated.": "<?= __("You can set email addresses by comma(,) separated or by newline separated.") ?>",

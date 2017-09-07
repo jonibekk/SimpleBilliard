@@ -2731,6 +2731,18 @@ msgstr "例) 太郎"
 msgid "Name Kana"
 msgstr "名前(カナ)"
 
+msgid "John"
+msgstr "鈴木"
+
+msgid "Smith"
+msgstr "太郎"
+
+msgid "ジョン"
+msgstr "スズキ"
+
+msgid "スミス"
+msgstr "タロウ"
+
 msgid "name@company.com"
 msgstr "name@company.co.jp"
 

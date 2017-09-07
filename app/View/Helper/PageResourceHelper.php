@@ -67,22 +67,22 @@ class PageResourceHelper extends AppHelper
             'default' => ['/js/react_message_app.min']
         ],
         'payments'      => [
-            'apply'          => [
+            'apply'            => [
                 'https://js.stripe.com/v3/',
                 '/js/react_payment_apply_app.min',
             ],
-            'default'        => [],
-            'update_cc_info' => [
+            'default'          => [],
+            'update_cc_info'   => [
                 'https://js.stripe.com/v3/',
                 '/js/goalous_payment.min'
             ],
-            'method' => [
+            'method'           => [
                 '/js/goalous_payment.min',
             ],
             'contact_settings' => [
                 '/js/goalous_payment.min',
             ],
-            'index' => [
+            'index'            => [
                 '/js/goalous_payment.min',
             ],
         ]
@@ -131,10 +131,10 @@ class PageResourceHelper extends AppHelper
             'default' => ['evaluation.min'],
         ],
         'teams'         => [
-            'main'     => ['team_members.min', 'team_visions.min'],
-            'settings' => ['team_setting.min'],
-            'invite'   => ['signup.min'],
-            'confirm_activation'   => ['invite.min']
+            'main'               => ['team_members.min', 'team_visions.min'],
+            'settings'           => ['team_setting.min'],
+            'invite'             => ['signup.min'],
+            'confirm_activation' => ['invite.min']
         ],
     ];
 
