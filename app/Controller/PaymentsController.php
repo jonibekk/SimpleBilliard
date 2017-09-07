@@ -202,10 +202,10 @@ class PaymentsController extends AppController
      */
     public function receipt(int $historyId)
     {
-        /** @var PaymentService $PaymentService */
-        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var ChargeHistoryService $ChargeHistoryService */
+        $ChargeHistoryService = ClassRegistry::init("ChargeHistoryService");
 
-        $history = $PaymentService->getReceipt($historyId);
+        $history = $ChargeHistoryService->getReceipt($historyId);
         $this->set(compact('history'));
         return $this->render();
     }

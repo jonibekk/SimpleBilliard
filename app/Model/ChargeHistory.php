@@ -299,11 +299,18 @@ class ChargeHistory extends AppModel
                 'ChargeHistory.id' => $historyId,
             ],
             'fields'     => [
-                'ChargeHistory.*',
-                'Team.*',
-                'PaymentSetting.*',
-                'CreditCard.*',
-                'Invoice.*',
+                'ChargeHistory.id',
+                'ChargeHistory.charge_datetime',
+                'ChargeHistory.tax',
+                'ChargeHistory.total_amount',
+                'ChargeHistory.payment_type',
+                'ChargeHistory.charge_users',
+                'ChargeHistory.charge_type',
+                'Team.name',
+                'PaymentSetting.company_country',
+                'PaymentSetting.company_name',
+                'PaymentSetting.contact_person_email',
+                'CreditCard.customer_code',
             ],
             'joins'      => [
                 [
@@ -330,15 +337,6 @@ class ChargeHistory extends AppModel
                     'conditions' => [
                         'ChargeHistory.team_id = CreditCard.team_id',
                         'CreditCard.del_flg' => false
-                    ]
-                ],
-                [
-                    'table'      => 'invoices',
-                    'alias'      => 'Invoice',
-                    'type'       => 'LEFT',
-                    'conditions' => [
-                        'ChargeHistory.team_id = Invoice.team_id',
-                        'Invoice.del_flg' => false
                     ]
                 ],
             ]

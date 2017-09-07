@@ -10,7 +10,6 @@ App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
 App::uses('AppUtil', 'Util');
-App::import('View', 'Helper/TimeExHelper');
 
 use Goalous\Model\Enum as Enum;
 
@@ -1624,65 +1623,5 @@ class PaymentService extends AppService
         }
 
         return $paymentSettings['type'];
-    }
-
-    /**
-     * Get a history by id
-     *
-     * @param int $historyId
-     *
-     * @return array
-     */
-    function getReceipt(int $historyId): array
-    {
-        /** @var ChargeHistory $ChargeHistory */
-        $ChargeHistory = ClassRegistry::init('ChargeHistory');
-
-        $history = $ChargeHistory->getForReceipt($historyId);
-        $history = $this->processForReceipt($history);
-        return $history;
-    }
-
-    /**
-     * Process history data for receipt
-     *
-     * @param array $history
-     *
-     * @return array
-     */
-    function processForReceipt(array $history): array
-    {
-        $TimeEx = new TimeExHelper(new View());
-
-        $localChargeDate = $TimeEx->formatYearDayI18n($history['ChargeHistory']['charge_datetime']);
-        $history['ChargeHistory']['local_charge_date'] = $localChargeDate;
-        $subTotalCharge = $history['ChargeHistory']['total_amount'] - $history['ChargeHistory']['tax'];
-        $currency = $this->getCurrencyTypeByCountry($history['PaymentSetting']['company_country']);
-        $history['ChargeHistory']['sub_total_with_currency'] = $this->formatCharge($subTotalCharge, $currency);
-        $history['ChargeHistory']['tax_with_currency'] = $this->formatCharge($history['ChargeHistory']['tax'], $currency);
-        $history['ChargeHistory']['total_with_currency'] = $this->formatCharge($history['ChargeHistory']['total_amount'], $currency);
-        $history['PaymentSetting']['is_card'] = false;
-        $history['ChargeHistory']['is_monthly'] = false;
-
-        if ($history['ChargeHistory']['payment_type'] == Enum\PaymentSetting\Type::CREDIT_CARD) {
-            /** @var CreditCardService $CreditCardService */
-            $CreditCardService = ClassRegistry::init('CreditCardService');
-
-            $creditCard = $CreditCardService->retrieveCreditCard($history['CreditCard']['customer_code']);
-            $creditCard = $creditCard['creditCard'];
-            $history['CreditCard']['last4'] = $creditCard->last4;
-            $history['PaymentSetting']['is_card'] = true;
-        }
-
-        if ($history['ChargeHistory']['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
-            $nextBaseDate = $this->getNextBaseDate($history['ChargeHistory']['charge_datetime']);
-            $prevBaseDate = $this->getPreviousBaseDate($nextBaseDate);
-            $prevBaseDate = $TimeEx->formatYearDayI18nFromDate($prevBaseDate);
-            $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
-
-            $history['ChargeHistory']['term'] = "$prevBaseDate - $endBaseDate";
-            $history['ChargeHistory']['is_monthly'] = true;
-        }
-        return $history;
     }
 }
