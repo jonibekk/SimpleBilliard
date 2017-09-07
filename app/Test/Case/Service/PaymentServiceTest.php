@@ -582,6 +582,33 @@ class PaymentServiceTest extends GoalousTestCase
             $res = $e->getMessage();
         }
         $this->assertEquals(strpos($res, 'Failed to charge.'), 0);
+
+        // check if charge fail on customer's credit card
+        // no rollback, insert charge history of failed
+        /** @var $CreditCardService CreditCardService */
+        $CreditCardService = ClassRegistry::init('CreditCardService');
+        $customer = $CreditCardService->registerCustomer("tok_chargeCustomerFail", "test@goalous.com", "Goalous TEST");
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        try {
+            $res = null;
+            list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => $customer["customer_id"]]);
+            $this->PaymentService->applyCreditCardCharge(
+                $teamId,
+                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                1,
+                $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEquals(strpos($res, 'Failed to charge.'), 0);
+        $hist = $ChargeHistory->find('first', [
+            'conditions' => [
+                'team_id' => $teamId,
+            ]
+        ]);
+        // assert failed history is saved
+        $this->assertEquals(Enum\ChargeHistory\ResultType::FAIL, $hist['ChargeHistory']['result_type']);
+        $this->CreditCardService->deleteCustomer($customer["customer_id"]);
     }
 
     public function test_applyCreditCardCharge_jp()
@@ -1191,6 +1218,47 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNull($team['service_use_state_end_date']);
 
         $this->deleteCustomer($res["customerId"]);
+    }
+
+    public function test_registerCreditCardPaymentAndCharge_fail()
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var CreditCard $CreditCard */
+        $CreditCard     = ClassRegistry::init("CreditCard");
+        /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
+        $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $token = 'tok_chargeCustomerFail';
+        $teamId = 1;
+        $this->Team->clear();
+        $this->Team->id = 1;
+        $this->Team->save([
+            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_state_start_date' => '2017/8/1',
+            'service_use_state_end_date'   => '2017/8/15'
+        ], false);
+
+        $userId = $this->createActiveUser($teamId);
+        $paymentData = $this->createTestPaymentDataForReg([]);
+
+        $countBeforeRollbackPaymentSetting          = $PaymentSetting->find('count');
+        $countBeforeRollbackCreditCard              = $CreditCard->find('count');
+        $countBeforeRollbackPaymentSettingChangeLog = $PaymentSettingChangeLog->find('count');
+        $countBeforeRollbackTeamMember              = $TeamMember->find('count');
+
+        $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $paymentData);
+        // Check response failed
+        $this->assertTrue($res['error']);
+        $this->assertEquals(500, $res['errorCode']);
+
+        // check if payment_settings is rollback
+        $this->assertEquals($countBeforeRollbackPaymentSetting, $PaymentSetting->find('count'));
+        $this->assertEquals($countBeforeRollbackCreditCard,     $CreditCard->find('count'));
+        $this->assertEquals($countBeforeRollbackPaymentSettingChangeLog, $PaymentSettingChangeLog->find('count'));
+        $this->assertEquals($countBeforeRollbackTeamMember,     $TeamMember->find('count'));
     }
 
     public function test_registerInvoicePayment()

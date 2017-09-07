@@ -553,7 +553,7 @@ class PaymentService extends AppService
                 $paymentDescription);
 
             // Save charge history
-            if ($chargeRes['error'] === true) {
+            if ($chargeRes['isApiRequestSucceed'] === false) {
                 throw new Exception(
                     sprintf("Failed to charge. data:%s",
                         AppUtil::varExportOneLine(
@@ -748,7 +748,6 @@ class PaymentService extends AppService
 
             $ChargeHistory->create();
             if (!$ChargeHistory->save($historyData)) {
-                $ChargeHistory->rollback();
                 throw new Exception(sprintf("Failed create charge history. data:%s",
                     AppUtil::varExportOneLine($historyData)));
             }
@@ -769,7 +768,7 @@ class PaymentService extends AppService
             // Error charging customer using Stripe API. Might be network,  API problem or card rejected
             if ($chargeResult['error'] === true) {
                 // Rollback transaction
-                $PaymentSetting->rollback();
+                $this->TransactionManager->rollback();
 
                 // Remove the customer from Stripe
                 $CreditCardService->deleteCustomer($customerId);
