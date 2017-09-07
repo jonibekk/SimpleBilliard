@@ -136,14 +136,33 @@ class CreditCardServiceTest extends GoalousTestCase
     {
         $customerId = $this->createCustomer(self::CARD_VISA);
 
-        $res = $this->CreditCardService->chargeCustomer($customerId, 'JPY', 30000, "Test charge ¥3000");
-
+        $amount = 30000;
+        $description = "Test charge ¥".$amount;
+        $currency = 'JPY';
+        $res = $this->CreditCardService->chargeCustomer($customerId, $currency, $amount, $description);
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("success", $res);
         $this->assertTrue($res["isApiRequestSucceed"]);
         $this->assertTrue($res["success"]);
-        // TODO.Payment: Add unit test case if foreign country and check currency
         $this->assertFalse($res["error"]);
+        $this->assertEquals('succeeded', $res['status']);
+        $this->assertEquals($currency, strtoupper($res['paymentData']->currency));
+        $this->assertEquals($description, $res['paymentData']->description);
+        $this->assertEquals($customerId, $res['paymentData']->customer);
+        $this->assertEquals($amount, $res['paymentData']->amount);
+
+        $amount = 666;
+        $description = "Test charge $".$amount;
+        $currency = 'USD';
+        $res = $this->CreditCardService->chargeCustomer($customerId, $currency, $amount, $description);
+        $this->assertNotNull($res, "Something very wrong happened");
+        $this->assertArrayHasKey("success", $res);
+        $this->assertTrue($res["success"]);
+        $this->assertEquals('succeeded', $res['status']);
+        $this->assertEquals($currency, strtoupper($res['paymentData']->currency));
+        $this->assertEquals($description, $res['paymentData']->description);
+        $this->assertEquals($customerId, $res['paymentData']->customer);
+        $this->assertEquals($amount*100, $res['paymentData']->amount);
     }
 
     /**
@@ -340,11 +359,61 @@ class CreditCardServiceTest extends GoalousTestCase
 
     function test_retrieveToken()
     {
-        // TODO.Payment: add unit tests.
+        $token = $this->createToken(self::CARD_VISA);
+
+        $res = $this->CreditCardService->retrieveToken($token);
+        $this->assertFalse($res["error"]);
+        $this->assertEquals('1881', $res['creditCard']->last4);
+    }
+
+    function test_retrieveToken_invalidToken()
+    {
+        $token = 'xxkljasldf';
+
+        $res = $this->CreditCardService->retrieveToken($token);
+        $this->assertTrue($res["error"] === true);
+    }
+
+    function test_retrieveToken_empty()
+    {
+        $token = '';
+
+        $res = $this->CreditCardService->retrieveToken($token);
+        $this->assertTrue($res["error"] === true);
     }
 
     function test_updateCreditCard()
     {
-        // TODO.Payment: add unit tests.
+        $this->setDefaultTeamIdAndUid();
+        $customerId = $this->createCustomer(self::CARD_VISA);
+
+        // New card
+        $token = $this->createToken(self::CARD_MASTERCARD);
+
+        $res = $this->CreditCardService->updateCreditCard($customerId, $token, 1);
+        $this->assertFalse($res['error']);
+
+        // Check if updated
+        $card = $this->CreditCardService->retrieveCreditCard($customerId);
+        $this->assertEquals('MasterCard', $card['creditCard']->brand);
+    }
+
+    function test_updateCreditCard_invalidToken()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $customerId = $this->createCustomer(self::CARD_VISA);
+        $token = 'xxxxxxxxxx';
+
+        $res = $this->CreditCardService->updateCreditCard($customerId, $token, 1);
+        $this->assertTrue($res['error'] === true);
+    }
+
+    function test_updateCreditCard_invalidCustomer()
+    {
+        $customerId = 'xxxxxxxx';
+        $token = $this->createToken(self::CARD_MASTERCARD);
+
+        $res = $this->CreditCardService->updateCreditCard($customerId, $token, 1);
+        $this->assertTrue($res['error'] === true);
     }
 }

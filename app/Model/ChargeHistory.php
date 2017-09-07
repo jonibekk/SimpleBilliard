@@ -244,13 +244,14 @@ class ChargeHistory extends AppModel
     }
 
     /**
-     * @param int $teamId
-     * @param int $time
-     * @param int $subTotalCharge
-     * @param int $tax
-     * @param int $amountPerUser
-     * @param int $usersCount
-     * @param int $currencyType
+     * @param int      $teamId
+     * @param int      $time
+     * @param int      $subTotalCharge
+     * @param int      $tax
+     * @param int      $amountPerUser
+     * @param int      $usersCount
+     * @param int      $currencyType
+     * @param int|null $userId
      *
      * @return mixed
      */
@@ -261,10 +262,12 @@ class ChargeHistory extends AppModel
         int $tax,
         int $amountPerUser,
         int $usersCount,
+        $userId = null,
         int $currencyType = PaymentSetting::CURRENCY_TYPE_JPY
     ) {
         $historyData = [
             'team_id'          => $teamId,
+            'user_id'          => $userId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_INVOICE,
             'charge_type'      => self::CHARGE_TYPE_MONTHLY,
             'amount_per_user'  => $amountPerUser,

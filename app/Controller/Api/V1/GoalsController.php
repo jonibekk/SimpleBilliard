@@ -403,7 +403,7 @@ class GoalsController extends ApiController
         }
 
         // リファラに表示する通知カード
-        $this->Notification->outSuccess(__("Saved goal & Top Key Result"));
+        $this->Notification->outSuccess(__("Saved Goal & Top Key Result"));
 
         // コーチへ通知
         // 来期のゴール関係の処理はコーチへ通知しない
@@ -513,7 +513,7 @@ class GoalsController extends ApiController
 
         // ゴール存在チェック
         if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
-            return $this->_getResponseBadFail(__("The goal doesn't exist."));
+            return $this->_getResponseBadFail(__("The Goal doesn't exist."));
         }
 
         // フォロー
@@ -545,7 +545,7 @@ class GoalsController extends ApiController
 
         // ゴール存在チェック
         if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
-            return $this->_getResponseBadFail(__("The goal doesn't exist."));
+            return $this->_getResponseBadFail(__("The Goal doesn't exist."));
         }
         // 解除対象のフォロー存在チェック
         $userId = $this->Auth->user('id');

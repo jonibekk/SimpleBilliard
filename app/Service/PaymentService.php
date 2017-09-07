@@ -19,8 +19,7 @@ use Goalous\Model\Enum as Enum;
 class PaymentService extends AppService
 {
     const AMOUNT_PER_USER_JPY = 1980;
-    // TODO.Payment: Fix amount per user case $ after final decision
-    const AMOUNT_PER_USER_USD = 16;
+    const AMOUNT_PER_USER_USD = 19;
 
     /* Payment settings variable cache */
     private static $cacheList = [];
@@ -153,62 +152,6 @@ class PaymentService extends AppService
         }
 
         return $allValidationErrors;
-    }
-
-    /**
-     * // TODO: This method has not been referred from anywhere (except Test), What is purpose?
-     * Create a payment settings as its related credit card
-     *
-     * @param        $data
-     * @param string $customerCode
-     * @param int    $userId
-     *
-     * @return bool
-     */
-    public function registerCreditCardPayment($data, string $customerCode, int $userId)
-    {
-        /** @var PaymentSetting $PaymentSetting */
-        $PaymentSetting = ClassRegistry::init("PaymentSetting");
-        /** @var CreditCard $CreditCard */
-        $CreditCard = ClassRegistry::init("CreditCard");
-
-        try {
-            // Create PaymentSettings
-            $this->TransactionManager->begin();
-            if (!$PaymentSetting->save($data)) {
-                $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create payment settings. data:%s", var_export($data, true)));
-            }
-            $paymentSettingId = $PaymentSetting->getLastInsertID();
-
-            // Create CreditCards
-            $creditCardData = [
-                'team_id'            => $data['team_id'],
-                'payment_setting_id' => $paymentSettingId,
-                'customer_code'      => $customerCode,
-            ];
-
-            if (!$CreditCard->save($creditCardData)) {
-                $CreditCard->rollback();
-                $PaymentSetting->rollback();
-                throw new Exception(sprintf("Failed create credit card. data:%s",
-                    AppUtil::varExportOneLine($creditCardData)));
-            }
-
-            // Save snapshot
-            /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
-            $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
-            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
-
-            // Commit changes
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::emergency($e->getTraceAsString());
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -890,6 +833,11 @@ class PaymentService extends AppService
         $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
 
         $membersCount = $TeamMember->countChargeTargetUsers($teamId);
+        // Count should never be zero.
+        if ($membersCount == 0) {
+            CakeLog::emergency(sprintf("[%s] Invalid member count for teamId: %s", __METHOD__, $teamId));
+            return false;
+        }
 
         try {
             $this->TransactionManager->begin();
@@ -902,7 +850,7 @@ class PaymentService extends AppService
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
             $paymentData['amount_per_user'] = self::AMOUNT_PER_USER_JPY;
             // Create Payment Setting
-            if (!$PaymentSetting->save($paymentData, false)) {
+            if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
                     AppUtil::varExportOneLine($paymentData)));
             }
@@ -913,7 +861,7 @@ class PaymentService extends AppService
             $invoiceData['payment_setting_id'] = $paymentSettingId;
             $invoiceData['credit_status'] = Enum\Invoice\CreditStatus::WAITING;
             // Create Invoice
-            if (!$Invoice->save($invoiceData, false)) {
+            if (!$Invoice->save($invoiceData, true)) {
                 throw new Exception(sprintf("Failed create invoice record. data: %s",
                     AppUtil::varExportOneLine($invoiceData)));
             }
@@ -932,7 +880,7 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP);
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId);
             if ($res === false) {
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
@@ -957,14 +905,15 @@ class PaymentService extends AppService
      * - invoice_histories -> status of response of atobarai.com
      * - invoice_histories_charge_histories -> intermediate table for invoice_histories and charge_histories.
      *
-     * @param int $teamId
-     * @param int $chargeMemberCount
-     * @param int $time
+     * @param int      $teamId
+     * @param int      $chargeMemberCount
+     * @param int      $time
+     * @param int|null $userId
      *
      * @return bool
      * @internal param float $timezone
      */
-    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time): bool
+    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
@@ -987,8 +936,9 @@ class PaymentService extends AppService
         if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
             return false;
         }
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount);
+
         $paymentSetting = $PaymentSetting->getByTeamId($teamId);
+        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
 
         $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
 
@@ -1002,7 +952,8 @@ class PaymentService extends AppService
                 $chargeInfo['sub_total_charge'],
                 $chargeInfo['tax'],
                 $paymentSetting['amount_per_user'],
-                $chargeMemberCount
+                $chargeMemberCount,
+                $userId
             );
             if (!$monthlyChargeHistory) {
                 throw new Exception(sprintf("Failed to save monthly charge history. validationErrors: %s"),
@@ -1631,6 +1582,11 @@ class PaymentService extends AppService
      */
     function isChargeUserActivation(int $teamId): bool
     {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        if (!$Team->isPaidPlan($teamId)) {
+            return false;
+        }
         $chargeUserCount = $this->calcChargeUserCount($teamId, 1);
         return $chargeUserCount === 1;
     }

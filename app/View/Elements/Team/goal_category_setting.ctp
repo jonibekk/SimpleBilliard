@@ -59,7 +59,7 @@
         <div class="form-group">
             <?php $index = count($this->request->data['GoalCategory']);
             $max_index = $index + 9; ?>
-            <?= $this->Html->link(__("Add a goal category"),
+            <?= $this->Html->link(__("Add a Goal category"),
                 ['controller' => 'teams', 'action' => 'ajax_get_goal_category_elm'],
                 ['id'              => 'AddCategoryButton',
                  'target-selector' => '#GoalCategoryTable > tbody',

@@ -76,9 +76,27 @@ class CreditCardService extends AppService
             $response = \Stripe\Customer::create($customer);
 
             $result["customer_id"] = $response->id;
-            // TODO: must research better way of getting default_source than [0]
-            // e.g. should be like $response->sources->retrieve()
-            $result["card"] = $response->sources->data[0];
+            // Try to get the credit card from the list on customer object
+            // will not be necessary to call $response->sources->retrieve()
+            // because after creation the customer will not have a long
+            // list of sources.
+            $defaultSource = $response->default_source;
+            foreach ($response->sources->data as $source) {
+                if ($source->id == $defaultSource) {
+                    $result["card"] = $source;
+                    break;
+                }
+            }
+            // Check if the the card was acquired
+            // This should not happen in any case. Logging an Emergency
+            if (!isset($result["card"] )) {
+                CakeLog::emergency(sprintf("[%s] Customer credit card not acquired. customer_id: %s, sourceId: %s",
+                    __METHOD__, $response->id, $defaultSource));
+
+                $result["error"] = true;
+                $result["message"] = __("An error occurred while processing.");
+                return $result;
+            }
         } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
@@ -378,7 +396,7 @@ class CreditCardService extends AppService
      *
      * @return array
      */
-    function updateCreditCard(string $customerId, string $token, int $teamId): array
+    public function updateCreditCard(string $customerId, string $token, int $teamId): array
     {
         try {
             \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);

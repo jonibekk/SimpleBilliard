@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'InvitationService');
 
 use Goalous\Model\Enum as Enum;
@@ -235,8 +236,82 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(1, count($extractedEmailValidationErrors['email']));
     }
 
-    function test_reInvite()
+    private function createDataInvite(int $userIdFrom, int $teamId, string $email): array
     {
-        // TODO: should write test
+        return [
+            'from_user_id'        => $userIdFrom,
+            'to_user_id'          => null,
+            'team_id'             => $teamId,
+            'email'               => $email,
+            'message'             => '',
+            'email_verified'      => false,
+            'email_token'         => 'token',
+            'email_token_expires' => GoalousDateTime::now()->getTimestamp(),
+            'del_flg'             => false,
+            'deleted'             => null,
+            'created'             => GoalousDateTime::now()->getTimestamp(),
+            'modified'            => GoalousDateTime::now()->getTimestamp(),
+        ];
+    }
+
+    private function createDataEmail(int $userId, string $email): array
+    {
+        return [
+            'user_id'             => $userId,
+            'email'               => $email,
+            'email_verified'      => false,
+            'email_token'         => '12345678',
+            'email_token_expires' => GoalousDateTime::now()->getTimestamp(),
+            'del_flg'             => false,
+            'deleted'             => null,
+            'created'             => GoalousDateTime::now()->getTimestamp(),
+            'modified'            => GoalousDateTime::now()->getTimestamp(),
+        ];
+    }
+
+    function test_reInvite_success()
+    {
+        $userIdFrom = 1;
+        $userId = 1;
+        $teamId = 1;
+        $emailFirst    = 'reInviteTest@example.com';
+        $emailReInvite = 'reInviteTestAgain@example.com';
+        $inviteData = $this->Invite->save($this->createDataInvite($userIdFrom, $teamId, $emailFirst));
+        $insertedInviteId = $inviteData['Invite']['id'];
+        $emailData = $this->Email->save($this->createDataEmail($userId, $emailFirst));
+        $result = $this->InvitationService->reInvite($inviteData['Invite'], $emailData['Email'], $emailReInvite);
+        $this->assertTrue($result);
+        $inviteData   = $this->Invite->findById($insertedInviteId);
+        $reInviteData = $this->Invite->findById($insertedInviteId + 1)['Invite'];
+
+        // asserting old invite cant get due to del_flg = 1
+        $this->assertEquals([], $inviteData);
+
+        $this->assertEquals(false, $reInviteData['del_flg']);
+        $this->assertEquals($emailReInvite, $reInviteData['email']);
+        $this->assertNull($reInviteData['deleted']);
+    }
+
+    function test_reInvite_success_same_email()
+    {
+        $userIdFrom = 1;
+        $userId = 1;
+        $teamId = 1;
+        $email  = 'reInviteTest@example.com';
+        $inviteData = $this->Invite->save($this->createDataInvite($userIdFrom, $teamId, $email));
+        $insertedInviteId = $inviteData['Invite']['id'];
+        $emailData = $this->Email->save($this->createDataEmail($userId, $email));
+        $result = $this->InvitationService->reInvite($inviteData['Invite'], $emailData['Email'], $email);
+        $this->assertTrue($result);
+
+        $inviteData   = $this->Invite->findById($insertedInviteId);
+        $reInviteData = $this->Invite->findById($insertedInviteId + 1)['Invite'];
+
+        // asserting old invite cant get due to del_flg = 1
+        $this->assertEquals([], $inviteData);
+
+        $this->assertEquals(false, $reInviteData['del_flg']);
+        $this->assertEquals($email, $reInviteData['email']);
+        $this->assertNull($reInviteData['deleted']);
     }
 }

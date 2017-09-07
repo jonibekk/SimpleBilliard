@@ -39,7 +39,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Goalous | Enjoy your work. Achieve your goal.'),
+        "content"  => __('Goalous | Enjoy your work. Achieve your Goal.'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
-<title><?= __('Goalous | Enjoy your work. Achieve your goal.') ?></title>
+<title><?= __('Goalous | Enjoy your work. Achieve your Goal.') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
@@ -96,7 +96,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
     <div class="lp-signup ">
         <span class="lp-signup-key-concept"><?= __("Enjoy your work. Achieve your goals.") ?></span>
-        <span class="lp-signup-pay-free"><?= __('You can use Goalous free of charge until the summer of 2017.') ?></span>
+        <span class="lp-signup-pay-free"><?= __("You can use Goalous free of charge till September 30, 2017.") ?></span>
 
         <div class="lp-signup-form">
             <div class="lp-signup-form-opacity-box">
@@ -271,7 +271,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         <div class="modal-body">
                             <div class="video-container">
                                 <iframe id="promoVideo" 
-                                    data-src="<?= $this->Lang->getLangCode()=='jp' ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
+                                    data-src="<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
                                     width="720" 
                                     height="405" 
                                     frameborder="0" 

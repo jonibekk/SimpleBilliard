@@ -54,6 +54,17 @@ class GoalousDateTime extends \Carbon\Carbon
     }
 
     /**
+     * set instance timezone by hour
+     * @param float $hour
+     *
+     * @return GoalousDateTime
+     */
+    function setTimeZoneByHour(float $hour): self
+    {
+        return $this->setTimeZone(self::hourToDateTimeZone($hour));
+    }
+
+    /**
      * change specify hours to DateTimeZone
      * @example self::hourToDateTimeZone(1) return new DateTimeZone("+01:00")
      * @param float $hour

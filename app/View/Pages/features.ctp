@@ -98,7 +98,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//intro-->
             <div class="features-video col-md-7 col-sm-6 col-xs-12 col-xs-offset-0">
                 <div class="video-container">
-                    <iframe width="720" height="405" src="https://www.youtube.com/embed/<?= $this->Lang->getLangCode()=='jp' ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>?rel=0"
+                    <iframe width="720" height="405" src="https://www.youtube.com/embed/<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>?rel=0"
                             frameborder="0" allowfullscreen></iframe>
                 </div><!--//video-container-->
             </div><!--//video-->
@@ -112,7 +112,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make employees Goals transparent and clear.') ?></h3>
+                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make your colleages Goal clear.') ?></h3>
                 <div class="details">
                     <p><?= __('What are you working on it? Why are you working on it? Make what you are doing clear to your colleagues.') ?></p>
                 </div>

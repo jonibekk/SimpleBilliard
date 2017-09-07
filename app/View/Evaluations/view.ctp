@@ -249,7 +249,7 @@
 <?php foreach ($goalList as $goal): ?>
     <?php $goal = array_values($goal) ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-        <div class="panel-heading"><?= __("Evaluation of goal") ?>(<?= $goalIndex ?>/<?= count($goalList) ?>)</div>
+        <div class="panel-heading"><?= __("Evaluation of Goal") ?>(<?= $goalIndex ?>/<?= count($goalList) ?>)</div>
         <div class="panel-body eval-view-panel-body">
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div class="col col-xxs-6 col-sm-4">

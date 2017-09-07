@@ -49,10 +49,11 @@ export default class Input extends Base {
     }
     return (
       <section className="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
-        <p className="gl-form-description">招待先のメールアドレスを入力してください</p>
+        <h2 className="gl-form-heading">{__("Invite members")}</h2>
         <form onSubmit={(e) => this.onSubmit(e)}>
           <div className="mb_16px">
-            <label className="gl-form-label">招待先メールアドレス</label>
+            <label className="gl-form-label">{__("Email Address")}</label>
+            <p className="gl-form-guide">{__("You can set email addresses by comma(,) separated or by newline separated.")}</p>
             <textarea
               name="email"
               className="form-control"
@@ -64,9 +65,9 @@ export default class Input extends Base {
           </div>
           {err_msg_el}
           <div className="btnGroupForForm">
-            <button type="submit" className="btnGroupForForm-next" disabled={input_data.emails ? "" : "disabled"}>次へ →
+            <button type="submit" className="btnGroupForForm-next" disabled={input_data.emails ? "" : "disabled"}>{__("Next")} →
             </button>
-            <a className="btnGroupForForm-cancel" href="/">キャンセル</a>
+            <a className="btnGroupForForm-cancel" href="/">{__("Cancel")}</a>
           </div>
         </form>
       </section>

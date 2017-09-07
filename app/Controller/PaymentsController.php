@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'TeamService');
+App::import('Service', 'PaymentService');
 App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
@@ -189,5 +190,22 @@ class PaymentsController extends AppController
     public function contact_settings()
     {
         $this->render('contact_settings');
+    }
+
+    /**
+     * output receipt pdf
+     * **Only used by outputing pdf**
+     *
+     * @param int $historyId
+     *
+     * @return \Cake\Network\Response
+     */
+    public function receipt(int $historyId)
+    {
+        // TODO.Payment: Should implement passing history vals to pdf after @joshua implement.
+
+        // If remove comment out, you can check on /payments/receipt
+        // $this->layout = 'pdf/one_column';
+        // return $this->render('pdf/receipt');
     }
 }
