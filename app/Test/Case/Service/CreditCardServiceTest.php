@@ -142,7 +142,9 @@ class CreditCardServiceTest extends GoalousTestCase
         $res = $this->CreditCardService->chargeCustomer($customerId, $currency, $amount, $description);
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("success", $res);
+        $this->assertTrue($res["isApiRequestSucceed"]);
         $this->assertTrue($res["success"]);
+        $this->assertFalse($res["error"]);
         $this->assertEquals('succeeded', $res['status']);
         $this->assertEquals($currency, strtoupper($res['paymentData']->currency));
         $this->assertEquals($description, $res['paymentData']->description);
@@ -174,6 +176,8 @@ class CreditCardServiceTest extends GoalousTestCase
 
         $this->assertNotNull($res, "Something very wrong happened");
         $this->assertArrayHasKey("error", $res);
+        $this->assertTrue($res["isApiRequestSucceed"]);
+        $this->assertFalse($res["success"]);
         $this->assertTrue($res["error"]);
     }
 

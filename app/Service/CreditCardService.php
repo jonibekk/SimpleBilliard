@@ -297,7 +297,9 @@ class CreditCardService extends AppService
     {
         $result = [
             "error"   => false,
-            "message" => null
+            "message" => null,
+            // does request to stripe is succeed
+            "isApiRequestSucceed" => false,
         ];
 
         // Validate Customer
@@ -344,10 +346,27 @@ class CreditCardService extends AppService
         try {
             $response = \Stripe\Charge::create($charge);
 
+            $result["isApiRequestSucceed"] = true;
             $result["success"] = $response->paid;
             $result["paymentId"] = $response->id;
             $result["status"] = $response->status;
             $result["paymentData"] = $response;
+        } catch(\Stripe\Error\Card $e) {
+            /**
+             * in this catch case, API request is success
+             * but credit card can not use for charge
+             * @see https://stripe.com/docs/api#error_handling
+             */
+            $result["isApiRequestSucceed"] = true;
+            $result["success"] = false;
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+            CakeLog::notice(sprintf("[%s]%s  data:%s",
+                __METHOD__,
+                $e->getMessage(),
+                AppUtil::varExportOneLine(compact('charge'))
+            ));
+            CakeLog::notice($e->getTraceAsString());
         } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
