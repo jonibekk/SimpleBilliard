@@ -4,7 +4,7 @@
  * @param sel
  */
 function paymentMenuChanged(sel) {
-    let value = sel.value;
+    var value = sel.value;
 
     if(window.location.href !== '/payments/'+value){
         window.location.href = '/payments/'+value;
