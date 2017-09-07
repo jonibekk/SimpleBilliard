@@ -29,6 +29,7 @@ App::uses('AppModel', 'Model');
  * @property MemberGroup    $MemberGroup
  * @property RecoveryCode   $RecoveryCode
  * @property Device         $Device
+ * @property TermsOfService $TermsOfService
  */
 class User extends AppModel
 {
@@ -306,8 +307,12 @@ class User extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
-        'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+        'DefaultTeam'    => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
+        'PrimaryEmail'   => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+        'TermsOfService' => [
+            'className'  => 'TermsOfService',
+            'foreignKey' => 'agreed_terms_of_service_id'
+        ]
     ];
 
     public $hasOne = [
@@ -644,9 +649,7 @@ class User extends AppModel
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
 
-        /** @var TermsOfService $TermsOfService */
-        $TermsOfService = ClassRegistry::init("TermsOfService");
-        $termsOfService = $TermsOfService->getCurrent();
+        $termsOfService = $this->TermsOfService->getCurrent();
         $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
 
         //データを保存
@@ -670,9 +673,7 @@ class User extends AppModel
         $data['Email']['email_token'] = null;
         $data['Email']['email_token_expires'] = null;
 
-        /** @var TermsOfService $TermsOfService */
-        $TermsOfService = ClassRegistry::init("TermsOfService");
-        $termsOfService = $TermsOfService->getCurrent();
+        $termsOfService = $this->TermsOfService->getCurrent();
         $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
 
         ///user with email and local_name
@@ -1691,7 +1692,7 @@ class User extends AppModel
                     'alias'      => 'Email',
                     'conditions' => [
                         'Email.user_id = User.id',
-                        'Email.email' => $emails,
+                        'Email.email'   => $emails,
                         'Email.del_flg' => false,
                     ]
 
@@ -1710,7 +1711,7 @@ class User extends AppModel
             ],
             'conditions' => [
                 'TeamMember.id' => null,
-                'User.del_flg'   => false,
+                'User.del_flg'  => false,
             ],
         ];
         $res = $this->find('list', $options);

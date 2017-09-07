@@ -35,7 +35,8 @@ class UserTest extends GoalousTestCase
         'app.action_result',
         'app.post_share_circle',
         'app.job_category',
-        'app.member_type'
+        'app.member_type',
+        'app.terms_of_service'
     );
 
     public $basicUserDefault = [
