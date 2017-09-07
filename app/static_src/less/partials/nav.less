@@ -156,8 +156,7 @@
     } 
 } 
 
-.nav-search {
-    width: 75% !important; //!important due to .form-control
+.nav-search.form-control {
     height: 28px;
     padding-top: 4px;
     padding-bottom: 4px;
@@ -167,7 +166,8 @@
 
 .nav-search-button {
     color: @modGray;
-    width: 100%;
+    width:45px;
+    flex-basis:45px;
     height: 28px;
     padding: 2px 5px;
     background-color: @smokyWhite;
@@ -193,14 +193,18 @@
 }
 
 .nav-search-form-group { 
+    .input-group{
+        width:100%;
+        display:flex;
+    }
     input{
         padding-left: 10px;
     }
 }
 
 .nav-search-button-group {
-    width: 25%;
-    float: left;
+    width:45px;
+    flex-basis:45px;
     &.caret{
         margin-left:2px;
     }
@@ -531,19 +535,25 @@
 }
 
 #NavbarOffcanvas{
-    width:200px;
+    width:75%;
     position: absolute;
     top:0;
     height:100vh;
     z-index:1;
     transition: transform .3s;
-    transform:translateX(-200px);
+    transform:translateX(-100%);
     overflow-y:scroll;
     background-color:@smokyWhite;
+    -ms-overflow-style: none; 
+    ::-webkit-scrollbar { width: 0 !important } 
     .mod-openNav &{
         transform:translateX(0px);
     }
+    @media @small{
+        max-width: 200px;
+    }
     @media @medium{
+        max-width: 100%;
         position:static;
         height:auto;
         width:auto;
