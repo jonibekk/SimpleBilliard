@@ -643,6 +643,12 @@ class User extends AppModel
         $email_token = null;
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
+
+        /** @var TermsOfService $TermsOfService */
+        $TermsOfService = ClassRegistry::init("TermsOfService");
+        $termsOfService = $TermsOfService->getCurrent();
+        $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
+
         //データを保存
         if (!Hash::get($data, 'Email.0.Email.email_verified') && !Hash::get($data, 'User.id')) {
             $this->create();
@@ -663,6 +669,11 @@ class User extends AppModel
         $data['Email']['email_verified'] = true;
         $data['Email']['email_token'] = null;
         $data['Email']['email_token_expires'] = null;
+
+        /** @var TermsOfService $TermsOfService */
+        $TermsOfService = ClassRegistry::init("TermsOfService");
+        $termsOfService = $TermsOfService->getCurrent();
+        $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
 
         ///user with email and local_name
         ////if data exists, update them

@@ -98,9 +98,10 @@ class Invite extends AppModel
 
         $insertData = [];
         foreach ($emails as $email) {
-            $insertData[] = [
+            $toUserId = !empty($registeredEmails[$email]) ? $registeredEmails[$email] : null;
+                $insertData[] = [
                 'from_user_id'        => $fromUserId,
-                'to_user_id'          => Hash::get($registeredEmails, $email),
+                'to_user_id'          => $toUserId,
                 'team_id'             => $teamId,
                 'email'               => $email,
                 'email_token'         => $this->generateToken(),
