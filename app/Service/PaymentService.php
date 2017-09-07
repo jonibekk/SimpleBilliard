@@ -223,18 +223,17 @@ class PaymentService extends AppService
     }
 
     /**
-     * Get total days from previous payment base date to next payment base date
-     * 現在月度の総利用日数
+     * Get previous base date by next base date
      *
-     * @param int $currentTimeStamp
+     * @param string $nextBaseDate
      *
-     * @return int
+     * @return string
      */
-    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    public function getPreviousBaseDate(string $nextBaseDate): string
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+
         list($y, $m, $d) = explode('-', $nextBaseDate);
         list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
 
@@ -246,6 +245,21 @@ class PaymentService extends AppService
         } else {
             $prevBaseDate = AppUtil::dateFromYMD($y, $m, $paymentBaseDay);
         }
+        return $prevBaseDate;
+    }
+
+    /**
+     * Get total days from previous payment base date to next payment base date
+     * 現在月度の総利用日数
+     *
+     * @param int $currentTimeStamp
+     *
+     * @return int
+     */
+    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    {
+        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        $prevBaseDate = $this->getPreviousBaseDate($nextBaseDate);
 
         $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
         return $res;

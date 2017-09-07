@@ -678,7 +678,7 @@ class GoalousTestCase extends CakeTestCase
         $saveTeam = array_merge(
             $team,
             [
-                'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+                'service_use_status' => Team::SERVICE_USE_STATUS_PAID
             ]
         );
         $teamId = $this->createTeam($saveTeam);
@@ -820,8 +820,8 @@ class GoalousTestCase extends CakeTestCase
             ],
             $chargeHistory
         );
-        return $this->ChargeHistory->save($saveChargeHistory);
-
+        $this->ChargeHistory->save($saveChargeHistory);
+        return $this->ChargeHistory->getLastInsertID();
     }
 
     /**
