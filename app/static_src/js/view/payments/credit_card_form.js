@@ -81,13 +81,13 @@ if(document.enterCCInfo){
      */
     function updateCreditCard(token) {
 
-        let data = {
+        var data = {
             'data[_Token][key]': cake.data.csrf_token.key,
             'token': token.id,
             'payer_name': cardName.value
         };
 
-        let xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/credit_card');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
@@ -96,7 +96,7 @@ if(document.enterCCInfo){
                 window.location.href = '/payments/method';
             }
             else {
-                let response  = JSON.parse(xhr.response);
+                var response  = JSON.parse(xhr.response);
                 // Display error message
                 new Noty({
                     type: 'error',
