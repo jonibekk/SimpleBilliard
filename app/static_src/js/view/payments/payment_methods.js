@@ -2,7 +2,7 @@
 // Edit Invoice info
 if(document.editInvoiceForm) {
 
-    let fields = [
+    var fields = [
         'company_name',
         'company_post_code',
         'company_region',
@@ -16,7 +16,7 @@ if(document.editInvoiceForm) {
         'contact_person_tel'
     ];
 
-    let allFields = document.editInvoiceForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
+    var allFields = document.editInvoiceForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
     for(var i = 0; i < allFields.length; i++) {
         allFields[i].addEventListener('change', removeError);
     }
@@ -31,7 +31,7 @@ if(document.editInvoiceForm) {
             data[fields[i]] = document.getElementsByName(fields[i])[0].value;
         }
 
-        let xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/invoice');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
@@ -45,10 +45,10 @@ if(document.editInvoiceForm) {
                 }).show();
             }
             else {
-                let response  = JSON.parse(xhr.response);
+                var response  = JSON.parse(xhr.response);
                 // Validation errors
                 if (response.validation_errors) {
-                    let fields = Object.keys(response.validation_errors.payment_setting);
+                    var fields = Object.keys(response.validation_errors.payment_setting);
                     fields.forEach(function (item) {
                         setError(item, response.validation_errors.payment_setting[item]);
                     });
@@ -59,7 +59,6 @@ if(document.editInvoiceForm) {
                         text: response.message ? response.message : xhr.statusText
                     }).show();
                 }
-
             }
         };
         xhr.send(urlEncode(data));

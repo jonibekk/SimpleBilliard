@@ -244,13 +244,14 @@ class ChargeHistory extends AppModel
     }
 
     /**
-     * @param int $teamId
-     * @param int $time
-     * @param int $subTotalCharge
-     * @param int $tax
-     * @param int $amountPerUser
-     * @param int $usersCount
-     * @param int $currencyType
+     * @param int      $teamId
+     * @param int      $time
+     * @param int      $subTotalCharge
+     * @param int      $tax
+     * @param int      $amountPerUser
+     * @param int      $usersCount
+     * @param int      $currencyType
+     * @param int|null $userId
      *
      * @return mixed
      */
@@ -261,10 +262,12 @@ class ChargeHistory extends AppModel
         int $tax,
         int $amountPerUser,
         int $usersCount,
+        $userId = null,
         int $currencyType = PaymentSetting::CURRENCY_TYPE_JPY
     ) {
         $historyData = [
             'team_id'          => $teamId,
+            'user_id'          => $userId,
             'payment_type'     => PaymentSetting::PAYMENT_TYPE_INVOICE,
             'charge_type'      => self::CHARGE_TYPE_MONTHLY,
             'amount_per_user'  => $amountPerUser,
@@ -280,5 +283,68 @@ class ChargeHistory extends AppModel
         $ret = $this->save($historyData);
         $ret = Hash::extract($ret, 'ChargeHistory');
         return $ret;
+    }
+
+    /**
+     * Get data for receipt
+     *
+     * @param int $historyId
+     *
+     * @return array
+     */
+    public function getForReceipt(int $historyId): array
+    {
+        $options = [
+            'conditions' => [
+                'ChargeHistory.id' => $historyId,
+            ],
+            'fields'     => [
+                'ChargeHistory.id',
+                'ChargeHistory.charge_datetime',
+                'ChargeHistory.tax',
+                'ChargeHistory.total_amount',
+                'ChargeHistory.payment_type',
+                'ChargeHistory.charge_users',
+                'ChargeHistory.charge_type',
+                'Team.name',
+                'PaymentSetting.company_country',
+                'PaymentSetting.company_name',
+                'PaymentSetting.contact_person_email',
+                'CreditCard.customer_code',
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'ChargeHistory.team_id = Team.id'
+                    ]
+                ],
+                [
+                    'table'      => 'payment_settings',
+                    'alias'      => 'PaymentSetting',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'ChargeHistory.team_id = PaymentSetting.team_id',
+                        'PaymentSetting.del_flg' => false
+                    ]
+                ],
+                [
+                    'table'      => 'credit_cards',
+                    'alias'      => 'CreditCard',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'ChargeHistory.team_id = CreditCard.team_id',
+                        'CreditCard.del_flg' => false
+                    ]
+                ],
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (!$res) {
+            return [];
+        }
+        return $res;
     }
 }

@@ -2,7 +2,7 @@
 // Edit Invoice info
 if(document.editPaySettingsForm) {
 
-    let fields = [
+    var fields = [
         'company_name',
         'company_country',
         'company_post_code',
@@ -18,7 +18,7 @@ if(document.editPaySettingsForm) {
         'contact_person_tel'
     ];
 
-    let allFields = document.editPaySettingsForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
+    var allFields = document.editPaySettingsForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
     for(var i = 0; i < allFields.length; i++) {
         allFields[i].addEventListener('change', removeError);
     }
@@ -33,7 +33,7 @@ if(document.editPaySettingsForm) {
             data[fields[i]] = document.getElementsByName(fields[i])[0].value;
         }
 
-        let xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/company_info');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
@@ -47,10 +47,10 @@ if(document.editPaySettingsForm) {
                 }).show();
             }
             else {
-                let response  = JSON.parse(xhr.response);
+                var response  = JSON.parse(xhr.response);
                 // Validation errors
                 if (response.validation_errors) {
-                    let fields = Object.keys(response.validation_errors.payment_setting);
+                    var fields = Object.keys(response.validation_errors.payment_setting);
                     fields.forEach(function (item) {
                         setError(item, response.validation_errors.payment_setting[item]);
                     });

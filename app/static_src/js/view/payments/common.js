@@ -35,10 +35,10 @@ function urlEncode(object) {
  * @param message
  */
 function setError(fieldName, message) {
-    let field = document.querySelector('input[name=' + fieldName + ']');
+    var field = document.querySelector('input[name=' + fieldName + ']');
     if (field) {
         field.parentNode.className += ' has-error';
-        let error = document.createElement('small');
+        var error = document.createElement('small');
         error.className = 'help-block';
         error.innerHTML = message;
         field.parentNode.appendChild(error);
@@ -50,9 +50,9 @@ function setError(fieldName, message) {
  * @param e
  */
 function removeError(e) {
-    let field = e.target;
+    var field = e.target;
     field.parentNode.className = field.parentNode.className.replace('has-error', '');
-    let error = field.parentNode.querySelector('small');
+    var error = field.parentNode.querySelector('small');
     if (error) {
         error.remove();
     }

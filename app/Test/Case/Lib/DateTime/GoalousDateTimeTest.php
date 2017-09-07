@@ -109,6 +109,30 @@ class GoalousDateTimeTest extends GoalousTestCase
         $this->assertEquals(self::TIMESTAMP_15e8, $_15e8->getTimestamp());
     }
 
+    public function provideDateChangeByTimeZoneHourSetting()
+    {
+        yield ['2017-12-31 20:00:00',      '+0000', '2018-01-01 05:00:00', '9'];
+        yield ['2017-02-28 20:00:00',      '+0000', '2017-03-01 05:00:00', '9'];
+        yield ['2018-01-01 05:00:00',      '+0900', '2017-12-31 17:00:00', '-3'];
+        yield ['2017-03-01 05:00:00',      '+0300', '2017-02-28 20:00:00', '-6'];
+        yield ['2017-03-01 05:00:00+0300', '+0300', '2017-02-28 20:00:00', '-6'];
+        yield ['2017-03-01 05:00:00-0600', '+0300', '2017-03-01 05:00:00', '-6'];
+
+        // float hour
+        yield ['2017-12-31 20:00:00',      '+0000','2018-01-01 05:45:00', '9.75'];
+        yield ['2017-03-01 05:00:00-0600', '+0300','2017-03-01 04:45:00', '-6.25'];
+    }
+
+    /**
+     * @dataProvider provideDateChangeByTimeZoneHourSetting
+     */
+    function test_setTimeZoneByHour($srcDateTime, $srcTimeZone, $destDateTime, $destTimeZoneHour)
+    {
+        $day = new GoalousDateTime($srcDateTime, new DateTimeZone($srcTimeZone));
+        $day->setTimeZoneByHour($destTimeZoneHour);
+        $this->assertEquals($destDateTime, $day->format('Y-m-d H:i:s'));
+    }
+
     public function provideDateChangeByTimeZoneSetting()
     {
         yield ['2017-12-31 20:00:00',      '+0000', '2018-01-01 05:00:00', '+0900'];

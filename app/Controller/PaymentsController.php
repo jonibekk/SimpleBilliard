@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'TeamService');
+App::import('Service', 'PaymentService');
 App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
@@ -211,5 +212,23 @@ class PaymentsController extends AppController
         $this->set(compact('setting', 'countries'));
 
         return $this->render('contact_settings');
+    }
+
+    /**
+     * output receipt pdf
+     * **Only used by outputing pdf**
+     *
+     * @param int $historyId
+     *
+     * @return \Cake\Network\Response
+     */
+    public function receipt(int $historyId)
+    {
+        /** @var ChargeHistoryService $ChargeHistoryService */
+        $ChargeHistoryService = ClassRegistry::init("ChargeHistoryService");
+
+        $history = $ChargeHistoryService->getReceipt($historyId);
+        $this->set(compact('history'));
+        return $this->render();
     }
 }

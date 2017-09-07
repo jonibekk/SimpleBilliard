@@ -56,7 +56,8 @@ class AppController extends BaseController
         'Ogp',
         'Csv',
         'Flash',
-        //        'Benchmark',
+        // CakePdf required it.
+        'RequestHandler'
     ];
     private $merge_helpers = [
         'Session',
@@ -608,7 +609,8 @@ class AppController extends BaseController
         $excludeEnvs = [
             'local',
             'isao',
-            'www'
+            'www',
+            'stg',
         ];
 
         // 特定の環境を除外

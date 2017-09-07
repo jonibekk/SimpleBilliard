@@ -7,6 +7,7 @@ App::uses('Folder', 'Utility');
 App::uses('SendAlertMailToAdminShell', 'Console/Command');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('GoalousDateTime', 'DateTime');
 
 /**
  * Class SendAlertMailToAdminShellTest
@@ -62,88 +63,88 @@ class SendAlertMailToAdminShellTest extends GoalousTestCase
 
     /**
      * ターゲットチームであるかどうかのテスト
-     * 前提条件: free trial期間が15日、EXPIRE_ALERT_NOTIFY_BEFORE_DAYSが"10,5,3,2,1"
-     * 方針: 本日の日付は変更できないので、ステータス開始日を変更して境界値テストを実施
+     * 前提条件: free trial期間が15日、EXPIRE_ALERT_NOTIFY_BEFORE_DAYSが "10,5,3,2,1"
      */
     function test_isTargetTeam()
     {
         $timezone = 9;
-        $localTodayDate = AppUtil::todayDateYmdLocal($timezone);
+        $currentDateTime = GoalousDateTime::now()->setTimeZoneByHour($timezone);
+        $currentDateTimeFormatted = $currentDateTime->format('Y-m-d');
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateBefore($localTodayDate, 1),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->subDay(1)->format('Y-m-d')// = stateEndDate
         );
         $this->assertFalse($isTargetTeam, "Expired!");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            $localTodayDate,
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTimeFormatted
         );
         $this->assertFalse($isTargetTeam, "Just Expired!");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 1),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(1)->format('Y-m-d')
         );
         $this->assertTrue($isTargetTeam, "1 day before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 2),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(2)->format('Y-m-d')
         );
         $this->assertTrue($isTargetTeam, "2 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 3),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(3)->format('Y-m-d')
         );
         $this->assertTrue($isTargetTeam, "3 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 4),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(4)->format('Y-m-d')
         );
         $this->assertFalse($isTargetTeam, "4 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 5),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(5)->format('Y-m-d')
         );
         $this->assertTrue($isTargetTeam, "5 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 6),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(6)->format('Y-m-d')
         );
         $this->assertFalse($isTargetTeam, "6 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 7),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(7)->format('Y-m-d')
         );
         $this->assertFalse($isTargetTeam, "7 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 8),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(8)->format('Y-m-d')
         );
         $this->assertFalse($isTargetTeam, "8 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 9),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(9)->format('Y-m-d')
         );
         $this->assertFalse($isTargetTeam, "9 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 10),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(10)->format('Y-m-d')
         );
         $this->assertTrue($isTargetTeam, "10 days before expires");
 
         $isTargetTeam = $this->SendAlertMailToAdminShell->_isTargetTeam(
-            AppUtil::dateAfter($localTodayDate, 11),
-            $timezone
+            $currentDateTimeFormatted,
+            $currentDateTime->copy()->addDay(11)->format('Y-m-d')
         );
         $this->assertFalse($isTargetTeam, "11 days before expires");
 

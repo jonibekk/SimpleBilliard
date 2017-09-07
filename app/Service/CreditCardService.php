@@ -76,9 +76,27 @@ class CreditCardService extends AppService
             $response = \Stripe\Customer::create($customer);
 
             $result["customer_id"] = $response->id;
-            // TODO: must research better way of getting default_source than [0]
-            // e.g. should be like $response->sources->retrieve()
-            $result["card"] = $response->sources->data[0];
+            // Try to get the credit card from the list on customer object
+            // will not be necessary to call $response->sources->retrieve()
+            // because after creation the customer will not have a long
+            // list of sources.
+            $defaultSource = $response->default_source;
+            foreach ($response->sources->data as $source) {
+                if ($source->id == $defaultSource) {
+                    $result["card"] = $source;
+                    break;
+                }
+            }
+            // Check if the the card was acquired
+            // This should not happen in any case. Logging an Emergency
+            if (!isset($result["card"] )) {
+                CakeLog::emergency(sprintf("[%s] Customer credit card not acquired. customer_id: %s, sourceId: %s",
+                    __METHOD__, $response->id, $defaultSource));
+
+                $result["error"] = true;
+                $result["message"] = __("An error occurred while processing.");
+                return $result;
+            }
         } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
@@ -106,8 +124,12 @@ class CreditCardService extends AppService
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
         $expiration = $CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($teamId);
-        if ($expiration instanceof GoalousDateTime) {
-            return $expiration;
+        if ($expiration['expire'] instanceof GoalousDateTime) {
+            return $expiration['expire'];
+        }
+        if ($expiration['error']) {
+            // cached error on redis
+            return null;
         }
 
         // no redis cache, fetch card expiration from StripeAPI
@@ -118,12 +140,13 @@ class CreditCardService extends AppService
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
         try {
-            $response = \Stripe\Customer::retrieve($customerId);
-            // TODO: must research better way of getting default_source than [0]
-            // e.g. should be like $response->sources->retrieve()
-            $card = $response->sources->data[0];
+            $response = $this->retrieveCreditCard($customerId);
+            if ($response['error'] || is_null($response['creditCard'])) {
+                throw new RuntimeException('credit card info not exists');
+            }
+            $card = $response['creditCard'];
             $CreditCardService->cacheTeamCreditCardExpiration([
-                'error' => is_null($card),
+                'error' => false,
                 'year'  => $card['exp_year'] ?? 0,
                 'month' => $card['exp_month'] ?? 0,
             ], $teamId);
@@ -136,7 +159,7 @@ class CreditCardService extends AppService
                 'month' => 0,
             ], $teamId);
         }
-        return $CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($teamId);
+        return $CreditCardService->getExpirationDateTimeOfTeamCreditCardFromCache($teamId)['expire'];
     }
 
     /**
@@ -158,7 +181,11 @@ class CreditCardService extends AppService
      * get team credit card expiration date by GoalousDateTime
      * @param int $teamId
      *
-     * @return GoalousDateTime|null
+     * @return array
+     * [
+     *     'error'  => bool,
+     *     'expire' => GoalousDateTime|null,
+     * ]
      */
     public function getExpirationDateTimeOfTeamCreditCardFromCache(int $teamId)
     {
@@ -166,14 +193,26 @@ class CreditCardService extends AppService
         $CreditCard = ClassRegistry::init("CreditCard");
         $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
         $cachedCreditCardExpireData = Cache::read($keyRedisCache, 'user_data');
-        if (false !== $cachedCreditCardExpireData) {
-            $expireDates = msgpack_unpack($cachedCreditCardExpireData);
-            if ($expireDates['error']) {
-                return null;
-            }
-            return self::getRealExpireDateTimeFromCreditCardExpireDate($expireDates['year'], $expireDates['month']);
+        if (false === $cachedCreditCardExpireData) {
+            // no cache, returning null, this is not error pattern
+            return [
+                'error'  => false,
+                'expire' => null,
+            ];
         }
-        return null;
+        // cached as error, stripe api is failed
+        $expireDates = msgpack_unpack($cachedCreditCardExpireData);
+        if ($expireDates['error']) {
+            return [
+                'error'  => true,
+                'expire' => null,
+            ];
+        }
+        // credit card expire date cached successfully
+        return [
+            'error'  => false,
+            'expire' => self::getRealExpireDateTimeFromCreditCardExpireDate($expireDates['year'], $expireDates['month']),
+        ];
     }
 
     /**
@@ -258,7 +297,9 @@ class CreditCardService extends AppService
     {
         $result = [
             "error"   => false,
-            "message" => null
+            "message" => null,
+            // does request to stripe is succeed
+            "isApiRequestSucceed" => false,
         ];
 
         // Validate Customer
@@ -305,10 +346,27 @@ class CreditCardService extends AppService
         try {
             $response = \Stripe\Charge::create($charge);
 
+            $result["isApiRequestSucceed"] = true;
             $result["success"] = $response->paid;
             $result["paymentId"] = $response->id;
             $result["status"] = $response->status;
             $result["paymentData"] = $response;
+        } catch(\Stripe\Error\Card $e) {
+            /**
+             * in this catch case, API request is success
+             * but credit card can not use for charge
+             * @see https://stripe.com/docs/api#error_handling
+             */
+            $result["isApiRequestSucceed"] = true;
+            $result["success"] = false;
+            $result["error"] = true;
+            $result["message"] = $e->getMessage();
+            CakeLog::notice(sprintf("[%s]%s  data:%s",
+                __METHOD__,
+                $e->getMessage(),
+                AppUtil::varExportOneLine(compact('charge'))
+            ));
+            CakeLog::notice($e->getTraceAsString());
         } catch (Exception $e) {
             $result["error"] = true;
             $result["message"] = $e->getMessage();
@@ -338,7 +396,7 @@ class CreditCardService extends AppService
      *
      * @return array
      */
-    function updateCreditCard(string $customerId, string $token, int $teamId): array
+    public function updateCreditCard(string $customerId, string $token, int $teamId): array
     {
         try {
             \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
@@ -458,7 +516,10 @@ class CreditCardService extends AppService
         } catch (Exception $e) {
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
-            return $result;
+            return [
+                'error'   => true,
+                'message' => __('Credit card settings does not exist.'),
+            ];
         }
     }
 
