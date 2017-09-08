@@ -484,7 +484,7 @@ class PaymentService extends AppService
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
         int $usersCount,
-        int $opeUserId
+        $opeUserId = null
     ) {
         try {
             // Validate user count

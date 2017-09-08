@@ -45,33 +45,39 @@ class MonthlyCreditCardChargeShell extends AppShell
             $this->log('Billing team does not exist', LOG_INFO);
             exit;
         }
+        $this->out(print_r(compact('targetChargeTeams'), true));
 
         // [Efficient processing]
         // This is why it is inefficient to throw SQL for each team and get the number of users
         $teamIds = Hash::extract($targetChargeTeams, '{n}.PaymentSetting.team_id');
+        $this->out(print_r(compact('teamIds'), true));
         $chargeMemberCountEachTeam = [];
         foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
-            $chargeMemberCountEachTeam = array_merge(
-                $chargeMemberCountEachTeam,
-                $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds)
-            );
+            $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
         }
+        $this->out(print_r(compact('chargeMemberCountEachTeam'), true));
 
         // Charge each team
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
             $chargeMemberCount = Hash::get($chargeMemberCountEachTeam, $teamId);
+            $this->out(print_r(compact('teamId', 'chargeMemberCount'), true));
             // Check if exist member
             if (empty($chargeMemberCount)) {
                 $noMemberTeams[] = $teamId;
                 continue;
             }
-            // Charge
-            $PaymentService->applyCreditCardCharge(
-                $teamId,
-                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
-                $chargeMemberCount
-            );
+
+            try {
+                // Charge
+                $PaymentService->applyCreditCardCharge(
+                    $teamId,
+                    Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                    $chargeMemberCount
+                );
+            } catch (Exception $e) {
+                // TODO: implement
+            }
         }
 
         if (!empty($noMemberTeams)) {
