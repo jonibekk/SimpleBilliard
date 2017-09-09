@@ -1718,4 +1718,38 @@ class User extends AppModel
         return $res;
     }
 
+    /**
+     * Check preRegistered(invited but not accept any team's invitation)
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    function isPreRegisteredByInvitationToken(string $email): bool
+    {
+        $options = [
+            'fields'     => [
+                'User.id',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'Email.email'   => $email,
+                        'Email.del_flg' => false,
+                        'active_flg' => false
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'User.del_flg'  => false,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res == 1;
+    }
+
 }

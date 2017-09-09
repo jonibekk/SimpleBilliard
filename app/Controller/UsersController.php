@@ -5,7 +5,10 @@ App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
 App::import('Service', 'UserService');
+App::import('Service', 'CircleService');
 App::import('Service', 'TermService');
+App::import('Service', 'TermService');
+App::import('Service', 'ExperimentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -825,27 +828,25 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        // メール招待かつ未登録ユーザーの場合
-        if (!$this->Invite->isUser($token)) {
-            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
-            return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
-        }
+        // 未ログイン
+        if (!$this->Auth->User()) {
+            // メール招待かつ未登録ユーザーの場合
+            $invitation = Hash::get($this->Invite->getByToken($token), 'Invite');
+            if ($this->User->isPreRegisteredByInvitationToken($invitation['email'])) {
+                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_EMAIL);
+                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
+            }
 
-        // CSV招待かつ未(仮)登録ユーザー場合
-        if ($this->Invite->isUserPreRegistered($token)) {
-            $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV);
-            return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
-        }
-
-        // 登録済みユーザーかつ未ログインの場合はログイン画面へ
-        if (!$this->Auth->user()) {
+            // 登録済みユーザーかつ未ログインの場合はログイン画面へ
+            $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             return $this->redirect(['action' => 'login']);
         }
 
+        $userId = $this->Auth->user('id');
         // トークンが自分用に生成されたもうのかどうかチェック
-        if (!$this->Invite->isForMe($token, $this->Auth->user('id'))) {
+        if (!$this->Invite->isForMe($token, $userId)) {
             $this->Notification->outError(__("This invitation isn't not for you."));
             return $this->redirect("/");
         }
@@ -1077,6 +1078,11 @@ class UsersController extends AppController
      */
     function _joinTeam($token)
     {
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init('CircleService');
+
         try {
             $this->User->begin();
 
@@ -1113,8 +1119,6 @@ class UsersController extends AppController
 
             // 「チーム全体」サークルに追加
             App::import('Service', 'CircleService');
-            /** @var ExperimentService $ExperimentService */
-            $CircleService = ClassRegistry::init('CircleService');
             $circleId = $teamAllCircle['Circle']['id'];
             if (!$CircleService->join($circleId, $userId)) {
                 $validationErrors = $ExperimentService->validationExtract($this->Circle->CircleMember->validationErrors);
