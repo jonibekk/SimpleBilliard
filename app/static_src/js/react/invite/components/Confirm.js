@@ -47,7 +47,7 @@ export default class Confirm extends Base {
   }
 
   onCheckAgreement(e) {
-    this.setState({check_agreement: e.target.value})
+    this.setState({check_agreement: e.target.checked})
   }
 
   render() {
@@ -73,7 +73,7 @@ export default class Confirm extends Base {
             <h2 className="title">{__("Billing")}</h2>
             <div className="ml_5px">
               <dl className="totalCharge">
-                <dt className="totalCharge-label">{__("Total")}</dt>
+                <dt className="totalCharge-label">{__("Total charge amount")}({__("Tax included")})</dt>
                 <dd className="totalCharge-value">{confirm_data.total_charge}</dd>
               </dl>
               <div className="totalChargeFormula mb_12px">
@@ -114,11 +114,11 @@ export default class Confirm extends Base {
                 </tr>
                 <tr>
                   <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} days</th>
-                  <td className="totalChargeFormulaDetail-description">：利用日数(日割り)</td>
+                  <td className="totalChargeFormulaDetail-description">：{__("Number of days")}({__("Daily payment")})</td>
                 </tr>
                 </tbody>
               </table>
-              <a href="/pricing">
+              <a href="/pricing" target="_blank">
                 <i className="fa fa-question-circle mr_4px" aria-hidden="true"/>{__("View details")}
               </a>
             </div>

@@ -583,6 +583,15 @@ App::uses('AttachedFile', 'Model');
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
             /* Change to paid plan */
+            // Select country and paymnet type
+            "Select Country Location": "<?= __("Select Country Location") ?>",
+            "Select Payment Method": "<?= __("Select Payment Method") ?>",
+            "Credit Card": "<?= __("Credit Card") ?>",
+            "Invoice": "<?= __("Invoice") ?>",
+            "Use a credit card to setup automatic, reoccuring payments for your Goalous team.": "<?= __("Use a credit card to setup automatic, reoccuring payments for your Goalous team.") ?>",
+            "Setup a monthly invoice with Goalous.": "<?= __("Setup a monthly invoice with Goalous.") ?>",
+            "Setup": "<?= __("Setup") ?>",
+
             // Input company info
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",
@@ -611,8 +620,16 @@ App::uses('AttachedFile', 'Model');
             "Total": "<?= __("Total") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
+            // Input Billing info
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
+            // Complete
+            "Thank You": "<?= __("Thank You") ?>",
+            "Your transaction was successful. You and your team now have full access to Goalous.": "<?= __("Your transaction was successful. You and your team now have full access to Goalous.") ?>",
+            "Go achieve your goal!": "<?= __("Go achieve your goal!") ?>",
+            "Move to Billing page": "<?= __("Move to Billing page") ?>",
+
+            // Invite
             "Update completed": "<?= __("Update completed") ?>",
             "Invite members": "<?= __("Invite members") ?>",
             "Email Address": "<?= __("Email Address") ?>",
@@ -621,6 +638,11 @@ App::uses('AttachedFile', 'Model');
             "days": "<?= __("days") ?>",
             "month": "<?= __("month") ?>",
             "View details": "<?= __("View details") ?>",
+            "Billing": "<?= __("Billing") ?>",
+            "Total charge amount": "<?= __("Total charge amount") ?>",
+            "Tax included": "<?= __("Tax included") ?>",
+            "Number of days": "<?= __("Number of days") ?>",
+            "Daily payment": "<?= __("Daily payment") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
