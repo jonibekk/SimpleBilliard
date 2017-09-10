@@ -110,6 +110,9 @@ class InvitationService extends AppService
 
         try {
             $this->TransactionManager->begin();
+
+            $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, count($emails));
+
             /* Insert invitations table */
             if (!$Invite->saveBulk($emails, $teamId, $fromUserId)) {
                 throw new Exception(sprintf("Failed to insert invitations. data:%s",
@@ -167,7 +170,6 @@ class InvitationService extends AppService
 
             /* Charge if paid plan */
             $addUserCnt = count($targetUserIds);
-            $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $addUserCnt);
             if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(

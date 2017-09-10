@@ -59,6 +59,7 @@ export default class Confirm extends Base {
       );
     }
     const is_paid_plan = team.service_use_status == Team.SERVICE_USE_STATUS.PAID;
+    const display_charge = is_paid_plan && confirm_data.charge_users_count > 0;
     return (
       <section className="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
         <form onSubmit={(e) => this.onSubmit(e)}>
@@ -68,7 +69,7 @@ export default class Confirm extends Base {
               {emails_el}
             </ul>
           </div>
-          {(is_paid_plan && confirm_data.charge_users_count > 0) &&
+          {display_charge &&
           <div className="inviteCfmBlock mod-bdt">
             <h2 className="title">{__("Billing")}</h2>
             <div className="ml_5px">
@@ -113,7 +114,7 @@ export default class Confirm extends Base {
                   <td className="totalChargeFormulaDetail-description">：{__("Price per user")}</td>
                 </tr>
                 <tr>
-                  <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} days</th>
+                  <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} {__("days")}s</th>
                   <td className="totalChargeFormulaDetail-description">：{__("Number of days")}({__("Daily payment")})</td>
                 </tr>
                 </tbody>
@@ -124,7 +125,7 @@ export default class Confirm extends Base {
             </div>
           </div>
           }
-          {is_paid_plan &&
+          {display_charge &&
           <div className="serviceTermAgreement mb_8px">
             <label>
               <input
@@ -136,7 +137,7 @@ export default class Confirm extends Base {
           }
           <div className="btnGroupForForm">
             <button type="submit" className="btnGroupForForm-next" ref="submit"
-                    disabled={(is_paid_plan && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
+                    disabled={(display_charge && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
               {__("Send")}
             </button>
             <Link className="btnGroupForForm-cancel" to="/users/invite">{__("Back")}</Link>

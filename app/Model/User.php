@@ -1715,7 +1715,7 @@ class User extends AppModel
             ],
         ];
         $res = $this->find('list', $options);
-        return $res;
+        return array_values($res);
     }
 
     /**
