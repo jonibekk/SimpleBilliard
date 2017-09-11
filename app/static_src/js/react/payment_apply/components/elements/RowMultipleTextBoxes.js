@@ -16,23 +16,27 @@ class RowMultipleTextBoxes extends React.Component {
     let errors_el = [];
     for (let i = 0; i < this.props.attributes.length; i++) {
       const attribute = this.props.attributes[i]
-      let className = `form-control ${attribute.className ? attribute.className : ""} `
+      let className = `flex-extend ${attribute.className ? attribute.className : ""}`
       if (i != this.props.attributes.length - 1) {
         className = className + " mr_8px"
       }
       textboxes_el.push(
-        <input
-          key={`tb_${attribute.id}`}
-          id={attribute.id}
-          type={attribute.type ? attribute.type : "text"}
-          name={attribute.name}
-          value={attribute.value}
-          className={className}
-          placeholder={attribute.placeholder}
-          disabled={attribute.disabled ? true : false}
-          maxLength={attribute.max_length ? attribute.max_length : 255}
-          onChange={(e) => this.props.onChange(e)}
-        />
+        <div className={className} key={`tb_${attribute.id}`}>
+          <label htmlFor={attribute.id} className="circle-create-label">
+            {attribute.label}
+          </label>
+          <input
+            id={attribute.id}
+            type={attribute.type ? attribute.type : "text"}
+            name={attribute.name}
+            value={attribute.value}
+            className="form-control"
+            placeholder={attribute.placeholder}
+            disabled={attribute.disabled ? true : false}
+            maxLength={attribute.max_length ? attribute.max_length : 255}
+            onChange={(e) => this.props.onChange(e)}
+          />
+        </div>
       )
       errors_el.push(
         <InvalidMessageBox key={`err_${attribute.id}`} message={attribute.err_msg}/>
@@ -41,9 +45,6 @@ class RowMultipleTextBoxes extends React.Component {
 
     return (
       <div className="form-group">
-        <label htmlFor={this.props.id} className="circle-create-label">
-          {this.props.label}
-        </label>
         <div className="flex">
           {textboxes_el}
         </div>
@@ -55,11 +56,9 @@ class RowMultipleTextBoxes extends React.Component {
 }
 
 RowMultipleTextBoxes.propTypes = {
-  label: React.PropTypes.string,
   attributes: React.PropTypes.array,
 };
 RowMultipleTextBoxes.defaultProps = {
-  label: "",
   attributes: [],
 };
 export default connect()(RowMultipleTextBoxes);

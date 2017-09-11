@@ -51,6 +51,30 @@ export default class Company extends Base {
     const {payment_setting} = input_data
     const errors_payment_setting = validation_errors.payment_setting ? validation_errors.payment_setting : {};
 
+    let attributes = [
+      {
+        id: "PaymentsContactPersonFirstName",
+        name: "contact_person_first_name",
+        label: __("First Name "),
+        value: payment_setting.contact_person_first_name,
+        placeholder: __("eg. Bruce"),
+        max_length: 128,
+        err_msg: errors_payment_setting.contact_person_first_name,
+      },
+      {
+        id: "PaymentsContactPersonLastName",
+        name: "contact_person_last_name",
+        label: __("Last Name "),
+        value: payment_setting.contact_person_last_name,
+        placeholder: __("eg. Jobs"),
+        max_length: 128,
+        err_msg: errors_payment_setting.contact_person_last_name,
+      }
+    ];
+    if (payment_setting.company_country == 'JP') {
+      attributes.reverse();
+    }
+
     return (
       <section className="panel company-info">
         <h3>{__("Enter Company Information")}</h3>
@@ -113,34 +137,16 @@ export default class Company extends Base {
           <fieldset className="company-info-fieldset">
             <legend className="company-info-legend">{__("Company Contact")}</legend>
             <RowMultipleTextBoxes
-              label={__("Name")}
-              attributes={[
-                {
-                  id: "PaymentsContactPersonLastName",
-                  name: "contact_person_last_name",
-                  value: payment_setting.contact_person_last_name,
-                  placeholder: __("eg. Jobs"),
-                  max_length: 128,
-                  err_msg: errors_payment_setting.contact_person_last_name,
-                },
-                {
-                  id: "PaymentsContactPersonFirstName",
-                  name: "contact_person_first_name",
-                  value: payment_setting.contact_person_first_name,
-                  placeholder: __("eg. Bruce"),
-                  max_length: 128,
-                  err_msg: errors_payment_setting.contact_person_first_name,
-                }
-              ]}
+              attributes={attributes}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
             {payment_setting.company_country == 'JP' &&
             <RowMultipleTextBoxes
-              label={__("Name Kana")}
               attributes={[
                 {
                   id: "PaymentsContactPersonLastNameKana",
                   name: "contact_person_last_name_kana",
+                  label: __("Last Name Kana"),
                   value: payment_setting.contact_person_last_name_kana,
                   placeholder: "スズキ",
                   max_length: 128,
@@ -149,6 +155,7 @@ export default class Company extends Base {
                 {
                   id: "PaymentsContactPersonFirstNameKana",
                   name: "contact_person_first_name_kana",
+                  label: __("First Name Kana"),
                   value: payment_setting.contact_person_first_name_kana,
                   placeholder: "タロウ",
                   max_length: 128,

@@ -608,7 +608,10 @@ App::uses('AttachedFile', 'Model');
             "Company Contact": "<?= __("Company Contact") ?>",
             "eg. Jobs": "<?= __("eg. Jobs") ?>",
             "eg. Bruce": "<?= __("eg. Bruce") ?>",
-            "Name Kana": "<?= __("Name Kana") ?>",
+            "Last Name ": "<?= __("Last Name ") ?>",
+            "Last Name Kana": "<?= __("Last Name Kana") ?>",
+            "First Name ": "<?= __("First Name ") ?>",
+            "First Name Kana": "<?= __("First Name Kana") ?>",
             "name@company.com": "<?= __("name@company.com") ?>",
             "Telephone": "<?= __("Telephone") ?>",
             // Input credit card
