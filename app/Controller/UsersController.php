@@ -7,6 +7,8 @@ App::import('Service', 'GoalService');
 App::import('Service', 'UserService');
 App::import('Service', 'TermService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Users Controller
  *
@@ -33,6 +35,8 @@ class UsersController extends AppController
             'accept_invite', 'register_with_invite', 'registration_with_set_password', 'two_fa_auth',
             'two_fa_auth_recovery',
             'add_subscribe_email', 'ajax_validate_email');
+
+        $this->_checkAdmin(['invite']);
     }
 
     /**
@@ -216,7 +220,7 @@ class UsersController extends AppController
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
 
-            if($this->is_mb_app){
+            if ($this->is_mb_app) {
                 // If mobile app, updating setup guide for installation of app.
                 // It should be called from here. Because, `updateSetupStatusIfNotCompleted()` uses Session Data.
                 $this->updateSetupStatusIfNotCompleted();
@@ -321,14 +325,6 @@ class UsersController extends AppController
         $team = $this->Team->findById($invite['Invite']['team_id']);
         $this->set('team_name', $team['Team']['name']);
 
-        //batch case
-        if ($user = $this->User->getUserByEmail($invite['Invite']['email'])) {
-            // Set user info to view value
-            $this->set('first_name', $user['User']['first_name']);
-            $this->set('last_name', $user['User']['last_name']);
-            $this->set('birth_day', $user['User']['birth_day']);
-        }
-
         if (!$this->request->is('post')) {
             if ($step === 2) {
                 return $this->render($passwordTemplate);
@@ -366,7 +362,10 @@ class UsersController extends AppController
 
         //sessionデータとpostのデータとマージ
         $data = Hash::merge($this->Session->read('data'), $this->request->data);
-        //batch case
+
+        // TODO: After payment implementation, user must be created any case in invitation.
+        //       So after merged auto creating use when invitation, this `if` statement should be deleted.
+        $user = $this->User->getUserByEmail($invite['Invite']['email']);
         if ($user) {
             $userId = $user['User']['id'];
 
@@ -405,19 +404,14 @@ class UsersController extends AppController
         $userId = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $userId;
         $this->_autoLogin($userId, true);
         // flash削除
-        // csvによる招待のケースで_authLogin()の処理中に例外メッセージが吐かれるため、
+        // _authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
         $this->Session->delete('Message.noty');
 
         //チーム参加
         $invitedTeam = $this->_joinTeam($this->request->params['named']['invite_token']);
         if ($invitedTeam === false) {
-            // HACK: _joinTeamでチーム参加処理に失敗した場合、どのチームにも所属していないユーザーが存在してしまうことになる。
-            //       したがってここでuserとemailレコードを明示的に削除している。
-            //       ただ本来はここですべき処理じゃない。ユーザー登録処理とチームジョイン処理でトランザクションを張るべきである。
             $this->Auth->logout();
-            $this->User->delete($userId);
-            $this->User->Email->deleteAll(['Email.user_id' => $userId], $cascade = false);
             $this->Notification->outError(__("Failed to register user. Please try again later."));
             return $this->redirect("/");
         }
@@ -1595,5 +1589,22 @@ class UsersController extends AppController
         $this->set('like_count', $post_like_count + $comment_like_count);
 
         return true;
+    }
+
+    /**
+     * User invitation form
+     *
+     * @param null $page
+     *
+     * @return void
+     */
+    public function invite($step = null)
+    {
+        // Deny direct access for confirm page
+        if (!empty($step)) {
+            return $this->redirect('/users/invite');
+        }
+
+        $this->layout = LAYOUT_ONE_COLUMN;
     }
 }

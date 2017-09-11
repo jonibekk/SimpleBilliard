@@ -29,6 +29,7 @@ App::uses('AppModel', 'Model');
  * @property MemberGroup    $MemberGroup
  * @property RecoveryCode   $RecoveryCode
  * @property Device         $Device
+ * @property TermsOfService $TermsOfService
  */
 class User extends AppModel
 {
@@ -240,11 +241,11 @@ class User extends AppModel
             ]
         ],
         'password'           => [
-            'maxLength' => ['rule' => ['maxLength', 50]],
-            'notBlank'  => [
+            'maxLength'      => ['rule' => ['maxLength', 50]],
+            'notBlank'       => [
                 'rule' => 'notBlank',
             ],
-            'minLength' => [
+            'minLength'      => [
                 'rule' => ['minLength', 8],
             ],
             'passwordPolicy' => [
@@ -306,8 +307,12 @@ class User extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
-        'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+        'DefaultTeam'    => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
+        'PrimaryEmail'   => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+        'TermsOfService' => [
+            'className'  => 'TermsOfService',
+            'foreignKey' => 'agreed_terms_of_service_id'
+        ]
     ];
 
     public $hasOne = [
@@ -399,15 +404,19 @@ class User extends AppModel
                         array_push($this->uids, $entity[$this->alias]['id']);
                     }
                 });
-
         //LocalName取得(まだ取得していないIDのみ)
         foreach ($this->uids as $k => $v) {
             if (array_key_exists($v, $this->local_names)) {
                 unset($this->uids[$k]);
             }
         }
-        $this->local_names = $this->local_names +
-            $this->LocalName->getNames($this->uids, $this->me['language']);
+        // shellによる通知orメール送信時は言語設定がセットされていない時があるが、その場合はローカル名の取得をしない
+        if ($this->me['language']) {
+            $localNames = $this->LocalName->getNames($this->uids, $this->me['language']);
+            if (!empty($localNames)) {
+                $this->local_names += $localNames;
+            }
+        }
         //データにLocalName付与する
         /** @noinspection PhpUnusedParameterInspection */
         $this
@@ -444,7 +453,7 @@ class User extends AppModel
             'contain'    => [
                 'TeamMember' => [
                     'conditions' => [
-                        'TeamMember.active_flg' => true
+                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
                     ],
                     'fields'     => [
                         'TeamMember.id',
@@ -639,6 +648,10 @@ class User extends AppModel
         $email_token = null;
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
+
+        $termsOfService = $this->TermsOfService->getCurrent();
+        $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
+
         //データを保存
         if (!Hash::get($data, 'Email.0.Email.email_verified') && !Hash::get($data, 'User.id')) {
             $this->create();
@@ -659,6 +672,9 @@ class User extends AppModel
         $data['Email']['email_verified'] = true;
         $data['Email']['email_token'] = null;
         $data['Email']['email_token_expires'] = null;
+
+        $termsOfService = $this->TermsOfService->getCurrent();
+        $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
 
         ///user with email and local_name
         ////if data exists, update them
@@ -1614,10 +1630,10 @@ class User extends AppModel
     {
         $options = [
             'conditions' => [
-                'User.id'               => $userIds,
-                'User.active_flg'       => true,
-                'TeamMember.team_id'    => $this->current_team_id,
-                'TeamMember.active_flg' => true,
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
             ],
             'joins'      => [
                 [
@@ -1651,6 +1667,55 @@ class User extends AppModel
         $users = $this->find('all', $options);
         $ret = Hash::extract($users, '{n}.User');
         return $ret;
+    }
+
+    /**
+     * Find users not belong to team
+     * filter: emails
+     *
+     * @param int   $teamId
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findNotBelongToTeamByEmail(int $teamId, array $emails): array
+    {
+        $options = [
+            'fields'     => [
+                'User.id',
+
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'Email.email'   => $emails,
+                        'Email.del_flg' => false,
+                    ]
+
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.del_flg' => false,
+                    ]
+
+                ],
+            ],
+            'conditions' => [
+                'TeamMember.id' => null,
+                'User.del_flg'  => false,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
 }

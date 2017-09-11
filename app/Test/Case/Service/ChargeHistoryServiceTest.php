@@ -1,0 +1,317 @@
+<?php
+App::uses('GoalousTestCase', 'Test');
+App::import('Service', 'ChargeHistoryService');
+App::import('DateTime', 'GoalousDateTime');
+
+use Goalous\Model\Enum as Enum;
+
+/**
+ * Class ChargeHistoryService
+ *
+ * @property ChargeHistoryService $ChargeHistoryService
+ */
+class ChargeHistoryServiceTest extends GoalousTestCase
+{
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.payment_setting',
+        'app.credit_card',
+        'app.charge_history',
+        'app.team',
+        'app.invoice',
+        'app.user',
+        'app.team_member',
+    ];
+
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
+        $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $this->ChargeHistory = ClassRegistry::init('ChargeHistory');
+        $this->CreditCard = ClassRegistry::init('CreditCard');
+    }
+
+    public function test_isLatestChargeSucceed()
+    {
+        $this->PaymentSetting->save([
+            'id'                             => 1,
+            'team_id'                        => 1,
+            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'currency'                       => Enum\PaymentSetting\Currency::JPY,
+            'amount_per_user'                => 1980,
+            'company_name'                   => 'TestCompany Ltd.',
+            'company_country'                => '',
+            'company_post_code'              => '',
+            'company_region'                 => '',
+            'company_city'                   => '',
+            'company_street'                 => '',
+            'company_tel'                    => '',
+            'contact_person_first_name'      => '',
+            'contact_person_first_name_kana' => '',
+            'contact_person_last_name'       => '',
+            'contact_person_last_name_kana'  => '',
+            'contact_person_tel'             => '',
+            'contact_person_email'           => '',
+            'payment_base_day'               => 1500000000,
+            'del_flg'                        => 0,
+            'deleted'                        => null,
+            'created'                        => 1500000000,
+            'modified'                       => 1500000000,
+        ], false);
+        $this->PaymentSetting->save([
+            'id'                             => 2,
+            'team_id'                        => 2,
+            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'currency'                       => Enum\PaymentSetting\Currency::JPY,
+            'amount_per_user'                => 1980,
+            'company_name'                   => 'TestCompany Team2 Ltd.',
+            'company_country'                => '',
+            'company_post_code'              => '',
+            'company_region'                 => '',
+            'company_city'                   => '',
+            'company_street'                 => '',
+            'company_tel'                    => '',
+            'contact_person_first_name'      => '',
+            'contact_person_first_name_kana' => '',
+            'contact_person_last_name'       => '',
+            'contact_person_last_name_kana'  => '',
+            'contact_person_tel'             => '',
+            'contact_person_email'           => '',
+            'payment_base_day'               => 1500000000,
+            'del_flg'                        => 0,
+            'deleted'                        => null,
+            'created'                        => 1500000000,
+            'modified'                       => 1500000000,
+        ], false);
+        $this->PaymentSetting->save([
+            'id'                             => 3,
+            'team_id'                        => 3,
+            'type'                           => Enum\PaymentSetting\Type::INVOICE,
+            'currency'                       => Enum\PaymentSetting\Currency::JPY,
+            'amount_per_user'                => 1980,
+            'company_name'                   => 'TestCompany Team3 Ltd.',
+            'company_country'                => '',
+            'company_post_code'              => '',
+            'company_region'                 => '',
+            'company_city'                   => '',
+            'company_street'                 => '',
+            'company_tel'                    => '',
+            'contact_person_first_name'      => '',
+            'contact_person_first_name_kana' => '',
+            'contact_person_last_name'       => '',
+            'contact_person_last_name_kana'  => '',
+            'contact_person_tel'             => '',
+            'contact_person_email'           => '',
+            'payment_base_day'               => (new GoalousDateTime('2017-08-28 00:00:00'))->getTimestamp(),
+            'del_flg'                        => 0,
+            'deleted'                        => null,
+            'created'                        => (new GoalousDateTime('2017-08-28 00:00:00'))->getTimestamp(),
+            'modified'                       => (new GoalousDateTime('2017-08-28 00:00:00'))->getTimestamp(),
+        ], false);
+
+        $this->ChargeHistory->save([
+            'id'                  => 1,
+            'team_id'             => 1,
+            'user_id'             => 1,
+            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'     => 1980,
+            'total_amount'        => 1980,
+            'tax'                 => 0,
+            'charge_users'        => 1,
+            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'charge_datetime'     => 1500000000,
+            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users'    => 1,
+            'stripe_payment_code' => '',
+            'del_flg'             => 0,
+            'deleted'             => null,
+            'created'             => 1500000000,
+            'modified'            => 1500000000,
+        ], false);
+        // for team id 2
+        $this->ChargeHistory->save([
+            'id'                  => 2,
+            'team_id'             => 2,
+            'user_id'             => 2,
+            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'     => 1980,
+            'total_amount'        => 1980,
+            'tax'                 => 0,
+            'charge_users'        => 1,
+            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'charge_datetime'     => 1500000001,
+            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users'    => 1,
+            'stripe_payment_code' => '',
+            'del_flg'             => 1,
+            'deleted'             => 1500000000,
+            'created'             => 1500000000,
+            'modified'            => 1500000000,
+        ], false);
+        $this->ChargeHistory->save([
+            'id'                  => 3,
+            'team_id'             => 2,
+            'user_id'             => 2,
+            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'     => 1980,
+            'total_amount'        => 1980,
+            'tax'                 => 0,
+            'charge_users'        => 1,
+            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'charge_datetime'     => 1500000001,
+            'result_type'         => Enum\ChargeHistory\ResultType::FAIL,
+            'max_charge_users'    => 1,
+            'stripe_payment_code' => '',
+            'del_flg'             => 0,
+            'deleted'             => null,
+            'created'             => 1500000001,
+            'modified'            => 1500000001,
+        ], false);
+        $this->CreditCard->save([
+            'id'                 => 1,
+            'team_id'            => 1,
+            'payment_setting_id' => 1,
+            'customer_code'      => 'cus_XXXXXXXXXX',
+            'del_flg'            => 0,
+            'deleted'            => null,
+            'created'            => 1500000000,
+            'modified'           => 1500000000,
+        ], false);
+            $this->CreditCard->save([
+            'id'                 => 2,
+            'team_id'            => 2,
+            'payment_setting_id' => 2,
+            'customer_code'      => 'cus_XXXXXXXXXX',
+            'del_flg'            => 0,
+            'deleted'            => null,
+            'created'            => 1500000000,
+            'modified'           => 1500000000,
+        ], false);
+
+        // last payment succeeded
+        $this->assertFalse($this->ChargeHistoryService->isLatestChargeFailed(1));
+        // failed last payment
+        $this->assertTrue($this->ChargeHistoryService->isLatestChargeFailed(2));
+        // setting is invoice
+        $this->assertFalse($this->ChargeHistoryService->isLatestChargeFailed(3));
+    }
+
+    public function test_getReceipt_creditCardMonthly()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+        $card = ['customer_code' => $this->createCustomer(self::CARD_VISA)];
+
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paySetting, $card);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type' => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'total_amount' => 2000,
+            'tax' => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type' => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_users' => 20
+        ]);
+        $res = $this->ChargeHistoryService->getReceipt($historyId);
+        $this->assertEquals($res['Team']['name'], 'Test Team');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥1,980');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
+        $this->assertEquals($res['ChargeHistory']['charge_users'], 20); 
+        $this->assertTrue($res['PaymentSetting']['is_card']);
+        $this->assertTrue($res['ChargeHistory']['is_monthly']);
+    }
+
+    public function test_getReceipt_creditCardAddUser()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+        $card = ['customer_code' => $this->createCustomer(self::CARD_VISA)];
+
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paySetting, $card);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 29700,
+            'payment_type' => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'total_amount' => 30000,
+            'tax' => 300,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type' => ChargeHistory::CHARGE_TYPE_ADD_USER,
+            'charge_users' => 10
+        ]);
+        $res = $this->ChargeHistoryService->getReceipt($historyId);
+        $this->assertEquals($res['Team']['name'], 'Test Team');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥29,700');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥30,000');
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥300'); 
+        $this->assertEquals($res['ChargeHistory']['charge_users'], 10); 
+        $this->assertTrue($res['PaymentSetting']['is_card']);
+        $this->assertFalse($res['ChargeHistory']['is_monthly']);
+    }
+
+    public function test_getReceipt_invoiceMonthly()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createInvoicePaidTeam($team, $paySetting);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type' => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'total_amount' => 2000,
+            'tax' => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type' => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_users' => 20
+            ]);
+        $res = $this->ChargeHistoryService->getReceipt($historyId);
+        $this->assertEquals($res['Team']['name'], 'Test Team');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥1,980');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
+        $this->assertFalse($res['PaymentSetting']['is_card']);
+        $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
+        $this->assertTrue($res['ChargeHistory']['is_monthly']);
+    }
+
+    public function test_getReceipt_invoiceAddUser()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createInvoicePaidTeam($team, $paySetting);
+        $this->setDefaultTeamIdAndUid(1, $teamId);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type' => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'total_amount' => 2000,
+            'tax' => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type' => ChargeHistory::CHARGE_TYPE_ADD_USER,
+            'charge_users' => 20
+            ]);
+        $res = $this->ChargeHistoryService->getReceipt($historyId);
+        $this->assertEquals($res['Team']['name'], 'Test Team');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥1,980');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
+        $this->assertFalse($res['PaymentSetting']['is_card']);
+        $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
+        $this->assertFalse($res['ChargeHistory']['is_monthly']);
+    }
+}

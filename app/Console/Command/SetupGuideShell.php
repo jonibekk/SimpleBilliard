@@ -13,7 +13,7 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  * - push notify
  * ## 通知タイミング
  * - 以下で定義
- *    app/Config/extra_defines.php
+ *    app/Config/extra_defines_default.php
  *   SETUP_GUIDE_NOTIFY_DAYS
  *    会員登録,または前回のセットアップガイド項目完了から送信するまでの日数を,区切りで指定。
  *      ex) SETUP_GUIDE_NOTIFY_DAYS=2,5,10

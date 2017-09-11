@@ -24,6 +24,12 @@ class SendMail extends AppModel
     const TYPE_TMPL_NOTIFY = 7;
     const TYPE_TMPL_SETUP = 8;
     const TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE = 9;
+    const TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL = 10;
+    const TYPE_TMPL_EXPIRE_ALERT_READ_ONLY = 11;
+    const TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE = 12;
+    const TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD = 13;
+    const TYPE_TMPL_CREDIT_STATUS_APPROVED = 14;
+    const TYPE_TMPL_CREDIT_STATUS_DENIED = 15;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY               => [
@@ -66,6 +72,36 @@ class SendMail extends AppModel
             'template' => 'email_verify_digit_code',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL      => [
+            'subject'  => null,
+            'template' => 'expire_alert_free_trial',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY       => [
+            'subject'  => null,
+            'template' => 'expire_alert_read_only',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE      => [
+            'subject'  => null,
+            'template' => 'expire_alert_cannot_use',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD     => [
+            'subject'  => null,
+            'template' => 'expire_alert_credit_card',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_CREDIT_STATUS_APPROVED       => [
+            'subject'  => null,
+            'template' => 'credit_approved_notification',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_CREDIT_STATUS_DENIED         => [
+            'subject'  => null,
+            'template' => 'credit_denied_notification',
+            'layout'   => 'default',
+        ],
     ];
 
     public function _setTemplateSubject()
@@ -77,6 +113,12 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __("Authentication for changing email address");
         self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __("Invitation for team");
         self::$TYPE_TMPL[self::TYPE_TMPL_SETUP]['subject'] = __("Could you setup Goalous?");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL]['subject'] = __("Notice of free trial deadline");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY]['subject'] = __("This team is currently in read-only status");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE]['subject'] = __("This team is currently unavailable");
+        self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD]['subject'] = __("Your credit card is about to expire");
+        self::$TYPE_TMPL[self::TYPE_TMPL_CREDIT_STATUS_APPROVED]['subject'] = __("Your credit check has been approved");
+        self::$TYPE_TMPL[self::TYPE_TMPL_CREDIT_STATUS_DENIED]['subject'] = __("Your credit check has been declined");
     }
 
     function __construct($id = false, $table = null, $ds = null)

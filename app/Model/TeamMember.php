@@ -15,7 +15,14 @@ App::uses('View', 'View');
 class TeamMember extends AppModel
 {
     const ADMIN_USER_FLAG = 1;
-    const ACTIVE_USER_FLAG = 1;
+
+    /**
+     * User status valid codes
+     * TODO.Payment: delete and move to enum
+     */
+    const USER_STATUS_INVITED = 0;
+    const USER_STATUS_ACTIVE = 1;
+    const USER_STATUS_INACTIVE = 2;
 
     public $myTeams = [];
     /**
@@ -32,12 +39,15 @@ class TeamMember extends AppModel
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
-        'active_flg'            => [
+        'status'                => [
+            'inEnumList' => [
+                'rule' => [
+                    'inEnumList',
+                    "TeamMember\Status"
+                ],
+            ],
             'isVerifiedEmail' => [
                 'rule' => ['isVerifiedEmail']
-            ],
-            'boolean'         => [
-                'rule' => ['boolean'],
             ]
         ],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
@@ -85,7 +95,6 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
-
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -98,8 +107,8 @@ class TeamMember extends AppModel
             function () use ($model, $uid) {
                 $options = [
                     'conditions' => [
-                        'TeamMember.user_id'    => $uid,
-                        'TeamMember.active_flg' => true
+                        'TeamMember.user_id' => $uid,
+                        'TeamMember.status'  => self::USER_STATUS_ACTIVE
                     ],
                     'fields'     => ['TeamMember.team_id', 'Team.name'],
                     'contain'    => ['Team']
@@ -121,7 +130,7 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'active_flg' => true,
+                'status' => self::USER_STATUS_ACTIVE,
                 'team_id'    => $this->current_team_id
             ],
             'fields'     => ['user_id', 'user_id']
@@ -218,7 +227,7 @@ class TeamMember extends AppModel
         if (empty($this->myStatusWithTeam['Team'])) {
             throw new RuntimeException(__("There is no team."));
         }
-        if (!$this->myStatusWithTeam['TeamMember']['active_flg']) {
+        if ($this->myStatusWithTeam['TeamMember']['status'] != self::USER_STATUS_ACTIVE) {
             throw new RuntimeException(__("You can't access to this team. Your account has been disabled."));
         }
         return true;
@@ -230,17 +239,17 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isActive($uid, $team_id = null)
+    public function isActive($uid, $teamId = null)
     {
-        if (!$team_id) {
+        if (!$teamId) {
             if (!$this->current_team_id) {
                 return false;
             }
-            $team_id = $this->current_team_id;
+            $teamId = $this->current_team_id;
         }
-        $is_default = false;
-        if ($uid == $this->my_uid && $team_id == $this->current_team_id) {
-            $is_default = true;
+        $isDefault = false;
+        if ($uid == $this->my_uid && $teamId == $this->current_team_id) {
+            $isDefault = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
             if ($res !== false) {
                 if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
@@ -251,9 +260,9 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'TeamMember.team_id'    => $team_id,
-                'TeamMember.user_id'    => $uid,
-                'TeamMember.active_flg' => true,
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.user_id' => $uid,
+                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
             ],
             'fields'     => ['TeamMember.id', 'TeamMember.user_id', 'TeamMember.team_id'],
             'contain'    => [
@@ -269,7 +278,7 @@ class TeamMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        if ($is_default) {
+        if ($isDefault) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
         if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
@@ -303,7 +312,7 @@ class TeamMember extends AppModel
         return true;
     }
 
-    public function isAdmin($uid = null)
+    public function isAdmin($uid = null): bool
     {
         if (!$uid) {
             $uid = $this->my_uid;
@@ -316,7 +325,7 @@ class TeamMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        return $res;
+        return (bool)$res;
     }
 
     public function add($uid, $team_id)
@@ -324,29 +333,32 @@ class TeamMember extends AppModel
         //if exists update
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
-            $team_member['TeamMember']['active_flg'] = true;
+            $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
             return $this->save($team_member);
         }
         $data = [
             'user_id'    => $uid,
             'team_id'    => $team_id,
-            'active_flg' => true,
+            'status'     => self::USER_STATUS_ACTIVE,
         ];
         return $this->save($data);
     }
 
-    public function getAllMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false, $teamId = null)
-    {
+    public function getAllMemberUserIdList(
+        $with_me = true,
+        $required_active = true,
+        $required_evaluate = false,
+        $teamId = null
+    ) {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
-                'team_id'    => $teamId,
-                'active_flg' => true,
+                'team_id'    => $teamId
             ],
             'fields'     => ['user_id'],
         ];
         if ($required_active) {
-            $options['conditions']['active_flg'] = true;
+            $options['conditions']['status'] = self::USER_STATUS_ACTIVE;
         }
         if ($required_evaluate) {
             $options['conditions']['evaluation_enable_flg'] = true;
@@ -358,6 +370,67 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    /**
+     * Count charge target users
+     *
+     * @param int $teamId
+     *
+     * @return int
+     */
+    public function countChargeTargetUsers(int $teamId): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'status'  => [
+                    self::USER_STATUS_INVITED,
+                    self::USER_STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
+    }
+
+    /**
+     * Count charge target users each team
+     *
+     * @param array $teamIds
+     *
+     * @return array
+     * e.g.
+     * TeamA(id:10)]: 5 charge target users.
+     * TeamA(id:13)]: 6 charge target users.
+     * return [10 => 5, 13 => 6];
+     */
+    public function countChargeTargetUsersEachTeam(array $teamIds): array
+    {
+        if (empty($teamIds)) {
+            return [];
+        }
+
+        $options = [
+            'fields'     => [
+                'team_id',
+                'COUNT(team_id) as cnt'
+            ],
+            'conditions' => [
+                'team_id' => $teamIds,
+                'status'  => [
+                    self::USER_STATUS_INVITED,
+                    self::USER_STATUS_ACTIVE,
+                ],
+            ],
+            'group'      => ['team_id']
+        ];
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+
+        return Hash::combine($res, '{n}.TeamMember.team_id', '{n}.0.cnt');
+    }
+
     public function setAdminUserFlag($member_id, $flag)
     {
         $this->deleteCacheMember($member_id);
@@ -366,12 +439,32 @@ class TeamMember extends AppModel
         return $this->saveField('admin_flg', $flag);
     }
 
-    public function setActiveFlag($member_id, $flag)
+    /**
+     * Activate taem member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function activate(int $teamMemberId): bool
     {
-        $this->deleteCacheMember($member_id);
-        $this->id = $member_id;
-        $flag = $flag == 'ON' ? 1 : 0;
-        return $this->saveField('active_flg', $flag, true);
+        $this->deleteCacheMember($teamMemberId);
+        $this->id = $teamMemberId;
+        return (bool)$this->saveField('status', self::USER_STATUS_ACTIVE);
+    }
+
+    /**
+     * Inactivate taem member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function inactivate(int $teamMemberId): bool
+    {
+        $this->deleteCacheMember($teamMemberId);
+        $this->id = $teamMemberId;
+        return (bool)$this->saveField('status', self::USER_STATUS_INACTIVE);
     }
 
     public function setEvaluationFlag($member_id, $flag)
@@ -454,7 +547,7 @@ class TeamMember extends AppModel
     public function defineTeamMemberOption($team_id)
     {
         $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'fields'     => ['id', 'status', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
@@ -627,7 +720,7 @@ class TeamMember extends AppModel
     public function activateMembers($user_ids, $team_id = null)
     {
         $team_id = !$team_id ? $this->current_team_id : $team_id;
-        return $this->updateAll(['TeamMember.active_flg' => true],
+        return $this->updateAll(['TeamMember.status' => self::USER_STATUS_ACTIVE],
             ['TeamMember.team_id' => $team_id, 'TeamMember.user_id' => $user_ids]);
     }
 
@@ -843,231 +936,6 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    /**
-     * save new members from csv
-     * return data as:
-     * $res = [
-     * 'error'         => false,
-     * 'success_count' => 0,
-     * 'error_line_no' => 0,
-     * 'error_msg'     => null,
-     * ];
-     *
-     * @param array $csv
-     *
-     * @return array
-     */
-    function saveNewMembersFromCsv($csv)
-    {
-        $res = [
-            'error'         => false,
-            'success_count' => 0,
-            'error_line_no' => 0,
-            'error_msg'     => null,
-        ];
-        $validate = $this->validateNewMemberCsvData($csv);
-        if ($validate['error']) {
-            return array_merge($res, $validate);
-        }
-
-        //save process
-
-        /**
-         * グループ登録処理
-         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
-         */
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            // delete old existing joined group members
-            if (!empty($row_v['User']['id'])) {
-                $member_group_ids = $this->User->MemberGroup->getAllGroupMemberIds($this->current_team_id,
-                    $row_v['User']['id']);
-                if (!empty($member_group_ids)) {
-                    foreach ($member_group_ids as $member_group_id) {
-                        $this->User->MemberGroup->delete($member_group_id);
-                    }
-                }
-            }
-
-            // add member groups
-            if (Hash::get($row_v, 'Group')) {
-                foreach ($row_v['Group'] as $k => $v) {
-                    // if user with same team and group exists then don't need to insert again
-                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
-
-                    // making member group array to save
-                    $this->csv_datas[$row_k]['MemberGroup'][] = [
-                        'group_id'  => $group['Group']['id'],
-                        'index_num' => $k
-                    ];
-                }
-                unset($this->csv_datas[$row_k]['Group']);
-            }
-        }
-
-        /**
-         * メンバータイプ
-         * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
-         */
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            if (Hash::get($row_v, 'MemberType.name')) {
-                $member_type = $this->MemberType->getByNameIfNotExistsSave($row_v['MemberType']['name']);
-                $this->csv_datas[$row_k]['TeamMember']['member_type_id'] = $member_type['MemberType']['id'];
-                unset($this->csv_datas[$row_k]['MemberType']);
-            }
-        }
-
-        /**
-         * ユーザ登録
-         * 1.メアドが存在する場合は、既存ユーザの情報を書き換える。
-         * なければ、まずEmail、LocalNameを登録し、ユーザ情報を登録した上でTeamMemberを登録する。
-         */
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            //メアド存在確認
-            $user = $this->User->getUserByEmail($row_v['Email']['email']);
-
-            if (Hash::get($user, 'User')) {
-                $this->csv_datas[$row_k]['Email'] = $user['Email'];
-                //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
-                $user['User'] = array_merge($user['User'], $row_v['User']);
-                // if no_pass_flg true, don't update password
-                if ($user['User']['no_pass_flg'] == 1) {
-                    unset($user['User']['password']);
-                }
-
-                // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
-                $user_update_fields = array_keys($user['User']);
-                $user = $this->User->save($user['User'], true, $user_update_fields);
-            } else {
-                //なければ、ユーザ情報(User,Email)を登録。
-                //create User
-                $this->User->create();
-                $row_v['User']['no_pass_flg'] = true;
-                $row_v['User']['default_team_id'] = $this->current_team_id;
-                $row_v['User']['language'] = Hash::get($row_v,
-                    'LocalName.language') ? $row_v['LocalName']['language'] : 'eng';
-
-                $user = $this->User->save($row_v['User']);
-                $row_v['Email']['user_id'] = $user['User']['id'];
-                //create Email
-                $this->User->Email->create();
-                $email = $this->User->Email->save($row_v['Email']);
-
-                $this->csv_datas[$row_k]['Email'] = $email['Email'];
-                $user['User']['primary_email_id'] = $email['Email']['id'];
-                $this->User->id = $user['User']['id'];
-
-                $this->User->saveField('primary_email_id', $email['Email']['id']);
-            }
-            $this->csv_datas[$row_k]['User'] = $user['User'];
-
-            //LocalName
-            $options = [
-                'conditions' => [
-                    'user_id' => $user['User']['id']
-                ]
-            ];
-            if (Hash::get($row_v, 'LocalName')) {
-                //save LocalName (if only lang update)
-                $existing_local_name = $this->User->LocalName->find('first', $options);
-
-                if (Hash::get($existing_local_name, 'LocalName')) {
-                    $existing_local_name['LocalName'] = array_merge($existing_local_name['LocalName'],
-                        $row_v['LocalName']);
-                    $existing_local_name = $this->User->LocalName->save($existing_local_name);
-                } else {
-                    $row_v['LocalName']['user_id'] = $user['User']['id'];
-                    $this->User->LocalName->create();
-                    $existing_local_name = $this->User->LocalName->save($row_v['LocalName']);
-                }
-
-                $this->csv_datas[$row_k]['LocalName'] = $existing_local_name['LocalName'];
-            } else {
-                $exists_local_name = $this->User->LocalName->find('first', $options);
-                if (!empty($exists_local_name)) {
-                    $this->User->LocalName->delete($exists_local_name['LocalName']['id']);
-                }
-            }
-
-            //MemberGroupの登録
-            if (Hash::get($row_v, 'MemberGroup')) {
-                foreach ($row_v['MemberGroup'] as $k => $v) {
-                    $row_v['MemberGroup'][$k]['index_num'] = $k;
-                    $row_v['MemberGroup'][$k]['user_id'] = $user['User']['id'];
-                    $row_v['MemberGroup'][$k]['team_id'] = $this->current_team_id;
-                }
-                $this->User->MemberGroup->saveAll($row_v['MemberGroup']);
-            }
-            /**
-             * TeamMemberに登録
-             */
-            if (Hash::get($row_v, 'TeamMember')) {
-                $row_v['TeamMember']['user_id'] = $user['User']['id'];
-                $row_v['TeamMember']['team_id'] = $this->current_team_id;
-                $row_v['TeamMember']['invitation_flg'] = true;
-                $row_v['TeamMember']['active_flg'] = false;
-                $this->create();
-                $team_member = $this->save($row_v['TeamMember']);
-                $this->csv_datas[$row_k]['TeamMember'] = $team_member['TeamMember'];
-            }
-        }
-
-        /**
-         * コーチは最後に登録
-         * コーチIDはメンバーIDを検索し、セット
-         */
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            if (!Hash::get($row_v, 'Coach')) {
-                continue;
-            }
-            if ($coach_team_member = $this->getByMemberNo($row_v['Coach'])) {
-                $this->id = $row_v['TeamMember']['id'];
-                $team_member = $this->saveField('coach_user_id', $coach_team_member['TeamMember']['user_id']);
-                $this->csv_datas[$row_k]['TeamMember']['coach_user_id'] = $team_member['TeamMember']['coach_user_id'];
-            }
-        }
-
-        /**
-         * 評価者は最後に登録
-         * 評価者IDはメンバーIDを検索し、セット
-         */
-        $save_evaluator_data = [];
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            // delete all existing evaluator records for the same user
-            if (!empty($row_v['User']['id'])) {
-                $existing_evaluator_ids = $this->Team->Evaluator->getExistingEvaluatorsIds($this->current_team_id,
-                    $row_v['User']['id']);
-                if (!empty($existing_evaluator_ids)) {
-                    foreach ($existing_evaluator_ids as $existing_evaluator_id) {
-                        $this->Team->Evaluator->delete($existing_evaluator_id);
-                    }
-                }
-            }
-
-            if (!Hash::get($row_v, 'Evaluator')) {
-                continue;
-            }
-            foreach ($row_v['Evaluator'] as $r_k => $r_v) {
-                if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
-                    // making evaluator save array
-                    $save_evaluator_data[] = [
-                        'index_num'         => $r_k,
-                        'team_id'           => $this->current_team_id,
-                        'evaluatee_user_id' => $row_v['User']['id'],
-                        'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
-                    ];
-                }
-            }
-        }
-        // saving evaluator data
-        if (viaIsSet($save_evaluator_data)) {
-            $this->Team->Evaluator->create();
-            $this->Team->Evaluator->saveAll($save_evaluator_data);
-        }
-
-        $res['success_count'] = count($this->csv_datas);
-        return $res;
-    }
-
     function validateUpdateMemberCsvData($csv_data)
     {
         $this->_setCsvValidateRule(false);
@@ -1094,12 +962,12 @@ class TeamMember extends AppModel
             $res['error_line_no'] = $key + 1;
 
             //key name set
-            if (!($row = copyKeyName($this->_getCsvHeading(false), $row))) {
+            if (!($row = copyKeyName($this->_getCsvHeading(), $row))) {
                 $res['error_msg'] = __("Numbers are not consistent.");
                 return $res;
             }
             if ($key === 0) {
-                if (!empty(array_diff($row, $this->_getCsvHeading(false)))) {
+                if (!empty(array_diff($row, $this->_getCsvHeading()))) {
                     $res['error_msg'] = __("Headding are not consistent.");
                     return $res;
                 }
@@ -1129,7 +997,7 @@ class TeamMember extends AppModel
             }
             $this->csv_member_ids[] = $row['member_no'];
             $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
-            $this->csv_datas[$key]['TeamMember']['active_flg'] = strtolower($row['active_flg']) == "on" ? true : false;
+            $this->csv_datas[$key]['TeamMember']['status'] = strtolower($row['status']) == "on" ? self::USER_STATUS_ACTIVE : self::USER_STATUS_INACTIVE;
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) == 'on' ? true : false;
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) == 'on' ? true : false;
             if (Hash::get($row, 'member_type')) {
@@ -1165,7 +1033,7 @@ class TeamMember extends AppModel
         //require least 1 or more admin and active check
         $exists_admin_active = false;
         foreach ($this->csv_datas as $k => $v) {
-            if ($v['TeamMember']['admin_flg'] && $v['TeamMember']['active_flg']) {
+            if ($v['TeamMember']['admin_flg'] && $v['TeamMember']['status'] == self::USER_STATUS_ACTIVE) {
                 $exists_admin_active = true;
             }
         }
@@ -1305,313 +1173,6 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    /**
-     * validate new member csv data
-     *
-     * @param array $csv_data
-     *
-     * @return array
-     */
-    function validateNewMemberCsvData($csv_data)
-    {
-        $this->_setCsvValidateRule();
-
-        $res = [
-            'error'         => true,
-            'error_line_no' => 0,
-            'error_msg'     => null,
-        ];
-
-        if (count($csv_data) <= 1) {
-            $res['error_msg'] = __("At least one data is required.");
-            return $res;
-        }
-        //validation each line of csv data.
-        foreach ($csv_data as $key => $row) {
-            //first record check
-            if ($key == 0) {
-                if (!empty(array_diff($row, $this->_getCsvHeading()))) {
-                    $res['error_msg'] = __("Headding are not consistent.");
-                    return $res;
-                }
-                continue;
-            }
-            //set line no
-            $res['error_line_no'] = $key + 1;
-            //key name set
-            if (!($row = copyKeyName($this->_getCsvHeading(), $row))) {
-                $res['error_msg'] = __("Numbers are not consistent.");
-                return $res;
-            }
-
-            $row = Hash::expand($row);
-            if (Hash::get($row, 'gender')) {
-                $row['gender'] = strtolower($row['gender']);
-            }
-            $this->set($row);
-            if (!$this->validates()) {
-                $res['error_msg'] = current(array_shift($this->validationErrors));
-                return $res;
-            }
-
-            $this->csv_emails[] = $row['email'];
-            $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
-
-            // add flg which records to be update
-            $options = [
-                'fields'     => ['email', 'id', 'to_user_id', 'email_token_expires'],
-                'conditions' => [
-                    'email'          => $row['email'],
-                    'team_id'        => $this->current_team_id,
-                    'email_verified' => 0
-                ]
-            ];
-            // checking first if any previous record in invite table, if not then get user_id from email table
-            // for checking the member id
-            $checkInvite = $this->Team->Invite->find('first', $options);
-            if (!empty($checkInvite['Invite'])) {
-                $this->csv_datas[$key]['User']['id'] = $checkInvite['Invite']['to_user_id'];
-            } else {
-                $checkInvite = $this->User->Email->findByEmail($row['email']);
-                if (!empty($checkInvite['Email'])) {
-                    $this->csv_datas[$key]['User']['id'] = $checkInvite['Email']['user_id'];
-                }
-            }
-
-            //exists member id check(after check)
-            $this->csv_member_ids[] = $row['member_no'];
-            $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
-            $this->csv_datas[$key]['User']['first_name'] = $row['first_name'];
-            $this->csv_datas[$key]['User']['last_name'] = $row['last_name'];
-            $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) === 'on' ? true : false;
-            $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) === 'on' ? true : false;
-
-            // for coach id set null if not set
-            if (!Hash::get($row, 'coach_member_no')) {
-                $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
-            }
-
-            if (Hash::get($row, 'member_type')) {
-                $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
-            } else {
-                $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
-            }
-
-            // for local name
-            if (Hash::get($row, 'language') && (Hash::get($row, 'local_first_name') || Hash::get($row,
-                        'local_last_name'))
-            ) {
-                $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
-                $this->csv_datas[$key]['LocalName']['first_name'] = Hash::get($row,
-                    'local_first_name') ? $row['local_first_name'] : '';
-                $this->csv_datas[$key]['LocalName']['last_name'] = Hash::get($row,
-                    'local_last_name') ? $row['local_last_name'] : '';
-            } else {
-                if (Hash::get($row, 'language')) {
-                    $this->local_lang_list[$key] = 'Local first name or local last name required with language of local name.';
-                } else {
-                    if (Hash::get($row, 'local_first_name') || Hash::get($row, 'local_last_name')) {
-                        $this->local_lang_list[$key] = 'Local language required with local first name or local last name.';
-                    }
-                }
-            }
-
-            if (Hash::get($row, 'phone_no')) {
-                $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row['phone_no']);
-            } else {
-                $this->csv_datas[$key]['User']['phone_no'] = null;
-            }
-
-            if (Hash::get($row, 'gender')) {
-                $this->csv_datas[$key]['User']['gender_type'] = $row['gender'] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
-            } else {
-                $this->csv_datas[$key]['User']['gender_type'] = null;
-            }
-
-            //[12]Birth Year
-            if (Hash::get($row, 'birth_year') && Hash::get($row, 'birth_month') && Hash::get($row, 'birth_day')) {
-                $this->csv_datas[$key]['User']['birth_day'] = $row['birth_year'] . '/' . $row['birth_month'] . '/' . $row['birth_day'];
-            } else {
-                $this->csv_datas[$key]['User']['birth_day'] = null;
-            }
-
-            //[15]-[21]Group
-            foreach ($row['group'] as $v) {
-                if (viaIsSet($v)) {
-                    $this->csv_datas[$key]['Group'][] = $v;
-                }
-            }
-
-            //[22]Coach ID
-            //exists check (after check)
-            $this->csv_coach_ids[] = $row['coach_member_no'];
-            if (Hash::get($row, 'coach_member_no')) {
-                $this->csv_datas[$key]['Coach'] = $row['coach_member_no'];
-            }
-
-            //[23]-[29]Evaluator ID
-            foreach ($row['evaluator_member_no'] as $v) {
-                if (viaIsSet($v)) {
-                    $this->csv_datas[$key]['Evaluator'][] = $v;
-                }
-            }
-            //evaluator id check(after check)
-            $this->csv_evaluator_ids[] = array_filter($row['evaluator_member_no'], "strlen");
-        } // end of foreach csv_data
-
-        //email exists check
-        //E-mail address should not be duplicated
-        if (count($this->csv_emails) != count(array_unique($this->csv_emails))) {
-            $duplicate_emails = array_filter(array_count_values($this->csv_emails), 'isOver2');
-            $duplicate_email = key($duplicate_emails);
-            //set line no
-            $res['error_line_no'] = array_search($duplicate_email, $this->csv_emails) + 2;
-            $res['error_msg'] = __("Duplicated email address.");
-            return $res;
-        }
-
-        // if only language of local name (without Local first name or local last name)  then show error
-        if (!empty($this->local_lang_list)) {
-            foreach ($this->local_lang_list as $local_k => $local_v) {
-                //set line no
-                $res['error_line_no'] = $local_k + 1;
-                $res['error_msg'] = __($local_v);
-                return $res;
-            }
-        }
-
-        //already joined team check
-        $joined_emails = $this->User->Email->getEmailsBelongTeamByEmail($this->csv_emails);
-        foreach ($joined_emails as $email) {
-            //set line no
-            $res['error_line_no'] = array_search($email['Email']['email'], $this->csv_emails) + 2;
-            $res['error_msg'] = __("This email address is found in this team.");
-            return $res;
-        }
-
-        //member id duplicate check
-        if (count($this->csv_member_ids) != count(array_unique($this->csv_member_ids))) {
-            $duplicate_member_ids = array_filter(array_count_values($this->csv_member_ids), 'isOver2');
-            $duplicate_member_id = key($duplicate_member_ids);
-            //set line no
-            $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
-            $res['error_msg'] = __("Duplicated member ID.");
-            return $res;
-        }
-
-        //exists member id check
-        $members = $this->find('all',
-            [
-                'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $this->csv_member_ids],
-                'fields'     => ['member_no', 'user_id', 'id']
-            ]
-        );
-
-        if (!empty($members)) {
-            foreach ($members as $member) {
-                foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
-                    if ($member['TeamMember']['member_no'] == $this_csv_data['TeamMember']['member_no']) {
-                        if (!empty($this_csv_data['User']['id']) && $member['TeamMember']['user_id'] ==
-                            $this_csv_data['User']['id']
-                        ) {
-                            $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
-                            $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
-                        } else {
-                            $res['error_line_no'] = array_search($member['TeamMember']['member_no'],
-                                    $this->csv_member_ids) + 2;
-                            $res['error_msg'] = __("This Member ID is found in this team.");
-                            return $res;
-                        }
-                    }
-                }
-            }
-        } else {
-            foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
-                if (!empty($this_csv_data['User']['id'])) {
-                    $member = $this->findByUserId($this_csv_data['User']['id']);
-                    if (!empty($member)) {
-                        $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
-                        $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
-                    }
-                }
-            }
-        }
-
-        //coach id check
-        $this->csv_coach_ids = array_filter($this->csv_coach_ids, "strlen");
-
-        //Coach ID must be already been registered or must be included in the member ID
-        //First check coach ID whether registered
-        $exists_coach_ids = $this->find('all',
-            [
-                'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $this->csv_coach_ids],
-                'fields'     => ['member_no']
-            ]
-        );
-        //remove the registered coach
-        foreach ($exists_coach_ids as $k => $v) {
-            $member_no = $v['TeamMember']['member_no'];
-            $key = array_search($member_no, $this->csv_coach_ids);
-            if ($key !== false) {
-                unset($this->csv_coach_ids[$key]);
-            }
-        }
-        //Error if the unregistered coach is not included in the member ID
-        foreach ($this->csv_coach_ids as $k => $v) {
-            $key = array_search($v, $this->csv_member_ids);
-            if ($key === false) {
-                $res['error_line_no'] = $k + 2;
-                $res['error_msg'] = __("Invalid member ID set in coach ID.");
-                return $res;
-            }
-        }
-
-        //evaluator id check
-        //Evaluator ID must be already been registered or must be included in the member ID
-        //remove empty elements
-        foreach ($this->csv_evaluator_ids as $k => $v) {
-            $this->csv_evaluator_ids[$k] = array_filter($v, "strlen");
-        }
-
-        //Merge all evaluator ID
-        $merged_evaluator_ids = [];
-        foreach ($this->csv_evaluator_ids as $v) {
-            $merged_evaluator_ids = array_merge($merged_evaluator_ids, $v);
-        }
-        //Check for evaluator ID registered
-        $exists_evaluator_ids = $this->find('all',
-            [
-                'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_evaluator_ids],
-                'fields'     => ['member_no']
-            ]
-        );
-        //remove the evaluator ID of the registered
-        foreach ($exists_evaluator_ids as $er_k => $er_v) {
-            $member_no = $er_v['TeamMember']['member_no'];
-            foreach ($this->csv_evaluator_ids as $r_k => $r_v) {
-                $key = array_search($member_no, $r_v);
-                if ($key !== false) {
-                    unset($this->csv_evaluator_ids[$r_k][$key]);
-                }
-            }
-        }
-        //Error if the unregistered evaluator ID is not included in the member ID
-        foreach ($this->csv_evaluator_ids as $r_k => $r_v) {
-            foreach ($r_v as $k => $v) {
-                $key = array_search($v, $this->csv_member_ids);
-                if ($key === false) {
-                    $res['error_line_no'] = $r_k + 2;
-                    $res['error_msg'] = __("Invalid member ID set in evaluator ID.");
-                    return $res;
-                }
-            }
-        }
-
-        $this->_setValidateFromBackUp();
-        $res['error'] = false;
-        return $res;
-    }
-
     function getByMemberNo($member_no, $team_id = null)
     {
         if (!$team_id) {
@@ -1672,8 +1233,8 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['last_name'] = Hash::get($v, 'User.last_name') ? $v['User']['last_name'] : null;
             $this->csv_datas[$k]['member_no'] = Hash::get($v,
                 'TeamMember.member_no') ? $v['TeamMember']['member_no'] : null;
-            $this->csv_datas[$k]['active_flg'] = Hash::get($v,
-                'TeamMember.active_flg') && $v['TeamMember']['active_flg'] ? 'ON' : 'OFF';
+            $this->csv_datas[$k]['status'] = Hash::get($v,
+                'TeamMember.status')  == self::USER_STATUS_ACTIVE ? 'ON' : 'OFF';
             $this->csv_datas[$k]['admin_flg'] = Hash::get($v,
                 'TeamMember.admin_flg') && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
@@ -1750,7 +1311,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.team_id' => $team_id,
             ],
-            'fields'     => ['member_no', 'coach_user_id', 'active_flg', 'admin_flg', 'evaluation_enable_flg'],
+            'fields'     => ['member_no', 'coach_user_id', 'status', 'admin_flg', 'evaluation_enable_flg'],
             'order'      => ['TeamMember.member_no ASC'],
             'contain'    => [
                 'User'       => [
@@ -1924,7 +1485,7 @@ class TeamMember extends AppModel
     {
         switch ($type) {
             case 'before_update':
-                $default_csv = $this->_getCsvHeading(false);
+                $default_csv = $this->_getCsvHeading();
                 break;
             case 'evaluation':
                 $default_csv = $this->_getCsvHeadingEvaluation();
@@ -1968,49 +1529,14 @@ class TeamMember extends AppModel
      *
      * @return array
      */
-    function _getCsvHeading($new = true)
+    function _getCsvHeading()
     {
-        if ($new) {
-            return [
-                'email'                 => __("Email(*)"),
-                'member_no'             => __("Member ID(*)"),
-                'first_name'            => __("First Name(*)"),
-                'last_name'             => __("Last Name(*)"),
-                'admin_flg'             => __("Administrator(*)"),
-                'evaluation_enable_flg' => __("Evaluated(*)"),
-                'member_type'           => __("Member Type"),
-                'language'              => __("Language of Local Name"),
-                'local_first_name'      => __("Local First Name"),
-                'local_last_name'       => __("Local Last Name"),
-                'phone_no'              => __("Telephone Number"),
-                'gender'                => __("Gender"),
-                'birth_year'            => __("Birth Year"),
-                'birth_month'           => __("Birth Month"),
-                'birth_day'             => __("Birthday"),
-                'group.1'               => __("Group 1"),
-                'group.2'               => __("Group 2"),
-                'group.3'               => __("Group 3"),
-                'group.4'               => __("Group 4"),
-                'group.5'               => __("Group 5"),
-                'group.6'               => __("Group 6"),
-                'group.7'               => __("Group 7"),
-                'coach_member_no'       => __("Coach ID"),
-                'evaluator_member_no.1' => __("Evaluator 1"),
-                'evaluator_member_no.2' => __("Evaluator 2"),
-                'evaluator_member_no.3' => __("Evaluator 3"),
-                'evaluator_member_no.4' => __("Evaluator 4"),
-                'evaluator_member_no.5' => __("Evaluator 5"),
-                'evaluator_member_no.6' => __("Evaluator 6"),
-                'evaluator_member_no.7' => __("Evaluator 7"),
-            ];
-        }
-
         return [
             'email'                 => __("Email(*, Not changed)"),
             'first_name'            => __("First Name(*, Not changed)"),
             'last_name'             => __("Last Name(*, Not changed)"),
             'member_no'             => __("Member ID(*)"),
-            'active_flg'            => __("Member active status(*)"),
+            'status'                => __("Member active status(*)"),
             'admin_flg'             => __("Administrator(*)"),
             'evaluation_enable_flg' => __("Evaluated(*)"),
             'member_type'           => __("Member Type"),
@@ -2179,72 +1705,8 @@ class TeamMember extends AppModel
                 ],
             ],
         ];
-        $validateOfNew = [
-            'phone_no'         => [
-                'maxLength' => [
-                    'rule'    => ['maxLength', 20],
-                    'message' => __("%s should be entered in less than 20 characters.", __("Phone number"))
-                ],
-                'phoneNo'   => [
-                    'rule'       => 'phoneNo',
-                    'message'    => __("Telephone number is incorrect. Single-byte number and '-()' are allowed."),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'gender'           => [
-                'inList' => [
-                    'rule'       => ['inList', ['male', 'female']],
-                    'message'    => __("Choose 'male' or 'female'."),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'language'         => [
-                'inList' => [
-                    'rule'       => ['inList', $this->support_lang_codes],
-                    'message'    => __("It is unsupported language code of the local first name and last name."),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'local_first_name' => [
-                'maxLength' => [
-                    'rule'    => ['maxLength', 64],
-                    'message' => __("%s should be entered in less than 64 characters.", __("Local First Name"))
-                ],
-            ],
-            'local_last_name'  => [
-                'maxLength' => [
-                    'rule'    => ['maxLength', 64],
-                    'message' => __("%s should be entered in less than 64 characters.", __("Local Last Name"))
-                ],
-            ],
-            'birth_year'       => [
-                'isAllOrNothing' => [
-                    'rule'    => ['isAllOrNothing', ['birth_year', 'birth_month', 'birth_day']],
-                    'message' => __("If you want to fill in the date of birth, please fill out all of the items of date."),
-                ],
-                'birthYear'      => [
-                    'rule'       => 'birthYear',
-                    'message'    => __("%s is not correct.", __("Birth Year")),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'birth_month'      => [
-                'birthMonth' => [
-                    'rule'       => 'birthMonth',
-                    'message'    => __("%s is not correct.", __("Birth Month")),
-                    'allowEmpty' => true,
-                ],
-            ],
-            'birth_day'        => [
-                'birthDay' => [
-                    'rule'       => 'birthDay',
-                    'message'    => __("%s is not correct.", __("Birthday")),
-                    'allowEmpty' => true,
-                ],
-            ],
-        ];
         $validateOfUpdate = [
-            'active_flg' => [
+            'status' => [
                 'notBlank'  => [
                     'rule'    => 'notBlank',
                     'message' => __("%s is required.", __("Active status"))
@@ -2255,11 +1717,7 @@ class TeamMember extends AppModel
                 ],
             ],
         ];
-        if ($new) {
-            $validate = $common_validate + $validateOfNew;
-        } else {
-            $validate = $common_validate + $validateOfUpdate;
-        }
+        $validate = $common_validate + $validateOfUpdate;
         $this->validateBackup = $this->validate;
         $this->validate = $validate;
     }
@@ -2328,7 +1786,7 @@ class TeamMember extends AppModel
             'fields'     => ['user_id'],
             'conditions' => [
                 'TeamMember.coach_user_id' => $user_id,
-                'active_flg'               => 1,
+                'status'                   => self::USER_STATUS_ACTIVE,
                 'evaluation_enable_flg'    => 1,
             ],
         ];
@@ -2411,15 +1869,15 @@ class TeamMember extends AppModel
     function getEvaluationEnableFlg($user_id)
     {
         $options = [
-            'fields'     => ['active_flg', 'evaluation_enable_flg'],
+            'fields'     => ['status', 'evaluation_enable_flg'],
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
             ],
         ];
         $res = $this->find('first', $options);
         $evaluation_flg = false;
-        if (isset($res['TeamMember']['active_flg']) === true
-            && $res['TeamMember']['active_flg'] === true
+        if (isset($res['TeamMember']['status'])
+            && $res['TeamMember']['status'] == self::USER_STATUS_ACTIVE
             && isset($res['TeamMember']['evaluation_enable_flg']) === true
             && $res['TeamMember']['evaluation_enable_flg'] === true
         ) {
@@ -2454,8 +1912,8 @@ class TeamMember extends AppModel
     {
         return $this->find('count', [
             'conditions' => [
-                'TeamMember.team_id'    => $team_id,
-                'TeamMember.active_flg' => true,
+                'TeamMember.team_id' => $team_id,
+                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
             ],
         ]);
     }
@@ -2485,7 +1943,7 @@ class TeamMember extends AppModel
                 'TeamMember.team_id',
                 'TeamMember.user_id',
                 'Team.name',
-                'TeamMember.active_flg',
+                'TeamMember.status',
                 'TeamMember.admin_flg',
             ],
             'contain'    => ['Team']
@@ -2498,7 +1956,7 @@ class TeamMember extends AppModel
         }
         if ($reformat_for_shell) {
             $teams = Hash::format($teams,
-                ['{n}.Team.name', '{n}.Team.id', '{n}.TeamMember.active_flg', '{n}.TeamMember.admin_flg'],
+                ['{n}.Team.name', '{n}.Team.id', '{n}.TeamMember.status', '{n}.TeamMember.admin_flg'],
                 'TeamName:%s, TeamId:%s, TeamMemberActive:%s, TeamAdmin:%s'
             );
         }
@@ -2508,17 +1966,18 @@ class TeamMember extends AppModel
     /**
      * active admin as team member and user
      *
-     * @param  int  $userId
-     * @param  int  $teamId
+     * @param  int $userId
+     * @param  int $teamId
+     *
      * @return bool
      */
     public function isActiveAdmin(int $userId, int $teamId): bool
     {
         $options = [
             'conditions' => [
-                'TeamMember.user_id'    => $userId,
-                'TeamMember.admin_flg'  => true,
-                'TeamMember.active_flg' => true
+                'TeamMember.user_id'   => $userId,
+                'TeamMember.admin_flg' => true,
+                'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
             'fields'     => ['TeamMember.id'],
             'joins'      => [
@@ -2536,5 +1995,166 @@ class TeamMember extends AppModel
 
         $res = $this->find('first', $options);
         return (bool)$res;
+    }
+
+    /**
+     * find admin Ids
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function findAdminList(int $teamId): array
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id'   => $teamId,
+                'TeamMember.admin_flg' => true,
+                'TeamMember.status'    => self::USER_STATUS_ACTIVE
+            ],
+            'fields'     => ['TeamMember.user_id'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = TeamMember.user_id',
+                        'User.active_flg' => true
+                    ],
+                ],
+            ],
+        ];
+
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * data migration for shell
+     * - active user -> status active
+     *
+     * @return void
+     */
+    function updateActiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::USER_STATUS_ACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => true
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * data migration for shell
+     * - inactive user -> status inactive
+     *
+     * @return void
+     */
+    function updateInactiveFlgToStatus()
+    {
+        $res = $this->updateAll(
+            [
+                'TeamMember.status' => self::USER_STATUS_INACTIVE
+            ],
+            [
+                'TeamMember.active_flg' => false
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * Get list of team members by its status.
+     *      USER_STATUS_INVITED = 0;
+     *      USER_STATUS_ACTIVE = 1;
+     *      USER_STATUS_INACTIVE = 2;
+     *
+     * @param      $status
+     * @param null $teamId
+     *
+     * @return array|null
+     */
+    public function getTeamMemberListByStatus($status, $teamId = null)
+    {
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
+        }
+
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.status'  => $status,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * Is team member or not
+     *
+     * @param int $teamId
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function isTeamMember(int $teamId, int $teamMemberId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id' => $teamMemberId,
+                'team_id' => $teamId
+            ]
+        ];
+        return (bool)$this->find('first', $options);
+    }
+
+    /**
+     * Is inactive team member
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     */
+    public function isInactive(int $teamMemberId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'     => $teamMemberId,
+                'status' => self::USER_STATUS_INACTIVE
+            ]
+        ];
+        return (bool)$this->find('first', $options);
+    }
+
+    /**
+     * Get user data by team member id
+     *
+     * @param int $teamMemberId
+     *
+     * @return array
+     */
+    public function getUserById(int $teamMemberId): array
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.id' => $teamMemberId
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (!empty($res['User'])) {
+            return $res['User'];
+        }
+        return [];
     }
 }

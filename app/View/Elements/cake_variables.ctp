@@ -13,6 +13,12 @@ App::uses('AttachedFile', 'Model');
         env_name: "<?= ENV_NAME ?>",
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
+        stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
+        require_banner_notification: "<?=
+            (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]))
+            || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
+            || (isset($statusPaymentFailed) && $statusPaymentFailed)
+            ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
@@ -118,7 +124,6 @@ App::uses('AttachedFile', 'Model');
             ])?>/",
             m: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_current_team_admin_list'])?>/",
             n: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_member'])?>/",
-            o: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_active_flag'])?>/",
             p: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_admin_user_flag'])?>/",
             q: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_term_start_end_by_edit'])?>",
@@ -144,7 +149,7 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
+            am: "api/v1/invitations/reInvite",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
@@ -171,9 +176,8 @@ App::uses('AttachedFile', 'Model');
             ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
             ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url([
-                'controller' => 'teams',
-                'action'     => 'settings',
-                '#'          => 'invite_member'
+                'controller' => 'users',
+                'action'     => 'invite',
             ]) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
@@ -198,6 +202,8 @@ App::uses('AttachedFile', 'Model');
                 'controller' => 'teams',
                 'action'     => 'ajax_validate_email_can_invite'
             ]) ?>",
+            inactivate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_inactivate_team_member'])?>/",
+            activate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'activate_team_member'])?>/",
             route_url: "<?= Router::fullbaseUrl() ?>"
         },
         data: {
@@ -576,9 +582,55 @@ App::uses('AttachedFile', 'Model');
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
+            /* Change to paid plan */
+            // Input company info
+            "Enter Company Information": "<?= __("Enter Company Information") ?>",
+            "Company Address": "<?= __("Company Address") ?>",
+            "Company Name": "<?= __("Company Name") ?>",
+            "ISAO Corporation": "<?= __("ISAO Corporation") ?>",
+            "Post Code": "<?= __("Post Code") ?>",
+            "12345": "<?= __("12345") ?>",
+            "State/Province/Region": "<?= __("State/Province/Region") ?>",
+            "California": "<?= __("California") ?>",
+            "City": "<?= __("City") ?>",
+            "Los Angeles": "<?= __("Los Angeles") ?>",
+            "Street": "<?= __("Street") ?>",
+            "1234 Street Name": "<?= __("1234 Street Name") ?>",
+            "Company Contact": "<?= __("Company Contact") ?>",
+            "eg. Jobs": "<?= __("eg. Jobs") ?>",
+            "eg. Bruce": "<?= __("eg. Bruce") ?>",
+            "Name Kana": "<?= __("Name Kana") ?>",
+            "name@company.com": "<?= __("name@company.com") ?>",
+            // Input credit card
+            "Name on Card": "<?= __("Name on Card") ?>",
+            "Card Number": "<?= __("Card Number") ?>",
+            "Price per user": "<?= __("Price per user") ?>",
+            "Number of users": "<?= __("Number of users") ?>",
+            "Sub Total": "<?= __("Sub Total") ?>",
+            "Tax": "<?= __("Tax") ?>",
+            "Total": "<?= __("Total") ?>",
+            "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
+            "Register": "<?= __("Register") ?>",
+            "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
+            "Same as company information": "<?= __("Same as company information") ?>",
+            "Update completed": "<?= __("Update completed") ?>",
+            "Invite members": "<?= __("Invite members") ?>",
+            "Email Address": "<?= __("Email Address") ?>",
+            "You can set email addresses by comma(,) separated or by newline separated.": "<?= __("You can set email addresses by comma(,) separated or by newline separated.") ?>",
+            "I confirmed the billing content": "<?= __("I confirmed the billing content") ?>",
+            "days": "<?= __("days") ?>",
+            "month": "<?= __("month") ?>",
+            "View details": "<?= __("View details") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
+        },
+        const: {
+            USER_STATUS: {
+                INVITED: "<?= TeamMember::USER_STATUS_INVITED ?>",
+                ACTIVE: "<?= TeamMember::USER_STATUS_ACTIVE ?>",
+                INACTIVE: "<?= TeamMember::USER_STATUS_INACTIVE ?>",
+            },
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,

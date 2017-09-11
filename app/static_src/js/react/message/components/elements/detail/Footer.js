@@ -5,7 +5,7 @@ import * as detail from "~/message/actions/detail";
 import * as file_upload from "~/message/modules/file_upload";
 import UploadDropZone from "~/message/components/elements/detail/UploadDropZone";
 import UploadPreview from "~/message/components/elements/detail/UploadPreview";
-import LoadingButton from "~/message/components/elements/ui_parts/LoadingButton";
+import LoadingButton from "~/common/components/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import Textarea from "react-textarea-autosize";

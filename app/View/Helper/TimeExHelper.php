@@ -213,7 +213,7 @@ class TimeExHelper extends AppHelper
                 $format = "%Y年%b%e日";
                 break;
             default:
-                $format = "%b %e %Y";
+                $format = "%b %e, %Y";
         }
         return $this->Time->i18nFormat($time, $format);
     }
@@ -232,6 +232,26 @@ class TimeExHelper extends AppHelper
                 $format = "%b %e %Y, at %l:%M%P";
         }
         return $this->Time->i18nFormat($time, $format);
+    }
+
+    public function formatDateI18nFromDate(string $date)
+    {
+        return $this->formatDateI18n(strtotime($date),false);
+    }
+
+    public function formatDatetimeI18nFromDate(string $date)
+    {
+        return $this->formatDatetimeI18n(strtotime($date),false);
+    }
+
+    public function formatFullTimeI18nFromDate(string $date)
+    {
+        return $this->formatFullTimeI18n(strtotime($date),false);
+    }
+
+    public function formatYearDayI18nFromDate(string $date)
+    {
+        return $this->formatYearDayI18n(strtotime($date),false);
     }
 
     public function getTimezoneText($timezone)

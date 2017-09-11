@@ -87,16 +87,6 @@
                 </div>
                 <hr>
                 <?=
-                $this->Form->input('type', [
-                    'label'      => __("Plan"),
-                    'type'       => 'select',
-                    'options'    => Team::$TYPE,
-                    'afterInput' => '<span class="help-block font_11px">'
-                        .__("You can use Goalous free of charge till September 30, 2017.") // 同様の文言がteam/edit_basic_setting.ctp
-                        . '</span>'
-                ]) ?>
-                <hr>
-                <?=
                 $this->Form->input('timezone', [
                     'label'   => __("Timezone"),
                     'type'    => 'select',

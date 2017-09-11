@@ -9,6 +9,8 @@
  */
 
 App::uses('AppController', 'Controller');
+App::import('Service', 'PaymentService');
+App::import('Service', 'UserService');
 
 /**
  * Static content controller
@@ -16,11 +18,13 @@ App::uses('AppController', 'Controller');
  *
  * @package       app.Controller
  * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
- * @property User $User
+ * @property User  $User
+ * @property TermsOfService TermsOfService
  * @noinspection  PhpInconsistentReturnPointsInspection
  */
 class PagesController extends AppController
 {
+    public $uses = ['TermsOfService'];
     /**
      * Displays a view
      *
@@ -30,29 +34,61 @@ class PagesController extends AppController
      * @internal param \What $mixed page to display
      * @return $this->redirect('/') or void
      */
-    public function display()
+    public function home()
     {
-        $path = func_get_args();
-        $page = $subpage = null;
-
-        if (!empty($path[0])) {
-            $page = $path[0];
+        // Display lp top page if not logged in
+        if (!$this->isLoggedIn()) {
+            $this->layout = LAYOUT_HOMEPAGE;
+            return $this->render('home');
         }
 
-        // Difine URL params for Google analytics.
+        // Define URL params for Google analytics.
         $this->_setUrlParams();
 
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
+        $this->_setTopAllContentIfLoggedIn();
 
-        //ログインしているかつ、topの場合はフィード表示
-        if ($this->Auth->user() && $path[0] === 'home') {
-            $this->_setTopAllContentIfLoggedIn();
-            return $this->render('logged_in_home');
+        return $this->render('logged_in_home');
+    }
+
+    /**
+     * Display lp pages other than top page
+     *
+     * @return void
+     */
+    public function lp()
+    {
+        $path = func_get_args();
+        $page = $path[0];
+
+        if ($page === 'pricing') {
+            $this->_setAmountPerUser();
+        } elseif ($page === 'terms') {
+            $this->_setTerms();
         }
 
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
+    }
+
+    /**
+     * Display lp pages other than top page
+     *
+     * @return void
+     */
+    private function _setTerms()
+    {
+        $terms = $this->TermsOfService->getCurrent();
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $lang = $Lang->getLangCode();
+
+        if ($lang === $Lang::LANG_CODE_JP) {
+            $this->set('terms', $terms['text_ja']);
+        } else {
+            $this->set('terms', (empty($terms['text_en']) ? $terms['text_ja'] : $terms['text_en']));
+        }
     }
 
     public function app_version_unsupported()
@@ -257,31 +293,23 @@ class PagesController extends AppController
 
     public function _setUrlParams()
     {
-        $url_params = $this->params['url'];
+        $parsed_referer_url = Router::parse($this->referer('/', true));
+        $request_status = $this->params['url'];
+        $status_from_referer = $this->_defineStatusFromReferer();
 
-        if ($this->Auth->user()) {
-            $parsed_referer_url = Router::parse($this->referer('/', true));
-            $request_status = viaIsSet($url_params);
-            $status_from_referer = $this->_defineStatusFromReferer();
-
-            // When parametes separated from google analitics already exists,
-            // ignore redirect for google analitics.
-            $reserved_params = ['notify_id', 'common_form', 'team_id', 'from'];
-            foreach ($reserved_params as $param) {
-                if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
-                    return true;
-                }
+        // When parametes separated from google analitics already exists,
+        // ignore redirect for google analitics.
+        $reserved_params = ['notify_id', 'common_form', 'team_id', 'from'];
+        foreach ($reserved_params as $param) {
+            if (Hash::get($this->request->params, $param) || Hash::get($this->request->params, "named.$param")) {
+                return true;
             }
+        }
 
-            if ($this->_parseParameter($request_status) !== $status_from_referer) {
-                return $this->redirect("${status_from_referer}");
-            }
-            $this->Session->delete('referer_status');
-            return true;
+        if ($this->_parseParameter($request_status) !== $status_from_referer) {
+            return $this->redirect("${status_from_referer}");
         }
-        if ($url_params) {
-            return $this->redirect('/');
-        }
+        $this->Session->delete('referer_status');
         return true;
     }
 
@@ -333,5 +361,28 @@ class PagesController extends AppController
             $i++;
         }
         return $parameters_text;
+    }
+
+    /**
+     * set view amount per user
+     *
+     * @return void
+     */
+    function _setAmountPerUser()
+    {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+
+        $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
+        $country = $UserService->getCountryAsMember($this->current_team_id);
+        if (!$country || empty($country['currency_symbol']) || empty($country['symbol_position'])) {
+            $price = AppUtil::formatThousand($amountPerUser);
+        } else {
+            $price = AppUtil::formatMoney($amountPerUser, $country['currency_symbol'], $country['symbol_position']);
+        }
+
+        $this->set(compact('price'));
     }
 }

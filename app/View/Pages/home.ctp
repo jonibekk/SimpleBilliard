@@ -270,10 +270,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         </div>
                         <div class="modal-body">
                             <div class="video-container">
-                                <iframe id="vimeo-video"
-                                        src="https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=0" width="720"
-                                        height="405" frameborder="0" webkitallowfullscreen mozallowfullscreen
-                                        allowfullscreen></iframe>
+                                <iframe id="promoVideo" 
+                                    data-src="<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
+                                    width="720" 
+                                    height="405" 
+                                    frameborder="0" 
+                                    webkitallowfullscreen 
+                                    mozallowfullscreen
+                                    allowfullscreen>
+                                </iframe>
                             </div><!--//video-container-->
                         </div><!--//modal-body-->
                     </div><!--//modal-content-->

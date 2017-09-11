@@ -154,6 +154,13 @@ class UserFixture extends CakeTestFixtureEx
             'default' => '1',
             'comment' => '更新情報メールフラグ(Onの場合はアプリから更新情報がメールで届く)'
         ),
+        'agreed_terms_of_service_id'   => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => true,
+            'comment'  => '同意した利用規約ID'
+        ),
         'del_flg'            => array(
             'type'    => 'boolean',
             'null'    => false,

@@ -97,7 +97,7 @@ class ApiTopicServiceTest extends GoalousTestCase
                     'attached_file_count' => 0,
                     'sender_user_id'      => 1,
                     'created'             => '1456811206',
-                    'display_created'     => 'Mar  1 2016'
+                    'display_created'     => 'Mar  1, 2016'
                 ],
                 'members_count'   => 3,
                 'can_leave_topic' => true,

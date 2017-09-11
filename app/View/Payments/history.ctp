@@ -1,0 +1,33 @@
+<?= $this->App->viewStartComment() ?>
+<section class="panel payment-history">
+    <div class="panel-container">
+        <h3><?= __('Payment History') ?></h3>
+        <table class="payment-history-table">
+            <thead class="payment-history-table-head">
+                <tr>
+                    <td><?= __('ID');?></td>
+                    <td><?= __('Date');?></td>
+                    <td><?= __('Amount');?></td>
+                    <td><?= __('Receipt');?></td>
+                </tr>
+            </thead>
+            <tbody class="payment-history-table-body">
+            <?php foreach ($histories as $v):?>
+                <tr>
+                    <td><?= $v['id'] ?></td>
+                    <td><?= $this->TimeEx->formatYearDayI18n($v['charge_datetime']) ?></td>
+                    <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check payment-success" : "fa fa-close payment-failed"?>
+                    <td><span class="<?=$resultIconClass?>"></span><?= $v['total']?></td>
+                    <td>
+                        <?= $this->Html->link(__('View'),
+                            ['controller' => 'payments', 'action' => 'receipt', $v['id'] . '.pdf'],
+                            ['class' => 'btn payment-history-view-receipt-btn', 'div' => false])
+                        ?>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+            </tbody>
+        </table>
+    </div>
+</section>
+<?= $this->App->ViewEndComment() ?>

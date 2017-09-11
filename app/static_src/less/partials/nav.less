@@ -153,7 +153,7 @@
         a, a:focus, a:hover{
             border: 1px solid @cGray;
         }
-    } 
+    }
 } 
 
 .nav-search.form-control {
@@ -459,9 +459,18 @@
 
 .navbar-nav {
     margin-top:50px;
-    padding:0 10px;
+    padding: 0 15px;
     @media @medium{
         background-color:transparent;
+        width:60%;
+        padding:0;
+        max-width:662px;
+        .header-search-group{
+            float:right;
+        }
+    }
+    @media @large{
+        width:100%;
     }
     .mb-app-nav &{
         margin-top:70px;

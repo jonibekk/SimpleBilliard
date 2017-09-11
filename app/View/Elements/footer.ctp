@@ -23,7 +23,7 @@
                     $this->Html->link(__('Privacy Policy'),
                         [
                             'controller' => 'pages',
-                            'action'     => 'display',
+                            'action'     => 'lp',
                             'pagename'   => 'privacy_policy',
                         ],
                         [
@@ -36,7 +36,7 @@
                     $this->Html->link(__('Terms of Service'),
                         [
                             'controller' => 'pages',
-                            'action'     => 'display',
+                            'action'     => 'lp',
                             'pagename'   => 'terms',
                         ],
                         [
