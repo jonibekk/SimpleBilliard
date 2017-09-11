@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-09 15:55+0900\n"
+"PO-Revision-Date: 2017-09-10 19:19+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2789,7 +2789,7 @@ msgid "Sub Total"
 msgstr "小計"
 
 msgid "Tax"
-msgstr "税金"
+msgstr "税"
 
 msgid "Total"
 msgstr "トータル"
@@ -2839,6 +2839,21 @@ msgstr "月"
 
 msgid "View details"
 msgstr "詳細へ"
+
+msgid "Billing"
+msgstr "請求"
+
+msgid "Total charge amount"
+msgstr "請求合計金額"
+
+msgid "Tax included"
+msgstr "税込"
+
+msgid "Number of days"
+msgstr "利用日数"
+
+msgid "Daily payment"
+msgstr "日割り"
 
 msgid "Circles"
 msgstr "サークル"
@@ -3437,9 +3452,6 @@ msgstr "ユーザー設定"
 
 msgid "Team Setting"
 msgstr "チーム設定"
-
-msgid "Billing"
-msgstr "請求"
 
 msgid "Evaluation"
 msgstr "評価"
@@ -5161,7 +5173,7 @@ msgid ""
 msgstr ""
 
 msgid "Monthly"
-msgstr "月"
+msgstr "月額"
 
 msgid "member"
 msgstr "メンバー"
@@ -5226,8 +5238,29 @@ msgstr "Jane Doe"
 msgid "PAID"
 msgstr ""
 
+msgid "Billing ID"
+msgstr "請求ID"
+
+msgid "Billing Date"
+msgstr "請求日"
+
 msgid "Billed To"
-msgstr ""
+msgstr "請求先"
+
+msgid "charged to card ending in"
+msgstr "カード番号末尾:"
+
+msgid "TYPE"
+msgstr "タイプ"
+
+msgid "TIME PERIOD"
+msgstr "期間"
+
+msgid "AMOUNT"
+msgstr "金額"
+
+msgid "members"
+msgstr "メンバー"
 
 msgid "5-20-8 Asakusabashi CS Tower, 7th Floor"
 msgstr ""
@@ -5236,9 +5269,9 @@ msgid "Taito-ku, Tokyo 111-0053 Japan"
 msgstr ""
 
 msgid ""
-"This is only for your records, no payment is due. If you have any questions, "
-"please contact us at contact@goalous.com. Thank you for your business!"
-msgstr ""
+"If you have any questions, please contact us at contact@goalous.com. Thank "
+"you for your business!"
+msgstr "ご不明な点がございましたら、contact@goalous.comまでお問い合わせください。ありがとうございます。"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"
@@ -5290,18 +5323,6 @@ msgstr "チームビジョンを作成"
 
 msgid "Activation user"
 msgstr "アクティブにするユーザー"
-
-msgid "Total charge amount"
-msgstr "請求合計金額"
-
-msgid "Tax included"
-msgstr "税込"
-
-msgid "Number of days"
-msgstr "利用日数"
-
-msgid "Daily payment"
-msgstr "日割り"
 
 msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
@@ -5511,91 +5532,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#~ msgid "Error, this invitation already expired, you can't cancel."
-#~ msgstr ""
-#~ "エラーが発生しました。すでに招待の期限が切れています。キャンセルはできませ"
-#~ "ん。"
-
-#~ msgid "No key result"
-#~ msgstr "KRはありません"
-
-#~ msgid "ジョン"
-#~ msgstr "スズキ"
-
-#~ msgid "Card Holder Name"
-#~ msgstr "カード所有者名"
-
-#~ msgid "Display on Home feed"
-#~ msgstr "ホームフィードに表示する"
-
-#~ msgid "Newsfeed"
-#~ msgstr "ニュースフィード"
-
-#~ msgid "Related Goals"
-#~ msgstr "関連ゴール"
-
-#~ msgid "eg. %s"
-#~ msgstr "例%s"
-
-#~ msgid "Comment(optional)"
-#~ msgstr "コメント（オプション）"
-
-#~ msgid "Comment will be added to the body of the invitation email."
-#~ msgstr "招待メールにコメントが載ります。"
-
-#~ msgid "Send an invitation email"
-#~ msgstr "招待メールを送信"
-
-#~ msgid "Make employees Goals transparent and clear."
-#~ msgstr "一目瞭然、全社員のゴール"
-
-#~ msgid "It's all free"
-#~ msgstr "今だけ、有料プランも完全無料"
-
-#~ msgid "Released sale, It's all free till September 30, 2017!"
-#~ msgstr ""
-#~ "リリース記念で2017年9月30日までPlusをご利用いただけます。フィードバックを"
-#~ "お待ちしております。"
-
-#~ msgid "Plus"
-#~ msgstr "Plus"
-
-#~ msgid "Campaign"
-#~ msgstr "キャンペーン"
-
-#~ msgid "/mon"
-#~ msgstr "/月"
-
-#~ msgid "Per User"
-#~ msgstr "1ユーザーあたり"
-
-#~ msgid "¥"
-#~ msgstr "$"
-
-#~ msgid "Unlimited members per team"
-#~ msgstr "1チームのアカウント無制限"
-
-#~ msgid "20MB file upload"
-#~ msgstr "20MB/ファイルのアップロード"
-
-#~ msgid "Unlimited file share"
-#~ msgstr "ストレージ無制限のファイル共有"
-
-#~ msgid "Chat message"
-#~ msgstr "チャットメッセージ"
-
-#~ msgid "Team Control"
-#~ msgstr "チーム管理機能"
-
-#~ msgid "Online user support"
-#~ msgstr "オンラインでのユーザーサポート"
-
-#~ msgid "Start now"
-#~ msgstr "今すぐ始める"
-
-#~ msgid "Feel free to ask us any questions"
-#~ msgstr "無料相談受付中"
-
-#~ msgid "Enter Payment Information"
-#~ msgstr "決済情報を入力してください"

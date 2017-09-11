@@ -206,7 +206,7 @@ class PaymentsController extends AppController
             return array(
                 'name' => $tag['name'],
                 'value' => $tag['code']
-            );
+             );
         }, $countries);
 
         $this->set(compact('setting', 'countries'));
