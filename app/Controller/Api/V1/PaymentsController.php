@@ -395,7 +395,18 @@ class PaymentsController extends ApiController
         $CreditCardService = ClassRegistry::init("CreditCardService");
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
         $token = Hash::get($this->request->data, 'token');
+        
+        // Check if the Payment if in the correct currency
+        $creditCardData = $CreditCardService->retrieveToken($token);
+        $ccCountry = $creditCardData['creditCard']->country;
+        $companyCountry = Hash::get($PaymentSetting->getByTeamId($teamId), 'company_country');
+        if (!$PaymentService->checkIllegalChoiceCountry($ccCountry, $companyCountry)) {
+            // TODO.Payment: Add translation for message
+            return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
+        }
 
         // Validation
         $customerCode = $CreditCard->getCustomerCode($teamId);
