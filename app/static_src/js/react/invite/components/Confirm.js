@@ -47,7 +47,7 @@ export default class Confirm extends Base {
   }
 
   onCheckAgreement(e) {
-    this.setState({check_agreement: e.target.value})
+    this.setState({check_agreement: e.target.checked})
   }
 
   render() {
@@ -59,6 +59,7 @@ export default class Confirm extends Base {
       );
     }
     const is_paid_plan = team.service_use_status == Team.SERVICE_USE_STATUS.PAID;
+    const display_charge = is_paid_plan && confirm_data.charge_users_count > 0;
     return (
       <section className="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
         <form onSubmit={(e) => this.onSubmit(e)}>
@@ -68,12 +69,12 @@ export default class Confirm extends Base {
               {emails_el}
             </ul>
           </div>
-          {(is_paid_plan && confirm_data.charge_users_count > 0) &&
+          {display_charge &&
           <div className="inviteCfmBlock mod-bdt">
             <h2 className="title">{__("Billing")}</h2>
             <div className="ml_5px">
               <dl className="totalCharge">
-                <dt className="totalCharge-label">{__("Total")}</dt>
+                <dt className="totalCharge-label">{__("Total charge amount")}({__("Tax included")})</dt>
                 <dd className="totalCharge-value">{confirm_data.total_charge}</dd>
               </dl>
               <div className="totalChargeFormula mb_12px">
@@ -113,18 +114,18 @@ export default class Confirm extends Base {
                   <td className="totalChargeFormulaDetail-description">：{__("Price per user")}</td>
                 </tr>
                 <tr>
-                  <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} days</th>
-                  <td className="totalChargeFormulaDetail-description">：利用日数(日割り)</td>
+                  <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} {__("days")}s</th>
+                  <td className="totalChargeFormulaDetail-description">：{__("Number of days")}({__("Daily payment")})</td>
                 </tr>
                 </tbody>
               </table>
-              <a href="/pricing">
+              <a href="/pricing" target="_blank">
                 <i className="fa fa-question-circle mr_4px" aria-hidden="true"/>{__("View details")}
               </a>
             </div>
           </div>
           }
-          {is_paid_plan &&
+          {display_charge &&
           <div className="serviceTermAgreement mb_8px">
             <label>
               <input
@@ -136,7 +137,7 @@ export default class Confirm extends Base {
           }
           <div className="btnGroupForForm">
             <button type="submit" className="btnGroupForForm-next" ref="submit"
-                    disabled={(is_paid_plan && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
+                    disabled={(display_charge && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
               {__("Send")}
             </button>
             <Link className="btnGroupForForm-cancel" to="/users/invite">{__("Back")}</Link>
