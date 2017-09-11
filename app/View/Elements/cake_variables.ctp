@@ -640,6 +640,7 @@ App::uses('AttachedFile', 'Model');
             "I confirmed the billing content": "<?= __("I confirmed the billing content") ?>",
             "days": "<?= __("days") ?>",
             "month": "<?= __("month") ?>",
+            "people": "<?= __("people") ?>",
             "View details": "<?= __("View details") ?>",
             "Billing": "<?= __("Billing") ?>",
             "Total charge amount": "<?= __("Total charge amount") ?>",
