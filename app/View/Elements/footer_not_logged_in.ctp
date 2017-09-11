@@ -40,21 +40,21 @@ if (!isset($top_lang)) {
                         <ul class="list-unstyled">
                             <li><a href="<?= $this->Html->url([
                                     'controller' => 'pages',
-                                    'action'     => 'display',
+                                    'action'     => 'lp',
                                     'pagename'   => 'terms',
                                     'lang'       => $top_lang,
                                 ]) ?>"><i
                                         class="fa fa-caret-right"></i><?= __('Terms of service') ?></a></li>
                             <li><a href="<?= $this->Html->url([
                                     'controller' => 'pages',
-                                    'action'     => 'display',
+                                    'action'     => 'lp',
                                     'pagename'   => 'privacy_policy',
                                     'lang'       => $top_lang,
                                 ]) ?>"><i
                                         class="fa fa-caret-right"></i><?= __('Privacy Policy') ?></a></li>
                             <li><a href="<?= $this->Html->url([
                                     'controller' => 'pages',
-                                    'action'     => 'display',
+                                    'action'     => 'lp',
                                     'pagename'   => 'law',
                                     'lang'       => $top_lang,
                                 ]) ?>"><i

@@ -12,6 +12,10 @@ App::import('Service', 'EvaluationService');
  */
 class EvaluationsController extends AppController
 {
+    public $uses = [
+        'Evaluation'
+    ];
+
     function beforeFilter()
     {
         parent::beforeFilter();

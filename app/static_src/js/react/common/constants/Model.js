@@ -48,3 +48,19 @@ export const AttachedFile = Object.freeze({
     DOC: 2
   }
 })
+
+export const Team = Object.freeze({
+  SERVICE_USE_STATUS: {
+    FREE_TRIAL: 0,
+    PAID: 1,
+    READ_ONLY: 2,
+    CANNOT_USE: 3
+  }
+})
+
+export const PaymentSetting = Object.freeze({
+  PAYMENT_TYPE: {
+    INVOICE: 0,
+    CREDIT_CARD: 1,
+  }
+})

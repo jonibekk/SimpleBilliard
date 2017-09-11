@@ -20,7 +20,17 @@ export function validateGoal(page, addData) {
         /* eslint-disable no-console */
         console.log("validate failed");
         /* eslint-enable no-console */
-        dispatch(invalid(response.data))
+
+        // when team is in read only
+        if (!response.data.validation_errors) {
+          // Reason to set to validation_errors.name is that
+          // This field is on to submit button
+          dispatch(invalid({
+            validation_errors: {name: response.data.message}
+          }))
+        } else {
+          dispatch(invalid(response.data))
+        }
       }
     );
   }

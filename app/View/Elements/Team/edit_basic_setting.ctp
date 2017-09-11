@@ -94,26 +94,20 @@
         </div>
 
         <hr>
-        <?=
-        $this->Form->input('timezone', [
-            'label' => __("Timezone"),
-            'type'  => 'select',
-        ]) ?>
-        <hr>
-
-        <?=
-        $this->Form->input('type', [
-            'label'      => __("Plan"),
-            'type'       => 'select',
-            'options'    => Team::$TYPE,
-            'wrapInput'  => 'team-setting-basic-plan',
-            'afterInput' => '<span class="help-block font_11px">'
-                . __("You can use Goalous free of charge until the summer of 2017.") // 同様の文言がteam/add.ctp
-                // . __("フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
-                // . '<br>'
-                // . __("このプランはチーム作成後にいつでも変更できます。")
-                . '</span>'
-        ]) ?>
+        <?php if ($isPaidPlan) :?>
+            <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __("Timezone") ?></label>
+                    <p class="form-control-static">
+                        <?= $timezoneLabel ?>
+                    </p>
+            </div>
+        <?php else: ?>
+            <?=
+            $this->Form->input('timezone', [
+                'label' => __("Timezone"),
+                'type'  => 'select',
+            ]) ?>
+        <?php endif;?>
     </div>
     <footer>
         <fieldset>

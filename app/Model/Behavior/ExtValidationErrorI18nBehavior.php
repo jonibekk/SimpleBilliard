@@ -33,6 +33,8 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'passwordPolicy'             => __('Please mix of numbers and alphanumeric.'),
             'userNameChar'               => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             'inList'                     => __("Invalid value"),
+            'inEnumList'                 => __("Invalid value"),
+            'katakanaOnly'               => __("Invalid value"),
             'dateYmd'                    => __('Enter a valid date in YYYY/MM/DD format.'),
             'checkRangeTerm'             => __("Input in the term."),
             'isUnique'                   => __('Data is duplicated.'),

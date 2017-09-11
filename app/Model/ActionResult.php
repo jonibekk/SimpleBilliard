@@ -145,7 +145,7 @@ class ActionResult extends AppModel
         ],
         'name'                     => [
             'notBlank'  => ['rule' => 'notBlank', 'required' => true],
-            'maxLength' => ['rule' => ['maxLength', 2000]],
+            'maxLength' => ['rule' => ['maxLength', 10000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
         ],
         'key_result_id'            => [

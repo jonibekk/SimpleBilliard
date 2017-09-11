@@ -3,7 +3,7 @@
     <div class="col-xs-4">
         <a href="/teams/add_group_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button"
            ng-class="{disabled: allMyGroupVisionCreated}">
-            <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
+            <i class="fa fa-plus-circle font_brownRed"></i>&nbsp;{{ 'GROUP_VISION.ADD_VISION' | translate}}</a>
     </div>
 
     <div class="col-xs-offset-4 col-xs-4">
@@ -14,7 +14,7 @@
 
 <table class="table table-hover team_member_table">
     <tr>
-        <th colspan="4"><i class="fa fa-plane"></i> グループビジョン ( {{GroupVisionCount}} )</th>
+        <th colspan="4"><i class="fa fa-plane"></i> {{ 'GROUP_VISION.HEADLINE' | translate}} ( {{GroupVisionCount}} )</th>
     </tr>
     <tr ng-repeat="item in GroupVisionList">
         <td class="pointer" width="20%"

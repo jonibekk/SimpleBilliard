@@ -11,10 +11,16 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
+App::import('Service', 'TeamService');
+App::import('Service', 'ChargeHistoryService');
+App::import('Service', 'CreditCardService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Application Controller
@@ -23,13 +29,14 @@ App::import('Service', 'GoalService');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent      $Lang
- * @property CookieComponent    $Cookie
- * @property CsvComponent       $Csv
- * @property PnotifyComponent   $Pnotify
- * @property MixpanelComponent  $Mixpanel
- * @property OgpComponent       $Ogp
- * @property BenchmarkComponent $Benchmark
+ * @property LangComponent         $Lang
+ * @property CookieComponent       $Cookie
+ * @property CsvComponent          $Csv
+ * @property NotificationComponent $Notification
+ * @property MixpanelComponent     $Mixpanel
+ * @property OgpComponent          $Ogp
+ * @property BenchmarkComponent    $Benchmark
+ * @property PaymentSetting        $PaymentSetting
  */
 class AppController extends BaseController
 {
@@ -49,7 +56,8 @@ class AppController extends BaseController
         'Ogp',
         'Csv',
         'Flash',
-        //        'Benchmark',
+        // CakePdf required it.
+        'RequestHandler'
     ];
     private $merge_helpers = [
         'Session',
@@ -68,7 +76,9 @@ class AppController extends BaseController
         'PageResource'
     ];
 
-    private $merge_uses = [];
+    private $merge_uses = [
+        'PaymentSetting'
+    ];
 
     //基本タイトル
     public $title_for_layout;
@@ -160,12 +170,48 @@ class AppController extends BaseController
             if ($notify_id) {
                 $this->NotifyBiz->changeReadStatusNotification($notify_id);
             }
-            //ajaxの時以外で実行する
+
+            // prohibit ajax request in read only term
+            if ($this->request->is('ajax') && $this->isProhibitedRequestByReadOnly()) {
+                $this->stopInvoke = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    'msg'   => __("You may only read your team’s pages.")
+                ]);
+            }
+            // prohibit ajax request in status of cannot use service
+            if ($this->request->is('ajax') && $this->isProhibitedRequestByCannotUseService()) {
+                $this->stopInvoke = true;
+                return $this->_ajaxGetResponse([
+                    'error' => true,
+                    'msg'   => __("You cannot use service on the team.")
+                ]);
+            }
+
+            // by not ajax request
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
                     $this->_setTerm();
                 }
                 $this->_setMyTeam();
+
+                // when prohibit request in read only
+                if ($this->isProhibitedRequestByReadOnly()) {
+                    $this->Notification->outError(__("You may only read your team’s pages."));
+                    $this->redirect($this->referer());
+                }
+                // when prohibit request in status of cannot use service
+                if ($this->isProhibitedRequestByCannotUseService()) {
+                    // if team admin, will be redirected to payments setting page. Otherwise, it will be redirected to the page of notification that the service can not be used.
+                    if ($this->Team->TeamMember->isAdmin($this->Auth->user('id'))) {
+                        $this->redirect(['controller' => 'payments', 'action' => 'index']);
+                    } else {
+                        $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
+                    }
+                }
+
+                // Pass variable about team service use
+                $this->setValsForAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -191,7 +237,7 @@ class AppController extends BaseController
                     $this->Session->read('current_team_id'));
                 $this->set(compact('is_isao_user'));
                 //getting notification without hide circle in home.
-                if ($this->request->params['controller'] == 'pages' && $this->request->params['pass'][0] == 'home') {
+                if ($this->request->params['controller'] == 'pages' && $this->request->params['action'] == 'home') {
                     $my_channels_json = $this->User->getMyChannelsJson(true);
                 } else {
                     $my_channels_json = $this->User->getMyChannelsJson();
@@ -222,6 +268,7 @@ class AppController extends BaseController
                 $this->_setMyCircle();
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
+                $this->_setTimeZoneEnvironment();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
             $this->_setMyMemberStatus();
@@ -259,6 +306,7 @@ class AppController extends BaseController
 
     /**
      * return true if Goalous Mobile App version is not supported
+     *
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -281,6 +329,7 @@ class AppController extends BaseController
      * https://jira.goalous.com/browse/GL-5962
      * return true if Goalous Android App version is deprecated from google play store
      * temporary support: this method should be deleted on future.
+     *
      * @param UserAgent $userAgent
      *
      * @return bool
@@ -299,6 +348,22 @@ class AppController extends BaseController
         return MobileAppVersion::isExpired($versionMobileAppLeast, $userAgent->getMobileAppVersion());
     }
 
+    /**
+     * This is wrapper parent invokeAction
+     * - it can make execution stop until before render
+     *
+     * @param CakeRequest $request
+     *
+     * @return void
+     */
+    public function invokeAction(CakeRequest $request)
+    {
+        if ($this->stopInvoke) {
+            return false;
+        }
+        return parent::invokeAction($request);
+    }
+
     public function _setBrowserToSession()
     {
         //UA情報をSessionにセット
@@ -309,6 +374,17 @@ class AppController extends BaseController
             }
             $this->Session->write('ua', $ua);
         }
+    }
+
+    public function _setTimeZoneEnvironment()
+    {
+        $timezoneUser = floatval($this->Auth->user('timezone'));
+        GoalousDateTime::setDefaultTimeZoneUserByHour($timezoneUser);
+
+        $Team = ClassRegistry::init('Team');
+        $team = $Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+        GoalousDateTime::setDefaultTimeZoneTeamByHour($timezoneTeam);
     }
 
     public function _setTerm()
@@ -533,7 +609,8 @@ class AppController extends BaseController
         $excludeEnvs = [
             'local',
             'isao',
-            'www'
+            'www',
+            'stg',
         ];
 
         // 特定の環境を除外
@@ -677,9 +754,9 @@ class AppController extends BaseController
                 //相手が現在のチームに所属しているか確認
                 $options = array(
                     'conditions' => array(
-                        'user_id'    => $id,
-                        'team_id'    => $this->Session->read('current_team_id'),
-                        'active_flg' => true,
+                        'user_id' => $id,
+                        'team_id' => $this->Session->read('current_team_id'),
+                        'status'  => Enum\TeamMember\Status::ACTIVE,
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
@@ -863,6 +940,50 @@ class AppController extends BaseController
         return $status;
     }
 
+    function setValsForAlert()
+    {
+        // TODO.Payment: must refactoring.
+        // Acquire only necessary information when necessary
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        $serviceUseStatus = $TeamService->getServiceUseStatus();
+        $this->set('serviceUseStatus', $serviceUseStatus);
+        $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
+        $this->set('stateEndDate', $TeamService->getStateEndDate());
+
+        $isAdmin = $this->_isAdmin();
+        if ($isAdmin && $serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
+            // show message if team last creditcard payment failed
+            /** @var ChargeHistoryService $ChargeHistoryService */
+            $ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
+            $this->set('statusPaymentFailed', $ChargeHistoryService->isLatestChargeFailed($this->current_team_id));
+        }
+
+        $paymentSetting = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
+        // check if team credit card expire in one month
+        if ($isAdmin && !empty($paymentSetting)) {
+            /** @var CreditCardService $CreditCardService */
+            $CreditCardService = ClassRegistry::init("CreditCardService");
+            $dateNow = GoalousDateTime::now();
+            $dateCreditCardExpire = $CreditCardService->getExpirationDateTimeOfTeamCreditCard($this->current_team_id);
+            if (!is_null($dateCreditCardExpire)) {
+                $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_CLEAR);
+                $dateCreditCardExpireBeforeOneMonth = $dateCreditCardExpire->copy()->subMonth(1);
+                if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpire)) {
+                    // team credit card has been expired
+                    $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
+                    $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                } else if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
+                    // team credit card expire in 1 month at least
+                    $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
+                    $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                }
+            }
+        }
+    }
+
     public function _setDefaultTeam($team_id)
     {
         if (!$team_id) {
@@ -924,6 +1045,31 @@ class AppController extends BaseController
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Check permission if team administrator
+     * [How to use]
+     * ・Check in all action methods
+     * 　Not set argument.
+     * 　e.g. `$this->_checkAdmin();`
+     * ・Check in specified action methods
+     * 　set argument as array.
+     * 　e.g.
+     *    check method: index, create
+     *    not check method: update
+     *    `$this->_checkAdmin(['index', 'create']);`
+     *
+     * @param array $actionMethods
+     *
+     * @return \Cake\Network\Response|null
+     */
+    protected function _checkAdmin(array $actionMethods = [])
+    {
+        if (!$this->_isAdmin($actionMethods)) {
+            $this->Notification->outError(__("You have no permission."));
+            return $this->redirect('/');
         }
     }
 

@@ -5,6 +5,10 @@ App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'PaymentService');
+App::import('Service', 'TeamMemberService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Teams Controller
@@ -16,6 +20,14 @@ class TeamsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_checkAdmin([
+            'ajax_set_current_team_admin_user_flag',
+            'ajax_set_current_team_evaluation_flag',
+            'ajax_inactivate_team_member',
+            'activate_team_member',
+            'activate_confirm_with_payment',
+            'activate_with_payment'
+        ]);
     }
 
     /**
@@ -106,7 +118,22 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
         $team = $this->Team->getById($this->current_team_id);
-        if ($this->Team->save($this->request->data)) {
+        $updateData = Hash::get($this->request->data, 'Team');
+        if (empty($updateData)) {
+            $this->Notification->outError(__("Failed to change basic team settings."));
+            return $this->redirect($this->referer());
+        }
+
+        $updateFields = [
+            'name',
+            'photo_file_name',
+        ];
+        $isPaidPlan = Hash::get($team, 'service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        if (!$isPaidPlan) {
+            $updateFields[] = 'timezone';
+        }
+
+        if ($this->Team->save($updateData, $updateFields)) {
             Cache::clear(false, 'team_info');
             $this->Notification->outSuccess(__("Changed basic team settings."));
         } else {
@@ -314,6 +341,9 @@ class TeamsController extends AppController
 
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
+        $isPaidPlan = Hash::get($team, 'Team.service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        // Get timezone label
+        $timezoneLabel = $this->getTimezoneLabel($team['Team']['timezone']);
 
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
@@ -344,7 +374,9 @@ class TeamsController extends AppController
             'nextTermStartYm',
             'nextTermEndYm',
             'termLength',
-            'isStartedEvaluation'
+            'isStartedEvaluation',
+            'isPaidPlan',
+            'timezoneLabel'
         ));
 
         return $this->render();
@@ -645,20 +677,6 @@ class TeamsController extends AppController
         return $this->redirect('/');
     }
 
-    function download_add_members_csv_format()
-    {
-        $team_id = $this->Session->read('current_team_id');
-        $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
-
-        $this->layout = false;
-        $filename = 'add_member_csv_format';
-        //heading
-        $th = $this->Team->TeamMember->_getCsvHeading(true);
-        $td = [];
-        $this->set(compact('filename', 'th', 'td'));
-        $this->_setResponseCsv($filename);
-    }
-
     function ajax_upload_update_members_csv()
     {
         $this->request->allowMethod('post');
@@ -692,51 +710,6 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    function ajax_upload_new_members_csv()
-    {
-        $this->request->allowMethod('post');
-        $result = [
-            'error' => false,
-            'css'   => 'alert-success',
-            'title' => __("Registration completed."),
-            'msg'   => '',
-        ];
-        $this->_ajaxPreProcess('post');
-        $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
-        $this->Team->TeamMember->begin();
-        $save_res = $this->Team->TeamMember->saveNewMembersFromCsv($csv);
-        if ($save_res['error']) {
-            $this->Team->TeamMember->rollback();
-            $result['error'] = true;
-            $result['css'] = 'alert-danger';
-            $result['msg'] = $save_res['error_msg'];
-            if ($save_res['error_line_no'] == 0) {
-                $result['title'] = __("Error occurred.");
-            } else {
-                $result['title'] = __("Error in the column %s (Column number included in text).",
-                    $save_res['error_line_no']);
-            }
-        } else {
-            $this->Team->TeamMember->commit();
-            $team = $this->Team->findById($this->Session->read('current_team_id'));
-            //send invite mail
-            foreach ($this->Team->TeamMember->csv_datas as $data) {
-                //save invite mail data
-                $invite = $this->Team->Invite->saveInvite(
-                    $data['Email']['email'],
-                    $this->Team->current_team_id,
-                    $this->Auth->user('id'),
-                    null
-                );
-                //send invite mail
-                $this->GlEmail->sendMailInvite($invite, $team['Team']['name']);
-            }
-
-            $result['msg'] = __("%s members are added.", $save_res['success_count']);
-        }
-        return $this->_ajaxGetResponse($result);
-    }
-
     function download_team_members_csv()
     {
         $team_id = $this->Session->read('current_team_id');
@@ -745,7 +718,7 @@ class TeamsController extends AppController
         $filename = 'team_members_' . date('YmdHis');
 
         //見出し
-        $th = $this->Team->TeamMember->_getCsvHeading(false);
+        $th = $this->Team->TeamMember->_getCsvHeading();
         $td = $this->Team->TeamMember->getAllMembersCsvData();
 
         $this->set(compact('filename', 'th', 'td'));
@@ -1085,67 +1058,41 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_set_current_team_active_flag($member_id, $active_flg)
+    function ajax_inactivate_team_member($teamMemberId)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setActiveFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->inactivate($teamMemberId);
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_invite_setting($invite_id, $action_flg)
+    /**
+     * TODO: delete this API if used place migrated to
+     * /api/v1/invitations/reInvite
+     *
+     * @deprecated
+     * @param $user_id
+     * @param $action_flg
+     *
+     * @return CakeResponse|null
+     */
+    function ajax_invite_setting($user_id, $action_flg)
     {
-        $this->_ajaxPreProcess();
-        $error = false;
-        $error_msg = '';
-        $invite_data = $this->Team->Invite->findById($invite_id);
-
-        // if already joined throw error, already exists
-        if ($invite_data['Invite']['email_verified']) {
-            $error_msg = (__("Error, this user already exists."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
-        }
-
-        // if already expired throw error, you can't cancel
-        if ($action_flg == 'Canceled' && ($invite_data['Invite']['email_token_expires'] < REQUEST_TIMESTAMP)) {
-            $error_msg = (__("Error, this invitation already expired, you can't cancel."));
-            $res['title'] = $error_msg;
-            $res['error'] = true;
-            $this->Notification->outError($error_msg);
-            return $this->_ajaxGetResponse($res);
-        }
-
-        // for cancel the old invite
-        $res = $this->Team->Invite->delete($invite_id);
-
-        if ($action_flg == 'Invited') {
-            //save invite mail data
-            $invite = $this->Team->Invite->saveInvite(
-                $invite_data['Invite']['email'],
-                $invite_data['Invite']['team_id'],
-                $invite_data['Invite']['from_user_id'],
-                !empty($invite_data['Invite']['message']) ? $invite_data['Invite']['message'] : null
-            );
-            if (!$invite) {
-                $error = true;
-                $error_msg = (__("Error, failed to invite."));
-                $this->Notification->outError($error_msg);
-            }
-            //send invite mail
-            $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
-            $this->GlEmail->sendMailInvite($invite, $team_name);
-        }
-        $res['title'] = $error_msg;
-        $res['error'] = $error;
-        return $this->_ajaxGetResponse($res);
+        CakeLog::info(sprintf("[%s]%s data:%s", __METHOD__,
+            'called deprecated method',
+            AppUtil::varExportOneLine([
+                'user_id'    => $user_id,
+                'action_flg' => $action_flg,
+            ])));
+        return $this->_ajaxGetResponse([
+            'title' => __("Some error occurred. Please try again from the start."),
+            'error' => true,
+        ]);
     }
 
-    function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
+    function ajax_set_current_team_admin_user_flag($member_id, $adminFlg)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $active_flg);
+        $res = $this->Team->TeamMember->setAdminUserFlag($member_id, $adminFlg);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -1334,7 +1281,7 @@ class TeamsController extends AppController
             $this->User->Email->create(['email' => $email]);
             $this->User->Email->validate = [
                 'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'maxLength' => ['rule' => ['maxLength', 255]],
                     'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
@@ -2681,5 +2628,138 @@ class TeamsController extends AppController
             }
             $this->Session->write('current_team_id', $this->orig_team_id);
         }
+    }
+
+    /**
+     * Activate team member action
+     * # Paid & charge case
+     *  - Activate team member & charge card|invoice
+     *  - Redirect confirmation page
+     * # Paid & not charge case
+     *  - Activate team member only
+     *  - Reload page
+     * # Free trial case
+     *  - Activate team member only
+     *  - Reload page
+     *
+     * @param int $teamMemberId
+     *
+     * @return void
+     */
+    function activate_team_member(int $teamMemberId)
+    {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outError(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // Paid charge case
+        if ($PaymentService->isChargeUserActivation($teamId)) {
+            return $this->redirect(['action' => 'confirm_user_activation', $teamMemberId]);
+        }
+
+        // Paid or free trial case
+        if ($this->Team->TeamMember->activate($teamMemberId)) {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outError(__("Failed to activate team member."));
+        }
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * Activate team member confirmation page
+     *
+     * @param int $teamMemberId
+     *
+     * @return CakeResponse
+     */
+    function confirm_user_activation(int $teamMemberId)
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $teamId = $this->current_team_id;
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outError(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        if (!$PaymentService->isChargeUserActivation($teamId)) {
+            $this->Notification->outError(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // User
+        $user = $this->Team->TeamMember->getUserById($teamMemberId);
+        $displayUserName = $user['display_username'];
+
+        // Payment info
+        $paymentSetting = $PaymentService->get($this->current_team_id);
+        $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user'], $paymentSetting['currency']);
+        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
+        $allUseDays = $PaymentService->getCurrentAllUseDays();
+        $currency = new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers(1, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+
+        $this->set(compact('teamMemberId', 'displayUserName', 'amountPerUser', 'useDaysByNext', 'totalCharge'));
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    /**
+     * Activate team member with payment
+     *
+     * @param int $teamId
+     *
+     * @return void
+     */
+    function activate_with_payment()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $teamId = $this->current_team_id;
+        $teamMemberId = Hash::get($this->request->data, 'TeamMember.id');
+
+        // Validate activation
+        if (!$TeamMemberService->validateActivation($teamId, $teamMemberId)) {
+            $this->Notification->outSuccess(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        if (!$PaymentService->isChargeUserActivation($teamId)) {
+            $this->Notification->outError(__("Failed to activate team member."));
+            return $this->redirect($this->referer());
+        }
+
+        // Activate
+        $userId = $this->Auth->user('id');
+        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId, $userId)) {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+        } else {
+            // TODO: Should display translation correctry by @kohei
+            $this->Notification->outError(__("Failed to activate team member."));
+        }
+
+        return $this->redirect('/teams/main');
     }
 }

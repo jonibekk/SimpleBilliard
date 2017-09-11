@@ -23,7 +23,7 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 <!--suppress ALL -->
 <html lang="<?= $this->Lang->getLangCode() ?>">
 <?= $this->element('head') ?>
-<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?>">
+<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?> <?= $bodyNoScrollClass ?> read-only">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
@@ -35,7 +35,11 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 }
 ?>
 
-<div id="container" class="container <?= $containerClass?>">
+<?php 
+// TODO: .container is too general of a class for the main body container.
+//       We should update .container styles to .body-container styles.
+?> 
+<div class="container body-container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">

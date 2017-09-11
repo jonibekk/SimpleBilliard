@@ -1,10 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
+use Goalous\Model\Enum as Enum;
 
 /**
  * Team Model
  *
- * @property Badge             $Badge
  * @property Circle            $Circle
  * @property CommentLike       $CommentLike
  * @property CommentMention    $CommentMention
@@ -29,6 +29,7 @@ App::uses('AppModel', 'Model');
  * @property GroupInsight      $GroupInsight
  * @property CircleInsight     $CircleInsight
  * @property AccessUser        $AccessUser
+ * @property PaymentSetting    $PaymentSetting
  */
 class Team extends AppModel
 {
@@ -48,6 +49,29 @@ class Team extends AppModel
     static public $OPTION_CHANGE_TERM = [
         self::OPTION_CHANGE_TERM_FROM_CURRENT => "",
         self::OPTION_CHANGE_TERM_FROM_NEXT    => ""
+    ];
+    /**
+     * Service use status
+     */
+    const SERVICE_USE_STATUS_FREE_TRIAL = 0;
+    const SERVICE_USE_STATUS_PAID = 1;
+    const SERVICE_USE_STATUS_READ_ONLY = 2;
+    const SERVICE_USE_STATUS_CANNOT_USE = 3;
+
+    /**
+     * Team credit card status
+     */
+    const STATUS_CREDIT_CARD_CLEAR       = 0;
+    const STATUS_CREDIT_CARD_EXPIRED     = 1;
+    const STATUS_CREDIT_CARD_EXPIRE_SOON = 2;
+
+    /**
+     * Days of service use status
+     */
+    const DAYS_SERVICE_USE_STATUS = [
+        self::SERVICE_USE_STATUS_FREE_TRIAL => 15,
+        self::SERVICE_USE_STATUS_READ_ONLY  => 30,
+        self::SERVICE_USE_STATUS_CANNOT_USE => 90,
     ];
 
     /**
@@ -123,7 +147,7 @@ class Team extends AppModel
         ],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
-        'next_start_ym'      => ['dateYm'  => ['rule' => ['date', 'ym'],],],
+        'next_start_ym'      => ['dateYm' => ['rule' => ['date', 'ym'],],],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'photo'              => [
             'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
@@ -183,6 +207,7 @@ class Team extends AppModel
         'GroupInsight',
         'CircleInsight',
         'AccessUser',
+        'PaymentSetting'
     ];
 
     public $current_team = [];
@@ -211,10 +236,20 @@ class Team extends AppModel
                 [
                     'user_id'   => $uid,
                     'admin_flg' => true,
+                    'status'    => TeamMember::USER_STATUS_ACTIVE
                 ]
             ]
         ];
         $postData = array_merge($postData, $team_member);
+
+        // set free trial start date and end date
+        $postData['Team']['service_use_status'] = self::SERVICE_USE_STATUS_FREE_TRIAL;
+        $postData['Team']['service_use_state_start_date'] = AppUtil::todayDateYmdLocal($postData['Team']['timezone']);
+        $stateDays = self::DAYS_SERVICE_USE_STATUS[self::SERVICE_USE_STATUS_FREE_TRIAL];
+        $stateEndDate = AppUtil::dateAfter($postData['Team']['service_use_state_start_date'],
+            $stateDays);
+        $postData['Team']['service_use_state_end_date'] = $stateEndDate;
+
         $this->saveAll($postData);
         // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
@@ -301,7 +336,7 @@ class Team extends AppModel
             $validate_backup = $this->TeamMember->User->Email->validate;
             $this->TeamMember->User->Email->validate = [
                 'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'maxLength' => ['rule' => ['maxLength', 255]],
                     'notBlank'  => ['rule' => 'notBlank',],
                     'email'     => ['rule' => ['email'],],
                 ],
@@ -366,6 +401,7 @@ class Team extends AppModel
     }
 
     /**
+     * TODO: move to service layter
      * @return null
      */
     function getCurrentTeam()
@@ -376,8 +412,19 @@ class Team extends AppModel
                 function () use ($model) {
                     return $model->findById($model->current_team_id);
                 }, 'team_info');
-        }
+            }
         return $this->current_team;
+    }
+
+    /**
+     * TODO: move to service layter
+     *
+     * @return null
+     */
+    function resetCurrentTeam()
+    {
+        $this->current_team = [];
+        Cache::delete($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false), 'team_info');
     }
 
     /**
@@ -589,4 +636,191 @@ class Team extends AppModel
         return $ret;
     }
 
+    /**
+     * @param int   $serviceUseStatus
+     * @param array $fields
+     *
+     * @return array
+     */
+    function findByServiceUseStatus(
+        int $serviceUseStatus,
+        array $fields = ['id', 'name', 'service_use_state_start_date', 'service_use_state_end_date', 'timezone']
+    ): array {
+        $options = [
+            'conditions' => [
+                'service_use_status' => $serviceUseStatus
+            ],
+            'fields'     => $fields,
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::extract($res, '{n}.Team');
+        return $res;
+    }
+
+    /**
+     * find team_id list of status expired
+     *
+     * @param int    $serviceStatus
+     * @param string $targetExpireDate
+     *
+     * @return array
+     */
+    function findTeamListStatusExpired(int $serviceStatus, string $targetExpireDate): array
+    {
+        $options = [
+            'conditions' => [
+                'service_use_status'            => $serviceStatus,
+                'service_use_state_end_date <=' => $targetExpireDate
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    /**
+     * update service status and start,end date
+     *
+     * @param array $targetTeamIds
+     * @param int   $nextStatus
+     *
+     * @return bool
+     */
+    function updateServiceStatusAndDates(array $targetTeamIds, int $nextStatus): bool
+    {
+        $statusDays = self::DAYS_SERVICE_USE_STATUS[$nextStatus];
+        // new service_use_state_end_date will be status days + 1 day from old service_use_state_end_date
+        $statusDays++;
+        $fields = [
+            'Team.service_use_status'           => $nextStatus,
+            'Team.service_use_state_start_date' => "DATE_ADD(Team.service_use_state_end_date,INTERVAL 1 DAY)",
+            'Team.service_use_state_end_date'   => "DATE_ADD(Team.service_use_state_end_date,INTERVAL {$statusDays} DAY)",
+        ];
+
+        // TODO: This is for only testing. cause, SqLite doesn't support DATE_ADD. But, this is bad know how..
+        if ($this->useDbConfig == 'test') {
+            $fields['Team.service_use_state_start_date'] = "DATE(Team.service_use_state_end_date, '+1 DAY')";
+            $fields['Team.service_use_state_end_date'] = "DATE(Team.service_use_state_end_date, '+{$statusDays} DAY')";
+        }
+
+        $ret = $this->updateAll(
+            $fields,
+            [
+                'Team.id' => $targetTeamIds
+            ]
+        );
+        return $ret;
+    }
+
+    /**
+     * update all team service use status start date and end date
+     *
+     * @param int    $serviceUseStatus
+     * @param string $startDate
+     *
+     * @return bool
+     */
+    public function updateAllServiceUseStateStartEndDate(int $serviceUseStatus, string $startDate): bool
+    {
+        if ($serviceUseStatus == self::SERVICE_USE_STATUS_PAID) {
+            $endDate = null;
+        } else {
+            $statusDays = self::DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
+            $endDate = AppUtil::dateAfter($startDate, $statusDays);
+        }
+        $res = $this->updateAll(
+            [
+                'Team.service_use_state_start_date' => "'$startDate'",
+                'Team.service_use_state_end_date'   => $endDate ? "'$endDate'" : null,
+            ],
+            [
+                'Team.service_use_status' => $serviceUseStatus
+            ]
+        );
+        return $res;
+    }
+
+    /**
+     * Check if paid plan
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isPaidPlan(int $teamId): bool
+    {
+        $status = $this->getServiceUseStatus($teamId);
+        return $status == self::SERVICE_USE_STATUS_PAID;
+    }
+
+    /**
+     * Check free trial plan or not
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isFreeTrial(int $teamId): bool
+    {
+        $status = $this->getServiceUseStatus($teamId);
+        return $status == self::SERVICE_USE_STATUS_FREE_TRIAL;
+    }
+
+    /**
+     * Update paid plan
+     *
+     * @param int    $teamId
+     * @param string $date
+     *
+     * @return bool
+     */
+    public function updatePaidPlan(int $teamId, string $date): bool
+    {
+        $data = [
+            'service_use_status' => Enum\Team\ServiceUseStatus::PAID,
+            'service_use_state_start_date' => $date,
+            'service_use_state_end_date' => null
+        ];
+        $this->clear();
+        $this->id = $teamId;
+        $res = $this->save($data, false);
+        if (empty($res)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * get country by team id
+     *
+     * @param int $teamId
+     *
+     * @return string|null
+     */
+    public function getCountry(int $teamId)
+    {
+        $res = $this->getByid($teamId);
+        if (!empty($res['country'])) {
+            return $res['country'];
+        }
+        return null;
+    }
+
+    /**
+     * Get service use status by team id
+     *
+     * @param int $teamId
+     *
+     * @return int|null
+     */
+    public function getServiceUseStatus(int $teamId)
+    {
+        $res = $this->getById($teamId);
+        if (!empty($res['service_use_status'])) {
+            return $res['service_use_status'];
+        }
+        return null;
+    }
 }

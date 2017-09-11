@@ -110,6 +110,8 @@ class AppModel extends Model
 
     /**
      * トランザクション開始
+     * @deprecated
+     * TODO: Delete this method and use TransactionManager
      */
     function begin()
     {
@@ -119,6 +121,8 @@ class AppModel extends Model
 
     /**
      * トランザクションコミット
+     * @deprecated
+     * TODO: Delete this method and use TransactionManager
      */
     function commit()
     {
@@ -128,6 +132,8 @@ class AppModel extends Model
 
     /**
      * トランザクションロールバック
+     * @deprecated
+     * TODO: Delete this method and use TransactionManager
      */
     function rollback()
     {
@@ -573,6 +579,20 @@ class AppModel extends Model
     }
 
     /**
+     * find single record by teamId
+     *
+     * @param int   $teamId
+     * @param array $fields
+     *
+     * @return array
+     */
+    function getByTeamId(int $teamId, array $fields = [])
+    {
+        $ret = $this->findByTeamId($teamId, $fields);
+        return reset($ret);
+    }
+
+    /**
      * 論理削除
      *
      * @param int  $id
@@ -612,10 +632,9 @@ class AppModel extends Model
      * @param array $condition
      * @param bool  $withTeamId
      *
-     * @return array
-     * @internal param $id
+     * @return bool
      */
-    function softDeleteAll(array $condition, bool $withTeamId = true)
+    function softDeleteAll(array $condition, bool $withTeamId = true): bool
     {
         if (empty($condition)) {
             return false;

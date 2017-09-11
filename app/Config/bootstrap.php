@@ -145,6 +145,41 @@ CakePlugin::load('UrlCache');
 Configure::write('UrlCache.active', true);
 
 Configure::load("app.php");
+Configure::load("country.php");
+
+// CakePdf setting
+CakePlugin::load('CakePdf', ['bootstrap' => true, 'routes' => true]);
+Configure::write('CakePdf', array(
+    'engine' => 'CakePdf.WkHtmlToPdf',
+    'binary' => ROOT . '/etc/wkhtmltopdf.sh', // For ubuntu, wrapped by shell
+    'options' => array(
+        'print-media-type' => false,
+        'outline' => true,
+        'dpi' => 96
+    ),
+    'margin' => array(
+        'bottom' => 5,
+        'left' => 5,
+        'right' => 5,
+        'top' => 5
+    ),
+    'orientation' => 'portrait',
+    'encoding'=>'UTF-8',
+    'pageSize'=>'A4',
+));
+
+// Autoload model constants
+spl_autoload_register(function($class) {
+    // Get filePath path by namespace
+    // e.g. 「Goalous\Model\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
+    if (!preg_match("/Model\\\\Enum\\\\[A-Za-z]+/", $class, $match)) {
+        return;
+    }
+    $filePath = APP. DS. str_replace('\\', DS, $match[0]).'.php' ;
+    if (file_exists($filePath)) {
+        return include $filePath;
+    }
+});
 
 /**
  * Goalous独自定数
@@ -240,6 +275,7 @@ define('CACHE_KEY_MY_KR_COUNT', 'my_kr_count');
 define('CACHE_KEY_IS_STARTED_EVALUATION', 'is_started_evaluation');
 define('CACHE_KEY_MY_ACTIONABLE_GOALS', 'my_goals_for_top_action');
 define('CACHE_KEY_BEFORE_CHANGE_TIMEZONE', 'before_change_timezone');
+define('CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE', 'team_credit_card_expire_date');
 
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');

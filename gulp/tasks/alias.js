@@ -8,13 +8,15 @@ import gutil from 'gulp-util';
 
 gulp.task('jsbuild', done => {
     return runSequence([
-        'js_home',
+        'js_feed',
         'js_goals',
         'js_team',
         'js_user',
         'js_evaluation',
         'js_app',
-        'js_vendor'], done)
+        'js_vendor',
+        'js_payment',
+        'js_homepage'], done)
 });
 
 gulp.task('build', done => {
@@ -23,7 +25,7 @@ gulp.task('build', done => {
 
 gulp.task('js', done => {
   return runSequence([
-      'js_home',
+      'js_feed',
       'js_goals',
       'js_team',
       'js_user',
@@ -31,22 +33,24 @@ gulp.task('js', done => {
       'js_app',
       'js_vendor',
       'js_prerender',
+      'js_payment',
+      'js_homepage',
       'angular_app',
       'angular_vendor',
       'react'], done)
 });
 
-// js home
-gulp.task('js_home', done => {
+// js feed
+gulp.task('js_feed', done => {
   return runSequence(
-    'js_home:concat',
-    'js_home:uglify',
-    'js_home:clean',
+    'js_feed:concat',
+    'js_feed:uglify',
+    'js_feed:clean',
     done
   );
 });
 
-// js home
+// js goals
 gulp.task('js_goals', done => {
   return runSequence(
     'js_goals:concat',
@@ -84,6 +88,26 @@ gulp.task('js_evaluation', done => {
         'js_evaluation:clean',
         done
     );
+});
+
+// js payment
+gulp.task('js_payment', done => {
+    return runSequence(
+        'js_payment:concat',
+        'js_payment:uglify',
+        'js_payment:clean',
+        done
+    );
+});
+
+// js homepage
+gulp.task('js_homepage', done => {
+  return runSequence(
+    'js_homepage:concat',
+    'js_homepage:uglify',
+    'js_homepage:clean',
+    done
+  );
 });
 
 // js app
@@ -166,9 +190,9 @@ gulp.task('css', done => {
 // less
 gulp.task('less', done => {
   return runSequence(
-    // 'css:lesshint',
     'less:common',
     'less:pages',
+    'less:homepage',
     done
   )
 })
