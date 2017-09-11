@@ -9,7 +9,7 @@
                 <?= __('Free Trial') ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
                 <i class="fa fa-check subscribed"></i>
-                <?= __('Subscribed') ?>
+                <?= __('Paid Plan') ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
                 <i class="fa fa-lock read-only"></i>
                 <?= __('Read Only') ?>

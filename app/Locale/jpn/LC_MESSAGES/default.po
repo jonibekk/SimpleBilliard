@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-09 15:55+0900\n"
+"PO-Revision-Date: 2017-09-11 13:38+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2840,6 +2840,21 @@ msgstr "月"
 msgid "View details"
 msgstr "詳細へ"
 
+msgid "Billing"
+msgstr "請求"
+
+msgid "Total charge amount"
+msgstr "請求合計金額"
+
+msgid "Tax included"
+msgstr "税込"
+
+msgid "Number of days"
+msgstr "利用日数"
+
+msgid "Daily payment"
+msgstr "日割り"
+
 msgid "Circles"
 msgstr "サークル"
 
@@ -3437,9 +3452,6 @@ msgstr "ユーザー設定"
 
 msgid "Team Setting"
 msgstr "チーム設定"
-
-msgid "Billing"
-msgstr "請求"
 
 msgid "Evaluation"
 msgstr "評価"
@@ -5133,8 +5145,8 @@ msgstr "チーム概要"
 msgid "Free Trial"
 msgstr ""
 
-msgid "Subscribed"
-msgstr "□配信停止"
+msgid "Paid Plan"
+msgstr "有料プラン"
 
 msgid "Read Only"
 msgstr "既読"
@@ -5291,18 +5303,6 @@ msgstr "チームビジョンを作成"
 msgid "Activation user"
 msgstr "アクティブにするユーザー"
 
-msgid "Total charge amount"
-msgstr "請求合計金額"
-
-msgid "Tax included"
-msgstr "税込"
-
-msgid "Number of days"
-msgstr "利用日数"
-
-msgid "Daily payment"
-msgstr "日割り"
-
 msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
 
@@ -5353,6 +5353,9 @@ msgstr ""
 
 msgid "Plan"
 msgstr "プラン"
+
+msgid "Subscribed"
+msgstr "□配信停止"
 
 msgid "Upgrade Plan"
 msgstr ""
