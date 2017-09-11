@@ -9,6 +9,10 @@ App::import('Service', 'CircleService');
  */
 class CirclesController extends AppController
 {
+    public $uses = [
+        'Circle'
+    ];
+
     /**
      * beforeFilter callback
      *
