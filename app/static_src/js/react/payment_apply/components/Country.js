@@ -108,9 +108,13 @@ export default class Country extends Base {
               </button>
             </div>
             }
-            {is_ja &&
-            <div className="payment-option-container mt_32px">
+          </form>
+          {is_ja &&
+          <div className="mt_32px">
+            <div className="payment-option-title-wrapper">
               <h3>{__('Select Payment Method')}</h3>
+            </div>
+            <div className="payment-option-container">
               <div className="payment-option"
                    onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
                 <h4>{__('Credit Card')}</h4>
@@ -126,8 +130,8 @@ export default class Country extends Base {
                 <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
               </div>
             </div>
-            }
-          </form>
+          </div>
+          }
         </div>
       </section>
     )
