@@ -1740,11 +1740,11 @@ class User extends AppModel
                         'Email.user_id = User.id',
                         'Email.email'   => $email,
                         'Email.del_flg' => false,
-                        'active_flg' => false
                     ]
                 ],
             ],
             'conditions' => [
+                'User.active_flg' => false,
                 'User.del_flg'  => false,
             ],
         ];

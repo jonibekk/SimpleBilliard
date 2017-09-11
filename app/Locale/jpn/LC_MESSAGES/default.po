@@ -868,8 +868,6 @@ msgstr "パラメータが不正です。"
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
 
-#, fuzzy
-#| msgid "Error, failed to invite."
 msgid "Error, failed to invite"
 msgstr "問題があるため、招待に失敗しました。"
 
@@ -1149,10 +1147,6 @@ msgid ""
 "定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
 
-#, fuzzy
-#| msgid ""
-#| "<span class=\"notify-card-head-target\">%1$s</span> add <span class="
-#| "\"notify-card-head-target\">you </span>to the circle."
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added <span class="
 "\"notify-card-head-target\">you </span>to the circle."
@@ -2864,10 +2858,6 @@ msgstr "About Us"
 msgid "ISAO Corporation, An IT corporation located in Akihabara, Tokyo."
 msgstr "東京・秋葉原にあるIT企業、株式会社ISAO。"
 
-#, fuzzy
-#| msgid ""
-#| "Our mid-term vision to be \\“a visionary company that brings joy to work "
-#| "around the world\\”,"
 msgid ""
 "Our mid-term vision to be “a visionary company that brings joy to work "
 "around the world”,"
@@ -3539,8 +3529,6 @@ msgid ""
 msgstr ""
 "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
-#, fuzzy
-#| msgid "What should we do after the campaign?"
 msgid "What happens after the free campaign?"
 msgstr "無償期間（2017年9月30日まで）の後はどうなりますか？"
 
@@ -5383,8 +5371,6 @@ msgstr "メール追加"
 msgid "Skip for Now"
 msgstr "今はスキップする"
 
-#, fuzzy
-#| msgid "Loading..."
 msgid "Loading"
 msgstr "読込中･･･"
 
