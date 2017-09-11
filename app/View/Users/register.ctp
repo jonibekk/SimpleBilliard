@@ -109,11 +109,7 @@
                 ]) ?>
                 <hr>
                 <?php $tosLink = $this->Html->link(__('Terms of Use'),
-                    [
-                        'controller' => 'pages',
-                        'action'     => 'display',
-                        'pagename'   => 'terms',
-                    ],
+                    '/terms',
                     [
                         'target'  => "_blank",
                         'onclick' => "window.open(this.href,'_system');return false;",
@@ -122,11 +118,7 @@
                 );
 
                 $ppLink = $this->Html->link(__('Privacy Policy'),
-                    [
-                        'controller' => 'pages',
-                        'action'     => 'display',
-                        'pagename'   => 'privacy_policy',
-                    ],
+                    '/privacy_policy',
                     [
                         'target'  => "_blank",
                         'onclick' => "window.open(this.href,'_system');return false;",
