@@ -24,9 +24,12 @@ class AppShell extends Shell
     public function startup() {
         parent::startup();
 
-        // set '--simulate_current_date="<php date format>"' option to
-        // simulate current date time in the console command
+        // set either option
+        // '--simulate_current_date="<php date format>"'
+        // '--simulate_current_timestamp="<timestamp>"'
+        // to, simulate current date time in the console command
         // as far as, using GoalousDateTime (except "www", "isao" environment)
+        // these commands assumed to use for testing
         $canOverWriteCurrentDateTime = !in_array(ENV_NAME, ['www', 'isao']);
         $simulateCurrentDateTime  = Hash::get($this->params, 'simulate_current_date');
         $simulateCurrentTimestamp = Hash::get($this->params, 'simulate_current_timestamp');
@@ -142,26 +145,38 @@ class AppShell extends Shell
     }
 
     /**
-     * @override
+     * log message on level error
+     * @param string $msg
+     * @param null   $scope
+     *
+     * @return bool
      */
     public function logError(string $msg, $scope = null) {
-        if (!is_string($msg)) {
-            $msg = print_r($msg, true);
-        }
-
         $msg = sprintf('[Shell:%s] %s', $this->name, $msg);
-        return CakeLog::write(LOG_ERR, $msg, $scope);
+        return CakeLog::error($msg, $scope);
     }
 
     /**
-     * @override
+     * log message on level info
+     * @param string $msg
+     * @param null   $scope
+     *
+     * @return bool
      */
     public function logInfo(string $msg, $scope = null) {
-        if (!is_string($msg)) {
-            $msg = print_r($msg, true);
-        }
-
         $msg = sprintf('[Shell:%s] %s', $this->name, $msg);
-        return CakeLog::write(LOG_INFO, $msg, $scope);
+        return CakeLog::info($msg, $scope);
+    }
+
+    /**
+     * log message on level emergency
+     * @param string $msg
+     * @param null   $scope
+     *
+     * @return bool
+     */
+    public function logEmergency(string $msg, $scope = null) {
+        $msg = sprintf('[Shell:%s] %s', $this->name, $msg);
+        return CakeLog::emergency($msg, $scope);
     }
 }
