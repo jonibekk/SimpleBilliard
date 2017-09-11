@@ -70,7 +70,7 @@
                         <?php if($serviceUseStatus==Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
                             <?= __('Free Trial') ?>
                         <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_PAID): ?>
-                            <?= __('Subscribed') ?>
+                            <?= __('Paid Plan') ?>
                         <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_READ_ONLY): ?>
                             <?= __('Read Only') ?>
                         <?php else: ?>

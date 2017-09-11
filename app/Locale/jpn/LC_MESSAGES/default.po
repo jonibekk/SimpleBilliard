@@ -5375,9 +5375,6 @@ msgstr ""
 msgid "Plan"
 msgstr "プラン"
 
-msgid "Subscribed"
-msgstr "□配信停止"
-
 msgid "Upgrade Plan"
 msgstr ""
 
