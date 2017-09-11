@@ -27,7 +27,7 @@
         <a class="btn btn-link design-cancel bd-radius_4px" href="/payments/method">
             <?= __("Cancel") ?>
         </a>
-        <input type="submit" class="btn btn-primary" value="<?= __("Update") ?>"/>
+        <input type="submit" class="btn btn-primary" value="<?= __("Update") ?>" disabled="disabled" />
     </div>
     <?= $this->Form->end() ?>
 </section>
