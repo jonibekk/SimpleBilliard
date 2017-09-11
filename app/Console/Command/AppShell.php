@@ -125,7 +125,7 @@ class AppShell extends Shell
             // adding these changes to original runCommand()
             // 1. adding start/stop log before/after on main()
             // 2. try catch on main()
-            $this->logInfo(sprintf('%s: start', $this->name), LOG_INFO);
+            $this->logInfo(sprintf('%s: start', $this->name));
             $result = false;
             try {
                 $result = $this->main();
@@ -134,7 +134,7 @@ class AppShell extends Shell
                 $this->logError($e->getTraceAsString());
                 return false;
             }
-            $this->logInfo(sprintf('%s: stop', $this->name), LOG_INFO);
+            $this->logInfo(sprintf('%s: stop', $this->name));
             return $result;
         }
         $this->out($this->OptionParser->help($command));
