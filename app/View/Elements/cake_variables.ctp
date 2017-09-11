@@ -623,6 +623,9 @@ App::uses('AttachedFile', 'Model');
             // Input Billing info
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
+            // Confirm
+            "Terms of Use": "<?= __("Terms of Use") ?>",
+
             // Complete
             "Thank You": "<?= __("Thank You") ?>",
             "Your transaction was successful. You and your team now have full access to Goalous.": "<?= __("Your transaction was successful. You and your team now have full access to Goalous.") ?>",
