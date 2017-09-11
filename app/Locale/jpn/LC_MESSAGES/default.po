@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-11 13:38+0900\n"
+"PO-Revision-Date: 2017-09-11 17:19+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2806,6 +2806,9 @@ msgstr "請求先情報を入力してください"
 msgid "Same as company information"
 msgstr "会社情報と同じにする"
 
+msgid "Terms of Use"
+msgstr "利用規約"
+
 msgid "Thank You"
 msgstr "ありがとうございます"
 
@@ -2818,7 +2821,7 @@ msgid "Go achieve your goal!"
 msgstr "いざ、ゴール達成へ！"
 
 msgid "Move to Billing page"
-msgstr ""
+msgstr "請求ページへ移動する"
 
 msgid "Invite members"
 msgstr "メンバーを招待する"
@@ -2836,6 +2839,9 @@ msgstr "日"
 
 msgid "month"
 msgstr "月"
+
+msgid "people"
+msgstr "人"
 
 msgid "View details"
 msgstr "詳細へ"
@@ -3600,7 +3606,7 @@ msgid "Subscription"
 msgstr ""
 
 msgid "Invoice history"
-msgstr ""
+msgstr "請求履歴"
 
 msgid "Payment method"
 msgstr "支払い方法"
@@ -5143,7 +5149,7 @@ msgid "Team Summary"
 msgstr "チーム概要"
 
 msgid "Free Trial"
-msgstr ""
+msgstr "フリートライアル"
 
 msgid "Paid Plan"
 msgstr "有料プラン"
@@ -5218,10 +5224,10 @@ msgid ""
 msgstr ""
 
 msgid "Card"
-msgstr ""
+msgstr "カード"
 
 msgid "Expire"
-msgstr ""
+msgstr "期限"
 
 msgid "Update Card"
 msgstr "カード情報を更新する"
@@ -5271,7 +5277,9 @@ msgstr ""
 msgid ""
 "If you have any questions, please contact us at contact@goalous.com. Thank "
 "you for your business!"
-msgstr "ご不明な点がございましたら、contact@goalous.comまでお問い合わせください。ありがとうございます。"
+msgstr ""
+"ご不明な点がございましたら、contact@goalous.comまでお問い合わせください。あり"
+"がとうございます。"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"
@@ -5386,9 +5394,6 @@ msgid ""
 msgstr ""
 "チームに仲間を招待しましょう。Goalousはみんなと使ってたのしいサービスです。"
 
-msgid "Add email"
-msgstr "メール追加"
-
 msgid "Skip for Now"
 msgstr "今はスキップする"
 
@@ -5445,9 +5450,6 @@ msgstr "例) Suzuki"
 
 msgid "eg. Harry"
 msgstr "例) Hiroshi"
-
-msgid "Terms of Use"
-msgstr "利用規約"
 
 msgid "New registration"
 msgstr "新規登録"
@@ -5532,3 +5534,6 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Add email"
+#~ msgstr "メール追加"

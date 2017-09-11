@@ -114,7 +114,7 @@ export default class Confirm extends Base {
                   <td className="totalChargeFormulaDetail-description">：{__("Price per user")}</td>
                 </tr>
                 <tr>
-                  <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} {__("days")}s</th>
+                  <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} {__("days")}</th>
                   <td className="totalChargeFormulaDetail-description">：{__("Number of days")}({__("Daily payment")})</td>
                 </tr>
                 </tbody>
