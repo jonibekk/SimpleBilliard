@@ -175,7 +175,7 @@ class CirclesController extends AppController
 
         // validation
         $validateAddMembers = $CircleService->validateAddMembers($circleId, $userId, $memberIds);
-        if (!$validateAddMembers) {
+        if ($validateAddMembers !== true) {
             $this->Notification->outError($validateAddMembers);
             return $this->redirect($this->referer());
         }
