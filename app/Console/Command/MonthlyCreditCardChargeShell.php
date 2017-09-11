@@ -42,20 +42,19 @@ class MonthlyCreditCardChargeShell extends AppShell
         // Get charge target teams
         $targetChargeTeams = $PaymentService->findMonthlyChargeCcTeams();
         if (empty($targetChargeTeams)) {
-            $this->log('Billing team does not exist', LOG_INFO);
+            CakeLog::info("Billing team does not exist");
             exit;
         }
+        CakeLog::info(AppUtil::varExportOneLine(compact('targetChargeTeams')));
 
         // [Efficient processing]
         // This is why it is inefficient to throw SQL for each team and get the number of users
         $teamIds = Hash::extract($targetChargeTeams, '{n}.PaymentSetting.team_id');
         $chargeMemberCountEachTeam = [];
         foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
-            $chargeMemberCountEachTeam = array_merge(
-                $chargeMemberCountEachTeam,
-                $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds)
-            );
+            $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
         }
+        CakeLog::info(AppUtil::varExportOneLine(compact('chargeMemberCountEachTeam')));
 
         // Charge each team
         foreach ($targetChargeTeams as $team) {
@@ -66,16 +65,22 @@ class MonthlyCreditCardChargeShell extends AppShell
                 $noMemberTeams[] = $teamId;
                 continue;
             }
-            // Charge
-            $PaymentService->applyCreditCardCharge(
-                $teamId,
-                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
-                $chargeMemberCount
-            );
+
+            try {
+                // Charge
+                $PaymentService->applyCreditCardCharge(
+                    $teamId,
+                    Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                    $chargeMemberCount
+                );
+            } catch (Exception $e) {
+                CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                CakeLog::emergency($e->getTraceAsString());
+            }
         }
 
         if (!empty($noMemberTeams)) {
-            $this->log(
+            CakeLog::error(
                 sprintf('There are teams with no members. team_ids:',
                     AppUtil::varExportOneLine($noMemberTeams)
                 )
