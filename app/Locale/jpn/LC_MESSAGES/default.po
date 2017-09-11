@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-11 17:19+0900\n"
+"PO-Revision-Date: 2017-09-11 19:16+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2706,10 +2706,10 @@ msgid "Select Payment Method"
 msgstr "支払い方法を選択してください"
 
 msgid "Credit Card"
-msgstr ""
+msgstr "クレジットカード"
 
 msgid "Invoice"
-msgstr ""
+msgstr "請求書"
 
 msgid ""
 "Use a credit card to setup automatic, reoccuring payments for your Goalous "
@@ -2741,7 +2741,7 @@ msgid "12345"
 msgstr "1100053"
 
 msgid "State/Province/Region"
-msgstr "都道府県"
+msgstr "都道府県/州/地方"
 
 msgid "California"
 msgstr "東京都"
@@ -5190,6 +5190,9 @@ msgstr "アクティブメンバー"
 msgid "Estimated Total"
 msgstr ""
 
+msgid "Upgrade Plan"
+msgstr "有料プランに変更する"
+
 msgid "100MB file upload"
 msgstr "20MB/ファイルのアップロード"
 
@@ -5382,9 +5385,6 @@ msgstr ""
 
 msgid "Plan"
 msgstr "プラン"
-
-msgid "Upgrade Plan"
-msgstr ""
 
 msgid "Send Invitations"
 msgstr "招待しましょう"

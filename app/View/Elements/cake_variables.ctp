@@ -610,6 +610,7 @@ App::uses('AttachedFile', 'Model');
             "eg. Bruce": "<?= __("eg. Bruce") ?>",
             "Name Kana": "<?= __("Name Kana") ?>",
             "name@company.com": "<?= __("name@company.com") ?>",
+            "Telephone": "<?= __("Telephone") ?>",
             // Input credit card
             "Name on Card": "<?= __("Name on Card") ?>",
             "Card Number": "<?= __("Card Number") ?>",

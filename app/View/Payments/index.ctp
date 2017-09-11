@@ -45,7 +45,7 @@
                     class="team-price-info-detail">/<?= __('month'); ?></div></span>
         </div>
         <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
-            <a href="/payments/apply" class="subscribe-btn btn btn-primary"><?= __('Subscribe') ?></a>
+            <a href="/payments/apply" class="subscribe-btn btn btn-primary"><?= __('Upgrade Plan') ?></a>
             <ul class="pricing-info-features">
                 <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('100MB file upload'); ?><sup
                         class="team-price-info-super-script">3</sup></li>

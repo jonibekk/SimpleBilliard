@@ -108,27 +108,26 @@ export default class Country extends Base {
               </button>
             </div>
             }
+            {is_ja &&
+            <div className="payment-option-container mt_32px">
+              <h3>{__('Select Payment Method')}</h3>
+              <div className="payment-option"
+                   onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
+                <h4>{__('Credit Card')}</h4>
+                <i className="fa fa-credit-card"/>
+                <p>{__("Use a credit card to setup automatic, reoccuring payments for your Goalous team.")}</p>
+                <a href="#">{__('Setup')}</a>
+              </div>
+              <div className="payment-option"
+                   onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
+                <h4>{__('Invoice')}</h4>
+                <i className="fa fa-leaf"/>
+                <p>{__("Setup a monthly invoice with Goalous.")}</p>
+                <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
+              </div>
+            </div>
+            }
           </form>
-          {is_ja &&
-          <div className="payment-option-container mt_32px">
-            <h3>{__('Select Payment Method')}</h3>
-            <div className="payment-option"
-                 onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
-              <h4>{__('Credit Card')}</h4>
-              <i className="fa fa-credit-card"/>
-              <p>{__("Use a credit card to setup automatic, reoccuring payments for your Goalous team.")}</p>
-              <a href="#">{__('Setup')}</a>
-            </div>
-            <div className="payment-option"
-                 onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
-              <h4>{__('Invoice')}</h4>
-              <i className="fa fa-leaf"/>
-              <p>{__("Setup a monthly invoice with Goalous.")}</p>
-              <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
-            </div>
-          </div>
-          }
-
         </div>
       </section>
     )

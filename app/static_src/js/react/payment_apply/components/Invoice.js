@@ -134,6 +134,7 @@ export default class Invoice extends Base {
                   name: "contact_person_last_name",
                   value: invoice.contact_person_last_name,
                   placeholder: __("eg. Jobs"),
+                  max_length: 128,
                   disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_last_name,
                 },
@@ -142,6 +143,7 @@ export default class Invoice extends Base {
                   name: "contact_person_first_name",
                   value: invoice.contact_person_first_name,
                   placeholder: __("eg. Bruce"),
+                  max_length: 128,
                   disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_first_name,
                 }
@@ -156,6 +158,7 @@ export default class Invoice extends Base {
                   name: "contact_person_last_name_kana",
                   value: invoice.contact_person_last_name_kana,
                   placeholder: "スズキ",
+                  max_length: 128,
                   disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_last_name_kana,
                 },
@@ -164,6 +167,7 @@ export default class Invoice extends Base {
                   name: "contact_person_first_name_kana",
                   value: invoice.contact_person_first_name_kana,
                   placeholder: "タロウ",
+                  max_length: 128,
                   disabled:is_same_as_company_info,
                   err_msg: errors_invoice.contact_person_first_name_kana
                 }
@@ -176,7 +180,7 @@ export default class Invoice extends Base {
             type="email"
             name="contact_person_email"
             value={invoice.contact_person_email}
-            label={__("Email")}
+            label={__("Email Address")}
             placeholder={__("name@company.com")}
             disabled={is_same_as_company_info}
             err_msg={errors_invoice.contact_person_email}

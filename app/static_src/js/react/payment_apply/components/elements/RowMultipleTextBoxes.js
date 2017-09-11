@@ -30,7 +30,7 @@ class RowMultipleTextBoxes extends React.Component {
           className={className}
           placeholder={attribute.placeholder}
           disabled={attribute.disabled ? true : false}
-          maxLength={attribute.max_length}
+          maxLength={attribute.max_length ? attribute.max_length : 255}
           onChange={(e) => this.props.onChange(e)}
         />
       )
