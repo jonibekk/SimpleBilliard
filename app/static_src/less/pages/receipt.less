@@ -65,6 +65,9 @@
       &:last-of-type{
         border-bottom: none;
       }
+      th:last-child, td:last-child {
+        width: 220px;
+      }
     }
     th,td{
       padding: 15px 0;
@@ -74,15 +77,17 @@
       border-bottom: 1px solid @darkGray;
       margin:0;
       padding: 10px 5%;
-      float:left;
       width:100%;
-      strong{
-        float:left;
-      }
+      font-size: 18px;
+      overflow: hidden;
       .total-label{
-        width:84.1%;
         text-align:right;
         padding-right: 30px;
+        float:left;
+      }
+      .total-amount {
+        float: right;
+        width: 220px;
       }
     }
   }
