@@ -10,12 +10,6 @@ $(function () {
         $('#PostSubmit').trigger('click');
     });
 
-    $('#PostDisplayForm').bootstrapValidator({
-        live: 'enabled',
-
-        fields: {}
-    });
-
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
