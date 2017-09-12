@@ -516,3 +516,51 @@ function changeSizeFeedImageOnlyOne($obj) {
     });
     return false;
 }
+
+// Define sub nav variables
+var subNav = document.getElementsByClassName('sub-navigation'),
+    subNavLi = subNav[0].getElementsByTagName('LI'),
+    subNavToggle = document.getElementsByClassName('sub-nav-toggle');
+
+// If sub nav exists, invoke initialization
+if(subNav.length){
+    initSubNav();
+}
+
+// If window is resized, reinitialize
+document.body.onresize=function(){initSubNav()};
+
+// Function that toggles dropdown
+function toggleSubNav(forceToggle){
+    if(forceToggle){
+        if(subNav[0].classList.contains('open')){
+            subNav[0].classList.remove('open');
+        }else{
+            subNav[0].classList.add('open');
+        }
+    }
+}
+
+// Function that initializes dropdown
+function initSubNav(){
+    if(document.body.clientWidth<992){
+        for(i=0;i<subNavLi.length;i++){ 
+            if(subNavLi[i].classList.contains('current')){
+                subNavLi[i].onclick = function(){
+                    toggleSubNav(true);
+                }
+            }else{
+                subNavLi[i].onclick = function(){
+                    toggleSubNav(false);
+                }
+            }
+        }
+        subNavToggle[0].onclick = function(){
+            toggleSubNav(true);
+        }
+    }else{
+        // Screen size is larger
+        // Force remove toggle class
+        subNav[0].classList.remove('open');
+    }
+}

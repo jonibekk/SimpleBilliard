@@ -3285,6 +3285,15 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
     border-radius: 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    &.has-subnav{
+        margin-top: 30px;
+        padding-top:0;
+        min-height: 260px;
+        @media @large{
+            margin-top:0;
+            padding-top:2rem;
+        }
+    }
 }
 
 .panel-body {

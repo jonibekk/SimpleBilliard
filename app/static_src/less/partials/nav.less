@@ -596,3 +596,98 @@
     position:relative;
     z-index:3;
 }
+
+.sub-nav-headline{
+    font-size: 14px;
+    text-transform: uppercase;
+    position: absolute;
+    top: -40px;
+    @media @large{
+        position: relative;
+        top:auto;
+    }
+}
+
+.sub-navigation{
+    width: 100%;
+    border-bottom: 1px solid @cGray;
+    position:relative;
+    padding: 5px 0;
+    margin-bottom: 10px;
+    font-size: 18px; 
+    @media @large{
+        position:fixed;
+        width:200px;
+        margin-left:-200px;
+        border-bottom: none;
+    }
+    li{
+        height: 0em;
+        overflow:hidden;
+        transition: height .3s, background-color .3s;
+        padding: 0 0 0 10px;
+        position:relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        color:@cGray;
+        background-color: @white;
+        &.current, .open&{
+            height:3em;
+        }
+        &:hover, &focus{
+            background-color: @cGray;
+            &.current{
+                background-color: @white;
+            }
+        }
+        @media @large{
+            color: @trueGray;
+            height: 3em;
+            background-color: transparent !important;
+            &.current{
+                padding-left:20px;
+            }
+        }
+    }
+    a{
+        color:@darkBlack;
+        transition: color .3s, border-color .3s;
+        width: 100%;
+        height: 3em;
+        display: flex;
+        align-items:center;
+        @media @large{
+            border-left: 3px solid;
+            border-color: @baseGray;
+            padding-left: 10px;
+        }
+        .current &, &:hover, &:focus{
+            text-decoration: none;
+            color: @white;
+            @media @large{
+                color:@acidRed;
+                border-color: @acidRed;
+            }
+        }
+    }
+    .sub-nav-toggle{
+        position: absolute;
+        right: 10px;
+        top:10px;
+        transform: rotateX(0deg);
+        transition: transform .3s;
+        font-size: 25px;
+        padding: 10px;
+        .open&{
+            transform: rotateX(180deg);
+        }
+        @media @large{
+            display:none;
+        }
+    }
+    
+}
+#debug-kit-toolbar{
+    display:none !important; 
+}
