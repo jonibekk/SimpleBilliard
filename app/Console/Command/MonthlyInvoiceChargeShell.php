@@ -30,7 +30,7 @@ class MonthlyInvoiceChargeShell extends AppShell
             'targetTimestamp' => [
                 'short'   => 't',
                 'help'    => 'This is current unix timestamp  as default, if retry, specify the param as target timestamp',
-                'default' => REQUEST_TIMESTAMP,
+                'default' => null,
             ],
         ];
         $parser->addOptions($options);
@@ -42,20 +42,23 @@ class MonthlyInvoiceChargeShell extends AppShell
      */
     public function main()
     {
-        $targetTs = $this->param('targetTimestamp');
+        $targetTimestamp = $this->param('targetTimestamp') ?? GoalousDateTime::now()->getTimestamp();
+        $this->logInfo(sprintf('target time stamp: %d (%s)',
+            $targetTimestamp,
+            GoalousDateTime::createFromTimestamp($targetTimestamp)->format('Y-m-d H:i:s')));
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
 
         // Get charge target teams that is not charged yet.
-        $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams($targetTs);
+        $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams($targetTimestamp);
         if (empty($targetChargeTeams)) {
-            $this->out("Target team doesn't exist.");
+            $this->logInfo("Target team doesn't exist.");
             return;
         }
-        $this->out('count $targetChargeTeams is ' . count($targetChargeTeams));
-        $this->out(print_r($targetChargeTeams, true));
+        $this->logInfo('count $targetChargeTeams is ' . count($targetChargeTeams));
+        $this->logInfo(sprintf('target teams: %s', AppUtil::jsonOneLine($targetChargeTeams)));
 
         // [Efficient processing]
         // This is why it is inefficient to throw SQL for each team and get the number of users
@@ -64,8 +67,8 @@ class MonthlyInvoiceChargeShell extends AppShell
         foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
             $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
         }
-        $this->out('$chargeMemberCountEachTeam');
-        $this->out(print_r($chargeMemberCountEachTeam, true));
+        $this->logInfo('$chargeMemberCountEachTeam');
+        $this->logInfo(sprintf('chargeMemberCountEachTeam: %s', AppUtil::jsonOneLine($chargeMemberCountEachTeam)));
 
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
@@ -76,22 +79,20 @@ class MonthlyInvoiceChargeShell extends AppShell
                 $noMemberTeams[] = $teamId;
                 continue;
             }
-            $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTs);
+            $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp);
             if ($retRegistration === true) {
-                $this->out(sprintf('Order registration was succeeded! teamId: %s', $teamId));
+                $this->logInfo(sprintf('Order registration was succeeded! teamId: %s', $teamId));
             } else {
-                $this->out(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
+                $this->logInfo(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
             }
         }
 
         if (!empty($noMemberTeams)) {
-            $this->log(
+            $this->logInfo(
                 sprintf('There are teams with no members. team_ids:',
                     AppUtil::varExportOneLine($noMemberTeams)
                 )
             );
         }
-
-        $this->out(sprintf("Done to send invoices."));
     }
 }
