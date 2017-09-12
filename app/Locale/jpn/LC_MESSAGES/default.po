@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-11 17:19+0900\n"
+"PO-Revision-Date: 2017-09-11 23:28+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2706,10 +2706,10 @@ msgid "Select Payment Method"
 msgstr "支払い方法を選択してください"
 
 msgid "Credit Card"
-msgstr ""
+msgstr "クレジットカード"
 
 msgid "Invoice"
-msgstr ""
+msgstr "請求書"
 
 msgid ""
 "Use a credit card to setup automatic, reoccuring payments for your Goalous "
@@ -2741,7 +2741,7 @@ msgid "12345"
 msgstr "1100053"
 
 msgid "State/Province/Region"
-msgstr "都道府県"
+msgstr "都道府県/州/地方"
 
 msgid "California"
 msgstr "東京都"
@@ -2767,11 +2767,23 @@ msgstr "例) 鈴木"
 msgid "eg. Bruce"
 msgstr "例) 太郎"
 
-msgid "Name Kana"
-msgstr "名前(カナ)"
+msgid "Last Name "
+msgstr "姓"
+
+msgid "Last Name Kana"
+msgstr "姓(カナ)"
+
+msgid "First Name "
+msgstr "名"
+
+msgid "First Name Kana"
+msgstr "名(カナ)"
 
 msgid "name@company.com"
 msgstr "name@company.co.jp"
+
+msgid "Telephone"
+msgstr "電話番号"
 
 msgid "Name on Card"
 msgstr "カード名義人（半角ローマ字）"
@@ -5112,14 +5124,14 @@ msgstr "請求先情報"
 msgid "Country"
 msgstr "国"
 
-msgid "Telephone"
-msgstr "電話番号"
-
 msgid "Smith"
 msgstr "太郎"
 
 msgid "John"
 msgstr "鈴木"
+
+msgid "Name Kana"
+msgstr "名前(カナ)"
 
 msgid "スズキ"
 msgstr "ジョン"
@@ -5189,6 +5201,9 @@ msgstr "アクティブメンバー"
 
 msgid "Estimated Total"
 msgstr ""
+
+msgid "Upgrade Plan"
+msgstr "有料プランに変更する"
 
 msgid "100MB file upload"
 msgstr "20MB/ファイルのアップロード"
@@ -5382,9 +5397,6 @@ msgstr ""
 
 msgid "Plan"
 msgstr "プラン"
-
-msgid "Upgrade Plan"
-msgstr ""
 
 msgid "Send Invitations"
 msgstr "招待しましょう"
