@@ -4,7 +4,7 @@
     <div class="panel-container">
         <h3><?= __('Payment History') ?></h3>
         <aside class="payment-history-key visible-xxs">
-            <span class="fa fa-calendar"></span> = Monthly &nbsp; <span class="fa fa-user"></span> = New Member
+            <span class="fa fa-calendar"></span> = <?= __('Monthly');?> &nbsp; <span class="fa fa-user"></span> = <?= __('New Member');?>
         </aside>
         <table class="payment-history-table">
             <thead class="payment-history-table-head">
@@ -28,9 +28,9 @@
                     <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check payment-success" : "fa fa-close payment-failed"?>
                     <td><span class="<?=$resultIconClass?>"></span><?= $v['total']?></td>
                     <td class="history-entry-download">
-                        <?= $this->Html->link("<span class='fa fa-download'></span>",
+                        <?= $this->Html->link("",
                             ['controller' => 'payments', 'action' => 'receipt', $v['id'] . '.pdf'],
-                            ['class' => 'btn payment-history-view-receipt-btn', 'div' => false])
+                            ['class' => 'fa fa-download', 'div' => false])
                         ?>
                     </td>
                 </tr>
