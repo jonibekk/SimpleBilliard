@@ -194,4 +194,19 @@ class CircleServiceTest extends GoalousTestCase
         $this->CircleMember->current_team_id = $teamId;
         $this->CircleMember->User->current_team_id = $teamId;
     }
+
+    function test_validateJoin()
+    {
+        $teamId = $this->createTeam();
+        $circleId = $this->createCircle(['team_id' => $teamId]);
+        $userId = 1;
+        $this->setDefaultTeamIdAndUid($userId, $teamId);
+        // valid
+        $this->assertTrue($this->CircleService->validateJoin($teamId, $circleId, $userId));
+        // invalid (circle not belong team)
+        $this->assertFalse($this->CircleService->validateJoin($teamId + 1, $circleId, $userId));
+        // invalid (circle member already exist)
+        $this->CircleMember->save(['team_id' => $teamId, 'circle_id' => $circleId, 'user_id' => $userId]);
+        $this->assertFalse($this->CircleService->validateJoin($teamId, $circleId, $userId));
+    }
 }

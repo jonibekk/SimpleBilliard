@@ -594,4 +594,21 @@ class GoalousTestCase extends CakeTestCase
         return REQUEST_TIMESTAMP + $timezone * HOUR;
     }
 
+    function createCircle(array $data = [])
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        
+        $default = [
+            "name"         => "Circle Name",
+            "description"  => "Circle description",
+            "public_flg"   => true,
+            "team_all_flg" => false
+        ];
+        $data = am($default, $data);
+        $Circle->create();
+        $Circle->save($data, false);
+        return $Circle->getLastInsertID();
+    }
+
 }
