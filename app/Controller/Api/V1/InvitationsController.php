@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 App::import('Service', 'InvitationService');
 App::import('Service', 'PaymentService');
 
@@ -182,7 +183,14 @@ class InvitationsController extends ApiController
             $this->GlEmail->sendMailInvite($invitation, Hash::get($team, 'Team.name'));
         }
 
-        $this->Notification->outSuccess(__("Invited %s people.", count($emails)));
+        $countInvitedPeople = count($emails);
+        $this->Notification->outSuccess(__("Invited %s people.", $countInvitedPeople));
+
+        CakeLog::info(sprintf('invited people: %s', AppUtil::jsonOneLine([
+            'teams.id' => $this->current_team_id,
+            'count_invite' => $countInvitedPeople,
+        ])));
+        PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
         return $this->_getResponseSuccess();
     }
 
