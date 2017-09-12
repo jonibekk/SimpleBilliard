@@ -356,4 +356,11 @@ class CircleTest extends GoalousTestCase
         }
     }
 
+    public function test_belongToTeam()
+    {
+        $circleId = $this->createCircle(['team_id' => 1]);
+        $this->assertTrue($this->Circle->belongToTeam(1, $circleId));
+        $this->assertFalse($this->Circle->belongToTeam(2, $circleId));
+    }
+
 }
