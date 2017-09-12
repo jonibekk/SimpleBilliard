@@ -8,9 +8,9 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<section class="panel paymentMethod">
+<section class="panel paymentMethod has-subnav">
+    <?= $this->element('Payment/method_select') ?>
     <div class="paymentMethod-inner">
-        <?= $this->element('Payment/method_select') ?>
         <h3 class=""><?= __("Credit Card")?></h3>
         <!-- canormal start-->
         <table class="paymentMethod-cc-table">
