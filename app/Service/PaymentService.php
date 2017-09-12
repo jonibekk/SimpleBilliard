@@ -10,10 +10,6 @@ App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
 App::uses('AppUtil', 'Util');
-App::uses('AppController', 'Controller');
-App::uses('ComponentCollection', 'Controller');
-App::uses('Component', 'Controller');
-App::uses('GlEmailComponent', 'Controller/Component');
 
 use Goalous\Model\Enum as Enum;
 
@@ -912,19 +908,6 @@ class PaymentService extends AppService
             CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::emergency($e->getTraceAsString());
             return false;
-        }
-
-        // Send notification email
-        $GlEmail = new GlEmailComponent(new ComponentCollection());
-        $GlEmail->startup(new AppController());
-        $adminList = $TeamMember->findAdminList($teamId);
-        if (!empty($adminList)) {
-            // sending emails to each admins.
-            foreach ($adminList as $toUid) {
-                $GlEmail->sendMailNewInvoiceSubscription($toUid, $teamId);
-            }
-        } else {
-            CakeLog::error("This team have no admin: $teamId");
         }
 
         return true;
