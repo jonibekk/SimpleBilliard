@@ -547,10 +547,10 @@ function initSubNav(){
                 subNavLi[i].onclick = function(){
                     toggleSubNav();
                 }
+                break;
             }
-            break;
         }
-        subNavToggle[0].onclick = function(){ 
+        subNavToggle[0].onclick = function(){
             toggleSubNav(true);
         }
     }else{
