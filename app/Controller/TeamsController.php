@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
@@ -1062,6 +1063,11 @@ class TeamsController extends AppController
     {
         $this->_ajaxPreProcess();
         $res = $this->Team->TeamMember->inactivate($teamMemberId);
+        CakeLog::info(sprintf('inactivate team member: %s', AppUtil::jsonOneLine([
+            'teams.id' => $this->current_team_id,
+            'team_members.id' => $teamMemberId,
+        ])));
+        PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
         return $this->_ajaxGetResponse($res);
     }
 
@@ -2670,6 +2676,12 @@ class TeamsController extends AppController
         if ($this->Team->TeamMember->activate($teamMemberId)) {
             // TODO: Should display translation correctry by @kohei
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
+
+            CakeLog::info(sprintf('activate team member: %s', AppUtil::jsonOneLine([
+                'teams.id' => $this->current_team_id,
+                'team_members.id' => $teamMemberId,
+            ])));
+            PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
         } else {
             // TODO: Should display translation correctry by @kohei
             $this->Notification->outError(__("Failed to activate team member."));
