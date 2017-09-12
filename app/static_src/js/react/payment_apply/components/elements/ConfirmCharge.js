@@ -20,7 +20,7 @@ class ConfirmCharge extends React.Component {
           <strong>{__('Total')}:&nbsp;</strong><span className="cc-info-value">{this.props.total_charge}</span>
         </div>
         <div className="form-group">
-          <a href="/terms">{__("The terms of service")}</a>
+          <a href="/terms" target="_blank">{__("Terms of Use")}</a>
         </div>
       </div>
     )

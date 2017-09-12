@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-08-20 16:06+0900\n"
+"PO-Revision-Date: 2017-09-11 23:28+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -102,6 +102,9 @@ msgstr "不正なアクセスです。"
 
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
+
+msgid "You have no permission."
+msgstr "権限がありません。"
 
 msgid "Failed to create a circle."
 msgstr "サークルの作成に失敗しました。"
@@ -229,9 +232,6 @@ msgstr "ゴールを完了にしました。"
 
 msgid "Not exist"
 msgstr "存在しません。"
-
-msgid "You have no permission."
-msgstr "権限がありません。"
 
 msgid "Deleted a Goal."
 msgstr "ゴールを削除しました。"
@@ -547,11 +547,11 @@ msgstr "チーム作成に失敗しました。"
 msgid "Created a team."
 msgstr "チームを作成しました。"
 
-msgid "Changed basic team settings."
-msgstr "チームの基本設定を更新しました。"
-
 msgid "Failed to change basic team settings."
 msgstr "チームの基本設定の更新に失敗しました。"
+
+msgid "Changed basic team settings."
+msgstr "チームの基本設定を更新しました。"
 
 msgid ""
 "The current term has already been evaluated and cannot be changed.  You can "
@@ -661,14 +661,6 @@ msgstr "評価を停止しました。"
 msgid "Removed evaluation suspension."
 msgstr "評価の停止を解除しました。"
 
-msgid "Error, this user already exists."
-msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
-
-msgid "Error, this invitation already expired, you can't cancel."
-msgstr ""
-"エラーが発生しました。すでに招待の期限が切れています。キャンセルはできませ"
-"ん。"
-
 msgid "Team vision already exists, new one cannot be made."
 msgstr "既にチームビジョンが存在する為、新規の追加はできません。"
 
@@ -705,6 +697,12 @@ msgstr "グループビジョンを更新しました。"
 
 msgid "This email address has already been joined."
 msgstr "このメールアドレスのユーザは既にチームに参加しています。"
+
+msgid "Failed to activate team member."
+msgstr "チーメンバーアクティブ化に失敗しました。"
+
+msgid "Changed active status inactive to active."
+msgstr ""
 
 msgid "You cannot access the topic"
 msgstr "このトピックにはアクセスできません。"
@@ -798,6 +796,9 @@ msgstr "パスワードの変更に失敗しました"
 msgid "Changed password."
 msgstr "パスワードを変更しました。"
 
+msgid "Please login and join the team"
+msgstr "ログインを行い、チームに参加してください"
+
 msgid "This invitation isn't not for you."
 msgstr "別のユーザ宛のチーム招待です。"
 
@@ -863,6 +864,12 @@ msgstr "フォロー中ではありません。"
 
 msgid "Parameter is invalid"
 msgstr "パラメータが不正です。"
+
+msgid "Error, this user already exists."
+msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
+
+msgid "Error, failed to invite"
+msgstr "問題があるため、招待に失敗しました。"
 
 msgid "Your Credit Card does not match your country settings"
 msgstr ""
@@ -1141,8 +1148,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> add <span class=\"notify-"
-"card-head-target\">you </span>to the circle."
+"<span class=\"notify-card-head-target\">%1$s</span> added <span class="
+"\"notify-card-head-target\">you </span>to the circle."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルに<span class="
 "\"notify-card-head-target\">あなた</span>を追加しました。"
@@ -1364,6 +1371,12 @@ msgid "This team is currently unavailable"
 msgstr "現在このチームは利用できない状態になっております"
 
 msgid "Your credit card is about to expire"
+msgstr ""
+
+msgid "Your credit check has been approved"
+msgstr ""
+
+msgid "Your credit check has been declined"
 msgstr ""
 
 msgid "Free Campaign"
@@ -1748,6 +1761,12 @@ msgstr "%s画素(pixel)がアップロードできるファイルの上限です
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
 
+msgid "Not found"
+msgstr ""
+
+msgid "Credit card settings does not exist."
+msgstr "クレジットカード設定が見つかりません。"
+
 msgid "Members"
 msgstr "メンバー"
 
@@ -1823,17 +1842,14 @@ msgstr "%sがトピック名を設定しました。: %s"
 msgid "%s removed the topic name."
 msgstr "%sがトピック名を削除しました。"
 
-msgid "Payment settings does not exists."
-msgstr "決済設定が見つかりません。"
-
-msgid "Credit card settings does not exist."
-msgstr "クレジットカード設定が見つかりません。"
-
 msgid "Failed to register paid plan."
 msgstr "有料プランの登録に失敗しました。"
 
 msgid "Please try again later."
 msgstr "しばらく時間をおいて再度登録してください。"
+
+msgid "Payment settings does not exists."
+msgstr "決済設定が見つかりません。"
 
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
@@ -1994,7 +2010,7 @@ msgstr "項目までしか選択できません"
 msgid "Select a Key Result (optional)"
 msgstr "KRを選択する(オプション)"
 
-msgid "No key result"
+msgid "No Key Result"
 msgstr "KRはありません"
 
 msgid "Add notified parties (optional)"
@@ -2683,6 +2699,29 @@ msgstr "本当にこのコメントを削除しますか？"
 msgid "Delete comment"
 msgstr "コメントを削除"
 
+msgid "Select Country Location"
+msgstr "チームの所在地(国)を選択してください"
+
+msgid "Select Payment Method"
+msgstr "支払い方法を選択してください"
+
+msgid "Credit Card"
+msgstr "クレジットカード"
+
+msgid "Invoice"
+msgstr "請求書"
+
+msgid ""
+"Use a credit card to setup automatic, reoccuring payments for your Goalous "
+"team."
+msgstr ""
+
+msgid "Setup a monthly invoice with Goalous."
+msgstr ""
+
+msgid "Setup"
+msgstr "セットアップ"
+
 msgid "Enter Company Information"
 msgstr "会社情報を入力してください"
 
@@ -2702,7 +2741,7 @@ msgid "12345"
 msgstr "1100053"
 
 msgid "State/Province/Region"
-msgstr "都道府県"
+msgstr "都道府県/州/地方"
 
 msgid "California"
 msgstr "東京都"
@@ -2728,26 +2767,26 @@ msgstr "例) 鈴木"
 msgid "eg. Bruce"
 msgstr "例) 太郎"
 
-msgid "Name Kana"
-msgstr "名前(カナ)"
+msgid "Last Name "
+msgstr "姓"
 
-msgid "John"
-msgstr "鈴木"
+msgid "Last Name Kana"
+msgstr "姓(カナ)"
 
-msgid "Smith"
-msgstr "太郎"
+msgid "First Name "
+msgstr "名"
 
-msgid "ジョン"
-msgstr "スズキ"
-
-msgid "スミス"
-msgstr "タロウ"
+msgid "First Name Kana"
+msgstr "名(カナ)"
 
 msgid "name@company.com"
 msgstr "name@company.co.jp"
 
-msgid "Card Holder Name"
-msgstr "カード所有者名"
+msgid "Telephone"
+msgstr "電話番号"
+
+msgid "Name on Card"
+msgstr "カード名義人（半角ローマ字）"
 
 msgid "Card Number"
 msgstr "カード番号"
@@ -2762,13 +2801,10 @@ msgid "Sub Total"
 msgstr "小計"
 
 msgid "Tax"
-msgstr "税金"
+msgstr "税"
 
 msgid "Total"
 msgstr "トータル"
-
-msgid "Telephone"
-msgstr "電話番号"
 
 msgid "I agree with the terms of service"
 msgstr "利用規約に同意する"
@@ -2779,11 +2815,63 @@ msgstr "登録する"
 msgid "Enter Billing Information"
 msgstr "請求先情報を入力してください"
 
-msgid "Billing Information"
-msgstr "請求先情報"
-
 msgid "Same as company information"
 msgstr "会社情報と同じにする"
+
+msgid "Terms of Use"
+msgstr "利用規約"
+
+msgid "Thank You"
+msgstr "ありがとうございます"
+
+msgid ""
+"Your transaction was successful. You and your team now have full access to "
+"Goalous."
+msgstr "決済に成功しました。Goalousのご利用を開始できます。"
+
+msgid "Go achieve your goal!"
+msgstr "いざ、ゴール達成へ！"
+
+msgid "Move to Billing page"
+msgstr "請求ページへ移動する"
+
+msgid "Invite members"
+msgstr "メンバーを招待する"
+
+msgid ""
+"You can set email addresses by comma(,) separated or by newline separated."
+msgstr ""
+"メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。"
+
+msgid "I confirmed the billing content"
+msgstr "請求内容を確認しました"
+
+msgid "days"
+msgstr "日"
+
+msgid "month"
+msgstr "月"
+
+msgid "people"
+msgstr "人"
+
+msgid "View details"
+msgstr "詳細へ"
+
+msgid "Billing"
+msgstr "請求"
+
+msgid "Total charge amount"
+msgstr "請求合計金額"
+
+msgid "Tax included"
+msgstr "税込"
+
+msgid "Number of days"
+msgstr "利用日数"
+
+msgid "Daily payment"
+msgstr "日割り"
 
 msgid "Circles"
 msgstr "サークル"
@@ -2804,7 +2892,8 @@ msgid "ISAO Corporation, An IT corporation located in Akihabara, Tokyo."
 msgstr "東京・秋葉原にあるIT企業、株式会社ISAO。"
 
 msgid ""
-"Our mid-term vision to be \“a visionary company that brings joy to work around the world\”,"
+"Our mid-term vision to be “a visionary company that brings joy to work "
+"around the world”,"
 msgstr ""
 "”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げてい"
 "ます。"
@@ -3014,9 +3103,6 @@ msgstr "□配信停止"
 msgid "Login -> UserSettings -> Notification"
 msgstr "[ログイン]->[設定]->[通知]"
 
-msgid "View details"
-msgstr "詳細へ"
-
 msgid "Incompleted"
 msgstr "未完了"
 
@@ -3106,9 +3192,6 @@ msgstr "ファイル"
 
 msgid "Circle setting"
 msgstr "サークルの設定"
-
-msgid "Display on Home feed"
-msgstr "ホームフィードに表示する"
 
 msgid "Notify new posts"
 msgstr "新しい投稿を通知する"
@@ -3388,9 +3471,6 @@ msgstr "ユーザー設定"
 msgid "Team Setting"
 msgstr "チーム設定"
 
-msgid "Billing"
-msgstr "請求"
-
 msgid "Evaluation"
 msgstr "評価"
 
@@ -3415,12 +3495,6 @@ msgstr "ログアウト"
 msgid "Team"
 msgstr "チーム"
 
-msgid "Newsfeed"
-msgstr "ニュースフィード"
-
-msgid "Related Goals"
-msgstr "関連ゴール"
-
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
 
@@ -3441,7 +3515,8 @@ msgstr "社員が期中で退職したらどうなりますか？"
 
 msgid ""
 "The team administrator can can change the member to deactivated status. "
-"Deactivated members are unable to acess Goalous but their posting history remains."
+"Deactivated members are unable to acess Goalous but their posting history "
+"remains."
 msgstr ""
 "チーム管理者（Goalous上での最高権限をもつチームメンバー）が、退職した社員を"
 "チームから「非アクティブ（無効）化」処理をしてください。非アクティブ化された"
@@ -3454,8 +3529,8 @@ msgid "I'm concerned about security and backup systems."
 msgstr "セキュリティやバックアップはどうなっていますか？"
 
 msgid ""
-"We have a distributed back-up system, back-ups are done everyday. "
-"Goalous can be used securely With SSL, 2-Step Verification and Login Lock."
+"We have a distributed back-up system, back-ups are done everyday. Goalous "
+"can be used securely With SSL, 2-Step Verification and Login Lock."
 msgstr ""
 "データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても"
 "別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップを"
@@ -3484,7 +3559,7 @@ msgid ""
 msgstr ""
 "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
-msgid "What should we do after the campaign?"
+msgid "What happens after the free campaign?"
 msgstr "無償期間（2017年9月30日まで）の後はどうなりますか？"
 
 msgid ""
@@ -3506,11 +3581,12 @@ msgid "How can we receive support?"
 msgstr "使い方がわからない場合、サポートはありますか？"
 
 msgid ""
-"After you login, please contact us using the support tool. We will help "
-"you as soon as possible."
+"After you login, please contact us using the support tool. We will help you "
+"as soon as possible."
 msgstr ""
-"2017年9月30日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用"
-"できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
+"2017年9月30日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
+"利用できるサポートツールでお問い合わせください。できる限り早い対応をいたしま"
+"す。"
 
 msgid "What company manages Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
@@ -3537,6 +3613,18 @@ msgstr "2017年9月30日まで完全無料！今すぐお試しください。"
 
 msgid "Are you on Goalous? %s. Any questions ? %s."
 msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
+
+msgid "Subscription"
+msgstr ""
+
+msgid "Invoice history"
+msgstr "請求履歴"
+
+msgid "Payment method"
+msgstr "支払い方法"
+
+msgid "Contact Settings"
+msgstr "設定"
 
 msgid "Batch Update"
 msgstr "一括更新"
@@ -3585,12 +3673,6 @@ msgstr "基本設定"
 
 msgid "Team Image"
 msgstr "チーム画像"
-
-msgid "Plan"
-msgstr "プラン"
-
-msgid "You can use Goalous free of charge till September 30, 2017."
-msgstr "2017年9月30日まで無料でご利用できます。"
 
 msgid "Change basic settings"
 msgstr "基本設定を更新"
@@ -3946,26 +4028,6 @@ msgstr "ログインメンバー"
 msgid "Unique"
 msgstr "ユニーク"
 
-msgid "Invite members"
-msgstr "メンバーを招待する"
-
-msgid ""
-"You can set email addresses by comma(,) separated or by newline separated."
-msgstr ""
-"メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。"
-
-msgid "eg. %s"
-msgstr "例%s"
-
-msgid "Comment(optional)"
-msgstr "コメント（オプション）"
-
-msgid "Comment will be added to the body of the invitation email."
-msgstr "招待メールにコメントが載ります。"
-
-msgid "Send an invitation email"
-msgstr "招待メールを送信"
-
 msgid "Final evaluation (%s - %s)"
 msgstr "最終評価 (期間：%s - %s)"
 
@@ -4304,14 +4366,24 @@ msgstr "どうぞよろしくお願い申し上げます。"
 msgid "What you want to ask"
 msgstr "お問い合わせ内容"
 
-msgid "What is your question about?"
-msgstr "お問い合わせ項目"
+msgid "Which item you want to ask"
+msgstr "お問い合わせ内容"
 
 msgid "Your company name"
 msgstr "会社名"
 
 msgid "Sales person you appointed"
 msgstr "ご希望の営業担当者"
+
+msgid "Your credit was approved. You will receive your payment slip soon."
+msgstr ""
+
+msgid ""
+"Unfortunately your credit was declined. Please contact Goalous sales team."
+msgstr ""
+
+msgid "You can update your payment setting from the following link:"
+msgstr "以下のリンクから決済設定を行ってください。"
 
 msgid "Thank you for signing up for Goalous.We are happy to meet you!"
 msgstr ""
@@ -4343,9 +4415,6 @@ msgid ""
 msgstr ""
 "なお、このまま有料プランへのご契約がない場合は、%sにチームの情報が削除されま"
 "す。"
-
-msgid "You can update your payment setting from the following link:"
-msgstr "以下のリンクから決済設定を行ってください。"
 
 msgid "Your \"%s\" credit card terminated with \"%s\" will expire soon."
 msgstr ""
@@ -4479,6 +4548,9 @@ msgstr "ゴール進捗率"
 msgid "There is no KR."
 msgstr "KRが登録されていません"
 
+msgid "Your team latest payment failed."
+msgstr ""
+
 msgid ""
 "Your team will remain in a read-only state until <strong>%s</strong>. "
 "Following this date, you will no longer be able to use Goalous. If you want "
@@ -4518,6 +4590,19 @@ msgstr ""
 "このチームは、<strong>%sまで</strong>フリートライアル期間です。それ以降は読み"
 "取り専用の状態になります。その場合、新規の投稿等はできなくなります。通常のご"
 "利用を再開したい場合は、チーム管理者にお問い合わせください。"
+
+msgid ""
+"Your credit card expired. you will no longer be able to use Goalous. Update "
+"credit card from <a href=\"#\">here</a>."
+msgstr ""
+
+msgid ""
+"Your credit card expires on <strong>%s</strong>. Following this date, you "
+"will no longer be able to use Goalous. Update credit card from <a href=\"#"
+"\">here</a>."
+msgstr ""
+"このカードは、<strong>%s</strong>が有効期限です。それ以降はご利用いただけませ"
+"ん。カード情報を<a href=\"/payments/apply\">こちら</a>から更新してください。"
 
 msgid "Collaborating"
 msgstr "コラボり中"
@@ -4589,8 +4674,8 @@ msgid "Contact us about Goalous"
 msgstr "Goalousに関するお問い合わせ"
 
 msgid ""
-"Goalous is managed by ISAO, a visionary company that brings joy to work around "
-"the world."
+"Goalous is managed by ISAO, a visionary company that brings joy to work "
+"around the world."
 msgstr ""
 "Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会社"
 "ISAOが運営しております。"
@@ -4612,6 +4697,9 @@ msgstr "例）株式会社ISAO"
 
 msgid "Company name, Organization name or Something like that."
 msgstr "会社名・団体名など"
+
+msgid "What is your question about?"
+msgstr "お問い合わせ項目"
 
 msgid "eg. We want to use it. So, we need more explanation in detail."
 msgstr "例）導入を希望しています。詳しく説明に来て欲しいです。"
@@ -4747,8 +4835,8 @@ msgstr "組織の壁なんて感じない"
 msgid "Your work becomes joyful!"
 msgstr "なんだか、仕事が楽しくなる"
 
-msgid "Make employees Goals transparent and clear."
-msgstr "一目瞭然、全社員のゴール"
+msgid "Make your colleages Goal clear."
+msgstr ""
 
 msgid ""
 "What are you working on it? Why are you working on it? Make what you are "
@@ -4774,7 +4862,9 @@ msgstr ""
 "報告も共有も自己アピールも、フォトアクション＝フォトアクで完了。仕事もセルフ"
 "プロデュースの時代です。"
 
-msgid "Take a fun photo after a meeting and suddenly your work has become more joyful!"
+msgid ""
+"Take a fun photo after a meeting and suddenly your work has become more "
+"joyful!"
 msgstr ""
 "打ち合わせの最後に「フォトアク撮ろう！」の一言で、ほら、なんだか楽しくなって"
 "きた。"
@@ -4786,8 +4876,8 @@ msgid "Sharing in a circle."
 msgstr "共有はサークルで"
 
 msgid ""
-"Create circles, and share with project members division members or anyone in the "
-"company."
+"Create circles, and share with project members division members or anyone in "
+"the company."
 msgstr ""
 "部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の"
 "場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェ"
@@ -4813,8 +4903,9 @@ msgstr "Goalousはメッセンジャー機能も備えています。"
 msgid "Evaluations with evidence!"
 msgstr "根拠のある評価ができる"
 
-msgid "Having a performance meeting where you ask \"What have you done this quarter\" is "
-"pointless! Through Goalous you already know their Goals and Actions."
+msgid ""
+"Having a performance meeting where you ask \"What have you done this quarter"
+"\" is pointless! Through Goalous you already know their Goals and Actions."
 msgstr "評価面談で「今期は何をやり遂げましたか？」なんて質問は不要です。"
 
 msgid "You have already known their Goals and Actions."
@@ -4826,7 +4917,9 @@ msgstr "評価？もちろんGoalousでできます。"
 msgid "Insight"
 msgstr "インサイト"
 
-msgid "Is the work really effective? Check Goalous for the insight and ranking to see actual engagement."
+msgid ""
+"Is the work really effective? Check Goalous for the insight and ranking to "
+"see actual engagement."
 msgstr ""
 "社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからな"
 "い」という声。インサイトやランキングで、エンゲージメントの増加が目に見えま"
@@ -4858,8 +4951,8 @@ msgstr ""
 
 msgid ""
 "Company database at your fingers. Pictures together with names, what are "
-"their goals in their work and what actions have they done? All viewable through "
-"Goalous."
+"their goals in their work and what actions have they done? All viewable "
+"through Goalous."
 msgstr ""
 "顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索でき"
 "る。これは全社のデータベースです。"
@@ -4875,6 +4968,9 @@ msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 msgid "Enjoy your work. Achieve your goals."
 msgstr "チーム力を\"たのしく\"あげる"
 
+msgid "You can use Goalous free of charge till September 30, 2017."
+msgstr "2017年9月30日まで無料でご利用できます。"
+
 msgid "5 Feb 2016"
 msgstr "2016年2月5日"
 
@@ -4884,7 +4980,9 @@ msgstr "月刊人事マネジメント2016年2月号に掲載されました"
 msgid "4 Feb 2016"
 msgstr "2016年2月4日"
 
-msgid "Goalous was featured in a web publication - Hito to shigoto no kenkyujo by Idem -"
+msgid ""
+"Goalous was featured in a web publication - Hito to shigoto no kenkyujo by "
+"Idem -"
 msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
 
 msgid "Your organization can be changed by Goalous!"
@@ -4899,9 +4997,9 @@ msgid "Move closer to your company's vision."
 msgstr "経営ビジョンにずんずん近づく"
 
 msgid ""
-"Everyone can know the company vision and can make their Goals. Goalous lets them " 
-"see their improvement and how close they are to the vision. The more they use "
-"Goalous the closer they can get to that vision."
+"Everyone can know the company vision and can make their Goals. Goalous lets "
+"them see their improvement and how close they are to the vision. The more "
+"they use Goalous the closer they can get to that vision."
 msgstr ""
 "経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールで"
 "す。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進"
@@ -4914,8 +5012,8 @@ msgid "The phrase \"I don know what that is, what they do\" goes away."
 msgstr "「それ知らない」が激減する"
 
 msgid ""
-"What did your colleagues did today? Share on Goalous and get to know more and "
-"more."
+"What did your colleagues did today? Share on Goalous and get to know more "
+"and more."
 msgstr ""
 "商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する"
 "日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足が"
@@ -4930,8 +5028,9 @@ msgid "Cooperate, get results."
 msgstr "協力による成果が出る"
 
 msgid ""
-"To achieve the team vision, the team must know what each other is doing. By using "
-"Goalous to know clearly what each other is doing, the team can succeeded efficiently."
+"To achieve the team vision, the team must know what each other is doing. By "
+"using Goalous to know clearly what each other is doing, the team can "
+"succeeded efficiently."
 msgstr ""
 "チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こ"
 "と。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出る"
@@ -4982,55 +5081,20 @@ msgstr "料金・価格はこちら。"
 msgid "Pricing | Goalous"
 msgstr "料金・価格 | Goalous(ゴーラス)"
 
-msgid "It's all free"
-msgstr "今だけ、有料プランも完全無料"
+msgid "Pricing Guide"
+msgstr "料金案内"
 
-msgid "Released sale, It's all free till September 30, 2017!"
+msgid "You use all features of Goalous for a 15-day free trial. Give it a try!"
 msgstr ""
-"リリース記念で2017年9月30日までPlusをご利用いただけます。フィードバックをお待ちし"
-"ております。"
 
-msgid "Plus"
-msgstr "Plus"
+msgid "Standard"
+msgstr ""
 
-msgid "Campaign"
-msgstr "キャンペーン"
+msgid "Per active member, per month"
+msgstr ""
 
-msgid "/mon"
-msgstr "/月"
-
-msgid "Per User"
-msgstr "1ユーザーあたり"
-
-msgid "¥"
-msgstr "$"
-
-msgid "Unlimited members per team"
-msgstr "1チームのアカウント無制限"
-
-msgid "20MB file upload"
-msgstr "20MB/ファイルのアップロード"
-
-msgid "Unlimited file share"
-msgstr "ストレージ無制限のファイル共有"
-
-msgid "Chat message"
-msgstr "チャットメッセージ"
-
-msgid "Insight Analytics"
-msgstr "インサイト分析"
-
-msgid "Team Control"
-msgstr "チーム管理機能"
-
-msgid "Online user support"
-msgstr "オンラインでのユーザーサポート"
-
-msgid "Start now"
-msgstr "今すぐ始める"
-
-msgid "Feel free to ask us any questions"
-msgstr "無料相談受付中"
+msgid "Start 15-day Free Trial"
+msgstr ""
 
 msgid "Privacy Policy is here."
 msgstr "プライバシーポリシーはこちら。"
@@ -5054,52 +5118,53 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "Subscribe"
 msgstr "□配信停止"
 
-msgid "Select Country Location"
-msgstr "国を選択"
+msgid "Billing Information"
+msgstr "請求先情報"
 
-msgid "Choose Country"
-msgstr "国を選択"
+msgid "Country"
+msgstr "国"
 
-msgid "Select Payment Method"
-msgstr "画像を選択"
+msgid "Smith"
+msgstr "太郎"
 
-msgid "Credit Card"
+msgid "John"
+msgstr "鈴木"
+
+msgid "Name Kana"
+msgstr "名前(カナ)"
+
+msgid "スズキ"
+msgstr "ジョン"
+
+msgid "タロウ"
+msgstr "スミス"
+
+msgid "Payment History"
+msgstr "請求履歴"
+
+msgid "ID"
 msgstr ""
 
-msgid ""
-"Use a credit card to setup automatic, reoccuring payments for your Goalous "
-"team."
+msgid "Date"
+msgstr "期限"
+
+msgid "Amount"
+msgstr "金額"
+
+msgid "Receipt"
 msgstr ""
 
-msgid "Setup"
-msgstr ""
-
-msgid "Invoice"
-msgstr ""
-
-msgid "Setup a monthly invoice with Goalous."
-msgstr ""
-
-msgid "Coming Soon"
-msgstr ""
-
-msgid "Enter Payment Information"
-msgstr "決済情報を入力してください"
-
-msgid "Name on Card"
-msgstr "カード名義人（半角ローマ字）"
-
-msgid "Total per month"
-msgstr "合計（月あたり）"
+msgid "View"
+msgstr "すべて表示"
 
 msgid "Team Summary"
 msgstr "チーム概要"
 
 msgid "Free Trial"
-msgstr ""
+msgstr "フリートライアル"
 
-msgid "Subscribed"
-msgstr "□配信停止"
+msgid "Paid Plan"
+msgstr "有料プラン"
 
 msgid "Read Only"
 msgstr "既読"
@@ -5126,19 +5191,19 @@ msgid ""
 msgstr ""
 
 msgid "Monthly"
-msgstr "月"
+msgstr "月額"
 
 msgid "member"
 msgstr "メンバー"
-
-msgid "month"
-msgstr "月"
 
 msgid "Active Members"
 msgstr "アクティブメンバー"
 
 msgid "Estimated Total"
 msgstr ""
+
+msgid "Upgrade Plan"
+msgstr "有料プランに変更する"
 
 msgid "100MB file upload"
 msgstr "20MB/ファイルのアップロード"
@@ -5148,6 +5213,9 @@ msgstr "ストレージ無制限のファイル共有"
 
 msgid "Chat Messaging"
 msgstr "メッセージ"
+
+msgid "Insight Analytics"
+msgstr "インサイト分析"
 
 msgid "Team Administration"
 msgstr "管理者"
@@ -5170,40 +5238,63 @@ msgid ""
 "10MB"
 msgstr ""
 
-msgid "Payment History"
-msgstr "請求履歴"
+msgid "Card"
+msgstr "カード"
 
-msgid "ID"
-msgstr ""
-
-msgid "Date"
+msgid "Expire"
 msgstr "期限"
 
-msgid "Amount"
-msgstr "金額"
+msgid "Update Card"
+msgstr "カード情報を更新する"
 
-msgid "Receipt"
-msgstr ""
-
-msgid "View"
-msgstr "すべて表示"
-
-msgid "Thank You"
-msgstr "ありがとうございます。"
-
-msgid ""
-"Your transaction was successful. You and your team now have full access to "
-"Goalous."
-msgstr "決済に成功しました。Goalousのご利用を開始できます。"
-
-msgid "Go achieve your goal!"
-msgstr "いざ、ゴール達成へ！"
+msgid "Card is expired. Please update your card's information."
+msgstr "カードの有効期限が切れています。カード情報を更新してください。"
 
 msgid "Enter your card information"
 msgstr "カード情報を入力してください"
 
 msgid "Jane Doe"
 msgstr "Jane Doe"
+
+msgid "PAID"
+msgstr ""
+
+msgid "Billing ID"
+msgstr "請求ID"
+
+msgid "Billing Date"
+msgstr "請求日"
+
+msgid "Billed To"
+msgstr "請求先"
+
+msgid "charged to card ending in"
+msgstr "カード番号末尾:"
+
+msgid "TYPE"
+msgstr "タイプ"
+
+msgid "TIME PERIOD"
+msgstr "期間"
+
+msgid "AMOUNT"
+msgstr "金額"
+
+msgid "members"
+msgstr "メンバー"
+
+msgid "5-20-8 Asakusabashi CS Tower, 7th Floor"
+msgstr ""
+
+msgid "Taito-ku, Tokyo 111-0053 Japan"
+msgstr ""
+
+msgid ""
+"If you have any questions, please contact us at contact@goalous.com. Thank "
+"you for your business!"
+msgstr ""
+"ご不明な点がございましたら、contact@goalous.comまでお問い合わせください。あり"
+"がとうございます。"
 
 msgid " new posts."
 msgstr "件の新しい投稿があります。"
@@ -5253,6 +5344,9 @@ msgstr "チームビジョン名"
 msgid "Create a team vision"
 msgstr "チームビジョンを作成"
 
+msgid "Activation user"
+msgstr "アクティブにするユーザー"
+
 msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
 
@@ -5301,6 +5395,9 @@ msgstr ""
 "「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終了"
 "日が来期末に更新されました。"
 
+msgid "Plan"
+msgstr "プラン"
+
 msgid "Send Invitations"
 msgstr "招待しましょう"
 
@@ -5309,11 +5406,11 @@ msgid ""
 msgstr ""
 "チームに仲間を招待しましょう。Goalousはみんなと使ってたのしいサービスです。"
 
-msgid "Add email"
-msgstr "メール追加"
-
 msgid "Skip for Now"
 msgstr "今はスキップする"
+
+msgid "Loading"
+msgstr "読込中･･･"
 
 msgid "Invitation"
 msgstr "招待"
@@ -5365,9 +5462,6 @@ msgstr "例) Suzuki"
 
 msgid "eg. Harry"
 msgstr "例) Hiroshi"
-
-msgid "Terms of Use"
-msgstr "利用規約"
 
 msgid "New registration"
 msgstr "新規登録"
@@ -5452,3 +5546,6 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Add email"
+#~ msgstr "メール追加"

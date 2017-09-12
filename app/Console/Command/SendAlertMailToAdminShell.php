@@ -4,7 +4,6 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
-App::uses('GoalousDateTime', 'DateTime');
 
 /**
  * # Batch processing for sending e-mail of expires alert.
@@ -78,10 +77,6 @@ class SendAlertMailToAdminShell extends AppShell
                     Team::SERVICE_USE_STATUS_CANNOT_USE
                 ],
             ],
-            'simulate_current_date' => [
-                'help'    => 'this batch simulate current date of option parameter',
-                'default' => null,
-            ],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -89,20 +84,7 @@ class SendAlertMailToAdminShell extends AppShell
 
     function main()
     {
-        $canOverWriteCurrentDate = !in_array(ENV_NAME, ['www', 'isao']);
-        $dateSimulateCurrent = Hash::get($this->params, 'simulate_current_date');
-        if ($canOverWriteCurrentDate && !empty($dateSimulateCurrent)) {
-            if (false === strtotime($dateSimulateCurrent)) {
-                $this->out("--simulate_current_date value must be date time format");
-                die();
-            }
-            GoalousDateTime::setTestNow($dateSimulateCurrent);
-        } else if (!$canOverWriteCurrentDate && !empty($dateSimulateCurrent)) {
-            $this->out(sprintf("cant simulate current date in this env(%s)!", ENV_NAME));
-            die();
-        }
         $this->dateTimeRequest = GoalousDateTime::now();
-        $this->out(sprintf("current date is: %s", $this->dateTimeRequest->format('Y-m-d')));
         if (Hash::get($this->params, 'target_status') !== null) {
             $this->_mainProcess($this->params['target_status']);
         } else {
@@ -123,13 +105,13 @@ class SendAlertMailToAdminShell extends AppShell
     {
         // validating $serviceUseStatus
         if (!array_key_exists($serviceUseStatus, Team::DAYS_SERVICE_USE_STATUS)) {
-            $this->log("Sending email for alerting expire was canceled. cause, \$serviceUseStatus was wrong. \$serviceUseStatus:$serviceUseStatus");
+            $this->logInfo("Sending email for alerting expire was canceled. cause, \$serviceUseStatus was wrong. \$serviceUseStatus:$serviceUseStatus");
             return false;
         }
         $teams = $this->Team->findByServiceUseStatus($serviceUseStatus);
         foreach ($teams as $team) {
             if ($team['service_use_state_start_date'] == "0000-00-00") {
-                $this->log("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is '0000-00-00'.");
+                $this->logInfo("TeamId:{$team['id']} was skipped. Cause, 'service_use_state_start_date' is '0000-00-00'.");
                 $this->failedCount++;
                 continue;
             }
@@ -147,10 +129,10 @@ class SendAlertMailToAdminShell extends AppShell
             $this->failedCount,
             $serviceUseStatus
         );
-        $this->out($msg);
+        $this->logInfo($msg);
         // logging only failed.
         if ($this->failedCount > 0) {
-            $this->log($msg);
+            $this->logError($msg);
         }
         $this->_resetCount();
     }
@@ -174,7 +156,7 @@ class SendAlertMailToAdminShell extends AppShell
             }
             $this->succeededCount++;
         } else {
-            $this->log("TeamId:{$teamId} There is no admin..");
+            $this->logInfo("TeamId:{$teamId} There is no admin..");
             $this->failedCount++;
         }
     }

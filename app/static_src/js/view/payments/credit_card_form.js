@@ -31,7 +31,8 @@ if(document.enterCCInfo){
     // Add validator listeners
     var cardName = document.enterCCInfo.querySelector('input[name=cardholder-name]');
     card.on('change', function(event) { validateCreditCardForm(event); });
-    cardName.addEventListener('change', validateCreditCardForm);
+    cardName.addEventListener('keyup', validateCreditCardForm);
+    var cardElement = document.getElementById('card-element');
 
     /**
      * Validate form input and Stripe token results
@@ -43,6 +44,11 @@ if(document.enterCCInfo){
         var submitButton = document.enterCCInfo.querySelector('input[type=submit]');
         var errorElement = document.querySelector('.error');
         errorElement.classList.remove('visible');
+
+        // Check if the credit card have been entered
+        if (cardElement && cardElement.className.indexOf('StripeElement--empty') !== -1) {
+            return false;
+        }
 
         // Validate Card Name
         if (cardName.value.trim() == '') {
@@ -97,10 +103,15 @@ if(document.enterCCInfo){
             }
             else {
                 var response  = JSON.parse(xhr.response);
+                // Disable submit button
+                document.enterCCInfo.querySelector('input[type=submit]').disabled = true;
                 // Display error message
                 new Noty({
                     type: 'error',
                     text: '<h4>'+cake.word.error+'</h4>' + response.message,
+                }).on('onClose', function() {
+                    // Focus on card name
+                    cardName.focus();
                 }).show();
             }
         };

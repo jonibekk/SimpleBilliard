@@ -1,6 +1,6 @@
 <?= $this->App->viewStartComment() ?>
 <?php
-// TODO.Payment: 
+// TODO.Payment:
 // 1. Fixing design collaposed
 // 2. Translation
 ?>
@@ -13,10 +13,10 @@
   </div>
   <!-- {is_paid_plan && -->
   <div class="inviteCfmBlock mod-bdt">
-    <h2 class="title"><?= __('請求料金'); ?></h2>
+    <h2 class="title"><?= __("Billing") ?></h2>
     <div class="ml_5px">
       <dl class="totalCharge">
-        <dt class="totalCharge-label"><?('請求料金合計');?></dt>
+        <dt class="totalCharge-label"><?= __("Total charge amount")?>(<?= __("Tax included")?>)</dt>
         <dd class="totalCharge-value"><?= $totalCharge ?></dd>
       </dl>
       <div class="totalChargeFormula mb_12px">
@@ -29,10 +29,10 @@
         <div class="totalChargeFormula-block">
           <div class="totalChargeFormula-fraction">
             <span class="totalChargeFormula-num"><?= $useDaysByNext ?><span
-              class="totalChargeFormula-unit">days</span></span>
+              class="totalChargeFormula-unit"><?= __("days")?></span></span>
             <span class="totalChargeFormula-fraction-exp"/>
             <span class="totalChargeFormula-num">1<span
-              class="totalChargeFormula-unit">month</span></span>
+              class="totalChargeFormula-unit"><?= __("month")?></span></span>
           </div>
         </div>
       </div>
@@ -40,22 +40,22 @@
         <tbody>
         <tr>
           <th class="totalChargeFormulaDetail-item"><?= $amountPerUser ?></th>
-          <td class="totalChargeFormulaDetail-description">：<?= __('1ヶ月の利用料金'); ?></td>
+          <td class="totalChargeFormulaDetail-description">：<?= __("Price per user"); ?></td>
         </tr>
         <tr>
           <th class="totalChargeFormulaDetail-item"><?= $useDaysByNext ?> days</th>
-          <td class="totalChargeFormulaDetail-description">：<?= __('利用日数(日割り)'); ?></td>
+          <td class="totalChargeFormulaDetail-description">：<?= __('Number of days'); ?>(<?= __("Daily payment")?>)</td>
         </tr>
         </tbody>
       </table>
-      <a href="#" target="_blank">
-        <i class="fa fa-question-circle mr_4px" aria-hidden="true"></i><?= __('詳細はこちら');?>
+      <a href="/pricing" target="_blank">
+        <i class="fa fa-question-circle mr_4px" aria-hidden="true"></i><?= __("View details")?>
       </a>
     </div>
   </div>
   <div class="serviceTermAgreement mb_8px">
     <label>
-      <input type="checkbox" name="service_term_agreement" class="serviceTermAgreement-cb js-required-agreement"/><?= __('請求内容を確認しました'); ?>
+      <input type="checkbox" name="service_term_agreement" class="serviceTermAgreement-cb js-required-agreement"/><?= __(''); ?>
     </label>
   </div>
   <div class="btnGroupForForm">
@@ -67,7 +67,7 @@
     <?= $this->Form->submit(__("Send"),
                     ['class' => 'btnGroupForForm-next js-activate-submit', 'div' => false, 'disabled' => 'disabled']) ?>
     <?= $this->Form->end(); ?>
-    <a class="btnGroupForForm-cancel" href="/teams/main"><?= __('戻る'); ?></a>
+    <a class="btnGroupForForm-cancel" href="/teams/main"><?= __('Back'); ?></a>
   </div>
 </section>
 
