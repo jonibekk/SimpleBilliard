@@ -519,11 +519,11 @@ function changeSizeFeedImageOnlyOne($obj) {
 
 // Define sub nav variables
 var subNav = document.getElementsByClassName('sub-navigation'),
-    subNavLi = subNav[0].getElementsByTagName('li'),
     subNavToggle = document.getElementsByClassName('sub-nav-toggle');
 
 // If sub nav exists, invoke initialization
 if(subNav.length){
+    var subNavLi = subNav[0].getElementsByTagName('li');
     initSubNav();
 }
 
