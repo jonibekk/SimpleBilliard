@@ -161,6 +161,7 @@ class CircleService extends AppService
         $CircleMember = ClassRegistry::init('CircleMember');
 
         // Validation check
+        // TODO: Should extract only existing id, and then should continue joining to other circles.
         foreach($circleIds as $circleId) {
             if (!$this->validateJoin($CircleMember->current_team_id, $circleId, $userId)) {
                 return false;
