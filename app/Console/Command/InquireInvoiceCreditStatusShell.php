@@ -16,7 +16,7 @@ use Goalous\Model\Enum as Enum;
  * - Send email with credit results in case of credit denied or on the first time
  * the credit is approved.
  * - Save credit result status.
- * - Set account as ready-only in case of credit denied.
+ * - Set account as read-only in case of credit denied.
  *
  * @property Invoice        $Invoice
  * @property InvoiceHistory $InvoiceHistory
@@ -47,19 +47,18 @@ class InquireInvoiceCreditStatusShell extends AppShell
      */
     public function main()
     {
-        $this->out('Starting credit inquire batch.');
         // Get the waiting for approval invoices
         $orders = $this->InvoiceHistory->getByOrderStatus(Enum\Invoice\CreditStatus::WAITING);
 
         $count = 1;
-        $this->out('Number of invoice orders is: ' . count($orders));
+        $this->logInfo('Number of invoice orders is: ' . count($orders));
         foreach ($orders as $order) {
-            $this->out(sprintf('- Processing %d of %d orders', $count, count($orders)));
+            $this->logInfo(sprintf('- Processing %d of %d orders', $count, count($orders)));
             $count++;
 
             $invoiceHistory = Hash::get($order, 'InvoiceHistory');
             if (empty($invoiceHistory)) {
-                $this->log("Error getting order history: Order: " . AppUtil::varExportOneLine($order));
+                $this->logError("Error getting order history: Order: " . AppUtil::varExportOneLine($order));
                 continue;
             }
             $orderCode = Hash::get($invoiceHistory, 'system_order_code');
@@ -70,19 +69,18 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Wrong response, try again on the next batch
             // TODO.Payment:save error log to db
             if (empty($status) || $status['status'] == 'error') {
-                $this->log("Error inquiring credit status: " . AppUtil::varExportOneLine($status));
-                $this->out(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
+                $this->logInfo("Error inquiring credit status: " . AppUtil::varExportOneLine($status));
+                $this->logInfo(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
                 continue;
             }
 
             // Process status
             if ($this->_processCreditStatus($invoiceHistory, $status)) {
-                $this->out(sprintf('Invoice order inquired with success. OrderCode: %s', $orderCode));
+                $this->logInfo(sprintf('Invoice order inquired with success. OrderCode: %s', $orderCode));
             } else {
-                $this->out(sprintf('Invoice order failed to process. OrderCode: %s', $orderCode));
+                $this->logInfo(sprintf('Invoice order failed to process. OrderCode: %s', $orderCode));
             }
         }
-        $this->out('Done inquiring invoice orders.');
     }
 
     /**
@@ -98,7 +96,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
         // Wrong status
         $result = Hash::get($inquireResult, 'results.result');
         if ($result == null) {
-            $this->log("Credit inquire result not found: " .
+            $this->logInfo("Credit inquire result not found: " .
                 AppUtil::varExportOneLine($inquireResult));
             return false;
         }
@@ -106,7 +104,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
         // Order status not available
         $orderStatus = Hash::get($result, 'orderStatus.@cd');
         if ($orderStatus == null) {
-            $this->log("Credit inquire order status not found: " .
+            $this->logError("Credit inquire order status not found: " .
                 AppUtil::varExportOneLine($inquireResult));
             return false;
         }
@@ -119,7 +117,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
 
         // Check for valid order status
         if (!($orderStatus == Enum\Invoice\CreditStatus::NG || $orderStatus == Enum\Invoice\CreditStatus::OK)) {
-            $this->log("Invalid order status: " .
+            $this->logInfo("Invalid order status: " .
                 AppUtil::varExportOneLine($inquireResult));
             return false;
         }
@@ -146,7 +144,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Get timezone
             $timezone = $this->TeamService->getTeamTimezone($teamId);
             if ($timezone === null) {
-                $this->log("Invalid timezone for team: " . $teamId);
+                $this->logError("Invalid timezone for team: " . $teamId);
                 return false;
             }
 
@@ -156,9 +154,9 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Update credit status for invoices tables
             $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $orderStatus);
 
-            // Set service to ready only
-            $startDate = AppUtil::todayDateYmdLocal($timezone);
-            $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $startDate);
+            // Set service to read only
+            $currentDateTimeOfTeamTimeZone = GoalousDateTime::now()->setTimeZoneByHour($timezone);
+            $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $currentDateTimeOfTeamTimeZone->format('Y-m-d'));
         }
 
         return true;
@@ -181,7 +179,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
                 $this->GlEmail->sendMailCreditStatusNotification($toUid, $teamId, $creditStatus);
             }
         } else {
-            $this->log("TeamId:{$teamId} There is no admin..", LOG_WARNING);
+            $this->logInfo("TeamId:{$teamId} There is no admin..", LOG_WARNING);
         }
     }
 }

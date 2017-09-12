@@ -35,7 +35,7 @@ class ChangeServiceStatusShell extends AppShell
             'targetExpireDate' => [
                 'short'   => 't',
                 'help'    => 'This is target expire date. It automatically will be yesterday UTC as default',
-                'default' => AppUtil::dateBefore(date('Y-m-d'), 2),
+                'default' => null,
             ],
         ];
         $parser->addOptions($options);
@@ -44,7 +44,8 @@ class ChangeServiceStatusShell extends AppShell
 
     function main()
     {
-        $targetExpireDate = $this->param('targetExpireDate');
+        $targetExpireDate = $this->param('targetExpireDate') ?? GoalousDateTime::now()->subDay(2)->format('Y-m-d');
+        $this->logInfo(sprintf('target expire date: %s', $targetExpireDate));
         // updating status from Free-trial to Read-only
         $this->TeamService->changeStatusAllTeamExpired(
             $targetExpireDate,
@@ -58,6 +59,5 @@ class ChangeServiceStatusShell extends AppShell
             Team::SERVICE_USE_STATUS_CANNOT_USE
         );
         $this->TeamService->deleteTeamCannotUseServiceExpired($targetExpireDate);
-        $this->out('finished to change service statuses.');
     }
 }

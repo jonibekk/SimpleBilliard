@@ -46,7 +46,7 @@ class CreditCardExpirationAlertShell extends AppShell
             // Call list customer API
             $respListCustomer = $CreditCardService->listCustomers($lastCustomer);
             if ($respListCustomer['error']) {
-                CakeLog::error('Error retrieving Stripe customers: '.$respListCustomer['message']);
+                $this->logError('Error retrieving Stripe customers: '.$respListCustomer['message']);
                 exit;
             }
 
@@ -60,6 +60,7 @@ class CreditCardExpirationAlertShell extends AppShell
 
             // If has more set the last Customer id
             if ($respListCustomer['hasMore']) {
+                $this->logInfo('has more customers, fetch more customers from stripe');
                 $lastCustomer = $customerCodeList[count($customerCodeList)-1];
             }
         } while($respListCustomer['hasMore']);
@@ -77,7 +78,7 @@ class CreditCardExpirationAlertShell extends AppShell
     private function _checkExpiringCards(array $registeredCards, array $customerList)
     {
         // Get current month and year
-        $now = new DateTime('now');
+        $now = GoalousDateTime::now();
         $currentMonth = $now->format('n');
         $currentYear = $now->format('Y');
 
@@ -100,13 +101,18 @@ class CreditCardExpirationAlertShell extends AppShell
                 // This is a non expected case.
                 // The default card should exists
                 if ($creditCardInfo == null) {
-                    CakeLog::error('Customer without default credit card: '.$customerData->id);
+                    $this->logError('Customer without default credit card: '.$customerData->id);
                     continue;
                 }
             }
 
             $expireYear = $creditCardInfo->exp_year;
             $expireMonth = $creditCardInfo->exp_month;
+
+            $this->logInfo(sprintf('compare credit card expiration with team: %s', AppUtil::varExportOneLine([
+                'card.exp_year'  => $expireYear,
+                'card.exp_month' => $expireMonth,
+            ])));
 
             // Cards that will expire this month
             if ($expireYear == $currentYear && $expireMonth == $currentMonth) {
@@ -120,13 +126,13 @@ class CreditCardExpirationAlertShell extends AppShell
         }
 
         // Remaining customers on the list do not have a match on Goalous database
-        // Check if are not test accounts and log otherwihse
+        // Check if are not test accounts and log otherwise
         foreach ($customerList as $customerData) {
             if (strpos($customerData->description, 'TEST') !== false) {
                 continue;
             }
             // Log the customer data for later check
-            CakeLog::error('Customer without a match on Goalous database. customerId: '.$customerData->id);
+            $this->logError('Customer without a match on Goalous database. customerId: '.$customerData->id);
         }
     }
 
@@ -140,9 +146,12 @@ class CreditCardExpirationAlertShell extends AppShell
     {
         // Validate card information
         if ($cardData == null || empty($cardData['last4']) || empty($cardData['brand'])) {
-            CakeLog::error("Invalid card data: ".AppUtil::varExportOneLine($cardData));
+            $this->logError("Invalid card data: ".AppUtil::varExportOneLine($cardData));
             return;
         }
+        $this->logInfo(sprintf('notify credit card expiration to team: %s', AppUtil::varExportOneLine([
+            'teams.id' => $teamId,
+        ])));
 
         $lastDigits = $cardData->last4;
         $brand = $cardData->brand;
@@ -156,7 +165,7 @@ class CreditCardExpirationAlertShell extends AppShell
                 $this->GlEmail->sendMailCreditCardExpireAlert($toUid, $teamId, $brand, $lastDigits);
             }
         } else {
-            CakeLog::error("This team have no admin: $teamId");
+            $this->logError("This team have no admin: $teamId");
         }
     }
 }
