@@ -511,4 +511,24 @@ class Circle extends AppModel
         return ['results' => $res];
     }
 
+    /**
+     * belong to team
+     *
+     * @param int $teamId
+     * @param int $circleId
+     *
+     * @return bool
+     */
+    function belongToTeam(int $teamId, int $circleId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $circleId,
+                'team_id' => $teamId
+            ],
+        ];
+
+        return (bool)$this->find('first', $options);
+    }
+
 }
