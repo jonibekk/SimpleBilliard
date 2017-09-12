@@ -528,7 +528,7 @@ if(subNav.length){
 }
 
 // If window is resized, reinitialize
-document.body.onresize=function(){initSubNav()};
+window.addEventListener( 'resize', function() {initSubNav()});
 
 // Function that toggles dropdown
 function toggleSubNav(){
@@ -551,7 +551,7 @@ function initSubNav(){
             }
         }
         subNavToggle[0].onclick = function(){
-            toggleSubNav(true);
+            toggleSubNav();
         }
     }else{
         // Screen size is larger
