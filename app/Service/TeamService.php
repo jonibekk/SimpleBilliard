@@ -101,6 +101,12 @@ class TeamService extends AppService
         if (empty($targetTeamList)) {
             return false;
         }
+        CakeLog::info(sprintf('update teams service status and dates: %s', AppUtil::jsonOneLine([
+            'teams.ids' => array_values($targetTeamList),
+            'teams.service_use_status.old' => $currentStatus,
+            'teams.service_use_status.new' => $nextStatus,
+            'target_expire_date' => $targetExpireDate,
+        ])));
         $ret = $Team->updateServiceStatusAndDates($targetTeamList, $nextStatus);
         if ($ret === false) {
             $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
@@ -137,6 +143,10 @@ class TeamService extends AppService
             return false;
         }
 
+        CakeLog::info(sprintf('delete teams service status expired: %s', AppUtil::jsonOneLine([
+            'teams.ids' => array_values($targetTeamList),
+            'target_expire_date' => $targetExpireDate,
+        ])));
         $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
         if ($ret === false) {
             $this->log(sprintf("failed to save deleteTeamCannotUseServiceExpired. targetTeamList: %s",

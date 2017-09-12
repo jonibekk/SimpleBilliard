@@ -1192,6 +1192,7 @@ class PaymentService extends AppService
         $InvoiceHistory = ClassRegistry::init("InvoiceHistory");
         // Get teams only credit card payment type
         $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\PaymentSetting\Type::INVOICE());
+        CakeLog::info(sprintf('teams monthly invoice charge:%s', AppUtil::jsonOneLine($targetChargeTeams)));
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
