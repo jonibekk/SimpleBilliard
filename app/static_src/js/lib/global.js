@@ -531,14 +531,12 @@ if(subNav.length){
 document.body.onresize=function(){initSubNav()};
 
 // Function that toggles dropdown
-function toggleSubNav(forceToggle){
-    if(forceToggle){
+function toggleSubNav(){
         if(subNav[0].classList.contains('open')){
             subNav[0].classList.remove('open');
         }else{
             subNav[0].classList.add('open');
         }
-    }
 }
 
 // Function that initializes dropdown
@@ -547,15 +545,12 @@ function initSubNav(){
         for(i=0;i<subNavLi.length;i++){ 
             if(subNavLi[i].classList.contains('current')){
                 subNavLi[i].onclick = function(){
-                    toggleSubNav(true);
-                }
-            }else{
-                subNavLi[i].onclick = function(){
-                    toggleSubNav(false);
+                    toggleSubNav();
                 }
             }
+            break;
         }
-        subNavToggle[0].onclick = function(){
+        subNavToggle[0].onclick = function(){ 
             toggleSubNav(true);
         }
     }else{
