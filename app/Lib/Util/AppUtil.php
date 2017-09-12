@@ -653,6 +653,25 @@ class AppUtil
     }
 
     /**
+     * json_encode as one line
+     *
+     * @param array $array
+     *
+     * @return string
+     */
+    static function jsonOneLine(array $array)
+    {
+        /**
+         * @see http://php.net/manual/ja/json.constants.php
+         *      for json encode option
+         */
+        return json_encode(
+            $array,
+            JSON_PARTIAL_OUTPUT_ON_ERROR
+        );
+    }
+
+    /**
      * Convert string to array
      * - Ignore empty line
      * - Trim each line
