@@ -201,20 +201,20 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'payment_base_day' => 2,
         ], false);
-        $currentTimestamp = strtotime("2017-01-01");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-01");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-01-02');
 
-        $currentTimestamp = strtotime("2017-01-02");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
-        $currentTimestamp = strtotime("2017-01-03");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-03");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
-        $currentTimestamp = strtotime("2017-12-31");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-12-31");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2018-01-02');
     }
 
@@ -232,16 +232,16 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 2,
         ], false);
 
-        $currentTimestamp = strtotime("2017-01-01 11:59:59");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-01 11:59:59");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-01-02');
 
-        $currentTimestamp = strtotime("2017-01-01 12:00:00");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-01 12:00:00");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
-        $currentTimestamp = strtotime("2017-01-01 12:00:01");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-01 12:00:01");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
         // timezone minus
@@ -251,16 +251,16 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->current_team = [];
         $this->_clearCache();
 
-        $currentTimestamp = strtotime("2017-01-02 11:59:59");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02 11:59:59");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-01-02');
 
-        $currentTimestamp = strtotime("2017-01-02 12:00:00");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02 12:00:00");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
-        $currentTimestamp = strtotime("2017-01-02 12:00:01");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02 12:00:01");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
         // timezone *.5
@@ -270,16 +270,16 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->current_team = [];
         $this->_clearCache();
 
-        $currentTimestamp = strtotime("2017-01-02 03:29:59");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02 03:29:59");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-01-02');
 
-        $currentTimestamp = strtotime("2017-01-02 03:30:00");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02 03:30:00");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
-        $currentTimestamp = strtotime("2017-01-02 03:30:01");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-02 03:30:01");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-02');
 
     }
@@ -299,20 +299,20 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-02-27");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-27");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-28');
 
-        $currentTimestamp = strtotime("2017-02-28");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-28");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-03-28');
 
-        $currentTimestamp = strtotime("2017-02-27");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-27");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-02-28');
 
-        $currentTimestamp = strtotime("2017-02-28");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-28");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-03-28');
 
         // No exist day
@@ -322,8 +322,8 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-02-28");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-28");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-03-29');
 
         $this->PaymentSetting->save([
@@ -332,8 +332,8 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-04-30");
-        $res = $this->PaymentService->getNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-04-30");
+        $res = $this->PaymentService->getNextBaseDate();
         $this->assertEquals($res, '2017-05-31');
     }
 
@@ -352,20 +352,20 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-02-01");
-        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-01");
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 27);
 
-        $currentTimestamp = strtotime("2017-02-27");
-        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-27");
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
 
-        $currentTimestamp = strtotime("2017-02-28");
-        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-28");
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 28);
 
-        $currentTimestamp = strtotime("2017-03-01");
-        $res = $this->PaymentService->getUseDaysByNextBaseDate($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-03-01");
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 27);
 
     }
@@ -385,24 +385,24 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-01-01");
-        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-01");
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
-        $currentTimestamp = strtotime("2016-12-31");
-        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
+        GoalousDateTime::setTestNow("2016-12-31");
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
-        $currentTimestamp = strtotime("2017-01-31");
-        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-01-31");
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
-        $currentTimestamp = strtotime("2017-02-01");
-        $res = $this->PaymentService->getCurrentAllUseDays($currentTimestamp);
+        GoalousDateTime::setTestNow("2017-02-01");
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 28);
     }
 
-    public function test_calcTotalChargeByAddUsers_jpy()
+    public function test_calcRelatedTotalChargeByAddUsers_jpy()
     {
         $teamId = 1;
         $this->Team->current_team_id = $teamId;
@@ -420,30 +420,40 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-01-01");
+        GoalousDateTime::setTestNow("2017-01-01");
         $userCnt = 1;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 2138);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 1980);
+        $this->assertEquals($res['tax'], 158);
+        $this->assertEquals($res['total_charge'], 2138);
 
-        $currentTimestamp = strtotime("2017-01-01");
+        GoalousDateTime::setTestNow("2017-01-01");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 4276);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 3960);
+        $this->assertEquals($res['tax'], 316);
+        $this->assertEquals($res['total_charge'], 4276);
 
-        $currentTimestamp = strtotime("2017-01-02");
+        GoalousDateTime::setTestNow("2017-01-02");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 4138);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 3832);
+        $this->assertEquals($res['tax'], 306);
+        $this->assertEquals($res['total_charge'], 4138);
 
-        $currentTimestamp = strtotime("2017-01-15");
+        GoalousDateTime::setTestNow("2017-01-15");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 2344);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 2171);
+        $this->assertEquals($res['tax'], 173);
+        $this->assertEquals($res['total_charge'], 2344);
 
-        $currentTimestamp = strtotime("2017-01-31");
+        GoalousDateTime::setTestNow("2017-01-31");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 137);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 127);
+        $this->assertEquals($res['tax'], 10);
+        $this->assertEquals($res['total_charge'], 137);
 
         // If invalid payment base date
         $this->PaymentSetting->save([
@@ -452,18 +462,22 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-04-29");
+        GoalousDateTime::setTestNow("2017-04-29");
         $userCnt = 1;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 71);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 66);
+        $this->assertEquals($res['tax'], 5);
+        $this->assertEquals($res['total_charge'], 71);
 
-        $currentTimestamp = strtotime("2017-04-30");
+        GoalousDateTime::setTestNow("2017-04-30");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 4276);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 3960);
+        $this->assertEquals($res['tax'], 316);
+        $this->assertEquals($res['total_charge'], 4276);
     }
 
-    public function test_calcTotalChargeByAddUsers_usd()
+    public function test_calcRelatedTotalChargeByAddUsers_usd()
     {
         $teamId = 1;
         $this->Team->current_team_id = $teamId;
@@ -481,30 +495,40 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-01-01");
+        GoalousDateTime::setTestNow("2017-01-01");
         $userCnt = 1;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 16);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 16);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 16);
 
-        $currentTimestamp = strtotime("2017-01-01");
+        GoalousDateTime::setTestNow("2017-01-01");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 32);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 32);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 32);
 
-        $currentTimestamp = strtotime("2017-01-02");
+        GoalousDateTime::setTestNow("2017-01-02");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 30.96);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 30.96);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 30.96);
 
-        $currentTimestamp = strtotime("2017-01-15");
+        GoalousDateTime::setTestNow("2017-01-15");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 17.54);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 17.54);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 17.54);
 
-        $currentTimestamp = strtotime("2017-01-31");
+        GoalousDateTime::setTestNow("2017-01-31");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 1.03);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 1.03);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 1.03);
 
         // If invalid payment base date
         $this->PaymentSetting->save([
@@ -513,15 +537,33 @@ class PaymentServiceTest extends GoalousTestCase
         ], false);
         $this->PaymentService->clearCachePaymentSettings();
 
-        $currentTimestamp = strtotime("2017-04-29");
+        GoalousDateTime::setTestNow("2017-04-29");
         $userCnt = 1;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 0.53);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 0.53);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0.53);
 
-        $currentTimestamp = strtotime("2017-04-30");
+        GoalousDateTime::setTestNow("2017-04-30");
         $userCnt = 2;
-        $res = $this->PaymentService->calcTotalChargeByAddUsers($userCnt, $currentTimestamp);
-        $this->assertEquals($res, 32.0);
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
+        $this->assertEquals($res['sub_total_charge'], 32.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 32.0);
+    }
+
+    public function test_calcRelatedTotalChargeByAddUsers_exception()
+    {
+        $teamId = 1;
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, 0);
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+        $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers(1, 0);
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
     }
 
     public function test_applyCreditCardCharge_exception()
@@ -644,6 +686,7 @@ class PaymentServiceTest extends GoalousTestCase
             'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
+
         $res = array_intersect_key($res, $expected);
         $this->assertEquals($res, $expected);
         $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
@@ -742,6 +785,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEmpty($res);
 
         $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        print_r($res);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -2210,50 +2254,50 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-01-31 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-31 14:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-01-31 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-31 14:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥137');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-01-31 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-31 15:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-01-31 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-31 15:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥6,415');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-02-28 23:59:59'));
+        GoalousDateTime::setTestNow('2017-02-28 23:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥75');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-03-01 00:00:00'));
+        GoalousDateTime::setTestNow('2017-03-01 00:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-04-01 03:29:59'));
+        GoalousDateTime::setTestNow('2017-04-01 03:29:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-04-01 03:30:00'));
+        GoalousDateTime::setTestNow('2017-04-01 03:30:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-09-01 11:59:59'));
+        GoalousDateTime::setTestNow('2017-09-01 11:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::JPY(),
-            strtotime('2017-09-01 12:00:00'));
+        GoalousDateTime::setTestNow('2017-09-01 12:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
     }
@@ -2280,46 +2324,58 @@ class PaymentServiceTest extends GoalousTestCase
 
         $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-30 14:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(2, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-30 14:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$1.22');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-30 15:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$'.$amountPerUser);
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(3, Enum\PaymentSetting\Currency::USD(), strtotime('2017-01-30 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-30 15:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$57');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-02-27 23:59:59'));
+        GoalousDateTime::setTestNow('2017-02-27 23:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.67');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-02-28 00:00:00'));
+        GoalousDateTime::setTestNow('2017-02-28 00:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$'.$amountPerUser);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-03-31 03:29:59'));
+        GoalousDateTime::setTestNow('2017-03-31 03:29:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-03-31 03:30:00'));
+        GoalousDateTime::setTestNow('2017-03-31 03:30:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$'.$amountPerUser);
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-04-01 03:30:00'));
+        GoalousDateTime::setTestNow('2017-04-01 03:30:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$18.36');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-08-31 11:59:59'));
+        GoalousDateTime::setTestNow('2017-08-31 11:59:59');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(1, Enum\PaymentSetting\Currency::USD(), strtotime('2017-08-31 12:00:00'));
+        GoalousDateTime::setTestNow('2017-08-31 12:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$'.$amountPerUser);
 
-        $res = $this->PaymentService->formatTotalChargeByAddUsers(12, Enum\PaymentSetting\Currency::USD(), strtotime('2017-09-10 12:00:00'));
+        GoalousDateTime::setTestNow('2017-09-10 12:00:00');
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 12, Enum\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$152');
 
     }
@@ -2338,34 +2394,44 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-01-31 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-31 14:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-01-31 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-31 15:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 28);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-02-28 14:59:59'));
+        GoalousDateTime::setTestNow('2017-02-28 14:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 28);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-02-28 15:00:00'));
+        GoalousDateTime::setTestNow('2017-02-28 15:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-03-31 23:59:59'));
+        GoalousDateTime::setTestNow('2017-03-31 23:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-04-01 00:00:00'));
+        GoalousDateTime::setTestNow('2017-04-01 00:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 30);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-05-01 03:29:59'));
+        GoalousDateTime::setTestNow('2017-05-01 03:29:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 30);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-05-01 03:30:00'));
+        GoalousDateTime::setTestNow('2017-05-01 03:30:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-06-01 11:59:59'));
+        GoalousDateTime::setTestNow('2017-06-01 11:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-06-01 12:00:00'));
+        GoalousDateTime::setTestNow('2017-06-01 12:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 30);
     }
 
@@ -2383,34 +2449,54 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-01-30 14:59:59'));
+
+        GoalousDateTime::setTestNow('2017-01-30 14:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-01-30 15:00:00'));
+
+        GoalousDateTime::setTestNow('2017-01-30 15:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 28);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-02-27 14:59:59'));
+
+        GoalousDateTime::setTestNow('2017-02-27 14:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 28);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-02-27 15:00:00'));
+
+        GoalousDateTime::setTestNow('2017-02-27 15:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-03-30 23:59:59'));
+
+        GoalousDateTime::setTestNow('2017-03-30 23:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-03-31 00:00:00'));
+
+        GoalousDateTime::setTestNow('2017-03-31 00:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 30);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-11-30 03:29:59'));
+
+        GoalousDateTime::setTestNow('2017-11-30 03:29:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 30);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-11-30 03:30:00'));
+
+        GoalousDateTime::setTestNow('2017-11-30 03:30:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-12-31 11:59:59'));
+
+        GoalousDateTime::setTestNow('2017-12-31 11:59:59');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getCurrentAllUseDays(strtotime('2017-12-31 12:00:00'));
+
+        GoalousDateTime::setTestNow('2017-12-31 12:00:00');
+        $res = $this->PaymentService->getCurrentAllUseDays();
         $this->assertEquals($res, 31);
     }
 
@@ -2428,46 +2514,62 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2016-12-31 14:59:59'));
+        GoalousDateTime::setTestNow('2016-12-31 14:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2016-12-31 15:00:00'));
+        GoalousDateTime::setTestNow('2016-12-31 15:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-01-31 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-31 14:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-01-31 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-31 15:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 28);
 
         $this->Team->saveField('timezone', 0.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-02-28 23:59:59'));
+        GoalousDateTime::setTestNow('2017-02-28 23:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-03-01 00:00:00'));
+        GoalousDateTime::setTestNow('2017-03-01 00:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-03-31 23:59:59'));
+        GoalousDateTime::setTestNow('2017-03-31 23:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-04-01 00:00:00'));
+        GoalousDateTime::setTestNow('2017-04-01 00:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 30);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-05-01 02:29:59'));
+        GoalousDateTime::setTestNow('2017-05-01 02:29:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-05-01 03:30:00'));
+        GoalousDateTime::setTestNow('2017-05-01 03:30:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-06-01 03:29:59'));
+        GoalousDateTime::setTestNow('2017-06-01 03:29:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-06-01 03:30:00'));
+        GoalousDateTime::setTestNow('2017-06-01 03:30:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 30);
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-08-01 11:59:59'));
+        GoalousDateTime::setTestNow('2017-08-01 11:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-08-01 12:00:00'));
+        GoalousDateTime::setTestNow('2017-08-01 12:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-09-01 11:59:59'));
+        GoalousDateTime::setTestNow('2017-09-01 11:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-09-01 12:00:00'));
+        GoalousDateTime::setTestNow('2017-09-01 12:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 30);
 
     }
@@ -2486,34 +2588,44 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-01-30 14:59:59'));
+        GoalousDateTime::setTestNow('2017-01-30 14:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-01-30 15:00:00'));
+        GoalousDateTime::setTestNow('2017-01-30 15:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 28);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-02-27 14:59:59'));
+        GoalousDateTime::setTestNow('2017-02-27 14:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-02-27 15:00:00'));
+        GoalousDateTime::setTestNow('2017-02-27 15:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-03-30 23:59:59'));
+        GoalousDateTime::setTestNow('2017-03-30 23:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-03-31 00:00:00'));
+        GoalousDateTime::setTestNow('2017-03-31 00:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 30);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-11-30 03:29:59'));
+        GoalousDateTime::setTestNow('2017-11-30 03:29:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-11-30 03:30:00'));
+        GoalousDateTime::setTestNow('2017-11-30 03:30:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-12-31 11:59:59'));
+        GoalousDateTime::setTestNow('2017-12-31 11:59:59');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 1);
-        $res = $this->PaymentService->getUseDaysByNextBaseDate(strtotime('2017-12-31 12:00:00'));
+        GoalousDateTime::setTestNow('2017-12-31 12:00:00');
+        $res = $this->PaymentService->getUseDaysByNextBaseDate();
         $this->assertEquals($res, 31);
     }
 

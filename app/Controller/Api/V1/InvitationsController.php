@@ -128,7 +128,7 @@ class InvitationsController extends ApiController
             $allUseDays = $PaymentService->getCurrentAllUseDays();
             // Calc total charge
             $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
-            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($chargeUserCnt, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($this->current_team_id, $chargeUserCnt, $currency,  $useDaysByNext, $allUseDays);
 
             $res = [
                 'amount_per_user' => $amountPerUser,
