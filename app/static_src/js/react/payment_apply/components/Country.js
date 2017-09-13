@@ -74,7 +74,7 @@ export default class Country extends Base {
     }
 
     let countries_option_el = [];
-    countries_option_el.push(<option key="" value="">{__('Choose Country')}</option>)
+    countries_option_el.push(<option key="" value="">{__('Please select')}</option>)
     for (const code in countries) {
       countries_option_el.push(
         <option key={code} value={code}>{countries[code]}</option>
