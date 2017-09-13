@@ -3,35 +3,24 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Model\Enum as Enum;
+
 /**
- * creating invoice payment about passed parameters
- * for recovering invoice monthly payments
- *
- * this shell is not for crontabs/systemd to run automatically
- *
- * # usage
- * ./Console/cake recover_monthly_payment_invoice --team_id=<teams.id> --amount_charge_users=<int> --target_date_time="<Y-m-d>"
- *
- * # required param
- * @param team_id int target teams.id
- * @param amount_charge_users int amount of users to paid
- * @param target_date_time string target date time it should be created paid at
- *
- * # sample command
- * ./Console/cake recover_monthly_payment_invoice --team_id=7 --amount_charge_users=1 --target_date_time="2017-09-12"
- *
  * class RecoverMonthlyPaymentInvoiceShell
+ *
  * @property Team             $Team
  * @property TeamMember       $TeamMember
  * @property PaymentSetting   $PaymentSetting
+ * @property CreditCard       $CreditCard
  * @property PaymentService   $PaymentService
  */
-class RecoverMonthlyPaymentInvoiceShell extends AppShell
+class RecoverMonthlyPaymentCreditCardShell extends AppShell
 {
     public $uses = [
         'Team',
         'TeamMember',
         'PaymentSetting',
+        'CreditCard',
         'PaymentService',
     ];
 
@@ -63,12 +52,6 @@ target date of recovering invoice payment',
         return $parser;
     }
 
-    /**
-     * validate and return values of required parameters to execute invoice payments
-     *
-     * @throws InvalidArgumentException
-     * @return array
-     */
     private function getValuesFromOption(): array
     {
         // validate option: target team
@@ -80,9 +63,9 @@ target date of recovering invoice payment',
         if (empty($team)) {
             throw new InvalidArgumentException(sprintf('team not found on team id: %d', $teamId));
         }
-        $paymentSetting = $this->PaymentSetting->getInvoiceByTeamId($teamId);
+        $paymentSetting = $this->PaymentSetting->getCcByTeamId($teamId);
         if (empty($paymentSetting)) {
-            throw new InvalidArgumentException(sprintf('payment setting of invoice not found on team id: %d', $teamId));
+            throw new InvalidArgumentException(sprintf('payment setting of credit card not found on team id: %d', $teamId));
         }
 
         // validate option: amount_charge_users
@@ -132,7 +115,7 @@ target date of recovering invoice payment',
         $currentCountTeamChargeMembers = $this->TeamMember->countChargeTargetUsers($team['id']);
         $this->logInfo(sprintf('current team member charge count(from db): %d', $currentCountTeamChargeMembers));
 
-        $inputConfirmContinue = $this->in('Are you sure to continue register invoice? [yes/no]');
+        $inputConfirmContinue = $this->in('Are you sure to continue credit card charge? [yes/no]');
         $this->logInfo(sprintf('confirm input: %s', $inputConfirmContinue));
         if ('yes' !== $inputConfirmContinue) {
             $this->out('aborted');
@@ -140,12 +123,12 @@ target date of recovering invoice payment',
         }
 
         $this->hr();
-        $this->out("Registering invoice");
+        $this->out("Apply Credit card charge");
         $this->hr();
-        $this->PaymentService->registerInvoice(
+        $this->PaymentService->applyCreditCardCharge(
             $team['id'],
-            $amountChargeUsers,
-            $targetDateTime->getTimestamp()
+            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            $amountChargeUsers
         );
     }
 }
