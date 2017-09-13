@@ -300,6 +300,7 @@ class ChargeHistory extends AppModel
             ],
             'fields'     => [
                 'ChargeHistory.id',
+                'ChargeHistory.team_id',
                 'ChargeHistory.charge_datetime',
                 'ChargeHistory.tax',
                 'ChargeHistory.total_amount',

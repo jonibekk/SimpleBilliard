@@ -190,7 +190,7 @@ class PaymentService extends AppService
         if (empty($timestamp)) {
             $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
         } else {
-            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp, $timezone)->format('Y-m-d');
+            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)->format('Y-m-d');
         }
 
         list($y, $m, $d) = explode('-', $localCurrentDate);
