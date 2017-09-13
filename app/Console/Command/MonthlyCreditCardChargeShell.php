@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 
 use Goalous\Model\Enum as Enum;
 
@@ -88,6 +89,7 @@ class MonthlyCreditCardChargeShell extends AppShell
             }
 
             try {
+                PaymentUtil::logCurrentTeamChargeUsers($teamId);
                 // Charge
                 $PaymentService->applyCreditCardCharge(
                     $teamId,

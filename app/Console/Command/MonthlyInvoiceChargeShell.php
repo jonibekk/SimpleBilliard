@@ -2,6 +2,7 @@
 App::import('Service', 'PaymentService');
 App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 
 /**
  * The shell for charging by invoice to team admins
@@ -79,11 +80,18 @@ class MonthlyInvoiceChargeShell extends AppShell
                 $noMemberTeams[] = $teamId;
                 continue;
             }
-            $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp);
-            if ($retRegistration === true) {
-                $this->logInfo(sprintf('Order registration was succeeded! teamId: %s', $teamId));
-            } else {
-                $this->logInfo(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
+
+            try {
+                PaymentUtil::logCurrentTeamChargeUsers($teamId);
+                $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp);
+                if ($retRegistration === true) {
+                    $this->logInfo(sprintf('Order registration was succeeded! teamId: %s', $teamId));
+                } else {
+                    $this->logInfo(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
+                }
+            } catch (Exception $e) {
+                $this->logEmergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                $this->logEmergency($e->getTraceAsString());
             }
         }
 
