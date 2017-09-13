@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-11 23:28+0900\n"
+"PO-Revision-Date: 2017-09-13 16:40+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1378,6 +1378,9 @@ msgstr ""
 
 msgid "Your credit check has been declined"
 msgstr ""
+
+msgid "Registration to the paid plan is complete"
+msgstr "有料プランへの変更が完了した"
 
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
@@ -3620,7 +3623,7 @@ msgstr ""
 msgid "Invoice history"
 msgstr "請求履歴"
 
-msgid "Payment method"
+msgid "Payment Method"
 msgstr "支払い方法"
 
 msgid "Contact Settings"
@@ -4456,6 +4459,24 @@ msgstr "この招待に応じる場合は、次のリンクをクリックして
 
 msgid "Message from %s:"
 msgstr "%sからのメッセージ："
+
+msgid ""
+"Thank you very much for registration to the paid plan. Registration to the "
+"paid plan is complete, but we are carrying out the credit check."
+msgstr ""
+"Golaous有料プランへお申し込みいただき、誠にありがとうございました。有料プラン"
+"への登録は完了しましたが、ただいま信用調査を実施しています。"
+
+msgid "Regarding the results of the examination, we have contacted you soon."
+msgstr "審査結果については、追ってご連絡いたします。"
+
+msgid "If you have any questions you can contact contact@golaous.com."
+msgstr "ご不明な点がございましたら、contact@goalous.comまでご連絡ください。 "
+
+msgid "Thanks,Goalous Team"
+msgstr ""
+"ありがとうございました。\n"
+"Goalous Team"
 
 msgid "\"%s\""
 msgstr "「%s」"
@@ -5546,6 +5567,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#~ msgid "Add email"
-#~ msgstr "メール追加"

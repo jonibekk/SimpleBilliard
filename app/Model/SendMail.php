@@ -125,8 +125,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD]['subject'] = __("Your credit card is about to expire");
         self::$TYPE_TMPL[self::TYPE_TMPL_CREDIT_STATUS_APPROVED]['subject'] = __("Your credit check has been approved");
         self::$TYPE_TMPL[self::TYPE_TMPL_CREDIT_STATUS_DENIED]['subject'] = __("Your credit check has been declined");
-        // TODO.payment Add translation
-        self::$TYPE_TMPL[self::TYPE_TMPL_INVOICE_NEW_SUBSCRIPTION]['subject'] = __("New Goalous subscription notice");
+        self::$TYPE_TMPL[self::TYPE_TMPL_INVOICE_NEW_SUBSCRIPTION]['subject'] = __("Registration to the paid plan is complete");
     }
 
     function __construct($id = false, $table = null, $ds = null)
