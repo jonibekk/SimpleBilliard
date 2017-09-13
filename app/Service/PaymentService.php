@@ -158,15 +158,17 @@ class PaymentService extends AppService
     /**
      * Get use days from current date to next payment base date
      *
+     * @param int $teamId
+     *
      * @return int
      */
-    public function getUseDaysByNextBaseDate(): int
+    public function getUseDaysByNextBaseDate(int $teamId): int
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->getTimezone();
         $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
-        $nextBaseDate = $this->getNextBaseDate();
+        $nextBaseDate = $this->getNextBaseDate($teamId);
         // Calc use days
         $diffDays = AppUtil::diffDays($localCurrentDate, $nextBaseDate);
         return $diffDays;
@@ -175,17 +177,25 @@ class PaymentService extends AppService
     /**
      * Get next payment base date
      *
+     * @param int  $teamId
+     * @param null $timestamp
+     *
      * @return string
      */
-    public function getNextBaseDate(): string
+    public function getNextBaseDate(int $teamId, $timestamp = null): string
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->getTimezone();
-        $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+        if (empty($timestamp)) {
+            $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+        } else {
+            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp, $timezone)->format('Y-m-d');
+        }
+
         list($y, $m, $d) = explode('-', $localCurrentDate);
 
-        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentSetting = $this->get($teamId);
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         // Check if next base date is this month or next month.
@@ -222,19 +232,17 @@ class PaymentService extends AppService
     /**
      * Get previous base date by next base date
      *
+     * @param int    $teamId
      * @param string $nextBaseDate
      *
      * @return string
      */
-    public function getPreviousBaseDate(string $nextBaseDate): string
+    public function getPreviousBaseDate(int $teamId, string $nextBaseDate): string
     {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-
         list($y, $m, $d) = explode('-', $nextBaseDate);
         list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
 
-        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentSetting = $this->get($teamId);
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         if (checkdate($m, $paymentBaseDay, $y) === false) {
@@ -249,13 +257,14 @@ class PaymentService extends AppService
      * Get total days from previous payment base date to next payment base date
      * 現在月度の総利用日数
      *
+     * @param int $teamId
+     *
      * @return int
      */
-    public function getCurrentAllUseDays(): int
+    public function getCurrentAllUseDays(int $teamId): int
     {
-        $nextBaseDate = $this->getNextBaseDate();
-        $prevBaseDate = $this->getPreviousBaseDate($nextBaseDate);
-
+        $nextBaseDate = $this->getNextBaseDate($teamId);
+        $prevBaseDate = $this->getPreviousBaseDate($teamId, $nextBaseDate);
         $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
         return $res;
     }
@@ -293,9 +302,8 @@ class PaymentService extends AppService
                 ));
             }
 
-            $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate();
-            $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays();
-
+            $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($teamId);
+            $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($teamId);
             // Ex. 3people × ¥1,980 × 20 days / 1month
             $subTotalCharge = $chargeUserCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
             $subTotalCharge = $this->processDecimalPointForAmount($paymentSetting['currency'], $subTotalCharge);

@@ -97,8 +97,9 @@ class ChargeHistoryService extends AppService
         }
 
         if ($history['ChargeHistory']['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
-            $nextBaseDate = $PaymentService->getNextBaseDate($history['ChargeHistory']['charge_datetime']);
-            $prevBaseDate = $PaymentService->getPreviousBaseDate($nextBaseDate);
+            $teamId = $history['ChargeHistory']['team_id'];
+            $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
+            $prevBaseDate = $PaymentService->getPreviousBaseDate($teamId, $nextBaseDate);
             $prevBaseDate = $TimeEx->formatYearDayI18nFromDate($prevBaseDate);
             $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
 

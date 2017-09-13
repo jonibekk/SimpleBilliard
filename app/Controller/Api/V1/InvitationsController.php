@@ -109,13 +109,14 @@ class InvitationsController extends ApiController
         }
 
         // Get payment setting by team id
-        $paySetting = $PaymentService->get($this->current_team_id);
+        $teamId = $this->current_team_id;
+        $paySetting = $PaymentService->get($teamId);
         // Check if exist payment setting
         if (empty($paySetting)) {
             return $this->_getResponseSuccess();
         }
         // Calc charge user count
-        $chargeUserCnt = $PaymentService->calcChargeUserCount($this->current_team_id, $invitationCnt);
+        $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $invitationCnt);
         if ($chargeUserCnt == 0) {
             $res = [
                 'charge_users_count' => 0,
@@ -123,12 +124,12 @@ class InvitationsController extends ApiController
         } else {
             $amountPerUser = $PaymentService->formatCharge($paySetting['amount_per_user'], $paySetting['currency']);
             // Get use days from today to next paymant base date
-            $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
+            $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate($teamId);
             // All days between before payment base date and next payment base date
-            $allUseDays = $PaymentService->getCurrentAllUseDays();
+            $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
             // Calc total charge
             $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
-            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($this->current_team_id, $chargeUserCnt, $currency,  $useDaysByNext, $allUseDays);
+            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($teamId, $chargeUserCnt, $currency,  $useDaysByNext, $allUseDays);
 
             $res = [
                 'amount_per_user' => $amountPerUser,
