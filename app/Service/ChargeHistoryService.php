@@ -76,13 +76,14 @@ class ChargeHistoryService extends AppService
         $PaymentService = ClassRegistry::init('PaymentService');
         $TimeEx = new TimeExHelper(new View());
 
+        $subTotal = $history['ChargeHistory']['total_amount'];
+        $tax = $history['ChargeHistory']['tax'];
+        $currency = $PaymentService->getCurrencyTypeByCountry($history['PaymentSetting']['company_country']);
         $localChargeDate = $TimeEx->formatYearDayI18n($history['ChargeHistory']['charge_datetime']);
         $history['ChargeHistory']['local_charge_date'] = $localChargeDate;
-        $subTotalCharge = $history['ChargeHistory']['total_amount'] - $history['ChargeHistory']['tax'];
-        $currency = $PaymentService->getCurrencyTypeByCountry($history['PaymentSetting']['company_country']);
-        $history['ChargeHistory']['sub_total_with_currency'] = $PaymentService->formatCharge($subTotalCharge, $currency);
-        $history['ChargeHistory']['tax_with_currency'] = $PaymentService->formatCharge($history['ChargeHistory']['tax'], $currency);
-        $history['ChargeHistory']['total_with_currency'] = $PaymentService->formatCharge($history['ChargeHistory']['total_amount'], $currency);
+        $history['ChargeHistory']['sub_total_with_currency'] = $PaymentService->formatCharge($subTotal, $currency);
+        $history['ChargeHistory']['tax_with_currency'] = $PaymentService->formatCharge($tax, $currency);
+        $history['ChargeHistory']['total_with_currency'] = $PaymentService->formatCharge($subTotal + $tax, $currency);
         $history['PaymentSetting']['is_card'] = false;
         $history['ChargeHistory']['is_monthly'] = false;
 
