@@ -769,6 +769,55 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res['total_amount'] < $res['amount_per_user'] * $chargeUserCnt);
     }
 
+    public function test_applyCreditCardCharge_specifyTime()
+    {
+        /* Case charge user:1 country:JPY */
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $this->Team->current_team_id = $teamId;
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $chargeUserCnt = 1;
+            $this->PaymentService->applyCreditCardCharge(
+                $teamId,
+                Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt,
+                $userId,
+                1500000000
+            );
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+            'charge_datetime'  => 1500000000,
+        ];
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+        $this->assertTrue($res['total_amount'] < $res['amount_per_user']);
+    }
+
     public function test_applyCreditCardCharge_foreign()
     {
         $companyCountry = 'US';
