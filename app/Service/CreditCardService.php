@@ -331,7 +331,7 @@ class CreditCardService extends AppService
         // Stripe specification
         // Ref: https://stripe.com/docs/currencies#zero-decimal
         if ($currencyName === PaymentSetting::CURRENCY_USD) {
-            $amount = (int)$amount * 100;
+            $amount = (int)($amount * 100);
         } else {
             $amount = (int)$amount;
         }
