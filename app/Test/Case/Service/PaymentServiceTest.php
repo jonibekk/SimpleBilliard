@@ -927,7 +927,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -942,7 +942,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -958,7 +958,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -974,7 +974,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -1001,7 +1001,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $stripeCharge = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
@@ -1018,7 +1018,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $stripeCharge = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
