@@ -164,11 +164,11 @@
             <tr ng-repeat="item in invite_list | filter:name_field">
                 <td>
                     <form name="{{'reinviteUser'+$index}}" class="team-member-invite-form" ng-submit="updateInvite($index,item.Invite.email, item.Invite.id)">
-                        <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email">
+                        <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email" ng-change="resetFeedback($index)">
                         <button type="submit" class="btn btn-primary team-member-invited-submit">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</button>
                     </form>
 
-                    <div ng-bind-html="item.Invite.created"></div>
+                    <div class="time-card" ng-bind-html="item.Invite.created"></div><div class="feedback {{item.Invite.result}}">{{item.Invite.feedback}}</div>
                     <div ng-if="item.Invite.token_expired_flg == true && item.Invite.del_flg == false" class="expired_invite left_align"> Expired </div>
                 </td>
                 <td>

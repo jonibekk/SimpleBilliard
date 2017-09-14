@@ -83,6 +83,8 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                     var invite_list = data.user_info;
                     angular.forEach(invite_list, function(val, key){
                         invite_list[key].Invite.created = $sce.trustAsHtml(val.Invite.created);
+                        invite_list[key].Invite.feedback = '';
+                        invite_list[key].Invite.result = '';
                     });
                     $scope.invite_list = invite_list;
                 });
@@ -119,15 +121,28 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         // cancel invite or re-invite
         $scope.updateInvite = function (index, invite_email, invite_id) {
             $scope.invite_loader[index] = true;
-            $http.post(url_list.am, {user_id:invite_id, email: invite_email}).success(function (data) {
+            var inviteData = {'user_id':invite_id, 'email': invite_email, 'data[_Token][key]': cake.data.csrf_token.key};
+            $http({
+                url: url_list.am,
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: $.param(inviteData)
+            }).then(function successCallback(response) {
                 $scope.invite_loader[index] = false;
-                if(data){
-                    console.log('Updated: '+data); 
-                }else if(message){
-                    console.log('Message: '+message);
-                } 
+                $scope.invite_list[index].Invite.result = 'success';
+                $scope.invite_list[index].Invite.feedback = response.data.message;
+            },function errorCallback(response){
+                $scope.invite_loader[index] = false;
+                $scope.invite_list[index].Invite.result = 'error';
+                $scope.invite_list[index].Invite.feedback = response.data.message;
             });
         };
+
+        // Clear feedback message if user updates email field
+        $scope.resetFeedback = function(index){
+            $scope.invite_list[index].Invite.result = '';
+            $scope.invite_list[index].Invite.feedback = '';
+        }
 
         // Enable email field so user can edit before resending invite.
         $scope.editInviteEmail = function(form){
