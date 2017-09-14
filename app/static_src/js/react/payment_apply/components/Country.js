@@ -74,7 +74,7 @@ export default class Country extends Base {
     }
 
     let countries_option_el = [];
-    countries_option_el.push(<option key="" value="">{__('Choose Country')}</option>)
+    countries_option_el.push(<option key="" value="">{__('Please select')}</option>)
     for (const code in countries) {
       countries_option_el.push(
         <option key={code} value={code}>{countries[code]}</option>
@@ -119,14 +119,14 @@ export default class Country extends Base {
                    onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
                 <h4>{__('Credit Card')}</h4>
                 <i className="fa fa-credit-card"/>
-                <p>{__("Use a credit card to setup automatic, reoccuring payments for your Goalous team.")}</p>
+                <p>{__("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.")}</p>
                 <a href="#">{__('Setup')}</a>
               </div>
               <div className="payment-option"
                    onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
                 <h4>{__('Invoice')}</h4>
                 <i className="fa fa-leaf"/>
-                <p>{__("Setup a monthly invoice with Goalous.")}</p>
+                <p>{__("Invoice will be issued monthly, so please transfer by the deadline.")}</p>
                 <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
               </div>
             </div>

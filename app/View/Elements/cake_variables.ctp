@@ -588,8 +588,8 @@ App::uses('AttachedFile', 'Model');
             "Select Payment Method": "<?= __("Select Payment Method") ?>",
             "Credit Card": "<?= __("Credit Card") ?>",
             "Invoice": "<?= __("Invoice") ?>",
-            "Use a credit card to setup automatic, reoccuring payments for your Goalous team.": "<?= __("Use a credit card to setup automatic, reoccuring payments for your Goalous team.") ?>",
-            "Setup a monthly invoice with Goalous.": "<?= __("Setup a monthly invoice with Goalous.") ?>",
+            "You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.": "<?= __("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.") ?>",
+            "Invoice will be issued monthly, so please transfer by the deadline.": "<?= __("Invoice will be issued monthly, so please transfer by the deadline.") ?>",
             "Setup": "<?= __("Setup") ?>",
 
             // Input company info

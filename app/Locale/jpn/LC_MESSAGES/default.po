@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-13 16:40+0900\n"
+"PO-Revision-Date: 2017-09-14 09:35+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -702,7 +702,7 @@ msgid "Failed to activate team member."
 msgstr "チーメンバーアクティブ化に失敗しました。"
 
 msgid "Changed active status inactive to active."
-msgstr ""
+msgstr "ステータスをアクティブに変更しました"
 
 msgid "You cannot access the topic"
 msgstr "このトピックにはアクセスできません。"
@@ -872,10 +872,10 @@ msgid "Error, failed to invite"
 msgstr "問題があるため、招待に失敗しました。"
 
 msgid "Your Credit Card does not match your country settings"
-msgstr ""
+msgstr "クレジットカードの発行国が、選択した会社の所在地(国)と一致していません"
 
 msgid "Invoice payment are available for Japan only"
-msgstr ""
+msgstr "日本のみ請求書払いを利用できます"
 
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
@@ -1371,7 +1371,7 @@ msgid "This team is currently unavailable"
 msgstr "現在このチームは利用できない状態になっております"
 
 msgid "Your credit card is about to expire"
-msgstr ""
+msgstr "クレジットカードの有効期限が迫っています"
 
 msgid "Your credit check has been approved"
 msgstr ""
@@ -2715,12 +2715,13 @@ msgid "Invoice"
 msgstr "請求書"
 
 msgid ""
-"Use a credit card to setup automatic, reoccuring payments for your Goalous "
-"team."
+"You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB."
 msgstr ""
+"Visa、MasterCard、AmericanExpress、Discover、Diners Club、JCBがご利用いただけ"
+"ます。"
 
-msgid "Setup a monthly invoice with Goalous."
-msgstr ""
+msgid "Invoice will be issued monthly, so please transfer by the deadline."
+msgstr "毎月、請求書が発行されますので、期限までにお支払いください。"
 
 msgid "Setup"
 msgstr "セットアップ"
@@ -3617,10 +3618,10 @@ msgstr "2017年9月30日まで完全無料！今すぐお試しください。"
 msgid "Are you on Goalous? %s. Any questions ? %s."
 msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
 
-msgid "Subscription"
+msgid "Status"
 msgstr ""
 
-msgid "Invoice history"
+msgid "History"
 msgstr "請求履歴"
 
 msgid "Payment Method"
@@ -5163,20 +5164,23 @@ msgstr "スミス"
 msgid "Payment History"
 msgstr "請求履歴"
 
+msgid "Monthly"
+msgstr "月額"
+
+msgid "New Member"
+msgstr "新しいメンバー"
+
 msgid "ID"
 msgstr ""
 
 msgid "Date"
 msgstr "期限"
 
-msgid "Amount"
-msgstr "金額"
-
-msgid "Receipt"
+msgid "Type"
 msgstr ""
 
-msgid "View"
-msgstr "すべて表示"
+msgid "Amount"
+msgstr "金額"
 
 msgid "Team Summary"
 msgstr "チーム概要"
@@ -5188,7 +5192,7 @@ msgid "Paid Plan"
 msgstr "有料プラン"
 
 msgid "Read Only"
-msgstr "既読"
+msgstr "読み取り専用"
 
 msgid "Deactivated"
 msgstr ""
@@ -5210,9 +5214,6 @@ msgid ""
 "Your team no longer has access to  Goalous. Your team account will be "
 "deleted on December 20, 2017"
 msgstr ""
-
-msgid "Monthly"
-msgstr "月額"
 
 msgid "member"
 msgstr "メンバー"
@@ -5567,3 +5568,12 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Invoice history"
+#~ msgstr "請求履歴"
+
+#~ msgid "View"
+#~ msgstr "すべて表示"
+
+#~ msgid "Add email"
+#~ msgstr "メール追加"
