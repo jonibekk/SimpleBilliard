@@ -228,10 +228,10 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
-        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥1,980');
-        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,020');
         $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
-        $this->assertEquals($res['ChargeHistory']['charge_users'], 20); 
+        $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
         $this->assertTrue($res['PaymentSetting']['is_card']);
         $this->assertTrue($res['ChargeHistory']['is_monthly']);
     }
@@ -255,8 +255,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
-        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥29,700');
-        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥30,000');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥30,000');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥30,300');
         $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥300'); 
         $this->assertEquals($res['ChargeHistory']['charge_users'], 10); 
         $this->assertTrue($res['PaymentSetting']['is_card']);
@@ -281,8 +281,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
-        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥1,980');
-        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,020');
         $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
         $this->assertFalse($res['PaymentSetting']['is_card']);
         $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
@@ -307,8 +307,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
-        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥1,980');
-        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥2,000');
+        $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,020');
         $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
         $this->assertFalse($res['PaymentSetting']['is_card']);
         $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
