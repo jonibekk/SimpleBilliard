@@ -97,7 +97,9 @@ class MonthlyCreditCardChargeShell extends AppShell
                     $chargeMemberCount
                 );
             } catch (Exception $e) {
-                $this->logEmergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                $this->logEmergency(sprintf("caught error on applyCreditCardCharge: %s", AppUtil::jsonOneLine([
+                    'message' => $e->getMessage()
+                ])));
                 $this->logEmergency($e->getTraceAsString());
             }
         }

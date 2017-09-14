@@ -48,16 +48,16 @@ class RecoverMonthlyPaymentInvoiceShell extends AppShell
         $parser = parent::getOptionParser();
         $parser->addOptions([
             'team_id' => [
-                'help'     => '@param int required
-team id to recover monthly invoice payment',
+                'help'     => '@param int required'
+                    . PHP_EOL . 'team id to recover monthly invoice payment',
             ],
             'amount_charge_users' => [
-                'help'     => '@param int
-amount of charge users to paid',
+                'help'     => '@param int'
+                    . PHP_EOL . 'amount of charge users to paid',
             ],
             'target_date_time' => [
-                'help'     => '@param string "Y-m-d" required
-target date of recovering invoice payment',
+                'help'     => '@param string "Y-m-d" required'
+                    . PHP_EOL . 'target date of recovering invoice payment',
             ],
         ]);
         return $parser;
@@ -142,10 +142,15 @@ target date of recovering invoice payment',
         $this->hr();
         $this->out("Registering invoice");
         $this->hr();
-        $this->PaymentService->registerInvoice(
-            $team['id'],
-            $amountChargeUsers,
-            $targetDateTime->getTimestamp()
-        );
+        try {
+            $this->PaymentService->registerInvoice(
+                $team['id'],
+                $amountChargeUsers,
+                $targetDateTime->getTimestamp()
+            );
+        } catch (Exception $e) {
+            $this->logError($e->getMessage());
+            $this->logError($e->getTraceAsString());
+        }
     }
 }

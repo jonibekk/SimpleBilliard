@@ -90,7 +90,9 @@ class MonthlyInvoiceChargeShell extends AppShell
                     $this->logInfo(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
                 }
             } catch (Exception $e) {
-                $this->logEmergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                $this->logEmergency(sprintf("caught error on registerInvoice: %s", AppUtil::jsonOneLine([
+                    'message' => $e->getMessage()
+                ])));
                 $this->logEmergency($e->getTraceAsString());
             }
         }

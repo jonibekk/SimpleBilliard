@@ -6,12 +6,27 @@ App::uses('AppUtil', 'Util');
 use Goalous\Model\Enum as Enum;
 
 /**
- * class RecoverMonthlyPaymentInvoiceShell
+ * creating credit card payment about passed parameters
+ * for recovering credit card monthly payments
+ *
+ * this shell is not for crontabs/systemd to run automatically
+ *
+ * # usage
+ * ./Console/cake recover_monthly_payment_credit_card --team_id=<teams.id> --amount_charge_users=<int> --target_date_time="<Y-m-d>"
+ *
+ * # required param
+ * @param team_id int target teams.id
+ * @param amount_charge_users int amount of users to paid
+ * @param target_date_time string target date time it should be created paid at
+ *
+ * # sample command
+ * ./Console/cake recover_monthly_payment_credit_card --team_id=7 --amount_charge_users=1 --target_date_time="2017-09-12"
+ *
+ * class RecoverMonthlyPaymentCreditCardShell
  *
  * @property Team             $Team
  * @property TeamMember       $TeamMember
  * @property PaymentSetting   $PaymentSetting
- * @property CreditCard       $CreditCard
  * @property PaymentService   $PaymentService
  */
 class RecoverMonthlyPaymentCreditCardShell extends AppShell
@@ -20,7 +35,6 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         'Team',
         'TeamMember',
         'PaymentSetting',
-        'CreditCard',
         'PaymentService',
     ];
 
@@ -37,16 +51,16 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         $parser = parent::getOptionParser();
         $parser->addOptions([
             'team_id' => [
-                'help'     => '@param int required
-team id to recover monthly invoice payment',
+                'help'     => '@param int required'
+                    . PHP_EOL . 'team id to recover monthly invoice payment',
             ],
             'amount_charge_users' => [
-                'help'     => '@param int
-amount of charge users to paid',
+                'help'     => '@param int'
+                    . PHP_EOL . 'amount of charge users to paid',
             ],
             'target_date_time' => [
-                'help'     => '@param string "Y-m-d" required
-target date of recovering invoice payment',
+                'help'     => '@param string "Y-m-d" required'
+                    . PHP_EOL . 'target date of recovering invoice payment',
             ],
         ]);
         return $parser;
@@ -125,10 +139,15 @@ target date of recovering invoice payment',
         $this->hr();
         $this->out("Apply Credit card charge");
         $this->hr();
-        $this->PaymentService->applyCreditCardCharge(
-            $team['id'],
-            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
-            $amountChargeUsers
-        );
+        try {
+            $this->PaymentService->applyCreditCardCharge(
+                $team['id'],
+                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                $amountChargeUsers
+            );
+        } catch (Exception $e) {
+            $this->logError($e->getMessage());
+            $this->logError($e->getTraceAsString());
+        }
     }
 }
