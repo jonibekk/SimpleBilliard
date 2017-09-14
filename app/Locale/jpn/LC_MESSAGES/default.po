@@ -1379,6 +1379,9 @@ msgstr ""
 msgid "Your credit check has been declined"
 msgstr ""
 
+msgid "Registration to the paid plan is complete"
+msgstr "有料プランへの変更が完了した"
+
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
 
@@ -4457,6 +4460,24 @@ msgstr "この招待に応じる場合は、次のリンクをクリックして
 
 msgid "Message from %s:"
 msgstr "%sからのメッセージ："
+
+msgid ""
+"Thank you very much for registration to the paid plan. Registration to the "
+"paid plan is complete, but we are carrying out the credit check."
+msgstr ""
+"Golaous有料プランへお申し込みいただき、誠にありがとうございました。有料プラン"
+"への登録は完了しましたが、ただいま信用調査を実施しています。"
+
+msgid "Regarding the results of the examination, we have contacted you soon."
+msgstr "審査結果については、追ってご連絡いたします。"
+
+msgid "If you have any questions you can contact contact@golaous.com."
+msgstr "ご不明な点がございましたら、contact@goalous.comまでご連絡ください。 "
+
+msgid "Thanks,Goalous Team"
+msgstr ""
+"ありがとうございました。\n"
+"Goalous Team"
 
 msgid "\"%s\""
 msgstr "「%s」"

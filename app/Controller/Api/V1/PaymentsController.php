@@ -159,6 +159,19 @@ class PaymentsController extends ApiController
             return $this->_getResponseInternalServerError();
         }
 
+        // Send notification email
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $adminList = $TeamMember->findAdminList($teamId);
+        if (!empty($adminList)) {
+            // sending emails to each admins.
+            foreach ($adminList as $toUid) {
+                $this->GlEmail->sendMailNewInvoiceSubscription($toUid, $teamId);
+            }
+        } else {
+            CakeLog::error("This team have no admin: $teamId");
+        }
+
         // New Payment registered with success
         return $this->_getResponseSuccess();
     }

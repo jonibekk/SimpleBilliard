@@ -267,6 +267,18 @@ class GlEmailComponent extends Component
     }
 
     /**
+     * Send email to new invoice subscription team admin
+     *
+     * @param int $toUid
+     * @param int $teamId
+     */
+    public function sendMailNewInvoiceSubscription(int $toUid, int $teamId)
+    {
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_INVOICE_NEW_SUBSCRIPTION,null, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにてセットアップガイドメールを送信
      *
      * @param $to_user_id
