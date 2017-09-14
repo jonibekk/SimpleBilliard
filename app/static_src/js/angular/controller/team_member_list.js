@@ -117,25 +117,23 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         };
 
         // cancel invite or re-invite
-        $scope.updateInvite = function (index, invite_id, action_flg) {
+        $scope.updateInvite = function (index, invite_email, invite_id) {
             $scope.invite_loader[index] = true;
-            var change_active_flag_url = url_list.am + invite_id + '/' + action_flg;
-            $http.get(change_active_flag_url).success(function (data) {
+            $http.post(url_list.am, {user_id:invite_id, email: invite_email}).success(function (data) {
                 $scope.invite_loader[index] = false;
-                if (data.error != true) {
-                    $scope.invite_msg[index] = action_flg;
-                    $scope.invite_list[index].Invite.del_flg = true;
-                } else {
-                    location.reload();
-                }
+                if(data){
+                    console.log('Updated: '+data); 
+                }else if(message){
+                    console.log('Message: '+message);
+                } 
             });
         };
 
         // Enable email field so user can edit before resending invite.
-        $scope.editInviteEmail = function(){
-            reinviteUser.username.removeAttribute('disabled');
-            reinviteUser.username.classList.add('focused');
-            reinviteUser.username.focus();
+        $scope.editInviteEmail = function(form){
+            document[form].username.removeAttribute('disabled');
+            document[form].username.classList.add('focused');
+            document[form].username.focus(); 
         };
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
