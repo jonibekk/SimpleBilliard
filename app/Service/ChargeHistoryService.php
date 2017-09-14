@@ -59,6 +59,9 @@ class ChargeHistoryService extends AppService
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
 
         $history = $ChargeHistory->getForReceipt($historyId);
+        if (empty($history)) {
+            return [];
+        }
         $history = $this->processForReceipt($history);
         return $history;
     }

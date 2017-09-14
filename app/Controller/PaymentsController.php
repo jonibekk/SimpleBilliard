@@ -228,6 +228,9 @@ class PaymentsController extends AppController
         $ChargeHistoryService = ClassRegistry::init("ChargeHistoryService");
 
         $history = $ChargeHistoryService->getReceipt($historyId);
+        if (empty($history)) {
+            throw new NotFoundException(__("Receipt not found"));
+        }
         $this->set(compact('history'));
         return $this->render();
     }
