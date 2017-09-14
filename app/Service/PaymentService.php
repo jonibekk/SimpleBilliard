@@ -10,6 +10,7 @@ App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
 App::uses('AppUtil', 'Util');
+App::uses('GoalousDateTime', 'DateTime');
 
 use Goalous\Model\Enum as Enum;
 
@@ -157,17 +158,17 @@ class PaymentService extends AppService
     /**
      * Get use days from current date to next payment base date
      *
-     * @param int $currentTimeStamp
+     * @param int $teamId
      *
      * @return int
      */
-    public function getUseDaysByNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    public function getUseDaysByNextBaseDate(int $teamId): int
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->getTimezone();
-        $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
-        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
+        $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+        $nextBaseDate = $this->getNextBaseDate($teamId);
         // Calc use days
         $diffDays = AppUtil::diffDays($localCurrentDate, $nextBaseDate);
         return $diffDays;
@@ -176,19 +177,25 @@ class PaymentService extends AppService
     /**
      * Get next payment base date
      *
-     * @param int $currentTimeStamp
+     * @param int  $teamId
+     * @param null $timestamp
      *
      * @return string
      */
-    public function getNextBaseDate(int $currentTimeStamp = REQUEST_TIMESTAMP): string
+    public function getNextBaseDate(int $teamId, $timestamp = null): string
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->getTimezone();
-        $localCurrentDate = AppUtil::dateYmdLocal($currentTimeStamp, $timezone);
+        if (empty($timestamp)) {
+            $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+        } else {
+            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)->format('Y-m-d');
+        }
+
         list($y, $m, $d) = explode('-', $localCurrentDate);
 
-        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentSetting = $this->get($teamId);
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         // Check if next base date is this month or next month.
@@ -225,19 +232,17 @@ class PaymentService extends AppService
     /**
      * Get previous base date by next base date
      *
+     * @param int    $teamId
      * @param string $nextBaseDate
      *
      * @return string
      */
-    public function getPreviousBaseDate(string $nextBaseDate): string
+    public function getPreviousBaseDate(int $teamId, string $nextBaseDate): string
     {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-
         list($y, $m, $d) = explode('-', $nextBaseDate);
         list($y, $m) = AppUtil::moveMonthYm($y, $m, -1);
 
-        $paymentSetting = $this->get($Team->current_team_id);
+        $paymentSetting = $this->get($teamId);
         $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
 
         if (checkdate($m, $paymentBaseDay, $y) === false) {
@@ -252,15 +257,14 @@ class PaymentService extends AppService
      * Get total days from previous payment base date to next payment base date
      * 現在月度の総利用日数
      *
-     * @param int $currentTimeStamp
+     * @param int $teamId
      *
      * @return int
      */
-    public function getCurrentAllUseDays(int $currentTimeStamp = REQUEST_TIMESTAMP): int
+    public function getCurrentAllUseDays(int $teamId): int
     {
-        $nextBaseDate = $this->getNextBaseDate($currentTimeStamp);
-        $prevBaseDate = $this->getPreviousBaseDate($nextBaseDate);
-
+        $nextBaseDate = $this->getNextBaseDate($teamId);
+        $prevBaseDate = $this->getPreviousBaseDate($teamId, $nextBaseDate);
         $res = AppUtil::diffDays($prevBaseDate, $nextBaseDate);
         return $res;
     }
@@ -268,33 +272,60 @@ class PaymentService extends AppService
     /**
      * Calc total charge by users count when invite users.
      *
-     * @param int  $userCnt
-     * @param int  $currentTimeStamp
-     * @param null $useDaysByNext
-     * @param null $allUseDays
+     * @param int   $teamId
+     * @param int   $chargeUserCnt
+     * @param null  $useDaysByNext
+     * @param null  $allUseDays
+     * @param array $paymentSetting
      *
-     * @return float
+     * @return array
+     * @internal param int $currentTimeStamp
      */
-    public function calcTotalChargeByAddUsers
+    public function calcRelatedTotalChargeByAddUsers
     (
-        int $userCnt,
-        int $currentTimeStamp = REQUEST_TIMESTAMP,
+        int $teamId,
+        int $chargeUserCnt,
         $useDaysByNext = null,
-        $allUseDays = null
-    ): float {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($currentTimeStamp);
-        $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($currentTimeStamp);
+        $allUseDays = null,
+        array $paymentSetting = []
+    ): array {
+        try {
+            if ($chargeUserCnt == 0) {
+                throw new Exception(sprintf("Invalid user count. %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt', 'paymentSetting'))
+                ));
+            }
+            $paymentSetting = empty($paymentSetting) ? $this->get($teamId) : $paymentSetting;
+            if (empty($paymentSetting)) {
+                throw new Exception(sprintf("Not exist payment setting data. %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'chargeUserCnt'))
+                ));
+            }
 
-        $paymentSetting = $this->get($Team->current_team_id);
-        // Ex. 3people × ¥1,980 × 20 days / 1month
-        $subTotalCharge = $userCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
-        $subTotalCharge = $this->processDecimalPointForAmount($paymentSetting['currency'], $subTotalCharge);
+            $useDaysByNext = $useDaysByNext ?? $this->getUseDaysByNextBaseDate($teamId);
+            $allUseDays = $allUseDays ?? $this->getCurrentAllUseDays($teamId);
+            // Ex. 3people × ¥1,980 × 20 days / 1month
+            $subTotalCharge = $chargeUserCnt * $paymentSetting['amount_per_user'] * ($useDaysByNext / $allUseDays);
+            $subTotalCharge = $this->processDecimalPointForAmount($paymentSetting['currency'], $subTotalCharge);
 
-        $tax = $this->calcTax($paymentSetting['company_country'], $subTotalCharge);
-        $totalCharge = $subTotalCharge + $tax;
-        return $totalCharge;
+            $tax = $this->calcTax($paymentSetting['company_country'], $subTotalCharge);
+            $totalCharge = $subTotalCharge + $tax;
+            $res = [
+                'sub_total_charge' => $subTotalCharge,
+                'tax'              => $tax,
+                'total_charge'     => $totalCharge,
+            ];
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            $res = [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+            ];
+        }
+
+        return $res;
     }
 
     /**
@@ -321,25 +352,46 @@ class PaymentService extends AppService
     /**
      * Format total charge by users count when invite users.
      *
+     * @param int                          $teamId
      * @param int                          $userCnt
      * @param Enum\PaymentSetting\Currency $currency
-     * @param int                          $currentTimeStamp
      * @param null                         $useDaysByNext
      * @param null                         $allUseDays
      *
      * @return string
      */
     public function formatTotalChargeByAddUsers(
+        int $teamId,
         int $userCnt,
         Enum\PaymentSetting\Currency $currency,
-        int $currentTimeStamp = REQUEST_TIMESTAMP,
         $useDaysByNext = null,
         $allUseDays = null
     ): string {
-        $totalCharge = $this->calcTotalChargeByAddUsers($userCnt, $currentTimeStamp, $useDaysByNext, $allUseDays);
+        $chargeRes = $this->calcRelatedTotalChargeByAddUsers($teamId, $userCnt, $useDaysByNext, $allUseDays);
         // Format ex 1980 → ¥1,980
-        $res = $this->formatCharge($totalCharge, $currency->getValue());
+        $res = $this->formatCharge($chargeRes['total_charge'], $currency->getValue());
         return $res;
+    }
+
+    /**
+     * Calc total charge by charge type
+     * @param int                           $teamId
+     * @param int                           $chargeUserCnt
+     * @param Enum\ChargeHistory\ChargeType $chargeType
+     * @param array                         $paymentSetting
+     *
+     * @return array
+     */
+    public function calcRelatedTotalChargeByType(
+        int $teamId,
+        int $chargeUserCnt,
+        Enum\ChargeHistory\ChargeType $chargeType,
+        array $paymentSetting = []
+    ): array {
+        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            return $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeUserCnt, $paymentSetting);
+        }
+        return $this->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt, null, null, $paymentSetting);
     }
 
     /**
@@ -518,8 +570,7 @@ class PaymentService extends AppService
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
-            $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
-                $paySetting);
+            $chargeInfo = $this->calcRelatedTotalChargeByType($teamId, $usersCount, $chargeType, $paySetting);
 
             $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
             // ChargeHistory temporary insert
@@ -1360,8 +1411,12 @@ class PaymentService extends AppService
             try {
 
                 // Apply the user charge on Stripe
-                $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $usersCount,
-                    $paymentSetting);
+                $chargeInfo = $this->calcRelatedTotalChargeByType(
+                    $teamId,
+                    $usersCount,
+                    $chargeType,
+                    $paymentSetting
+                );
 
                 $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
                 // Insert ChargeHistory

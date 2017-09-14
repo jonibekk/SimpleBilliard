@@ -2723,10 +2723,10 @@ class TeamsController extends AppController
         // Payment info
         $paymentSetting = $PaymentService->get($this->current_team_id);
         $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user'], $paymentSetting['currency']);
-        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate();
-        $allUseDays = $PaymentService->getCurrentAllUseDays();
+        $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate($teamId);
+        $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
         $currency = new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']);
-        $totalCharge = $PaymentService->formatTotalChargeByAddUsers(1, $currency, REQUEST_TIMESTAMP,  $useDaysByNext, $allUseDays);
+        $totalCharge = $PaymentService->formatTotalChargeByAddUsers($teamId, 1, $currency, $useDaysByNext, $allUseDays);
 
         $this->set(compact('teamMemberId', 'displayUserName', 'amountPerUser', 'useDaysByNext', 'totalCharge'));
 
