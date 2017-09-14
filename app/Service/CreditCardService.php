@@ -172,7 +172,7 @@ class CreditCardService extends AppService
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init("CreditCard");
         $keyRedisCache = $CreditCard->getCacheKey(CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE, false, null, $teamId);
-        CakeLog::error("cache credit card expiration date to redis: {$keyRedisCache}", LOG_INFO);
+        CakeLog::info("cache credit card expiration date to redis: {$keyRedisCache}");
         Cache::set('duration', self::CACHE_TTL_SECONDS_TEAM_CREDIT_CARD_EXPIRE_DATE, 'user_data');
         Cache::write($keyRedisCache, msgpack_pack($data), 'user_data');
     }
