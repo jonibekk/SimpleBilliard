@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 
 use Goalous\Model\Enum as Enum;
 
@@ -88,6 +89,7 @@ class MonthlyCreditCardChargeShell extends AppShell
             }
 
             try {
+                PaymentUtil::logCurrentTeamChargeUsers($teamId);
                 // Charge
                 $PaymentService->applyCreditCardCharge(
                     $teamId,
@@ -95,7 +97,9 @@ class MonthlyCreditCardChargeShell extends AppShell
                     $chargeMemberCount
                 );
             } catch (Exception $e) {
-                $this->logEmergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                $this->logEmergency(sprintf("caught error on applyCreditCardCharge: %s", AppUtil::jsonOneLine([
+                    'message' => $e->getMessage()
+                ])));
                 $this->logEmergency($e->getTraceAsString());
             }
         }
