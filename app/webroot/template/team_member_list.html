@@ -62,7 +62,7 @@
         </a>
     </section>
     <div class="col-xs-12">
-        <section class="team_member_table">
+        <section class="team-member-table">
             <div ng-repeat="item in team_list | filter:name_field === true"
                  ng-if="item.TeamMember.status == '1' || display_inactive_users"
                  ng-class="item.TeamMember.status == '2' ? 'disable_member' : ''" class="team-members-card">
@@ -160,16 +160,15 @@
 <div ng-if="invite_box_show === true">
     <div class="team-member-count-label">{{ 'TEAM_MEMBER_LIST.TARGET_MEMBERS' | translate}} ( {{(invite_list|filter:name_field).length}} )</div>
     <div class="col-xs-12">
-        <table class="table team_member_table">
+        <table class="table team-member-table">
             <tr ng-repeat="item in invite_list | filter:name_field">
                 <td>
-                    <!-- TODO: Add function to ng-submit when Invite API has been fixed -->
-                    <form name="reinviteUser" class="team-member-invite-form" ng-submit="">
-                        <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email">
+                    <form name="{{'reinviteUser'+$index}}" class="team-member-invite-form" ng-submit="updateInvite($index, 'reinviteUser'+$index, item.Invite.email, item.Email.user_id)">
+                        <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email" ng-change="resetFeedback($index)">
                         <button type="submit" class="btn btn-primary team-member-invited-submit">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</button>
                     </form>
 
-                    <div ng-bind-html="item.Invite.created"></div>
+                    <div class="time-card" ng-bind-html="item.Invite.created"></div><div class="feedback {{item.Invite.result}}">{{item.Invite.feedback}}</div>
                     <div ng-if="item.Invite.token_expired_flg == true && item.Invite.del_flg == false" class="expired_invite left_align"> Expired </div>
                 </td>
                 <td>
@@ -183,7 +182,7 @@
 
                         <div ng-hide="invite_loader[$index] == true" class="pull-right header-function dropdown team-members-card-function"
                              ng-if="(admin_user_cnt > 1 || login_user_id != item.User.id) && item.Invite.del_flg == '0'">
-                            <button class="btn team_member_setting_btn dropdown-toggle" type="button"
+                            <button class="btn team_member_setting_btn dropdown-toggle dropdown-toggle-{{$index}}" type="button"
                                     id="dropdownMenu1"
                                     data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-cog header-function-icon"
@@ -195,7 +194,7 @@
 
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1"
-                                       ng-click="editInviteEmail(true)">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</a>
+                                       ng-click="editInviteEmail('reinviteUser'+$index, $index)">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</a>
                                 </li>
 
                             </ul>
