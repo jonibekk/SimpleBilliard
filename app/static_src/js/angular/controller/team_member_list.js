@@ -83,6 +83,8 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                     var invite_list = data.user_info;
                     angular.forEach(invite_list, function(val, key){
                         invite_list[key].Invite.created = $sce.trustAsHtml(val.Invite.created);
+                        invite_list[key].Invite.feedback = '';
+                        invite_list[key].Invite.result = '';
                     });
                     $scope.invite_list = invite_list;
                 });
@@ -117,25 +119,39 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         };
 
         // cancel invite or re-invite
-        $scope.updateInvite = function (index, invite_id, action_flg) {
+        $scope.updateInvite = function (index, form, invite_email, user_id) {
             $scope.invite_loader[index] = true;
-            var change_active_flag_url = url_list.am + invite_id + '/' + action_flg;
-            $http.get(change_active_flag_url).success(function (data) {
+            var inviteData = {'user_id':user_id, 'email': invite_email, 'data[_Token][key]': cake.data.csrf_token.key};
+            $http({
+                url: url_list.am,
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: $.param(inviteData)
+            }).then(function successCallback(response) {
                 $scope.invite_loader[index] = false;
-                if (data.error != true) {
-                    $scope.invite_msg[index] = action_flg;
-                    $scope.invite_list[index].Invite.del_flg = true;
-                } else {
-                    location.reload();
-                }
+                $scope.invite_list[index].Invite.result = 'success';
+                $scope.invite_list[index].Invite.feedback = "Invite sent to "+invite_email;
+                document[form].username.setAttribute('disabled','disabled');
+                document[form].username.classList.remove('focused');
+            },function errorCallback(response){
+                $scope.invite_loader[index] = false;
+                $scope.invite_list[index].Invite.result = 'error';
+                $scope.invite_list[index].Invite.feedback = response.data.message;
             });
         };
 
+        // Clear feedback message if user updates email field
+        $scope.resetFeedback = function(index){
+            $scope.invite_list[index].Invite.result = '';
+            $scope.invite_list[index].Invite.feedback = '';
+        }
+
         // Enable email field so user can edit before resending invite.
-        $scope.editInviteEmail = function(){
-            reinviteUser.username.removeAttribute('disabled');
-            reinviteUser.username.classList.add('focused');
-            reinviteUser.username.focus();
+        $scope.editInviteEmail = function(form, index){
+            document[form].username.removeAttribute('disabled');
+            document[form].username.classList.add('focused');
+            document[form].username.focus();
+            document.getElementsByClassName("dropdown-toggle-"+index)[0].classList.add('remove');
         };
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
