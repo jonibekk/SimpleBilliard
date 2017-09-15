@@ -17,6 +17,33 @@ class InvoiceService extends AppService
     const API_URL_INQUIRE_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
     /**
+     * @var \GuzzleHttp\Client
+     * be sure to use GuzzleHttp (not \Guzzle\Http this is old version)
+     */
+    private $httpClient = null;
+
+    /**
+     * @return \GuzzleHttp\Client
+     */
+    private function getHttpClient(): \GuzzleHttp\Client
+    {
+        $client = $this->httpClient ?? new \GuzzleHttp\Client();
+        $this->httpClient = null;
+        return $client;
+    }
+
+    /**
+     * InvoiceService dependence to http client
+     * this method use usually on test/simulate
+     *
+     * @param \GuzzleHttp\Client $httpClient
+     */
+    public function setHttpClient(\GuzzleHttp\Client $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    /**
      * register order for 1 team's invoice via atobarai.com
      *
      * @param int    $teamId
@@ -122,54 +149,23 @@ class InvoiceService extends AppService
      */
     private function _postRequestForAtobaraiDotCom(string $requestUrl, array $data): array
     {
-        /** @var  Invoice $Invoice */
-        $Invoice = ClassRegistry::init('Invoice');
-        // TODO.Payment: This is bad know how. We should use mock on testing. We can try to use https://packagist.org/packages/phake/phake#v2.3.2
-        // see detail -> #18 on http://bit.ly/2g1MkWR
-        if ($Invoice->useDbConfig == 'test') {
-            return $this->getAtobaraiResponseForTest();
+        $client = $this->getHttpClient();
+        $response = $client->post($requestUrl, [
+            'headers' => [
+                'Content-Type: application/x-www-form-urlencoded',
+                'Content-Length: ' . http_build_query($data),
+            ],
+            'form_params' => $data,
+        ]);
+        if (200 !== $response->getStatusCode()) {
+            throw new RuntimeException(sprintf('atobarai.com api error: %s', AppUtil::jsonOneLine([
+                'status' => $response->getStatusCode(),
+            ])));
         }
 
-        $data = http_build_query($data);
-
-        // header
-        $header = [
-            "Content-Type: application/x-www-form-urlencoded",
-            "Content-Length: " . strlen($data)
-        ];
-
-        $context = [
-            "http" => [
-                "method"  => "POST",
-                "header"  => implode("\r\n", $header),
-                "content" => $data
-            ]
-        ];
-        $ret = file_get_contents($requestUrl, false, stream_context_create($context));
-        $xmlArray = Xml::toArray(Xml::build($ret));
+        $xmlArray = Xml::toArray(Xml::build($response->getBody()->getContents()));
         $ret = Hash::extract($xmlArray, 'response');
         return $ret;
-    }
-
-    /**
-     * This is for only testing!
-     * Don't use it for production.
-     *
-     * @return array
-     */
-    function getAtobaraiResponseForTest()
-    {
-        $data = [
-            'status'        => 'success',
-            'orderId'       => '',
-            'systemOrderId' => 'AK23553506',
-            'messages'      => '',
-            'orderStatus'   => [
-                '@cd' => '0',
-                '@'   => '与信中'
-            ]
-        ];
-        return $data;
     }
 
     /**
