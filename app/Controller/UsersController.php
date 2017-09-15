@@ -10,6 +10,8 @@ App::import('Service', 'TermService');
 App::import('Service', 'TermService');
 App::import('Service', 'ExperimentService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Users Controller
  *
