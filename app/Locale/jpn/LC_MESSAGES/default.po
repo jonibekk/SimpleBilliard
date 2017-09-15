@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-14 09:35+0900\n"
+"PO-Revision-Date: 2017-09-15 12:32+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -427,6 +427,9 @@ msgstr "【Goalous】お問い合わせありがとうございました"
 
 msgid "You have already registered the paid plan."
 msgstr "既に有料プランの登録が済んでいます。"
+
+msgid "Receipt not found"
+msgstr "請求書が見つかりません"
 
 msgid "Due to using an old URL, you have been redirected to this page."
 msgstr "古いURLにアクセスされたので、このページにリダイレクトされました。"
@@ -2796,7 +2799,7 @@ msgid "Card Number"
 msgstr "カード番号"
 
 msgid "Price per user"
-msgstr "料金（1ユーザー当たり）"
+msgstr "1ユーザー当たりの料金"
 
 msgid "Number of users"
 msgstr "ユーザー数"
@@ -2854,7 +2857,7 @@ msgid "days"
 msgstr "日"
 
 msgid "month"
-msgstr "月"
+msgstr "ヶ月"
 
 msgid "people"
 msgstr "人"
@@ -2871,11 +2874,17 @@ msgstr "請求合計金額"
 msgid "Tax included"
 msgstr "税込"
 
+msgid "Tax excluded"
+msgstr "税抜"
+
 msgid "Number of days"
 msgstr "利用日数"
 
 msgid "Daily payment"
 msgstr "日割り"
+
+msgid "Send & Pay"
+msgstr "送信する・支払う"
 
 msgid "Circles"
 msgstr "サークル"
@@ -5177,7 +5186,7 @@ msgid "Date"
 msgstr "期限"
 
 msgid "Type"
-msgstr ""
+msgstr "種類"
 
 msgid "Amount"
 msgstr "金額"

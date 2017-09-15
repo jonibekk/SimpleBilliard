@@ -649,8 +649,10 @@ App::uses('AttachedFile', 'Model');
             "Billing": "<?= __("Billing") ?>",
             "Total charge amount": "<?= __("Total charge amount") ?>",
             "Tax included": "<?= __("Tax included") ?>",
+            "Tax excluded": "<?= __("Tax excluded") ?>",
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
+            "Send & Pay": "<?= __("Send & Pay") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
