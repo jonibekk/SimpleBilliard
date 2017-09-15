@@ -147,10 +147,12 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         }
 
         // Enable email field so user can edit before resending invite.
-        $scope.editInviteEmail = function(form){
+        $scope.editInviteEmail = function(form, index){
             document[form].username.removeAttribute('disabled');
             document[form].username.classList.add('focused');
-            document[form].username.focus(); 
+            document[form].username.focus();
+            $scope.invite_list[index].Invite.result = '';
+            $scope.invite_list[index].Invite.feedback = '';
         };
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
