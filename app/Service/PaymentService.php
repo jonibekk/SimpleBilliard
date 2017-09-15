@@ -528,6 +528,7 @@ class PaymentService extends AppService
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
      * @param int                               $opeUserId
+     * @param int|null                          $timestampChargeDateTime timestamp of charge_histories.charge_datetime
      *
      * @return array
      * @throws Exception
@@ -536,7 +537,8 @@ class PaymentService extends AppService
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
         int $usersCount,
-        $opeUserId = null
+        $opeUserId = null,
+        $timestampChargeDateTime = null
     ) {
         try {
             CakeLog::info(sprintf('apply credit card charge: %s', AppUtil::jsonOneLine([
@@ -587,6 +589,10 @@ class PaymentService extends AppService
                 'charge_info' => $chargeInfo,
             ])));
 
+            $chargeDateTime = is_null($timestampChargeDateTime)
+                // $chargeDateTime does not affect by GoalousDateTime::setTestNow()
+                ? GoalousDateTime::createFromTimestamp(time())
+                : GoalousDateTime::createFromTimestamp($timestampChargeDateTime);
             $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
             // ChargeHistory temporary insert
             $historyData = [
@@ -599,7 +605,7 @@ class PaymentService extends AppService
                 'tax'              => $chargeInfo['tax'],
                 'charge_users'     => $usersCount,
                 'currency'         => $currency,
-                'charge_datetime'  => time(),
+                'charge_datetime'  => $chargeDateTime->getTimestamp(),
                 'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
                 'max_charge_users' => $maxChargeUserCnt
             ];

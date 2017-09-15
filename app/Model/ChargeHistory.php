@@ -148,17 +148,18 @@ class ChargeHistory extends AppModel
      * returns last ChargeHistory of team
      * if team has no ChargeHistory, this returns empty array
      *
-     * @param int $teamId
+     * @param int    $teamId
+     * @param string $orderField
      *
      * @return array
      */
-    function getLastChargeHistoryByTeamId(int $teamId): array
+    function getLastChargeHistoryByTeamId(int $teamId, string $orderField = 'created'): array
     {
         $res = $this->find('first', [
                 'conditions' => [
                     'team_id' => $teamId,
                 ],
-                'order'      => ['created' => 'DESC'],
+                'order'      => [$orderField => 'DESC'],
             ]
         );
         if ($res === false) {
