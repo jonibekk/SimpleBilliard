@@ -75,7 +75,6 @@ class InvitationService extends AppService
                     $i + 1) . "：" . __("This email address has already been used. Use another email address.");
         }
         if (!empty($errors)) {
-            $this->log('This email address has already been used. Use another email address');
             return $errors;
         }
 
