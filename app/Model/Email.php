@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Email Model
  *
@@ -245,5 +247,55 @@ class Email extends AppModel
         ]);
 
         return Hash::extract($res, '{n}.Email.email') ?? [];
+    }
+
+    /**
+     * Find users not belong any team
+     *
+     * @param array $emails
+     *
+     * @return array
+     */
+    public function findNotBelongAnyTeamsByEmails(array $emails): array
+    {
+
+        $options = [
+            'fields' => [
+                'Email.email'
+            ],
+            'conditions' => [
+                'Email.email' => $emails,
+                'Email.del_flg' => false
+            ],
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'User.del_flg' => false,
+                    ]
+                ],
+            ]
+        ];
+
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => ['TeamMember.id'],
+            'table'      => 'team_members',
+            'alias'      => 'TeamMember',
+            'conditions' => [
+                'TeamMember.user_id = User.id',
+                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+            ],
+        ], $this);
+        $options['conditions'][] = $db->expression("NOT EXISTS (" . $subQuery . ")");
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.Email.email');
     }
 }
