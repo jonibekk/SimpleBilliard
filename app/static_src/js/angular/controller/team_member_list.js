@@ -151,8 +151,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             document[form].username.removeAttribute('disabled');
             document[form].username.classList.add('focused');
             document[form].username.focus();
-            $scope.invite_list[index].Invite.result = '';
-            $scope.invite_list[index].Invite.feedback = '';
+            document.getElementsByClassName("dropdown-toggle-"+index)[0].classList.add('remove');
         };
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {

@@ -182,7 +182,7 @@
 
                         <div ng-hide="invite_loader[$index] == true" class="pull-right header-function dropdown team-members-card-function"
                              ng-if="(admin_user_cnt > 1 || login_user_id != item.User.id) && item.Invite.del_flg == '0'">
-                            <button class="btn team_member_setting_btn dropdown-toggle" type="button"
+                            <button class="btn team_member_setting_btn dropdown-toggle dropdown-toggle-{{$index}}" type="button"
                                     id="dropdownMenu1"
                                     data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-cog header-function-icon"
