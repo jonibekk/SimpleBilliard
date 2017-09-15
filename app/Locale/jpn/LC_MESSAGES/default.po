@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-15 12:32+0900\n"
+"PO-Revision-Date: 2017-09-15 15:40+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -715,6 +715,9 @@ msgstr "アカウントがロックされています。%s分後に自動的に�
 
 msgid "Email address or Password is incorrect."
 msgstr "メールアドレスもしくはパスワードが正しくありません。"
+
+msgid "You don't belong to any team."
+msgstr "あなたはどのチームにも属していません"
 
 msgid "Error. Try to login again."
 msgstr "エラーが発生しました。再度ログインをしてください。"

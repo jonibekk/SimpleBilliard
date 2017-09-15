@@ -1,10 +1,12 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Email', 'Model');
+use Goalous\Model\Enum as Enum;
 
 /**
  * Email Test Case
  *
  * @property Email $Email
+ * @property TeamMember $TeamMember
  */
 class EmailTest extends GoalousTestCase
 {
@@ -32,6 +34,7 @@ class EmailTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Email = ClassRegistry::init('Email');
+        $this->TeamMember = ClassRegistry::init('TeamMember');
     }
 
     /**
@@ -148,6 +151,43 @@ class EmailTest extends GoalousTestCase
         $this->assertTrue($res);
     }
 
+    function test_findNotBelongAnyTeamsByEmails()
+    {
+        $teamId = 1;
+        $this->Email->deleteAll(['Email.del_flg' => false]);
+        $emails = ['test@company.com'];
+        $res = $this->Email->findNotBelongAnyTeamsByEmails($emails);
+        $this->assertEmpty($res);
+
+        $email1 = 'test@company.com';
+        $emails = [$email1];
+        $this->Email->save(['email' => $email1], false);
+        $res = $this->Email->findNotBelongAnyTeamsByEmails($emails);
+        $this->assertEmpty($res);
+
+        $userId = $this->createActiveUser($teamId);
+        $this->Email->id = $this->Email->getLastInsertID();
+        $this->Email->saveField('user_id', $userId);
+
+        $res = $this->Email->findNotBelongAnyTeamsByEmails($emails);
+        $this->assertEmpty($res);
+
+        $this->TeamMember->updateAll(
+            ['status' => Enum\TeamMember\Status::INACTIVE],
+            ['user_id' => $userId, 'team_id' => $teamId]
+        );
+
+        $res = $this->Email->findNotBelongAnyTeamsByEmails($emails);
+        $this->assertNotEmpty($res);
+
+        $this->TeamMember->updateAll(
+            ['status' => Enum\TeamMember\Status::INVITED],
+            ['user_id' => $userId, 'team_id' => $teamId]
+        );
+
+        $res = $this->Email->findNotBelongAnyTeamsByEmails($emails);
+        $this->assertEmpty($res);
+    }
 
     function test_findExistUsersByEmail()
     {
@@ -158,5 +198,4 @@ class EmailTest extends GoalousTestCase
     {
         // TODO.Payment:add unit tests
     }
-
 }
