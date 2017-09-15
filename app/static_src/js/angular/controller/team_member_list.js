@@ -119,9 +119,9 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         };
 
         // cancel invite or re-invite
-        $scope.updateInvite = function (index, invite_email, invite_id) {
+        $scope.updateInvite = function (index, invite_email, user_id) {
             $scope.invite_loader[index] = true;
-            var inviteData = {'user_id':invite_id, 'email': invite_email, 'data[_Token][key]': cake.data.csrf_token.key};
+            var inviteData = {'user_id':user_id, 'email': invite_email, 'data[_Token][key]': cake.data.csrf_token.key};
             $http({
                 url: url_list.am,
                 method: "POST",
@@ -130,7 +130,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             }).then(function successCallback(response) {
                 $scope.invite_loader[index] = false;
                 $scope.invite_list[index].Invite.result = 'success';
-                $scope.invite_list[index].Invite.feedback = response.data.message;
+                $scope.invite_list[index].Invite.feedback = "Invite sent to "+invite_email;
             },function errorCallback(response){
                 $scope.invite_loader[index] = false;
                 $scope.invite_list[index].Invite.result = 'error';

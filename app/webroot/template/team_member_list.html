@@ -163,7 +163,7 @@
         <table class="table team_member_table">
             <tr ng-repeat="item in invite_list | filter:name_field">
                 <td>
-                    <form name="{{'reinviteUser'+$index}}" class="team-member-invite-form" ng-submit="updateInvite($index,item.Invite.email, item.Invite.id)">
+                    <form name="{{'reinviteUser'+$index}}" class="team-member-invite-form" ng-submit="updateInvite($index,item.Invite.email, item.Email.user_id)">
                         <input type="text" class="team-member-invited-name" disabled name="username" ng-model="item.Invite.email" ng-change="resetFeedback($index)">
                         <button type="submit" class="btn btn-primary team-member-invited-submit">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</button>
                     </form>
