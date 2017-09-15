@@ -111,7 +111,7 @@ export default class Confirm extends Base {
                 </tr>
                 <tr>
                   <th className="totalChargeFormulaDetail-item">{confirm_data.amount_per_user}</th>
-                  <td className="totalChargeFormulaDetail-description">：{__("Price per user")}</td>
+                  <td className="totalChargeFormulaDetail-description">：{`${__("Price per user")}(${__("Tax excluded")})`}</td>
                 </tr>
                 <tr>
                   <th className="totalChargeFormulaDetail-item">{confirm_data.use_days_by_next_base_date} {__("days")}</th>
@@ -138,7 +138,7 @@ export default class Confirm extends Base {
           <div className="btnGroupForForm">
             <button type="submit" className="btnGroupForForm-next" ref="submit"
                     disabled={(display_charge && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
-              {__("Send")}
+              {display_charge ? __("Send & Pay") : __("Send")}
             </button>
             <Link className="btnGroupForForm-cancel" to="/users/invite">{__("Back")}</Link>
           </div>
