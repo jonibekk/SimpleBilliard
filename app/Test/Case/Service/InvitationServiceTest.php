@@ -151,7 +151,7 @@ class InvitationServiceTest extends GoalousTestCase
             'email'   => $email
         ], false);
         $res = $this->InvitationService->validateEmails($teamId, [$email]);
-        $this->assertEquals($res, []);
+        $this->assertTrue(strpos($res[0], __("This email address has already been used. Use another email address.")) >= 0);
 
         $this->TeamMember->save([
             'user_id' => $userId,
