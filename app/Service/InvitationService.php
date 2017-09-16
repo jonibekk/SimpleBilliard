@@ -85,7 +85,8 @@ class InvitationService extends AppService
                     $i + 1) . "：" . __("This email address has already been used. Use another email address.");
         }
         if (!empty($errEmails)) {
-            CakeLog::info(sprintf("[%s] Users with email address does not belong to any team. emails:%s", __METHOD__,  AppUtil::jsonOneLine($errEmails)));
+            CakeLog::info(sprintf("[%s] Users with email address does not belong to any team. emails:%s", __METHOD__,
+                AppUtil::jsonOneLine($errEmails)));
         }
         return $errors;
     }
@@ -181,6 +182,7 @@ class InvitationService extends AppService
             }
 
             /* Charge if paid plan */
+            // TODO.payment: Should we store $addUserCnt to DB?
             $addUserCnt = count($targetUserIds);
             if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
@@ -194,8 +196,8 @@ class InvitationService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
             return false;
         }
         return true;

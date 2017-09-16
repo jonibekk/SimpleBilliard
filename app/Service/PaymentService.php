@@ -190,7 +190,8 @@ class PaymentService extends AppService
         if (empty($timestamp)) {
             $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
         } else {
-            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)->format('Y-m-d');
+            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)
+                                               ->format('Y-m-d');
         }
 
         list($y, $m, $d) = explode('-', $localCurrentDate);
@@ -375,6 +376,7 @@ class PaymentService extends AppService
 
     /**
      * Calc total charge by charge type
+     *
      * @param int                           $teamId
      * @param int                           $chargeUserCnt
      * @param Enum\ChargeHistory\ChargeType $chargeType
@@ -542,9 +544,9 @@ class PaymentService extends AppService
     ) {
         try {
             CakeLog::info(sprintf('apply credit card charge: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
-                'charge_type' => $chargeType->getValue(),
-                'users_count' => $usersCount,
+                'teams.id'     => $teamId,
+                'charge_type'  => $chargeType->getValue(),
+                'users_count'  => $usersCount,
                 'ope_users.id' => $opeUserId,
             ])));
             // Validate user count
@@ -568,7 +570,7 @@ class PaymentService extends AppService
                 );
             }
             CakeLog::info(sprintf('payment setting at charge: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'       => $teamId,
                 'PaymentSetting' => $paymentSettings
             ])));
 
@@ -585,7 +587,7 @@ class PaymentService extends AppService
             $chargeInfo = $this->calcRelatedTotalChargeByType($teamId, $usersCount, $chargeType, $paySetting);
 
             CakeLog::info(sprintf('payment charge info: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'    => $teamId,
                 'charge_info' => $chargeInfo,
             ])));
 
@@ -624,14 +626,22 @@ class PaymentService extends AppService
                 $paymentDescription);
 
             CakeLog::info(sprintf('stripe result: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'      => $teamId,
                 'stripe_result' => $chargeRes,
             ])));
 
             // Save charge history
             if ($chargeRes['isApiRequestSucceed'] === false) {
                 throw new Exception(
-                    sprintf("Failed to charge. data:%s",
+                    sprintf("Failed to charge. A request to Stripe API was failed. data:%s",
+                        AppUtil::varExportOneLine(
+                            compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
+                        )
+                    )
+                );
+            } elseif ($chargeRes['error'] && $chargeType->getValue() !== $chargeType::MONTHLY_FEE) {
+                throw new Exception(
+                    sprintf("Failed to charge. In adding/activating members case, all transaction should be rollback. data:%s",
                         AppUtil::varExportOneLine(
                             compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
                         )
@@ -663,8 +673,8 @@ class PaymentService extends AppService
             }
 
             CakeLog::info(sprintf('update charge history: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
-                'charge_histories.id' => $historyId,
+                'teams.id'              => $teamId,
+                'charge_histories.id'   => $historyId,
                 'update_charge_history' => $updateHistory,
             ])));
         } catch (Exception $e) {
@@ -1038,7 +1048,7 @@ class PaymentService extends AppService
         // if already send an invoice, return
         if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
             CakeLog::info(sprintf('invoice sent already: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'           => $teamId,
                 'local_current_date' => $localCurrentDate,
             ])));
             return false;
@@ -1067,7 +1077,8 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($ChargeHistory->validationErrors)
                 );
             }
-            CakeLog::info(sprintf('add invoice monthly charge_histories: %s', AppUtil::jsonOneLine($monthlyChargeHistory)));
+            CakeLog::info(sprintf('add invoice monthly charge_histories: %s',
+                AppUtil::jsonOneLine($monthlyChargeHistory)));
 
             // monthly dates
             $monthlyChargeHistory['monthlyStartDate'] = $localCurrentDate;
@@ -1128,7 +1139,7 @@ class PaymentService extends AppService
                 ));
             }
             CakeLog::info(sprintf('response of atobarai.com: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'          => $teamId,
                 'response_atobarai' => $resAtobarai,
             ])));
         } catch (Exception $e) {
@@ -1163,7 +1174,7 @@ class PaymentService extends AppService
                 ));
             }
             CakeLog::info(sprintf('updated invoice_histories: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'          => $teamId,
                 'invoice_histories' => $resUpdate,
             ])));
         } catch (Exception $e) {
