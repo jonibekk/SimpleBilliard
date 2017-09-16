@@ -6,7 +6,7 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel company-info paymentMethod has-subnav">
     <?= $this->element('Payment/method_select') ?>
-    <h3><?= __("Billing Information") ?></h3>
+    <h3><?= __("Company Information") ?></h3>
     <form class="form-horizontal" name="editPaySettingsForm" id="editPaySettingsForm" accept-charset="utf-8">
         <div class="form-group">
             <label for="PaymentsCompanyName" class="circle-create-label"><?= __("Company Name") ?></label>
@@ -19,20 +19,7 @@
             <legend class="company-info-legend"><?= __("Company Address") ?></legend>
             <div class="form-group">
                 <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Country") ?></label>
-                <?php echo $this->Form->input('current_team',
-                    array(
-                        'type'      => 'select',
-                        'options'   => $countries,
-                        'value'     => $setting['company_country'],
-                        'id'        => 'PaymentsCompanyCountry',
-                        'name'      => 'company_country',
-                        'label'     => false,
-                        'div'       => false,
-                        'class'     => 'form-control',
-                        'wrapInput' => false,
-                        'form'      => 'editPaySettingsForm',
-                    ))
-                ?>
+                <?= $countries[$setting['company_country']]?>
             </div>
             <div class="form-group">
                 <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Post Code") ?></label>
@@ -68,16 +55,6 @@
                        name="company_street"
                        value="<?= $setting['company_street'] ?>" required class="form-control"
                        placeholder="<?= __("1234 Street Name") ?>"
-                       maxlength="255">
-            </div>
-            <div class="form-group">
-                <label for="PaymentsCompanyTelephone"
-                       class="circle-create-label"><?= __("Telephone") ?></label>
-                <input type="tel"
-                       id="PaymentsCompanyTelephone"
-                       name="company_tel"
-                       value="<?= $setting['company_tel'] ?>" required class="form-control"
-                       placeholder="000-0000-0000"
                        maxlength="255">
             </div>
         </fieldset>
@@ -128,7 +105,9 @@
                    maxlength="255">
         </div>
         <footer>
-            <button class="btn btn-primary"><?= __("Update") ?></button>
+            <button class="btn btn-primary" id="editPaySettingsSubmitBtn">
+                <?= __("Update") ?>
+            </button>
         </footer>
     </form>
 </section>

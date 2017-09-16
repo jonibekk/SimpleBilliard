@@ -4,12 +4,10 @@ if(document.editPaySettingsForm) {
 
     var fields = [
         'company_name',
-        'company_country',
         'company_post_code',
         'company_region',
         'company_city',
         'company_street',
-        'company_tel',
         'contact_person_last_name',
         'contact_person_first_name',
         'contact_person_last_name_kana',
@@ -25,6 +23,13 @@ if(document.editPaySettingsForm) {
 
     document.editPaySettingsForm.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // Reset validation errors
+        $(this).find('.help-block').remove();
+
+        var $submitBtn = $(this).find('#editPaySettingsSubmitBtn');
+        $submitBtn.prop('disabled', true);
+
 
         var data = {
             'data[_Token][key]': cake.data.csrf_token.key
@@ -42,8 +47,9 @@ if(document.editPaySettingsForm) {
                 new Noty({
                     type: 'success',
                     text: __("Update completed"),
+                    timeout: 3000
                 }).on('onClose', function() {
-                    window.location.href = '/payments';
+                    window.location.reload();
                 }).show();
             }
             else {
@@ -54,6 +60,7 @@ if(document.editPaySettingsForm) {
                     fields.forEach(function (item) {
                         setError(item, response.validation_errors.payment_setting[item]);
                     });
+                    $submitBtn.prop('disabled', false);
                 } else {
                     // Any other error
                     new Noty({

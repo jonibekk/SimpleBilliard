@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-15 15:40+0900\n"
+"PO-Revision-Date: 2017-09-16 17:50+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -5152,8 +5152,8 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "Subscribe"
 msgstr "□配信停止"
 
-msgid "Billing Information"
-msgstr "請求先情報"
+msgid "Company Information"
+msgstr "会社情報"
 
 msgid "Country"
 msgstr "国"
@@ -5283,6 +5283,9 @@ msgstr "カード情報を更新する"
 
 msgid "Card is expired. Please update your card's information."
 msgstr "カードの有効期限が切れています。カード情報を更新してください。"
+
+msgid "Billing Information"
+msgstr "請求先情報"
 
 msgid "Enter your card information"
 msgstr "カード情報を入力してください"

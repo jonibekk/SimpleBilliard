@@ -1350,12 +1350,10 @@ class PaymentService extends AppService
             'team_id'                        => $paySetting['team_id'],
             'type'                           => $paySetting['type'],
             'company_name'                   => $payerData['company_name'],
-            'company_country'                => $payerData['company_country'],
             'company_post_code'              => $payerData['company_post_code'],
             'company_region'                 => $payerData['company_region'],
             'company_city'                   => $payerData['company_city'],
             'company_street'                 => $payerData['company_street'],
-            'company_tel'                    => $payerData['company_tel'],
             'contact_person_first_name'      => $payerData['contact_person_first_name'],
             'contact_person_first_name_kana' => $payerData['contact_person_first_name_kana'],
             'contact_person_last_name'       => $payerData['contact_person_last_name'],
@@ -1369,7 +1367,7 @@ class PaymentService extends AppService
             $PaymentSetting->begin();
 
             // Save Payment Settings
-            if (!$PaymentSetting->save($data)) {
+            if (!$PaymentSetting->save($data, false)) {
                 throw new Exception(sprintf("Fail to update payment settings. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
