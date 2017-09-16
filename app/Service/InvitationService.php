@@ -104,9 +104,9 @@ class InvitationService extends AppService
      * @param int   $fromUserId
      * @param array $emails
      *
-     * @return bool
+     * @return array [error:true|false, msg:""]
      */
-    function invite(int $teamId, int $fromUserId, array $emails): bool
+    function invite(int $teamId, int $fromUserId, array $emails): array
     {
         /** @var Invite $Invite */
         $Invite = ClassRegistry::init("Invite");
@@ -120,6 +120,11 @@ class InvitationService extends AppService
         $Team = ClassRegistry::init("Team");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+
+        $res = [
+            'error' => false,
+            'msg'   => "",
+        ];
 
         try {
             $this->TransactionManager->begin();
@@ -198,9 +203,11 @@ class InvitationService extends AppService
             $this->TransactionManager->rollback();
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
-            return false;
+            $res['error'] = true;
+            $res['msg'] = __('Charge was failed');
+            return $res;
         }
-        return true;
+        return $res;
     }
 
     function reInvite(array $inviteData, array $emailData, string $email): bool

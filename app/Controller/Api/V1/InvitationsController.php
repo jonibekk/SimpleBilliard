@@ -171,9 +171,10 @@ class InvitationsController extends ApiController
         }
 
         // Invite
-        if (!$InvitationService->invite($this->current_team_id, $userId, $emails)) {
+        $resInvite = $InvitationService->invite($this->current_team_id, $userId, $emails);
+        if ($resInvite['error']) {
             // TODO.payment: switch message when exists problem card status
-            return $this->_getResponseInternalServerError();
+            return $this->_getResponseBadFail($resInvite['msg']);
         }
 
         // Send invitation mail
