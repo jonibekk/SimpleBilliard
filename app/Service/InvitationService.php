@@ -204,21 +204,21 @@ class InvitationService extends AppService
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
             $res['error'] = true;
-            $res['msg'] = __('Invitation was failed. There is a problem with your card.');
+            $res['msg'] = __('Invitation was failed.') . " " . __('There is a problem with your card.');
             return $res;
         } catch (StripeApiException $e) {
             $this->TransactionManager->rollback();
             CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::emergency($e->getTraceAsString());
             $res['error'] = true;
-            $res['msg'] = __('There was a problem. Please try again later.');
+            $res['msg'] = __('Invitation was failed.') . " " . __('Please try again later.');
             return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::emergency($e->getTraceAsString());
             $res['error'] = true;
-            $res['msg'] = __('System error has occurred.');
+            $res['msg'] = __('Invitation was failed.') . " " . __('System error has occurred.');
             return $res;
         }
         return $res;
