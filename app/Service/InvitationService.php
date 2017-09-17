@@ -224,15 +224,6 @@ class InvitationService extends AppService
         return $res;
     }
 
-    /**
-     * @param Exception $e
-     */
-    private function _errorLogging(Exception $e)
-    {
-        CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-        CakeLog::error($e->getTraceAsString());
-    }
-
     function reInvite(array $inviteData, array $emailData, string $email): bool
     {
         /** @var Email $Email */
