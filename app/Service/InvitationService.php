@@ -199,15 +199,38 @@ class InvitationService extends AppService
                 );
             }
             $this->TransactionManager->commit();
-        } catch (Exception $e) {
+        } catch (CreditCardStatusException $e) {
             $this->TransactionManager->rollback();
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
             $res['error'] = true;
-            $res['msg'] = __('Charge was failed');
+            $res['msg'] = __('Invitation was failed. There is a problem with your card.');
+            return $res;
+        } catch (StripeApiException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __('There was a problem. Please try again later.');
+            return $res;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __('System error has occurred.');
             return $res;
         }
         return $res;
+    }
+
+    /**
+     * @param Exception $e
+     */
+    private function _errorLogging(Exception $e)
+    {
+        CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+        CakeLog::error($e->getTraceAsString());
     }
 
     function reInvite(array $inviteData, array $emailData, string $email): bool

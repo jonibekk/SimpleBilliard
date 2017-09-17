@@ -629,10 +629,10 @@ class PaymentService extends AppService
                 'teams.id'      => $teamId,
                 'stripe_result' => $chargeRes,
             ])));
-
             // Save charge history
             if ($chargeRes['isApiRequestSucceed'] === false) {
-                throw new Exception(
+                // This Exception is Stripe system matter.
+                throw new StripeApiException(
                     sprintf("Failed to charge. A request to Stripe API was failed. data:%s",
                         AppUtil::varExportOneLine(
                             compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
@@ -640,7 +640,8 @@ class PaymentService extends AppService
                     )
                 );
             } elseif ($chargeRes['error'] && $chargeType->getValue() !== $chargeType::MONTHLY_FEE) {
-                throw new Exception(
+                // This Exception is an user's card matter.
+                throw new CreditCardStatusException(
                     sprintf("Failed to charge. In adding/activating members case, all transaction should be rollback. data:%s",
                         AppUtil::varExportOneLine(
                             compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
