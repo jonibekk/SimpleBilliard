@@ -225,7 +225,8 @@ class PaymentsController extends AppController
         if (empty($history)) {
             throw new NotFoundException(__("Receipt not found"));
         }
-        $this->set(compact('history'));
+        $isMonthly = $history['ChargeHistory']['is_monthly'];
+        $this->set(compact('history', 'isMonthly'));
         return $this->render();
     }
 }
