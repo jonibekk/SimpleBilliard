@@ -89,7 +89,7 @@ class CreditCardService extends AppService
             }
             // Check if the the card was acquired
             // This should not happen in any case. Logging an Emergency
-            if (!isset($result["card"] )) {
+            if (!isset($result["card"])) {
                 CakeLog::emergency(sprintf("[%s] Customer credit card not acquired. customer_id: %s, sourceId: %s",
                     __METHOD__, $response->id, $defaultSource));
 
@@ -164,6 +164,7 @@ class CreditCardService extends AppService
 
     /**
      * cache team credit card expiration data by array
+     *
      * @param array $data
      * @param int   $teamId
      */
@@ -179,6 +180,7 @@ class CreditCardService extends AppService
 
     /**
      * get team credit card expiration date by GoalousDateTime
+     *
      * @param int $teamId
      *
      * @return array
@@ -211,7 +213,8 @@ class CreditCardService extends AppService
         // credit card expire date cached successfully
         return [
             'error'  => false,
-            'expire' => self::getRealExpireDateTimeFromCreditCardExpireDate($expireDates['year'], $expireDates['month']),
+            'expire' => self::getRealExpireDateTimeFromCreditCardExpireDate($expireDates['year'],
+                $expireDates['month']),
         ];
     }
 
@@ -221,7 +224,6 @@ class CreditCardService extends AppService
      *  - exp_year = 2018
      *  - exp_month = 8
      * the card "real" expire datetime is "9/1/2018 00:00:00"
-     *
      * in this example, this method returns
      *     new GoalousDateTime("9/1/2018 00:00:00");
      *
@@ -296,8 +298,8 @@ class CreditCardService extends AppService
     public function chargeCustomer(string $customerId, string $currencyName, float $amount, string $description)
     {
         $result = [
-            "error"   => false,
-            "message" => null,
+            "error"               => false,
+            "message"             => null,
             // does request to stripe is succeed
             "isApiRequestSucceed" => false,
         ];
@@ -350,11 +352,12 @@ class CreditCardService extends AppService
             $result["success"] = $response->paid;
             $result["paymentId"] = $response->id;
             $result["status"] = $response->status;
-            $result["paymentData"] = $response;
-        } catch(\Stripe\Error\Card $e) {
+            $result["paymentData"] = $response->jsonSerialize();
+        } catch (\Stripe\Error\Card $e) {
             /**
              * in this catch case, API request is success
              * but credit card can not use for charge
+             *
              * @see https://stripe.com/docs/api#error_handling
              */
             $result["isApiRequestSucceed"] = true;
@@ -392,7 +395,7 @@ class CreditCardService extends AppService
      *
      * @param string $customerId
      * @param string $token
-     * @param int $teamId
+     * @param int    $teamId
      *
      * @return array
      */

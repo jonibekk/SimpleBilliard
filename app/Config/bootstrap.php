@@ -166,6 +166,10 @@ Configure::write('CakePdf', array(
     'pageSize'    => 'A4',
 ));
 
+// AdditionalExceptions
+require APP . "Lib/Error/Exceptions.php";
+
+
 // Autoload model constants
 spl_autoload_register(function ($class) {
     // Get filePath path by namespace

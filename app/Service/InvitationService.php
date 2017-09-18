@@ -85,7 +85,8 @@ class InvitationService extends AppService
                     $i + 1) . "：" . __("This email address has already been used. Use another email address.");
         }
         if (!empty($errEmails)) {
-            CakeLog::info(sprintf("[%s] Users with email address does not belong to any team. emails:%s", __METHOD__,  AppUtil::jsonOneLine($errEmails)));
+            CakeLog::info(sprintf("[%s] Users with email address does not belong to any team. emails:%s", __METHOD__,
+                AppUtil::jsonOneLine($errEmails)));
         }
         return $errors;
     }
@@ -103,9 +104,9 @@ class InvitationService extends AppService
      * @param int   $fromUserId
      * @param array $emails
      *
-     * @return bool
+     * @return array [error:true|false, msg:""]
      */
-    function invite(int $teamId, int $fromUserId, array $emails): bool
+    function invite(int $teamId, int $fromUserId, array $emails): array
     {
         /** @var Invite $Invite */
         $Invite = ClassRegistry::init("Invite");
@@ -119,6 +120,11 @@ class InvitationService extends AppService
         $Team = ClassRegistry::init("Team");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+
+        $res = [
+            'error' => false,
+            'msg'   => "",
+        ];
 
         try {
             $this->TransactionManager->begin();
@@ -181,6 +187,7 @@ class InvitationService extends AppService
             }
 
             /* Charge if paid plan */
+            // TODO.payment: Should we store $addUserCnt to DB?
             $addUserCnt = count($targetUserIds);
             if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
@@ -192,13 +199,29 @@ class InvitationService extends AppService
                 );
             }
             $this->TransactionManager->commit();
+        } catch (CreditCardStatusException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __('Invitation was failed.') . " " . __('There is a problem with your card.');
+            return $res;
+        } catch (StripeApiException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __('Invitation was failed.') . " " . __('Please try again later.');
+            return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-            return false;
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __('Invitation was failed.') . " " . __('System error has occurred.');
+            return $res;
         }
-        return true;
+        return $res;
     }
 
     function reInvite(array $inviteData, array $emailData, string $email): bool

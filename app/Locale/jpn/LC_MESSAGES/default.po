@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.1\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -1833,6 +1833,18 @@ msgstr "%d行目"
 msgid "Email address"
 msgstr "メールアドレス"
 
+msgid "Invitation was failed."
+msgstr "メンバーの招待に失敗しました。"
+
+msgid "There is a problem with your card."
+msgstr "お客様のカード情報に問題があります。"
+
+msgid "Please try again later."
+msgstr "しばらく時間をおいて再度操作してください。"
+
+msgid "System error has occurred."
+msgstr "システムエラーが発生しております。"
+
 msgid "Incomplete"
 msgstr "未完了"
 
@@ -1865,9 +1877,6 @@ msgstr "%sがトピック名を削除しました。"
 
 msgid "Failed to register paid plan."
 msgstr "有料プランの登録に失敗しました。"
-
-msgid "Please try again later."
-msgstr "しばらく時間をおいて再度登録してください。"
 
 msgid "Payment settings does not exists."
 msgstr "決済設定が見つかりません。"
