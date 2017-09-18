@@ -17,30 +17,17 @@ class InvoiceService extends AppService
     const API_URL_INQUIRE_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
     /**
-     * @var \GuzzleHttp\Client
-     * be sure to use GuzzleHttp (not \Guzzle\Http this is old version)
-     */
-    private $httpClient = null;
-
-    /**
      * @return \GuzzleHttp\Client
      */
     private function getHttpClient(): \GuzzleHttp\Client
     {
-        $client = $this->httpClient ?? new \GuzzleHttp\Client();
-        $this->httpClient = null;
-        return $client;
-    }
-
-    /**
-     * InvoiceService dependence to http client
-     * this method use usually on test/simulate
-     *
-     * @param \GuzzleHttp\Client $httpClient
-     */
-    public function setHttpClient(\GuzzleHttp\Client $httpClient)
-    {
-        $this->httpClient = $httpClient;
+        // use ClassRegistry::getObject() for test cases
+        // usually returning false on default case
+        $registeredClient = ClassRegistry::getObject(\GuzzleHttp\Client::class);
+        if ($registeredClient instanceof \GuzzleHttp\Client) {
+            return $registeredClient;
+        }
+        return new \GuzzleHttp\Client();
     }
 
     /**
@@ -51,7 +38,7 @@ class InvoiceService extends AppService
      * @param array  $monthlyChargeHistory
      * @param string $orderDate
      *
-     * @return array responce from atobarai.com
+     * @return array response from atobarai.com
      * @throws Exception
      */
     function registerOrder(
