@@ -333,7 +333,8 @@ class CreditCardService extends AppService
         if ($currencyName === PaymentSetting::CURRENCY_USD) {
             // Because of PHP float bug, we should use this value as float
             // ref) http://php.net/manual/ja/language.types.float.php
-            $amount = (float)($amount * 100);
+            //      http://www.psi-net.co.jp/blog/?p=277
+            $amount = (string)($amount * 100);
         } else {
             $amount = (int)$amount;
         }
