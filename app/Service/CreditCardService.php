@@ -331,7 +331,9 @@ class CreditCardService extends AppService
         // Stripe specification
         // Ref: https://stripe.com/docs/currencies#zero-decimal
         if ($currencyName === PaymentSetting::CURRENCY_USD) {
-            $amount = (int)($amount * 100);
+            // Because of PHP float bug, we should use this value as float
+            // ref) http://php.net/manual/ja/language.types.float.php
+            $amount = (float)($amount * 100);
         } else {
             $amount = (int)$amount;
         }
