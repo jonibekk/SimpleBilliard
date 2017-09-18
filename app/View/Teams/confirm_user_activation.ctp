@@ -1,9 +1,4 @@
 <?= $this->App->viewStartComment() ?>
-<?php
-// TODO.Payment:
-// 1. Fixing design collaposed
-// 2. Translation
-?>
 <section id="UserInvite" class="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
     <div class="inviteCfmBlock">
         <h2 class="title"><?= __('Activation user'); ?></h2>

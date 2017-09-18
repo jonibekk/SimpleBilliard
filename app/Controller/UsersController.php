@@ -18,6 +18,7 @@ use Goalous\Model\Enum as Enum;
  * @property User           $User
  * @property Invite         $Invite
  * @property Circle         $Circle
+ * @property TeamMember     $TeamMember
  * @property TwoFaComponent $TwoFa
  */
 class UsersController extends AppController
@@ -26,6 +27,7 @@ class UsersController extends AppController
         'User',
         'Invite',
         'Circle',
+        'TeamMember'
     ];
     public $components = [
         'TwoFa',
@@ -74,6 +76,13 @@ class UsersController extends AppController
             $this->Notification->outError(__("Email address or Password is incorrect."));
             return $this->render();
         }
+
+        // Check if user belongs any team
+        if (empty($this->TeamMember->findBelongsByUser($userInfo['id']))) {
+            $this->Notification->outError(__("You don't belong to any team."));
+            return $this->render();
+        }
+
         $this->Session->write('preAuthPost', $this->request->data);
 
         //デバイス情報を保存する
@@ -818,6 +827,8 @@ class UsersController extends AppController
      * - この中で呼ばれる_joinTeam()メソッド内でトランザクションを張っている
      *
      * @param $token
+     *
+     * @return \Cake\Network\Response|null
      */
     public function accept_invite($token)
     {
