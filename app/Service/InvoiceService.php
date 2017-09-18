@@ -138,6 +138,7 @@ class InvoiceService extends AppService
     {
         $client = $this->getHttpClient();
         $response = $client->post($requestUrl, [
+            'http_errors' => 'false',
             'headers' => [
                 'Content-Type: application/x-www-form-urlencoded',
                 'Content-Length: ' . http_build_query($data),
