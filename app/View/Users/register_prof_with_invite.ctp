@@ -65,7 +65,6 @@
                 'text'  => __("I want to receive news and updates by email from Goalous.")
             ],
             'class'     => '',
-            'required'  => true,
             'checked'   => 'checked'
         ]);
         ?>
