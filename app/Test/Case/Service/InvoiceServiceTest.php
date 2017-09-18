@@ -252,7 +252,7 @@ class InvoiceServiceTest extends GoalousTestCase
 
 
         $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
-            $this->createXmlAtobaraiInquireCreditSucceedResponse([
+            $this->createXmlAtobaraiInquireCreditResponse([
                 [
                     'orderId'     => $orderId,
                     'entOrderId'  => '',
@@ -265,6 +265,26 @@ class InvoiceServiceTest extends GoalousTestCase
         $res = $this->InvoiceService->inquireCreditStatus($orderId);
         $this->assertEquals('success', $res['status']);
         $this->assertEquals(Enum\AtobaraiCom\Credit::OK, $res['results']['result']['orderStatus']['@cd']);
+    }
+
+    public function test_inquireCreditStatusNotFound()
+    {
+        $orderId = 'order_id_not_found_xxxxxxxxxxxxx';
+
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiInquireCreditResponse([
+                [
+                    'orderId'     => $orderId,
+                    'entOrderId'  => '',
+                    'orderCreditStatus' => Enum\AtobaraiCom\Credit::ORDER_NOT_FOUND(),
+                ],
+            ])
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
+        $res = $this->InvoiceService->inquireCreditStatus($orderId);
+        $this->assertEquals('error', $res['status']);
+        $this->assertEquals(Enum\AtobaraiCom\Credit::ORDER_NOT_FOUND, $res['results']['result']['orderStatus']['@cd']);
     }
 
     public function test_updateCreditStatus()

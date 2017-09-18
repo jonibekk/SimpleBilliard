@@ -44,7 +44,7 @@ trait AtobaraiResponseTraits
      *
      * @return \GuzzleHttp\Psr7\Response
      */
-    protected function createXmlAtobaraiInquireCreditSucceedResponse(array $inquireResults): \GuzzleHttp\Psr7\Response
+    protected function createXmlAtobaraiInquireCreditResponse(array $inquireResults): \GuzzleHttp\Psr7\Response
     {
         $r = XmlAtobaraiResponse::getInquireCreditStatus($inquireResults);
         return new \GuzzleHttp\Psr7\Response($r['status'], [], $r['xml']);
