@@ -45,7 +45,7 @@
             || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
             || (isset($statusPaymentFailed) && $statusPaymentFailed)
         ) : ?>
-        <div class="banner-alert font_verydark">
+        <div class="banner-alert font_verydark <?= $is_mb_app_ios ? "mod-mb-app" : "" ?>">
             <div class="container">
                 <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate, $teamCreditCardStatus ?? Team::STATUS_CREDIT_CARD_CLEAR, $teamCreditCardExpireDate ?? '', $statusPaymentFailed ?? false) ?>

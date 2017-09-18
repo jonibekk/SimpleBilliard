@@ -524,11 +524,10 @@ var subNav = document.getElementsByClassName('sub-navigation'),
 // If sub nav exists, invoke initialization
 if(subNav.length){
     var subNavLi = subNav[0].getElementsByTagName('li');
+    // If window is resized, reinitialize
+    window.addEventListener( 'resize', function() {initSubNav()});
     initSubNav();
 }
-
-// If window is resized, reinitialize
-window.addEventListener( 'resize', function() {initSubNav()});
 
 // Function that toggles dropdown
 function toggleSubNav(){
