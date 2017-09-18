@@ -56,7 +56,40 @@ XML
     }
 
     /**
-     * simulate response of 与信状況問い合わせAPI (check invoice API)
+     * simulate response of 注文登録API error (new order API)
+     *
+     * @param string $orderId
+     *
+     * @return array
+     */
+    public static function getOrderError(string $orderId): array
+    {
+        return [
+            'status' => 200, // not defined on .pdf
+            'xml' => <<< XML
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+	<status>error</status>
+	<orderId>{$orderId}</orderId>
+	<messages>
+		<message cd="E00201">
+			請求金額合計 : データを0または空にすることはできません
+		</message>
+		<message cd="E00202">
+			有効な注文IDが指定されていません
+		</message>
+	</messages>
+</response>
+
+XML
+        ];
+    }
+
+    /**
+     * simulate response of 与信状況問い合わせAPI (check credit invoice API)
+     *
+     * if passed 'orderCreditStatus' is all Enum\AtobaraiCom\Credit::ORDER_NOT_FOUND()
+     * xml status returns <status>error</status>
      *
      * @param array $results [
      *      [
@@ -67,16 +100,23 @@ XML
      *      ...
      * ]
      *
+     * @see 後払い.com API 外部インターフェイス仕様書 与信状況問い合わせAPI
+     * https://confluence.goalous.com/pages/viewpage.action?pageId=9371952&preview=/9371952/9371959/%E5%A4%96%E9%83%A8%EF%BC%A9%EF%BC%A6%E4%BB%95%E6%A7%98%E6%9B%B8%EF%BC%8802%EF%BC%9A%E4%B8%8E%E4%BF%A1%E7%8A%B6%E6%B3%81%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%EF%BC%A1%EF%BC%B0%EF%BC%A9%EF%BC%89.pdf
      * @return array
      */
-    public static function getInquireCreditStatusSucceed(array $results): array
+    public static function getInquireCreditStatus(array $results): array
     {
         $resultsXml = '';
+        $isOrderIdFound = false;
         foreach ($results as $result) {
             $orderId = $result['orderId'];
             $entOrderId = $result['entOrderId'];
+            /** @var Enum\AtobaraiCom\Credit $orderCreditStatus */
             $orderCreditStatus = $result['orderCreditStatus'];
             $creditString = self::getCdString($orderCreditStatus);
+            if (!$orderCreditStatus->equals(Enum\AtobaraiCom\Credit::ORDER_NOT_FOUND())) {
+                $isOrderIdFound = true;
+            }
             $resultsXml .= <<< XML
 		<result>
 			<orderId>{$orderId}</orderId>
@@ -85,13 +125,15 @@ XML
 		</result>
 XML;
         }
+        $status = $isOrderIdFound ? 'success' : 'error';
+        $messages = $isOrderIdFound ? '<messages />' : '<message cd="E00202">有効な注文IDが指定されていません</message>';
         return [
             'status' => 200,
             'xml' => <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
-	<status>success</status>
-	<messages />
+	<status>{$status}</status>
+	{$messages}
 	<results>
 	    {$resultsXml}
 	</results>
