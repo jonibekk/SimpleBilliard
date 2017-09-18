@@ -202,13 +202,7 @@ class PaymentsController extends AppController
 
         // Get country list
         $countries = Configure::read("countries");
-        $countries = array_map(function($tag) {
-            return array(
-                'name' => $tag['name'],
-                'value' => $tag['code']
-             );
-        }, $countries);
-
+        $countries = Hash::combine($countries, '{n}.code', '{n}.name');
         $this->set(compact('setting', 'countries'));
 
         return $this->render('contact_settings');

@@ -1748,6 +1748,9 @@ msgstr "メールアドレスが正しくないものがあります。"
 msgid "Please mix of numbers and alphanumeric."
 msgstr "パスワードは数字と英字を組み合わせて下さい。"
 
+msgid "Only Kana characters are allowed."
+msgstr "許可されているのはカナのみです。"
+
 msgid "Enter a valid date in YYYY/MM/DD format."
 msgstr "有効な日付を YYYY/MM/DD フォーマットで入力してください。"
 
@@ -2837,6 +2840,9 @@ msgstr "税"
 msgid "Total"
 msgstr "トータル"
 
+msgid "Enter your card information"
+msgstr "カード情報を入力してください"
+
 msgid "I agree with the terms of service"
 msgstr "利用規約に同意する"
 
@@ -2851,6 +2857,9 @@ msgstr "会社情報と同じにする"
 
 msgid "Terms of Use"
 msgstr "利用規約"
+
+msgid "Confirm registration and charge"
+msgstr "有料プラン登録・請求確認"
 
 msgid "Thank You"
 msgstr "ありがとうございます"
@@ -5173,8 +5182,8 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "Subscribe"
 msgstr "□配信停止"
 
-msgid "Billing Information"
-msgstr "請求先情報"
+msgid "Company Information"
+msgstr "会社情報"
 
 msgid "Country"
 msgstr "国"
@@ -5305,8 +5314,8 @@ msgstr "カード情報を更新する"
 msgid "Card is expired. Please update your card's information."
 msgstr "カードの有効期限が切れています。カード情報を更新してください。"
 
-msgid "Enter your card information"
-msgstr "カード情報を入力してください"
+msgid "Billing Information"
+msgstr "請求先情報"
 
 msgid "Jane Doe"
 msgstr "Jane Doe"

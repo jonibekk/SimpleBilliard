@@ -73,26 +73,6 @@ class Invoice extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_tel'             => [
-            'maxLength' => ['rule' => ['maxLength', 20]],
-            'notBlank'  => [
-                'required' => true,
-                'rule'     => 'notBlank',
-            ],
-        ],
-        'contact_person_email'           => [
-            'notBlank'    => [
-                'required' => true,
-                'rule'     => 'notBlank',
-            ],
-            'emailsCheck' => [
-                'rule' => ['emailsCheck']
-            ],
-        ],
-    ];
-
-
-    public $validateJp = [
         'contact_person_first_name_kana' => [
             'notBlank'  => [
                 'required' => true,
@@ -109,6 +89,22 @@ class Invoice extends AppModel
             'katakanaOnly' => ['rule' => ['katakanaOnly']],
             'maxLength' => ['rule' => ['maxLength', 128]],
         ],
-    ];
+        'contact_person_tel'             => [
+            'maxLength' => ['rule' => ['maxLength', 20]],
+            'notBlank'  => [
+                'required' => true,
+                'rule'     => 'notBlank',
+            ],
+        ],
+        'contact_person_email'           => [
+            'notBlank'    => [
+                'required' => true,
+                'rule'     => 'notBlank',
+            ],
+            'emailsCheck' => [
+                'rule' => ['emailsCheck']
+            ],
+        ],
 
+    ];
 }
