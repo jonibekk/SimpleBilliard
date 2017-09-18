@@ -29,7 +29,7 @@
             <h3><?= __('Billed To');?></h3>
             <?php if ($history['PaymentSetting']['is_card']): ?>
                 <p class="credit-charge-to">
-                        <?= $history['ChargeHistory']['total_with_currency'] ?> <?= __("charged to card ending in")?> <?= $history['CreditCard']['last4'] ?>
+                    <?= $history['ChargeHistory']['total_with_currency'] ?> <?= __("charged to card ending in")?> <?= $history['CreditCard']['last4'] ?>
                 </p>
             <?php endif; ?>
             <p><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
