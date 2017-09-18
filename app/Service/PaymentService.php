@@ -84,11 +84,6 @@ class PaymentService extends AppService
         // Validates model
         $PaymentSetting->set($data);
         $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateCreate);
-
-        $companyCountry = Hash::get($data, 'company_country');
-        if ($companyCountry === 'JP') {
-            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
-        }
         if (!$PaymentSetting->validates()) {
             return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
         }
@@ -127,11 +122,6 @@ class PaymentService extends AppService
         // Validates PaymentSetting model
         $checkData = Hash::get($data, 'payment_setting') ?? [];
         $PaymentSetting->set($checkData);
-
-        $companyCountry = Hash::get($data, 'payment_setting.company_country');
-        if ($companyCountry === 'JP') {
-            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
-        }
         if (!$PaymentSetting->validates()) {
             $allValidationErrors = am(
                 $allValidationErrors,
@@ -142,9 +132,6 @@ class PaymentService extends AppService
         // Validates Invoice model
         $checkData = Hash::get($data, 'invoice') ?? [];
         $Invoice->set($checkData);
-        if ($companyCountry === 'JP') {
-            $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
-        }
         if (!$Invoice->validates()) {
             $allValidationErrors = am(
                 $allValidationErrors,
@@ -1347,20 +1334,22 @@ class PaymentService extends AppService
 
         $data = [
             'id'                             => $paySetting['id'],
-            'team_id'                        => $paySetting['team_id'],
-            'type'                           => $paySetting['type'],
             'company_name'                   => $payerData['company_name'],
             'company_post_code'              => $payerData['company_post_code'],
             'company_region'                 => $payerData['company_region'],
             'company_city'                   => $payerData['company_city'],
             'company_street'                 => $payerData['company_street'],
             'contact_person_first_name'      => $payerData['contact_person_first_name'],
-            'contact_person_first_name_kana' => $payerData['contact_person_first_name_kana'],
             'contact_person_last_name'       => $payerData['contact_person_last_name'],
-            'contact_person_last_name_kana'  => $payerData['contact_person_last_name_kana'],
             'contact_person_tel'             => $payerData['contact_person_tel'],
             'contact_person_email'           => $payerData['contact_person_email'],
         ];
+
+        // If payment type is invoice, user can update contact person name kana
+        if ((int)Hash::get($paySetting, 'type') === Enum\PaymentSetting\Type::INVOICE) {
+            $data['contact_person_first_name_kana'] = $payerData['contact_person_first_name_kana'];
+            $data['contact_person_last_name_kana'] = $payerData['contact_person_last_name_kana'];
+        }
 
         try {
             // Update PaymentSettings
@@ -1569,8 +1558,8 @@ class PaymentService extends AppService
         $allValidationErrors = [];
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
-            $companyCountry = Hash::get($data, 'payment_setting.company_country');
-            if ($companyCountry === 'JP') {
+            $paymentType = Hash::get($data, 'payment_setting.type');
+            if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
                 $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
             }
             $allValidationErrors = am(
@@ -1590,11 +1579,6 @@ class PaymentService extends AppService
 
         // Invoice validation
         if (!empty(Hash::get($fields, 'Invoice'))) {
-            $companyCountry = Hash::get($data, 'payment_setting.company_country');
-            if ($companyCountry === 'JP') {
-                $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
-            }
-
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)

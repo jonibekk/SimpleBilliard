@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-16 17:50+0900\n"
+"PO-Revision-Date: 2017-09-18 11:30+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1736,6 +1736,9 @@ msgstr "メールアドレスが正しくないものがあります。"
 msgid "Please mix of numbers and alphanumeric."
 msgstr "パスワードは数字と英字を組み合わせて下さい。"
 
+msgid "Only Kana characters are allowed."
+msgstr "許可されているのはカナのみです。"
+
 msgid "Enter a valid date in YYYY/MM/DD format."
 msgstr "有効な日付を YYYY/MM/DD フォーマットで入力してください。"
 
@@ -2816,6 +2819,9 @@ msgstr "税"
 msgid "Total"
 msgstr "トータル"
 
+msgid "Enter your card information"
+msgstr "カード情報を入力してください"
+
 msgid "I agree with the terms of service"
 msgstr "利用規約に同意する"
 
@@ -2830,6 +2836,9 @@ msgstr "会社情報と同じにする"
 
 msgid "Terms of Use"
 msgstr "利用規約"
+
+msgid "Confirm registration and charge"
+msgstr "有料プラン登録・請求確認"
 
 msgid "Thank You"
 msgstr "ありがとうございます"
@@ -5286,9 +5295,6 @@ msgstr "カードの有効期限が切れています。カード情報を更新
 
 msgid "Billing Information"
 msgstr "請求先情報"
-
-msgid "Enter your card information"
-msgstr "カード情報を入力してください"
 
 msgid "Jane Doe"
 msgstr "Jane Doe"

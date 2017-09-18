@@ -10,13 +10,19 @@ if(document.editPaySettingsForm) {
         'company_street',
         'contact_person_last_name',
         'contact_person_first_name',
-        'contact_person_last_name_kana',
-        'contact_person_first_name_kana',
         'contact_person_email',
         'contact_person_tel'
     ];
 
-    var allFields = document.editPaySettingsForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
+    // If payment type is invoice, user can update contact person name kana.
+    if (document.getElementById('editPaySettingsType').value == 0) {
+      fields.push(
+        'contact_person_last_name_kana',
+        'contact_person_first_name_kana'
+      );
+    }
+
+  var allFields = document.editPaySettingsForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
     for(var i = 0; i < allFields.length; i++) {
         allFields[i].addEventListener('change', removeError);
     }
