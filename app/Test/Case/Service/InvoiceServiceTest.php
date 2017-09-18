@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('XmlAtobaraiResponse', 'AtobaraiCom');
+App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'InvoiceService');
 
 use Goalous\Model\Enum as Enum;
@@ -12,6 +12,8 @@ use Goalous\Model\Enum as Enum;
  */
 class InvoiceServiceTest extends GoalousTestCase
 {
+    use AtobaraiResponseTraits;
+
     /**
      * Fixtures
      *
@@ -157,7 +159,7 @@ class InvoiceServiceTest extends GoalousTestCase
         $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
             $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
         ]));
-        $this->InvoiceService->setHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
 
         $res = $this->InvoiceService->registerOrder($teamId, $targetChargeHistories, $monthlyChargeHistory, $orderDate);
 
@@ -242,7 +244,7 @@ class InvoiceServiceTest extends GoalousTestCase
         $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
             $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
         ]));
-        $this->InvoiceService->setHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
 
         $orderDate = "2016-12-31";
         $res = $this->InvoiceService->registerOrder($teamId, $targetChargeHistories, $monthlyChargeHistory, $orderDate);
@@ -258,7 +260,7 @@ class InvoiceServiceTest extends GoalousTestCase
                 ],
             ])
         ]));
-        $this->InvoiceService->setHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
 
         $res = $this->InvoiceService->inquireCreditStatus($orderId);
         $this->assertEquals('success', $res['status']);
@@ -306,21 +308,5 @@ class InvoiceServiceTest extends GoalousTestCase
     public function test_isSentInvoice()
     {
         // TODO.Payment: add unit tests.
-    }
-
-    private function createXmlAtobaraiOrderSucceedResponse(
-        string $orderId,
-        string $systemOrderId,
-        Enum\AtobaraiCom\Credit $orderCredit
-    ): \GuzzleHttp\Psr7\Response
-    {
-        $r = XmlAtobaraiResponse::getOrderSucceed($orderId, $systemOrderId, $orderCredit);
-        return new \GuzzleHttp\Psr7\Response($r['status'], [], $r['xml']);
-    }
-
-    private function createXmlAtobaraiInquireCreditSucceedResponse(array $inquireResults): \GuzzleHttp\Psr7\Response
-    {
-        $r = XmlAtobaraiResponse::getInquireCreditStatusSucceed($inquireResults);
-        return new \GuzzleHttp\Psr7\Response($r['status'], [], $r['xml']);
     }
 }

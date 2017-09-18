@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'PaymentService');
 
 use Goalous\Model\Enum as Enum;
@@ -20,6 +21,8 @@ use Goalous\Model\Enum as Enum;
  */
 class PaymentServiceTest extends GoalousTestCase
 {
+    use AtobaraiResponseTraits;
+
     /**
      * Fixtures
      *
@@ -1606,6 +1609,11 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentData = $invoiceData = $this->createTestPaymentDataForReg([]);
 
         // Register invoice
+        // TODO:ここを適切なレスポンスにする
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData);
         $this->assertTrue($res === true);
 
@@ -1679,6 +1687,11 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentData = $invoiceData = [];
 
         // Register invoice
+        // TODO: ここを適切なレスポンスにする
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
         $this->assertFalse($res === true);
     }
@@ -1689,6 +1702,11 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentData = $invoiceData = $this->createTestPaymentData([]);
 
         // Register invoice
+        // TODO: ここを適切なレスポンスにする
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $res = $this->PaymentService->registerInvoicePayment($userID, 999, $paymentData, $invoiceData);
         $this->assertFalse($res === true);
     }
@@ -1697,6 +1715,11 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $userID = $this->createActiveUser(1);
         $paymentData = $invoiceData = $this->createTestPaymentData([]);
+        // TODO: ここを適切なレスポンスにする
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
 
         // update invoice
@@ -1721,6 +1744,11 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $userID = $this->createActiveUser(1);
         $paymentData = $invoiceData = $this->createTestPaymentData([]);
+        // TODO: ここを失敗レスポンスにする
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
 
         $newData = $this->createTestPaymentData([
@@ -2354,6 +2382,13 @@ class PaymentServiceTest extends GoalousTestCase
         $this->_addInvoiceChargeHistory($teamId, [
             'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
         ]);
+
+
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
         $res = $this->PaymentService->registerInvoice($teamId, 10, $time);
         $this->assertTrue($res);
         // checking invoiceHistory
