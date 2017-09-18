@@ -45,6 +45,18 @@ msgstr ""
 msgid "5 (Very high)"
 msgstr "5 (とても高い)"
 
+msgid "Germany"
+msgstr "ドイツ"
+
+msgid "Japan"
+msgstr "日本"
+
+msgid "Thailand"
+msgstr "タイ"
+
+msgid "United States"
+msgstr "アメリカ合衆国"
+
 msgid "All Team"
 msgstr "チーム全体"
 
