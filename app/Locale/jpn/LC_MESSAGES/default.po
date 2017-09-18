@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-15 18:11+0900\n"
+"PO-Revision-Date: 2017-09-18 11:39+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -729,7 +729,7 @@ msgid "Email address or Password is incorrect."
 msgstr "メールアドレスもしくはパスワードが正しくありません。"
 
 msgid "You don't belong to any team."
-msgstr ""
+msgstr "あなたはどのチームにも属していません"
 
 msgid "Error. Try to login again."
 msgstr "エラーが発生しました。再度ログインをしてください。"
@@ -5322,6 +5322,9 @@ msgstr "タイプ"
 
 msgid "TIME PERIOD"
 msgstr "期間"
+
+msgid "DATE"
+msgstr "日"
 
 msgid "AMOUNT"
 msgstr "金額"

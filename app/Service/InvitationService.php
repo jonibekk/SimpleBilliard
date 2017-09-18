@@ -68,12 +68,24 @@ class InvitationService extends AppService
         if (!empty($errors)) {
             return $errors;
         }
-
         $existEmails = $Email->findExistByTeamId($teamId, $emails);
         $errEmails = array_intersect($emails, $existEmails);
         foreach ($errEmails as $i => $mail) {
             $errors[] = __("Line %d",
                     $i + 1) . "：" . __("This email address has already been used. Use another email address.");
+        }
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        $existEmails = $Email->findNotBelongAnyTeamsByEmails($emails);
+        $errEmails = array_intersect($emails, $existEmails);
+        foreach ($errEmails as $i => $mail) {
+            $errors[] = __("Line %d",
+                    $i + 1) . "：" . __("This email address has already been used. Use another email address.");
+        }
+        if (!empty($errEmails)) {
+            CakeLog::info(sprintf("[%s] Users with email address does not belong to any team. emails:%s", __METHOD__,  AppUtil::jsonOneLine($errEmails)));
         }
         return $errors;
     }
