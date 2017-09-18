@@ -41,10 +41,10 @@
         <table>
             <tbody>
                 <th colspan="2"><?= __("TYPE") ?></th>
-                <th><?= $isMonthly ? __('TIME PERIOD') :  __('DATE'); ?></th>
+                <th><?= $isMonthly ? __('TIME PERIOD') : __('DATE'); ?></th>
                 <th><?= __('AMOUNT');?></th>
                 <tr>
-                    <td><?= $isMonthly ? __('Monthly') :  __('Add member(s)'); ?></td>
+                    <td><?= $isMonthly ? __('Monthly') : __('Add member(s)'); ?></td>
                     <td><?= $history['ChargeHistory']['charge_users'] ?> <?= __("members") ?></td>
                     <td>
                     <?php if ($isMonthly): ?>
