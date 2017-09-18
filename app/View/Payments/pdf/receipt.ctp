@@ -8,7 +8,7 @@
             );
             ?>
         </figure>
-        <?php if (!$history['PaymentSetting']['is_card']): ?>
+        <?php if ($history['PaymentSetting']['is_card']): ?>
         <h2 class="receipt-status"><?= __("PAID") ?></h2>
         <?php endif; ?>
     </header>
