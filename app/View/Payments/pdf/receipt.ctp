@@ -34,25 +34,25 @@
             <?= $history['ChargeHistory']['total_with_currency'] ?> charged
             <?php endif; ?>
             </p>
-            <p><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
+            <p class="company-info"><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
         </div>
     </div>
     <div class="invoice-table">
         <table>
             <tbody>
                 <th colspan="2"><?= __("TYPE") ?></th>
-                <th><?= __('TIME PERIOD');?></th>
+                <th><?= $isMonthly ? __('TIME PERIOD') :  __('DATE'); ?></th>
                 <th><?= __('AMOUNT');?></th>
                 <tr>
-                    <td>
-                        <?php if($history['ChargeHistory']['is_monthly']): ?>
-                            <?= __("Monthly") ?>
-                        <?php else: ?>
-                            <?= __("Add member(s)") ?>
-                        <?php endif; ?>
-                    </td>
+                    <td><?= $isMonthly ? __('Monthly') :  __('Add member(s)'); ?></td>
                     <td><?= $history['ChargeHistory']['charge_users'] ?> <?= __("members") ?></td>
-                    <td><?= $history['ChargeHistory']['term'] ?></td>
+                    <td>
+                    <?php if ($isMonthly): ?>
+                        <?= $history['ChargeHistory']['term'] ?>
+                    <?php else: ?>
+                        <?= $history['ChargeHistory']['local_charge_date'] ?>
+                    <?php endif; ?>
+                    </td>
                     <td><?= $history['ChargeHistory']['sub_total_with_currency'] ?></td>
                 </tr>
                 <tr>
