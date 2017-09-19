@@ -26,7 +26,6 @@ class InvitationsController extends ApiController
 
     /**
      * Validation
-     *
      */
     function post_validate()
     {
@@ -54,7 +53,6 @@ class InvitationsController extends ApiController
         return $this->_getResponseSuccess(compact('emails'));
     }
 
-
     /**
      * Get information for invitation input page.
      */
@@ -75,7 +73,6 @@ class InvitationsController extends ApiController
             'team' => $team
         ]);
     }
-
 
     /**
      * Get information for displaying invitation confirmation page.
@@ -129,14 +126,15 @@ class InvitationsController extends ApiController
             $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
             // Calc total charge
             $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
-            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($teamId, $chargeUserCnt, $currency,  $useDaysByNext, $allUseDays);
+            $totalCharge = $PaymentService->formatTotalChargeByAddUsers($teamId, $chargeUserCnt, $currency,
+                $useDaysByNext, $allUseDays);
 
             $res = [
-                'amount_per_user' => $amountPerUser,
-                'charge_users_count' => $chargeUserCnt,
+                'amount_per_user'            => $amountPerUser,
+                'charge_users_count'         => $chargeUserCnt,
                 'use_days_by_next_base_date' => $useDaysByNext,
-                'all_use_days' => $allUseDays,
-                'total_charge' => $totalCharge,
+                'all_use_days'               => $allUseDays,
+                'total_charge'               => $totalCharge,
             ];
         }
 
@@ -173,8 +171,10 @@ class InvitationsController extends ApiController
         }
 
         // Invite
-        if (!$InvitationService->invite($this->current_team_id, $userId, $emails)) {
-            return $this->_getResponseInternalServerError();
+        $resInvite = $InvitationService->invite($this->current_team_id, $userId, $emails);
+        if ($resInvite['error']) {
+            // TODO.payment: switch message when exists problem card status
+            return $this->_getResponseBadFail($resInvite['msg']);
         }
 
         // Send invitation mail
@@ -188,7 +188,7 @@ class InvitationsController extends ApiController
         $this->Notification->outSuccess(__("Invited %s people.", $countInvitedPeople));
 
         CakeLog::info(sprintf('invited people: %s', AppUtil::jsonOneLine([
-            'teams.id' => $this->current_team_id,
+            'teams.id'     => $this->current_team_id,
             'count_invite' => $countInvitedPeople,
         ])));
         PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
@@ -197,7 +197,6 @@ class InvitationsController extends ApiController
 
     /**
      * re-inviting user
-     *
      * this API takes id of user_id
      *
      * @return CakeResponse
@@ -217,7 +216,7 @@ class InvitationsController extends ApiController
         /** @var Email $Email */
         $Email = ClassRegistry::init('Email');
 
-        $userId         = $this->request->data('user_id');
+        $userId = $this->request->data('user_id');
         $requestedEmail = $this->request->data('email') ?? '';
         if (!AppUtil::isInt($userId)) {
             return $this->_getResponseBadFail(__('Param is incorrect'));

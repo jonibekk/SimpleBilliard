@@ -91,28 +91,26 @@ Configure::write('Slack', [
 /**
  * Configures default file logging options
  */
-App::uses('CakeLog', 'Log');
 // changing path of error log, cause, doc root is changed every time of deployment by opsworks
-CakeLog::config('custom_path', [
-    'engine' => LOG_ENGINE,
-    'path'   => '/var/log/goalous/'
-]);
+$logPath = '/var/log/goalous/';
 CakeLog::config('debug', [
     'engine' => LOG_ENGINE,
     'types'  => ['notice', 'info', 'debug'],
     'file'   => 'debug',
+    'path'   => $logPath
 ]);
 CakeLog::config('error', [
     'engine' => LOG_ENGINE,
     'types'  => ['warning', 'error', 'critical', 'alert'],
     'file'   => 'error',
+    'path'   => $logPath
 ]);
 CakeLog::config('emergency', [
     'engine' => LOG_ENGINE,
     'types'  => ['emergency'],
     'file'   => 'emergency',
+    'path'   => $logPath
 ]);
-
 Configure::write('Asset.timestamp', 'force');
 
 App::build([
@@ -150,32 +148,36 @@ Configure::load("country.php");
 // CakePdf setting
 CakePlugin::load('CakePdf', ['bootstrap' => true, 'routes' => true]);
 Configure::write('CakePdf', array(
-    'engine' => 'CakePdf.WkHtmlToPdf',
-    'binary' => ROOT . '/etc/wkhtmltopdf.sh', // For ubuntu, wrapped by shell
-    'options' => array(
+    'engine'      => 'CakePdf.WkHtmlToPdf',
+    'binary'      => ROOT . '/etc/wkhtmltopdf.sh', // For ubuntu, wrapped by shell
+    'options'     => array(
         'print-media-type' => false,
-        'outline' => true,
-        'dpi' => 96
+        'outline'          => true,
+        'dpi'              => 96
     ),
-    'margin' => array(
+    'margin'      => array(
         'bottom' => 5,
-        'left' => 5,
-        'right' => 5,
-        'top' => 5
+        'left'   => 5,
+        'right'  => 5,
+        'top'    => 5
     ),
     'orientation' => 'portrait',
-    'encoding'=>'UTF-8',
-    'pageSize'=>'A4',
+    'encoding'    => 'UTF-8',
+    'pageSize'    => 'A4',
 ));
 
+// AdditionalExceptions
+require APP . "Lib/Error/Exceptions.php";
+
+
 // Autoload model constants
-spl_autoload_register(function($class) {
+spl_autoload_register(function ($class) {
     // Get filePath path by namespace
     // e.g. 「Goalous\Model\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
     if (!preg_match("/Model\\\\Enum\\\\[A-Za-z]+/", $class, $match)) {
         return;
     }
-    $filePath = APP. DS. str_replace('\\', DS, $match[0]).'.php' ;
+    $filePath = APP . DS . str_replace('\\', DS, $match[0]) . '.php';
     if (file_exists($filePath)) {
         return include $filePath;
     }
