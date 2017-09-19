@@ -142,6 +142,53 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
         </div>
         <div class="question">
+            <p class="question-entry"><strong><?= __('When does the free trial period and payment begin?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('For customers who registered on Goalous before 2017/9/29, the free trial period will end on 2017/10/15. Those who registered after 2017/9/29, the free trial period will end in 15 days. The payment begins on the day you apply for the paid plan.');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('When should I apply for the paid plan?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('Please apply for the paid plan before the free trial period ends. Even if the free trial period is over, you can apply for a paid plan for a certain period (120 days).');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('Are there any function limitations for free trial?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('Using Goalous on a free trial does not place, you will be able to use the same functions as a paid plan.');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('What happens when the free trial period is over?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post.');?></p>
+                <p><?= __('Furthermore, when the read-only mode is over, there will be a 90 day lock mode. During this time, you cannot check any contents, only a paid plan application is possible.');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('How is the paid plan fee charged?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('The paid plan is charged by calculating the number of active member usage on the day the paid plan contract starts (payment date), which is one month’s payment. “A one month period is considered to have elapsed on the day prior to the corresponding date in the month after the contract went into effect.”When there is no corresponding date, it will be by the end of the month. If the payment date is the 1st, it will be by the end of the same month. Payment Period Example: 2017/10/01 – 2017/10/30 2017/10/31 – 2017/11/30 2017/11/10 – 2017/12/09 2018/01/31 – 2018/02/28');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('Can I continue using Goalous for free?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('You cannot. Please apply for the paid plan once the free trial period is over.');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('How are monthly active members charged?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('Team members who fit the following criteria are considered to be billable monthly active members:');?></p>
+                <ul>
+                    <li><?=__('Team members who are active by the payment date (those not deactivated by the team administrator)');?></li>
+                    <li><?=__('In the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date. In addition, in that situation, added team member’s usage fee will be charged based on daily rate.');?></li>
+                </ul>
+            </div>
+        </div>
+        <div class="question">
             <p class="question-entry"><strong><?= __('How can I deactivate team members?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
                 <p><?=__('The team administrator has authority to do so. The team administrator can deactivate members by going to the team member list and changing the corresponding member’s setting.');?></p>
@@ -170,6 +217,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="answer">
                 <p><?=__('After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day.');?>
                 <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."');?>'
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('');?></p>
             </div>
         </div>
     </div>
