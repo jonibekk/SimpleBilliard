@@ -58,17 +58,20 @@ function removeError(e) {
     }
 }
 
-function removeErrorFromField(fieldName) {
-    var field = document.getElementsByTagName(fieldName)[0];
-    if (field) {
-        field.parentNode.className = field.parentNode.className.replace('has-error', '');
-        var error = field.parentNode.querySelector('small');
-        if (error) {
-            error.remove();
-        }
-    }
+/**
+ * Remove all error from a element and its child
+ * @param element
+ */
+function removeAllErrors(element) {
+    $(element).find('.help-block').remove();
+    $(element).find('.has-error').removeClass('has-error');
 }
 
+/**
+ * Check if a string is Zenkaku Katakana
+ * @param str
+ * @returns {boolean}
+ */
 function isZenKatakana(str){
     str = (str==null)?"":str;
     if(str.match(/^[ァ-ヶー　]*$/)){    //"ー"の後ろの文字は全角スペースです。
@@ -78,6 +81,11 @@ function isZenKatakana(str){
     }
 }
 
+/**
+ * Accept numbers and + symbol
+ * @param e
+ * @returns {boolean}
+ */
 function isPhoneNumber(e) {
     e = (e) ? e : window.event;
     var charCode = (e.which) ? e.which : e.keyCode;
@@ -88,10 +96,14 @@ function isPhoneNumber(e) {
     return false;
 }
 
+/**
+ * Accept only numbers
+ * @param e
+ * @returns {boolean}
+ */
 function isNumber(e) {
     e = (e) ? e : window.event;
     var charCode = (e.which) ? e.which : e.keyCode;
-    console.log(charCode);
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
         e.returnValue = false;
         return false;

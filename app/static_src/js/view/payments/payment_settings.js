@@ -1,65 +1,80 @@
-
 // Edit Invoice info
-if(document.editPaySettingsForm) {
+if (document.editPaySettingsForm) {
 
-    var fields = [
-        'company_name',
-        'company_post_code',
-        'company_region',
-        'company_city',
-        'company_street',
-        'contact_person_last_name',
-        'contact_person_first_name',
-        'contact_person_email',
-        'contact_person_tel'
-    ];
+    var companyName = document.getElementById('company_name');
+    var companyCountry = document.getElementById('company_country');
+    var companyPostCode = document.getElementById('company_post_code');
+    var companyRegion = document.getElementById('company_region');
+    var companyCity = document.getElementById('company_city');
+    var companyStreet = document.getElementById('company_street');
+    var contactLastName = document.getElementById('contact_person_last_name');
+    var contactFirstName = document.getElementById('contact_person_first_name');
+    var contactLastnameKana = document.getElementById('contact_person_last_name_kana');
+    var contactFirstNameKana = document.getElementById('contact_person_first_name_kana');
+    var contactEmail = document.getElementById('contact_person_email');
+    var contactTel = document.getElementById('contact_person_tel');
 
-    // If payment type is invoice, user can update contact person name kana.
-    if (document.getElementById('editPaySettingsType').value == 0) {
-      fields.push(
-        'contact_person_last_name_kana',
-        'contact_person_first_name_kana'
-      );
-    }
+    // Initialize international phone plugin
+    // https://github.com/jackocnr/intl-tel-input
+    $(contactTel).intlTelInput({
+        onlyCountries: ['us', 'jp', 'de', 'th'],
+        autoHideDialCode: false,
+        nationalMode: false,
+    });
 
-  var allFields = document.editPaySettingsForm.querySelectorAll('input[type=text], input[type=email], input[type=tel]');
-    for(var i = 0; i < allFields.length; i++) {
-        switch (allFields[i].name) {
-            case 'contact_person_first_name_kana':
-                firstNameKana = allFields[i];
-                allFields[i].addEventListener('input', validateKanaFields);
-                break
+    // Accept only numbers and '+'
+    $(contactTel).on('keypress', function (e) {
+        return isPhoneNumber(e);
+    });
+    // Set tel country
+    $(contactTel).intlTelInput("setCountry", companyCountry.value);
 
-            case 'contact_person_last_name_kana':
-                lastNameKana = allFields[i];
-                allFields[i].addEventListener('input', validateKanaFields);
-                break
-        }
-    }
+    // Accept only numbers for postal code
+    $(companyPostCode).on('keypress', function (e) {
+        return isNumber(e);
+    });
 
-    function validateKanaFields(e) {
-        if ((firstNameKana.value !== '' && !isZenKatakana(firstNameKana.value)) ||
-            (lastNameKana.value !== '') && !isZenKatakana(lastNameKana.value)) {
-
-            setError(e.target.name, __("Only Kana characters are allowed."));
-            submitButton.disabled = true;
-            return;
-        }
-        removeError(e);
-        submitButton.disabled = false;
-        submitButton.enabled = true;
-    }
-    
+    // Validate form
     function validateForm() {
-        
+        var isValid = true;
+
+        // Validate kana fields in case of invoice
+        if (document.getElementById('editPaySettingsType').value === "0") {
+            if (!isZenKatakana(contactLastnameKana.value)) {
+                setError(contactLastnameKana.name, __("Only Kana characters are allowed."));
+                isValid = false;
+            }
+
+            if (!isZenKatakana(contactFirstNameKana.value)) {
+                setError(contactFirstNameKana.name, __("Only Kana characters are allowed."));
+                isValid = false;
+            }
+        }
+
+        // Validate postal code
+        var country = companyCountry.value;
+        var postalCode = companyPostCode.value;
+        if ((country === 'JP' && postalCode.length !== 7) ||
+            (country === 'US' && postalCode.length !== 5)) {
+            setError(companyPostCode.name, 'Invalid format');
+            isValid = false;
+        }
+
+        return isValid;
     }
 
-    document.editPaySettingsForm.addEventListener('submit', function(e) {
+    document.editPaySettingsForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         // Reset validation errors
-        $(this).find('.help-block').remove();
+        removeAllErrors(this);
 
+        // Validate this form
+        if (!validateForm()) {
+            return;
+        }
+
+        // disable button
         var $submitBtn = $(this).find('#editPaySettingsSubmitBtn');
         $submitBtn.prop('disabled', true);
 
@@ -71,20 +86,22 @@ if(document.editPaySettingsForm) {
             company_region: companyRegion.value,
             company_city: companyCity.value,
             company_street: companyStreet.value,
-            company_tel: companyTel.value,
             contact_person_last_name: contactLastName.value,
             contact_person_first_name: contactFirstName.value,
-            contact_person_last_name_kana: contactLastnameKana.value,
-            contact_person_first_name_kana: contactFirstNameKana.value,
             contact_person_email: contactEmail.value,
             contact_person_tel: contactTel.value
         };
 
+        // If payment type is invoice, user can update contact person name kana.
+        if (document.getElementById('editPaySettingsType').value === "0") {
+            data.contact_person_last_name_kana = contactLastnameKana.value;
+            data.contact_person_first_name_kana = contactFirstNameKana.value;
+        }
 
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/company_info');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 // Updated, redirect to payment pages
                 document.editPaySettingsForm.disabled = true;
@@ -92,12 +109,12 @@ if(document.editPaySettingsForm) {
                     type: 'success',
                     text: __("Update completed"),
                     timeout: 3000
-                }).on('onClose', function() {
+                }).on('onClose', function () {
                     window.location.reload();
                 }).show();
             }
             else {
-                var response  = JSON.parse(xhr.response);
+                var response = JSON.parse(xhr.response);
                 // Validation errors
                 if (response.validation_errors) {
                     var fields = Object.keys(response.validation_errors.payment_setting);

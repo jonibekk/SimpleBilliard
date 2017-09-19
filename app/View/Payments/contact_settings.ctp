@@ -19,7 +19,21 @@
             <legend class="company-info-legend"><?= __("Company Address") ?></legend>
             <div class="form-group">
                 <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Country") ?></label>
-                <?= $countries[$setting['company_country']] ?>
+                <?php echo $this->Form->input('current_team',
+                    array(
+                        'type'      => 'select',
+                        'options'   => $countries,
+                        'value'     => $setting['company_country'],
+                        'id'        => 'company_country',
+                        'name'      => 'company_country',
+                        'label'     => false,
+                        'div'       => false,
+                        'class'     => 'form-control',
+                        'wrapInput' => false,
+                        'disabled'  => 'disabled',
+                        'form'      => 'editPaySettingsForm',
+                    ))
+                ?>
             </div>
             <div class="form-group">
                 <label for="company_post_code" class="circle-create-label"><?= __("Post Code") ?></label>
@@ -38,7 +52,7 @@
                        maxlength="255">
             </div>
             <div class="form-group">
-                <label for="PaymentsCompanyAddressCity"
+                <label for="company_city"
                        class="circle-create-label"><?= __("City") ?></label>
                 <input type="text"
                        id="company_city"
@@ -63,48 +77,61 @@
             <div class="form-group">
                 <div class="flex">
                     <div class="flex-extend mr_8px">
-                        <input type="text" id="PaymentsContactPersonLastName" name="contact_person_last_name"
-                               value="<?= $setting['contact_person_last_name'] ?>" required
-                               class="form-control"
+                        <label class="circle-create-label" for="contact_person_last_name"><?= __("Last Name ") ?></label>
+                        <input type="text" id="contact_person_last_name"
+                               name="contact_person_last_name"
+                               value="<?= $setting['contact_person_last_name'] ?>"
+                               required
+                               class="form-control   mr_8px"
+                               maxlength="128"
                                placeholder="<?= __("Smith") ?>">
                     </div>
                     <div class="flex-extend">
+                        <label class="circle-create-label" for="contact_person_first_name"><?= __("First Name ") ?></label>
                         <input type="text"
-                               id="PaymentsContactPersonFirstName"
+                               id="contact_person_first_name"
                                name="contact_person_first_name"
-                               value="<?= $setting['contact_person_first_name'] ?>" required
-                               class="form-control  "
+                               value="<?= $setting['contact_person_first_name'] ?>"
+                               required
+                               class="form-control"
+                               maxlength="128"
                                placeholder="<?= __("John") ?>">
                     </div>
                 </div>
             </div>
-            <?php if ((int)$setting['type'] === Goalous\Model\Enum\PaymentSetting\Type::INVOICE): ?>
-
-                <div class="form-group">
-                    <label class="circle-create-label"><?= __("Name Kana") ?></label>
-                    <div class="flex">
-                        <div class="flex-extend mr_8px">
-                            <input type="text" id="PaymentsContactPersonLastNameKana"
-                                   name="contact_person_last_name_kana"
-                                   value="<?= $setting['contact_person_last_name_kana'] ?>"
-                                   required class="form-control"
-                                   placeholder="<?= __("スズキ") ?>">
-                        </div>
-                        <div class="flex-extend">
-                            <input type="text" id="PaymentsContactPersonFirstNameKana"
-                                   name="contact_person_first_name_kana"
-                                   value="<?= $setting['contact_person_first_name_kana'] ?>" required
-                                   class="form-control  " placeholder="<?= __("タロウ") ?>">
-                        </div>
+            <?php if ((int)$setting['type'] === Goalous\Model\Enum\PaymentSetting\Type::INVOICE || true): ?>
+            <div class="form-group">
+                <div class="flex">
+                    <div class="flex-extend mr_8px">
+                        <label class="circle-create-label" for="contact_person_last_name_kana"><?= __("Last Name Kana") ?></label>
+                        <input type="text" id="contact_person_last_name_kana"
+                               name="contact_person_last_name_kana"
+                               value="<?= $setting['contact_person_last_name_kana'] ?>"
+                               required
+                               class="form-control   mr_8px"
+                               maxlength="128"
+                               placeholder="<?= __("スズキ") ?>">
+                    </div>
+                    <div class="flex-extend">
+                        <label class="circle-create-label" for="contact_person_first_name_kana"><?= __("First Name Kana") ?></label>
+                        <input type="text" id="contact_person_first_name_kana"
+                               name="contact_person_first_name_kana"
+                               value="<?= $setting['contact_person_first_name_kana'] ?>"
+                               required
+                               maxlength="128"
+                               class="form-control  " placeholder="<?= __("タロウ") ?>">
                     </div>
                 </div>
+            </div>
             <?php endif; ?>
         </fieldset>
         <div class="form-group">
             <label for="contact_person_email" class="circle-create-label"><?= __("Email") ?></label>
-            <input
-                    type="email" id="PaymentsContactPersonEmail" name="contact_person_email"
-                    value="<?= $setting['contact_person_email'] ?>" required
+            <input type="email"
+                   id="contact_person_email"
+                    name="contact_person_email"
+                    value="<?= $setting['contact_person_email'] ?>"
+                    required
                     class="form-control"
                     placeholder="<?= __("name@company.com") ?>" maxlength="255"></div>
         <div class="form-group">
@@ -113,7 +140,9 @@
             <input type="tel"
                    id="contact_person_tel"
                    name="contact_person_tel"
-                   value="<?= $setting['contact_person_tel'] ?>" required class="form-control"
+                   value="<?= $setting['contact_person_tel'] ?>"
+                   required
+                   class="form-control"
                    placeholder="000-0000-0000"
                    maxlength="255">
         </div>
