@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'PaymentService');
 
 use Goalous\Model\Enum as Enum;
@@ -20,6 +21,8 @@ use Goalous\Model\Enum as Enum;
  */
 class PaymentServiceTest extends GoalousTestCase
 {
+    use AtobaraiResponseTraits;
+
     /**
      * Fixtures
      *
@@ -1655,6 +1658,13 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentData = $invoiceData = $this->createTestPaymentDataForReg([]);
 
         // Register invoice
+        $returningOrderId = 'AK12345678';
+
+        // mocking credit invoice as succeed
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $returningOrderId, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData);
         $this->assertTrue($res === true);
 
@@ -1692,11 +1702,14 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
-        $this->assertCount(1, $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]));
+        $invoiceHistories = $InvoiceHistory->findAllByTeamId($teamId);
+        $this->assertCount(1, $invoiceHistories);
+        $this->assertEquals($returningOrderId, $invoiceHistories[0]['InvoiceHistory']['system_order_code']);
 
         // Check invoice charge history was created
         $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
-        $this->assertCount(1, $InvoiceHistoriesChargeHistory->find('all'));
+        $InvoiceHistoriesChargeHistories = $InvoiceHistoriesChargeHistory->find('all');
+        $this->assertCount(1, $InvoiceHistoriesChargeHistories);
 
         // Check saved ChargeHistory data
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
@@ -1728,8 +1741,9 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentData = $invoiceData = [];
 
         // Register invoice
+        // this test case does not use http access (not calling api)
         $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
-        $this->assertFalse($res === true);
+        $this->assertFalse($res);
     }
 
     public function test_registerInvoicePayment_invalidTeam()
@@ -1738,15 +1752,25 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentData = $invoiceData = $this->createTestPaymentData([]);
 
         // Register invoice
+        // this test case does not use http access (not calling api)
         $res = $this->PaymentService->registerInvoicePayment($userID, 999, $paymentData, $invoiceData);
         $this->assertFalse($res === true);
     }
 
     public function test_updateInvoice()
     {
+        $teamId = 1;
         $userID = $this->createActiveUser(1);
         $paymentData = $invoiceData = $this->createTestPaymentData([]);
-        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
+
+        $returningOrderId = 'AK12345678';
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $returningOrderId, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+        $this->PaymentService->registerInvoicePayment($userID, $teamId, $paymentData, $invoiceData);
+
+
 
         // update invoice
         $newData = $this->createTestPaymentData([
@@ -1764,13 +1788,25 @@ class PaymentServiceTest extends GoalousTestCase
         $data = array_intersect_key($invoice, $newData);
         $newData = array_intersect_key($newData, $data);
         $this->assertEquals($data, $newData);
+
+        // check invoice history
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        $invoiceHistories = $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]);
+        $this->assertCount(1, $invoiceHistories);
+        $this->assertEquals($returningOrderId, $invoiceHistories[0]['InvoiceHistory']['system_order_code']);
     }
 
     public function test_updateInvoice_missingFields()
     {
         $userID = $this->createActiveUser(1);
         $paymentData = $invoiceData = $this->createTestPaymentData([]);
-        $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
+
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+        $res = $this->PaymentService->registerInvoicePayment($userID, 1, $paymentData, $invoiceData);
+        $this->assertTrue($res);
 
         $newData = $this->createTestPaymentData([
             'contact_person_first_name'      => '',
@@ -2490,6 +2526,13 @@ class PaymentServiceTest extends GoalousTestCase
         $this->_addInvoiceChargeHistory($teamId, [
             'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
         ]);
+
+
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
         $res = $this->PaymentService->registerInvoice($teamId, 10, $time);
         $this->assertTrue($res);
         // checking invoiceHistory

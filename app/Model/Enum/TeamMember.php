@@ -4,9 +4,9 @@ namespace Goalous\Model\Enum\TeamMember;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static Action INVITED()
- * @method static Action ACTIVE()
- * @method static Action INACTIVE()
+ * @method static static INVITED()
+ * @method static static ACTIVE()
+ * @method static static INACTIVE()
  */
 class Status extends Enum
 {
