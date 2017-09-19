@@ -1653,7 +1653,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
-        $invoiceHistories = $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]);
+        $invoiceHistories = $InvoiceHistory->findAllByTeamId($teamId);
         $this->assertCount(1, $invoiceHistories);
         $this->assertEquals($returningOrderId, $invoiceHistories[0]['InvoiceHistory']['system_order_code']);
 
