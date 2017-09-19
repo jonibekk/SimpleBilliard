@@ -84,11 +84,6 @@ class PaymentService extends AppService
         // Validates model
         $PaymentSetting->set($data);
         $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateCreate);
-
-        $companyCountry = Hash::get($data, 'company_country');
-        if ($companyCountry === 'JP') {
-            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
-        }
         if (!$PaymentSetting->validates()) {
             return $PaymentSetting->_validationExtract($PaymentSetting->validationErrors);
         }
@@ -127,11 +122,6 @@ class PaymentService extends AppService
         // Validates PaymentSetting model
         $checkData = Hash::get($data, 'payment_setting') ?? [];
         $PaymentSetting->set($checkData);
-
-        $companyCountry = Hash::get($data, 'payment_setting.company_country');
-        if ($companyCountry === 'JP') {
-            $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
-        }
         if (!$PaymentSetting->validates()) {
             $allValidationErrors = am(
                 $allValidationErrors,
@@ -142,9 +132,6 @@ class PaymentService extends AppService
         // Validates Invoice model
         $checkData = Hash::get($data, 'invoice') ?? [];
         $Invoice->set($checkData);
-        if ($companyCountry === 'JP') {
-            $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
-        }
         if (!$Invoice->validates()) {
             $allValidationErrors = am(
                 $allValidationErrors,
@@ -190,7 +177,8 @@ class PaymentService extends AppService
         if (empty($timestamp)) {
             $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
         } else {
-            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)->format('Y-m-d');
+            $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)
+                                               ->format('Y-m-d');
         }
 
         list($y, $m, $d) = explode('-', $localCurrentDate);
@@ -375,6 +363,7 @@ class PaymentService extends AppService
 
     /**
      * Calc total charge by charge type
+     *
      * @param int                           $teamId
      * @param int                           $chargeUserCnt
      * @param Enum\ChargeHistory\ChargeType $chargeType
@@ -528,6 +517,7 @@ class PaymentService extends AppService
      * @param Enum\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
      * @param int                               $opeUserId
+     * @param int|null                          $timestampChargeDateTime timestamp of charge_histories.charge_datetime
      *
      * @return array
      * @throws Exception
@@ -536,13 +526,14 @@ class PaymentService extends AppService
         int $teamId,
         Enum\ChargeHistory\ChargeType $chargeType,
         int $usersCount,
-        $opeUserId = null
+        $opeUserId = null,
+        $timestampChargeDateTime = null
     ) {
         try {
             CakeLog::info(sprintf('apply credit card charge: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
-                'charge_type' => $chargeType->getValue(),
-                'users_count' => $usersCount,
+                'teams.id'     => $teamId,
+                'charge_type'  => $chargeType->getValue(),
+                'users_count'  => $usersCount,
                 'ope_users.id' => $opeUserId,
             ])));
             // Validate user count
@@ -566,7 +557,7 @@ class PaymentService extends AppService
                 );
             }
             CakeLog::info(sprintf('payment setting at charge: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'       => $teamId,
                 'PaymentSetting' => $paymentSettings
             ])));
 
@@ -583,10 +574,14 @@ class PaymentService extends AppService
             $chargeInfo = $this->calcRelatedTotalChargeByType($teamId, $usersCount, $chargeType, $paySetting);
 
             CakeLog::info(sprintf('payment charge info: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'    => $teamId,
                 'charge_info' => $chargeInfo,
             ])));
 
+            $chargeDateTime = is_null($timestampChargeDateTime)
+                // $chargeDateTime does not affect by GoalousDateTime::setTestNow()
+                ? GoalousDateTime::createFromTimestamp(time())
+                : GoalousDateTime::createFromTimestamp($timestampChargeDateTime);
             $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
             // ChargeHistory temporary insert
             $historyData = [
@@ -599,7 +594,7 @@ class PaymentService extends AppService
                 'tax'              => $chargeInfo['tax'],
                 'charge_users'     => $usersCount,
                 'currency'         => $currency,
-                'charge_datetime'  => time(),
+                'charge_datetime'  => $chargeDateTime->getTimestamp(),
                 'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
                 'max_charge_users' => $maxChargeUserCnt
             ];
@@ -618,14 +613,23 @@ class PaymentService extends AppService
                 $paymentDescription);
 
             CakeLog::info(sprintf('stripe result: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'      => $teamId,
                 'stripe_result' => $chargeRes,
             ])));
-
             // Save charge history
             if ($chargeRes['isApiRequestSucceed'] === false) {
-                throw new Exception(
-                    sprintf("Failed to charge. data:%s",
+                // This Exception is Stripe system matter.
+                throw new StripeApiException(
+                    sprintf("Failed to charge. A request to Stripe API was failed. data:%s",
+                        AppUtil::varExportOneLine(
+                            compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
+                        )
+                    )
+                );
+            } elseif ($chargeRes['error'] && $chargeType->getValue() !== $chargeType::MONTHLY_FEE) {
+                // This Exception is an user's card matter.
+                throw new CreditCardStatusException(
+                    sprintf("Failed to charge. In adding/activating members case, all transaction should be rollback. data:%s",
                         AppUtil::varExportOneLine(
                             compact('chargeRes', 'customerId', 'currencyName', 'chargeInfo')
                         )
@@ -657,8 +661,8 @@ class PaymentService extends AppService
             }
 
             CakeLog::info(sprintf('update charge history: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
-                'charge_histories.id' => $historyId,
+                'teams.id'              => $teamId,
+                'charge_histories.id'   => $historyId,
                 'update_charge_history' => $updateHistory,
             ])));
         } catch (Exception $e) {
@@ -1032,7 +1036,7 @@ class PaymentService extends AppService
         // if already send an invoice, return
         if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
             CakeLog::info(sprintf('invoice sent already: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'           => $teamId,
                 'local_current_date' => $localCurrentDate,
             ])));
             return false;
@@ -1061,7 +1065,8 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($ChargeHistory->validationErrors)
                 );
             }
-            CakeLog::info(sprintf('add invoice monthly charge_histories: %s', AppUtil::jsonOneLine($monthlyChargeHistory)));
+            CakeLog::info(sprintf('add invoice monthly charge_histories: %s',
+                AppUtil::jsonOneLine($monthlyChargeHistory)));
 
             // monthly dates
             $monthlyChargeHistory['monthlyStartDate'] = $localCurrentDate;
@@ -1122,7 +1127,7 @@ class PaymentService extends AppService
                 ));
             }
             CakeLog::info(sprintf('response of atobarai.com: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'          => $teamId,
                 'response_atobarai' => $resAtobarai,
             ])));
         } catch (Exception $e) {
@@ -1157,7 +1162,7 @@ class PaymentService extends AppService
                 ));
             }
             CakeLog::info(sprintf('updated invoice_histories: %s', AppUtil::jsonOneLine([
-                'teams.id' => $teamId,
+                'teams.id'          => $teamId,
                 'invoice_histories' => $resUpdate,
             ])));
         } catch (Exception $e) {
@@ -1341,29 +1346,29 @@ class PaymentService extends AppService
 
         $data = [
             'id'                             => $paySetting['id'],
-            'team_id'                        => $paySetting['team_id'],
-            'type'                           => $paySetting['type'],
             'company_name'                   => $payerData['company_name'],
-            'company_country'                => $payerData['company_country'],
             'company_post_code'              => $payerData['company_post_code'],
             'company_region'                 => $payerData['company_region'],
             'company_city'                   => $payerData['company_city'],
             'company_street'                 => $payerData['company_street'],
-            'company_tel'                    => $payerData['company_tel'],
             'contact_person_first_name'      => $payerData['contact_person_first_name'],
-            'contact_person_first_name_kana' => $payerData['contact_person_first_name_kana'],
             'contact_person_last_name'       => $payerData['contact_person_last_name'],
-            'contact_person_last_name_kana'  => $payerData['contact_person_last_name_kana'],
             'contact_person_tel'             => $payerData['contact_person_tel'],
             'contact_person_email'           => $payerData['contact_person_email'],
         ];
+
+        // If payment type is invoice, user can update contact person name kana
+        if ((int)Hash::get($paySetting, 'type') === Enum\PaymentSetting\Type::INVOICE) {
+            $data['contact_person_first_name_kana'] = $payerData['contact_person_first_name_kana'];
+            $data['contact_person_last_name_kana'] = $payerData['contact_person_last_name_kana'];
+        }
 
         try {
             // Update PaymentSettings
             $PaymentSetting->begin();
 
             // Save Payment Settings
-            if (!$PaymentSetting->save($data)) {
+            if (!$PaymentSetting->save($data, false)) {
                 throw new Exception(sprintf("Fail to update payment settings. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
@@ -1565,8 +1570,8 @@ class PaymentService extends AppService
         $allValidationErrors = [];
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
-            $companyCountry = Hash::get($data, 'payment_setting.company_country');
-            if ($companyCountry === 'JP') {
+            $paymentType = Hash::get($data, 'payment_setting.type');
+            if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
                 $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
             }
             $allValidationErrors = am(
@@ -1586,11 +1591,6 @@ class PaymentService extends AppService
 
         // Invoice validation
         if (!empty(Hash::get($fields, 'Invoice'))) {
-            $companyCountry = Hash::get($data, 'payment_setting.company_country');
-            if ($companyCountry === 'JP') {
-                $Invoice->validate = am($Invoice->validate, $Invoice->validateJp);
-            }
-
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)

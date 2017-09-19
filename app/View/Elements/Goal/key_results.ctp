@@ -20,7 +20,7 @@
             <dl class="goal-detail-kr-info-counts mb_4px">
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-check-circle"></i></dt>
                 <dd class="goal-detail-kr-info-counts-description">
-                    <?= count($kr['ActionResult']) ?>
+                    <?= $kr['KeyResult']['action_result_count'] ?>
                 </dd>
                 <dt class="goal-detail-kr-info-counts-title"><i class="fa fa-database"></i></dt>
                 <dd class="goal-detail-kr-info-counts-description">

@@ -24,14 +24,27 @@ class BannerHelper extends AppHelper
      *
      * @return string
      */
-    public function getBannerMessage(int $serviceUseStatus, bool $isTeamAdmin, string $stateEndDate, int $teamCreditCardStatus, string $teamCreditCardExpireDate, bool $statusPaymentFailed): string
-    {
+    public function getBannerMessage(
+        int $serviceUseStatus,
+        bool $isTeamAdmin,
+        $stateEndDate,
+        int $teamCreditCardStatus,
+        string $teamCreditCardExpireDate,
+        bool $statusPaymentFailed
+    ): string {
         // TODO: this Helper needs to be mode flexibility
         // if developer adding another banner message pattern next time
         // this method should be like ...
         //  public function getBannerMessage(InterfaceBannerMessage $bannerMessage): string
+        // OR Controller should wrap array required params.
 
-        $stateEndDate = $this->TimeEx->formatYearDayI18nFromDate($stateEndDate);
+        // TODO.payment: $stateEndDate should be type hinted. but, disable type hint temporary.
+        if ($stateEndDate) {
+            $stateEndDate = $this->TimeEx->formatYearDayI18nFromDate($stateEndDate);
+        }
+        if ($teamCreditCardExpireDate) {
+            $teamCreditCardExpireDate = $this->TimeEx->formatYearDayI18nFromDate($teamCreditCardExpireDate);
+        }
 
         if ($statusPaymentFailed) {
             // TODO: need to decide priority of message
@@ -62,11 +75,11 @@ class BannerHelper extends AppHelper
             switch ($teamCreditCardStatus) {
                 case Team::STATUS_CREDIT_CARD_EXPIRED:
                     // TODO: this is temporary message. message needs fix
-                    return __('Your credit card expired. you will no longer be able to use Goalous. Update credit card from <a href="#">here</a>.',
+                    return __('Your credit card expired. you will no longer be able to use Goalous. Update credit card from <a href="/payments/method">here</a>.',
                         $teamCreditCardExpireDate);
                 case Team::STATUS_CREDIT_CARD_EXPIRE_SOON:
                     // TODO: this is temporary message. message needs fix
-                    return __('Your credit card expires on <strong>%s</strong>. Following this date, you will no longer be able to use Goalous. Update credit card from <a href="#">here</a>.',
+                    return __('Your credit card expires on <strong>%s</strong>. Following this date, you will no longer be able to use Goalous. Update credit card from <a href="/payments/method">here</a>.',
                         $teamCreditCardExpireDate);
             }
         }

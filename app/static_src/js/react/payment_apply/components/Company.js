@@ -140,7 +140,7 @@ export default class Company extends Base {
               attributes={attributes}
               onChange={(e) => this.onChange(e, "payment_setting")}
             />
-            {payment_setting.company_country == 'JP' &&
+            {payment_setting.type == PaymentSetting.PAYMENT_TYPE.INVOICE &&
             <RowMultipleTextBoxes
               attributes={[
                 {

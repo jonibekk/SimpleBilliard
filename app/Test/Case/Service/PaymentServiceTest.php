@@ -772,6 +772,55 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertTrue($res['total_amount'] < $res['amount_per_user'] * $chargeUserCnt);
     }
 
+    public function test_applyCreditCardCharge_specifyTime()
+    {
+        /* Case charge user:1 country:JPY */
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $this->Team->current_team_id = $teamId;
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $chargeUserCnt = 1;
+            $this->PaymentService->applyCreditCardCharge(
+                $teamId,
+                Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt,
+                $userId,
+                1500000000
+            );
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+            'charge_datetime'  => 1500000000,
+        ];
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+        $this->assertTrue($res['total_amount'] < $res['amount_per_user']);
+    }
+
     public function test_applyCreditCardCharge_foreign()
     {
         $companyCountry = 'US';
@@ -881,7 +930,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -896,7 +945,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -912,7 +961,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -928,7 +977,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
@@ -955,7 +1004,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $stripeCharge = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
@@ -972,7 +1021,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $stripeCharge = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
@@ -1209,10 +1258,10 @@ class PaymentServiceTest extends GoalousTestCase
                 'timezone' => -3.5
             ],
             [
-                'type'            => Enum\PaymentSetting\Type::CREDIT_CARD,
-                'company_country' => $companyCountry,
-                'currency'        => Enum\PaymentSetting\Currency::USD,
-                'amount_per_user' => PaymentService::AMOUNT_PER_USER_USD,
+                'type'             => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'company_country'  => $companyCountry,
+                'currency'         => Enum\PaymentSetting\Currency::USD,
+                'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
                 'payment_base_day' => 12
             ]
         );
@@ -1293,7 +1342,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = array_intersect_key($res, $expected);
         $this->assertEquals($res, $expected);
         $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
-        $this->assertTrue($res['total_amount'] == $amountPerUser*1000);
+        $this->assertTrue($res['total_amount'] == $amountPerUser * 1000);
         $this->assertEquals($chargeRes->currency, 'usd');
     }
 
@@ -1653,7 +1702,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
-        $invoiceHistories = $InvoiceHistory->find('all', ['conditions' => ['team_id' => $teamId]]);
+        $invoiceHistories = $InvoiceHistory->findAllByTeamId($teamId);
         $this->assertCount(1, $invoiceHistories);
         $this->assertEquals($returningOrderId, $invoiceHistories[0]['InvoiceHistory']['system_order_code']);
 
@@ -2228,19 +2277,32 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
-    public function test_updatePayerInfo()
+    public function test_updatePayerInfo_cc()
     {
-        list($teamId) = $this->createCcPaidTeam();
+        list($teamId) = $this->createCcPaidTeam([], [
+            'company_name'              => 'ISAO1',
+            'company_post_code'         => '000000',
+            'company_country'           => 'JP',
+            'company_region'            => '東京都',
+            'company_city'              => '杉並区',
+            'company_street'            => '１−３−１１',
+            'contact_person_tel'        => '09012345678',
+            'contact_person_email'      => 'test1@example.com',
+            'contact_person_first_name' => 'Steve',
+            'contact_person_last_name'  => 'Jobs',
+        ]);
+
         $updateData = [
-            'company_name'                   => 'ISAO',
-            'company_post_code'              => '000000',
+            'team_id'                        => $teamId + 1, // no existing team
+            'type'                           => Enum\PaymentSetting\Type::INVOICE,
+            'company_name'                   => 'ISAO2',
+            'company_post_code'              => '111111',
             'company_country'                => 'US',
             'company_region'                 => 'NY',
             'company_city'                   => 'Central Park',
             'company_street'                 => 'Somewhere',
-            'company_tel'                    => '123456789',
-            'contact_person_tel'             => '123456789',
-            'contact_person_email'           => 'test@example.com',
+            'contact_person_tel'             => '08012345678',
+            'contact_person_email'           => 'test2@example.com',
             'contact_person_first_name'      => 'Tonny',
             'contact_person_first_name_kana' => 'トニー',
             'contact_person_last_name'       => 'Stark',
@@ -2255,23 +2317,49 @@ class PaymentServiceTest extends GoalousTestCase
         // Retrieve data from db
         $data = $this->PaymentSetting->getUnique($teamId);
         // Compare updated with saved data
-        $data = array_intersect_key($data, $updateData);
-        $this->assertEquals($updateData, $data);
+        $this->assertNotEmpty($data);
+        $this->assertEquals($data['team_id'], $teamId);
+        $this->assertEquals($data['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+        $this->assertEquals($data['company_post_code'], '111111');
+        $this->assertEquals($data['company_country'], 'JP');
+        $this->assertEquals($data['company_region'], 'NY');
+        $this->assertEquals($data['company_city'], 'Central Park');
+        $this->assertEquals($data['company_street'], 'Somewhere');
+        $this->assertEquals($data['contact_person_tel'], '08012345678');
+        $this->assertEquals($data['contact_person_email'], 'test2@example.com');
+        $this->assertEquals($data['contact_person_first_name'], 'Tonny');
+        $this->assertEquals($data['contact_person_first_name_kana'], null);
+        $this->assertEquals($data['contact_person_last_name'], 'Stark');
+        $this->assertEquals($data['contact_person_last_name_kana'], null);
+
     }
 
-    public function test_updatePayerInfo_missingFields()
+    public function test_updatePayerInfo_invoice()
     {
-        list($teamId) = $this->createCcPaidTeam();
+        list($teamId) = $this->createInvoicePaidTeam([], [
+            'company_name'              => 'ISAO1',
+            'company_post_code'         => '000000',
+            'company_country'           => 'JP',
+            'company_region'            => '東京都',
+            'company_city'              => '杉並区',
+            'company_street'            => '１−３−１１',
+            'contact_person_tel'        => '09012345678',
+            'contact_person_email'      => 'test1@example.com',
+            'contact_person_first_name' => 'Steve',
+            'contact_person_last_name'  => 'Jobs',
+        ]);
+
         $updateData = [
-            'company_name'                   => 'ISAO',
-            'company_post_code'              => '',
-            'company_country'                => '',
-            'company_region'                 => '',
-            'company_city'                   => '',
-            'company_street'                 => '',
-            'company_tel'                    => '',
-            'contact_person_tel'             => '123456789',
-            'contact_person_email'           => 'test@example.com',
+            'team_id'                        => $teamId + 1, // no existing team
+            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'company_name'                   => 'ISAO2',
+            'company_post_code'              => '111111',
+            'company_country'                => 'US',
+            'company_region'                 => 'NY',
+            'company_city'                   => 'Central Park',
+            'company_street'                 => 'Somewhere',
+            'contact_person_tel'             => '08012345678',
+            'contact_person_email'           => 'test2@example.com',
             'contact_person_first_name'      => 'Tonny',
             'contact_person_first_name_kana' => 'トニー',
             'contact_person_last_name'       => 'Stark',
@@ -2281,11 +2369,59 @@ class PaymentServiceTest extends GoalousTestCase
         // Update payment data
         $userId = $this->createActiveUser($teamId);
         $res = $this->PaymentService->updatePayerInfo($teamId, $userId, $updateData);
+        $this->assertTrue($res);
 
-        $this->assertNotNull($res);
-        $this->assertArrayHasKey("errorCode", $res);
-        $this->assertArrayHasKey("message", $res);
-        $this->assertEquals(500, $res['errorCode']);
+        // Retrieve data from db
+        $data = $this->PaymentSetting->getUnique($teamId);
+        // Compare updated with saved data
+        $this->assertNotEmpty($data);
+        $this->assertEquals($data['team_id'], $teamId);
+        $this->assertEquals($data['type'], Enum\PaymentSetting\Type::INVOICE);
+        $this->assertEquals($data['company_post_code'], '111111');
+        $this->assertEquals($data['company_country'], 'JP');
+        $this->assertEquals($data['company_region'], 'NY');
+        $this->assertEquals($data['company_city'], 'Central Park');
+        $this->assertEquals($data['company_street'], 'Somewhere');
+        $this->assertEquals($data['contact_person_tel'], '08012345678');
+        $this->assertEquals($data['contact_person_email'], 'test2@example.com');
+        $this->assertEquals($data['contact_person_first_name'], 'Tonny');
+        $this->assertEquals($data['contact_person_first_name_kana'], 'トニー');
+        $this->assertEquals($data['contact_person_last_name'], 'Stark');
+        $this->assertEquals($data['contact_person_last_name_kana'], 'スターク');
+
+    }
+
+    public function test_updatePayerInfo_missingFields()
+    {
+        // This case is enable if validation when saving is enable
+        // But Enabling validation when saving is not best way.
+        // Because validation is different by case.
+        // So this comment outed temporarily.
+//        list($teamId) = $this->createCcPaidTeam();
+//        $updateData = [
+//            'company_name'                   => 'ISAO',
+//            'company_post_code'              => '',
+//            'company_country'                => '',
+//            'company_region'                 => '',
+//            'company_city'                   => '',
+//            'company_street'                 => '',
+//            'company_tel'                    => '',
+//            'contact_person_tel'             => '123456789',
+//            'contact_person_email'           => 'test@example.com',
+//            'contact_person_first_name'      => 'Tonny',
+//            'contact_person_first_name_kana' => 'トニー',
+//            'contact_person_last_name'       => 'Stark',
+//            'contact_person_last_name_kana'  => 'スターク',
+//        ];
+//
+//        // Update payment data
+//        $userId = $this->createActiveUser($teamId);
+//        $res = $this->PaymentService->updatePayerInfo($teamId, $userId, $updateData);
+//
+//        $this->assertNotNull($res);
+//        $this->assertArrayHasKey("errorCode", $res);
+//        $this->assertArrayHasKey("message", $res);
+//        $this->assertEquals(500, $res['errorCode']);
     }
 
     function test_findMonthlyChargeInvoiceTeams()

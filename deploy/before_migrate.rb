@@ -115,3 +115,13 @@ directory "/var/log/goalous" do
     action :create
     not_if {::Dir.exists?("/var/log/goalous")}
 end
+
+# Create empty app log
+%w{debug error emergency}.each do |level|
+  file "/var/log/goalous/#{level}.log" do
+      owner 'deploy'
+      group 'www-data'
+      mode 0664
+      action :create_if_missing
+  end
+end

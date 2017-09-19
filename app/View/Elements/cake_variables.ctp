@@ -149,7 +149,7 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            am: "api/v1/invitations/reInvite",
+            am: "/api/v1/invitations/reInvite",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
@@ -622,6 +622,7 @@ App::uses('AttachedFile', 'Model');
             "Sub Total": "<?= __("Sub Total") ?>",
             "Tax": "<?= __("Tax") ?>",
             "Total": "<?= __("Total") ?>",
+            "Enter your card information": "<?= __("Enter your card information") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
             // Input Billing info
@@ -629,6 +630,7 @@ App::uses('AttachedFile', 'Model');
             "Same as company information": "<?= __("Same as company information") ?>",
             // Confirm
             "Terms of Use": "<?= __("Terms of Use") ?>",
+            "Confirm registration and charge": "<?= __("Confirm registration and charge") ?>",
 
             // Complete
             "Thank You": "<?= __("Thank You") ?>",
@@ -649,8 +651,10 @@ App::uses('AttachedFile', 'Model');
             "Billing": "<?= __("Billing") ?>",
             "Total charge amount": "<?= __("Total charge amount") ?>",
             "Tax included": "<?= __("Tax included") ?>",
+            "Tax excluded": "<?= __("Tax excluded") ?>",
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
+            "Send & Pay": "<?= __("Send & Pay") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

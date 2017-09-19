@@ -3,6 +3,8 @@ App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('View', 'View');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * TeamMember Model
  *
@@ -2157,4 +2159,28 @@ class TeamMember extends AppModel
         }
         return [];
     }
+
+    /**
+     * Find Belonged teams by user
+     *
+     * @param int $userId
+     *
+     * @return array
+     * @internal param int $teamMemberId
+     */
+    public function findBelongsByUser(int $userId): array
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id' => $userId,
+                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+            ],
+        ];
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.TeamMember');
+    }
+
 }

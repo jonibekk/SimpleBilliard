@@ -74,6 +74,8 @@ if(document.enterCCInfo){
         if (result.token) {
             // Call function to update the card
             updateCreditCard(result.token);
+            submitButton.disabled = true;
+            return true;
         }
 
         submitButton.disabled = false;
