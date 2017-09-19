@@ -56,7 +56,7 @@ if (document.editPaySettingsForm) {
         var postalCode = companyPostCode.value;
         if ((country === 'JP' && postalCode.length !== 7) ||
             (country === 'US' && postalCode.length !== 5)) {
-            setError(companyPostCode.name, 'Invalid format');
+            setError(companyPostCode.name, __("Invalid fields"));
             isValid = false;
         }
 

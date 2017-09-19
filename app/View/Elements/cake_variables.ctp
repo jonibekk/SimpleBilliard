@@ -655,6 +655,8 @@ App::uses('AttachedFile', 'Model');
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
             "Send & Pay": "<?= __("Send & Pay") ?>",
+            "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
+            "Invalid fields": "<?= __("Invalid fields") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"
