@@ -130,11 +130,11 @@ class PageResourceHelper extends AppHelper
         'evaluations'   => [
             'default' => ['evaluation.min'],
         ],
-        'teams'         => [
-            'main'               => ['team_members.min', 'team_visions.min'],
-            'settings'           => ['team_setting.min'],
-            'invite'             => ['signup.min'],
-            'confirm_activation' => ['invite.min']
+        'teams' => [
+            'main'                    => ['team_members.min', 'team_visions.min'],
+            'settings'                => ['team_setting.min'],
+            'invite'                  => ['signup.min'],
+            'confirm_user_activation' => ['invite.min']
         ],
     ];
 

@@ -622,6 +622,7 @@ App::uses('AttachedFile', 'Model');
             "Sub Total": "<?= __("Sub Total") ?>",
             "Tax": "<?= __("Tax") ?>",
             "Total": "<?= __("Total") ?>",
+            "Enter your card information": "<?= __("Enter your card information") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
             // Input Billing info
@@ -629,6 +630,7 @@ App::uses('AttachedFile', 'Model');
             "Same as company information": "<?= __("Same as company information") ?>",
             // Confirm
             "Terms of Use": "<?= __("Terms of Use") ?>",
+            "Confirm registration and charge": "<?= __("Confirm registration and charge") ?>",
 
             // Complete
             "Thank You": "<?= __("Thank You") ?>",
@@ -649,8 +651,10 @@ App::uses('AttachedFile', 'Model');
             "Billing": "<?= __("Billing") ?>",
             "Total charge amount": "<?= __("Total charge amount") ?>",
             "Tax included": "<?= __("Tax included") ?>",
+            "Tax excluded": "<?= __("Tax excluded") ?>",
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
+            "Send & Pay": "<?= __("Send & Pay") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

@@ -48,7 +48,6 @@ export default function invite(state = initialState, action) {
     case types.REDIRECT_TO_HOME:
       return Object.assign({}, state, {
         redirect_to_home: true,
-        is_saving: false
       })
     case types.SAVING:
       return Object.assign({}, state, {

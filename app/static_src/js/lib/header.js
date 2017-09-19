@@ -86,11 +86,11 @@ $(function () {
 
   //チーム切り換え
   $('#SwitchTeam').change(function () {
-      var val = $(this).val();
-      var url = "/teams/ajax_switch_team/team_id:" + val;
-      $.get(url, function (data) {
-          location.href = data;
-      });
+    var val = $(this).val();
+    var url = "/teams/ajax_switch_team/team_id:" + val;
+    $.get(url, function (data) {
+      location.href = data;
+    });
   });
 
   // ヘッダーの検索フォームの処理
@@ -102,12 +102,12 @@ $(function () {
   $('.js-disappear-banner').click(function () {
     $('.banner-alert').remove();
     resetNavBarPadding();
-    setCookieCloseAlert();
+    setCookieCloseAlert(cake.data.team_id);
   });
 });
 
 // If team status is read only, Display read only alert box
-if (cake.require_banner_notification && isClosedAlert() === false) {
+if (cake.require_banner_notification && isClosedAlert(cake.data.team_id) === false) {
   // Because alert box is postion fixed,
   // so body padding should be resized after window loaded and resized.
   window.addEventListener("DOMContentLoaded", function (event) {
@@ -421,10 +421,10 @@ function resetNavBarPadding() {
 /**
  * set cookie for disappearing alert
  */
-function setCookieCloseAlert(){
-  setCookie('alertClosed',1,1);
+function setCookieCloseAlert(teamId) {
+  setCookie('alertClosedTeam_' + teamId, 1, 1);
 }
 
-function isClosedAlert(){
-  return getCookie('alertClosed') !== "";
+function isClosedAlert(teamId) {
+  return getCookie('alertClosedTeam_' + teamId) !== "";
 }

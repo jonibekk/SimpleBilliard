@@ -274,7 +274,9 @@ class InvoiceService extends AppService
                     AppUtil::varExportOneLine($InvoiceHistory->validationErrors)));
             }
 
-            if (!$Invoice->save($invoice)) {
+            $Invoice->clear();
+            $Invoice->id = $invoice['id'];
+            if (!$Invoice->save(['credit_status' => $creditStatus], false)) {
                 throw new Exception(sprintf("Failed to save Invoice order status. data: %s, validationErrors: %s",
                     AppUtil::varExportOneLine($invoice),
                     AppUtil::varExportOneLine($Invoice->validationErrors)));
