@@ -5121,9 +5121,6 @@ msgstr "料金案内"
 msgid "You use all features of Goalous for a 15-day free trial. Give it a try!"
 msgstr ""
 
-msgid "Standard"
-msgstr ""
-
 msgid "Per active member, per month"
 msgstr ""
 
@@ -5184,6 +5181,9 @@ msgstr "新しいメンバー"
 
 msgid "ID"
 msgstr ""
+
+msgid: "&dollar;19"
+msgstr: "&yen;1,980"
 
 msgid "Date"
 msgstr "期限"
