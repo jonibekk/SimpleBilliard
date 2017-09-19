@@ -26,7 +26,7 @@
 <html lang="<?= $this->Lang->getLangCode() ?>">
 <!--<![endif]-->
 <head>
-    <?= $this->Html->charset(); ?>
+    <meta charset="utf-8" />
     <?php
     echo $this->Html->meta('icon');
     echo $this->Html->meta([
