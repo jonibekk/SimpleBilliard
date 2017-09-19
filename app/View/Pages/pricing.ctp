@@ -88,7 +88,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <p><?= __('You use all features of Goalous for a 15-day free trial. Give it a try!');?></p>
         <div class="pricing-card">
             <h3><?= __('Paid Plan');?></h3>
-            <p><span class="price-text"><?=__('&dollar;19');?></span>
+            <p><span class="price-text"><?= $price; ?></span>
             <?= __('Per active member, per month');?></p>
             <?php if (!isset($_GET['backBtn'])): ?>
             <button class="btn btn-cta btn-cta-primary"><?= __('Start 15-day Free Trial');?></button>

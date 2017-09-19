@@ -5182,9 +5182,6 @@ msgstr "新しいメンバー"
 msgid "ID"
 msgstr ""
 
-msgid "&dollar;19"
-msgstr "&yen;1,980"
-
 msgid "Date"
 msgstr "期限"
 
