@@ -15,7 +15,7 @@ export default class AppSelect extends React.Component {
 
                 <div className="setup-items">
                     <a className="setup-items-item pt_10px mt_12px bd-radius_14px"
-                       href="https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous" target="_blank">
+                       href="https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous2" target="_blank">
                         <div className="pull-left mt_3px ml_2px">
                             <div className="setup-items-item-icon">
                                 <i className="fa fa-android setup-items-item-icon-fa"></i>
@@ -23,7 +23,7 @@ export default class AppSelect extends React.Component {
                         </div>
                         <div className="setup-items-item-explain pull-left">
                             <p className="font_bold font_verydark">{__('Install Android app')}</p>
-                            <p className="font_11px font_lightgray">{__('Requires Android 4.4 or later.')}</p>
+                            <p className="font_11px font_lightgray">{__('Requires Android 6.0 or later.')}</p>
                         </div>
                         <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
                             <i className="fa fa-chevron-right font_18px"></i>
@@ -31,7 +31,7 @@ export default class AppSelect extends React.Component {
                     </a>
 
                     <a className="setup-items-item pt_10px mt_12px bd-radius_14px"
-                       href="https://itunes.apple.com/jp/app/goalous-gorasu-bijinesusns/id1060474459" target="_blank">
+                       href="https://itunes.apple.com/app/goalous-business-sns/id1060474459" target="_blank">
                         <div className="pull-left mt_3px ml_2px">
                             <div className="setup-items-item-icon">
                                 <i className="fa fa-apple setup-items-item-icon-fa"></i>
