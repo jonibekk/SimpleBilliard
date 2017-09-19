@@ -97,21 +97,33 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div>
         <!-- TODO: Replace placement text -->
         <div class="feature-category">
-            <strong class="icon icon-heart">Goal Features</strong>
+            <strong class="icon icon-heart"><?= __('Goal features');?></strong>
             <ul>
-                <li>Unlimited team, goal, photo, and video storage</li>
+                <li><?= __('Create &amp; share Goals for your project'); ?></li>
+                <li><?= __('Team members can join to collaborate towards your Goal.');?></li>
+                <li><?= __('Organize Goals into separate <q>Key Results</q>');?></li>
+                <li><?= __('Post <q>Actions</q> that contribute to the <q>Key Result</q>');?></li>
+                <li><?= __('Graphical progress that helps motivate your team');?></li>
             </ul>
         </div>
         <div class="feature-category">
-            <strong class="icon icon-message">Communication Features</strong>
+            <strong class="icon icon-message"><?= __('Communication features');?></strong>
             <ul>
-                <li>Live chat messaging</li>
+                <li><? __('Create private Circles where members can communicate');?></li>
+                <li><? __('Give reactions to posts with likes and comments');?></li>
+                <li><? __('Realtime chat messaging');?></li>
+                <li><? __('Attach and share files up to 100MB per file');?></li>
+                <li><? __('See how many members have read your posts and comments');?></li>
             </ul>
         </div>
         <div class="feature-category">
-            <strong class="icon icon-lock">Security Features</strong>
+            <strong class="icon icon-lock"><?=__('Security Features');?></strong>
             <ul>
-                <li>Encrypted storage</li>
+                <li><? __('Unlimited team members');?></li>
+                <li><? __('Two-Step velification for stronger security');?></li>
+                <li><? __('English and Japanese language available');?></li>
+                <li><? __('Live chat support (Initial response will be within the next business day)');?></li>
+                <li><? __('iOS(10 or higher) and Android(4.4 or higher) APPs');?></li>
             </ul>
         </div>
     </div>
@@ -119,19 +131,45 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
 <section id="faqs">
     <div class="container">
-        <h2>Frequently Asked Questions</h2>
+        <h2><?= __('Frequently Asked Questions');?></h2>
         <div class="question">
-            <p class="question-entry"><strong>What are my payment options?</strong><span class="fa fa-angle-down"></span></p>
+            <p class="question-entry"><strong><?= __('What are the payment methods available?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
-                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
-                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+                <p><?=__('"Team members who fit the following criteria are considered to be billable monthly active members:');?>
+                <ul>
+                    <li><?= __('Team members who are active by the payment date (those not deactivated by the team administrator) in the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date.');?></li>
+                    <li><?= __('In addition, in that situation, added team member’s usage fee will be charged based on daily rate."');?></p>
             </div>
         </div>
         <div class="question">
-            <p class="question-entry"><strong>What are my payment options?</strong><span class="fa fa-angle-down"></span></p>
+            <p class="question-entry"><strong><?= __('How can I deactivate team members?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
-                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
-                <p>You can use your credit card to pay for our Standard Plan. If your organizaiton is located in Japan, we can invoice you monthly.</p>
+                <p><?=__('The team administrator has authority to do so. The team administrator can deactivate members by going to the team member list and changing the corresponding member’s setting.');?></p>
+                <p><?=__('Deactivated team members will lose their login permission to the team they have been deactivated from.');?></p>
+                <p><?=__('In addition, in that situation, usage fee for deactivated members will not be refunded.');?></p>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('What kind of authority does a team manager have?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?= __('The team administrator can give associates team administrative roles in Goalous.');?></p>
+                <p><?= __('Team administrators have the following authorities.');?>
+                <ul>
+                    <li><?=__('Team detail setting changes');?></li>
+                    <li><?=__('Assign administrative roles');?></li>
+                    <li><?=__('Default circles (All team) management');?></li>
+                    <li><?=__('Team member deactivation');?></li>
+                    <li><?=__('Deletion of inappropriate posts');?></li>
+                    <li><?=__('Paid Plan detail changes');?></li>
+                    <li><?=__('Settlement information reference changes');?></li>
+                </ul>
+            </div>
+        </div>
+        <div class="question">
+            <p class="question-entry"><strong><?= __('What is the payment schedule for invoice?');?></strong><span class="fa fa-angle-down"></span></p>
+            <div class="answer">
+                <p><?=__('After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day.');?>
+                <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."');?>'
             </div>
         </div>
     </div>
