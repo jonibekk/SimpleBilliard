@@ -36,7 +36,7 @@ function urlEncode(object) {
  */
 function setError(fieldName, message) {
     var field = document.querySelector('input[name=' + fieldName + ']');
-    if (field) {
+    if (field && field.parentNode.className.indexOf('has-error') === -1) {
         field.parentNode.className += ' has-error';
         var error = document.createElement('small');
         error.className = 'help-block';
@@ -56,4 +56,45 @@ function removeError(e) {
     if (error) {
         error.remove();
     }
+}
+
+function removeErrorFromField(fieldName) {
+    var field = document.getElementsByTagName(fieldName)[0];
+    if (field) {
+        field.parentNode.className = field.parentNode.className.replace('has-error', '');
+        var error = field.parentNode.querySelector('small');
+        if (error) {
+            error.remove();
+        }
+    }
+}
+
+function isZenKatakana(str){
+    str = (str==null)?"":str;
+    if(str.match(/^[ァ-ヶー　]*$/)){    //"ー"の後ろの文字は全角スペースです。
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function isPhoneNumber(e) {
+    e = (e) ? e : window.event;
+    var charCode = (e.which) ? e.which : e.keyCode;
+    if (charCode === 43 || isNumber(e)) {
+        return true;
+    }
+    e.returnValue = false;
+    return false;
+}
+
+function isNumber(e) {
+    e = (e) ? e : window.event;
+    var charCode = (e.which) ? e.which : e.keyCode;
+    console.log(charCode);
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        e.returnValue = false;
+        return false;
+    }
+    return true;
 }
