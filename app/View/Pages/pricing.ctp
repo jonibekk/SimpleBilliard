@@ -107,21 +107,21 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="feature-category">
             <strong class="icon icon-message"><?= __('Communication features');?></strong>
             <ul>
-                <li><? __('Create private Circles where members can communicate');?></li>
-                <li><? __('Give reactions to posts with likes and comments');?></li>
-                <li><? __('Realtime chat messaging');?></li>
-                <li><? __('Attach and share files up to 100MB per file');?></li>
-                <li><? __('See how many members have read your posts and comments');?></li>
+                <li><?=__('Create private Circles where members can communicate');?></li>
+                <li><?=__('Give reactions to posts with likes and comments');?></li>
+                <li><?=__('Realtime chat messaging');?></li>
+                <li><?=__('Attach and share files up to 100MB per file');?></li>
+                <li><?=__('See how many members have read your posts and comments');?></li>
             </ul>
         </div>
         <div class="feature-category">
             <strong class="icon icon-lock"><?=__('Security Features');?></strong>
             <ul>
-                <li><? __('Unlimited team members');?></li>
-                <li><? __('Two-Step velification for stronger security');?></li>
-                <li><? __('English and Japanese language available');?></li>
-                <li><? __('Live chat support (Initial response will be within the next business day)');?></li>
-                <li><? __('iOS(10 or higher) and Android(4.4 or higher) APPs');?></li>
+                <li><?=__('Unlimited team members');?></li>
+                <li><?=__('Two-Step velification for stronger security');?></li>
+                <li><?=__('English and Japanese language available');?></li>
+                <li><?=__('Live chat support (Initial response will be within the next business day)');?></li>
+                <li><?=__('iOS(10 or higher) and Android(4.4 or higher) APPs');?></li>
             </ul>
         </div>
     </div>
