@@ -176,7 +176,7 @@ class GlEmailComponent extends Component
                 $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
                 break;
         }
-        $url = "https://" . ENV_NAME . ".goalous.com/payments/apply";
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
         $item = compact('teamName', 'expireDate', 'url');
         $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
