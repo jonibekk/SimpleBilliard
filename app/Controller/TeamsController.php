@@ -1064,7 +1064,7 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess();
         $res = $this->Team->TeamMember->inactivate($teamMemberId);
         CakeLog::info(sprintf('inactivate team member: %s', AppUtil::jsonOneLine([
-            'teams.id' => $this->current_team_id,
+            'teams.id'        => $this->current_team_id,
             'team_members.id' => $teamMemberId,
         ])));
         PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
@@ -1076,6 +1076,7 @@ class TeamsController extends AppController
      * /api/v1/invitations/reInvite
      *
      * @deprecated
+     *
      * @param $user_id
      * @param $action_flg
      *
@@ -2678,7 +2679,7 @@ class TeamsController extends AppController
             $this->Notification->outSuccess(__("Changed active status inactive to active."));
 
             CakeLog::info(sprintf('activate team member: %s', AppUtil::jsonOneLine([
-                'teams.id' => $this->current_team_id,
+                'teams.id'        => $this->current_team_id,
                 'team_members.id' => $teamMemberId,
             ])));
             PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
@@ -2764,12 +2765,13 @@ class TeamsController extends AppController
 
         // Activate
         $userId = $this->Auth->user('id');
-        if ($TeamMemberService->activateWithPayment($teamId, $teamMemberId, $userId)) {
+        $activationRes = $TeamMemberService->activateWithPayment($teamId, $teamMemberId, $userId);
+        if ($activationRes['error']) {
             // TODO: Should display translation correctry by @kohei
-            $this->Notification->outSuccess(__("Changed active status inactive to active."));
+            $this->Notification->outError($activationRes['msg']);
         } else {
             // TODO: Should display translation correctry by @kohei
-            $this->Notification->outError(__("Failed to activate team member."));
+            $this->Notification->outSuccess(__("Changed active status inactive to active."));
         }
 
         return $this->redirect('/teams/main');

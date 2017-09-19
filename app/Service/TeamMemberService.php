@@ -16,9 +16,9 @@ class TeamMemberService extends AppService
      * @param int $teamMemberId
      * @param int $opeUserId
      *
-     * @return bool
+     * @return array [error:true|false, msg:""]
      */
-    public function activateWithPayment(int $teamId, int $teamMemberId, int $opeUserId): bool
+    public function activateWithPayment(int $teamId, int $teamMemberId, int $opeUserId): array
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
@@ -27,13 +27,18 @@ class TeamMemberService extends AppService
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
 
+        $res = [
+            'error' => false,
+            'msg'   => "",
+        ];
+
         try {
             $this->TransactionManager->begin();
 
             // Team member activate
             if (!$TeamMember->activate($teamMemberId)) {
                 throw new Exception(sprintf("Failed to activate team member. data:%s",
-                AppUtil::varExportOneLine(compact('teamId', 'teamMemberId'))));
+                    AppUtil::varExportOneLine(compact('teamId', 'teamMemberId'))));
             }
 
             // Charge if paid plan
@@ -45,15 +50,31 @@ class TeamMemberService extends AppService
                     $opeUserId
                 );
             }
+        } catch (CreditCardStatusException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __("Failed to activate team member.") . " " . __('There is a problem with your card.');
+            return $res;
+        } catch (StripeApiException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __("Failed to activate team member.") . " " . __('Please try again later.');
+            return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-            return false;
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res['error'] = true;
+            $res['msg'] = __("Failed to activate team member.") . " " . __('System error has occurred.');
+            return $res;
         }
 
         $this->TransactionManager->commit();
-        return true;
+        return $res;
     }
 
     /**

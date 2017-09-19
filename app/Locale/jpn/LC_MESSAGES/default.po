@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-15 15:40+0900\n"
+"PO-Revision-Date: 2017-09-18 16:17+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.1\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -44,6 +44,18 @@ msgstr ""
 
 msgid "5 (Very high)"
 msgstr "5 (とても高い)"
+
+msgid "Germany"
+msgstr "ドイツ"
+
+msgid "Japan"
+msgstr "日本"
+
+msgid "Thailand"
+msgstr "タイ"
+
+msgid "United States"
+msgstr "アメリカ合衆国"
 
 msgid "All Team"
 msgstr "チーム全体"
@@ -1736,6 +1748,9 @@ msgstr "メールアドレスが正しくないものがあります。"
 msgid "Please mix of numbers and alphanumeric."
 msgstr "パスワードは数字と英字を組み合わせて下さい。"
 
+msgid "Only Kana characters are allowed."
+msgstr "許可されているのはカナのみです。"
+
 msgid "Enter a valid date in YYYY/MM/DD format."
 msgstr "有効な日付を YYYY/MM/DD フォーマットで入力してください。"
 
@@ -1821,6 +1836,18 @@ msgstr "%d行目"
 msgid "Email address"
 msgstr "メールアドレス"
 
+msgid "Invitation was failed."
+msgstr "メンバーの招待に失敗しました。"
+
+msgid "There is a problem with your card."
+msgstr "お客様のカード情報に問題があります。"
+
+msgid "Please try again later."
+msgstr "しばらく時間をおいて再度操作してください。"
+
+msgid "System error has occurred."
+msgstr "システムエラーが発生しております。"
+
 msgid "Incomplete"
 msgstr "未完了"
 
@@ -1853,9 +1880,6 @@ msgstr "%sがトピック名を削除しました。"
 
 msgid "Failed to register paid plan."
 msgstr "有料プランの登録に失敗しました。"
-
-msgid "Please try again later."
-msgstr "しばらく時間をおいて再度登録してください。"
 
 msgid "Payment settings does not exists."
 msgstr "決済設定が見つかりません。"
@@ -2816,6 +2840,9 @@ msgstr "税"
 msgid "Total"
 msgstr "トータル"
 
+msgid "Enter your card information"
+msgstr "カード情報を入力してください"
+
 msgid "I agree with the terms of service"
 msgstr "利用規約に同意する"
 
@@ -2830,6 +2857,9 @@ msgstr "会社情報と同じにする"
 
 msgid "Terms of Use"
 msgstr "利用規約"
+
+msgid "Confirm registration and charge"
+msgstr "有料プラン登録・請求確認"
 
 msgid "Thank You"
 msgstr "ありがとうございます"
@@ -4627,16 +4657,14 @@ msgstr ""
 
 msgid ""
 "Your credit card expired. you will no longer be able to use Goalous. Update "
-"credit card from <a href=\"#\">here</a>."
+"credit card from <a href=\"/payments/method\">here</a>."
 msgstr ""
 
 msgid ""
 "Your credit card expires on <strong>%s</strong>. Following this date, you "
-"will no longer be able to use Goalous. Update credit card from <a href=\"#"
-"\">here</a>."
-msgstr ""
-"このカードは、<strong>%s</strong>が有効期限です。それ以降はご利用いただけませ"
-"ん。カード情報を<a href=\"/payments/apply\">こちら</a>から更新してください。"
+"will no longer be able to use Goalous. Update credit card from <a href=\"/"
+"payments/method\">here</a>."
+msgstr "このカードは、<strong>%s</strong>が有効期限です。それ以降はご利用いただけません。カード情報を<a href=\"/payments/method\">こちら</a>から更新してください。"
 
 msgid "Collaborating"
 msgstr "コラボり中"
@@ -5149,8 +5177,8 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "Subscribe"
 msgstr "□配信停止"
 
-msgid "Billing Information"
-msgstr "請求先情報"
+msgid "Company Information"
+msgstr "会社情報"
 
 msgid "Country"
 msgstr "国"
@@ -5284,8 +5312,8 @@ msgstr "カード情報を更新する"
 msgid "Card is expired. Please update your card's information."
 msgstr "カードの有効期限が切れています。カード情報を更新してください。"
 
-msgid "Enter your card information"
-msgstr "カード情報を入力してください"
+msgid "Billing Information"
+msgstr "請求先情報"
 
 msgid "Jane Doe"
 msgstr "Jane Doe"
@@ -5310,6 +5338,9 @@ msgstr "タイプ"
 
 msgid "TIME PERIOD"
 msgstr "期間"
+
+msgid "DATE"
+msgstr "日"
 
 msgid "AMOUNT"
 msgstr "金額"

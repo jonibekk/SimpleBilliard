@@ -4,14 +4,15 @@ App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'InvitationService');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * InvitationServiceTest Class
  *
  * @property InvitationService $InvitationService
- * @property User $User
- * @property Email $Email
- * @property Invite $Invite
- * @property TeamMember $TeamMember
+ * @property User              $User
+ * @property Email             $Email
+ * @property Invite            $Invite
+ * @property TeamMember        $TeamMember
  */
 class InvitationServiceTest extends GoalousTestCase
 {
@@ -27,6 +28,7 @@ class InvitationServiceTest extends GoalousTestCase
         'app.team_member',
         'app.invite',
         'app.payment_setting',
+        'app.charge_history',
     );
 
     /**
@@ -110,6 +112,7 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals($errors[0],
             __("%s invitations are the limits in one time.", InvitationService::MAX_INVITATION_CNT));
     }
+
     /**
      * Validate emails
      * Check duplicates
@@ -151,7 +154,8 @@ class InvitationServiceTest extends GoalousTestCase
             'email'   => $email
         ], false);
         $res = $this->InvitationService->validateEmails($teamId, [$email]);
-        $this->assertTrue(strpos($res[0], __("This email address has already been used. Use another email address.")) >= 0);
+        $this->assertTrue(strpos($res[0],
+                __("This email address has already been used. Use another email address.")) >= 0);
 
         $this->TeamMember->save([
             'user_id' => $userId,
@@ -165,11 +169,10 @@ class InvitationServiceTest extends GoalousTestCase
             'team_id' => $teamId,
         ]);
         $res = $this->InvitationService->validateEmails($teamId, [$email]);
-        $this->assertTrue(strpos($res[0], __("This email address has already been used. Use another email address.")) >= 0);
-
+        $this->assertTrue(strpos($res[0],
+                __("This email address has already been used. Use another email address.")) >= 0);
 
     }
-
 
     /**
      * Invite
@@ -181,13 +184,13 @@ class InvitationServiceTest extends GoalousTestCase
         ]);
         $email = 'test1@company.com';
         $res = $this->InvitationService->invite($teamId, 1, [$email]);
-        $this->assertTrue($res);
+        $this->assertFalse($res['error']);
         $res = Hash::get($this->Invite->findByTeamId($teamId), 'Invite');
         $this->assertEquals($res['from_user_id'], 1);
         $this->assertEquals($res['email'], $email);
         $this->assertEquals($res['email_verified'], false);
         $this->assertNotEmpty($res['email_token']);
-        $this->assertTrue($res['email_token_expires'] <=  (REQUEST_TIMESTAMP + TOKEN_EXPIRE_SEC_INVITE));
+        $this->assertTrue($res['email_token_expires'] <= (REQUEST_TIMESTAMP + TOKEN_EXPIRE_SEC_INVITE));
 
         $emailData = Hash::get($this->Email->findByEmail($email), 'Email');
         $this->assertNotEmpty($emailData);
@@ -204,7 +207,7 @@ class InvitationServiceTest extends GoalousTestCase
         ]);
 
         $res = $this->InvitationService->invite($teamId, 1, [$email]);
-        $this->assertTrue($res);
+        $this->assertFalse($res['error']);
         $user2 = Hash::get($this->User->find('first', ['order' => 'id DESC']), 'User');
         $this->assertEquals($user, $user2);
         $emailData2 = Hash::get($this->Email->findByEmail($email), 'Email');
@@ -220,7 +223,7 @@ class InvitationServiceTest extends GoalousTestCase
             'test4@company.com',
         ];
         $res = $this->InvitationService->invite($teamId, 1, $emails);
-        $this->assertTrue($res);
+        $this->assertFalse($res['error']);
         $teamMembers = Hash::extract($this->TeamMember->findAllByTeamId($teamId), '{n}.TeamMember');
         $this->assertEquals(count($teamMembers), 4);
 
@@ -274,14 +277,14 @@ class InvitationServiceTest extends GoalousTestCase
         $userIdFrom = 1;
         $userId = 1;
         $teamId = 1;
-        $emailFirst    = 'reInviteTest@example.com';
+        $emailFirst = 'reInviteTest@example.com';
         $emailReInvite = 'reInviteTestAgain@example.com';
         $inviteData = $this->Invite->save($this->createDataInvite($userIdFrom, $teamId, $emailFirst));
         $insertedInviteId = $inviteData['Invite']['id'];
         $emailData = $this->Email->save($this->createDataEmail($userId, $emailFirst));
         $result = $this->InvitationService->reInvite($inviteData['Invite'], $emailData['Email'], $emailReInvite);
         $this->assertTrue($result);
-        $inviteData   = $this->Invite->findById($insertedInviteId);
+        $inviteData = $this->Invite->findById($insertedInviteId);
         $reInviteData = $this->Invite->findById($insertedInviteId + 1)['Invite'];
 
         // asserting old invite cant get due to del_flg = 1
@@ -297,14 +300,14 @@ class InvitationServiceTest extends GoalousTestCase
         $userIdFrom = 1;
         $userId = 1;
         $teamId = 1;
-        $email  = 'reInviteTest@example.com';
+        $email = 'reInviteTest@example.com';
         $inviteData = $this->Invite->save($this->createDataInvite($userIdFrom, $teamId, $email));
         $insertedInviteId = $inviteData['Invite']['id'];
         $emailData = $this->Email->save($this->createDataEmail($userId, $email));
         $result = $this->InvitationService->reInvite($inviteData['Invite'], $emailData['Email'], $email);
         $this->assertTrue($result);
 
-        $inviteData   = $this->Invite->findById($insertedInviteId);
+        $inviteData = $this->Invite->findById($insertedInviteId);
         $reInviteData = $this->Invite->findById($insertedInviteId + 1)['Invite'];
 
         // asserting old invite cant get due to del_flg = 1

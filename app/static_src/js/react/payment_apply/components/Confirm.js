@@ -40,7 +40,7 @@ export default class Confirm extends Base {
     const {payment} = this.props
     return (
       <section className="panel enter-cc-info">
-        <h3>{__('Confirm charge')}</h3>
+        <h3>{__('Confirm registration and charge')}</h3>
         <form className="form-horizontal"
               onSubmit={(e) => this.onSubmit(e)}>
           <ConfirmCharge

@@ -19,13 +19,13 @@ class PaymentsController extends ApiController
 
     // Need validation fields for validation API of changing to paid plan
     private $validationFieldsEachPage = [
-        'country' => [
+        'country'        => [
             'PaymentSetting' => [
                 'company_country',
                 'type'
             ],
         ],
-        'company' => [
+        'company'        => [
             'PaymentSetting' => [
                 'company_name',
                 'company_country',
@@ -39,8 +39,23 @@ class PaymentsController extends ApiController
                 'contact_person_email',
             ]
         ],
-        'invoice' => [
+        'invoice'        => [
             'Invoice' => [
+                'company_name',
+                'company_post_code',
+                'company_region',
+                'company_city',
+                'company_street',
+                'contact_person_first_name',
+                'contact_person_last_name',
+                'contact_person_last_name_kana',
+                'contact_person_first_name_kana',
+                'contact_person_tel',
+                'contact_person_email',
+            ],
+        ],
+        'update_company' => [
+            'PaymentSetting' => [
                 'company_name',
                 'company_post_code',
                 'company_region',
@@ -50,7 +65,7 @@ class PaymentsController extends ApiController
                 'contact_person_last_name',
                 'contact_person_tel',
                 'contact_person_email',
-            ],
+            ]
         ],
     ];
 
@@ -258,11 +273,11 @@ class PaymentsController extends ApiController
 
         $data = $this->request->data;
         if ($page === 'company') {
-            $companyCountry = Hash::get($data, 'payment_setting.company_country');
-            if (empty($companyCountry)) {
+            $paymentType = Hash::get($data, 'payment_setting.type');
+            if (!AppUtil::isInt($paymentType)) {
                 return $this->_getResponseBadFail(__("Invalid Request"));
             }
-            if ($companyCountry === 'JP') {
+            if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
                 $validationFields['PaymentSetting'] = am(
                     $validationFields['PaymentSetting'],
                     [
@@ -271,14 +286,6 @@ class PaymentsController extends ApiController
                     ]
                 );
             }
-        } elseif ($page === 'invoice') {
-            $validationFields['Invoice'] = am(
-                $validationFields['Invoice'],
-                [
-                    'contact_person_last_name_kana',
-                    'contact_person_first_name_kana',
-                ]
-            );
         }
 
         /** @var PaymentService $PaymentService */
@@ -313,8 +320,21 @@ class PaymentsController extends ApiController
         $PaymentService = ClassRegistry::init("PaymentService");
 
         // Validate input
-        $validationFields = Hash::get($this->validationFieldsEachPage, 'company');
+        $validationFields = Hash::get($this->validationFieldsEachPage, 'update_company');
         $data = array('payment_setting' => $this->request->data);
+
+        $paymentSetting = $PaymentService->get($teamId);
+        $paymentType = Hash::get($paymentSetting, 'type');
+        if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+            $validationFields['PaymentSetting'] = am(
+                $validationFields['PaymentSetting'],
+                [
+                    'contact_person_last_name_kana',
+                    'contact_person_first_name_kana',
+                ]
+            );
+        }
+        $data['PaymentSetting']['type'] = $paymentType;
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
@@ -411,7 +431,7 @@ class PaymentsController extends ApiController
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
         $token = Hash::get($this->request->data, 'token');
-        
+
         // Check if the Payment if in the correct currency
         $creditCardData = $CreditCardService->retrieveToken($token);
         $ccCountry = $creditCardData['creditCard']->country;

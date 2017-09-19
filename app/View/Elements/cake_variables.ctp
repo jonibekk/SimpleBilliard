@@ -622,6 +622,7 @@ App::uses('AttachedFile', 'Model');
             "Sub Total": "<?= __("Sub Total") ?>",
             "Tax": "<?= __("Tax") ?>",
             "Total": "<?= __("Total") ?>",
+            "Enter your card information": "<?= __("Enter your card information") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
             // Input Billing info
@@ -629,6 +630,7 @@ App::uses('AttachedFile', 'Model');
             "Same as company information": "<?= __("Same as company information") ?>",
             // Confirm
             "Terms of Use": "<?= __("Terms of Use") ?>",
+            "Confirm registration and charge": "<?= __("Confirm registration and charge") ?>",
 
             // Complete
             "Thank You": "<?= __("Thank You") ?>",
