@@ -90,7 +90,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <h3><?= __('Paid Plan');?></h3>
             <p><span class="price-text"><?=__('&dollar;19');?></span>
             <?= __('Per active member, per month');?></p>
+            <?php if (!isset($_GET['backBtn'])): ?>
             <button class="btn btn-cta btn-cta-primary"><?= __('Start 15-day Free Trial');?></button>
+            <?php endif; ?>
             <div class="hr"></div>
             <p><?=__('For teams and companies ready to create and share project goals on Goalous.');?></p>
         </div>
@@ -216,13 +218,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."');?>'
             </div>
         </div>
-        <div class="question">
-            <p class="question-entry"><strong><?= __('');?></strong><span class="fa fa-angle-down"></span></p>
-            <div class="answer">
-                <p><?=__('');?></p>
-            </div>
-        </div>
     </div>
 </section>
-<?= $this->element('Homepage/signup') ?>
+<?php if (!isset($_GET['backBtn'])): ?>
+    <?= $this->element('Homepage/signup') ?>
+<?php endif; ?>
 <?= $this->App->viewEndComment()?>
