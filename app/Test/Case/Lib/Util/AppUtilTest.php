@@ -276,4 +276,12 @@ class AppUtilTest extends GoalousTestCase
         $res = AppUtil::formatMoney(190, "$", "after");
         $this->assertEquals($res, "190$");
     }
+
+    function test_sizeStringToByte()
+    {
+        $this->assertEquals(  2 * 1024 * 1024 * 1024, AppUtil::sizeStringToByte('2G'));
+        $this->assertEquals(128 * 1024 * 1024, AppUtil::sizeStringToByte('128M'));
+        $this->assertEquals( 10 * 1024, AppUtil::sizeStringToByte('10K'));
+        $this->assertEquals(0, AppUtil::sizeStringToByte('ABC'));
+    }
 }
