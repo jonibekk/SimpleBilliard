@@ -3,6 +3,7 @@ App::uses('AppUtil', 'Util');
 App::uses('AppController', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
+App::uses('XmlAtobaraiResponse', 'AtobaraiCom');
 App::import('Service', 'InvoiceService');
 App::import('Service', 'TeamService');
 
@@ -26,6 +27,10 @@ use Goalous\Model\Enum as Enum;
  */
 class InquireInvoiceCreditStatusShell extends AppShell
 {
+    const OPTION_SIMULATE_INQUIRE_CREDIT_STATUS = 'simulate_inquire_credit_status';
+
+    private $simulateInquireCreditStatus = null;
+
     public $uses = [
         'Invoice',
         'InvoiceHistory',
@@ -40,6 +45,42 @@ class InquireInvoiceCreditStatusShell extends AppShell
         // initializing component
         $this->GlEmail = new GlEmailComponent(new ComponentCollection());
         $this->GlEmail->startup(new AppController());
+
+        $simulateInquireCreditStatus = Hash::get($this->params, self::OPTION_SIMULATE_INQUIRE_CREDIT_STATUS);
+        if (!is_null($simulateInquireCreditStatus)) {
+            if ($this->isEnvironmentProduction()) {
+                $this->out(sprintf('cant take option %s on env: %s', self::OPTION_SIMULATE_INQUIRE_CREDIT_STATUS, ENV_NAME));
+                die();
+            }
+            $this->simulateInquireCreditStatus = new Enum\AtobaraiCom\Credit(intval($simulateInquireCreditStatus));
+        }
+    }
+
+    /**
+     * @override
+     * @return ConsoleOptionParser
+     */
+    function getOptionParser()
+    {
+        $parser = parent::getOptionParser();
+
+        $options = [
+            self::OPTION_SIMULATE_INQUIRE_CREDIT_STATUS => [
+                'help'    => 'this batch simulate the credit result from Atobarai.com'
+                // change enums to string
+                // '0: OK' . '1: NG' ...
+                . array_reduce(
+                    Enum\AtobaraiCom\Credit::values(), function(string $string, Enum\AtobaraiCom\Credit $creditStatus) {
+                    return $string . sprintf('%d: %s', $creditStatus->getValue(), $creditStatus->getKey()) . PHP_EOL;
+                }, PHP_EOL),
+                'default' => null,
+                'choices' => array_map(function(Enum\AtobaraiCom\Credit $creditStatus) {
+                    return $creditStatus->getValue();
+                }, Enum\AtobaraiCom\Credit::values()),
+            ],
+        ];
+        $parser->addOptions($options);
+        return $parser;
     }
 
     /**
@@ -63,22 +104,35 @@ class InquireInvoiceCreditStatusShell extends AppShell
             }
             $orderCode = Hash::get($invoiceHistory, 'system_order_code');
 
+            if ($this->simulateInquireCreditStatus instanceof Enum\AtobaraiCom\Credit) {
+                $this->registerHttpClientMock(
+                    $invoiceHistory['system_order_code'],
+                    $this->simulateInquireCreditStatus
+                );
+            }
+
             // check status at Atobarai.com
             $status = $this->InvoiceService->inquireCreditStatus($orderCode);
 
             // Wrong response, try again on the next batch
             // TODO.Payment:save error log to db
             if (empty($status) || $status['status'] == 'error') {
-                $this->logInfo("Error inquiring credit status: " . AppUtil::varExportOneLine($status));
-                $this->logInfo(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
+                $this->logError(sprintf("Error inquiring credit status: %s", AppUtil::jsonOneLine($status)));
+                $this->logError(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
                 continue;
             }
 
             // Process status
             if ($this->_processCreditStatus($invoiceHistory, $status)) {
-                $this->logInfo(sprintf('Invoice order inquired with success. OrderCode: %s', $orderCode));
+                $this->logInfo(sprintf('Invoice order inquired with success: %s', AppUtil::jsonOneLine([
+                    'orderStatus@cd' => $status['results']['result']['orderStatus']['@cd'] ?? '',
+                    'orderCode' => $orderCode,
+                ])));
             } else {
-                $this->logInfo(sprintf('Invoice order failed to process. OrderCode: %s', $orderCode));
+                $this->logInfo(sprintf('Invoice order failed to process: %s', AppUtil::jsonOneLine([
+                    'orderStatus@cd' => $status['results']['result']['orderStatus']['@cd'] ?? '',
+                    'orderCode' => $orderCode,
+                ])));
             }
         }
     }
@@ -116,9 +170,13 @@ class InquireInvoiceCreditStatusShell extends AppShell
         }
 
         // Check for valid order status
-        if (!($orderStatus == Enum\Invoice\CreditStatus::NG || $orderStatus == Enum\Invoice\CreditStatus::OK)) {
-            $this->logInfo("Invalid order status: " .
-                AppUtil::varExportOneLine($inquireResult));
+        if (!in_array($orderStatus, [
+            Enum\Invoice\CreditStatus::NG,
+            Enum\Invoice\CreditStatus::OK,
+            Enum\Invoice\CreditStatus::CANCELED,
+        ])) {
+            $this->logError("Invalid order status: " . AppUtil::jsonOneLine($inquireResult));
+            $this->logError(sprintf('Invalid order status: %s', AppUtil::jsonOneLine($inquireResult)));
             return false;
         }
 
@@ -157,6 +215,21 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Set service to read only
             $currentDateTimeOfTeamTimeZone = GoalousDateTime::now()->setTimeZoneByHour($timezone);
             $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $currentDateTimeOfTeamTimeZone->format('Y-m-d'));
+            return true;
+        }
+
+        // Credit canceled
+        if ($orderStatus == Enum\Invoice\CreditStatus::CANCELED) {
+            // Get timezone
+            $timezone = $this->TeamService->getTeamTimezone($teamId);
+            if ($timezone === null) {
+                $this->logError("Invalid timezone for team: " . $teamId);
+                return false;
+            }
+
+            // Update credit status for invoices tables
+            $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $orderStatus);
+            return true;
         }
 
         return true;
@@ -181,5 +254,32 @@ class InquireInvoiceCreditStatusShell extends AppShell
         } else {
             $this->logInfo("TeamId:{$teamId} There is no admin..", LOG_WARNING);
         }
+    }
+
+    /**
+     * @param string                  $orderId
+     * @param Enum\AtobaraiCom\Credit $creditStatus
+     *
+     * @return \GuzzleHttp\Psr7\Response
+     */
+    protected function registerHttpClientMock(string $orderId, Enum\AtobaraiCom\Credit $creditStatus)
+    {
+        $r = XmlAtobaraiResponse::getInquireCreditStatus([
+            [
+                'orderId'     => $orderId,
+                'entOrderId'  => '',
+                'orderCreditStatus' => $creditStatus,
+            ],
+        ]);
+        $response = new \GuzzleHttp\Psr7\Response($r['status'], [], $r['xml']);
+
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $response,
+        ]));
+        $client = new \GuzzleHttp\Client(['handler' => $handler]);
+
+        $objectKey = \GuzzleHttp\Client::class;
+        ClassRegistry::removeObject($objectKey);
+        ClassRegistry::addObject($objectKey, $client);
     }
 }
