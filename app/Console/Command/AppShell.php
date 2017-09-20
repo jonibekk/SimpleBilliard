@@ -30,7 +30,7 @@ class AppShell extends Shell
         // to, simulate current date time in the console command
         // as far as, using GoalousDateTime (except "www", "isao" environment)
         // these commands assumed to use for testing
-        $canOverWriteCurrentDateTime = !in_array(ENV_NAME, ['www', 'isao']);
+        $canOverWriteCurrentDateTime = !$this->isEnvironmentProduction();
         $simulateCurrentDateTime  = Hash::get($this->params, 'simulate_current_date');
         $simulateCurrentTimestamp = Hash::get($this->params, 'simulate_current_timestamp');
         if (!$canOverWriteCurrentDateTime
@@ -178,5 +178,15 @@ class AppShell extends Shell
     public function logEmergency(string $msg, $scope = null) {
         $msg = sprintf('[Shell:%s] %s', $this->name, $msg);
         return CakeLog::emergency($msg, $scope);
+    }
+
+    /**
+     * return true if environment is production
+     *
+     * @return bool
+     */
+    public function isEnvironmentProduction(): bool
+    {
+        return in_array(ENV_NAME, ['www', 'isao']);
     }
 }
