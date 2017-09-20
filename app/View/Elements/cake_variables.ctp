@@ -316,7 +316,7 @@ App::uses('AttachedFile', 'Model');
             "Next": "<?= __("Next") ?>",
             'Login from mobile app': "<?= __('Login from mobile app') ?>",
             'Install Android app': "<?= __('Install Android app') ?>",
-            'Requires Android 4.4 or later.': "<?= __('Requires Android 4.4 or later.') ?>",
+            'Requires Android 6.0 or later.': "<?= __('Requires Android 6.0 or later.') ?>",
             'Install iOS app': "<?= __('Install iOS app') ?>",
             'Requires iOS 8.4 or later.': "<?= __('Requires iOS 8.4 or later.') ?>",
             "If you don't have a mobile device.": "<?= __("If you don't have a mobile device.") ?>",

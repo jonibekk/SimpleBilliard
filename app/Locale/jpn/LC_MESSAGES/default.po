@@ -2099,8 +2099,8 @@ msgstr "スマホアプリでログイン"
 msgid "Install Android app"
 msgstr "Androidアプリ"
 
-msgid "Requires Android 4.4 or later."
-msgstr "4.4以上のOSバージョンの方"
+msgid "Requires Android 6.0 or later."
+msgstr "6.0以上のOSバージョンの方"
 
 msgid "Install iOS app"
 msgstr "iOSアプリ"
