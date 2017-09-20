@@ -74,9 +74,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
                     return $string . sprintf('%d: %s', $creditStatus->getValue(), $creditStatus->getKey()) . PHP_EOL;
                 }, PHP_EOL),
                 'default' => null,
-                'choices' => array_map(function(Enum\AtobaraiCom\Credit $creditStatus) {
-                    return $creditStatus->getValue();
-                }, Enum\AtobaraiCom\Credit::values()),
+                'choices' => array_values(Enum\AtobaraiCom\Credit::toArray()),
             ],
         ];
         $parser->addOptions($options);
@@ -117,8 +115,8 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Wrong response, try again on the next batch
             // TODO.Payment:save error log to db
             if (empty($status) || $status['status'] == 'error') {
-                $this->logError(sprintf("Error inquiring credit status: %s", AppUtil::jsonOneLine($status)));
-                $this->logError(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
+                $this->logEmergency(sprintf("Error inquiring credit status: %s", AppUtil::jsonOneLine($status)));
+                $this->logEmergency(sprintf('Failed to inquire order code. OrderCode: %s', $orderCode));
                 continue;
             }
 
