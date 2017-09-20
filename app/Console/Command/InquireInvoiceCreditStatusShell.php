@@ -28,8 +28,18 @@ use Goalous\Model\Enum as Enum;
 class InquireInvoiceCreditStatusShell extends AppShell
 {
     const OPTION_SIMULATE_INQUIRE_CREDIT_STATUS = 'simulate_inquire_credit_status';
+    const OPTION_SPECIFY_TEAM_ID = 'specify_team_id';
 
+    /**
+     * @var null|Enum\AtobaraiCom\Credit
+     */
     private $simulateInquireCreditStatus = null;
+
+    /**
+     * if value is int, inquiring limit to specified team id
+     * @var null|int
+     */
+    private $specifyTeamId = null;
 
     public $uses = [
         'Invoice',
@@ -53,6 +63,13 @@ class InquireInvoiceCreditStatusShell extends AppShell
                 die();
             }
             $this->simulateInquireCreditStatus = new Enum\AtobaraiCom\Credit(intval($simulateInquireCreditStatus));
+        }
+        $specifyTeamId = Hash::get($this->params, self::OPTION_SPECIFY_TEAM_ID);
+        if (AppUtil::isInt($specifyTeamId)) {
+            $this->logInfo(sprintf('teams.id limited: %s', AppUtil::jsonOneLine([
+                'specify_team_id' => $specifyTeamId,
+            ])));
+            $this->specifyTeamId = intval($specifyTeamId);
         }
     }
 
@@ -78,6 +95,10 @@ class InquireInvoiceCreditStatusShell extends AppShell
                     return $creditStatus->getValue();
                 }, Enum\AtobaraiCom\Credit::values()),
             ],
+            self::OPTION_SPECIFY_TEAM_ID => [
+                'help'    => 'pass the teams.id to limit the inquiring history by teams.id',
+                'default' => null,
+            ],
         ];
         $parser->addOptions($options);
         return $parser;
@@ -93,11 +114,24 @@ class InquireInvoiceCreditStatusShell extends AppShell
 
         $count = 1;
         $this->logInfo('Number of invoice orders is: ' . count($orders));
+
         foreach ($orders as $order) {
-            $this->logInfo(sprintf('- Processing %d of %d orders', $count, count($orders)));
+            $invoiceHistory = Hash::get($order, 'InvoiceHistory');
+            $this->logInfo(sprintf('- Processing %d/%d orders: %s', $count, count($orders), AppUtil::jsonOneLine([
+                'invoice_histories.id' => $invoiceHistory['id'],
+                'teams.id' => $invoiceHistory['team_id'],
+            ])));
             $count++;
 
-            $invoiceHistory = Hash::get($order, 'InvoiceHistory');
+            // skip if specified team id has set
+            if (is_int($this->specifyTeamId) && $this->specifyTeamId != $invoiceHistory['team_id']) {
+                $this->logInfo(sprintf('skipped: %s', AppUtil::jsonOneLine([
+                    'invoice_histories.id' => $invoiceHistory['id'],
+                    'teams.id' => $invoiceHistory['team_id'],
+                ])));
+                continue;
+            }
+
             if (empty($invoiceHistory)) {
                 $this->logError("Error getting order history: Order: " . AppUtil::varExportOneLine($order));
                 continue;
@@ -125,11 +159,13 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Process status
             if ($this->_processCreditStatus($invoiceHistory, $status)) {
                 $this->logInfo(sprintf('Invoice order inquired with success: %s', AppUtil::jsonOneLine([
+                    'invoice_histories.id' => $invoiceHistory['id'],
                     'orderStatus@cd' => $status['results']['result']['orderStatus']['@cd'] ?? '',
                     'orderCode' => $orderCode,
                 ])));
             } else {
                 $this->logInfo(sprintf('Invoice order failed to process: %s', AppUtil::jsonOneLine([
+                    'invoice_histories.id' => $invoiceHistory['id'],
                     'orderStatus@cd' => $status['results']['result']['orderStatus']['@cd'] ?? '',
                     'orderCode' => $orderCode,
                 ])));
