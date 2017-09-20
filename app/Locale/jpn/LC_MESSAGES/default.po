@@ -5765,7 +5765,7 @@ msgstr "決済情報の参照や変更"
 msgid "What is the payment schedule for invoice?"
 msgstr "請求書払いの支払いスケジュールはどのようになりますか？"
 
-msgid ""After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day."
+msgid "After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day."
 msgstr "請求書払いでの契約後、最初の請求書は翌営業日に発行され、14日間以内にお支払いいただきます。この支払い期限日の8日間以内に支払いが行われなかった場合、次の請求書が発行されます。"
 
 msgid "Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."
