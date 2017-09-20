@@ -119,7 +119,7 @@ blockquote {
     font-size: 25px;
 }
 input[type="text"], input[type="email"], input[type="password"], input[type="submit"], input[type="button"], textarea, select {
-    appearance: none;
+    -webkit-appearance: none;
 }
 select {
     background: url(../../img/svg/icon_arrow_open.svgz) no-repeat right !important;
@@ -246,6 +246,10 @@ select {
     background: @white;
     z-index: 888;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+.navbar-nav li a{
+    padding-top:10px;
+    padding-bottom: 10px;
 }
 .header.navbar-fixed-top {
     border: none;
