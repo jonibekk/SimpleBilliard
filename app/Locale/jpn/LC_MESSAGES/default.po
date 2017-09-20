@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-18 16:17+0900\n"
+"PO-Revision-Date: 2017-09-20 14:53+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -4427,6 +4427,8 @@ msgstr ""
 msgid ""
 "Unfortunately your credit was declined. Please contact Goalous sales team."
 msgstr ""
+"残念ながらあなたのカードは拒否されました。Goalousチームにお問い合わせくださ"
+"い。"
 
 msgid "You can update your payment setting from the following link:"
 msgstr "以下のリンクから決済設定を行ってください。"
@@ -4664,7 +4666,9 @@ msgid ""
 "Your credit card expires on <strong>%s</strong>. Following this date, you "
 "will no longer be able to use Goalous. Update credit card from <a href=\"/"
 "payments/method\">here</a>."
-msgstr "このカードは、<strong>%s</strong>が有効期限です。それ以降はご利用いただけません。カード情報を<a href=\"/payments/method\">こちら</a>から更新してください。"
+msgstr ""
+"このカードは、<strong>%s</strong>が有効期限です。それ以降はご利用いただけませ"
+"ん。カード情報を<a href=\"/payments/method\">こちら</a>から更新してください。"
 
 msgid "Collaborating"
 msgstr "コラボり中"
@@ -5149,10 +5153,284 @@ msgstr "料金案内"
 msgid "You use all features of Goalous for a 15-day free trial. Give it a try!"
 msgstr ""
 
+msgid "Paid Plan"
+msgstr "有料プラン"
+
 msgid "Per active member, per month"
 msgstr ""
 
 msgid "Start 15-day Free Trial"
+msgstr ""
+
+msgid ""
+"For teams and companies ready to create and share project goals on Goalous."
+msgstr ""
+
+msgid "Goal features"
+msgstr "ゴールの機能"
+
+msgid "Create &amp; share Goals for your project"
+msgstr "プロジェクトの目標作成と共有"
+
+msgid "Team members can join to collaborate towards your Goal."
+msgstr "チームメンバーは誰でも目標にコラボできる"
+
+msgid "Organize Goals into separate <q>Key Results</q>"
+msgstr "複数の<q>重要な成果</q>を目標に紐づけて認識する"
+
+msgid "Post <q>Actions</q> that contribute to the <q>Key Result</q>"
+msgstr "<q>重要な成果</q>へ貢献するアクションの投稿"
+
+msgid "Graphical progress that helps motivate your team"
+msgstr "グラフィカルな進捗表示がやる気をもたらす"
+
+msgid "Communication features"
+msgstr "コミュニケーションの機能"
+
+msgid "Create private Circles where members can communicate"
+msgstr "限定的なメンバーでコミュニケーションできるサークル"
+
+msgid "Give reactions to posts with likes and comments"
+msgstr "いいね！とコメントで投稿へのリアクション"
+
+msgid "Realtime chat messaging"
+msgstr "リアルタイムでのチャットメッセージ"
+
+msgid "Attach and share files up to 100MB per file"
+msgstr "1ファイルあたり100MBまでのファイルを添付"
+
+msgid "See how many members have read your posts and comments"
+msgstr "全ての投稿とコメントの既読者を表示"
+
+msgid "Security Features"
+msgstr ""
+
+msgid "Unlimited team members"
+msgstr "無制限のチームメンバー数"
+
+msgid "Two-Step velification for stronger security"
+msgstr ""
+
+msgid "English and Japanese language available"
+msgstr "英語と日本語で利用可能"
+
+msgid ""
+"Live chat support (Initial response will be within the next business day)"
+msgstr "ライブチャットでのサポート(翌営業日までのレスポンスを約束)"
+
+msgid "iOS(10 or higher) and Android(4.4 or higher) APPs"
+msgstr "Android(4.4以上)とiPhone(10以上)のアプリケーション提供"
+
+msgid "Frequently Asked Questions"
+msgstr ""
+
+msgid "What are the payment methods available?"
+msgstr "支払い方法は何がありますか？"
+
+msgid ""
+"\"Team members who fit the following criteria are considered to be billable "
+"monthly active members:"
+msgstr ""
+
+msgid ""
+"Team members who are active by the payment date (those not deactivated by "
+"the team administrator) in the event that team members were added by the "
+"team administrator between the current month’s payment date and 1 day prior "
+"to the following month’s payment date, the number of billable members will "
+"be more than the number of active members falling on the current month’s "
+"payment date."
+msgstr ""
+
+msgid ""
+"In addition, in that situation, added team member’s usage fee will be "
+"charged based on daily rate.\""
+msgstr ""
+
+msgid "When does the free trial period and payment begin?"
+msgstr "新しいフリートライアル期間と、課金の開始日は？"
+
+msgid ""
+"For customers who registered on Goalous before 2017/9/29, the free trial "
+"period will end on 2017/10/15. Those who registered after 2017/9/29, the "
+"free trial period will end in 15 days. The payment begins on the day you "
+"apply for the paid plan."
+msgstr ""
+"2017年9月29日より前にGoalousに登録されたお客様の無料体験期間は、2017年10月15"
+"日までになります。2017年9月29日以降に登録されるお客様のフリートライアル期間"
+"は、15日間です。課金はお客様が有料プランに申し込んだ日から始まります。"
+
+msgid "When should I apply for the paid plan?"
+msgstr "いつ有料プランに申し込めばよいですか？"
+
+msgid ""
+"Please apply for the paid plan before the free trial period ends. Even if "
+"the free trial period is over, you can apply for a paid plan for a certain "
+"period (120 days)."
+msgstr ""
+"フリートライアル期間の終了日までに、有料プランにお申し込みください。仮にフ"
+"リートライアル期間が過ぎても、一定の期間(120日間)は有料プランへの申し込みが可"
+"能です。"
+
+msgid "Are there any function limitations for free trial?"
+msgstr "フリートライアルには機能制限がありますか？"
+
+msgid ""
+"Using Goalous on a free trial does not place, you will be able to use the "
+"same functions as a paid plan."
+msgstr ""
+"フリートライアル期間におけるGoalousの利用は、機能制限がなく、有料プランと同等"
+"の機能をお試しいただけます。"
+
+msgid "What happens when the free trial period is over?"
+msgstr "フリートライアル期間が終了したらどうなりますか？"
+
+msgid ""
+"When the free trial is over, you will only be able to use it in read-only "
+"mode for 30 days. During this time, you will not be able to action or post."
+msgstr ""
+"フリートライアル期間が終了すると、30日間の読込専用モードになります。この期間"
+"は、アクションや投稿などの書込をすることができません。"
+
+msgid ""
+"Furthermore, when the read-only mode is over, there will be a 90 day lock "
+"mode. During this time, you cannot check any contents, only a paid plan "
+"application is possible."
+msgstr ""
+"さらに、読込専用モードが終了すると、90日間のロックモードになります。この期間"
+"は、一切のコンテンツ参照ができず、有料プランへの申込のみが可能です。"
+
+msgid "How is the paid plan fee charged?"
+msgstr "有料プランの料金は、どのように計算されますか？"
+
+msgid ""
+"The paid plan is charged by calculating the number of active member usage on "
+"the day the paid plan contract starts (payment date), which is one month’s "
+"payment. “A one month period is considered to have elapsed on the day prior "
+"to the corresponding date in the month after the contract went into "
+"effect.”When there is no corresponding date, it will be by the end of the "
+"month. If the payment date is the 1st, it will be by the end of the same "
+"month. Payment Period Example: 2017/10/01 – 2017/10/30 2017/10/31 – "
+"2017/11/30 2017/11/10 – 2017/12/09 2018/01/31 – 2018/02/28"
+msgstr ""
+"有料プランの契約を開始した日(支払基準日)のアクティブメンバー数に1メンバーあた"
+"りの利用料を乗じた料金が、1ヶ月分の料金です。 1ヶ月分とは、「支払基準日の属す"
+"る月の翌月における支払基準日と同じ日付の１日前」までになります。該当日付が存"
+"在しない場合は、月末までになります。支払基準日の日付が１日の場合，同月の月末"
+"までになります。支払期間の例： 2017年10月01日 – 2017年10月30日 2017年10月31"
+"日 – 2017年11月30日 2017年11月10日 – 2017年12月09日 2018年01月31日 – 2018年02"
+"月28日"
+
+msgid "Can I continue using Goalous for free?"
+msgstr "無料でGoalousを使い続けることはできますか？"
+
+msgid ""
+"You cannot. Please apply for the paid plan once the free trial period is "
+"over."
+msgstr ""
+"できません。フリートライアル期間の終了までに有料プランに申し込んでください。"
+
+msgid "How are monthly active members charged?"
+msgstr "請求対象となる月間アクティブメンバーとはどのようなものですか。"
+
+msgid ""
+"Team members who fit the following criteria are considered to be billable "
+"monthly active members:"
+msgstr ""
+"請求対象となる月間アクティブメンバーとは、以下に該当するチームメンバーです。"
+
+msgid ""
+"Team members who are active by the payment date (those not deactivated by "
+"the team administrator)"
+msgstr ""
+"支払基準日にチームメンバーがアクティブ(チーム管理者によって非アクティブ化され"
+"ていない)な状態であった。"
+
+msgid ""
+"In the event that team members were added by the team administrator between "
+"the current month’s payment date and 1 day prior to the following month’s "
+"payment date, the number of billable members will be more than the number of "
+"active members falling on the current month’s payment date. In addition, in "
+"that situation, added team member’s usage fee will be charged based on daily "
+"rate."
+msgstr ""
+"チーム管理者が当月の支払基準日から翌月の支払基準日の1日前までにメンバーを追加"
+"した場合で、当月の支払基準日におけるアクティブメンバー数を超過した。なお、こ"
+"の場合は、追加されたチームメンバーの利用料が日割り計算によって請求されます。"
+
+msgid "How can I deactivate team members?"
+msgstr "チームメンバーの非アクティブ化はどのように実行できますか？"
+
+msgid ""
+"The team administrator has authority to do so. The team administrator can "
+"deactivate members by going to the team member list and changing the "
+"corresponding member’s setting."
+msgstr ""
+"チーム管理者のみに実行権限があります。チーム管理者は、チームメンバーリスト画"
+"面にて該当するチームメンバーの設定を非アクティブ化することが可能です。"
+
+msgid ""
+"Deactivated team members will lose their login permission to the team they "
+"have been deactivated from."
+msgstr ""
+"非アクティブ化されたチームメンバーは、該当チームへのログイン権限を失います。"
+
+msgid ""
+"In addition, in that situation, usage fee for deactivated members will not "
+"be refunded."
+msgstr ""
+"なお、この場合に、非アクティブ化されたチームメンバーに係るご利用料金は返金さ"
+"れません。"
+
+msgid "What kind of authority does a team manager have?"
+msgstr "チーム管理者の権限にはどのようなものがありますか。"
+
+msgid ""
+"The team administrator can give associates team administrative roles in "
+"Goalous."
+msgstr ""
+"チーム管理者はGoalousで会社の同僚にチーム管理者の役割を与えることができます。"
+
+msgid "Team administrators have the following authorities."
+msgstr ""
+
+msgid "Team detail setting changes"
+msgstr "チーム詳細設定の変更"
+
+msgid "Assign administrative roles"
+msgstr "管理者の役割の割り当て"
+
+msgid "Default circles (All team) management"
+msgstr "デフォルトサークル(All team)の管理者"
+
+msgid "Team member deactivation"
+msgstr "チームメンバーの非アクティブ化"
+
+msgid "Deletion of inappropriate posts"
+msgstr "不適切な投稿の削除"
+
+msgid "Paid Plan detail changes"
+msgstr "有料プラン詳細の変更"
+
+msgid "Settlement information reference changes"
+msgstr "決済情報の参照や変更"
+
+msgid "What is the payment schedule for invoice?"
+msgstr "請求書払いの支払いスケジュールはどのようになりますか？"
+
+msgid ""
+"After creating your invoice contract, your first invoice will be issued the "
+"following business day. You will then have 14 days to pay the invoice. If "
+"payment has not been received within 8 days after your due date, an updated "
+"invoice will be issued on the following business day."
+msgstr ""
+"請求書払いでの契約後、最初の請求書は翌営業日に発行され、14日間以内にお支払い"
+"いただきます。この支払い期限日の8日間以内に支払いが行われなかった場合、次の請"
+"求書が発行されます。"
+
+msgid ""
+"Upon issuing the updated invoice, you will have 10 days to complete your "
+"payment. If this process is repeated multiple times, your company may be "
+"subject to review, and may be denied access to Goalous.\""
 msgstr ""
 
 msgid "Privacy Policy is here."
@@ -5224,9 +5502,6 @@ msgstr "チーム概要"
 
 msgid "Free Trial"
 msgstr "フリートライアル"
-
-msgid "Paid Plan"
-msgstr "有料プラン"
 
 msgid "Read Only"
 msgstr "読み取り専用"
@@ -5408,6 +5683,9 @@ msgstr "チームビジョンを作成"
 
 msgid "Activation user"
 msgstr "アクティブにするユーザー"
+
+msgid "Activate & Pay"
+msgstr "アクティブにする・支払う"
 
 msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
@@ -5609,167 +5887,32 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
-msgid "Goal features"
-msgstr "ゴールの機能"
+#~ msgid "Other features"
+#~ msgstr "その他の機能"
 
-msgid "Create &amp; share Goals for your project"
-msgstr "プロジェクトの目標作成と共有"
+#~ msgid "Two-Step verification for stronger security"
+#~ msgstr "2段階認証でより強固なセキュリティ"
 
-msgid "Team members can join to collaborate towards your Goal."
-msgstr "チームメンバーは誰でも目標にコラボできる"
+#~ msgid ""
+#~ "Credit cards can be used for paid plan payments. You can pay in US "
+#~ "Dollars or Japanese Yen (for Japan only). If your organization is located "
+#~ "in Japan, you can choose invoice payment."
+#~ msgstr ""
+#~ "有料プランのお支払いには、クレジットカードが利用できます。お支払い可能な通"
+#~ "貨は、USドルと円(日本のみ)です。あなたの組織の所在地が日本の場合、請求書払"
+#~ "いを選択することも可能です。"
 
-msgid "Organize Goals into separate <q>Key Results</q>"
-msgstr "複数の<q>重要な成果</q>を目標に紐づけて認識する"
+#~ msgid "Team administrators have the following authorities:"
+#~ msgstr "チーム管理者には、次の権限があります。"
 
-msgid "Post <q>Actions</q> that contribute to the <q>Key Result</q>"
-msgstr "<q>重要な成果</q>へ貢献するアクションの投稿"
-
-msgid "Graphical progress that helps motivate your team"
-msgstr "グラフィカルな進捗表示がやる気をもたらす"
-
-msgid "Communication features"
-msgstr "コミュニケーションの機能"
-
-msgid "Create private Circles where members can communicate"
-msgstr "限定的なメンバーでコミュニケーションできるサークル"
-
-msgid "Give reactions to posts with likes and comments"
-msgstr "いいね！とコメントで投稿へのリアクション"
-
-msgid "Realtime chat messaging"
-msgstr "リアルタイムでのチャットメッセージ"
-
-msgid "Attach and share files up to 100MB per file"
-msgstr "1ファイルあたり100MBまでのファイルを添付"
-
-msgid "See how many members have read your posts and comments"
-msgstr "全ての投稿とコメントの既読者を表示"
-
-msgid "Other features"
-msgstr "その他の機能"
-
-msgid "Unlimited team members"
-msgstr "無制限のチームメンバー数"
-
-msgid "Two-Step verification for stronger security"
-msgstr "2段階認証でより強固なセキュリティ"
-
-msgid "English and Japanese language available"
-msgstr "英語と日本語で利用可能"
-
-msgid "Live chat support (Initial response will be within the next business day)"
-msgstr "ライブチャットでのサポート(翌営業日までのレスポンスを約束)"
-
-msgid "iOS(10 or higher) and Android(4.4 or higher) APPs"
-msgstr "Android(4.4以上)とiPhone(10以上)のアプリケーション提供"
-
-msgid "What are the payment methods available?"
-msgstr "支払い方法は何がありますか？"
-
-msgid "Credit cards can be used for paid plan payments. You can pay in US Dollars or Japanese Yen (for Japan only). If your organization is located in Japan, you can choose invoice payment."
-msgstr "有料プランのお支払いには、クレジットカードが利用できます。お支払い可能な通貨は、USドルと円(日本のみ)です。あなたの組織の所在地が日本の場合、請求書払いを選択することも可能です。"
-
-msgid "When does the free trial period and payment begin?"
-msgstr "新しいフリートライアル期間と、課金の開始日は？"
-
-msgid "For customers who registered on Goalous before 2017/9/29, the free trial period will end on 2017/10/15. Those who registered after 2017/9/29, the free trial period will end in 15 days. The payment begins on the day you apply for the paid plan."
-msgstr "2017年9月29日より前にGoalousに登録されたお客様の無料体験期間は、2017年10月15日までになります。2017年9月29日以降に登録されるお客様のフリートライアル期間は、15日間です。課金はお客様が有料プランに申し込んだ日から始まります。"
-
-msgid "When should I apply for the paid plan?"
-msgstr "いつ有料プランに申し込めばよいですか？"
-
-msgid "Please apply for the paid plan before the free trial period ends. Even if the free trial period is over, you can apply for a paid plan for a certain period (120 days)."
-msgstr "フリートライアル期間の終了日までに、有料プランにお申し込みください。仮にフリートライアル期間が過ぎても、一定の期間(120日間)は有料プランへの申し込みが可能です。"
-
-msgid "Are there any function limitations for free trial?"
-msgstr "フリートライアルには機能制限がありますか？"
-
-msgid "Using Goalous on a free trial does not place, you will be able to use the same functions as a paid plan."
-msgstr "フリートライアル期間におけるGoalousの利用は、機能制限がなく、有料プランと同等の機能をお試しいただけます。"
-
-msgid "What happens when the free trial period is over?"
-msgstr "フリートライアル期間が終了したらどうなりますか？"
-
-msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
-msgstr "フリートライアル期間が終了すると、30日間の読込専用モードになります。この期間は、アクションや投稿などの書込をすることができません。"
-
-msgid "Furthermore, when the read-only mode is over, there will be a 90 day lock mode. During this time, you cannot check any contents, only a paid plan application is possible."
-msgstr "さらに、読込専用モードが終了すると、90日間のロックモードになります。この期間は、一切のコンテンツ参照ができず、有料プランへの申込のみが可能です。"
-
-msgid "How is the paid plan fee charged?"
-msgstr "有料プランの料金は、どのように計算されますか？"
-
-msgid "The paid plan is charged by calculating the number of active member usage on the day the paid plan contract starts (payment date), which is one month’s payment. “A one month period is considered to have elapsed on the day prior to the corresponding date in the month after the contract went into effect.”When there is no corresponding date, it will be by the end of the month. If the payment date is the 1st, it will be by the end of the same month. Payment Period Example: 2017/10/01 – 2017/10/30 2017/10/31 – 2017/11/30 2017/11/10 – 2017/12/09 2018/01/31 – 2018/02/28"
-msgstr "有料プランの契約を開始した日(支払基準日)のアクティブメンバー数に1メンバーあたりの利用料を乗じた料金が、1ヶ月分の料金です。 1ヶ月分とは、「支払基準日の属する月の翌月における支払基準日と同じ日付の１日前」までになります。該当日付が存在しない場合は、月末までになります。支払基準日の日付が１日の場合，同月の月末までになります。支払期間の例： 2017年10月01日 – 2017年10月30日 2017年10月31日 – 2017年11月30日 2017年11月10日 – 2017年12月09日 2018年01月31日 – 2018年02月28日"
-
-msgid "Can I continue using Goalous for free?"
-msgstr "無料でGoalousを使い続けることはできますか？"
-
-msgid "You cannot. Please apply for the paid plan once the free trial period is over."
-msgstr "できません。フリートライアル期間の終了までに有料プランに申し込んでください。"
-
-msgid "How are monthly active members charged?"
-msgstr "請求対象となる月間アクティブメンバーとはどのようなものですか。"
-
-msgid "Team members who fit the following criteria are considered to be billable monthly active members:"
-msgstr "請求対象となる月間アクティブメンバーとは、以下に該当するチームメンバーです。"
-
-msgid "Team members who are active by the payment date (those not deactivated by the team administrator)"
-msgstr "支払基準日にチームメンバーがアクティブ(チーム管理者によって非アクティブ化されていない)な状態であった。"
-
-msgid "In the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date. In addition, in that situation, added team member’s usage fee will be charged based on daily rate."
-msgstr "チーム管理者が当月の支払基準日から翌月の支払基準日の1日前までにメンバーを追加した場合で、当月の支払基準日におけるアクティブメンバー数を超過した。なお、この場合は、追加されたチームメンバーの利用料が日割り計算によって請求されます。"
-
-msgid "How can I deactivate team members?"
-msgstr "チームメンバーの非アクティブ化はどのように実行できますか？"
-
-msgid "The team administrator has authority to do so. The team administrator can deactivate members by going to the team member list and changing the corresponding member’s setting."
-msgstr "チーム管理者のみに実行権限があります。チーム管理者は、チームメンバーリスト画面にて該当するチームメンバーの設定を非アクティブ化することが可能です。"
-
-msgid "Deactivated team members will lose their login permission to the team they have been deactivated from."
-msgstr "非アクティブ化されたチームメンバーは、該当チームへのログイン権限を失います。"
-
-msgid "In addition, in that situation, usage fee for deactivated members will not be refunded."
-msgstr "なお、この場合に、非アクティブ化されたチームメンバーに係るご利用料金は返金されません。"
-
-msgid "What kind of authority does a team manager have?"
-msgstr "チーム管理者の権限にはどのようなものがありますか。"
-
-msgid "The team administrator can give associates team administrative roles in Goalous."
-msgstr "チーム管理者はGoalousで会社の同僚にチーム管理者の役割を与えることができます。"
-
-msgid "Team administrators have the following authorities:"
-msgstr "チーム管理者には、次の権限があります。"
-
-msgid "Team detail setting changes"
-msgstr "チーム詳細設定の変更"
-
-msgid "Assign administrative roles"
-msgstr "管理者の役割の割り当て"
-
-msgid "Default circles (All team) management"
-msgstr "デフォルトサークル(All team)の管理者"
-
-msgid "Team member deactivation"
-msgstr "チームメンバーの非アクティブ化"
-
-msgid "Deletion of inappropriate posts"
-msgstr "不適切な投稿の削除"
-
-msgid "Paid Plan detail changes"
-msgstr "有料プラン詳細の変更"
-
-msgid "Settlement information reference changes"
-msgstr "決済情報の参照や変更"
-
-msgid "What is the payment schedule for invoice?"
-msgstr "請求書払いの支払いスケジュールはどのようになりますか？"
-
-msgid "After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day."
-msgstr "請求書払いでの契約後、最初の請求書は翌営業日に発行され、14日間以内にお支払いいただきます。この支払い期限日の8日間以内に支払いが行われなかった場合、次の請求書が発行されます。"
-
-msgid "Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."
-msgstr "次の請求書が発行された場合、10日間以内にお支払いいただきます。このプロセスが複数回繰り返されると、あなたの会社は審査の対象となり、Goalousの利用を停止される可能性があります。"
+#~ msgid ""
+#~ "Upon issuing the updated invoice, you will have 10 days to complete your "
+#~ "payment. If this process is repeated multiple times, your company may be "
+#~ "subject to review, and may be denied access to Goalous."
+#~ msgstr ""
+#~ "次の請求書が発行された場合、10日間以内にお支払いいただきます。このプロセス"
+#~ "が複数回繰り返されると、あなたの会社は審査の対象となり、Goalousの利用を停"
+#~ "止される可能性があります。"
 
 #~ msgid "Invoice history"
 #~ msgstr "請求履歴"
