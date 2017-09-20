@@ -20,7 +20,7 @@
             <div class="form-group">
                 <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Country") ?></label>
                 <?php echo $this->Form->input('current_team',
-                    array(
+                    [
                         'type'      => 'select',
                         'options'   => $countries,
                         'value'     => $setting['company_country'],
@@ -32,7 +32,7 @@
                         'wrapInput' => false,
                         'disabled'  => 'disabled',
                         'form'      => 'editPaySettingsForm',
-                    ))
+                    ])
                 ?>
             </div>
             <div class="form-group">
@@ -99,7 +99,7 @@
                     </div>
                 </div>
             </div>
-            <?php if ((int)$setting['type'] === Goalous\Model\Enum\PaymentSetting\Type::INVOICE || true): ?>
+            <?php if ((int)$setting['type'] === Goalous\Model\Enum\PaymentSetting\Type::INVOICE): ?>
             <div class="form-group">
                 <div class="flex">
                     <div class="flex-extend mr_8px">
