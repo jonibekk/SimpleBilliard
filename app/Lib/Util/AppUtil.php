@@ -756,4 +756,38 @@ class AppUtil
         return "${amountWithComma}${symbol}";
     }
 
+    /**
+     * set memory_limit if passed value is larger than
+     * current memory_limit value
+     *
+     * @param string $sizeString
+     */
+    static function iniSetMemoryLimitAtLeast(string $sizeString)
+    {
+        $currentLimit = ini_get('memory_limit');
+        if (self::sizeStringToByte($sizeString) > self::sizeStringToByte($currentLimit)) {
+            ini_set('memory_limit', $sizeString);
+        }
+    }
+
+    /**
+     * change size string like '2G', '128M' to integer bytes
+     * @param string $sizeString
+     *
+     * @return int
+     */
+    static function sizeStringToByte(string $sizeString): int
+    {
+        if (AppUtil::isInt($sizeString)) {
+            return intval($sizeString);
+        }
+        $unit = strtoupper(substr($sizeString, -1));
+        $sizeNum = floatval($sizeString);
+        switch ($unit) {
+            case 'G': return $sizeNum * 1024 * 1024 * 1024;
+            case 'M': return $sizeNum * 1024 * 1024;
+            case 'K': return $sizeNum * 1024;
+        }
+        return 0;
+    }
 }

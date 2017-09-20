@@ -4,9 +4,9 @@ namespace Goalous\Model\Enum\Invoice;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static Action WAITING()
- * @method static Action OK()
- * @method static Action NG()
+ * @method static static WAITING()
+ * @method static static OK()
+ * @method static static NG()
  */
 class CreditStatus extends Enum
 {

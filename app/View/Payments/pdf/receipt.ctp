@@ -8,7 +8,7 @@
             );
             ?>
         </figure>
-        <?php if (!$history['PaymentSetting']['is_card']): ?>
+        <?php if ($history['PaymentSetting']['is_card']): ?>
         <h2 class="receipt-status"><?= __("PAID") ?></h2>
         <?php endif; ?>
     </header>
@@ -27,14 +27,12 @@
         </div>
         <div class="overview-item">
             <h3><?= __('Billed To');?></h3>
-            <p>
             <?php if ($history['PaymentSetting']['is_card']): ?>
-            <?= $history['ChargeHistory']['total_with_currency'] ?> <?= __("charged to card ending in")?> <?= $history['CreditCard']['last4'] ?>
-            <?php else: ?>
-            <?= $history['ChargeHistory']['total_with_currency'] ?> charged
+                <p class="credit-charge-to">
+                    <?= $history['ChargeHistory']['total_with_currency'] ?> <?= __("charged to card ending in")?> <?= $history['CreditCard']['last4'] ?>
+                </p>
             <?php endif; ?>
-            </p>
-            <p class="company-info"><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
+            <p><?= $history['PaymentSetting']['contact_person_email'] ?> <br /> <?= $history['PaymentSetting']['company_name'] ?></p>
         </div>
     </div>
     <div class="invoice-table">

@@ -4,8 +4,8 @@ namespace Goalous\Model\Enum\PaymentSetting;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static Action INVOICE()
- * @method static Action CREDIT_CARD()
+ * @method static static INVOICE()
+ * @method static static CREDIT_CARD()
  */
 class Type extends Enum
 {
@@ -14,8 +14,8 @@ class Type extends Enum
 }
 
 /**
- * @method static Action JPY()
- * @method static Action USD()
+ * @method static static JPY()
+ * @method static static USD()
  */
 class Currency extends Enum
 {
