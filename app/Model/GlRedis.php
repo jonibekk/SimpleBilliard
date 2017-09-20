@@ -991,7 +991,7 @@ class GlRedis extends AppModel
         // With a file of 88M, PHP have a memory usage peak of 168M.
         // With a file of 97M, the consumption goes to 281M (over the initial 256M limit).
         $memoryLimit = trim(ini_get('memory_limit'));
-        ini_set('memory_limit', '384M');
+        AppUtil::iniSetMemoryLimitAtLeast('384M');
 
         // Serialize the uploaded file
         $this->Db->set($key, serialize($file));

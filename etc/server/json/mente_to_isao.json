@@ -5,7 +5,7 @@
       "ResourceRecordSet": {
         "Name": "isao.goalous.com.",
         "AliasTarget": {
-          "DNSName": "dualstack.gls-release2-1361262832.ap-northeast-1.elb.amazonaws.com.",
+          "DNSName": "dualstack.gls-isao-alb-2066342955.ap-northeast-1.elb.amazonaws.com.",
           "HostedZoneId": "Z14GRHDCWA56QT",
           "EvaluateTargetHealth": true
         },

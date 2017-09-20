@@ -4,9 +4,9 @@ namespace Goalous\Model\Enum\ChargeHistory;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static Action MONTHLY_FEE()
- * @method static Action USER_INCREMENT_FEE()
- * @method static Action USER_ACTIVATION_FEE()
+ * @method static static MONTHLY_FEE()
+ * @method static static USER_INCREMENT_FEE()
+ * @method static static USER_ACTIVATION_FEE()
  */
 class ChargeType extends Enum
 {
@@ -16,9 +16,9 @@ class ChargeType extends Enum
 }
 
 /**
- * @method static Action ERROR()
- * @method static Action SUCCESS()
- * @method static Action FAIL()
+ * @method static static ERROR()
+ * @method static static SUCCESS()
+ * @method static static FAIL()
  */
 class ResultType extends Enum
 {
