@@ -191,9 +191,12 @@ class TeamService extends AppService
             'service_use_state_start_date' => "'$startDate'",
             'service_use_state_end_date'   => $endDate ? "'$endDate'" : null,
         ];
+        $condition = [
+            'Team.id' => $teamId,
+        ];
 
         try {
-            if (!$Team->save($data)) {
+            if (!$Team->updateAll($data, $condition)) {
                 throw new Exception(sprintf("Failed update Team use status. data: %s, validationErrors: %s",
                     AppUtil::varExportOneLine($data),
                     AppUtil::varExportOneLine($Team->validationErrors)));
