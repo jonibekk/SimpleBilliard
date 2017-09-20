@@ -45,7 +45,7 @@ class User extends AppModel
         self::TYPE_GENDER_NEITHER => ""
     ];
 
-    const USER_NAME_REGEX = '^[a-zA-Z\u00C0-\u017F \'‘’]+$';
+    const USER_NAME_REGEX = '^[a-zA-Z\p{Latin} \‘’’]+$';
 
     /**
      * 性別タイプの名前をセット
