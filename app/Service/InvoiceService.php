@@ -5,6 +5,7 @@ App::uses('InvoiceHistory', 'Model');
 App::uses('InvoiceHistoriesChargeHistory', 'Model');
 App::uses('Invoice', 'Model');
 App::uses('Team', 'Model');
+App::uses('GlRedis', 'Model');
 
 /**
  * Class InvoiceService
@@ -234,6 +235,8 @@ class InvoiceService extends AppService
         $Invoice = ClassRegistry::init('Invoice');
         /** @var  InvoiceHistory $InvoiceHistory */
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
 
         // Get invoice history
         $invoiceHistory = $InvoiceHistory->getById($invoiceHistoryId);
@@ -241,10 +244,12 @@ class InvoiceService extends AppService
             return false;
         }
 
+        $teamId = $invoiceHistory['team_id'];
+
         $invoiceHistory['order_status'] = $creditStatus;
-        $invoice = $Invoice->getByTeamId($invoiceHistory['team_id']);
+        $invoice = $Invoice->getByTeamId($teamId);
         if (empty($invoice)) {
-            CakeLog::error("Invoice not found for invoice history. TeamId: " . $invoiceHistory['team_id']);
+            CakeLog::error("Invoice not found for invoice history. TeamId: " . $teamId);
             return false;
         }
         $invoice['credit_status'] = $creditStatus;
@@ -273,6 +278,9 @@ class InvoiceService extends AppService
             CakeLog::emergency($e->getTraceAsString());
             return false;
         }
+
+        $GlRedis->dellKeys("*current_team:team:{$teamId}");
+
         return true;
     }
 

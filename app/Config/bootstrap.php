@@ -95,13 +95,13 @@ Configure::write('Slack', [
 $logPath = '/var/log/goalous/';
 CakeLog::config('debug', [
     'engine' => LOG_ENGINE,
-    'types'  => ['notice', 'info', 'debug'],
+    'types'  => ['info', 'debug'],
     'file'   => 'debug',
     'path'   => $logPath
 ]);
 CakeLog::config('error', [
     'engine' => LOG_ENGINE,
-    'types'  => ['warning', 'error', 'critical', 'alert'],
+    'types'  => ['warning', 'error', 'critical', 'alert', 'notice'],
     'file'   => 'error',
     'path'   => $logPath
 ]);
