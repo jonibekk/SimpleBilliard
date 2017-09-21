@@ -54,12 +54,12 @@ class ApiController extends BaseController
         }
 
         // when prohibit request in read only
-        if ($this->isProhibitedRequestByReadOnly()) {
+        if ($this->_isProhibitedRequestByReadOnly()) {
             $this->stopInvoke = true;
             return $this->_getResponseBadFail(__("You may only read your team’s pages."));
         }
         // when prohibit request in status of cannot use service
-        if ($this->isProhibitedRequestByCannotUseService()) {
+        if ($this->_isProhibitedRequestByCannotUseService()) {
             $this->stopInvoke = true;
             return $this->_getResponseBadFail(__("You cannot use service on the team."));
         }

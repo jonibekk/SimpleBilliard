@@ -180,7 +180,7 @@ class BaseController extends Controller
         }
     }
 
-    function updateSetupStatusIfNotCompleted()
+    function _updateSetupStatusIfNotCompleted()
     {
         $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
         if ($setup_guide_is_completed) {
@@ -190,7 +190,7 @@ class BaseController extends Controller
         $user_id = $this->Auth->user('id');
         $this->GlRedis->deleteSetupGuideStatus($user_id);
         $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
-        if ($this->calcSetupRestCount($status_from_mysql) === 0) {
+        if ($this->_calcSetupRestCount($status_from_mysql) === 0) {
             $this->User->completeSetupGuide($user_id);
             $this->_refreshAuth($this->Auth->user('id'));
             return true;
@@ -202,14 +202,14 @@ class BaseController extends Controller
         return true;
     }
 
-    function calcSetupRestCount($status)
+    function _calcSetupRestCount($status)
     {
         return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
     }
 
-    function calcSetupCompletePercent($status)
+    function _calcSetupCompletePercent($status)
     {
-        $rest_count = $this->calcSetupRestCount($status);
+        $rest_count = $this->_calcSetupRestCount($status);
         if ($rest_count <= 0) {
             return 100;
         }
@@ -322,24 +322,13 @@ class BaseController extends Controller
     }
 
     /**
-     * pass `isTablet` variable to view.
-     * - get browser ua from browscap
-     */
-    public function _setIsTablet()
-    {
-        $browser = $this->getBrowser();
-        $this->is_tablet = $browser['istablet'];
-        $this->set('isTablet', $this->is_tablet);
-    }
-
-    /**
      * check prohibited request in read only term
      *
      * @return bool
      */
-    public function isProhibitedRequestByReadOnly(): bool
+    public function _isProhibitedRequestByReadOnly(): bool
     {
-        if ($this->isExcludeRequestParamInProhibited()) {
+        if ($this->_isExcludeRequestParamInProhibited()) {
             return false;
         }
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
@@ -360,9 +349,9 @@ class BaseController extends Controller
      *
      * @return bool
      */
-    public function isProhibitedRequestByCannotUseService(): bool
+    public function _isProhibitedRequestByCannotUseService(): bool
     {
-        if ($this->isExcludeRequestParamInProhibited()) {
+        if ($this->_isExcludeRequestParamInProhibited()) {
             return false;
         }
 
@@ -383,7 +372,7 @@ class BaseController extends Controller
      *
      * @return bool
      */
-    private function isExcludeRequestParamInProhibited(): bool
+    private function _isExcludeRequestParamInProhibited(): bool
     {
         // if controller is not much, skip all.
         $ignoreParamExists = array_search($this->request->param('controller'),
@@ -408,7 +397,7 @@ class BaseController extends Controller
      *
      * @return bool
      */
-    public function isLoggedIn(): bool
+    public function _isLoggedIn(): bool
     {
         return (bool)$this->Auth->user();
     }

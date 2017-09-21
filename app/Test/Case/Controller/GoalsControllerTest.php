@@ -296,9 +296,9 @@ class GoalsControllerTest extends GoalousControllerTestCase
     function testGetEndMonthLocalDateTime()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $Goals->getEndMonthLocalDateTime('test');
-        $Goals->getEndMonthLocalDateTime(6, 'test');
-        $Goals->getEndMonthLocalDateTime();
+        $Goals->_getEndMonthLocalDateTime('test');
+        $Goals->_getEndMonthLocalDateTime(6, 'test');
+        $Goals->_getEndMonthLocalDateTime();
     }
 
     /**
@@ -1064,7 +1064,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
     function testForceSSL()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $Goals->forceSSL();
+        $Goals->_forceSSL();
     }
 
     function testSwitchTeamBeforeCheckFalse()
