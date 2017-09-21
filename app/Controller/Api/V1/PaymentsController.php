@@ -169,7 +169,7 @@ class PaymentsController extends ApiController
         // Register invoice
         $paymentData = Hash::get($requestData, 'payment_setting');
         $invoiceData = Hash::get($requestData, 'invoice');
-        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData);
+        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, false);
         if ($regResponse !== true) {
             return $this->_getResponseInternalServerError();
         }
