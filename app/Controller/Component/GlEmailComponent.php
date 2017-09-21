@@ -176,13 +176,7 @@ class GlEmailComponent extends Component
                 $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
                 break;
         }
-        $url = Router::url(
-            [
-                'admin'      => false,
-                'controller' => 'payments',
-                'action'     => 'index',
-                'team_id'    => $teamId,
-            ], true);
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
         $item = compact('teamName', 'expireDate', 'url');
         $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
@@ -193,8 +187,8 @@ class GlEmailComponent extends Component
      *
      * @param int    $toUid
      * @param int    $teamId
-     * @param string $brand         Credit card brand (Visa, Master Card, American Express, etc..)
-     * @param string $lastDigits    Last for digits of credit card number
+     * @param string $brand      Credit card brand (Visa, Master Card, American Express, etc..)
+     * @param string $lastDigits Last for digits of credit card number
      */
     public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits)
     {
@@ -274,7 +268,7 @@ class GlEmailComponent extends Component
      */
     public function sendMailNewInvoiceSubscription(int $toUid, int $teamId)
     {
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_INVOICE_NEW_SUBSCRIPTION,null, null, $teamId);
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_INVOICE_NEW_SUBSCRIPTION, null, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
