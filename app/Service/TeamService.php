@@ -190,6 +190,7 @@ class TeamService extends AppService
             'service_use_status' => $serviceUseStatus,
             'service_use_state_start_date' => "'$startDate'",
             'service_use_state_end_date'   => $endDate ? "'$endDate'" : null,
+            'modified' => GoalousDateTime::now()->getTimestamp(),
         ];
         $condition = [
             'Team.id' => $teamId,
