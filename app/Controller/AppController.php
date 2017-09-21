@@ -173,19 +173,11 @@ class AppController extends BaseController
 
             // prohibit ajax request in read only term
             if ($this->request->is('ajax') && $this->isProhibitedRequestByReadOnly()) {
-                $this->stopInvoke = true;
-                return $this->_ajaxGetResponse([
-                    'error' => true,
-                    'msg'   => __("You may only read your team’s pages.")
-                ]);
+                return $this->_forceErrorResponse();
             }
             // prohibit ajax request in status of cannot use service
             if ($this->request->is('ajax') && $this->isProhibitedRequestByCannotUseService()) {
-                $this->stopInvoke = true;
-                return $this->_ajaxGetResponse([
-                    'error' => true,
-                    'msg'   => __("You cannot use service on the team.")
-                ]);
+                return $this->_forceErrorResponse();
             }
 
             // by not ajax request
@@ -278,6 +270,17 @@ class AppController extends BaseController
         }
         $this->set('current_global_menu', null);
         $this->redirectIfMobileAppVersionUnsupported();
+    }
+
+    /**
+     * @return CakeResponse
+     */
+    public function _forceErrorResponse()
+    {
+        $this->stopInvoke = true;
+        $this->autoRender = false;
+        $this->_ajaxPreProcess();
+        return $this->_ajaxGetResponse(null);
     }
 
     /**
@@ -580,11 +583,21 @@ class AppController extends BaseController
         $this->viewPath = 'Elements';
     }
 
-    public function _ajaxGetResponse($result, $json_option = 0)
+    /**
+     * @param     $result
+     * @param int $json_option
+     *
+     * @return CakeResponse
+     */
+    public function _ajaxGetResponse($result, $json_option = 0): CakeResponse
     {
         //レスポンスをjsonで生成
         $this->response->type('json');
-        $this->response->body(json_encode($result, $json_option));
+        if ($result !== null) {
+            $this->response->body(json_encode($result, $json_option));
+        } else {
+            $this->response->body($result);
+        }
         return $this->response;
     }
 
@@ -975,10 +988,12 @@ class AppController extends BaseController
                     // team credit card has been expired
                     $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
                     $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
-                } else if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
-                    // team credit card expire in 1 month at least
-                    $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
-                    $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                } else {
+                    if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
+                        // team credit card expire in 1 month at least
+                        $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
+                        $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                    }
                 }
             }
         }
