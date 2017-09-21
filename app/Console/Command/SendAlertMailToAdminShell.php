@@ -116,6 +116,12 @@ class SendAlertMailToAdminShell extends AppShell
                 continue;
             }
             $stateEndDate = $team['service_use_state_end_date'];
+            if (is_null($stateEndDate)) {
+                $this->logEmergency(sprintf('skipped due to service_use_state_end_date is null: %s', AppUtil::jsonOneLine([
+                    'teams.id' => $team['id'],
+                ])));
+                continue;
+            }
             if (false === $this->_isTargetTeam(
                     $this->dateTimeRequest->copy()->setTimeZoneByHour($team['timezone'])->format('Y-m-d'),
                     $stateEndDate
