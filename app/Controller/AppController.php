@@ -280,7 +280,7 @@ class AppController extends BaseController
         $this->stopInvoke = true;
         $this->autoRender = false;
         $this->_ajaxPreProcess();
-        return $this->_ajaxGetResponse(null);
+        return $this->_ajaxGetErrorResponse();
     }
 
     /**
@@ -591,10 +591,29 @@ class AppController extends BaseController
      */
     public function _ajaxGetResponse($result, $json_option = 0): CakeResponse
     {
-        //レスポンスをjsonで生成
         $this->response->type('json');
         if ($result !== null) {
             $this->response->body(json_encode($result, $json_option));
+        } else {
+            $this->response->body(null);
+        }
+        return $this->response;
+    }
+
+    /**
+     * get error response
+     *
+     * @param     $result
+     * @param int $statusCode
+     *
+     * @return CakeResponse
+     */
+    public function _ajaxGetErrorResponse($result = null, $statusCode = 400): CakeResponse
+    {
+        $this->response->statusCode($statusCode);
+        $this->response->type('json');
+        if ($result !== null) {
+            $this->response->body(json_encode($result));
         } else {
             $this->response->body(null);
         }
