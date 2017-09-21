@@ -12,7 +12,7 @@
  */
 ?>
 <?= $this->App->viewStartComment()?>
-<div class="navbar navbar-fixed-top navbar-default gl-navbar h_50px" id="header" style="box-shadow: none;">
+<div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>" id="header">
     <div class="container">
         <div class="nav-container header-container">
             <a class="logo-title" href="/">

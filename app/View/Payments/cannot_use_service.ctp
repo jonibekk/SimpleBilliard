@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment() ?>
-<section class="panel service-disabled">
+<section class="panel payment service-disabled">
     <div class="panel-container">
         <span class="fa fa-lock service-disabled-headline"></span>
         <h3><?= __("Your team no longer has access to Goalous.") ?></h3>

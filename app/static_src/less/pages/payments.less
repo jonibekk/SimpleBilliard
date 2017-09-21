@@ -4,6 +4,30 @@
 // TODO: Class name might as well rename like this. this is based on our style guide and easy to understand relation.
 // e.g. 「.subscription-status, .pricing-info」→「.subscriptionStatus, .pricingInfo」
 
+.panel-container{
+    max-width:600px;
+    margin: 0 20px;
+    h3{
+        margin:1.5em 0 1em 0;
+        width:100%;
+        padding-bottom:.5em;
+        border-bottom: 1px solid @cGray;
+        @media @medium{
+            margin: .5em 0 1.25em 0;
+        }
+    }
+    h4{
+        margin-bottom:0;
+    }
+    i{
+        font-size: 3rem;
+        margin: .25em 0;
+    }
+    p{
+        line-height:1.2em;
+    }
+}
+
 .choose-payment{
     padding: 2rem 0;
     .form-horizontal{
@@ -22,38 +46,18 @@
     }
 }
 
-.panel-container{
-    max-width:600px;
-    width:90%;
-    margin: 0 auto;
-    @media @small{
-        width:75%;
-    }
-    h3{
-        flex-basis:100%;
-        margin: 0 0 1em 0;
-    }
-    h4{
-        margin-bottom:0;
-    }
-    i{
-        font-size: 3rem;
-        margin: .25em 0;
-    }
-    p{
-        line-height:1.2em;
-    }
-}
+
 .payment-nav-select{
     margin: 10px 0;
 }
+
 .payment-options{
     width:100%;
 }
 .payment-option-container{
     display:flex;
     flex-wrap:wrap;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .payment-option{
     max-width:300px;
@@ -67,7 +71,7 @@
     position:relative;
     cursor:pointer;
     @media @medium{
-        flex-basis:45%;
+        flex-basis:48%;
     }
     &.upcoming{
         background:transparent;
@@ -93,11 +97,6 @@
         width:100%;
     }
 }
-.payment-option-title-wrapper {
-  margin: 0 auto;
-  max-width: 300px;
-  width: 100%;
-}
 
 .company-info-fieldset{
     margin-top:1rem;
@@ -106,18 +105,13 @@
     font-size:16px;
     font-weight:600;
     color:@darkBlack;
-    border-top:1px solid @baseGray;
     border-bottom:none;
     margin:0;
-    padding:1rem 15px;
+    padding:1rem 0 0;
 }
-.enter-cc-info, .company-info{
+.panel.payment{
     max-width: 600px;
     margin: 0 auto;
-
-    h3{
-        margin:1em 15px;
-    }
 
     .outcome {
     float: left;
@@ -135,11 +129,11 @@
     }
 
     .error {
-    color: #E4584C;
+    color: @acidRed;
     }
 
     .success {
-    color: #666EE8;
+    color: @subColor7;
     }
 
     .success .token {
@@ -152,8 +146,10 @@
     }
 
     .form-group{
-        margin-bottom:1em;
-        padding:0 15px;
+        margin-top: 1rem;
+        &:first-of-type{
+            margin-top:0;
+        }
     }
 
     .form-control.cc-field{
@@ -184,6 +180,7 @@
         display:flex;
         justify-content: flex-end;
         flex-wrap:wrap;
+        margin: 3rem 0 0 0;
         .btn{
             margin:0 0 0 1rem;
         }
@@ -357,7 +354,7 @@
 
 .payment-history-table-head{
   background-color:@baseGray;
-  font-weight: 600;
+  color:@darkBlack;
   td{
     border-right: 1px solid @white;
     &:last-of-type{
@@ -420,14 +417,6 @@
   }
 }
 
-
-
-.subscription-status, .pricing-info, .paymentMethod{
-    max-width:600px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
 .subscription-status-headline{
     font-weight: 500;
 }
@@ -457,18 +446,21 @@
 }
 
 .subscription-status-detail{
-    margin: 0 0 20px;
+    margin: 0;
     line-height: 1.5em;
     padding-right: 5rem;
 }
 
 .panel-container{
+    .team-price-info{
+        margin: 2em 0;
+    }
     .team-price-info-headline, .pricing-info-per-user-headline{
         text-transform: uppercase;
         font-size: 11px;
         color: @basicGray;
         font-weight: 600;
-        margin:1rem 0 .5rem 0;
+        margin:1rem 0 0;
     }
 
     .subscribe-btn{
@@ -500,7 +492,7 @@
         }
     }
     .team-price-info-footer-legal{
-        margin: 20px 10px 0 10px;
+        margin: 2rem 10px 3rem;
         padding: 0;
         font-size: 11px;
         color:@basicGray;
@@ -515,36 +507,4 @@
         position:relative;
         top: -.5em;
     }
-}
-
-/* Payment method */
-.paymentMethod {
-  footer {
-    margin: 0;
-    padding: 0 15px;
-    text-align: right;
-  }
-}
-.paymentMethod-inner {
-  padding: 0 15px;
-}
-
-.paymentMethod-cc-table{
-  &:extend(.payment-history-table all);
-  font-size:13px;
-}
-
-.paymentMethod-cc-table-head{
-  &:extend(.payment-history-table-head all);
-}
-
-.paymentMethod-cc-table-body{
-  &:extend(.payment-history-table-body all);
-}
-.paymentMethod-cc-table-expireDate {
-  display: inline-block;
-  line-height:38px;
-  &.mod-alert {
-    color: @strongRed;
-  }
 }

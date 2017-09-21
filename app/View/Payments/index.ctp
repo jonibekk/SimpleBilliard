@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment() ?>
-<section class="panel subscription-status <?= $serviceUseStatus == Goalous\Model\Enum\Team\ServiceUseStatus::PAID ? 'has-subnav' : '';?>">
+<section class="panel payment subscription-status <?= $serviceUseStatus == Goalous\Model\Enum\Team\ServiceUseStatus::PAID ? 'has-subnav' : '';?>">
     <?= $this->element('Payment/method_select') ?>
     <div class="panel-container">
         <h3 class="subscription-status-headline"><?= __("Team Summary") ?></h3>
@@ -21,7 +21,7 @@
         <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
             <p class="subscription-status-detail"><?= __('Your team is currently using Goalous as a free trial. Your free trial will end on September 20, 2017'); ?></p>
         <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
-            <p class="subscription-status-detail"><?= __('Your team has full access to Goalous.<br /><br />Go achieve your goal!'); ?></p>
+            <p class="subscription-status-detail"><?= __('Your team has full access to Goalous.<br />Go achieve your goal!'); ?></p>
         <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
             <p class="subscription-status-detail"><?= __('Your team can no longer create or edit content on Goalous. Your team account will be deactived on November 20, 2017'); ?></p>
         <?php else: //Deactivated ?>
@@ -30,11 +30,11 @@
         <div class="team-price-info">
             <h5 class="team-price-info-headline"><?= __('Monthly') ?></h5>
             <span class="team-price-info-number"><?= $amountPerUser ?><div class="team-price-info-detail">/<?= __('member'); ?>
-                    /<?= __('month'); ?><sup class="team-price-info-super-script">1</sup></div></span>
+                    /<?= __('month'); ?><sup class="team-price-info-super-script">*1</sup></div></span>
         </div>
         <div class="team-price-info">
             <h5 class="team-price-info-headline"><?= __('Active Members') ?><sup
-                    class="team-price-info-super-script">2</sup></h5>
+                    class="team-price-info-super-script">*2</sup></h5>
             <i class="team-price-info-icon fa fa-user"></i>
             <span class="team-price-info-number"><?= $chargeMemberCount ?></span>
         </div>
@@ -48,7 +48,7 @@
             <a href="/payments/apply" class="subscribe-btn btn btn-primary"><?= __('Upgrade Plan') ?></a>
             <ul class="pricing-info-features">
                 <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('100MB file upload'); ?><sup
-                        class="team-price-info-super-script">3</sup></li>
+                        class="team-price-info-super-script">*3</sup></li>
                 <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('Unlimited uploads'); ?></li>
                 <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('Chat Messaging'); ?></li>
                 <li class="team-price-info-feature-item"><i class="fa fa-check"></i><?= __('Insight Analytics'); ?></li>

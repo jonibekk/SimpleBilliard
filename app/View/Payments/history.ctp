@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment() ?>
-<section class="panel payment-history has-subnav">
+<section class="panel payment payment-history has-subnav">
     <?= $this->element('Payment/method_select') ?>
     <div class="panel-container">
         <h3><?= __('Payment History') ?></h3>

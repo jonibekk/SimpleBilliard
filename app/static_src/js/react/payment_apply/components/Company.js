@@ -76,14 +76,14 @@ export default class Company extends Base {
     }
 
     return (
-      <section className="panel company-info">
-        <h3>{__("Enter Company Information")}</h3>
+      <section className="panel payment company-info">
         <form
           className="form-horizontal" name="addCompanyInfo"
           id="PaymentsAddCompanyInfoForm" acceptCharset="utf-8"
           onSubmit={(e) => this.onSubmit(e)}
         >
-
+        <div className="panel-container">
+        <h3>{__("Enter Company Information")}</h3>
           <FormTextBox
             id="PaymentsCompanyName"
             name="company_name"
@@ -187,6 +187,7 @@ export default class Company extends Base {
             onChange={(e) => this.onChange(e, "payment_setting")}
             max_length={20}
           />
+          </div>
           <div className="panel-footer setting_pannel-footer">
             <Link to="/payments/apply" className="btn btn-link design-cancel bd-radius_4px">
               {__("Back")}</Link>
