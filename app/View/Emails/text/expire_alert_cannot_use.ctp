@@ -16,8 +16,8 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("The team \"%s\" is currently unavailable.", $teamName) . " " .
-    __("If you would like to restore your team to a regular status, please subscribe to the paid plan by %s.",
+echo __("The team \"%s\" is currently unavailable.", $teamName)."\n";
+echo __("If you would like to restore your team to a regular status, please subscribe to the paid plan by %s.",
         $this->TimeEx->formatDateI18nFromDate($expireDate)
     );
 echo "\n";
