@@ -637,7 +637,8 @@ App::uses('AttachedFile', 'Model');
 
             // Complete
             "Thank You": "<?= __("Thank You") ?>",
-            "Your transaction and registration to the payment plan was successful.<br>In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.": "<?= __("Your transaction and registration to the payment plan was successful.\<br\>In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.") ?>",
+            "Your transaction and registration to the payment plan was successful.": "<?= __("Your transaction and registration to the payment plan was successful.") ?>",
+            "In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.": "<?= __("In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.") ?>",
             "Move to Billing page": "<?= __("Move to Billing page") ?>",
             // Invite
             "Update completed": "<?= __("Update completed") ?>",

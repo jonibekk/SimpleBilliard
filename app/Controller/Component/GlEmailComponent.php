@@ -189,6 +189,7 @@ class GlEmailComponent extends Component
      * @param int    $teamId
      * @param string $brand      Credit card brand (Visa, Master Card, American Express, etc..)
      * @param string $lastDigits Last for digits of credit card number
+     * @param string $teamName
      */
     public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits, string $teamName)
     {
