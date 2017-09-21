@@ -192,13 +192,7 @@ class GlEmailComponent extends Component
      */
     public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits)
     {
-        $url = Router::url(
-            [
-                'admin'      => false,
-                'controller' => 'payments',
-                'action'     => 'index',
-                'team_id'    => $teamId,
-            ], true);
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method", ['team_id' => $teamId]);
         $item = compact('url', 'brand', 'lastDigits');
         $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD,
             $item, null, $teamId);
@@ -352,13 +346,7 @@ class GlEmailComponent extends Component
      */
     public function sendMailCreditStatusNotification(int $toUid, int $teamId, int $creditStatus)
     {
-        $url = Router::url(
-            [
-                'admin'      => false,
-                'controller' => 'payments',
-                'action'     => 'index',
-                'team_id'    => $teamId,
-            ], true);
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
 
         $template = ($creditStatus == Invoice::CREDIT_STATUS_OK) ?
             Sendmail::TYPE_TMPL_CREDIT_STATUS_APPROVED :
