@@ -310,7 +310,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                             'alt'    => 'Get it on Google Play',
                             'height' => '40'
                         ]),
-                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous',
+                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous2',
                     [
                         'escape' => false,
                         'class'  => 'app-dl-btn'

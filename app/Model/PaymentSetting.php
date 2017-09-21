@@ -190,12 +190,6 @@ class PaymentSetting extends AppModel
     ];
 
     public $validateCreate = [
-        'team_id' => [
-            'isUnique' => [
-                'rule'     => ['isUnique', ['team_id']],
-                'required' => 'create'
-            ],
-        ],
     ];
 
     public $belongsTo = [
