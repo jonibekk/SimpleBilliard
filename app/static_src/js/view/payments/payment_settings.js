@@ -1,23 +1,21 @@
 // Edit Invoice info
 if (document.editPaySettingsForm) {
 
+    var contactLastnameKana, contactFirstNameKana;
     var companyName = document.getElementById('company_name');
-    var companyCountry = document.getElementById('company_country');
     var companyPostCode = document.getElementById('company_post_code');
     var companyRegion = document.getElementById('company_region');
     var companyCity = document.getElementById('company_city');
     var companyStreet = document.getElementById('company_street');
     var contactLastName = document.getElementById('contact_person_last_name');
     var contactFirstName = document.getElementById('contact_person_first_name');
-    var contactLastnameKana = document.getElementById('contact_person_last_name_kana');
-    var contactFirstNameKana = document.getElementById('contact_person_first_name_kana');
     var contactEmail = document.getElementById('contact_person_email');
     var contactTel = document.getElementById('contact_person_tel');
 
     // Initialize international phone plugin
     // https://github.com/jackocnr/intl-tel-input
     $(contactTel).intlTelInput({
-        onlyCountries: ['us', 'jp', 'de', 'th'],
+        onlyCountries: cake.data.countryCodes,
         autoHideDialCode: false,
         nationalMode: false,
     });
@@ -27,7 +25,8 @@ if (document.editPaySettingsForm) {
         return isPhoneNumber(e);
     });
     // Set tel country
-    $(contactTel).intlTelInput("setCountry", companyCountry.value);
+    var companyCountry = document.getElementById('countryCode').value;
+    $(contactTel).intlTelInput("setCountry", companyCountry);
 
     // Accept only numbers for postal code
     $(companyPostCode).on('keypress', function (e) {
@@ -40,6 +39,9 @@ if (document.editPaySettingsForm) {
 
         // Validate kana fields in case of invoice
         if (document.getElementById('editPaySettingsType').value === "0") {
+            contactLastnameKana = document.getElementById('contact_person_last_name_kana');
+            contactFirstNameKana = document.getElementById('contact_person_first_name_kana');
+
             if (!isZenKatakana(contactLastnameKana.value)) {
                 setError(contactLastnameKana.name, __("Only Kana characters are allowed."));
                 isValid = false;
@@ -52,10 +54,9 @@ if (document.editPaySettingsForm) {
         }
 
         // Validate postal code
-        var country = companyCountry.value;
         var postalCode = companyPostCode.value;
-        if ((country === 'JP' && postalCode.length !== 7) ||
-            (country === 'US' && postalCode.length !== 5)) {
+        if ((companyCountry === 'JP' && postalCode.length !== 7) ||
+            (companyCountry === 'US' && postalCode.length !== 5)) {
             setError(companyPostCode.name, __("Invalid fields"));
             isValid = false;
         }
@@ -81,7 +82,6 @@ if (document.editPaySettingsForm) {
         var data = {
             'data[_Token][key]': cake.data.csrf_token.key,
             company_name: companyName.value,
-            company_country: companyCountry.value,
             company_post_code: companyPostCode.value,
             company_region: companyRegion.value,
             company_city: companyCity.value,

@@ -6,8 +6,8 @@
 function paymentMenuChanged(sel) {
     var value = sel.value;
 
-    if(window.location.href !== '/payments/'+value){
-        window.location.href = '/payments/'+value;
+    if (window.location.href !== '/payments/' + value) {
+        window.location.href = '/payments/' + value;
     }
 }
 
@@ -72,13 +72,24 @@ function removeAllErrors(element) {
  * @param str
  * @returns {boolean}
  */
-function isZenKatakana(str){
-    str = (str==null)?"":str;
-    if(str.match(/^[ァ-ヶー　]*$/)){    //"ー"の後ろの文字は全角スペースです。
+function isZenKatakana(str) {
+    str = (str == null) ? "" : str;
+    // Mach katakana characters and zenkaku white space.
+    if (str.match(/^[ァ-ヶー　]*$/)) {
         return true;
-    }else{
+    } else {
         return false;
     }
+}
+
+/**
+ * Return the key code from a javascript key event.
+ * @param e
+ * @returns {*}
+ */
+function getKeyCode(e) {
+    e = (e) ? e : window.event;
+    return (e.which) ? e.which : e.keyCode;
 }
 
 /**
@@ -87,9 +98,8 @@ function isZenKatakana(str){
  * @returns {boolean}
  */
 function isPhoneNumber(e) {
-    e = (e) ? e : window.event;
-    var charCode = (e.which) ? e.which : e.keyCode;
-    if (charCode === 43 || isNumber(e)) {
+    var charCode = getKeyCode(e);
+    if (charCode === 43 || (charCode > 31 && (charCode < 48 || charCode > 57))) {
         return true;
     }
     e.returnValue = false;
@@ -102,8 +112,7 @@ function isPhoneNumber(e) {
  * @returns {boolean}
  */
 function isNumber(e) {
-    e = (e) ? e : window.event;
-    var charCode = (e.which) ? e.which : e.keyCode;
+    var charCode = getKeyCode(e);
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
         e.returnValue = false;
         return false;

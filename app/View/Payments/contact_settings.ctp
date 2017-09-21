@@ -19,21 +19,8 @@
             <legend class="company-info-legend"><?= __("Company Address") ?></legend>
             <div class="form-group">
                 <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Country") ?></label>
-                <?php echo $this->Form->input('current_team',
-                    [
-                        'type'      => 'select',
-                        'options'   => $countries,
-                        'value'     => $setting['company_country'],
-                        'id'        => 'company_country',
-                        'name'      => 'company_country',
-                        'label'     => false,
-                        'div'       => false,
-                        'class'     => 'form-control',
-                        'wrapInput' => false,
-                        'disabled'  => 'disabled',
-                        'form'      => 'editPaySettingsForm',
-                    ])
-                ?>
+                <?= $countries[$setting['company_country']] ?>
+                <input type="hidden" id="countryCode" value="<?= $setting['company_country'] ?>"/>
             </div>
             <div class="form-group">
                 <label for="company_post_code" class="circle-create-label"><?= __("Post Code") ?></label>
@@ -82,7 +69,7 @@
                                name="contact_person_last_name"
                                value="<?= $setting['contact_person_last_name'] ?>"
                                required
-                               class="form-control   mr_8px"
+                               class="form-control"
                                maxlength="128"
                                placeholder="<?= __("Smith") ?>">
                     </div>
@@ -108,7 +95,7 @@
                                name="contact_person_last_name_kana"
                                value="<?= $setting['contact_person_last_name_kana'] ?>"
                                required
-                               class="form-control   mr_8px"
+                               class="form-control"
                                maxlength="128"
                                placeholder="<?= __("スズキ") ?>">
                     </div>
