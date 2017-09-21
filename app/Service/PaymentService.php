@@ -911,10 +911,11 @@ class PaymentService extends AppService
      * @param int   $teamId
      * @param array $paymentData
      * @param array $invoiceData
+     * @param bool  $checkSentInvoice
      *
      * @return bool
      */
-    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData, array $invoiceData)
+    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData, array $invoiceData, bool $checkSentInvoice = true)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -975,7 +976,7 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId);
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice);
             if ($res === false) {
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
@@ -1004,11 +1005,12 @@ class PaymentService extends AppService
      * @param int      $chargeMemberCount
      * @param int      $time
      * @param int|null $userId
+     * @param bool     $checkSentInvoice
      *
      * @return bool
      * @internal param float $timezone
      */
-    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null): bool
+    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null, bool $checkSentInvoice = true): bool
     {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
@@ -1034,7 +1036,7 @@ class PaymentService extends AppService
         $timezone = $Team->getById($teamId)['timezone'];
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
-        if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
+        if ($checkSentInvoice && $InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
             CakeLog::info(sprintf('invoice sent already: %s', AppUtil::jsonOneLine([
                 'teams.id'           => $teamId,
                 'local_current_date' => $localCurrentDate,
