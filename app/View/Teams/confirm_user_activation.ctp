@@ -38,7 +38,7 @@
                     <tbody>
                     <tr>
                         <th class="totalChargeFormulaDetail-item"><?= $amountPerUser ?></th>
-                        <td class="totalChargeFormulaDetail-description">：<?= __("Price per user"); ?></td>
+                        <td class="totalChargeFormulaDetail-description">：<?= __("Price per user"); ?>(<?=__("Tax excluded")?>)</td>
                     </tr>
                     <tr>
                         <th class="totalChargeFormulaDetail-item"><?= $useDaysByNext ?> days</th>
@@ -65,7 +65,7 @@
                 'url'        => ['controller' => 'teams', 'action' => 'activate_with_payment'],
             ]); ?>
             <?= $this->Form->hidden('id', ['value' => $teamMemberId]) ?>
-            <?= $this->Form->submit(__("Send"),
+            <?= $this->Form->submit(__("Activate & Pay"),
                 ['class' => 'btnGroupForForm-next js-activate-submit', 'div' => false, 'disabled' => 'disabled']) ?>
             <?= $this->Form->end(); ?>
             <a class="btnGroupForForm-cancel" href="/teams/main"><?= __('Back'); ?></a>

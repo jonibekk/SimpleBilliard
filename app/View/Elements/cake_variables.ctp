@@ -300,7 +300,9 @@ App::uses('AttachedFile', 'Model');
             user_id: "<?= $this->Session->read('Auth.User.id')?>",
             kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>,
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
-            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>
+            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
+            // Array with country codes
+            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
@@ -591,7 +593,10 @@ App::uses('AttachedFile', 'Model');
             "You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.": "<?= __("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.") ?>",
             "Invoice will be issued monthly, so please transfer by the deadline.": "<?= __("Invoice will be issued monthly, so please transfer by the deadline.") ?>",
             "Setup": "<?= __("Setup") ?>",
-
+            "Germany": "<?= __("Germany") ?>",
+            "Japan": "<?= __("Japan") ?>",
+            "Thailand": "<?= __("Thailand") ?>",
+            "United States": "<?= __("United States") ?>",
             // Input company info
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",

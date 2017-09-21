@@ -182,7 +182,6 @@ const config = {
       // Collapsed design latest node_modules css
       assets_dir + '/css/select2.css',
       assets_dir + '/css/select2-bootstrap.css',
-      assets_dir + '/css/intlTelInputCustom.css',
 
       node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       node_modules_dir + '/intl-tel-input/build/css/intlTelInput.css',
