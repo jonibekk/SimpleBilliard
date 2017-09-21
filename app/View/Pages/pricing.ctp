@@ -117,13 +117,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </ul>
         </div>
         <div class="feature-category">
-            <strong class="icon icon-lock"><?=__('Security Features');?></strong>
+            <strong class="icon icon-lock"><?=__('Other Features');?></strong>
             <ul>
                 <li><?=__('Unlimited team members');?></li>
-                <li><?=__('Two-Step velification for stronger security');?></li>
+                <li><?=__('Two-Step verification for stronger security');?></li>
                 <li><?=__('English and Japanese language available');?></li>
                 <li><?=__('Live chat support (Initial response will be within the next business day)');?></li>
-                <li><?=__('iOS(10 or higher) and Android(4.4 or higher) APPs');?></li>
+                <li><?=__('iOS(8.4 or higher) and Android(6.0 or higher) APPs');?></li>
             </ul>
         </div>
     </div>
