@@ -15,13 +15,14 @@
  *  * TODO: Create email body
  */
 
-echo __('Hello %s.', $to_user_name);
+echo __('Dear %s administrator:', $teamName);
 echo "\n";
 echo "\n";
-echo __("Your \"%s\" credit card terminated with \"%s\" will expire soon.", $brand, $lastDigits);
-echo __("Please update your credit card information as soon as possible.");
+echo __("Just a friendly reminder that the credit card (%s - %s) for the %s is about to expire.", $brand, $lastDigits, $teamName)."\n";
+echo __("Please take a moment to update your card here:")."\n";
+echo $url."\n";
 echo "\n";
-echo __("You can update your payment setting from the following link:");
-echo "\n";
-echo $url;
+echo __("If you have any questions you can contact contact@goalous.com.")."\n";
+echo __("Thanks.")."\n";
+echo __("Goalous Team")."\n";
 echo "\n";

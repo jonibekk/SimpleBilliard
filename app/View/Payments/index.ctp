@@ -59,8 +59,15 @@
             </ul>
         <?php endif; ?>
         <ol class="team-price-info-footer-legal">
-            <li class="team-price-info-footer-legal-item"><?= __('Adding a user will result in an immediate charge based on the remaining days of your billing period.'); ?></li>
-            <li class="team-price-info-footer-legal-item"><?= __('Active members are those members who have not been deactivated from the team. All active members are able to log in to the team.'); ?></li>
+            <li class="team-price-info-footer-legal-item">
+                <?= __("Added team member's usage fee will be charged based on daily rate."); ?><br>
+            </li>
+            <li class="team-price-info-footer-legal-item"><?= __('Team members who fit the following criteria are considered to be billable monthly active members:'); ?></li>
+            <ul>
+                <li><?=__('Team members who are active by the payment date (those not deactivated by the team administrator)');?></li>
+                <li><?=__('In the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date. In addition, in that situation, added team member’s usage fee will be charged based on daily rate.');?></li>
+            </ul>
+
             <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
                 <li class="team-price-info-footer-legal-item"><?= __('Maximum file upload for sharing files is 100MB. Posting photos allows up to 10MB'); ?></li>
             <?php endif; ?>

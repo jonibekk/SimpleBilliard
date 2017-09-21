@@ -85,13 +85,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <section id="pricingDetail">
     <div class="container">
         <h2><?= __('Pricing Guide');?></h2>
-        <p><?= __('You use all features of Goalous for a 15-day free trial. Give it a try!');?></p>
+        <p><?= __('You use all features of Goalous for a %s-day free trial. Give it a try!', 15);?></p>
         <div class="pricing-card">
             <h3><?= __('Paid Plan');?></h3>
             <p><span class="price-text"><?= $price; ?></span>
             <?= __('Per active member, per month');?></p>
             <?php if (!isset($_GET['backBtn'])): ?>
-            <button class="btn btn-cta btn-cta-primary"><?= __('Start 15-day Free Trial');?></button>
+            <button class="btn btn-cta btn-cta-primary"><?= __('Start %s-day Free Trial', 15);?></button>
             <?php endif; ?>
             <div class="hr"></div>
             <p><?=__('For teams and companies ready to create and share project goals on Goalous.');?></p>
@@ -134,10 +134,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="question">
             <p class="question-entry"><strong><?= __('What are the payment methods available?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
-                <p><?=__('"Team members who fit the following criteria are considered to be billable monthly active members:');?>
-                <ul>
-                    <li><?= __('Team members who are active by the payment date (those not deactivated by the team administrator) in the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date.');?></li>
-                    <li><?= __('In addition, in that situation, added team member’s usage fee will be charged based on daily rate."');?></p>
+<!--                <p>--><?//=__('Team members who fit the following criteria are considered to be billable monthly active members:');?>
+<!--                <ul>-->
+<!--                    <li>--><?//= __('Team members who are active by the payment date (those not deactivated by the team administrator)');?><!--</li>-->
+<!--                    <li>--><?//= __('In the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date. In addition, in that situation, added team member’s usage fee will be charged based on daily rate.');?><!--</p>-->
             </div>
         </div>
         <div class="question">
@@ -215,7 +215,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p class="question-entry"><strong><?= __('What is the payment schedule for invoice?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
                 <p><?=__('After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day.');?>
-                <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."');?>'
+                <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous.');?>'
             </div>
         </div>
     </div>

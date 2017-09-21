@@ -47,9 +47,7 @@ class BannerHelper extends AppHelper
         }
 
         if ($statusPaymentFailed) {
-            // TODO: need to decide priority of message
-            // TODO: this message string is temporary
-            return __('Your team latest payment failed.');
+            return __('Your last payment have been unsuccessful.');
         }
 
         switch ($serviceUseStatus) {
@@ -74,11 +72,9 @@ class BannerHelper extends AppHelper
         if ($isTeamAdmin) {
             switch ($teamCreditCardStatus) {
                 case Team::STATUS_CREDIT_CARD_EXPIRED:
-                    // TODO: this is temporary message. message needs fix
-                    return __('Your credit card expired. you will no longer be able to use Goalous. Update credit card from <a href="/payments/method">here</a>.',
+                    return __('Your credit card has expired. You will no longer be able to use Goalous. Update credit card from <a href="/payments/method">here</a>.',
                         $teamCreditCardExpireDate);
                 case Team::STATUS_CREDIT_CARD_EXPIRE_SOON:
-                    // TODO: this is temporary message. message needs fix
                     return __('Your credit card expires on <strong>%s</strong>. Following this date, you will no longer be able to use Goalous. Update credit card from <a href="/payments/method">here</a>.',
                         $teamCreditCardExpireDate);
             }

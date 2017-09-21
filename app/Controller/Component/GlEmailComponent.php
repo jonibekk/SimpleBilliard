@@ -196,16 +196,16 @@ class GlEmailComponent extends Component
      * @param string $brand         Credit card brand (Visa, Master Card, American Express, etc..)
      * @param string $lastDigits    Last for digits of credit card number
      */
-    public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits)
+    public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits, string $teamName)
     {
         $url = Router::url(
             [
                 'admin'      => false,
                 'controller' => 'payments',
-                'action'     => 'index',
+                'action'     => 'update_cc_info',
                 'team_id'    => $teamId,
             ], true);
-        $item = compact('url', 'brand', 'lastDigits');
+        $item = compact('url', 'brand', 'lastDigits', 'teamName');
         $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD,
             $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
@@ -272,9 +272,21 @@ class GlEmailComponent extends Component
      * @param int $toUid
      * @param int $teamId
      */
-    public function sendMailNewInvoiceSubscription(int $toUid, int $teamId)
+    public function sendMailRegisterInvoicePaidPlan(int $toUid, int $teamId)
     {
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_INVOICE_NEW_SUBSCRIPTION,null, null, $teamId);
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN,null, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Send email to new credit card subscription team admin
+     *
+     * @param int $toUid
+     * @param int $teamId
+     */
+    public function sendMailRegisterCreditCardPaidPlan(int $toUid, int $teamId)
+    {
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN,null, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 

@@ -160,9 +160,11 @@ class CreditCardExpirationAlertShell extends AppShell
         $TeamMember = ClassRegistry::init('TeamMember');
         $adminList = $TeamMember->findAdminList($teamId);
         if (!empty($adminList)) {
+            $team = $this->Team->getCurrentTeam();
+            $teamName = Hash::get($team, 'Team.name');
             // sending emails to each admins.
             foreach ($adminList as $toUid) {
-                $this->GlEmail->sendMailCreditCardExpireAlert($toUid, $teamId, $brand, $lastDigits);
+                $this->GlEmail->sendMailCreditCardExpireAlert($toUid, $teamId, $brand, $lastDigits, $teamName);
             }
         } else {
             $this->logError("This team have no admin: $teamId");
