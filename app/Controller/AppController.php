@@ -596,7 +596,7 @@ class AppController extends BaseController
         if ($result !== null) {
             $this->response->body(json_encode($result, $json_option));
         } else {
-            $this->response->body($result);
+            $this->response->body(null);
         }
         return $this->response;
     }
