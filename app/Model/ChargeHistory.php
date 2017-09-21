@@ -193,6 +193,7 @@ class ChargeHistory extends AppModel
                 'team_id'            => $teamId,
                 'charge_datetime >=' => $dateStart,
                 'charge_datetime <=' => $dateEnd,
+                'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'del_flg'            => false
             ],
         ];
