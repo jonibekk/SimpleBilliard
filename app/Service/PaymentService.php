@@ -759,6 +759,9 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($stripeResponse)));
             }
 
+            // teams payment setting must be only one
+            $this->deleteTeamsAllPaymentSetting($teamId);
+
             // Variable to later use
             $result['customerId'] = $customerId;
 
@@ -938,6 +941,9 @@ class PaymentService extends AppService
         try {
             $this->TransactionManager->begin();
 
+            // teams payment setting must be only one
+            $this->deleteTeamsAllPaymentSetting($teamId);
+
             // Prepare data for saving
             $timezone = $Team->getTimezone();
             $paymentData['team_id'] = $teamId;
@@ -993,6 +999,41 @@ class PaymentService extends AppService
         }
 
         return true;
+    }
+
+    /**
+     * delete teams all payment settings
+     *
+     * @param int $teamId
+     */
+    private function deleteTeamsAllPaymentSetting(int $teamId)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+
+        $condition = [
+            'team_id' => $teamId,
+        ];
+        if (!$PaymentSetting->updateAll([
+            'del_flg'  => 1,
+            'modified' => GoalousDateTime::now()->getTimestamp(),
+        ], $condition)) {
+            throw new RuntimeException(sprintf('failed update payment_settings: %s', AppUtil::jsonOneLine([
+                'del_flg'  => 1,
+                'teams.id' => $teamId,
+            ])));
+        }
+        if (!$Invoice->updateAll([
+            'del_flg'  => 1,
+            'modified' => GoalousDateTime::now()->getTimestamp(),
+        ], $condition)) {
+            throw new RuntimeException(sprintf('failed update invoices: %s', AppUtil::jsonOneLine([
+                'del_flg'  => 1,
+                'teams.id' => $teamId,
+            ])));
+        }
     }
 
     /**
