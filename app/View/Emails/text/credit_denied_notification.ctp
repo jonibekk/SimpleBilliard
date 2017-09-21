@@ -18,9 +18,8 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("Unfortunately your credit was declined. Please contact Goalous sales team.");
-echo "\n";
-echo __("You can update your payment setting from the following link:");
-echo "\n";
-echo $url;
+echo __("Thank you for your application to Goalous paid plan.")."\n";
+echo __("However, your organization did not pass the credit check.")."\n";
+echo __("If you do not apply again by credit card, we will stop using Goalous today.")."\n";
+echo __("We look forward to your continued support to Goalous in the future.")."\n";
 echo "\n";
