@@ -62,10 +62,7 @@ if (!isset($top_lang)) {
                                 ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
                         </li>
                         <li class="nav-item" id="h-nav-login">
-                            <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login'),
-                                [
-                                    "class" => "btn btn-link",
-                                ]); ?>
+                            <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login')); ?>
                         </li>
                         <li class="nav-item nav-item-cta last" id="h-nav-signup">
                             <?= $this->Html->link(__('Create New Team'),

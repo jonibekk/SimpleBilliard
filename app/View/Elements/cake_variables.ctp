@@ -591,7 +591,10 @@ App::uses('AttachedFile', 'Model');
             "You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.": "<?= __("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.") ?>",
             "Invoice will be issued monthly, so please transfer by the deadline.": "<?= __("Invoice will be issued monthly, so please transfer by the deadline.") ?>",
             "Setup": "<?= __("Setup") ?>",
-
+            "Germany": "<?= __("Germany") ?>",
+            "Japan": "<?= __("Japan") ?>",
+            "Thailand": "<?= __("Thailand") ?>",
+            "United States": "<?= __("United States") ?>",
             // Input company info
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",
