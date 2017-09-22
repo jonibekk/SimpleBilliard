@@ -39,17 +39,19 @@ export default class Confirm extends Base {
   render() {
     const {payment} = this.props
     return (
-      <section className="panel enter-cc-info">
-        <h3>{__('Confirm registration and charge')}</h3>
+      <section className="panel payment enter-cc-info">
         <form className="form-horizontal"
               onSubmit={(e) => this.onSubmit(e)}>
-          <ConfirmCharge
-            amount_per_user={payment.amount_per_user}
-            charge_users_count={payment.charge_users_count}
-            sub_total_charge={payment.sub_total_charge}
-            tax={payment.tax}
-            total_charge={payment.total_charge}
-          />
+          <div className="panel-container">
+            <h3>{__('Confirm registration and charge')}</h3>
+            <ConfirmCharge
+              amount_per_user={payment.amount_per_user}
+              charge_users_count={payment.charge_users_count}
+              sub_total_charge={payment.sub_total_charge}
+              tax={payment.tax}
+              total_charge={payment.total_charge}
+            />
+          </div>
           <div className="panel-footer setting_pannel-footer">
             <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/invoice">
               {__("Back")}

@@ -132,13 +132,14 @@ class PaymentsController extends AppController
         $expYear = $creditCard->exp_year;
         $expMonth = $creditCard->exp_month;
         $expMonthName = date('F', mktime(0, 0, 0, $expMonth, 10, $expYear));
+        $nameOnCard = $creditCard->name;
 
         // Check if the card is expired
         $dateNow = GoalousDateTime::now();
         $expDate = $CreditCardService->getRealExpireDateTimeFromCreditCardExpireDate($expYear, $expMonth);
         $isExpired = $dateNow->greaterThanOrEqualTo($expDate);
 
-        $this->set(compact('brand', 'expMonth', 'expYear', 'lastDigits', 'expMonthName', 'isExpired'));
+        $this->set(compact('brand', 'expMonth', 'expYear', 'lastDigits', 'expMonthName', 'isExpired', 'nameOnCard'));
         return $this->render('method_cc');
     }
 

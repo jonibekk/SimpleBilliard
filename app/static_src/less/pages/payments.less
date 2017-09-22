@@ -4,34 +4,26 @@
 // TODO: Class name might as well rename like this. this is based on our style guide and easy to understand relation.
 // e.g. 「.subscription-status, .pricing-info」→「.subscriptionStatus, .pricingInfo」
 
-.choose-payment{
-    padding: 2rem 0;
-    .form-horizontal{
-        margin:0 auto;
-        max-width:300px;
-        width:100%;
-    }
-    .btn{
-        float:right;
-        margin:1rem 0 0 0;
-    }
-    .payment-options{
-        overflow:hidden;
-        height:0px;
-        transition: height .3s;
-    }
-}
 
-.panel-container{
-    max-width:600px;
-    width:90%;
+// Styles applied to all payment pages.
+.payment{
+    max-width: 600px;
     margin: 0 auto;
-    @media @small{
-        width:75%;
+    padding-top: 3em;
+    .panel-container{
+        margin: 0 20px;
     }
     h3{
-        flex-basis:100%;
-        margin: 0 0 1em 0;
+        margin:1.5em 0 1em 0;
+        width:100%;
+        padding-bottom:.5em;
+        border-bottom: 1px solid @cGray;
+        &:first-of-type{
+            margin-top: 0;
+        }
+        @media @medium{
+            margin: .5em 0 1.25em 0;
+        }
     }
     h4{
         margin-bottom:0;
@@ -43,131 +35,24 @@
     p{
         line-height:1.2em;
     }
-}
-.payment-nav-select{
-    margin: 10px 0;
-}
-.payment-options{
-    width:100%;
-}
-.payment-option-container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: space-around;
-}
-.payment-option{
-    max-width:300px;
-    flex-basis:100%;
-    min-height:175px;
-    margin-bottom: 2rem;
-    padding: 1rem 2rem;
-    border:1px solid @cGray;
-    background: @smokyWhite;
-    border-radius: 4px;
-    position:relative;
-    cursor:pointer;
-    @media @medium{
-        flex-basis:45%;
-    }
-    &.upcoming{
-        background:transparent;
-        border: .5rem dashed @cGray;
-        cursor: normal;
-        h4, p, a, i{
-            color:@cGray;
-        }
-    }
-    h4{
-        width:100%;
-    }
-    p{
-        padding-bottom: 2em;
-        &.coming-soon{
-            padding-bottom:0;
-        }
-    }
-    .payment-option-setup-link{
-        position:absolute;
-        bottom:1rem;
-        left: 2rem;
-        width:100%;
-    }
-}
-.payment-option-title-wrapper {
-  margin: 0 auto;
-  max-width: 300px;
-  width: 100%;
-}
-
-.company-info-fieldset{
-    margin-top:1rem;
-}
-.company-info-legend{
-    font-size:16px;
-    font-weight:600;
-    color:@darkBlack;
-    border-top:1px solid @baseGray;
-    border-bottom:none;
-    margin:0;
-    padding:1rem 15px;
-}
-.enter-cc-info, .company-info{
-    max-width: 600px;
-    margin: 0 auto;
-
-    h3{
-        margin:1em 15px;
-    }
-
-    .outcome {
-    float: left;
-    width: 100%;
-    text-align: center;
-    }
-
-    .success, .error {
-    display: none;
-    font-size: 13px;
-    }
-
-    .success.visible, .error.visible {
-    display: inline;
-    }
-
-    .error {
-    color: #E4584C;
-    }
-
-    .success {
-    color: #666EE8;
-    }
-
-    .success .token {
-    font-weight: 500;
-    font-size: 13px;
-    }
-
-    form{
-        width:100%;
-    }
 
     .form-group{
-        margin-bottom:1em;
-        padding:0 15px;
+        margin-top: 1rem;
+        &:first-of-type{
+            margin-top:0;
+        }
     }
 
-    .form-control.cc-field{
+    .cc-field{
         padding:0 1rem;
     }
 
     .payment-info-group{
-        background:@baseLightGray;
-        padding:1rem;
-        margin:1rem 15px;
-        .cc-info-value{
+        margin:1rem 0;
+        .info-value{
             float:right;
         }
-        hr{
+        .hr{
             border-top:1px dashed @darkBlack;
             margin:.5rem 0;
         }
@@ -184,6 +69,7 @@
         display:flex;
         justify-content: flex-end;
         flex-wrap:wrap;
+        margin: 3rem 0 0 0;
         .btn{
             margin:0 0 0 1rem;
         }
@@ -191,72 +77,118 @@
             flex-basis:100%;
         }
     }
-}
 
-@keyframes confetti1 {
-    0%   {
-        transform: rotateX(0deg) rotateZ(0deg);
-        top:-1vh;
+    .outcome {
+        float: left;
+        width: 100%;
+        text-align: center;
     }
-    100% {
-        transform: rotateX(540deg) rotateZ(360deg);
-        top:60vh;
+    
+    .success, .error {
+        display: none;
     }
-}
-
-@keyframes confetti2 {
-    0%   {
-        transform: rotateX(0deg) rotateZ(0deg);
-        top:-2vh;
+    
+    .success.visible, .error.visible {
+        display: inline;
     }
-    100% {
-        transform: rotateX(-900deg) rotateZ(-540deg);
-        top:60vh;
+    
+    .error {
+        color: @acidRed;
     }
-}
-
-@keyframes confetti3 {
-    0%   {
-        transform: rotateX(0deg) rotateZ(0deg);
-        top:-3vh;
-    }
-    100% {
-        transform: rotateX(360deg) rotateZ(-900deg);
-        top:60vh;
+    
+    .success {
+        color: @subColor7;
     }
 }
 
-@keyframes confetti4 {
-    0%   {
-        transform: rotateX(0deg) rotateZ(0deg);
-        top:-2vh;
-    }
-    100% {
-        transform: rotateX(-720deg) rotateZ(-1080deg);
-        top:60vh;
+
+// Application page (ReactJS)
+.payment{
+    .payment-options{
+        margin-top:2rem;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-between;
+        h3{
+            margin-top: 1em;
+        }
     }
 }
+
+.payment-option{
+    max-width:300px;
+    flex-basis:100%;
+    min-height:175px;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    border:1px solid @cGray;
+    background: @smokyWhite;
+    border-radius: 4px;
+    position:relative;
+    cursor:pointer;
+    @media @medium{
+        flex-basis:48%;
+    }
+    h4{
+        width:100%;
+    }
+    p{
+        padding-bottom: 2em;
+    }
+    .payment-option-link{
+        position:absolute;
+        bottom:1rem;
+        left: 2rem;
+        width:100%;
+    }
+}
+
+.company-info{
+    fieldset{
+        margin-top:1rem;
+    }
+    legend{
+        font-size:16px;
+        font-weight:600;
+        color:@darkBlack;
+        border-bottom:none;
+        margin:0;
+        padding:1rem 0 0;
+    }
+}
+
+.enter-cc-info{
+    .payment-terms{
+        float:left;
+        clear:both;
+        margin: 1em 0;
+        width: 100%;
+    }
+    .btnRadiusOnlyIcon{
+        display:flex;
+        i{
+            margin:auto;
+        }
+    }
+}
+
+// Thank You page
 
 .payment-thanks{
     text-align:center;
     position:relative;
-    max-width:600px;
-    margin:0 auto;
     .panel-container{
         min-height:20rem;
-        padding:2rem 0;
         position:relative;
         z-index:2;
         @media @medium{
             min-height:30rem;
         }
     }
-    .thank-you-headline{
+    h3{
         color:@goalous;
-        font-weight: 600;
     }
-    .thank-you-text{
-        font-weight:600;
+    p{
         max-width:400px;
         width:100%;
         font-size:18px;
@@ -317,77 +249,61 @@
     }
 }
 
+
+// Service Disabled Page
 .service-disabled{
     padding: 20px 0;
+    .btn-primary{
+        width:10em;
+        display:block;
+        margin: 0 auto 2em auto;
+        font-size: 20px;
+    }
 }
 
-.service-disabled-headline{
+.service-disabled-icon{
     font-size: 48px;
     color:@basicGray;
     text-align: center;
     width:100%;
 }
 
-.service-disabled-subscribe{
-    width:10em;
-    display:block;
-    margin: 0 auto 2em auto;
-    font-size: 20px;
-}
 
-.service-subscribe{
-    display:block;
-    margin: 0 auto 2em auto;
-    font-size: 20px;
-}
-
-
-.payment-history{
-    max-width: 600px;
-    width: 100%;
-    margin:0 auto;
-    padding: 2rem 0;
-}
-
+// Payment History Page
 .payment-history-table{
     width:100%;
     border: 1px solid @baseGray;
     font-size:11px;
+    margin: 1rem 0 3rem 0;
     @media @small{
         font-size:14px;
     }
     td{
         padding:.25rem .5rem;
     }
-}
-
-.payment-history-table-head{
-  background-color:@baseGray;
-  font-weight: 600;
-  td{
-    border-right: 1px solid @white;
-    &:last-of-type{
-      border-right: none;
+    thead{
+        background-color:@baseGray;
+        color:@darkBlack;
+        td{
+            border-right: 1px solid @white;
+            &:last-of-type{
+                border-right: none;
+            }
+        }
     }
-  }
-}
-
-.payment-history-table-body{
-  background-color: @white;
-  color:@darkBlack;
-  tr{
-    border-bottom: 1px solid @baseGray;
-    td{
-      border-right: 1px solid @baseGray;
-      &:last-of-type{
-        border-right:none;
-      }
+    tbody{
+        background-color: @white;
+        color:@darkBlack;
+        tr{
+            border-bottom: 1px solid @baseGray;
+            td{
+                border-right: 1px solid @baseGray;
+                &:last-of-type{
+                    border-right:none;
+                }
+            }
+        }
     }
-  }
-}
-
-.payment-history-key{
-    margin: 10px 0;
 }
 
 .history-entry-type{
@@ -411,31 +327,32 @@
     }
 }
 
-.payment-history-view-receipt-btn{
-  padding: .25rem 0;
-  width: 5rem;
-  text-align:center;
-  display:block;
-  margin: 0 auto;
-  border-color: @darkBlack;
-  background-color: @white;
-  transition: background-color .3s, border-color .3s;
-  &:hover{
-    border-color: @basicPink;
-    background-color: @basicPink;
-  }
-}
-
-
-
-.subscription-status, .pricing-info, .paymentMethod{
-    max-width:600px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
-.subscription-status-headline{
-    font-weight: 500;
+// Payment Index Page
+.subscription-status{
+    h5{
+        text-transform: uppercase;
+        font-size: 11px;
+        color: @basicGray;
+        font-weight: 600;
+        margin:1rem 0 0;
+    }
+    sup{
+        font-size: 8px;
+        position:relative;
+        top: -.5em;
+    }
+    .btn-primary{
+        margin: 1rem 0;
+    }
+    .fa{
+        margin:0 .5rem 0 0;
+        color: @darkBlack;
+        font-size: 18px;
+    }
+    .fa-check{
+        color:@subColor6;
+        font-size: 14px;
+    }
 }
 
 .status-text{
@@ -454,108 +371,80 @@
     }
 }
 
-.payment-success{
-    color:@subColor6;
-}
-
-.payment-failed{
-    color:@acidRed;
-}
-
 .subscription-status-detail{
-    margin: 0 0 20px;
+    margin: 1em 0 0;
     line-height: 1.5em;
     padding-right: 5rem;
 }
 
-.payment-alert-text{
-  text-align: center;
+.team-price-info{
+    margin: 2em 0;
 }
 
+.team-price-info-number{
+    font-size: 20px;
+    color: @darkBlack;
+    width:100%;
+}
 
-.panel-container{
-    .team-price-info-headline, .pricing-info-per-user-headline{
-        text-transform: uppercase;
-        font-size: 11px;
-        color: @basicGray;
-        font-weight: 600;
-        margin:1rem 0 .5rem 0;
-    }
+.team-price-info-detail{
+    font-size: 11px;
+    display:inline;
+}
 
-    .subscribe-btn{
-        margin: 1rem 0;
-    }
-
-    .team-price-info-icon{
-        margin:0 .5rem 0 0;
-        color: @darkBlack;
-        font-size: 18px;
-    }
-
-    .team-price-info-number{
-        font-size: 20px;
-        color: @darkBlack;
-        width:100%;
-    }
-
-    .team-price-info-detail{
-        font-size: 11px;
-        display:inline;
-    }
-
-    .team-price-info-feature-item{
-        i{
-            color:@subColor6;
-            font-size: 14px;
-            margin-right: .5rem;
-        }
-    }
-    .team-price-info-footer-legal{
-        margin: 20px 10px 0 10px;
-        padding: 0;
-        font-size: 11px;
-        color:@basicGray;
-    }
-
-    .team-price-info-footer-legal-item{
+.team-price-info-legal{
+    margin: 2rem 10px 3rem;
+    padding: 0;
+    font-size: 11px;
+    color:@basicGray;
+    li{
         margin-bottom: 10px;
     }
+}
 
-    .team-price-info-super-script{
-        font-size: 8px;
-        position:relative;
-        top: -.5em;
+
+/// ANIMATIONS \\\
+
+@keyframes confetti1 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-1vh;
+    }
+    100% {
+        transform: rotateX(540deg) rotateZ(360deg);
+        top:60vh;
     }
 }
 
-/* Payment method */
-.paymentMethod {
-  footer {
-    margin: 0;
-    padding: 0 15px;
-    text-align: right;
-  }
-}
-.paymentMethod-inner {
-  padding: 0 15px;
-}
-
-.paymentMethod-cc-table{
-  &:extend(.payment-history-table all);
-  font-size:13px;
+@keyframes confetti2 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-2vh;
+    }
+    100% {
+        transform: rotateX(-900deg) rotateZ(-540deg);
+        top:60vh;
+    }
 }
 
-.paymentMethod-cc-table-head{
-  &:extend(.payment-history-table-head all);
+@keyframes confetti3 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-3vh;
+    }
+    100% {
+        transform: rotateX(360deg) rotateZ(-900deg);
+        top:60vh;
+    }
 }
 
-.paymentMethod-cc-table-body{
-  &:extend(.payment-history-table-body all);
-}
-.paymentMethod-cc-table-expireDate {
-  display: inline-block;
-  line-height:38px;
-  &.mod-alert {
-    color: @strongRed;
-  }
+@keyframes confetti4 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-2vh;
+    }
+    100% {
+        transform: rotateX(-720deg) rotateZ(-1080deg);
+        top:60vh;
+    }
 }

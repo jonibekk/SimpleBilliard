@@ -292,11 +292,17 @@ class CreditCardService extends AppService
      * @param string $currencyName
      * @param float  $amount
      * @param string $description
+     * @param array  $metaData
      *
      * @return array
      */
-    public function chargeCustomer(string $customerId, string $currencyName, float $amount, string $description)
-    {
+    public function chargeCustomer(
+        string $customerId,
+        string $currencyName,
+        float $amount,
+        string $description,
+        array $metaData = []
+    ) {
         $result = [
             "error"               => false,
             "message"             => null,
@@ -345,7 +351,8 @@ class CreditCardService extends AppService
             'customer'    => $customerId,
             'amount'      => $amount,
             'currency'    => $currencyName,
-            'description' => $description
+            'description' => $description,
+            'metadata'    => $metaData
         ];
 
         try {
