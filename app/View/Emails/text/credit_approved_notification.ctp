@@ -18,6 +18,7 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("Your credit was approved. You will receive your payment slip soon.");
-echo "\n";
+echo __("Thank you for your application to Goalous paid plan.")."\n";
+echo __("Your organization can use Goalous on invoice payment.")."\n";
+echo __("We look forward to your continued support to Goalous in the future.")."\n";
 echo "\n";

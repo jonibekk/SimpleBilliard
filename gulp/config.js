@@ -75,7 +75,8 @@ const config = {
   },
   js_prerender: {
     src: [
-      node_modules_dir + '/jquery/dist/jquery.js'
+      node_modules_dir + '/jquery/dist/jquery.js',
+      node_modules_dir + '/intl-tel-input/build/js/intlTelInput.min.js',
     ],
     output: {
       file_name: 'goalous.prerender',
@@ -183,6 +184,7 @@ const config = {
       assets_dir + '/css/select2-bootstrap.css',
 
       node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+      node_modules_dir + '/intl-tel-input/build/css/intlTelInput.css',
     ],
     watch_files: [assets_dir + '/css/**/*.css'],
     output: {

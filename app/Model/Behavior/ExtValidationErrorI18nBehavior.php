@@ -44,6 +44,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'canProcessImage'            => __('The image cannot be processed. The image taken with this device may not be supported.'),
             'isTopicMember'              => __("You are not a member of the topic."),
             'bodyOrAttachedFileRequired' => __("Body or attached file is required. "),
+            'phoneNo'                    => __("Invalid telephone number"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

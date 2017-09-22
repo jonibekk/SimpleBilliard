@@ -60,7 +60,9 @@ class PaymentsController extends AppController
             $amountPerUser = $PaymentService->formatCharge($payment['amount_per_user'], $payment['currency']);
         }
         $serviceUseStatus = $TeamService->getServiceUseStatus();
+        $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
         $this->set(compact(
+            'team',
             'payment',
             'chargeMemberCount',
             'serviceUseStatus',
