@@ -119,7 +119,7 @@ export default class Confirm extends Base {
                 </tr>
                 </tbody>
               </table>
-              <a href="/pricing" target="_blank">
+              <a href="/pricing?backBtn=true" target="_blank">
                 <i className="fa fa-question-circle mr_4px" aria-hidden="true"/>{__("View details")}
               </a>
             </div>
