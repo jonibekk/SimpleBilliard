@@ -614,8 +614,13 @@ class PaymentService extends AppService
 
             CakeLog::info(sprintf('stripe result: %s', AppUtil::jsonOneLine([
                 'teams.id'      => $teamId,
-                'stripe_result' => $chargeRes,
+                'stripe_result' => [
+                    'error' => $chargeRes['error'],
+                    'message' => $chargeRes['message'],
+                    'isApiRequestSucceed' => $chargeRes['isApiRequestSucceed'],
+                ],
             ])));
+
             // Save charge history
             if ($chargeRes['isApiRequestSucceed'] === false) {
                 // This Exception is Stripe system matter.

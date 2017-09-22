@@ -117,7 +117,6 @@ class CreditCardExpirationAlertShell extends AppShell
             // Cards that will expire this month
             if ($expireYear == $currentYear && $expireMonth == $currentMonth) {
                 $teamId = Hash::get($creditCard, 'CreditCard.team_id');
-                // TODO: Confirm the email text and translations
                 $this->_notifyExpiringCard($teamId, $creditCardInfo);
             }
 
@@ -146,7 +145,7 @@ class CreditCardExpirationAlertShell extends AppShell
     {
         // Validate card information
         if ($cardData == null || empty($cardData['last4']) || empty($cardData['brand'])) {
-            $this->logError("Invalid card data: ".AppUtil::varExportOneLine($cardData));
+            $this->logError("Invalid card data. team id: ". $teamId);
             return;
         }
         $this->logInfo(sprintf('notify credit card expiration to team: %s', AppUtil::varExportOneLine([
