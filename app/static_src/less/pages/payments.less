@@ -4,6 +4,8 @@
 // TODO: Class name might as well rename like this. this is based on our style guide and easy to understand relation.
 // e.g. 「.subscription-status, .pricing-info」→「.subscriptionStatus, .pricingInfo」
 
+
+// Styles applied to all payment pages.
 .payment{
     max-width: 600px;
     margin: 0 auto;
@@ -99,6 +101,8 @@
     }
 }
 
+
+// Application page (ReactJS)
 .payment-options{
     margin-top:2rem;
     display:flex;
@@ -224,6 +228,8 @@
     }
 }
 
+
+// Service Disabled Page
 .service-disabled{
     padding: 20px 0;
     .btn-primary{
@@ -241,6 +247,8 @@
     width:100%;
 }
 
+
+// Payment History Page
 .payment-history-table{
     width:100%;
     border: 1px solid @baseGray;
@@ -298,23 +306,32 @@
     }
 }
 
-.payment-history-view-receipt-btn{
-  padding: .25rem 0;
-  width: 5rem;
-  text-align:center;
-  display:block;
-  margin: 0 auto;
-  border-color: @darkBlack;
-  background-color: @white;
-  transition: background-color .3s, border-color .3s;
-  &:hover{
-    border-color: @basicPink;
-    background-color: @basicPink;
-  }
-}
-
-.subscription-status-headline{
-    font-weight: 500;
+// Payment Index Page
+.subscription-status{
+    h5{
+        text-transform: uppercase;
+        font-size: 11px;
+        color: @basicGray;
+        font-weight: 600;
+        margin:1rem 0 0;
+    }
+    sup{
+        font-size: 8px;
+        position:relative;
+        top: -.5em;
+    }
+    .btn-primary{
+        margin: 1rem 0;
+    }
+    .fa{
+        margin:0 .5rem 0 0;
+        color: @darkBlack;
+        font-size: 18px;
+    }
+    .fa-check{
+        color:@subColor6;
+        font-size: 14px;
+    }
 }
 
 .status-text{
@@ -339,61 +356,28 @@
     padding-right: 5rem;
 }
 
-.panel-container{
-    .team-price-info{
-        margin: 2em 0;
-    }
-    .team-price-info-headline, .pricing-info-per-user-headline{
-        text-transform: uppercase;
-        font-size: 11px;
-        color: @basicGray;
-        font-weight: 600;
-        margin:1rem 0 0;
-    }
+.team-price-info{
+    margin: 2em 0;
+}
 
-    .subscribe-btn{
-        margin: 1rem 0;
-    }
+.team-price-info-number{
+    font-size: 20px;
+    color: @darkBlack;
+    width:100%;
+}
 
-    .team-price-info-icon{
-        margin:0 .5rem 0 0;
-        color: @darkBlack;
-        font-size: 18px;
-    }
+.team-price-info-detail{
+    font-size: 11px;
+    display:inline;
+}
 
-    .team-price-info-number{
-        font-size: 20px;
-        color: @darkBlack;
-        width:100%;
-    }
-
-    .team-price-info-detail{
-        font-size: 11px;
-        display:inline;
-    }
-
-    .team-price-info-feature-item{
-        i{
-            color:@subColor6;
-            font-size: 14px;
-            margin-right: .5rem;
-        }
-    }
-    .team-price-info-footer-legal{
-        margin: 2rem 10px 3rem;
-        padding: 0;
-        font-size: 11px;
-        color:@basicGray;
-    }
-
-    .team-price-info-footer-legal-item{
+.team-price-info-legal{
+    margin: 2rem 10px 3rem;
+    padding: 0;
+    font-size: 11px;
+    color:@basicGray;
+    li{
         margin-bottom: 10px;
-    }
-
-    .team-price-info-super-script{
-        font-size: 8px;
-        position:relative;
-        top: -.5em;
     }
 }
 
