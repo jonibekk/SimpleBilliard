@@ -112,6 +112,9 @@ msgstr "ログイン中のチームが削除されたため、ログアウトさ
 msgid "Invalid access"
 msgstr "不正なアクセスです。"
 
+msgid "Invalid telephone number"
+msgstr "不正な電話番号です。"
+
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
 
