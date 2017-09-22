@@ -300,7 +300,9 @@ App::uses('AttachedFile', 'Model');
             user_id: "<?= $this->Session->read('Auth.User.id')?>",
             kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>,
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
-            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>
+            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
+            // Array with country codes
+            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
@@ -657,6 +659,8 @@ App::uses('AttachedFile', 'Model');
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
             "Send & Pay": "<?= __("Send & Pay") ?>",
+            "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
+            "Invalid fields": "<?= __("Invalid fields") ?>",
             // Goals
             "No Goals found": "<?= __("No Goals found") ?>",
         },
