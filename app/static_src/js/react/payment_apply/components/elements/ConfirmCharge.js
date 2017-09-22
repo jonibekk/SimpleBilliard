@@ -17,7 +17,7 @@ class ConfirmCharge extends React.Component {
           <strong>{__('Tax')}:&nbsp;</strong><span className="info-value">{this.props.tax}</span><br/>
           <div className="hr"></div>
           <strong>{__('Total')}:&nbsp;</strong><span className="info-value">{this.props.total_charge}</span>
-          <a href="/terms" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
+          <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
         </div>
     )
 
