@@ -110,23 +110,21 @@ export default class Country extends Base {
             }
           </form>
           {is_ja &&
-            <div className="panel-container">
-                <h3>{__('Select Payment Method')}</h3>
-              <div className="payment-option-container">
-                <div className="payment-option"
-                    onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
-                  <h4>{__('Credit Card')}</h4>
-                  <i className="fa fa-credit-card"/>
-                  <p>{__("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.")}</p>
-                  <a href="#">{__('Setup')}</a>
-                </div>
-                <div className="payment-option"
-                    onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
-                  <h4>{__('Invoice')}</h4>
-                  <i className="fa fa-leaf"/>
-                  <p>{__("Invoice will be issued monthly, so please transfer by the deadline.")}</p>
-                  <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
-                </div>
+            <div className="panel-container payment-options">
+              <h3>{__('Select Payment Method')}</h3>
+              <div className="payment-option"
+                  onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
+                <h4>{__('Credit Card')}</h4>
+                <i className="fa fa-credit-card"/>
+                <p>{__("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.")}</p>
+                <a href="#" className="payment-option-link">{__('Setup')}</a>
+              </div>
+              <div className="payment-option"
+                  onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
+                <h4>{__('Invoice')}</h4>
+                <i className="fa fa-leaf"/>
+                <p>{__("Invoice will be issued monthly, so please transfer by the deadline.")}</p>
+                <a href="#" className="payment-option-link">{__('Setup')}</a>
               </div>
             </div>
           }

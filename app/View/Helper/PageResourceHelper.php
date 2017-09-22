@@ -70,6 +70,7 @@ class PageResourceHelper extends AppHelper
             'apply'            => [
                 'https://js.stripe.com/v3/',
                 '/js/react_payment_apply_app.min',
+                '/js/goalous_payment.min'
             ],
             'default'          => [],
             'update_cc_info'   => [

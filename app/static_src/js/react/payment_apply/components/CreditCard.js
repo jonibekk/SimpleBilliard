@@ -81,10 +81,10 @@ export default class CreditCard extends Base {
     const {validation_errors, error_message} = payment
     return (
       <section className="panel payment enter-cc-info">
-        <div className="panel-container">
-          <h3>{__('Enter your card information')}</h3>
           <form id="enterCCInfo" className="form-horizontal" name=""
                 onSubmit={(e) => this.onSubmit(e)}>
+          <div className="panel-container">
+            <h3>{__('Enter your card information')}</h3>
             <div className="form-group">
               <label htmlFor="cardholder-name">{__('Name on Card')}</label>
               <input
@@ -105,26 +105,26 @@ export default class CreditCard extends Base {
               tax={payment.tax}
               total_charge={payment.total_charge}
             />
-            <div className="panel-footer setting_pannel-footer">
-              <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/company">
-                {__("Back")}
-              </Link>
-              {(() => {
-                if (payment.is_saving) {
-                  return <LoadingButton/>
-                } else {
-                  return (
-                    <button
-                      className="btn btn-primary"
-                      disabled={payment.is_disabled_submit ? "disabled" : ""}>
-                      {__("Register")}
-                    </button>
-                  )
-                }
-              })()}
-            </div>
-          </form>
-        </div>
+          </div>
+          <div className="panel-footer setting_pannel-footer">
+            <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/company">
+              {__("Back")}
+            </Link>
+            {(() => {
+              if (payment.is_saving) {
+                return <LoadingButton/>
+              } else {
+                return (
+                  <button
+                    className="btn btn-primary"
+                    disabled={payment.is_disabled_submit ? "disabled" : ""}>
+                    {__("Register")}
+                  </button>
+                )
+              }
+            })()}
+          </div>
+        </form>
       </section>
     )
   }

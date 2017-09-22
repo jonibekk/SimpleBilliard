@@ -1,8 +1,6 @@
 <?= $this->App->viewStartComment() ?>
 <section class="panel payment enter-cc-info">
-    <div class="panel-container">
-        <h3><?= __('Enter your card information') ?></h3>
-        <?=
+    <?=
         $this->Form->create('Payments', [
             'default'    => false,
             'url'        => '',
@@ -11,8 +9,10 @@
             'novalidate' => true,
             'name'       => 'enterCCInfo',
             'id'         => 'enterCCInfo'
-        ]);
-        ?>
+            ]);
+            ?>
+    <div class="panel-container">
+        <h3><?= __('Enter your card information') ?></h3>
         <div class="form-group">
             <label for="cardholder-name"><?= __('Name on Card'); ?></label>
             <input name="cardholder-name" class="form-control" placeholder="<?= __('Jane Doe'); ?>" required/>

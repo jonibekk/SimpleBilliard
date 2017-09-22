@@ -76,9 +76,9 @@ export default class Company extends Base {
     }
 
     return (
-      <section className="panel payment company-info">
+      <section className="panel payment">
         <form
-          className="form-horizontal" name="addCompanyInfo"
+          className="form-horizontal company-info" name="addCompanyInfo"
           id="PaymentsAddCompanyInfoForm" acceptCharset="utf-8"
           onSubmit={(e) => this.onSubmit(e)}
         >

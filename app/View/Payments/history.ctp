@@ -1,9 +1,9 @@
 <?= $this->App->viewStartComment() ?>
-<section class="panel payment payment-history has-subnav">
+<section class="panel payment has-subnav">
     <?= $this->element('Payment/method_select') ?>
     <div class="panel-container">
         <h3><?= __('Payment History') ?></h3>
-        <aside class="payment-history-key visible-xxs">
+        <aside class="visible-xxs">
             <span class="fa fa-calendar"></span> = <?= __('Monthly');?> &nbsp; <span class="fa fa-user"></span> = <?= __('New Member');?>
         </aside>
         <table class="payment-history-table">
@@ -25,7 +25,7 @@
                         <span class="visible-xxs <?= $v['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE ? "fa fa-calendar" : "fa fa-user"?>"></span>
                         <span class="hidden-xxs"><?= $v['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE ? "Monthly" : "Added Member"?></span>
                     </td>
-                    <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check payment-success" : "fa fa-close payment-failed"?>
+                    <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check success" : "fa fa-close error"?>
                     <td><span class="<?=$resultIconClass?>"></span><?= $v['total']?></td>
                     <td class="history-entry-download">
                         <?= $this->Html->link("",
