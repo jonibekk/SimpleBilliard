@@ -91,7 +91,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p><span class="price-text"><?= $price; ?></span>
             <?= __('Per active member, per month');?></p>
             <?php if (!isset($_GET['backBtn'])): ?>
-            <button class="btn btn-cta btn-cta-primary"><?= __('Start %s-day Free Trial', 15);?></button>
+            <a href="/signup/email?type=header" class="btn btn-cta btn-cta-primary"><?= __('Start %s-day Free Trial', 15);?></a>
             <?php endif; ?>
             <div class="hr"></div>
             <p><?=__('For teams and companies ready to create and share project goals on Goalous.');?></p>
