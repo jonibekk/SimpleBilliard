@@ -16,10 +16,10 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("The team \"%s\" is currently in a read-only state.", $teamName) . " " .
-    __("If you would like to restore your team to a regular status, please subscribe to the paid plan by %s.",
+echo __("The team \"%s\" is currently in a read-only state.", $teamName)."\n";
+echo __("If you would like to restore your team to a regular status, please subscribe to the paid plan by %s.",
         $this->TimeEx->formatDateI18nFromDate($expireDate)
-    );
+    )."\n";
 echo "\n";
 echo __("Your team will be able to resume normal use immediately after subscribing to the paid plan.");
 echo "\n";

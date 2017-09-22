@@ -144,7 +144,7 @@ class PaymentServiceTest extends GoalousTestCase
             'currency'         => 1
         ]);
         $res = $this->PaymentService->validateCreateCc($payment);
-        $this->assertFalse($res === true);
+        $this->assertTrue($res);
     }
 
     public function test_validateCreate_validateError_wrongType()

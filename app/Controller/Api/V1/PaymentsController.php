@@ -130,6 +130,19 @@ class PaymentsController extends ApiController
             return $this->_getResponse($res['errorCode'], null, null, $res['message']);
         }
 
+        // Send notification email
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $adminList = $TeamMember->findAdminList($teamId);
+        if (!empty($adminList)) {
+            // sending emails to each admins.
+            foreach ($adminList as $toUid) {
+                $this->GlEmail->sendMailRegisterCreditCardPaidPlan($toUid, $teamId);
+            }
+        } else {
+            CakeLog::error("This team have no admin: $teamId");
+        }
+
         // New Payment registered with success
         return $this->_getResponseSuccess();
     }
@@ -169,7 +182,7 @@ class PaymentsController extends ApiController
         // Register invoice
         $paymentData = Hash::get($requestData, 'payment_setting');
         $invoiceData = Hash::get($requestData, 'invoice');
-        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData);
+        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, false);
         if ($regResponse !== true) {
             return $this->_getResponseInternalServerError();
         }
@@ -181,7 +194,7 @@ class PaymentsController extends ApiController
         if (!empty($adminList)) {
             // sending emails to each admins.
             foreach ($adminList as $toUid) {
-                $this->GlEmail->sendMailNewInvoiceSubscription($toUid, $teamId);
+                $this->GlEmail->sendMailRegisterInvoicePaidPlan($toUid, $teamId);
             }
         } else {
             CakeLog::error("This team have no admin: $teamId");

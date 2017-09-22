@@ -759,6 +759,9 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($stripeResponse)));
             }
 
+            // teams payment setting must be only one
+            $this->deleteTeamsAllPaymentSetting($teamId);
+
             // Variable to later use
             $result['customerId'] = $customerId;
 
@@ -911,10 +914,11 @@ class PaymentService extends AppService
      * @param int   $teamId
      * @param array $paymentData
      * @param array $invoiceData
+     * @param bool  $checkSentInvoice
      *
      * @return bool
      */
-    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData, array $invoiceData)
+    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData, array $invoiceData, bool $checkSentInvoice = true)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -936,6 +940,9 @@ class PaymentService extends AppService
 
         try {
             $this->TransactionManager->begin();
+
+            // teams payment setting must be only one
+            $this->deleteTeamsAllPaymentSetting($teamId);
 
             // Prepare data for saving
             $timezone = $Team->getTimezone();
@@ -975,7 +982,7 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId);
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice);
             if ($res === false) {
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
@@ -995,6 +1002,41 @@ class PaymentService extends AppService
     }
 
     /**
+     * delete teams all payment settings
+     *
+     * @param int $teamId
+     */
+    private function deleteTeamsAllPaymentSetting(int $teamId)
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init("PaymentSetting");
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+
+        $condition = [
+            'team_id' => $teamId,
+        ];
+        if (!$PaymentSetting->updateAll([
+            'del_flg'  => 1,
+            'modified' => GoalousDateTime::now()->getTimestamp(),
+        ], $condition)) {
+            throw new RuntimeException(sprintf('failed update payment_settings: %s', AppUtil::jsonOneLine([
+                'del_flg'  => 1,
+                'teams.id' => $teamId,
+            ])));
+        }
+        if (!$Invoice->updateAll([
+            'del_flg'  => 1,
+            'modified' => GoalousDateTime::now()->getTimestamp(),
+        ], $condition)) {
+            throw new RuntimeException(sprintf('failed update invoices: %s', AppUtil::jsonOneLine([
+                'del_flg'  => 1,
+                'teams.id' => $teamId,
+            ])));
+        }
+    }
+
+    /**
      * Register Invoice including requesting to atobarai.com and saving data in the following:
      * - charge_histories -> monthly charge
      * - invoice_histories -> status of response of atobarai.com
@@ -1004,11 +1046,12 @@ class PaymentService extends AppService
      * @param int      $chargeMemberCount
      * @param int      $time
      * @param int|null $userId
+     * @param bool     $checkSentInvoice
      *
      * @return bool
      * @internal param float $timezone
      */
-    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null): bool
+    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null, bool $checkSentInvoice = true): bool
     {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
@@ -1034,7 +1077,7 @@ class PaymentService extends AppService
         $timezone = $Team->getById($teamId)['timezone'];
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
         // if already send an invoice, return
-        if ($InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
+        if ($checkSentInvoice && $InvoiceService->isSentInvoice($teamId, $localCurrentDate)) {
             CakeLog::info(sprintf('invoice sent already: %s', AppUtil::jsonOneLine([
                 'teams.id'           => $teamId,
                 'local_current_date' => $localCurrentDate,
