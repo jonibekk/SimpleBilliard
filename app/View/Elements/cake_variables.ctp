@@ -666,7 +666,7 @@ App::uses('AttachedFile', 'Model');
             "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",
         },
         regex: {
-            user_name: "<?= User::USER_NAME_REGEX ?>"
+            user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
         },
         const: {
             USER_STATUS: {
