@@ -194,12 +194,8 @@ class AppController extends BaseController
                 }
                 // when prohibit request in status of cannot use service
                 if ($this->_isProhibitedRequestByCannotUseService()) {
-                    // if team admin, will be redirected to payments setting page. Otherwise, it will be redirected to the page of notification that the service can not be used.
-                    if ($this->Team->TeamMember->isAdmin($this->Auth->user('id'))) {
-                        $this->redirect(['controller' => 'payments', 'action' => 'index']);
-                    } else {
-                        $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
-                    }
+                    // it will be redirected to the page of notification that the service can not be used.
+                    $this->redirect(['controller' => 'payments', 'action' => 'cannot_use_service']);
                 }
 
                 // Pass variable about team service use

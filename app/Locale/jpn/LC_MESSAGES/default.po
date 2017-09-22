@@ -4657,6 +4657,9 @@ msgstr ""
 "取り専用の状態になります。その場合、新規の投稿等はできなくなります。通常のご"
 "利用を再開したい場合は、チーム管理者にお問い合わせください。"
 
+msgid "If you want to resume normal usage, please contact to your team administrators."
+msgstr "通常のご利用を再開したい場合は、チーム管理者にお問い合わせください。"
+
 msgid ""
 "Your credit card expired. you will no longer be able to use Goalous. Update "
 "credit card from <a href=\"/payments/method\">here</a>."
@@ -5446,14 +5449,14 @@ msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
 msgid "Your team no longer has access to Goalous."
-msgstr "チーム力が向上しているか？これを見れば分かります。"
+msgstr "あなたのチームはGoalousにアクセスできなくなりました。"
 
 msgid ""
 "If you want to resume normal usage, please subscribe to our payment plan."
 msgstr "継続してご利用されたい場合は、有料プランのご契約をお願いいたします。"
 
 msgid "Subscribe"
-msgstr "□配信停止"
+msgstr "有料プランを申し込む"
 
 msgid "Company Information"
 msgstr "会社情報"
