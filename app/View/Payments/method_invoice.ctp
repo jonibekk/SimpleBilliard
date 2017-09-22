@@ -4,7 +4,7 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<section class="panel company-info paymentMethod has-subnav">
+<section class="panel payment company-info has-subnav">
     <?= $this->element('Payment/method_select') ?>
     <h3><?= __("Billing Information") ?></h3>
     <form class="form-horizontal" name="editInvoiceForm" id="editInvoiceForm" accept-charset="utf-8">

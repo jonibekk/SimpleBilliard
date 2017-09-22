@@ -84,55 +84,50 @@ export default class Country extends Base {
     const errors_payment_setting = validation_errors.payment_setting ? validation_errors.payment_setting : {};
 
     return (
-      <section className="panel choose-payment">
-        <div className="panel-container">
+      <section className="panel payment">
           <form className="form-horizontal" name="companyLocation" onSubmit={(e) => this.onSubmit(e)}>
-            <h3>{__('Select Country Location')}</h3>
-            <select
-              name="company_country"
-              className="form-control setting_input-design company-location-select"
-              value={company_country}
-              onChange={(e) => this.onChange(e)}
-              ref="company_country"
-            >
-              {countries_option_el}
-            </select>
-            <InvalidMessageBox message={errors_payment_setting.company_country}/>
-
+            <div className="panel-container">
+              <h3>{__('Select Country Location')}</h3>
+              <select
+                name="company_country"
+                className="form-control setting_input-design company-location-select"
+                value={company_country}
+                onChange={(e) => this.onChange(e)}
+                ref="company_country" 
+              >
+                {countries_option_el}
+              </select>
+              <InvalidMessageBox message={errors_payment_setting.company_country}/>
+            </div>
             {!is_ja &&
-            <div className="clearfix">
+            <footer className="panel-footer setting_pannel-footer">
               <button
                 className="btn btn-primary"
                 disabled={input_data.country == "" ? "disabled" : ""}>
                 {__("Next")}
               </button>
-            </div>
+            </footer>
             }
           </form>
           {is_ja &&
-          <div className="mt_32px">
-            <div className="payment-option-title-wrapper">
+            <div className="panel-container payment-options">
               <h3>{__('Select Payment Method')}</h3>
-            </div>
-            <div className="payment-option-container">
               <div className="payment-option"
-                   onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
+                  onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
                 <h4>{__('Credit Card')}</h4>
                 <i className="fa fa-credit-card"/>
                 <p>{__("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.")}</p>
-                <a href="#">{__('Setup')}</a>
+                <a href="#" className="payment-option-link">{__('Setup')}</a>
               </div>
               <div className="payment-option"
-                   onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
+                  onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.INVOICE)}>
                 <h4>{__('Invoice')}</h4>
                 <i className="fa fa-leaf"/>
                 <p>{__("Invoice will be issued monthly, so please transfer by the deadline.")}</p>
-                <a href="#" className="payment-option-setup-link">{__('Setup')}</a>
+                <a href="#" className="payment-option-link">{__('Setup')}</a>
               </div>
             </div>
-          </div>
           }
-        </div>
       </section>
     )
   }

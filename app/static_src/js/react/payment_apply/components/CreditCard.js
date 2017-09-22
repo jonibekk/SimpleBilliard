@@ -80,30 +80,32 @@ export default class CreditCard extends Base {
     const {payment} = this.props
     const {validation_errors, error_message} = payment
     return (
-      <section className="panel enter-cc-info">
-        <h3>{__('Enter your card information')}</h3>
-        <form id="enterCCInfo" className="form-horizontal" name=""
-              onSubmit={(e) => this.onSubmit(e)}>
-          <div className="form-group">
-            <label htmlFor="cardholder-name">{__('Name on Card')}</label>
-            <input
-              name="card_holder_name"
-              className="form-control" placeholder="Jane Doe"
-              onChange={this.onChange}/>
-            <InvalidMessageBox message={validation_errors.name}/>
+      <section className="panel payment enter-cc-info">
+          <form id="enterCCInfo" className="form-horizontal" name=""
+                onSubmit={(e) => this.onSubmit(e)}>
+          <div className="panel-container">
+            <h3>{__('Enter your card information')}</h3>
+            <div className="form-group">
+              <label htmlFor="cardholder-name">{__('Name on Card')}</label>
+              <input
+                name="card_holder_name"
+                className="form-control" placeholder="Jane Doe"
+                onChange={this.onChange}/>
+              <InvalidMessageBox message={validation_errors.name}/>
+            </div>
+            <div className="form-group">
+              <label>{__('Card Number')}</label>
+              <div id="card-element" className="form-control cc-field"></div>
+              <InvalidMessageBox message={error_message}/>
+            </div>
+            <ConfirmCharge
+              amount_per_user={payment.amount_per_user}
+              charge_users_count={payment.charge_users_count}
+              sub_total_charge={payment.sub_total_charge}
+              tax={payment.tax}
+              total_charge={payment.total_charge}
+            />
           </div>
-          <div className="form-group">
-            <label>{__('Card Number')}</label>
-            <div id="card-element" className="form-control cc-field"></div>
-            <InvalidMessageBox message={error_message}/>
-          </div>
-          <ConfirmCharge
-            amount_per_user={payment.amount_per_user}
-            charge_users_count={payment.charge_users_count}
-            sub_total_charge={payment.sub_total_charge}
-            tax={payment.tax}
-            total_charge={payment.total_charge}
-          />
           <div className="panel-footer setting_pannel-footer">
             <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/company">
               {__("Back")}
