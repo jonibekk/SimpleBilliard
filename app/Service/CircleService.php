@@ -129,7 +129,7 @@ class CircleService extends AppService
         $ExperimentService = ClassRegistry::init('ExperimentService');
 
         // check already joined or not
-        if ($CircleMember->isJoined($circleId, $userId)) {
+        if (!$this->validateJoin($CircleMember->current_team_id, $circleId, $userId)) {
             return false;
         }
 
@@ -159,6 +159,14 @@ class CircleService extends AppService
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
+
+        // Validation check
+        // TODO: Should extract only existing id, and then should continue joining to other circles.
+        foreach($circleIds as $circleId) {
+            if (!$this->validateJoin($CircleMember->current_team_id, $circleId, $userId)) {
+                return false;
+            }
+        }
 
         try {
             $CircleMember->begin();
@@ -282,6 +290,11 @@ class CircleService extends AppService
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
+        // check circle belong to team
+        if (!$Circle->belongToTeam($Circle->current_team_id, $circleId)) {
+            return __("Failed to add circle member(s.)");
+        }
+
         // check exec user is admin
         // if create mode, not exist circle_member record, then pass this check
         if (!$isCreate && !$CircleMember->isAdmin($myUserId, $circleId)) {
@@ -314,6 +327,35 @@ class CircleService extends AppService
             ['conditions' => ['user_id' => $memberUserIds, 'circle_id' => $circleId]]);
         if ($usersExist > 0) {
             return __("Failed to add circle member(s.)");
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate join
+     *
+     * @param int $teamId
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function validateJoin(int $teamId, int $circleId, int $userId): bool
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        // Check joining circle is in team
+        if (!$Circle->belongToTeam($teamId, $circleId)) {
+            return false;
+        }
+
+        // Check already joined
+        if ($CircleMember->isJoined($circleId, $userId)) {
+            return false;
         }
 
         return true;
