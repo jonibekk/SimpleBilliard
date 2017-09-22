@@ -131,7 +131,7 @@
                    required
                    class="form-control"
                    placeholder="000-0000-0000"
-                   maxlength="255">
+                   maxlength="20">
         </div>
         <footer>
             <button class="btn btn-primary" id="editPaySettingsSubmitBtn">

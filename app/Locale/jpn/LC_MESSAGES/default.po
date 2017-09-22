@@ -1734,6 +1734,9 @@ msgstr "%2$d文字以上で入力してください。"
 msgid "%2$d or less than %2$d characters are allowed."
 msgstr "%2$d文字以下で入力してください。"
 
+msgid "Enter %2$d numeric characters for postal code."
+msgstr "郵便番号は%2$d桁の数字で入力してください。"
+
 msgid "The file is over limit size."
 msgstr "ファイルサイズが上限を超えています。"
 

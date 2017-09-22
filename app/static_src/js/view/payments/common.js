@@ -99,7 +99,7 @@ function getKeyCode(e) {
  */
 function isPhoneNumber(e) {
     var charCode = getKeyCode(e);
-    if (charCode === 43 || (charCode > 31 && (charCode < 48 || charCode > 57))) {
+    if (charCode === 43 || (charCode > 47 && charCode < 58)) {
         return true;
     }
     e.returnValue = false;
