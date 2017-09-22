@@ -182,7 +182,7 @@ export default class Company extends Base {
             name="contact_person_tel"
             value={payment_setting.contact_person_tel}
             label={__("Telephone")}
-            placeholder="000-0000-0000"
+            placeholder="00000000000"
             err_msg={errors_payment_setting.contact_person_tel}
             onChange={(e) => this.onChange(e, "payment_setting")}
             max_length={20}

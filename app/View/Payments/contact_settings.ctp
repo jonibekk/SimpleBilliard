@@ -130,7 +130,7 @@
                    value="<?= $setting['contact_person_tel'] ?>"
                    required
                    class="form-control"
-                   placeholder="000-0000-0000"
+                   placeholder="00000000000"
                    maxlength="20">
         </div>
         <footer>

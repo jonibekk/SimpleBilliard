@@ -194,7 +194,7 @@ export default class Invoice extends Base {
             name="contact_person_tel"
             value={invoice.contact_person_tel}
             label={__("Telephone")}
-            placeholder="000-0000-0000"
+            placeholder="00000000000"
             disabled={is_same_as_company_info}
             err_msg={errors_invoice.contact_person_tel}
             onChange={(e) => this.onChange(e, "invoice")}
