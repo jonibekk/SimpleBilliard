@@ -923,7 +923,7 @@ class GoalousTestCase extends CakeTestCase
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
-        
+
         $default = [
             "name"         => "Circle Name",
             "description"  => "Circle description",
@@ -935,5 +935,4 @@ class GoalousTestCase extends CakeTestCase
         $Circle->save($data, false);
         return $Circle->getLastInsertID();
     }
-
 }
