@@ -5616,6 +5616,9 @@ msgstr "期限"
 msgid "Update Card"
 msgstr "カード情報を更新する"
 
+msgid "Expiration date"
+msgstr "有効期限"
+
 msgid "Card is expired. Please update your card's information."
 msgstr "カードの有効期限が切れています。カード情報を更新してください。"
 

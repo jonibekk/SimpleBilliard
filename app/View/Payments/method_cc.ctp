@@ -13,10 +13,13 @@
     <div class="panel-container">
         <h3 class=""><?= __("Credit Card")?></h3>
 
+        <p><strong><?= __('Name on Card');?></strong></p>
+        <p><?= $nameOnCard ?></p>
+        <br />
         <p><strong><?= __('Card Number');?></strong></p>
         <p><?= $brand ?> **** **** **** <?= $lastDigits; ?></p>
         <br />
-        <p><strong><?= __('Expiration');?></strong></p>
+        <p><strong><?= __('Expiration date');?></strong></p>
         <p class="<?= $isExpired ? 'mod-alert' : '' ?>"><?= $expMonthName ?>, <?= $expYear ?></p>
 
         <?php if ($isExpired) : ?>
