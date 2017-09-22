@@ -725,22 +725,6 @@ class PaymentService extends AppService
      *
      * @return array
      */
-    public function createCreditCardChargeDescription(array $data
-
-    ) {
-        $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
-    }
-
-    /**
-     * Register Credit Card Payment and apply charge in a single transaction.
-     *
-     * @param int    $userId
-     * @param int    $teamId
-     * @param string $creditCardToken
-     * @param array  $paymentData
-     *
-     * @return array
-     */
     public function registerCreditCardPaymentAndCharge(
         int $userId,
         int $teamId,
