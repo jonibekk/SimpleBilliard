@@ -663,6 +663,7 @@ App::uses('AttachedFile', 'Model');
             "Invalid fields": "<?= __("Invalid fields") ?>",
             // Goals
             "No Goals found": "<?= __("No Goals found") ?>",
+            "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

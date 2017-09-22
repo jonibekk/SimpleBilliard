@@ -98,11 +98,11 @@
                     id="PaymentsContactPersonPhone"
                     name="contact_person_tel"
                     value="<?= $invoice['contact_person_tel'] ?>" required class="form-control"
-                    placeholder="000-0000-0000"
+                    placeholder="00000000000"
                     maxlength="255">
             </div>
         </div>
-        <footer>
+        <footer class="panel-footer setting_pannel-footer">
             <button class="btn btn-primary"><?= __("Update") ?></button>
         </footer>
     </form>

@@ -26,7 +26,9 @@ if (document.editPaySettingsForm) {
     });
     // Set tel country
     var companyCountry = document.getElementById('countryCode').value;
-    $(contactTel).intlTelInput("setCountry", companyCountry);
+    if (!contactTel.value.startsWith('+')) {
+        $(contactTel).intlTelInput("setCountry", companyCountry);
+    }
 
     // Accept only numbers for postal code
     $(companyPostCode).on('keypress', function (e) {
@@ -55,13 +57,21 @@ if (document.editPaySettingsForm) {
 
         // Validate postal code
         var postalCode = companyPostCode.value;
-        if ((companyCountry === 'JP' && postalCode.length !== 7) ||
-            (companyCountry === 'US' && postalCode.length !== 5)) {
-            setError(companyPostCode.name, __("Invalid fields"));
+        if (companyCountry === 'JP' && postalCode.length !== 7) {
+            setError(companyPostCode.name, getPostalCodeErrorMessage(7));
+            isValid = false;
+        }
+        else if (companyCountry === 'US' && postalCode.length !== 5) {
+            setError(companyPostCode.name, getPostalCodeErrorMessage(5));
             isValid = false;
         }
 
         return isValid;
+    }
+
+    function getPostalCodeErrorMessage(length) {
+        var msg = __("Enter %2$d numeric characters for postal code.").replace("%2$d", length);
+        return msg;
     }
 
     document.editPaySettingsForm.addEventListener('submit', function (e) {
