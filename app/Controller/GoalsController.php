@@ -1542,7 +1542,7 @@ class GoalsController extends AppController
         // push
         $this->Notification->outSuccess(__("Added an action."));
         //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
         $url = $post ? [

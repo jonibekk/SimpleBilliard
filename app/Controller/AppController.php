@@ -113,7 +113,7 @@ class AppController extends BaseController
      * ブラウザ情報
      *
      * @var array
-     * @see AppController::getBrowser()
+     * @see AppController::_getBrowser()
      */
     private $_browser = [];
 
@@ -172,20 +172,12 @@ class AppController extends BaseController
             }
 
             // prohibit ajax request in read only term
-            if ($this->request->is('ajax') && $this->isProhibitedRequestByReadOnly()) {
-                $this->stopInvoke = true;
-                return $this->_ajaxGetResponse([
-                    'error' => true,
-                    'msg'   => __("You may only read your team’s pages.")
-                ]);
+            if ($this->request->is('ajax') && $this->_isProhibitedRequestByReadOnly()) {
+                return $this->_forceErrorResponse();
             }
             // prohibit ajax request in status of cannot use service
-            if ($this->request->is('ajax') && $this->isProhibitedRequestByCannotUseService()) {
-                $this->stopInvoke = true;
-                return $this->_ajaxGetResponse([
-                    'error' => true,
-                    'msg'   => __("You cannot use service on the team.")
-                ]);
+            if ($this->request->is('ajax') && $this->_isProhibitedRequestByCannotUseService()) {
+                return $this->_forceErrorResponse();
             }
 
             // by not ajax request
@@ -196,12 +188,12 @@ class AppController extends BaseController
                 $this->_setMyTeam();
 
                 // when prohibit request in read only
-                if ($this->isProhibitedRequestByReadOnly()) {
+                if ($this->_isProhibitedRequestByReadOnly()) {
                     $this->Notification->outError(__("You may only read your team’s pages."));
                     $this->redirect($this->referer());
                 }
                 // when prohibit request in status of cannot use service
-                if ($this->isProhibitedRequestByCannotUseService()) {
+                if ($this->_isProhibitedRequestByCannotUseService()) {
                     // if team admin, will be redirected to payments setting page. Otherwise, it will be redirected to the page of notification that the service can not be used.
                     if ($this->Team->TeamMember->isAdmin($this->Auth->user('id'))) {
                         $this->redirect(['controller' => 'payments', 'action' => 'index']);
@@ -211,7 +203,7 @@ class AppController extends BaseController
                 }
 
                 // Pass variable about team service use
-                $this->setValsForAlert();
+                $this->_setValsForAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -277,13 +269,24 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
-        $this->redirectIfMobileAppVersionUnsupported();
+        $this->_redirectIfMobileAppVersionUnsupported();
+    }
+
+    /**
+     * @return CakeResponse
+     */
+    public function _forceErrorResponse()
+    {
+        $this->stopInvoke = true;
+        $this->autoRender = false;
+        $this->_ajaxPreProcess();
+        return $this->_ajaxGetErrorResponse();
     }
 
     /**
      * redirect if Mobile App version is unsupported
      */
-    private function redirectIfMobileAppVersionUnsupported()
+    private function _redirectIfMobileAppVersionUnsupported()
     {
         // GL-5962: show version expired if Goalous Mobile App version is old
         if (!$this->request->is('ajax')) {
@@ -293,10 +296,10 @@ class AppController extends BaseController
                 if ($userAgent->isMobileAppAccess()) {
                     // https://jira.goalous.com/browse/GL-5962
                     // TODO: delete this "if" process, if old Android App(1.0.2) user is gone.
-                    if ($this->isAndroidVersionForceUninstall($userAgent)) {
+                    if ($this->_isAndroidVersionForceUninstall($userAgent)) {
                         $this->redirect('/app_force_install');
                     }
-                    if ($this->isExpiredVersionMobileApp($userAgent)) {
+                    if ($this->_isExpiredVersionMobileApp($userAgent)) {
                         $this->redirect('/app_force_update');
                     }
                 }
@@ -311,7 +314,7 @@ class AppController extends BaseController
      *
      * @return bool
      */
-    private function isExpiredVersionMobileApp(UserAgent $userAgent): bool
+    private function _isExpiredVersionMobileApp(UserAgent $userAgent): bool
     {
         if (!$userAgent->isMobileAppAccess()) {
             return false;
@@ -334,7 +337,7 @@ class AppController extends BaseController
      *
      * @return bool
      */
-    private function isAndroidVersionForceUninstall(UserAgent $userAgent): bool
+    private function _isAndroidVersionForceUninstall(UserAgent $userAgent): bool
     {
         if (!$userAgent->isAndroidApp()) {
             return false;
@@ -368,7 +371,7 @@ class AppController extends BaseController
     {
         //UA情報をSessionにセット
         if (!$this->Session->read('ua')) {
-            $ua = $this->getBrowser();
+            $ua = $this->_getBrowser();
             if (empty($ua['istablet']) && $ua['device_type'] == 'unknown') {
                 $ua['device_type'] = 'Desktop';
             }
@@ -476,7 +479,7 @@ class AppController extends BaseController
         }
     }
 
-    public function forceSSL()
+    public function _forceSSL()
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->redirect('https://' . env('HTTP_HOST') . $this->here);
@@ -580,11 +583,40 @@ class AppController extends BaseController
         $this->viewPath = 'Elements';
     }
 
-    public function _ajaxGetResponse($result, $json_option = 0)
+    /**
+     * @param     $result
+     * @param int $json_option
+     *
+     * @return CakeResponse
+     */
+    public function _ajaxGetResponse($result, $json_option = 0): CakeResponse
     {
-        //レスポンスをjsonで生成
         $this->response->type('json');
-        $this->response->body(json_encode($result, $json_option));
+        if ($result !== null) {
+            $this->response->body(json_encode($result, $json_option));
+        } else {
+            $this->response->body(null);
+        }
+        return $this->response;
+    }
+
+    /**
+     * get error response
+     *
+     * @param     $result
+     * @param int $statusCode
+     *
+     * @return CakeResponse
+     */
+    public function _ajaxGetErrorResponse($result = null, $statusCode = 400): CakeResponse
+    {
+        $this->response->statusCode($statusCode);
+        $this->response->type('json');
+        if ($result !== null) {
+            $this->response->body(json_encode($result));
+        } else {
+            $this->response->body(null);
+        }
         return $this->response;
     }
 
@@ -654,7 +686,7 @@ class AppController extends BaseController
      *
      * @return int
      */
-    function getEndMonthLocalDateTime($month_count = 6, $symbol = "+")
+    function _getEndMonthLocalDateTime($month_count = 6, $symbol = "+")
     {
         if (!is_numeric($month_count)) {
             return null;
@@ -873,7 +905,7 @@ class AppController extends BaseController
     /**
      * ブラウザ情報を返す
      */
-    public function getBrowser()
+    public function _getBrowser()
     {
         if (!$this->_browser) {
             $browscap = new \BrowscapPHP\Browscap();
@@ -885,7 +917,7 @@ class AppController extends BaseController
     function _setResponseCsv($filename)
     {
         // safari は日本語ファイル名が文字化けするので特別扱い
-        $browser = $this->getBrowser();
+        $browser = $this->_getBrowser();
         if ($browser['browser'] == 'Safari') {
             $this->response->header('Content-Disposition',
                 sprintf('attachment; filename="%s";', $filename . '.csv'));
@@ -907,7 +939,7 @@ class AppController extends BaseController
             return;
         }
 
-        $status_from_redis = $this->getStatusWithRedisSave();
+        $status_from_redis = $this->_getStatusWithRedisSave();
         // remove last update time
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
@@ -916,16 +948,16 @@ class AppController extends BaseController
         return;
     }
 
-    function getAllSetupDataFromRedis($user_id = false)
+    function _getAllSetupDataFromRedis($user_id = false)
     {
         $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
         return $this->GlRedis->getSetupGuideStatus($user_id);
     }
 
-    function getStatusWithRedisSave($user_id = false)
+    function _getStatusWithRedisSave($user_id = false)
     {
         $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
-        $status = $this->getAllSetupDataFromRedis($user_id);
+        $status = $this->_getAllSetupDataFromRedis($user_id);
         if (!$status) {
             $status = $this->User->generateSetupGuideStatusDict($user_id);
             //set update time
@@ -940,7 +972,7 @@ class AppController extends BaseController
         return $status;
     }
 
-    function setValsForAlert()
+    function _setValsForAlert()
     {
         // TODO.Payment: must refactoring.
         // Acquire only necessary information when necessary
@@ -975,10 +1007,12 @@ class AppController extends BaseController
                     // team credit card has been expired
                     $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
                     $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
-                } else if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
-                    // team credit card expire in 1 month at least
-                    $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
-                    $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                } else {
+                    if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
+                        // team credit card expire in 1 month at least
+                        $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
+                        $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
+                    }
                 }
             }
         }
@@ -1106,4 +1140,16 @@ class AppController extends BaseController
             'action'     => 'login'
         );
     }
+
+    /**
+     * pass `isTablet` variable to view.
+     * - get browser ua from browscap
+     */
+    public function _setIsTablet()
+    {
+        $browser = $this->_getBrowser();
+        $this->is_tablet = $browser['istablet'];
+        $this->set('isTablet', $this->is_tablet);
+    }
+
 }

@@ -112,12 +112,12 @@ class SetupController extends AppController
                 6 => true,
             ];
         } else {
-            $status = $this->getStatusWithRedisSave();
+            $status = $this->_getStatusWithRedisSave();
         }
         $res = [
             'status'           => $status,
-            'rest_count'       => $this->calcSetupRestCount($status),
-            'complete_percent' => $this->calcSetupCompletePercent($status),
+            'rest_count'       => $this->_calcSetupRestCount($status),
+            'complete_percent' => $this->_calcSetupCompletePercent($status),
         ];
 
         return $this->_ajaxGetResponse($res);
@@ -152,7 +152,7 @@ class SetupController extends AppController
             $msg = __("Failed to save a Goal.");
             $error = true;
         }
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
@@ -212,7 +212,7 @@ class SetupController extends AppController
             null, $memberIds);
         $this->Notification->outSuccess(__("Created a circle."));
 
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         return $this->_ajaxGetResponse(['msg' => __("Created a circle."), 'error' => false]);
     }
@@ -244,7 +244,7 @@ class SetupController extends AppController
         foreach ($circleIds as $circleId) {
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
         }
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         $this->Notification->outSuccess(__("Join a circle."));
         return $this->_ajaxGetResponse(['msg' => __("Join a circle."), 'error' => false]);
@@ -265,7 +265,7 @@ class SetupController extends AppController
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
         $this->User->saveAll($this->request->data);
         //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
         $msg = __("Saved user profile.");
         $error = false;
         $this->Notification->outSuccess($msg);
@@ -288,7 +288,7 @@ class SetupController extends AppController
                 ]
             ]);
         }
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         return $this->_ajaxGetResponse(['error' => !$res]);
     }
@@ -398,7 +398,7 @@ class SetupController extends AppController
         // push
         $this->Notification->outSuccess($msg = __("Added an action."));
         //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
         $res = [
             'error' => false,
             'msg'   => $msg

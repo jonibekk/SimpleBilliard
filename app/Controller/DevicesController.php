@@ -64,7 +64,7 @@ class DevicesController extends AppController
             }
 
             //セットアップガイドのカウント更新
-            $this->updateSetupStatusIfNotCompleted();
+            $this->_updateSetupStatusIfNotCompleted();
 
             $ret_array = [
                 'response' => [

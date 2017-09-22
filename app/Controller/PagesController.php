@@ -37,7 +37,7 @@ class PagesController extends AppController
     public function home()
     {
         // Display lp top page if not logged in
-        if (!$this->isLoggedIn()) {
+        if (!$this->_isLoggedIn()) {
             $this->layout = LAYOUT_HOMEPAGE;
             return $this->render('home');
         }

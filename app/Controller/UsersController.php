@@ -235,7 +235,7 @@ class UsersController extends AppController
             if ($this->is_mb_app) {
                 // If mobile app, updating setup guide for installation of app.
                 // It should be called from here. Because, `updateSetupStatusIfNotCompleted()` uses Session Data.
-                $this->updateSetupStatusIfNotCompleted();
+                $this->_updateSetupStatusIfNotCompleted();
             }
 
             $this->_refreshAuth();
@@ -705,7 +705,7 @@ class UsersController extends AppController
                 //言語設定
                 $this->_setAppLanguage();
                 //セットアップガイドステータスの更新
-                $this->updateSetupStatusIfNotCompleted();
+                $this->_updateSetupStatusIfNotCompleted();
 
                 // update message search keywords by user id
                 ClassRegistry::init('TopicSearchKeyword')->updateByUserId($this->Auth->user('id'));

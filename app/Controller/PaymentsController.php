@@ -17,10 +17,16 @@ class PaymentsController extends AppController
         'PaymentSetting',
     ];
 
+    public $allowActionsForAllMembers = [
+        'cannot_use_service',
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->_checkAdmin();
+        if (!$this->_isAllowedAction()) {
+            $this->_checkAdmin();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
     }
 
@@ -230,5 +236,15 @@ class PaymentsController extends AppController
         $isMonthly = $history['ChargeHistory']['is_monthly'];
         $this->set(compact('history', 'isMonthly'));
         return $this->render();
+    }
+
+    /**
+     * Is allowed action to see for all members
+     *
+     * @return bool
+     */
+    public function _isAllowedAction()
+    {
+        return in_array($this->request->param('action'), $this->allowActionsForAllMembers);
     }
 }
