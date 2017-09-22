@@ -30,7 +30,7 @@
         <?php
         $last_name = $this->Form->input('last_name', [
             'placeholder'                  => __("last name (eg. Smith)"),
-            "pattern"                      => User::USER_NAME_REGEX,
+            "pattern"                      => User::USER_NAME_REGEX_JAVASCRIPT,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
@@ -41,7 +41,7 @@
         ]);
         $first_name = $this->Form->input('first_name', [
             'placeholder'                  => __("first name (eg. John)"),
-            "pattern"                      => User::USER_NAME_REGEX,
+            "pattern"                      => User::USER_NAME_REGEX_JAVASCRIPT,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
