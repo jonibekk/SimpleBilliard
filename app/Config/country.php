@@ -9,8 +9,6 @@ $config['countries'] = [
         "code" => "JP",
         "name" => __("Japan"),
         "tax_rate" => 0.08,
-        "currency_symbol" => "¥",
-        "symbol_position" => "before"
     ],
     [
         "code" => "TH",
@@ -19,7 +17,5 @@ $config['countries'] = [
     [
         "code" => "US",
         "name" => __("United States"),
-        "currency_symbol" => "$",
-        "symbol_position" => "before"
     ],
 ];
