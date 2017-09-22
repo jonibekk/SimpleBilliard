@@ -99,6 +99,8 @@ function getKeyCode(e) {
  */
 function isPhoneNumber(e) {
     var charCode = getKeyCode(e);
+    // Char code in ASCII http://ascii.cl
+    // 43 = '+', 48 = '0', 57 = '9'
     if (charCode === 43 || (charCode > 47 && charCode < 58)) {
         return true;
     }
@@ -113,6 +115,9 @@ function isPhoneNumber(e) {
  */
 function isNumber(e) {
     var charCode = getKeyCode(e);
+    // Char code in ASCII http://ascii.cl
+    // 43 = '+', 48 = '0', 57 = '9'
+    // Less then 32 are special characters
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
         e.returnValue = false;
         return false;
