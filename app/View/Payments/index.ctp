@@ -20,13 +20,13 @@
         </h4>
         <p class="subscription-status-detail">
             <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
-                <?= __('Your team is currently using Goalous as a free trial. Your free trial will end on September 20, 2017'); ?>
+                <?= __('Your team is currently using Goalous as a free trial. Your free trial will end on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
-                <?= __('Your team has full access to Goalous.<br />Go achieve your goal!'); ?>
+                <?= __('Your team has full access to Goalous.<br /><br />Go achieve your goal!'); ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
-                <?= __('Your team can no longer create or edit content on Goalous. Your team account will be deactived on November 20, 2017'); ?>
+                <?= __('Your team can no longer create or edit content on Goalous. Your team account will be deactivated on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php else: //Deactivated ?>
-                <?= __('Your team no longer has access to  Goalous. Your team account will be deleted on December 20, 2017'); ?>
+                <?= __('Your team no longer has access to  Goalous. Your team account will be deleted on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php endif; ?>
         </p>
         <div class="team-price-info">
