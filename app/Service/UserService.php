@@ -1,6 +1,9 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class UserService
@@ -63,27 +66,32 @@ class UserService extends AppService
     }
 
     /**
-     * get country as team member
-     * - If team has country, use team country
-     * - If not, use user country
+     * get curency as team member
+     * - If team's status is paid plan, use team currency
+     * - If not, decide currency by user language
      *
      * @param int|null $teamId
+     *
+     * @return int
      */
-    function getCountryAsMember(int $teamId = null)
+    function getCurrencyAsMember($teamId = null): int
     {
+        if (AppUtil::isInt($teamId)) {
+            /** @var PaymentService $PaymentService */
+            $PaymentService = ClassRegistry::init("PaymentService");
+            $paymentSetting = $PaymentService->get($teamId);
+            // If paid plan, use currency of payment setting
+            if (!empty($paymentSetting)) {
+                return $paymentSetting['currency'];
+            }
+        }
+
         App::uses('LangHelper', 'View/Helper');
         $Lang = new LangHelper(new View());
         $userCountryCode = $Lang->getUserCountryCode();
-        $teamCountryCode = "";
-        if ($teamId) {
-            /** @var Team $Team */
-            $Team = ClassRegistry::init("Team");
-            $teamCountryCode = $Team->getCountry($teamId);
-        }
-
-        $countryCode = $teamCountryCode ?: $userCountryCode;
-        $country = $Lang->getCountryByCode($countryCode);
-        return $country;
+        return $userCountryCode == 'JP' ?
+            Enum\PaymentSetting\Currency::JPY :
+            Enum\PaymentSetting\Currency::USD;
     }
 
 }

@@ -300,7 +300,9 @@ App::uses('AttachedFile', 'Model');
             user_id: "<?= $this->Session->read('Auth.User.id')?>",
             kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>,
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
-            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>
+            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
+            // Array with country codes
+            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
@@ -322,7 +324,7 @@ App::uses('AttachedFile', 'Model');
             "Next": "<?= __("Next") ?>",
             'Login from mobile app': "<?= __('Login from mobile app') ?>",
             'Install Android app': "<?= __('Install Android app') ?>",
-            'Requires Android 4.4 or later.': "<?= __('Requires Android 4.4 or later.') ?>",
+            'Requires Android 6.0 or later.': "<?= __('Requires Android 6.0 or later.') ?>",
             'Install iOS app': "<?= __('Install iOS app') ?>",
             'Requires iOS 8.4 or later.': "<?= __('Requires iOS 8.4 or later.') ?>",
             "If you don't have a mobile device.": "<?= __("If you don't have a mobile device.") ?>",
@@ -637,10 +639,9 @@ App::uses('AttachedFile', 'Model');
 
             // Complete
             "Thank You": "<?= __("Thank You") ?>",
-            "Your transaction was successful. You and your team now have full access to Goalous.": "<?= __("Your transaction was successful. You and your team now have full access to Goalous.") ?>",
-            "Go achieve your goal!": "<?= __("Go achieve your goal!") ?>",
+            "Your transaction and registration to the payment plan was successful.": "<?= __("Your transaction and registration to the payment plan was successful.") ?>",
+            "In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.": "<?= __("In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.") ?>",
             "Move to Billing page": "<?= __("Move to Billing page") ?>",
-
             // Invite
             "Update completed": "<?= __("Update completed") ?>",
             "Invite members": "<?= __("Invite members") ?>",
@@ -658,6 +659,10 @@ App::uses('AttachedFile', 'Model');
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
             "Send & Pay": "<?= __("Send & Pay") ?>",
+            "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
+            "Invalid fields": "<?= __("Invalid fields") ?>",
+            // Goals
+            "No Goals found": "<?= __("No Goals found") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX ?>"

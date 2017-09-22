@@ -2,6 +2,7 @@
 import React from 'react'
 /* eslint-enable no-unused-vars */
 import Base from "~/common/components/Base";
+import {nl2br} from "~/util/element";
 
 export default class Complete extends Base {
   constructor(props) {

@@ -125,7 +125,7 @@ class PostsController extends AppController
             return false;
         }
 
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
@@ -1267,7 +1267,7 @@ class PostsController extends AppController
             return $this->redirect($this->request->referer());
         }
 
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         // Notify to circle member
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);
@@ -1345,7 +1345,7 @@ class PostsController extends AppController
         }
 
         //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         return $this->_ajaxGetResponse([
             'error'             => $error,

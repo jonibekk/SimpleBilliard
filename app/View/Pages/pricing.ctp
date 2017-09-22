@@ -85,13 +85,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <section id="pricingDetail">
     <div class="container">
         <h2><?= __('Pricing Guide');?></h2>
-        <p><?= __('You use all features of Goalous for a 15-day free trial. Give it a try!');?></p>
+        <p><?= __('You use all features of Goalous for a %s-day free trial. Give it a try!', 15);?></p>
         <div class="pricing-card">
             <h3><?= __('Paid Plan');?></h3>
             <p><span class="price-text"><?= $price; ?></span>
             <?= __('Per active member, per month');?></p>
             <?php if (!isset($_GET['backBtn'])): ?>
-            <button class="btn btn-cta btn-cta-primary"><?= __('Start 15-day Free Trial');?></button>
+            <button class="btn btn-cta btn-cta-primary"><?= __('Start %s-day Free Trial', 15);?></button>
             <?php endif; ?>
             <div class="hr"></div>
             <p><?=__('For teams and companies ready to create and share project goals on Goalous.');?></p>
@@ -117,13 +117,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </ul>
         </div>
         <div class="feature-category">
-            <strong class="icon icon-lock"><?=__('Security Features');?></strong>
+            <strong class="icon icon-lock"><?=__('Other Features');?></strong>
             <ul>
                 <li><?=__('Unlimited team members');?></li>
-                <li><?=__('Two-Step velification for stronger security');?></li>
+                <li><?=__('Two-Step verification for stronger security');?></li>
                 <li><?=__('English and Japanese language available');?></li>
                 <li><?=__('Live chat support (Initial response will be within the next business day)');?></li>
-                <li><?=__('iOS(10 or higher) and Android(4.4 or higher) APPs');?></li>
+                <li><?=__('iOS(8.4 or higher) and Android(6.0 or higher) APPs');?></li>
             </ul>
         </div>
     </div>
@@ -134,10 +134,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="question">
             <p class="question-entry"><strong><?= __('What are the payment methods available?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
-                <p><?=__('"Team members who fit the following criteria are considered to be billable monthly active members:');?>
-                <ul>
-                    <li><?= __('Team members who are active by the payment date (those not deactivated by the team administrator) in the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date.');?></li>
-                    <li><?= __('In addition, in that situation, added team member’s usage fee will be charged based on daily rate."');?></p>
+                <p><?=__('Credit cards can be used for paid plan payments. You can pay in US Dollars or Japanese Yen (for Japan only). If your organization is located in Japan, you can choose invoice payment.');?>
             </div>
         </div>
         <div class="question">
@@ -168,7 +165,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="question">
             <p class="question-entry"><strong><?= __('How is the paid plan fee charged?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
-                <p><?=__('The paid plan is charged by calculating the number of active member usage on the day the paid plan contract starts (payment date), which is one month’s payment. “A one month period is considered to have elapsed on the day prior to the corresponding date in the month after the contract went into effect.”When there is no corresponding date, it will be by the end of the month. If the payment date is the 1st, it will be by the end of the same month. Payment Period Example: 2017/10/01 – 2017/10/30 2017/10/31 – 2017/11/30 2017/11/10 – 2017/12/09 2018/01/31 – 2018/02/28');?></p>
+                <p><?=__('The paid plan is charged by calculating the number of active member usage on the day the paid plan contract starts (payment date), which is one month’s payment. “A one month period is considered to have elapsed on the day prior to the corresponding date in the month after the contract went into effect.”When there is no corresponding date, it will be by the end of the month. If the payment date is the 1st, it will be by the end of the same month.')?><br><br>
+                    <?= __("Payment Period Example:");?><br>
+                    2017/10/01 – 2017/10/30<br>
+                    2017/10/31 – 2017/11/30<br>
+                    2017/11/10 – 2017/12/09<br>
+                    2018/01/31 – 2018/02/28
+                </p>
             </div>
         </div>
         <div class="question">
@@ -215,7 +218,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p class="question-entry"><strong><?= __('What is the payment schedule for invoice?');?></strong><span class="fa fa-angle-down"></span></p>
             <div class="answer">
                 <p><?=__('After creating your invoice contract, your first invoice will be issued the following business day. You will then have 14 days to pay the invoice. If payment has not been received within 8 days after your due date, an updated invoice will be issued on the following business day.');?>
-                <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."');?>'
+                <p><?=__('Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous.');?>'
             </div>
         </div>
     </div>

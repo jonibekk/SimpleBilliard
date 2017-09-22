@@ -3,7 +3,7 @@
  */
 
 // Only for credit card form
-if(document.enterCCInfo){
+if (document.enterCCInfo) {
     // Setup Stripe
     var stripe = Stripe(cake.stripe_publishable_key);
     var elements = stripe.elements();
@@ -30,7 +30,9 @@ if(document.enterCCInfo){
 
     // Add validator listeners
     var cardName = document.enterCCInfo.querySelector('input[name=cardholder-name]');
-    card.on('change', function(event) { validateCreditCardForm(event); });
+    card.on('change', function (event) {
+        validateCreditCardForm(event);
+    });
     cardName.addEventListener('keyup', validateCreditCardForm);
     var cardElement = document.getElementById('card-element');
 
@@ -98,20 +100,20 @@ if(document.enterCCInfo){
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', '/api/v1/payments/' + cake.data.team_id + '/credit_card');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 // Go back to payment method page
                 window.location.href = '/payments/method';
             }
             else {
-                var response  = JSON.parse(xhr.response);
+                var response = JSON.parse(xhr.response);
                 // Disable submit button
                 document.enterCCInfo.querySelector('input[type=submit]').disabled = true;
                 // Display error message
                 new Noty({
                     type: 'error',
-                    text: '<h4>'+cake.word.error+'</h4>' + response.message,
-                }).on('onClose', function() {
+                    text: '<h4>' + cake.word.error + '</h4>' + response.message,
+                }).on('onClose', function () {
                     // Focus on card name
                     cardName.focus();
                 }).show();
@@ -123,7 +125,7 @@ if(document.enterCCInfo){
     /**
      * Handle Form submit event.
      */
-    document.enterCCInfo.addEventListener('submit', function(e) {
+    document.enterCCInfo.addEventListener('submit', function (e) {
         e.preventDefault();
         var extraDetails = {
             name: cardName.value,

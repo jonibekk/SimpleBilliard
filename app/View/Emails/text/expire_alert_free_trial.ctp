@@ -19,7 +19,8 @@ echo "\n";
 echo __("The free trial for your team, \"%s\", will end on %s",
         $teamName,
         $this->TimeEx->formatDateI18nFromDate($expireDate)
-    ) . " " . __("If you would like to continue using Goalous, please subscribe to the paid plan.");
+    )."\n";
+echo __("If you would like to continue using Goalous, please subscribe to the paid plan.")."\n";
 echo "\n";
 echo __("You can update your payment setting from the following link:");
 echo "\n";

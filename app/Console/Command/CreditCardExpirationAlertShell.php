@@ -117,7 +117,6 @@ class CreditCardExpirationAlertShell extends AppShell
             // Cards that will expire this month
             if ($expireYear == $currentYear && $expireMonth == $currentMonth) {
                 $teamId = Hash::get($creditCard, 'CreditCard.team_id');
-                // TODO: Confirm the email text and translations
                 $this->_notifyExpiringCard($teamId, $creditCardInfo);
             }
 
@@ -146,7 +145,7 @@ class CreditCardExpirationAlertShell extends AppShell
     {
         // Validate card information
         if ($cardData == null || empty($cardData['last4']) || empty($cardData['brand'])) {
-            $this->logError("Invalid card data: ".AppUtil::varExportOneLine($cardData));
+            $this->logError("Invalid card data. team id: ". $teamId);
             return;
         }
         $this->logInfo(sprintf('notify credit card expiration to team: %s', AppUtil::varExportOneLine([
@@ -160,9 +159,10 @@ class CreditCardExpirationAlertShell extends AppShell
         $TeamMember = ClassRegistry::init('TeamMember');
         $adminList = $TeamMember->findAdminList($teamId);
         if (!empty($adminList)) {
+            $team = $this->Team->getById($teamId);
             // sending emails to each admins.
             foreach ($adminList as $toUid) {
-                $this->GlEmail->sendMailCreditCardExpireAlert($toUid, $teamId, $brand, $lastDigits);
+                $this->GlEmail->sendMailCreditCardExpireAlert($toUid, $teamId, $brand, $lastDigits, $team['name']);
             }
         } else {
             $this->logError("This team have no admin: $teamId");

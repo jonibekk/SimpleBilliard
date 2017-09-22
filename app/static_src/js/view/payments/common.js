@@ -6,8 +6,8 @@
 function paymentMenuChanged(sel) {
     var value = sel.value;
 
-    if(window.location.href !== '/payments/'+value){
-        window.location.href = '/payments/'+value;
+    if (window.location.href !== '/payments/' + value) {
+        window.location.href = '/payments/' + value;
     }
 }
 
@@ -36,7 +36,7 @@ function urlEncode(object) {
  */
 function setError(fieldName, message) {
     var field = document.querySelector('input[name=' + fieldName + ']');
-    if (field) {
+    if (field && field.parentNode.className.indexOf('has-error') === -1) {
         field.parentNode.className += ' has-error';
         var error = document.createElement('small');
         error.className = 'help-block';
@@ -56,4 +56,66 @@ function removeError(e) {
     if (error) {
         error.remove();
     }
+}
+
+/**
+ * Remove all error from a element and its child
+ * @param element
+ */
+function removeAllErrors(element) {
+    $(element).find('.help-block').remove();
+    $(element).find('.has-error').removeClass('has-error');
+}
+
+/**
+ * Check if a string is Zenkaku Katakana
+ * @param str
+ * @returns {boolean}
+ */
+function isZenKatakana(str) {
+    str = (str == null) ? "" : str;
+    // Mach katakana characters and zenkaku white space.
+    if (str.match(/^[ァ-ヶー　]*$/)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Return the key code from a javascript key event.
+ * @param e
+ * @returns {*}
+ */
+function getKeyCode(e) {
+    e = (e) ? e : window.event;
+    return (e.which) ? e.which : e.keyCode;
+}
+
+/**
+ * Accept numbers and + symbol
+ * @param e
+ * @returns {boolean}
+ */
+function isPhoneNumber(e) {
+    var charCode = getKeyCode(e);
+    if (charCode === 43 || (charCode > 31 && (charCode < 48 || charCode > 57))) {
+        return true;
+    }
+    e.returnValue = false;
+    return false;
+}
+
+/**
+ * Accept only numbers
+ * @param e
+ * @returns {boolean}
+ */
+function isNumber(e) {
+    var charCode = getKeyCode(e);
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        e.returnValue = false;
+        return false;
+    }
+    return true;
 }

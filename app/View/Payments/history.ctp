@@ -23,7 +23,7 @@
                     <td><?= $this->TimeEx->formatYearDayI18n($v['charge_datetime']) ?></td>
                     <td class="history-entry-type">
                         <span class="visible-xxs <?= $v['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE ? "fa fa-calendar" : "fa fa-user"?>"></span>
-                        <span class="hidden-xxs"><?= $v['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE ? "Monthly" : "Added Member"?></span>
+                        <span class="hidden-xxs"><?= $v['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE ? __("Monthly") : __("Added Member")?></span>
                     </td>
                     <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check success" : "fa fa-close error"?>
                     <td><span class="<?=$resultIconClass?>"></span><?= $v['total']?></td>

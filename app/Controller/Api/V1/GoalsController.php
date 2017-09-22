@@ -342,7 +342,7 @@ class GoalsController extends ApiController
         }
 
         // セットアップガイドステータス更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         //コーチの未認定件数を更新(キャッシュを削除)
         $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);

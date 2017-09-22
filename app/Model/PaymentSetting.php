@@ -3,6 +3,7 @@ App::uses('AppModel', 'Model');
 App::uses('Invoice', 'Model');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * PaymentSetting Model
  */
@@ -43,7 +44,7 @@ class PaymentSetting extends AppModel
     * @var array
     */
     public $validate = [
-        'team_id'                        => [
+        'team_id'                   => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
@@ -51,7 +52,7 @@ class PaymentSetting extends AppModel
                 'rule' => 'notBlank',
             ],
         ],
-        'type'                           => [
+        'type'                      => [
             'inEnumList' => [
                 'rule' => [
                     'inEnumList',
@@ -59,10 +60,10 @@ class PaymentSetting extends AppModel
                 ],
             ],
             'notBlank'   => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
-        'currency'                       => [
+        'currency'                  => [
             'inList'   => [
                 'rule' => [
                     'inList',
@@ -76,7 +77,7 @@ class PaymentSetting extends AppModel
                 'rule' => 'notBlank',
             ],
         ],
-        'amount_per_user'                => [
+        'amount_per_user'           => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
@@ -84,7 +85,7 @@ class PaymentSetting extends AppModel
                 'rule' => 'notBlank',
             ],
         ],
-        'payment_base_day'               => [
+        'payment_base_day'          => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
@@ -96,7 +97,7 @@ class PaymentSetting extends AppModel
                 'rule' => ['range', 0, 32]
             ]
         ],
-        'company_name'                   => [
+        'company_name'              => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'isString'  => ['rule' => 'isString'],
             'notBlank'  => [
@@ -104,62 +105,65 @@ class PaymentSetting extends AppModel
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_country'                => [
+        'company_country'           => [
             'notBlank' => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_post_code'              => [
+        'company_post_code'         => [
             'maxLength' => ['rule' => ['maxLength', 16]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_region'                 => [
+        'company_region'            => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'rcacequired' => true,
                 'rule'        => 'notBlank',
             ],
         ],
-        'company_city'                   => [
+        'company_city'              => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'company_street'                 => [
+        'company_street'            => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_first_name'      => [
+        'contact_person_first_name' => [
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_last_name'       => [
+        'contact_person_last_name'  => [
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
         ],
-        'contact_person_tel'             => [
+        'contact_person_tel'        => [
             'maxLength' => ['rule' => ['maxLength', 20]],
             'notBlank'  => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
+            'phoneNo'   => [
+                'rule' => 'phoneNo',
+            ],
         ],
-        'contact_person_email'           => [
+        'contact_person_email'      => [
             'notBlank'    => [
                 'required' => true,
                 'rule'     => 'notBlank',
@@ -171,31 +175,37 @@ class PaymentSetting extends AppModel
     ];
 
     public $validateJp = [
+        'company_post_code'              => [
+            'numeric'   => [
+                'rule' => ['numeric'],
+            ],
+            'minLength' => ['rule' => ['minLength', 7]],
+            'maxLength' => ['rule' => ['maxLength', 7]],
+        ],
         'contact_person_first_name_kana' => [
-            'notBlank'  => [
+            'notBlank'     => [
                 'required' => true,
-                'rule' => 'notBlank'
+                'rule'     => 'notBlank'
             ],
             'katakanaOnly' => ['rule' => ['katakanaOnly']],
-            'maxLength' => ['rule' => ['maxLength', 128]],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
         ],
         'contact_person_last_name_kana'  => [
-            'notBlank'  => [
+            'notBlank'     => [
                 'required' => true,
-                'rule' => 'notBlank'
+                'rule'     => 'notBlank'
             ],
             'katakanaOnly' => ['rule' => ['katakanaOnly']],
-            'maxLength' => ['rule' => ['maxLength', 128]],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
+        ],
+        'contact_person_tel'             => [
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
         ],
     ];
 
     public $validateCreate = [
-        'team_id' => [
-            'isUnique' => [
-                'rule'     => ['isUnique', ['team_id']],
-                'required' => 'create'
-            ],
-        ],
     ];
 
     public $belongsTo = [
@@ -215,7 +225,7 @@ class PaymentSetting extends AppModel
     public function getCcByTeamId(int $teamId)
     {
         $options = [
-            'fields' => [
+            'fields'     => [
                 'PaymentSetting.id',
                 'PaymentSetting.team_id',
                 'PaymentSetting.type',
@@ -252,7 +262,7 @@ class PaymentSetting extends AppModel
     public function getInvoiceByTeamId(int $teamId)
     {
         $options = [
-            'fields' => [
+            'fields'     => [
                 'PaymentSetting.id',
                 'PaymentSetting.team_id',
                 'PaymentSetting.currency',
