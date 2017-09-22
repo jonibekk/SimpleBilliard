@@ -606,11 +606,26 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed create charge history. data:%s",
                     AppUtil::varExportOneLine($historyData)));
             }
+            $historyId = $ChargeHistory->getLastInsertID();
 
             /* Charge */
-            $paymentDescription = "Team: $teamId Unit: $amountPerUser Users: $usersCount";
-            $chargeRes = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
-                $paymentDescription);
+            $metaData = [
+                'env'=> ENV_NAME,
+                'team_id' => $teamId,
+                'history_id' => $historyId,
+                'type' => $chargeType->getValue()
+            ];
+            $paymentDescription = "";
+            foreach ($metaData as $k => $v) {
+                $paymentDescription .= $k.":".$v. " ";
+            }
+            $chargeRes = $CreditCardService->chargeCustomer(
+                $customerId,
+                $currencyName,
+                $chargeInfo['total_charge'],
+                $paymentDescription,
+                $metaData
+            );
 
             CakeLog::info(sprintf('stripe result: %s', AppUtil::jsonOneLine([
                 'teams.id'      => $teamId,
@@ -656,7 +671,6 @@ class PaymentService extends AppService
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
             }
 
-            $historyId = $ChargeHistory->getLastInsertID();
             // Update Charge history
             $ChargeHistory->clear();
             $ChargeHistory->id = $historyId;
@@ -699,6 +713,22 @@ class PaymentService extends AppService
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
         $latestMaxChargeUserCnt = $ChargeHistory->getLatestMaxChargeUsers($teamId);
         return $latestMaxChargeUserCnt + $usersCount;
+    }
+
+    /**
+     * Register Credit Card Payment and apply charge in a single transaction.
+     *
+     * @param int    $userId
+     * @param int    $teamId
+     * @param string $creditCardToken
+     * @param array  $paymentData
+     *
+     * @return array
+     */
+    public function createCreditCardChargeDescription(array $data
+
+    ) {
+        $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
     }
 
     /**
@@ -844,11 +874,28 @@ class PaymentService extends AppService
             // Apply the user charge on Stripe
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
-            $paymentDescription = "Team: $teamId Unit: $formattedAmountPerUser Users: $membersCount";
+
+            $metaData = [
+                'env'=> ENV_NAME,
+                'team_id' => $teamId,
+                'history_id' => $historyId,
+                'charge_type' => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'first_charge' => true
+            ];
+            $paymentDescription = "";
+            foreach ($metaData as $k => $v) {
+                $paymentDescription .= $k.":".$v. " ";
+            }
+
             $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
             // Charge
-            $chargeResult = $CreditCardService->chargeCustomer($customerId, $currencyName, $chargeInfo['total_charge'],
-                $paymentDescription);
+            $chargeResult = $CreditCardService->chargeCustomer(
+                $customerId,
+                $currencyName,
+                $chargeInfo['total_charge'],
+                $paymentDescription,
+                $metaData
+            );
 
             // Delete cache
             $Team->resetCurrentTeam();
