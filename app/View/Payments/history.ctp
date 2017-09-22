@@ -30,7 +30,7 @@
                     <td class="history-entry-download">
                         <?= $this->Html->link("",
                             ['controller' => 'payments', 'action' => 'receipt', $v['id'] . '.pdf'],
-                            ['class' => 'fa fa-download', 'div' => false])
+                            ['class' => 'fa fa-download', 'div' => false, 'download' => true])
                         ?>
                     </td>
                 </tr>
