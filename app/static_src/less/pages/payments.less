@@ -103,11 +103,16 @@
 
 
 // Application page (ReactJS)
-.payment-options{
-    margin-top:2rem;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: space-between;
+.payment{
+    .payment-options{
+        margin-top:2rem;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-between;
+        h3{
+            margin-top: 1em;
+        }
+    }
 }
 
 .payment-option{
@@ -152,12 +157,28 @@
     }
 }
 
+.enter-cc-info{
+    .payment-terms{
+        float:left;
+        clear:both;
+        margin: 1em 0;
+        width: 100%;
+    }
+    .btnRadiusOnlyIcon{
+        display:flex;
+        i{
+            margin:auto;
+        }
+    }
+}
+
+// Thank You page
+
 .payment-thanks{
     text-align:center;
     position:relative;
     .panel-container{
         min-height:20rem;
-        padding:2rem 0;
         position:relative;
         z-index:2;
         @media @medium{
@@ -371,7 +392,7 @@
     display:inline;
 }
 
-.team-price-info-legal{ 
+.team-price-info-legal{
     margin: 2rem 10px 3rem;
     padding: 0;
     font-size: 11px;
