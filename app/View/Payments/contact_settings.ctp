@@ -139,11 +139,12 @@
                        placeholder="00000000000"
                        maxlength="20">
             </div>
-            <footer class="panel-footer setting_pannel-footer">
-                <button class="btn btn-primary" id="editPaySettingsSubmitBtn">
-                    <?= __("Update") ?>
-                </button>
-            </footer>
+        </div>
+        <footer class="panel-footer setting_pannel-footer">
+            <button class="btn btn-primary" id="editPaySettingsSubmitBtn">
+                <?= __("Update") ?>
+            </button>
+        </footer>
     </form>
 </section>
 <?= $this->App->ViewEndComment() ?>
