@@ -1689,10 +1689,10 @@ class PaymentService extends AppService
         $Lang = new LangHelper(new View());
 
         $userCountryCode = $Lang->getUserCountryCode();
-        $defaultAamountPerUser = $this->getDefaultAmountPerUserByCountry($userCountryCode);
+        $defaultAmountPerUser = $this->getDefaultAmountPerUserByCountry($userCountryCode);
 
         if (!$teamId) {
-            return $defaultAamountPerUser;
+            return $defaultAmountPerUser;
         }
 
         $teamAmountPerUser = $PaymentSetting->getAmountPerUser($teamId);
@@ -1700,12 +1700,7 @@ class PaymentService extends AppService
             return $teamAmountPerUser;
         }
 
-        $teamCountry = $Team->getCountry($teamId);
-        if ($teamCountry) {
-            return $this->getDefaultAmountPerUserByCountry($teamCountry);
-        }
-
-        return $defaultAamountPerUser;
+        return $defaultAmountPerUser;
     }
 
     /**
