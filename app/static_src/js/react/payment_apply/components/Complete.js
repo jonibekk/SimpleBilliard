@@ -14,12 +14,8 @@ export default class Complete extends Base {
       <section className="panel payment payment-thanks">
         <div className="panel-container">
           <h3>{__('Thank You')}</h3>
-          <p>
-            {
-              __('Your transaction was successful. You and your team now have full access to Goalous.')
-            }
-          </p>
-          <p>{__('Go achieve your goal!')}</p>
+          <p>{__("Your transaction and registration to the payment plan was successful.")}</p>
+          <p>{__("In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.")}</p>
           <a className="" href="/payments">{__('Move to Billing page')}</a>
         </div>
         <div className="confetti-cannon">
