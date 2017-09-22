@@ -121,6 +121,14 @@ class BaseController extends Controller
             'action'     => 'logout',
         ],
         [
+            'controller' => 'users',
+            'action'     => 'accept_invite',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'settings',
+        ],
+        [
             'controller' => 'terms',
         ],
         // TODO: We have to fix it. now, privacy_policy and terms are redirected to home. but they should be appear and important page!
