@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Email Model
  *
@@ -21,7 +23,7 @@ class Email extends AppModel
             ],
         ],
         'email'          => [
-            'maxLength'     => ['rule' => ['maxLength', 200]],
+            'maxLength'     => ['rule' => ['maxLength', 255]],
             'notBlank'      => [
                 'rule' => 'notBlank',
             ],
@@ -43,7 +45,7 @@ class Email extends AppModel
             ],
         ],
         'email'   => [
-            'maxLength' => ['rule' => ['maxLength', 200]],
+            'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'rule' => 'notBlank',
             ],
@@ -123,22 +125,22 @@ class Email extends AppModel
                 'User' => [
                     'TeamMember' => [
                         'conditions' => ['TeamMember.team_id' => $team_id],
-                        'fields'     => ['id', 'active_flg']
+                        'fields'     => ['id', 'status']
                     ]
                 ]
             ]
         ];
         $res = $this->find('first', $options);
-        if (isset($res['User']['TeamMember'][0]['active_flg']) && $res['User']['TeamMember'][0]['active_flg']) {
+        if (isset($res['User']['TeamMember'][0]['status']) && $res['User']['TeamMember'][0]['status'] == TeamMember::USER_STATUS_ACTIVE) {
             return true;
         }
         return false;
     }
 
-    function getEmailsBelongTeamByEmail($emails, $team_id = null)
+    function getEmailsBelongTeamByEmail($emails, $teamId = null)
     {
-        if (!$team_id) {
-            $team_id = $this->current_team_id;
+        if (!$teamId) {
+            $teamId = $this->current_team_id;
         }
         $options = [
             'conditions' => [
@@ -149,7 +151,10 @@ class Email extends AppModel
             'contain'    => [
                 'User' => [
                     'TeamMember' => [
-                        'conditions' => ['TeamMember.team_id' => $team_id, 'TeamMember.active_flg' => 1],
+                        'conditions' => [
+                            'TeamMember.team_id' => $teamId,
+                            'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
+                        ],
                         'fields'     => ['id']
                     ]
                 ]
@@ -177,5 +182,120 @@ class Email extends AppModel
             return true;
         }
         return false;
+    }
+
+    function findExistUsersByEmail(array $emails): array
+    {
+        $res = $this->find('all', [
+            'fields'     => ['Email.email', 'Email.user_id'],
+            'conditions' => [
+                'Email.email'   => $emails,
+                'Email.del_flg' => false,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'User.del_flg' => false
+                    ],
+                ]
+            ]
+        ]);
+        return Hash::extract($res, '{n}.Email');
+    }
+
+    /**
+     * Get existed data by target team
+     *
+     * @param int   $teamId
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findExistByTeamId(int $teamId, array $emails): array
+    {
+        $res = $this->find('all', [
+            'fields'     => ['Email.email', 'Email.user_id'],
+            'conditions' => [
+                'Email.email'   => $emails,
+                'Email.del_flg' => false,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'User.del_flg' => false
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'Email.user_id = TeamMember.user_id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.del_flg' => false
+                    ],
+                ]
+            ]
+        ]);
+
+        return Hash::extract($res, '{n}.Email.email') ?? [];
+    }
+
+    /**
+     * Find users not belong any team
+     *
+     * @param array $emails
+     *
+     * @return array
+     */
+    public function findNotBelongAnyTeamsByEmails(array $emails): array
+    {
+
+        $options = [
+            'fields' => [
+                'Email.email'
+            ],
+            'conditions' => [
+                'Email.email' => $emails,
+                'Email.del_flg' => false
+            ],
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'User.del_flg' => false,
+                    ]
+                ],
+            ]
+        ];
+
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => ['TeamMember.id'],
+            'table'      => 'team_members',
+            'alias'      => 'TeamMember',
+            'conditions' => [
+                'TeamMember.user_id = User.id',
+                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+            ],
+        ], $this);
+        $options['conditions'][] = $db->expression("NOT EXISTS (" . $subQuery . ")");
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.Email.email');
     }
 }

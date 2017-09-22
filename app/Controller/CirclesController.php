@@ -9,6 +9,10 @@ App::import('Service', 'CircleService');
  */
 class CirclesController extends AppController
 {
+    public $uses = [
+        'Circle'
+    ];
+
     /**
      * beforeFilter callback
      *
@@ -60,7 +64,7 @@ class CirclesController extends AppController
             null, $memberIds);
         $this->Notification->outSuccess(__("Created a circle."));
 
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -294,7 +298,7 @@ class CirclesController extends AppController
             return $this->_ajaxGetResponse(['msg' => __("Failed to change circle belonging status.")]);
         }
 
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         // Notify to circle member
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId);

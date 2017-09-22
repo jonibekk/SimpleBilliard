@@ -52,7 +52,7 @@ class ActionsController extends ApiController
         }
 
         //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         // pusherに通知
         $socketId = Hash::get($this->request->data, 'socket_id');

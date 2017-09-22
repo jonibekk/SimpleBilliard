@@ -13,7 +13,7 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  * - push notify
  * ## 通知タイミング
  * - 以下で定義
- *    app/Config/extra_defines.php
+ *    app/Config/extra_defines_default.php
  *   SETUP_GUIDE_NOTIFY_DAYS
  *    会員登録,または前回のセットアップガイド項目完了から送信するまでの日数を,区切りで指定。
  *      ex) SETUP_GUIDE_NOTIFY_DAYS=2,5,10
@@ -146,7 +146,7 @@ class SetupGuideShell extends AppShell
      */
     function _sendNotify($user_id)
     {
-        $status = $this->AppController->getStatusWithRedisSave($user_id);
+        $status = $this->AppController->_getStatusWithRedisSave($user_id);
         $target_key = 0;
         foreach ($status as $key => $value) {
             if (empty($value)) {
@@ -172,7 +172,7 @@ class SetupGuideShell extends AppShell
      */
     function _isNotifyDay($user_id, $user_singup_time)
     {
-        $status = $this->AppController->getAllSetupDataFromRedis($user_id);
+        $status = $this->AppController->_getAllSetupDataFromRedis($user_id);
         if($status === null) {
             return false;
         }
@@ -181,7 +181,7 @@ class SetupGuideShell extends AppShell
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         // define base time for notify
-        $setup_rest_count = $this->AppController->calcSetupRestCount($status);
+        $setup_rest_count = $this->AppController->_calcSetupRestCount($status);
         if ($user_do_nothing_for_setup = $setup_rest_count == count(User::$TYPE_SETUP_GUIDE)) {
             $base_update_time = $user_singup_time;
         } else {
@@ -232,7 +232,7 @@ class SetupGuideShell extends AppShell
                 $url = "/setup/app/image";
                 break;
             case 3:
-                $message = __("Please create your GOAL.");
+                $message = __("Please create your Goal.");
                 $url = "/setup/goal/image";
                 break;
             case 4:

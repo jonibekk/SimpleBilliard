@@ -92,11 +92,11 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
 /**
  * エイリアス
  */
-Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/common_form/:common_form_type/*', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
-Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display', 'home']);
+Router::connect('/', ['controller' => 'pages', 'action' => 'home']);
+Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'home']);
+Router::connect('/common_form/:common_form_type/*', ['controller' => 'pages', 'action' => 'home']);
+Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'home']);
+Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'home']);
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
@@ -128,10 +128,10 @@ Router::connect('/:lang/:action', ['controller' => 'pages'],
  * 言語指定あり
  * PagesControllerにのみ影響する。
  */
-Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'display', 'home'], ['lang' => 'ja|en']);
-Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'display'],
+Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'home'], ['lang' => 'ja|en']);
+Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'lp'],
     ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks', 'pass' => ['pagename']]);
-Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'display'],
+Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'lp'],
     [
         'pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks',
         'lang'     => 'ja|en',
@@ -139,6 +139,9 @@ Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'displ
     ]);
 Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'app_version_unsupported'],
     ['pagename' => 'app_force_update|app_force_install', 'pass' => ['pagename']]);
+
+// Allow '.pdf' extension
+Router::parseExtensions('pdf');
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

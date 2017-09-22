@@ -72,6 +72,7 @@ class TopicSearchKeyword extends AppModel
      */
     function updateByUserId($userId): bool
     {
+        $teamMemberStatusActive = TeamMember::USER_STATUS_ACTIVE;
         $query = <<<SQL
 UPDATE topic_search_keywords tsk,
 (SELECT
@@ -97,7 +98,7 @@ UPDATE topic_search_keywords tsk,
     INNER JOIN team_members tm ON
         tpm.user_id = tm.user_id
         AND tpm.team_id = tm.team_id
-        AND tm.active_flg = 1
+        AND tm.status = $teamMemberStatusActive
         AND tm.del_flg = 0
     LEFT JOIN local_names ln ON
         ln.user_id = u.id

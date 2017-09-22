@@ -61,7 +61,8 @@ class TeamMemberTest extends GoalousTestCase
     {
         $uid = '1';
         $data = [
-            'TeamMember' => [['user_id' => $uid,]],
+            'TeamMember' => [
+                ['user_id' => $uid, 'status' => TeamMember::USER_STATUS_ACTIVE]],
             'Team'       => [
                 'name' => 'test'
             ]
@@ -93,7 +94,7 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 2);
 
-        $this->TeamMember->saveField('active_flg', false);
+        $this->TeamMember->saveField('status', TeamMember::USER_STATUS_INACTIVE);
         $this->TeamMember->myTeams = null;
         Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
@@ -128,7 +129,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => false,
+                    'status' => TeamMember::USER_STATUS_INACTIVE,
                 ]
             ],
             'Team'       => [
@@ -148,7 +149,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                 ]
             ],
             'Team'       => [
@@ -183,7 +184,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                     'admin_flg'  => false,
                 ]
             ],
@@ -203,7 +204,7 @@ class TeamMemberTest extends GoalousTestCase
             'TeamMember' => [
                 [
                     'user_id'    => $uid,
-                    'active_flg' => true,
+                    'status' => TeamMember::USER_STATUS_ACTIVE,
                     'admin_flg'  => true,
                 ]
             ],
@@ -230,10 +231,10 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->Team->save($data);
         $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
-        $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
+        $this->assertEquals($res['TeamMember']['status'], TeamMember::USER_STATUS_ACTIVE);
         $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
         $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
-        $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
+        $this->assertEquals($res['TeamMember']['status'], TeamMember::USER_STATUS_ACTIVE);
         $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
     }
 
@@ -281,1152 +282,6 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $actual = $this->TeamMember->getAllMemberUserIdList(true, true, true);
         $this->assertEquals($expected, $actual);
-    }
-
-    function testSaveNewMembersFromCsvSuccessChangeLocalName()
-    {
-        $this->setDefault();
-        $this->TeamMember->Team->Circle->current_team_id = 1;
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'csv_test@email.com',
-            'aaa',
-            'first',
-            'last',
-            'on',
-            'off',
-            null,
-            'jpn',
-            'ふぁーすと',
-            'ラスト'
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->saveNewMembersFromCsv($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => false,
-            'error_line_no' => 0,
-            'error_msg'     => null,
-            'success_count' => 1,
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataDifferenceTitle()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[0]['name'] = 'xxx';
-        $csv_data[] = $this->getEmptyRowOnCsv();
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 0
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataDifferenceColumnCount()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        unset($csv_data[1][0]);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEmpty()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 0
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEmptyEmail()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataValidateEmail()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1][0] = 'aaa';
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataMemberIdEmpty()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $csv_data[1][0] = 'aaa@aaa.com';
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataFirstNameEmpty()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $csv_data[1][0] = 'aaa@aaa.com';
-        $csv_data[1][1] = 'aaa';
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataFirstNameOnlyRoman()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'aaa', 'ああああ',];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataLastNameEmpty()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', '',];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataLastNameOnlyRoman()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'あああ',];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataAdminEmpty()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', '',];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataAdminNotOnOrOff()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'aaaa',];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEvaluateEmpty()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', ''];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEvaluateNotOnOrOff()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'aaaa'];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataLangCodeNotSupport()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'aaaaa',];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataValidatePhone()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            'aaaaaaa',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataValidateGender()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'aaaa',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataBirthDayAllOrNothing()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '',
-            '',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataBirthYearValidate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            'aaaaa',
-            '1',
-            '1',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataBirthMonthValidate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            'aaaa',
-            '1',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataBirthDayValidate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            'aaaa',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataGroupAlignLeft()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            '',
-            'group3',
-            '',
-            '',
-            '',
-            '',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataGroupDuplicate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group1',
-            '',
-            '',
-            '',
-            '',
-            '',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataCoachIdIsNotMemberId()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'member_id',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEvaluatorIdAlignLeft()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'coach_id',
-            'rater1',
-            '',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEvaluatorIdNotIncludeMemberId()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'coach_id',
-            'member_id',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEvaluatorIdDuplicate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'coach_id',
-            'rater2',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEmailDuplicate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $csv_data[2] = $this->getEmptyRowOnCsv();
-        $test_data_a = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
-
-        $test_data_b = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-        ];
-        $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEmailAlreadyJoined()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-
-        $test_data_a = [
-            'from@email.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataMemberIdDuplicate()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $csv_data[2] = $this->getEmptyRowOnCsv();
-
-        $test_data_a = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
-
-        $test_data_b = [
-            'bbb@bbb.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-        ];
-        $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataMemberIdExists()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data_a = [
-            'aaa@aaa.com',
-            'member_1',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-        ];
-        $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
-
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataCoachIdExists()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'member_id',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'member_1',
-            'rater1',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[2] = [
-            'aaax@aaa.com',
-            'member_2',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            'not_exists_coach_id',
-            'rater1',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 3
-        ];
-        $this->assertEquals($excepted, $actual);
-    }
-
-    function testValidateNewMemberCsvDataEvaluatorIdExists()
-    {
-        $this->setDefault();
-
-        $csv_data = [];
-        $csv_data[] = $this->TeamMember->_getCsvHeading();
-        $csv_data[] = $this->getEmptyRowOnCsv();
-
-        $csv_data[1] = [
-            'aaa@aaa.com',
-            'abc',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            '',
-            'member_1',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $csv_data[2] = [
-            'aaax@aaa.com',
-            'member_z',
-            'firstname',
-            'lastname',
-            'ON',
-            'ON',
-            '',
-            'jpn',
-            'localfirstname',
-            'locallastname',
-            '000-0000-0000',
-            'male',
-            '1999',
-            '11',
-            '11',
-            'group1',
-            'group2',
-            'group3',
-            'group4',
-            'group5',
-            'group6',
-            'group7',
-            '',
-            'abc',
-            'rater2',
-            'rater3',
-            'rater4',
-            'rater5',
-            'rater6',
-            'rater7',
-        ];
-        $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
-        if (Hash::get($actual, 'error_msg')) {
-            unset($actual['error_msg']);
-        }
-        $excepted = [
-            'error'         => true,
-            'error_line_no' => 2
-        ];
-        $this->assertEquals($excepted, $actual);
     }
 
     function testValidateUpdateMemberCsvDataNotMatchRecordCount()
@@ -2367,7 +1222,7 @@ class TeamMemberTest extends GoalousTestCase
             'team_id'           => 1,
             'evaluatee_user_id' => 2,
             'evaluator_user_id' => 1,
-            'term_id'  => 1,
+            'term_id'           => 1,
             'comment'           => null,
             'evaluate_score_id' => null,
             'evaluate_type'     => 0,
@@ -2478,8 +1333,9 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'       => $user_id,
             'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $res = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
         $this->assertEquals($coach_user_id, $res);
 
@@ -2495,8 +1351,9 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'       => $user_id,
             'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
+            'status' => TeamMember::USER_STATUS_ACTIVE
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $res = $this->TeamMember->getMyMembersList($coach_user_id);
         $this->assertContains($user_id, $res);
     }
@@ -2514,7 +1371,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'active_flg'            => 1,
+            'status' => TeamMember::USER_STATUS_ACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -2531,7 +1388,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'active_flg'            => 0,
+            'status' => TeamMember::USER_STATUS_INACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->current_team_id = $team_id;
@@ -2548,7 +1405,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'active_flg'            => 1,
+            'status'            => TeamMember::USER_STATUS_ACTIVE,
             'evaluation_enable_flg' => 0
         ];
         $this->TeamMember->current_team_id = $team_id;
@@ -2707,7 +1564,7 @@ class TeamMemberTest extends GoalousTestCase
         $member_id = 999;
         $params = [
             'id'        => $member_id,
-            'admin_flg' => 0,
+            'admin_flg' => 0
         ];
         $this->TeamMember->save($params);
         $this->TeamMember->setAdminUserFlag($member_id, 'ON');
@@ -2732,44 +1589,19 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertEquals(0, $res['TeamMember']['admin_flg']);
     }
 
-    function testSetActiveFlagPatternON()
+    function test_inactivate()
     {
-        $member_id = 999;
-        $this->TeamMember->User->save([
-            'id'         => $member_id,
-            'first_name' => 'test',
-            'last_name'  => 'test',
-        ]);
-        $this->TeamMember->User->Email->save([
-            'user_id'        => $member_id,
-            'email_verified' => true
-        ], false);
+        $memberId = 999;
         $params = [
-            'id'         => $member_id,
-            'user_id'    => $member_id,
-            'active_flg' => 0,
+            'id'     => $memberId,
+            'status' => TeamMember::USER_STATUS_ACTIVE,
         ];
         $this->TeamMember->save($params, false);
-        $this->TeamMember->setActiveFlag($member_id, 'ON');
+        $this->TeamMember->inactivate($memberId);
 
-        $options['conditions']['id'] = $member_id;
+        $options['conditions']['id'] = $memberId;
         $res = $this->TeamMember->find('first', $options);
-        $this->assertEquals(1, $res['TeamMember']['active_flg']);
-    }
-
-    function testSetActiveFlagPatternOFF()
-    {
-        $member_id = 999;
-        $params = [
-            'id'         => $member_id,
-            'active_flg' => 0,
-        ];
-        $this->TeamMember->save($params);
-        $this->TeamMember->setActiveFlag($member_id, 'OFF');
-
-        $options['conditions']['id'] = $member_id;
-        $res = $this->TeamMember->find('first', $options);
-        $this->assertEquals(0, $res['TeamMember']['active_flg']);
+        $this->assertEquals(TeamMember::USER_STATUS_INACTIVE, $res['TeamMember']['status']);
     }
 
     function testSetEvaluationEnableFlagPatternON()
@@ -2972,7 +1804,7 @@ class TeamMemberTest extends GoalousTestCase
     {
         $team_id = 999;
         $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'fields'     => ['id', 'status', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
@@ -3070,13 +1902,13 @@ class TeamMemberTest extends GoalousTestCase
         $members = $this->TeamMember->find('all', [
             'fields' => [
                 'TeamMember.team_id',
-                'TeamMember.active_flg',
+                'TeamMember.status',
             ],
         ]);
 
         $counts = [];
         foreach ($members as $v) {
-            if (!$v['TeamMember']['active_flg']) {
+            if (!$v['TeamMember']['status']) {
                 continue;
             }
             if (!isset($counts[$v['TeamMember']['team_id']])) {
@@ -3181,29 +2013,90 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
 
         // TeamMember: active admin, User: active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => true]);
+        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
         $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
         $this->assertTrue($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: is not admin
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => false, 'active_flg' => true]);
-        $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
+        $this->TeamMember->save([
+            'id'         => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'admin_flg'  => false,
+            'status' => TeamMember::USER_STATUS_ACTIVE
+        ]);
+        $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: active, User: not active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => true]);
+        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: not active, User: active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => false]);
+        $this->TeamMember->save([
+            'id'         => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'admin_flg'  => true,
+            'status' => TeamMember::USER_STATUS_INACTIVE
+        ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: not active, User: not active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'active_flg' => false]);
+        $this->TeamMember->save([
+            'id'         => 1,
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'admin_flg'  => true,
+            'status' => TeamMember::USER_STATUS_ACTIVE
+        ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+    }
+
+    function test_updateActiveFlgToStatus_success()
+    {
+        $this->TeamMember->save(['status' => TeamMember::USER_STATUS_ACTIVE], false);
+        $teamMemberId = $this->TeamMember->getLastInsertId();
+        $this->TeamMember->updateActiveFlgToStatus();
+        $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
+        $this->assertEqual($newStatus, TeamMember::USER_STATUS_ACTIVE);
+    }
+
+    function test_updateInActiveFlgToStatus_success()
+    {
+        $this->TeamMember->save(['status' => TeamMember::USER_STATUS_INACTIVE], false);
+        $teamMemberId = $this->TeamMember->getLastInsertId();
+        $this->TeamMember->updateInactiveFlgToStatus();
+        $newStatus = Hash::get($this->TeamMember->getById($teamMemberId), 'status');
+        $this->assertEqual($newStatus, TeamMember::USER_STATUS_INACTIVE);
+    }
+
+    function test_findAdminList()
+    {
+        // It's expected decrement from list when changed to inactive team member.
+        $retBefore = $this->TeamMember->findAdminList(1);
+        $userId = current($retBefore);
+        $this->TeamMember->updateAll(['TeamMember.status' => TeamMember::USER_STATUS_INACTIVE],
+            ['TeamMember.team_id' => 1, 'TeamMember.user_id' => $userId]);
+        $afterOneInactivated = $this->TeamMember->findAdminList(1);
+        $this->assertEquals(count($afterOneInactivated), count($retBefore) - 1);
+
+        // It's expected decrement from list when changed to not admin team member.
+        $userId = current($afterOneInactivated);
+        $this->TeamMember->updateAll(['TeamMember.admin_flg' => false],
+            ['TeamMember.team_id' => 1, 'TeamMember.user_id' => $userId]);
+        $afterOneToNormalMember = $this->TeamMember->findAdminList(1);
+        $this->assertEquals(count($afterOneToNormalMember), count($afterOneInactivated) - 1);
+
+        // It's expected decrement from list when changed to inactive user.
+        $userId = current($afterOneToNormalMember);
+        $this->TeamMember->User->updateAll(['User.active_flg' => false],
+            ['User.id' => $userId]);
+        $afterOneToInactive = $this->TeamMember->findAdminList(1);
+        $this->assertEquals(count($afterOneToInactive), count($afterOneToNormalMember) - 1);
     }
 
     function _saveEvaluations()
@@ -3213,7 +2106,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 2,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'あいうえお',
                 'evaluate_score_id' => 1,
@@ -3223,7 +2116,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'かきくけこ',
                 'evaluate_score_id' => 1,
@@ -3234,7 +2127,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'さしすせそ',
                 'evaluate_score_id' => 1,
@@ -3245,7 +2138,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 1,
                 'evaluatee_user_id' => 1,
                 'evaluator_user_id' => 1,
-                'term_id'  => 1,
+                'term_id'           => 1,
                 'evaluate_type'     => 0,
                 'comment'           => 'たちつてと',
                 'evaluate_score_id' => 1,
@@ -3256,7 +2149,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => 2,
+                'term_id'           => 2,
                 'evaluate_type'     => 0,
                 'comment'           => 'なにぬねの',
                 'evaluate_score_id' => 1,
@@ -3267,7 +2160,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => 2,
+                'term_id'           => 2,
                 'evaluate_type'     => 0,
                 'comment'           => 'はひふへほ',
                 'evaluate_score_id' => 1,
@@ -3278,7 +2171,7 @@ class TeamMemberTest extends GoalousTestCase
                 'team_id'           => 2,
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => 2,
+                'term_id'           => 2,
                 'evaluate_type'     => 0,
                 'comment'           => 'まみむめも',
                 'evaluate_score_id' => 1,
@@ -3290,4 +2183,42 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->Team->Evaluation->saveAll($records);
     }
 
+    public function test_countChargeTargetUsersEachTeam()
+    {
+        $this->TeamMember->deleteAll(['TeamMember.del_flg' => false]);
+        $this->createActiveUser(1);
+        $ret = $this->TeamMember->countChargeTargetUsersEachTeam([1,2]);
+        // TODO: Add other pattern tests
+    }
+
+    public function test_isTeamMember()
+    {
+        $teamId = 1;
+        $userId = 1;
+        $teamMemberId = $this->createTeamMember($teamId, $userId);
+        $this->assertTrue($this->TeamMember->isTeamMember($teamId, $teamMemberId));
+
+        $otherTeamId = 2;
+        $userId = 2;
+        $otherTeamMemberId = $this->createTeamMember($otherTeamId, $userId);
+        $this->assertFalse($this->TeamMember->isTeamMember($teamId, $otherTeamMemberId));
+    }
+
+    public function test_isInactive()
+    {
+        $activeTeamMemberId = $this->createTeamMember(1, 1, TeamMember::USER_STATUS_ACTIVE);
+        $this->assertFalse($this->TeamMember->isInactive($activeTeamMemberId));
+
+        $inactiveTeamMemberId = $this->createTeamMember(2, 2, TeamMember::USER_STATUS_INACTIVE);
+        $this->assertTrue($this->TeamMember->isInactive($inactiveTeamMemberId));
+    }
+
+    public function test_getUserById()
+    {
+        $userId = $this->createActiveUser(1);
+        $tmId = $this->TeamMember->getLastInsertId();
+
+        $res = $this->TeamMember->getUserById($tmId);
+        $this->assertEquals($res['id'], $userId);
+    }
 }

@@ -40,14 +40,14 @@
 
 .header-toggle-icon {
   .mixin-header-toggle-icon();
-  background-color:@white;
+  background-color: @white;
   height: 50px;
   line-height: 50px;
-  i{
-    transform:rotate(0deg);
-    transition:transform .3s;
-    .mod-openNav &{
-      transform:rotate(-180deg);
+  i {
+    transform: rotate(0deg);
+    transition: transform .3s;
+    .mod-openNav & {
+      transform: rotate(-180deg);
     }
   }
 }
@@ -310,11 +310,10 @@
   }
   @media screen and (min-width: 992px) {
     width: 166px;
-    margin-left: 4px;
+    margin-left: 10px;
   }
   @media screen and (min-width: 1024px) {
     width: 184px;
-    margin-left: 10px;
   }
 }
 
@@ -408,6 +407,10 @@
   .header-nav-function-contents-anchor();
 }
 
+.dropdown-menu > li > a.header-nav-function-contents-billing {
+  .header-nav-function-contents-anchor();
+}
+
 .dropdown-menu > li > a.header-nav-function-contents-blog {
   .header-nav-function-contents-anchor();
 }
@@ -458,4 +461,22 @@
 .mb-app-nav-icon {
   opacity: 1;
   color: #505050;
+}
+
+.banner-alert {
+  height: auto;
+  width: 100%;
+  background: @unreadRed;
+  position: fixed;
+  top: 50px;
+  z-index: 1;
+  padding: 10px 0;
+  display: none;
+  color: @darkBlack;
+  &.mod-mb-app{
+    top: 70px;
+  }
+  .container {
+    margin-top: 0;
+  }
 }

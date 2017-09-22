@@ -6,7 +6,7 @@
     <file url="file://$PROJECT_DIR$/app/Model/Comment.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/Test/Case/Controller/UsersControllerTest.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/View/Elements/gl_common_js.ctp" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/webroot/template/message_detail.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/yarn.lock" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

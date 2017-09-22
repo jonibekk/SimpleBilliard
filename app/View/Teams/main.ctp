@@ -8,6 +8,6 @@
     </div>
 
     <div class="col-xs-9">
-        <div ui-view> ロード中....</div>
+        <div ui-view> <?= __('Loading');?>&hellip;</div>
     </div>
 </div>

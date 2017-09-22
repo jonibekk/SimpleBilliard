@@ -85,7 +85,7 @@ directory "#{release_path}/app/tmp" do
   group 'www-data'
   mode 0777
   action :create
-  not_if {::File.exists?("#{release_path}/app/tmp")}
+  not_if {::Dir.exists?("#{release_path}/app/tmp")}
 end
 
 # 外部API用Keyの定義
@@ -106,4 +106,22 @@ template "/home/deploy/.bash_profile" do
   group "www-data"
   mode 0644
   source ".bash_profile"
+end
+# /var/log/goalousディレクトリ作成
+directory "/var/log/goalous" do
+    owner 'deploy'
+    group 'www-data'
+    mode 0775
+    action :create
+    not_if {::Dir.exists?("/var/log/goalous")}
+end
+
+# Create empty app log
+%w{debug error emergency}.each do |level|
+  file "/var/log/goalous/#{level}.log" do
+      owner 'deploy'
+      group 'www-data'
+      mode 0664
+      action :create_if_missing
+  end
 end

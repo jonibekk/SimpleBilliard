@@ -2,29 +2,41 @@ const assets_dir = './app/static_src'
 const compiled_assets_dir = './app/webroot'
 const node_modules_dir = './node_modules'
 const config = {
+  argOptions: {
+    string: ['react_app'],
+    default: {
+      react_app: "",
+    }
+  },
   assets_dir,
   compiled_assets_dir,
   compiled_js_dir: compiled_assets_dir + '/js',
   dest: assets_dir + '/dest',
   js: {
     pages: {
-        home: [
+        feed: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/home/*.js',
+            assets_dir + '/js/view/feed/*.js'
         ],
         goals: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/goals/*.js',
+            assets_dir + '/js/view/goals/*.js'
         ],
         team: [
             assets_dir + '/js/view/teams/*.js',
         ],
         user: [
             assets_dir + '/js/lib/actions.js',
-            assets_dir + '/js/view/users/*.js',
+            assets_dir + '/js/view/users/*.js'
         ],
         evaluation: [
-            assets_dir + '/js/view/evaluations/*.js',
+            assets_dir + '/js/view/evaluations/*.js'
+        ],
+        payments: [
+            assets_dir + '/js/view/payments/*.js'
+        ],
+        homepage: [
+            assets_dir + '/js/view/homepage/*.js'
         ]
     },
     src: [
@@ -40,15 +52,18 @@ const config = {
       assets_dir + '/js/lib/posts.js',
       assets_dir + '/js/lib/comments.js',
       assets_dir + '/js/lib/circle.js',
+      assets_dir + '/js/lib/cookie.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {
       file_name: 'goalous',
-      home_script_name: 'goalous_home',
+      feed_script_name: 'goalous_feed',
       goals_script_name: 'goalous_goal',
       team_script_name: 'goalous_team',
       user_script_name: 'goalous_user',
       evaluation_script_name: 'goalous_evaluation',
+      payments_script_name: 'goalous_payment',
+      homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
@@ -60,7 +75,8 @@ const config = {
   },
   js_prerender: {
     src: [
-      node_modules_dir + '/jquery/dist/jquery.js'
+      node_modules_dir + '/jquery/dist/jquery.js',
+      node_modules_dir + '/intl-tel-input/build/js/intlTelInput.min.js',
     ],
     output: {
       file_name: 'goalous.prerender',
@@ -100,8 +116,7 @@ const config = {
     output: {
       file_name: 'vendors',
       path: compiled_assets_dir + '/js'
-    },
-    watch_files: [assets_dir + '/js/vendor/*.js']
+    }
   },
   coffee: {
     src: [assets_dir + '/coffee/**/*.coffee'],
@@ -117,20 +132,16 @@ const config = {
       path: compiled_assets_dir + '/js'
     },
     watch_files: [
-      assets_dir + '/js/vendor/angular/**/*.js'
+      assets_dir + '/js/angular/**/*.js'
     ]
   },
   angular_vendor: {
     src: [
-      assets_dir + '/js/vendor/angular/angular.js',
-      assets_dir + '/js/vendor/angular/angular-ui-router.js',
-      assets_dir + '/js/vendor/angular/angular-route.js',
-      assets_dir + '/js/vendor/angular/angular-translate.js',
-      assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js',
-      assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js',
-      assets_dir + '/js/vendor/angular/angular-sanitize.js',
-      assets_dir + '/js/vendor/angular/pusher-angular.min.js',
-      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js'
+      node_modules_dir + '/angular/angular.js',
+      node_modules_dir + '/angular-ui-router/release/angular-ui-router.js',
+      node_modules_dir + '/angular-translate/dist/angular-translate.js',
+      node_modules_dir + '/angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
+      node_modules_dir + '/angular-ui-bootstrap/ui-bootstrap.js'
     ],
     output: {
       file_name: 'ng_vendors',
@@ -148,7 +159,9 @@ const config = {
     'goal_approval',
     'goal_search',
     'kr_column',
-    'message'
+    'message',
+    'invite',
+    'payment_apply'
   ],
   css_vendor: {
     src: [
@@ -171,6 +184,7 @@ const config = {
       assets_dir + '/css/select2-bootstrap.css',
 
       node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
+      node_modules_dir + '/intl-tel-input/build/css/intlTelInput.css',
     ],
     watch_files: [assets_dir + '/css/**/*.css'],
     output: {
@@ -181,12 +195,14 @@ const config = {
   less: {
     src: {
       common: assets_dir + '/less/common.less',
-      pages: assets_dir + '/less/pages/*.less',
+      pages: assets_dir + '/less/pages/**/*.less',
+      homepage: assets_dir + '/less/homepage/**/*.less'
     },
     output: {
-      path: compiled_assets_dir + '/css/'
+      path: compiled_assets_dir + '/css/',
+      homepage: compiled_assets_dir + '/css/homepage/'
     },
-    watch_files: [assets_dir + '/less/**/*.less']
+    watch_files: [assets_dir + '/less/**/**/*.less']
   }
 }
 

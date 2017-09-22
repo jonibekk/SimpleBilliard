@@ -33,6 +33,8 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'passwordPolicy'             => __('Please mix of numbers and alphanumeric.'),
             'userNameChar'               => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             'inList'                     => __("Invalid value"),
+            'inEnumList'                 => __("Invalid value"),
+            'katakanaOnly'               => __("Only Kana characters are allowed."),
             'dateYmd'                    => __('Enter a valid date in YYYY/MM/DD format.'),
             'checkRangeTerm'             => __("Input in the term."),
             'isUnique'                   => __('Data is duplicated.'),
@@ -42,6 +44,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'canProcessImage'            => __('The image cannot be processed. The image taken with this device may not be supported.'),
             'isTopicMember'              => __("You are not a member of the topic."),
             'bodyOrAttachedFileRequired' => __("Body or attached file is required. "),
+            'phoneNo'                    => __("Invalid telephone number"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);
