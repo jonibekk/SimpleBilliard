@@ -54,6 +54,7 @@ class Form2Authenticate extends FormAuthenticate
                 if ($inputHashedPassword !== $storedHashedPassword) {
                     return false;
                 }
+                // TODO: password saving as SHA256
             } elseif (!$this->passwordHasher()->check($password, $storedHashedPassword)) {
                 // Normal case
                 return false;
