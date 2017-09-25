@@ -971,7 +971,15 @@ class User extends AppModel
             throw new RuntimeException(__("Email address is empty."));
         }
 
-        $this->id = $uid;
+        if (!$this->validatePassword($postData)) {
+            $msg = null;
+            foreach ($this->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+
         $this->set($postData);
         if (!$this->validates()) {
             $msg = null;
@@ -1040,9 +1048,9 @@ class User extends AppModel
         if (empty($value) || !isset($value[$field_name])) {
             return false;
         }
-        $currentPassword = $this->field('password', ['User.id' => $this->id]);
-        $hashed_old_password = $this->generateHash($value[$field_name]);
-        if ($currentPassword !== $hashed_old_password) {
+        $currentPassword = $this->field('password', ['User.id' => $this->my_uid]);
+        $inputHashedPassword = $this->generateHash($value[$field_name]);
+        if ($currentPassword !== $inputHashedPassword) {
             return false;
         }
         return true;
