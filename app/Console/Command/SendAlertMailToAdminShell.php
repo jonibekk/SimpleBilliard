@@ -36,6 +36,8 @@ App::uses('GlEmailComponent', 'Controller/Component');
  */
 class SendAlertMailToAdminShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
         'Team',
         'TeamMember',

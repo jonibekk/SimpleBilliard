@@ -13,6 +13,8 @@ App::uses('PaymentUtil', 'Util');
  */
 class MonthlyInvoiceChargeShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
     ];
 

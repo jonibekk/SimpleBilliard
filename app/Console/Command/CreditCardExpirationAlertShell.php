@@ -15,6 +15,8 @@ App::import('Service', 'CreditCardService');
  */
 class CreditCardExpirationAlertShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
         'Team',
         'TeamMember',

@@ -17,7 +17,6 @@
  */
 class PushMessageShell extends AppShell
 {
-
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();

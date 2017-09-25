@@ -28,6 +28,8 @@ App::uses('AppUtil', 'Util');
  */
 class RecoverMonthlyPaymentInvoiceShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
         'Team',
         'TeamMember',
