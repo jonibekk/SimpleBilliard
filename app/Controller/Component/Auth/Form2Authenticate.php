@@ -16,6 +16,9 @@ class Form2Authenticate extends FormAuthenticate
     protected function _findUser($username, $password = null)
     {
         $userModel = $this->settings['userModel'];
+        /** @var User $User */
+        $User = ClassRegistry::init($userModel);
+
         list(, $model) = pluginSplit($userModel);
         $fields = $this->settings['fields'];
 
@@ -32,7 +35,7 @@ class Form2Authenticate extends FormAuthenticate
         if (!empty($this->settings['scope'])) {
             $conditions = array_merge($conditions, $this->settings['scope']);
         }
-        $result = ClassRegistry::init($userModel)->find('first', array(
+        $result = $User->find('first', array(
             'conditions' => $conditions,
             'recursive'  => $this->settings['recursive'],
             'contain'    => $this->settings['contain'],
@@ -54,7 +57,18 @@ class Form2Authenticate extends FormAuthenticate
                 if ($inputHashedPassword !== $storedHashedPassword) {
                     return false;
                 }
-                // TODO: password saving as SHA256
+                // Saving SHA256 hashed password
+                $newHashedPassword = $this->passwordHasher()->hash($password);
+                $passSaveRes = $User->save([
+                    'id'       => $user['id'],
+                    'password' => $newHashedPassword,
+                ], false);
+                if (!$passSaveRes) {
+                    CakeLog::emergency(sprintf("Failed to save SHA256 password. userData: %s, Trace: %s",
+                        AppUtil::jsonOneLine($user),
+                        AppUtil::jsonOneLine(Debugger::trace())
+                    ));
+                }
             } elseif (!$this->passwordHasher()->check($password, $storedHashedPassword)) {
                 // Normal case
                 return false;
