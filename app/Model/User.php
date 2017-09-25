@@ -242,7 +242,7 @@ class User extends AppModel
             ]
         ],
         'password'           => [
-            'maxLength'      => ['rule' => ['maxLength', 50]],
+//            'maxLength'      => ['rule' => ['maxLength', 50]],
             'notBlank'       => [
                 'rule' => 'notBlank',
             ],
@@ -935,7 +935,7 @@ class User extends AppModel
 
     public function generateHash($str)
     {
-        $passwordHasher = new SimplePasswordHasher();
+        $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha256']);
         return $passwordHasher->hash($str);
     }
 
@@ -1746,7 +1746,7 @@ class User extends AppModel
             ],
             'conditions' => [
                 'User.active_flg' => false,
-                'User.del_flg'  => false,
+                'User.del_flg'    => false,
             ],
         ];
         $res = $this->find('count', $options);

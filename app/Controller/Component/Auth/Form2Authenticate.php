@@ -44,7 +44,18 @@ class Form2Authenticate extends FormAuthenticate
 
         $user = $result[$model];
         if ($password !== null) {
-            if (!$this->passwordHasher()->check($password, $user[$fields['password']])) {
+            $storedHashedPassword = $user[$fields['password']];
+            if (strlen($storedHashedPassword) == 40) {
+                // Old password (SHA1) if 40 bytes.
+                // SHA1 passwords are stored before payment release.
+                // Ols passwords will be changed to sha256 when user change password
+                $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
+                $inputHashedPassword = $passwordHasher->hash($password);
+                if($inputHashedPassword != $storedHashedPassword){
+                    return false;
+                }
+            } elseif (!$this->passwordHasher()->check($password, $storedHashedPassword)) {
+                // Normal case
                 return false;
             }
             unset($user[$fields['password']]);
