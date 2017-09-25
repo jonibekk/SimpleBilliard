@@ -1052,21 +1052,14 @@ class PaymentService extends AppService
         $condition = [
             'team_id' => $teamId,
         ];
-        if (!$PaymentSetting->updateAll([
-            'del_flg'  => 1,
-            'modified' => GoalousDateTime::now()->getTimestamp(),
-        ], $condition)) {
-            throw new RuntimeException(sprintf('failed update payment_settings: %s', AppUtil::jsonOneLine([
-                'del_flg'  => 1,
+
+        if (!$PaymentSetting->softDeleteAll($condition, true)) {
+            throw new RuntimeException(sprintf('failed soft delete payment_settings: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
-        if (!$Invoice->updateAll([
-            'del_flg'  => 1,
-            'modified' => GoalousDateTime::now()->getTimestamp(),
-        ], $condition)) {
-            throw new RuntimeException(sprintf('failed update invoices: %s', AppUtil::jsonOneLine([
-                'del_flg'  => 1,
+        if (!$Invoice->softDeleteAll($condition, true)) {
+            throw new RuntimeException(sprintf('failed soft delete invoices: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
