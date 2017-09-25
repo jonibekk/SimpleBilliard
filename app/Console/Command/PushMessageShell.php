@@ -17,6 +17,7 @@
  */
 class PushMessageShell extends AppShell
 {
+    protected $enableOutputLogStartStop = false;
 
     public function getOptionParser()
     {

@@ -19,6 +19,16 @@ App::uses('GoalousDateTime', 'DateTime');
 class AppShell extends Shell
 {
     /**
+     * enable/disable output debug log
+     * e.g. set true/false to enable/disable this message log
+     * 2017-09-25 04:21:52 Info: [Shell:PushMessage] PushMessage: stop
+     * 2017-09-25 04:21:56 Info: [Shell:PushMessage] PushMessage: start
+     *
+     * @var bool
+     */
+    protected $enableOutputLogStartStop = true;
+
+    /**
      * @override
      */
     public function startup() {
@@ -128,16 +138,19 @@ class AppShell extends Shell
             // adding these changes to original runCommand()
             // 1. adding start/stop log before/after on main()
             // 2. try catch on main()
-            $this->logInfo(sprintf('%s: start', $this->name));
+            if ($this->enableOutputLogStartStop) {
+                $this->logInfo(sprintf('%s: start', $this->name));
+            }
             $result = false;
             try {
                 $result = $this->main();
             } catch (Exception $e) {
                 $this->logError($e->getMessage());
                 $this->logError($e->getTraceAsString());
-                return false;
             }
-            $this->logInfo(sprintf('%s: stop', $this->name));
+            if ($this->enableOutputLogStartStop) {
+                $this->logInfo(sprintf('%s: stop', $this->name));
+            }
             return $result;
         }
         $this->out($this->OptionParser->help($command));

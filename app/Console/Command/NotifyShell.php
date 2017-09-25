@@ -15,6 +15,7 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  */
 class NotifyShell extends AppShell
 {
+    protected $enableOutputLogStartStop = false;
 
     public $uses = array(
         'Team',
