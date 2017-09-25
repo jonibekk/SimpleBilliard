@@ -51,7 +51,7 @@ class Form2Authenticate extends FormAuthenticate
                 // Ols passwords will be changed to sha256 when user change password
                 $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
                 $inputHashedPassword = $passwordHasher->hash($password);
-                if($inputHashedPassword != $storedHashedPassword){
+                if ($inputHashedPassword !== $storedHashedPassword) {
                     return false;
                 }
             } elseif (!$this->passwordHasher()->check($password, $storedHashedPassword)) {
