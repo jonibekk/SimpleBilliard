@@ -89,6 +89,16 @@ class UserTest extends GoalousTestCase
         return $this->User->validates();
     }
 
+    function getPasswordValidationRes($data = [])
+    {
+        if (empty($data)) {
+            return null;
+        }
+        $testData = array_merge($this->baseData, $data);
+        $this->User->create();
+        return $this->User->validatePassword($testData);
+    }
+
     /**
      * @param array $user_data
      * @param array $email_data
@@ -140,32 +150,36 @@ class UserTest extends GoalousTestCase
             "[異常系]英姓はアルファベットのみ"
         );
         $this->assertTrue(
-            $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
-            "[正常系]パスワードは確認パスワードと一致"
-        );
-        $this->assertFalse(
-            $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
-            "[異常系]パスワードは確認パスワードと一致"
-        );
-        $this->assertTrue(
-            $this->getValidationRes(['password' => '1234567a']),
-            "[正常系]パスワードは8文字以上"
-        );
-        $this->assertFalse(
-            $this->getValidationRes(['password' => '1234567']),
-            "[異常系]パスワードは8文字以上"
-        );
-        $this->assertFalse(
-            $this->getValidationRes(['password' => '',]),
-            "[異常系]パスワードは空を認めない"
-        );
-        $this->assertTrue(
             $this->getValidationRes(['agree_tos' => true,]),
             "[正常系]利用規約に同意は必須"
         );
         $this->assertFalse(
             $this->getValidationRes(['agree_tos' => false,]),
             "[異常系]利用規約に同意は必須"
+        );
+    }
+
+    public function testPasswordValidation()
+    {
+        $this->assertTrue(
+            $this->getPasswordValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
+            "[正常系]パスワードは確認パスワードと一致"
+        );
+        $this->assertFalse(
+            $this->getPasswordValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
+            "[異常系]パスワードは確認パスワードと一致"
+        );
+        $this->assertTrue(
+            $this->getPasswordValidationRes(['password' => '1234567a']),
+            "[正常系]パスワードは8文字以上"
+        );
+        $this->assertFalse(
+            $this->getPasswordValidationRes(['password' => '1234567']),
+            "[異常系]パスワードは8文字以上"
+        );
+        $this->assertFalse(
+            $this->getPasswordValidationRes(['password' => '',]),
+            "[異常系]パスワードは空を認めない"
         );
     }
 
