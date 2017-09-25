@@ -48,26 +48,14 @@ class Form2Authenticate extends FormAuthenticate
         $user = $result[$model];
         if ($password !== null) {
             $storedHashedPassword = $user[$fields['password']];
-            if (strlen($storedHashedPassword) == 40) {
-                // Old password (SHA1) if 40 bytes.
+            if ($this->_isSha1($storedHashedPassword)) {
                 // SHA1 passwords are stored before payment release.
                 // Ols passwords will be changed to sha256 when user change password
-                $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
-                $inputHashedPassword = $passwordHasher->hash($password);
-                if ($inputHashedPassword !== $storedHashedPassword) {
+                if (!$this->_verifySha1Password($password, $storedHashedPassword)) {
                     return false;
                 }
-                // Saving SHA256 hashed password
-                $newHashedPassword = $this->passwordHasher()->hash($password);
-                $passSaveRes = $User->save([
-                    'id'       => $user['id'],
-                    'password' => $newHashedPassword,
-                ], false);
-                if (!$passSaveRes) {
-                    CakeLog::emergency(sprintf("Failed to save SHA256 password. userData: %s, Trace: %s",
-                        AppUtil::jsonOneLine($user),
-                        AppUtil::jsonOneLine(Debugger::trace())
-                    ));
+                if (!$this->_savePasswordAsSha256($user, $password)) {
+                    return false;
                 }
             } elseif (!$this->passwordHasher()->check($password, $storedHashedPassword)) {
                 // Normal case
@@ -78,5 +66,66 @@ class Form2Authenticate extends FormAuthenticate
 
         unset($result[$model]);
         return array_merge($user, $result);
+    }
+
+    /**
+     * Is password Sha1?
+     * Old password (SHA1) if 40 bytes.
+     *
+     * @param string $hashedPassword
+     *
+     * @return bool
+     */
+    private function _isSha1(string $hashedPassword): bool
+    {
+        return strlen($hashedPassword) == 40;
+    }
+
+    /**
+     * SHA1 password verification
+     *
+     * @param string $inputPlanePassword
+     * @param string $storedHashedPassword
+     *
+     * @return bool
+     */
+    private function _verifySha1Password(string $inputPlanePassword, string $storedHashedPassword): bool
+    {
+        $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
+        $inputHashedPassword = $passwordHasher->hash($inputPlanePassword);
+        if ($inputHashedPassword === $storedHashedPassword) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Save new password as SHA256
+     *
+     * @param array  $userData
+     * @param string $planePassword
+     *
+     * @return bool
+     */
+    private function _savePasswordAsSha256(array $userData, string $planePassword): bool
+    {
+        $userModel = $this->settings['userModel'];
+        /** @var User $User */
+        $User = ClassRegistry::init($userModel);
+        $newHashedPassword = $this->passwordHasher()->hash($planePassword);
+        try {
+            $User->save([
+                'id'       => $userData['id'],
+                'password' => $newHashedPassword,
+            ], false);
+        } catch (Exception $e) {
+            CakeLog::emergency(sprintf("Failed to save SHA256 password. errorMsg: %s, userData: %s, Trace: %s",
+                $e->getMessage(),
+                AppUtil::jsonOneLine($userData),
+                AppUtil::jsonOneLine(Debugger::trace())
+            ));
+            return false;
+        }
+        return true;
     }
 }
