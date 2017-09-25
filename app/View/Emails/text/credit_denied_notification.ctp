@@ -18,8 +18,10 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __("Thank you for your application to Goalous paid plan.")."\n";
-echo __("However, your organization did not pass the credit check.")."\n";
-echo __("If you do not apply again by credit card, we will stop using Goalous today.")."\n";
+echo __("Thank you very much for registration to Paid Plan.")."\n";
+echo __("Unfortunately your organization did not pass the credit check.")."\n";
+echo __("Therefore, we changed the status of your team to read-only.")."\n";
+echo __("To cancel the read-only status, you need to apply to Paid Plan again with credit card.")."\n";
+echo "\n";
 echo __("We look forward to your continued support to Goalous in the future.")."\n";
 echo "\n";
