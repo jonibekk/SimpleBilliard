@@ -26,7 +26,7 @@ class AppShell extends Shell
      *
      * @var bool
      */
-    protected $enableOutputLogStartStop = true;
+    protected $enableOutputLogStartStop = false;
 
     /**
      * @override

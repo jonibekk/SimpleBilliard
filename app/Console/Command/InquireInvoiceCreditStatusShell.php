@@ -27,6 +27,8 @@ use Goalous\Model\Enum as Enum;
  */
 class InquireInvoiceCreditStatusShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     const OPTION_SIMULATE_INQUIRE_CREDIT_STATUS = 'simulate_inquire_credit_status';
     const OPTION_SPECIFY_TEAM_ID = 'specify_team_id';
 
