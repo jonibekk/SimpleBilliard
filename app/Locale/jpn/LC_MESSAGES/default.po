@@ -2977,7 +2977,7 @@ msgstr "特定商取引法に基づく表記"
 msgid "Get in touch"
 msgstr "Get in touch"
 
-msgid "Contact us"
+msgid "Contact&nbsp;us"
 msgstr "お問い合わせ"
 
 msgid "Contact for press"
@@ -3668,8 +3668,8 @@ msgstr "さぁ、Goalousへ！"
 msgid "It's free till September 30, 2017! Try it out!"
 msgstr "2017年9月30日まで完全無料！今すぐお試しください。"
 
-msgid "Are you on Goalous? %s. Any questions ? %s."
-msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
+msgid "Already using Goalous? %s. <br />Have any questions? %s."
+msgstr "すでにお使いであれば、%s。 <br />ご質問があれば、%s。"
 
 msgid "Status"
 msgstr "ステータス"
@@ -5928,3 +5928,9 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+msgid "I agree. Continue."
+msgsr "同意して続ける"
+
+msgid "By clicking <q>I agree</q> below, you are agreeing to the <a href='/terms?backBtn=true' target='_blank'>Terms of Service</a> and the <a href='/privacy_policy?backBtn=true' target='_blank'>Privacy Policy</a>'"
+msgstr "下の<q>同意して続ける</q>をクリックすることで、あなたは利用規約とプライバシーポリシーに同意したことになります。"
