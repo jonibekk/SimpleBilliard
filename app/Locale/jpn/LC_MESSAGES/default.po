@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-22 08:42+0900\n"
+"PO-Revision-Date: 2017-09-25 14:54+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.4\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -103,17 +103,11 @@ msgstr "スマホアプリ・ブラウザで利用可能です。"
 msgid "You may only read your team’s pages."
 msgstr "あなたのチームはページの読み取りしか許可されていません。"
 
-msgid "You cannot use service on the team."
-msgstr "このチームは現在、利用できません。"
-
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
 
 msgid "Invalid access"
 msgstr "不正なアクセスです。"
-
-msgid "Invalid telephone number"
-msgstr "不正な電話番号です。"
 
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
@@ -843,6 +837,9 @@ msgstr "メールアドレスの登録ができました。"
 
 msgid "You should be logged in."
 msgstr "ログインが必要です。"
+
+msgid "You cannot use service on the team."
+msgstr "このチームは現在、利用できません。"
 
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
@@ -1734,9 +1731,6 @@ msgstr "%2$d文字以上で入力してください。"
 msgid "%2$d or less than %2$d characters are allowed."
 msgstr "%2$d文字以下で入力してください。"
 
-msgid "Enter %2$d numeric characters for postal code."
-msgstr "郵便番号は%2$d桁の数字で入力してください。"
-
 msgid "The file is over limit size."
 msgstr "ファイルサイズが上限を超えています。"
 
@@ -1781,6 +1775,9 @@ msgstr "あなたはこのトピックのメンバーではありません。"
 
 msgid "Body or attached file is required. "
 msgstr "本文か添付ファイルは必須です。"
+
+msgid "Invalid telephone number"
+msgstr "不正な電話番号です。"
 
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
@@ -2929,6 +2926,9 @@ msgstr "送信する・支払う"
 
 msgid "No Goals found"
 msgstr "検索に一致するゴールが見つかりませんでした。"
+
+msgid "Enter %2$d numeric characters for postal code."
+msgstr "郵便番号は%2$d桁の数字で入力してください。"
 
 msgid "Circles"
 msgstr "サークル"
@@ -4441,14 +4441,19 @@ msgstr "あなたの組織は問題なく請求書払いにてGoalousをご利�
 msgid "We look forward to your continued support to Goalous in the future."
 msgstr "今後とも、Goalousをよろしくお願い申しあげます。"
 
-msgid "However, your organization did not pass the credit check."
+msgid "Thank you very much for registration to Paid Plan."
+msgstr "Goalousの有料プランへお申込みいただきありがとうございました。"
+
+msgid "Unfortunately your organization did not pass the credit check."
 msgstr "しかしながら、あなたの組織は審査に通過しませんでした。"
 
+msgid "Therefore, we changed the status of your team to read-only."
+msgstr "そのため、チームのステータスを読み取り専用に変更いたしました。"
+
 msgid ""
-"If you do not apply again by credit card, we will stop using Goalous today."
-msgstr ""
-"クレジットカードにて再度お申込みいただかなければ、本日中にGoalousのご利用を停"
-"止いたします。"
+"To cancel the read-only status, you need to apply to Paid Plan again with "
+"credit card."
+msgstr "読み取り専用のスタータスを解除するには、クレジットカードにて再度お申込みいただけますでしょうか。"
 
 msgid "Thank you for signing up for Goalous.We are happy to meet you!"
 msgstr ""
@@ -4686,9 +4691,6 @@ msgstr ""
 "このチームは、<strong>%sまで</strong>フリートライアル期間です。それ以降は読み"
 "取り専用の状態になります。その場合、新規の投稿等はできなくなります。通常のご"
 "利用を再開したい場合は、チーム管理者にお問い合わせください。"
-
-msgid "If you want to resume normal usage, please contact to your team administrators."
-msgstr "通常のご利用を再開したい場合は、チーム管理者にお問い合わせください。"
 
 msgid ""
 "Your credit card has expired. You will no longer be able to use Goalous. "
@@ -5488,6 +5490,11 @@ msgstr "継続してご利用されたい場合は、有料プランのご契約
 msgid "Subscribe"
 msgstr "有料プランを申し込む"
 
+msgid ""
+"If you want to resume normal usage, please contact to your team "
+"administrators."
+msgstr "通常のご利用を再開したい場合は、チーム管理者にお問い合わせください。"
+
 msgid "Company Information"
 msgstr "会社情報"
 
@@ -5499,9 +5506,6 @@ msgstr "太郎"
 
 msgid "John"
 msgstr "鈴木"
-
-msgid "Name Kana"
-msgstr "名前(カナ)"
 
 msgid "スズキ"
 msgstr "ジョン"
@@ -5610,23 +5614,20 @@ msgstr ""
 "ファイルあたりの最大アップロード容量は100MBです。ただし、写真は最大10MBまでに"
 "なります。"
 
-msgid "Card"
-msgstr "カード"
-
-msgid "Expire"
-msgstr "期限"
-
-msgid "Update Card"
-msgstr "カード情報を更新する"
-
 msgid "Expiration date"
 msgstr "有効期限"
 
 msgid "Card is expired. Please update your card's information."
 msgstr "カードの有効期限が切れています。カード情報を更新してください。"
 
+msgid "Update Card"
+msgstr "カード情報を更新する"
+
 msgid "Billing Information"
 msgstr "請求先情報"
+
+msgid "Name Kana"
+msgstr "名前(カナ)"
 
 msgid "Jane Doe"
 msgstr "Jane Doe"
