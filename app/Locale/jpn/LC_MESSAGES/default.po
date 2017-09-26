@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-26 14:43+0900\n"
+"PO-Revision-Date: 2017-09-26 18:17+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -34,7 +34,7 @@ msgid "1 (Very low)"
 msgstr "1 (とても低い)"
 
 msgid "2"
-msgstr ""
+msgstr "2"
 
 msgid "3 (Default)"
 msgstr "3 (デフォルト)"
@@ -5196,6 +5196,9 @@ msgstr "1アクティブメンバー、1ヶ月"
 
 msgid "Start %s-day Free Trial"
 msgstr "%s日間のフリートライアルを始める"
+
+msgid "Upgrade to Paid Plan"
+msgstr "有料プランに申し込む"
 
 msgid ""
 "For teams and companies ready to create and share project goals on Goalous."

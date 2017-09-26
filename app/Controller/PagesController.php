@@ -84,6 +84,9 @@ class PagesController extends AppController
 
         if ($page === 'pricing') {
             $this->_setAmountPerUser();
+            if ($this->_isLoggedIn()) {
+                $this->set('isPaidPlan', $this->Team->isPaidPlan($this->current_team_id));
+            }
         } elseif ($page === 'terms') {
             $this->_setTerms();
         }
