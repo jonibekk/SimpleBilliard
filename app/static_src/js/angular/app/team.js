@@ -19,7 +19,6 @@ var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bo
         }]
 );
 
-
 app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$httpProvider',
     function ($stateProvider, $urlRouterProvider, $translateProvider, $httpProvider) {
         // Anti IE cache
