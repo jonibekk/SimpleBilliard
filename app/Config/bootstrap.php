@@ -119,23 +119,14 @@ App::build([
         ],
         'Plugin' => [
             ROOT . '/Plugin/',
+            // Batch Shells read as Plugins for classifying by namespaces
+            ROOT . '/app/Console/Command/Batch/',
+            ROOT . '/app/Console/Command/Development/',
+            ROOT . '/app/Console/Command/DataMigration/',
         ],
     ]
 );
 
-// Prepend shell command files directory path
-App::build([
-    'Console/Command' => [
-        ROOT . '/app/Console/Command/Batch/',
-        ROOT . '/app/Console/Command/Batch/DetectInconsistent/',
-        ROOT . '/app/Console/Command/Batch/Operation/',
-        ROOT . '/app/Console/Command/Batch/Payment/',
-        ROOT . '/app/Console/Command/Batch/Statistic/',
-        ROOT . '/app/Console/Command/Development/',
-        ROOT . '/app/Console/Command/Migration/',
-    ],
-    App::PREPEND
-]);
 //重複するコントローラを共存させる
 if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
     App::build([
