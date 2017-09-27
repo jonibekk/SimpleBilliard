@@ -19,7 +19,7 @@ if (!isset($top_lang)) {
 ?>
 <header id="header" class="header">
     <div class="container">
-        <?php if (isset($_GET['backBtn'])): ?>
+        <?php if (!isset($_GET['backBtn'])): ?>
             <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
                 <h1 class="logo pull-left">
                     <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
@@ -43,7 +43,7 @@ if (!isset($top_lang)) {
                                 'action'     => 'lp',
                                 'pagename'   => 'features',
                                 'lang'       => $top_lang,
-                                ]); ?>
+                            ]); ?>
                         </li>
                         <li class="nav-item" id="h-nav-pricing">
                             <?= $this->Html->link(__('Pricing'), [
@@ -51,7 +51,7 @@ if (!isset($top_lang)) {
                                 'action'     => 'lp',
                                 'pagename'   => 'pricing',
                                 'lang'       => $top_lang,
-                                ]); ?>
+                            ]); ?>
                         </li>
                         <li class="nav-item" id="h-nav-blog">
                             <?= $this->Html->link(__('Blog'), 'http://blog.goalous.com/',
