@@ -382,6 +382,11 @@ class User extends AppModel
             $this->data[$this->alias]['first_name'] = ucfirst($this->data[$this->alias]['first_name']);
             $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
         }
+
+        if (isset($this->data[$this->alias]['default_team_id']) && !$this->data[$this->alias]['default_team_id']) {
+            $this->log($this->data[$this->alias]);
+
+        }
         return true;
     }
 
