@@ -30,6 +30,7 @@
                 <?= __('Your team no longer has access to  Goalous. Your team account will be deleted on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php endif; ?>
         </p>
+        <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade to Paid Plan') ?></a>
         <div class="hr"></div>
         <div class="team-price-info">
             <h5><?= __('Monthly') ?></h5>
@@ -49,7 +50,6 @@
                     class="team-price-info-detail">/<?= __('month'); ?></div></span>
         </div>
         <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
-            <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade to Paid Plan') ?></a>
             <ul>
                 <li><i class="fa fa-check"></i><?= __('100MB file upload'); ?><sup
                         class="team-price-info-super-script">*3</sup></li>
