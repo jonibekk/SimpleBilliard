@@ -37,7 +37,7 @@
         <?php endif;?>
         </p>
         <?php if(!$isLoggedIn): ?>
-        <p><?= __('Are you on Goalous? %s. Any questions ? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
+            <p><?= __('Already using Goalous? %s. <br />Have any questions? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
         <?php endif; ?>
     </div>
 </section><!--//signup-->
