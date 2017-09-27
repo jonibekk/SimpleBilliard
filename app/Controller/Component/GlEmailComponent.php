@@ -196,8 +196,8 @@ class GlEmailComponent extends Component
     ) {
         $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
         $item = compact('teamName', 'expireDate', 'url');
-        $mailTemplate = null;
-        $this->SendMail->saveMailData($toUid, SendMail::TYPE_TMPL_ALERT_CHARGE_FAILURE, $item, null, $teamId);
+        $mailTemplate = SendMail::TYPE_TMPL_ALERT_CHARGE_FAILURE;
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
