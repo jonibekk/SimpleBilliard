@@ -32,79 +32,80 @@ class SendMail extends AppModel
     const TYPE_TMPL_CREDIT_STATUS_DENIED = 15;
     const TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN = 16;
     const TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN = 17;
+    const TYPE_TMPL_ALERT_CHARGE_FAILURE = 18;
 
     static public $TYPE_TMPL = [
-        self::TYPE_TMPL_ACCOUNT_VERIFY             => [
+        self::TYPE_TMPL_ACCOUNT_VERIFY                 => [
             'subject'  => null,
             'template' => 'account_verification',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET             => [
+        self::TYPE_TMPL_PASSWORD_RESET                 => [
             'subject'  => null,
             'template' => 'password_reset',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE    => [
+        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE        => [
             'subject'  => null,
             'template' => 'password_reset_complete',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_TOKEN_RESEND                 => [
+        self::TYPE_TMPL_TOKEN_RESEND                   => [
             'subject'  => null,
             'template' => 'token_resend',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY          => [
+        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY            => [
             'subject'  => null,
             'template' => 'change_email',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_INVITE                       => [
+        self::TYPE_TMPL_INVITE                         => [
             'subject'  => null,
             'template' => 'invite',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_SETUP                        => [
+        self::TYPE_TMPL_SETUP                          => [
             'subject'  => null,
             'template' => 'setup',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE => [
+        self::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE   => [
             'subject'  => null,
             'template' => 'email_verify_digit_code',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL      => [
+        self::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL        => [
             'subject'  => null,
             'template' => 'expire_alert_free_trial',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY       => [
+        self::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY         => [
             'subject'  => null,
             'template' => 'expire_alert_read_only',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE      => [
+        self::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE        => [
             'subject'  => null,
             'template' => 'expire_alert_cannot_use',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD   => [
+        self::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD       => [
             'subject'  => null,
             'template' => 'expire_alert_credit_card',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_CREDIT_STATUS_APPROVED     => [
+        self::TYPE_TMPL_CREDIT_STATUS_APPROVED         => [
             'subject'  => null,
             'template' => 'credit_approved_notification',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_CREDIT_STATUS_DENIED       => [
+        self::TYPE_TMPL_CREDIT_STATUS_DENIED           => [
             'subject'  => null,
             'template' => 'credit_denied_notification',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN => [
+        self::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN     => [
             'subject'  => null,
             'template' => 'register_invoice_paid_plan',
             'layout'   => 'default',
@@ -112,6 +113,11 @@ class SendMail extends AppModel
         self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN => [
             'subject'  => null,
             'template' => 'register_credit_card_paid_plan',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_ALERT_CHARGE_FAILURE           => [
+            'subject'  => null,
+            'template' => 'alert_charge_failure',
             'layout'   => 'default',
         ],
     ];

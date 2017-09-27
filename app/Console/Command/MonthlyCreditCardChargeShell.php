@@ -11,9 +11,11 @@ use Goalous\Model\Enum as Enum;
  * Description
  * - Charge each only credit card payment team that payment base date came
  *
- * @property Team           $Team
- * @property Term           $Term
- * @property PaymentSetting $PaymentSetting
+ * @property Team             $Team
+ * @property TeamMember       $TeamMember
+ * @property Term             $Term
+ * @property PaymentSetting   $PaymentSetting
+ * @property GlEmailComponent $GlEmail
  */
 class MonthlyCreditCardChargeShell extends AppShell
 {
@@ -21,6 +23,7 @@ class MonthlyCreditCardChargeShell extends AppShell
 
     public $uses = [
         'Team',
+        'TeamMember',
         'Term',
         'PaymentSetting',
         'ChargeHistory',
@@ -98,6 +101,9 @@ class MonthlyCreditCardChargeShell extends AppShell
                     Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
                     $chargeMemberCount
                 );
+            } catch (CreditCardStatusException $e) {
+                // send e-mail to team admins for informing a charge failure
+
             } catch (Exception $e) {
                 $this->logEmergency(sprintf("caught error on applyCreditCardCharge: %s", AppUtil::jsonOneLine([
                     'message' => $e->getMessage()
@@ -112,6 +118,25 @@ class MonthlyCreditCardChargeShell extends AppShell
                     AppUtil::varExportOneLine($noMemberTeams)
                 )
             );
+        }
+    }
+
+    /**
+     * Sending Email to admins on the team.
+     *
+     * @param int $teamId
+     */
+    function _sendingEmailToAdmins(int $teamId)
+    {
+        $adminList = $this->TeamMember->findAdminList($teamId);
+        $team = $this->Team->findById($teamId);
+        if (!empty($adminList)) {
+            // sending emails to each admins.
+            foreach ($adminList as $toUid) {
+                $this->GlEmail->sendMailChargeFailure($toUid, $teamId, $team['name']);
+            }
+        } else {
+            $this->logInfo("TeamId:{$teamId} There is no admin..");
         }
     }
 }
