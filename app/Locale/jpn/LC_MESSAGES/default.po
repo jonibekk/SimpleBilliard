@@ -5930,7 +5930,7 @@ msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
 msgid "I agree. Continue."
-msgsr "同意して続ける"
+msgstr "同意して続ける"
 
 msgid "By clicking <q>I agree</q> below, you are agreeing to the <a href='/terms?backBtn=true' target='_blank'>Terms of Service</a> and the <a href='/privacy_policy?backBtn=true' target='_blank'>Privacy Policy</a>'"
 msgstr "下の<q>同意して続ける</q>をクリックすることで、あなたは利用規約とプライバシーポリシーに同意したことになります。"
