@@ -32,6 +32,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_CREDIT_STATUS_DENIED = 15;
     const TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN = 16;
     const TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN = 17;
+    const TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE = 18;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY             => [
@@ -114,6 +115,11 @@ class SendMail extends AppModel
             'template' => 'register_credit_card_paid_plan',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE => [
+            'subject'  => null,
+            'template' => 'move_read_only_for_charge_failure',
+            'layout'   => 'default',
+        ],
     ];
 
     public function _setTemplateSubject()
@@ -133,6 +139,9 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_CREDIT_STATUS_DENIED]['subject'] = __("Notice of credit check result: You didn't pass the credit check");
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
+
+        // TODO:Update mail subject after Kohei created
+        self::$TYPE_TMPL[self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE]['subject'] = __("Moved read only status");
     }
 
     function __construct($id = false, $table = null, $ds = null)

@@ -6,7 +6,7 @@ App::uses('PaymentUtil', 'Util');
 use Goalous\Model\Enum as Enum;
 
 /**
- * The shell for creating next next term
+ * The shell for charge monthly if payment type iscredit card
  * Console/cake monthly credit card charge
  * Description
  * - Charge each only credit card payment team that payment base date came
