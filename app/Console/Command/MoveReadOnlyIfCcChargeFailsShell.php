@@ -57,6 +57,7 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
             $targetTimestamp,
             GoalousDateTime::createFromTimestamp($targetTimestamp)->format('Y-m-d H:i:s')));
 
+        // To check if it failed three times certainly, filter charge history from the date four months ago rather than three months ago to the current day
         $startTimestamp = GoalousDateTime::now()->subMonth(4)->getTimestamp();
         $targetTeamIds = $this->Team->findTargetsForMovingReadOnly($startTimestamp, $targetTimestamp);
 
@@ -90,14 +91,10 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
         }
     }
 
-
     /**
      * Sending Email to admins on the team.
      *
-     * @param int    $teamId
-     * @param string $teamName
-     * @param string $expireDate
-     * @param int    $serviceUseStatus
+     * @param int $teamId
      */
     function _sendEmailToAdmins(int $teamId)
     {
