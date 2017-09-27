@@ -4,7 +4,7 @@ App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
 App::uses('Folder', 'Utility');
-App::uses('DataUpdateShell', 'Console/Command');
+App::uses('DataUpdateShell', 'Console/Command/DataMigration/DataMigration/Console/Command');
 App::uses('Evaluation', 'Model');
 
 /**
