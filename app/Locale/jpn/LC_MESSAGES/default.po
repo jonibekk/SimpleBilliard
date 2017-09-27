@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-25 14:54+0900\n"
+"PO-Revision-Date: 2017-09-26 18:17+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -34,7 +34,7 @@ msgid "1 (Very low)"
 msgstr "1 (とても低い)"
 
 msgid "2"
-msgstr ""
+msgstr "2"
 
 msgid "3 (Default)"
 msgstr "3 (デフォルト)"
@@ -3498,6 +3498,9 @@ msgstr "機能"
 msgid "Pricing"
 msgstr "料金"
 
+msgid "Go Your Team"
+msgstr "チームへ移動"
+
 msgid "Login"
 msgstr "ログイン"
 
@@ -3616,13 +3619,6 @@ msgid ""
 msgstr ""
 "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
-msgid "What happens after the free campaign?"
-msgstr "無償期間（2017年9月30日まで）の後はどうなりますか？"
-
-msgid ""
-"In order to continue using Goalous, please purchase a subscription plan."
-msgstr "引き続きご利用いただくには、有料プランのご契約が必要になります。"
-
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
 
@@ -3665,8 +3661,8 @@ msgstr "その他のご質問はありますか？"
 msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
-msgid "It's free till September 30, 2017! Try it out!"
-msgstr "2017年9月30日まで完全無料！今すぐお試しください。"
+msgid "Easy set-up ･ Free 15 day Trial"
+msgstr "簡単セットアップ ･ 15日間無料トライアル"
 
 msgid "Already using Goalous? %s. <br />Have any questions? %s."
 msgstr "すでにお使いであれば、%s。 <br />ご質問があれば、%s。"
@@ -4453,7 +4449,9 @@ msgstr "そのため、チームのステータスを読み取り専用に変更
 msgid ""
 "To cancel the read-only status, you need to apply to Paid Plan again with "
 "credit card."
-msgstr "読み取り専用のスタータスを解除するには、クレジットカードにて再度お申込みいただけますでしょうか。"
+msgstr ""
+"読み取り専用のスタータスを解除するには、クレジットカードにて再度お申込みいた"
+"だけますでしょうか。"
 
 msgid "Thank you for signing up for Goalous.We are happy to meet you!"
 msgstr ""
@@ -5072,9 +5070,6 @@ msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 msgid "Enjoy your work. Achieve your goals."
 msgstr "チーム力を\"たのしく\"あげる"
 
-msgid "You can use Goalous free of charge till September 30, 2017."
-msgstr "2017年9月30日まで無料でご利用できます。"
-
 msgid "5 Feb 2016"
 msgstr "2016年2月5日"
 
@@ -5201,6 +5196,9 @@ msgstr "1アクティブメンバー、1ヶ月"
 
 msgid "Start %s-day Free Trial"
 msgstr "%s日間のフリートライアルを始める"
+
+msgid "Upgrade to Paid Plan"
+msgstr "有料プランに申し込む"
 
 msgid ""
 "For teams and companies ready to create and share project goals on Goalous."

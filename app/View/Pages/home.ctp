@@ -86,9 +86,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="section-container">
         <h1><?= __("Enjoy your work. Achieve your goals.") ?></h1>
         <div class="create-team">
-            <p><strong><?= __("You can use Goalous free of charge till September&nbsp;30,&nbsp;2017.") ?></strong></p>
+            <p><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
             <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
             <p><?= __('Already using Goalous? %s. <br />Have any questions? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact&nbsp;us') . '</a>') ?></p>
+
         </div>
     </div>
 </section><!--//promo-->
