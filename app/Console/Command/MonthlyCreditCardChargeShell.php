@@ -2,6 +2,10 @@
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
+App::uses('AppController', 'Controller');
+App::uses('ComponentCollection', 'Controller');
+App::uses('Component', 'Controller');
+App::uses('GlEmailComponent', 'Controller/Component');
 
 use Goalous\Model\Enum as Enum;
 
@@ -33,6 +37,9 @@ class MonthlyCreditCardChargeShell extends AppShell
     public function startup()
     {
         parent::startup();
+        // initializing component
+        $this->GlEmail = new GlEmailComponent(new ComponentCollection());
+        $this->GlEmail->startup(new AppController());
     }
 
     /**
@@ -96,14 +103,21 @@ class MonthlyCreditCardChargeShell extends AppShell
             try {
                 PaymentUtil::logCurrentTeamChargeUsers($teamId);
                 // Charge
-                $PaymentService->applyCreditCardCharge(
+                $chargeRes = $PaymentService->applyCreditCardCharge(
                     $teamId,
                     Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
                     $chargeMemberCount
                 );
+                if ($chargeRes['error']) {
+                    throw new CreditCardStatusException(AppUtil::jsonOneLine($chargeRes));
+                }
             } catch (CreditCardStatusException $e) {
+                $this->logInfo(sprintf("Monthly charge was failed! The card has problem. msg: %s, teamId: %s",
+                    $e->getMessage(),
+                    $teamId
+                ));
                 // send e-mail to team admins for informing a charge failure
-
+                $this->_sendingEmailToAdmins($teamId);
             } catch (Exception $e) {
                 $this->logEmergency(sprintf("caught error on applyCreditCardCharge: %s", AppUtil::jsonOneLine([
                     'message' => $e->getMessage()
@@ -129,7 +143,7 @@ class MonthlyCreditCardChargeShell extends AppShell
     function _sendingEmailToAdmins(int $teamId)
     {
         $adminList = $this->TeamMember->findAdminList($teamId);
-        $team = $this->Team->findById($teamId);
+        $team = $this->Team->getById($teamId);
         if (!empty($adminList)) {
             // sending emails to each admins.
             foreach ($adminList as $toUid) {
