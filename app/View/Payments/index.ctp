@@ -3,6 +3,7 @@
     <?= $this->element('Payment/method_select') ?>
     <div class="panel-container">
         <h3><?= __("Team Summary") ?></h3>
+        <h5><?= __('Team Status') ?></h5>
         <h4 class="status-text">
             <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
                 <i class="fa fa-unlock-alt free-trial"></i>
@@ -20,15 +21,16 @@
         </h4>
         <p class="subscription-status-detail">
             <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
-                <?= __('Your team is currently using Goalous as a free trial. Your free trial will end on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
+            <?= __('Your team is currently using Goalous as a free trial. Your free trial will end on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
-                <?= __('Your team has full access to Goalous.<br /><br />Go achieve your goal!'); ?>
+            <?= __('Your team has full access to Goalous.<br />Go achieve your goal!'); ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
-                <?= __('Your team can no longer create or edit content on Goalous. Your team account will be deactivated on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
+            <?= __('Your team can no longer create or edit content on Goalous. Your team account will be deactivated on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php else: //Deactivated ?>
                 <?= __('Your team no longer has access to  Goalous. Your team account will be deleted on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php endif; ?>
         </p>
+        <div class="hr"></div>
         <div class="team-price-info">
             <h5><?= __('Monthly') ?></h5>
             <span class="team-price-info-number"><?= $amountPerUser ?><div class="team-price-info-detail">/<?= __('member'); ?>
