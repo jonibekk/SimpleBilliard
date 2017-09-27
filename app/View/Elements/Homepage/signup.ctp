@@ -27,7 +27,7 @@
                 <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Create New Team') ?></button>
             </a>
         </p>
-        <p><?= __('Are you on Goalous? %s. Any questions ? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
+        <p><?= __('Already using Goalous? %s. <br />Have any questions? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
     </div>
 </section><!--//signup-->
 <?= $this->App->viewEndComment()?>
