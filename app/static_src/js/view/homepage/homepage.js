@@ -63,7 +63,6 @@ faqInit = function(){
         $answer.dataset.height = setHeight+30;
         $question.click(function(){
             if(!$(this).hasClass('active')){
-                $questions.removeClass('active').find('.answer').css('height',0);
                 $(this).addClass('active');
                 $answer.style.height=$answer.dataset.height+'px';
             }else{
