@@ -25,6 +25,26 @@ App::import('Service', 'UserService');
 class PagesController extends AppController
 {
     public $uses = ['TermsOfService'];
+
+    public function beforeFilter()
+    {
+        $this->_setLanguage();
+        //全ページ許可
+        $this->Auth->allow();
+
+        //チームidがあった場合は許可しない
+        if (isset($this->request->params['team_id'])) {
+            $this->Auth->deny('display');
+        }
+
+        // Pass login status to view
+        $this->set('isLoggedIn', $this->_isLoggedIn());
+
+        //切り換え可能な言語をセット
+        $this->set('lang_list', $this->_getPageLanguageList());
+        parent::beforeFilter();
+    }
+
     /**
      * Displays a view
      *
@@ -64,6 +84,9 @@ class PagesController extends AppController
 
         if ($page === 'pricing') {
             $this->_setAmountPerUser();
+            if ($this->_isLoggedIn()) {
+                $this->set('isPaidPlan', $this->Team->isPaidPlan($this->current_team_id));
+            }
         } elseif ($page === 'terms') {
             $this->_setTerms();
         }
@@ -137,22 +160,6 @@ class PagesController extends AppController
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-    }
-
-    public function beforeFilter()
-    {
-        $this->_setLanguage();
-        //全ページ許可
-        $this->Auth->allow();
-
-        //チームidがあった場合は許可しない
-        if (isset($this->request->params['team_id'])) {
-            $this->Auth->deny('display');
-        }
-
-        //切り換え可能な言語をセット
-        $this->set('lang_list', $this->_getPageLanguageList());
-        parent::beforeFilter();
     }
 
     public function _setLanguage()

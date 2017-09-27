@@ -44,10 +44,6 @@
         'answer'   => __('Sure! Please contact us using the contact form. We are looking forward to hearing from you.')
     ],
     [
-        'question' => __('What happens after the free campaign?'),
-        'answer'   => __('In order to continue using Goalous, please purchase a subscription plan.')
-    ],
-    [
         'question' => __('Can we customize Goalous?'),
         'answer'   => __('We are unable to accept customize requests at this time. We would love to hear your feedback though! We are implementing new ideas constantly.')
     ],

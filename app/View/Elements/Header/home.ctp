@@ -61,17 +61,28 @@ if (!isset($top_lang)) {
                             <?= $this->Html->link(__('Contact us'),
                                 ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
                         </li>
-                        <li class="nav-item" id="h-nav-login">
-                            <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login')); ?>
-                        </li>
-                        <li class="nav-item nav-item-cta last" id="h-nav-signup">
-                            <?= $this->Html->link(__('Create New Team'),
-                                array('controller' => 'signup', 'action' => 'email', '?' => ['type' => 'header']),
-                                array(
-                                    'class' => 'header-signup btn btn-cta btn-cta-primary',
-                                    'id'    => 'RegisterLinkHeader'
-                                )); ?>
-                        </li>
+                        <?php if($isLoggedIn): ?>
+                            <li class="nav-item nav-item-cta last" id="h-nav-signup">
+                                <?= $this->Html->link(__('Go Your Team'),
+                                    array('controller' => 'pages', 'action' => 'home'),
+                                    array(
+                                        'class' => 'header-signup btn btn-cta btn-cta-primary',
+                                        'id'    => 'RegisterLinkHeader'
+                                    )); ?>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item" id="h-nav-login">
+                                <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login')); ?>
+                            </li>
+                            <li class="nav-item nav-item-cta last" id="h-nav-signup">
+                                <?= $this->Html->link(__('Create New Team'),
+                                    array('controller' => 'signup', 'action' => 'email', '?' => ['type' => 'header']),
+                                    array(
+                                        'class' => 'header-signup btn btn-cta btn-cta-primary',
+                                        'id'    => 'RegisterLinkHeader'
+                                    )); ?>
+                            </li>
+                        <?php endif; ?>
                     </ul> <!-- //nav -->
                 </div> <!-- //navbar-collapse -->
             </nav> <!-- //main-nav -->
