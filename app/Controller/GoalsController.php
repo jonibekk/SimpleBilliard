@@ -27,6 +27,7 @@ class GoalsController extends AppController
         //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
         if (in_array($this->request->params['action'], $allowed_actions) && $this->is_mb_app) {
             $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
         }
     }
 
