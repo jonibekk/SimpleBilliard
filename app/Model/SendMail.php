@@ -139,6 +139,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_CREDIT_STATUS_DENIED]['subject'] = __("Notice of credit check result: You didn't pass the credit check");
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
+        self::$TYPE_TMPL[self::TYPE_TMPL_ALERT_CHARGE_FAILURE]['subject'] = __("Charge was failed.");
     }
 
     function __construct($id = false, $table = null, $ds = null)

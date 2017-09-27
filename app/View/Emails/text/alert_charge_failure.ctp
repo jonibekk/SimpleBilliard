@@ -15,6 +15,7 @@
 
 echo __('Hello %s.', $to_user_name);
 echo "\n";
+echo "Charge failed.";
 echo "\n";
 echo $url;
 echo "\n";
