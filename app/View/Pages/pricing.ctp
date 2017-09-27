@@ -227,7 +227,5 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div>
     </div>
 </section>
-<?php if (!isset($_GET['backBtn'])): ?>
-    <?= $this->element('Homepage/signup') ?>
-<?php endif; ?>
+<?= $this->element('Homepage/signup') ?>
 <?= $this->App->viewEndComment()?>
