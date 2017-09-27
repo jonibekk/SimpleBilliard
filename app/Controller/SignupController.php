@@ -463,11 +463,10 @@ class SignupController extends AppController
             $this->Session->delete('data');
 
         } catch (RuntimeException $e) {
-            CakeLog::error(sprintf("Failed to signup. msg: %s, requestData: %s sessionData: %s",
+            CakeLog::error(sprintf("Failed to signup. msg: %s, requestData: %s",
                     $e->getMessage(),
-                    var_export($requestData, true),
-                    var_export($sessionData, true))
-            );
+                    AppUtil::jsonOneLine($requestData)
+            ));
             $res['error'] = true;
             $res['message'] = $e->getMessage();
             $this->User->rollback();
