@@ -383,9 +383,12 @@ class User extends AppModel
             $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
         }
 
+        // If default_team_id is null, not working fine at all.
         if (isset($this->data[$this->alias]['default_team_id']) && !$this->data[$this->alias]['default_team_id']) {
-            $this->log($this->data[$this->alias]);
-
+            CakeLog::emergency(sprintf("Attempting to save null to default_team_id! saveData: %s, trace: %s",
+                AppUtil::jsonOneLine($this->data[$this->alias]),
+                Debugger::trace()
+            ));
         }
         return true;
     }
