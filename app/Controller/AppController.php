@@ -1112,16 +1112,20 @@ class AppController extends BaseController
     {
         $this->Auth->authenticate = [
             'Form2' => [
-                'fields'    => [
+                'fields'         => [
                     'username' => 'email',
                     'password' => 'password'
                 ],
-                'userModel' => 'User',
-                'scope'     => [
+                'userModel'      => 'User',
+                'scope'          => [
                     'User.active_flg'             => 1,
                     'PrimaryEmail.email_verified' => 1
                 ],
-                'recursive' => 0,
+                'recursive'      => 0,
+                'passwordHasher' => [
+                    'className' => 'Simple',
+                    'hashType'  => 'sha256' // if change it, should change User::generateHash() also.
+                ]
             ]
         ];
         $st_login = REFERER_STATUS_LOGIN;
