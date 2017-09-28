@@ -786,7 +786,7 @@ class PaymentService extends AppService
 
             $companyCountry = Hash::get($paymentData, 'company_country');
             $paymentData['team_id'] = $teamId;
-            $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
+            $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforeRegisteringPayment($teamId, $companyCountry);
             $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
@@ -986,7 +986,7 @@ class PaymentService extends AppService
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
-            $paymentData['amount_per_user'] = self::AMOUNT_PER_USER_JPY;
+            $paymentData['amount_per_user'] = $this->getAmountPerUserBeforeRegisteringPayment($teamId, 'JP');
             // Create Payment Setting
             if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
@@ -1791,5 +1791,27 @@ class PaymentService extends AppService
         }
 
         return $paymentSettings['type'];
+    }
+
+    /**
+     * Get amount per user by team or default
+     *
+     * @param int $teamId
+     * @param string $country
+     *
+     * @return int
+     */
+    function getAmountPerUserBeforeRegisteringPayment(int $teamId, string $country): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $teamAmountPerUser = $Team->getAmountPerUser($teamId);
+        if ($teamAmountPerUser !== null) {
+            return $teamAmountPerUser;
+        }
+
+        $defaultAmountPerUser = $this->getDefaultAmountPerUserByCountry($country);
+        return $defaultAmountPerUser;
     }
 }

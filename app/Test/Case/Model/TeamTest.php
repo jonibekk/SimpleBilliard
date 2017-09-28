@@ -372,6 +372,14 @@ class TeamTest extends GoalousTestCase
         ]);
     }
 
+    public function test_getAmountPerUser()
+    {
+        $teamAId = $this->createTeam(['pre_register_amount_per_user' => 1500]);
+        $this->assertEqual($this->Team->getAmountPerUser($teamAId), 1500);
+        $teamBId = $this->createTeam();
+        $this->assertEqual($this->Team->getAmountPerUser($teamBId), null);
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;
