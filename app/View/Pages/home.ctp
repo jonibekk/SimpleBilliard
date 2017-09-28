@@ -88,8 +88,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="create-team">
             <p><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
             <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
-            <p><?= __('Already using Goalous? %s. <br />Have any questions? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact&nbsp;us') . '</a>') ?></p>
-
+            <ul class="create-team-linkGroup">
+                <li class="create-team-linkGroup-item"><a href="/users/login" class="lp-signup-login-link"><?=__('Login')?></a></li>
+                <li class="create-team-linkGroup-item"><a href="/contact" class="lp-signup-contact-link"><?=__('Contact&nbsp;us')?></a></li>
+            </ul>
         </div>
     </div>
 </section><!--//promo-->
@@ -215,12 +217,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         </div>
                         <div class="modal-body">
                             <div class="video-container">
-                                <iframe id="promoVideo" 
+                                <iframe id="promoVideo"
                                     data-src="<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
-                                    width="720" 
-                                    height="405" 
-                                    frameborder="0" 
-                                    webkitallowfullscreen 
+                                    width="720"
+                                    height="405"
+                                    frameborder="0"
+                                    webkitallowfullscreen
                                     mozallowfullscreen
                                     allowfullscreen>
                                 </iframe>
