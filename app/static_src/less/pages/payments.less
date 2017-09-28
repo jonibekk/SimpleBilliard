@@ -411,6 +411,67 @@
     }
 }
 
+.feature-category{
+    border-bottom: 1px solid @cGray;
+    margin: 10px 0;
+    padding-bottom: 10px;
+    .icon{
+        &:before{
+            color:@white;
+            font-family: FontAwesome; 
+            border-radius: 50%;
+            display: block;
+            font-size: 10px;
+            float: left;
+            text-align: center;
+            padding: 3px 0;
+            width: 20px;
+            margin-right: 5px;
+        }
+    }
+    .icon-heart{
+        &:before{
+            content: '\f004';
+            background-color:@acidRed;
+        }
+    }
+    .icon-message{
+        &:before{
+            content: '\f086';
+            background-color:@subColor13;
+        }
+    }
+    .icon-lock{
+        &:before{
+            content: '\f023';
+            background-color:@subColor6;
+        }
+    }
+    &:last-of-type{
+        border-bottom: none;
+    }
+    ul{
+        list-style-type: none;
+        margin: 5px 0 0 0;
+        padding-left: 25px;
+    }
+    li{
+        position: relative;
+        &:before{
+            content: '\f00c';
+            font-family:FontAwesome;
+            position: absolute;
+            left: -23px;
+        }
+    }
+}
+
+.feature-more-link{
+    .fa{
+        color:@acidRed;
+    }
+}
+
 
 /// ANIMATIONS \\\
 

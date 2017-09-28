@@ -33,6 +33,7 @@ class SetupController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        // TODO: delete these uncheck setting to enable security check.
         $this->Security->validatePost = false;
         $this->Security->csrfCheck = false;
         $this->layout = LAYOUT_ONE_COLUMN;

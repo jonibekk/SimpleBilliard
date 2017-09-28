@@ -55,17 +55,38 @@
                     class="team-price-info-detail">/<?= __('month'); ?></div></span>
         </div>
         <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
-            <ul>
-                <li><i class="fa fa-check"></i><?= __('100MB file upload'); ?><sup
-                        class="team-price-info-super-script">*3</sup></li>
-                <li><i class="fa fa-check"></i><?= __('Unlimited uploads'); ?></li>
-                <li><i class="fa fa-check"></i><?= __('Chat Messaging'); ?></li>
-                <li><i class="fa fa-check"></i><?= __('Insight Analytics'); ?></li>
-                <li><i class="fa fa-check"></i><?= __('Team Administration'); ?>
-                </li>
-                <li><i class="fa fa-check"></i><?= __('Free Online support'); ?>
-                </li>
-            </ul>
+            <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade to Paid Plan') ?></a>
+            <div class="feature-category">
+                <strong class="icon icon-heart"><?= __('Goal features');?></strong>
+                <ul>
+                    <li><?= __('Create &amp; share Goals for your project'); ?></li>
+                    <li><?= __('Team members can join to collaborate towards your Goal.');?></li>
+                    <li><?= __('Organize Goals into separate <q>Key Results</q>');?></li>
+                    <li><?= __('Post <q>Actions</q> that contribute to the <q>Key Result</q>');?></li>
+                    <li><?= __('Graphical progress that helps motivate your team');?></li>
+                </ul>
+            </div>
+            <div class="feature-category">
+                <strong class="icon icon-message"><?= __('Communication features');?></strong>
+                <ul>
+                    <li><?=__('Create private Circles where members can communicate');?></li>
+                    <li><?=__('Give reactions to posts with likes and comments');?></li>
+                    <li><?=__('Realtime chat messaging');?></li>
+                    <li><?=__('Attach and share files up to 100MB per file');?></li>
+                    <li><?=__('See how many members have read your posts and comments');?></li>
+                </ul>
+            </div>
+            <div class="feature-category">
+                <strong class="icon icon-lock"><?=__('Other Features');?></strong>
+                <ul>
+                    <li><?=__('Unlimited team members');?></li>
+                    <li><?=__('Two-Step verification for stronger security');?></li>
+                    <li><?=__('English and Japanese language available');?></li>
+                    <li><?=__('Live chat support (Initial response will be within the next business day)');?></li>
+                    <li><?=__('iOS(8.4 or higher) and Android(6.0 or higher) APPs');?></li>
+                </ul>
+            </div>
+            <a href="/pricing?backBtn=true" target="_blank" class="feature-more-link">View more details <span class="fa fa-angle-right"></span></a>
         <?php endif; ?>
         <ol class="team-price-info-legal">
             <li><?= __("Added team member's usage fee will be charged based on daily rate."); ?></li>
