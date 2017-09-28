@@ -15,7 +15,6 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  */
 class NotifyShell extends AppShell
 {
-
     public $uses = array(
         'Team',
         'User',

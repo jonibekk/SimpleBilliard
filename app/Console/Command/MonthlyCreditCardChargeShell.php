@@ -17,6 +17,8 @@ use Goalous\Model\Enum as Enum;
  */
 class MonthlyCreditCardChargeShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
         'Team',
         'Term',

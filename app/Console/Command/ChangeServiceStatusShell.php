@@ -17,6 +17,8 @@ App::import('Service', 'TeamService');
  */
 class ChangeServiceStatusShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $TeamService;
 
     public function startup()
