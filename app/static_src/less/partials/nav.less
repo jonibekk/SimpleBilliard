@@ -624,16 +624,19 @@
     li{
         height: 0em;
         overflow:hidden;
-        transition: height .3s, background-color .3s;
+        transition: height .3s, background-color .3s, color .3s;
         padding: 0 0 0 10px;
         position:relative;
         display: flex;
         align-items: center;
         width: 100%;
-        color:@cGray;
+        color:@darkBlack;
         background-color: @white;
         &.current, .open&{
             height:3em;
+        }
+        .open&{
+            color:@cGray;
         }
         &:hover, &focus{
             background-color: @cGray;
