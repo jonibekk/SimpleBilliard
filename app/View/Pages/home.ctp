@@ -86,11 +86,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="section-container">
         <h1><?= __("Enjoy your work. Achieve your goals.") ?></h1>
         <div class="create-team">
-            <p><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
+            <p class="create-team-guide"><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
             <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
             <ul class="create-team-linkGroup">
-                <li class="create-team-linkGroup-item"><a href="/users/login" class="lp-signup-login-link"><?=__('Login')?></a></li>
-                <li class="create-team-linkGroup-item"><a href="/contact" class="lp-signup-contact-link"><?=__('Contact&nbsp;us')?></a></li>
+                <li class="create-team-linkGroup-item">
+                    <a href="/users/login" class=""><?=__('Login')?></a>
+                </li>
+                <li class="create-team-linkGroup-item">
+                    <a href="/contact" class=""><?=__('Contact&nbsp;us')?></a>
+                </li>
             </ul>
         </div>
     </div>
