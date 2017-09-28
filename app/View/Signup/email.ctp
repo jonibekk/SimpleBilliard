@@ -37,11 +37,14 @@
             'data-bv-stringlength-max'     => 200,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
             'required'                     => false,
+            'type'                         => 'email',
             'div'                          => ['style' => 'overflow: hidden']
         ]) ?>
-
+        <label>
+            <?= __('By clicking <q>I agree. Continue.</q> below, you are agreeing to the <a href="/terms?backBtn=true" target="_blank">Terms of Service</a> and the <a href="/privacy_policy?backBtn=true" target="_blank">Privacy Policy</a>.');?>
+        </label>
         <div className="submit">
-            <?= $this->Form->button(__('Next') . ' <i class="fa fa-angle-right"></i>',
+            <?= $this->Form->button(__('I agree. Continue.'),
                 [
                     'type'     => 'submit',
                     'class'    => 'btn btn-primary signup-email-submit-button',
