@@ -101,7 +101,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p><?=__('For teams and companies ready to create and share project goals on Goalous.');?></p>
         </div>
         <div class="feature-category">
-            <strong class="icon icon-heart"><?= __('Goal features');?></strong>
+            <strong class="icon icon-flag"><?= __('Goal features');?></strong>
             <ul>
                 <li><?= __('Create &amp; share Goals for your project'); ?></li>
                 <li><?= __('Team members can join to collaborate towards your Goal.');?></li>

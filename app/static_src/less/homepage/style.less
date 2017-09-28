@@ -1729,7 +1729,7 @@ body {
     .feature-category{
         border-bottom: 1px solid @cGray;
         margin: 10px 10px;
-        padding-bottom: 10px;
+        padding-bottom: 13px;
         .icon{
             &:before{
                 color:@white;
@@ -1744,9 +1744,9 @@ body {
                 margin-right: 5px;
             }
         }
-        .icon-heart{
+        .icon-flag{
             &:before{
-                content: '\f004';
+                content: '\f024';
                 background-color:@acidRed;
             }
         }
@@ -1790,7 +1790,9 @@ body {
         margin: 0;
         .question-entry{
             width: 100%;
-            padding: 6px 0;
+            padding: 15px 0;
+            border-top: 1px solid @cGray;  
+            margin:0;
             &:hover{
                 cursor:pointer;
             }
@@ -1798,9 +1800,14 @@ body {
                 font-size: 30px;
                 position: absolute;
                 right: 0;
-                top:0;
+                top:10px;
                 transition: transform .3s;
                 transform: rotate(0deg);
+            }
+        }
+        &:first-of-type{
+            .question-entry{
+                border-top: none;
             }
         }
         .answer{
