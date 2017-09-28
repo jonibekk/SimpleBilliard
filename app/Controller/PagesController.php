@@ -385,7 +385,7 @@ class PagesController extends AppController
         $userCurrency = $PaymentService->getCurrencyTypeByCountry($userCountryCode);
 
         if (!$this->_isLoggedIn()) {
-            $amountPerUser = $this->getDefaultAmountPerUserByCountry($userCountryCode);
+            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($userCountryCode);
             $price = $PaymentService->formatCharge($amountPerUser, $userCurrency);
             $this->set(compact('price'));
             return;
