@@ -10,14 +10,16 @@
                     <?= __('Free Trial') ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
                 <h4 class="status-text subscribed">
-                    <i class="fa fa-ticket subscribed"></i>
+                    <i class="fa fa-ticket"></i>
                     <?= __('Paid Plan') ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
-                <i class="fa fa-ticket read-only"></i>
-                <?= __('Read Only') ?>
+                <h4 class="status-text read-only">
+                    <i class="fa fa-ticket"></i>
+                    <?= __('Read Only') ?>
             <?php else: ?>
-                <i class="fa fa-ticket deactivated"></i>
-                <?= __('Deactivated') ?>
+                <h4 class="status-text deactivated">
+                    <i class="fa fa-ticket "></i>
+                    <?= __('Deactivated') ?>
             <?php endif; ?>
         </h4>
         <p class="subscription-status-detail">
