@@ -400,7 +400,7 @@ class PagesController extends AppController
             $currency = $payment['currency'];
             $price = $PaymentService->formatCharge($amountPerUser, $currency);
         } else {
-            $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamid, $userCountryCode);
+            $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamId, $userCountryCode);
             $price = $PaymentService->formatCharge($amountPerUser, $userCurrency);
         }
         $this->set(compact('price', 'isLoggedIn', 'isPaidPlan'));
