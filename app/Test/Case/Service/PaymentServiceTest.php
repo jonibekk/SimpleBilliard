@@ -1476,7 +1476,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check saved ChargeHistory data
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
-        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $amountPerUser = 1000;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $totalAmount = $amountPerUser * $chargeUserCnt;
         $expected = [
@@ -1808,7 +1808,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check saved ChargeHistory data
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
-        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $amountPerUser = 1200;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $totalAmount = $amountPerUser * $chargeUserCnt;
         $expected = [
