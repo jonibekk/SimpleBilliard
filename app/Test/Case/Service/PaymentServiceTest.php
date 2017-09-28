@@ -3282,20 +3282,20 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertFalse($res === true);
     }
 
-    public function test_getAmountPerUserBeforeRegisteringPayment()
+    public function test_getAmountPerUserBeforePayment()
     {
         $teamAId = $this->createTeam(['pre_register_amount_per_user' => 1000]);
-        $res = $this->PaymentService->getAmountPerUserBeforeRegisteringPayment($teamAId, 'JP');
+        $res = $this->PaymentService->getAmountPerUserBeforePayment($teamAId, 'JP');
         $this->assertEquals($res, 1000);
 
         // JPY
         $teamBId = $this->createTeam();
-        $res = $this->PaymentService->getAmountPerUserBeforeRegisteringPayment($teamBId, 'JP');
+        $res = $this->PaymentService->getAmountPerUserBeforePayment($teamBId, 'JP');
         $this->assertEquals(PaymentService::AMOUNT_PER_USER_JPY, $res);
 
         // USD
         $teamCId = $this->createTeam();
-        $res = $this->PaymentService->getAmountPerUserBeforeRegisteringPayment($teamCId, 'US');
+        $res = $this->PaymentService->getAmountPerUserBeforePayment($teamCId, 'US');
         $this->assertEquals(PaymentService::AMOUNT_PER_USER_USD, $res);
     }
 

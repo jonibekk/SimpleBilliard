@@ -83,10 +83,7 @@ class PagesController extends AppController
         $page = $path[0];
 
         if ($page === 'pricing') {
-            $this->_setAmountPerUser();
-            if ($this->_isLoggedIn()) {
-                $this->set('isPaidPlan', $this->Team->isPaidPlan($this->current_team_id));
-            }
+            $this->_setPricingValues();
         } elseif ($page === 'terms') {
             $this->_setTerms();
         }
@@ -375,17 +372,38 @@ class PagesController extends AppController
      *
      * @return void
      */
-    function _setAmountPerUser()
+    function _setPricingValues()
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init("UserService");
 
-        $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
-        $currencyType = $UserService->getCurrencyAsMember($this->current_team_id);
-        $price = $PaymentService->formatCharge($amountPerUser, $currencyType);
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $userCountryCode = $Lang->getUserCountryCode();
+        $userCurrency = $PaymentService->getCurrencyTypeByCountry($userCountryCode);
 
-        $this->set(compact('price'));
+        if (!$this->_isLoggedIn()) {
+            $amountPerUser = $this->getDefaultAmountPerUserByCountry($userCountryCode);
+            $price = $PaymentService->formatCharge($amountPerUser, $userCurrency);
+            $this->set(compact('price'));
+            return;
+        }
+
+        $teamId = $this->current_team_id;
+        $isLoggedIn = true;
+        $isPaidPlan = false;
+        $payment = $PaymentService->get($teamId);
+        if ($payment) {
+            $amountPerUser = $payment['amount_per_user'];
+            $currency = $payment['currency'];
+            $price = $PaymentService->formatCharge($amountPerUser, $currency);
+        } else {
+            $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamid, $userCountryCode);
+            $price = $PaymentService->formatCharge($amountPerUser, $userCurrency);
+        }
+        $this->set(compact('price', 'isLoggedIn', 'isPaidPlan'));
     }
+
 }

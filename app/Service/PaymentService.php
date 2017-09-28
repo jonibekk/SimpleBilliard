@@ -786,7 +786,7 @@ class PaymentService extends AppService
 
             $companyCountry = Hash::get($paymentData, 'company_country');
             $paymentData['team_id'] = $teamId;
-            $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforeRegisteringPayment($teamId, $companyCountry);
+            $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforePayment($teamId, $companyCountry);
             $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
@@ -986,7 +986,7 @@ class PaymentService extends AppService
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
-            $paymentData['amount_per_user'] = $this->getAmountPerUserBeforeRegisteringPayment($teamId, 'JP');
+            $paymentData['amount_per_user'] = $this->getAmountPerUserBeforePayment($teamId, 'JP');
             // Create Payment Setting
             if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
@@ -1801,7 +1801,7 @@ class PaymentService extends AppService
      *
      * @return int
      */
-    function getAmountPerUserBeforeRegisteringPayment(int $teamId, string $country): int
+    function getAmountPerUserBeforePayment(int $teamId, string $country): int
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
