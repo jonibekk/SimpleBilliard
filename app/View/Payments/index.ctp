@@ -4,18 +4,19 @@
     <div class="panel-container">
         <h3><?= __("Team Summary") ?></h3>
         <h5><?= __('Team Status') ?></h5>
-        <h4 class="status-text">
             <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
-                <i class="fa fa-unlock-alt free-trial"></i>
-                <?= __('Free Trial') ?>
+                <h4 class="status-text free-trial">
+                    <i class="fa fa-ticket"></i>
+                    <?= __('Free Trial') ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
-                <i class="fa fa-check subscribed"></i>
-                <?= __('Paid Plan') ?>
+                <h4 class="status-text subscribed">
+                    <i class="fa fa-ticket subscribed"></i>
+                    <?= __('Paid Plan') ?>
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
-                <i class="fa fa-lock read-only"></i>
+                <i class="fa fa-ticket read-only"></i>
                 <?= __('Read Only') ?>
             <?php else: ?>
-                <i class="fa fa-lock deactivated"></i>
+                <i class="fa fa-ticket deactivated"></i>
                 <?= __('Deactivated') ?>
             <?php endif; ?>
         </h4>
@@ -30,7 +31,9 @@
                 <?= __('Your team no longer has access to  Goalous. Your team account will be deleted on %s', $this->TimeEx->formatYearDayI18nFromDate($team['service_use_state_end_date'])); ?>
             <?php endif; ?>
         </p>
-        <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade to Paid Plan') ?></a>
+        <?php if (!$serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
+            <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade to Paid Plan') ?></a>
+        <?php endif; ?>
         <div class="hr"></div>
         <div class="team-price-info">
             <h5><?= __('Monthly') ?></h5>
