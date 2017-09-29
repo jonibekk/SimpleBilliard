@@ -1542,7 +1542,7 @@ class NotifyBizComponent extends Component
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " notify";
+        $cmd = " Operation.notify";
         $cmd .= " -t " . $type;
         if ($model_id) {
             $cmd .= " -m " . $model_id;

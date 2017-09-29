@@ -4,7 +4,7 @@ App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
 App::uses('Folder', 'Utility');
-App::uses('TermMigration2Shell', 'Console/Command');
+App::uses('TermMigration2Shell', 'Console/Command/DataMigration/DataMigration/Console/Command');
 App::uses('Team', 'Model');
 App::uses('Term', 'Model');
 App::uses('Goal', 'Model');

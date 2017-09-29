@@ -366,7 +366,7 @@ class GlEmailComponent extends Component
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " send_mail {$method_name}";
+        $cmd = " Operation.send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd .= " -s " . $this->Session->id();
         $cmd .= " -l " . Configure::read('Config.language');

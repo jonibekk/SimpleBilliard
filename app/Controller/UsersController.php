@@ -781,7 +781,6 @@ class UsersController extends AppController
         if (!$this->request->is('put')) {
             throw new NotFoundException();
         }
-
         try {
             $this->User->changePassword($this->request->data);
         } catch (RuntimeException $e) {
