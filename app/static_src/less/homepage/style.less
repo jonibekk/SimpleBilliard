@@ -522,14 +522,18 @@ select {
         background: linear-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1));
         box-shadow: 0px 0px .5rem rgba(0,0,0,0.25);
         padding: 2em;
-        p{
-            &:first-of-type{
-                margin-top:0;
-            }
-            &:last-of-type{
-                margin-bottom:0;
-            }
-        }
+    }
+    .create-team-guide {
+      margin-top:0;
+    }
+    .create-team-linkGroup {
+      list-style: none;
+      padding: 0;
+      margin: 2em 0 0 0;
+    }
+    .create-team-linkGroup-item {
+      display: inline-block;
+      padding: 4px 8px;
     }
 }
 
@@ -1699,7 +1703,7 @@ body {
 }
 
 #signup{
-    margin-top: 20px; 
+    margin-top: 20px;
     .btn-block{
         width: auto!important;
         margin: 0 auto;
@@ -1715,7 +1719,7 @@ body {
     }
     .pricing-card{
         border: 1px solid @cGray;
-        padding: 10px; 
+        padding: 10px;
         text-align:center;
         border-radius: 4px;
         margin-bottom: 20px;
@@ -1733,7 +1737,7 @@ body {
         .icon{
             &:before{
                 color:@white;
-                font-family: FontAwesome; 
+                font-family: FontAwesome;
                 border-radius: 50%;
                 display: block;
                 font-size: 10px;
@@ -1791,7 +1795,7 @@ body {
         .question-entry{
             width: 100%;
             padding: 15px 0;
-            border-top: 1px solid @cGray;  
+            border-top: 1px solid @cGray;
             margin:0;
             &:hover{
                 cursor:pointer;

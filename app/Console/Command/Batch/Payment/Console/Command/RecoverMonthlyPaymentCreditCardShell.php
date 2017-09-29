@@ -12,7 +12,7 @@ use Goalous\Model\Enum as Enum;
  * this shell is not for crontabs/systemd to run automatically
  *
  * # usage
- * ./Console/cake recover_monthly_payment_credit_card --team_id=<teams.id> --amount_charge_users=<int> --target_date_time="<Y-m-d>"
+ * ./Console/cake Payment.recover_monthly_payment_credit_card --team_id=<teams.id> --amount_charge_users=<int> --target_date_time="<Y-m-d>"
  *
  * # required param
  * @param team_id int target teams.id
@@ -20,7 +20,7 @@ use Goalous\Model\Enum as Enum;
  * @param target_date_time string target date time it should be created paid at
  *
  * # sample command
- * ./Console/cake recover_monthly_payment_credit_card --team_id=7 --amount_charge_users=1 --target_date_time="2017-09-12"
+ * ./Console/cake Payment.recover_monthly_payment_credit_card --team_id=7 --amount_charge_users=1 --target_date_time="2017-09-12"
  *
  * class RecoverMonthlyPaymentCreditCardShell
  *

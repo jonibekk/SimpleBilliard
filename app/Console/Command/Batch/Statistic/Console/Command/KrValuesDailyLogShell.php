@@ -4,7 +4,7 @@ App::uses('AppUtil', 'Util');
 
 /**
  * KR日次進捗集計用バッチ
- * Console/cake kr_values_daily_log -d YYYY-MM-DD
+ * Console/cake Statistic.kr_values_daily_log -d YYYY-MM-DD
  * 説明
  * - 指定日までの最新のKR進捗から各ゴールの進捗を求める。
  * - デフォルトの指定日は前日

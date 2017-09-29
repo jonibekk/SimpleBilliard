@@ -36,7 +36,7 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  * o teamid :チームIDが指定されている場合には、指定されたチームのみ対象とする
  * f 強制。時間に関係なく即座に通知を行う
  * ## Usage
- * Console/cake setupGuide -o team_id -f true
+ * Console/cake Operation.setupGuide -o team_id -f true
  *
  * @property Team          $Team
  * @property TeamMember    $TeamMember

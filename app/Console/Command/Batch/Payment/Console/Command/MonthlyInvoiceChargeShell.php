@@ -7,7 +7,7 @@ App::uses('PaymentUtil', 'Util');
 /**
  * The shell for charging by invoice to team admins
  * Console/cake monthly_invoice_charge
- * If retry: Console/cake monthly_invoice_charge -t <target timestamp>
+ * If retry: Console/cake Payment.monthly_invoice_charge -t <target timestamp>
  * Description
  * - Sending invoice each only invoice that payment base date came
  */
