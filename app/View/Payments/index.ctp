@@ -85,7 +85,7 @@
                     <li><?=__('iOS(8.4 or higher) and Android(6.0 or higher) APPs');?></li>
                 </ul>
             </div>
-            <a href="/pricing?backBtn=true" target="_blank" class="feature-more-link">View more details <span class="fa fa-angle-right"></span></a>
+            <a href="/pricing?backBtn=true" target="_blank" class="feature-more-link"><?= __("View more details") ?> <span class="fa fa-angle-right"></span></a>
         <?php endif; ?>
         <ol class="team-price-info-legal">
             <li><?= __("Added team member's usage fee will be charged based on daily rate."); ?></li>
