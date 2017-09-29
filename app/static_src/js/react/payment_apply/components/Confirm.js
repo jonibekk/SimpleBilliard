@@ -57,7 +57,7 @@ export default class Confirm extends Base {
               {__("Back")}
             </Link>
             <button className="btn btn-primary">
-              {__("Register")}
+              {__("Purchase")}
             </button>
           </div>
         </form>
