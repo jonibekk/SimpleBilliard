@@ -1400,6 +1400,9 @@ msgstr "信用審査結果のお知らせ: 審査を通過しませんでした"
 msgid "Registration to the paid plan is complete"
 msgstr "有料プラン登録が完了しました"
 
+msgid "We had a problem billing your team"
+msgstr "請求で問題が発生しています"
+
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
 
@@ -4400,6 +4403,21 @@ msgstr "Goalousへようこそ！"
 msgid "Click the below link to make your account enable."
 msgstr "以下のリンクをクリックしてアカウントを有効化してください。"
 
+msgid "We've attempted to bill your team, but have been unsuccessful."
+msgstr "あなたのチームに請求を試みましたが、失敗しました。"
+
+msgid "Please check your payment method by accessing the page below:"
+msgstr "お支払い方法を確認するには、下記のページにアクセスしてください："
+
+msgid "If you have any questions, please contact us."
+msgstr "ご不明な点がございましたら、こちらにお問い合わせください。"
+
+msgid "Thanks."
+msgstr "ありがとうございました。"
+
+msgid "Goalous Team"
+msgstr "Goalousチーム"
+
 msgid "Click the below link to authenticate your email address."
 msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
@@ -4500,15 +4518,6 @@ msgstr "クレジットカード（%s *******%s） が期限切れに近づい�
 
 msgid "Please take a moment to update your card here:"
 msgstr "こちらからカードを更新してください："
-
-msgid "If you have any questions, please contact us."
-msgstr "ご不明な点がございましたら、こちらにお問い合わせください。"
-
-msgid "Thanks."
-msgstr "ありがとうございました。"
-
-msgid "Goalous Team"
-msgstr "Goalousチーム"
 
 msgid "The free trial for your team, \"%s\", will end on %s"
 msgstr "チーム「%s」のフリートライアルの期限は%sです。"
@@ -5545,7 +5554,7 @@ msgid "Team Summary"
 msgstr "チーム概要"
 
 msgid "Team Status"
-msgstr "チームステータス"
+msgstr "チームのステータス"
 
 msgid "Free Trial"
 msgstr "フリートライアル"
