@@ -658,7 +658,8 @@ App::uses('AttachedFile', 'Model');
             "Tax excluded": "<?= __("Tax excluded") ?>",
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
-            "Send & Pay": "<?= __("Send & Pay") ?>",
+            "Purchase & Invite": "<?= __("Purchase & Invite") ?>",
+            "Purchase" : "<?= __("Purchase") ?>",
             "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
             "Invalid fields": "<?= __("Invalid fields") ?>",
             // Goals
