@@ -49,7 +49,7 @@ class PaymentsController extends AppController
             App::uses('LangHelper', 'View/Helper');
             $Lang = new LangHelper(new View());
             $userCountryCode = $Lang->getUserCountryCode();
-            $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
+            $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamId, $userCountryCode);
             $currencyType = $userCountryCode == 'JP' ? Enum\PaymentSetting\Currency::JPY : Enum\PaymentSetting\Currency::USD;
             $subTotal = $PaymentService->formatCharge($amountPerUser * $chargeMemberCount, $currencyType);
             $amountPerUser = $PaymentService->formatCharge($amountPerUser, $currencyType);

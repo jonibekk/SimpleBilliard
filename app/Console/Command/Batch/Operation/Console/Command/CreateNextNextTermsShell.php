@@ -3,7 +3,7 @@ App::uses('AppUtil', 'Util');
 
 /**
  * The shell for creating next next term
- * Console/cake create_next_term
+ * Console/cake Operation.create_next_term
  * Description
  * - As normally, it's executed by cron job.
  * - You can execute it manually if cron job is failed.

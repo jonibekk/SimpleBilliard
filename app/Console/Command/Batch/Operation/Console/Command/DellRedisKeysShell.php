@@ -2,7 +2,7 @@
 
 /**
  * redisからキーを指定して削除するshell
- * Console/cake dell_redis_keys -p "key pattern"
+ * Console/cake Operation.dell_redis_keys -p "key pattern"
  *
  * @property GlRedis $GlRedis
  */

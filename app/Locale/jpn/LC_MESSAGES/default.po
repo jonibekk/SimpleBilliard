@@ -5557,9 +5557,9 @@ msgstr ""
 "あなたのチームは、現在フリートライアルでGoalousを利用しています。%sにフリート"
 "ライアルは終了します。"
 
-msgid "Your team has full access to Goalous.<br /><br />Go achieve your goal!"
+msgid "Your team has full access to Goalous.<br />Go achieve your goal!"
 msgstr ""
-"あなたのチームはGoalousの全ての機能をご利用いただけます。<br /><br />いざ、"
+"あなたのチームはGoalousの全ての機能をご利用いただけます。<br />いざ、"
 "ゴールへ向かって！"
 
 msgid ""

@@ -1429,7 +1429,8 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->save([
             'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
-            'service_use_state_end_date'   => '2017/8/15'
+            'service_use_state_end_date'   => '2017/8/15',
+            'pre_register_amount_per_user' => 1000
         ], false);
 
         $userId = $this->createActiveUser($teamId);
@@ -1451,7 +1452,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($paySetting['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
         $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::JPY);
-        $this->assertEquals($paySetting['amount_per_user'], PaymentService::AMOUNT_PER_USER_JPY);
+        $this->assertEquals($paySetting['amount_per_user'], '1000');
 
         // Check saved CreditCard data
         $cc = $this->CreditCard->getByTeamId($teamId);
@@ -1475,7 +1476,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check saved ChargeHistory data
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
-        $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $amountPerUser = 1000;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $totalAmount = $amountPerUser * $chargeUserCnt;
         $expected = [
@@ -1715,6 +1716,99 @@ class PaymentServiceTest extends GoalousTestCase
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
         $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
+        $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
+        $totalAmount = $amountPerUser * $chargeUserCnt;
+        $expected = [
+            'id'               => 1,
+            'team_id'          => $teamId,
+            'user_id'          => $userId,
+            'payment_type'     => $paymentSettings['type'],
+            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => $paymentSettings['amount_per_user'],
+            'total_amount'     => $totalAmount,
+            'tax'              => $this->PaymentService->calcTax($paymentSettings['company_country'], $totalAmount),
+            'charge_users'     => $chargeUserCnt,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users' => $chargeUserCnt,
+        ];
+        $this->assertEquals(array_intersect_key($history, $expected), $expected);
+        $this->assertTrue($history['charge_datetime'] <= time());
+    }
+
+    public function test_registerInvoicePayment_preRegisterAmount()
+    {
+        $teamId = 1;
+        $this->Team->clear();
+        $this->Team->id = $teamId;
+        $this->Team->save([
+            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_state_start_date' => '2017/8/1',
+            'service_use_state_end_date'   => '2017/8/15',
+            'pre_register_amount_per_user' => 1200
+        ], false);
+
+        $userId = $this->createActiveUser($teamId);
+        $paymentData = $invoiceData = $this->createTestPaymentDataForReg([]);
+
+        // Register invoice
+        $returningOrderId = 'AK12345678';
+
+        // mocking credit invoice as succeed
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $returningOrderId, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+        $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData);
+        $this->assertTrue($res === true);
+
+        // Check team status
+        $team = $this->Team->getById($teamId);
+        $timezone = $this->Team->getTimezone();
+        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertNull($team['service_use_state_end_date']);
+
+        // Check if payment settings was created
+        $paymentSettings = $this->PaymentSetting->getUnique($teamId);
+        $this->assertNotEmpty($paymentSettings);
+        $this->assertEquals($paymentData, array_intersect_key($paymentSettings, $paymentData));
+        $this->assertEquals($paymentSettings['payment_base_day'],
+            date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
+        $this->assertEquals($paymentSettings['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paymentSettings['amount_per_user'], 1200);
+
+        // Check if PaymentSettingChangeLog was created
+        $payLog = $this->PaymentSettingChangeLog->getLatest($teamId);
+        $this->assertNotEmpty($payLog);
+        $this->assertEquals($payLog['team_id'], $teamId);
+        $this->assertEquals($payLog['user_id'], $userId);
+        $this->assertEquals($payLog['payment_setting_id'], $paymentSettings['id']);
+        $this->assertEquals($payLog['plain_data'], $paymentSettings);
+
+        // Check if invoice was created
+        $Invoice = ClassRegistry::init('Invoice');
+        $invoice = $Invoice->getByTeamId(1);
+        $data = array_intersect_key($invoice, $invoiceData);
+        $this->assertEquals(array_intersect_key($invoiceData, $data), $data);
+        $this->assertEquals($paymentSettings['id'], $invoice['payment_setting_id']);
+        $this->assertEquals(Enum\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
+
+        // Check invoice history was created
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        $invoiceHistories = $InvoiceHistory->findAllByTeamId($teamId);
+        $this->assertCount(1, $invoiceHistories);
+        $this->assertEquals($returningOrderId, $invoiceHistories[0]['InvoiceHistory']['system_order_code']);
+
+        // Check invoice charge history was created
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $InvoiceHistoriesChargeHistories = $InvoiceHistoriesChargeHistory->find('all');
+        $this->assertCount(1, $InvoiceHistoriesChargeHistories);
+
+        // Check saved ChargeHistory data
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($history['charge_datetime'] <= time());
+        $amountPerUser = 1200;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $totalAmount = $amountPerUser * $chargeUserCnt;
         $expected = [
@@ -3186,6 +3280,23 @@ class PaymentServiceTest extends GoalousTestCase
         // Already paid, expect false
         $res = $this->PaymentService->isChargeUserActivation($teamId);
         $this->assertFalse($res === true);
+    }
+
+    public function test_getAmountPerUserBeforePayment()
+    {
+        $teamAId = $this->createTeam(['pre_register_amount_per_user' => 1000]);
+        $res = $this->PaymentService->getAmountPerUserBeforePayment($teamAId, 'JP');
+        $this->assertEquals($res, 1000);
+
+        // JPY
+        $teamBId = $this->createTeam();
+        $res = $this->PaymentService->getAmountPerUserBeforePayment($teamBId, 'JP');
+        $this->assertEquals(PaymentService::AMOUNT_PER_USER_JPY, $res);
+
+        // USD
+        $teamCId = $this->createTeam();
+        $res = $this->PaymentService->getAmountPerUserBeforePayment($teamCId, 'US');
+        $this->assertEquals(PaymentService::AMOUNT_PER_USER_USD, $res);
     }
 
     /**
