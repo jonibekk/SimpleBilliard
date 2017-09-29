@@ -396,6 +396,7 @@ class PagesController extends AppController
         $isPaidPlan = false;
         $payment = $PaymentService->get($teamId);
         if ($payment) {
+            $isPaidPlan = true;
             $amountPerUser = $payment['amount_per_user'];
             $currency = $payment['currency'];
             $price = $PaymentService->formatCharge($amountPerUser, $currency);
