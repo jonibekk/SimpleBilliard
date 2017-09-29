@@ -218,6 +218,7 @@ class PaymentsController extends ApiController
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
+        $teamId = $this->current_team_id;
         $res = [];
 
         if ($this->request->query('data_types')) {
@@ -243,16 +244,16 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('charge', $dataTypes)) {
             // Get payment setting by team id
             $companyCountry = $this->request->query('company_country');
-            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($companyCountry);
+            $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamId, $companyCountry);
             $currencyType = $PaymentService->getCurrencyTypeByCountry($companyCountry);
             // Calc charge user count
-            $chargeUserCnt = $TeamMember->countChargeTargetUsers($this->current_team_id);
+            $chargeUserCnt = $TeamMember->countChargeTargetUsers($teamId);
             $paymentSetting = [
                 'currency'        => $currencyType,
                 'amount_per_user' => $amountPerUser,
                 'company_country' => $companyCountry
             ];
-            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($this->current_team_id, $chargeUserCnt,
+            $chargeInfo = $PaymentService->calcRelatedTotalChargeByUserCnt($teamId, $chargeUserCnt,
                 $paymentSetting);
             $res = am($res, [
                 'amount_per_user'    => $PaymentService->formatCharge($amountPerUser, $currencyType),
