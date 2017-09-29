@@ -348,7 +348,7 @@ class PaymentsController extends ApiController
                 ]
             );
         }
-        $data['PaymentSetting']['type'] = $paymentType;
+        $data['payment_setting']['type'] = $paymentType;
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {
             return $this->_getResponseValidationFail($validationErrors);
@@ -398,6 +398,18 @@ class PaymentsController extends ApiController
         // setting there to avoid creating another validation method.
         $this->request->data['company_country'] = 'JP';
         $data = array('payment_setting' => $this->request->data);
+        $paymentSetting = $PaymentService->get($teamId);
+        $paymentType = Hash::get($paymentSetting, 'type');
+        if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+            $validationFields['PaymentSetting'] = am(
+                $validationFields['PaymentSetting'],
+                [
+                    'contact_person_last_name_kana',
+                    'contact_person_first_name_kana',
+                ]
+            );
+        }
+        $data['payment_setting']['type'] = $paymentType;
 
         $validationErrors = $PaymentService->validateSave($data, $validationFields);
         if (!empty($validationErrors)) {

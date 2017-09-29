@@ -52,9 +52,10 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
      * @return bool
      * @internal param array $field
      */
-    function inEnumList(Model $Model, $value, $enumClass) {
+    function inEnumList(Model $Model, $value, $enumClass)
+    {
         $value = array_shift($value);
-        $enumClass = "Goalous\\Model\\Enum\\".$enumClass;
+        $enumClass = "Goalous\\Model\\Enum\\" . $enumClass;
         $constants = call_user_func([$enumClass, 'toArray']);
         return in_array($value, $constants);
     }
@@ -161,7 +162,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     ) {
         $value = array_values($check);
         $value = $value[0];
-        return preg_match('/^[0-9-\(\)]+$/', $value);
+        return preg_match('/^[0-9-\(\)+]+$/', $value);
     }
 
     function isAllOrNothing(
@@ -391,8 +392,8 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     function katakanaOnly(
         /** @noinspection PhpUnusedParameterInspection */
         Model $Model,
-        $value)
-    {
+        $value
+    ) {
         $value = array_shift($value);
         return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
     }

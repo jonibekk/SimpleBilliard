@@ -787,7 +787,8 @@ class PaymentService extends AppService
 
             $companyCountry = Hash::get($paymentData, 'company_country');
             $paymentData['team_id'] = $teamId;
-            $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforePayment($teamId, $companyCountry);
+            $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforePayment($teamId,
+                $companyCountry);
             $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
@@ -1654,7 +1655,7 @@ class PaymentService extends AppService
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
             $paymentType = Hash::get($data, 'payment_setting.type');
-            if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+            if (is_null($paymentType) === false && (int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
                 $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
             }
             $allValidationErrors = am(
@@ -1807,7 +1808,7 @@ class PaymentService extends AppService
     /**
      * Get amount per user by team or default
      *
-     * @param int $teamId
+     * @param int    $teamId
      * @param string $country
      *
      * @return int
