@@ -189,7 +189,7 @@ class DetectInconsistentChargeShell extends AppShell
                 }
             } else {
                 // It is impossible to check amount strictly in case of pay by the day.
-                // So we compare if only history's sub total doesn't over max sub total
+                // So we compare if only history's sub total doesn't over expected max sub total
                 if ($taxCompareRes === 1) {
                     $errors[self::INCONSISTENT_TYPE_AMOUNT_SUB_TOTAL][] = [
                         'history_id'        => $history['id'],
@@ -218,7 +218,7 @@ class DetectInconsistentChargeShell extends AppShell
                 }
             } else {
                 // It is impossible to check amount strictly in case of pay by the day.
-                // So we compare if only history's sub total doesn't over max sub total
+                // So we compare if only history's tax doesn't over expected max tax
                 if ($taxCompareRes === 1) {
                     $errors[self::INCONSISTENT_TYPE_AMOUNT_TAX][] = [
                         'history_id'  => $history['id'],
