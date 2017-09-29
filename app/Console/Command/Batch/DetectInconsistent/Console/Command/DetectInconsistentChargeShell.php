@@ -86,8 +86,7 @@ class DetectInconsistentChargeShell extends AppShell
         $stripeChargeCheckHistories = [];
         $atobaraiChargeCheckHistories = [];
         foreach ($checkPassedHistories as $history) {
-            // Set data for checking stripe amount
-            // If amount checking is OK and payment type is credit card, then check if stripe amount match goalous db amount.
+            // Set data for checking amount registered external services(stripe and atobarai.com
             if ($history['payment_type'] == Enum\PaymentSetting\Type::CREDIT_CARD) {
                 $stripeChargeCheckHistories[] = $history;
             } elseif ($history['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
@@ -103,7 +102,7 @@ class DetectInconsistentChargeShell extends AppShell
             $this->checkStripeAmountEachHistory($stripeChargeCheckHistories, $startTimestamp, $endTimestamp);
         }
 
-        // Check if history amount match stripe amount
+        // Check if history amount match atobarai.com amount
         if (!empty($stripeChargeCheckHistories)) {
             $this->checkAtobaraiComAmountEachHistory($atobaraiChargeCheckHistories, $startTimestamp, $endTimestamp);
         }
