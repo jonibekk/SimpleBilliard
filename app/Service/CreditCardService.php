@@ -590,4 +590,36 @@ class CreditCardService extends AppService
         }
         return $result;
     }
+
+    /*
+     * Return a list with all registered charges on Stripe filtering specifying created range.
+     * Documentation about the returned data can be found on
+     * https://stripe.com/docs/api#list_charges
+     *
+     * @return array
+     */
+    /**
+     * @param int    $startTimestamp
+     * @param int    $endTimestamp
+     * @param string $customerCode
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function findChargesByCreatedRange(int $startTimestamp, int $endTimestamp, string $customerCode)
+    {
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+        $options = array(
+            "created[gte]" => $startTimestamp, // Process in blocks of 20 accounts
+            "created[lte]" => $endTimestamp,
+            "customer" => $customerCode
+        );
+        try {
+            // Get the customer list
+            $response = \Stripe\Charge::all($options);
+        } catch (Exception $e) {
+            throw $e;
+        }
+        return $response->data;
+    }
 }

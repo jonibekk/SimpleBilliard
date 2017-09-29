@@ -21,5 +21,8 @@ class DetectInconsistentDataShell extends AppShell
         $this->dispatchShell('DetectInconsistent.DetectInconsistentGoal');
         // kr
         $this->dispatchShell('DetectInconsistent.DetectInconsistentKr');
+        // payment
+        $this->dispatchShell('DetectInconsistent.DetectInconsistentCharge');
+
     }
 }

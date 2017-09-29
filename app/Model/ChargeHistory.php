@@ -350,4 +350,28 @@ class ChargeHistory extends AppModel
         }
         return $res;
     }
+
+    /**
+     * Get by charge datetime range
+     *
+     * @param int $startTimestamp
+     * @param int $endTimestamp
+     *
+     * @return array
+     */
+    public function findByChargeDatetimeRange(int $startTimestamp, int $endTimestamp): array
+    {
+        $options = [
+            'conditions' => [
+                'charge_datetime >=' => $startTimestamp,
+                'charge_datetime <=' => $endTimestamp,
+                'result_type !=' => Enum\ChargeHistory\ResultType::ERROR,
+            ],
+        ];
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.ChargeHistory');
+    }
 }
