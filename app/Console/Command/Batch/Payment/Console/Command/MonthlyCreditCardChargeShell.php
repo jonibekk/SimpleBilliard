@@ -117,7 +117,7 @@ class MonthlyCreditCardChargeShell extends AppShell
                     $teamId
                 ));
                 // send e-mail to team admins for informing a charge failure
-                $this->_sendingEmailToAdmins($teamId);
+                $this->_sendEmailToAdmins($teamId);
             } catch (Exception $e) {
                 $this->logEmergency(sprintf("caught error on applyCreditCardCharge: %s", AppUtil::jsonOneLine([
                     'message' => $e->getMessage()
@@ -140,7 +140,7 @@ class MonthlyCreditCardChargeShell extends AppShell
      *
      * @param int $teamId
      */
-    function _sendingEmailToAdmins(int $teamId)
+    function _sendEmailToAdmins(int $teamId)
     {
         $adminList = $this->TeamMember->findAdminList($teamId);
         $team = $this->Team->getById($teamId);
@@ -150,7 +150,7 @@ class MonthlyCreditCardChargeShell extends AppShell
                 $this->GlEmail->sendMailChargeFailure($toUid, $teamId, $team['name']);
             }
         } else {
-            $this->logInfo("TeamId:{$teamId} There is no admin..");
+            $this->logEmergency(sprintf("There is no admin! It should be recovered. teamId: %s,", $teamId));
         }
     }
 }
