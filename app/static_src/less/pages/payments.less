@@ -33,6 +33,13 @@
         line-height:1.2em;
     }
 
+    .hr{
+        border-top: 1px solid @cGray;
+        width: 100%;
+        margin: 1.5rem 0;
+        display:block;
+    }
+
     .form-group{
         margin-top: 1rem;
         &:first-of-type{
@@ -341,30 +348,25 @@
     .btn-primary{
         margin: 1rem 0;
     }
-    .fa{
-        margin:0 .5rem 0 0;
-        color: @darkBlack;
-        font-size: 18px;
-    }
-    .fa-check{
-        color:@subColor6;
-        font-size: 14px;
-    }
 }
 
 .status-text{
     font-weight: 600;
+    &.free-trial{
+        color: @darkBlack;
+    }
+    &.subscribed{ 
+        color:@subColor7;
+    }
+    &.read-only{
+        color: @paleYellow;
+    }
+    &.deactivated{
+        color:@acidRed;
+    }
     i{
-        margin-right: 1rem;
-        &.free-trial, &.subscribed{
-            color:@subColor7;
-        }
-        &.read-only{
-            color: @paleYellow;
-        }
-        &.deactivated{
-            color:@acidRed;
-        }
+        margin-right: .5rem;
+        font-size: 20px;
     }
 }
 
@@ -376,6 +378,16 @@
 
 .team-price-info{
     margin: 2em 0;
+    .fa{
+        margin:0 .5rem 0 0;
+        color: @darkBlack;
+        font-size: 18px;
+    }
+    &:first-of-type{
+        h5{
+            margin-top: 0;
+        }
+    }
 }
 
 .team-price-info-number{
