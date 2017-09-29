@@ -103,7 +103,7 @@ class DetectInconsistentChargeShell extends AppShell
         }
 
         // Check if history amount match atobarai.com amount
-        if (!empty($stripeChargeCheckHistories)) {
+        if (!empty($atobaraiChargeCheckHistories)) {
             $this->checkAtobaraiComAmountEachHistory($atobaraiChargeCheckHistories, $startTimestamp, $endTimestamp);
         }
     }
