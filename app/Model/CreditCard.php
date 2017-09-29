@@ -53,7 +53,7 @@ class CreditCard extends AppModel
      * get customer code by team id
      *
      * @param int $teamId
-     * 
+     *
      * @return string
      */
     public function getCustomerCode(int $teamId): string
@@ -68,6 +68,34 @@ class CreditCard extends AppModel
             return '';
         }
         return Hash::get($res, 'CreditCard.customer_code');
+    }
+
+    /**
+     * find customer codes by team ids
+     *
+     * @param array $teamIds
+     *
+     * @return array
+     * @internal param int $teamId
+     */
+    public function findCustomerCode(array $teamIds): array
+    {
+        if (empty($teamIds)) {
+            return [];
+        }
+        $options = [
+            'conditions' => [
+                'team_id' => $teamIds
+            ],
+            'fields' => [
+                'customer_code'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.CreditCard.customer_code');
     }
 
     /*
