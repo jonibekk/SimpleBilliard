@@ -20,7 +20,7 @@
                 <legend class="company-info-legend"><?= __("Company Address") ?></legend>
                 <div class="form-group">
                     <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Country") ?></label>
-                    <?= $countries[$setting['company_country']] ?>
+                    <?= h($countries[$setting['company_country']]) ?>
                     <input type="hidden" id="countryCode" value="<?= $setting['company_country'] ?>"/>
                 </div>
                 <div class="form-group">
