@@ -1,4 +1,5 @@
 <?php
+App::uses('SendMail', 'Model');
 
 /**
  * @author daikihirakata
@@ -148,6 +149,84 @@ class GlEmailComponent extends Component
     }
 
     /**
+     * Sending a alert of expires
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $teamName
+     * @param string $expireDate
+     * @param string $serviceUseStatus
+     */
+    public function sendMailServiceExpireAlert(
+        int $toUid,
+        int $teamId,
+        string $teamName,
+        string $expireDate,
+        string $serviceUseStatus
+    ) {
+        $mailTemplate = null;
+        switch ($serviceUseStatus) {
+            case Team::SERVICE_USE_STATUS_FREE_TRIAL:
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL;
+                break;
+            case Team::SERVICE_USE_STATUS_READ_ONLY:
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY;
+                break;
+            case Team::SERVICE_USE_STATUS_CANNOT_USE:
+                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
+                break;
+        }
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
+        $item = compact('teamName', 'expireDate', 'url');
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Sending a alert of charge failure
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $teamName
+     */
+    public function sendMailChargeFailure(
+        int $toUid,
+        int $teamId,
+        string $teamName
+    ) {
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method",
+            ['team_id' => $teamId]);
+        $item = compact('teamName', 'expireDate', 'url');
+        $mailTemplate = SendMail::TYPE_TMPL_ALERT_CHARGE_FAILURE;
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Send credit card about to expire email alert.
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $brand      Credit card brand (Visa, Master Card, American Express, etc..)
+     * @param string $lastDigits Last for digits of credit card number
+     * @param string $teamName
+     */
+    public function sendMailCreditCardExpireAlert(
+        int $toUid,
+        int $teamId,
+        string $brand,
+        string $lastDigits,
+        string $teamName
+    ) {
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method",
+            ['team_id' => $teamId]);
+        $item = compact('url', 'brand', 'lastDigits', 'teamName');
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD,
+            $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
      * メールにて招待メールを送信
      *
      * @param array $invite_data
@@ -199,6 +278,30 @@ class GlEmailComponent extends Component
             'to'      => $to,
         ];
         $this->SendMail->saveMailData(null, SendMail::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE, $item);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Send email to new invoice subscription team admin
+     *
+     * @param int $toUid
+     * @param int $teamId
+     */
+    public function sendMailRegisterInvoicePaidPlan(int $toUid, int $teamId)
+    {
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN, null, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Send email to new credit card subscription team admin
+     *
+     * @param int $toUid
+     * @param int $teamId
+     */
+    public function sendMailRegisterCreditCardPaidPlan(int $toUid, int $teamId)
+    {
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN, null, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -264,12 +367,32 @@ class GlEmailComponent extends Component
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " send_mail {$method_name}";
+        $cmd = " Operation.send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd .= " -s " . $this->Session->id();
         $cmd .= " -l " . Configure::read('Config.language');
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
+    }
+
+    /**
+     * Send email to team admin with credit check result
+     *
+     * @param int $toUid
+     * @param int $teamId
+     * @param int $creditStatus
+     */
+    public function sendMailCreditStatusNotification(int $toUid, int $teamId, int $creditStatus)
+    {
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
+
+        $template = ($creditStatus == Invoice::CREDIT_STATUS_OK) ?
+            Sendmail::TYPE_TMPL_CREDIT_STATUS_APPROVED :
+            Sendmail::TYPE_TMPL_CREDIT_STATUS_DENIED;
+
+        $item = compact('url');
+        $this->SendMail->saveMailData($toUid, $template, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
     }
 }

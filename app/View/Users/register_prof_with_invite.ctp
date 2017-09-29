@@ -30,27 +30,25 @@
         <?php
         $last_name = $this->Form->input('last_name', [
             'placeholder'                  => __("last name (eg. Smith)"),
-            "pattern"                      => User::USER_NAME_REGEX,
+            "pattern"                      => User::USER_NAME_REGEX_JAVASCRIPT,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-            'required'                     => true,
-            'value'                        => viaIsSet($last_name)
+            'required'                     => true
         ]);
         $first_name = $this->Form->input('first_name', [
             'placeholder'                  => __("first name (eg. John)"),
-            "pattern"                      => User::USER_NAME_REGEX,
+            "pattern"                      => User::USER_NAME_REGEX_JAVASCRIPT,
             "data-bv-regexp-message"       => __("It includes restricted strings. Allowed characters are only alphanumeric, space and apostrophe."),
             "data-bv-notempty"             => "true",
             "data-bv-notempty-message"     => __("Input is required."),
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 128,
             'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-            'required'                     => true,
-            'value'                        => viaIsSet($first_name)
+            'required'                     => true
         ]);
 
         // This column is required by alphabet.
@@ -67,7 +65,6 @@
                 'text'  => __("I want to receive news and updates by email from Goalous.")
             ],
             'class'     => '',
-            'required'  => true,
             'checked'   => 'checked'
         ]);
         ?>
@@ -91,7 +88,6 @@
                         '11' => __('Nov'),
                         '12' => __('Dec'),
                     ],
-                    'default'                  => viaIsSet($birth_day),
                     'class'                    => 'form-control inline-fix signup_input-design',
                     'label'                    => false,
                     'dateFormat'               => 'YMD',
@@ -107,11 +103,7 @@
         ?>
 
         <?php $tosLink = $this->Html->link(__('Terms of Use'),
-            [
-                'controller' => 'pages',
-                'action'     => 'display',
-                'pagename'   => 'terms',
-            ],
+            '/terms',
             [
                 'target'  => "_blank",
                 'onclick' => "window.open(this.href,'_system');return false;",
@@ -120,11 +112,7 @@
         );
 
         $ppLink = $this->Html->link(__('Privacy Policy'),
-            [
-                'controller' => 'pages',
-                'action'     => 'display',
-                'pagename'   => 'privacy_policy',
-            ],
+            '/privacy_policy',
             [
                 'target'  => "_blank",
                 'onclick' => "window.open(this.href,'_system');return false;",

@@ -29,6 +29,7 @@ App::uses('AppModel', 'Model');
  * @property MemberGroup    $MemberGroup
  * @property RecoveryCode   $RecoveryCode
  * @property Device         $Device
+ * @property TermsOfService $TermsOfService
  */
 class User extends AppModel
 {
@@ -44,7 +45,8 @@ class User extends AppModel
         self::TYPE_GENDER_NEITHER => ""
     ];
 
-    const USER_NAME_REGEX = '^[a-zA-Z \']+$';
+    const USER_NAME_REGEX = '^[a-zA-Z\p{Latin} \‘’’]+$';
+    const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-Z\u00C0-\u017F \'‘’]+$';
 
     /**
      * 性別タイプの名前をセット
@@ -215,53 +217,6 @@ class User extends AppModel
                 'rule' => ['minLength', 8],
             ]
         ],
-        'password_request'   => [
-            'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notBlank'      => [
-                'rule' => 'notBlank',
-            ],
-            'minLength'     => [
-                'rule' => ['minLength', 8],
-            ],
-            'passwordCheck' => [
-                'rule' => ['passwordCheck', 'password_request'],
-            ]
-        ],
-        'password_request2'  => [
-            'maxLength'     => ['rule' => ['maxLength', 50]],
-            'notBlank'      => [
-                'rule' => 'notBlank',
-            ],
-            'minLength'     => [
-                'rule' => ['minLength', 8],
-            ],
-            'passwordCheck' => [
-                'rule' => ['passwordCheck', 'password_request2'],
-            ]
-        ],
-        'password'           => [
-            'maxLength' => ['rule' => ['maxLength', 50]],
-            'notBlank'  => [
-                'rule' => 'notBlank',
-            ],
-            'minLength' => [
-                'rule' => ['minLength', 8],
-            ],
-            'passwordPolicy' => [
-                'rule' => [
-                    'custom',
-                    '/^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i',
-                ]
-            ]
-        ],
-        'password_confirm'   => [
-            'notBlank'          => [
-                'rule' => 'notBlank',
-            ],
-            'passwordSameCheck' => [
-                'rule' => ['passwordSameCheck', 'password'],
-            ],
-        ],
         'photo'              => [
             'canProcessImage' => ['rule' => 'canProcessImage',],
             'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
@@ -289,6 +244,56 @@ class User extends AppModel
         'setup_complete_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
     ];
 
+    public $validatePassword = [
+        'password_request'  => [
+            'maxLength'     => ['rule' => ['maxLength', 50]],
+            'notBlank'      => [
+                'rule' => 'notBlank',
+            ],
+            'minLength'     => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordCheck' => [
+                'rule' => ['passwordCheck', 'password_request'],
+            ]
+        ],
+        'password_request2' => [
+            'maxLength'     => ['rule' => ['maxLength', 50]],
+            'notBlank'      => [
+                'rule' => 'notBlank',
+            ],
+            'minLength'     => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordCheck' => [
+                'rule' => ['passwordCheck', 'password_request2'],
+            ]
+        ],
+        'password'          => [
+            'maxLength'      => ['rule' => ['maxLength', 50]],
+            'notBlank'       => [
+                'rule' => 'notBlank',
+            ],
+            'minLength'      => [
+                'rule' => ['minLength', 8],
+            ],
+            'passwordPolicy' => [
+                'rule' => [
+                    'custom',
+                    '/^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i',
+                ]
+            ]
+        ],
+        'password_confirm'  => [
+            'notBlank'          => [
+                'rule' => 'notBlank',
+            ],
+            'passwordSameCheck' => [
+                'rule' => ['passwordSameCheck', 'password'],
+            ],
+        ],
+    ];
+
     public $profileFields = [
         'id',
         'first_name',
@@ -306,8 +311,12 @@ class User extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'DefaultTeam'  => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
-        'PrimaryEmail' => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+        'DefaultTeam'    => ['className' => 'Team', 'foreignKey' => 'default_team_id',],
+        'PrimaryEmail'   => ['className' => 'Email', 'foreignKey' => 'primary_email_id', 'dependent' => true],
+        'TermsOfService' => [
+            'className'  => 'TermsOfService',
+            'foreignKey' => 'agreed_terms_of_service_id'
+        ]
     ];
 
     public $hasOne = [
@@ -373,6 +382,14 @@ class User extends AppModel
             $this->data[$this->alias]['first_name'] = ucfirst($this->data[$this->alias]['first_name']);
             $this->data[$this->alias]['last_name'] = ucfirst($this->data[$this->alias]['last_name']);
         }
+
+        // If default_team_id is null, not working fine at all.
+        if (isset($this->data[$this->alias]['default_team_id']) && !$this->data[$this->alias]['default_team_id']) {
+            CakeLog::emergency(sprintf("Attempting to save null to default_team_id! saveData: %s, trace: %s",
+                AppUtil::jsonOneLine($this->data[$this->alias]),
+                Debugger::trace()
+            ));
+        }
         return true;
     }
 
@@ -399,15 +416,19 @@ class User extends AppModel
                         array_push($this->uids, $entity[$this->alias]['id']);
                     }
                 });
-
         //LocalName取得(まだ取得していないIDのみ)
         foreach ($this->uids as $k => $v) {
             if (array_key_exists($v, $this->local_names)) {
                 unset($this->uids[$k]);
             }
         }
-        $this->local_names = $this->local_names +
-            $this->LocalName->getNames($this->uids, $this->me['language']);
+        // shellによる通知orメール送信時は言語設定がセットされていない時があるが、その場合はローカル名の取得をしない
+        if ($this->me['language']) {
+            $localNames = $this->LocalName->getNames($this->uids, $this->me['language']);
+            if (!empty($localNames)) {
+                $this->local_names += $localNames;
+            }
+        }
         //データにLocalName付与する
         /** @noinspection PhpUnusedParameterInspection */
         $this
@@ -444,7 +465,7 @@ class User extends AppModel
             'contain'    => [
                 'TeamMember' => [
                     'conditions' => [
-                        'TeamMember.active_flg' => true
+                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
                     ],
                     'fields'     => [
                         'TeamMember.id',
@@ -628,6 +649,11 @@ class User extends AppModel
      */
     public function userRegistration($data)
     {
+        // password validation
+        if (!$this->validatePassword($data)) {
+            return false;
+        }
+
         //バリデーションでエラーが発生したらreturn
         if (!$this->validateAssociated($data)) {
             return false;
@@ -639,6 +665,10 @@ class User extends AppModel
         $email_token = null;
         $data['Email'][0]['Email']['email_verified'] = true;
         $data['User']['active_flg'] = true;
+
+        $termsOfService = $this->TermsOfService->getCurrent();
+        $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
+
         //データを保存
         if (!Hash::get($data, 'Email.0.Email.email_verified') && !Hash::get($data, 'User.id')) {
             $this->create();
@@ -660,6 +690,9 @@ class User extends AppModel
         $data['Email']['email_token'] = null;
         $data['Email']['email_token_expires'] = null;
 
+        $termsOfService = $this->TermsOfService->getCurrent();
+        $data['User']['agreed_terms_of_service_id'] = $termsOfService['id'];
+
         ///user with email and local_name
         ////if data exists, update them
         if ($email = $this->Email->findByEmail($data['Email']['email'])) {
@@ -675,6 +708,7 @@ class User extends AppModel
             $data['User']['id'] = $user_id;
             $data['User']['primary_email_id'] = $email['Email']['id'];
             $this->create();
+            unset($this->validate['password']);
             if (!$this->save($data['User'])) {
                 throw New RuntimeException(__('Saving User failed'));
             }
@@ -700,6 +734,7 @@ class User extends AppModel
         } else {
             //Saving User
             $this->create();
+            unset($this->validate['password']);
             if (!$this->save($data['User'])) {
                 throw New RuntimeException(__('Saving User failed'));
             }
@@ -728,6 +763,23 @@ class User extends AppModel
     }
 
     /**
+     * Password validation for user input datas
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function validatePassword(array $data): bool
+    {
+        $validateBackup = $this->validate;
+        $this->validate = $this->validatePassword;
+        $this->set($data);
+        $res = $this->validates();
+        $this->validate = $validateBackup;
+        return $res;
+    }
+
+    /**
      * @param $data
      *
      * @return bool
@@ -735,7 +787,7 @@ class User extends AppModel
      */
     public function changePassword($data)
     {
-        if (!$this->validateAssociated($data)) {
+        if (!$this->validatePassword($data)) {
             $msg = null;
             foreach ($this->validationErrors as $val) {
                 $msg = $val[0];
@@ -900,8 +952,7 @@ class User extends AppModel
             return false;
         }
         $this->id = $user_email['User']['id'];
-        $this->set($postData);
-        if (!$this->validates()) {
+        if (!$this->validatePassword($postData)) {
             return false;
         }
 
@@ -918,7 +969,7 @@ class User extends AppModel
 
     public function generateHash($str)
     {
-        $passwordHasher = new SimplePasswordHasher();
+        $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha256']);
         return $passwordHasher->hash($str);
     }
 
@@ -928,7 +979,15 @@ class User extends AppModel
             throw new RuntimeException(__("Email address is empty."));
         }
 
-        $this->id = $uid;
+        if (!$this->validatePassword($postData)) {
+            $msg = null;
+            foreach ($this->validationErrors as $val) {
+                $msg = $val[0];
+                break;
+            }
+            throw new RuntimeException($msg);
+        }
+
         $this->set($postData);
         if (!$this->validates()) {
             $msg = null;
@@ -997,9 +1056,9 @@ class User extends AppModel
         if (empty($value) || !isset($value[$field_name])) {
             return false;
         }
-        $currentPassword = $this->field('password', ['User.id' => $this->id]);
-        $hashed_old_password = $this->generateHash($value[$field_name]);
-        if ($currentPassword !== $hashed_old_password) {
+        $currentPassword = $this->field('password', ['User.id' => $this->my_uid]);
+        $inputHashedPassword = $this->generateHash($value[$field_name]);
+        if ($currentPassword !== $inputHashedPassword) {
             return false;
         }
         return true;
@@ -1614,10 +1673,10 @@ class User extends AppModel
     {
         $options = [
             'conditions' => [
-                'User.id'               => $userIds,
-                'User.active_flg'       => true,
-                'TeamMember.team_id'    => $this->current_team_id,
-                'TeamMember.active_flg' => true,
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
             ],
             'joins'      => [
                 [
@@ -1651,6 +1710,89 @@ class User extends AppModel
         $users = $this->find('all', $options);
         $ret = Hash::extract($users, '{n}.User');
         return $ret;
+    }
+
+    /**
+     * Find users not belong to team
+     * filter: emails
+     *
+     * @param int   $teamId
+     * @param array $emails
+     *
+     * @return array
+     */
+    function findNotBelongToTeamByEmail(int $teamId, array $emails): array
+    {
+        $options = [
+            'fields'     => [
+                'User.id',
+
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'Email.email'   => $emails,
+                        'Email.del_flg' => false,
+                    ]
+
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.del_flg' => false,
+                    ]
+
+                ],
+            ],
+            'conditions' => [
+                'TeamMember.id' => null,
+                'User.del_flg'  => false,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return array_values($res);
+    }
+
+    /**
+     * Check preRegistered(invited but not accept any team's invitation)
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    function isPreRegisteredByInvitationToken(string $email): bool
+    {
+        $options = [
+            'fields'     => [
+                'User.id',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'conditions' => [
+                        'Email.user_id = User.id',
+                        'Email.email'   => $email,
+                        'Email.del_flg' => false,
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'User.active_flg' => false,
+                'User.del_flg'    => false,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res == 1;
     }
 
 }

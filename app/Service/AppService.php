@@ -1,5 +1,7 @@
 <?php
 App::uses('GlRedis', 'Model');
+App::uses('TransactionManager', 'Model');
+
 /**
  * Created by PhpStorm.
  * User: yoshidam2
@@ -7,12 +9,19 @@ App::uses('GlRedis', 'Model');
  * Time: 17:57
  */
 
-
 /**
  * Class AppService
  */
 class AppService extends CakeObject
 {
+    /** @var TransactionManager $TransactionManager */
+    protected $TransactionManager = null;
+
+    function __construct()
+    {
+        $this->TransactionManager = ClassRegistry::init("TransactionManager");
+    }
+
     /**
      * バリデーションメッセージの展開
      * key:valueの形にして1フィールド1メッセージにする
@@ -38,5 +47,44 @@ class AppService extends CakeObject
             }
         }
         return $res;
+    }
+
+    /**
+     * Validate only specified fields and model
+     *
+     * @param array  $data
+     * @param array  $fields
+     * @param string $dataParentKey
+     * @param string $modelKey
+     * @param Model  $model
+     *
+     * @return array
+     */
+    protected function validateSingleModelFields(
+        array $data,
+        array $fields,
+        string $dataParentKey,
+        string $modelKey,
+        Model $model
+    ): array {
+        $validationFields = Hash::get($fields, $modelKey) ?? [];
+        $validationBackup = $model->validate;
+        // Set each field rule
+        $validationRules = [];
+        foreach ($validationFields as $field) {
+            $validationRules[$field] = Hash::get($validationBackup, $field);
+        }
+        $model->validate = $validationRules;
+
+        $checkData = Hash::get($data, $dataParentKey) ?? [];
+        $model->set($checkData);
+        $res = $model->validates();
+        $model->validate = $validationBackup;
+        if (!$res) {
+            $validationErrors = $this->validationExtract($model->validationErrors);
+            return [$dataParentKey => $validationErrors];
+        }
+        return [];
+
     }
 }

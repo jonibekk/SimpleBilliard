@@ -25,8 +25,9 @@ class GoalsController extends AppController
         parent::beforeFilter();
         $allowed_actions = ['add_completed_action'];
         //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
-        if (in_array($this->request->params['action'], $allowed_actions)) {
+        if (in_array($this->request->params['action'], $allowed_actions) && $this->is_mb_app) {
             $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
         }
     }
 
@@ -93,7 +94,7 @@ class GoalsController extends AppController
         }
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL, $goalId);
-        $this->Notification->outSuccess(__("Completed a goal."));
+        $this->Notification->outSuccess(__("Completed a Goal."));
         // pusherに通知
         $socketId = Hash::get($this->request->data, 'socket_id');
         $channelName = "goal_" . $goalId;
@@ -182,7 +183,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $this->Notification->outSuccess(__("Deleted a goal."));
+        $this->Notification->outSuccess(__("Deleted a Goal."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
@@ -431,7 +432,7 @@ class GoalsController extends AppController
 
         // Goal do not exists
         if (empty($goal)) {
-            $this->Notification->outError(__("The goal doesn't exist."));
+            $this->Notification->outError(__("The Goal doesn't exist."));
             return $this->redirect($this->referer());
         }
 
@@ -447,13 +448,13 @@ class GoalsController extends AppController
 
         // Check if the goal is completed
         if ($this->Goal->isCompleted($goalId)) {
-            $this->Notification->outError(__("You cannot follow or collaborate with a completed goal."));
+            $this->Notification->outError(__("You cannot follow or collaborate with a completed Goal."));
             return $this->redirect($this->referer());
         }
 
         // Check if it is an old goal
         if ($this->Goal->isFinished($goalId)) {
-            $this->Notification->outError(__("You cannot follow or collaborate with a past goal."));
+            $this->Notification->outError(__("You cannot follow or collaborate with a past Goal."));
             return $this->redirect($this->referer());
         }
 
@@ -545,7 +546,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
             $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
-        $this->Notification->outSuccess(__("Added a key result."));
+        $this->Notification->outSuccess(__("Added a Key Result."));
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/goals/kr_progress');
@@ -738,12 +739,12 @@ class GoalsController extends AppController
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL,
                     $key_result['KeyResult']['goal_id'],
                     $kr_id);
-                $this->Notification->outSuccess(__("Completed a goal."));
+                $this->Notification->outSuccess(__("Completed a Goal."));
             } else {
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
                     $key_result['KeyResult']['goal_id'],
                     $kr_id);
-                $this->Notification->outSuccess(__("Completed a key result."));
+                $this->Notification->outSuccess(__("Completed a Key Result."));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
@@ -794,7 +795,7 @@ class GoalsController extends AppController
         }
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
-        $this->Notification->outSuccess(__("Made a key result uncompleted."));
+        $this->Notification->outSuccess(__("Made a Key Result uncompleted."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -837,7 +838,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $goalId);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $goalId, $krId);
 
-        $this->Notification->outSuccess(__("Deleted a key result."));
+        $this->Notification->outSuccess(__("Deleted a Key Result."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $paramsReferer = Router::parse($this->referer(null, true));
@@ -987,28 +988,28 @@ class GoalsController extends AppController
         // Check if goal exists
         if (!$this->Goal->exists($goalId)) {
             $return['error'] = true;
-            $return['msg'] = __("The goal doesn't exist.");
+            $return['msg'] = __("The Goal doesn't exist.");
             return $this->_ajaxGetResponse($return);
         }
 
         // Check if the goal is completed
         if ($this->Goal->isCompleted($goalId)) {
             $return['error'] = true;
-            $return['msg'] = __("You cannot follow or collaborate with a completed goal.");
+            $return['msg'] = __("You cannot follow or collaborate with a completed Goal.");
             return $this->_ajaxGetResponse($return);
         }
 
         // Check if it is an old goal
         if ($this->Goal->isFinished($goalId)) {
             $return['error'] = true;
-            $return['msg'] = __("You cannot follow or collaborate with a past goal.");
+            $return['msg'] = __("You cannot follow or collaborate with a past Goal.");
             return $this->_ajaxGetResponse($return);
         }
 
         //存在チェック
         if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
             $return['error'] = true;
-            $return['msg'] = __("The goal doesn't exist.");
+            $return['msg'] = __("The Goal doesn't exist.");
             return $this->_ajaxGetResponse($return);
         }
 
@@ -1542,7 +1543,7 @@ class GoalsController extends AppController
         // push
         $this->Notification->outSuccess(__("Added an action."));
         //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
+        $this->_updateSetupStatusIfNotCompleted();
 
         $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
         $url = $post ? [

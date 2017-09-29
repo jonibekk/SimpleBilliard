@@ -1,6 +1,9 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class UserService
@@ -61,5 +64,4 @@ class UserService extends AppService
 
         return $newUsers;
     }
-
 }

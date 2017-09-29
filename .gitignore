@@ -19,6 +19,10 @@ Berksfile.lock
 .buildpath
 junit.xml
 .DS_Store
+# php defines
+/app/Config/extra_defines.php
+/.vscode/*
+
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
 /.idea
@@ -42,6 +46,9 @@ yarn-error.log
 /index.html
 # for public compiled assets
 /app/webroot/css/*.min.css
+/app/webroot/css/homepage/style.min.css
 /app/webroot/js/*.js
+/app/webroot/js/homepage/goalous_homepage.min.js
 # for Translation | 翻訳関連
 /app/Locale/**/*.pot
+package-lock.json

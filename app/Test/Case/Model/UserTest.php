@@ -35,7 +35,8 @@ class UserTest extends GoalousTestCase
         'app.action_result',
         'app.post_share_circle',
         'app.job_category',
-        'app.member_type'
+        'app.member_type',
+        'app.terms_of_service'
     );
 
     public $basicUserDefault = [
@@ -86,6 +87,16 @@ class UserTest extends GoalousTestCase
         $this->User->create();
         $this->User->set($testData);
         return $this->User->validates();
+    }
+
+    function getPasswordValidationRes($data = [])
+    {
+        if (empty($data)) {
+            return null;
+        }
+        $testData = array_merge($this->baseData, $data);
+        $this->User->create();
+        return $this->User->validatePassword($testData);
     }
 
     /**
@@ -139,32 +150,36 @@ class UserTest extends GoalousTestCase
             "[異常系]英姓はアルファベットのみ"
         );
         $this->assertTrue(
-            $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
-            "[正常系]パスワードは確認パスワードと一致"
-        );
-        $this->assertFalse(
-            $this->getValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
-            "[異常系]パスワードは確認パスワードと一致"
-        );
-        $this->assertTrue(
-            $this->getValidationRes(['password' => '1234567a']),
-            "[正常系]パスワードは8文字以上"
-        );
-        $this->assertFalse(
-            $this->getValidationRes(['password' => '1234567']),
-            "[異常系]パスワードは8文字以上"
-        );
-        $this->assertFalse(
-            $this->getValidationRes(['password' => '',]),
-            "[異常系]パスワードは空を認めない"
-        );
-        $this->assertTrue(
             $this->getValidationRes(['agree_tos' => true,]),
             "[正常系]利用規約に同意は必須"
         );
         $this->assertFalse(
             $this->getValidationRes(['agree_tos' => false,]),
             "[異常系]利用規約に同意は必須"
+        );
+    }
+
+    public function testPasswordValidation()
+    {
+        $this->assertTrue(
+            $this->getPasswordValidationRes(['password' => 'goalous1234', 'password_confirm' => 'goalous1234']),
+            "[正常系]パスワードは確認パスワードと一致"
+        );
+        $this->assertFalse(
+            $this->getPasswordValidationRes(['password' => 'goalous1234', 'password_confirm' => '1234goalous']),
+            "[異常系]パスワードは確認パスワードと一致"
+        );
+        $this->assertTrue(
+            $this->getPasswordValidationRes(['password' => '1234567a']),
+            "[正常系]パスワードは8文字以上"
+        );
+        $this->assertFalse(
+            $this->getPasswordValidationRes(['password' => '1234567']),
+            "[異常系]パスワードは8文字以上"
+        );
+        $this->assertFalse(
+            $this->getPasswordValidationRes(['password' => '',]),
+            "[異常系]パスワードは空を認めない"
         );
     }
 
@@ -565,7 +580,7 @@ class UserTest extends GoalousTestCase
         $uid = $this->generateBasicUser();
         $value = ['password_request' => '12345678'];
         $field_name = "password_request";
-        $this->User->id = $uid;
+        $this->User->my_uid = $uid;
         $res = $this->User->passwordCheck($value, $field_name);
         $this->assertTrue($res, "[正常]パスワード確認に成功");
     }
@@ -575,7 +590,7 @@ class UserTest extends GoalousTestCase
         $uid = $this->generateBasicUser();
         $value = ['password_request' => '1234567800'];
         $field_name = "password_request";
-        $this->User->id = $uid;
+        $this->User->my_uid = $uid;
         $res = $this->User->passwordCheck($value, $field_name);
         $this->assertFalse($res, "[異常]パスワード確認で間違ったパスワード");
     }
@@ -585,7 +600,7 @@ class UserTest extends GoalousTestCase
         $uid = $this->generateBasicUser();
         $value = ['password_request' => '1234567800'];
         $field_name = "password_request_aaaa";
-        $this->User->id = $uid;
+        $this->User->my_uid = $uid;
         $res = $this->User->passwordCheck($value, $field_name);
         $this->assertFalse($res, "[異常]パスワード確認で間違ったヴァリデーション指定");
     }
@@ -703,9 +718,9 @@ class UserTest extends GoalousTestCase
 
         $this->User->TeamMember->create();
         $this->User->TeamMember->save([
-            'user_id'    => '14',
-            'team_id'    => '1',
-            'active_flg' => 1,
+            'user_id' => '14',
+            'team_id' => '1',
+            'status'  => TeamMember::USER_STATUS_ACTIVE,
         ]);
 
         $users = $this->User->getUsersSelectOnly('first', 10, $post_id, true);
@@ -1085,14 +1100,22 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords([
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'status'  => TeamMember::USER_STATUS_ACTIVE
+        ],
             $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted());
         // assign team_id
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords([
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'status'  => TeamMember::USER_STATUS_ACTIVE
+        ],
             $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted($team_id));
 
@@ -1100,7 +1123,11 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => true], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords([
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'status'  => TeamMember::USER_STATUS_ACTIVE
+        ],
             $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
 
@@ -1108,7 +1135,11 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => false],
+        $this->_saveTeamMemberRecords([
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'status'  => TeamMember::USER_STATUS_INACTIVE
+        ],
             $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
 
@@ -1116,7 +1147,11 @@ class UserTest extends GoalousTestCase
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => false],
             $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+        $this->_saveTeamMemberRecords([
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'status'  => TeamMember::USER_STATUS_ACTIVE
+        ],
             $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
     }
@@ -1161,5 +1196,10 @@ class UserTest extends GoalousTestCase
         }
         $after_list = $this->User->filterActiveUserList([1, 2, 3, 4, 5]);
         $this->assertEquals(count($current_list), count($after_list) + 1);
+    }
+
+    function test_findNotBelongToTeamByEmail()
+    {
+        // TODO.Payment:add unit tests
     }
 }

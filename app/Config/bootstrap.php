@@ -68,17 +68,17 @@ require ROOT . '/Vendor/autoload.php';
 // 元々、日本語ファイルで問題あり。"あabcあ.png" が basename() で"abcあ.png"と扱われていた。 HTTP/2移行後から、日本語ファイル名が正しく扱われるようになった。<- 何が影響しているか判断できない。nginx? OS?
 // 正しくないファイル名をhashしたものをs3に保存していたため、HTTP/2移行後から日本語ファイルの画像がリンク切れを起こすようになった。
 // よって、元の(正しくない)設定に戻す。
-setlocale(LC_ALL,"");
+setlocale(LC_ALL, "");
 
 // CakePHPのオートローダーをいったん削除し、composerより先に評価されるように先頭に追加する
 // https://github.com/composer/composer/commit/c80cb76b9b5082ecc3e5b53b1050f76bb27b127b を参照
-spl_autoload_unregister(array('App', 'load'));
-spl_autoload_register(array('App', 'load'), true, true);
+spl_autoload_unregister(['App', 'load']);
+spl_autoload_register(['App', 'load'], true, true);
 
-Configure::write('Dispatcher.filters', array(
+Configure::write('Dispatcher.filters', [
     'AssetDispatcher',
     'CacheDispatcher'
-));
+]);
 
 //slack setting
 Configure::write('Slack', [
@@ -91,18 +91,26 @@ Configure::write('Slack', [
 /**
  * Configures default file logging options
  */
-App::uses('CakeLog', 'Log');
-CakeLog::config('debug', array(
+// changing path of error log, cause, doc root is changed every time of deployment by opsworks
+$logPath = '/var/log/goalous/';
+CakeLog::config('debug', [
     'engine' => LOG_ENGINE,
-    'types'  => array('notice', 'info', 'debug'),
+    'types'  => ['info', 'debug'],
     'file'   => 'debug',
-));
-CakeLog::config('error', array(
+    'path'   => $logPath
+]);
+CakeLog::config('error', [
     'engine' => LOG_ENGINE,
-    'types'  => array('warning', 'error', 'critical', 'alert', 'emergency'),
+    'types'  => ['warning', 'error', 'critical', 'alert', 'notice'],
     'file'   => 'error',
-));
-
+    'path'   => $logPath
+]);
+CakeLog::config('emergency', [
+    'engine' => LOG_ENGINE,
+    'types'  => ['emergency'],
+    'file'   => 'emergency',
+    'path'   => $logPath
+]);
 Configure::write('Asset.timestamp', 'force');
 
 App::build([
@@ -111,9 +119,14 @@ App::build([
         ],
         'Plugin' => [
             ROOT . '/Plugin/',
+            // Batch Shells read as Plugins for classifying by namespaces
+            ROOT . '/app/Console/Command/Batch/',
+            ROOT . '/app/Console/Command/Development/',
+            ROOT . '/app/Console/Command/DataMigration/',
         ],
     ]
 );
+
 //重複するコントローラを共存させる
 if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
     App::build([
@@ -135,6 +148,45 @@ CakePlugin::load('UrlCache');
 Configure::write('UrlCache.active', true);
 
 Configure::load("app.php");
+Configure::load("country.php");
+
+// CakePdf setting
+CakePlugin::load('CakePdf', ['bootstrap' => true, 'routes' => true]);
+Configure::write('CakePdf', array(
+    'engine'      => 'CakePdf.WkHtmlToPdf',
+    'binary'      => ROOT . '/etc/wkhtmltopdf.sh', // For ubuntu, wrapped by shell
+    'options'     => array(
+        'print-media-type' => false,
+        'outline'          => true,
+        'dpi'              => 96
+    ),
+    'margin'      => array(
+        'bottom' => 5,
+        'left'   => 5,
+        'right'  => 5,
+        'top'    => 5
+    ),
+    'orientation' => 'portrait',
+    'encoding'    => 'UTF-8',
+    'pageSize'    => 'A4',
+));
+
+// AdditionalExceptions
+require APP . "Lib/Error/Exceptions.php";
+
+
+// Autoload model constants
+spl_autoload_register(function ($class) {
+    // Get filePath path by namespace
+    // e.g. 「Goalous\Model\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
+    if (!preg_match("/Model\\\\Enum\\\\[A-Za-z]+/", $class, $match)) {
+        return;
+    }
+    $filePath = APP . DS . str_replace('\\', DS, $match[0]) . '.php';
+    if (file_exists($filePath)) {
+        return include $filePath;
+    }
+});
 
 /**
  * Goalous独自定数
@@ -230,6 +282,7 @@ define('CACHE_KEY_MY_KR_COUNT', 'my_kr_count');
 define('CACHE_KEY_IS_STARTED_EVALUATION', 'is_started_evaluation');
 define('CACHE_KEY_MY_ACTIONABLE_GOALS', 'my_goals_for_top_action');
 define('CACHE_KEY_BEFORE_CHANGE_TIMEZONE', 'before_change_timezone');
+define('CACHE_KEY_TEAM_CREDIT_CARD_EXPIRE_DATE', 'team_credit_card_expire_date');
 
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', '?st=def');

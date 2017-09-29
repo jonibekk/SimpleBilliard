@@ -1,0 +1,113 @@
+@import "../variables/all";
+@import "../helpers/mixin";
+
+#pdfReceipt {
+  padding: 15px;
+  color:@darkBlack;
+  background:@white;
+  float: left;
+  width:100%;
+  header {
+    border-bottom: solid @darkGray 1px;
+    padding: 15px 0;
+    float: left;
+    width: 100%;
+    .logo {
+      width: 250px;
+      float: left;
+      img {
+        height: auto;
+        width: 100%;
+      }
+    }
+    .receipt-status {
+      width: 130px;
+      border: 2px solid @subColor7;
+      border-radius: 10px;
+      text-align:center;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: @subColor7;
+      float:right;
+      margin:0;
+    }
+  }
+  .invoice-overview{
+    width: 100%;
+    padding: 15px 0;
+    margin: 0 0 70px 0;
+    overflow: hidden;
+    .overview-item{
+      width: 35%;
+      padding: 15px;
+      min-height: 5em;
+      font-size: 20px;
+      float:left;
+      &:nth-child(even){
+        width: 65%;
+      }
+      h3{
+        font-size: 20px;
+        margin-top:0;
+      }
+      .credit-charge-to {
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .invoice-table{
+    border-top: 2px solid @darkBlack;
+    table{
+      width:90%;
+      margin-left: 5%;
+      font-size: 18px;
+    }
+    tr{
+      border-bottom: 1px solid @darkGray;
+      &:last-of-type{
+        border-bottom: none;
+      }
+      th:last-child, td:last-child {
+        width: 220px;
+      }
+    }
+    th,td{
+      padding: 15px 0;
+    }
+    footer{
+      border-top: 2px solid @darkBlack;
+      border-bottom: 1px solid @darkGray;
+      margin:0;
+      padding: 10px 5%;
+      width:100%;
+      font-size: 18px;
+      overflow: hidden;
+      .total-label{
+        text-align:right;
+        padding-right: 30px;
+        float:left;
+      }
+      .total-amount {
+        float: right;
+        width: 220px;
+      }
+    }
+  }
+  .invoice-contact{
+    padding: 100px 15px 0;
+    float: left;
+    width: 100%;
+    color:@darkGray;
+    font-weight: 600;
+    address{
+      font-size: 16px;
+      float: left;
+      width: 100%;
+    }
+    footer{
+      width: 60%;
+      float:right;
+    }
+  }
+}

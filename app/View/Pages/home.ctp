@@ -39,7 +39,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Goalous | Enjoy your work. Achieve your goal.'),
+        "content"  => __('Goalous | Enjoy your work. Achieve your Goal.'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
-<title><?= __('Goalous | Enjoy your work. Achieve your goal.') ?></title>
+<title><?= __('Goalous | Enjoy your work. Achieve your Goal.') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
@@ -83,68 +83,19 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
-
-    <div class="bg-slider-wrapper">
-        <div id="bg-slider" class="flexslider bg-slider">
-            <ul class="slides">
-                <li class="slide slide-1">
-                    <div class="slide-black-cover"></div>
+    <div class="section-container">
+        <h1><?= __("Enjoy your work. Achieve your goals.") ?></h1>
+        <div class="create-team">
+            <p class="create-team-guide"><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
+            <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
+            <ul>
+                <li>
+                    <a href="/users/login"><?=__('Login')?></a>
+                </li>
+                <li>
+                    <a href="/contact"><?=__('Contact&nbsp;us')?></a>
                 </li>
             </ul>
-        </div>
-    </div><!--//bg-slider-wrapper-->
-
-    <div class="lp-signup ">
-        <span class="lp-signup-key-concept"><?= __("Enjoy your work. Achieve your goals.") ?></span>
-        <span class="lp-signup-pay-free"><?= __("You can use Goalous free of charge till September 30, 2017.") ?></span>
-
-        <div class="lp-signup-form">
-            <div class="lp-signup-form-opacity-box">
-                <div class="lp-signup-form-opacity-box-inner">
-                </div>
-            </div>
-            <div class="lp-signup-form-inner">
-                <?=
-                $this->Form->create('Email', [
-                    'inputDefaults' => array(
-                        'div'       => 'form-group',
-                        'label'     => false,
-                        'wrapInput' => false,
-                        'class'     => 'form-control lp-signup-input-email'
-                    ),
-                    'url'           => ['controller' => 'signup', 'action' => 'email'],
-                    'class'         => 'form-horizontal',
-                    'novalidate'    => true,
-                    'id'            => 'HomeSignupEmail'
-                ]); ?>
-
-                <?=
-                $this->Form->input('email', [
-                    'placeholder'                  => __('Email address'),
-                    "data-bv-notempty"             => "true",
-                    "data-bv-notempty-message"     => __("Email address is empty."),
-                    'data-bv-emailaddress'         => "false",
-                    "data-bv-callback"             => "true",
-                    "data-bv-callback-message"     => " ",
-                    "data-bv-callback-callback"    => "bvCallbackAvailableEmailNotVerified",
-                    'data-bv-stringlength'         => 'true',
-                    'data-bv-stringlength-max'     => 200,
-                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                    'required'                     => false
-                ]) ?>
-                <div id="HomeEmailErrorContainer"></div>
-                <div class="submit">
-                    <?= $this->Form->button(__('Create New Team') . ' <i class="fa fa-angle-right"></i>',
-                        [
-                            'type'     => 'submit',
-                            'class'    => 'btn btn-cta btn-cta-primary lp-signup-submit-button',
-                            'escape'   => false
-                        ]) ?>
-                </div>
-                <?= $this->Form->end(); ?>
-                <span class="lp-signup-form-footer-notice">
-                  <?= __('Are you on Goalous? %s. Any question ? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact us') . '</a>') ?></span>
-            </div>
         </div>
     </div>
 </section><!--//promo-->
@@ -160,7 +111,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p class="col-md-6 col-sm-9">
                 <?=
                 $this->Html->link(
-                    __('We appeared on a magazine. - Gekkan Jinji Management Feb. -'),
+                    __('Goalous was featured in a magazine - Gekkan Jinji Management Feb. -'),
                     'http://blog.isao.co.jp/press_jinjimanage_20160205/',
                     ['target' => '_blank']
                 );
@@ -174,7 +125,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <p class="col-md-6 col-sm-9">
                 <?=
                 $this->Html->link(
-                    __('We appeared on a web media. - Hito to shigoto no kenkyujo by Idem -'),
+                    __('Goalous was featured in a web publication - Hito to shigoto no kenkyujo by Idem -'),
                     'https://apj.aidem.co.jp/column/597//',
                     ['target' => '_blank']
                 );
@@ -187,15 +138,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <!-- ******WHY****** -->
 <section id="why" class="why section">
     <div class="container">
-        <h2 class="title text-center"><?= __('You can definitely change your organization by Goalous.') ?></h2>
+        <h2 class="title text-center"><?= __('Your organization can be changed by Goalous!') ?></h2>
         <p class="intro text-center"><?= __('Achieve Goals, make your team open, let your job become joyful!') ?></p>
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('Get progress to Vision.') ?></h3>
+                <h3 class="title"><?= __("Move closer to your company's vision.") ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'Every one knows Vision and make their Goals. Goalous let them improve themselves.') ?></p>
+                            'Everyone can know the company vision and can make their Goals. Goalous lets them see their improvement and how close they are to the vision. The more they use Goalous the closer they can get to that vision.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
@@ -212,10 +163,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="item row flex from-right">
             <div class="content col-md-5 col-sm-5 col-xs-12 col-left">
-                <h3 class="title"><?= __('You can reduce the words, What is that?') ?></h3>
+                <h3 class="title"><?= __('The phrase "I don know what that is, what they do" goes away.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'What did your colleages did today? Share on Goalous and get to know more and more.') ?></p>
+                            'What did your colleagues did today? Share on Goalous and get to know more and more.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
@@ -233,10 +184,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('Make results by cooperation.') ?></h3>
+                <h3 class="title"><?= __('Cooperate, get results.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                            'What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently.') ?></p>
+                            'To achieve the team vision, the team must know what each other is doing. By using Goalous to know clearly what each other is doing, the team can succeeded efficiently.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
@@ -270,10 +221,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         </div>
                         <div class="modal-body">
                             <div class="video-container">
-                                <iframe id="vimeo-video"
-                                        src="https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=0" width="720"
-                                        height="405" frameborder="0" webkitallowfullscreen mozallowfullscreen
-                                        allowfullscreen></iframe>
+                                <iframe id="promoVideo"
+                                    data-src="<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
+                                    width="720"
+                                    height="405"
+                                    frameborder="0"
+                                    webkitallowfullscreen
+                                    mozallowfullscreen
+                                    allowfullscreen>
+                                </iframe>
                             </div><!--//video-container-->
                         </div><!--//modal-body-->
                     </div><!--//modal-content-->
@@ -288,7 +244,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
                 <h3><?= __('Wherever, Whenever, from your smartphone.') ?></h3>
-                <p class="lead-text"><?= __('You can get iOS and Android apps.') ?></p>
+                <p class="lead-text"><?= __('iOS and Android apps avaliable.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
                     'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
@@ -350,10 +306,10 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __('Fryer (pdf)') ?>
+                    <?= __('Flyer (pdf)') ?>
                 </dt>
                 <dd>
-                    <?= __('This is Goalous flyer.') ?>
+                    <?= __('Goalous Flyer (Japanese)') ?>
                     <br>
                     <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i
                             class="fa fa-arrow-down document-download-icon"></i>

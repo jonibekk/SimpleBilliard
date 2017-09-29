@@ -13,6 +13,12 @@ App::uses('AttachedFile', 'Model');
         env_name: "<?= ENV_NAME ?>",
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
+        stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
+        require_banner_notification: "<?=
+            (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]))
+            || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
+            || (isset($statusPaymentFailed) && $statusPaymentFailed)
+            ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
@@ -80,8 +86,8 @@ App::uses('AttachedFile', 'Model');
             h: "<?=__("is too long.")?>",
             i: "<?=__("At most,")?>",
             j: "<?=__("item can only be selected.")?>",
-            k: "<?=__("Select a key result (optional)")?>",
-            l: "<?=__("No key result")?>",
+            k: "<?=__("Select a Key Result (optional)")?>",
+            l: "<?=__("No Key Result")?>",
             select_notify_range: "<?=__("Add notified parties (optional)")?>",
             public: "<?=__("Public")?>",
             secret: "<?=__("Secret")?>",
@@ -118,7 +124,6 @@ App::uses('AttachedFile', 'Model');
             ])?>/",
             m: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_current_team_admin_list'])?>/",
             n: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_member'])?>/",
-            o: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_active_flag'])?>/",
             p: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_admin_user_flag'])?>/",
             q: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_term_start_end_by_edit'])?>",
@@ -144,7 +149,7 @@ App::uses('AttachedFile', 'Model');
             ])?>",
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
-            am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
+            am: "/api/v1/invitations/reInvite",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
@@ -171,9 +176,8 @@ App::uses('AttachedFile', 'Model');
             ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
             ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url([
-                'controller' => 'teams',
-                'action'     => 'settings',
-                '#'          => 'invite_member'
+                'controller' => 'users',
+                'action'     => 'invite',
             ]) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
@@ -198,6 +202,8 @@ App::uses('AttachedFile', 'Model');
                 'controller' => 'teams',
                 'action'     => 'ajax_validate_email_can_invite'
             ]) ?>",
+            inactivate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_inactivate_team_member'])?>/",
+            activate_team_member: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'activate_team_member'])?>/",
             route_url: "<?= Router::fullbaseUrl() ?>"
         },
         data: {
@@ -294,7 +300,9 @@ App::uses('AttachedFile', 'Model');
             user_id: "<?= $this->Session->read('Auth.User.id')?>",
             kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>,
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
-            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>
+            timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
+            // Array with country codes
+            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
@@ -376,9 +384,9 @@ App::uses('AttachedFile', 'Model');
             'Completed': "<?= __('Completed') ?>",
             'Excellent!': "<?= __('Excellent!') ?>",
             'I have no iOS/Android devices': "<?= __('I have no iOS/Android devices') ?>",
-            'Make a good goal to discuss with your project members.': "<?= __('Make a good goal to discuss with your project members.') ?>",
-            'Have a common goal': "<?= __('Have a common goal') ?>",
-            'Action for your goal': "<?= __('Action for your goal') ?>",
+            'Make a good Goal to discuss with your project members.': "<?= __('Make a good Goal to discuss with your project members.') ?>",
+            'Have a common Goal': "<?= __('Have a common Goal') ?>",
+            'Action for your Goal': "<?= __('Action for your Goal') ?>",
             "Let's action to show your activity.": "<?= __("Let's action to show your activity.") ?>",
             "Improve your orgainization": "<?= __("Improve your orgainization") ?>",
             "Please choose one.": "<?= __("Please choose one.") ?>",
@@ -469,7 +477,7 @@ App::uses('AttachedFile', 'Model');
             "Upload an image": "<?=__("Upload an image")?>",
             "This Term": "<?=__("This Term")?>",
             "Next Term": "<?=__("Next Term")?>",
-            "Do you want to evaluate this goal ?": "<?=__("Do you want to evaluate this goal ?")?>",
+            "Do you want to evaluate this Goal ?": "<?=__("Do you want to evaluate this Goal ?")?>",
             "View more options": "<?=__("View more options")?>",
             "Description": "<?=__("Description")?>",
             "End date": "<?=__("End date")?>",
@@ -518,7 +526,7 @@ App::uses('AttachedFile', 'Model');
             "Send": "<?= __("Send") ?>",
             "Role": "<?= __("Role") ?>",
             // goal edit
-            "Confirm this goal": "<?= __("Confirm this goal") ?>",
+            "Confirm this Goal": "<?= __("Confirm this Goal") ?>",
             "Edit goal & Top Key Result": "<?=  __("Edit goal & Top Key Result") ?>",
             "Save changes": "<?= __("Save changes") ?>",
             "Optional": "<?= __("Optional") ?>",
@@ -576,9 +584,97 @@ App::uses('AttachedFile', 'Model');
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
+            /* Change to paid plan */
+            // Select country and paymnet type
+            "Select Country Location": "<?= __("Select Country Location") ?>",
+            "Select Payment Method": "<?= __("Select Payment Method") ?>",
+            "Credit Card": "<?= __("Credit Card") ?>",
+            "Invoice": "<?= __("Invoice") ?>",
+            "You can use Visa, MasterCard and AmericanExpress.": "<?= __("You can use Visa, MasterCard and AmericanExpress.") ?>",
+            "Invoice will be issued monthly, so please transfer by the deadline.": "<?= __("Invoice will be issued monthly, so please transfer by the deadline.") ?>",
+            "Setup": "<?= __("Setup") ?>",
+            "Germany": "<?= __("Germany") ?>",
+            "Japan": "<?= __("Japan") ?>",
+            "Thailand": "<?= __("Thailand") ?>",
+            "United States": "<?= __("United States") ?>",
+            // Input company info
+            "Enter Company Information": "<?= __("Enter Company Information") ?>",
+            "Company Address": "<?= __("Company Address") ?>",
+            "Company Name": "<?= __("Company Name") ?>",
+            "ISAO Corporation": "<?= __("ISAO Corporation") ?>",
+            "Post Code": "<?= __("Post Code") ?>",
+            "12345": "<?= __("12345") ?>",
+            "State/Province/Region": "<?= __("State/Province/Region") ?>",
+            "California": "<?= __("California") ?>",
+            "City": "<?= __("City") ?>",
+            "Los Angeles": "<?= __("Los Angeles") ?>",
+            "Street": "<?= __("Street") ?>",
+            "1234 Street Name": "<?= __("1234 Street Name") ?>",
+            "Company Contact": "<?= __("Company Contact") ?>",
+            "eg. Jobs": "<?= __("eg. Jobs") ?>",
+            "eg. Bruce": "<?= __("eg. Bruce") ?>",
+            "Last Name ": "<?= __("Last Name ") ?>",
+            "Last Name Kana": "<?= __("Last Name Kana") ?>",
+            "First Name ": "<?= __("First Name ") ?>",
+            "First Name Kana": "<?= __("First Name Kana") ?>",
+            "name@company.com": "<?= __("name@company.com") ?>",
+            "Telephone": "<?= __("Telephone") ?>",
+            // Input credit card
+            "Name on Card": "<?= __("Name on Card") ?>",
+            "Card Number": "<?= __("Card Number") ?>",
+            "Price per user": "<?= __("Price per user") ?>",
+            "Number of users": "<?= __("Number of users") ?>",
+            "Sub Total": "<?= __("Sub Total") ?>",
+            "Tax": "<?= __("Tax") ?>",
+            "Total": "<?= __("Total") ?>",
+            "Enter your card information": "<?= __("Enter your card information") ?>",
+            "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
+            "Register": "<?= __("Register") ?>",
+            // Input Billing info
+            "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
+            "Same as company information": "<?= __("Same as company information") ?>",
+            // Confirm
+            "Terms of Use": "<?= __("Terms of Use") ?>",
+            "Confirm registration and charge": "<?= __("Confirm registration and charge") ?>",
+
+            // Complete
+            "Thank You": "<?= __("Thank You") ?>",
+            "Your transaction and registration to the payment plan was successful.": "<?= __("Your transaction and registration to the payment plan was successful.") ?>",
+            "In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.": "<?= __("In the case of invoice payment, we conduct a credit check. As a result of the investigation, we will contact you if we deem it impossible to trade.") ?>",
+            "Move to Billing page": "<?= __("Move to Billing page") ?>",
+            // Invite
+            "Update completed": "<?= __("Update completed") ?>",
+            "Invite members": "<?= __("Invite members") ?>",
+            "Email Address": "<?= __("Email Address") ?>",
+            "You can set email addresses by comma(,) separated or by newline separated.": "<?= __("You can set email addresses by comma(,) separated or by newline separated.") ?>",
+            "I confirmed the billing content": "<?= __("I confirmed the billing content") ?>",
+            "days": "<?= __("days") ?>",
+            "month": "<?= __("month") ?>",
+            "people": "<?= __("people") ?>",
+            "View details": "<?= __("View details") ?>",
+            "Billing": "<?= __("Billing") ?>",
+            "Total charge amount": "<?= __("Total charge amount") ?>",
+            "Tax included": "<?= __("Tax included") ?>",
+            "Tax excluded": "<?= __("Tax excluded") ?>",
+            "Number of days": "<?= __("Number of days") ?>",
+            "Daily payment": "<?= __("Daily payment") ?>",
+            "Purchase & Invite": "<?= __("Purchase & Invite") ?>",
+            "Purchase" : "<?= __("Purchase") ?>",
+            "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
+            "Invalid fields": "<?= __("Invalid fields") ?>",
+            // Goals
+            "No Goals found": "<?= __("No Goals found") ?>",
+            "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",
         },
         regex: {
-            user_name: "<?= User::USER_NAME_REGEX ?>"
+            user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
+        },
+        const: {
+            USER_STATUS: {
+                INVITED: "<?= TeamMember::USER_STATUS_INVITED ?>",
+                ACTIVE: "<?= TeamMember::USER_STATUS_ACTIVE ?>",
+                INACTIVE: "<?= TeamMember::USER_STATUS_INACTIVE ?>",
+            },
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,

@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('SessionComponent', 'Controller/Component');
 App::uses('NotifyBizComponent', 'Controller/Component');
-App::uses('SetupGuideShell', 'Console/Command');
+App::uses('SetupGuideShell', 'Console/Command/Batch/Operation/Console/Command');
 App::uses('GlRedis', 'Model');
 
 class SetupGuideShellTest extends GoalousTestCase
@@ -114,8 +114,8 @@ class SetupGuideShellTest extends GoalousTestCase
         $this->assertEquals($data['urls']['push'], SETUP_GUIDE_NOTIFY_URL . '/setup/app/image/?from=pushnotifi');
 
         $data = $this->SetupGuideShell->_getNotifyDataByTargetKey(3);
-        $this->assertTrue(strpos($data['messages']['mail'], 'Please create your GOAL.') !== false);
-        $this->assertEquals($data['messages']['push'], 'Please create your GOAL.');
+        $this->assertTrue(strpos($data['messages']['mail'], 'Please create your Goal.') !== false);
+        $this->assertEquals($data['messages']['push'], 'Please create your Goal.');
         $this->assertEquals($data['urls']['mail'], SETUP_GUIDE_NOTIFY_URL . '/setup/goal/image/?from=email');
         $this->assertEquals($data['urls']['push'], SETUP_GUIDE_NOTIFY_URL . '/setup/goal/image/?from=pushnotifi');
 

@@ -292,6 +292,59 @@ class AppUtil
     }
 
     /**
+     * Get year and month by moving month
+     *
+     * @param int $year
+     * @param int $month
+     * @param int $moveMonth
+     *
+     * @return array
+     */
+    static function moveMonthYm(int $year, int $month, int $moveMonth = 1) : array
+    {
+        $date = self::dateFromYMD($year, $month, 1);
+        $date = date('Y-m', strtotime($date. ' '. $moveMonth. ' month'));
+        return explode('-', $date);
+    }
+
+    /**
+     * Date format by year, month, day
+     *
+     * @param int $y
+     * @param int $m
+     * @param int $d
+     *
+     * @return string
+     */
+    static function dateFromYMD(int $y, int $m, int $d) : string
+    {
+        return sprintf("%4d-%02d-%02d", $y, $m, $d);
+    }
+
+    /**
+     * Correct date to the last date of the month if argument date is invalid
+     * e.g.
+     *  2017-02-29(not exist) → 2017-02-28
+     *
+     * @param int $y
+     * @param int $m
+     * @param int $d
+     *
+     * @return string
+     */
+    static function correctInvalidDate(int $y, int $m, int $d) : string
+    {
+        // Check invalid
+        if (checkdate($m, $d, $y) === false) {
+            // If not exist payment base day, set last day of the month.
+            $lastDay = date('t', strtotime(AppUtil::dateFromYMD($y, $m, 1)));
+            return self::dateFromYMD($y, $m, $lastDay);
+        } else {
+            return self::dateFromYMD($y, $m, $d);
+        }
+    }
+
+    /**
      * 値が指定した範囲に含まれるか？
      *
      * @param int $target
@@ -599,4 +652,142 @@ class AppUtil
         return $text;
     }
 
+    /**
+     * json_encode as one line
+     *
+     * @param array $array
+     *
+     * @return string
+     */
+    static function jsonOneLine(array $array)
+    {
+        /**
+         * @see http://php.net/manual/ja/json.constants.php
+         *      for json encode option
+         */
+        return json_encode(
+            $array,
+            JSON_PARTIAL_OUTPUT_ON_ERROR
+        );
+    }
+
+    /**
+     * Convert string to array
+     * - Ignore empty line
+     * - Trim each line
+     *
+     * @param string $str
+     * @param bool   $ignoreEmptyLine
+     *
+     * @return array
+     */
+    static function convStrToArr(string $str, bool $ignoreEmptyLine = false): array
+    {
+        if (empty($str)) {
+            return [];
+        }
+
+        //一行ずつ処理
+        $cr = array("\r\n", "\r"); // 改行コード置換用配列を作成しておく
+
+        $str = trim($str); // 文頭文末の空白を削除
+
+        // 改行コードを統一
+        $str = str_replace($cr, "\n", $str);
+        // 改行コードで分割して配列に変換
+        $emails = explode("\n", $str);
+
+        //一行ずつ処理
+        $res = [];
+        foreach ($emails as $i => $email) {
+            //全角スペースを除去
+            $email = preg_replace('/　/', ' ', $email);
+            //前後スペースを除去
+            $email = trim($email);
+            //空行はスキップ
+            if ($ignoreEmptyLine && empty($email)) {
+                continue;
+            }
+            $res[$i] = $email;
+        }
+        // 全ての要素の値が空文字だったら空の配列で返す
+        if (empty(array_filter($res))) {
+            return [];
+        }
+        return $res;
+    }
+
+    /**
+     * Check if int
+     *
+     * String type allow compare to `is_int` func
+     * @param $val
+     *
+     * @return bool
+     */
+    static function isInt($val) : bool
+    {
+        if (!is_numeric($val)) {
+            return false;
+        }
+        if (!preg_match("/^[0-9]+$/", $val)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * format money string
+     * - format as thousand comma
+     * - add symbol before of after
+     *
+     * @param int $amount
+     * @param string $symbol
+     * @param string $beforeAfter
+     *
+     * @return string
+     */
+    static function formatMoney(int $amount, string $symbol, string $beforeAfter): string
+    {
+        $amountWithComma = self::formatThousand($amount);
+        if ($beforeAfter == 'before') {
+            return "${symbol}${amountWithComma}";
+        }
+        return "${amountWithComma}${symbol}";
+    }
+
+    /**
+     * set memory_limit if passed value is larger than
+     * current memory_limit value
+     *
+     * @param string $sizeString
+     */
+    static function iniSetMemoryLimitAtLeast(string $sizeString)
+    {
+        $currentLimit = ini_get('memory_limit');
+        if (self::sizeStringToByte($sizeString) > self::sizeStringToByte($currentLimit)) {
+            ini_set('memory_limit', $sizeString);
+        }
+    }
+
+    /**
+     * change size string like '2G', '128M' to integer bytes
+     * @param string $sizeString
+     *
+     * @return int
+     */
+    static function sizeStringToByte(string $sizeString): int
+    {
+        if (AppUtil::isInt($sizeString)) {
+            return intval($sizeString);
+        }
+        $unit = strtoupper(substr($sizeString, -1));
+        $sizeNum = floatval($sizeString);
+        switch ($unit) {
+            case 'G': return $sizeNum * 1024 * 1024 * 1024;
+            case 'M': return $sizeNum * 1024 * 1024;
+            case 'K': return $sizeNum * 1024;
+        }
+        return 0;
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 App::uses('Controller', 'Controller');
+App::import('Service', 'TeamService');
 
 /**
  * Application level Controller
@@ -35,12 +36,13 @@ class BaseController extends Controller
             'csrfExpires' => '+24 hour'
         ],
         'Auth'     => [
-            'flash' => [
+            'flash'        => [
                 'element' => 'alert',
                 'key'     => 'auth',
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
             ]
         ],
+        'Notification',
         'NotifyBiz',
         'GlEmail',
         'Mixpanel',
@@ -88,6 +90,59 @@ class BaseController extends Controller
         'Goalous App iOS',
         'Goalous App Android'
     ];
+    /**
+     * use it when you need stop after beforender
+     */
+    public $stopInvoke = false;
+
+    /**
+     * This list for excluding from prohibited request
+     * It's like a cake request params.
+     * If only controller name is specified, including all actions
+     * If you would like to specify several action, refer to the following:
+     * [
+     * 'controller' => 'users', 'action'     => 'settings',
+     * ],
+     * [
+     * 'controller' => 'users', 'action'     => 'view_goals',
+     * ],
+     *
+     * @var array
+     */
+    private $ignoreProhibitedRequest = [
+        [
+            'controller' => 'payments',
+        ],
+        [
+            'controller' => 'teams',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'logout',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'accept_invite',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'settings',
+        ],
+        [
+            'controller' => 'terms',
+        ],
+        // TODO: We have to fix it. now, privacy_policy and terms are redirected to home. but they should be appear and important page!
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'privacy_policy',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'terms',
+        ],
+    ];
 
     public function __construct($request = null, $response = null)
     {
@@ -133,7 +188,7 @@ class BaseController extends Controller
         }
     }
 
-    function updateSetupStatusIfNotCompleted()
+    function _updateSetupStatusIfNotCompleted()
     {
         $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
         if ($setup_guide_is_completed) {
@@ -143,7 +198,7 @@ class BaseController extends Controller
         $user_id = $this->Auth->user('id');
         $this->GlRedis->deleteSetupGuideStatus($user_id);
         $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
-        if ($this->calcSetupRestCount($status_from_mysql) === 0) {
+        if ($this->_calcSetupRestCount($status_from_mysql) === 0) {
             $this->User->completeSetupGuide($user_id);
             $this->_refreshAuth($this->Auth->user('id'));
             return true;
@@ -155,14 +210,14 @@ class BaseController extends Controller
         return true;
     }
 
-    function calcSetupRestCount($status)
+    function _calcSetupRestCount($status)
     {
         return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
     }
 
-    function calcSetupCompletePercent($status)
+    function _calcSetupCompletePercent($status)
     {
-        $rest_count = $this->calcSetupRestCount($status);
+        $rest_count = $this->_calcSetupRestCount($status);
         if ($rest_count <= 0) {
             return 100;
         }
@@ -273,14 +328,107 @@ class BaseController extends Controller
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
+
     /**
-     * pass `isTablet` variable to view.
-     * - get browser ua from browscap
+     * check prohibited request in read only term
+     *
+     * @return bool
      */
-    public function _setIsTablet()
+    public function _isProhibitedRequestByReadOnly(): bool
     {
-        $browser = $this->getBrowser();
-        $this->is_tablet = $browser['istablet'];
-        $this->set('isTablet', $this->is_tablet);
+        if ($this->_isExcludeRequestParamInProhibited()) {
+            return false;
+        }
+        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
+            return false;
+        }
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * check prohibited request in read only term
+     *
+     * @return bool
+     */
+    public function _isProhibitedRequestByCannotUseService(): bool
+    {
+        if ($this->_isExcludeRequestParamInProhibited()) {
+            return false;
+        }
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+
+        if ($TeamService->isCannotUseService()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Request params are excluded request in prohibited?
+     * Decide with $this->excludeRequestParamsInProhibited
+     * checking controller and action
+     * if only controller checking and hit it, return true
+     *
+     * @return bool
+     */
+    private function _isExcludeRequestParamInProhibited(): bool
+    {
+        // if controller is not much, skip all.
+        $ignoreParamExists = array_search($this->request->param('controller'),
+            Hash::extract($this->ignoreProhibitedRequest, '{n}.controller')
+        );
+        if ($ignoreParamExists === false) {
+            return false;
+        }
+
+        foreach ($this->ignoreProhibitedRequest as $ignoreParam) {
+            // filter requested param with $ignoreParam
+            $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
+            if ($intersectedParams == $ignoreParam) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check is logged in or not
+     *
+     * @return bool
+     */
+    public function _isLoggedIn(): bool
+    {
+        return (bool)$this->Auth->user();
+    }
+
+    /*
+     * check prohibited request in read only term
+     *
+     * @param array $actionMethods
+     *
+     * @return bool
+     */
+    protected function _isAdmin(array $actionMethods = []): bool
+    {
+        if (!empty($actionMethods) && !in_array($this->request->action, $actionMethods)) {
+            return true;
+        }
+
+        // Check if team administrator
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+        if (empty($userId) || empty($teamId)) {
+            return false;
+        }
+        return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
     }
 }

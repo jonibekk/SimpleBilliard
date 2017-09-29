@@ -1,6 +1,8 @@
 <?php
 App::uses('AddValidationRuleBehavior', 'Cakeplus.Model/Behavior');
 
+use Goalous\Model\Enum;
+
 /**
  * Created by PhpStorm.
  * User: daikihirakata
@@ -38,6 +40,24 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
             }
         }
         return false;
+    }
+
+    /**
+     * Check if value exist in enum values
+     *
+     * @param Model $Model
+     * @param       $value
+     * @param       $enumClass
+     *
+     * @return bool
+     * @internal param array $field
+     */
+    function inEnumList(Model $Model, $value, $enumClass)
+    {
+        $value = array_shift($value);
+        $enumClass = "Goalous\\Model\\Enum\\" . $enumClass;
+        $constants = call_user_func([$enumClass, 'toArray']);
+        return in_array($value, $constants);
     }
 
     /**
@@ -142,7 +162,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     ) {
         $value = array_values($check);
         $value = $value[0];
-        return preg_match('/^[0-9-\(\)]+$/', $value);
+        return preg_match('/^[0-9-\(\)+]+$/', $value);
     }
 
     function isAllOrNothing(
@@ -287,8 +307,8 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
     ) {
         // This method is for to activate sisuation
         // So it's not needed in to inactivate situation
-        if (isset($Model->data['TeamMember']['active_flg'])
-            && $Model->data['TeamMember']['active_flg'] == false
+        if (isset($Model->data['TeamMember']['status'])
+            && $Model->data['TeamMember']['status'] != TeamMember::USER_STATUS_ACTIVE
         ) {
             return true;
         }
@@ -361,4 +381,20 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return false;
     }
 
+    /**
+     * 全角カタカナ以外が含まれていればエラーとするバリデーションチェック
+     *
+     * @param Model $Model
+     * @param array $value
+     *
+     * @return bool
+     */
+    function katakanaOnly(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $value
+    ) {
+        $value = array_shift($value);
+        return preg_match("/^[ァ-ヶー゛゜]*$/u", $value);
+    }
 }

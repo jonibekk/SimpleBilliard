@@ -1688,6 +1688,10 @@ pre code {
     padding-right: 15px;
 }
 
+.body-container{
+    position:relative;
+}
+
 @media (min-width: 768px) {
     .container {
         width: 750px;
@@ -3281,6 +3285,14 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
     border-radius: 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    &.has-subnav{
+        margin-top: 30px;
+        padding-top:0;
+        min-height: 260px;
+        @media @medium{
+            margin-top:0;
+        }
+    }
 }
 
 .panel-body {
@@ -3437,6 +3449,9 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 
 .panel-default {
     border-color: #dddddd;
+    &.mod-form {
+      padding: 16px;
+    }
 }
 
 .panel-default > .panel-heading {

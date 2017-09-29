@@ -1,0 +1,520 @@
+@import "../variables/all";
+@import "../helpers/mixin";
+
+// TODO: Class name might as well rename like this. this is based on our style guide and easy to understand relation.
+// e.g. 「.subscription-status, .pricing-info」→「.subscriptionStatus, .pricingInfo」
+
+
+// Styles applied to all payment pages.
+.payment{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0;
+    .panel-container{
+        padding: 0 20px;
+    }
+    h3{
+        margin:1em 0 1em 0;
+        width:100%;
+        padding-bottom: .5em;
+        border-bottom: 1px solid @cGray;
+        @media @medium{
+            margin: 2em 0 1.25em 0;
+        }
+    }
+    h4{
+        margin-bottom:0;
+    }
+    i{
+        font-size: 3rem;
+        margin: .25em 0;
+    }
+    p{
+        line-height:1.2em;
+    }
+
+    .hr{
+        border-top: 1px solid @cGray;
+        width: 100%;
+        margin: 1.5rem 0;
+        display:block;
+    }
+
+    .form-group{
+        margin-top: 1rem;
+        &:first-of-type{
+            margin-top:0;
+        }
+    }
+
+    .cc-field{
+        padding:0 1rem;
+    }
+
+    .payment-info-group{
+        margin:1rem 0;
+        .info-value{
+            float:right;
+        }
+        .hr{
+            border-top:1px dashed @darkBlack;
+            margin:.5rem 0;
+        }
+    }
+
+    .checkbox{
+        padding:1rem 15px;
+        input{
+            margin-bottom:1rem;
+        }
+    }
+
+    .panel-footer{
+        display:flex;
+        justify-content: flex-end;
+        flex-wrap:wrap;
+        margin: 3rem 0 0 0;
+        .btn{
+            margin:0 0 0 1rem;
+        }
+        .outcome{
+            flex-basis:100%;
+        }
+    }
+
+    .outcome {
+        float: left;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .success, .error {
+        display: none;
+    }
+    
+    .success.visible, .error.visible {
+        display: inline;
+    }
+    
+    .error {
+        color: @acidRed;
+    }
+    
+    .success {
+        color: @subColor7;
+    }
+}
+
+
+// Application page (ReactJS)
+.payment{
+    .payment-options{
+        margin-top:2rem;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-between;
+        h3{
+            margin-top: 1em;
+        }
+    }
+}
+
+.payment-option{
+    max-width:300px;
+    flex-basis:100%;
+    min-height:175px;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    border:1px solid @cGray;
+    background: @smokyWhite;
+    border-radius: 4px;
+    position:relative;
+    cursor:pointer;
+    @media @medium{
+        flex-basis:48%;
+    }
+    h4{
+        width:100%;
+    }
+    p{
+        padding-bottom: 2em;
+    }
+    .payment-option-link{
+        position:absolute;
+        bottom:1rem;
+        left: 2rem;
+        width:100%;
+    }
+}
+
+.company-info{
+    fieldset{
+        margin-top:1rem;
+    }
+    legend{
+        font-size:16px;
+        font-weight:600;
+        color:@darkBlack;
+        border-bottom:none;
+        margin:0;
+        padding:1rem 0 0;
+    }
+}
+
+.enter-cc-info{
+    .payment-terms{
+        float:left;
+        clear:both;
+        margin: 1em 0;
+        width: 100%;
+    }
+    .btnRadiusOnlyIcon{
+        display:flex;
+        i{
+            margin:auto;
+        }
+    }
+}
+
+// Thank You page
+
+.payment-thanks{
+    text-align:center;
+    position:relative;
+    .panel-container{
+        min-height:20rem;
+        position:relative;
+        z-index:2;
+        @media @medium{
+            min-height:30rem;
+        }
+    }
+    h3{
+        color:@goalous;
+    }
+    p{
+        max-width:400px;
+        width:100%;
+        font-size:18px;
+        margin:0 auto 2rem auto;
+    }
+    .confetti-cannon{
+        position:absolute;
+        overflow:hidden;
+        height:100%;
+        width:100%;
+        top:0;
+        left:0;
+        z-index:1;
+        .confetti{
+            transform-origin: 50% 50%;
+            display:block;
+            background-color:@goalous;
+            position:absolute;
+            left:10px;
+            top:-20px;
+            &.confetti-1{
+                animation-name:confetti1;
+                animation-duration: 3s;
+                width:5px;
+                height:10px;
+                animation-timing-function: linear;
+                transition: top 3s ease-in-out;
+            }
+            &.confetti-2{
+                animation-name:confetti2;
+                animation-duration: 3s;
+                width:3px;
+                height:5px;
+                background:yellow;
+                animation-timing-function: ease-in-out;
+                transition: top 4s linear;
+            }
+            &.confetti-3{
+                animation-name:confetti3;
+                animation-duration: 4s;
+                width:5px;
+                height:5px;
+                background:@subColor6;
+                border-radius:50%;
+                animation-timing-function: ease-out;
+                transition: top 5s ease-out;
+            }
+            &.confetti-4{
+                animation-name:confetti4;
+                animation-duration: 5s;
+                width:7px;
+                height:7px;
+                background:@aquaBlue;
+                animation-timing-function: ease-out;
+                transition: top 5s ease-out;
+            }
+        }
+    }
+}
+
+
+// Service Disabled Page
+.service-disabled{
+    padding: 20px 0;
+    .btn-primary{
+        width:12em;
+        display:block;
+        margin: 0 auto 2em auto;
+        font-size: 20px;
+    }
+}
+
+.service-disabled-icon{
+    font-size: 48px;
+    color:@basicGray;
+    text-align: center;
+    width:100%;
+}
+
+
+// Payment History Page
+.payment-history-table{
+    width:100%;
+    border: 1px solid @baseGray;
+    font-size:11px;
+    margin: 1rem 0 3rem 0;
+    @media @small{
+        font-size:14px;
+    }
+    td{
+        padding:.25rem .5rem;
+    }
+    thead{
+        background-color:@baseGray;
+        color:@darkBlack;
+        td{
+            border-right: 1px solid @white;
+            &:last-of-type{
+                border-right: none;
+            }
+        }
+    }
+    tbody{
+        background-color: @white;
+        color:@darkBlack;
+        tr{
+            border-bottom: 1px solid @baseGray;
+            td{
+                border-right: 1px solid @baseGray;
+                &:last-of-type{
+                    border-right:none;
+                }
+            }
+        }
+    }
+}
+
+.history-entry-type{
+    text-align:center;
+    @media @small{
+        text-align:left;
+    }
+    span:first-of-type{
+        color:@trueGray;
+    }
+}
+
+.history-entry-download{
+    text-align: center;
+    font-size: 14px;
+    a{
+        color: @darkBlack;
+        &:hover{
+            text-decoration: none;
+        }
+    }
+}
+
+// Payment Index Page
+.subscription-status{
+    h5{
+        text-transform: uppercase;
+        font-size: 11px;
+        color: @basicGray;
+        font-weight: 600;
+        margin:1rem 0 0;
+    }
+    sup{
+        font-size: 8px;
+        position:relative;
+        top: -.5em;
+    }
+    .btn-primary{
+        margin: 1rem 0;
+    }
+}
+
+.status-text{
+    font-weight: 600;
+    &.free-trial{
+        color: @darkBlack;
+    }
+    &.subscribed{ 
+        color:@subColor7;
+    }
+    &.read-only{
+        color: @paleYellow;
+    }
+    &.deactivated{
+        color:@acidRed;
+    }
+    i{
+        margin-right: .5rem;
+        font-size: 20px;
+    }
+}
+
+.subscription-status-detail{
+    margin: 1em 0 0;
+    line-height: 1.5em;
+    padding-right: 5rem;
+}
+
+.team-price-info{
+    margin: 2em 0;
+    .fa{
+        margin:0 .5rem 0 0;
+        color: @darkBlack;
+        font-size: 18px;
+    }
+    &:first-of-type{
+        h5{
+            margin-top: 0;
+        }
+    }
+}
+
+.team-price-info-number{
+    font-size: 20px;
+    color: @darkBlack;
+    width:100%;
+}
+
+.team-price-info-detail{
+    font-size: 11px;
+    display:inline;
+}
+
+.team-price-info-legal{
+    margin: 2rem 10px 3rem;
+    padding: 0;
+    font-size: 11px;
+    color:@basicGray;
+    li{
+        margin-bottom: 10px;
+    }
+}
+
+.feature-category{
+    border-bottom: 1px solid @cGray;
+    margin: 10px 0;
+    padding-bottom: 10px;
+    .icon{
+        &:before{
+            color:@white;
+            font-family: FontAwesome; 
+            border-radius: 50%;
+            display: block;
+            font-size: 10px;
+            float: left;
+            text-align: center;
+            padding: 3px 0;
+            width: 20px;
+            margin-right: 5px;
+        }
+    }
+    .icon-heart{
+        &:before{
+            content: '\f004';
+            background-color:@acidRed;
+        }
+    }
+    .icon-message{
+        &:before{
+            content: '\f086';
+            background-color:@subColor13;
+        }
+    }
+    .icon-lock{
+        &:before{
+            content: '\f023';
+            background-color:@subColor6;
+        }
+    }
+    &:last-of-type{
+        border-bottom: none;
+    }
+    ul{
+        list-style-type: none;
+        margin: 5px 0 0 0;
+        padding-left: 25px;
+    }
+    li{
+        position: relative;
+        &:before{
+            content: '\f00c';
+            font-family:FontAwesome;
+            position: absolute;
+            left: -23px;
+        }
+    }
+}
+
+.feature-more-link{
+    .fa{
+        color:@acidRed;
+    }
+}
+
+
+/// ANIMATIONS \\\
+
+@keyframes confetti1 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-1vh;
+    }
+    100% {
+        transform: rotateX(540deg) rotateZ(360deg);
+        top:60vh;
+    }
+}
+
+@keyframes confetti2 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-2vh;
+    }
+    100% {
+        transform: rotateX(-900deg) rotateZ(-540deg);
+        top:60vh;
+    }
+}
+
+@keyframes confetti3 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-3vh;
+    }
+    100% {
+        transform: rotateX(360deg) rotateZ(-900deg);
+        top:60vh;
+    }
+}
+
+@keyframes confetti4 {
+    0%   {
+        transform: rotateX(0deg) rotateZ(0deg);
+        top:-2vh;
+    }
+    100% {
+        transform: rotateX(-720deg) rotateZ(-1080deg);
+        top:60vh;
+    }
+}

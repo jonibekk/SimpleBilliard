@@ -16,7 +16,7 @@ if (!isset($top_lang)) {
 }
 ?>
 <?= $this->App->viewStartComment() ?>
-<footer class="footer <?= $is_mb_app ? 'hide' : null ?>">
+<footer class="footer <?= $is_mb_app || isset($_GET['backBtn']) ? 'hide' : null ?>">
     <div class="footer-content">
         <div class="container">
             <div class="row">
@@ -24,10 +24,10 @@ if (!isset($top_lang)) {
                     <div class="footer-col-inner">
                         <h3 class="title"><?= __('About Us') ?></h3>
                         <p>
-                            <?= __('ISAO Corporation, IT company located in Akihabara, Tokyo.') ?><br>
-                            <?= __('"Visionary Company which make jobs joyful in the world" is our middle term vision.') ?>
+                            <?= __('ISAO Corporation, An IT corporation located in Akihabara, Tokyo.') ?><br>
+                            <?= __('Our mid-term vision to be “a visionary company that brings joy to work around the world”,') ?>
                             <br>
-                            <?= __('Bari Flat Model - No managing post, No hierarchy but infinite team strength - is adopted in Japan from 1 Oct 2015.') ?>
+                            <?= __('introduced the first Super Flat model to Japan. No management, No hierarchy, but infinite team strength.') ?>
                         </p>
                         <p><a class="more" href="http://www.isao.co.jp/" target="_blank"><?= __('Check our website') ?>
                                 <i
@@ -40,21 +40,21 @@ if (!isset($top_lang)) {
                         <ul class="list-unstyled">
                             <li><a href="<?= $this->Html->url([
                                     'controller' => 'pages',
-                                    'action'     => 'display',
+                                    'action'     => 'lp',
                                     'pagename'   => 'terms',
                                     'lang'       => $top_lang,
                                 ]) ?>"><i
                                         class="fa fa-caret-right"></i><?= __('Terms of service') ?></a></li>
                             <li><a href="<?= $this->Html->url([
                                     'controller' => 'pages',
-                                    'action'     => 'display',
+                                    'action'     => 'lp',
                                     'pagename'   => 'privacy_policy',
                                     'lang'       => $top_lang,
                                 ]) ?>"><i
                                         class="fa fa-caret-right"></i><?= __('Privacy Policy') ?></a></li>
                             <li><a href="<?= $this->Html->url([
                                     'controller' => 'pages',
-                                    'action'     => 'display',
+                                    'action'     => 'lp',
                                     'pagename'   => 'law',
                                     'lang'       => $top_lang,
                                 ]) ?>"><i

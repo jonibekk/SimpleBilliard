@@ -14,8 +14,10 @@ class DevicesController extends AppController
         parent::beforeFilter();
         $allowed_actions = ['add', 'get_version_info'];
         //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
+        // TODO: There is big security issue!!! In currentry, all clint requests are allowed!
         if (in_array($this->request->params['action'], $allowed_actions)) {
             $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
         }
     }
 
@@ -64,7 +66,7 @@ class DevicesController extends AppController
             }
 
             //セットアップガイドのカウント更新
-            $this->updateSetupStatusIfNotCompleted();
+            $this->_updateSetupStatusIfNotCompleted();
 
             $ret_array = [
                 'response' => [
