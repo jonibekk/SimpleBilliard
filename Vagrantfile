@@ -19,7 +19,7 @@ Vagrant.configure('2') do |config|
     end
 
     if Vagrant.has_plugin?('vagrant-omnibus')
-        config.omnibus.chef_version = '11.10.4'
+        config.omnibus.chef_version = '12.19.36'
     end
 
     if Vagrant.has_plugin?('vagrant-berkshelf')
