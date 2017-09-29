@@ -273,7 +273,12 @@ class DetectInconsistentChargeShell extends AppShell
         // Because we can't specify multiple customer codes when call list charge api.
         $stripeCharges = [];
         foreach ($customerCodes as $customerCode) {
-            $stripeCharges = am($stripeCharges, $CreditCardService->findChargesByCreatedRange($startTimestamp, $endTimestamp, $customerCode));
+            try {
+                $stripeCharges = am($stripeCharges, $CreditCardService->findChargesByCreatedRange($startTimestamp, $endTimestamp, $customerCode));
+            } catch (Exception $e) {
+                $this->logError($e->getMessage());
+                $this->logError($e->getTraceAsString());
+            }
         }
 
         $this->logInfo(sprintf("Stripe charge count:%d", count($stripeCharges)));

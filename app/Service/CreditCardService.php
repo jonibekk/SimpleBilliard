@@ -604,6 +604,7 @@ class CreditCardService extends AppService
      * @param string $customerCode
      *
      * @return array
+     * @throws Exception
      */
     public function findChargesByCreatedRange(int $startTimestamp, int $endTimestamp, string $customerCode)
     {
@@ -617,9 +618,7 @@ class CreditCardService extends AppService
             // Get the customer list
             $response = \Stripe\Charge::all($options);
         } catch (Exception $e) {
-            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::error($e->getTraceAsString());
-            return [];
+            throw $e;
         }
         return $response->data;
     }
