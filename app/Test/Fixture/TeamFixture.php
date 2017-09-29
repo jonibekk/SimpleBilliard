@@ -112,6 +112,14 @@ class TeamFixture extends CakeTestFixtureEx
             'default' => null,
             'comment' => '各ステートの終了日'
         ),
+        'pre_register_amount_per_user' => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'length'   => 10,
+            'unsigned' => true,
+            'comment'  => 'Amount per user before registering payment plan'
+        ),
         'del_flg'                      => array(
             'type'    => 'boolean',
             'null'    => false,
