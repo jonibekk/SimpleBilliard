@@ -1654,7 +1654,7 @@ class PaymentService extends AppService
         $allValidationErrors = [];
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
-            $paymentType = Hash::get($data, 'PaymentSetting.type');
+            $paymentType = Hash::get($data, 'payment_setting.type');
             if (is_null($paymentType) === false && (int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
                 $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
             }
