@@ -5067,8 +5067,8 @@ msgstr ""
 msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
-msgid "Enjoy your work. Achieve your goals."
-msgstr "チーム力を<br>\"たのしく\"あげる"
+msgid "Enjoy your work.<br />Achieve your goals."
+msgstr "チーム力を<br><q>たのしく</q>あげる"
 
 msgid "Contact&nbsp;us"
 msgstr "お問い合わせ"
