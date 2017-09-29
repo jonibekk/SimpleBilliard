@@ -6,8 +6,8 @@ App::import('Service', 'TeamService');
  * Batch for changing service status of team.
  * # Description
  * ## Usage
- * - Console/cake change_service_status
- * - Console/cake change_service_status -t [target date]
+ * - Console/cake Payment.change_service_status
+ * - Console/cake Payment.change_service_status -t [target date]
  * ## changing status in the following order:
  * - Free trial -> Read-only -> Cannot use Service -> Deleted
  * ## UTC or local date?

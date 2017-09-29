@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('SessionComponent', 'Controller/Component');
 App::uses('NotifyBizComponent', 'Controller/Component');
-App::uses('SetupGuideShell', 'Console/Command');
+App::uses('SetupGuideShell', 'Console/Command/Batch/Operation/Console/Command');
 App::uses('GlRedis', 'Model');
 
 class SetupGuideShellTest extends GoalousTestCase

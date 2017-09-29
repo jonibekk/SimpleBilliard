@@ -16,10 +16,13 @@ class DetectInconsistentDataShell extends AppShell
     {
         /* Detect inconsistent data each type */
         // term
-        $this->dispatchShell('DetectInconsistentTerm');
+        $this->dispatchShell('DetectInconsistent.DetectInconsistentTerm');
         // goal
-        $this->dispatchShell('DetectInconsistentGoal');
+        $this->dispatchShell('DetectInconsistent.DetectInconsistentGoal');
         // kr
-        $this->dispatchShell('DetectInconsistentKr');
+        $this->dispatchShell('DetectInconsistent.DetectInconsistentKr');
+        // payment
+        $this->dispatchShell('DetectInconsistent.DetectInconsistentCharge');
+
     }
 }

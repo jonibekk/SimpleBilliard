@@ -1,30 +1,21 @@
 <?php
 App::import('Service', 'PaymentService');
+App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 
-use Goalous\Model\Enum as Enum;
-
 /**
- * The shell for creating next next term
- * Console/cake monthly credit card charge
+ * The shell for charging by invoice to team admins
+ * Console/cake monthly_invoice_charge
+ * If retry: Console/cake Payment.monthly_invoice_charge -t <target timestamp>
  * Description
- * - Charge each only credit card payment team that payment base date came
- *
- * @property Team           $Team
- * @property Term           $Term
- * @property PaymentSetting $PaymentSetting
+ * - Sending invoice each only invoice that payment base date came
  */
-class MonthlyCreditCardChargeShell extends AppShell
+class MonthlyInvoiceChargeShell extends AppShell
 {
     protected $enableOutputLogStartStop = true;
 
     public $uses = [
-        'Team',
-        'Term',
-        'PaymentSetting',
-        'ChargeHistory',
-        'CreditCard'
     ];
 
     public function startup()
@@ -63,13 +54,14 @@ class MonthlyCreditCardChargeShell extends AppShell
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
 
-        // Get charge target teams
-        $targetChargeTeams = $PaymentService->findMonthlyChargeCcTeams($targetTimestamp);
+        // Get charge target teams that is not charged yet.
+        $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams($targetTimestamp);
         if (empty($targetChargeTeams)) {
-            $this->logInfo("Billing team does not exist");
+            $this->logInfo("Target team doesn't exist.");
             return;
         }
-        $this->logInfo(sprintf('target charge teams: %s', AppUtil::jsonOneLine($targetChargeTeams)));
+        $this->logInfo('count $targetChargeTeams is ' . count($targetChargeTeams));
+        $this->logInfo(sprintf('target teams: %s', AppUtil::jsonOneLine($targetChargeTeams)));
 
         // [Efficient processing]
         // This is why it is inefficient to throw SQL for each team and get the number of users
@@ -78,11 +70,12 @@ class MonthlyCreditCardChargeShell extends AppShell
         foreach (array_chunk($teamIds, 100) as $chunkTeamIds) {
             $chargeMemberCountEachTeam += $TeamMember->countChargeTargetUsersEachTeam($chunkTeamIds);
         }
-        $this->logInfo(sprintf('charge member count each teams: %s', AppUtil::jsonOneLine($chargeMemberCountEachTeam)));
+        $this->logInfo('$chargeMemberCountEachTeam');
+        $this->logInfo(sprintf('chargeMemberCountEachTeam: %s', AppUtil::jsonOneLine($chargeMemberCountEachTeam)));
 
-        // Charge each team
         foreach ($targetChargeTeams as $team) {
             $teamId = Hash::get($team, 'PaymentSetting.team_id');
+
             $chargeMemberCount = Hash::get($chargeMemberCountEachTeam, $teamId);
             // Check if exist member
             if (empty($chargeMemberCount)) {
@@ -92,14 +85,14 @@ class MonthlyCreditCardChargeShell extends AppShell
 
             try {
                 PaymentUtil::logCurrentTeamChargeUsers($teamId);
-                // Charge
-                $PaymentService->applyCreditCardCharge(
-                    $teamId,
-                    Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
-                    $chargeMemberCount
-                );
+                $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp);
+                if ($retRegistration === true) {
+                    $this->logInfo(sprintf('Order registration was succeeded! teamId: %s', $teamId));
+                } else {
+                    $this->logInfo(sprintf('Order registration was skipped or failed! teamId: %s', $teamId));
+                }
             } catch (Exception $e) {
-                $this->logEmergency(sprintf("caught error on applyCreditCardCharge: %s", AppUtil::jsonOneLine([
+                $this->logEmergency(sprintf("caught error on registerInvoice: %s", AppUtil::jsonOneLine([
                     'message' => $e->getMessage()
                 ])));
                 $this->logEmergency($e->getTraceAsString());
@@ -107,7 +100,7 @@ class MonthlyCreditCardChargeShell extends AppShell
         }
 
         if (!empty($noMemberTeams)) {
-            $this->logError(
+            $this->logInfo(
                 sprintf('There are teams with no members. team_ids:',
                     AppUtil::varExportOneLine($noMemberTeams)
                 )

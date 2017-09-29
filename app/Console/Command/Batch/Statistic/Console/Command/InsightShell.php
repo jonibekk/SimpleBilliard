@@ -2,7 +2,7 @@
 
 /**
  * 各種データ集計用バッチ
- * Console/cake insight -d YYYY-MM-DD -t timezone
+ * Console/cake Statistic.insight -d YYYY-MM-DD -t timezone
  *
  * @property Team          $Team
  * @property TeamMember    $TeamMember

@@ -590,7 +590,7 @@ App::uses('AttachedFile', 'Model');
             "Select Payment Method": "<?= __("Select Payment Method") ?>",
             "Credit Card": "<?= __("Credit Card") ?>",
             "Invoice": "<?= __("Invoice") ?>",
-            "You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.": "<?= __("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.") ?>",
+            "You can use Visa, MasterCard and AmericanExpress.": "<?= __("You can use Visa, MasterCard and AmericanExpress.") ?>",
             "Invoice will be issued monthly, so please transfer by the deadline.": "<?= __("Invoice will be issued monthly, so please transfer by the deadline.") ?>",
             "Setup": "<?= __("Setup") ?>",
             "Germany": "<?= __("Germany") ?>",
@@ -658,7 +658,8 @@ App::uses('AttachedFile', 'Model');
             "Tax excluded": "<?= __("Tax excluded") ?>",
             "Number of days": "<?= __("Number of days") ?>",
             "Daily payment": "<?= __("Daily payment") ?>",
-            "Send & Pay": "<?= __("Send & Pay") ?>",
+            "Purchase & Invite": "<?= __("Purchase & Invite") ?>",
+            "Purchase" : "<?= __("Purchase") ?>",
             "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
             "Invalid fields": "<?= __("Invalid fields") ?>",
             // Goals

@@ -4,7 +4,7 @@ App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
 App::uses('Folder', 'Utility');
-App::uses('SendAlertMailToAdminShell', 'Console/Command');
+App::uses('SendAlertMailToAdminShell', 'Console/Command/Batch/Payment/Console/Command');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('GoalousDateTime', 'DateTime');

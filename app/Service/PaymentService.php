@@ -519,7 +519,7 @@ class PaymentService extends AppService
      * @param int                               $opeUserId
      * @param int|null                          $timestampChargeDateTime timestamp of charge_histories.charge_datetime
      *
-     * @return array
+     * @return array charge response
      * @throws Exception
      */
     public function applyCreditCardCharge(
@@ -610,14 +610,14 @@ class PaymentService extends AppService
 
             /* Charge */
             $metaData = [
-                'env'=> ENV_NAME,
-                'team_id' => $teamId,
+                'env'        => ENV_NAME,
+                'team_id'    => $teamId,
                 'history_id' => $historyId,
-                'type' => $chargeType->getValue()
+                'type'       => $chargeType->getValue()
             ];
             $paymentDescription = "";
             foreach ($metaData as $k => $v) {
-                $paymentDescription .= $k.":".$v. " ";
+                $paymentDescription .= $k . ":" . $v . " ";
             }
             $chargeRes = $CreditCardService->chargeCustomer(
                 $customerId,
@@ -630,8 +630,8 @@ class PaymentService extends AppService
             CakeLog::info(sprintf('stripe result: %s', AppUtil::jsonOneLine([
                 'teams.id'      => $teamId,
                 'stripe_result' => [
-                    'error' => $chargeRes['error'],
-                    'message' => $chargeRes['message'],
+                    'error'               => $chargeRes['error'],
+                    'message'             => $chargeRes['message'],
                     'isApiRequestSucceed' => $chargeRes['isApiRequestSucceed'],
                 ],
             ])));
@@ -689,6 +689,7 @@ class PaymentService extends AppService
             $this->TransactionManager->rollback();
             throw $e;
         }
+        return $chargeRes;
     }
 
     /**
@@ -786,7 +787,8 @@ class PaymentService extends AppService
 
             $companyCountry = Hash::get($paymentData, 'company_country');
             $paymentData['team_id'] = $teamId;
-            $paymentData['amount_per_user'] = $amountPerUser = $this->getDefaultAmountPerUserByCountry($companyCountry);
+            $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforePayment($teamId,
+                $companyCountry);
             $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
@@ -860,15 +862,15 @@ class PaymentService extends AppService
             $CreditCardService = ClassRegistry::init("CreditCardService");
 
             $metaData = [
-                'env'=> ENV_NAME,
-                'team_id' => $teamId,
-                'history_id' => $historyId,
-                'charge_type' => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'env'          => ENV_NAME,
+                'team_id'      => $teamId,
+                'history_id'   => $historyId,
+                'charge_type'  => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'first_charge' => true
             ];
             $paymentDescription = "";
             foreach ($metaData as $k => $v) {
-                $paymentDescription .= $k.":".$v. " ";
+                $paymentDescription .= $k . ":" . $v . " ";
             }
 
             $currencyName = $currency == PaymentSetting::CURRENCY_TYPE_JPY ? PaymentSetting::CURRENCY_JPY : PaymentSetting::CURRENCY_USD;
@@ -954,8 +956,13 @@ class PaymentService extends AppService
      *
      * @return bool
      */
-    public function registerInvoicePayment(int $userId, int $teamId, array $paymentData, array $invoiceData, bool $checkSentInvoice = true)
-    {
+    public function registerInvoicePayment(
+        int $userId,
+        int $teamId,
+        array $paymentData,
+        array $invoiceData,
+        bool $checkSentInvoice = true
+    ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var TeamMember $TeamMember */
@@ -986,7 +993,7 @@ class PaymentService extends AppService
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
-            $paymentData['amount_per_user'] = self::AMOUNT_PER_USER_JPY;
+            $paymentData['amount_per_user'] = $this->getAmountPerUserBeforePayment($teamId, 'JP');
             // Create Payment Setting
             if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
@@ -1080,8 +1087,13 @@ class PaymentService extends AppService
      * @return bool
      * @internal param float $timezone
      */
-    public function registerInvoice(int $teamId, int $chargeMemberCount, int $time, $userId = null, bool $checkSentInvoice = true): bool
-    {
+    public function registerInvoice(
+        int $teamId,
+        int $chargeMemberCount,
+        int $time,
+        $userId = null,
+        bool $checkSentInvoice = true
+    ): bool {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
             'charge_count' => $chargeMemberCount,
@@ -1417,16 +1429,16 @@ class PaymentService extends AppService
         }
 
         $data = [
-            'id'                             => $paySetting['id'],
-            'company_name'                   => $payerData['company_name'],
-            'company_post_code'              => $payerData['company_post_code'],
-            'company_region'                 => $payerData['company_region'],
-            'company_city'                   => $payerData['company_city'],
-            'company_street'                 => $payerData['company_street'],
-            'contact_person_first_name'      => $payerData['contact_person_first_name'],
-            'contact_person_last_name'       => $payerData['contact_person_last_name'],
-            'contact_person_tel'             => $payerData['contact_person_tel'],
-            'contact_person_email'           => $payerData['contact_person_email'],
+            'id'                        => $paySetting['id'],
+            'company_name'              => $payerData['company_name'],
+            'company_post_code'         => $payerData['company_post_code'],
+            'company_region'            => $payerData['company_region'],
+            'company_city'              => $payerData['company_city'],
+            'company_street'            => $payerData['company_street'],
+            'contact_person_first_name' => $payerData['contact_person_first_name'],
+            'contact_person_last_name'  => $payerData['contact_person_last_name'],
+            'contact_person_tel'        => $payerData['contact_person_tel'],
+            'contact_person_email'      => $payerData['contact_person_email'],
         ];
 
         // If payment type is invoice, user can update contact person name kana
@@ -1643,7 +1655,7 @@ class PaymentService extends AppService
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
             $paymentType = Hash::get($data, 'payment_setting.type');
-            if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+            if (is_null($paymentType) === false && (int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
                 $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
             }
             $allValidationErrors = am(
@@ -1791,5 +1803,27 @@ class PaymentService extends AppService
         }
 
         return $paymentSettings['type'];
+    }
+
+    /**
+     * Get amount per user by team or default
+     *
+     * @param int    $teamId
+     * @param string $country
+     *
+     * @return int
+     */
+    function getAmountPerUserBeforePayment(int $teamId, string $country): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $teamAmountPerUser = $Team->getAmountPerUser($teamId);
+        if ($teamAmountPerUser !== null) {
+            return $teamAmountPerUser;
+        }
+
+        $defaultAmountPerUser = $this->getDefaultAmountPerUserByCountry($country);
+        return $defaultAmountPerUser;
     }
 }
