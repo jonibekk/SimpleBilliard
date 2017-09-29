@@ -16,7 +16,7 @@
 echo __('Hello %s.', $to_user_name) . "\n";
 echo "\n";
 echo __("We've attempted to bill your team, but have been unsuccessful.") . "\n";
-echo __("Please check your payment method by accessing the page below:");
+echo __("Please check your payment method by accessing the page below:") . "\n";
 echo $url . "\n";
 echo "\n";
 echo __("If you have any questions, please contact us.") . "\n";
