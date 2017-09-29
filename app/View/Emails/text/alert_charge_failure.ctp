@@ -13,9 +13,16 @@
  * @var CodeCompletionView $this
  */
 
-echo __('Hello %s.', $to_user_name);
+echo __('Hello %s.', $to_user_name) . "\n";
 echo "\n";
-echo "Charge failed.";
+echo __("We've attempted to bill your team, but have been unsuccessful.") . "\n";
+echo __("Please check your payment method by accessing the page below:");
+echo $url . "\n";
 echo "\n";
-echo $url;
+echo __("If you have any questions, please contact us.") . "\n";
+echo "contact@goalous.com" . "\n";
 echo "\n";
+echo __("Thanks.") . "\n";
+echo __("Goalous Team") . "\n";
+echo "\n";
+

@@ -194,7 +194,8 @@ class GlEmailComponent extends Component
         int $teamId,
         string $teamName
     ) {
-        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method",
+            ['team_id' => $teamId]);
         $item = compact('teamName', 'expireDate', 'url');
         $mailTemplate = SendMail::TYPE_TMPL_ALERT_CHARGE_FAILURE;
         $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
