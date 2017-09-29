@@ -88,12 +88,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="create-team">
             <p class="create-team-guide"><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
             <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
-            <ul class="create-team-linkGroup">
-                <li class="create-team-linkGroup-item">
-                    <a href="/users/login" class=""><?=__('Login')?></a>
+            <ul>
+                <li>
+                    <a href="/users/login"><?=__('Login')?></a>
                 </li>
-                <li class="create-team-linkGroup-item">
-                    <a href="/contact" class=""><?=__('Contact&nbsp;us')?></a>
+                <li>
+                    <a href="/contact"><?=__('Contact&nbsp;us')?></a>
                 </li>
             </ul>
         </div>
