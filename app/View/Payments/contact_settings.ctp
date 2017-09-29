@@ -9,10 +9,10 @@
     <form class="form-horizontal" name="editPaySettingsForm" id="editPaySettingsForm" accept-charset="utf-8">
         <div class="panel-container">
             <h3><?= __("Company Information") ?></h3>
-            <input type="hidden" id="editPaySettingsType" value="<?= h($setting['type']) ?>"/>
+            <input type="hidden" id="editPaySettingsType" value="<?= $setting['type'] ?>"/>
             <div class="form-group">
                 <label for="company_name" class="circle-create-label"><?= __("Company Name") ?></label>
-                <input type="text" id="company_name" name="company_name" value="<?= h($setting['company_name']) ?>"
+                <input type="text" id="company_name" name="company_name" value="<?= $setting['company_name'] ?>"
                        required class="form-control"
                        placeholder="<?= __("ISAO Corporation") ?>" maxlength="255">
             </div>
@@ -21,12 +21,12 @@
                 <div class="form-group">
                     <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Country") ?></label>
                     <?= h($countries[$setting['company_country']]) ?>
-                    <input type="hidden" id="countryCode" value="<?= h($setting['company_country']) ?>"/>
+                    <input type="hidden" id="countryCode" value="<?= $setting['company_country'] ?>"/>
                 </div>
                 <div class="form-group">
                     <label for="company_post_code" class="circle-create-label"><?= __("Post Code") ?></label>
                     <input type="tel" id="company_post_code" name="company_post_code"
-                           value="<?= h($setting['company_post_code']) ?>" required
+                           value="<?= $setting['company_post_code'] ?>" required
                            class="form-control" placeholder="<?= __("12345") ?>" maxlength="16">
                 </div>
                 <div class="form-group">
@@ -34,7 +34,7 @@
                            class="circle-create-label"><?= __("State/Province/Region") ?></label>
                     <input type="text"
                            id="company_region"
-                           name="company_region" value="<?= h($setting['company_region']) ?>" required
+                           name="company_region" value="<?= $setting['company_region'] ?>" required
                            class="form-control"
                            placeholder="<?= __("California") ?>"
                            maxlength="255">
@@ -44,7 +44,7 @@
                            class="circle-create-label"><?= __("City") ?></label>
                     <input type="text"
                            id="company_city"
-                           name="company_city" value="<?= h($setting['company_city']) ?>" required
+                           name="company_city" value="<?= $setting['company_city'] ?>" required
                            class="form-control"
                            placeholder="<?= __("Los Angeles") ?>"
                            maxlength="255">
@@ -55,7 +55,7 @@
                     <input type="text"
                            id="company_street"
                            name="company_street"
-                           value="<?= h($setting['company_street']) ?>" required class="form-control"
+                           value="<?= $setting['company_street'] ?>" required class="form-control"
                            placeholder="<?= __("1234 Street Name") ?>"
                            maxlength="255">
                 </div>
@@ -69,7 +69,7 @@
                                    for="contact_person_last_name"><?= __("Last Name ") ?></label>
                             <input type="text" id="contact_person_last_name"
                                    name="contact_person_last_name"
-                                   value="<?= h($setting['contact_person_last_name']) ?>"
+                                   value="<?= $setting['contact_person_last_name'] ?>"
                                    required
                                    class="form-control"
                                    maxlength="128"
@@ -81,7 +81,7 @@
                             <input type="text"
                                    id="contact_person_first_name"
                                    name="contact_person_first_name"
-                                   value="<?= h($setting['contact_person_first_name']) ?>"
+                                   value="<?= $setting['contact_person_first_name'] ?>"
                                    required
                                    class="form-control"
                                    maxlength="128"
@@ -97,7 +97,7 @@
                                        for="contact_person_last_name_kana"><?= __("Last Name Kana") ?></label>
                                 <input type="text" id="contact_person_last_name_kana"
                                        name="contact_person_last_name_kana"
-                                       value="<?= h($setting['contact_person_last_name_kana']) ?>"
+                                       value="<?= $setting['contact_person_last_name_kana'] ?>"
                                        required
                                        class="form-control"
                                        maxlength="128"
@@ -108,7 +108,7 @@
                                        for="contact_person_first_name_kana"><?= __("First Name Kana") ?></label>
                                 <input type="text" id="contact_person_first_name_kana"
                                        name="contact_person_first_name_kana"
-                                       value="<?= h($setting['contact_person_first_name_kana']) ?>"
+                                       value="<?= $setting['contact_person_first_name_kana'] ?>"
                                        required
                                        maxlength="128"
                                        class="form-control  " placeholder="<?= __("タロウ") ?>">
@@ -122,7 +122,7 @@
                 <input type="email"
                        id="contact_person_email"
                        name="contact_person_email"
-                       value="<?= h($setting['contact_person_email']) ?>"
+                       value="<?= $setting['contact_person_email'] ?>"
                        required
                        class="form-control"
                        placeholder="<?= __("name@company.com") ?>" maxlength="255">
@@ -133,7 +133,7 @@
                 <input type="tel"
                        id="contact_person_tel"
                        name="contact_person_tel"
-                       value="<?= h($setting['contact_person_tel']) ?>"
+                       value="<?= $setting['contact_person_tel'] ?>"
                        required
                        class="form-control"
                        placeholder="00000000000"
