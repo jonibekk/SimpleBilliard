@@ -613,13 +613,13 @@ class CreditCardService extends AppService
             "created[lte]" => $endTimestamp,
             "customer" => $customerCode
         );
-
         try {
             // Get the customer list
             $response = \Stripe\Charge::all($options);
         } catch (Exception $e) {
             CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::error($e->getTraceAsString());
+            return [];
         }
         return $response->data;
     }
