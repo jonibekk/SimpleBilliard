@@ -9,7 +9,6 @@ App::uses('TransactionManager', 'Model');
  * Time: 17:57
  */
 
-
 /**
  * Class AppService
  */
@@ -50,15 +49,14 @@ class AppService extends CakeObject
         return $res;
     }
 
-
     /**
      * Validate only specified fields and model
      *
-     * @param $data
-     * @param $fields
-     * @param $dataParentKey
-     * @param $modelKey
-     * @param $model
+     * @param array  $data
+     * @param array  $fields
+     * @param string $dataParentKey
+     * @param string $modelKey
+     * @param Model  $model
      *
      * @return array
      */
@@ -67,7 +65,7 @@ class AppService extends CakeObject
         array $fields,
         string $dataParentKey,
         string $modelKey,
-        $model
+        Model $model
     ): array {
         $validationFields = Hash::get($fields, $modelKey) ?? [];
         $validationBackup = $model->validate;
