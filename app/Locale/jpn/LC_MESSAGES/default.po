@@ -2775,7 +2775,7 @@ msgid "Post Code"
 msgstr "郵便番号"
 
 msgid "12345 "
-msgstr "1110053"
+msgstr "1100053"
 
 msgid "State/Province/Region"
 msgstr "都道府県/州/地方"
