@@ -22,7 +22,7 @@
                     <label for="PaymentsCompanyPostCode" class="circle-create-label"><?= __("Post Code") ?></label>
                     <input type="tel" id="PaymentsCompanyPostCode" name="company_post_code"
                            value="<?= h($invoice['company_post_code']) ?>" required
-                           class="form-control" placeholder="<?= __("12345") ?>" maxlength="16">
+                           class="form-control" placeholder="<?= __("12345 ") ?>" maxlength="16">
                 </div>
                 <div class="form-group">
                     <label for="PaymentsCompanyAddressRegion"
