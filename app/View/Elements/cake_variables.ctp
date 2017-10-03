@@ -603,7 +603,7 @@ App::uses('AttachedFile', 'Model');
             "Company Name": "<?= __("Company Name") ?>",
             "ISAO Corporation": "<?= __("ISAO Corporation") ?>",
             "Post Code": "<?= __("Post Code") ?>",
-            "12345": "<?= __("12345") ?>",
+            "12345 ": "<?= __("12345 ") ?>",
             "State/Province/Region": "<?= __("State/Province/Region") ?>",
             "California": "<?= __("California") ?>",
             "City": "<?= __("City") ?>",
