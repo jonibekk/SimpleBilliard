@@ -27,7 +27,7 @@
                     <label for="company_post_code" class="circle-create-label"><?= __("Post Code") ?></label>
                     <input type="tel" id="company_post_code" name="company_post_code"
                            value="<?= h($setting['company_post_code']) ?>" required
-                           class="form-control" placeholder="<?= __("12345") ?>" maxlength="16">
+                           class="form-control" placeholder="<?= __("12345 ") ?>" maxlength="16">
                 </div>
                 <div class="form-group">
                     <label for="company_region"
