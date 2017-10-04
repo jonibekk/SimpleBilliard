@@ -69,6 +69,7 @@
                 ]) ?>
             <hr>
             <?= $this->Form->input('is_wish_approval', [
+                'wrapInput' => "col col-sm-9 col-sm-offset-3",
                 'type'      => 'checkbox',
                 'label'     => [
                     'class' => null,
