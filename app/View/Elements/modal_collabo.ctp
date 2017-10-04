@@ -68,6 +68,16 @@
                     'value'                        => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
                 ]) ?>
             <hr>
+            <?= $this->Form->input('is_wish_approval', [
+                'type'      => 'checkbox',
+                'label'     => [
+                    'class' => null,
+                    'text'  => __("Wish goal approval")
+                ],
+                'checked'   => 'checked'
+            ]);
+            ?>
+            <hr>
             <?=
             $this->Form->input('priority',
                 [
