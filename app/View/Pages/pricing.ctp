@@ -90,14 +90,18 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <h3><?= __('Paid Plan');?></h3>
             <p><span class="price-text"><?= $price; ?></span>
             <?= __('Per active member, per month');?></p>
-            <?php if (!isset($_GET['backBtn'])): ?>
-            <a href="/signup/email?type=header" class="btn btn-cta btn-cta-primary"><?= __('Start %s-day Free Trial', 15);?></a>
+            <?php if(!$isLoggedIn): ?>
+                <a href="/signup/email?type=header" class="btn btn-cta btn-cta-primary"><?= __('Start %s-day Free Trial', 15);?></a>
+            <?php elseif($isPaidPlan): ?>
+                <a href="/" class="btn btn-cta btn-cta-primary"><?= __('Go Your Team') ?></a>
+            <?php else: ?>
+                <a href="/payments" class="btn btn-cta btn-cta-primary"><?= __('Upgrade to Paid Plan') ?></a>
             <?php endif; ?>
             <div class="hr"></div>
             <p><?=__('For teams and companies ready to create and share project goals on Goalous.');?></p>
         </div>
         <div class="feature-category">
-            <strong class="icon icon-heart"><?= __('Goal features');?></strong>
+            <strong class="icon icon-flag"><?= __('Goal features');?></strong>
             <ul>
                 <li><?= __('Create &amp; share Goals for your project'); ?></li>
                 <li><?= __('Team members can join to collaborate towards your Goal.');?></li>
@@ -223,7 +227,5 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div>
     </div>
 </section>
-<?php if (!isset($_GET['backBtn'])): ?>
-    <?= $this->element('Homepage/signup') ?>
-<?php endif; ?>
+<?= $this->element('Homepage/signup') ?>
 <?= $this->App->viewEndComment()?>

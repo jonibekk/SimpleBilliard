@@ -210,6 +210,27 @@ class GlEmailComponent extends Component
         $this->execSendMailById($this->SendMail->id);
     }
 
+
+    /**
+     * Sending a alert of charge failure
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     * @param string $teamName
+     */
+    public function sendMailChargeFailure(
+        int $toUid,
+        int $teamId,
+        string $teamName
+    ) {
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method",
+            ['team_id' => $teamId]);
+        $item = compact('teamName', 'expireDate', 'url');
+        $mailTemplate = SendMail::TYPE_TMPL_ALERT_CHARGE_FAILURE;
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
     /**
      * Send credit card about to expire email alert.
      *
@@ -219,9 +240,15 @@ class GlEmailComponent extends Component
      * @param string $lastDigits Last for digits of credit card number
      * @param string $teamName
      */
-    public function sendMailCreditCardExpireAlert(int $toUid, int $teamId, string $brand, string $lastDigits, string $teamName)
-    {
-        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method", ['team_id' => $teamId]);
+    public function sendMailCreditCardExpireAlert(
+        int $toUid,
+        int $teamId,
+        string $brand,
+        string $lastDigits,
+        string $teamName
+    ) {
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method",
+            ['team_id' => $teamId]);
         $item = compact('url', 'brand', 'lastDigits', 'teamName');
         $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_EXPIRE_ALERT_CREDIT_CARD,
             $item, null, $teamId);
@@ -291,7 +318,7 @@ class GlEmailComponent extends Component
      */
     public function sendMailRegisterInvoicePaidPlan(int $toUid, int $teamId)
     {
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN,null, null, $teamId);
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN, null, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -303,7 +330,7 @@ class GlEmailComponent extends Component
      */
     public function sendMailRegisterCreditCardPaidPlan(int $toUid, int $teamId)
     {
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN,null, null, $teamId);
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN, null, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -369,7 +396,7 @@ class GlEmailComponent extends Component
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " send_mail {$method_name}";
+        $cmd = " Operation.send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd .= " -s " . $this->Session->id();
         $cmd .= " -l " . Configure::read('Config.language');

@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
-App::uses('KrValuesDailyLogShell', 'Console/Command');
+App::uses('KrValuesDailyLogShell', 'Console/Command/Batch/Statistic/Console/Command');
 App::uses('KrValuesDailyLog', 'Model');
 App::uses('Goal', 'Model');
 App::uses('GoalMember', 'Model');

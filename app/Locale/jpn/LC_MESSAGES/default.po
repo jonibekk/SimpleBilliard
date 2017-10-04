@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-25 14:54+0900\n"
+"PO-Revision-Date: 2017-10-03 11:03+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -34,7 +34,7 @@ msgid "1 (Very low)"
 msgstr "1 (とても低い)"
 
 msgid "2"
-msgstr ""
+msgstr "2"
 
 msgid "3 (Default)"
 msgstr "3 (デフォルト)"
@@ -60,11 +60,6 @@ msgstr "アメリカ合衆国"
 msgid "All Team"
 msgstr "チーム全体"
 
-msgid "Import is canceled because there already exist test data."
-msgstr ""
-"既にテストデータが存在するため、テストデータのインポートをキャンセルしまし"
-"た。"
-
 msgid "Please input your profile to Goalous."
 msgstr "Goalousにプロフィールをいれましょう。"
 
@@ -85,6 +80,11 @@ msgstr "Goalousでサークルに投稿してみよう。"
 
 msgid "Click the below link to setup Goalous."
 msgstr "以下のリンクをクリックしてGoalousのセットアップをしてください。"
+
+msgid "Import is canceled because there already exist test data."
+msgstr ""
+"既にテストデータが存在するため、テストデータのインポートをキャンセルしまし"
+"た。"
 
 msgid "Goalous"
 msgstr "Goalous(ゴーラス)"
@@ -1399,6 +1399,9 @@ msgstr "信用審査結果のお知らせ: 審査を通過しませんでした"
 
 msgid "Registration to the paid plan is complete"
 msgstr "有料プラン登録が完了しました"
+
+msgid "We had a problem billing your team"
+msgstr "請求で問題が発生しています"
 
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
@@ -2747,11 +2750,8 @@ msgstr "クレジットカード"
 msgid "Invoice"
 msgstr "請求書"
 
-msgid ""
-"You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB."
-msgstr ""
-"Visa、MasterCard、AmericanExpress、Discover、Diners Club、JCBがご利用いただけ"
-"ます。"
+msgid "You can use Visa, MasterCard and AmericanExpress."
+msgstr "Visa、MasterCard、AmericanExpressがご利用いただけます。"
 
 msgid "Invoice will be issued monthly, so please transfer by the deadline."
 msgstr "毎月、請求書が発行されますので、期限までにお支払いください。"
@@ -2774,7 +2774,7 @@ msgstr "株式会社ISAO"
 msgid "Post Code"
 msgstr "郵便番号"
 
-msgid "12345"
+msgid "12345 "
 msgstr "1100053"
 
 msgid "State/Province/Region"
@@ -2921,8 +2921,11 @@ msgstr "利用日数"
 msgid "Daily payment"
 msgstr "日割り"
 
-msgid "Send & Pay"
-msgstr "送信する・支払う"
+msgid "Purchase & Invite"
+msgstr "購入して、招待する"
+
+msgid "Purchase"
+msgstr "購入する"
 
 msgid "No Goals found"
 msgstr "検索に一致するゴールが見つかりませんでした。"
@@ -3498,6 +3501,9 @@ msgstr "機能"
 msgid "Pricing"
 msgstr "料金"
 
+msgid "Go Your Team"
+msgstr "チームへ移動"
+
 msgid "Login"
 msgstr "ログイン"
 
@@ -3616,13 +3622,6 @@ msgid ""
 msgstr ""
 "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
-msgid "What happens after the free campaign?"
-msgstr "無償期間（2017年9月30日まで）の後はどうなりますか？"
-
-msgid ""
-"In order to continue using Goalous, please purchase a subscription plan."
-msgstr "引き続きご利用いただくには、有料プランのご契約が必要になります。"
-
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
 
@@ -3665,11 +3664,11 @@ msgstr "その他のご質問はありますか？"
 msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
-msgid "It's free till September 30, 2017! Try it out!"
-msgstr "2017年9月30日まで完全無料！今すぐお試しください。"
+msgid "Easy set-up ･ Free 15 day Trial"
+msgstr "簡単セットアップ ･ 15日間無料トライアル"
 
-msgid "Are you on Goalous? %s. Any questions ? %s."
-msgstr "すでにお使いであれば、%s。ご質問があれば、%s。"
+msgid "Already using Goalous? %s. <br />Have any questions? %s."
+msgstr "すでにお使いであれば、%s。 <br />ご質問があれば、%s。"
 
 msgid "Status"
 msgstr "ステータス"
@@ -4401,6 +4400,21 @@ msgstr "Goalousへようこそ！"
 msgid "Click the below link to make your account enable."
 msgstr "以下のリンクをクリックしてアカウントを有効化してください。"
 
+msgid "We've attempted to bill your team, but have been unsuccessful."
+msgstr "あなたのチームに請求を試みましたが、失敗しました。"
+
+msgid "Please check your payment method by accessing the page below:"
+msgstr "お支払い方法を確認するには、下記のページにアクセスしてください："
+
+msgid "If you have any questions, please contact us."
+msgstr "ご不明な点がございましたら、こちらにお問い合わせください。"
+
+msgid "Thanks."
+msgstr "ありがとうございました。"
+
+msgid "Goalous Team"
+msgstr "Goalousチーム"
+
 msgid "Click the below link to authenticate your email address."
 msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
@@ -4453,7 +4467,9 @@ msgstr "そのため、チームのステータスを読み取り専用に変更
 msgid ""
 "To cancel the read-only status, you need to apply to Paid Plan again with "
 "credit card."
-msgstr "読み取り専用のスタータスを解除するには、クレジットカードにて再度お申込みいただけますでしょうか。"
+msgstr ""
+"読み取り専用のスタータスを解除するには、クレジットカードにて再度お申込みいた"
+"だけますでしょうか。"
 
 msgid "Thank you for signing up for Goalous.We are happy to meet you!"
 msgstr ""
@@ -4499,15 +4515,6 @@ msgstr "クレジットカード（%s *******%s） が期限切れに近づい�
 
 msgid "Please take a moment to update your card here:"
 msgstr "こちらからカードを更新してください："
-
-msgid "If you have any questions, please contact us."
-msgstr "ご不明な点がございましたら、こちらにお問い合わせください。"
-
-msgid "Thanks."
-msgstr "ありがとうございました。"
-
-msgid "Goalous Team"
-msgstr "Goalousチーム"
 
 msgid "The free trial for your team, \"%s\", will end on %s"
 msgstr "チーム「%s」のフリートライアルの期限は%sです。"
@@ -4769,7 +4776,7 @@ msgid "goal management, achieve a goal, sns app, evaluation, mbo"
 msgstr "目標管理,目標達成,社内SNS,評価,MBO"
 
 msgid "Contact us | Goalous"
-msgstr ""
+msgstr "お問い合わせ | Goalous"
 
 msgid "Goalous │ Enterprise SNS the most ever open for Goal"
 msgstr "Goalous (ゴーラス) │ ゴール達成への最強にオープンな社内SNS"
@@ -5069,11 +5076,11 @@ msgstr ""
 msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
-msgid "Enjoy your work. Achieve your goals."
-msgstr "チーム力を\"たのしく\"あげる"
+msgid "Enjoy your work.<br />Achieve your goals."
+msgstr "チーム力を<br><q>たのしく</q>あげる"
 
-msgid "You can use Goalous free of charge till September 30, 2017."
-msgstr "2017年9月30日まで無料でご利用できます。"
+msgid "Contact&nbsp;us"
+msgstr "お問い合わせ"
 
 msgid "5 Feb 2016"
 msgstr "2016年2月5日"
@@ -5202,11 +5209,13 @@ msgstr "1アクティブメンバー、1ヶ月"
 msgid "Start %s-day Free Trial"
 msgstr "%s日間のフリートライアルを始める"
 
+msgid "Upgrade to Paid Plan"
+msgstr "有料プランに申し込む"
+
 msgid ""
 "For teams and companies ready to create and share project goals on Goalous."
 msgstr ""
-"プロジェクトのゴールをGoalousで作成・共有する準備ができているチームや企業に"
-"とって。"
+"プロジェクトのゴールをメンバーと共有し、進捗を感じ合いたいチームに、すばらしい体験をご提供いたします。"
 
 msgid "Goal features"
 msgstr "ゴールの機能"
@@ -5540,6 +5549,9 @@ msgstr "ユーザー追加"
 msgid "Team Summary"
 msgstr "チーム概要"
 
+msgid "Team Status"
+msgstr "チームのステータス"
+
 msgid "Free Trial"
 msgstr "フリートライアル"
 
@@ -5556,10 +5568,10 @@ msgstr ""
 "あなたのチームは、現在フリートライアルでGoalousを利用しています。%sにフリート"
 "ライアルは終了します。"
 
-msgid "Your team has full access to Goalous.<br /><br />Go achieve your goal!"
+msgid "Your team has full access to Goalous.<br />Go achieve your goal!"
 msgstr ""
-"あなたのチームはGoalousの全ての機能をご利用いただけます。<br /><br />いざ、"
-"ゴールへ向かって！"
+"あなたのチームはGoalousの全ての機能をご利用いただけます。<br />いざ、ゴールへ"
+"向かって！"
 
 msgid ""
 "Your team can no longer create or edit content on Goalous. Your team account "
@@ -5583,26 +5595,8 @@ msgstr "アクティブメンバー"
 msgid "Estimated Total"
 msgstr "予測総額"
 
-msgid "Upgrade Plan"
-msgstr "有料プランに変更する"
-
-msgid "100MB file upload"
-msgstr "20MB/ファイルのアップロード"
-
-msgid "Unlimited uploads"
-msgstr "ストレージ無制限のファイル共有"
-
-msgid "Chat Messaging"
-msgstr "メッセージ"
-
-msgid "Insight Analytics"
-msgstr "インサイト分析"
-
-msgid "Team Administration"
-msgstr "管理者"
-
-msgid "Free Online support"
-msgstr "オンラインでのユーザーサポート"
+msgid "View more details"
+msgstr "詳しく見る"
 
 msgid "Added team member's usage fee will be charged based on daily rate."
 msgstr "追加されたチームメンバーの利用料が日割り計算によって請求されます。"
@@ -5696,6 +5690,18 @@ msgstr "新しいチームを作成"
 msgid "Your email address"
 msgstr "あなたのメールアドレス"
 
+msgid ""
+"By clicking <q>I agree. Continue.</q> below, you are agreeing to the <a href="
+"\"/terms?backBtn=true\" target=\"_blank\">Terms of Service</a> and the <a "
+"href=\"/privacy_policy?backBtn=true\" target=\"_blank\">Privacy Policy</a>."
+msgstr ""
+"下の<q>同意して続ける</q>をクリックすると、<a href=\"/terms?backBtn=true\" "
+"target=\"_blank\">利用規約</a>と<a href=\"/privacy_policy?backBtn=true\" "
+"target=\"_blank\">プライバシーポリシー</a>に同意したことになります。"
+
+msgid "I agree. Continue."
+msgstr "同意して続ける"
+
 msgid " "
 msgstr " "
 
@@ -5726,8 +5732,8 @@ msgstr "チームビジョンを作成"
 msgid "Activation user"
 msgstr "アクティブにするユーザー"
 
-msgid "Activate & Pay"
-msgstr "アクティブにする・支払う"
+msgid "Purchase & Activate"
+msgstr "購入して、アクティブにする"
 
 msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
@@ -5779,6 +5785,9 @@ msgstr ""
 
 msgid "Plan"
 msgstr "プラン"
+
+msgid "Upgrade Plan"
+msgstr "有料プランに変更する"
 
 msgid "Send Invitations"
 msgstr "招待しましょう"
@@ -5928,3 +5937,10 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid ""
+#~ "You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and "
+#~ "JCB."
+#~ msgstr ""
+#~ "Visa、MasterCard、AmericanExpress、Discover、Diners Club、JCBがご利用いた"
+#~ "だけます。"

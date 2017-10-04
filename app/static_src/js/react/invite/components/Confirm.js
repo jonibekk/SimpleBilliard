@@ -138,7 +138,7 @@ export default class Confirm extends Base {
           <div className="btnGroupForForm">
             <button type="submit" className="btnGroupForForm-next" ref="submit"
                     disabled={(display_charge && !this.state.check_agreement) || is_saving ? "disabled" : ""}>
-              {display_charge ? __("Send & Pay") : __("Send")}
+              {display_charge ? __("Purchase & Invite") : __("Send")}
             </button>
             <Link className="btnGroupForForm-cancel" to="/users/invite">{__("Back")}</Link>
           </div>

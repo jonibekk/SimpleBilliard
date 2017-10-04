@@ -879,4 +879,19 @@ class Team extends AppModel
         return Hash::extract($ret, '{n}.Team.id');
     }
 
+    /**
+     * Get amount per user
+     *
+     * @param int $teamId
+     *
+     * @return void
+     */
+    public function getAmountPerUser(int $teamId)
+    {
+        $res = $this->getById($teamId);
+        if (!empty($res['pre_register_amount_per_user'])) {
+            return $res['pre_register_amount_per_user'];
+        }
+        return null;
+    }
 }

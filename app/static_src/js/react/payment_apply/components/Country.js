@@ -93,7 +93,7 @@ export default class Country extends Base {
                 className="form-control setting_input-design company-location-select"
                 value={company_country}
                 onChange={(e) => this.onChange(e)}
-                ref="company_country" 
+                ref="company_country"
               >
                 {countries_option_el}
               </select>
@@ -116,7 +116,7 @@ export default class Country extends Base {
                   onClick={(e) => this.choosePaymentType(PaymentSetting.PAYMENT_TYPE.CREDIT_CARD)}>
                 <h4>{__('Credit Card')}</h4>
                 <i className="fa fa-credit-card"/>
-                <p>{__("You can use Visa, MasterCard, AmericanExpress, Discover, Diners Club and JCB.")}</p>
+                <p>{__("You can use Visa, MasterCard and AmericanExpress.")}</p>
                 <a href="#" className="payment-option-link">{__('Setup')}</a>
               </div>
               <div className="payment-option"

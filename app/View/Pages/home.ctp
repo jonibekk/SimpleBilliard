@@ -83,68 +83,19 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
-
-    <div class="bg-slider-wrapper">
-        <div id="bg-slider" class="flexslider bg-slider">
-            <ul class="slides">
-                <li class="slide slide-1">
-                    <div class="slide-black-cover"></div>
+    <div class="section-container">
+        <h1><?= __("Enjoy your work. Achieve your goals.") ?></h1>
+        <div class="create-team">
+            <p class="create-team-guide"><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
+            <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
+            <ul>
+                <li>
+                    <a href="/users/login"><?=__('Login')?></a>
+                </li>
+                <li>
+                    <a href="/contact"><?=__('Contact&nbsp;us')?></a>
                 </li>
             </ul>
-        </div>
-    </div><!--//bg-slider-wrapper-->
-
-    <div class="lp-signup ">
-        <span class="lp-signup-key-concept"><?= __("Enjoy your work. Achieve your goals.") ?></span>
-        <span class="lp-signup-pay-free"><?= __("You can use Goalous free of charge till September 30, 2017.") ?></span>
-
-        <div class="lp-signup-form">
-            <div class="lp-signup-form-opacity-box">
-                <div class="lp-signup-form-opacity-box-inner">
-                </div>
-            </div>
-            <div class="lp-signup-form-inner">
-                <?=
-                $this->Form->create('Email', [
-                    'inputDefaults' => array(
-                        'div'       => 'form-group',
-                        'label'     => false,
-                        'wrapInput' => false,
-                        'class'     => 'form-control lp-signup-input-email'
-                    ),
-                    'url'           => ['controller' => 'signup', 'action' => 'email'],
-                    'class'         => 'form-horizontal',
-                    'novalidate'    => true,
-                    'id'            => 'HomeSignupEmail'
-                ]); ?>
-
-                <?=
-                $this->Form->input('email', [
-                    'placeholder'                  => __('Email address'),
-                    "data-bv-notempty"             => "true",
-                    "data-bv-notempty-message"     => __("Email address is empty."),
-                    'data-bv-emailaddress'         => "false",
-                    "data-bv-callback"             => "true",
-                    "data-bv-callback-message"     => " ",
-                    "data-bv-callback-callback"    => "bvCallbackAvailableEmailNotVerified",
-                    'data-bv-stringlength'         => 'true',
-                    'data-bv-stringlength-max'     => 200,
-                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                    'required'                     => false
-                ]) ?>
-                <div id="HomeEmailErrorContainer"></div>
-                <div class="submit">
-                    <?= $this->Form->button(__('Create New Team') . ' <i class="fa fa-angle-right"></i>',
-                        [
-                            'type'     => 'submit',
-                            'class'    => 'btn btn-cta btn-cta-primary lp-signup-submit-button',
-                            'escape'   => false
-                        ]) ?>
-                </div>
-                <?= $this->Form->end(); ?>
-                <span class="lp-signup-form-footer-notice">
-                  <?= __('Are you on Goalous? %s. Any questions ? %s.', '<a href="/users/login" class="lp-signup-login-link">' . __('Login') . '</a>', '<a href="/contact" class="lp-signup-contact-link">' . __('Contact us') . '</a>') ?></span>
-            </div>
         </div>
     </div>
 </section><!--//promo-->
@@ -270,12 +221,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         </div>
                         <div class="modal-body">
                             <div class="video-container">
-                                <iframe id="promoVideo" 
+                                <iframe id="promoVideo"
                                     data-src="<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'jwG1Lsq3Wyw' : 'dArw8d4uh00'?>"
-                                    width="720" 
-                                    height="405" 
-                                    frameborder="0" 
-                                    webkitallowfullscreen 
+                                    width="720"
+                                    height="405"
+                                    frameborder="0"
+                                    webkitallowfullscreen
                                     mozallowfullscreen
                                     allowfullscreen>
                                 </iframe>
