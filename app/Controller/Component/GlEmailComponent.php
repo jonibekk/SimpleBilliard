@@ -192,18 +192,7 @@ class GlEmailComponent extends Component
         int $toUid,
         int $teamId
     ) {
-        $mailTemplate = null;
-        switch ($serviceUseStatus) {
-            case Team::SERVICE_USE_STATUS_FREE_TRIAL:
-                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_FREE_TRIAL;
-                break;
-            case Team::SERVICE_USE_STATUS_READ_ONLY:
-                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_READ_ONLY;
-                break;
-            case Team::SERVICE_USE_STATUS_CANNOT_USE:
-                $mailTemplate = Sendmail::TYPE_TMPL_EXPIRE_ALERT_CANNOT_USE;
-                break;
-        }
+        $mailTemplate = Sendmail::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE;
         $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
         $item = compact('teamName', 'expireDate', 'url');
         $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
