@@ -113,7 +113,7 @@ export default class Step3Component extends Base {
           <div className={`checkbox ${can_approve ? "" : "hide"}`}>
             <label>
               <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true" ref="is_wish_approval"/>
-              <span>{__("Wish goal approval")}</span>
+              <span>{__("Request goal approval")}</span>
             </label>
           </div>
 
