@@ -217,9 +217,19 @@ class SendMailShell extends AppShell
                 'template' => $notify_option['mail_template'],
                 'layout'   => 'default',
             ];
+
+            // GL-6355: Output log to investigate the cause of error.
+            // TODO: Remove try catch after we found the cause and fixed.
+            if (!isset($data['FromUser']['display_username'])) {
+                CakeLog::error(sprintf("Undefined index FromUser.display_username param_id:%s FromUser:%s"
+                    , $this->params['id']
+                    , AppUtil::jsonOneLine($data['FromUser'])
+                ));
+            }
+
             $viewVars = [
                 'to_user_name'   => $data['ToUser']['display_username'],
-                'from_user_name' => $data['FromUser']['display_username'],
+                'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
                 'body'           => $this->item['item_name'],
