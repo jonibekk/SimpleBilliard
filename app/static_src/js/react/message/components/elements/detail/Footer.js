@@ -24,7 +24,6 @@ class Footer extends React.Component {
       is_drag_start: false,
     }
     this.sendMessage = this.sendMessage.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this)
   }
 
   componentDidMount() {
@@ -140,10 +139,6 @@ class Footer extends React.Component {
     }
   }
 
-  onTouchMove(e) {
-    e.preventDefault()
-  }
-
   render() {
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
     const footer_style = {
@@ -164,7 +159,6 @@ class Footer extends React.Component {
         onDragEnter={this.dragEnter.bind(this)}
         onDragOver={this.dragOver.bind(this)}
         onDragLeave={this.dragLeave.bind(this)}
-        onTouchMove={this.onTouchMove}
         style={footer_style}
         ref="topic_detail_footer"
       >
