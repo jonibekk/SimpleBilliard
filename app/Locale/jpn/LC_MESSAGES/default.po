@@ -2655,7 +2655,7 @@ msgstr "完了"
 msgid "Progress"
 msgstr "進捗"
 
-msgid "Wish goal approval"
+msgid "Request goal approval"
 msgstr "ゴール認定を希望する"
 
 msgid "Name"

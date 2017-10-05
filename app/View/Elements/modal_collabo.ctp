@@ -73,7 +73,7 @@
                 'type'      => 'checkbox',
                 'label'     => [
                     'class' => null,
-                    'text'  => __("Wish goal approval")
+                    'text'  => __("Request goal approval")
                 ],
                 'checked'   => 'checked'
             ]);
