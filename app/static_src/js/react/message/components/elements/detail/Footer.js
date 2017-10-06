@@ -8,7 +8,6 @@ import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/common/components/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
-import Textarea from "react-textarea-autosize";
 import {nl2br} from "~/util/element";
 import {isIOSApp, isMobileApp} from "~/util/base";
 import {HotKeys} from "react-hotkeys";
@@ -30,6 +29,18 @@ class Footer extends React.Component {
     if (!isMobileApp()) {
       return;
     }
+
+    var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
+    var threadBody = document.getElementsByClassName('topicDetail-body')[0];
+    
+    ta.addEventListener('autosize:resized', function(){
+      console.log(ta.clientHeight);
+      console.log(threadBody);
+      console.log(threadBody.style.paddingBottom);
+      threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
+      threadBody.scrollTo(0,threadBody.scrollHeight);
+    });
+
     const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
     this.props.dispatch(
       detail.changeLayout({body_bottom})
@@ -178,7 +189,7 @@ class Footer extends React.Component {
             </div>
             <div className="topicDetail-footer-box-center">
               <HotKeys keyMap={key_map} handlers={handlers}>
-                <Textarea
+                <textarea
                   className={`topicDetail-footer-inputBody form-control disable-change-warning ${sp_class}`}
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" value={this.props.body}
