@@ -229,7 +229,7 @@ class SendMailShell extends AppShell
 
             $viewVars = [
                 'to_user_name'   => $data['ToUser']['display_username'],
-                'from_user_name' => (isset($data['FromUser']['display_username'])) ? $data['FromUser']['display_username'] : null,
+                'from_user_name' => $data['FromUser']['display_username'] ?? null,
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
                 'body'           => $this->item['item_name'],
