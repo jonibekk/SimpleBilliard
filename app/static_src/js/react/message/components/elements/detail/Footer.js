@@ -26,11 +26,13 @@ class Footer extends React.Component {
   }
 
   componentDidMount() {
+    var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
+    autosize(ta);
+    
     if (!isMobileApp()) {
       return;
     }
 
-    var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
     var threadBody = document.getElementsByClassName('topicDetail-body')[0];
     
     ta.addEventListener('autosize:resized', function(){
