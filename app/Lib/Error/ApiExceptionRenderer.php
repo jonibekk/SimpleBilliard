@@ -42,7 +42,7 @@ class ApiExceptionRenderer extends ExceptionRenderer
                 break;
             case 'BadRequestException':
                 if ($message == 'The request has been black-holed') {
-                    $message = __('CSRF Error!');
+                    $message = __('Some error occurred. Please try again from the start.');
                     $code = 403;
                 }
                 break;
