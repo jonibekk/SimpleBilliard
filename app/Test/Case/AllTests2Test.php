@@ -20,7 +20,7 @@
  *
  * @package       Cake.Test.Case
  */
-class AllTests extends PHPUnit_Framework_TestSuite
+class AllTests2 extends PHPUnit_Framework_TestSuite
 {
 
     /**
@@ -32,12 +32,9 @@ class AllTests extends PHPUnit_Framework_TestSuite
     {
         ini_set('memory_limit', '2G');
         $suite = new CakeTestSuite('All Application Test');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'View' . DS . 'Helper');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Model');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service');
+        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service'. DS.'Payment2');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service' . DS . 'Api');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Console');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Lib' . DS . 'Util');
         return $suite;
     }
 

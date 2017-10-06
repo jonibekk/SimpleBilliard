@@ -1,11 +1,17 @@
+dist: trusty
+sudo: false
+
 language: php
 
 php:
   - 7.0.12
 
 env:
-  - DB=mysql
-
+  global:
+    - DB=mysql
+  matrix:
+    - TEST_TARGET=AllTests1
+    - TEST_TARGET=AllTests2
 cache:
   - bundler
   - apt
@@ -35,10 +41,9 @@ before_script:
   - Vendor/bin/browscap-php browscap:convert app/Test/travis/lite_php_browscap.ini
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
-  - mkdir ./app/tmp
-  - chmod -R 777 ./app/tmp
-  - sudo mkdir /var/log/goalous
-  - sudo chmod -R 777 /var/log/goalous
+  - cp -f ./app/Config/bootstrap.php.travis ./app/Config/bootstrap.php
+  - mkdir -p ./app/tmp/logs
+  - chmod -R 777 ./app/tmp/logs
   - echo "<?php
     class DATABASE_CONFIG {
     private \$identities = array(
@@ -103,7 +108,7 @@ script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
 #  - if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist; fi
 #  - if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist; fi
-  - ./Console/cake test app AllTests --stderr --configuration ../phpunit.xml.dist
+  - ./Console/cake test app $TEST_TARGET --stderr --configuration ../phpunit.xml.dist
 
 after_script:
 #TODO 一旦カバレッジ測定やめる。並列処理にする
@@ -133,20 +138,20 @@ deploy:
 #    on:
 #      branch: master-isao
 
-  - provider: opsworks
-    access-key-id: $AWS_ACCESS_KEY
-    secret-access-key: $AWS_SECRET_KEY
-    app-id: 42c32abd-5bf8-4d36-b3ef-b417425fb7c1
-    wait-until-deployed: false
-    region: ap-northeast-1
-    on:
-      branch: develop
-
-  - provider: opsworks
-    access-key-id: $AWS_ACCESS_KEY
-    secret-access-key: $AWS_SECRET_KEY
-    app-id: 2481ef12-126f-404c-87da-82fa72097f3b
-    wait-until-deployed: false
-    region: ap-northeast-1
-    on:
-      branch: stage
+#  - provider: opsworks
+#    access-key-id: $AWS_ACCESS_KEY
+#    secret-access-key: $AWS_SECRET_KEY
+#    app-id: 42c32abd-5bf8-4d36-b3ef-b417425fb7c1
+#    wait-until-deployed: false
+#    region: ap-northeast-1
+#    on:
+#      branch: develop
+#
+#  - provider: opsworks
+#    access-key-id: $AWS_ACCESS_KEY
+#    secret-access-key: $AWS_SECRET_KEY
+#    app-id: 2481ef12-126f-404c-87da-82fa72097f3b
+#    wait-until-deployed: false
+#    region: ap-northeast-1
+#    on:
+#      branch: stage
