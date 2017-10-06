@@ -118,6 +118,7 @@
 
 .team-member-table{
   position: relative;
+  overflow: hidden;
   .time-card{
     float:left;
   }
@@ -139,7 +140,7 @@
     transform: translateX(0px);
   }
   .dropdown-toggle{
-    opacity: 1;
+    transform: translateX(0px);     
     &.remove{
       animation: dropdown-slideout .5s forwards;
     }
@@ -148,10 +149,13 @@
 
 @keyframes dropdown-slideout {
   0%{
-    opacity: 1;
+    transform: translateX(0px);     
+  }
+  20%{
+    transform: translateX(-10px); 
   }
   100%{
-    opacity: 0;
+    transform: translateX(100px);    
   }
 }
 
