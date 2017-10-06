@@ -43,14 +43,12 @@ class Goal extends AppModel
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __("0 (Certified exempt)");
         $this->priority_list[1] = __("1 (Very low)");
         $this->priority_list[3] = __("3 (Default)");
         $this->priority_list[5] = __("5 (Very high)");
     }
 
     public $priority_list = [
-        0 => 0,
         1 => 1,
         2 => 2,
         3 => 3,

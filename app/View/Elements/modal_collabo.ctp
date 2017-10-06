@@ -68,6 +68,19 @@
                     'value'                        => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
                 ]) ?>
             <hr>
+            <?php if ($canApprove):?>
+            <?= $this->Form->input('is_wish_approval', [
+                'wrapInput' => "col col-sm-9 col-sm-offset-3",
+                'type'      => 'checkbox',
+                'label'     => [
+                    'class' => null,
+                    'text'  => __("Request goal approval")
+                ],
+                'checked'   => 'checked'
+            ]);
+            ?>
+            <hr>
+            <?php endif;?>
             <?=
             $this->Form->input('priority',
                 [
