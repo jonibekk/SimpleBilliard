@@ -28,18 +28,16 @@ class Footer extends React.Component {
   componentDidMount() {
     var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
     autosize(ta);
-    
+
     if (!isMobileApp()) {
       return;
     }
-
+  
     var threadBody = document.getElementsByClassName('topicDetail-body')[0];
     
     ta.addEventListener('autosize:resized', function(){
-      console.log(ta.clientHeight);
-      console.log(threadBody);
-      console.log(threadBody.style.paddingBottom);
       threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
+      // The following line doesn't work on Android app. Fix this issue.
       threadBody.scrollTo(0,threadBody.scrollHeight);
     });
 
