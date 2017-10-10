@@ -6,6 +6,7 @@ import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
 import {PaymentSetting} from "~/common/constants/Model";
+import LoadingButton from "~/common/components/LoadingButton";
 
 export default class Confirm extends Base {
   constructor(props) {
@@ -56,9 +57,17 @@ export default class Confirm extends Base {
             <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply/invoice">
               {__("Back")}
             </Link>
-            <button className="btn btn-primary">
-              {__("Purchase")}
-            </button>
+            {(() => {
+              if (payment.is_saving) {
+                return <LoadingButton/>
+              } else {
+                return (
+                  <button className="btn btn-primary">
+                    {__("Purchase")}
+                  </button>
+                )
+              }
+            })()}
           </div>
         </form>
       </section>

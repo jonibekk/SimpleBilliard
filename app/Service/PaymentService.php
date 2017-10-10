@@ -754,6 +754,13 @@ class PaymentService extends AppService
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
 
+        // Check if already registered.
+        if (!empty($PaymentSetting->getByTeamId($teamId))) {
+            CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__, $teamId));
+            return false;
+        }
+
+
         // Register payment settings
         try {
             // Register Credit Card to stripe
@@ -978,6 +985,12 @@ class PaymentService extends AppService
         // Count should never be zero.
         if ($membersCount == 0) {
             CakeLog::emergency(sprintf("[%s] Invalid member count for teamId: %s", __METHOD__, $teamId));
+            return false;
+        }
+
+        // Check if already registered.
+        if (!empty($PaymentSetting->getByTeamId($teamId))) {
+            CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__, $teamId));
             return false;
         }
 
