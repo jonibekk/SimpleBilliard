@@ -19,10 +19,6 @@
     ?>
     <!-- start Intercom -->
     <script>
-        enabled_intercom_icon = true;
-        if (window.innerWidth < 992) {
-            enabled_intercom_icon = false;
-        }
         window.intercomSettings = {
             app_id: "<?=INTERCOM_APP_ID?>",
             <?php if ($this->Session->read('Auth.User.id')): ?>
@@ -51,9 +47,6 @@
             teams_belong: <?= isset($my_teams) ? h(intval(count($my_teams))) : 0 ?>, // Teams count that user belongs to
             <?php endif ?>
         };
-        if (!enabled_intercom_icon) {
-            window.intercomSettings.hide_default_launcher = true;
-        }
 
         window.intercomSettings.custom_launcher_selector = ".intercom-launcher";
 
@@ -91,14 +84,5 @@
         })()
     </script>
     <!-- end Intercom -->
-    <script>
-        //intercomのリンクを非表示にする
-        if (enabled_intercom_icon) {
-            var intercomLink = document.getElementById("IntercomLink");
-            if (intercomLink) {
-                intercomLink.style.display = 'none';
-            }
-        }
-    </script>
 <?php endif; ?>
 <?= $this->App->viewEndComment() ?>

@@ -18,10 +18,6 @@
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 
 <?php
-// right column react app
-if (!empty($loadRightColumn)) {
-    echo $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);
-}
 
 // Include page specific javascript file
 if (isset($page_js_files) && !empty($page_js_files)) {
@@ -42,7 +38,7 @@ echo $this->PageResource->getPageScript();
 ?>
 
 <?php //公開環境のみタグを有効化
-if (PUBLIC_ENV) {
+if (PUBLIC_ENV && !$is_mb_app && !$isMobileBrowser) {
     /** @noinspection PhpDeprecationInspection */
     echo $this->element('intercom');
 }
