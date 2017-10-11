@@ -48,7 +48,7 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
         </div>
         <?php endif; ?>
     </div>
-    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main <?= ($is_mb_app) ? "true" : "false";?>" role="main">
+    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
         <?= $this->Session->flash(); ?>
         <!-- Remark -->
         <?= $this->fetch('content'); ?>
