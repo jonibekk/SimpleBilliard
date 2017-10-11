@@ -81,13 +81,14 @@ class PagesController extends AppController
     {
         $path = func_get_args();
         $page = $path[0];
-
+        
         if ($page === 'pricing') {
             $this->_setPricingValues();
         } elseif ($page === 'terms') {
             $this->_setTerms();
         }
-
+        
+        $this->set('is_mb_app', $this->is_mb_app);
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
     }

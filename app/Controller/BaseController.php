@@ -63,6 +63,13 @@ class BaseController extends Controller
     public $next_term_id = null;
 
     /**
+     * スマホからのリクエストか？
+     * is request from mobile browser?
+     *
+     * @var bool
+     */
+    public $is_mb_browser = false;
+    /**
      * スマホアプリからのリクエストか？
      * is request from mobile app?
      *

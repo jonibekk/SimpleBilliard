@@ -14,9 +14,10 @@
 if (!isset($top_lang)) {
     $top_lang = null;
 }
+
 ?>
 <?= $this->App->viewStartComment() ?>
-<footer class="footer <?= $is_mb_app || isset($_GET['backBtn']) ? 'hide' : null ?>">
+<footer class="footer <?= $is_mb_app && isset($_GET['backBtn']) ? 'hide' : null ?>">
     <div class="footer-content">
         <div class="container">
             <div class="row">
