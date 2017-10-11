@@ -146,6 +146,7 @@ class AppController extends BaseController
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
         $this->_setIsTablet();
+        $this->_setIsMobileBrowser();
 
         // Basic認証を特定の条件でかける
         if ($this->_isBasicAuthRequired()) {
@@ -1135,6 +1136,17 @@ class AppController extends BaseController
             'controller' => 'users',
             'action'     => 'login'
         );
+    }
+
+    /**
+     * pass `is_mb_browser` variable to view.
+     * - get browser ua from browscap
+     */
+    public function _setIsMobileBrowser()
+    {
+        $browser = $this->_getBrowser();
+        $this->is_mb_browser = $browser['ismobiledevice'];
+        $this->set('isMobileBrowser', $this->is_mb_browser);
     }
 
     /**

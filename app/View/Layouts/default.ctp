@@ -48,19 +48,22 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
         </div>
         <?php endif; ?>
     </div>
-    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
+    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main <?= ($is_mb_app) ? "true" : "false";?>" role="main">
         <?= $this->Session->flash(); ?>
         <!-- Remark -->
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
-    <div
-        class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
-        role="goal_area">
-        <div class="right-side-container" id="jsRightSideContainer">
-            <div id="kr-column"></div>
+    <?php if (!$is_mb_app && !$isMobileBrowser): ?>
+        <div
+            class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
+            role="goal_area">
+            <div class="right-side-container" id="jsRightSideContainer">
+                <div id="kr-column"></div>
+            </div>
         </div>
-    </div>
+            <?= $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);?>
+<?php endif; ?>
 </div>
 <?= $this->element('common_modules') ?>
 
