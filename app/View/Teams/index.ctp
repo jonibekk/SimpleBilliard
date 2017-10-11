@@ -34,7 +34,7 @@
                 <label class="col col-sm-3 control-label form-label"><?= __("Team Name") ?></label>
                 <div class="col col-sm-6">
                     <p class="form-control-static">
-                        <?= $team['name'] ?>
+                        <?= h($team['name']) ?>
                     </p>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                 <label class="col col-sm-3 control-label form-label"><?= __("Timezone") ?></label>
                 <div class="col col-sm-6">
                     <p class="form-control-static">
-                        <?= $timezone_label ?>
+                        <?= h($timezone_label) ?>
                     </p>
                 </div>
             </div>
@@ -67,17 +67,17 @@
 
                     <p class="form-control-static">
 
-                        <?php if($serviceUseStatus==Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
+                        <?php if ($serviceUseStatus == Team::SERVICE_USE_STATUS_FREE_TRIAL): ?>
                             <?= __('Free Trial') ?>
-                        <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_PAID): ?>
+                        <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
                             <?= __('Paid Plan') ?>
-                        <?php elseif($serviceUseStatus==Team::SERVICE_USE_STATUS_READ_ONLY): ?>
+                        <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_READ_ONLY): ?>
                             <?= __('Read Only') ?>
                         <?php else: ?>
                             <?= __('Deactivated') ?>
                         <?php endif; ?>
-                        <?php if($isTeamAdmin && $serviceUseStatus!=Team::SERVICE_USE_STATUS_PAID):?>
-                            &dash;&nbsp;<a href="/payments"><?= __('Upgrade Plan');?></a>
+                        <?php if ($isTeamAdmin && $serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
+                            &dash;&nbsp;<a href="/payments"><?= __('Upgrade Plan'); ?></a>
                         <?php endif; ?>
 
                     </p>

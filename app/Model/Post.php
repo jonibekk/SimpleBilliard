@@ -1523,7 +1523,7 @@ class Post extends AppModel
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
-        $cmd = " post {$method_name}";
+        $cmd = " Operation.post {$method_name}";
         $cmd .= " -u " . $this->my_uid;
         $cmd .= " -t " . $this->current_team_id;
         $cmd .= " -p " . base64_encode(serialize($post_id));

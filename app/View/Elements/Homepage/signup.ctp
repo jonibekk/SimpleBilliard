@@ -20,14 +20,25 @@
 <section id="signup" class="signup">
     <div class="container text-center">
         <h2 class="title"><?= __('Let\'s go to Goalous!') ?></h2>
-        <p class="summary"><?= __("It's free till September 30, 2017! Try it out!") ?></p>
+        <?php if($isLoggedIn): ?>
+        <p class="row">
+            <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'home']) ?>"
+               class="col-md-6 col-md-offset-3">
+                <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Go Your Team') ?></button>
+            </a>
+        </p>
+        <?php else: ?>      
+        <p class="summary"><?= __("Easy set-up ･ Free 15 day Trial") ?></p>
         <p class="row">
             <a href="<?= $this->Html->url(['controller' => 'signup', 'action' => 'email', '?' => ['type' => 'bottom']]) ?>"
                class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
                 <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Create New Team') ?></button>
             </a>
+        <?php endif;?>
         </p>
-        <p><?= __('Are you on Goalous? %s. Any questions ? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
+        <?php if(!$isLoggedIn): ?>
+            <p><?= __('Already using Goalous? %s. <br />Have any questions? %s.', '<a href="/users/login">' . __('Login') . '</a>', '<a href="/contact">' . __('Contact us') . '</a>') ?></p>
+        <?php endif; ?>
     </div>
 </section><!--//signup-->
 <?= $this->App->viewEndComment()?>

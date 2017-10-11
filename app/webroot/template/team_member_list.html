@@ -63,7 +63,7 @@
     </section>
     <div class="col-xs-12">
         <section class="team-member-table">
-            <div ng-repeat="item in team_list | filter:name_field === true"
+            <div ng-repeat="item in team_list | filter:name_field"
                  ng-if="item.TeamMember.status == '1' || display_inactive_users"
                  ng-class="item.TeamMember.status == '2' ? 'disable_member' : ''" class="team-members-card">
 

@@ -9,20 +9,17 @@
 .payment{
     max-width: 600px;
     margin: 0 auto;
-    padding-top: 3em;
+    padding: 0;
     .panel-container{
-        margin: 0 20px;
+        padding: 0 20px;
     }
     h3{
-        margin:1.5em 0 1em 0;
+        margin:1em 0 1em 0;
         width:100%;
-        padding-bottom:.5em;
+        padding-bottom: .5em;
         border-bottom: 1px solid @cGray;
-        &:first-of-type{
-            margin-top: 0;
-        }
         @media @medium{
-            margin: .5em 0 1.25em 0;
+            margin: 2em 0 1.25em 0;
         }
     }
     h4{
@@ -34,6 +31,13 @@
     }
     p{
         line-height:1.2em;
+    }
+
+    .hr{
+        border-top: 1px solid @cGray;
+        width: 100%;
+        margin: 1.5rem 0;
+        display:block;
     }
 
     .form-group{
@@ -254,7 +258,7 @@
 .service-disabled{
     padding: 20px 0;
     .btn-primary{
-        width:10em;
+        width:12em;
         display:block;
         margin: 0 auto 2em auto;
         font-size: 20px;
@@ -344,30 +348,25 @@
     .btn-primary{
         margin: 1rem 0;
     }
-    .fa{
-        margin:0 .5rem 0 0;
-        color: @darkBlack;
-        font-size: 18px;
-    }
-    .fa-check{
-        color:@subColor6;
-        font-size: 14px;
-    }
 }
 
 .status-text{
     font-weight: 600;
+    &.free-trial{
+        color: @darkBlack;
+    }
+    &.subscribed{ 
+        color:@subColor7;
+    }
+    &.read-only{
+        color: @paleYellow;
+    }
+    &.deactivated{
+        color:@acidRed;
+    }
     i{
-        margin-right: 1rem;
-        &.free-trial, &.subscribed{
-            color:@subColor7;
-        }
-        &.read-only{
-            color: @paleYellow;
-        }
-        &.deactivated{
-            color:@acidRed;
-        }
+        margin-right: .5rem;
+        font-size: 20px;
     }
 }
 
@@ -379,6 +378,16 @@
 
 .team-price-info{
     margin: 2em 0;
+    .fa{
+        margin:0 .5rem 0 0;
+        color: @darkBlack;
+        font-size: 18px;
+    }
+    &:first-of-type{
+        h5{
+            margin-top: 0;
+        }
+    }
 }
 
 .team-price-info-number{
@@ -399,6 +408,67 @@
     color:@basicGray;
     li{
         margin-bottom: 10px;
+    }
+}
+
+.feature-category{
+    border-bottom: 1px solid @cGray;
+    margin: 10px 0;
+    padding-bottom: 10px;
+    .icon{
+        &:before{
+            color:@white;
+            font-family: FontAwesome; 
+            border-radius: 50%;
+            display: block;
+            font-size: 10px;
+            float: left;
+            text-align: center;
+            padding: 3px 0;
+            width: 20px;
+            margin-right: 5px;
+        }
+    }
+    .icon-heart{
+        &:before{
+            content: '\f004';
+            background-color:@acidRed;
+        }
+    }
+    .icon-message{
+        &:before{
+            content: '\f086';
+            background-color:@subColor13;
+        }
+    }
+    .icon-lock{
+        &:before{
+            content: '\f023';
+            background-color:@subColor6;
+        }
+    }
+    &:last-of-type{
+        border-bottom: none;
+    }
+    ul{
+        list-style-type: none;
+        margin: 5px 0 0 0;
+        padding-left: 25px;
+    }
+    li{
+        position: relative;
+        &:before{
+            content: '\f00c';
+            font-family:FontAwesome;
+            position: absolute;
+            left: -23px;
+        }
+    }
+}
+
+.feature-more-link{
+    .fa{
+        color:@acidRed;
     }
 }
 

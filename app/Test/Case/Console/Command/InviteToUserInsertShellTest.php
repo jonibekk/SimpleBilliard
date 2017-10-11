@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
-App::uses('InviteToUserInsertShell', 'Console/Command');
+App::uses('InviteToUserInsertShell', 'Console/Command/DataMigration/DataMigration/Console/Command');
 App::uses('Team', 'Model');
 App::uses('Invite', 'Model');
 App::uses('Email', 'Model');

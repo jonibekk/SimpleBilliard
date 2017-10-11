@@ -25,6 +25,26 @@ App::import('Service', 'UserService');
 class PagesController extends AppController
 {
     public $uses = ['TermsOfService'];
+
+    public function beforeFilter()
+    {
+        $this->_setLanguage();
+        //全ページ許可
+        $this->Auth->allow();
+
+        //チームidがあった場合は許可しない
+        if (isset($this->request->params['team_id'])) {
+            $this->Auth->deny('display');
+        }
+
+        // Pass login status to view
+        $this->set('isLoggedIn', $this->_isLoggedIn());
+
+        //切り換え可能な言語をセット
+        $this->set('lang_list', $this->_getPageLanguageList());
+        parent::beforeFilter();
+    }
+
     /**
      * Displays a view
      *
@@ -63,7 +83,7 @@ class PagesController extends AppController
         $page = $path[0];
 
         if ($page === 'pricing') {
-            $this->_setAmountPerUser();
+            $this->_setPricingValues();
         } elseif ($page === 'terms') {
             $this->_setTerms();
         }
@@ -137,22 +157,6 @@ class PagesController extends AppController
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-    }
-
-    public function beforeFilter()
-    {
-        $this->_setLanguage();
-        //全ページ許可
-        $this->Auth->allow();
-
-        //チームidがあった場合は許可しない
-        if (isset($this->request->params['team_id'])) {
-            $this->Auth->deny('display');
-        }
-
-        //切り換え可能な言語をセット
-        $this->set('lang_list', $this->_getPageLanguageList());
-        parent::beforeFilter();
     }
 
     public function _setLanguage()
@@ -368,17 +372,39 @@ class PagesController extends AppController
      *
      * @return void
      */
-    function _setAmountPerUser()
+    function _setPricingValues()
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init("UserService");
 
-        $amountPerUser = $PaymentService->getAmountPerUser($this->current_team_id);
-        $currencyType = $UserService->getCurrencyAsMember($this->current_team_id);
-        $price = $PaymentService->formatCharge($amountPerUser, $currencyType);
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $userCountryCode = $Lang->getUserCountryCode();
+        $userCurrency = $PaymentService->getCurrencyTypeByCountry($userCountryCode);
 
-        $this->set(compact('price'));
+        if (!$this->_isLoggedIn()) {
+            $amountPerUser = $PaymentService->getDefaultAmountPerUserByCountry($userCountryCode);
+            $price = $PaymentService->formatCharge($amountPerUser, $userCurrency);
+            $this->set(compact('price'));
+            return;
+        }
+
+        $teamId = $this->current_team_id;
+        $isLoggedIn = true;
+        $isPaidPlan = false;
+        $payment = $PaymentService->get($teamId);
+        if ($payment) {
+            $isPaidPlan = true;
+            $amountPerUser = $payment['amount_per_user'];
+            $currency = $payment['currency'];
+            $price = $PaymentService->formatCharge($amountPerUser, $currency);
+        } else {
+            $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamId, $userCountryCode);
+            $price = $PaymentService->formatCharge($amountPerUser, $userCurrency);
+        }
+        $this->set(compact('price', 'isLoggedIn', 'isPaidPlan'));
     }
+
 }

@@ -413,7 +413,7 @@ class MessageService extends AppService
      */
     function execPushMessageEvent(int $topicId, $socketId = null)
     {
-        $cmd = " push_message";
+        $cmd = " Operation.push_message";
         $cmd .= " -t " . $topicId;
         if ($socketId) {
             $cmd .= " -s " . $socketId;

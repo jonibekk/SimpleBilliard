@@ -101,7 +101,7 @@ export default class Company extends Base {
               name="company_post_code"
               value={payment_setting.company_post_code}
               label={__("Post Code")}
-              placeholder={__("12345")}
+              placeholder={__("12345 ")}
               err_msg={errors_payment_setting.company_post_code}
               max_length={16}
               onChange={(e) => this.onChange(e, "payment_setting")}

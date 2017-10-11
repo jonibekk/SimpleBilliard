@@ -24,7 +24,7 @@ App::uses('GlEmailComponent', 'Controller/Component');
  * - Team Admins
  *   * If user is admin in multiple teams, it will send multiple e-mails.
  * ## Usage
- * Console/cake send_alert_mail_to_admin
+ * Console/cake Payment.send_alert_mail_to_admin
  * - Options
  *   -f Force sending emails. If specified it,EXPIRE_ALERT_NOTIFY_BEFORE_DAYS will be ignored.
  *   -s This is about target "service_use_status". As default, target status is all. status: 0: free trial,2: read only,3:cannot use (choices: 0|2|3)
@@ -36,6 +36,8 @@ App::uses('GlEmailComponent', 'Controller/Component');
  */
 class SendAlertMailToAdminShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
         'Team',
         'TeamMember',

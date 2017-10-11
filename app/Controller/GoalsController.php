@@ -25,8 +25,9 @@ class GoalsController extends AppController
         parent::beforeFilter();
         $allowed_actions = ['add_completed_action'];
         //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
-        if (in_array($this->request->params['action'], $allowed_actions)) {
+        if (in_array($this->request->params['action'], $allowed_actions) && $this->is_mb_app) {
             $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
         }
     }
 
@@ -402,7 +403,14 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getCollaboModalItem($goal_id);
         $priority_list = $this->Goal->priority_list;
-        $this->set(compact('goal', 'priority_list'));
+
+        /** @var GoalApprovalService $GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $canApprove = $GoalApprovalService->isApprovable(
+            $this->Auth->user('id'), $this->Session->read('current_team_id')
+        );
+
+        $this->set(compact('goal', 'priority_list', 'canApprove'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -461,6 +469,9 @@ class GoalsController extends AppController
         $this->request->data['GoalMember']['approval_status'] = $new ? GoalMember::APPROVAL_STATUS_NEW : GoalMember::APPROVAL_STATUS_REAPPLICATION;
         $this->request->data['GoalMember']['is_target_evaluation'] = false;
 
+        $this->request->data['GoalMember']['is_wish_approval'] = !empty($this->request->data['GoalMember']['is_wish_approval']);
+
+
         if (!$this->Goal->GoalMember->edit($this->request->data)) {
             $this->_editCollaboError();
             return $this->redirect($this->referer());
@@ -482,7 +493,6 @@ class GoalsController extends AppController
 
         //mixpanel
         if ($new) {
-            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $goalId);
             // コラボしたのがコーチーの場合は、コーチとしての通知を送るのでゴールリーダーとしての通知は送らない
             if ($goalLeaderUserId != $coachId) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $goalId);

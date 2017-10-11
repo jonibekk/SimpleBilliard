@@ -3,16 +3,14 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
 
-use Goalous\Model\Enum as Enum;
-
 /**
- * creating credit card payment about passed parameters
- * for recovering credit card monthly payments
+ * creating invoice payment about passed parameters
+ * for recovering invoice monthly payments
  *
  * this shell is not for crontabs/systemd to run automatically
  *
  * # usage
- * ./Console/cake recover_monthly_payment_credit_card --team_id=<teams.id> --amount_charge_users=<int> --target_date_time="<Y-m-d>"
+ * ./Console/cake Payment.recover_monthly_payment_invoice --team_id=<teams.id> --amount_charge_users=<int> --target_date_time="<Y-m-d>"
  *
  * # required param
  * @param team_id int target teams.id
@@ -20,17 +18,18 @@ use Goalous\Model\Enum as Enum;
  * @param target_date_time string target date time it should be created paid at
  *
  * # sample command
- * ./Console/cake recover_monthly_payment_credit_card --team_id=7 --amount_charge_users=1 --target_date_time="2017-09-12"
+ * ./Console/cake Payment.recover_monthly_payment_invoice --team_id=7 --amount_charge_users=1 --target_date_time="2017-09-12"
  *
- * class RecoverMonthlyPaymentCreditCardShell
- *
+ * class RecoverMonthlyPaymentInvoiceShell
  * @property Team             $Team
  * @property TeamMember       $TeamMember
  * @property PaymentSetting   $PaymentSetting
  * @property PaymentService   $PaymentService
  */
-class RecoverMonthlyPaymentCreditCardShell extends AppShell
+class RecoverMonthlyPaymentInvoiceShell extends AppShell
 {
+    protected $enableOutputLogStartStop = true;
+
     public $uses = [
         'Team',
         'TeamMember',
@@ -66,6 +65,12 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         return $parser;
     }
 
+    /**
+     * validate and return values of required parameters to execute invoice payments
+     *
+     * @throws InvalidArgumentException
+     * @return array
+     */
     private function getValuesFromOption(): array
     {
         // validate option: target team
@@ -77,9 +82,9 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         if (empty($team)) {
             throw new InvalidArgumentException(sprintf('team not found on team id: %d', $teamId));
         }
-        $paymentSetting = $this->PaymentSetting->getCcByTeamId($teamId);
+        $paymentSetting = $this->PaymentSetting->getInvoiceByTeamId($teamId);
         if (empty($paymentSetting)) {
-            throw new InvalidArgumentException(sprintf('payment setting of credit card not found on team id: %d', $teamId));
+            throw new InvalidArgumentException(sprintf('payment setting of invoice not found on team id: %d', $teamId));
         }
 
         // validate option: amount_charge_users
@@ -129,7 +134,7 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         $currentCountTeamChargeMembers = $this->TeamMember->countChargeTargetUsers($team['id']);
         $this->logInfo(sprintf('current team member charge count(from db): %d', $currentCountTeamChargeMembers));
 
-        $inputConfirmContinue = $this->in('Are you sure to continue credit card charge? [yes/no]');
+        $inputConfirmContinue = $this->in('Are you sure to continue register invoice? [yes/no]');
         $this->logInfo(sprintf('confirm input: %s', $inputConfirmContinue));
         if ('yes' !== $inputConfirmContinue) {
             $this->out('aborted');
@@ -137,14 +142,12 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         }
 
         $this->hr();
-        $this->out("Apply Credit card charge");
+        $this->out("Registering invoice");
         $this->hr();
         try {
-            $this->PaymentService->applyCreditCardCharge(
+            $this->PaymentService->registerInvoice(
                 $team['id'],
-                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $amountChargeUsers,
-                null,
                 $targetDateTime->getTimestamp()
             );
         } catch (Exception $e) {
