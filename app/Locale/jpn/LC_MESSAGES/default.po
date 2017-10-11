@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-10-05 16:54+0900\n"
+"PO-Revision-Date: 2017-10-12 00:37+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1355,7 +1355,7 @@ msgstr "%1$s、%2$sと%3$sに共有"
 msgid "Shared %1$s and %2$s others,%3$s and %4$s circle(s)"
 msgstr "%1$sと他%2$s人、%3$s他%4$sサークルに共有"
 
-msgid "Registered tempolarily"
+msgid "Registered temporarily"
 msgstr "アカウントの仮登録が完了しました"
 
 msgid "Reset Password"
@@ -1399,6 +1399,9 @@ msgstr "有料プラン登録が完了しました"
 
 msgid "We had a problem billing your team"
 msgstr "請求で問題が発生しています"
+
+msgid "We are downgrading your team to read-only"
+msgstr "読み取り専用にダウングレードしました"
 
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
@@ -4547,6 +4550,18 @@ msgstr "この招待に応じる場合は、次のリンクをクリックして
 
 msgid "Message from %s:"
 msgstr "%sからのメッセージ："
+
+msgid ""
+"We’ve attempted to bill for the last 3 months, but have been unsuccessful."
+msgstr "過去3か月間、請求を試みましたが失敗しました。"
+
+msgid "We are downgrading your team to read-only."
+msgstr "そのため、あなたのチームを読み取り専用にダウングレードしました。"
+
+msgid ""
+"If you want to reactivate your team, you can register at the following link:"
+msgstr ""
+"チームを再度アクティブにする場合は、次のリンクから登録し直してください。"
 
 msgid "\"%s\""
 msgstr "「%s」"

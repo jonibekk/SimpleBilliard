@@ -183,6 +183,24 @@ class GlEmailComponent extends Component
     }
 
     /**
+     * Sending a alert of expires
+     *
+     * @param int    $toUid
+     * @param int    $teamId
+     */
+    public function sendMailMovedReadOnlyForChargeFailure(
+        int $toUid,
+        int $teamId
+    ) {
+        $mailTemplate = Sendmail::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE;
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments", ['team_id' => $teamId]);
+        $item = compact('teamName', 'expireDate', 'url');
+        $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+
+    /**
      * Sending a alert of charge failure
      *
      * @param int    $toUid
