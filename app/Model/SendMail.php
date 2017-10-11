@@ -130,7 +130,7 @@ class SendMail extends AppModel
 
     public function _setTemplateSubject()
     {
-        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __("Registered tempolarily");
+        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __("Registered temporarily");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __("Reset Password");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __("Succeeded to reset password");
         self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __("Authentication email address");
@@ -146,8 +146,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_ALERT_CHARGE_FAILURE]['subject'] = __("We had a problem billing your team");
-        // TODO:Update mail subject after Kohei created
-        self::$TYPE_TMPL[self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE]['subject'] = __("Moved read only status");
+        self::$TYPE_TMPL[self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE]['subject'] = __("We are downgrading your team to read-only");
     }
 
     function __construct($id = false, $table = null, $ds = null)

@@ -1,6 +1,8 @@
 <?php
 App::import('Service', 'TeamService');
 App::uses('AppUtil', 'Util');
+App::uses('AppController', 'Controller');
+App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 
@@ -28,6 +30,9 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
     public function startup()
     {
         parent::startup();
+        // initializing component
+        $this->GlEmail = new GlEmailComponent(new ComponentCollection());
+        $this->GlEmail->startup(new AppController());
     }
 
     /**
@@ -59,6 +64,10 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
 
         // To check if it failed three times certainly, filter charge history from the date four months ago rather than three months ago to the current day
         $startTimestamp = GoalousDateTime::now()->subMonth(4)->getTimestamp();
+        $this->logInfo(sprintf('start time stamp: %d (%s)',
+            $startTimestamp,
+            GoalousDateTime::createFromTimestamp($startTimestamp)->format('Y-m-d H:i:s')));
+
         $targetTeamIds = $this->Team->findTargetsForMovingReadOnly($startTimestamp, $targetTimestamp);
 
         if (empty($targetTeamIds)) {
@@ -66,20 +75,31 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
             return;
         }
 
+        $this->logInfo(AppUtil::jsonOneLine(compact('targetTeamIds')));
+
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init('TeamService');
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
+
+        $teams = $this->Team->find('all', ['conditions' => ['id' => $targetTeamIds], 'fields' => ['id','timezone']]);
+        $timezoneEachTeamId = Hash::combine($teams, '{n}.Team.id', '{n}.Team.timezone');
 
         $updateErrTeamIds = [];
         foreach ($targetTeamIds as $teamId) {
+            $currentDateTimeOfTeamTimeZone = GoalousDateTime::now()->setTimeZoneByHour($timezoneEachTeamId[$teamId]);
+            // Update team's service use status
             $res = $TeamService->updateServiceUseStatus(
                 $teamId,
                 Enum\Team\ServiceUseStatus::READ_ONLY,
-                GoalousDateTime::now()->format('Y-m-d')
+                $currentDateTimeOfTeamTimeZone->format('Y-m-d')
             );
             if (!$res) {
                 $updateErrTeamIds[] = $teamId;
                 continue;
             }
+            // Delete cache team info
+            $GlRedis->dellKeys("*current_team:team:{$teamId}");
             $this->_sendEmailToAdmins($teamId);
         }
 
