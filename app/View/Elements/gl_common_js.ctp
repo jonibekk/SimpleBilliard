@@ -38,8 +38,9 @@ echo $this->PageResource->getPageScript();
 ?>
 
 <?php //公開環境のみタグを有効化
-if (PUBLIC_ENV && !$is_mb_app && !$isMobileBrowser) {
+if (PUBLIC_ENV) {
     /** @noinspection PhpDeprecationInspection */
+    // TODO: Find a more optimized solution to track user interactions
     echo $this->element('intercom');
 }
 ?>
