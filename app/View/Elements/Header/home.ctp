@@ -16,11 +16,15 @@
 if (!isset($top_lang)) {
     $top_lang = null;
 }
+$backBtn = isset($_GET['backBtn']);
+
 ?>
 <header id="header" class="header">
     <div class="container">
-        <?php if (!isset($_GET['backBtn'])): ?>
-            <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
+        <?php if ($backBtn && $is_mb_app): ?>
+            <?= $this->element('Header/back_btn'); ?><a class="back-btn-text" href="#" onclick="window.history.back();">Back</a>
+        <?php else: ?>
+        <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
                 <h1 class="logo pull-left">
                     <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
                 </h1>
@@ -86,8 +90,6 @@ if (!isset($top_lang)) {
                     </ul> <!-- //nav -->
                 </div> <!-- //navbar-collapse -->
             </nav> <!-- //main-nav -->
-        <?php else: ?>
-            <?= $this->element('Header/back_btn'); ?><a class="back-btn-text" href="#" onclick="window.history.back();">Back</a>
         <?php endif; ?>
     </div> <!-- //container -->
 </header> <!-- //header -->
