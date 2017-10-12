@@ -554,7 +554,7 @@ App::uses('AttachedFile', 'Model');
             "Complete": "<?=__("Complete")?>",
             "Incomplete": "<?=__("Incomplete")?>",
             "Progress": "<?=__("Progress")?>",
-            "Wish goal approval": "<?=__("Wish goal approval")?>",
+            "Request goal approval": "<?=__("Request goal approval")?>",
             "Name": "<?=__("Name")?>",
             "Level of achievement": "<?=__("Level of achievement")?>",
             "Achieved": "<?= __("Achieved") ?>",
