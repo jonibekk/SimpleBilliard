@@ -131,16 +131,23 @@ class InvitationService extends AppService
 
             $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, count($emails));
 
+            /* Insert users table */
+            // Get emails of registered users
+            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
+            foreach ($emails as &$email) {
+                $matches = preg_grep("/".$email."/i", $existEmails);
+                if (!empty($matches)) {
+                    $email = array_shift($matches);
+                }
+            }
+            $newEmails = array_udiff($emails, $existEmails, 'strcasecmp');
+
             /* Insert invitations table */
             if (!$Invite->saveBulk($emails, $teamId, $fromUserId)) {
                 throw new Exception(sprintf("Failed to insert invitations. data:%s",
                         AppUtil::varExportOneLine(compact('emails', 'teamId', 'fromUserId')))
                 );
             }
-            /* Insert users table */
-            // Get emails of registered users
-            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
-            $newEmails = array_udiff($emails, $existEmails, 'strcasecmp');
 
             $insertEmails = [];
             foreach ($newEmails as $email) {
