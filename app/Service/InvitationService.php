@@ -140,7 +140,7 @@ class InvitationService extends AppService
             /* Insert users table */
             // Get emails of registered users
             $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
-            $newEmails = array_diff($emails, $existEmails);
+            $newEmails = array_udiff($emails, $existEmails, 'strcasecmp');
 
             $insertEmails = [];
             foreach ($newEmails as $email) {
