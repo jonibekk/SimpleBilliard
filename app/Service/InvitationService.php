@@ -63,13 +63,24 @@ class InvitationService extends AppService
         $uniqueEmails = array_unique($emails);
         $duplicateEmails = array_diff_key($emails, $uniqueEmails);
         foreach ($duplicateEmails as $i => $duplicateEmail) {
+            if (empty($duplicateEmail)) {
+                continue;
+            }
             $errors[] = __("Line %d", $i + 1) . "：" . __("%s is duplicated.", __("Email address"));
         }
         if (!empty($errors)) {
             return $errors;
         }
         $existEmails = $Email->findExistByTeamId($teamId, $emails);
-        $errEmails = array_intersect($emails, $existEmails);
+        // Filter error emails (case-insensitive)
+        $errEmails = array_filter($emails, function ($email) use ($existEmails) {
+            if (empty($email)) {
+                return false;
+            }
+            $matches = preg_grep("/^" . preg_quote($email) . "$/i", $existEmails);
+            return !empty($matches);
+        });
+
         foreach ($errEmails as $i => $mail) {
             $errors[] = __("Line %d",
                     $i + 1) . "：" . __("This email address has already been used. Use another email address.");
@@ -129,7 +140,24 @@ class InvitationService extends AppService
         try {
             $this->TransactionManager->begin();
 
+            $emails = array_filter($emails, "strlen");
+
             $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, count($emails));
+
+            /* Insert users table */
+            // Get emails of registered users
+            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
+            // If email has already registered with other team, replace email string by case-insensitive
+            // e.g. Send invitation "test@company.jp" to team1, but "Test@company.jp" user  has been registered team2.
+            // In this case, we change "test@company.jp" →　"Test@company.jp" in $emails
+            // This process is to prevent to register new user.
+            foreach ($emails as &$email) {
+                $matches = preg_grep("/^" . preg_quote($email) . "$/i", $existEmails);
+                if (!empty($matches)) {
+                    $email = array_shift($matches);
+                }
+            }
+            $newEmails = array_udiff($emails, $existEmails, 'strcasecmp');
 
             /* Insert invitations table */
             if (!$Invite->saveBulk($emails, $teamId, $fromUserId)) {
@@ -137,10 +165,6 @@ class InvitationService extends AppService
                         AppUtil::varExportOneLine(compact('emails', 'teamId', 'fromUserId')))
                 );
             }
-            /* Insert users table */
-            // Get emails of registered users
-            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
-            $newEmails = array_diff($emails, $existEmails);
 
             $insertEmails = [];
             foreach ($newEmails as $email) {
