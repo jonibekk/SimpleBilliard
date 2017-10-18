@@ -77,7 +77,7 @@ class InvitationService extends AppService
             if (empty($email)) {
                 return false;
             }
-            $matches = preg_grep("/" . preg_quote($email) . "/i", $existEmails);
+            $matches = preg_grep("/^" . preg_quote($email) . "$/i", $existEmails);
             return !empty($matches);
         });
 
@@ -152,7 +152,7 @@ class InvitationService extends AppService
             // In this case, we change "test@company.jp" →　"Test@company.jp" in $emails
             // This process is to prevent to register new user.
             foreach ($emails as &$email) {
-                $matches = preg_grep("/" . preg_quote($email) . "/i", $existEmails);
+                $matches = preg_grep("/^" . preg_quote($email) . "$/i", $existEmails);
                 if (!empty($matches)) {
                     $email = array_shift($matches);
                 }
