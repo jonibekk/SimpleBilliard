@@ -25,8 +25,8 @@ $this->Upload->uploadImage($current_circle, 'Circle.photo', ['style' => 'small']
        'action'     => 'ajax_get_circle_members',
        'circle_id'  => $current_circle['Circle']['id']
    ]) ?>"
-     class="modal-ajax-get remove-on-hide" id="circle-filter-menu-member-url">
-     <span class="feed-circle-user-number"><i class="fa fa-user"></i>&nbsp;
+   class="modal-ajax-get remove-on-hide" id="circle-filter-menu-member-url">
+    <span class="feed-circle-user-number"><i class="fa fa-user"></i>&nbsp;
         <span id="circle-filter-menu-circle-member-count">
             <?php if (isset($circle_member_count)): ?><?= $circle_member_count ?><?php endif ?>
         </span>
