@@ -422,7 +422,7 @@ function resetNavBarPadding() {
  * set cookie for disappearing alert
  */
 function setCookieCloseAlert(teamId) {
-  setCookie('alertClosedTeam_' + teamId, 1, 1);
+  setCookie('alertClosedTeam_' + teamId, 1, 3);
 }
 
 function isClosedAlert(teamId) {
