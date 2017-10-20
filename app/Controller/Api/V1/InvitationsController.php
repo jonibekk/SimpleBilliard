@@ -228,9 +228,6 @@ class InvitationsController extends ApiController
         }
 
         $inviteData = $Invite->getUnverifiedWithEmailByUserId($userId, $this->current_team_id);
-        if ($Email->isVerified($requestedEmail)) {
-            return $this->_getResponseBadFail(__("Error, this user already exists."));
-        }
         if (empty($inviteData)) {
             return $this->_getResponseNotFound();
         }
