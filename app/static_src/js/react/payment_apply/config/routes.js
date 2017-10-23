@@ -18,6 +18,7 @@ import CreditCardContainer from '../containers/credit_card'
 import InvoiceContainer from '../containers/invoice'
 import ConfirmContainer from '../containers/confirm'
 import CompleteContainer from '../containers/complete'
+import SelectCampaignContainer from '../containers/select_campaign'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -54,6 +55,7 @@ export default class Routes extends Component {
               <Route path="apply/credit_card" component={CreditCardContainer} />
               <Route path="apply/invoice" component={InvoiceContainer} />
               <Route path="apply/confirm" component={ConfirmContainer} />
+              <Route path="apply/select_campaign" component={SelectCampaignContainer} />
               <Route path="apply/complete" component={CompleteContainer} />
             </Route>
           </Router>

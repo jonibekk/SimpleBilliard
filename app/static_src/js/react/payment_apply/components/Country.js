@@ -27,7 +27,7 @@ export default class Country extends Base {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.payment.to_next_page) {
-      browserHistory.push(Page.URL_COMPANY)
+      browserHistory.push(Page.URL_SELECT_CAMPAIGN)
     }
   }
 

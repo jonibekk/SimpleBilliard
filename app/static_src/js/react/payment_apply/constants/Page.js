@@ -6,6 +6,7 @@ export const CONFIRM = 'confirm'
 export const COMPLETE = 'complete'
 
 export const URL_COUNTRY = '/payments/apply'
+export const URL_SELECT_CAMPAIGN = '/payments/apply/select_campaign'
 export const URL_COMPANY = '/payments/apply/company'
 export const URL_INVOICE = '/payments/apply/invoice'
 export const URL_CREDIT_CARD = '/payments/apply/credit_card'
