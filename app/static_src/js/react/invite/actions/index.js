@@ -95,6 +95,8 @@ export function saveInvitation() {
           new Noty({
             type: 'error',
             text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
+          }).on('afterShow', function() {
+              dispatch({type: types.REDIRECT_TO_UPGRADE_PLAN})
           }).show();
           dispatch(invalid(response.data))
         } else {

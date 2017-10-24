@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 App::uses('Email', 'Model');
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
@@ -131,6 +132,8 @@ class InvitationService extends AppService
         $Team = ClassRegistry::init("Team");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         $res = [
             'error' => false,
@@ -141,8 +144,19 @@ class InvitationService extends AppService
             $this->TransactionManager->begin();
 
             $emails = array_filter($emails, "strlen");
-
             $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, count($emails));
+
+            // Check if it is a Campaign user and if the number of users does not exceeds
+            // the maximum allowed on the campaign
+            if ($CampaignService->purchased($teamId)) {
+                $numberOfInvitations = count($emails);
+                $currentUserCount = $TeamMember->countChargeTargetUsers($teamId);
+                $campaignMaximumUsers = $CampaignService->getMaxAllowedUsers($teamId);
+
+                if ($campaignMaximumUsers < ($numberOfInvitations + $currentUserCount)) {
+                    throw new ErrorException("The number of invitations exceed the number of users allowed to your plan.");
+                }
+            }
 
             /* Insert users table */
             // Get emails of registered users
@@ -213,7 +227,7 @@ class InvitationService extends AppService
             /* Charge if paid plan */
             // TODO.payment: Should we store $addUserCnt to DB?
             $addUserCnt = count($targetUserIds);
-            if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
+            if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
                     $teamId,
@@ -236,6 +250,13 @@ class InvitationService extends AppService
             CakeLog::emergency($e->getTraceAsString());
             $res['error'] = true;
             $res['msg'] = __('Invitation was failed.') . " " . __('Please try again later.');
+            return $res;
+        } catch (ErrorException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::info("Team $teamId is trying to invite too many users.");
+            $res['error'] = true;
+            // TODO: add translations
+            $res['msg'] = "The number of invitations exceed the number of users allowed to your plan.";
             return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();

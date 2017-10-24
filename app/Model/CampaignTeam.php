@@ -1,23 +1,28 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
-
 /**
- * CampaignTeam Model
+ * Class CampaignTeam
+ *
+ * Teams applicable to campaigns
+ * キャンペーン適用チーム
  */
 class CampaignTeam extends AppModel
 {
     /**
-     * is campaign team
-     * TODO: Implement. This is mock.
+     * Return true if the team is entitled to monthly campaign
      *
      * @param int $teamId
      *
      * @return bool
      */
-    public function isCampaignTeam(int $teamId): bool
+    function isCampaignTeam(int $teamId): bool
     {
+        $campaignTeam = $this->getByTeamId($teamId, ['id']);
+        if (!empty($campaignTeam)) {
+            return true;
+        }
         return false;
     }
 }
+
