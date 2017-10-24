@@ -1,5 +1,8 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('CampaignPricePlan', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class CampaignService
@@ -65,5 +68,30 @@ class CampaignService extends AppService
 
         $maxMembers = $pricePlan['max_members'];
         return $maxMembers;
+    }
+
+    function findList(int $teamId): array
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init("CampaignTeam");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $res = [];
+        $campaigns = $CampaignTeam->findPricePlans($teamId);
+        foreach($campaigns as $campaign) {
+            $currencyType = $campaign['CampaignPriceGroup']['currency'];
+            $subTotalCharge = $campaign['CampaignPricePlan']['price'];
+            $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
+            $totalCharge = $subTotalCharge + $tax;
+            $res[] = [
+                'id'               => $campaign['CampaignPricePlan']['id'],
+                'sub_total_charge' => $PaymentService->formatCharge($subTotalCharge, $currencyType),
+                'tax'              => $PaymentService->formatCharge($tax, $currencyType),
+                'total_charge'     => $PaymentService->formatCharge($totalCharge, $currencyType),
+                'member_count'     => $campaign['CampaignPricePlan']['max_members'],
+            ];
+        }
+        return $res;
     }
 }

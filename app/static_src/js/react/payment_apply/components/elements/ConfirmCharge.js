@@ -9,10 +9,13 @@ class ConfirmCharge extends React.Component {
   render() {
     return (
         <div className="payment-info-group">
-          <strong>{__('Price per user')}:&nbsp;</strong><span
-          className="info-value">{this.props.amount_per_user}</span><br/>
-          <strong>{__('Number of users')}:&nbsp;</strong><span
-          className="info-value">{this.props.charge_users_count}</span><br/>
+          {!this.props.is_campaign && 
+            <div>
+              <strong>{__('Price per user')}:&nbsp;</strong><span
+              className="info-value">{this.props.amount_per_user}</span><br/>
+            </div>
+          }
+          <strong>{__('Number of users')}:&nbsp;</strong><span className="info-value">{this.props.charge_users_count}</span><br/>
           <strong>{__('Sub Total')}:&nbsp;</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
           <strong>{__('Tax')}:&nbsp;</strong><span className="info-value">{this.props.tax}</span><br/>
           <div className="hr"></div>
@@ -30,6 +33,7 @@ ConfirmCharge.propTypes = {
   sub_total_charge: React.PropTypes.string,
   tax: React.PropTypes.string,
   total_charge: React.PropTypes.string,
+  is_campaign: React.PropTypes.boolean
 };
 ConfirmCharge.defaultProps = {
   amount_per_user: "",
@@ -37,6 +41,6 @@ ConfirmCharge.defaultProps = {
   sub_total_charge: "",
   tax: "",
   total_charge: "",
-
+  is_campaign: false
 };
 export default connect()(ConfirmCharge);

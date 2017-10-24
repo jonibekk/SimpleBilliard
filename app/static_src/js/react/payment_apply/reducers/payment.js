@@ -35,7 +35,10 @@ const initial_state = {
       contact_person_email: "",
     },
     price_plan_purchase_team: {
-      price_plan_id: ""
+      price_plan_id: "",
+      tax: "",
+      sub_total_charge: "",
+      total_charge: ""
     },
     credit_card: {
       customer_code:""
