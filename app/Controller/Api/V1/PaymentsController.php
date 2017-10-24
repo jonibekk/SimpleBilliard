@@ -25,6 +25,11 @@ class PaymentsController extends ApiController
                 'type'
             ],
         ],
+        'campaign'       => [
+            'PricePlanPurchaseTeam' => [
+                'price_plan_id'
+            ]
+        ],
         'company'        => [
             'PaymentSetting' => [
                 'company_name',
@@ -173,6 +178,8 @@ class PaymentsController extends ApiController
             return $this->_getResponseValidationFail($validationErrors);
         }
 
+        $this->log($requestData);
+
         // Check if the country is Japan
         if (Hash::get($requestData, 'payment_setting.company_country') !== 'JP') {
             // TODO.Payment: Add translation for message
@@ -233,6 +240,10 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('countries', $dataTypes)) {
             $countries = Configure::read("countries");
             $res['countries'] = Hash::combine($countries, '{n}.code', '{n}.name');
+            // TODO: Implement getting is_campaign_team
+            /** @var TeamMember $TeamMember */
+            $CampaignTeam = ClassRegistry::init("CampaignTeam");
+            $res['is_campaign_team'] = $CampaignTeam->isCampaignTeam($teamId);
         }
 
         if ($dataTypes == 'all' || in_array('lang_code', $dataTypes)) {
@@ -349,6 +360,10 @@ class PaymentsController extends ApiController
                     ]
                 );
             }
+        }
+
+        if ($page === 'campaign') {
+            // TODO: Implement price plan id validation
         }
 
         /** @var PaymentService $PaymentService */

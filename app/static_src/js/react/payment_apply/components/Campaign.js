@@ -9,22 +9,35 @@ import {PaymentSetting} from "~/common/constants/Model";
 export default class Campaign extends Base {
   constructor(props) {
     super(props);
+    this.onChange = this.onChange.bind(this)
   }
 
   componentWillMount() {
     this.props.fetchInitialData(Page.CAMPAIGN)
   }
 
-  choose(campaign_id) {
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.payment.to_next_page) {
+      browserHistory.push(Page.URL_COMPANY)
+    }
   }
 
+  componentDidMount() {
+    super.componentDidMount.apply(this)
+  }
+
+  onChange(price_plan_id) {
+    this.props.updateInputData({ price_plan_id }, 'price_plan_purchase_team')
+    this.props.validatePayment(Page.CAMPAIGN, {payment_setting: { price_plan_id }});
+  }
+
+  // TODO: Merge @joshua 's view file
   render() {
     const { payment } = this.props
     const campaigns_el = () => {
       return payment.campaigns.map((campaign, i) => {
         return (
-          <a onClick={ this.choose(campaign.id) }>
+          <a onClick={ () => { this.onChange(campaign.id) } } key={ campaign.id}>
             { campaign.total_charge }
           </a>
         )
