@@ -17,7 +17,7 @@ class AddPricePlanIdToPricePlanPurchaseTeams extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'price_plan_purchase_teams' => array(
-					'price_plan_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => false, 'after' => 'team_id'),
+					'price_plan_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'after' => 'team_id'),
 				),
 			),
 		),
