@@ -178,8 +178,6 @@ class PaymentsController extends ApiController
             return $this->_getResponseValidationFail($validationErrors);
         }
 
-        $this->log($requestData);
-
         // Check if the country is Japan
         if (Hash::get($requestData, 'payment_setting.company_country') !== 'JP') {
             // TODO.Payment: Add translation for message

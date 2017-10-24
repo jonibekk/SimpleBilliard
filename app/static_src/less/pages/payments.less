@@ -322,7 +322,7 @@
         }
         tbody{
             tr{
-                border-bottom: 1px solid @trueGray;
+                border-color: 1px solid @trueGray;
                 height: 40px;
                 td{ 
                     border-right: none;
@@ -340,6 +340,9 @@
             padding: .15em .5em;
             font-weight: 600;
             border-width:1px;
+            &.selected {
+                border-color: @subColor7;
+            }
         }
         .fa.fa-check.success{
             display:block;
