@@ -88,6 +88,8 @@ class InvitationsController extends ApiController
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
         // Check permission
         if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
@@ -112,9 +114,12 @@ class InvitationsController extends ApiController
         if (empty($paySetting)) {
             return $this->_getResponseSuccess();
         }
+
         // Calc charge user count
         $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $invitationCnt);
-        if ($chargeUserCnt == 0) {
+
+        // Charges not applicable to campaign users or count 0
+        if ($chargeUserCnt == 0 || $PricePlanPurchaseTeam->isCampaignTeam($teamId)) {
             $res = [
                 'charge_users_count' => 0,
             ];
