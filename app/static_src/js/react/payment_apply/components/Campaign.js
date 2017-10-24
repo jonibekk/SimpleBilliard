@@ -6,7 +6,7 @@ import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
 import {PaymentSetting} from "~/common/constants/Model";
 
-export default class SelectCampaign extends Base {
+export default class Campaign extends Base {
   constructor(props) {
     super(props);
   }
