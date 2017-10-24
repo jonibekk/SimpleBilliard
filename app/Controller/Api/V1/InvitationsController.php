@@ -4,6 +4,7 @@ App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::import('Service', 'InvitationService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -88,8 +89,8 @@ class InvitationsController extends ApiController
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
-        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
-        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         // Check permission
         if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
@@ -119,7 +120,7 @@ class InvitationsController extends ApiController
         $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $invitationCnt);
 
         // Charges not applicable to campaign users or count 0
-        if ($chargeUserCnt == 0 || $PricePlanPurchaseTeam->isCampaignTeam($teamId)) {
+        if ($chargeUserCnt == 0 || $CampaignService->purchased($teamId)) {
             $res = [
                 'charge_users_count' => 0,
             ];

@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 App::uses('Email', 'Model');
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
@@ -131,8 +132,8 @@ class InvitationService extends AppService
         $Team = ClassRegistry::init("Team");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
-        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
-        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         $res = [
             'error' => false,
@@ -147,10 +148,10 @@ class InvitationService extends AppService
 
             // Check if it is a Campaign user and if the number of users does not exceeds
             // the maximum allowed on the campaign
-            if ($PricePlanPurchaseTeam->isCampaignTeam($teamId)) {
+            if ($CampaignService->purchased($teamId)) {
                 $numberOfInvitations = count($emails);
                 $currentUserCount = $TeamMember->countChargeTargetUsers($teamId);
-                $campaignMaximumUsers = $PricePlanPurchaseTeam->getMaxAllowedUsers($teamId);
+                $campaignMaximumUsers = $CampaignService->getMaxAllowedUsers($teamId);
 
                 if ($campaignMaximumUsers < ($numberOfInvitations + $currentUserCount)) {
                     throw new ErrorException("The number of invitations exceed the number of users allowed to your plan.");
@@ -226,7 +227,7 @@ class InvitationService extends AppService
             /* Charge if paid plan */
             // TODO.payment: Should we store $addUserCnt to DB?
             $addUserCnt = count($targetUserIds);
-            if ($Team->isPaidPlan($teamId) && !$PricePlanPurchaseTeam->isCampaignTeam($teamId) && $chargeUserCnt > 0) {
+            if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
                     $teamId,

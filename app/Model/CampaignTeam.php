@@ -16,7 +16,7 @@ class CampaignTeam extends AppModel
      *
      * @return bool
      */
-    function isAllowedToCampaign(int $teamId): bool
+    function isCampaignTeam(int $teamId): bool
     {
         $campaignTeam = $this->getByTeamId($teamId, ['id']);
         if (!empty($campaignTeam)) {
