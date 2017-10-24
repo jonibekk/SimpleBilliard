@@ -37,20 +37,38 @@ export default class Campaign extends Base {
     const campaigns_el = () => {
       return payment.campaigns.map((campaign, i) => {
         return (
-          <a onClick={ () => { this.onChange(campaign.id) } } key={ campaign.id}>
-            { campaign.total_charge }
-          </a>
+          <tr>
+            <td>{ campaign.member_count }{ __('members')}</td>
+            <td>{ campaign.total_charge }</td>
+            <td><a onClick={ () => { this.onChange(campaign.id) } } key={ campaign.id} className="btn small">{__('Select')}</a></td>
+          </tr>
         )
       })
     }
     return (
       <section className="panel payment">
-        <div>
-          <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply">
-            {__("Back")}
-          </Link>
-          { __("members") }
-          <ul>{ campaigns_el() }</ul>
+        <div className="panel-container">
+            <h3>{ __("Select Plan") }</h3>
+            <p>{ __('You have 187 active members. Please select the best plan for the number of members expected for your team.') }</p>
+            <table className="payment-table campaign-table">
+                <thead>
+                    <tr>
+                        <td><strong>{ __('Plan')}</strong><br />{ __('max members')}</td>
+                        <td><strong>{ __('Price')}</strong><br />{ __('per month')}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    { campaigns_el() }
+                </tbody>
+            </table>
+            <p>{ __('Larger plans available on request. All prices are without tax.')}</p>
+        </div>
+        <div className="panel-footer setting_pannel-footer">
+            <a className="btn btn-link design-cancel bd-radius_4px" href="/payments/method">
+                { __("Cancel") }
+            </a>
+            <input type="submit" className="btn btn-primary" value={ __('Update') }disabled="disabled" />
         </div>
       </section>
     )
