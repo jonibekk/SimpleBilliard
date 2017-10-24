@@ -29,6 +29,7 @@ class InvitationServiceTest extends GoalousTestCase
         'app.invite',
         'app.payment_setting',
         'app.charge_history',
+        'app.price_plan_purchase_team',
     );
 
     /**
