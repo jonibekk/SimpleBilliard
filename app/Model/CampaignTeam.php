@@ -18,6 +18,6 @@ class CampaignTeam extends AppModel
      */
     public function isCampaignTeam(int $teamId): bool
     {
-        return true;
+        return false;
     }
 }
