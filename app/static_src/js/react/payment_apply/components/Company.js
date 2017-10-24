@@ -189,7 +189,8 @@ export default class Company extends Base {
           />
           </div>
           <div className="panel-footer setting_pannel-footer">
-            <Link to="/payments/apply" className="btn btn-link design-cancel bd-radius_4px">
+            <Link to={ this.props.is_campaign_team ? '/payments/apply/campaign' : '/payments/apply' }
+                  className="btn btn-link design-cancel bd-radius_4px">
               {__("Back")}</Link>
             <button className="btn btn-primary" disabled={is_disabled_submit ? "disabled" : ""}>
               {__("Next")}

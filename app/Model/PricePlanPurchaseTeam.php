@@ -12,6 +12,21 @@ class PricePlanPurchaseTeam extends AppModel
     public $useTable = 'price_plan_purchase_teams';
 
     /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public $validate = [
+        'price_plan_id' => [
+            'numeric'       => ['rule' => ['numeric'],],
+            'notBlank'      => [
+                'required' => 'create',
+                'rule'     => 'notBlank',
+            ],
+        ]
+    ];
+
+    /**
      * Returns true if the team have purchased a campaign plan
      *
      * @param int $teamId
@@ -27,3 +42,4 @@ class PricePlanPurchaseTeam extends AppModel
         return false;
     }
 }
+

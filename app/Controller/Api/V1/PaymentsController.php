@@ -25,6 +25,11 @@ class PaymentsController extends ApiController
                 'type'
             ],
         ],
+        'campaign'       => [
+            'PricePlanPurchaseTeam' => [
+                'price_plan_id'
+            ]
+        ],
         'company'        => [
             'PaymentSetting' => [
                 'company_name',
@@ -233,6 +238,10 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('countries', $dataTypes)) {
             $countries = Configure::read("countries");
             $res['countries'] = Hash::combine($countries, '{n}.code', '{n}.name');
+            // TODO: Implement getting is_campaign_team
+            /** @var TeamMember $TeamMember */
+            $CampaignTeam = ClassRegistry::init("CampaignTeam");
+            $res['is_campaign_team'] = $CampaignTeam->isCampaignTeam($teamId);
         }
 
         if ($dataTypes == 'all' || in_array('lang_code', $dataTypes)) {
@@ -263,6 +272,55 @@ class PaymentsController extends ApiController
                 'total_charge'       => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
             ]);
         }
+
+        if ($dataTypes == 'all' || in_array('campaigns', $dataTypes)) {
+            $res = am($res, [
+                // TODO: Should implement getting campaigns
+                'campaigns' => [
+                    [
+                        'id' => 5,
+                        'sub_total_charge' => '¥250,000',
+                        'tax' => '¥20000',
+                        'total_charge' => '¥270,000',
+                        'member_count' => 500,
+                        'can_select' => true
+                    ],
+                    [
+                        'id' => 4,
+                        'sub_total_charge' => '¥200,000',
+                        'tax' => '¥16,000',
+                        'total_charge' => '¥216,000',
+                        'member_count' => 400,
+                        'can_select' => true
+                    ],
+                    [
+                        'id' => 3,
+                        'sub_total_charge' => '¥150,000',
+                        'tax' => '¥12,000',
+                        'total_charge' => '¥162,000',
+                        'member_count' => 300,
+                        'can_select' => true
+                    ],
+                    [
+                        'id' => 2,
+                        'sub_total_charge' => '¥100,000',
+                        'tax' => '¥8000',
+                        'total_charge' => '¥108,000',
+                        'member_count' => 200,
+                        'can_select' => true
+                    ],
+                    [
+                        'id' => 1,
+                        'sub_total_charge' => '¥50,000',
+                        'tax' => '¥4000',
+                        'total_charge' => '¥54,000',
+                        'member_count' => 50,
+                        'can_select' => false
+                    ],
+                ]
+            ]);
+        }
+
         return $this->_getResponseSuccess($res);
     }
 
@@ -300,6 +358,10 @@ class PaymentsController extends ApiController
                     ]
                 );
             }
+        }
+
+        if ($page === 'campaign') {
+            // TODO: Implement price plan id validation
         }
 
         /** @var PaymentService $PaymentService */
