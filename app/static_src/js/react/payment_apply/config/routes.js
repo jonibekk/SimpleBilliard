@@ -51,15 +51,15 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="/payments">
               <Route path="apply" component={CountryContainer} />
+              <Route path="apply/select_campaign" component={SelectCampaignContainer} />
               <Route path="apply/company" component={CompanyContainer} />
               <Route path="apply/credit_card" component={CreditCardContainer} />
               <Route path="apply/invoice" component={InvoiceContainer} />
               <Route path="apply/confirm" component={ConfirmContainer} />
-              <Route path="apply/select_campaign" component={SelectCampaignContainer} />
               <Route path="apply/complete" component={CompleteContainer} />
             </Route>
           </Router>
-           {/*<DevTools/>*/}
+           {<DevTools/>}
         </div>
       </Provider>
     );

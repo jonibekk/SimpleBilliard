@@ -7,6 +7,7 @@ const initial_state = {
   validation_errors: {},
   error_message: "",
   countries: {},
+  campaigns: [],
   stripe: {},
   lang_code: "",
   amount_per_user: "",
@@ -99,6 +100,8 @@ export default function payment(state = initial_state, action) {
             validation_errors: {},
             error_message: ""
           })
+        case Page.CAMPAIGN:
+          return Object.assign({}, state, action.data)
         case Page.CREDIT_CARD:
           return Object.assign({}, state, action.data, {
             to_next_page: false,

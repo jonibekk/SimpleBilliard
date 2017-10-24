@@ -11,13 +11,35 @@ export default class SelectCampaign extends Base {
     super(props);
   }
 
+  componentWillMount() {
+    this.props.fetchInitialData(Page.CAMPAIGN)
+  }
+
+  choose(campaign_id) {
+
+  }
+
   render() {
+    const { payment } = this.props
+    const campaigns_el = () => {
+      return payment.campaigns.map((campaign, i) => {
+        return (
+          <a onClick={ this.choose(campaign.id) }>
+            { campaign.total_charge }
+          </a>
+        )
+      })
+    }
     return (
-      <div>
-        <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply">
-          {__("Back")}
-        </Link>
-      </div>
+      <section className="panel payment">
+        <div>
+          <Link className="btn btn-link design-cancel bd-radius_4px" to="/payments/apply">
+            {__("Back")}
+          </Link>
+          { __("members") }
+          <ul>{ campaigns_el() }</ul>
+        </div>
+      </section>
     )
   }
 }

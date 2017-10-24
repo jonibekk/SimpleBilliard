@@ -1,5 +1,6 @@
 export const COUNTRY = 'country'
 export const COMPANY = 'company'
+export const CAMPAIGN = 'campaign'
 export const CREDIT_CARD = 'credit_card'
 export const INVOICE = 'invoice'
 export const CONFIRM = 'confirm'
@@ -17,6 +18,9 @@ export const INITIAL_DATA_TYPES = {
   [COUNTRY]: [
     "countries",
     'lang_code'
+  ],
+  [CAMPAIGN]: [
+    'campaigns'
   ],
   [CREDIT_CARD]: [
     "charge",
