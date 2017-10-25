@@ -3,6 +3,7 @@ App::import('Service', 'AppService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
 App::import('Service', 'TeamService');
+App::import('Service', 'CampaignService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TransactionManager', 'Model');
@@ -1791,7 +1792,10 @@ class PaymentService extends AppService
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
-        if (!$Team->isPaidPlan($teamId)) {
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
+
+        if (!$Team->isPaidPlan($teamId) || $CampaignService->purchased($teamId)) {
             return false;
         }
         $chargeUserCount = $this->calcChargeUserCount($teamId, 1);

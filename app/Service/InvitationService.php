@@ -148,14 +148,9 @@ class InvitationService extends AppService
 
             // Check if it is a Campaign user and if the number of users does not exceeds
             // the maximum allowed on the campaign
-            if ($CampaignService->purchased($teamId)) {
-                $numberOfInvitations = count($emails);
-                $currentUserCount = $TeamMember->countChargeTargetUsers($teamId);
-                $campaignMaximumUsers = $CampaignService->getMaxAllowedUsers($teamId);
-
-                if ($campaignMaximumUsers < ($numberOfInvitations + $currentUserCount)) {
-                    throw new ErrorException("The number of invitations exceed the number of users allowed to your plan.");
-                }
+            if ($CampaignService->purchased($teamId) &&
+                $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, count($emails))) {
+                throw new ErrorException("The number of invitations exceed the number of users allowed to your plan.");
             }
 
             /* Insert users table */
@@ -255,8 +250,8 @@ class InvitationService extends AppService
             $this->TransactionManager->rollback();
             CakeLog::info("Team $teamId is trying to invite too many users.");
             $res['error'] = true;
-            // TODO: add translations
-            $res['msg'] = "The number of invitations exceed the number of users allowed to your plan.";
+            // TODO:campaign add translations
+            $res['msg'] = __("The number of users exceed the limit allowed by your plan.");
             return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();

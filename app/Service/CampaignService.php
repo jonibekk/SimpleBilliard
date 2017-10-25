@@ -70,6 +70,25 @@ class CampaignService extends AppService
         return $maxMembers;
     }
 
+    /**
+     * Check if additional users will exceed the campaign limit
+     *
+     * @param int $teamId
+     * @param int $additionalUsersCount
+     *
+     * @return bool
+     */
+    function willExceedMaximumCampaignAllowedUser(int $teamId, int $additionalUsersCount)
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $currentUserCount = $TeamMember->countChargeTargetUsers($teamId);
+        $campaignMaximumUsers = CampaignService::getMaxAllowedUsers($teamId);
+
+        return $campaignMaximumUsers < ($currentUserCount + $additionalUsersCount);
+    }
+
     function findList(int $teamId): array
     {
         /** @var CampaignTeam $CampaignTeam */
