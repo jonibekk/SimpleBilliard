@@ -10,7 +10,7 @@ export default class Campaign extends Base {
   constructor(props) {
     super(props);
     this.state = {
-      selected_price_plan_id: null
+      selected_campaign: { id: null }
     }
     this.onClickNext = this.onClickNext.bind(this)
     this.selectCampaign = this.selectCampaign.bind(this)
@@ -36,16 +36,21 @@ export default class Campaign extends Base {
   }
 
   onClickNext() {
-    const price_plan_id = this.state.selected_price_plan_id;
-    if (price_plan_id) {
-      this.props.updateInputData({ price_plan_id }, 'price_plan_purchase_team')
-      this.props.validatePayment(Page.CAMPAIGN, { payment_setting: { price_plan_id } });
+    const campaign = this.state.selected_campaign
+    if (campaign.id != null) {
+      this.props.updateInputData({
+        price_plan_id: campaign.id,
+        tax: campaign.tax,
+        sub_total_charge: campaign.sub_total_charge,
+        total_charge: campaign.total_charge
+      }, 'price_plan_purchase_team')
+      this.props.validatePayment(Page.CAMPAIGN, { payment_setting: { price_plan_id: campaign.id } });
     }
   }
 
-  selectCampaign(price_plan_id) {
+  selectCampaign(campaign) {
     this.setState({
-      selected_price_plan_id: price_plan_id
+      selected_campaign: campaign
     });
   }
 
@@ -54,16 +59,18 @@ export default class Campaign extends Base {
     const campaigns_el = () => {
       return payment.campaigns.map((campaign, i) => {
         const campaignId = campaign.id
+        const display_select_button = payment.charge_users_count < campaign.member_count
         return (
           <tr key={ campaignId }>
             <td>{ campaign.member_count }{ __('members')}</td>
             <td>{ campaign.sub_total_charge }</td>
             <td>
-              <a onClick={ () => { this.selectCampaign(campaignId) } }
-                 className="btn small"
-                 className={ `btn small ${this.state.selected_price_plan_id == campaignId ? 'selected' : ''}` }>
-                {__('Select')}
-              </a>
+              { display_select_button &&
+                <a onClick={ () => { this.selectCampaign(campaign) } }
+                   className={ `btn small ${this.state.selected_campaign.id == campaignId ? 'selected' : ''}` }>
+                  { __('Select') }
+                </a>
+              }
             </td>
           </tr>
         )
@@ -73,7 +80,7 @@ export default class Campaign extends Base {
       <section className="panel payment">
         <div className="panel-container">
           <h3>{ __('Select Plan') }</h3>
-          <p>{ __('You have 187 active members. Please select the best plan for the number of members expected for your team.') }</p>
+          <p>{ __(`You have ${payment.charge_users_count} active members. Please select the best plan for the number of members expected for your team.`) }</p>
           <table className="payment-table campaign-table">
             <thead>
               <tr>
@@ -95,7 +102,7 @@ export default class Campaign extends Base {
           </Link>
           <a className="btn btn-primary"
              onClick={ this.onClickNext }
-             disabled={ this.state.selected_price_plan_id == null } >
+             disabled={ this.state.selected_campaign.id == null } >
             { __('Next') }
           </a>
         </div>
