@@ -148,7 +148,8 @@ class InvitationService extends AppService
 
             // Check if it is a Campaign user and if the number of users does not exceeds
             // the maximum allowed on the campaign
-            if ($CampaignService->willExceedMaximumCampaignAllowedUser($teamId, count($emails))) {
+            if ($CampaignService->purchased($teamId) &&
+                $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, count($emails))) {
                 throw new ErrorException("The number of invitations exceed the number of users allowed to your plan.");
             }
 
