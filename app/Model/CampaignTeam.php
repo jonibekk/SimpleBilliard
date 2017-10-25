@@ -66,49 +66,6 @@ class CampaignTeam extends AppModel
             ]
         ];
         return $this->find('all', $options);
-
-        // return [
-        //     [
-        //         'id' => 5,
-        //         'sub_total_charge' => '¥250,000',
-        //         'tax' => '¥20000',
-        //         'total_charge' => '¥270,000',
-        //         'member_count' => 500,
-        //         'can_select' => true
-        //     ],
-        //     [
-        //         'id' => 4,
-        //         'sub_total_charge' => '¥200,000',
-        //         'tax' => '¥16,000',
-        //         'total_charge' => '¥216,000',
-        //         'member_count' => 400,
-        //         'can_select' => true
-        //     ],
-        //     [
-        //         'id' => 3,
-        //         'sub_total_charge' => '¥150,000',
-        //         'tax' => '¥12,000',
-        //         'total_charge' => '¥162,000',
-        //         'member_count' => 300,
-        //         'can_select' => true
-        //     ],
-        //     [
-        //         'id' => 2,
-        //         'sub_total_charge' => '¥100,000',
-        //         'tax' => '¥8000',
-        //         'total_charge' => '¥108,000',
-        //         'member_count' => 200,
-        //         'can_select' => true
-        //     ],
-        //     [
-        //         'id' => 1,
-        //         'sub_total_charge' => '¥50,000',
-        //         'tax' => '¥4000',
-        //         'total_charge' => '¥54,000',
-        //         'member_count' => 50,
-        //         'can_select' => false
-        //     ],
-        // ];
     }
 }
 
