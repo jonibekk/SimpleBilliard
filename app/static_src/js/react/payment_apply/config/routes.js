@@ -59,7 +59,7 @@ export default class Routes extends Component {
               <Route path="apply/complete" component={CompleteContainer} />
             </Route>
           </Router>
-           {<DevTools/>}
+            {/* <DevTools/> */}
         </div>
       </Provider>
     );
