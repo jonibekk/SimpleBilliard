@@ -39,12 +39,12 @@ export default class Campaign extends Base {
     const campaign = this.state.selected_campaign
     if (campaign.id != null) {
       this.props.updateInputData({
-        price_plan_id: campaign.id,
+        id: campaign.id,
         tax: campaign.tax,
         sub_total_charge: campaign.sub_total_charge,
         total_charge: campaign.total_charge
       }, 'price_plan_purchase_team')
-      this.props.validatePayment(Page.CAMPAIGN, { payment_setting: { price_plan_id: campaign.id } });
+      this.props.validatePayment(Page.CAMPAIGN, { payment_setting: { id: campaign.id } });
     }
   }
 

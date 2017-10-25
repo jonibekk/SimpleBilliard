@@ -742,6 +742,8 @@ class PaymentService extends AppService
 
         /** @var CreditCardService $CreditCardService */
         $CreditCardService = ClassRegistry::init("CreditCardService");
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var CreditCard $CreditCard */
@@ -842,7 +844,12 @@ class PaymentService extends AppService
             $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
             $membersCount = $membersCount[$teamId];
             $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
-            $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
+            // If campaign team, pay as campaign price
+            if ($CampaignService->isCampaignTeam($teamId)) {
+                $chargeInfo = $CampaignService->getChargeInfo(Hash::get($requestData, 'price_plan_purchase_team.id'));
+            } else {
+                $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
+            }
             $historyData = [
                 'team_id'          => $teamId,
                 'user_id'          => $userId,
@@ -961,6 +968,7 @@ class PaymentService extends AppService
      * @param array $paymentData
      * @param array $invoiceData
      * @param bool  $checkSentInvoice
+     * @param       $pricePlanId
      *
      * @return bool
      */
@@ -969,7 +977,8 @@ class PaymentService extends AppService
         int $teamId,
         array $paymentData,
         array $invoiceData,
-        bool $checkSentInvoice = true
+        bool $checkSentInvoice = true,
+        $pricePlanId = null
     ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1039,7 +1048,7 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice);
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice, $pricePlanId);
             if ($res === false) {
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
@@ -1106,7 +1115,8 @@ class PaymentService extends AppService
         int $chargeMemberCount,
         int $time,
         $userId = null,
-        bool $checkSentInvoice = true
+        bool $checkSentInvoice = true,
+        $pricePlanId = null
     ): bool {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
@@ -1128,6 +1138,8 @@ class PaymentService extends AppService
         $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         $timezone = $Team->getById($teamId)['timezone'];
         $localCurrentDate = AppUtil::dateYmdLocal($time, $timezone);
@@ -1141,7 +1153,12 @@ class PaymentService extends AppService
         }
 
         $paymentSetting = $PaymentSetting->getByTeamId($teamId);
-        $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
+        // If campaign team, pay as campaign price
+        if ($CampaignService->isCampaignTeam($teamId) && $pricePlanId) {
+            $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
+        } else {
+            $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
+        }
 
         $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
 
