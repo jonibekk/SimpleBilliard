@@ -36,7 +36,8 @@
             <?php } ?>
         </div>
     </div>
-    <?php if(!($this->request->params['controller'] == 'payments' && $this->request->params['action'] == 'apply')):?>
+    <?php // Show header alert only team admin temporarily. [GL-6387]  ?>
+    <?php if($isTeamAdmin && !($this->request->params['controller'] == 'payments' && $this->request->params['action'] == 'apply')):?>
         <?php
         // TODO.Payment: must refactoring.
         // Acquire only necessary information when necessary
