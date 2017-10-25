@@ -32,7 +32,7 @@ export default class Confirm extends Base {
     }
     else if (nextProps.invite.redirect_to_upgrade_plan) {
         super.removeBeforeUnloadHandler.apply(this)
-        // TODO: check the correct url
+        // TODO:campaign check the correct url
         document.location.href = "/payments/campaign"
     }
   }

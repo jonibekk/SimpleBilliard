@@ -8,6 +8,7 @@ App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
 App::import('Service', 'PaymentService');
 App::import('Service', 'TeamMemberService');
+App::import('Service', 'CampaignService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -2671,6 +2672,17 @@ class TeamsController extends AppController
         // Paid charge case
         if ($PaymentService->isChargeUserActivation($teamId)) {
             return $this->redirect(['action' => 'confirm_user_activation', $teamMemberId]);
+        }
+
+        // Campaign team case
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
+        if ($CampaignService->purchased($teamId) &&
+            $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, 1)) {
+            // TODO:campaign add translation
+            $this->Notification->outError(__("The number of users exceed the limit allowed by your plan."));
+            // TODO:campaign check the correct url
+            return $this->redirect("/payments/campaign");
         }
 
         // Paid or free trial case
