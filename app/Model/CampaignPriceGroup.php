@@ -7,5 +7,4 @@ App::uses('AppModel', 'Model');
 class CampaignPriceGroup extends AppModel
 {
     public $useTable = 'mst_price_plan_groups';
-
 }
