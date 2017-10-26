@@ -846,7 +846,7 @@ class PaymentService extends AppService
             $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
             // If campaign team, pay as campaign price
             if ($CampaignService->isCampaignTeam($teamId)) {
-                $chargeInfo = $CampaignService->getChargeInfo(Hash::get($requestData, 'price_plan_purchase_team.id'));
+                $chargeInfo = $CampaignService->getChargeInfo(Hash::get($paymentData, 'price_plan_id'));
             } else {
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
             }

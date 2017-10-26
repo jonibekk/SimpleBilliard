@@ -44,6 +44,11 @@ export default class Campaign extends Base {
         sub_total_charge: campaign.sub_total_charge,
         total_charge: campaign.total_charge
       }, 'price_plan_purchase_team')
+      // This is duplication, I know..
+      // But for credit card post data, it need contain price_plan_id on payment_setting
+      this.props.updateInputData({
+        price_plan_id: campaign.id,
+      }, 'payment_setting')
       this.props.validatePayment(Page.CAMPAIGN, { payment_setting: { id: campaign.id } });
     }
   }

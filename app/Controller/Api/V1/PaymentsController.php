@@ -132,7 +132,7 @@ class PaymentsController extends ApiController
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
         if ($CampaignService->isCampaignTeam($teamId)) {
-            $pricePlanId = Hash::get($requestData, 'price_plan_purchase_team.id');
+            $pricePlanId = Hash::get($requestData, 'price_plan_id');
             if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, $companyCountry)) {
                 // TODO.Payment: Add translation for message
                 return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
