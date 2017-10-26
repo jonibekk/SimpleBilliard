@@ -173,7 +173,7 @@ class CampaignService extends AppService
             return false;
         }
         $chargeUserCount = $TeamMember->countChargeTargetUsers($teamId);
-        if ($pricePlan['price'] < $chargeUserCount) {
+        if ($pricePlan['max_members'] < $chargeUserCount) {
             return false;
         }
 
