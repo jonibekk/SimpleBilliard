@@ -667,7 +667,14 @@ App::uses('AttachedFile', 'Model');
             // Goals
             "No Goals found": "<?= __("No Goals found") ?>",
             "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",
+            // Campaigns
+            "Select": "<?= __("Select") ?>",
             "Upgrade Plan": "<?= __("Upgrade Plan") ?>",
+            "Select Plan": "<?= __("Select Plan") ?>",
+            "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.": "<?= __("This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.") ?>",
+            "Larger plans available on request. All prices are without tax.": "<?= __("Larger plans available on request. All prices are without tax.") ?>",
+            "You have %d active members. Please select the best plan for the number of members expected for your team.": "<?= __("You have %d active members. Please select the best plan for the number of members expected for your team.") ?>",
+
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
@@ -700,6 +707,32 @@ App::uses('AttachedFile', 'Model');
             return cake.translation[text];
         }
         return text;
+    }
+
+    function sprintf() {
+        var args = arguments,
+            string = args[0],
+            i = 1;
+        return string.replace(/%((%)|s|d)/g, function (m) {
+            // m is the matched format, e.g. %s, %d
+            var val = null;
+            if (m[2]) {
+                val = m[2];
+            } else {
+                val = args[i];
+                // A switch statement so that the formatter can be extended. Default is %s
+                switch (m) {
+                    case '%d':
+                        val = parseFloat(val);
+                        if (isNaN(val)) {
+                            val = 0;
+                        }
+                        break;
+                }
+                i++;
+            }
+            return val;
+        });
     }
 
 </script>
