@@ -40,7 +40,9 @@ class PaymentServiceTest extends GoalousTestCase
         'app.team_member',
         'app.job_category',
         'app.member_type',
-        'app.user'
+        'app.user',
+        'app.campaign_team',
+        'app.price_plan_purchase_team'
     );
 
     /**

@@ -1,6 +1,10 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('CampaignTeam', 'Model');
 App::uses('CampaignPricePlan', 'Model');
+App::uses('CampaignPriceGroup', 'Model');
+App::uses('TeamMember', 'Model');
+App::import('Service', 'PaymentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -89,6 +93,12 @@ class CampaignService extends AppService
         return $campaignMaximumUsers < ($currentUserCount + $additionalUsersCount);
     }
 
+    /**
+     * find price plans belongs team campaign group
+     *
+     * @param int $teamId
+     * @return array
+     */
     function findList(int $teamId): array
     {
         /** @var CampaignTeam $CampaignTeam */
@@ -112,5 +122,97 @@ class CampaignService extends AppService
             ];
         }
         return $res;
+    }
+
+    function process(array $campaign): array
+    {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $currencyType = $campaign['CampaignPriceGroup']['currency'];
+        $subTotalCharge = $campaign['CampaignPricePlan']['price'];
+        $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
+        $totalCharge = $subTotalCharge + $tax;
+        return [
+            'id'               => $campaign['CampaignPricePlan']['id'],
+            'sub_total_charge' => $PaymentService->formatCharge($subTotalCharge, $currencyType),
+            'tax'              => $PaymentService->formatCharge($tax, $currencyType),
+            'total_charge'     => $PaymentService->formatCharge($totalCharge, $currencyType),
+            'member_count'     => $campaign['CampaignPricePlan']['max_members'],
+        ];
+    }
+
+    /**
+     * Check is allowed price plan as team campaign groups
+     *
+     * @param int $teamId
+     * @param int $pricePlanId
+     * @return bool
+     */
+    function isAllowedPricePlan(int $teamId, int $pricePlanId, string $companyCountry): bool
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init("CampaignTeam");
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init("CampaignPricePlan");
+        /** @var CampaignPriceGroup $CampaignPriceGroup */
+        $CampaignPriceGroup = ClassRegistry::init("CampaignPriceGroup");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        // Check price plan belonging team
+        if (!$CampaignTeam->isTeamPricePlan($teamId, $pricePlanId)) {
+            return false;
+        }
+
+        // Check upper price plan max users
+        $pricePlan = $CampaignPricePlan->getById($pricePlanId);
+        if (empty($pricePlan)) {
+            return false;
+        }
+        $chargeUserCount = $TeamMember->countChargeTargetUsers($teamId);
+        if ($pricePlan['max_members'] < $chargeUserCount) {
+            return false;
+        }
+
+        // Check currency
+        $currency = $CampaignPriceGroup->getCurrency($pricePlan['group_id']);
+        $requestedCountry = $PaymentService->getCurrencyTypeByCountry($companyCountry);
+        if ($currency != $requestedCountry) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * get campaign for charging
+     *
+     * @param int $pricePlanId
+     * @return array
+     */
+    function getChargeInfo(int $pricePlanId): array
+    {
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init("CampaignPricePlan");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+
+        $campaign = $CampaignPricePlan->getWithCurrency($pricePlanId);
+        $subTotalCharge = $campaign['CampaignPricePlan']['price'];
+        $currencyType = $campaign['CampaignPriceGroup']['currency'];
+        $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
+        $totalCharge = $subTotalCharge + $tax;
+        $chargeInfo = [
+            'id'               => $campaign['CampaignPricePlan']['id'],
+            'sub_total_charge' => $subTotalCharge,
+            'tax'              => $tax,
+            'total_charge'     => $totalCharge,
+            'member_count'     => $campaign['CampaignPricePlan']['max_members'],
+        ];
+
+        return $chargeInfo;
     }
 }
