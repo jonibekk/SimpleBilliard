@@ -79,6 +79,16 @@ export default class CreditCard extends Base {
   render() {
     const {payment} = this.props
     const {validation_errors, error_message} = payment
+    let tax = payment.tax
+    let sub_total_charge = payment.sub_total_charge
+    let total_charge = payment.total_charge
+    if (payment.is_campaign_team) {
+      const input_campaign = payment.input_data.price_plan_purchase_team
+      tax = input_campaign.tax
+      sub_total_charge = input_campaign.sub_total_charge
+      total_charge = input_campaign.total_charge
+    }
+
     return (
       <section className="panel payment enter-cc-info">
           <form id="enterCCInfo" className="form-horizontal" name=""
@@ -101,9 +111,10 @@ export default class CreditCard extends Base {
             <ConfirmCharge
               amount_per_user={payment.amount_per_user}
               charge_users_count={payment.charge_users_count}
-              sub_total_charge={payment.sub_total_charge}
-              tax={payment.tax}
-              total_charge={payment.total_charge}
+              sub_total_charge={sub_total_charge}
+              tax={tax}
+              total_charge={total_charge}
+              is_campaign={payment.is_campaign_team}
             />
           </div>
           <div className="panel-footer setting_pannel-footer">
