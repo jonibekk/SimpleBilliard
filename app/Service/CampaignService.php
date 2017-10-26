@@ -94,6 +94,36 @@ class CampaignService extends AppService
     }
 
     /**
+     * Return team current price plan
+     *
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    function getTeamPricePlan(int $teamId)
+    {
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
+        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
+        if (empty($purchasedPlan)) {
+            CakeLog::debug("PricePlanPurchaseTeam not found to team: $teamId");
+            return null;
+        }
+
+        $priceId = $purchasedPlan['price_plan_id'];
+        $pricePlan = $CampaignPricePlan->getWithCurrencyInfo($priceId);
+        if (empty($pricePlan)) {
+            CakeLog::debug("CampaignPricePlan not found with id: $priceId");
+            return null;
+        }
+
+        return $pricePlan;
+    }
+
+    /*
      * find price plans belongs team campaign group
      *
      * @param int $teamId

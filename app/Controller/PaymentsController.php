@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'TeamService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
@@ -41,9 +42,12 @@ class PaymentsController extends AppController
         $UserService = ClassRegistry::init("UserService");
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
 
         $teamId = $this->current_team_id;
         $payment = $PaymentService->get($teamId);
+        $isCampaignTeam = $CampaignService->isCampaignTeam($teamId);
         $chargeMemberCount = $this->Team->TeamMember->countChargeTargetUsers($teamId);
         if (empty($payment)) {
             App::uses('LangHelper', 'View/Helper');
@@ -58,6 +62,12 @@ class PaymentsController extends AppController
                 $payment);
             $subTotal = $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $payment['currency']);
             $amountPerUser = $PaymentService->formatCharge($payment['amount_per_user'], $payment['currency']);
+
+            // Campaign info
+            $campaign = $CampaignService->getTeamPricePlan($teamId);
+            $currencyType = $campaign['currency'];
+            $campaignUsers = $campaign['max_members'];
+            $campaignPrice = $PaymentService->formatCharge($campaign['price'], $currencyType);
         }
         $serviceUseStatus = $TeamService->getServiceUseStatus();
         $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
@@ -68,7 +78,10 @@ class PaymentsController extends AppController
             'serviceUseStatus',
             'chargeInfo',
             'subTotal',
-            'amountPerUser'
+            'amountPerUser',
+            'isCampaignTeam',
+            'campaignUsers',
+            'campaignPrice'
         ));
     }
 

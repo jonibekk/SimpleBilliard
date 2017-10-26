@@ -1800,6 +1800,12 @@ msgstr "クレジットカード設定が見つかりません。"
 msgid "Members"
 msgstr "メンバー"
 
+msgid "%d members"
+msgstr "メンバー"
+
+msgid "Using %d of %d members"
+msgstr "%d人が利用中です。現在のプランでは、%d人まで利用できます。"
+
 msgid "Waiting for the evaluation by %s."
 msgstr "%sの評価待ちです"
 

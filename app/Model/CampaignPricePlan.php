@@ -1,13 +1,11 @@
 <?php
 App::uses('AppModel', 'Model');
-
 /**
  * Class CampaignPricePlan
  */
 class CampaignPricePlan extends AppModel
 {
     public $useTable = 'mst_price_plans';
-
     /**
      * Get max member count of campaign price plan
      *
@@ -20,41 +18,46 @@ class CampaignPricePlan extends AppModel
         if (!$res) {
             return null;
         }
-
         return $res['max_members'];
     }
 
     /**
-     * get price plan with currency
+     * Return CampaignPricePlan containing
+     * currency information from CampaignPriceGroup
      *
-     * @param int $pricePlanId
+     * @param int $planId
+     *
+     * @return array|null
      */
-    function getWithCurrency(int $pricePlanId)
+    public function getWithCurrencyInfo(int $planId)
     {
         $options = [
-            'conditions' => [
-                'CampaignPricePlan.id' => $pricePlanId,
-                'CampaignPricePlan.del_flg' => false,
-            ],
             'fields'     => [
                 'CampaignPricePlan.id',
+                'CampaignPricePlan.group_id',
+                'CampaignPricePlan.code',
                 'CampaignPricePlan.price',
                 'CampaignPricePlan.max_members',
                 'CampaignPriceGroup.currency',
             ],
+            'conditions' => [
+                'CampaignPricePlan.id' => $planId,
+                'CampaignPricePlan.del_flg'  => false
+            ],
             'joins'      => [
                 [
-                    'type'       => 'INNER',
                     'table'      => 'mst_price_plan_groups',
                     'alias'      => 'CampaignPriceGroup',
+                    'type'       => 'INNER',
                     'conditions' => [
-                        'CampaignPriceGroup.id = CampaignPricePlan.group_id',
-                        'CampaignPriceGroup.del_flg' => false,
-                    ],
-                ],
-            ]
+                        'CampaignPricePlan.group_id = CampaignPriceGroup.id',
+                        'CampaignPriceGroup.del_flg' => false
+                    ]
+                ]
+            ],
         ];
         $res = $this->find('first', $options);
+        $res = am($res['CampaignPricePlan'], $res['CampaignPriceGroup']);
         return $res;
     }
 }
