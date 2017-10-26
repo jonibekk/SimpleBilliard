@@ -69,9 +69,15 @@ export function fetchConfirmInitialData() {
     const invitations_count = getState().invite.emails.length;
     return axios.get(`/api/v1/invitations/confirm?invitation_count=${invitations_count}`)
       .then((response) => {
-        let data = response.data.data
+        let data = response.data.data;
+        let type = types.FETCH_CONFIRM_INITIAL_DATA;
+
+        if (data.exceedMaximumUsers) {
+          type = types.REDIRECT_TO_UPGRADE_PLAN;
+        }
+
         dispatch({
-          type: types.FETCH_CONFIRM_INITIAL_DATA,
+          type: type,
           data,
         })
       })
@@ -95,8 +101,6 @@ export function saveInvitation() {
           new Noty({
             type: 'error',
             text: '<h4>'+cake.word.error+'</h4>'+ response.data.message,
-          }).on('afterShow', function() {
-              dispatch({type: types.REDIRECT_TO_UPGRADE_PLAN})
           }).show();
           dispatch(invalid(response.data))
         } else {

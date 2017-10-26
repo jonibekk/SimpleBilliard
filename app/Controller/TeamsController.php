@@ -2682,7 +2682,7 @@ class TeamsController extends AppController
             // TODO:campaign add translation
             $this->Notification->outError(__("The number of users exceed the limit allowed by your plan."));
             // TODO:campaign check the correct url
-            return $this->redirect("/payments/campaign");
+            return $this->redirect("/payments");
         }
 
         // Paid or free trial case

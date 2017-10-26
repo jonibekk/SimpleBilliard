@@ -120,7 +120,12 @@ class InvitationsController extends ApiController
         $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $invitationCnt);
 
         // Charges not applicable to campaign users or count 0
-        if ($chargeUserCnt == 0 || $CampaignService->purchased($teamId)) {
+        $isCampaign = $CampaignService->purchased($teamId);
+        if ($isCampaign && $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, $invitationCnt)) {
+            $res = [
+                'exceedMaximumUsers' => true,
+            ];
+        } else if ($chargeUserCnt == 0 || $isCampaign) {
             $res = [
                 'charge_users_count' => 0,
             ];
