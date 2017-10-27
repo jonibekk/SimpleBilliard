@@ -129,7 +129,7 @@ export default class CreditCard extends Base {
                   <button
                     className="btn btn-primary"
                     disabled={payment.is_disabled_submit ? "disabled" : ""}>
-                    {__("Purchase")}
+                    {payment.is_campaign_team ? __("Agree & Purchase") : __("Purchase")}
                   </button>
                 )
               }

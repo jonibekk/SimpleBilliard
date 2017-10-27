@@ -2679,7 +2679,6 @@ class TeamsController extends AppController
         $CampaignService = ClassRegistry::init('CampaignService');
         if ($CampaignService->purchased($teamId) &&
             $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, 1)) {
-            // TODO:campaign add translation
             $this->Notification->outError(__("The number of users exceed the limit allowed by your plan."));
             // TODO:campaign check the correct url
             return $this->redirect("/payments");

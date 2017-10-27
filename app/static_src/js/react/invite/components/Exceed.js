@@ -29,7 +29,7 @@ export default class Exceed extends Base {
                 <form>
                     <div className="mb_16px">
                         <label className="gl-form-label">
-                            {__('This invitation will cause your team’s active members to exceed the current plan limit. Please upgrade your plan.')}
+                            {__("This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.")}
                         </label>
                     </div>
                     <div className="btnGroupForForm">
