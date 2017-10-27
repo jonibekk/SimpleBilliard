@@ -64,10 +64,12 @@ class PaymentsController extends AppController
             $amountPerUser = $PaymentService->formatCharge($payment['amount_per_user'], $payment['currency']);
 
             // Campaign info
-            $campaign = $CampaignService->getTeamPricePlan($teamId);
-            $currencyType = $campaign['currency'];
-            $campaignUsers = $campaign['max_members'];
-            $campaignPrice = $PaymentService->formatCharge($campaign['price'], $currencyType);
+            if ($isCampaignTeam) {
+                $campaign = $CampaignService->getTeamPricePlan($teamId);
+                $currencyType = $campaign['currency'];
+                $campaignUsers = $campaign['max_members'];
+                $campaignPrice = $PaymentService->formatCharge($campaign['price'], $currencyType);
+            }
         }
         $serviceUseStatus = $TeamService->getServiceUseStatus();
         $team = Hash::get($this->Team->getCurrentTeam(), 'Team');
