@@ -230,17 +230,17 @@ class CampaignService extends AppService
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
-        $campaign = $CampaignPricePlan->getWithCurrency($pricePlanId);
-        $subTotalCharge = $campaign['CampaignPricePlan']['price'];
-        $currencyType = $campaign['CampaignPriceGroup']['currency'];
+        $campaign = $CampaignPricePlan->getWithCurrencyInfo($pricePlanId);
+        $subTotalCharge = $campaign['price'];
+        $currencyType = $campaign['currency'];
         $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
         $totalCharge = $subTotalCharge + $tax;
         $chargeInfo = [
-            'id'               => $campaign['CampaignPricePlan']['id'],
+            'id'               => $campaign['id'],
             'sub_total_charge' => $subTotalCharge,
             'tax'              => $tax,
             'total_charge'     => $totalCharge,
-            'member_count'     => $campaign['CampaignPricePlan']['max_members'],
+            'member_count'     => $campaign['max_members'],
         ];
 
         return $chargeInfo;
