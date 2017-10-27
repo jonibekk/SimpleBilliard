@@ -18,8 +18,8 @@ class CampaignServiceTest extends GoalousTestCase
         'app.team',
         'app.team_member',
         'app.campaign_team',
-        'app.mst_price_plan_groups',
-        'app.mst_price_plans',
+        'app.mst_price_plan_group',
+        'app.mst_price_plan',
     );
 
     /**
@@ -32,9 +32,10 @@ class CampaignServiceTest extends GoalousTestCase
         parent::setUp();
         $this->setDefaultTeamIdAndUid();
         $this->CampaignService = ClassRegistry::init('CampaignService');
+        $this->Team = $this->Team ?? ClassRegistry::init('Team');
     }
 
-    private function setupCampaign()
+    private function _setupCampaign(int $teamId)
     {
         /** @var CampaignPriceGroup $CampaignPriceGroup */
         $CampaignPriceGroup = ClassRegistry::init('CampaignPriceGroup');
@@ -81,7 +82,7 @@ class CampaignServiceTest extends GoalousTestCase
 
         // Create campaign team
         $campaignTeam = [
-            'team_id' => 1,
+            'team_id' => $teamId,
             'campaign_type' => 0,
             'price_plan_group_id' => 1,
             'start_date' => '2017-10-27',
@@ -93,7 +94,16 @@ class CampaignServiceTest extends GoalousTestCase
 
     function test_isCampaignTeam()
     {
+        $this->_setupCampaign(1);
+        $isCampaign = $this->CampaignService->isCampaignTeam(1);
 
+        $this->assertTrue($isCampaign);
+    }
+
+    function test_isCampaignTeam_false()
+    {
+        $isCampaign = $this->CampaignService->isCampaignTeam(1);
+        $this->assertFalse($isCampaign);
     }
 
     function test_purchased()
@@ -109,5 +119,12 @@ class CampaignServiceTest extends GoalousTestCase
     function willExceedMaximumCampaignAllowedUser()
     {
 
+    }
+
+    function tearDown()
+    {
+        parent::tearDown();
+
+        $this->Team->resetCurrentTeam();
     }
 }
