@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOMServer from 'react-dom/server';
 import {connect} from "react-redux";
 
 class ConfirmCharge extends React.Component {
@@ -7,6 +8,9 @@ class ConfirmCharge extends React.Component {
   }
 
   render() {
+    const tms = (<a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>);
+    const contract = (<a href="/campaign_terms?backBtn=true" className="payment-terms" target="_blank">{__("Campaign Contract")}</a>);
+
     return (
         <div className="payment-info-group">
           {!this.props.is_campaign &&
@@ -21,10 +25,11 @@ class ConfirmCharge extends React.Component {
           <div className="hr"></div>
           <strong>{__('Total')}:&nbsp;</strong><span className="info-value">{this.props.total_charge}</span>
           {!this.props.is_campaign ? (
-            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
+            tms
           ) : (
-              // TODO:campaign fix the contract terms
-            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("By purchasing, you agree to the Campaign Contract and Terms of Service.")}</a>
+            <p><span dangerouslySetInnerHTML={{__html:sprintf(__("By purchasing, you agree to the %s and %s."),
+                ReactDOMServer.renderToString(contract),
+                ReactDOMServer.renderToString(tms))}}></span></p>
           )
           }
 

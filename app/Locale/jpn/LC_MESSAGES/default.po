@@ -2980,6 +2980,12 @@ msgstr "Other Links"
 msgid "Terms of service"
 msgstr "利用規約"
 
+msgid "Campaign Contract"
+msgstr "キャンペーン契約"
+
+msgid "By purchasing, you agree to the %s and %s."
+msgstr "お支払い頂いた場合、%s及び%sに同意した事になります。"
+
 msgid "Inscription by Law"
 msgstr "特定商取引法に基づく表記"
 
