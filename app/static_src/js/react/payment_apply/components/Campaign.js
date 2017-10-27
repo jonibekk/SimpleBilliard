@@ -67,7 +67,7 @@ export default class Campaign extends Base {
         const display_select_button = payment.charge_users_count < campaign.member_count
         return (
           <tr key={ campaignId }>
-            <td>{ campaign.member_count } { __('members')}</td>
+            <td>{sprintf(__("%d members"), campaign.member_count)}</td>
             <td>{ campaign.sub_total_charge }</td>
             <td>
               { display_select_button &&

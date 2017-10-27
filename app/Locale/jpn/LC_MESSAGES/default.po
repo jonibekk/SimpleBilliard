@@ -5672,8 +5672,8 @@ msgstr "日"
 msgid "AMOUNT"
 msgstr "金額"
 
-msgid "members"
-msgstr "メンバー"
+msgid "%d members"
+msgstr "%dメンバー"
 
 msgid "5-20-8 Asakusabashi CS Tower, 7th Floor"
 msgstr ""
