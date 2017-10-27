@@ -5882,6 +5882,24 @@ msgstr "Goalousのログインパスワードを作成してください。"
 msgid "********"
 msgstr "********"
 
+msgid "Select"
+msgstr "選択する"
+
+msgid "Select Plan"
+msgstr "プランを選択する"
+
+msgid "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan."
+msgstr "この招待によって、アクティブメンバー数の上限を超えます。プランをアップグレードしてください。"
+
+msgid "Larger plans available on request. All prices are without tax."
+msgstr "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけます。すべて税抜価格です。"
+
+msgid "The number of users exceed the limit allowed by your plan."
+msgstr "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけます。すべて税抜価格です。"
+
+msgid "You have %d active members. Please select the best plan for the number of members expected for your team."
+msgstr "このチームには、%d人のアクティブメンバーがいます。今後追加する予定のメンバー数を含めて、最適なプランを選択してください。"
+
 msgid "Join Team"
 msgstr "チームに参加"
 

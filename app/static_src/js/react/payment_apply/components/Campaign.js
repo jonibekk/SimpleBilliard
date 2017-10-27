@@ -67,7 +67,7 @@ export default class Campaign extends Base {
         const display_select_button = payment.charge_users_count < campaign.member_count
         return (
           <tr key={ campaignId }>
-            <td>{ campaign.member_count }{ __('members')}</td>
+            <td>{ campaign.member_count } { __('members')}</td>
             <td>{ campaign.sub_total_charge }</td>
             <td>
               { display_select_button &&
@@ -85,7 +85,7 @@ export default class Campaign extends Base {
       <section className="panel payment">
         <div className="panel-container">
           <h3>{ __('Select Plan') }</h3>
-          <p>{ __(`You have ${payment.charge_users_count} active members. Please select the best plan for the number of members expected for your team.`) }</p>
+          <p>{ sprintf(__('You have %d active members. Please select the best plan for the number of members expected for your team.'), payment.charge_users_count) }</p>
           <table className="payment-table campaign-table">
             <thead>
               <tr>
@@ -98,7 +98,7 @@ export default class Campaign extends Base {
               { campaigns_el() }
             </tbody>
           </table>
-          <p>{ __('Larger plans available on request. All prices are without tax.')}</p>
+          <p>{ __('Larger plans available on request. All prices are without tax.') }</p>
         </div>
         <div className="panel-footer setting_pannel-footer">
           <Link className="btn btn-link design-cancel bd-radius_4px"

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
+import {browserHistory} from "react-router";
 import {Link} from "react-router";
 import {MaxLength} from "~/common/constants/App";
 import Base from "~/common/components/Base";
@@ -32,8 +33,7 @@ export default class Confirm extends Base {
     }
     else if (nextProps.invite.redirect_to_upgrade_plan) {
         super.removeBeforeUnloadHandler.apply(this)
-        // TODO:campaign check the correct url
-        document.location.href = "/payments/campaign"
+        browserHistory.push('/users/invite/exceed')
     }
   }
 

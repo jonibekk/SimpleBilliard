@@ -14,6 +14,7 @@ import createReducer from '../reducers/index'
 // Container読み込み
 import InputContainer from '../containers/input'
 import ConfirmContainer from '../containers/confirm'
+import ExceedContainer from '../containers/exceed'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -47,6 +48,7 @@ export default class Routes extends Component {
             <Route path="/users">
               <Route path="invite" component={InputContainer} />
               <Route path="invite/confirm" component={ConfirmContainer} />
+              <Route path="invite/exceed" component={ExceedContainer} />
             </Route>
           </Router>
            {/*<DevTools />*/}

@@ -250,7 +250,6 @@ class InvitationService extends AppService
             $this->TransactionManager->rollback();
             CakeLog::info("Team $teamId is trying to invite too many users.");
             $res['error'] = true;
-            // TODO:campaign add translations
             $res['msg'] = __("The number of users exceed the limit allowed by your plan.");
             return $res;
         } catch (Exception $e) {
