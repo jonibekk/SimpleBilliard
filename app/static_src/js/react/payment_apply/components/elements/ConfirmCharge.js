@@ -24,7 +24,7 @@ class ConfirmCharge extends React.Component {
             <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
           ) : (
               // TODO:campaign fix the contract terms
-            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("By purchasing, you agree to the Campaign Contract and Terms of Service.")}</a>
+            <a href="/campaign_terms?backBtn=true" className="payment-terms" target="_blank">{__("By purchasing, you agree to the Campaign Contract and Terms of Service.")}</a>
           )
           }
 
