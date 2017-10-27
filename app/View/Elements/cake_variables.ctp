@@ -598,7 +598,7 @@ App::uses('AttachedFile', 'Model');
             "Thailand": "<?= __("Thailand") ?>",
             "United States": "<?= __("United States") ?>",
             // Select campaign
-            "members": "<?= __("members") ?>",
+            "%d members": "<?= __("%d members") ?>",
             // Input company info
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",

@@ -45,7 +45,7 @@ class CampaignTeam extends AppModel
                 'CampaignPriceGroup.currency',
             ],
             'order'      => [
-                'CampaignPricePlan.price DESC'
+                'CampaignPricePlan.max_members ASC'
             ],
             'joins'      => [
                 [
