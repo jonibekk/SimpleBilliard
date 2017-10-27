@@ -9,7 +9,7 @@ class ConfirmCharge extends React.Component {
   render() {
     return (
         <div className="payment-info-group">
-          {!this.props.is_campaign && 
+          {!this.props.is_campaign &&
             <div>
               <strong>{__('Price per user')}:&nbsp;</strong><span
               className="info-value">{this.props.amount_per_user}</span><br/>
@@ -20,7 +20,14 @@ class ConfirmCharge extends React.Component {
           <strong>{__('Tax')}:&nbsp;</strong><span className="info-value">{this.props.tax}</span><br/>
           <div className="hr"></div>
           <strong>{__('Total')}:&nbsp;</strong><span className="info-value">{this.props.total_charge}</span>
-          <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
+          {!this.props.is_campaign ? (
+            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
+          ) : (
+              // TODO:campaign fix the contract terms
+            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("By purchasing, you agree to the Campaign Contract and Terms of Service.")}</a>
+          )
+          }
+
         </div>
     )
 

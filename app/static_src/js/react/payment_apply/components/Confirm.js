@@ -73,7 +73,7 @@ export default class Confirm extends Base {
               } else {
                 return (
                   <button className="btn btn-primary">
-                    {__("Purchase")}
+                    {payment.is_campaign_team ? __("Agree & Purchase") : __("Purchase")}
                   </button>
                 )
               }
