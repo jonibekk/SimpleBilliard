@@ -20,6 +20,7 @@ class CampaignServiceTest extends GoalousTestCase
         'app.campaign_team',
         'app.mst_price_plan_group',
         'app.mst_price_plan',
+        'app.price_plan_purchase_team'
     );
 
     /**
@@ -106,9 +107,10 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertFalse($isCampaign);
     }
 
-    function test_purchased()
+    function test_purchased_false()
     {
-
+        $isPurchased = $this->CampaignService->purchased(1);
+        $this->assertFalse($isPurchased);
     }
 
     function test_getMaxAllowedUsers()
@@ -118,7 +120,17 @@ class CampaignServiceTest extends GoalousTestCase
 
     function willExceedMaximumCampaignAllowedUser()
     {
+        $this->_setupCampaign(1);
+        for($x=0;$x<50;$x++) {
+            $this->createActiveUser(1);
+        }
+        $exceed = $this->CampaignService->willExceedMaximumCampaignAllowedUser(1, 1);
+        $this->assertFalse($exceed === false);
+        $this->assertTrue($exceed === true);
 
+        $this->createActiveUser(1);
+        $exceed = $this->CampaignService->willExceedMaximumCampaignAllowedUser(1, 1);
+        $this->assertTrue($exceed);
     }
 
     function tearDown()
