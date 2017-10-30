@@ -8,8 +8,9 @@ class ConfirmCharge extends React.Component {
   }
 
   render() {
-    const tms = (<a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>);
-    const contract = (<a href="/campaign_terms?backBtn=true" className="payment-terms" target="_blank">{__("Campaign Contract")}</a>);
+    const tms = this.props.is_campaign ? (<a href="/terms?backBtn=true" target="_blank">{__("Terms of Use")}</a>)
+        : (<a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>);
+    const contract = (<a href="/campaign_terms?backBtn=true" target="_blank">{__("Campaign Contract")}</a>);
 
     return (
         <div className="payment-info-group">
