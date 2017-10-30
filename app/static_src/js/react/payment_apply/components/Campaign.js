@@ -42,7 +42,8 @@ export default class Campaign extends Base {
         id: campaign.id,
         tax: campaign.tax,
         sub_total_charge: campaign.sub_total_charge,
-        total_charge: campaign.total_charge
+        total_charge: campaign.total_charge,
+        members: campaign.member_count
       }, 'price_plan_purchase_team')
       // This is duplication, I know..
       // But for credit card post data, it need contain price_plan_id on payment_setting

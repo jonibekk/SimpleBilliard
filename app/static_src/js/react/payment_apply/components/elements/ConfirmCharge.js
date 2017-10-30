@@ -14,14 +14,22 @@ class ConfirmCharge extends React.Component {
 
     return (
         <div className="payment-info-group">
-          {!this.props.is_campaign &&
+          {!this.props.is_campaign ? (
             <div>
-              <strong>{__('Price per user')}:&nbsp;</strong><span
-              className="info-value">{this.props.amount_per_user}</span><br/>
+              <div>
+                <strong>{__('Price per user')}:&nbsp;</strong><span className="info-value">{this.props.amount_per_user}</span><br/>
+              </div>
+              <strong>{__('Number of users')}:&nbsp;</strong><span className="info-value">{this.props.charge_users_count}</span><br/>
+              <strong>{__('Sub Total')}:&nbsp;</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
             </div>
+            ) : (
+              <div>
+                  <strong>{__('Plan')}&nbsp;({sprintf(__("%d members"), this.props.campaign_members)}):</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
+              </div>
+            )
           }
-          <strong>{__('Number of users')}:&nbsp;</strong><span className="info-value">{this.props.charge_users_count}</span><br/>
-          <strong>{__('Sub Total')}:&nbsp;</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
+
+
           <strong>{__('Tax')}:&nbsp;</strong><span className="info-value">{this.props.tax}</span><br/>
           <div className="hr"></div>
           <strong>{__('Total')}:&nbsp;</strong><span className="info-value">{this.props.total_charge}</span>
@@ -46,7 +54,7 @@ ConfirmCharge.propTypes = {
   sub_total_charge: React.PropTypes.string,
   tax: React.PropTypes.string,
   total_charge: React.PropTypes.string,
-  is_campaign: React.PropTypes.boolean
+  is_campaign: React.PropTypes.bool
 };
 ConfirmCharge.defaultProps = {
   amount_per_user: "",
