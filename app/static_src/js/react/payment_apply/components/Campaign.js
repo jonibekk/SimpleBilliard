@@ -71,10 +71,10 @@ export default class Campaign extends Base {
             <td>{ campaign.sub_total_charge }</td>
             <td>
               { display_select_button &&
-                <a onClick={ () => { this.selectCampaign(campaign) } }
-                   className={ `btn small ${this.state.selected_campaign.id == campaignId ? 'selected' : ''}` }>
-                  { __('Select') }
-                </a>
+                <span onClick={ () => { this.selectCampaign(campaign) } }
+                   className={ `${this.state.selected_campaign.id == campaignId ? 'fa fa-check success' : 'btn small'}` }>
+                  {this.state.selected_campaign.id == campaignId ? '':__('Select') }
+                </span>
               }
             </td>
           </tr>
