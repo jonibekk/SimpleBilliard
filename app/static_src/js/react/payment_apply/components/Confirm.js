@@ -38,15 +38,17 @@ export default class Confirm extends Base {
   }
 
   render() {
-    const {payment} = this.props
-    let tax = payment.tax
-    let sub_total_charge = payment.sub_total_charge
-    let total_charge = payment.total_charge
+    const {payment} = this.props;
+    let tax = payment.tax;
+    let sub_total_charge = payment.sub_total_charge;
+    let total_charge = payment.total_charge;
+    let campaign_members = 0;
     if (payment.is_campaign_team) {
-      const input_campaign = payment.input_data.price_plan_purchase_team
-      tax = input_campaign.tax
-      sub_total_charge = input_campaign.sub_total_charge
-      total_charge = input_campaign.total_charge
+      const input_campaign = payment.input_data.price_plan_purchase_team;
+      tax = input_campaign.tax;
+      sub_total_charge = input_campaign.sub_total_charge;
+      total_charge = input_campaign.total_charge;
+      campaign_members = input_campaign.members;
     }
     return (
       <section className="panel payment enter-cc-info">
@@ -61,6 +63,7 @@ export default class Confirm extends Base {
               tax={tax}
               total_charge={total_charge}
               is_campaign={payment.is_campaign_team}
+              campaign_members={campaign_members}
             />
           </div>
           <div className="panel-footer setting_pannel-footer">

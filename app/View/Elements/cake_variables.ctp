@@ -669,12 +669,14 @@ App::uses('AttachedFile', 'Model');
             "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",
             // Campaigns
             "Select": "<?= __("Select") ?>",
+            "Plan": "<?= __("Plan") ?>",
             "Upgrade Plan": "<?= __("Upgrade Plan") ?>",
             "Select Plan": "<?= __("Select Plan") ?>",
             "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.": "<?= __("This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.") ?>",
             "Larger plans available on request. All prices are without tax.": "<?= __("Larger plans available on request. All prices are without tax.") ?>",
             "You have %d active members. Please select the best plan for the number of members expected for your team.": "<?= __("You have %d active members. Please select the best plan for the number of members expected for your team.") ?>",
-
+            "Campaign Contract": "<?= __("Campaign Contract") ?>",
+            "By purchasing, you agree to the %s and %s.": "<?= __("By purchasing, you agree to the %s and %s.") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
