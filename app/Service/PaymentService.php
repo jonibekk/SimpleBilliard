@@ -756,6 +756,10 @@ class PaymentService extends AppService
         $TeamService = ClassRegistry::init('TeamService');
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
         // Check if already registered.
         if (!empty($PaymentSetting->getByTeamId($teamId))) {
@@ -844,9 +848,26 @@ class PaymentService extends AppService
             $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
             $membersCount = $membersCount[$teamId];
             $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
+
             // If campaign team, pay as campaign price
             if ($CampaignService->isCampaignTeam($teamId)) {
-                $chargeInfo = $CampaignService->getChargeInfo(Hash::get($paymentData, 'price_plan_id'));
+                // Register campaign purchase
+                $pricePlanId = Hash::get($paymentData, 'price_plan_id');
+                $pricePlan = $CampaignPricePlan->getById($pricePlanId, ['code']);
+                $pricePlanPurchase = [
+                    'team_id' => $teamId,
+                    'price_plan_id' => $pricePlanId,
+                    'price_plan_code' => $pricePlan['code'],
+                    'purchase_datetime' => $date,
+                ];
+                $PricePlanPurchaseTeam->create();
+                if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. data:%s",
+                        AppUtil::varExportOneLine($pricePlanPurchase)));
+                }
+
+                // Get campaign price
+                $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
             } else {
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
             }
@@ -990,6 +1011,12 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
         $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
         $membersCount = $TeamMember->countChargeTargetUsers($teamId);
         // Count should never be zero.
@@ -1046,6 +1073,22 @@ class PaymentService extends AppService
             $date = AppUtil::todayDateYmdLocal($timezone);
             if (!$Team->updatePaidPlan($teamId, $date)) {
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
+            }
+
+            // Register campaign purchase
+            if ($CampaignService->isCampaignTeam($teamId) && $pricePlanId) {
+                $pricePlan = $CampaignPricePlan->getById($pricePlanId, ['code']);
+                $pricePlanPurchase = [
+                    'team_id'           => $teamId,
+                    'price_plan_id'     => $pricePlanId,
+                    'price_plan_code'   => $pricePlan['code'],
+                    'purchase_datetime' => $date,
+                ];
+                $PricePlanPurchaseTeam->create();
+                if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. data:%s",
+                        AppUtil::varExportOneLine($pricePlanPurchase)));
+                }
             }
 
             $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice, $pricePlanId);

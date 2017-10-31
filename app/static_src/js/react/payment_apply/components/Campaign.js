@@ -42,7 +42,8 @@ export default class Campaign extends Base {
         id: campaign.id,
         tax: campaign.tax,
         sub_total_charge: campaign.sub_total_charge,
-        total_charge: campaign.total_charge
+        total_charge: campaign.total_charge,
+        members: campaign.member_count
       }, 'price_plan_purchase_team')
       // This is duplication, I know..
       // But for credit card post data, it need contain price_plan_id on payment_setting
@@ -71,10 +72,10 @@ export default class Campaign extends Base {
             <td>{ campaign.sub_total_charge }</td>
             <td>
               { display_select_button &&
-                <a onClick={ () => { this.selectCampaign(campaign) } }
-                   className={ `btn small ${this.state.selected_campaign.id == campaignId ? 'selected' : ''}` }>
-                  { __('Select') }
-                </a>
+                <span onClick={ () => { this.selectCampaign(campaign) } }
+                   className={ `${this.state.selected_campaign.id == campaignId ? 'fa fa-check success' : 'btn small'}` }>
+                  {this.state.selected_campaign.id == campaignId ? '':__('Select') }
+                </span>
               }
             </td>
           </tr>

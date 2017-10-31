@@ -130,10 +130,10 @@ Router::connect('/:lang/:action', ['controller' => 'pages'],
  */
 Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'home'], ['lang' => 'ja|en']);
 Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'lp'],
-    ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks', 'pass' => ['pagename']]);
+    ['pagename' => 'features|pricing|terms|campaign_terms|privacy_policy|law|contact_thanks', 'pass' => ['pagename']]);
 Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'lp'],
     [
-        'pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks',
+        'pagename' => 'features|pricing|terms|campaign_terms|privacy_policy|law|contact_thanks',
         'lang'     => 'ja|en',
         'pass'     => ['pagename']
     ]);

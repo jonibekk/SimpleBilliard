@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOMServer from 'react-dom/server';
 import {connect} from "react-redux";
 
 class ConfirmCharge extends React.Component {
@@ -7,24 +8,37 @@ class ConfirmCharge extends React.Component {
   }
 
   render() {
+    const tms = this.props.is_campaign ? (<a href="/terms?backBtn=true" target="_blank">{__("Terms of Use")}</a>)
+        : (<a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>);
+    const contract = (<a href="/campaign_terms?backBtn=true" target="_blank">{__("Campaign Contract")}</a>);
+
     return (
         <div className="payment-info-group">
-          {!this.props.is_campaign &&
+          {!this.props.is_campaign ? (
             <div>
-              <strong>{__('Price per user')}:&nbsp;</strong><span
-              className="info-value">{this.props.amount_per_user}</span><br/>
+              <div>
+                <strong>{__('Price per user')}:&nbsp;</strong><span className="info-value">{this.props.amount_per_user}</span><br/>
+              </div>
+              <strong>{__('Number of users')}:&nbsp;</strong><span className="info-value">{this.props.charge_users_count}</span><br/>
+              <strong>{__('Sub Total')}:&nbsp;</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
             </div>
+            ) : (
+              <div>
+                  <strong>{__('Plan')}&nbsp;({sprintf(__("%d members"), this.props.campaign_members)}):</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
+              </div>
+            )
           }
-          <strong>{__('Number of users')}:&nbsp;</strong><span className="info-value">{this.props.charge_users_count}</span><br/>
-          <strong>{__('Sub Total')}:&nbsp;</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
+
+
           <strong>{__('Tax')}:&nbsp;</strong><span className="info-value">{this.props.tax}</span><br/>
           <div className="hr"></div>
           <strong>{__('Total')}:&nbsp;</strong><span className="info-value">{this.props.total_charge}</span>
           {!this.props.is_campaign ? (
-            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("Terms of Use")}</a>
+            tms
           ) : (
-              // TODO:campaign fix the contract terms
-            <a href="/terms?backBtn=true" className="payment-terms" target="_blank">{__("By purchasing, you agree to the Campaign Contract and Terms of Service.")}</a>
+            <p><span dangerouslySetInnerHTML={{__html:sprintf(__("By purchasing, you agree to the %s and %s."),
+                ReactDOMServer.renderToString(contract),
+                ReactDOMServer.renderToString(tms))}}></span></p>
           )
           }
 
@@ -40,7 +54,7 @@ ConfirmCharge.propTypes = {
   sub_total_charge: React.PropTypes.string,
   tax: React.PropTypes.string,
   total_charge: React.PropTypes.string,
-  is_campaign: React.PropTypes.boolean
+  is_campaign: React.PropTypes.bool
 };
 ConfirmCharge.defaultProps = {
   amount_per_user: "",
