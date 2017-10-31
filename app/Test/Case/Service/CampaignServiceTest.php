@@ -20,6 +20,7 @@ class CampaignServiceTest extends GoalousTestCase
         'app.campaign_team',
         'app.mst_price_plan_group',
         'app.mst_price_plan',
+        'app.view_price_plan',
         'app.price_plan_purchase_team'
     );
 
@@ -105,7 +106,7 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals([
             'id'          => '1',
             'group_id'    => '1',
-            'code'        => 'JPY50',
+            'code'        => '1-1',
             'price'       => '50000',
             'max_members' => '50',
             'currency'    => '1',
@@ -117,7 +118,7 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals([
             'id'          => '9',
             'group_id'    => '2',
-            'code'        => 'USD400',
+            'code'        => '2-4',
             'price'       => '2000',
             'max_members' => '400',
             'currency'    => '2',

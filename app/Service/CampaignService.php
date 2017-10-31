@@ -102,8 +102,8 @@ class CampaignService extends AppService
      */
     function getTeamPricePlan(int $teamId)
     {
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
@@ -114,7 +114,7 @@ class CampaignService extends AppService
         }
 
         $priceId = $purchasedPlan['price_plan_id'];
-        $pricePlan = $CampaignPricePlan->getWithCurrencyInfo($priceId);
+        $pricePlan = $ViewCampaignPricePlan->getById($priceId);
         if (empty($pricePlan)) {
             CakeLog::debug("CampaignPricePlan not found with id: $priceId");
             return null;
@@ -139,16 +139,16 @@ class CampaignService extends AppService
         $res = [];
         $campaigns = $CampaignTeam->findPricePlans($teamId);
         foreach($campaigns as $campaign) {
-            $currencyType = $campaign['CampaignPriceGroup']['currency'];
-            $subTotalCharge = $campaign['CampaignPricePlan']['price'];
+            $currencyType = $campaign['currency'];
+            $subTotalCharge = $campaign['price'];
             $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
             $totalCharge = $subTotalCharge + $tax;
             $res[] = [
-                'id'               => $campaign['CampaignPricePlan']['id'],
+                'id'               => $campaign['id'],
                 'sub_total_charge' => $PaymentService->formatCharge($subTotalCharge, $currencyType),
                 'tax'              => $PaymentService->formatCharge($tax, $currencyType),
                 'total_charge'     => $PaymentService->formatCharge($totalCharge, $currencyType),
-                'member_count'     => $campaign['CampaignPricePlan']['max_members'],
+                'member_count'     => $campaign['max_members'],
             ];
         }
         return $res;
@@ -207,12 +207,12 @@ class CampaignService extends AppService
      */
     function getChargeInfo(int $pricePlanId): array
     {
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init("CampaignPricePlan");
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
-        $campaign = $CampaignPricePlan->getWithCurrencyInfo($pricePlanId);
+        $campaign = $ViewCampaignPricePlan->getById($pricePlanId);
         $subTotalCharge = $campaign['price'];
         $currencyType = $campaign['currency'];
         $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;

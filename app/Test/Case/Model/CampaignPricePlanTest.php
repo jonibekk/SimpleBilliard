@@ -3,8 +3,10 @@ App::uses('CampaignPricePlan', 'Model');
 
 /**
  * CampaignPricePlan Test Case
- */
-class CampaignPricePlanTest extends CakeTestCase {
+ *
+ * @property CampaignPricePlan CampaignPricePlan
+*/
+class CampaignPricePlanTest extends GoalousTestCase {
 
 /**
  * Fixtures
@@ -12,6 +14,8 @@ class CampaignPricePlanTest extends CakeTestCase {
  * @var array
  */
     public $fixtures = array(
+        'app.mst_price_plan',
+        'app.mst_price_plan_group',
     );
 
     /**
@@ -21,7 +25,7 @@ class CampaignPricePlanTest extends CakeTestCase {
      */
     public function setUp() {
         parent::setUp();
-        $this->PaymentSettingChangeLog = ClassRegistry::init('CampaignPricePlan');
+        $this->CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
     }
 
     /**
@@ -30,15 +34,13 @@ class CampaignPricePlanTest extends CakeTestCase {
      * @return void
      */
     public function tearDown() {
-        unset($this->PaymentSettingChangeLog);
+        unset($this->CampaignPricePlan);
 
         parent::tearDown();
     }
 
-    // TODO: Implement
-    function test_getMaxMemberCount() {}
-
-    // TODO: Implement
-    function test_getWithCurrency() {}
+    function test_getMaxMemberCount() {
+        // Unit test is unnecessary because target method is too simple.
+    }
 
   }

@@ -34,41 +34,34 @@ class CampaignTeam extends AppModel
     function findPricePlans(int $teamId): array
     {
         $options = [
-            'conditions' => [
-                'CampaignTeam.team_id' => $teamId,
-                'CampaignTeam.del_flg' => false,
-            ],
             'fields'     => [
-                'CampaignPricePlan.id',
-                'CampaignPricePlan.price',
-                'CampaignPricePlan.max_members',
-                'CampaignPriceGroup.currency',
+                'ViewCampaignPricePlan.id',
+                'ViewCampaignPricePlan.code',
+                'ViewCampaignPricePlan.price',
+                'ViewCampaignPricePlan.max_members',
+                'ViewCampaignPricePlan.currency',
             ],
             'order'      => [
-                'CampaignPricePlan.max_members ASC'
+                'ViewCampaignPricePlan.max_members ASC'
             ],
             'joins'      => [
                 [
                     'type'       => 'INNER',
-                    'table'      => 'mst_price_plan_groups',
-                    'alias'      => 'CampaignPriceGroup',
+                    'table'      => 'view_price_plans',
+                    'alias'      => 'ViewCampaignPricePlan',
                     'conditions' => [
-                        'CampaignPriceGroup.id = CampaignTeam.price_plan_group_id',
-                        'CampaignPriceGroup.del_flg' => false,
-                    ],
-                ],
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'mst_price_plans',
-                    'alias'      => 'CampaignPricePlan',
-                    'conditions' => [
-                        'CampaignPricePlan.group_id = CampaignPriceGroup.id',
-                        'CampaignPricePlan.del_flg' => false
+                        'ViewCampaignPricePlan.group_id = CampaignTeam.price_plan_group_id',
+                        'CampaignTeam.team_id' => $teamId,
+                        'CampaignTeam.del_flg' => false,
                     ],
                 ],
             ]
         ];
-        return $this->find('all', $options);
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.ViewCampaignPricePlan');
     }
 
     /**
@@ -81,34 +74,19 @@ class CampaignTeam extends AppModel
     function isTeamPricePlan(int $teamId, int $pricePlanId): bool
     {
         $options = [
-            'conditions' => [
-                'CampaignTeam.team_id' => $teamId,
-                'CampaignTeam.del_flg' => false,
-                'CampaignPricePlan.id' => $pricePlanId
-            ],
             'fields'     => [
-                'CampaignPricePlan.id'
-            ],
-            'order'      => [
-                'CampaignPricePlan.price DESC'
+                'ViewCampaignPricePlan.id'
             ],
             'joins'      => [
                 [
                     'type'       => 'INNER',
-                    'table'      => 'mst_price_plan_groups',
-                    'alias'      => 'CampaignPriceGroup',
+                    'table'      => 'view_price_plans',
+                    'alias'      => 'ViewCampaignPricePlan',
                     'conditions' => [
-                        'CampaignPriceGroup.id = CampaignTeam.price_plan_group_id',
-                        'CampaignPriceGroup.del_flg' => false,
-                    ],
-                ],
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'mst_price_plans',
-                    'alias'      => 'CampaignPricePlan',
-                    'conditions' => [
-                        'CampaignPricePlan.group_id = CampaignPriceGroup.id',
-                        'CampaignPricePlan.del_flg' => false
+                        'ViewCampaignPricePlan.group_id = CampaignTeam.price_plan_group_id',
+                        'CampaignTeam.team_id' => $teamId,
+                        'CampaignTeam.del_flg' => false,
+                        'ViewCampaignPricePlan.id' => $pricePlanId
                     ],
                 ],
             ]
