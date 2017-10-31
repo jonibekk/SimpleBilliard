@@ -935,4 +935,51 @@ class GoalousTestCase extends CakeTestCase
         $Circle->save($data, false);
         return $Circle->getLastInsertID();
     }
+
+    /**
+     * Setup an active campaign with max number of users for the campaign
+     * 
+     * @param int $teamId
+     * @param int $maxMembers
+     */
+    function setupActiveCampaign(int $teamId, int $maxMembers)
+    {
+        /** @var CampaignPriceGroup $CampaignPriceGroup */
+        $CampaignPriceGroup = ClassRegistry::init('CampaignPriceGroup');
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
+        // Create price group
+        $CampaignPriceGroup->create();
+        $CampaignPriceGroup->save(['currency' => 1]);
+        $groupId = $CampaignPriceGroup->getLastInsertID();
+        // Price plans
+        $CampaignPricePlan->create();
+        $CampaignPricePlan->save([
+            'group_id' => $groupId,
+            'code' => "CP$maxMembers",
+            'max_members' => $maxMembers,
+        ]);
+        $planId = $CampaignPricePlan->getLastInsertID();
+        // Create campaign team
+        $CampaignTeam->create();
+        $CampaignTeam->save([
+            'team_id' => $teamId,
+            'campaign_type' => 0,
+            'price_plan_group_id' => $groupId,
+            'start_date' => '2017-10-27',
+        ]);
+        // Crete the purchase
+        $PricePlanPurchaseTeam->create();
+        $PricePlanPurchaseTeam->save([
+            'team_id' => $teamId,
+            'price_plan_id' => $planId,
+            'price_plan_code' => 'CP',
+            'purchase_date' => '2017-10-30',
+        ]);
+    }
 }
