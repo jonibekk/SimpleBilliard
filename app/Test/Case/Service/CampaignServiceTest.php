@@ -50,7 +50,7 @@ class CampaignServiceTest extends GoalousTestCase
     function test_purchased()
     {
         $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
-        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = 'JPY50');
+        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = '1-1');
         $this->assertTrue($this->CampaignService->purchased(1));
         $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
         $this->createPurchasedTeam($teamId = 2, $pricePlanId = 7, $pricePlanCode = 'USD200');
@@ -66,24 +66,24 @@ class CampaignServiceTest extends GoalousTestCase
     function test_getTeamPricePlan()
     {
         $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
-        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = 'JPY50');
+        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = '1-1');
         $plan = $this->CampaignService->getTeamPricePlan(1);
         $this->assertEquals([
             'id'          => '1',
             'group_id'    => '1',
-            'code'        => 'JPY50',
+            'code'        => '1-1',
             'price'       => '50000',
             'max_members' => '50',
             'currency'    => '1',
         ], $plan);
 
         $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
-        $this->createPurchasedTeam($teamId = 2, $pricePlanId = 9, $pricePlanCode = 'USD400');
+        $this->createPurchasedTeam($teamId = 2, $pricePlanId = 9, $pricePlanCode = '2-4');
         $plan = $this->CampaignService->getTeamPricePlan(2);
         $this->assertEquals([
             'id'          => '9',
             'group_id'    => '2',
-            'code'        => 'USD400',
+            'code'        => '2-4',
             'price'       => '2000',
             'max_members' => '400',
             'currency'    => '2',
@@ -98,11 +98,11 @@ class CampaignServiceTest extends GoalousTestCase
     function test_getMaxAllowedUsers()
     {
         $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
-        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = 'JPY50');
+        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = '1-1');
         $this->assertEquals(50, $this->CampaignService->getMaxAllowedUsers(1));
 
         $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
-        $this->createPurchasedTeam($teamId = 2, $pricePlanId = 9, $pricePlanCode = 'USD400');
+        $this->createPurchasedTeam($teamId = 2, $pricePlanId = 9, $pricePlanCode = '2-4');
         $this->assertEquals(400, $this->CampaignService->getMaxAllowedUsers(2));
     }
 
@@ -207,7 +207,7 @@ class CampaignServiceTest extends GoalousTestCase
     function test_willExceedMaximumCampaignAllowedUser()
     {
         $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
-        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = 'JPY50');
+        $this->createPurchasedTeam($teamId = 1, $pricePlanId = 1, $pricePlanCode = '1-1');
         for ($x = 0; $x < 50; $x++) {
             $this->createActiveUser(1);
         }
@@ -215,7 +215,7 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertTrue($exceed, 'team member count 50 exceed if adding 1 user');
 
         $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 1);
-        $this->createPurchasedTeam($teamId = 2, $pricePlanId = 1, $pricePlanCode = 'JPY50');
+        $this->createPurchasedTeam($teamId = 2, $pricePlanId = 1, $pricePlanCode = '1-1');
         $exceed = $this->CampaignService->willExceedMaximumCampaignAllowedUser($teamId = 2, $additionalUsersCount = 1);
         $this->assertFalse($exceed, 'team member count below 50 not exceeding');
     }
