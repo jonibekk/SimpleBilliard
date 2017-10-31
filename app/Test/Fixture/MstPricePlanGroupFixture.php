@@ -24,9 +24,11 @@ class MstPricePlanGroupFixture extends CakeTestFixtureEx {
 
     public $records = [
         [
+            'id'       => 1,
             'currency' => 1,
         ],
         [
+            'id'       => 2,
             'currency' => 2,
         ]
     ];
