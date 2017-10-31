@@ -30,6 +30,9 @@ class InvitationServiceTest extends GoalousTestCase
         'app.payment_setting',
         'app.charge_history',
         'app.price_plan_purchase_team',
+        'app.mst_price_plan_group',
+        'app.mst_price_plan',
+        'app.campaign_team',
     );
 
     /**
@@ -229,6 +232,40 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(count($teamMembers), 4);
 
         // TODO.Payment: add unit test cases related charge
+    }
+
+    /**
+     * Test user invitations for campaign teams.
+     */
+    function test_invite_campaign()
+    {
+        // Assert single user
+        $teamId = $this->createTeam([
+            'service_use_status' => Enum\Team\ServiceUseStatus::PAID
+        ]);
+        $userId = $this->createActiveUser($teamId);
+        $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
+        $this->createPurchasedTeam($teamId, $pricePlanId = 1, $pricePlanCode = '1-1');
+
+        $emails = ['test1@company.com'];
+        $res = $this->InvitationService->invite($teamId, $userId, $emails);
+        $this->assertFalse($res['error'] === true);
+
+        // 1 active user + 49 invitations
+        $emails = [];
+        for ($n = 2; $n < 50; $n++) {
+            array_push($emails,"test$n@company.com");
+        }
+        $res = $this->InvitationService->invite($teamId, $userId, $emails);
+        $this->assertFalse($res['error'] === true);
+
+        // Exceeds campaign user limit
+        $emails = [
+            'test50@company.com',
+            'test51@company.com',
+        ];
+        $res = $this->InvitationService->invite($teamId, $userId, $emails);
+        $this->assertTrue($res['error'] === true);
     }
 
     function test_validateEmail()

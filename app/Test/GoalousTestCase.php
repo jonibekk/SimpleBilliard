@@ -72,6 +72,9 @@ class GoalousTestCase extends CakeTestCase
 
     private $testCustomersList = array();
 
+    /** @var string Goalous current date time (Y-m-d H:i:s) */
+    public $currentDateTime = null;
+
     /**
      * setUp method
      *
@@ -93,6 +96,8 @@ class GoalousTestCase extends CakeTestCase
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->GlRedis->changeDbSource('redis_test');
         $this->CreditCardService = ClassRegistry::init('CreditCardService');
+
+        $this->currentDateTime = GoalousDateTime::now()->format('Y-m-d H:i:s');
     }
 
     /**
@@ -934,5 +939,43 @@ class GoalousTestCase extends CakeTestCase
         $Circle->create();
         $Circle->save($data, false);
         return $Circle->getLastInsertID();
+    }
+
+    /**
+     * Create campaign allowed team
+     *
+     * @param int $teamId
+     * @param int $campaignType
+     * @param int $pricePlanGroupId
+     */
+    function createCampaignTeam(int $teamId, int $campaignType, int $pricePlanGroupId)
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
+
+        // Create campaign team
+        $campaignTeam = [
+            'team_id'             => $teamId,
+            'campaign_type'       => $campaignType,
+            'price_plan_group_id' => $pricePlanGroupId,
+            'start_date'          => $this->currentDateTime,
+        ];
+
+        $CampaignTeam->create();
+        $CampaignTeam->save($campaignTeam);
+    }
+
+    function createPurchasedTeam(int $teamId, int $pricePlanId, string $pricePlanCode)
+    {
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
+        $PricePlanPurchaseTeam->create();
+        $PricePlanPurchaseTeam->save([
+            'team_id'           => $teamId,
+            'price_plan_id'     => $pricePlanId,
+            'price_plan_code'   => $pricePlanCode,
+            'purchase_datetime' => $this->currentDateTime,
+        ]);
     }
 }
