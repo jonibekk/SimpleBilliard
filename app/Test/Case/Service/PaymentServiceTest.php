@@ -1739,6 +1739,10 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
         $this->assertNull($team['service_use_state_end_date']);
 
+        // Check campaign purchase
+        $isPurchased = $this->CampaignService->purchased($teamId);
+        $this->assertTrue($isPurchased === true);
+
         $this->deleteCustomer($res["customerId"]);
     }
 
@@ -1925,6 +1929,10 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
         $this->assertTrue($history['charge_datetime'] <= time());
+
+        // Check campaign purchase
+        $isPurchased = $this->CampaignService->purchased($teamId);
+        $this->assertTrue($isPurchased === true);
     }
 
     public function test_registerInvoicePayment_preRegisterAmount()
