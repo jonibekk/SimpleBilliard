@@ -154,24 +154,6 @@ class CampaignService extends AppService
         return $res;
     }
 
-    function process(array $campaign): array
-    {
-        /** @var PaymentService $PaymentService */
-        $PaymentService = ClassRegistry::init("PaymentService");
-
-        $currencyType = $campaign['CampaignPriceGroup']['currency'];
-        $subTotalCharge = $campaign['CampaignPricePlan']['price'];
-        $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
-        $totalCharge = $subTotalCharge + $tax;
-        return [
-            'id'               => $campaign['CampaignPricePlan']['id'],
-            'sub_total_charge' => $PaymentService->formatCharge($subTotalCharge, $currencyType),
-            'tax'              => $PaymentService->formatCharge($tax, $currencyType),
-            'total_charge'     => $PaymentService->formatCharge($totalCharge, $currencyType),
-            'member_count'     => $campaign['CampaignPricePlan']['max_members'],
-        ];
-    }
-
     /**
      * Check is allowed price plan as team campaign groups
      *
