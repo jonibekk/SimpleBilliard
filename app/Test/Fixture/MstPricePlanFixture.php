@@ -25,4 +25,18 @@ class MstPricePlanFixture extends CakeTestFixtureEx {
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
+
+    public $records = [
+        ['group_id' => 1, 'code' =>  'JPY50', 'price' =>  50000, 'max_members' =>  50,],
+        ['group_id' => 1, 'code' => 'JPY200', 'price' => 100000, 'max_members' => 200,],
+        ['group_id' => 1, 'code' => 'JPY300', 'price' => 150000, 'max_members' => 300,],
+        ['group_id' => 1, 'code' => 'JPY400', 'price' => 200000, 'max_members' => 400,],
+        ['group_id' => 1, 'code' => 'JPY500', 'price' => 250000, 'max_members' => 500,],
+
+        ['group_id' => 2, 'code' =>  'USD50', 'price' =>  500,   'max_members' =>  50,],
+        ['group_id' => 2, 'code' => 'USD200', 'price' => 1000,   'max_members' => 200,],
+        ['group_id' => 2, 'code' => 'USD300', 'price' => 1500,   'max_members' => 300,],
+        ['group_id' => 2, 'code' => 'USD400', 'price' => 2000,   'max_members' => 400,],
+        ['group_id' => 2, 'code' => 'USD500', 'price' => 2500,   'max_members' => 500,],
+    ];
 }
