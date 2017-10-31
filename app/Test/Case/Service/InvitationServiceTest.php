@@ -244,7 +244,9 @@ class InvitationServiceTest extends GoalousTestCase
             'service_use_status' => Enum\Team\ServiceUseStatus::PAID
         ]);
         $userId = $this->createActiveUser($teamId);
-        $this->setupActiveCampaign($teamId, 50);
+        $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
+        $this->createPurchasedTeam($teamId, $pricePlanId = 1, $pricePlanCode = '1-1');
+
         $emails = ['test1@company.com'];
         $res = $this->InvitationService->invite($teamId, $userId, $emails);
         $this->assertFalse($res['error'] === true);
