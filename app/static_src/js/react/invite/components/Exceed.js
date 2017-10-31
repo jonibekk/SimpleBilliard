@@ -18,8 +18,10 @@ export default class Exceed extends Base {
         super.componentWillUnmount.apply(this)
     }
 
-    onSubmit(e) {
-        e.preventDefault()
+    // Display intercom message window 
+    showIntercom(e) {
+        e.preventDefault();
+        Intercom('showNewMessage', 'Feedback on the new reports feature:');
     }
 
     render() {
@@ -33,7 +35,7 @@ export default class Exceed extends Base {
                         </label>
                     </div>
                     <div className="btnGroupForForm">
-                        <a className="btnGroupForForm-next" href="/payments" >{__("Select Plan")}</a>
+                        <a className="btnGroupForForm-next" href="#" onClick={(e) => this.showIntercom(e)} >{__("Contact Us")}</a>
                     </div>
                 </form>
             </section>

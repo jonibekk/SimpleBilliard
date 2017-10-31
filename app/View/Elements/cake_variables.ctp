@@ -677,6 +677,7 @@ App::uses('AttachedFile', 'Model');
             "You have %d active members. Please select the best plan for the number of members expected for your team.": "<?= __("You have %d active members. Please select the best plan for the number of members expected for your team.") ?>",
             "Campaign Contract": "<?= __("Campaign Contract") ?>",
             "By purchasing, you agree to the %s and %s.": "<?= __("By purchasing, you agree to the %s and %s.") ?>",
+            "Contact us": "<?= __("Contact us") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
