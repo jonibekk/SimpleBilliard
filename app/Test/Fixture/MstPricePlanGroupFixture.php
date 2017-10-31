@@ -21,4 +21,15 @@ class MstPricePlanGroupFixture extends CakeTestFixtureEx {
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
+
+    public $records = [
+        [
+            'id'       => 1,
+            'currency' => 1,
+        ],
+        [
+            'id'       => 2,
+            'currency' => 2,
+        ]
+    ];
 }
