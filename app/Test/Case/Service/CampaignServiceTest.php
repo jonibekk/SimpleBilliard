@@ -34,44 +34,9 @@ class CampaignServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->setDefaultTeamIdAndUid();
-        $this->_setupCampaign();
+        $this->currentDateTime = GoalousDateTime::now()->format('Y-m-d H:i:s');
         $this->CampaignService = ClassRegistry::init('CampaignService');
         $this->Team = $this->Team ?? ClassRegistry::init('Team');
-    }
-
-    private function _setupCampaign()
-    {
-        $this->currentDateTime = GoalousDateTime::now()->format('Y-m-d H:i:s');
-        /** @var CampaignPriceGroup $CampaignPriceGroup */
-        $CampaignPriceGroup = ClassRegistry::init('CampaignPriceGroup');
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
-        // Create price group
-        $pricePlanGroup = [
-            [
-                'currency' => 1,
-            ],
-            [
-                'currency' => 2,
-            ]
-        ];
-        $CampaignPriceGroup->bulkInsert($pricePlanGroup, false);
-
-        // Price plans
-        $pricePlans = [
-            ['group_id' => 1, 'code' =>  'JPY50', 'price' =>  50000, 'max_members' =>  50,],
-            ['group_id' => 1, 'code' => 'JPY200', 'price' => 100000, 'max_members' => 200,],
-            ['group_id' => 1, 'code' => 'JPY300', 'price' => 150000, 'max_members' => 300,],
-            ['group_id' => 1, 'code' => 'JPY400', 'price' => 200000, 'max_members' => 400,],
-            ['group_id' => 1, 'code' => 'JPY500', 'price' => 250000, 'max_members' => 500,],
-
-            ['group_id' => 2, 'code' =>  'USD50', 'price' =>  500, 'max_members' =>  50,],
-            ['group_id' => 2, 'code' => 'USD200', 'price' => 1000, 'max_members' => 200,],
-            ['group_id' => 2, 'code' => 'USD300', 'price' => 1500, 'max_members' => 300,],
-            ['group_id' => 2, 'code' => 'USD400', 'price' => 2000, 'max_members' => 400,],
-            ['group_id' => 2, 'code' => 'USD500', 'price' => 2500, 'max_members' => 500,],
-        ];
-        $CampaignPricePlan->bulkInsert($pricePlans);
     }
 
     private function _createCampaignTeam(int $teamId, int $campaignType, int $pricePlanGroupId)
