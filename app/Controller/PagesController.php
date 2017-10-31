@@ -84,7 +84,7 @@ class PagesController extends AppController
         
         if ($page === 'pricing') {
             $this->_setPricingValues();
-        } elseif ($page === 'terms' || $page === 'campaign_terms') {
+        } elseif ($page === 'terms') {
             $this->_setTerms();
         }
         
