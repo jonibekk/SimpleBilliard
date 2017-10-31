@@ -18,10 +18,10 @@ export default class Exceed extends Base {
         super.componentWillUnmount.apply(this)
     }
 
-    // Display intercom message window 
+    // Display intercom message window
     showIntercom(e) {
         e.preventDefault();
-        Intercom('showNewMessage', 'Feedback on the new reports feature:');
+        Intercom('showNewMessage', 'Please inform about upgrade my Campaign Plan');
     }
 
     render() {
