@@ -244,13 +244,16 @@ class PaymentsController extends AppController
     {
         /** @var ChargeHistoryService $ChargeHistoryService */
         $ChargeHistoryService = ClassRegistry::init("ChargeHistoryService");
+        $CampaignService = ClassRegistry::init("CampaignService");
 
         $history = $ChargeHistoryService->getReceipt($historyId);
         if (empty($history)) {
             throw new NotFoundException(__("Receipt not found"));
         }
+        $isPurchasedCampaign = $CampaignService->purchased($this->current_team_id);
+        $maxMembers = $CampaignService->getMaxAllowedUsers($this->current_team_id);
         $isMonthly = $history['ChargeHistory']['is_monthly'];
-        $this->set(compact('history', 'isMonthly'));
+        $this->set(compact('history', 'isMonthly','isPurchasedCampaign','maxMembers'));
         return $this->render();
     }
 

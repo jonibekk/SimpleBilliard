@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var array $history
+ * @var bool isMonthly
+ * @var bool isPurchasedCampaign
+ * @var int maxMembers
+ */
+?>
+
 <article id="pdfReceipt">
     <header>
         <figure class="logo">
@@ -44,7 +53,7 @@
             <th><?= __('AMOUNT'); ?></th>
             <tr>
                 <td><?= $isMonthly ? __('Monthly') : __('Add member(s)'); ?></td>
-                <td><?= h($history['ChargeHistory']['charge_users']) ?> <?= __("members") ?></td>
+                <td><?= $isPurchasedCampaign ? h($maxMembers) :  h($history['ChargeHistory']['charge_users']) ?> <?= __("members") ?></td>
                 <td>
                     <?php if ($isMonthly): ?>
                         <?= h($history['ChargeHistory']['term']) ?>

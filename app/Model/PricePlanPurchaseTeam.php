@@ -27,7 +27,7 @@ class PricePlanPurchaseTeam extends AppModel
     ];
 
     /**
-     * Returns true if the team have purchased a campaign plan
+     * Returns true if the team has purchased a campaign plan
      *
      * @param int $teamId
      *
