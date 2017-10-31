@@ -167,7 +167,7 @@ class InvitationService extends AppService
             }
 
             $insertEmails = [];
-            foreach ($newEmails as $email) {
+            foreach ($newEmails as $newEmail) {
                 $User->create();
                 // There is nothing to specify for saving user table
                 if (!$User->save([], false)) {
@@ -175,7 +175,7 @@ class InvitationService extends AppService
                 }
                 $insertEmails[] = [
                     'user_id' => $User->getLastInsertID(),
-                    'email'   => $email
+                    'email'   => $newEmail
                 ];
             }
             /* Insert emails table */
