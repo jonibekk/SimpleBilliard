@@ -7,8 +7,8 @@
             <span class="fa fa-calendar"></span> = <?= __('Monthly'); ?> &nbsp; <span class="fa fa-user"></span>
             = <?= __('New Member'); ?>
         </aside>
-        <table class="payment-history-table">
-            <thead class="payment-history-table-head">
+        <table class="payment-table">
+            <thead>
             <tr>
                 <td><?= __('ID'); ?></td>
                 <td><?= __('Date'); ?></td>
@@ -17,7 +17,7 @@
                 <td>&nbsp;</td>
             </tr>
             </thead>
-            <tbody class="payment-history-table-body">
+            <tbody>
             <?php foreach ($histories as $v): ?>
                 <tr>
                     <td><?= h($v['id']) ?></td>

@@ -7,6 +7,7 @@ const initial_state = {
   validation_errors: {},
   error_message: "",
   countries: {},
+  campaigns: [],
   stripe: {},
   lang_code: "",
   amount_per_user: "",
@@ -16,6 +17,7 @@ const initial_state = {
   total_charge: "",
   is_same_as_company_info: false,
   is_saving: false,
+  is_campaign_team: false,
   input_data: {
     payment_setting: {
       type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD,
@@ -31,6 +33,12 @@ const initial_state = {
       contact_person_last_name_kana: "",
       contact_person_tel: "",
       contact_person_email: "",
+    },
+    price_plan_purchase_team: {
+      id: "",
+      tax: "",
+      sub_total_charge: "",
+      total_charge: ""
     },
     credit_card: {
       customer_code:""
@@ -99,6 +107,8 @@ export default function payment(state = initial_state, action) {
             validation_errors: {},
             error_message: ""
           })
+        case Page.CAMPAIGN:
+          return Object.assign({}, state, action.data)
         case Page.CREDIT_CARD:
           return Object.assign({}, state, action.data, {
             to_next_page: false,
@@ -171,6 +181,8 @@ export function updateInputData(input_data, page, add_data) {
   switch (page) {
     case Page.COUNTRY:
       input_data["payment_setting"] = Object.assign({}, input_data["payment_setting"], add_data["payment_setting"]);
+      break;
+    case Page.CAMPAIGN:
       break;
     case Page.COMPANY:
       break;
