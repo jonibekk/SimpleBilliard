@@ -2,7 +2,6 @@
 /**
  * @var array $history
  * @var bool isMonthly
- * @var bool isPurchasedCampaign
  * @var int maxMembers
  */
 ?>
@@ -53,7 +52,7 @@
             <th><?= __('AMOUNT'); ?></th>
             <tr>
                 <td><?= $isMonthly ? __('Monthly') : __('Add member(s)'); ?></td>
-                <td><?= $isPurchasedCampaign ? h($maxMembers) :  h($history['ChargeHistory']['charge_users']) ?> <?= __("members") ?></td>
+                <td><?= $maxMembers!=0 ? h($maxMembers) :  h($history['ChargeHistory']['charge_users']) ?> <?= __("members") ?></td>
                 <td>
                     <?php if ($isMonthly): ?>
                         <?= h($history['ChargeHistory']['term']) ?>

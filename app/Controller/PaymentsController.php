@@ -250,10 +250,9 @@ class PaymentsController extends AppController
         if (empty($history)) {
             throw new NotFoundException(__("Receipt not found"));
         }
-        $isPurchasedCampaign = $CampaignService->purchased($this->current_team_id);
-        $maxMembers = $isPurchasedCampaign ? $CampaignService->getMaxAllowedUsers($this->current_team_id) : 0;
+        $maxMembers = $CampaignService->purchased($this->current_team_id) ? $CampaignService->getMaxAllowedUsers($this->current_team_id) : 0;
         $isMonthly = $history['ChargeHistory']['is_monthly'];
-        $this->set(compact('history', 'isMonthly','isPurchasedCampaign','maxMembers'));
+        $this->set(compact('history', 'isMonthly','maxMembers'));
         return $this->render();
     }
 
