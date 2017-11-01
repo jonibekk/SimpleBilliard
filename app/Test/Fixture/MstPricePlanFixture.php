@@ -32,7 +32,6 @@ class MstPricePlanFixture extends CakeTestFixtureEx {
         ['id' =>  3, 'group_id' => 1, 'code' => '1-3', 'price' => 150000, 'max_members' => 300,],
         ['id' =>  4, 'group_id' => 1, 'code' => '1-4', 'price' => 200000, 'max_members' => 400,],
         ['id' =>  5, 'group_id' => 1, 'code' => '1-5', 'price' => 250000, 'max_members' => 500,],
-
         ['id' =>  6, 'group_id' => 2, 'code' => '2-1', 'price' =>  500,   'max_members' =>  50,],
         ['id' =>  7, 'group_id' => 2, 'code' => '2-2', 'price' => 1000,   'max_members' => 200,],
         ['id' =>  8, 'group_id' => 2, 'code' => '2-3', 'price' => 1500,   'max_members' => 300,],

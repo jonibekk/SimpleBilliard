@@ -20,6 +20,7 @@ class CampaignServiceTest extends GoalousTestCase
         'app.campaign_team',
         'app.mst_price_plan_group',
         'app.mst_price_plan',
+        'app.view_price_plan',
         'app.price_plan_purchase_team'
     );
 

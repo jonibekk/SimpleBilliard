@@ -45,6 +45,7 @@ class PaymentServiceTest extends GoalousTestCase
         'app.price_plan_purchase_team',
         'app.mst_price_plan_group',
         'app.mst_price_plan',
+        'app.view_price_plan',
         'app.campaign_team',
     );
 
