@@ -1800,6 +1800,12 @@ msgstr "クレジットカード設定が見つかりません。"
 msgid "Members"
 msgstr "メンバー"
 
+msgid "%d members"
+msgstr "メンバー"
+
+msgid "Using %d of %d members"
+msgstr "%d人が利用中です。現在のプランでは、%d人まで利用できます。"
+
 msgid "Waiting for the evaluation by %s."
 msgstr "%sの評価待ちです"
 
@@ -2973,6 +2979,12 @@ msgstr "Other Links"
 
 msgid "Terms of service"
 msgstr "利用規約"
+
+msgid "Campaign Contract"
+msgstr "キャンペーン利用特約"
+
+msgid "By purchasing, you agree to the %s and %s."
+msgstr "お支払い頂いた場合、%s及び%sに同意した事になります。"
 
 msgid "Inscription by Law"
 msgstr "特定商取引法に基づく表記"
@@ -5502,6 +5514,9 @@ msgstr "利用規約はこちら。"
 msgid "Terms of service | Goalous"
 msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
+msgid "Campaign Contract | Goalous"
+msgstr "Goalousキャンペーン利用特約 | Goalous(ゴーラス)"
+
 msgid "Your team no longer has access to Goalous."
 msgstr "あなたのチームはGoalousにアクセスできなくなりました。"
 
@@ -5666,8 +5681,8 @@ msgstr "日"
 msgid "AMOUNT"
 msgstr "金額"
 
-msgid "members"
-msgstr "メンバー"
+msgid "%d members"
+msgstr "%dメンバー"
 
 msgid "5-20-8 Asakusabashi CS Tower, 7th Floor"
 msgstr ""
@@ -5875,6 +5890,24 @@ msgstr "Goalousのログインパスワードを作成してください。"
 
 msgid "********"
 msgstr "********"
+
+msgid "Select"
+msgstr "選択する"
+
+msgid "Select Plan"
+msgstr "プランを選択する"
+
+msgid "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan."
+msgstr "この招待によって、アクティブメンバー数の上限を超えます。プランをアップグレードしてください。"
+
+msgid "Larger plans available on request. All prices are without tax."
+msgstr "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけます。すべて税抜価格です。"
+
+msgid "The number of users exceed the limit allowed by your plan."
+msgstr "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけます。すべて税抜価格です。"
+
+msgid "You have %d active members. Please select the best plan for the number of members expected for your team."
+msgstr "このチームには、%d人のアクティブメンバーがいます。今後追加する予定のメンバー数を含めて、最適なプランを選択してください。"
 
 msgid "Join Team"
 msgstr "チームに参加"

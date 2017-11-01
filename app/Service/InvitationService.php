@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 App::uses('Email', 'Model');
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
@@ -63,13 +64,24 @@ class InvitationService extends AppService
         $uniqueEmails = array_unique($emails);
         $duplicateEmails = array_diff_key($emails, $uniqueEmails);
         foreach ($duplicateEmails as $i => $duplicateEmail) {
+            if (empty($duplicateEmail)) {
+                continue;
+            }
             $errors[] = __("Line %d", $i + 1) . "：" . __("%s is duplicated.", __("Email address"));
         }
         if (!empty($errors)) {
             return $errors;
         }
         $existEmails = $Email->findExistByTeamId($teamId, $emails);
-        $errEmails = array_intersect($emails, $existEmails);
+        // Filter error emails (case-insensitive)
+        $errEmails = array_filter($emails, function ($email) use ($existEmails) {
+            if (empty($email)) {
+                return false;
+            }
+            $matches = preg_grep("/^" . preg_quote($email) . "$/i", $existEmails);
+            return !empty($matches);
+        });
+
         foreach ($errEmails as $i => $mail) {
             $errors[] = __("Line %d",
                     $i + 1) . "：" . __("This email address has already been used. Use another email address.");
@@ -120,6 +132,8 @@ class InvitationService extends AppService
         $Team = ClassRegistry::init("Team");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         $res = [
             'error' => false,
@@ -129,7 +143,30 @@ class InvitationService extends AppService
         try {
             $this->TransactionManager->begin();
 
+            $emails = array_filter($emails, "strlen");
             $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, count($emails));
+
+            // Check if it is a Campaign user and if the number of users does not exceeds
+            // the maximum allowed on the campaign
+            if ($CampaignService->purchased($teamId) &&
+                $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, count($emails))) {
+                throw new ErrorException("The number of invitations exceed the number of users allowed to your plan.");
+            }
+
+            /* Insert users table */
+            // Get emails of registered users
+            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
+            // If email has already registered with other team, replace email string by case-insensitive
+            // e.g. Send invitation "test@company.jp" to team1, but "Test@company.jp" user  has been registered team2.
+            // In this case, we change "test@company.jp" →　"Test@company.jp" in $emails
+            // This process is to prevent to register new user.
+            foreach ($emails as &$email) {
+                $matches = preg_grep("/^" . preg_quote($email) . "$/i", $existEmails);
+                if (!empty($matches)) {
+                    $email = array_shift($matches);
+                }
+            }
+            $newEmails = array_udiff($emails, $existEmails, 'strcasecmp');
 
             /* Insert invitations table */
             if (!$Invite->saveBulk($emails, $teamId, $fromUserId)) {
@@ -137,13 +174,9 @@ class InvitationService extends AppService
                         AppUtil::varExportOneLine(compact('emails', 'teamId', 'fromUserId')))
                 );
             }
-            /* Insert users table */
-            // Get emails of registered users
-            $existEmails = Hash::extract($Email->findExistUsersByEmail($emails), '{n}.email') ?? [];
-            $newEmails = array_diff($emails, $existEmails);
 
             $insertEmails = [];
-            foreach ($newEmails as $email) {
+            foreach ($newEmails as $newEmail) {
                 $User->create();
                 // There is nothing to specify for saving user table
                 if (!$User->save([], false)) {
@@ -151,7 +184,7 @@ class InvitationService extends AppService
                 }
                 $insertEmails[] = [
                     'user_id' => $User->getLastInsertID(),
-                    'email'   => $email
+                    'email'   => $newEmail
                 ];
             }
             /* Insert emails table */
@@ -189,7 +222,7 @@ class InvitationService extends AppService
             /* Charge if paid plan */
             // TODO.payment: Should we store $addUserCnt to DB?
             $addUserCnt = count($targetUserIds);
-            if ($Team->isPaidPlan($teamId) && $chargeUserCnt > 0) {
+            if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId) && $chargeUserCnt > 0) {
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
                     $teamId,
@@ -212,6 +245,12 @@ class InvitationService extends AppService
             CakeLog::emergency($e->getTraceAsString());
             $res['error'] = true;
             $res['msg'] = __('Invitation was failed.') . " " . __('Please try again later.');
+            return $res;
+        } catch (ErrorException $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::info("Team $teamId is trying to invite too many users.");
+            $res['error'] = true;
+            $res['msg'] = __("The number of users exceed the limit allowed by your plan.");
             return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
