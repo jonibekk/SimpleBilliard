@@ -42,6 +42,7 @@ class ApiController extends BaseController
     function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_setHeader();
         $this->_setupAuth();
         $this->autoRender = false;
         //htmlを出力してしまうためdebugを無効化
@@ -65,6 +66,17 @@ class ApiController extends BaseController
         }
 
         $this->_setAppLanguage();
+    }
+
+    /**
+     * Set header
+     * Disable cache
+     * Ref: https://stackoverflow.com/questions/13640109/how-to-prevent-browser-cache-for-php-site
+     */
+    private function _setHeader()
+    {
+        header("Cache-Control: no-store, no-cache, max-age=0");
+        header("Pragma: no-cache");
     }
 
     /**
