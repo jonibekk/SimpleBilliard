@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-10-12 00:37+0900\n"
+"PO-Revision-Date: 2017-11-02 11:14+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -713,6 +713,11 @@ msgstr "このメールアドレスのユーザは既にチームに参加して
 msgid "Failed to activate team member."
 msgstr "チーメンバーアクティブ化に失敗しました。"
 
+msgid "The number of users exceed the limit allowed by your plan."
+msgstr ""
+"お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけま"
+"す。すべて税抜価格です。"
+
 msgid "Changed active status inactive to active."
 msgstr "ステータスをアクティブに変更しました"
 
@@ -892,6 +897,9 @@ msgstr "問題があるため、招待に失敗しました。"
 msgid "Your Credit Card does not match your country settings"
 msgstr "クレジットカードの発行国が、選択した会社の所在地(国)と一致していません"
 
+msgid "Your selected campaign is not allowed."
+msgstr "選択したプランは購入出来ません。"
+
 msgid "Invoice payment are available for Japan only"
 msgstr "日本のみ請求書払いを利用できます"
 
@@ -934,9 +942,6 @@ msgstr "ゴール達成しました！"
 
 msgid "Api Endpoint not found."
 msgstr "APIが見つかりません。"
-
-msgid "CSRF Error!"
-msgstr "CSRFエラーです。"
 
 msgid "You can not decrease current value."
 msgstr "現在値は減らせません。"
@@ -1799,12 +1804,6 @@ msgstr "クレジットカード設定が見つかりません。"
 
 msgid "Members"
 msgstr "メンバー"
-
-msgid "%d members"
-msgstr "メンバー"
-
-msgid "Using %d of %d members"
-msgstr "%d人が利用中です。現在のプランでは、%d人まで利用できます。"
 
 msgid "Waiting for the evaluation by %s."
 msgstr "%sの評価待ちです"
@@ -2765,6 +2764,18 @@ msgstr "毎月、請求書が発行されますので、期限までにお支払
 msgid "Setup"
 msgstr "セットアップ"
 
+msgid "%d members"
+msgstr "%dメンバー"
+
+msgid "max members"
+msgstr "最大メンバー数"
+
+msgid "per month"
+msgstr "月額"
+
+msgid "Price"
+msgstr "料金"
+
 msgid "Enter Company Information"
 msgstr "会社情報を入力してください"
 
@@ -2858,6 +2869,9 @@ msgstr "利用規約に同意する"
 msgid "Register"
 msgstr "登録する"
 
+msgid "Agree & Purchase"
+msgstr "同意して、購入する"
+
 msgid "Enter Billing Information"
 msgstr "請求先情報を入力してください"
 
@@ -2933,11 +2947,57 @@ msgstr "購入して、招待する"
 msgid "Purchase"
 msgstr "購入する"
 
+msgid "Contact Us"
+msgstr "連絡する"
+
+msgid "Please inform about upgrade my Campaign Plan"
+msgstr "キャンペーンプランのアップグレードについてお問い合わせください"
+
 msgid "No Goals found"
 msgstr "検索に一致するゴールが見つかりませんでした。"
 
 msgid "Enter %2$d numeric characters for postal code."
 msgstr "郵便番号は%2$d桁の数字で入力してください。"
+
+msgid "Select"
+msgstr "選択する"
+
+msgid "Plan"
+msgstr "プラン"
+
+msgid "Upgrade Plan"
+msgstr "有料プランに変更する"
+
+msgid "Select Plan"
+msgstr "プランを選択する"
+
+msgid ""
+"This invitation will cause your team's active members to exceed the current "
+"plan limit. Please upgrade your plan."
+msgstr ""
+"この招待によって、アクティブメンバー数の上限を超えます。プランをアップグレー"
+"ドしてください。"
+
+msgid "Larger plans available on request. All prices are without tax."
+msgstr ""
+"お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけま"
+"す。すべて税抜価格です。"
+
+msgid ""
+"You have %d active members. Please select the best plan for the number of "
+"members expected for your team."
+msgstr ""
+"このチームには、%d人のアクティブメンバーがいます。今後追加する予定のメンバー"
+"数を含めて、最適なプランを選択してください。"
+
+msgid "Campaign Contract"
+msgstr "キャンペーン利用特約"
+
+msgid "By purchasing, you agree to the %s and %s."
+msgstr "お支払い頂いた場合、%s及び%sに同意した事になります。"
+
+msgid "Contact us"
+msgstr "お問い合わせ"
 
 msgid "Circles"
 msgstr "サークル"
@@ -2980,20 +3040,11 @@ msgstr "Other Links"
 msgid "Terms of service"
 msgstr "利用規約"
 
-msgid "Campaign Contract"
-msgstr "キャンペーン利用特約"
-
-msgid "By purchasing, you agree to the %s and %s."
-msgstr "お支払い頂いた場合、%s及び%sに同意した事になります。"
-
 msgid "Inscription by Law"
 msgstr "特定商取引法に基づく表記"
 
 msgid "Get in touch"
 msgstr "Get in touch"
-
-msgid "Contact us"
-msgstr "お問い合わせ"
 
 msgid "Contact for press"
 msgstr "プレス関連のお問い合わせ"
@@ -4793,17 +4844,26 @@ msgstr ""
 "サポートされなくなったGoalousのバージョンを使用しています。Goalousを使用する"
 "には、最新のアプリバージョンに更新してください。ありがとうございます！"
 
-msgid "We accept consultation of introduction."
-msgstr "導入のご相談を受け付けています。"
+msgid "Terms and Conditions is here."
+msgstr "利用規約はこちら。"
 
 msgid "goal management, achieve a goal, sns app, evaluation, mbo"
 msgstr "目標管理,目標達成,社内SNS,評価,MBO"
 
-msgid "Contact us | Goalous"
-msgstr "お問い合わせ | Goalous"
+msgid "Terms of service | Goalous"
+msgstr "Goalous利用規約 | Goalous(ゴーラス)"
 
 msgid "Goalous │ Enterprise SNS the most ever open for Goal"
 msgstr "Goalous (ゴーラス) │ ゴール達成への最強にオープンな社内SNS"
+
+msgid "Campaign Contract | Goalous"
+msgstr "Goalousキャンペーン利用特約 | Goalous(ゴーラス)"
+
+msgid "We accept consultation of introduction."
+msgstr "導入のご相談を受け付けています。"
+
+msgid "Contact us | Goalous"
+msgstr "お問い合わせ | Goalous"
 
 msgid "Contact us about Goalous"
 msgstr "Goalousに関するお問い合わせ"
@@ -5100,8 +5160,8 @@ msgstr ""
 msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
-msgid "Enjoy your work.<br />Achieve your goals."
-msgstr "チーム力を<br><q>たのしく</q>あげる"
+msgid "Enjoy your work. Achieve your goals."
+msgstr ""
 
 msgid "Contact&nbsp;us"
 msgstr "お問い合わせ"
@@ -5508,15 +5568,6 @@ msgstr "プライバシーポリシーはこちら。"
 msgid "PrivacyPolicy | Goalous"
 msgstr "プライバシーポリシー | Goalous (ゴーラス)"
 
-msgid "Terms and Conditions is here."
-msgstr "利用規約はこちら。"
-
-msgid "Terms of service | Goalous"
-msgstr "Goalous利用規約 | Goalous(ゴーラス)"
-
-msgid "Campaign Contract | Goalous"
-msgstr "Goalousキャンペーン利用特約 | Goalous(ゴーラス)"
-
 msgid "Your team no longer has access to Goalous."
 msgstr "あなたのチームはGoalousにアクセスできなくなりました。"
 
@@ -5595,6 +5646,9 @@ msgid ""
 msgstr ""
 "あなたのチームは、現在フリートライアルでGoalousを利用しています。%sにフリート"
 "ライアルは終了します。"
+
+msgid "Using %d of %d members"
+msgstr "%d人が利用中です。現在のプランでは、%d人まで利用できます。"
 
 msgid "Your team has full access to Goalous.<br />Go achieve your goal!"
 msgstr ""
@@ -5681,8 +5735,8 @@ msgstr "日"
 msgid "AMOUNT"
 msgstr "金額"
 
-msgid "%d members"
-msgstr "%dメンバー"
+msgid "members"
+msgstr ""
 
 msgid "5-20-8 Asakusabashi CS Tower, 7th Floor"
 msgstr ""
@@ -5811,12 +5865,6 @@ msgstr ""
 "「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終了"
 "日が来期末に更新されました。"
 
-msgid "Plan"
-msgstr "プラン"
-
-msgid "Upgrade Plan"
-msgstr "有料プランに変更する"
-
 msgid "Send Invitations"
 msgstr "招待しましょう"
 
@@ -5890,24 +5938,6 @@ msgstr "Goalousのログインパスワードを作成してください。"
 
 msgid "********"
 msgstr "********"
-
-msgid "Select"
-msgstr "選択する"
-
-msgid "Select Plan"
-msgstr "プランを選択する"
-
-msgid "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan."
-msgstr "この招待によって、アクティブメンバー数の上限を超えます。プランをアップグレードしてください。"
-
-msgid "Larger plans available on request. All prices are without tax."
-msgstr "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけます。すべて税抜価格です。"
-
-msgid "The number of users exceed the limit allowed by your plan."
-msgstr "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけます。すべて税抜価格です。"
-
-msgid "You have %d active members. Please select the best plan for the number of members expected for your team."
-msgstr "このチームには、%d人のアクティブメンバーがいます。今後追加する予定のメンバー数を含めて、最適なプランを選択してください。"
 
 msgid "Join Team"
 msgstr "チームに参加"
@@ -5983,3 +6013,9 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "CSRF Error!"
+#~ msgstr "CSRFエラーです。"
+
+#~ msgid "Enjoy your work.<br />Achieve your goals."
+#~ msgstr "チーム力を<br><q>たのしく</q>あげる"
