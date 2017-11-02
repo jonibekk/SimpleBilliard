@@ -29,6 +29,22 @@ class CampaignService extends AppService
     }
 
     /**
+     * Get Campaign assigned to the team.
+     *
+     * @param int   $teamId
+     * @param array $fields
+     *
+     * @return array
+     */
+    function getCampaignTeam(int $teamId, array $fields = []): array
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
+
+        return $CampaignTeam->getByTeamId($teamId, $fields);
+    }
+
+    /**
      * Returns true if the team have purchased a campaign plan
      *
      * @param int $teamId
