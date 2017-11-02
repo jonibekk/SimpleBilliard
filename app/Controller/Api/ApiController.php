@@ -65,6 +65,18 @@ class ApiController extends BaseController
         }
 
         $this->_setAppLanguage();
+        $this->_setHeader();
+    }
+
+    /**
+     * Set header
+     * Disable cache
+     * Ref: https://stackoverflow.com/questions/13640109/how-to-prevent-browser-cache-for-php-site
+     */
+    private function _setHeader()
+    {
+        header("Cache-Control: no-store, no-cache, max-age=0");
+        header("Pragma: no-cache");
     }
 
     /**
