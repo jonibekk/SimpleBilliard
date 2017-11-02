@@ -902,6 +902,7 @@ class PaymentService extends AppService
             ];
             if ($isCampaign) {
                 $metaData['plan_purchase_id'] = $pricePlanPurchaseId;
+                $metaData['campaign_team_id'] = $campaignTeamId;
             }
             $paymentDescription = "";
             foreach ($metaData as $k => $v) {
