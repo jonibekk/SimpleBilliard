@@ -798,7 +798,7 @@ class PaymentService extends AppService
             $currency = $isCampaign ? $CampaignService->getPricePlanCurrency($pricePlanId) :
                 $this->getCurrencyTypeByCountry($companyCountry);
             $timezone = $Team->getTimezone();
-            $date = AppUtil::todayDateYmdLocal($timezone);
+            $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
 
             $paymentData['team_id'] = $teamId;
             $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforePayment($teamId,
@@ -1028,7 +1028,7 @@ class PaymentService extends AppService
 
             // Prepare data for saving
             $timezone = $Team->getTimezone();
-            $date = AppUtil::todayDateYmdLocal($timezone);
+            $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
 
             $paymentData['team_id'] = $teamId;
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));

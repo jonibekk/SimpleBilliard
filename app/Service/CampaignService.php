@@ -259,7 +259,7 @@ class CampaignService extends AppService
         $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         $campaign = $ViewCampaignPricePlan->getById($pricePlanId, ['currency']);
 
-        return Hash::get($campaign, 'currency');
+        return $campaign['currency'];
     }
 
     /**
