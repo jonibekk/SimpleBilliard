@@ -897,8 +897,12 @@ class PaymentService extends AppService
                 'team_id'      => $teamId,
                 'history_id'   => $historyId,
                 'charge_type'  => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-                'first_charge' => true
+                'first_charge' => true,
+                'campaign'     => $isCampaign,
             ];
+            if ($isCampaign) {
+                $metaData['plan_purchase_id'] = $pricePlanPurchaseId;
+            }
             $paymentDescription = "";
             foreach ($metaData as $k => $v) {
                 $paymentDescription .= $k . ":" . $v . " ";
