@@ -42,6 +42,7 @@ class ApiController extends BaseController
     function beforeFilter()
     {
         parent::beforeFilter();
+        $this->_setHeader();
         $this->_setupAuth();
         $this->autoRender = false;
         //htmlを出力してしまうためdebugを無効化
@@ -65,7 +66,6 @@ class ApiController extends BaseController
         }
 
         $this->_setAppLanguage();
-        $this->_setHeader();
     }
 
     /**
