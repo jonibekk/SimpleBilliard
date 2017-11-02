@@ -18,8 +18,9 @@ class CampaignTeam extends AppModel
      */
     function isCampaignTeam(int $teamId): bool
     {
-        $campaignTeam = $this->getByTeamId($teamId, ['id']);
-        if (!empty($campaignTeam)) {
+        $campaignTeam = $this->getByTeamId($teamId, ['id', 'start_date']);
+        $now = GoalousDateTime::createFromTimestamp(time())->getTimestamp();
+        if (!empty($campaignTeam) && $campaignTeam['start_date'] < $now) {
             return true;
         }
         return false;
