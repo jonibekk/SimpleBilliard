@@ -21,7 +21,7 @@ export default class Exceed extends Base {
     // Display intercom message window
     showIntercom(e) {
         e.preventDefault();
-        Intercom('showNewMessage', 'Please inform about upgrade my Campaign Plan');
+        Intercom('showNewMessage', __('Please inform about upgrade my Campaign Plan'));
     }
 
     render() {

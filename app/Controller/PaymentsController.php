@@ -66,9 +66,12 @@ class PaymentsController extends AppController
             // Campaign info
             if ($isCampaignTeam) {
                 $campaign = $CampaignService->getTeamPricePlan($teamId);
-                $currencyType = $campaign['currency'];
-                $campaignUsers = $campaign['max_members'];
-                $campaignPrice = $PaymentService->formatCharge($campaign['price'], $currencyType);
+                // If the team contract campaign after the team became read-only, plan purchase information does not exist
+                if (!empty($campaign)) {
+                    $currencyType = $campaign['currency'];
+                    $campaignUsers = $campaign['max_members'];
+                    $campaignPrice = $PaymentService->formatCharge($campaign['price'], $currencyType);
+                }
             }
         }
         $serviceUseStatus = $TeamService->getServiceUseStatus();

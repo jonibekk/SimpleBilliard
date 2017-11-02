@@ -173,8 +173,10 @@ class CampaignService extends AppService
     /**
      * Check is allowed price plan as team campaign groups
      *
-     * @param int $teamId
-     * @param int $pricePlanId
+     * @param int    $teamId
+     * @param int    $pricePlanId
+     * @param string $companyCountry
+     *
      * @return bool
      */
     function isAllowedPricePlan(int $teamId, int $pricePlanId, string $companyCountry): bool

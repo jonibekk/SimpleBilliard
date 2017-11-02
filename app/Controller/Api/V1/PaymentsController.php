@@ -96,7 +96,8 @@ class PaymentsController extends ApiController
         // Set teamId and payment type for validation
         $teamId = $this->current_team_id;
         $userId = $this->Auth->user('id');
-        $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
+        $requestData = Hash::get($this->request->data, 'payment_setting');
+        $requestData = Hash::insert($requestData, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
         // Check if not already paid plan
@@ -124,7 +125,6 @@ class PaymentsController extends ApiController
         // Check to prevent illegal choice of dollar or yen
         $ccCountry = $creditCardData['creditCard']->country;
         if (!$PaymentService->checkIllegalChoiceCountry($ccCountry, $companyCountry)) {
-            // TODO.Payment: Add translation for message
             return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
         }
 
@@ -132,11 +132,11 @@ class PaymentsController extends ApiController
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
         if ($CampaignService->isCampaignTeam($teamId)) {
-            $pricePlanId = Hash::get($requestData, 'price_plan_id');
+            $pricePlanId = Hash::get($this->request->data, 'price_plan_purchase_team.price_plan_id');
             if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, $companyCountry)) {
-                // TODO.Payment: Add translation for message
                 return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
             }
+            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
         }
 
         // Register credit card, and apply payment
@@ -201,11 +201,12 @@ class PaymentsController extends ApiController
         $CampaignService = ClassRegistry::init("CampaignService");
         $pricePlanId = null;
         if ($CampaignService->isCampaignTeam($teamId)) {
-            $pricePlanId = Hash::get($requestData, 'price_plan_purchase_team.id');
+            $pricePlanId = Hash::get($requestData, 'price_plan_purchase_team.price_plan_id');
             if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, 'JP')) {
                 // TODO.Payment: Add translation for message
                 return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
             }
+            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
         }
 
         // Register invoice

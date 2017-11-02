@@ -599,6 +599,9 @@ App::uses('AttachedFile', 'Model');
             "United States": "<?= __("United States") ?>",
             // Select campaign
             "%d members": "<?= __("%d members") ?>",
+            "max members": "<?= __("max members") ?>",
+            "per month": "<?= __("per month") ?>",
+            "Price": "<?= __("Price") ?>",
             // Input company info
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",
@@ -632,6 +635,7 @@ App::uses('AttachedFile', 'Model');
             "Enter your card information": "<?= __("Enter your card information") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
+            "Agree & Purchase": "<?= __("Agree & Purchase") ?>",
             // Input Billing info
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
@@ -664,6 +668,8 @@ App::uses('AttachedFile', 'Model');
             "Purchase" : "<?= __("Purchase") ?>",
             "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
             "Invalid fields": "<?= __("Invalid fields") ?>",
+            "Contact Us": "<?= __("Contact Us") ?>",
+            "Please inform about upgrade my Campaign Plan": "<?= __("Please inform about upgrade my Campaign Plan") ?>",
             // Goals
             "No Goals found": "<?= __("No Goals found") ?>",
             "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",

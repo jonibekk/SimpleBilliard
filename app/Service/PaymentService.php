@@ -1716,6 +1716,8 @@ class PaymentService extends AppService
         $CreditCard = ClassRegistry::init("CreditCard");
         /** @var Invoice $Invoice */
         $Invoice = ClassRegistry::init("Invoice");
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
 
         $allValidationErrors = [];
         // PaymentSetting validation
@@ -1744,6 +1746,14 @@ class PaymentService extends AppService
             $allValidationErrors = am(
                 $allValidationErrors,
                 $this->validateSingleModelFields($data, $fields, 'invoice', 'Invoice', $Invoice)
+            );
+        }
+
+        // PricePlanPurchaseTeam validation
+        if (!empty(Hash::get($fields, 'PricePlanPurchaseTeam'))) {
+            $allValidationErrors = am(
+                $allValidationErrors,
+                $this->validateSingleModelFields($data, $fields, 'price_plan_purchase_team', 'PricePlanPurchaseTeam', $PricePlanPurchaseTeam)
             );
         }
 
