@@ -752,21 +752,15 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        /** @var TeamService $TeamService */
-        $TeamService = ClassRegistry::init('TeamService');
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init('ChargeHistory');
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
-        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
-        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
         // Check if already registered.
         if (!empty($PaymentSetting->getByTeamId($teamId))) {
-            CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__, $teamId));
+            CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__,
+                $teamId));
             return false;
         }
-
 
         // Register payment settings
         try {
@@ -798,15 +792,22 @@ class PaymentService extends AppService
 
             // Variable to later use
             $result['customerId'] = $customerId;
-
+            $isCampaign = $CampaignService->isCampaignTeam($teamId);
+            $pricePlanId = $isCampaign ? Hash::get($paymentData, 'price_plan_id') : null;
             $companyCountry = Hash::get($paymentData, 'company_country');
+            $currency = $isCampaign ? $CampaignService->getPricePlanCurrency($pricePlanId) :
+                $this->getCurrencyTypeByCountry($companyCountry);
+            $timezone = $Team->getTimezone();
+            $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+
             $paymentData['team_id'] = $teamId;
             $paymentData['amount_per_user'] = $amountPerUser = $this->getAmountPerUserBeforePayment($teamId,
                 $companyCountry);
-            $paymentData['currency'] = $currency = $this->getCurrencyTypeByCountry($companyCountry);
+            $paymentData['currency'] = $currency;
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['type'] = Enum\PaymentSetting\Type::CREDIT_CARD;
+            $paymentData['start_date'] = $date;
 
             // Create PaymentSetting
             $PaymentSetting->create();
@@ -836,8 +837,6 @@ class PaymentService extends AppService
             // Set team status
             // Up to this point any failure do not directly affect user accounts or charge its credit card.
             // Team status will be set first in case of any failure team will be able to continue to use.
-            $timezone = $Team->getTimezone();
-            $date = AppUtil::todayDateYmdLocal($timezone);
             if (!$Team->updatePaidPlan($teamId, $date)) {
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
@@ -847,43 +846,42 @@ class PaymentService extends AppService
             // ChargeHistory result_type will be updated after charge
             $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
             $membersCount = $membersCount[$teamId];
-            $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
 
             // If campaign team, pay as campaign price
-            if ($CampaignService->isCampaignTeam($teamId)) {
+            $pricePlanPurchaseId = null;
+            $campaignTeamId = null;
+            if ($isCampaign) {
                 // Register campaign purchase
-                $pricePlanId = Hash::get($paymentData, 'price_plan_id');
-                $pricePlan = $CampaignPricePlan->getById($pricePlanId, ['code']);
-                $pricePlanPurchase = [
-                    'team_id' => $teamId,
-                    'price_plan_id' => $pricePlanId,
-                    'price_plan_code' => $pricePlan['code'],
-                    'purchase_datetime' => $date,
-                ];
-                $PricePlanPurchaseTeam->create();
-                if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
-                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. data:%s",
-                        AppUtil::varExportOneLine($pricePlanPurchase)));
+                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanId);
+                if (!$pricePlanPurchase) {
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanId: %s",
+                        $teamId, $pricePlanId));
                 }
+                $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
+                $campaignTeamId = Hash::get($CampaignService->getCampaignTeam($teamId, ['id']), 'id');
 
                 // Get campaign price
                 $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
             } else {
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
             }
+
+            // Charge history
             $historyData = [
-                'team_id'          => $teamId,
-                'user_id'          => $userId,
-                'payment_type'     => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-                'amount_per_user'  => $amountPerUser,
-                'total_amount'     => $chargeInfo['sub_total_charge'],
-                'tax'              => $chargeInfo['tax'],
-                'charge_users'     => $membersCount,
-                'currency'         => $currency,
-                'charge_datetime'  => time(),
-                'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
-                'max_charge_users' => $membersCount
+                'team_id'                     => $teamId,
+                'user_id'                     => $userId,
+                'payment_type'                => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
+                'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'amount_per_user'             => $amountPerUser,
+                'total_amount'                => $chargeInfo['sub_total_charge'],
+                'tax'                         => $chargeInfo['tax'],
+                'charge_users'                => $membersCount,
+                'currency'                    => $currency,
+                'charge_datetime'             => time(),
+                'result_type'                 => Enum\ChargeHistory\ResultType::ERROR,
+                'max_charge_users'            => $membersCount,
+                'campaign_team_id'            => $campaignTeamId,
+                'price_plan_purchase_team_id' => $pricePlanPurchaseId,
             ];
 
             $ChargeHistory->create();
@@ -894,16 +892,18 @@ class PaymentService extends AppService
             $historyId = $ChargeHistory->getLastInsertID();
 
             // Apply the user charge on Stripe
-            /** @var CreditCardService $CreditCardService */
-            $CreditCardService = ClassRegistry::init("CreditCardService");
-
             $metaData = [
                 'env'          => ENV_NAME,
                 'team_id'      => $teamId,
                 'history_id'   => $historyId,
                 'charge_type'  => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-                'first_charge' => true
+                'first_charge' => true,
+                'campaign'     => $isCampaign,
             ];
+            if ($isCampaign) {
+                $metaData['plan_purchase_id'] = $pricePlanPurchaseId;
+                $metaData['campaign_team_id'] = $campaignTeamId;
+            }
             $paymentDescription = "";
             foreach ($metaData as $k => $v) {
                 $paymentDescription .= $k . ":" . $v . " ";
@@ -1011,12 +1011,6 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
         $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
-        /** @var CampaignService $CampaignService */
-        $CampaignService = ClassRegistry::init('CampaignService');
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
-        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
-        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
         $membersCount = $TeamMember->countChargeTargetUsers($teamId);
         // Count should never be zero.
@@ -1039,11 +1033,14 @@ class PaymentService extends AppService
 
             // Prepare data for saving
             $timezone = $Team->getTimezone();
+            $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+
             $paymentData['team_id'] = $teamId;
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
             $paymentData['amount_per_user'] = $this->getAmountPerUserBeforePayment($teamId, 'JP');
+            $paymentData['start_date'] = $date;
             // Create Payment Setting
             if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
@@ -1069,26 +1066,8 @@ class PaymentService extends AppService
             }
 
             // Set team status
-            $timezone = $Team->getTimezone();
-            $date = AppUtil::todayDateYmdLocal($timezone);
             if (!$Team->updatePaidPlan($teamId, $date)) {
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
-            }
-
-            // Register campaign purchase
-            if ($CampaignService->isCampaignTeam($teamId) && $pricePlanId) {
-                $pricePlan = $CampaignPricePlan->getById($pricePlanId, ['code']);
-                $pricePlanPurchase = [
-                    'team_id'           => $teamId,
-                    'price_plan_id'     => $pricePlanId,
-                    'price_plan_code'   => $pricePlan['code'],
-                    'purchase_datetime' => $date,
-                ];
-                $PricePlanPurchaseTeam->create();
-                if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
-                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. data:%s",
-                        AppUtil::varExportOneLine($pricePlanPurchase)));
-                }
             }
 
             $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice, $pricePlanId);
@@ -1197,7 +1176,8 @@ class PaymentService extends AppService
 
         $paymentSetting = $PaymentSetting->getByTeamId($teamId);
         // If campaign team, pay as campaign price
-        if ($CampaignService->isCampaignTeam($teamId) && $pricePlanId) {
+        $isCampaign = $CampaignService->isCampaignTeam($teamId);
+        if ($isCampaign && $pricePlanId) {
             $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
         } else {
             $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
@@ -1207,6 +1187,20 @@ class PaymentService extends AppService
 
         $this->TransactionManager->begin();
         try {
+            // Save Campaign History
+            $pricePlanPurchaseId = null;
+            $campaignTeamId = null;
+            if ($isCampaign) {
+                // Register campaign purchase
+                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanId);
+                if (!$pricePlanPurchase) {
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanId: %s",
+                        $teamId, $pricePlanId));
+                }
+                $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
+                $campaignTeamId = Hash::get($CampaignService->getCampaignTeam($teamId, ['id']), 'id');
+            }
+
             // save monthly charge
             $ChargeHistory->clear();
             $monthlyChargeHistory = $ChargeHistory->addInvoiceMonthlyCharge(
@@ -1216,7 +1210,10 @@ class PaymentService extends AppService
                 $chargeInfo['tax'],
                 $paymentSetting['amount_per_user'],
                 $chargeMemberCount,
-                $userId
+                $userId,
+                PaymentSetting::CURRENCY_TYPE_JPY,
+                $campaignTeamId,
+                $pricePlanPurchaseId
             );
             if (!$monthlyChargeHistory) {
                 throw new Exception(sprintf("Failed to save monthly charge history. validationErrors: %s"),
@@ -1904,6 +1901,13 @@ class PaymentService extends AppService
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+
+        // Campaign team have no price for individual users
+        if ($CampaignService->isCampaignTeam($teamId)) {
+            return 0;
+        }
 
         $teamAmountPerUser = $Team->getAmountPerUser($teamId);
         if ($teamAmountPerUser !== null) {

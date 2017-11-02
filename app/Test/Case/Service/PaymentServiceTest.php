@@ -1512,7 +1512,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if team status updated
         $team = $this->Team->getById($teamId);
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         $this->deleteCustomer($res["customerId"]);
@@ -1604,7 +1604,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if team status updated
         $team = $this->Team->getById($teamId);
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         $this->deleteCustomer($res["customerId"]);
@@ -1661,7 +1661,6 @@ class PaymentServiceTest extends GoalousTestCase
             'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15',
-            'pre_register_amount_per_user' => 1000
         ], false);
 
         $userId = $this->createActiveUser($teamId);
@@ -1685,7 +1684,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($paySetting['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
         $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::JPY);
-        $this->assertEquals($paySetting['amount_per_user'], '1000');
+        $this->assertEquals($paySetting['amount_per_user'], '0');
 
         // Check saved CreditCard data
         $cc = $this->CreditCard->getByTeamId($teamId);
@@ -1737,7 +1736,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if team status updated
         $team = $this->Team->getById($teamId);
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check campaign purchase
@@ -1776,7 +1775,7 @@ class PaymentServiceTest extends GoalousTestCase
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check if payment settings was created
@@ -1869,7 +1868,7 @@ class PaymentServiceTest extends GoalousTestCase
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check if payment settings was created
@@ -1880,7 +1879,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($paymentSettings['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
         $this->assertEquals($paymentSettings['currency'], Enum\PaymentSetting\Currency::JPY);
-        $this->assertEquals($paymentSettings['amount_per_user'], PaymentService::AMOUNT_PER_USER_JPY);
+        $this->assertEquals($paymentSettings['amount_per_user'], 0);
 
         // Check if PaymentSettingChangeLog was created
         $payLog = $this->PaymentSettingChangeLog->getLatest($teamId);
@@ -1966,7 +1965,7 @@ class PaymentServiceTest extends GoalousTestCase
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], AppUtil::todayDateYmdLocal($timezone));
+        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check if payment settings was created

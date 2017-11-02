@@ -29,13 +29,29 @@ class CampaignService extends AppService
     }
 
     /**
+     * Get Campaign assigned to the team.
+     *
+     * @param int   $teamId
+     * @param array $fields
+     *
+     * @return array
+     */
+    function getCampaignTeam(int $teamId, array $fields = []): array
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
+
+        return $CampaignTeam->getByTeamId($teamId, $fields);
+    }
+
+    /**
      * Returns true if the team have purchased a campaign plan
      *
      * @param int $teamId
      *
      * @return bool
      */
-    function purchased(int $teamId)
+    function purchased(int $teamId): bool
     {
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
@@ -228,5 +244,75 @@ class CampaignService extends AppService
         ];
 
         return $chargeInfo;
+    }
+
+    /**
+     * Get Currency info from team price group
+     *
+     * @param int $pricePlanId
+     *
+     * @return int|null
+     */
+    function getPricePlanCurrency(int $pricePlanId)
+    {
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
+        $campaign = $ViewCampaignPricePlan->getById($pricePlanId, ['currency']);
+
+        return $campaign['currency'];
+    }
+
+    /**
+     * Save PricePlanPurchaseTeam to DB
+     *
+     * @param int $teamId
+     * @param int $pricePlanId
+     *
+     * @return array
+     */
+    function savePricePlanPurchase(int $teamId, int $pricePlanId): array
+    {
+        /** @var CampaignPricePlan $CampaignPricePlan */
+        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
+        $pricePlan = $CampaignPricePlan->getById($pricePlanId, ['code']);
+        $pricePlanPurchase = [
+            'team_id'           => $teamId,
+            'price_plan_id'     => $pricePlanId,
+            'price_plan_code'   => $pricePlan['code'],
+            'purchase_datetime' => time(),
+        ];
+
+        $PricePlanPurchaseTeam->create();
+        return $PricePlanPurchaseTeam->save($pricePlanPurchase);
+    }
+
+    /**
+     * Save CampaignChargeHistory to DB
+     *
+     * @param int $teamId
+     * @param int $historyId
+     * @param int $pricePlanPurchaseId
+     *
+     * @return array
+     */
+    function saveCampaignChargeHistory(int $teamId, int $historyId, int $pricePlanPurchaseId): array
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
+        /** @var CampaignChargeHistory $CampaignChargeHistory */
+        $CampaignChargeHistory = ClassRegistry::init('CampaignChargeHistory');
+
+        $campaignTeam = $CampaignTeam->getByTeamId($teamId, ['id']);
+        $campaignHistory = [
+            'charge_history_id'           => $historyId,
+            'campaign_team_id'            => $campaignTeam['id'],
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId,
+
+        ];
+        $CampaignChargeHistory->create();
+        return $CampaignChargeHistory->save($campaignHistory);
     }
 }
