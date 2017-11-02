@@ -2951,7 +2951,7 @@ msgid "Contact Us"
 msgstr "連絡する"
 
 msgid "Please inform about upgrade my Campaign Plan"
-msgstr "キャンペーンプランのアップグレードについてお問い合わせください"
+msgstr "キャンペーンプランのアップグレードについて教えてください"
 
 msgid "No Goals found"
 msgstr "検索に一致するゴールが見つかりませんでした。"
