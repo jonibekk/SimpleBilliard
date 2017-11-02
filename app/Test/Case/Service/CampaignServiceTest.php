@@ -21,7 +21,8 @@ class CampaignServiceTest extends GoalousTestCase
         'app.mst_price_plan_group',
         'app.mst_price_plan',
         'app.view_price_plan',
-        'app.price_plan_purchase_team'
+        'app.price_plan_purchase_team',
+        'app.campaign_charge_history',
     );
 
     /**
@@ -131,6 +132,65 @@ class CampaignServiceTest extends GoalousTestCase
             ['id' =>  '9', 'sub_total_charge' => '$2,000', 'tax' => '$0', 'total_charge' => '$2,000', 'member_count' => '400',],
             ['id' => '10', 'sub_total_charge' => '$2,500', 'tax' => '$0', 'total_charge' => '$2,500', 'member_count' => '500',],
         ], $this->CampaignService->findList(2));
+    }
+
+    function test_getPricePlanCurrency()
+    {
+        $currency = $this->CampaignService->getPricePlanCurrency(2);
+        $this->assertEquals(1, $currency);
+
+        $currency = $this->CampaignService->getPricePlanCurrency(9);
+        $this->assertEquals(2, $currency);
+    }
+
+    function test_getPricePlanCurrency_noPricePlan()
+    {
+        $this->assertNull($this->CampaignService->getPricePlanCurrency(100));
+    }
+
+    function test_savePricePlanPurchase()
+    {
+        $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
+        $ret = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 2);
+        $expected = [
+            'team_id' => $teamId,
+            'price_plan_id' => $pricePlanId,
+            'price_plan_code' => '1-2',
+        ];
+        $this->assertEquals($expected, array_intersect_key($expected, $ret['PricePlanPurchaseTeam']));
+
+
+        $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
+        $ret = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 6);
+        $expected = [
+            'team_id' => $teamId,
+            'price_plan_id' => $pricePlanId,
+            'price_plan_code' => '2-1',
+        ];
+        $this->assertEquals($expected, array_intersect_key($expected, $ret['PricePlanPurchaseTeam']));
+    }
+
+    function test_saveCampaignChargeHistory()
+    {
+        $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
+        $purchase = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 6);
+        $ret = $this->CampaignService->saveCampaignChargeHistory($teamId, $historyId = 1, $purchase['PricePlanPurchaseTeam']['id']);
+        $expected = [
+            'charge_history_id'           => $historyId,
+            'campaign_team_id'            => 1,
+            'price_plan_purchase_team_id' => $purchase['PricePlanPurchaseTeam']['id'],
+        ];
+        $this->assertEquals($expected, array_intersect_key($expected, $ret['CampaignChargeHistory']));
+
+        $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
+        $purchase = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 6);
+        $ret = $this->CampaignService->saveCampaignChargeHistory($teamId, $historyId = 2, $purchase['PricePlanPurchaseTeam']['id']);
+        $expected = [
+            'charge_history_id'           => $historyId,
+            'campaign_team_id'            => 1,
+            'price_plan_purchase_team_id' => $purchase['PricePlanPurchaseTeam']['id'],
+        ];
+        $this->assertEquals($expected, array_intersect_key($expected, $ret['CampaignChargeHistory']));
     }
 
     public function providerAllowedPricePlanGroupJPY()

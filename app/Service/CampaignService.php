@@ -235,7 +235,7 @@ class CampaignService extends AppService
      *
      * @return int
      */
-    function getPricePlanCurrency(int $pricePlanId): int
+    function getPricePlanCurrency(int $pricePlanId)
     {
         /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
         $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
