@@ -44,7 +44,7 @@ export default class Confirm extends Base {
     let total_charge = payment.total_charge;
     let campaign_members = 0;
     if (payment.is_campaign_team) {
-      const input_campaign = payment.input_data.price_plan_purchase_team;
+      const input_campaign = payment.selected_price_plan;
       tax = input_campaign.tax;
       sub_total_charge = input_campaign.sub_total_charge;
       total_charge = input_campaign.total_charge;
