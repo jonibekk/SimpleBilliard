@@ -197,10 +197,7 @@ class InvitationsController extends ApiController
                 'teams.id'     => $teamId,
                 'count_invite' => $countInvitedPeople,
             ])));
-            return $this->_getResponseValidationFail([
-                'message' => 'need to exceed campaign plan',
-                'invite_count' => $countInvitedPeople,
-            ]);
+            return $this->_getResponseForbidden([]);
         }
 
         // Invite
