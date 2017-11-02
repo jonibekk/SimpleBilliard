@@ -51,7 +51,7 @@ class CampaignService extends AppService
      *
      * @return bool
      */
-    function purchased(int $teamId)
+    function purchased(int $teamId): bool
     {
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
@@ -251,7 +251,7 @@ class CampaignService extends AppService
      *
      * @param int $pricePlanId
      *
-     * @return int
+     * @return int|null
      */
     function getPricePlanCurrency(int $pricePlanId)
     {
@@ -259,7 +259,7 @@ class CampaignService extends AppService
         $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         $campaign = $ViewCampaignPricePlan->getById($pricePlanId, ['currency']);
 
-        return $campaign['currency'];
+        return Hash::get($campaign, 'currency');
     }
 
     /**
