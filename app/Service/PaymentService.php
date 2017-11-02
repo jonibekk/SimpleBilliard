@@ -807,6 +807,8 @@ class PaymentService extends AppService
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
             $paymentData['type'] = Enum\PaymentSetting\Type::CREDIT_CARD;
+            $paymentData['start_date'] = time();
+
 
             // Create PaymentSetting
             $PaymentSetting->create();
@@ -858,7 +860,7 @@ class PaymentService extends AppService
                     'team_id' => $teamId,
                     'price_plan_id' => $pricePlanId,
                     'price_plan_code' => $pricePlan['code'],
-                    'purchase_datetime' => $date,
+                    'purchase_datetime' => time(),
                 ];
                 $PricePlanPurchaseTeam->create();
                 if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
@@ -1044,6 +1046,7 @@ class PaymentService extends AppService
             $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
             $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
             $paymentData['amount_per_user'] = $this->getAmountPerUserBeforePayment($teamId, 'JP');
+            $paymentData['start_date'] = time();
             // Create Payment Setting
             if (!$PaymentSetting->save($paymentData, true)) {
                 throw new Exception(sprintf("Failed create payment settings. data: %s",
@@ -1082,7 +1085,7 @@ class PaymentService extends AppService
                     'team_id'           => $teamId,
                     'price_plan_id'     => $pricePlanId,
                     'price_plan_code'   => $pricePlan['code'],
-                    'purchase_datetime' => $date,
+                    'purchase_datetime' => time(),
                 ];
                 $PricePlanPurchaseTeam->create();
                 if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
