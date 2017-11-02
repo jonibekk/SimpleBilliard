@@ -65,7 +65,7 @@ export default class Campaign extends Base {
     const campaigns_el = () => {
       return payment.campaigns.map((campaign, i) => {
         const campaignId = campaign.id
-        const display_select_button = payment.charge_users_count < campaign.member_count
+        const display_select_button = payment.charge_users_count <= campaign.member_count
         return (
           <tr key={ campaignId }>
             <td>{sprintf(__("%d members"), campaign.member_count)}</td>
