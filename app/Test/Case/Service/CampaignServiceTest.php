@@ -22,7 +22,6 @@ class CampaignServiceTest extends GoalousTestCase
         'app.mst_price_plan',
         'app.view_price_plan',
         'app.price_plan_purchase_team',
-        'app.campaign_charge_history',
     );
 
     /**
@@ -168,29 +167,6 @@ class CampaignServiceTest extends GoalousTestCase
             'price_plan_code' => '2-1',
         ];
         $this->assertEquals($expected, array_intersect_key($expected, $ret['PricePlanPurchaseTeam']));
-    }
-
-    function test_saveCampaignChargeHistory()
-    {
-        $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
-        $purchase = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 6);
-        $ret = $this->CampaignService->saveCampaignChargeHistory($teamId, $historyId = 1, $purchase['PricePlanPurchaseTeam']['id']);
-        $expected = [
-            'charge_history_id'           => $historyId,
-            'campaign_team_id'            => 1,
-            'price_plan_purchase_team_id' => $purchase['PricePlanPurchaseTeam']['id'],
-        ];
-        $this->assertEquals($expected, array_intersect_key($expected, $ret['CampaignChargeHistory']));
-
-        $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
-        $purchase = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 6);
-        $ret = $this->CampaignService->saveCampaignChargeHistory($teamId, $historyId = 2, $purchase['PricePlanPurchaseTeam']['id']);
-        $expected = [
-            'charge_history_id'           => $historyId,
-            'campaign_team_id'            => 1,
-            'price_plan_purchase_team_id' => $purchase['PricePlanPurchaseTeam']['id'],
-        ];
-        $this->assertEquals($expected, array_intersect_key($expected, $ret['CampaignChargeHistory']));
     }
 
     public function providerAllowedPricePlanGroupJPY()
