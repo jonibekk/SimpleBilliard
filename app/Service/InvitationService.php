@@ -250,7 +250,7 @@ class InvitationService extends AppService
             $this->TransactionManager->rollback();
             CakeLog::info("Team $teamId is trying to invite too many users.");
             $res['error'] = true;
-            $res['msg'] = __("Your campaign plan reached to the maximum user allowed. Please contact for the larger plans.");
+            $res['msg'] = __("Your campaign plan reached the maximum user allowed. Please contact for the larger plans.");
             return $res;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
