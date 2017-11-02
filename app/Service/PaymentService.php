@@ -849,7 +849,6 @@ class PaymentService extends AppService
             // ChargeHistory result_type will be updated after charge
             $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
             $membersCount = $membersCount[$teamId];
-            $formattedAmountPerUser = $this->formatCharge($amountPerUser, $currency);
 
             // If campaign team, pay as campaign price
             if ($CampaignService->isCampaignTeam($teamId)) {
