@@ -2870,7 +2870,7 @@ msgid "Register"
 msgstr "登録する"
 
 msgid "Agree & Purchase"
-msgstr "同意して、購入する"
+msgstr "同意して購入する"
 
 msgid "Enter Billing Information"
 msgstr "請求先情報を入力してください"
