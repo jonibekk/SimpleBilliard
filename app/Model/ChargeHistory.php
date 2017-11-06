@@ -372,6 +372,8 @@ class ChargeHistory extends AppModel
                 'charge_datetime >=' => $startTimestamp,
                 'charge_datetime <=' => $endTimestamp,
                 'result_type !=' => Enum\ChargeHistory\ResultType::ERROR,
+                // TODO: Remove this condition and add checking for inconsistency of campaign team's charge in DetectInconsistentChargeShell.
+                'campaign_team_id' => null
             ],
         ];
         $res = $this->find('all', $options);
