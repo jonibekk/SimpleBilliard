@@ -94,6 +94,7 @@ class MonthlyInvoiceChargeShell extends AppShell
                     $pricePlanId = $pricePlan['id'];
                 }
 
+                // TODO: fix 6th arguments: https://jira.goalous.com/browse/GL-6378
                 $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp, null, true, $pricePlanId);
                 if ($retRegistration === true) {
                     $this->logInfo(sprintf('Order registration was succeeded! teamId: %s', $teamId));
