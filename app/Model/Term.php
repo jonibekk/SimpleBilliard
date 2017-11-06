@@ -278,12 +278,12 @@ class Term extends AppModel
     public function getTermData(int $type, bool $withCache = true): array
     {
         $this->_checkType($type);
-        
+
         // GL-6354: Output log to investigate the cause of error.
         // TODO: Remove try catch after we found the cause and fixed.
         try {
             $timezone = $this->Team->getTimezone();
-            if (empty($timezone)) {
+            if (is_null($timezone) || $timezone === "") {
                 $currentTeamId = $this->Team->current_team_id;
                 if (empty($currentTeamId)) {
                     throw new Exception(sprintf("Timezone is null. current_team_id is empty. my_uid:%s",
