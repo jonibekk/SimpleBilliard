@@ -779,9 +779,9 @@ class Team extends AppModel
     public function updatePaidPlan(int $teamId, string $date): bool
     {
         $data = [
-            'service_use_status' => Enum\Team\ServiceUseStatus::PAID,
+            'service_use_status'           => Enum\Team\ServiceUseStatus::PAID,
             'service_use_state_start_date' => $date,
-            'service_use_state_end_date' => null
+            'service_use_state_end_date'   => null
         ];
         $this->clear();
         $this->id = $teamId;
@@ -822,6 +822,61 @@ class Team extends AppModel
             return $res['service_use_status'];
         }
         return null;
+    }
+
+    /**
+     * finding team ids that has been failed some times in monthly credit card charge
+     *
+     * @param int $startTimestamp
+     * @param int $endTimestamp
+     * @param int $judgeFailureCnt
+     *
+     * @return array
+     */
+    public function findTargetsForMovingReadOnly(int $startTimestamp, int $endTimestamp, $judgeFailureCnt = 3): array
+    {
+        $options = [
+            'conditions' => [
+                'Team.del_flg' => false,
+            ],
+            'fields'     => [
+                'Team.id'
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'payment_settings',
+                    'alias'      => 'PaymentSetting',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Team.id = PaymentSetting.team_id',
+                        'Team.service_use_status' => Enum\Team\ServiceUseStatus::PAID,
+                        'PaymentSetting.type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+                        'PaymentSetting.del_flg'  => false,
+                    ]
+                ],
+                [
+                    'table'      => 'charge_histories',
+                    'alias'      => 'ChargeHistory',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'PaymentSetting.team_id = ChargeHistory.team_id',
+                        'ChargeHistory.charge_type'     => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                        'ChargeHistory.result_type'     => Enum\ChargeHistory\ResultType::FAIL,
+                        'ChargeHistory.charge_datetime >= ' => $startTimestamp,
+                        'ChargeHistory.charge_datetime <= ' => $endTimestamp,
+                        'ChargeHistory.del_flg' => false,
+                    ]
+                ],
+            ],
+            'group' => [
+                'Team.id HAVING COUNT(Team.id) >= '.$judgeFailureCnt
+            ],
+        ];
+        $ret = $this->find('all', $options);
+        if (empty($ret)) {
+            return [];
+        }
+        return Hash::extract($ret, '{n}.Team.id');
     }
 
     /**

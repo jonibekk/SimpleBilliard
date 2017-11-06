@@ -8,7 +8,6 @@ import UploadPreview from "~/message/components/elements/detail/UploadPreview";
 import LoadingButton from "~/common/components/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
-import Textarea from "react-textarea-autosize";
 import {nl2br} from "~/util/element";
 import {isIOSApp, isMobileApp} from "~/util/base";
 import {HotKeys} from "react-hotkeys";
@@ -24,13 +23,24 @@ class Footer extends React.Component {
       is_drag_start: false,
     }
     this.sendMessage = this.sendMessage.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this)
   }
 
   componentDidMount() {
+    var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
+    autosize(ta);
+
     if (!isMobileApp()) {
       return;
     }
+  
+    var threadBody = document.getElementsByClassName('topicDetail-body')[0];
+    
+    ta.addEventListener('autosize:resized', function(){
+      threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
+      // The following line doesn't work on Android app. Fix this issue.
+      threadBody.scrollTo(0,threadBody.scrollHeight);
+    });
+
     const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
     this.props.dispatch(
       detail.changeLayout({body_bottom})
@@ -140,10 +150,6 @@ class Footer extends React.Component {
     }
   }
 
-  onTouchMove(e) {
-    e.preventDefault()
-  }
-
   render() {
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
     const footer_style = {
@@ -164,7 +170,6 @@ class Footer extends React.Component {
         onDragEnter={this.dragEnter.bind(this)}
         onDragOver={this.dragOver.bind(this)}
         onDragLeave={this.dragLeave.bind(this)}
-        onTouchMove={this.onTouchMove}
         style={footer_style}
         ref="topic_detail_footer"
       >
@@ -184,7 +189,7 @@ class Footer extends React.Component {
             </div>
             <div className="topicDetail-footer-box-center">
               <HotKeys keyMap={key_map} handlers={handlers}>
-                <Textarea
+                <textarea
                   className={`topicDetail-footer-inputBody form-control disable-change-warning ${sp_class}`}
                   rows={1} cols={30} placeholder={__("Reply")}
                   name="message_body" value={this.props.body}
