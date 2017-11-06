@@ -26,7 +26,7 @@
             <?php elseif ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID): ?>
             <h4 class="status-text subscribed">
                 <i class="fa fa-ticket"></i>
-                <?php if($isCampaignTeam): ?>
+                <?php if ($isCampaignTeam): ?>
                     <?= __('%d members', $campaignUsers); ?>
                 <?php else: ?>
                     <?= __('Paid Plan') ?>
@@ -62,12 +62,12 @@
                     <?php endif; ?>
                     <div class="hr"></div>
                     <?php if (!$isCampaignTeam): ?>
-                    <div class="team-price-info">
-                        <h5><?= __('Monthly') ?></h5>
-                        <span class="team-price-info-number"><?= h($amountPerUser) ?>
-                            <div class="team-price-info-detail">/<?= __('member'); ?>
-                                /<?= __('month'); ?><sup class="team-price-info-super-script">*1</sup></div></span>
-                    </div>
+                        <div class="team-price-info">
+                            <h5><?= __('Monthly') ?></h5>
+                            <span class="team-price-info-number"><?= h($amountPerUser) ?>
+                                <div class="team-price-info-detail">/<?= __('member'); ?>
+                                    /<?= __('month'); ?><sup class="team-price-info-super-script">*1</sup></div></span>
+                        </div>
                     <?php endif; ?>
                     <div class="team-price-info">
                         <h5><?= __('Active Members') ?><sup
@@ -76,21 +76,21 @@
                         <span class="team-price-info-number"><?= h($chargeMemberCount) ?></span>
                     </div>
                     <?php if (!$isCampaignTeam): ?>
-                    <div class="team-price-info">
-                        <h5><?= __('Estimated Total') ?></h5>
-                        <i class="team-price-info-icon fa fa-credit-card"></i>
-                        <span class="team-price-info-number"><?= h($subTotal) ?>
-                            <div class="team-price-info-detail">/<?= __('month'); ?></div>
+                        <div class="team-price-info">
+                            <h5><?= __('Estimated Total') ?></h5>
+                            <i class="team-price-info-icon fa fa-credit-card"></i>
+                            <span class="team-price-info-number"><?= h($subTotal) ?>
+                                <div class="team-price-info-detail">/<?= __('month'); ?></div>
                         </span>
-                    </div>
+                        </div>
                     <?php elseif (($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID)): ?>
-                    <div class="team-price-info">
-                        <h5><?= __('Estimated Total') ?></h5>
-                        <i class="team-price-info-icon fa fa-credit-card"></i>
-                        <span class="team-price-info-number"><?= h($campaignPrice) ?>
-                            <div class="team-price-info-detail">/<?= __('month'); ?></div>
+                        <div class="team-price-info">
+                            <h5><?= __('Estimated Total') ?></h5>
+                            <i class="team-price-info-icon fa fa-credit-card"></i>
+                            <span class="team-price-info-number"><?= h($campaignPrice) ?>
+                                <div class="team-price-info-detail">/<?= __('month'); ?></div>
                         </span>
-                    </div>
+                        </div>
                     <?php endif; ?>
                     <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
                         <div class="feature-category">
@@ -128,15 +128,21 @@
                                 class="fa fa-angle-right"></span></a>
                     <?php endif; ?>
                     <ol class="team-price-info-legal">
-                        <li><?= __("Added team member's usage fee will be charged based on daily rate."); ?></li>
-                        <li><?= __('Team members who fit the following criteria are considered to be billable monthly active members:'); ?>
-                            <ul class="team-price-info-legal">
-                                <li><?= __('Team members who are active by the payment date (those not deactivated by the team administrator)'); ?></li>
-                                <li><?= __('In the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date. In addition, in that situation, added team member’s usage fee will be charged based on daily rate.'); ?></li>
-                            </ul>
-                        </li>
-                        <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
-                            <li><?= __('Maximum file upload for sharing files is 100MB. Posting photos allows up to 10MB'); ?></li>
+                        <?php if ($isCampaignTeam): ?>
+                            <li><?= __("Your team qualifies for a special campaign price (annual contract, paid monthly)."); ?></li>
+                            <li><?= __("You cannot downgrade the plan during the contract period. However, you may downgrade the plan during the last month of the current contract period."); ?></li>
+                            <li><?= __("If you cancel during the contract period, you’ll be charged 100% of your remaining contract obligation and your service will immediately end."); ?></li>
+                        <?php else: ?>
+                            <li><?= __("Added team member's usage fee will be charged based on daily rate."); ?></li>
+                            <li><?= __('Team members who fit the following criteria are considered to be billable monthly active members:'); ?>
+                                <ul class="team-price-info-legal">
+                                    <li><?= __('Team members who are active by the payment date (those not deactivated by the team administrator)'); ?></li>
+                                    <li><?= __('In the event that team members were added by the team administrator between the current month’s payment date and 1 day prior to the following month’s payment date, the number of billable members will be more than the number of active members falling on the current month’s payment date. In addition, in that situation, added team member’s usage fee will be charged based on daily rate.'); ?></li>
+                                </ul>
+                            </li>
+                            <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
+                                <li><?= __('Maximum file upload for sharing files is 100MB. Posting photos allows up to 10MB'); ?></li>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </ol>
     </div>
