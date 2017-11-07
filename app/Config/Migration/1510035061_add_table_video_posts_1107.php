@@ -1,12 +1,12 @@
 <?php
-class AddTableVideoPosts1025 extends CakeMigration {
+class AddTableVideoPosts1107 extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'add_table_video_posts_1025';
+	public $description = 'add_table_video_posts_1107';
 
 /**
  * Actions to be performed
@@ -52,7 +52,7 @@ class AddTableVideoPosts1025 extends CakeMigration {
 					'video_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'unique', 'comment' => '= videos.id'),
 					'duration' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'unsigned' => true, 'comment' => 'video stream duration second'),
 					'aspect_ratio' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'streams width/height ratio'),
-					'key_master_playlist' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
+					'key_master_playlist' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
 					'status_transcode' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 4, 'unsigned' => false, 'comment' => '-1=error
 0=none
 1=uploading(to cloud storage)
@@ -77,9 +77,10 @@ class AddTableVideoPosts1025 extends CakeMigration {
 					'duration' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true, 'comment' => 'video duration second'),
 					'width' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true, 'comment' => 'video width(px)'),
 					'height' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true, 'comment' => 'video height(px)'),
-					'hash' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'video file hash sha256', 'charset' => 'utf8mb4'),
+					'hash' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 256, 'collate' => 'utf8mb4_general_ci', 'comment' => 'video file hash sha256', 'charset' => 'utf8mb4'),
 					'file_size' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true, 'comment' => 'video file byte size'),
-					'file_key' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
+					'file_name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'filename of original uploaded file', 'charset' => 'utf8mb4'),
+					'file_key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
