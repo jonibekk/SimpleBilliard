@@ -11,7 +11,8 @@ const initialState = {
     emails: "",
   },
   is_saving: false,
-  redirect_to_home: false
+  redirect_to_home: false,
+  redirect_to_upgrade_plan: false
 }
 
 export default function invite(state = initialState, action) {
@@ -48,6 +49,10 @@ export default function invite(state = initialState, action) {
     case types.REDIRECT_TO_HOME:
       return Object.assign({}, state, {
         redirect_to_home: true,
+      })
+    case types.REDIRECT_TO_UPGRADE_PLAN:
+      return Object.assign({}, state, {
+          redirect_to_upgrade_plan: true,
       })
     case types.SAVING:
       return Object.assign({}, state, {

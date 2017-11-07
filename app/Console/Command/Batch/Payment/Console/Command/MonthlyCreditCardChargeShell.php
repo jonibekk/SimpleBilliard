@@ -10,7 +10,7 @@ App::uses('GlEmailComponent', 'Controller/Component');
 use Goalous\Model\Enum as Enum;
 
 /**
- * The shell for creating next next term
+ * The shell for charging monthly if payment type is credit card
  * Console/cake monthly credit card charge
  * Description
  * - Charge each only credit card payment team that payment base date came

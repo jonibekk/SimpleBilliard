@@ -67,6 +67,7 @@ export default class Invoice extends Base {
                 <input
                   type="checkbox" id="checkSameAsCompanyInfo"
                   onChange={this.onCheck.bind(this)}
+                  checked={is_same_as_company_info}
                 />{__("Same as company information")}
               </label>
             </div>

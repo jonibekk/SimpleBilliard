@@ -14,7 +14,6 @@ export default class Country extends Base {
     this.state = {};
     this.onChange = this.onChange.bind(this)
     this.choosePaymentType = this.choosePaymentType.bind(this)
-
   }
 
   componentWillMount() {
@@ -27,7 +26,8 @@ export default class Country extends Base {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.payment.to_next_page) {
-      browserHistory.push(Page.URL_COMPANY)
+      const next_page = nextProps.payment.is_campaign_team ? Page.URL_CAMPAIGN : Page.URL_COMPANY;
+      browserHistory.push(next_page)
     }
   }
 
@@ -48,7 +48,6 @@ export default class Country extends Base {
   choosePaymentType(type) {
     this.props.validatePayment(Page.COUNTRY, {payment_setting: {type}});
   }
-
 
   onChange(e) {
     this.props.updateInputData({company_country: e.target.value}, 'payment_setting')

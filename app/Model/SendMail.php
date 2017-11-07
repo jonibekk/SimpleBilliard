@@ -32,7 +32,8 @@ class SendMail extends AppModel
     const TYPE_TMPL_CREDIT_STATUS_DENIED = 15;
     const TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN = 16;
     const TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN = 17;
-    const TYPE_TMPL_ALERT_CHARGE_FAILURE = 18;
+    const TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE = 18;
+    const TYPE_TMPL_ALERT_CHARGE_FAILURE = 19;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY                 => [
@@ -115,6 +116,11 @@ class SendMail extends AppModel
             'template' => 'register_credit_card_paid_plan',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE => [
+            'subject'  => null,
+            'template' => 'move_read_only_for_charge_failure',
+            'layout'   => 'default',
+        ],
         self::TYPE_TMPL_ALERT_CHARGE_FAILURE           => [
             'subject'  => null,
             'template' => 'alert_charge_failure',
@@ -124,7 +130,7 @@ class SendMail extends AppModel
 
     public function _setTemplateSubject()
     {
-        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __("Registered tempolarily");
+        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __("Registered temporarily");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __("Reset Password");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __("Succeeded to reset password");
         self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __("Authentication email address");
@@ -140,6 +146,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_INVOICE_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_ALERT_CHARGE_FAILURE]['subject'] = __("We had a problem billing your team");
+        self::$TYPE_TMPL[self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE]['subject'] = __("We are downgrading your team to read-only");
     }
 
     function __construct($id = false, $table = null, $ds = null)

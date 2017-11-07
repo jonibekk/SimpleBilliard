@@ -597,6 +597,11 @@ App::uses('AttachedFile', 'Model');
             "Japan": "<?= __("Japan") ?>",
             "Thailand": "<?= __("Thailand") ?>",
             "United States": "<?= __("United States") ?>",
+            // Select campaign
+            "%d members": "<?= __("%d members") ?>",
+            "max members": "<?= __("max members") ?>",
+            "per month": "<?= __("per month") ?>",
+            "Price": "<?= __("Price") ?>",
             // Input company info
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",
@@ -630,6 +635,7 @@ App::uses('AttachedFile', 'Model');
             "Enter your card information": "<?= __("Enter your card information") ?>",
             "I agree with the terms of service": "<?= __("I agree with the terms of service") ?>",
             "Register": "<?= __("Register") ?>",
+            "Agree & Purchase": "<?= __("Agree & Purchase") ?>",
             // Input Billing info
             "Enter Billing Information": "<?= __("Enter Billing Information") ?>",
             "Same as company information": "<?= __("Same as company information") ?>",
@@ -662,9 +668,22 @@ App::uses('AttachedFile', 'Model');
             "Purchase" : "<?= __("Purchase") ?>",
             "Only Kana characters are allowed.": "<?= __("Only Kana characters are allowed.") ?>",
             "Invalid fields": "<?= __("Invalid fields") ?>",
+            "Contact Us": "<?= __("Contact Us") ?>",
+            "Please inform about upgrade my Campaign Plan": "<?= __("Please inform about upgrade my Campaign Plan") ?>",
             // Goals
             "No Goals found": "<?= __("No Goals found") ?>",
             "Enter %2$d numeric characters for postal code.": "<?= __('Enter %2$d numeric characters for postal code.') ?>",
+            // Campaigns
+            "Select": "<?= __("Select") ?>",
+            "Plan": "<?= __("Plan") ?>",
+            "Upgrade Plan": "<?= __("Upgrade Plan") ?>",
+            "Select Plan": "<?= __("Select Plan") ?>",
+            "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.": "<?= __("This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.") ?>",
+            "Larger plans available on request. All prices are without tax.": "<?= __("Larger plans available on request. All prices are without tax.") ?>",
+            "You have %d active members. Please select the best plan for the number of members expected for your team.": "<?= __("You have %d active members. Please select the best plan for the number of members expected for your team.") ?>",
+            "Campaign Contract": "<?= __("Campaign Contract") ?>",
+            "By purchasing, you agree to the %s and %s.": "<?= __("By purchasing, you agree to the %s and %s.") ?>",
+            "Contact us": "<?= __("Contact us") ?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
@@ -697,6 +716,32 @@ App::uses('AttachedFile', 'Model');
             return cake.translation[text];
         }
         return text;
+    }
+
+    function sprintf() {
+        var args = arguments,
+            string = args[0],
+            i = 1;
+        return string.replace(/%((%)|s|d)/g, function (m) {
+            // m is the matched format, e.g. %s, %d
+            var val = null;
+            if (m[2]) {
+                val = m[2];
+            } else {
+                val = args[i];
+                // A switch statement so that the formatter can be extended. Default is %s
+                switch (m) {
+                    case '%d':
+                        val = parseFloat(val);
+                        if (isNaN(val)) {
+                            val = 0;
+                        }
+                        break;
+                }
+                i++;
+            }
+            return val;
+        });
     }
 
 </script>

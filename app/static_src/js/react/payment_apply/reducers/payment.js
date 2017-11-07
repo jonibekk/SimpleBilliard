@@ -7,6 +7,7 @@ const initial_state = {
   validation_errors: {},
   error_message: "",
   countries: {},
+  campaigns: [],
   stripe: {},
   lang_code: "",
   amount_per_user: "",
@@ -16,6 +17,7 @@ const initial_state = {
   total_charge: "",
   is_same_as_company_info: false,
   is_saving: false,
+  is_campaign_team: false,
   input_data: {
     payment_setting: {
       type: PaymentSetting.PAYMENT_TYPE.CREDIT_CARD,
@@ -32,8 +34,11 @@ const initial_state = {
       contact_person_tel: "",
       contact_person_email: "",
     },
+    price_plan_purchase_team: {
+      price_plan_id: 0
+    },
     credit_card: {
-      customer_code:""
+      customer_code: ""
     },
     invoice: {
       company_name: "",
@@ -48,6 +53,11 @@ const initial_state = {
       contact_person_tel: "",
       contact_person_email: "",
     }
+  },
+  selected_price_plan: {
+    tax: "",
+    sub_total_charge: "",
+    total_charge: ""
   },
   is_disabled_submit: false,
   redirect_to_home: false
@@ -99,6 +109,8 @@ export default function payment(state = initial_state, action) {
             validation_errors: {},
             error_message: ""
           })
+        case Page.CAMPAIGN:
+          return Object.assign({}, state, action.data)
         case Page.CREDIT_CARD:
           return Object.assign({}, state, action.data, {
             to_next_page: false,
@@ -128,6 +140,11 @@ export default function payment(state = initial_state, action) {
           input_data
         })
       }
+    case types.UPDATE_SELECTED_CAMPAIGN_PLAN_INFO:
+      return Object.assign({}, state, {
+        selected_price_plan: action.data
+      })
+
     case types.RESET_STATES:
       return Object.assign({}, state, {
         to_next_page: false,
@@ -139,7 +156,7 @@ export default function payment(state = initial_state, action) {
         stripe: action.stripe,
       });
     case types.SET_BILLING_SAME_AS_COMPANY:
-      for(const key in input_data.invoice) {
+      for (const key in input_data.invoice) {
         input_data['invoice'][key] = input_data['payment_setting'][key]
       }
       return Object.assign({}, state, {
@@ -147,7 +164,7 @@ export default function payment(state = initial_state, action) {
         is_same_as_company_info: true
       });
     case types.RESET_BILLING:
-      for(const key in input_data.invoice) {
+      for (const key in input_data.invoice) {
         input_data['invoice'][key] = "";
       }
       return Object.assign({}, state, {
@@ -171,6 +188,8 @@ export function updateInputData(input_data, page, add_data) {
   switch (page) {
     case Page.COUNTRY:
       input_data["payment_setting"] = Object.assign({}, input_data["payment_setting"], add_data["payment_setting"]);
+      break;
+    case Page.CAMPAIGN:
       break;
     case Page.COMPANY:
       break;

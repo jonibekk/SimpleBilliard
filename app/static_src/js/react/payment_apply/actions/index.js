@@ -61,6 +61,12 @@ export function updateInputData(data, key) {
     key
   }
 }
+export function updateSelectedCampaignPlanInfo(data) {
+  return {
+    type: types.UPDATE_SELECTED_CAMPAIGN_PLAN_INFO,
+    data
+  }
+}
 
 export function fetchInitialData(page) {
   let params = {
@@ -105,8 +111,8 @@ export function savePaymentCc(card, extra_details) {
         }))
       } else {
         // Send the token to your server
-        const post_data = getState().payment.input_data.payment_setting
-        post_data['token'] = result.token.id
+        const post_data = getState().payment.input_data
+        post_data['payment_setting']['token'] = result.token.id
         return post("/api/v1/payments/credit_card", post_data, null,
           (response) => {
             dispatch(toNextPage(Page.COMPLETE))

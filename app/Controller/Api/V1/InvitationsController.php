@@ -4,6 +4,7 @@ App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::import('Service', 'InvitationService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -88,6 +89,8 @@ class InvitationsController extends ApiController
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         // Check permission
         if (!$TeamMember->isAdmin($this->Auth->user('id'))) {
@@ -112,9 +115,17 @@ class InvitationsController extends ApiController
         if (empty($paySetting)) {
             return $this->_getResponseSuccess();
         }
+
         // Calc charge user count
         $chargeUserCnt = $PaymentService->calcChargeUserCount($teamId, $invitationCnt);
-        if ($chargeUserCnt == 0) {
+
+        // Charges not applicable to campaign users or count 0
+        $isCampaign = $CampaignService->purchased($teamId);
+        if ($isCampaign && $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, $invitationCnt)) {
+            $res = [
+                'exceedMaximumUsers' => true,
+            ];
+        } else if ($chargeUserCnt == 0 || $isCampaign) {
             $res = [
                 'charge_users_count' => 0,
             ];
@@ -156,6 +167,8 @@ class InvitationsController extends ApiController
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         // Check permission
         $userId = $this->Auth->user('id');
@@ -163,15 +176,32 @@ class InvitationsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
+        $teamId = $this->current_team_id;
+
         // Validation
         $emails = $this->request->data("emails");
-        $errors = $InvitationService->validateEmails($this->current_team_id, $emails);
+        $countInvitedPeople = count($emails);
+        $errors = $InvitationService->validateEmails($teamId, $emails);
         if (!empty($errors)) {
             return $this->_getResponseValidationFail($errors);
         }
 
+        // Validation campaign plan need to be exceed
+        $isCampaign = $CampaignService->purchased($teamId);
+        if ($isCampaign && $CampaignService->willExceedMaximumCampaignAllowedUser($teamId, $countInvitedPeople)) {
+            // should not come in here
+            // check campaign need to exceed using confirm API
+            // before call this API
+            // /api/v1/invitations/confirm?invitation_count=*
+            CakeLog::notice(sprintf('campaign plan need to exceed: %s', AppUtil::jsonOneLine([
+                'teams.id'     => $teamId,
+                'count_invite' => $countInvitedPeople,
+            ])));
+            return $this->_getResponseForbidden([]);
+        }
+
         // Invite
-        $resInvite = $InvitationService->invite($this->current_team_id, $userId, $emails);
+        $resInvite = $InvitationService->invite($teamId, $userId, $emails);
         if ($resInvite['error']) {
             // TODO.payment: switch message when exists problem card status
             return $this->_getResponseBadFail($resInvite['msg']);
@@ -184,14 +214,13 @@ class InvitationsController extends ApiController
             $this->GlEmail->sendMailInvite($invitation, Hash::get($team, 'Team.name'));
         }
 
-        $countInvitedPeople = count($emails);
         $this->Notification->outSuccess(__("Invited %s people.", $countInvitedPeople));
 
         CakeLog::info(sprintf('invited people: %s', AppUtil::jsonOneLine([
-            'teams.id'     => $this->current_team_id,
+            'teams.id'     => $teamId,
             'count_invite' => $countInvitedPeople,
         ])));
-        PaymentUtil::logCurrentTeamChargeUsers($this->current_team_id);
+        PaymentUtil::logCurrentTeamChargeUsers($teamId);
         return $this->_getResponseSuccess();
     }
 
