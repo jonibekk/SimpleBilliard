@@ -11,6 +11,7 @@
 App::uses('AppController', 'Controller');
 App::import('Service', 'PaymentService');
 App::import('Service', 'UserService');
+App::import('Service', 'CampaignService');
 
 /**
  * Static content controller
@@ -86,6 +87,13 @@ class PagesController extends AppController
             $this->_setPricingValues();
         } elseif ($page === 'terms') {
             $this->_setTerms();
+        } elseif ($page === 'campaign_terms') {
+            /** @var CampaignService $CampaignService */
+            $CampaignService = ClassRegistry::init('CampaignService');
+            if (!$this->_isLoggedIn() ||
+                !$CampaignService->isCampaignTeam($this->current_team_id)) {
+                throw new NotFoundException();
+            }
         }
         
         $this->set('is_mb_app', $this->is_mb_app);

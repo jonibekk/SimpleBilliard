@@ -18,6 +18,7 @@ import CreditCardContainer from '../containers/credit_card'
 import InvoiceContainer from '../containers/invoice'
 import ConfirmContainer from '../containers/confirm'
 import CompleteContainer from '../containers/complete'
+import CampaignContainer from '../containers/campaign'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -50,6 +51,7 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="/payments">
               <Route path="apply" component={CountryContainer} />
+              <Route path="apply/campaign" component={CampaignContainer} />
               <Route path="apply/company" component={CompanyContainer} />
               <Route path="apply/credit_card" component={CreditCardContainer} />
               <Route path="apply/invoice" component={InvoiceContainer} />
@@ -57,7 +59,7 @@ export default class Routes extends Component {
               <Route path="apply/complete" component={CompleteContainer} />
             </Route>
           </Router>
-           {/*<DevTools/>*/}
+            {/* <DevTools/> */}
         </div>
       </Provider>
     );

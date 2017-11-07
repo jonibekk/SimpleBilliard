@@ -246,16 +246,18 @@ class ChargeHistory extends AppModel
     }
 
     /**
-     * @param int      $teamId
-     * @param int      $time
-     * @param int      $subTotalCharge
-     * @param int      $tax
-     * @param int      $amountPerUser
-     * @param int      $usersCount
-     * @param int      $currencyType
-     * @param int|null $userId
+     * @param int  $teamId
+     * @param int  $time
+     * @param int  $subTotalCharge
+     * @param int  $tax
+     * @param int  $amountPerUser
+     * @param int  $usersCount
+     * @param null $userId
+     * @param int  $currencyType
+     * @param null $campaignTeamId
+     * @param null $pricePlanPurchaseId
      *
-     * @return mixed
+     * @return array|mixed
      */
     public function addInvoiceMonthlyCharge(
         int $teamId,
@@ -265,21 +267,25 @@ class ChargeHistory extends AppModel
         int $amountPerUser,
         int $usersCount,
         $userId = null,
-        int $currencyType = PaymentSetting::CURRENCY_TYPE_JPY
+        int $currencyType = PaymentSetting::CURRENCY_TYPE_JPY,
+        $campaignTeamId = null,
+        $pricePlanPurchaseId = null
     ) {
         $historyData = [
-            'team_id'          => $teamId,
-            'user_id'          => $userId,
-            'payment_type'     => PaymentSetting::PAYMENT_TYPE_INVOICE,
-            'charge_type'      => self::CHARGE_TYPE_MONTHLY,
-            'amount_per_user'  => $amountPerUser,
-            'total_amount'     => $subTotalCharge,
-            'tax'              => $tax,
-            'charge_users'     => $usersCount,
-            'currency'         => $currencyType,
-            'charge_datetime'  => $time,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
-            'max_charge_users' => $usersCount
+            'team_id'                     => $teamId,
+            'user_id'                     => $userId,
+            'payment_type'                => PaymentSetting::PAYMENT_TYPE_INVOICE,
+            'charge_type'                 => self::CHARGE_TYPE_MONTHLY,
+            'amount_per_user'             => $amountPerUser,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $tax,
+            'charge_users'                => $usersCount,
+            'currency'                    => $currencyType,
+            'charge_datetime'             => $time,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users'            => $usersCount,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId,
         ];
         $this->clear();
         $ret = $this->save($historyData);
@@ -366,6 +372,8 @@ class ChargeHistory extends AppModel
                 'charge_datetime >=' => $startTimestamp,
                 'charge_datetime <=' => $endTimestamp,
                 'result_type !=' => Enum\ChargeHistory\ResultType::ERROR,
+                // TODO: Remove this condition and add checking for inconsistency of campaign team's charge in DetectInconsistentChargeShell.
+                'campaign_team_id' => null
             ],
         ];
         $res = $this->find('all', $options);

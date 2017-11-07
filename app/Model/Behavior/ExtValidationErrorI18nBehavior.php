@@ -45,6 +45,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'isTopicMember'              => __("You are not a member of the topic."),
             'bodyOrAttachedFileRequired' => __("Body or attached file is required. "),
             'phoneNo'                    => __("Invalid telephone number"),
+            'customValidateExistPlan'                    => __("Invalid value"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

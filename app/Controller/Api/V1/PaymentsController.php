@@ -2,6 +2,7 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'PaymentService');
+App::import('Service', 'CampaignService');
 App::uses('PaymentSetting', 'Model');
 
 use Goalous\Model\Enum as Enum;
@@ -24,6 +25,11 @@ class PaymentsController extends ApiController
                 'company_country',
                 'type'
             ],
+        ],
+        'campaign'       => [
+            'PricePlanPurchaseTeam' => [
+                'price_plan_id'
+            ]
         ],
         'company'        => [
             'PaymentSetting' => [
@@ -90,7 +96,8 @@ class PaymentsController extends ApiController
         // Set teamId and payment type for validation
         $teamId = $this->current_team_id;
         $userId = $this->Auth->user('id');
-        $requestData = Hash::insert($this->request->data, 'team_id', $teamId);
+        $requestData = Hash::get($this->request->data, 'payment_setting');
+        $requestData = Hash::insert($requestData, 'team_id', $teamId);
         $requestData = Hash::insert($requestData, 'type', PaymentSetting::PAYMENT_TYPE_CREDIT_CARD);
 
         // Check if not already paid plan
@@ -118,8 +125,18 @@ class PaymentsController extends ApiController
         // Check to prevent illegal choice of dollar or yen
         $ccCountry = $creditCardData['creditCard']->country;
         if (!$PaymentService->checkIllegalChoiceCountry($ccCountry, $companyCountry)) {
-            // TODO.Payment: Add translation for message
             return $this->_getResponseBadFail(__("Your Credit Card does not match your country settings"));
+        }
+
+        // Check valid campaign
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+        if ($CampaignService->isCampaignTeam($teamId)) {
+            $pricePlanId = Hash::get($this->request->data, 'price_plan_purchase_team.price_plan_id');
+            if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, $companyCountry)) {
+                return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
+            }
+            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
         }
 
         // Register credit card, and apply payment
@@ -179,10 +196,23 @@ class PaymentsController extends ApiController
             return $this->_getResponseBadFail(__("Invoice payment are available for Japan only"));
         }
 
+        // Check valid campaign
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+        $pricePlanId = null;
+        if ($CampaignService->isCampaignTeam($teamId)) {
+            $pricePlanId = Hash::get($requestData, 'price_plan_purchase_team.price_plan_id');
+            if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, 'JP')) {
+                // TODO.Payment: Add translation for message
+                return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
+            }
+            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
+        }
+
         // Register invoice
         $paymentData = Hash::get($requestData, 'payment_setting');
         $invoiceData = Hash::get($requestData, 'invoice');
-        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, false);
+        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, false, $pricePlanId);
         if ($regResponse !== true) {
             return $this->_getResponseInternalServerError();
         }
@@ -217,6 +247,8 @@ class PaymentsController extends ApiController
         $PaymentService = ClassRegistry::init("PaymentService");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
 
         $teamId = $this->current_team_id;
         $res = [];
@@ -233,6 +265,8 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('countries', $dataTypes)) {
             $countries = Configure::read("countries");
             $res['countries'] = Hash::combine($countries, '{n}.code', '{n}.name');
+            $res['is_campaign_team'] = $CampaignService->isCampaignTeam($teamId);
+            $res['charge_users_count'] = $TeamMember->countChargeTargetUsers($teamId);
         }
 
         if ($dataTypes == 'all' || in_array('lang_code', $dataTypes)) {
@@ -263,6 +297,13 @@ class PaymentsController extends ApiController
                 'total_charge'       => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
             ]);
         }
+
+        if ($dataTypes == 'all' || in_array('campaigns', $dataTypes)) {
+            /** @var CampaignService $CampaignService */
+            $CampaignService = ClassRegistry::init("CampaignService");
+            $res['campaigns'] = $CampaignService->findList($teamId);
+        }
+
         return $this->_getResponseSuccess($res);
     }
 
