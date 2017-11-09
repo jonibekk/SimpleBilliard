@@ -283,10 +283,6 @@ class CampaignService extends AppService
         return $res;
     }
 
-    function calcTaxCaseCampaign($currencyType) {
-
-    }
-
     /**
      * Check is allowed price plan as team campaign groups
      *
