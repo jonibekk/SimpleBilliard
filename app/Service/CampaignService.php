@@ -170,6 +170,123 @@ class CampaignService extends AppService
         return $res;
     }
 
+    /*
+     * find price plans for upgrading
+     *
+     * @param int $teamId
+     * @return array
+     */
+    function findPlansForUpgrading(int $teamId, array $currentPlan): array
+    {
+        if (empty($currentPlan)) {
+            return [];
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
+
+
+        list($groupId, $detailNo) = explode('-', $currentPlan['code']);
+        $pricePlans = $ViewCampaignPricePlan->findAllByGroupId($groupId, ['id', 'code', 'max_members', 'price', 'currency']);
+        $pricePlans = Hash::extract($pricePlans, '{n}.ViewCampaignPricePlan');
+
+        // Calc remaining days by next base data
+        foreach($pricePlans as &$plan) {
+            $plan['is_current_plan'] = $currentPlan['id'] == $plan['id'];
+
+            $currencyType = (int)$plan['currency'];
+            $plan['format_price'] = $PaymentService->formatCharge($plan['price'], $currencyType);
+            if ($plan['max_members'] <= $currentPlan['max_members']) {
+                $plan['can_select'] = false;
+                continue;
+            }
+            $plan['can_select'] = true;
+
+            // Calc charge amount
+            $chargeInfo = $this->calcRelatedTotalChargeForUpgradingPlan(
+                $teamId,
+                new Enum\PaymentSetting\Currency($currencyType),
+                $plan['price'],
+                $currentPlan['price']
+            );
+
+            $plan = am($plan, [
+                'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $currencyType),
+                'tax'              => $PaymentService->formatCharge($chargeInfo['tax'], $currencyType),
+                'total_charge'     => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
+            ]);
+        }
+        return $pricePlans;
+    }
+
+    /**
+     * Calc balance for upgrading plan.
+     * Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
+     * (100,000 - 50,000) × 20 days / 1 month
+     *
+     * @param int                          $teamId
+     * @param Enum\PaymentSetting\Currency $currencyType
+     * @param int                          $upgradePlanPrice
+     * @param int                          $currentPlanPrice
+     *
+     * @return array
+     */
+    public function calcRelatedTotalChargeForUpgradingPlan
+    (
+        int $teamId,
+        Enum\PaymentSetting\Currency $currencyType,
+        int $upgradePlanPrice,
+        int $currentPlanPrice
+    ): array {
+        try {
+            /** @var PaymentService $PaymentService */
+            $PaymentService = ClassRegistry::init("PaymentService");
+
+            if ($upgradePlanPrice <= 0 || $currentPlanPrice <= 0 || $upgradePlanPrice - $currentPlanPrice <= 0) {
+                throw new Exception(sprintf("Inconsistent plan price. %s",
+                    AppUtil::jsonOneLine(compact('teamId', 'upgradePlanPrice', 'currentPlanPrice'))
+                ));
+            }
+            $paymentSetting = $PaymentService->get($teamId);
+            if (empty($paymentSetting)) {
+                throw new Exception(sprintf("Not exist payment setting data. %s",
+                    AppUtil::jsonOneLine(compact('teamId'))
+                ));
+            }
+
+            $useDaysByNext = $useDaysByNext ?? $PaymentService->getUseDaysByNextBaseDate($teamId);
+            $allUseDays = $allUseDays ?? $PaymentService->getCurrentAllUseDays($teamId);
+            // Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
+            // (100,000 - 50,000) × 20 days / 1 month
+            $subTotalCharge = ($upgradePlanPrice - $currentPlanPrice) * ($useDaysByNext / $allUseDays);
+            $subTotalCharge = $PaymentService->processDecimalPointForAmount($currencyType->getValue(), $subTotalCharge);
+
+            $tax = $PaymentService->calcTax($paymentSetting['company_country'], $subTotalCharge);
+            $totalCharge = $subTotalCharge + $tax;
+            $res = [
+                'sub_total_charge' => $subTotalCharge,
+                'tax'              => $tax,
+                'total_charge'     => $totalCharge,
+            ];
+        } catch (Exception $e) {
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res = [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+            ];
+        }
+
+        return $res;
+    }
+
+    function calcTaxCaseCampaign($currencyType) {
+
+    }
+
     /**
      * Check is allowed price plan as team campaign groups
      *
