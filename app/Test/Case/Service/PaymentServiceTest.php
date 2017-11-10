@@ -1036,6 +1036,73 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($chargeInfo['total_charge'] * 100, $stripeCharge['amount']);
     }
 
+    public function test_applyCreditCardCharge_campaign()
+    {
+        // Activation
+        $this->Team->deleteAll(['del_flg' => false]);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanId = 1, $pricePlanCode = '1-1');
+        $usersCount = 10;
+        $this->Team->current_team_id = $teamId;
+        $this->createActiveUsers($teamId, $usersCount - 1);
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $usersCount, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertNotEmpty($res);
+
+        // Monthly charge
+        $this->Team->deleteAll(['del_flg' => false]);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanId = 1, $pricePlanCode = '1-1');
+        $usersCount = 10;
+        $this->Team->current_team_id = $teamId;
+        $this->createActiveUsers($teamId, $usersCount - 1);
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                $usersCount, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $paymentSetting = $this->PaymentService->get($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
+            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $expected = [
+            'id'                          => 2,
+            'team_id'                     => $teamId,
+            'user_id'                     => $userId,
+            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'             => 0,
+            'total_amount'                => $chargeInfo['sub_total_charge'],
+            'tax'                         => $chargeInfo['tax'],
+            'charge_users'                => $usersCount,
+            'currency'                    => Enum\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users'            => $usersCount,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId
+        ];
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+        $this->assertTrue($res['total_amount'] > $res['amount_per_user']);
+    }
+
     public function test_charge_ccJp()
     {
         $this->Team->resetCurrentTeam();

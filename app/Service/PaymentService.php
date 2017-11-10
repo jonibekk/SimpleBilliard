@@ -378,9 +378,30 @@ class PaymentService extends AppService
         Enum\ChargeHistory\ChargeType $chargeType,
         array $paymentSetting = []
     ): array {
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+        $isCampaign = $CampaignService->purchased($teamId);
+
+        // Get price for monthly campaign
+        if ($isCampaign && $chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            return $CampaignService->getTeamChargeInfo($teamId);
+        }
+
+        // Activation and user increment for campaign
+        if ($isCampaign) {
+            return [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+            ];
+        }
+
+        // Monthly fee
         if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
             return $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeUserCnt, $paymentSetting);
         }
+
+        // Day fee
         return $this->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt, null, null, $paymentSetting);
     }
 
@@ -530,15 +551,22 @@ class PaymentService extends AppService
         $opeUserId = null,
         $timestampChargeDateTime = null
     ) {
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+        $isCampaign = $CampaignService->purchased($teamId);
+        $pricePlanPurchaseId = null;
+        $campaignTeamId = null;
+
         try {
             CakeLog::info(sprintf('apply credit card charge: %s', AppUtil::jsonOneLine([
                 'teams.id'     => $teamId,
                 'charge_type'  => $chargeType->getValue(),
                 'users_count'  => $usersCount,
                 'ope_users.id' => $opeUserId,
+                'is_campaign'  => $isCampaign,
             ])));
             // Validate user count
-            if ($usersCount <= 0) {
+            if (!$isCampaign && $usersCount <= 0) {
                 throw new Exception(
                     sprintf("Charge user count is 0. data:%s",
                         AppUtil::varExportOneLine(compact('teamId', 'chargeType', 'usersCount'))
@@ -584,6 +612,13 @@ class PaymentService extends AppService
                 ? GoalousDateTime::createFromTimestamp(time())
                 : GoalousDateTime::createFromTimestamp($timestampChargeDateTime);
             $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
+
+            if ($isCampaign) {
+                $campaignPurchaseInfo = $CampaignService->getPricePlanPurchaseTeam($teamId);
+                $pricePlanPurchaseId = Hash::get($campaignPurchaseInfo, 'PricePlanPurchaseTeam.id');
+                $campaignTeamId = Hash::get($campaignPurchaseInfo, 'CampaignTeam.id');
+            }
+
             // ChargeHistory temporary insert
             $historyData = [
                 'team_id'          => $teamId,
@@ -597,7 +632,9 @@ class PaymentService extends AppService
                 'currency'         => $currency,
                 'charge_datetime'  => $chargeDateTime->getTimestamp(),
                 'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
-                'max_charge_users' => $maxChargeUserCnt
+                'max_charge_users' => $maxChargeUserCnt,
+                'campaign_team_id'            => $campaignTeamId,
+                'price_plan_purchase_team_id' => $pricePlanPurchaseId,
             ];
 
             /** @var ChargeHistory $ChargeHistory */
@@ -614,8 +651,13 @@ class PaymentService extends AppService
                 'env'        => ENV_NAME,
                 'team_id'    => $teamId,
                 'history_id' => $historyId,
-                'type'       => $chargeType->getValue()
+                'type'       => $chargeType->getValue(),
+                'campaign'     => $isCampaign,
             ];
+            if ($isCampaign) {
+                $metaData['plan_purchase_id'] = $pricePlanPurchaseId;
+                $metaData['campaign_team_id'] = $campaignTeamId;
+            }
             $paymentDescription = "";
             foreach ($metaData as $k => $v) {
                 $paymentDescription .= $k . ":" . $v . " ";
