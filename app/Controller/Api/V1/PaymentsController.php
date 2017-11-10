@@ -328,7 +328,7 @@ class PaymentsController extends ApiController
             return $this->_getResponseForbidden();
         }
 
-        // Get current campaign plan
+        // Get campaign plan list
         $res['campaigns'] = $CampaignService->findPlansForUpgrading($teamId, $currentPricePlan);
         return $this->_getResponseSuccess($res);
     }
