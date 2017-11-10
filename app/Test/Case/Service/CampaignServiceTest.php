@@ -4,7 +4,7 @@ App::uses('GoalousTestCase', 'Test');
 /**
  * Class CampaignServiceTest
  *
- * @property CampaignService    $CampaignService
+ * @property CampaignService $CampaignService
  */
 class CampaignServiceTest extends GoalousTestCase
 {
@@ -22,6 +22,8 @@ class CampaignServiceTest extends GoalousTestCase
         'app.mst_price_plan',
         'app.view_price_plan',
         'app.price_plan_purchase_team',
+        'app.payment_setting',
+        'app.credit_card'
     );
 
     /**
@@ -91,6 +93,45 @@ class CampaignServiceTest extends GoalousTestCase
         ], $plan);
     }
 
+    function test_getPricePlanPurchaseTeam()
+    {
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanId = 1, $pricePlanCode = '1-1');
+        $res = $this->CampaignService->getPricePlanPurchaseTeam($teamId);
+        $this->assertNotEmpty($res);
+        $expected = [
+            'PricePlanPurchaseTeam' => [
+                'id'              => $pricePlanPurchaseId,
+                'price_plan_id'   => $pricePlanId,
+                'price_plan_code' => $pricePlanCode
+            ],
+            'CampaignTeam'          => [
+                'id'                  => $campaignTeamId,
+                'campaign_type'       => 0,
+                'price_plan_group_id' => $pricePlanGroupId
+            ]
+        ];
+        $this->assertEquals($expected, $res);
+
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 2,
+            $pricePlanId = 7, $pricePlanCode = '2-2');
+        $res = $this->CampaignService->getPricePlanPurchaseTeam($teamId);
+        $this->assertNotEmpty($res);
+        $expected = [
+            'PricePlanPurchaseTeam' => [
+                'id'              => $pricePlanPurchaseId,
+                'price_plan_id'   => $pricePlanId,
+                'price_plan_code' => $pricePlanCode
+            ],
+            'CampaignTeam'          => [
+                'id'                  => $campaignTeamId,
+                'campaign_type'       => 0,
+                'price_plan_group_id' => $pricePlanGroupId
+            ]
+        ];
+        $this->assertEquals($expected, $res);
+    }
+
     function test_getTeamPricePlan_notCampaign()
     {
         $this->assertNull($this->CampaignService->getTeamPricePlan(1));
@@ -152,18 +193,17 @@ class CampaignServiceTest extends GoalousTestCase
         $this->createCampaignTeam($teamId = 1, $campaignType = 0, $pricePlanGroupId = 1);
         $ret = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 2);
         $expected = [
-            'team_id' => $teamId,
-            'price_plan_id' => $pricePlanId,
+            'team_id'         => $teamId,
+            'price_plan_id'   => $pricePlanId,
             'price_plan_code' => '1-2',
         ];
         $this->assertEquals($expected, array_intersect_key($expected, $ret['PricePlanPurchaseTeam']));
 
-
         $this->createCampaignTeam($teamId = 2, $campaignType = 0, $pricePlanGroupId = 2);
         $ret = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanId = 6);
         $expected = [
-            'team_id' => $teamId,
-            'price_plan_id' => $pricePlanId,
+            'team_id'         => $teamId,
+            'price_plan_id'   => $pricePlanId,
             'price_plan_code' => '2-1',
         ];
         $this->assertEquals($expected, array_intersect_key($expected, $ret['PricePlanPurchaseTeam']));
@@ -239,6 +279,27 @@ class CampaignServiceTest extends GoalousTestCase
             'total_charge'     => floatval(2500),
             'member_count'     => '500',
         ], $this->CampaignService->getChargeInfo(10));
+    }
+
+    function test_getTeamChargeInfo()
+    {
+        list ($teamId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanId = 1, $pricePlanCode = '1-1');
+        $this->assertEquals([
+            'id'               => '1',
+            'sub_total_charge' => '50000',
+            'tax'              => floatval(4000),
+            'total_charge'     => floatval(54000),
+            'member_count'     => '50',
+        ], $this->CampaignService->getTeamChargeInfo($teamId));
+
+        list ($teamId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanId = 4, $pricePlanCode = '1-4');
+        $this->assertEquals([
+            'id'               => '4',
+            'sub_total_charge' => '200000',
+            'tax'              => floatval(16000),
+            'total_charge'     => floatval(216000),
+            'member_count'     => '400',
+        ], $this->CampaignService->getTeamChargeInfo($teamId));
     }
 
     function test_willExceedMaximumCampaignAllowedUser()

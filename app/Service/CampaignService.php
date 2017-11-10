@@ -45,6 +45,45 @@ class CampaignService extends AppService
     }
 
     /**
+     * Get Price plan information for campaign team
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function getPricePlanPurchaseTeam(int $teamId): array
+    {
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
+        $options = [
+            'fields' => [
+                'PricePlanPurchaseTeam.id',
+                'PricePlanPurchaseTeam.price_plan_id',
+                'PricePlanPurchaseTeam.price_plan_code',
+                'CampaignTeam.id',
+                'CampaignTeam.campaign_type',
+                'CampaignTeam.price_plan_group_id',
+            ],
+            'joins'  => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'campaign_teams',
+                    'alias'      => 'CampaignTeam',
+                    'conditions' => [
+                        'PricePlanPurchaseTeam.team_id = CampaignTeam.team_id',
+                        'CampaignTeam.team_id' => $teamId,
+                        'CampaignTeam.del_flg' => false,
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $PricePlanPurchaseTeam->find('first', $options);
+        return $res;
+    }
+
+    /**
      * Returns true if the team have purchased a campaign plan
      *
      * @param int $teamId
@@ -221,6 +260,7 @@ class CampaignService extends AppService
      * get campaign for charging
      *
      * @param int $pricePlanId
+     *
      * @return array
      */
     function getChargeInfo(int $pricePlanId): array
@@ -244,6 +284,32 @@ class CampaignService extends AppService
         ];
 
         return $chargeInfo;
+    }
+
+    /**
+     * Get charge info for campaign team
+     *
+     * @param int $teamId
+     *
+     * @return array
+     */
+    function getTeamChargeInfo(int $teamId): array
+    {
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
+        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
+        if (empty($purchasedPlan)) {
+            CakeLog::debug("PricePlanPurchaseTeam not found to team: $teamId");
+            return [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+                'member_count'     => 0,
+            ];
+        }
+        $priceId = $purchasedPlan['price_plan_id'];
+        return CampaignService::getChargeInfo($priceId);
     }
 
     /**
