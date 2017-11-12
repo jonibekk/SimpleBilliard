@@ -18,9 +18,7 @@ cache:
   - composer
 cache:
   directories:
-  - $HOME/.composer/cache
-  - $HOME/apcu-4.0.2
-  - $HOME/redis-2.2.7
+  - $HOME/.composer/cache/files
 
 services:
   - redis-server
