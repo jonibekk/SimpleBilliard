@@ -1,4 +1,5 @@
 <?php
+require_once "BaseTest.php";
 /**
  * AllTests file
  * PHP 5
@@ -15,12 +16,12 @@
  */
 
 /**
- * AllTests class
- * This test group will run all tests.
+ * CIParallelTests1 class
+ * This test group will run 1st tests for Travis CI parallel processes.
  *
  * @package       Cake.Test.Case
  */
-class AllTests1 extends PHPUnit_Framework_TestSuite
+class CIParallelTests1 extends BaseTest
 {
 
     /**
@@ -31,12 +32,11 @@ class AllTests1 extends PHPUnit_Framework_TestSuite
     public static function suite()
     {
         ini_set('memory_limit', '2G');
-        $suite = new CakeTestSuite('All Application Test');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'View' . DS . 'Helper');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Console');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Lib' . DS . 'Util');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Model');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service'. DS.'Payment1');
+        $suite = new CakeTestSuite('Travis CI Parallel1 Test');
+        $testDirectories = static::$testDirectories[__CLASS__];
+        foreach ($testDirectories as $dir) {
+            $suite->addTestDirectory($dir);
+        }
         return $suite;
     }
 

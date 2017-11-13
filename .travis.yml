@@ -10,8 +10,8 @@ env:
   global:
     - DB=mysql
   matrix:
-    - TEST_TARGET=AllTests1
-    - TEST_TARGET=AllTests2
+    - TEST_TARGET=CIParallelTests1
+    - TEST_TARGET=CIParallelTests2
 cache:
   - bundler
   - apt
