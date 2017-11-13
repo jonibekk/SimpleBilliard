@@ -14,13 +14,14 @@ require_once "BaseTest.php";
  * @since         CakePHP(tm) v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 /**
  * CIParallelTests2 class
- * This test group will run 1st tests for Travis CI parallel processes.
+ * This test group will run 2nd tests for Travis CI parallel processes.
  *
  * @package       Cake.Test.Case
  */
-class AllTests extends BaseTest
+class CIParallelTests2 extends BaseTest
 {
 
     /**
@@ -31,23 +32,12 @@ class AllTests extends BaseTest
     public static function suite()
     {
         ini_set('memory_limit', '2G');
-        $suite = new CakeTestSuite('All Test');
-        // Flatten all test directories
-        $testDirectories = static::flatten(static::$testDirectories);
+        $suite = new CakeTestSuite('Travis CI Parallel2 Test');
+        $testDirectories = static::$testDirectories[__CLASS__];
         foreach ($testDirectories as $dir) {
             $suite->addTestDirectory($dir);
         }
         return $suite;
-    }
-
-    function flatten(array $array) {
-        $return = array();
-        array_walk_recursive($array, function($a) use (&$return) {
-            if (!in_array($a, $return)) {
-                $return[] = $a;
-            }
-        });
-        return $return;
     }
 
 }

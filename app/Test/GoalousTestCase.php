@@ -493,7 +493,27 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->deleteAll(['id > ' => 0]);
     }
 
-    function createActiveUser($teamId)
+    /**
+     * Create a specified number of users or target team
+     *
+     * @param $teamId
+     * @param $count
+     */
+    function createActiveUsers(int $teamId, int $count)
+    {
+        for($n = 0; $n < $count; $n++) {
+            $this->createActiveUser($teamId);
+        }
+    }
+
+    /**
+     * Create a single active user for the target team
+     *
+     * @param $teamId
+     *
+     * @return mixed
+     */
+    function createActiveUser(int $teamId)
     {
         $this->Team->TeamMember->User->create();
         $this->Team->TeamMember->User->save(['active_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE], false);
@@ -947,8 +967,10 @@ class GoalousTestCase extends CakeTestCase
      * @param int $teamId
      * @param int $campaignType
      * @param int $pricePlanGroupId
+     *
+     * @return int
      */
-    function createCampaignTeam(int $teamId, int $campaignType, int $pricePlanGroupId)
+    function createCampaignTeam(int $teamId, int $campaignType, int $pricePlanGroupId): int
     {
         /** @var CampaignTeam $CampaignTeam */
         $CampaignTeam = ClassRegistry::init('CampaignTeam');
@@ -963,9 +985,20 @@ class GoalousTestCase extends CakeTestCase
 
         $CampaignTeam->create();
         $CampaignTeam->save($campaignTeam);
+
+        return $CampaignTeam->getLastInsertID();
     }
 
-    function createPurchasedTeam(int $teamId, int $pricePlanId, string $pricePlanCode)
+    /**
+     * Create PricePlanPurchaseTeam
+     *
+     * @param int    $teamId
+     * @param int    $pricePlanId
+     * @param string $pricePlanCode
+     *
+     * @return int
+     */
+    function createPurchasedTeam(int $teamId, int $pricePlanId, string $pricePlanCode): int
     {
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
@@ -977,5 +1010,27 @@ class GoalousTestCase extends CakeTestCase
             'price_plan_code'   => $pricePlanCode,
             'purchase_datetime' => $this->currentDateTime,
         ]);
+
+        return $PricePlanPurchaseTeam->getLastInsertID();
+    }
+
+
+    function createCcCampaignTeam(int $pricePlanGroupId, int $pricePlanId, string $pricePlanCode): array
+    {
+        $team = [
+            'country' => 'JP'
+        ];
+        $paymentSetting = [
+            'amount_per_user' => 0,
+        ];
+        list($teamId) = $this->createCcPaidTeam($team, $paymentSetting);
+        $campaignTeamId = $this->createCampaignTeam($teamId, 0, $pricePlanGroupId);
+        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanId, $pricePlanCode);
+
+        return [
+            $teamId,
+            $campaignTeamId,
+            $pricePlanPurchaseId
+        ];
     }
 }
