@@ -294,16 +294,16 @@ class CampaignService extends AppService
         $pricePlans = $this->findAllPlansByGroupId($codeInfo['group_id']);
 
         // Calc remaining days by next base data
-        foreach($pricePlans as &$plan) {
-            $plan['is_current_plan'] = $currentPlan['id'] == $plan['id'];
+        foreach($pricePlans as $k => $plan) {
+            $pricePlans[$k]['is_current_plan'] = $currentPlan['id'] == $plan['id'];
 
             $currencyType = (int)$plan['currency'];
-            $plan['format_price'] = $PaymentService->formatCharge($plan['price'], $currencyType);
+            $plan[$k]['format_price'] = $PaymentService->formatCharge($plan['price'], $currencyType);
             if ($plan['max_members'] <= $currentPlan['max_members']) {
-                $plan['can_select'] = false;
+                $pricePlans[$k]['can_select'] = false;
                 continue;
             }
-            $plan['can_select'] = true;
+            $pricePlans[$k]['can_select'] = true;
 
             // Calc charge amount
             $chargeInfo = $this->calcRelatedTotalChargeForUpgradingPlan(
@@ -313,7 +313,7 @@ class CampaignService extends AppService
                 $currentPlan['code']
             );
 
-            $plan = am($plan, [
+            $pricePlans[$k] = am($pricePlans[$k], [
                 'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $currencyType),
                 'tax'              => $PaymentService->formatCharge($chargeInfo['tax'], $currencyType),
                 'total_charge'     => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
