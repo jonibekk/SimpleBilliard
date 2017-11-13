@@ -384,7 +384,12 @@ class PaymentService extends AppService
 
         // Get price for monthly campaign
         if ($isCampaign && $chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
-            return $CampaignService->getTeamChargeInfo($teamId);
+            $info = $CampaignService->getTeamChargeInfo($teamId);
+            if (empty($info)) {
+                CakeLog::emergency("PricePlanPurchaseTeam not found for team: $teamId");
+                throw new Exception("PricePlanPurchaseTeam not found for team: $teamId");
+            }
+            return $info;
         }
 
         // Activation and user increment for campaign

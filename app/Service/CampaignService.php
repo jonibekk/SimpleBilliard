@@ -114,7 +114,6 @@ class CampaignService extends AppService
 
         $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
         if (empty($purchasedPlan)) {
-            CakeLog::debug("PricePlanPurchaseTeam not found to team: $teamId");
             return 0;
         }
 
@@ -164,7 +163,6 @@ class CampaignService extends AppService
 
         $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
         if (empty($purchasedPlan)) {
-            CakeLog::debug("PricePlanPurchaseTeam not found to team: $teamId");
             return null;
         }
 
@@ -300,13 +298,7 @@ class CampaignService extends AppService
 
         $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
         if (empty($purchasedPlan)) {
-            CakeLog::debug("PricePlanPurchaseTeam not found to team: $teamId");
-            return [
-                'sub_total_charge' => 0,
-                'tax'              => 0,
-                'total_charge'     => 0,
-                'member_count'     => 0,
-            ];
+            return null;
         }
         $priceId = $purchasedPlan['price_plan_id'];
         return CampaignService::getChargeInfo($priceId);
