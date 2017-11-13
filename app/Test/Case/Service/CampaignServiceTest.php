@@ -114,7 +114,6 @@ class CampaignServiceTest extends GoalousTestCase
             ],
             'CampaignTeam'          => [
                 'id'                  => $campaignTeamId,
-                'campaign_type'       => 0,
                 'price_plan_group_id' => $pricePlanGroupId
             ]
         ];
@@ -132,7 +131,6 @@ class CampaignServiceTest extends GoalousTestCase
             ],
             'CampaignTeam'          => [
                 'id'                  => $campaignTeamId,
-                'campaign_type'       => 0,
                 'price_plan_group_id' => $pricePlanGroupId
             ]
         ];
@@ -520,6 +518,7 @@ class CampaignServiceTest extends GoalousTestCase
             ]),
             '{n}.ViewCampaignPricePlan'
         );
+        print_r($res);
         foreach ($res as $i => $v) {
             $this->assertEquals($v['id'], $plans[$i]['id']);
             $this->assertEquals($v['code'], $plans[$i]['code']);

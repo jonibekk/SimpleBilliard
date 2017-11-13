@@ -1023,7 +1023,7 @@ class GoalousTestCase extends CakeTestCase
             'amount_per_user' => 0,
         ];
         list($teamId) = $this->createCcPaidTeam($team, $paymentSetting);
-        $campaignTeamId = $this->createCampaignTeam($teamId, 0, $pricePlanGroupId);
+        $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
         $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanId, $pricePlanCode);
 
         return [

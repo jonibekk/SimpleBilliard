@@ -65,7 +65,6 @@ class CampaignService extends AppService
                 'PricePlanPurchaseTeam.price_plan_id',
                 'PricePlanPurchaseTeam.price_plan_code',
                 'CampaignTeam.id',
-                'CampaignTeam.campaign_type',
                 'CampaignTeam.price_plan_group_id',
             ],
             'joins'  => [
@@ -298,7 +297,7 @@ class CampaignService extends AppService
             $pricePlans[$k]['is_current_plan'] = $currentPlan['id'] == $plan['id'];
 
             $currencyType = (int)$plan['currency'];
-            $plan[$k]['format_price'] = $PaymentService->formatCharge($plan['price'], $currencyType);
+            $pricePlans[$k]['format_price'] = $PaymentService->formatCharge($plan['price'], $currencyType);
             if ($plan['max_members'] <= $currentPlan['max_members']) {
                 $pricePlans[$k]['can_select'] = false;
                 continue;
