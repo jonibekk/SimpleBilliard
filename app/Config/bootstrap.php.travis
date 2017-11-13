@@ -1,0 +1,9 @@
+<?php
+/**
+ * This file is only for travis unit test.
+ * For example, logging path setting(/var/log/goalous) is unnecessary when travis unit test.
+ * If you want to add other setting for it, Please write after loading common settings
+ */
+
+// Load common settings
+require_once 'bootstrap_common.php';
