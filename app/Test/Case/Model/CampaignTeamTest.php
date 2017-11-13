@@ -63,7 +63,6 @@ class CampaignTeamTest extends CakeTestCase {
         // Exist campaign team
         $this->CampaignTeam->save([
             'team_id' => $teamId,
-            'campaign_type' => Enum\CampaignTeam\CampaignType::FIXED_MONTHLY_CHARGE,
             'price_plan_group_id' => 1
         ]);
 
@@ -106,7 +105,6 @@ class CampaignTeamTest extends CakeTestCase {
         // Exist campaign team
         $this->CampaignTeam->save([
             'team_id' => $teamId,
-            'campaign_type' => Enum\CampaignTeam\CampaignType::FIXED_MONTHLY_CHARGE,
             'price_plan_group_id' => 1
         ]);
 

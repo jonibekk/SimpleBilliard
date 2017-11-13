@@ -40,7 +40,7 @@ class AllTests extends BaseTest
         return $suite;
     }
 
-    function flatten(array $array) {
+    private static function flatten(array $array) {
         $return = array();
         array_walk_recursive($array, function($a) use (&$return) {
             if (!in_array($a, $return)) {
