@@ -970,7 +970,7 @@ class GoalousTestCase extends CakeTestCase
      *
      * @return int
      */
-    function createCampaignTeam(int $teamId, int $campaignType, int $pricePlanGroupId): int
+    function createCampaignTeam(int $teamId, int $pricePlanGroupId)
     {
         /** @var CampaignTeam $CampaignTeam */
         $CampaignTeam = ClassRegistry::init('CampaignTeam');
@@ -978,7 +978,6 @@ class GoalousTestCase extends CakeTestCase
         // Create campaign team
         $campaignTeam = [
             'team_id'             => $teamId,
-            'campaign_type'       => $campaignType,
             'price_plan_group_id' => $pricePlanGroupId,
             'start_date'          => $this->currentDateTime,
         ];
