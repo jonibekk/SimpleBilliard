@@ -12,6 +12,7 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'PaymentService');
 App::import('Service', 'UserService');
 App::import('Service', 'CampaignService');
+App::import('Model', 'PostDraft');
 
 /**
  * Static content controller
@@ -166,6 +167,11 @@ class PagesController extends AppController
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init("PostDraft");
+        $postDrafts = $PostDraft->getByUserIdAndTeamId($this->Auth->user('id'), $this->current_team_id);
+        CakeLog::info(var_export($postDrafts, 1));
+        $this->set('post_drafts', $postDrafts);
     }
 
     public function _setLanguage()

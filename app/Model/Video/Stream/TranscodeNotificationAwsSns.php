@@ -1,4 +1,5 @@
 <?php
+App::uses('VideoUploadRequestOnPost', 'Model/Video/Stream');
 
 use Goalous\Model\Enum as Enum;
 

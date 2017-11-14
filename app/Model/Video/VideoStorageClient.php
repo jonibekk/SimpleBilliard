@@ -1,5 +1,8 @@
 <?php
 
+App::uses('VideoUploadRequest', 'Model/Video/Requests');
+App::uses('VideoUploadResultAwsS3', 'Model/Video/Results');
+
 class VideoStorageClient
 {
     public static function upload(VideoUploadRequest $uploadRequest): VideoUploadResult
@@ -11,7 +14,7 @@ class VideoStorageClient
         } catch (\Aws\Common\Exception\ServiceResponseException $exception) {
             return VideoUploadResultAwsS3::createFromAwsException($exception);
         }
-        return VideoUploadResultAwsS3::createFromGuzzleModel($awsResult);
+        return VideoUploadResultAwsS3::createFromGuzzleModel($awsResult)->withResourcePath($uploadRequest->getResourcePath());
     }
 
     /**
@@ -25,8 +28,8 @@ class VideoStorageClient
             // TODO: move configurations to config files
             'region'   => 'ap-northeast-1',
             'credentials' => [
-                'key'    => "a",
-                'secret' => "a",
+                'key'    => "AKIAJWRB3ISRYGDYHV5A",
+                'secret' => "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",
             ],
         ]);
     }

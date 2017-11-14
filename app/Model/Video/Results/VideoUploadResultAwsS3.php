@@ -1,4 +1,5 @@
 <?php
+App::uses('VideoUploadResult', 'Model/Video/Results');
 
 class VideoUploadResultAwsS3 implements VideoUploadResult
 {
@@ -6,6 +7,7 @@ class VideoUploadResultAwsS3 implements VideoUploadResult
      * @var array
      */
     protected $data;
+    protected $resourcePath;
 
     private $errorCode;
     private $errorMessage;
@@ -18,10 +20,11 @@ class VideoUploadResultAwsS3 implements VideoUploadResult
 
     public function isSucceed(): bool
     {
-        if (isset($this->data['@metadata']['statusCode'])) {
-            return 200 === $this->data['@metadata']['statusCode'];
-        }
-        return false;
+        // aws-sdk-php is version 2.x, cant use @metadata
+        //if (isset($this->data['@metadata']['statusCode'])) {
+        //    return 200 === $this->data['@metadata']['statusCode'];
+        //}
+        return 0 < strlen($this->data['ObjectURL']);
     }
 
     public static function createFromGuzzleModel(\Guzzle\Service\Resource\Model $model): self
@@ -36,6 +39,12 @@ class VideoUploadResultAwsS3 implements VideoUploadResult
             ->withErrorMessage($exception->getMessage());
     }
 
+    public function withResourcePath(string $resourcePath): self
+    {
+        $this->resourcePath = $resourcePath;
+        return $this;
+    }
+
     public function withErrorCodeAws($code): self
     {
         $this->errorCode = $code;
@@ -47,9 +56,14 @@ class VideoUploadResultAwsS3 implements VideoUploadResult
         return $this;
     }
 
-    public function getErrorCodeAws(): int
+    public function getResourcePath(): string
     {
-        return intval($this->errorCode);
+        return $this->resourcePath;
+    }
+
+    public function getErrorCode(): string
+    {
+        return strval($this->errorCode);
     }
 
     public function getErrorMessage(): string

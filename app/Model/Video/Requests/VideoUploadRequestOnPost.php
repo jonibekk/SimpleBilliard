@@ -1,5 +1,7 @@
 <?php
 
+App::uses('VideoUploadRequest', 'Model/Video/Requests');
+
 class VideoUploadRequestOnPost implements VideoUploadRequest
 {
     /**
@@ -18,18 +20,16 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
      */
     protected $teamId;
 
-    /**
-     * array data of draft post
-     * @var array
-     */
-    protected $postDraft;
+    protected $video;
+    protected $videoStream;
 
-    public function __construct(\SplFileInfo $splFileInfo, array $user, int $teamId, array $postDraft)
+    public function __construct(\SplFileInfo $splFileInfo, array $user, int $teamId, array $video, array $videoStream)
     {
         $this->file = $splFileInfo;
         $this->user = $user;
         $this->teamId = $teamId;
-        $this->postDraft = $postDraft;
+        $this->video = $video;
+        $this->videoStream = $videoStream;
     }
 
     public function getFile(): \SplFileInfo
@@ -42,22 +42,19 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
         return $this->file->getRealPath();
     }
 
-    private function getDraftPostId(): int
-    {
-        return intval($this->postDraft['id']);
-    }
-
     private function getUserId(): int
     {
         return intval($this->user['id']);
     }
 
-    private function getFileHash(): string
+    public function getFileHash(): string
     {
+        // TODO: any cache?
         return hash_file('sha256', $this->getSourceFilePath());
     }
 
-    public function getKey(): string
+    // TODO: rename to kind of resource path
+    public function getResourcePath(): string
     {
         return sprintf(
             'uploads/%d/%d/%s/original',
@@ -77,7 +74,7 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
     public function getBucket(): string
     {
         // TODO: move to config
-        return 'goalous-local-masuichig-videos';
+        return 'goalous-local-masuichig-videos-original';
     }
 
     public function getAcl(): string
@@ -88,8 +85,8 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
     public function getMetaData(): array
     {
         return [
-            // TODO: can s3 set original metadata by this ?
-            'draft_posts.id' => $this->getDraftPostId(),
+            'videos.id' => $this->video['id'],
+            'video_streams.id' => $this->videoStream['id'],
         ];
     }
 
@@ -102,7 +99,7 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
     {
         return [
             'Bucket'       => $this->getBucket(),
-            'Key'          => $this->getKey(),
+            'Key'          => $this->getResourcePath(),
             'SourceFile'   => $this->getSourceFilePath(),
             'ContentType'  => $this->getContentType(),
             'ACL'          => $this->getAcl(),
