@@ -13,6 +13,9 @@ use Goalous\Model\Enum as Enum;
  */
 class CampaignService extends AppService
 {
+    // Cached campaign price plans each group id
+    private $cache_plans = [];
+
     /**
      * Return true if the team is entitled to monthly campaign
      *
@@ -62,7 +65,6 @@ class CampaignService extends AppService
                 'PricePlanPurchaseTeam.price_plan_id',
                 'PricePlanPurchaseTeam.price_plan_code',
                 'CampaignTeam.id',
-                'CampaignTeam.campaign_type',
                 'CampaignTeam.price_plan_group_id',
             ],
             'joins'  => [
@@ -204,6 +206,221 @@ class CampaignService extends AppService
                 'member_count'     => $campaign['max_members'],
             ];
         }
+        return $res;
+    }
+
+    /*
+     * find price plans by group id
+     *
+     * @param int $groupId
+     * @return array
+     */
+    function findAllPlansByGroupId(int $groupId): array
+    {
+        // Get cached data from class variable
+        $plans = Hash::get($this->cache_plans, $groupId);
+        if (!empty($plans)) {
+            return $plans;
+        }
+
+        // Get cached data from Redis
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
+        $plans = $GlRedis->getMstCampaignPlans($groupId);
+        if (!empty($plans)) {
+            // Set class variable to cache
+            $this->cache_plans[$groupId] = $plans;
+            return $plans;
+        }
+
+        // Get DB data
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
+        $plans = $ViewCampaignPricePlan->findAllPlansByGroupId($groupId);
+        if (empty($plans)) {
+            return [];
+        }
+        // Cache data
+        $GlRedis->saveMstCampaignPlans($groupId, $plans);
+        $this->cache_plans[$groupId] = $plans;
+
+        return $plans;
+    }
+
+    /*
+     * Get price plan by code
+     *
+     * @param int $planCode
+     * @return array
+     */
+    function getPlanByCode(string $planCode): array
+    {
+        $parsedPlanCode = $this->parsePlanCode($planCode);
+        $groupId = Hash::get($parsedPlanCode, 'group_id');
+        if (empty($groupId)) {
+            return [];
+        }
+
+        $plans = $this->findAllPlansByGroupId($groupId);
+        if (empty($plans)) {
+            return [];
+        }
+
+        $plansEachCode = Hash::combine($plans, '{n}.code', '{n}');
+        $plan = Hash::get($plansEachCode, $planCode) ?? [];
+        return $plan;
+    }
+
+    /*
+     * find price plans for upgrading
+     *
+     * @param int $teamId
+     * @return array
+     */
+    function findPlansForUpgrading(int $teamId, array $currentPlan): array
+    {
+        if (empty($currentPlan)) {
+            return [];
+        }
+
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
+
+
+        $codeInfo = $this->parsePlanCode($currentPlan['code']);
+        $pricePlans = $this->findAllPlansByGroupId($codeInfo['group_id']);
+
+        // Calc remaining days by next base data
+        foreach($pricePlans as $k => $plan) {
+            $pricePlans[$k]['is_current_plan'] = $currentPlan['id'] == $plan['id'];
+
+            $currencyType = (int)$plan['currency'];
+            $pricePlans[$k]['format_price'] = $PaymentService->formatCharge($plan['price'], $currencyType);
+            if ($plan['max_members'] <= $currentPlan['max_members']) {
+                $pricePlans[$k]['can_select'] = false;
+                continue;
+            }
+            $pricePlans[$k]['can_select'] = true;
+
+            // Calc charge amount
+            $chargeInfo = $this->calcRelatedTotalChargeForUpgradingPlan(
+                $teamId,
+                new Enum\PaymentSetting\Currency($currencyType),
+                $plan['code'],
+                $currentPlan['code']
+            );
+
+            $pricePlans[$k] = am($pricePlans[$k], [
+                'sub_total_charge' => $PaymentService->formatCharge($chargeInfo['sub_total_charge'], $currencyType),
+                'tax'              => $PaymentService->formatCharge($chargeInfo['tax'], $currencyType),
+                'total_charge'     => $PaymentService->formatCharge($chargeInfo['total_charge'], $currencyType),
+            ]);
+        }
+        return $pricePlans;
+    }
+
+    /*
+     * Parse price plan code
+     * Ex. code "1-2"→ ["group_id" => 1, "detail_no" => 2"]
+     * @param string $code
+     *
+     * @return array
+     */
+    function parsePlanCode(string $code): array
+    {
+        try {
+            $ar = explode('-', $code);
+            if (count($ar) != 2) {
+                throw new Exception(sprintf("Failed to parse price plan code. code:%s", $code));
+            }
+            if (!AppUtil::isInt($ar[0]) || !AppUtil::isInt($ar[1])) {
+                throw new Exception(sprintf("Failed to parse price plan code. %s", AppUtil::jsonOneLine($ar)));
+            }
+            $res = ['group_id' => $ar[0], 'detail_no' => $ar[1]];
+        } catch (Exception $e) {
+            throw $e;
+        }
+        return $res;
+    }
+
+    /**
+     * Calc balance for upgrading plan.
+     * Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
+     * (100,000 - 50,000) × 20 days / 1 month
+     *
+     * @param int                          $teamId
+     * @param Enum\PaymentSetting\Currency $currencyType
+     * @param string                       $upgradePlanCode
+     * @param string                       $currentPlanCode
+     *
+     * @return array
+     * @internal param int $upgradePlanPrice
+     * @internal param int $currentPlanPrice
+     */
+    function calcRelatedTotalChargeForUpgradingPlan
+    (
+        int $teamId,
+        Enum\PaymentSetting\Currency $currencyType,
+        string $upgradePlanCode,
+        string $currentPlanCode
+    ): array {
+        try {
+            /** @var PaymentService $PaymentService */
+            $PaymentService = ClassRegistry::init("PaymentService");
+
+            if ($upgradePlanCode === $currentPlanCode) {
+                throw new Exception(sprintf("Upgrading plan and current plan are same plan. %s",
+                    AppUtil::jsonOneLine(compact('teamId', 'upgradePlanCode', 'currentPlanCode'))
+                ));
+            }
+
+            $currentPlan = $this->getPlanByCode($currentPlanCode);
+            if (empty($currentPlan)) {
+                throw new Exception(sprintf("Current plan doesn't exit. %s",
+                    AppUtil::jsonOneLine(compact('teamId', 'currentPlanCode'))
+                ));
+            }
+
+            $upgradePlan = $this->getPlanByCode($upgradePlanCode);
+            if (empty($upgradePlan)) {
+                throw new Exception(sprintf("Upgrading plan doesn't exit. %s",
+                    AppUtil::jsonOneLine(compact('teamId', 'upgradePlanCode'))
+                ));
+            }
+
+            $paymentSetting = $PaymentService->get($teamId);
+            if (empty($paymentSetting)) {
+                throw new Exception(sprintf("Not exist payment setting data. %s",
+                    AppUtil::jsonOneLine(compact('teamId'))
+                ));
+            }
+
+            $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate($teamId);
+            $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
+            // Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
+            // (100,000 - 50,000) × 20 days / 1 month
+            $subTotalCharge = ($upgradePlan['price'] - $currentPlan['price']) * ($useDaysByNext / $allUseDays);
+            $subTotalCharge = $PaymentService->processDecimalPointForAmount($currencyType->getValue(), $subTotalCharge);
+
+            $tax = $PaymentService->calcTax($paymentSetting['company_country'], $subTotalCharge);
+            $totalCharge = $subTotalCharge + $tax;
+            $res = [
+                'sub_total_charge' => $subTotalCharge,
+                'tax'              => $tax,
+                'total_charge'     => $totalCharge,
+            ];
+        } catch (Exception $e) {
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            $res = [
+                'sub_total_charge' => 0,
+                'tax'              => 0,
+                'total_charge'     => 0,
+            ];
+        }
+
         return $res;
     }
 

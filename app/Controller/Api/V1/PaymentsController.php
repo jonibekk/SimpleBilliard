@@ -308,6 +308,32 @@ class PaymentsController extends ApiController
     }
 
     /**
+     * Get information for display form
+     *
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
+     * @return CakeResponse
+     * @internal     param int|null $id
+     */
+    function get_upgrade_plan()
+    {
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+
+        $teamId = $this->current_team_id;
+        $res = [];
+
+        // Get current campaign plan
+        $currentPricePlan = $CampaignService->getTeamPricePlan($teamId);
+        if (empty($currentPricePlan)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Get campaign plan list
+        $res['campaigns'] = $CampaignService->findPlansForUpgrading($teamId, $currentPricePlan);
+        return $this->_getResponseSuccess($res);
+    }
+
+    /**
      * Validation API
      *
      * @query_param fields

@@ -26,6 +26,7 @@ class SetupGuideShellTest extends GoalousTestCase
         'app.email',
         'app.team_member',
         'app.member_type',
+        'app.terms_of_service',
         'app.local_name',
         'notify_setting'
     );
