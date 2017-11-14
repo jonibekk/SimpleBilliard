@@ -1058,6 +1058,8 @@ class PaymentService extends AppService
         $Team = ClassRegistry::init('Team');
         /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
         $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
 
         $membersCount = $TeamMember->countChargeTargetUsers($teamId);
         // Count should never be zero.
@@ -1117,7 +1119,16 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Failed to update team status to paid plan. team_id: %s", $teamId));
             }
 
-            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice, $pricePlanId);
+            // Save CampaignPurchase
+            if ($pricePlanId !== null && $CampaignService->isCampaignTeam($teamId)) {
+                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanId);
+                if (!$pricePlanPurchase) {
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanId: %s",
+                        $teamId, $pricePlanId));
+                }
+            }
+
+            $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice);
             if ($res === false) {
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
@@ -1184,8 +1195,7 @@ class PaymentService extends AppService
         int $chargeMemberCount,
         int $time,
         $userId = null,
-        bool $checkSentInvoice = true,
-        $pricePlanId = null
+        bool $checkSentInvoice = true
     ): bool {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
@@ -1221,32 +1231,30 @@ class PaymentService extends AppService
             return false;
         }
 
-        $paymentSetting = $PaymentSetting->getByTeamId($teamId);
-        // If campaign team, pay as campaign price
-        $isCampaign = $CampaignService->isCampaignTeam($teamId);
-        if ($isCampaign && $pricePlanId) {
-            $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
-        } else {
-            $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
-        }
-
-        $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
-
         $this->TransactionManager->begin();
         try {
-            // Save Campaign History
-            $pricePlanPurchaseId = null;
-            $campaignTeamId = null;
-            if ($isCampaign) {
-                // Register campaign purchase
-                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanId);
-                if (!$pricePlanPurchase) {
-                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanId: %s",
-                        $teamId, $pricePlanId));
-                }
-                $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
-                $campaignTeamId = Hash::get($CampaignService->getCampaignTeam($teamId, ['id']), 'id');
+            // Check if its a campaign and charge the correct price
+            $paymentSetting = $PaymentSetting->getByTeamId($teamId);
+            $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
+            $pricePlanPurchase = $CampaignService->getPricePlanPurchaseTeam($teamId);
+            $isCampaign = ($pricePlanPurchase != null);
+            $pricePlanId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.price_plan_id');
+            $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
+            $campaignTeamId = Hash::get($pricePlanPurchase, 'CampaignTeam.id');
+
+            if ($isCampaign && $pricePlanId) {
+                $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
+            } else {
+                $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
             }
+
+//            // Save Campaign History
+//            $pricePlanPurchaseId = null;
+//            $campaignTeamId = null;
+//            if ($isCampaign) {
+//                $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
+//                $campaignTeamId = Hash::get($CampaignService->getCampaignTeam($teamId, ['id']), 'id');
+//            }
 
             // save monthly charge
             $ChargeHistory->clear();
