@@ -44,6 +44,16 @@ $(document).ready(function() {
     });
 
     faqInit();
+
+    var seminarTicketBtn = document.getElementById('seminar_ticket');
+    if(seminarTicketBtn!=null && cake.env_name == 'www' && typeof(ga) != 'undefined'){
+        seminarTicketBtn.onclick = function(e){
+            e.preventDefault();
+            ga('send', 'event', 'Seminar', 'Ticket Button Clicked [test]', 'Promotional Homepage', 1);
+            var win = window.open(seminarTicketBtn.dataset.url, '_blank');
+            win.focus();
+        }
+    }
 });
 
 $(window).resize(function(){
