@@ -1152,12 +1152,17 @@ class PaymentService extends AppService
      *
      * @param int $teamId
      */
-    private function deleteTeamsAllPaymentSetting(int $teamId)
+    public function deleteTeamsAllPaymentSetting(int $teamId)
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init('CreditCard');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+
 
         $condition = [
             'team_id' => $teamId,
@@ -1170,6 +1175,16 @@ class PaymentService extends AppService
         }
         if (!$Invoice->softDeleteAll($condition, true)) {
             throw new RuntimeException(sprintf('failed soft delete invoices: %s', AppUtil::jsonOneLine([
+                'teams.id' => $teamId,
+            ])));
+        }
+        if (!$CreditCard->softDeleteAll($condition, true)) {
+            throw new RuntimeException(sprintf('failed soft delete credit_cards: %s', AppUtil::jsonOneLine([
+                'teams.id' => $teamId,
+            ])));
+        }
+        if (!$PricePlanPurchaseTeam->softDeleteAll($condition, true)) {
+            throw new RuntimeException(sprintf('failed soft delete price_plan_purchase_team: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
@@ -1247,14 +1262,6 @@ class PaymentService extends AppService
             } else {
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
             }
-
-//            // Save Campaign History
-//            $pricePlanPurchaseId = null;
-//            $campaignTeamId = null;
-//            if ($isCampaign) {
-//                $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
-//                $campaignTeamId = Hash::get($CampaignService->getCampaignTeam($teamId, ['id']), 'id');
-//            }
 
             // save monthly charge
             $ChargeHistory->clear();
