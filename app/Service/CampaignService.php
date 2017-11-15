@@ -48,6 +48,27 @@ class CampaignService extends AppService
     }
 
     /**
+     * Validate upgrade plan
+     *
+     * @param     $planCode Why no type hinting is that empty value is possible for validation
+     *
+     * @return array
+     */
+    function validateUpgradePlan($planCode): array
+    {
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
+
+        $PricePlanPurchaseTeam->validate = $PricePlanPurchaseTeam->validateUpdate;
+        $PricePlanPurchaseTeam->set(['price_plan_code' => $planCode]);
+        if (!$PricePlanPurchaseTeam->validates()) {
+            $errors = $this->validationExtract($PricePlanPurchaseTeam->validationErrors);
+            return $errors;
+        }
+        return [];
+    }
+
+    /**
      * Get Price plan information for campaign team
      *
      * @param int $teamId
@@ -193,10 +214,11 @@ class CampaignService extends AppService
 
         $res = [];
         $campaigns = $CampaignTeam->findPricePlans($teamId);
-        foreach($campaigns as $campaign) {
+        foreach ($campaigns as $campaign) {
             $currencyType = $campaign['currency'];
             $subTotalCharge = $campaign['price'];
-            $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
+            $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP',
+                $subTotalCharge) : 0;
             $totalCharge = $subTotalCharge + $tax;
             $res[] = [
                 'id'               => $campaign['id'],
@@ -240,6 +262,7 @@ class CampaignService extends AppService
         if (empty($plans)) {
             return [];
         }
+        $plans = Hash::combine($plans, '{n}.code', '{n}');
         // Cache data
         $GlRedis->saveMstCampaignPlans($groupId, $plans);
         $this->cache_plans[$groupId] = $plans;
@@ -255,7 +278,7 @@ class CampaignService extends AppService
      */
     function getPlanByCode(string $planCode): array
     {
-        $parsedPlanCode = $this->parsePlanCode($planCode);
+        $parsedPlanCode = PaymentUtil::parsePlanCode($planCode);
         $groupId = Hash::get($parsedPlanCode, 'group_id');
         if (empty($groupId)) {
             return [];
@@ -266,8 +289,7 @@ class CampaignService extends AppService
             return [];
         }
 
-        $plansEachCode = Hash::combine($plans, '{n}.code', '{n}');
-        $plan = Hash::get($plansEachCode, $planCode) ?? [];
+        $plan = Hash::get($plans, $planCode) ?? [];
         return $plan;
     }
 
@@ -288,12 +310,11 @@ class CampaignService extends AppService
         /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
         $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
 
-
-        $codeInfo = $this->parsePlanCode($currentPlan['code']);
+        $codeInfo = PaymentUtil::parsePlanCode($currentPlan['code']);
         $pricePlans = $this->findAllPlansByGroupId($codeInfo['group_id']);
 
         // Calc remaining days by next base data
-        foreach($pricePlans as $k => $plan) {
+        foreach ($pricePlans as $k => $plan) {
             $pricePlans[$k]['is_current_plan'] = $currentPlan['id'] == $plan['id'];
 
             $currencyType = (int)$plan['currency'];
@@ -305,7 +326,7 @@ class CampaignService extends AppService
             $pricePlans[$k]['can_select'] = true;
 
             // Calc charge amount
-            $chargeInfo = $this->calcRelatedTotalChargeForUpgradingPlan(
+            $chargeInfo = $PaymentService->calcRelatedTotalChargeForUpgradingPlan(
                 $teamId,
                 new Enum\PaymentSetting\Currency($currencyType),
                 $plan['code'],
@@ -342,85 +363,6 @@ class CampaignService extends AppService
         } catch (Exception $e) {
             throw $e;
         }
-        return $res;
-    }
-
-    /**
-     * Calc balance for upgrading plan.
-     * Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
-     * (100,000 - 50,000) × 20 days / 1 month
-     *
-     * @param int                          $teamId
-     * @param Enum\PaymentSetting\Currency $currencyType
-     * @param string                       $upgradePlanCode
-     * @param string                       $currentPlanCode
-     *
-     * @return array
-     * @internal param int $upgradePlanPrice
-     * @internal param int $currentPlanPrice
-     */
-    function calcRelatedTotalChargeForUpgradingPlan
-    (
-        int $teamId,
-        Enum\PaymentSetting\Currency $currencyType,
-        string $upgradePlanCode,
-        string $currentPlanCode
-    ): array {
-        try {
-            /** @var PaymentService $PaymentService */
-            $PaymentService = ClassRegistry::init("PaymentService");
-
-            if ($upgradePlanCode === $currentPlanCode) {
-                throw new Exception(sprintf("Upgrading plan and current plan are same plan. %s",
-                    AppUtil::jsonOneLine(compact('teamId', 'upgradePlanCode', 'currentPlanCode'))
-                ));
-            }
-
-            $currentPlan = $this->getPlanByCode($currentPlanCode);
-            if (empty($currentPlan)) {
-                throw new Exception(sprintf("Current plan doesn't exit. %s",
-                    AppUtil::jsonOneLine(compact('teamId', 'currentPlanCode'))
-                ));
-            }
-
-            $upgradePlan = $this->getPlanByCode($upgradePlanCode);
-            if (empty($upgradePlan)) {
-                throw new Exception(sprintf("Upgrading plan doesn't exit. %s",
-                    AppUtil::jsonOneLine(compact('teamId', 'upgradePlanCode'))
-                ));
-            }
-
-            $paymentSetting = $PaymentService->get($teamId);
-            if (empty($paymentSetting)) {
-                throw new Exception(sprintf("Not exist payment setting data. %s",
-                    AppUtil::jsonOneLine(compact('teamId'))
-                ));
-            }
-
-            $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate($teamId);
-            $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
-            // Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
-            // (100,000 - 50,000) × 20 days / 1 month
-            $subTotalCharge = ($upgradePlan['price'] - $currentPlan['price']) * ($useDaysByNext / $allUseDays);
-            $subTotalCharge = $PaymentService->processDecimalPointForAmount($currencyType->getValue(), $subTotalCharge);
-
-            $tax = $PaymentService->calcTax($paymentSetting['company_country'], $subTotalCharge);
-            $totalCharge = $subTotalCharge + $tax;
-            $res = [
-                'sub_total_charge' => $subTotalCharge,
-                'tax'              => $tax,
-                'total_charge'     => $totalCharge,
-            ];
-        } catch (Exception $e) {
-            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::emergency($e->getTraceAsString());
-            $res = [
-                'sub_total_charge' => 0,
-                'tax'              => 0,
-                'total_charge'     => 0,
-            ];
-        }
-
         return $res;
     }
 
@@ -562,6 +504,69 @@ class CampaignService extends AppService
 
         $PricePlanPurchaseTeam->create();
         return $PricePlanPurchaseTeam->save($pricePlanPurchase);
+    }
+
+    /**
+     * Upgrade price plan
+     *
+     * @param int    $teamId
+     * @param string $pricePlanCode
+     * @param int    $opeUserId
+     *
+     * @return array
+     */
+    function upgradePlan(int $teamId, string $pricePlanCode, int $opeUserId): array
+    {
+        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
+        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+
+        try {
+            $this->TransactionManager->begin();
+
+            $currentPlan = $this->getTeamPricePlan($teamId);
+            if (empty($currentPlan)) {
+                throw new Exception(sprintf("Current price plan doesn't exist. team_id:%s", $teamId));
+            }
+
+            $upgradePlan = $ViewCampaignPricePlan->getById($pricePlanCode);
+            if (empty($upgradePlan)) {
+                throw new Exception(sprintf("Upgrade price plan doesn't exist. plan_id:%s", $pricePlanCode));
+            }
+
+            // Delete current plan
+            // The reason why recode doesn't update is to save history when the team purchased new plan .
+            $PricePlanPurchaseTeam->softDeleteAll(['team_id' => $teamId], false);
+
+            $pricePlanPurchase = [
+                'team_id'           => $teamId,
+                'price_plan_id'     => $upgradePlan['id'],
+                'price_plan_code'   => $pricePlanCode,
+                'purchase_datetime' => time(),
+            ];
+            // Purchase new plan
+            $PricePlanPurchaseTeam->create();
+            if (!$PricePlanPurchaseTeam->save($pricePlanPurchase)) {
+                throw new Exception(
+                    sprintf("Failed to purchase new plan. %s", AppUtil::jsonOneLine(compact('pricePlanPurchase')
+                    ))
+                );
+            }
+
+            // Charge diff amount by upgrading plan
+            $PaymentService->chargeForUpgradingCampaignPlan($teamId, $currentPlan['code'], $pricePlanCode,  $opeUserId);
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            return false;
+        }
+        return true;
     }
 
     /**

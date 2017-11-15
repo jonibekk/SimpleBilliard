@@ -28,6 +28,7 @@ App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 
 use Goalous\Model\Enum as Enum;
 
