@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Team', 'Model');
+App::import('Service', 'PaymentSettings');
 
 /**
  * Class TeamService
@@ -96,6 +97,8 @@ class TeamService extends AppService
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init("PaymentService");
 
         $targetTeamList = $Team->findTeamListStatusExpired($currentStatus, $targetExpireDate);
         if (empty($targetTeamList)) {
@@ -112,6 +115,10 @@ class TeamService extends AppService
             $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
                 AppUtil::varExportOneLine($targetTeamList)));
             $this->log(Debugger::trace());
+        }
+
+        foreach ($targetTeamList as $targetTeam) {
+            $PaymentService->deleteTeamsAllPaymentSetting($targetTeam);
         }
 
         /** @var GlRedis $GlRedis */
