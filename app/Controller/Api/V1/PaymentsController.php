@@ -346,16 +346,14 @@ class PaymentsController extends ApiController
         $CampaignService = ClassRegistry::init("CampaignService");
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init("TeamMember");
 
         $teamId = $this->current_team_id;
 
         $pricePlanCode = $this->request->data('plan_code');
         // Validate
-        $errRes = $this->_validateUpgradePlan($teamId, $pricePlanCode);
-        if (!empty($errRes)) {
-            return $errRes;
+        $validateRes = $this->_validateUpgradePlan($teamId, $pricePlanCode);
+        if ($validateRes !== true) {
+            return $validateRes;
         }
 
         // Upgrade plan
