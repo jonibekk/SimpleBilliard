@@ -105,8 +105,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="row text-left">
             <h2 class="title"><strong><?= __('New Event');?>:</strong> <?= __('Free Goalous Seminar');?></h2>
             <p><?= __('Learn all of the ways you can improve your organization using Goalous.');?></p>
-            <a href="http://peatix.com/event/319633/view" target="_blank" class="btn btn-cta-primary btn-lg"><?= __('Get Ticket');?></a>
         </div>
+        <a href="http://peatix.com/event/319633/view" target="_blank" class="btn btn-cta-primary btn-lg"><?= __('Get Ticket');?></a>
     </div>
 </div>
 
