@@ -23,6 +23,35 @@ class ApiPostsController extends ApiController
         $this->Security->csrfCheck = false;
     }
 
+    public function callback() {
+
+        $jsonBody = $this->request->input('json_decode');
+        $headers = iterator_to_array($this->getRequestHeaders());
+        CakeLog::info(sprintf('log video callback: %s', AppUtil::jsonOneLine([
+            'headers' => $headers,
+            'jsonBody' => $jsonBody,
+            'message' => json_decode($jsonBody->Message),
+        ])));
+        $result = [
+            'meta' => [
+                'status' => '200',
+                'message' => 'ok',
+            ],
+            'data' => [
+                'header' => $headers,
+                'body'   => $jsonBody,
+                'message' => json_decode($jsonBody->Message),
+            ],
+        ];
+        $this->viewClass = 'Json';
+        $this->set(compact('result'));
+        $this->set('_serialize', 'result');
+
+        return $this->_getResponseSuccess([
+            "code" => "success",
+        ]);
+    }
+
     /**
      * make video, video_stream
      * return video_stream id
