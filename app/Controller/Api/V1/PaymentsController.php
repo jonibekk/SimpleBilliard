@@ -334,11 +334,9 @@ class PaymentsController extends ApiController
     }
 
     /**
-     * Get information for display form
+     * Upgrade price plan
      *
-     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `countries,lang_code`)
      * @return CakeResponse
-     * @internal     param int|null $id
      */
     function post_upgrade_plan()
     {
