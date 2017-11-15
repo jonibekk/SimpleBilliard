@@ -4,6 +4,7 @@ App::uses('CampaignTeam', 'Model');
 App::uses('CampaignPricePlan', 'Model');
 App::uses('CampaignPriceGroup', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('PaymentUtil', 'Util');
 App::import('Service', 'PaymentService');
 
 use Goalous\Model\Enum as Enum;
