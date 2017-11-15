@@ -24,7 +24,6 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
 
     public $MonthlyInvoiceChargeShell;
     public $PaymentService;
-    public $ChargeHistory;
     public $CampaignService;
 
     /**
@@ -146,8 +145,11 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         // Add new users
         $testNow = '2017-01-15';
         GoalousDateTime::setTestNow($testNow);
-        $this->createActiveUsers($teamId, 5);
+        $usersCount = 5;
+        $this->createActiveUsers($teamId, $usersCount);
 
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
+            Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $paymentSetting);
         $maxChargeUserCnt = $this->PaymentService->getChargeMaxUserCnt($teamId,
             Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 5);
 
@@ -180,12 +182,22 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $this->MonthlyInvoiceChargeShell->params['targetTimestamp'] = strtotime($testNow);
         $this->MonthlyInvoiceChargeShell->main();
 
-        // Check charge history
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
-        $paymentSetting = $this->PaymentService->get($teamId);
+        // Check if invoice was created
+        $invoice = $Invoice->getByTeamId($teamId);
+        $this->assertNotEmpty($invoice);
+        $this->assertEquals($paymentSettingId, $invoice['payment_setting_id']);
+        $this->assertEquals(Enum\Invoice\CreditStatus::OK, $invoice['credit_status']);
+
+        // Check invoice history was created
+        $invoiceHistories = $InvoiceHistory->getByOrderDate($teamId, $testNow);
+        $this->assertCount(1, $invoiceHistories);
+
+        // Check invoice charge history was created
+        $InvoiceHistoriesChargeHistories = $InvoiceHistoriesChargeHistory->find('all', ['conditions' => ['invoice_history_id' => $invoiceHistories['InvoiceHistory']['id']]]);
+        $this->assertCount(2, $InvoiceHistoriesChargeHistories);
     }
 
-    function test_mainx()
+    function test_main_campaign()
     {
         $testNow = '2017-01-01';
         GoalousDateTime::setTestNow($testNow);
@@ -194,7 +206,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         list ($teamId, $paymentSettingId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1,
             $pricePlanId = 1, $pricePlanCode = '1-1');
         $this->Team->current_team_id = $teamId;
-        $this->createActiveUsers($teamId, $usersCount-1);
+        $this->createActiveUsers($teamId, $usersCount - 1);
 
         // mocking credit invoice as succeed
         $returningOrderId = 'AK12345678';
