@@ -344,8 +344,6 @@ class PaymentsController extends ApiController
     {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
-        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
-        $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
 
         $teamId = $this->current_team_id;
 
