@@ -68,7 +68,7 @@ $defines = [
     //trueの場合、FORCE_ENABLE_ALL_EXPERIMENTSより優先される。trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が無効化される。
     'FORCE_DISABLE_ALL_EXPERIMENTS'               => false,
     //trueの場合は実験の存在の有無にかかわらず強制的に全ての実験が有効化される
-    'FORCE_ENABLE_ALL_EXPERIMENTS'                => true,
+    'FORCE_ENABLE_ALL_EXPERIMENTS'                => false,
     'SENTRY_DSN'                                  => null,
     // Stripe API keys. https://dashboard.stripe.com/account/apikeys
     'STRIPE_PUBLISHABLE_KEY'                      => 'pk_test_9ne6tSqfUbBXSWqn1XwmeHfb',
