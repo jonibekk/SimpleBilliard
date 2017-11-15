@@ -1032,4 +1032,24 @@ class GoalousTestCase extends CakeTestCase
             $pricePlanPurchaseId
         ];
     }
+
+    function createInvoiceCampaignTeam(int $pricePlanGroupId, int $pricePlanId, string $pricePlanCode): array
+    {
+        $team = [
+            'country' => 'JP',
+            'timezone' => 9
+        ];
+        $paymentSetting = [
+            'amount_per_user' => 0,
+        ];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);
+        $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
+        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanId, $pricePlanCode);
+
+        return [
+            $teamId,
+            $campaignTeamId,
+            $pricePlanPurchaseId
+        ];
+    }
 }
