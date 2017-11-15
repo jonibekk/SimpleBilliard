@@ -834,9 +834,6 @@ class PaymentService extends AppService
                     AppUtil::varExportOneLine($stripeResponse)));
             }
 
-            // teams payment setting must be only one
-            $this->deleteTeamsAllPaymentSetting($teamId);
-
             // Variable to later use
             $result['customerId'] = $customerId;
             $isCampaign = $CampaignService->isCampaignTeam($teamId);
@@ -1076,9 +1073,6 @@ class PaymentService extends AppService
 
         try {
             $this->TransactionManager->begin();
-
-            // teams payment setting must be only one
-            $this->deleteTeamsAllPaymentSetting($teamId);
 
             // Prepare data for saving
             $timezone = $Team->getTimezone();
