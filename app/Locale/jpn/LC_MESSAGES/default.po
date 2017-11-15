@@ -5163,7 +5163,19 @@ msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
 msgid "Enjoy your work. Achieve your goals."
-msgstr "チーム力を<br>\"たのしく\"あげる"
+msgstr "チーム力を<br><q>たのしく</q>あげる"
+
+msgid "New Event"
+msgstr "イベント"
+
+msgid "Free Goalous Seminar"
+msgstr "無料のGoalousセミナー開催！"
+
+msgid "Learn all of the ways you can improve your organization using Goalous."
+msgstr "Goalousを使ってどのように組織改革するかをご紹介します。"
+
+msgid "Get Ticket"
+msgstr "申し込む"
 
 msgid "Contact&nbsp;us"
 msgstr "お問い合わせ"
@@ -6051,6 +6063,3 @@ msgstr "認定ステータス: %s"
 
 #~ msgid "CSRF Error!"
 #~ msgstr "CSRFエラーです。"
-
-#~ msgid "Enjoy your work.<br />Achieve your goals."
-#~ msgstr "チーム力を<br><q>たのしく</q>あげる"
