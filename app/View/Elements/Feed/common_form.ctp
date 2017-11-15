@@ -30,11 +30,6 @@ $only_tab_action =
 $only_tab_post =
     ($is_edit_mode && $common_form_type == 'post') ||
     (isset($common_form_only_tab) && $common_form_only_tab == 'post');
-
-// 表示するタブを「メッセージ」のみする
-// 以下のいずれかの場合に true
-//   1. $common_form_only_tab == 'message' が指定された場合
-$only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'message');
 ?>
 <?= $this->App->viewStartComment() ?>
 <div id="ActionFormWrapper">
@@ -42,37 +37,18 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
         <div class="post-panel-heading ptb_7px plr_11px">
             <!-- Nav tabs -->
             <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
-                <li class="switch-action <?php
-                // ファイル上部の宣言部を参照
-                if ($only_tab_post || $only_tab_message): ?>
-                none
-            <?php endif ?>">
-                    <a href="#ActionForm" role="tab" data-toggle="tab"
-                       class="switch-action-anchor click-target-focus"
-                       target-id="CommonActionName"><i
-                            class="fa fa-check-circle"></i><?= __("Action") ?></a><span class="switch-arrow"></span>
+                <li class="switch-action  <?= $only_tab_post ? 'none' : ''; ?>">
+                    <a href="#ActionForm" role="tab" data-toggle="tab" class="switch-action-anchor click-target-focus" target-id="CommonActionName">
+                       <i class="fa fa-check-circle"></i><?= __("Action") ?>
+                    </a>
+                    <span class="switch-arrow"></span>
                 </li>
-                <li class="switch-post <?php
-                // ファイル上部の宣言部を参照
-                if ($only_tab_action || $only_tab_message): ?>
-                none
-            <?php endif ?>">
-                    <a href="#PostForm" role="tab" data-toggle="tab"
-                       class="switch-post-anchor click-target-focus"
-                       target-id="CommonPostBody"><i
-                            class="fa fa-comment-o"></i><?= __("Posts") ?></a><span class="switch-arrow"></span>
-                </li>
-                <li class="switch-message <?php
-                // ファイル上部の宣言部を参照
-                if ($only_tab_action || $only_tab_post): ?>
-                none
-            <?php endif ?><?php
-                // ファイル上部の宣言部を参照
-                if ($common_form_type == "message"): ?>
-                active
-            <?php endif ?>">
-                    <a href="/topics" class="switch-message-anchor">
-                        <i class="fa fa-paper-plane-o"></i><?= __("Message") ?></a><span class="switch-arrow"></span>
+                <li class="switch-post 
+                    <?= $only_tab_action ? 'none' : '';?>">
+                    <a href="#PostForm" role="tab" data-toggle="tab" class="switch-post-anchor click-target-focus" target-id="CommonPostBody">
+                        <i class="fa fa-comment-o"></i><?= __("Posts") ?>
+                    </a>
+                    <span class="switch-arrow"></span>
                 </li>
             </ul>
         </div>
