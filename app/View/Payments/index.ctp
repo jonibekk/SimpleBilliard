@@ -59,6 +59,8 @@
                     </p>
                     <?php if ($serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
                         <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade to Paid Plan') ?></a>
+                    <?php elseif ($isCampaignTeam): ?>
+                        <a href="/payments/apply" class="btn btn-primary"><?= __('Upgrade Plan') ?></a>
                     <?php endif; ?>
                     <div class="hr"></div>
                     <?php if (!$isCampaignTeam): ?>
