@@ -365,7 +365,7 @@ class PaymentService extends AppService
 
             $paymentSetting = $this->get($teamId);
             if (empty($paymentSetting)) {
-                throw new Exception(sprintf("Not exist payment setting data. %s",
+                throw new Exception(sprintf("Payment setting doesn't exist. %s",
                     AppUtil::jsonOneLine(compact('teamId'))
                 ));
             }
@@ -1801,12 +1801,7 @@ class PaymentService extends AppService
      * @param string $upgradePlanCode
      * @param int    $opeUserId
      *
-     * @return array
      * @throws Exception
-     * @internal param string $pricePlanCode
-     * @internal param int $planPurchaseTeamId
-     * @internal param Enum\ChargeHistory\ChargeType|int $chargeType
-     * @internal param int $usersCount
      */
     public function chargeForUpgradingCampaignPlan(
         int $teamId,

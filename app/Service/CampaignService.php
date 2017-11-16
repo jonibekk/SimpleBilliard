@@ -49,6 +49,23 @@ class CampaignService extends AppService
     }
 
     /**
+     * For unit test
+     * @return array
+     */
+    function getCachePlans(): array
+    {
+        return $this->cache_plans;
+    }
+
+    /**
+     * For unit test
+     */
+    function clearCachePlans()
+    {
+        $this->cache_plans = [];
+    }
+
+    /**
      * Validate upgrade plan
      *
      * @param     $planCode Why no type hinting is that empty value is possible for validation

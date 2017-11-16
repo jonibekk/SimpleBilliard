@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class CampaignServiceTest
@@ -386,11 +387,6 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertFalse($exceed, 'team member count below 50 not exceeding');
     }
 
-    function test_findAllPlansByGroupId()
-    {
-        $this->markTestSkipped();
-    }
-
     function test_findPlansForUpgrading()
     {
         $pricePlanCode = '1-1';
@@ -492,6 +488,79 @@ class CampaignServiceTest extends GoalousTestCase
         $this->markTestSkipped();
     }
 
+    function test_findAllPlansByGroupId_yen()
+    {
+        $pricePlanGroupId = 1;
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 5);
+        $this->assertEquals(reset($res), [
+            'id' => 1,
+            'code' => '1-1',
+            'price' => 50000,
+            'currency' => Enum\PaymentSetting\Currency::JPY,
+            'group_id' => $pricePlanGroupId,
+            'max_members' => 50,
+        ]);
+        $this->assertEquals(end($res), [
+            'id' => 5,
+            'code' => '1-5',
+            'price' => 250000,
+            'currency' => Enum\PaymentSetting\Currency::JPY,
+            'group_id' => $pricePlanGroupId,
+            'max_members' => 500,
+        ]);
+
+        $redisData = $this->GlRedis->getMstCampaignPlans($pricePlanGroupId);
+        $this->assertEquals($res, $redisData);
+
+        $pgCache = $this->CampaignService->getCachePlans();
+        $this->assertEquals($res, $pgCache[$pricePlanGroupId]);
+
+        $this->CampaignService->clearCachePlans();
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 5);
+
+        $this->CampaignService->clearCachePlans();
+        $this->GlRedis->deleteMstCampaignPlans($pricePlanGroupId);
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 5);
+    }
+
+    function test_findAllPlansByGroupId_dollar()
+    {
+        $pricePlanGroupId = 2;
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 5);
+        $this->assertEquals(reset($res), [
+            'id' => 6,
+            'code' => '2-1',
+            'price' => 500,
+            'currency' => Enum\PaymentSetting\Currency::USD,
+            'group_id' => $pricePlanGroupId,
+            'max_members' => 50,
+        ]);
+        $this->assertEquals(end($res), [
+            'id' => 10,
+            'code' => '2-5',
+            'price' => 2500,
+            'currency' => Enum\PaymentSetting\Currency::USD,
+            'group_id' => $pricePlanGroupId,
+            'max_members' => 500,
+        ]);
+
+        $this->ViewCampaignPricePlan->deleteAll(['group_id' => $pricePlanGroupId]);
+
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 5);
+
+        $this->GlRedis->deleteMstCampaignPlans($pricePlanGroupId);
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 5);
+
+        $this->CampaignService->clearCachePlans();
+        $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
+        $this->assertEquals(count($res), 0);
+    }
 
     function tearDown()
     {

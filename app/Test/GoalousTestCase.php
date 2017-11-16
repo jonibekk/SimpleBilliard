@@ -1013,14 +1013,14 @@ class GoalousTestCase extends CakeTestCase
     }
 
 
-    function createCcCampaignTeam(int $pricePlanGroupId, string $pricePlanCode): array
+    function createCcCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
     {
-        $team = [
+        $team = array_merge([
             'country' => 'JP'
-        ];
-        $paymentSetting = [
+        ], $team);
+        $paymentSetting = array_merge([
             'amount_per_user' => 0,
-        ];
+        ], $paymentSetting);
         list($teamId) = $this->createCcPaidTeam($team, $paymentSetting);
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
         $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
@@ -1032,15 +1032,17 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
-    function createInvoiceCampaignTeam(int $pricePlanGroupId, string $pricePlanCode): array
+    function createInvoiceCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
     {
-        $team = [
+        $team = am([
             'country' => 'JP',
             'timezone' => 9
-        ];
-        $paymentSetting = [
+        ], $team);
+        $paymentSetting = am([
+            'company_country' => 'JP',
+            'currency' => Enum\PaymentSetting\Currency::JPY,
             'amount_per_user' => 0,
-        ];
+        ], $paymentSetting);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
         $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);

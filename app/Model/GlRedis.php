@@ -1421,4 +1421,17 @@ class GlRedis extends AppModel
         }
         return $ret;
     }
+
+    /**
+     * Delete master data for campaign price plans
+     *
+     * @param  $groupId
+     *
+     * @return bool
+     */
+    function deleteMstCampaignPlans(int $groupId): bool
+    {
+        $key = $this->getKeyNameForMstCampaignPlans($groupId);
+        return $this->Db->del($key);
+    }
 }
