@@ -3565,6 +3565,16 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals(PaymentService::AMOUNT_PER_USER_USD, $res);
     }
 
+    function test_calcRelatedTotalChargeForUpgradingPlan()
+    {
+        $this->markTestSkipped();
+    }
+
+    function test_chargeForUpgradingCampaignPlan()
+    {
+        $this->markTestSkipped();
+    }
+
     /**
      * tearDown method
      *
