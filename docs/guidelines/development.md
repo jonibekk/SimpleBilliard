@@ -10,10 +10,10 @@ Goalousで素早く開発を始められるよう心がけております。
 ## Requirements
 以下のツールはローカルにおける開発時に必須である為、必ずインストールしてください。
 
-- Virtual Box `version = 5.0.x`
-- Vagrant `version = latest`
+- Virtual Box `version = latest`
+- Vagrant `version = 1.8.7` https://releases.hashicorp.com/vagrant/1.8.7/
 - Git `version >= latest`
-- Chef Development Kit `version = 0.17.17`
+- Chef Development Kit `version = 0.17.17` https://downloads.chef.io/chefdk/stable/0.17.17
 
 [インストール手順(windows)](http://bit.ly/2aIo1KH)
 [インストール手順(mac)](http://bit.ly/2adyLyR)
@@ -27,11 +27,11 @@ Goalousで素早く開発を始められるよう心がけております。
 ## Installation
 1. ソースファイルをClone  
 ターミナルを起動し、以下を実行  
-`git clone --recursive git@github.com:IsaoCorp/goalous2.git`  
+`git clone --recursive git@github.com:IsaoCorp/goalous.git`  
 1. vagrantを起動  
 ターミナルで以下を実行  
-`cd goalous2`  
-`vagrant up default`  
+`cd goalous`  
+`vagrant up`  
 [vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](http://bit.ly/1TnOYjQ)  
 1. 動作確認  
 ブラウザから以下にアクセス  
