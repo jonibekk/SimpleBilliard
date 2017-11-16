@@ -70,6 +70,14 @@ On Guest OS(VM):
 vagrant@precise64:/vagrant/app$ ./Console/cake migrations.migration run all
 ```
 
+### DB information for local environment
+DB name: `myapp`
+DB user: `root`
+DB password: blank
+DB host: localhost
+
+You can connect the DB from VM.
+
 ### To run test cases
 #### In Goal model case
 On Guest OS(VM):
