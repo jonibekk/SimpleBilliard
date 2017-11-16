@@ -346,7 +346,6 @@ class PaymentsController extends ApiController
     {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
-return $this->_getResponseInternalServerError();
         $teamId = $this->current_team_id;
 
         $pricePlanCode = $this->request->data('plan_code');
