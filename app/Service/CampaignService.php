@@ -263,7 +263,7 @@ class CampaignService extends AppService
         if (empty($plans)) {
             return [];
         }
-        $plans = Hash::combine($plans, '{n}.code', '{n}');
+
         // Cache data
         $GlRedis->saveMstCampaignPlans($groupId, $plans);
         $this->cache_plans[$groupId] = $plans;
@@ -290,6 +290,7 @@ class CampaignService extends AppService
             return [];
         }
 
+        $plans = Hash::combine($plans, '{n}.code', '{n}');
         $plan = Hash::get($plans, $planCode) ?? [];
         return $plan;
     }
