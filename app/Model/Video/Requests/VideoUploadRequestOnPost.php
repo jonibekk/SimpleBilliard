@@ -73,8 +73,12 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
 
     public function getBucket(): string
     {
-        // TODO: move to config
-        return 'goalous-local-masuichig-videos-original';
+        // TODO: define fqdn to extra_define
+        if (ENV_NAME == 'local') {
+            return 'goalous-local-masuichig-videos-original';
+        } else if (ENV_NAME == 'dev') {
+            return 'goalous-dev-videos-original';
+        }
     }
 
     public function getAcl(): string
