@@ -1,13 +1,15 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+
 use Goalous\Model\Enum as Enum;
 
 /**
  * Class CampaignServiceTest
  *
- * @property CampaignService  $CampaignService
+ * @property CampaignService       $CampaignService
  * @property ViewCampaignPricePlan $ViewCampaignPricePlan
  * @property PricePlanPurchaseTeam $PricePlanPurchaseTeam
+ * @property CampaignTeam          $CampaignTeam
  */
 class CampaignServiceTest extends GoalousTestCase
 {
@@ -48,6 +50,7 @@ class CampaignServiceTest extends GoalousTestCase
         $this->PaymentService = ClassRegistry::init('PaymentService');
         $this->ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         $this->PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+        $this->CampaignTeam = ClassRegistry::init('CampaignTeam');
         $this->Team = $this->Team ?? ClassRegistry::init('Team');
     }
 
@@ -107,7 +110,8 @@ class CampaignServiceTest extends GoalousTestCase
 
     function test_getPricePlanPurchaseTeam()
     {
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanCode = '1-1');
         $res = $this->CampaignService->getPricePlanPurchaseTeam($teamId);
         $this->assertNotEmpty($res);
         $expected = [
@@ -122,7 +126,8 @@ class CampaignServiceTest extends GoalousTestCase
         ];
         $this->assertEquals($expected, $res);
 
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 2, $pricePlanCode = '2-2');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 2,
+            $pricePlanCode = '2-2');
         $res = $this->CampaignService->getPricePlanPurchaseTeam($teamId);
         $this->assertNotEmpty($res);
         $expected = [
@@ -161,83 +166,151 @@ class CampaignServiceTest extends GoalousTestCase
 
     function test_findList()
     {
-        $this->createCampaignTeam($teamId = 1, $pricePlanGroupId = 1);
-        $this->assertEquals([
+        $campaignTeamId = $this->createCampaignTeam($teamId = 1, $pricePlanGroupId = 1);
+        $expected = [
             [
                 'id'               => '1',
+                'code'             => '1-1',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 50000,
+                'currency'         => 1,
+                'can_select'       => true,
                 'sub_total_charge' => '¥50,000',
+                'format_price'     => '¥50,000',
                 'tax'              => '¥4,000',
                 'total_charge'     => '¥54,000',
-                'member_count'     => '50',
+                'max_members'      => '50',
             ],
             [
                 'id'               => '2',
+                'code'             => '1-2',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 100000,
+                'currency'         => 1,
+                'can_select'       => true,
                 'sub_total_charge' => '¥100,000',
+                'format_price'     => '¥100,000',
                 'tax'              => '¥8,000',
                 'total_charge'     => '¥108,000',
-                'member_count'     => '200',
+                'max_members'      => '200',
             ],
             [
                 'id'               => '3',
+                'code'             => '1-3',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 150000,
+                'currency'         => 1,
+                'can_select'       => true,
                 'sub_total_charge' => '¥150,000',
+                'format_price'     => '¥150,000',
                 'tax'              => '¥12,000',
                 'total_charge'     => '¥162,000',
-                'member_count'     => '300',
+                'max_members'      => '300',
             ],
             [
                 'id'               => '4',
+                'code'             => '1-4',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 200000,
+                'currency'         => 1,
+                'can_select'       => true,
                 'sub_total_charge' => '¥200,000',
+                'format_price'     => '¥200,000',
                 'tax'              => '¥16,000',
                 'total_charge'     => '¥216,000',
-                'member_count'     => '400',
+                'max_members'      => '400',
             ],
             [
                 'id'               => '5',
+                'code'             => '1-5',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 250000,
+                'currency'         => 1,
+                'can_select'       => true,
                 'sub_total_charge' => '¥250,000',
+                'format_price'     => '¥250,000',
                 'tax'              => '¥20,000',
                 'total_charge'     => '¥270,000',
-                'member_count'     => '500',
+                'max_members'      => '500',
             ],
-        ], $this->CampaignService->findList(1));
+        ];
+        $res = $this->CampaignService->findList(1);
+        $this->assertEquals($expected, $res);
 
-        $this->createCampaignTeam($teamId = 2, $pricePlanGroupId = 2);
-        $this->assertEquals([
+        $pricePlanGroupId = 2;
+        $this->CampaignTeam->clear();
+        $this->CampaignTeam->id = $campaignTeamId;
+        $this->CampaignTeam->save(['price_plan_group_id' => $pricePlanGroupId], false);
+        $expected = [
             [
                 'id'               => '6',
+                'code'             => '2-1',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 500,
+                'currency'         => 2,
+                'can_select'       => true,
+                'format_price'     => '$500',
                 'sub_total_charge' => '$500',
                 'tax'              => '$0',
                 'total_charge'     => '$500',
-                'member_count'     => '50',
+                'max_members'      => '50',
             ],
             [
                 'id'               => '7',
+                'code'             => '2-2',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 1000,
+                'currency'         => 2,
+                'can_select'       => true,
+                'format_price'     => '$1,000',
                 'sub_total_charge' => '$1,000',
                 'tax'              => '$0',
                 'total_charge'     => '$1,000',
-                'member_count'     => '200',
+                'max_members'      => '200',
             ],
             [
                 'id'               => '8',
+                'code'             => '2-3',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 1500,
+                'currency'         => 2,
+                'can_select'       => true,
+                'format_price'     => '$1,500',
                 'sub_total_charge' => '$1,500',
                 'tax'              => '$0',
                 'total_charge'     => '$1,500',
-                'member_count'     => '300',
+                'max_members'      => '300',
             ],
             [
                 'id'               => '9',
+                'code'             => '2-4',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 2000,
+                'currency'         => 2,
+                'can_select'       => true,
+                'format_price'     => '$2,000',
                 'sub_total_charge' => '$2,000',
                 'tax'              => '$0',
                 'total_charge'     => '$2,000',
-                'member_count'     => '400',
+                'max_members'      => '400',
             ],
             [
                 'id'               => '10',
+                'code'             => '2-5',
+                'group_id'         => $pricePlanGroupId,
+                'price'            => 2500,
+                'currency'         => 2,
+                'can_select'       => true,
+                'format_price'     => '$2,500',
                 'sub_total_charge' => '$2,500',
                 'tax'              => '$0',
                 'total_charge'     => '$2,500',
-                'member_count'     => '500',
+                'max_members'      => '500',
             ],
-        ], $this->CampaignService->findList(2));
+        ];
+        $res = $this->CampaignService->findList($teamId);
+        $this->assertEquals($expected, $res);
+
     }
 
     function test_getPricePlanCurrency()
@@ -268,7 +341,7 @@ class CampaignServiceTest extends GoalousTestCase
         $ret = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanCode = '2-1');
         $expected = [
             'team_id'         => $teamId,
-            'price_plan_code'   => $pricePlanCode,
+            'price_plan_code' => $pricePlanCode,
         ];
         $this->assertEquals($expected, array_intersect_key($expected, $ret['PricePlanPurchaseTeam']));
     }
@@ -277,7 +350,7 @@ class CampaignServiceTest extends GoalousTestCase
     {
         $groupId = 1;
         foreach (range(1, 5) as $detailNo) {
-            yield [$groupId.'-'.$detailNo, $companyCountry = 'JP'];
+            yield [$groupId . '-' . $detailNo, $companyCountry = 'JP'];
         }
     }
 
@@ -301,7 +374,7 @@ class CampaignServiceTest extends GoalousTestCase
         $groupId = 2;
         foreach (range(1, 5) as $detailNo) {
             foreach (['DE', 'TH', 'US'] as $companyCountry) {
-                yield [$groupId.'-'.$detailNo, $companyCountry];
+                yield [$groupId . '-' . $detailNo, $companyCountry];
             }
         }
     }
@@ -398,7 +471,7 @@ class CampaignServiceTest extends GoalousTestCase
         list($teamId, $paymentSettingId) = $this->createCcPaidTeam();
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
         $purchasedPlan = $this->CampaignService->savePricePlanPurchase($teamId, $pricePlanCode);
-        $purchasedPlan = Hash::get($purchasedPlan,'PricePlanPurchaseTeam');
+        $purchasedPlan = Hash::get($purchasedPlan, 'PricePlanPurchaseTeam');
 
         $res = $this->CampaignService->findPlansForUpgrading($teamId, []);
         $this->assertEmpty($res);
@@ -422,7 +495,8 @@ class CampaignServiceTest extends GoalousTestCase
             $this->assertEquals($v['code'], $plans[$i]['code']);
             $this->assertEquals($v['max_members'], $plans[$i]['max_members']);
             $this->assertEquals($v['price'], $plans[$i]['price']);
-            $this->assertEquals($v['format_price'], $this->PaymentService->formatCharge($plans[$i]['price'], $plans[$i]['currency']));
+            $this->assertEquals($v['format_price'],
+                $this->PaymentService->formatCharge($plans[$i]['price'], $plans[$i]['currency']));
 
             if ($v['code'] == $pricePlanCode) {
                 $this->assertTrue($v['is_current_plan']);
@@ -463,7 +537,8 @@ class CampaignServiceTest extends GoalousTestCase
             $this->assertEquals($v['code'], $plans[$i]['code']);
             $this->assertEquals($v['max_members'], $plans[$i]['max_members']);
             $this->assertEquals($v['price'], $plans[$i]['price']);
-            $this->assertEquals($v['format_price'], $this->PaymentService->formatCharge($plans[$i]['price'], $plans[$i]['currency']));
+            $this->assertEquals($v['format_price'],
+                $this->PaymentService->formatCharge($plans[$i]['price'], $plans[$i]['currency']));
 
             if ($v['code'] == $pricePlanCode) {
                 $this->assertTrue($v['is_current_plan']);
@@ -490,10 +565,11 @@ class CampaignServiceTest extends GoalousTestCase
         $paymentSetting = [
             'payment_base_day' => 20,
             'company_country'  => 'JP',
-            'currency' => $currencyType
+            'currency'         => $currencyType
         ];
         GoalousDateTime::setTestNow('2017-10-21');
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $currentPricePlanCode, [], $paymentSetting);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $currentPricePlanCode, [], $paymentSetting);
 
         $upgradePricePlanCode = '1-2';
         $res = $this->CampaignService->upgradePlan($teamId, $upgradePricePlanCode, $opeUserId);
@@ -502,14 +578,14 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals($upgradedPlanPurchased['price_plan_code'], $upgradePricePlanCode);
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $baseExpected = [
-            'team_id'          => $teamId,
-            'user_id'          => $opeUserId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
-            'amount_per_user'  => 0,
-            'charge_users'     => 0,
-            'currency'         => $currencyType,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'team_id'                     => $teamId,
+            'user_id'                     => $opeUserId,
+            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'             => 0,
+            'charge_users'                => 0,
+            'currency'                    => $currencyType,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
         ];
@@ -518,8 +594,8 @@ class CampaignServiceTest extends GoalousTestCase
             $teamId, Enum\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
         );
         $expected = am($baseExpected, [
-            'total_amount'     => $chargeInfo['sub_total_charge'],
-            'tax'              => $chargeInfo['tax'],
+            'total_amount' => $chargeInfo['sub_total_charge'],
+            'tax'          => $chargeInfo['tax'],
         ]);
         $history = array_intersect_key($history, $expected);
         $this->assertEquals($history, $expected);
@@ -533,10 +609,11 @@ class CampaignServiceTest extends GoalousTestCase
         $paymentSetting = [
             'payment_base_day' => 10,
             'company_country'  => 'US',
-            'currency' => $currencyType
+            'currency'         => $currencyType
         ];
         GoalousDateTime::setTestNow('2017-10-21');
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 2, $currentPricePlanCode, [], $paymentSetting);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 2,
+            $currentPricePlanCode, [], $paymentSetting);
 
         $upgradePricePlanCode = '2-5';
         $res = $this->CampaignService->upgradePlan($teamId, $upgradePricePlanCode, $opeUserId);
@@ -545,14 +622,14 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals($upgradedPlanPurchased['price_plan_code'], $upgradePricePlanCode);
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $baseExpected = [
-            'team_id'          => $teamId,
-            'user_id'          => $opeUserId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
-            'amount_per_user'  => 0,
-            'charge_users'     => 0,
-            'currency'         => $currencyType,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'team_id'                     => $teamId,
+            'user_id'                     => $opeUserId,
+            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'             => 0,
+            'charge_users'                => 0,
+            'currency'                    => $currencyType,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
         ];
@@ -561,8 +638,8 @@ class CampaignServiceTest extends GoalousTestCase
             $teamId, Enum\PaymentSetting\Currency::USD(), $upgradePricePlanCode, $currentPricePlanCode
         );
         $expected = am($baseExpected, [
-            'total_amount'     => $chargeInfo['sub_total_charge'],
-            'tax'              => $chargeInfo['tax'],
+            'total_amount' => $chargeInfo['sub_total_charge'],
+            'tax'          => $chargeInfo['tax'],
         ]);
         $history = array_intersect_key($history, $expected);
         $this->assertEquals($history, $expected);
@@ -577,7 +654,8 @@ class CampaignServiceTest extends GoalousTestCase
             'payment_base_day' => 12,
         ];
         GoalousDateTime::setTestNow('2017-10-21');
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $currentPricePlanCode, [], $paymentSetting);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1,
+            $currentPricePlanCode, [], $paymentSetting);
 
         $upgradePricePlanCode = '1-4';
         $res = $this->CampaignService->upgradePlan($teamId, $upgradePricePlanCode, $opeUserId);
@@ -586,14 +664,14 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals($upgradedPlanPurchased['price_plan_code'], $upgradePricePlanCode);
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $baseExpected = [
-            'team_id'          => $teamId,
-            'user_id'          => $opeUserId,
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
-            'amount_per_user'  => 0,
-            'charge_users'     => 0,
-            'currency'         => $currencyType,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'team_id'                     => $teamId,
+            'user_id'                     => $opeUserId,
+            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'             => 0,
+            'charge_users'                => 0,
+            'currency'                    => $currencyType,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
         ];
@@ -602,8 +680,8 @@ class CampaignServiceTest extends GoalousTestCase
             $teamId, Enum\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
         );
         $expected = am($baseExpected, [
-            'total_amount'     => $chargeInfo['sub_total_charge'],
-            'tax'              => $chargeInfo['tax'],
+            'total_amount' => $chargeInfo['sub_total_charge'],
+            'tax'          => $chargeInfo['tax'],
         ]);
         $history = array_intersect_key($history, $expected);
         $this->assertEquals($history, $expected);
@@ -615,19 +693,19 @@ class CampaignServiceTest extends GoalousTestCase
         $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
         $this->assertEquals(count($res), 5);
         $this->assertEquals(reset($res), [
-            'id' => 1,
-            'code' => '1-1',
-            'price' => 50000,
-            'currency' => Enum\PaymentSetting\Currency::JPY,
-            'group_id' => $pricePlanGroupId,
+            'id'          => 1,
+            'code'        => '1-1',
+            'price'       => 50000,
+            'currency'    => Enum\PaymentSetting\Currency::JPY,
+            'group_id'    => $pricePlanGroupId,
             'max_members' => 50,
         ]);
         $this->assertEquals(end($res), [
-            'id' => 5,
-            'code' => '1-5',
-            'price' => 250000,
-            'currency' => Enum\PaymentSetting\Currency::JPY,
-            'group_id' => $pricePlanGroupId,
+            'id'          => 5,
+            'code'        => '1-5',
+            'price'       => 250000,
+            'currency'    => Enum\PaymentSetting\Currency::JPY,
+            'group_id'    => $pricePlanGroupId,
             'max_members' => 500,
         ]);
 
@@ -653,19 +731,19 @@ class CampaignServiceTest extends GoalousTestCase
         $res = $this->CampaignService->findAllPlansByGroupId($pricePlanGroupId);
         $this->assertEquals(count($res), 5);
         $this->assertEquals(reset($res), [
-            'id' => 6,
-            'code' => '2-1',
-            'price' => 500,
-            'currency' => Enum\PaymentSetting\Currency::USD,
-            'group_id' => $pricePlanGroupId,
+            'id'          => 6,
+            'code'        => '2-1',
+            'price'       => 500,
+            'currency'    => Enum\PaymentSetting\Currency::USD,
+            'group_id'    => $pricePlanGroupId,
             'max_members' => 50,
         ]);
         $this->assertEquals(end($res), [
-            'id' => 10,
-            'code' => '2-5',
-            'price' => 2500,
-            'currency' => Enum\PaymentSetting\Currency::USD,
-            'group_id' => $pricePlanGroupId,
+            'id'          => 10,
+            'code'        => '2-5',
+            'price'       => 2500,
+            'currency'    => Enum\PaymentSetting\Currency::USD,
+            'group_id'    => $pricePlanGroupId,
             'max_members' => 500,
         ]);
 
