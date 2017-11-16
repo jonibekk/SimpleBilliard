@@ -993,12 +993,11 @@ class GoalousTestCase extends CakeTestCase
      * Create PricePlanPurchaseTeam
      *
      * @param int    $teamId
-     * @param int    $pricePlanId
      * @param string $pricePlanCode
      *
      * @return int
      */
-    function createPurchasedTeam(int $teamId, int $pricePlanId, string $pricePlanCode): int
+    function createPurchasedTeam(int $teamId, string $pricePlanCode): int
     {
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
@@ -1006,7 +1005,6 @@ class GoalousTestCase extends CakeTestCase
         $PricePlanPurchaseTeam->create();
         $PricePlanPurchaseTeam->save([
             'team_id'           => $teamId,
-            'price_plan_id'     => $pricePlanId,
             'price_plan_code'   => $pricePlanCode,
             'purchase_datetime' => $this->currentDateTime,
         ]);
@@ -1015,7 +1013,7 @@ class GoalousTestCase extends CakeTestCase
     }
 
 
-    function createCcCampaignTeam(int $pricePlanGroupId, int $pricePlanId, string $pricePlanCode): array
+    function createCcCampaignTeam(int $pricePlanGroupId, string $pricePlanCode): array
     {
         $team = [
             'country' => 'JP'
@@ -1025,7 +1023,7 @@ class GoalousTestCase extends CakeTestCase
         ];
         list($teamId) = $this->createCcPaidTeam($team, $paymentSetting);
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
-        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanId, $pricePlanCode);
+        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
 
         return [
             $teamId,
@@ -1034,7 +1032,7 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
-    function createInvoiceCampaignTeam(int $pricePlanGroupId, int $pricePlanId, string $pricePlanCode): array
+    function createInvoiceCampaignTeam(int $pricePlanGroupId, string $pricePlanCode): array
     {
         $team = [
             'country' => 'JP',
@@ -1045,7 +1043,7 @@ class GoalousTestCase extends CakeTestCase
         ];
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
-        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanId, $pricePlanCode);
+        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
 
         return [
             $teamId,

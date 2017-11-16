@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-06 11:38+0900\n"
+"PO-Revision-Date: 2017-11-16 15:43+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -854,6 +854,13 @@ msgstr "お探しのページが見つかりませんでした。"
 msgid "Error, data conflicted."
 msgstr ""
 
+msgid ""
+"Server error occurred. I am sorry to trouble you, please try again from the "
+"beginning"
+msgstr ""
+"サーバーエラーが発生しました。お手数をお掛けして申し訳ありませんが、もう一度"
+"最初からやり直して下さい。"
+
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
@@ -904,6 +911,9 @@ msgstr "選択したプランは購入出来ません。"
 
 msgid "Invoice payment are available for Japan only"
 msgstr "日本のみ請求書払いを利用できます"
+
+msgid "Your team upgraded price plan"
+msgstr "プランアップグレードが完了しました"
 
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
@@ -3294,9 +3304,6 @@ msgstr "コメントを編集"
 msgid "Posts"
 msgstr "投稿"
 
-msgid "Message"
-msgstr "メッセージ"
-
 msgid "Save"
 msgstr "保存する"
 
@@ -4148,6 +4155,9 @@ msgstr "ログインメンバー"
 
 msgid "Unique"
 msgstr "ユニーク"
+
+msgid "Message"
+msgstr "メッセージ"
 
 msgid "Final evaluation (%s - %s)"
 msgstr "最終評価 (期間：%s - %s)"
@@ -6036,21 +6046,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#~ msgid ""
-#~ "Your campaign plan reached to the maximum user allowed. Please contact "
-#~ "for the larger plans."
-#~ msgstr ""
-#~ "現在のプランでのメンバー数が上限に達しました。より多くのメンバー数のプラン"
-#~ "についてはお問い合わせください。"
-
-#~ msgid "The number of users exceed the limit allowed by your plan."
-#~ msgstr ""
-#~ "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけま"
-#~ "す。すべて税抜価格です。"
-
-#~ msgid "CSRF Error!"
-#~ msgstr "CSRFエラーです。"
-
-#~ msgid "Enjoy your work.<br />Achieve your goals."
-#~ msgstr "チーム力を<br><q>たのしく</q>あげる"

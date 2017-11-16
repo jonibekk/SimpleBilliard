@@ -205,7 +205,7 @@ class ApiController extends BaseController
     protected function _getResponseInternalServerError($message = null)
     {
         if (empty($message)) {
-            $message = __("Internal Server Error.");
+            $message = __("Server error occurred. I am sorry to trouble you, please try again from the beginning");
         }
         return $this->_getResponse(500, null, null, $message);
     }

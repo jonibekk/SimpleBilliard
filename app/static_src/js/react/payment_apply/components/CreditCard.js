@@ -5,7 +5,7 @@ import {browserHistory, Link} from "react-router";
 import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
 import InvalidMessageBox from "~/common/components/InvalidMessageBox";
-import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
+import ConfirmCharge from "~/common/components/elements/payment/ConfirmCharge";
 import LoadingButton from "~/common/components/LoadingButton";
 
 export default class CreditCard extends Base {

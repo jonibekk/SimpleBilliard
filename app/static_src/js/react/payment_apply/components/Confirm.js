@@ -4,7 +4,7 @@ import React from 'react'
 import {browserHistory, Link} from "react-router";
 import * as Page from "~/payment_apply/constants/Page";
 import Base from "~/common/components/Base";
-import ConfirmCharge from "~/payment_apply/components/elements/ConfirmCharge";
+import ConfirmCharge from "~/common/components/elements/payment/ConfirmCharge";
 import {PaymentSetting} from "~/common/constants/Model";
 import LoadingButton from "~/common/components/LoadingButton";
 

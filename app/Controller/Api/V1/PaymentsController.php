@@ -346,7 +346,7 @@ class PaymentsController extends ApiController
     {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
-
+return $this->_getResponseInternalServerError();
         $teamId = $this->current_team_id;
 
         $pricePlanCode = $this->request->data('plan_code');
@@ -361,6 +361,8 @@ class PaymentsController extends ApiController
         if(!$CampaignService->upgradePlan($teamId, $pricePlanCode, $userId)) {
             return $this->_getResponseInternalServerError();
         }
+        $this->Notification->outSuccess(__("Your team upgraded price plan"));
+
         return $this->_getResponseSuccess();
     }
 
