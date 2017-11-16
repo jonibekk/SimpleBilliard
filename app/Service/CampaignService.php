@@ -77,7 +77,6 @@ class CampaignService extends AppService
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
 
-        $PricePlanPurchaseTeam->validate = $PricePlanPurchaseTeam->validateUpdate;
         $PricePlanPurchaseTeam->set(['price_plan_code' => $planCode]);
         if (!$PricePlanPurchaseTeam->validates()) {
             $errors = $this->validationExtract($PricePlanPurchaseTeam->validationErrors);
@@ -222,26 +221,29 @@ class CampaignService extends AppService
      */
     function findList(int $teamId): array
     {
-        /** @var CampaignTeam $CampaignTeam */
-        $CampaignTeam = ClassRegistry::init("CampaignTeam");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
         $res = [];
-        $campaigns = $CampaignTeam->findPricePlans($teamId);
-        foreach ($campaigns as $campaign) {
-            $currencyType = $campaign['currency'];
-            $subTotalCharge = $campaign['price'];
+        $campaignTeam = $this->getCampaignTeam($teamId);
+        $chargeUserCnt = $TeamMember->countChargeTargetUsers($teamId);
+        $pricePlans = $this->findAllPlansByGroupId($campaignTeam['price_plan_group_id']);
+        foreach ($pricePlans as $plan) {
+            $currencyType = $plan['currency'];
+            $subTotalCharge = $plan['price'];
             $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP',
                 $subTotalCharge) : 0;
             $totalCharge = $subTotalCharge + $tax;
-            $res[] = [
-                'id'               => $campaign['id'],
-                'sub_total_charge' => $PaymentService->formatCharge($subTotalCharge, $currencyType),
+            $formatSubTotal = $PaymentService->formatCharge($subTotalCharge, $currencyType);
+            $res[] = am($plan, [
+                'can_select' => ($chargeUserCnt <= $plan['max_members']),
+                'format_price' => $formatSubTotal,
+                'sub_total_charge' => $formatSubTotal,
                 'tax'              => $PaymentService->formatCharge($tax, $currencyType),
                 'total_charge'     => $PaymentService->formatCharge($totalCharge, $currencyType),
-                'member_count'     => $campaign['max_members'],
-            ];
+            ]);
         }
         return $res;
     }

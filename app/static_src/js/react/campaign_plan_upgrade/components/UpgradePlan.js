@@ -36,8 +36,8 @@ export default class UpgradePlan extends Base {
   }
 
   render() {
-    const {campaign} = this.props
-    const selected_price_plan = campaign.selected_price_plan
+    const {campaign} = this.props;
+    const selected_price_plan = campaign.selected_price_plan;
     return (
       <section className="panel payment">
         <div className="panel-container">
@@ -47,7 +47,6 @@ export default class UpgradePlan extends Base {
             price_plans={campaign.price_plans}
             selected_price_plan_code={selected_price_plan.code}
             selectPricePlan={(plan) => this.selectPricePlan(plan)}
-            onChange={(e) => this.onChange(e, "key_result")}
           />
           <p>{__('Larger plans available on request. All prices are without tax.')}</p>
           {selected_price_plan.code &&

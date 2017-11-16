@@ -28,7 +28,7 @@ class PaymentsController extends ApiController
         ],
         'campaign'       => [
             'PricePlanPurchaseTeam' => [
-                'price_plan_id'
+                'price_plan_code'
             ]
         ],
         'company'        => [
@@ -132,11 +132,11 @@ class PaymentsController extends ApiController
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
         if ($CampaignService->isCampaignTeam($teamId)) {
-            $pricePlanId = Hash::get($this->request->data, 'price_plan_purchase_team.price_plan_id');
-            if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, $companyCountry)) {
+            $pricePlanCode = Hash::get($this->request->data, 'price_plan_purchase_team.price_plan_code');
+            if (!$pricePlanCode || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanCode, $companyCountry)) {
                 return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
             }
-            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
+            $requestData = Hash::insert($requestData, 'price_plan_code', $pricePlanCode);
         }
 
         // Register credit card, and apply payment
@@ -301,7 +301,7 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('campaigns', $dataTypes)) {
             /** @var CampaignService $CampaignService */
             $CampaignService = ClassRegistry::init("CampaignService");
-            $res['campaigns'] = $CampaignService->findList($teamId);
+            $res['price_plans'] = $CampaignService->findList($teamId);
         }
 
         return $this->_getResponseSuccess($res);
