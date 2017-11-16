@@ -1,6 +1,10 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::uses('TranscodeNotificationAwsSns', 'Model/Video/Stream');
+App::uses('VideoStream', 'Model');
+App::uses('PostResource', 'Model');
+App::uses('PostShareCircle', 'Model');
+App::uses('PostResourceService', 'Service');
 
 use Goalous\Model\Enum as Enum;
 
@@ -8,20 +12,26 @@ class SnsNotificationController extends ApiController
 {
     public function beforeFilter()
     {
+        // parent::beforeFilter();
         $this->Auth->allow();
-        parent::beforeFilter();
+        $this->Security->validatePost = false;
+        $this->Security->csrfCheck = false;
     }
 
     public function callback_notify()
     {
+        // TODO: fix these code.
+        // current code is for just 動作確認(for test)
         $jsonBody = $this->request->input();
         $jsonData = json_decode($jsonBody, true);
         $headers = iterator_to_array($this->getRequestHeaders());
+        /*
         CakeLog::info(sprintf('log video callback: %s', AppUtil::jsonOneLine([
             'headers' => $headers,
             'jsonBody' => $jsonData,
             'message' => json_decode($jsonData['Message']),
         ])));
+        */
         $result = [
             'meta' => [
                 'status' => '200',
@@ -39,12 +49,95 @@ class SnsNotificationController extends ApiController
         $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString($jsonBody);
 
         $progressState = $transcodeNotificationAwsSns->getProgressState();
+        // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id');// not used
+        $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
+
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+        $videoStream = $VideoStream->getById($videoStreamId);
+        $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
         if ($progressState->equals(Enum\Video\VideoTranscodeProgress::PROGRESS())) {
-
+            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::QUEUED())) {
+                return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not queued");
+            }
+            $status = Enum\Video\VideoTranscodeStatus::TRANSCODING;
+            $videoStream['status_transcode'] = $status;
+            $VideoStream->save($videoStream);
+            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
+                'video_streams.id' => $videoStreamId,
+                'state' => $progressState->getValue(),
+                'status_value' => $status,
+            ])));
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
-
+            $status = Enum\Video\VideoTranscodeStatus::ERROR;
+            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
+                return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not transcoding");
+            }
+            $videoStream['status_transcode'] = $status;
+            $VideoStream->save($videoStream);
+            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
+                'video_streams.id' => $videoStreamId,
+                'state' => $progressState->getValue(),
+                'status_value' => $status,
+            ])));
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
+            $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
+            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
+                return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not transcoding");
+            }
+            $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
+            $videoStream['duration'] = $transcodeNotificationAwsSns->getDuration();
+            $videoStream['aspect_ratio'] = $transcodeNotificationAwsSns->getAspectRatio();
+            $videoStream['master_playlist_path'] = $transcodeNotificationAwsSns->getPlaylistPath();
+            $videoStream['transcode_info'] = "[]";// TODO: set ETS JobId at least
+            $VideoStream->save($videoStream);
+            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
+                'video_streams.id' => $videoStreamId,
+                'state' => $progressState->getValue(),
+                'status_value' => $status,
+            ])));
+            // ###############################################################################
+            // TODO: move these paragraph to Service
 
+            /** @var PostResource $PostResource */
+            $PostResource = ClassRegistry::init('PostResource');
+            $postDraftId = $PostResource->getPostDraftIdByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
+
+            /** @var PostDraft $PostDraft */
+            $PostDraft = ClassRegistry::init('PostDraft');
+            $postDraft = $PostDraft->getById($postDraftId);
+            $postDraftData = json_decode($postDraft['draft_data'], true);
+
+            // create a post from draft post
+            $post = $this->Post->save([
+                'Post' => [
+                    'user_id'          => $postDraft['user_id'],
+                    'team_id'          => $postDraft['team_id'],
+                    'body'             => h($postDraftData['body']),
+                    'type'             => $postDraftData['type'],
+                    'goal_id'          => $postDraftData['goal_id'],
+                    'circle_id'        => $postDraftData['circle_id'],
+                    'action_result_id' => $postDraftData['action_result_id'],
+                    'key_result_id'    => $postDraftData['key_result_id'],
+                ],
+            ]);
+
+            CakeLog::info(sprintf('draft post published: %s', AppUtil::jsonOneLine([
+                'post' => $post,
+            ])));
+            /** @var PostResourceService $PostResourceService */
+            $PostResourceService = ClassRegistry::init('PostResourceService');
+            $PostResourceService->updatePostIdByPostDraftId($post['Post']['id'], $postDraft['id']);
+
+            /** @var PostShareCircle $PostShareCircle */
+            $PostShareCircle = ClassRegistry::init('PostShareCircle');
+            $PostShareCircle->add($post['Post']['id'], $postDraftData['share_circle_ids'], $postDraft['team_id']);
+
+            // draft is published, deleting draft
+            $postDraft['del_flg'] = 1;
+            $postDraft['post_id'] = $post['Post']['id'];
+            $PostDraft->save($postDraft);
+            // ###############################################################################
         }
 
         return $this->_getResponseSuccess($result);

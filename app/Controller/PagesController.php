@@ -159,10 +159,9 @@ class PagesController extends AppController
         }
 
         try {
-            $this->set([
-                'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
-                    $this->request->params)
-            ]);
+            $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
+            //CakeLog::info(AppUtil::jsonOneLine($posts));
+            $this->set(['posts' => $posts]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
@@ -170,7 +169,6 @@ class PagesController extends AppController
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init("PostDraft");
         $postDrafts = $PostDraft->getByUserIdAndTeamId($this->Auth->user('id'), $this->current_team_id);
-        CakeLog::info(var_export($postDrafts, 1));
         $this->set('post_drafts', $postDrafts);
     }
 

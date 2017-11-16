@@ -1,5 +1,10 @@
 <?= $this->App->viewStartComment()?>
 
+<?php
+if (!isset($post_drafts)) {
+    $post_drafts = [];
+}
+?>
 <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
 <script src="https://unpkg.com/video.js/dist/video.js"></script>
 <script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
@@ -30,27 +35,41 @@
                 </span>
             </a>
             <div class="font_11px font_lightgray oneline-ellipsis">
-                <span class="label label-primary">PROCESSING</span>
-                <span title="2017年11月14日 18:35">8分前</span>
-                <span class="font_lightgray"> ･ </span>
-                <a href="#" data-url="/posts/ajax_get_share_circles_users_modal/post_id:102" class="modal-ajax-get-share-circles-users link-dark-gray">
-                    <i class="fa fa-circle-o"></i>&nbsp;~~~~に共有予定(この投稿は自分のみ見えます)
-                </a>
+                <span class="label label-primary">PROCESSING</span><i class="fa fa-2 fa-spinner fa-spin" aria-hidden="true"></i>
+                <?php
+                    $minutesAgo = (time() - $post_draft['created']) / 60;
+                    $minutesAgo = floor($minutesAgo);
+                ?>
+                <span title=""><?= $minutesAgo ?>minutes ago</span>
+                <div>
+                <span href="#" data-url="" class="modal-ajax-get-share-circles-users link-dark-gray">
+                    <i class="fa fa-circle-o"></i>&nbsp;~~~~に共有予定(動画処理完了後に公開されます)
+                </span>
+                </div>
             </div>
         </div>
 
         <div class="col feed-contents post-contents showmore font_14px font_verydark box-align" id="PostTextBody_102">
+            <div>
+                <?php
+                    $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($post_draft['post_resources'][0]['status_transcode']));
+                ?>
+                [drafts.id: <?= $post_draft['id'] ?>][resource_id: <?=$post_draft['post_resources'][0]['id'] ?> / status: <?= $transcodeStatus->getValue() ?>(<?= $transcodeStatus->getKey() ?>)]
+            </div>
             <?= $post_draft['data']['body'] ?>
             <?php
                 // TODO: foreach the post_resources
                 $videoStreamId = sprintf('video_stream_%d', $post_draft['post_resources'][0]['id']);
             ?>
+
+            <!--
             <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin" controls playsinline>
                 <source
                         src="https://s3-ap-northeast-1.amazonaws.com/goalous-video-post-test/transcoded/1/2017-10-12.aes/playlist.m3u8"
                         type="application/x-mpegURL">
             </video>
             <script>videojs('<?= $videoStreamId ?>');</script>
+            -->
         </div>
 
         <div style="display: none;"><?= json_encode($post_draft) ?></div>

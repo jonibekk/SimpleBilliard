@@ -30,7 +30,7 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
             throw new RuntimeException('failed to parse json message string');
         }
         $this->messageData = $messageData;
-        CakeLog::info(sprintf('message data: %s', AppUtil::jsonOneLine($messageData)));
+        //CakeLog::info(sprintf('message data: %s', AppUtil::jsonOneLine($messageData)));
     }
 
     public function getProgressState(): Enum\Video\VideoTranscodeProgress {
@@ -55,14 +55,32 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
         return $this->messageData['outputKeyPrefix'];
     }
 
+    public function getAspectRatio(): float
+    {
+        // TODO: fix not use magic number 0
+        $height = floatval($this->messageData['outputs'][0]['height']);
+        $width  = floatval($this->messageData['outputs'][0]['width']);
+        return $width/$height;
+    }
+
+    public function getDuration(): int
+    {
+        // TODO: fix not use magic number 0
+        return intval($this->messageData['outputs'][0]['duration']);
+    }
+
     public function getPlaylistPath(): string
     {
+        // TODO: define somewhere m3u8
         return $this->getOutputKeyPrefix() . 'playlist.m3u8';
     }
 
-    public function getMetaData(string $key, $default): string
+    public function getMetaData(string $key, $default = null)
     {
-        return "";
+        if (isset($this->messageData['userMetadata'][$key])) {
+            return $this->messageData['userMetadata'][$key];
+        }
+        return $default;
     }
 
     public function isError(): bool

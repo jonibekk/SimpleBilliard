@@ -239,7 +239,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                             success: function(data) {
                                 console.log(data)
                                 if (data.data.code == "success") {
-
+                                    location.reload();
                                 }
                             }
                         });

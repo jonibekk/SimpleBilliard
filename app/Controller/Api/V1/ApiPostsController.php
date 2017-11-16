@@ -5,6 +5,7 @@ App::import('Service', 'PostDraftService');
 App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
 App::uses('Circle', 'Model');
+App::uses('GoalousDateTime', 'DateTime');
 
 use Goalous\Model\Enum as Enum;
 
@@ -93,7 +94,7 @@ class ApiPostsController extends ApiController
 
             $postDraft = $PostDraftService->createPostDraft($user['id'], $teamId);
             $postDraft['draft_data'] = json_encode([
-                'body'             => 'i post the movie!\n(動画を投稿しました!)',
+                'body'             => GoalousDateTime::now()->format("Y-m-d H:i:s") . PHP_EOL . 'i post the movie!'.PHP_EOL.'(動画を投稿しました!)',
                 'type'             => 1,
                 'goal_id'          => null,
                 'circle_id'        => null,

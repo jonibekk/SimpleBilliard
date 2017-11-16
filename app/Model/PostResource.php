@@ -9,14 +9,27 @@ use Goalous\Model\Enum as Enum;
  */
 class PostResource extends AppModel
 {
+    const COLUMN_POST = 'post_id';
+    const COLUMN_POST_DRAFT = 'post_draft_id';
+
+    function getResourcesByPostId(int $postDraftId): array
+    {
+        return $this->getResourcesByPostOrPostDraftId($postDraftId, static::COLUMN_POST);
+    }
+
     function getResourcesByPostDraftId(int $postDraftId): array
+    {
+        return $this->getResourcesByPostOrPostDraftId($postDraftId, static::COLUMN_POST_DRAFT);
+    }
+
+    private function getResourcesByPostOrPostDraftId(int $id, string $postOrDraft): array
     {
         $options = [
             'fields'     => [
                 '*'
             ],
             'conditions' => [
-                'post_draft_id' => $postDraftId,
+                $postOrDraft => $id,
             ],
         ];
         $postResources = Hash::extract($this->find('all', $options), '{n}.PostResource');
@@ -28,13 +41,35 @@ class PostResource extends AppModel
             $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
             switch ($resourceType->getValue()) {
                 case Enum\Post\PostResourceType::VIDEO_STREAM:
-                    return $VideoStream->getById($postResource['resource_id']);
+                    $resourceVideoStream = $VideoStream->getById($postResource['resource_id']);
+                    $playlistPath = $resourceVideoStream['master_playlist_path'];
+                    // TODO: define fqdn to extra_define
+                    if (ENV_NAME == 'local') {
+                        $playlistPath = 'https://s3-ap-northeast-1.amazonaws.com/goalous-local-masuichig-videos/' . $playlistPath;
+                    } else if (ENV_NAME == 'dev') {
+                        $playlistPath = 'https://s3-ap-northeast-1.amazonaws.com/goalous-dev-videos/' . $playlistPath;
+                    }
+                    $resourceVideoStream['playlist_path'] = $playlistPath;
+                    return $resourceVideoStream;
             }
         }, $postResources);
     }
 
-    private function getResourceVideoStream(int $videoStreamId): array
+    function getPostDraftIdByResourceTypeAndResourceId(Enum\Post\PostResourceType $resourceType, int $resourceId)/*: ?int */
     {
-
+        $options = [
+            'fields'     => [
+                'post_draft_id'
+            ],
+            'conditions' => [
+                'resource_type' => $resourceType->getValue(),
+                'resource_id'   => $resourceId,
+            ],
+        ];
+        $r = $this->find('first', $options);
+        if (empty($r)) {
+            return null;
+        }
+        return $r['PostResource']['post_draft_id'];
     }
 }

@@ -5,6 +5,7 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
+App::uses('PostResource', 'Model');
 
 /**
  * Post Model
@@ -832,6 +833,15 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
         //未読件数を取得
         $res = $this->getCommentMyUnreadCount($res);
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        // get post resources
+        foreach ($res as $key => $post) {
+            $res[$key] = am($post, [
+                'PostResources' => $PostResource->getResourcesByPostId($post['Post']['id']),
+            ]);
+        }
         return $res;
     }
 

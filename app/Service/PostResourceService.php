@@ -24,4 +24,19 @@ class PostResourceService extends AppService
         $result = $PostResource->save();
         return reset($result);
     }
+
+
+    function updatePostIdByPostDraftId(int $postId, $postDraftId): bool
+    {
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        $ret = $PostResource->updateAll([
+            'PostResource.post_id' => $postId,
+        ], [
+            'PostResource.post_draft_id' => $postDraftId,
+        ]);
+
+        return !empty($ret);
+    }
 }
