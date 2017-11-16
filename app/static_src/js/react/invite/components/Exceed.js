@@ -18,12 +18,6 @@ export default class Exceed extends Base {
         super.componentWillUnmount.apply(this)
     }
 
-    // Display intercom message window
-    showIntercom(e) {
-        e.preventDefault();
-        Intercom('showNewMessage', __('Please inform about upgrade my Campaign Plan'));
-    }
-
     render() {
         return (
             <section className="panel panel-default mod-form col-sm-8 col-sm-offset-2 clearfix gl-form">
@@ -35,7 +29,7 @@ export default class Exceed extends Base {
                         </label>
                     </div>
                     <div className="btnGroupForForm">
-                        <a className="btnGroupForForm-next" href="#" onClick={(e) => this.showIntercom(e)} >{__("Contact Us")}</a>
+                        <a className="btnGroupForForm-next" href="/payments/upgrade_plan" >{__("Upgrade Plan")}</a>
                     </div>
                 </form>
             </section>
