@@ -3794,6 +3794,7 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentSetting = ['payment_base_day' => 1, 'company_country' => $companyCountry];
         list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => -12], $paymentSetting);
         $currencyType = Enum\PaymentSetting\Currency::USD();
+        $this->PaymentService->clearCachePaymentSettings();
 
         // Case: Upgraded plan date is as same as payment base day
         $upgradePlanCode = '2-2';
@@ -3962,6 +3963,7 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-11-14 15:00:00');
         list($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam(1, $currentPlanCode, $team,
             $paymentSetting);
+        $this->PaymentService->clearCachePaymentSettings();
 
         // Case: Upgraded plan date is as same as payment base day
         $this->PaymentService->chargeForUpgradingCampaignPlan(
@@ -4058,6 +4060,7 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-12-01 11:59:00');
         list($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam(2, $currentPlanCode, $team,
             $paymentSetting);
+        $this->PaymentService->clearCachePaymentSettings();
         $this->Team->current_team_id = $teamId;
         // Case: Upgraded plan date is as same as payment base day
         $this->PaymentService->chargeForUpgradingCampaignPlan(
@@ -4153,6 +4156,7 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2022-03-03');
         list($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam(1, $currentPlanCode, [],
             $paymentSetting);
+        $this->PaymentService->clearCachePaymentSettings();
         $this->Team->current_team_id = $teamId;
 
         // Case: Upgraded plan date is as same as payment base day

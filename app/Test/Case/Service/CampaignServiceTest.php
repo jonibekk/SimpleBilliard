@@ -28,7 +28,11 @@ class CampaignServiceTest extends GoalousTestCase
         'app.view_price_plan',
         'app.price_plan_purchase_team',
         'app.payment_setting',
-        'app.credit_card'
+        'app.credit_card',
+        'app.charge_history',
+        'app.invoice',
+        'app.invoice_history',
+        'app.invoice_histories_charge_history',
     );
 
     /**
@@ -79,7 +83,6 @@ class CampaignServiceTest extends GoalousTestCase
         $this->createCampaignTeam($teamId = 1, $pricePlanGroupId = 1);
         $this->createPurchasedTeam($teamId = 1, $pricePlanCode = '1-1');
         $plan = $this->CampaignService->getTeamPricePlan(1);
-        print_r($plan);
         $this->assertEquals([
             'id'          => '1',
             'group_id'    => '1',
@@ -414,7 +417,6 @@ class CampaignServiceTest extends GoalousTestCase
             ]),
             '{n}.ViewCampaignPricePlan'
         );
-        print_r($res);
         foreach ($res as $i => $v) {
             $this->assertEquals($v['id'], $plans[$i]['id']);
             $this->assertEquals($v['code'], $plans[$i]['code']);
@@ -478,14 +480,133 @@ class CampaignServiceTest extends GoalousTestCase
                 $this->assertTrue($v['can_select']);
             }
         }
-
-        //US
-        // TODO
     }
 
-    function test_upgradePlan()
+    function test_upgradePlan_ccJp()
     {
-        $this->markTestSkipped();
+        $opeUserId = 1;
+        $currentPricePlanCode = '1-1';
+        $currencyType = Enum\PaymentSetting\Currency::JPY;
+        $paymentSetting = [
+            'payment_base_day' => 20,
+            'company_country'  => 'JP',
+            'currency' => $currencyType
+        ];
+        GoalousDateTime::setTestNow('2017-10-21');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $currentPricePlanCode, [], $paymentSetting);
+
+        $upgradePricePlanCode = '1-2';
+        $res = $this->CampaignService->upgradePlan($teamId, $upgradePricePlanCode, $opeUserId);
+        $this->assertTrue($res);
+        $upgradedPlanPurchased = $this->PricePlanPurchaseTeam->getByTeamId($teamId);
+        $this->assertEquals($upgradedPlanPurchased['price_plan_code'], $upgradePricePlanCode);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $baseExpected = [
+            'team_id'          => $teamId,
+            'user_id'          => $opeUserId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'  => 0,
+            'charge_users'     => 0,
+            'currency'         => $currencyType,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
+        ];
+
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, Enum\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
+        );
+        $expected = am($baseExpected, [
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
+        ]);
+        $history = array_intersect_key($history, $expected);
+        $this->assertEquals($history, $expected);
+    }
+
+    function test_upgradePlan_ccForeign()
+    {
+        $opeUserId = 1;
+        $currentPricePlanCode = '2-2';
+        $currencyType = Enum\PaymentSetting\Currency::USD;
+        $paymentSetting = [
+            'payment_base_day' => 10,
+            'company_country'  => 'US',
+            'currency' => $currencyType
+        ];
+        GoalousDateTime::setTestNow('2017-10-21');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 2, $currentPricePlanCode, [], $paymentSetting);
+
+        $upgradePricePlanCode = '2-5';
+        $res = $this->CampaignService->upgradePlan($teamId, $upgradePricePlanCode, $opeUserId);
+        $this->assertTrue($res);
+        $upgradedPlanPurchased = $this->PricePlanPurchaseTeam->getByTeamId($teamId);
+        $this->assertEquals($upgradedPlanPurchased['price_plan_code'], $upgradePricePlanCode);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $baseExpected = [
+            'team_id'          => $teamId,
+            'user_id'          => $opeUserId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'  => 0,
+            'charge_users'     => 0,
+            'currency'         => $currencyType,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
+        ];
+
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, Enum\PaymentSetting\Currency::USD(), $upgradePricePlanCode, $currentPricePlanCode
+        );
+        $expected = am($baseExpected, [
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
+        ]);
+        $history = array_intersect_key($history, $expected);
+        $this->assertEquals($history, $expected);
+    }
+
+    function test_upgradePlan_invoice()
+    {
+        $opeUserId = 1;
+        $currentPricePlanCode = '1-3';
+        $currencyType = Enum\PaymentSetting\Currency::JPY;
+        $paymentSetting = [
+            'payment_base_day' => 12,
+        ];
+        GoalousDateTime::setTestNow('2017-10-21');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $currentPricePlanCode, [], $paymentSetting);
+
+        $upgradePricePlanCode = '1-4';
+        $res = $this->CampaignService->upgradePlan($teamId, $upgradePricePlanCode, $opeUserId);
+        $this->assertTrue($res);
+        $upgradedPlanPurchased = $this->PricePlanPurchaseTeam->getByTeamId($teamId);
+        $this->assertEquals($upgradedPlanPurchased['price_plan_code'], $upgradePricePlanCode);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $baseExpected = [
+            'team_id'          => $teamId,
+            'user_id'          => $opeUserId,
+            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'  => 0,
+            'charge_users'     => 0,
+            'currency'         => $currencyType,
+            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
+        ];
+
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, Enum\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
+        );
+        $expected = am($baseExpected, [
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
+        ]);
+        $history = array_intersect_key($history, $expected);
+        $this->assertEquals($history, $expected);
     }
 
     function test_findAllPlansByGroupId_yen()
