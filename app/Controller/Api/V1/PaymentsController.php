@@ -334,6 +334,88 @@ class PaymentsController extends ApiController
     }
 
     /**
+     * Upgrade price plan
+     *
+     * @return CakeResponse
+     */
+    function post_upgrade_plan()
+    {
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+
+        $teamId = $this->current_team_id;
+
+        $pricePlanCode = $this->request->data('plan_code');
+        // Validate
+        $validateRes = $this->_validateUpgradePlan($teamId, $pricePlanCode);
+        if ($validateRes !== true) {
+            return $validateRes;
+        }
+
+        // Upgrade plan
+        $userId = $this->Auth->user('id');
+        if(!$CampaignService->upgradePlan($teamId, $pricePlanCode, $userId)) {
+            return $this->_getResponseInternalServerError();
+        }
+        return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Validation for upgrading plan
+     *
+     * @param int $teamId
+     * @param     $planCode No type hinting because of validation
+     *
+     * @return bool|CakeResponse
+     */
+    private function _validateUpgradePlan(int $teamId, $planCode)
+    {
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $PricePlanPurchaseTeam->validate = $PricePlanPurchaseTeam->validateUpdate;
+        $PricePlanPurchaseTeam->set(['price_plan_code' => $planCode]);
+        if (!$PricePlanPurchaseTeam->validates()) {
+            $errors = $this->validationExtract($PricePlanPurchaseTeam->validationErrors);
+            return $this->_getResponseValidationFail($errors);
+        }
+
+        // Check if plan purchased
+        $purchasedTeam = $this->getPricePlanPurchaseTeam($teamId);
+        if (empty($purchasedTeam)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if exist upgrading plan
+        $currentPlan = $this->getPlanByCode($purchasedTeam['price_plan_code']);
+        $upgradePlan = $this->getPlanByCode($planCode);
+        if (empty($upgradePlan) || empty($currentPlan)) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if price plan group of upgrading plan equals the group of current plan
+        if ($upgradePlan['group_id'] != $currentPlan['price_plan_group_id']) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if not downgrade
+        if ($upgradePlan['max_members'] <= $currentPlan['max_members']) {
+            return $this->_getResponseForbidden();
+        }
+
+        // Check if charge members don't over max members of upgrading plan
+        $chargeMemberCount = $TeamMember->countChargeTargetUsers($teamId);
+        if ($chargeMemberCount > $upgradePlan['max_members']) {
+            return $this->_getResponseForbidden();
+        }
+
+        return true;
+    }
+
+
+    /**
      * Validation API
      *
      * @query_param fields
