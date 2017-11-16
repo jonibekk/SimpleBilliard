@@ -922,9 +922,9 @@ class PaymentService extends AppService
             // Variable to later use
             $result['customerId'] = $customerId;
             $isCampaign = $CampaignService->isCampaignTeam($teamId);
-            $pricePlanId = $isCampaign ? Hash::get($paymentData, 'price_plan_id') : null;
+            $pricePlanCode = $isCampaign ? Hash::get($paymentData, 'price_plan_code') : null;
             $companyCountry = Hash::get($paymentData, 'company_country');
-            $currency = $isCampaign ? $CampaignService->getPricePlanCurrency($pricePlanId) :
+            $currency = $isCampaign ? $CampaignService->getPricePlanCurrency($pricePlanCode) :
                 $this->getCurrencyTypeByCountry($companyCountry);
             $timezone = $Team->getTimezone();
             $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
@@ -981,16 +981,16 @@ class PaymentService extends AppService
             $campaignTeamId = null;
             if ($isCampaign) {
                 // Register campaign purchase
-                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanId);
+                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanCode);
                 if (!$pricePlanPurchase) {
-                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanId: %s",
-                        $teamId, $pricePlanId));
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanCode: %s",
+                        $teamId, $pricePlanCode));
                 }
                 $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
                 $campaignTeamId = Hash::get($CampaignService->getCampaignTeam($teamId, ['id']), 'id');
 
                 // Get campaign price
-                $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
+                $chargeInfo = $CampaignService->getChargeInfo($pricePlanCode);
             } else {
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $membersCount, $paymentData);
             }
@@ -1118,7 +1118,7 @@ class PaymentService extends AppService
      * @param array $paymentData
      * @param array $invoiceData
      * @param bool  $checkSentInvoice
-     * @param       $pricePlanId
+     * @param       $pricePlanCode
      *
      * @return bool
      */
@@ -1128,7 +1128,7 @@ class PaymentService extends AppService
         array $paymentData,
         array $invoiceData,
         bool $checkSentInvoice = true,
-        $pricePlanId = null
+        $pricePlanCode = null
     ) {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
@@ -1199,11 +1199,11 @@ class PaymentService extends AppService
             }
 
             // Save CampaignPurchase
-            if ($pricePlanId !== null && $CampaignService->isCampaignTeam($teamId)) {
-                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanId);
+            if ($pricePlanCode !== null && $CampaignService->isCampaignTeam($teamId)) {
+                $pricePlanPurchase = $CampaignService->savePricePlanPurchase($teamId, $pricePlanCode);
                 if (!$pricePlanPurchase) {
-                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanId: %s",
-                        $teamId, $pricePlanId));
+                    throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanCode: %s",
+                        $teamId, $pricePlanCode));
                 }
             }
 
@@ -1332,12 +1332,12 @@ class PaymentService extends AppService
             $targetChargeHistories = $PaymentService->findTargetInvoiceChargeHistories($teamId, $time);
             $pricePlanPurchase = $CampaignService->getPricePlanPurchaseTeam($teamId);
             $isCampaign = ($pricePlanPurchase != null);
-            $pricePlanId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.price_plan_id');
+            $pricePlanCode = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.price_plan_code');
             $pricePlanPurchaseId = Hash::get($pricePlanPurchase, 'PricePlanPurchaseTeam.id');
             $campaignTeamId = Hash::get($pricePlanPurchase, 'CampaignTeam.id');
 
-            if ($isCampaign && $pricePlanId) {
-                $chargeInfo = $CampaignService->getChargeInfo($pricePlanId);
+            if ($isCampaign && $pricePlanCode) {
+                $chargeInfo = $CampaignService->getChargeInfo($pricePlanCode);
             } else {
                 $chargeInfo = $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeMemberCount, $paymentSetting);
             }
@@ -1832,7 +1832,7 @@ class PaymentService extends AppService
         $usersCount = 0;
         $chargeInfo = $this->calcRelatedTotalChargeForUpgradingPlan(
             $teamId,
-            new Enum\PaymentSetting\Currency($paymentSetting['currency']),
+            new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']),
             $upgradePlanCode,
             $currentPlanCode
         );
@@ -1870,7 +1870,7 @@ class PaymentService extends AppService
                     'user_id'          => $opeUserId,
                     'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
                     'charge_type'      => $chargeType->getValue(),
-                    'amount_per_user'  => $paymentSetting['amount_per_user'],
+                    'amount_per_user'  => 0,
                     'total_amount'     => $chargeInfo['sub_total_charge'],
                     'tax'              => $chargeInfo['tax'],
                     'charge_users'     => $usersCount,

@@ -116,7 +116,7 @@ class MonthlyCreditCardChargeShellTest extends GoalousTestCase
     function test_main_campaign_plans()
     {
         $this->Team->deleteAll(['del_flg' => false]);
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
         $usersCount = 10;
         $this->Team->current_team_id = $teamId;
         $this->createActiveUsers($teamId, $usersCount - 1);

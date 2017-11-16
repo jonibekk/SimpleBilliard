@@ -12,7 +12,6 @@ class PricePlanPurchaseTeamFixture extends CakeTestFixtureEx {
 	public $fields = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-		'price_plan_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true),
 		'price_plan_code' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'External key: mst_price_plans.code', 'charset' => 'utf8mb4'),
 		'purchase_datetime' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),

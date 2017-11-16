@@ -203,8 +203,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         GoalousDateTime::setTestNow($testNow);
         $this->Team->deleteAll(['del_flg' => false]);
         $usersCount = 10;
-        list ($teamId, $paymentSettingId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1,
-            $pricePlanId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $paymentSettingId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
         $this->Team->current_team_id = $teamId;
         $this->createActiveUsers($teamId, $usersCount - 1);
 

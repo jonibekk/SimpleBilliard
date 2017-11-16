@@ -84,7 +84,6 @@ class CampaignService extends AppService
         $options = [
             'fields' => [
                 'PricePlanPurchaseTeam.id',
-                'PricePlanPurchaseTeam.price_plan_id',
                 'PricePlanPurchaseTeam.price_plan_code',
                 'CampaignTeam.id',
                 'CampaignTeam.price_plan_group_id',
@@ -136,15 +135,15 @@ class CampaignService extends AppService
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
-        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
+        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_code']);
         if (empty($purchasedPlan)) {
             return 0;
         }
 
-        $priceId = $purchasedPlan['price_plan_id'];
-        $pricePlan = $CampaignPricePlan->getById($priceId, ['max_members']);
+        $pricePlanCode = $purchasedPlan['price_plan_code'];
+        $pricePlan = $this->getPlanByCode($pricePlanCode);
         if (empty($pricePlan)) {
-            CakeLog::debug("CampaignPricePlan not found with id: $priceId");
+            CakeLog::debug("CampaignPricePlan not found with price plan code: $pricePlanCode");
             return 0;
         }
 
@@ -180,20 +179,18 @@ class CampaignService extends AppService
      */
     function getTeamPricePlan(int $teamId)
     {
-        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
-        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
-        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
+        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_code']);
         if (empty($purchasedPlan)) {
             return null;
         }
 
-        $priceId = $purchasedPlan['price_plan_id'];
-        $pricePlan = $ViewCampaignPricePlan->getById($priceId);
+        $pricePlanCode = $purchasedPlan['price_plan_code'];
+        $pricePlan = $this->getPlanByCode($pricePlanCode);
         if (empty($pricePlan)) {
-            CakeLog::debug("CampaignPricePlan not found with id: $priceId");
+            CakeLog::debug("CampaignPricePlan not found with price_plan_code: $pricePlanCode");
             return null;
         }
 
@@ -372,31 +369,27 @@ class CampaignService extends AppService
      * Check is allowed price plan as team campaign groups
      *
      * @param int    $teamId
-     * @param int    $pricePlanId
+     * @param string    $pricePlanCode
      * @param string $companyCountry
      *
      * @return bool
      */
-    function isAllowedPricePlan(int $teamId, int $pricePlanId, string $companyCountry): bool
+    function isAllowedPricePlan(int $teamId, string $pricePlanCode, string $companyCountry): bool
     {
         /** @var CampaignTeam $CampaignTeam */
         $CampaignTeam = ClassRegistry::init("CampaignTeam");
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init("CampaignPricePlan");
-        /** @var CampaignPriceGroup $CampaignPriceGroup */
-        $CampaignPriceGroup = ClassRegistry::init("CampaignPriceGroup");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
         // Check price plan belonging team
-        if (!$CampaignTeam->isTeamPricePlan($teamId, $pricePlanId)) {
+        if (!$CampaignTeam->isTeamPricePlan($teamId, $pricePlanCode)) {
             return false;
         }
 
         // Check upper price plan max users
-        $pricePlan = $CampaignPricePlan->getById($pricePlanId);
+        $pricePlan = $this->getPlanByCode($pricePlanCode);
         if (empty($pricePlan)) {
             return false;
         }
@@ -406,7 +399,7 @@ class CampaignService extends AppService
         }
 
         // Check currency
-        $currency = $CampaignPriceGroup->getCurrency($pricePlan['group_id']);
+        $currency = $pricePlan['currency'];
         $requestedCountry = $PaymentService->getCurrencyTypeByCountry($companyCountry);
         if ($currency != $requestedCountry) {
             return false;
@@ -418,18 +411,18 @@ class CampaignService extends AppService
     /**
      * get campaign for charging
      *
-     * @param int $pricePlanId
+     * @param string $pricePlanCode
      *
      * @return array
      */
-    function getChargeInfo(int $pricePlanId): array
+    function getChargeInfo(string $pricePlanCode): array
     {
         /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
         $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
 
-        $campaign = $ViewCampaignPricePlan->getById($pricePlanId);
+        $campaign = $this->getPlanByCode($pricePlanCode);
         $subTotalCharge = $campaign['price'];
         $currencyType = $campaign['currency'];
         $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
@@ -457,26 +450,27 @@ class CampaignService extends AppService
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
-        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_id']);
+        $purchasedPlan = $PricePlanPurchaseTeam->getByTeamId($teamId, ['price_plan_code']);
         if (empty($purchasedPlan)) {
             return null;
         }
-        $priceId = $purchasedPlan['price_plan_id'];
-        return CampaignService::getChargeInfo($priceId);
+        $pricePlanCode = $purchasedPlan['price_plan_code'];
+        return CampaignService::getChargeInfo($pricePlanCode);
     }
 
     /**
      * Get Currency info from team price group
      *
-     * @param int $pricePlanId
+     * @param string $pricePlanCode
      *
      * @return int|null
      */
-    function getPricePlanCurrency(int $pricePlanId)
+    function getPricePlanCurrency(string $pricePlanCode)
     {
-        /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
-        $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
-        $campaign = $ViewCampaignPricePlan->getById($pricePlanId, ['currency']);
+        $campaign = $this->getPlanByCode($pricePlanCode);
+        if (empty($campaign)) {
+            return null;
+        }
 
         return $campaign['currency'];
     }
@@ -485,22 +479,18 @@ class CampaignService extends AppService
      * Save PricePlanPurchaseTeam to DB
      *
      * @param int $teamId
-     * @param int $pricePlanId
+     * @param string $pricePlanCode
      *
      * @return array
      */
-    function savePricePlanPurchase(int $teamId, int $pricePlanId): array
+    function savePricePlanPurchase(int $teamId, string $pricePlanCode): array
     {
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
-        $pricePlan = $CampaignPricePlan->getById($pricePlanId, ['code']);
         $pricePlanPurchase = [
             'team_id'           => $teamId,
-            'price_plan_id'     => $pricePlanId,
-            'price_plan_code'   => $pricePlan['code'],
+            'price_plan_code'   => $pricePlanCode,
             'purchase_datetime' => time(),
         ];
 
@@ -515,9 +505,9 @@ class CampaignService extends AppService
      * @param string $pricePlanCode
      * @param int    $opeUserId
      *
-     * @return array
+     * @return bool
      */
-    function upgradePlan(int $teamId, string $pricePlanCode, int $opeUserId): array
+    function upgradePlan(int $teamId, string $pricePlanCode, int $opeUserId): bool
     {
         /** @var ViewCampaignPricePlan $ViewCampaignPricePlan */
         $ViewCampaignPricePlan = ClassRegistry::init('ViewCampaignPricePlan');
@@ -534,7 +524,7 @@ class CampaignService extends AppService
                 throw new Exception(sprintf("Current price plan doesn't exist. team_id:%s", $teamId));
             }
 
-            $upgradePlan = $ViewCampaignPricePlan->getById($pricePlanCode);
+            $upgradePlan = $this->getPlanByCode($pricePlanCode);
             if (empty($upgradePlan)) {
                 throw new Exception(sprintf("Upgrade price plan doesn't exist. plan_id:%s", $pricePlanCode));
             }
@@ -545,7 +535,6 @@ class CampaignService extends AppService
 
             $pricePlanPurchase = [
                 'team_id'           => $teamId,
-                'price_plan_id'     => $upgradePlan['id'],
                 'price_plan_code'   => $pricePlanCode,
                 'purchase_datetime' => time(),
             ];

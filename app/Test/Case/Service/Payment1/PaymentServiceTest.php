@@ -1040,8 +1040,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         // Activation
         $this->Team->deleteAll(['del_flg' => false]);
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
-            $pricePlanId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
         $usersCount = 10;
         $this->Team->current_team_id = $teamId;
         $this->createActiveUsers($teamId, $usersCount - 1);
@@ -1057,8 +1056,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Monthly charge
         $this->Team->deleteAll(['del_flg' => false]);
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
-            $pricePlanId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
         $usersCount = 10;
         $this->Team->current_team_id = $teamId;
         $this->createActiveUsers($teamId, $usersCount - 1);
@@ -1732,7 +1730,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
-        $paymentData = $this->createTestPaymentDataForReg(['price_plan_id' => $pricePlanId = 1]);
+        $paymentData = $this->createTestPaymentDataForReg(['price_plan_code' => $pricePlanCode = '1-1']);
 
         $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $paymentData);
         // Check response success
@@ -1775,7 +1773,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check saved ChargeHistory data
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
-        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanId);
+        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanCode);
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $expected = [
             'id'               => 1,
@@ -1918,7 +1916,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
-        $paymentData = $invoiceData = $this->createTestPaymentDataForReg(['price_plan_id' => $pricePlanId = 1]);
+        $paymentData = $invoiceData = $this->createTestPaymentDataForReg(['price_plan_code' => $pricePlanCode = '1-1']);
 
         // Register invoice
         $returningOrderId = 'AK12345678';
@@ -1928,7 +1926,7 @@ class PaymentServiceTest extends GoalousTestCase
             $this->createXmlAtobaraiOrderSucceedResponse('', $returningOrderId, Enum\AtobaraiCom\Credit::OK()),
         ]));
         $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
-        $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, true, $pricePlanId);
+        $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, true, $pricePlanCode);
         $this->assertTrue($res === true);
 
         // Check team status
@@ -1979,7 +1977,7 @@ class PaymentServiceTest extends GoalousTestCase
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
-        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanId);
+        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanCode);
         $expected = [
             'id'               => 1,
             'team_id'          => $teamId,

@@ -12,7 +12,7 @@ class ViewCampaignPricePlan extends AppModel
     {
         $options = [
             'fields' => [
-                'id', 'code', 'max_members', 'price', 'currency'
+                'id', 'code', 'max_members', 'price', 'currency', 'group_id'
             ],
             'conditions' => [
                 'group_id' => $groupId

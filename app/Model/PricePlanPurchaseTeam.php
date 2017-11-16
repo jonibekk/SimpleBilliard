@@ -18,18 +18,6 @@ class PricePlanPurchaseTeam extends AppModel
      * @var array
      */
     public $validate = [
-        'price_plan_id' => [
-            'numeric'                 => [
-                'rule' => ['numeric'],
-            ],
-            'notBlank'                => [
-                'required' => 'create',
-                'rule'     => 'notBlank',
-            ],
-            'customValidateExistPlan' => [
-                'rule' => 'customValidateExistPlan',
-            ],
-        ],
     ];
 
     /**
