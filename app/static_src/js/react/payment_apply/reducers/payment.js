@@ -7,7 +7,7 @@ const initial_state = {
   validation_errors: {},
   error_message: "",
   countries: {},
-  campaigns: [],
+  price_plans: [],
   stripe: {},
   lang_code: "",
   amount_per_user: "",
@@ -35,7 +35,7 @@ const initial_state = {
       contact_person_email: "",
     },
     price_plan_purchase_team: {
-      price_plan_id: 0
+      price_plan_code: ""
     },
     credit_card: {
       customer_code: ""

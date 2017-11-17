@@ -1036,6 +1036,73 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($chargeInfo['total_charge'] * 100, $stripeCharge['amount']);
     }
 
+    public function test_applyCreditCardCharge_campaign()
+    {
+        // Activation
+        $this->Team->deleteAll(['del_flg' => false]);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanCode = '1-1');
+        $usersCount = 10;
+        $this->Team->current_team_id = $teamId;
+        $this->createActiveUsers($teamId, $usersCount - 1);
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $usersCount, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertNotEmpty($res);
+
+        // Monthly charge
+        $this->Team->deleteAll(['del_flg' => false]);
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanCode = '1-1');
+        $usersCount = 10;
+        $this->Team->current_team_id = $teamId;
+        $this->createActiveUsers($teamId, $usersCount - 1);
+        $userId = $this->createActiveUser($teamId);
+        $res = "";
+        try {
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                $usersCount, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $paymentSetting = $this->PaymentService->get($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
+            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $expected = [
+            'id'                          => 2,
+            'team_id'                     => $teamId,
+            'user_id'                     => $userId,
+            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'             => 0,
+            'total_amount'                => $chargeInfo['sub_total_charge'],
+            'tax'                         => $chargeInfo['tax'],
+            'charge_users'                => $usersCount,
+            'currency'                    => Enum\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users'            => $usersCount,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId
+        ];
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+        $this->assertTrue($res['total_amount'] > $res['amount_per_user']);
+    }
+
     public function test_charge_ccJp()
     {
         $this->Team->resetCurrentTeam();
@@ -1512,7 +1579,8 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if team status updated
         $team = $this->Team->getById($teamId);
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
+        $this->assertEquals($team['service_use_state_start_date'],
+            GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         $this->deleteCustomer($res["customerId"]);
@@ -1604,7 +1672,8 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if team status updated
         $team = $this->Team->getById($teamId);
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
+        $this->assertEquals($team['service_use_state_start_date'],
+            GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         $this->deleteCustomer($res["customerId"]);
@@ -1665,7 +1734,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
-        $paymentData = $this->createTestPaymentDataForReg(['price_plan_id' => $pricePlanId = 1]);
+        $paymentData = $this->createTestPaymentDataForReg(['price_plan_code' => $pricePlanCode = '1-1']);
 
         $res = $this->PaymentService->registerCreditCardPaymentAndCharge($userId, $teamId, $token, $paymentData);
         // Check response success
@@ -1708,7 +1777,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check saved ChargeHistory data
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
-        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanId);
+        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanCode);
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $expected = [
             'id'               => 1,
@@ -1736,7 +1805,8 @@ class PaymentServiceTest extends GoalousTestCase
         // Check if team status updated
         $team = $this->Team->getById($teamId);
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
+        $this->assertEquals($team['service_use_state_start_date'],
+            GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check campaign purchase
@@ -1775,7 +1845,8 @@ class PaymentServiceTest extends GoalousTestCase
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
+        $this->assertEquals($team['service_use_state_start_date'],
+            GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check if payment settings was created
@@ -1851,7 +1922,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
-        $paymentData = $invoiceData = $this->createTestPaymentDataForReg(['price_plan_id' => $pricePlanId = 1]);
+        $paymentData = $invoiceData = $this->createTestPaymentDataForReg(['price_plan_code' => $pricePlanCode = '1-1']);
 
         // Register invoice
         $returningOrderId = 'AK12345678';
@@ -1861,14 +1932,16 @@ class PaymentServiceTest extends GoalousTestCase
             $this->createXmlAtobaraiOrderSucceedResponse('', $returningOrderId, Enum\AtobaraiCom\Credit::OK()),
         ]));
         $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
-        $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, true, $pricePlanId);
+        $res = $this->PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, true,
+            $pricePlanCode);
         $this->assertTrue($res === true);
 
         // Check team status
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
+        $this->assertEquals($team['service_use_state_start_date'],
+            GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check if payment settings was created
@@ -1912,7 +1985,7 @@ class PaymentServiceTest extends GoalousTestCase
         $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $this->assertTrue($history['charge_datetime'] <= time());
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
-        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanId);
+        $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanCode);
         $expected = [
             'id'               => 1,
             'team_id'          => $teamId,
@@ -1965,7 +2038,8 @@ class PaymentServiceTest extends GoalousTestCase
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
-        $this->assertEquals($team['service_use_state_start_date'], GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
+        $this->assertEquals($team['service_use_state_start_date'],
+            GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
 
         // Check if payment settings was created
@@ -2062,8 +2136,6 @@ class PaymentServiceTest extends GoalousTestCase
         ]));
         $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
         $this->PaymentService->registerInvoicePayment($userID, $teamId, $paymentData, $invoiceData);
-
-
 
         // update invoice
         $newData = $this->createTestPaymentData([
@@ -2820,7 +2892,6 @@ class PaymentServiceTest extends GoalousTestCase
             'charge_datetime' => AppUtil::getStartTimestampByTimezone('2016-11-30', 9)
         ]);
 
-
         $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
             $this->createXmlAtobaraiOrderSucceedResponse('', 'AK23553506', Enum\AtobaraiCom\Credit::OK()),
         ]));
@@ -3496,6 +3567,626 @@ class PaymentServiceTest extends GoalousTestCase
         $teamCId = $this->createTeam();
         $res = $this->PaymentService->getAmountPerUserBeforePayment($teamCId, 'US');
         $this->assertEquals(PaymentService::AMOUNT_PER_USER_USD, $res);
+    }
+
+    function test_calcRelatedTotalChargeForUpgradingPlan_exception()
+    {
+        // Prepare data for testing
+        $teamId = 9999999;
+        $currencyType = Enum\PaymentSetting\Currency::JPY();
+
+        // upgradePlanCode is empty
+        $upgradePlanCode = '';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+        // currentPlanCode is empty
+        $upgradePlanCode = '1-1';
+        $currentPlanCode = '';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+        // upgradePlanCode doesn't exist
+        $upgradePlanCode = '1000-1000';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+        // currentPlanCode doesn't exist
+        $upgradePlanCode = '1-1';
+        $currentPlanCode = '1000-1000';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+        // currentPlanCode and upgradePlanCode are same
+        $upgradePlanCode = '1-1';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+        // Payment setting doesn't exist
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], 0);
+
+    }
+
+    function test_calcRelatedTotalChargeForUpgradingPlan_jp()
+    {
+        GoalousDateTime::setTestNow("2017-11-01");
+        // Prepare data for testing
+        $companyCountry = 'JP';
+        $paymentSetting = ['payment_base_day' => 1, 'company_country' => $companyCountry];
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], $paymentSetting);
+        $currencyType = Enum\PaymentSetting\Currency::JPY();
+
+        // Case: Upgraded plan date is as same as payment base day
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 50000);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '1-5';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 200000);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '1-5';
+        $currentPlanCode = '1-4';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 50000);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Upgraded plan date is one day after payment base day
+        GoalousDateTime::setTestNow("2017-11-02");
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 48333.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '1-5';
+        $currentPlanCode = '1-2';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 145000);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Upgraded plan date is one day before payment base day
+        GoalousDateTime::setTestNow("2017-11-30");
+        $upgradePlanCode = '1-4';
+        $currentPlanCode = '1-3';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 1666.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '1-3';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 3333.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Month days are short (February)
+        GoalousDateTime::setTestNow("2018-02-02");
+
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 48214.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-02-28");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 1785.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Payment base day are end day of month
+        $this->PaymentSetting->clear();
+        $this->PaymentSetting->id = $paymentSettingId;
+        $this->PaymentSetting->save([
+            'payment_base_day' => 31
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        GoalousDateTime::setTestNow("2018-02-28");
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 50000.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2017-11-30");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 50000);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2017-12-31");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 50000);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-01-01");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 48387.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-03-01");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 48387.0);
+        $this->assertEquals($res['tax'], $this->PaymentService->calcTax($companyCountry, $res['sub_total_charge']));
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+    }
+
+    function test_calcRelatedTotalChargeForUpgradingPlan_us()
+    {
+        GoalousDateTime::setTestNow("2017-11-01");
+        // Prepare data for testing
+        $companyCountry = 'US';
+        $paymentSetting = ['payment_base_day' => 1, 'company_country' => $companyCountry];
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => -12], $paymentSetting);
+        $currencyType = Enum\PaymentSetting\Currency::USD();
+        $this->PaymentService->clearCachePaymentSettings();
+
+        // Case: Upgraded plan date is as same as payment base day
+        $upgradePlanCode = '2-2';
+        $currentPlanCode = '2-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 500.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '2-3';
+        $currentPlanCode = '2-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 1000.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '2-4';
+        $currentPlanCode = '2-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 1500.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        $upgradePlanCode = '2-5';
+        $currentPlanCode = '2-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 2000.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-01-01");
+        $upgradePlanCode = '2-3';
+        $currentPlanCode = '2-2';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 500.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Upgraded plan date is one day after payment base day
+        GoalousDateTime::setTestNow("2018-01-02");
+        $upgradePlanCode = '2-4';
+        $currentPlanCode = '2-3';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 483.87);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-02-02");
+        $upgradePlanCode = '2-4';
+        $currentPlanCode = '2-3';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 482.14);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Upgraded plan date is one day before payment base day
+        GoalousDateTime::setTestNow("2017-12-31");
+        $upgradePlanCode = '2-4';
+        $currentPlanCode = '2-3';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 16.12);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-02-28");
+        $upgradePlanCode = '2-4';
+        $currentPlanCode = '2-3';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 17.85);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        // Case: Payment base day are end day of month
+        $this->PaymentSetting->clear();
+        $this->PaymentSetting->id = $paymentSettingId;
+        $this->PaymentSetting->save([
+            'payment_base_day' => 31
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        GoalousDateTime::setTestNow("2018-02-28");
+        $upgradePlanCode = '2-2';
+        $currentPlanCode = '2-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 500.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-04-30");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 500.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-12-31");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 500.0);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-03-01");
+        $upgradePlanCode = '2-2';
+        $currentPlanCode = '2-1';
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 483.87);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-04-01");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 483.33);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+        GoalousDateTime::setTestNow("2018-03-30");
+        $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
+            $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
+        );
+        $this->assertEquals($res['sub_total_charge'], 16.12);
+        $this->assertEquals($res['tax'], 0);
+        $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
+
+    }
+
+    function test_chargeForUpgradingCampaignPlan_jpCc()
+    {
+        $opeUserId = 1;
+        $companyCountry = 'JP';
+        $currencyType = Enum\PaymentSetting\Currency::JPY();
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $team = ['timezone' => 9];
+        $paymentSetting = [
+            'payment_base_day' => 15,
+            'company_country'  => $companyCountry
+        ];
+
+        GoalousDateTime::setTestNow('2017-11-14 15:00:00');
+        list($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam(1, $currentPlanCode, $team,
+            $paymentSetting);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        // Case: Upgraded plan date is as same as payment base day
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $baseExpected = [
+            'team_id'                     => $teamId,
+            'user_id'                     => $opeUserId,
+            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'             => 0,
+            'charge_users'                => 0,
+            'currency'                    => Enum\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId,
+        ];
+        $subTotalCharge = 50000;
+        $expected = am($baseExpected, [
+            'id'                          => 1,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+
+        // Case: Upgraded plan date is one day after payment base day
+        GoalousDateTime::setTestNow('2017-11-16 14:59:59');
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $subTotalCharge = 48333;
+        $expected = am($baseExpected, [
+            'id'                          => 2,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+
+        // Case: Upgraded plan date is one day before payment base day
+        GoalousDateTime::setTestNow('2017-04-14 14:59:59');
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $subTotalCharge = 1612;
+        $expected = am($baseExpected, [
+            'id'                          => 3,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, $res['total_amount'] + $res['tax']);
+        $this->assertEquals($chargeRes->currency, 'jpy');
+    }
+
+    function test_chargeForUpgradingCampaignPlan_foreignCc()
+    {
+        $opeUserId = 1;
+        $companyCountry = 'TH';
+        $currencyType = Enum\PaymentSetting\Currency::USD();
+        $upgradePlanCode = '2-5';
+        $currentPlanCode = '2-1';
+        $team = ['timezone' => -12];
+        $paymentSetting = [
+            'payment_base_day' => 31,
+            'company_country'  => $companyCountry,
+            'currency'  =>$currencyType
+        ];
+
+        GoalousDateTime::setTestNow('2017-12-01 11:59:00');
+        list($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createCcCampaignTeam(2, $currentPlanCode, $team,
+            $paymentSetting);
+        $this->PaymentService->clearCachePaymentSettings();
+        $this->Team->current_team_id = $teamId;
+        // Case: Upgraded plan date is as same as payment base day
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $baseExpected = [
+            'team_id'                     => $teamId,
+            'user_id'                     => $opeUserId,
+            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'             => 0,
+            'charge_users'                => 0,
+            'currency'                    => Enum\PaymentSetting\Currency::USD,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId,
+        ];
+        // Stripe specification
+        // Ref: https://stripe.com/docs/currencies#zero-decimal
+        $subTotalCharge = 2000;
+        $expected = am($baseExpected, [
+            'id'                          => 1,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge * 100));
+        $this->assertEquals($chargeRes->currency, 'usd');
+
+        // Case: Upgraded plan date is one day after payment base day
+        GoalousDateTime::setTestNow('2017-12-02 11:59:00');
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $subTotalCharge = 1935.48;
+        $expected = am($baseExpected, [
+            'id'                          => 2,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge * 100));
+        $this->assertEquals($chargeRes->currency, 'usd');
+
+        // Case: Upgraded plan date is one day before payment base day
+        GoalousDateTime::setTestNow('2017-02-28 11:59:00');
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $this->assertNotEmpty($res['stripe_payment_code']);
+        $subTotalCharge = 71.42;
+        $expected = am($baseExpected, [
+            'id'                          => 3,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
+        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge * 100));
+        $this->assertEquals($chargeRes->currency, 'usd');
+    }
+
+    function test_chargeForUpgradingCampaignPlan_invoice()
+    {
+        $opeUserId = 1;
+        $companyCountry = 'JP';
+        $currencyType = Enum\PaymentSetting\Currency::JPY;
+        $upgradePlanCode = '1-2';
+        $currentPlanCode = '1-1';
+        $paymentSetting = [
+            'payment_base_day' => 3,
+        ];
+
+        GoalousDateTime::setTestNow('2022-03-03');
+        list($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam(1, $currentPlanCode, [],
+            $paymentSetting);
+        $this->PaymentService->clearCachePaymentSettings();
+        $this->Team->current_team_id = $teamId;
+
+        // Case: Upgraded plan date is as same as payment base day
+        $this->PaymentService->chargeForUpgradingCampaignPlan(
+            $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
+        );
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $this->assertTrue($res['charge_datetime'] <= time());
+        $baseExpected = [
+            'team_id'                     => $teamId,
+            'user_id'                     => $opeUserId,
+            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'amount_per_user'             => 0,
+            'charge_users'                => 0,
+            'currency'                    => Enum\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'campaign_team_id'            => $campaignTeamId,
+            'price_plan_purchase_team_id' => $pricePlanPurchaseId,
+        ];
+        $subTotalCharge = 50000;
+        $expected = am($baseExpected, [
+            'id'                          => 1,
+            'total_amount'                => $subTotalCharge,
+            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+        ]);
+
+        $res = array_intersect_key($res, $expected);
+        $this->assertEquals($res, $expected);
     }
 
     /**

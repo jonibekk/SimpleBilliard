@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-06 11:38+0900\n"
+"PO-Revision-Date: 2017-11-17 14:21+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -853,6 +853,12 @@ msgstr "お探しのページが見つかりませんでした。"
 
 msgid "Error, data conflicted."
 msgstr ""
+
+msgid ""
+"Server error occurred. We apologize for the inconvenience. Please try again."
+msgstr ""
+"サーバーエラーが発生しました。お手数をお掛けしますが、もう一度最初からやり直"
+"して下さい。"
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
@@ -2967,8 +2973,14 @@ msgstr "選択する"
 msgid "Plan"
 msgstr "プラン"
 
+msgid "Upgrade"
+msgstr "アップグレード"
+
 msgid "Upgrade Plan"
-msgstr "有料プランに変更する"
+msgstr "プランをアップグレードする"
+
+msgid "Upgrade"
+msgstr "アップグレード"
 
 msgid "Select Plan"
 msgstr "プランを選択する"
@@ -3000,6 +3012,19 @@ msgstr "お支払い頂いた場合、%s及び%sに同意した事になりま�
 
 msgid "Contact us"
 msgstr "お問い合わせ"
+
+msgid "Your team upgraded price plan"
+msgstr "プランアップグレードが完了しました"
+
+msgid "Current plan"
+msgstr "現在のプラン"
+
+msgid ""
+"Your monthly bill will increase from %s to %s. You'll be charged a prorated "
+"amount today, shown below, for this upgrade."
+msgstr ""
+"今回のアップグレードで、毎月の請求額が%sから%sに増加します。本日は、今月の残"
+"期間における以下の差分料金が課金されます。"
 
 msgid "Circles"
 msgstr "サークル"
@@ -3293,9 +3318,6 @@ msgstr "コメントを編集"
 
 msgid "Posts"
 msgstr "投稿"
-
-msgid "Message"
-msgstr "メッセージ"
 
 msgid "Save"
 msgstr "保存する"
@@ -4148,6 +4170,9 @@ msgstr "ログインメンバー"
 
 msgid "Unique"
 msgstr "ユニーク"
+
+msgid "Message"
+msgstr "メッセージ"
 
 msgid "Final evaluation (%s - %s)"
 msgstr "最終評価 (期間：%s - %s)"
@@ -5308,7 +5333,7 @@ msgid "Start %s-day Free Trial"
 msgstr "%s日間のフリートライアルを始める"
 
 msgid "Upgrade to Paid Plan"
-msgstr "有料プランに申し込む"
+msgstr "有料プランに変更する"
 
 msgid ""
 "For teams and companies ready to create and share project goals on Goalous."
@@ -6048,18 +6073,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#~ msgid ""
-#~ "Your campaign plan reached to the maximum user allowed. Please contact "
-#~ "for the larger plans."
-#~ msgstr ""
-#~ "現在のプランでのメンバー数が上限に達しました。より多くのメンバー数のプラン"
-#~ "についてはお問い合わせください。"
-
-#~ msgid "The number of users exceed the limit allowed by your plan."
-#~ msgstr ""
-#~ "お問い合わせいただけますと、より多くのメンバー数のプランをご利用いただけま"
-#~ "す。すべて税抜価格です。"
-
-#~ msgid "CSRF Error!"
-#~ msgstr "CSRFエラーです。"
