@@ -1421,4 +1421,18 @@ class GlRedis extends AppModel
         }
         return $ret;
     }
+
+    /**
+     * Delete master data for campaign price plans
+     * ※Currently, this method is called only for unit tests
+     *
+     * @param  $groupId
+     *
+     * @return bool
+     */
+    function deleteMstCampaignPlans(int $groupId): bool
+    {
+        $key = $this->getKeyNameForMstCampaignPlans($groupId);
+        return $this->Db->del($key);
+    }
 }

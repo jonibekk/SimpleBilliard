@@ -28,7 +28,7 @@ class PaymentsController extends ApiController
         ],
         'campaign'       => [
             'PricePlanPurchaseTeam' => [
-                'price_plan_id'
+                'price_plan_code'
             ]
         ],
         'company'        => [
@@ -132,11 +132,11 @@ class PaymentsController extends ApiController
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
         if ($CampaignService->isCampaignTeam($teamId)) {
-            $pricePlanId = Hash::get($this->request->data, 'price_plan_purchase_team.price_plan_id');
-            if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, $companyCountry)) {
+            $pricePlanCode = Hash::get($this->request->data, 'price_plan_purchase_team.price_plan_code');
+            if (!$pricePlanCode || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanCode, $companyCountry)) {
                 return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
             }
-            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
+            $requestData = Hash::insert($requestData, 'price_plan_code', $pricePlanCode);
         }
 
         // Register credit card, and apply payment
@@ -199,20 +199,20 @@ class PaymentsController extends ApiController
         // Check valid campaign
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
-        $pricePlanId = null;
+        $pricePlanCode = null;
         if ($CampaignService->isCampaignTeam($teamId)) {
-            $pricePlanId = Hash::get($requestData, 'price_plan_purchase_team.price_plan_id');
-            if (!$pricePlanId || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanId, 'JP')) {
+            $pricePlanCode = Hash::get($requestData, 'price_plan_purchase_team.price_plan_code');
+            if (!$pricePlanCode || !$CampaignService->isAllowedPricePlan($teamId, $pricePlanCode, 'JP')) {
                 // TODO.Payment: Add translation for message
                 return $this->_getResponseBadFail(__("Your selected campaign is not allowed."));
             }
-            $requestData = Hash::insert($requestData, 'price_plan_id', $pricePlanId);
+            $requestData = Hash::insert($requestData, 'price_plan_code', $pricePlanCode);
         }
 
         // Register invoice
         $paymentData = Hash::get($requestData, 'payment_setting');
         $invoiceData = Hash::get($requestData, 'invoice');
-        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, false, $pricePlanId);
+        $regResponse = $PaymentService->registerInvoicePayment($userId, $teamId, $paymentData, $invoiceData, false, $pricePlanCode);
         if ($regResponse !== true) {
             return $this->_getResponseInternalServerError();
         }
@@ -301,7 +301,7 @@ class PaymentsController extends ApiController
         if ($dataTypes == 'all' || in_array('campaigns', $dataTypes)) {
             /** @var CampaignService $CampaignService */
             $CampaignService = ClassRegistry::init("CampaignService");
-            $res['campaigns'] = $CampaignService->findList($teamId);
+            $res['price_plans'] = $CampaignService->findList($teamId);
         }
 
         return $this->_getResponseSuccess($res);
@@ -318,6 +318,8 @@ class PaymentsController extends ApiController
     {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
 
         $teamId = $this->current_team_id;
         $res = [];
@@ -329,7 +331,9 @@ class PaymentsController extends ApiController
         }
 
         // Get campaign plan list
-        $res['campaigns'] = $CampaignService->findPlansForUpgrading($teamId, $currentPricePlan);
+        $res['price_plans'] = $CampaignService->findPlansForUpgrading($teamId, $currentPricePlan);
+        $res['charge_users_count'] = $TeamMember->countChargeTargetUsers($teamId);
+        $res['current_price_plan_code'] = $currentPricePlan['code'];
         return $this->_getResponseSuccess($res);
     }
 
@@ -342,7 +346,6 @@ class PaymentsController extends ApiController
     {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
-
         $teamId = $this->current_team_id;
 
         $pricePlanCode = $this->request->data('plan_code');
@@ -357,6 +360,7 @@ class PaymentsController extends ApiController
         if(!$CampaignService->upgradePlan($teamId, $pricePlanCode, $userId)) {
             return $this->_getResponseInternalServerError();
         }
+
         return $this->_getResponseSuccess();
     }
 
@@ -364,39 +368,40 @@ class PaymentsController extends ApiController
      * Validation for upgrading plan
      *
      * @param int $teamId
-     * @param     $planCode No type hinting because of validation
+     * @param     $upgradePlanCode No type hinting because of validation
      *
      * @return bool|CakeResponse
      */
-    private function _validateUpgradePlan(int $teamId, $planCode)
+    private function _validateUpgradePlan(int $teamId, $upgradePlanCode)
     {
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init("PricePlanPurchaseTeam");
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
-        $PricePlanPurchaseTeam->validate = $PricePlanPurchaseTeam->validateUpdate;
-        $PricePlanPurchaseTeam->set(['price_plan_code' => $planCode]);
-        if (!$PricePlanPurchaseTeam->validates()) {
-            $errors = $this->validationExtract($PricePlanPurchaseTeam->validationErrors);
-            return $this->_getResponseValidationFail($errors);
+        $validationError = $CampaignService->validateUpgradePlan($upgradePlanCode);
+        if (!empty($validationError)) {
+            return $this->_getResponseValidationFail($validationError);
         }
 
         // Check if plan purchased
-        $purchasedTeam = $this->getPricePlanPurchaseTeam($teamId);
+        $purchasedTeam = $CampaignService->getPricePlanPurchaseTeam($teamId);
+        $currentPlanCode = Hash::get($purchasedTeam, 'PricePlanPurchaseTeam.price_plan_code');
         if (empty($purchasedTeam)) {
             return $this->_getResponseForbidden();
         }
 
         // Check if exist upgrading plan
-        $currentPlan = $this->getPlanByCode($purchasedTeam['price_plan_code']);
-        $upgradePlan = $this->getPlanByCode($planCode);
+        $currentPlan = $CampaignService->getPlanByCode($currentPlanCode);
+        $upgradePlan = $CampaignService->getPlanByCode($upgradePlanCode);
         if (empty($upgradePlan) || empty($currentPlan)) {
             return $this->_getResponseForbidden();
         }
 
         // Check if price plan group of upgrading plan equals the group of current plan
-        if ($upgradePlan['group_id'] != $currentPlan['price_plan_group_id']) {
+        if ($upgradePlan['group_id'] != $currentPlan['group_id']) {
             return $this->_getResponseForbidden();
         }
 
