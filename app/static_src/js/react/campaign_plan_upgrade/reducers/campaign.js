@@ -6,6 +6,7 @@ const initial_state = {
   charge_users_count: 0,
   selected_campaign_plan_code: "",
   current_price_plan_code: "",
+  current_price_plan: {},
   is_saving: false,
   selected_price_plan: {},
 }
@@ -25,9 +26,17 @@ export default function campaign(state = initial_state, action) {
         is_saving: false
       })
     case types.FETCH_INITIAL_DATA:
-      console.log(action.data);
+      let current_price_plan = {};
+      const price_plans = action.data.price_plans;
+      const current_price_plan_code = action.data.current_price_plan_code;
+      for (let i = 0; i < price_plans.length; i++) {
+        if (price_plans[i].code == current_price_plan_code) {
+          current_price_plan = price_plans[i]
+          break;
+        }
+      }
       return Object.assign({}, state, action.data, {
-        error_message: "",
+        current_price_plan,
       })
     case types.SELECT_PRICE_PLAN:
       return Object.assign({}, state, {

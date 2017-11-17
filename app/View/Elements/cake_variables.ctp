@@ -677,6 +677,7 @@ App::uses('AttachedFile', 'Model');
             "Select": "<?= __("Select") ?>",
             "Plan": "<?= __("Plan") ?>",
             "Upgrade Plan": "<?= __("Upgrade Plan") ?>",
+            "Upgrade": "<?= __("Upgrade") ?>",
             "Select Plan": "<?= __("Select Plan") ?>",
             "This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.": "<?= __("This invitation will cause your team's active members to exceed the current plan limit. Please upgrade your plan.") ?>",
             "Larger plans available on request. All prices are without tax.": "<?= __("Larger plans available on request. All prices are without tax.") ?>",
@@ -685,7 +686,8 @@ App::uses('AttachedFile', 'Model');
             "By purchasing, you agree to the %s and %s.": "<?= __("By purchasing, you agree to the %s and %s.") ?>",
             "Contact us": "<?= __("Contact us") ?>",
             "Your team upgraded price plan": "<?= __("Your team upgraded price plan") ?>",
-            "Current plan": "<?= __("Current plan") ?>"
+            "Current plan": "<?= __("Current plan") ?>",
+            "Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.": "<?= __("Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"

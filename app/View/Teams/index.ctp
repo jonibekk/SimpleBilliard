@@ -77,7 +77,7 @@
                             <?= __('Deactivated') ?>
                         <?php endif; ?>
                         <?php if ($isTeamAdmin && $serviceUseStatus != Team::SERVICE_USE_STATUS_PAID): ?>
-                            &dash;&nbsp;<a href="/payments"><?= __('Upgrade Plan'); ?></a>
+                            &dash;&nbsp;<a href="/payments"><?= __('Upgrade to Paid Plan'); ?></a>
                         <?php endif; ?>
 
                     </p>
