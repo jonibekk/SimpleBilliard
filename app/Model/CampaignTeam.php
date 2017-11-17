@@ -71,10 +71,11 @@ class CampaignTeam extends AppModel
      * Check is allowed price plan as team campaign groups
      *
      * @param int $teamId
-     * @param int $pricePlanId
+     * @param string $pricePlanCode
+     *
      * @return bool
      */
-    function isTeamPricePlan(int $teamId, int $pricePlanId): bool
+    function isTeamPricePlan(int $teamId, string $pricePlanCode): bool
     {
         $options = [
             'fields'     => [
@@ -87,9 +88,9 @@ class CampaignTeam extends AppModel
                     'alias'      => 'ViewCampaignPricePlan',
                     'conditions' => [
                         'ViewCampaignPricePlan.group_id = CampaignTeam.price_plan_group_id',
-                        'CampaignTeam.team_id' => $teamId,
-                        'CampaignTeam.del_flg' => false,
-                        'ViewCampaignPricePlan.id' => $pricePlanId
+                        'CampaignTeam.team_id'     => $teamId,
+                        'CampaignTeam.del_flg'     => false,
+                        'ViewCampaignPricePlan.code' => $pricePlanCode
                     ],
                 ],
             ]

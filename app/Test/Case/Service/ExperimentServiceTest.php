@@ -11,6 +11,7 @@ App::import('Service', 'ExperimentService');
  * Time: 17:50
  *
  * @property ExperimentService $ExperimentService
+ * @property Experiment        $Experiment
  */
 class ExperimentServiceTest extends GoalousTestCase
 {
@@ -33,13 +34,21 @@ class ExperimentServiceTest extends GoalousTestCase
         parent::setUp();
         $this->ExperimentService = ClassRegistry::init('ExperimentService');
         /** @var Experiment $Experiment */
-        $Experiment = ClassRegistry::init('Experiment');
-        $Experiment->current_team_id = 1;
+        $this->Experiment = ClassRegistry::init('Experiment');
+        $this->Experiment->current_team_id = 1;
     }
 
-    function testIsDefined()
+    function test_isDefined_NotFound()
     {
-        $this->assertTrue($this->ExperimentService->isDefined('test'));
+        $this->assertFalse($this->ExperimentService->isDefined('test'));
     }
 
+    function test_isDefined_ExistsExperiment()
+    {
+        $this->assertFalse($this->ExperimentService->isDefined('CircleDefaultSettingOn'));
+
+        $this->_clearCache();
+        $this->Experiment->save(['name' => 'CircleDefaultSettingOn', 'team_id' => 1]);
+        $this->assertTrue($this->ExperimentService->isDefined('CircleDefaultSettingOn'));
+    }
 }
