@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-17 12:32+0900\n"
+"PO-Revision-Date: 2017-11-17 14:21+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2974,7 +2974,10 @@ msgid "Plan"
 msgstr "プラン"
 
 msgid "Upgrade Plan"
-msgstr "有料プランに変更する"
+msgstr "プランをアップグレードする"
+
+msgid "Upgrade"
+msgstr "アップグレード"
 
 msgid "Select Plan"
 msgstr "プランを選択する"
@@ -3012,6 +3015,13 @@ msgstr "プランアップグレードが完了しました"
 
 msgid "Current plan"
 msgstr "現在のプラン"
+
+msgid ""
+"Your monthly bill will increase from %s to %s. You'll be charged a prorated "
+"amount today, shown below, for this upgrade."
+msgstr ""
+"今回のアップグレードで、毎月の請求額が%sから%sに増加します。本日は、今月の残"
+"期間における以下の差分料金が課金されます。"
 
 msgid "Circles"
 msgstr "サークル"
@@ -5308,7 +5318,7 @@ msgid "Start %s-day Free Trial"
 msgstr "%s日間のフリートライアルを始める"
 
 msgid "Upgrade to Paid Plan"
-msgstr "有料プランに申し込む"
+msgstr "有料プランに変更する"
 
 msgid ""
 "For teams and companies ready to create and share project goals on Goalous."

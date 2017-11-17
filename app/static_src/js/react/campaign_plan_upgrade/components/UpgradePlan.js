@@ -41,7 +41,7 @@ export default class UpgradePlan extends Base {
     return (
       <section className="panel payment">
         <div className="panel-container">
-          <h3>{__('Select Plan')}</h3>
+          <h3>{__('Upgrade Plan')}</h3>
           <p>{sprintf(__('You have %d active members. Please select the best plan for the number of members expected for your team.'), campaign.charge_users_count)}</p>
           <PricePlansTable
             price_plans={campaign.price_plans}
@@ -49,7 +49,16 @@ export default class UpgradePlan extends Base {
             current_price_plan_code={campaign.current_price_plan_code}
             selectPricePlan={(plan) => this.selectPricePlan(plan)}
           />
-          <p>{__('Larger plans available on request. All prices are without tax.')}</p>
+          <p className="mb_12px">{__('Larger plans available on request. All prices are without tax.')}
+          </p>
+          {selected_price_plan.code &&
+          <p>
+            {sprintf(__("Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.")
+              ,campaign.current_price_plan.format_price
+              ,selected_price_plan.format_price
+            )}
+          </p>
+          }
           {selected_price_plan.code &&
             <ConfirmCharge
               charge_users_count={campaign.charge_users_count}
@@ -58,6 +67,7 @@ export default class UpgradePlan extends Base {
               total_charge={selected_price_plan.total_charge}
               is_campaign={true}
               campaign_members={selected_price_plan.max_members}
+              is_upgrading_plan={true}
             />
           }
         </div>
