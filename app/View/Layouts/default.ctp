@@ -54,7 +54,18 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
-    <?php if (!$is_mb_app && !$isMobileBrowser): ?>
+
+    <?php 
+        if ($is_mb_app) {
+            $loadKR = false;
+        } else if ($isMobileBrowser && !$isTablet){
+            $loadKR = false;
+        } else{
+            $loadKR = true;
+        }
+    ?>
+
+    <?php if ($loadKR): ?>
         <div
             class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
             role="goal_area">
