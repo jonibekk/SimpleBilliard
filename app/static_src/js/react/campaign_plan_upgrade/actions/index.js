@@ -38,7 +38,13 @@ export function upgradePricePlan(plan_code) {
     const post_data = {plan_code};
     return post("/api/v1/payments/upgrade_plan", post_data, null,
       (response) => {
-        document.location.href = '/payments'
+        new Noty({
+          type: 'success',
+          text: '<h4>'+cake.word.success+'</h4>'+ __("Your team upgraded price plan"),
+          timeout: 3000
+        }).on('onClose', function() {
+          window.location.href = '/payments';
+        }).show();
       },
       ({response}) => {
         let err_msg = "";

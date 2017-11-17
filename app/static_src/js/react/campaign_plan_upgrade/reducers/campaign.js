@@ -5,6 +5,7 @@ const initial_state = {
   price_plans: [],
   charge_users_count: 0,
   selected_campaign_plan_code: "",
+  current_price_plan_code: "",
   is_saving: false,
   selected_price_plan: {},
 }

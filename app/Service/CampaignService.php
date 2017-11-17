@@ -146,8 +146,6 @@ class CampaignService extends AppService
      */
     function getMaxAllowedUsers(int $teamId): int
     {
-        /** @var CampaignPricePlan $CampaignPricePlan */
-        $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 

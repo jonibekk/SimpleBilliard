@@ -360,7 +360,6 @@ class PaymentsController extends ApiController
         if(!$CampaignService->upgradePlan($teamId, $pricePlanCode, $userId)) {
             return $this->_getResponseInternalServerError();
         }
-        $this->Notification->outSuccess(__("Your team upgraded price plan"));
 
         return $this->_getResponseSuccess();
     }

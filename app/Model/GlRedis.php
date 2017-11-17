@@ -1424,6 +1424,7 @@ class GlRedis extends AppModel
 
     /**
      * Delete master data for campaign price plans
+     * ※Currently, this method is called only for unit tests
      *
      * @param  $groupId
      *

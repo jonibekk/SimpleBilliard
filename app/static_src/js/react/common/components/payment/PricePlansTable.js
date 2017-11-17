@@ -13,23 +13,26 @@ export default class PricePlansTable extends React.Component {
   }
 
   render() {
-    const {price_plans, selected_price_plan_code} = this.props
+    const {price_plans, selected_price_plan_code, current_price_plan_code} = this.props
     const price_plans_el = () => {
       return price_plans.map((plan, i) => {
+        let plan_el = ""
+        if (current_price_plan_code == plan.code) {
+          plan_el = <span className="">{__("Current plan")}</span>
+        } else if (plan.can_select) {
+          plan_el = <span
+            onClick={() => {this.selectPricePlan(plan)}}
+            className={`${selected_price_plan_code == plan.code ? 'fa fa-check success' : 'btn small'}`}>
+                {plan.can_select && selected_price_plan_code != plan.code ? __('Select') : ''}
+          </span>
+        }
         const campaignId = plan.id
         return (
           <tr key={campaignId}>
             <td>{sprintf(__("%d members"), plan.max_members)}</td>
             <td>{plan.format_price}</td>
             <td>
-              {plan.can_select &&
-              <span onClick={() => {
-                this.selectPricePlan(plan)
-              }}
-                    className={`${selected_price_plan_code == plan.code ? 'fa fa-check success' : 'btn small'}`}>
-                  {plan.can_select && selected_price_plan_code != plan.code ? __('Select') : ''}
-                </span>
-              }
+              {plan_el}
             </td>
           </tr>
         )
@@ -53,9 +56,11 @@ export default class PricePlansTable extends React.Component {
 }
 PricePlansTable.propTypes = {
   selected_price_plan_code: React.PropTypes.string,
+  current_price_plan_code: React.PropTypes.string,
   price_plans: React.PropTypes.array,
 };
 PricePlansTable.defaultProps = {
   selected_price_plan_code: "",
+  current_price_plan_code: "",
   price_plans: []
 };

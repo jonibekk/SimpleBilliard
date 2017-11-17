@@ -46,6 +46,7 @@ export default class UpgradePlan extends Base {
           <PricePlansTable
             price_plans={campaign.price_plans}
             selected_price_plan_code={selected_price_plan.code}
+            current_price_plan_code={campaign.current_price_plan_code}
             selectPricePlan={(plan) => this.selectPricePlan(plan)}
           />
           <p>{__('Larger plans available on request. All prices are without tax.')}</p>
@@ -68,6 +69,7 @@ export default class UpgradePlan extends Base {
           {campaign.is_saving ? <LoadingButton/> :
             <a className="btn btn-primary"
                onClick={this.onSubmit}
+               disabled={selected_price_plan.code ? "" : "disabled"}
             >
               {__('Agree & Purchase')}
             </a>

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-16 15:43+0900\n"
+"PO-Revision-Date: 2017-11-17 12:32+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -855,11 +855,10 @@ msgid "Error, data conflicted."
 msgstr ""
 
 msgid ""
-"Server error occurred. I am sorry to trouble you, please try again from the "
-"beginning"
+"Server error occurred. We apologize for the inconvenience. Please try again."
 msgstr ""
-"サーバーエラーが発生しました。お手数をお掛けして申し訳ありませんが、もう一度"
-"最初からやり直して下さい。"
+"サーバーエラーが発生しました。お手数をお掛けしますが、もう一度最初からやり直"
+"して下さい。"
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
@@ -911,9 +910,6 @@ msgstr "選択したプランは購入出来ません。"
 
 msgid "Invoice payment are available for Japan only"
 msgstr "日本のみ請求書払いを利用できます"
-
-msgid "Your team upgraded price plan"
-msgstr "プランアップグレードが完了しました"
 
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
@@ -3010,6 +3006,12 @@ msgstr "お支払い頂いた場合、%s及び%sに同意した事になりま�
 
 msgid "Contact us"
 msgstr "お問い合わせ"
+
+msgid "Your team upgraded price plan"
+msgstr "プランアップグレードが完了しました"
+
+msgid "Current plan"
+msgstr "現在のプラン"
 
 msgid "Circles"
 msgstr "サークル"
