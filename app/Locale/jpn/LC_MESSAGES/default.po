@@ -2967,6 +2967,9 @@ msgstr "選択する"
 msgid "Plan"
 msgstr "プラン"
 
+msgid "Upgrade"
+msgstr "アップグレード"
+
 msgid "Upgrade Plan"
 msgstr "有料プランに変更する"
 

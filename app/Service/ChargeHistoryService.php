@@ -110,6 +110,14 @@ class ChargeHistoryService extends AppService
             $history['ChargeHistory']['term'] = "$prevBaseDate - $endBaseDate";
             $history['ChargeHistory']['is_monthly'] = true;
         }
+        else if ($history['ChargeHistory']['charge_type'] == Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF) {
+            $teamId = $history['ChargeHistory']['team_id'];
+
+            $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
+            $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
+            $history['ChargeHistory']['term'] = "$localChargeDate - $endBaseDate";
+            $history['ChargeHistory']['is_monthly'] = true;
+        }
         return $history;
     }
 }
