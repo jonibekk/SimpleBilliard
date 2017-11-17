@@ -11,17 +11,11 @@ error_exit(){ echo "${red}*** Error!!${whit}" ; exit 1 ; }
 
 echo "${blu}### Update Application. ###${whit}"
 echo "Please wait a minute..."
-echo "*** git fetch --all --prune"
-git fetch --all --prune || error_exit
-echo "${gre}*** Done.${whit}"
-echo "*** git pull"
-git pull || error_exit
-echo "${gre}*** Done.${whit}"
 echo "*** Updating all git submodules."
 git submodule update --init --recursive || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Updating an environment by chef.(include DB schema, using library and more.)"
-vagrant provision default || error_exit
+vagrant provision || error_exit
 
 TIME_B=`date +%s`   #B
 PT=`expr ${TIME_B} - ${TIME_A}`

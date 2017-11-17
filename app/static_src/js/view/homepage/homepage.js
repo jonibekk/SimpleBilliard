@@ -44,6 +44,7 @@ $(document).ready(function() {
     });
 
     faqInit();
+
 });
 
 $(window).resize(function(){

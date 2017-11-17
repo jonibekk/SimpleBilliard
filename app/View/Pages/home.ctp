@@ -100,40 +100,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
     </div>
 </section><!--//promo-->
 
-<!-- ここからつづき -->
-<!-- ******PRESS****** -->
-<div class="press">
-    <div class="container text-center">
+<div class="seminar">
+    <div class="container">
         <div class="row text-left">
-            <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
-                __('5 Feb 2016');
-                ?></p>
-            <p class="col-md-6 col-sm-9">
-                <?=
-                $this->Html->link(
-                    __('Goalous was featured in a magazine - Gekkan Jinji Management Feb. -'),
-                    'http://blog.isao.co.jp/press_jinjimanage_20160205/',
-                    ['target' => '_blank']
-                );
-                ?>
-            </p>
+            <h2 class="title"><strong><?= __('New Event');?>:</strong> <?= __('Free Goalous Seminar');?></h2>
+            <p><?= __('Learn all of the ways you can improve your organization using Goalous.');?></p>
         </div>
-        <div class="row text-left">
-            <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
-                __('4 Feb 2016');
-                ?></p>
-            <p class="col-md-6 col-sm-9">
-                <?=
-                $this->Html->link(
-                    __('Goalous was featured in a web publication - Hito to shigoto no kenkyujo by Idem -'),
-                    'https://apj.aidem.co.jp/column/597//',
-                    ['target' => '_blank']
-                );
-                ?>
-            </p>
-        </div>
+        <a href="http://peatix.com/event/319633/view" target="_blank" class="btn btn-cta-primary btn-lg"><?= __('Get Ticket');?></a>
     </div>
-</div><!--//press-->
+</div>
 
 <!-- ******WHY****** -->
 <section id="why" class="why section">
