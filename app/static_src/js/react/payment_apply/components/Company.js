@@ -47,7 +47,7 @@ export default class Company extends Base {
   }
 
   render() {
-    const {input_data, validation_errors, is_disabled_submit} = this.props.payment;
+    const {input_data, validation_errors, is_disabled_submit, is_campaign_team} = this.props.payment;
     const {payment_setting} = input_data
     const errors_payment_setting = validation_errors.payment_setting ? validation_errors.payment_setting : {};
 
@@ -101,7 +101,7 @@ export default class Company extends Base {
               name="company_post_code"
               value={payment_setting.company_post_code}
               label={__("Post Code")}
-              placeholder={__("12345")}
+              placeholder={__("12345 ")}
               err_msg={errors_payment_setting.company_post_code}
               max_length={16}
               onChange={(e) => this.onChange(e, "payment_setting")}
@@ -189,7 +189,8 @@ export default class Company extends Base {
           />
           </div>
           <div className="panel-footer setting_pannel-footer">
-            <Link to="/payments/apply" className="btn btn-link design-cancel bd-radius_4px">
+            <Link to={ is_campaign_team ? '/payments/apply/campaign' : '/payments/apply' }
+                  className="btn btn-link design-cancel bd-radius_4px">
               {__("Back")}</Link>
             <button className="btn btn-primary" disabled={is_disabled_submit ? "disabled" : ""}>
               {__("Next")}

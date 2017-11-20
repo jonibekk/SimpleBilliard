@@ -53,6 +53,8 @@ class MonthlyInvoiceChargeShell extends AppShell
         $PaymentService = ClassRegistry::init('PaymentService');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
 
         // Get charge target teams that is not charged yet.
         $targetChargeTeams = $PaymentService->findMonthlyChargeInvoiceTeams($targetTimestamp);
@@ -85,7 +87,15 @@ class MonthlyInvoiceChargeShell extends AppShell
 
             try {
                 PaymentUtil::logCurrentTeamChargeUsers($teamId);
-                $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp);
+
+                $pricePlanId = null;
+                if ($CampaignService->isCampaignTeam($teamId)) {
+                    $pricePlan = $CampaignService->getTeamPricePlan($teamId);
+                    $pricePlanId = $pricePlan['id'];
+                }
+
+                // TODO: fix 6th arguments: https://jira.goalous.com/browse/GL-6378
+                $retRegistration = $PaymentService->registerInvoice($teamId, $chargeMemberCount, $targetTimestamp, null, true, $pricePlanId);
                 if ($retRegistration === true) {
                     $this->logInfo(sprintf('Order registration was succeeded! teamId: %s', $teamId));
                 } else {

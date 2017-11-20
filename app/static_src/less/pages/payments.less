@@ -87,19 +87,19 @@
         width: 100%;
         text-align: center;
     }
-    
+
     .success, .error {
         display: none;
     }
-    
+
     .success.visible, .error.visible {
         display: inline;
     }
-    
+
     .error {
         color: @acidRed;
     }
-    
+
     .success {
         color: @subColor7;
     }
@@ -169,7 +169,6 @@
         width: 100%;
     }
     .btnRadiusOnlyIcon{
-        display:flex;
         i{
             margin:auto;
         }
@@ -274,7 +273,7 @@
 
 
 // Payment History Page
-.payment-history-table{
+.payment-table{
     width:100%;
     border: 1px solid @baseGray;
     font-size:11px;
@@ -306,6 +305,48 @@
                     border-right:none;
                 }
             }
+        }
+    }
+    &.campaign-table{
+        border:none;
+        text-align:left;
+        font-size: 14px;
+        thead{
+            background-color:transparent;
+            border-top: 1px solid @darkBlack;
+            border-bottom: 1px solid @darkBlack;
+            td{
+                border-right: none;
+                padding: .25em 0;
+            }
+        }
+        tbody{
+            tr{
+                border-bottom: 1px solid @trueGray;
+                height: 40px;
+                td{ 
+                    border-right: none;
+                    padding: .5em 0;
+                    min-height: 3em;
+                    &:last-of-type{
+                        text-align:right;
+                    }
+                }
+            }
+        }
+        .btn.small{
+            border-color: @darkBlack;
+            color: @darkBlack;
+            padding: .15em .5em;
+            font-weight: 600;
+            border-width:1px;
+            &.selected {
+                border-color: @subColor7;
+            }
+        }
+        .fa.fa-check.success{
+            display:block;
+            margin-right: 1.5em;
         }
     }
 }
@@ -355,7 +396,7 @@
     &.free-trial{
         color: @darkBlack;
     }
-    &.subscribed{ 
+    &.subscribed{
         color:@subColor7;
     }
     &.read-only{
@@ -418,7 +459,7 @@
     .icon{
         &:before{
             color:@white;
-            font-family: FontAwesome; 
+            font-family: FontAwesome;
             border-radius: 50%;
             display: block;
             font-size: 10px;

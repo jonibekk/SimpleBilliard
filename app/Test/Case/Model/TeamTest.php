@@ -1,5 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Team', 'Model');
+App::import('Service', 'PaymentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -24,7 +25,11 @@ class TeamTest extends GoalousTestCase
         'app.circle_member',
         'app.team_member',
         'app.term',
-        'app.email'
+        'app.email',
+        'app.payment_setting',
+        'app.charge_history',
+        'app.credit_card',
+        'app.invoice',
     );
 
     /**
@@ -36,6 +41,7 @@ class TeamTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Team = ClassRegistry::init('Team');
+        $this->PaymentService = ClassRegistry::init('PaymentService');
     }
 
     /**
@@ -378,6 +384,82 @@ class TeamTest extends GoalousTestCase
         $this->assertEqual($this->Team->getAmountPerUser($teamAId), 1500);
         $teamBId = $this->createTeam();
         $this->assertEqual($this->Team->getAmountPerUser($teamBId), null);
+    }
+
+    public function test_findTargetsForMovingReadOnly_basic()
+    {
+        $startTs = strtotime("2017-01-01 00:00:00");
+        $endTs = strtotime("2017-03-01 23:59:59");
+        // Not paid plan team
+        // Free trial
+        $this->createTeam(["service_use_status" => Enum\Team\ServiceUseStatus::FREE_TRIAL]);
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
+
+        // Read only
+        $this->createTeam(["service_use_status" => Enum\Team\ServiceUseStatus::READ_ONLY]);
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
+
+        // Invoice payment type team
+        $this->createInvoicePaidTeam();
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
+
+        // Charge fail 1 count
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $usersCount = 5;
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, $usersCount);
+        $historyData = [
+            'team_id'          => $teamId,
+            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'total_amount'     => $chargeInfo['sub_total_charge'],
+            'tax'              => $chargeInfo['tax'],
+            'charge_users'     => $usersCount,
+            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'charge_datetime'  => strtotime("2017-01-01 00:00:00"),
+            'result_type'      => Enum\ChargeHistory\ResultType::FAIL,
+            'max_charge_users' => $usersCount
+        ];
+        $this->ChargeHistory->create();
+        $this->ChargeHistory->save($historyData, false);
+
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
+
+
+        // Charge fail 2 count
+        $historyData2 = array_merge($historyData, ['charge_datetime' => strtotime("2017-02-01 00:00:00")]);
+        $this->ChargeHistory->create();
+        $historyId2 = $this->ChargeHistory->save($historyData2, false);
+
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
+
+        // Charge fail 3 count
+        $historyData3 = array_merge($historyData, ['charge_datetime' => strtotime("2017-03-01 00:00:00")]);
+        $this->ChargeHistory->create();
+        $this->ChargeHistory->save($historyData3, false);
+
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0], $teamId);
+
+        // Charge fail 3 count past
+        $startTs = strtotime("2017-01-02 00:00:00");
+        $endTs = strtotime("2017-03-02 23:59:59");
+
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
+
+        // Charge fail 3 count but not continuously
+        $this->ChargeHistory->id = $historyId2;
+        $this->ChargeHistory->save(['result_type'      => Enum\ChargeHistory\ResultType::SUCCESS], false);
+        $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
+        $this->assertEmpty($res);
     }
 
     function _setDefault()

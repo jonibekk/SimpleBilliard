@@ -278,7 +278,39 @@ class Term extends AppModel
     public function getTermData(int $type, bool $withCache = true): array
     {
         $this->_checkType($type);
-        $timezone = $this->Team->getTimezone();
+
+        // GL-6354: Output log to investigate the cause of error.
+        // TODO: Remove try catch after we found the cause and fixed.
+        try {
+            $timezone = $this->Team->getTimezone();
+            if (is_null($timezone) || $timezone === "") {
+                $currentTeamId = $this->Team->current_team_id;
+                if (empty($currentTeamId)) {
+                    throw new Exception(sprintf("Timezone is null. current_team_id is empty. my_uid:%s",
+                        $this->Team->my_uid));
+                }
+                $cacheCurrentTeam = Cache::read($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false), 'team_info');
+                if (empty($cacheCurrentTeam)) {
+                    throw new Exception(sprintf("Timezone is null. Current team cache is empty. current_team_id:%s my_uid:%s",
+                        $currentTeamId, $this->Team->my_uid));
+                }
+
+                $dbCurrentTeam = $this->Team->findById($currentTeamId);
+                if (empty($dbCurrentTeam)) {
+                    throw new Exception(sprintf("Timezone is null. Db data is empty. current_team_id:%s my_uid:%s cache:%s"
+                        , $currentTeamId, $this->Team->my_uid, AppUtil::jsonOneLine($cacheCurrentTeam)));
+                }
+
+                throw new Exception(sprintf("Timezone is null. current_team_id:%s my_uid:%s cache:%s db data:%s"
+                    , $currentTeamId, $this->Team->my_uid
+                    , AppUtil::jsonOneLine($cacheCurrentTeam)
+                    , AppUtil::jsonOneLine($dbCurrentTeam)
+                ));
+            }
+        } catch (Exception $e) {
+            CakeLog::error($e->getMessage());
+            CakeLog::error($e->getTraceAsString());
+        }
 
         //先ずはcurrentを取得。previous, nextの基準になるので
         if (!$this->currentTerm) {

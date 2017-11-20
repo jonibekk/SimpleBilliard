@@ -67,6 +67,7 @@ export default class Invoice extends Base {
                 <input
                   type="checkbox" id="checkSameAsCompanyInfo"
                   onChange={this.onCheck.bind(this)}
+                  checked={is_same_as_company_info}
                 />{__("Same as company information")}
               </label>
             </div>
@@ -88,7 +89,7 @@ export default class Invoice extends Base {
                 name="company_post_code"
                 value={invoice.company_post_code}
                 label={__("Post Code")}
-                placeholder={__("12345")}
+                placeholder={__("12345 ")}
                 disabled={is_same_as_company_info}
                 err_msg={errors_invoice.company_post_code}
                 max_length={16}

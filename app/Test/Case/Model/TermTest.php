@@ -470,10 +470,12 @@ class TermTest extends GoalousTestCase
     function test_updateCurrentEnd()
     {
         $this->_setDefault();
-        $currentTerm = $this->saveTerm(1, '2017-04-01' , 6, false);
-        $this->Term->updateCurrentEnd('2017-02-01');
+        $currentTerm = $this->saveTerm(1, date('Y-m-d') , 6, false);
+        $this->Term->current_team_id = $currentTerm['team_id'];
+        $endDate = date('Y-m-d', strtotime('+1 month'));
+        $this->Term->updateCurrentEnd($endDate);
         $resEndDate = $this->Term->getById($this->Term->getCurrentTermId())['end_date'];
-        $this->assertEquals($resEndDate, '2017-02-01');
+        $this->assertEquals($resEndDate, $endDate);
     }
 
     function test_updateRange()

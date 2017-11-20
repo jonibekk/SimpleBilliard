@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
+import {browserHistory} from "react-router";
 import {Link} from "react-router";
 import {MaxLength} from "~/common/constants/App";
 import Base from "~/common/components/Base";
@@ -29,6 +30,10 @@ export default class Confirm extends Base {
     if (nextProps.invite.redirect_to_home) {
       super.removeBeforeUnloadHandler.apply(this)
       document.location.href = "/"
+    }
+    else if (nextProps.invite.redirect_to_upgrade_plan) {
+        super.removeBeforeUnloadHandler.apply(this)
+        browserHistory.push('/users/invite/exceed')
     }
   }
 
