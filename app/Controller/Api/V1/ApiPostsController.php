@@ -60,9 +60,12 @@ class ApiPostsController extends ApiController
     public function post_video()
     {
         try {
-            CakeLog::info(sprintf("file log: %s", AppUtil::jsonOneLine([
+            CakeLog::info(sprintf("uploaded file: %s", AppUtil::jsonOneLine([
                 'video' => $this->params['form']['video'],
             ])));
+            if (0 < intval($this->params['form']['video']['error'])) {
+                throw new RuntimeException('file upload error: ' . $this->params['form']['video']['error']);
+            }
 
             // TODO: check the video duration, resolution, aspect ratio
             // TODO: create draft post
