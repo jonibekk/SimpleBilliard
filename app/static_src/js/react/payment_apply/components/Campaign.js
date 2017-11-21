@@ -74,7 +74,7 @@ export default class Campaign extends Base {
           </Link>
           <a className="btn btn-primary"
              onClick={this.onClickNext}
-             disabled={selected_price_plan_code == null}>
+             disabled={!selected_price_plan_code}>
             {__('Next')}
           </a>
         </div>
