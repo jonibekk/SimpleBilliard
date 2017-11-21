@@ -66,7 +66,7 @@ export default class UpgradePlan extends Base {
               tax={selected_price_plan.tax}
               total_charge={selected_price_plan.total_charge}
               is_campaign={true}
-              campaign_members={selected_price_plan.max_members}
+              max_members={selected_price_plan.max_members}
               is_upgrading_plan={true}
             />
           }

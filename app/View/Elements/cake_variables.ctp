@@ -688,6 +688,7 @@ App::uses('AttachedFile', 'Model');
             "Your team upgraded price plan": "<?= __("Your team upgraded price plan") ?>",
             "Current plan": "<?= __("Current plan") ?>",
             "Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.": "<?= __("Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.") ?>",
+            "Annual plan(paid monthly)": "<?= __("Annual plan(paid monthly)") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
