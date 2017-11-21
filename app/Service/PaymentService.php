@@ -613,7 +613,9 @@ class PaymentService extends AppService
     {
         // Format ex 1980 → ¥1,980
         $num = number_format($charge, 2);
-        $num = preg_replace("/\.?0+$/", "", $num);
+        if ($currencyType == Enum\PaymentSetting\Currency::JPY) {
+            $num = preg_replace("/\.?0+$/", "", $num);
+        }
         $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . $num;
         return $res;
     }
