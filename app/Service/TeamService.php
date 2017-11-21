@@ -3,6 +3,8 @@ App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Class TeamService
  */
@@ -185,7 +187,7 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        if ($serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
+        if ($serviceUseStatus == Enum\Team\ServiceUseStatus::PAID) {
             $endDate = null;
         } else {
             $statusDays = Team::DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
@@ -208,6 +210,14 @@ class TeamService extends AppService
                 throw new Exception(sprintf("Failed update Team use status. data: %s, validationErrors: %s",
                     AppUtil::varExportOneLine($data),
                     AppUtil::varExportOneLine($Team->validationErrors)));
+            }
+
+            // Delete all payment data only when changing from PAID to READ_ONLY
+            if (TeamService::getServiceUseStatus() == Enum\Team\ServiceUseStatus::PAID &&
+                $serviceUseStatus !== Enum\Team\ServiceUseStatus::READ_ONLY) {
+                /** @var PaymentService $PaymentService */
+                $PaymentService = ClassRegistry::init('PaymentService');
+                $PaymentService->deleteTeamsAllPaymentSetting($teamId);
             }
         }
         catch (Exception $e) {

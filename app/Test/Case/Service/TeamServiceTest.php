@@ -16,6 +16,10 @@ class TeamServiceTest extends GoalousTestCase
         'app.term',
         'app.user',
         'app.team',
+        'app.payment_setting',
+        'app.invoice',
+        'app.credit_card',
+        'app.price_plan_purchase_team',
     );
 
     /**
