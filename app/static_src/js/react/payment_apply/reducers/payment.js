@@ -57,7 +57,8 @@ const initial_state = {
   selected_price_plan: {
     tax: "",
     sub_total_charge: "",
-    total_charge: ""
+    total_charge: "",
+    max_members: 0,
   },
   is_disabled_submit: false,
   redirect_to_home: false

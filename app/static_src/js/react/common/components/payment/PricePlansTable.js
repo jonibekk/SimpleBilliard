@@ -42,7 +42,7 @@ export default class PricePlansTable extends React.Component {
       <table className="payment-table campaign-table">
         <thead>
         <tr>
-          <td><strong>{__('Plan')}</strong><br/>{__('max members')}</td>
+          <td><strong>{__('Annual plan(paid monthly)')}</strong><br/>{__('max members')}</td>
           <td><strong>{__('Price')}</strong><br/>{__('per month')}</td>
           <td>&nbsp;</td>
         </tr>

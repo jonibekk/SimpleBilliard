@@ -241,6 +241,7 @@ class CampaignServiceTest extends GoalousTestCase
         $this->CampaignTeam->clear();
         $this->CampaignTeam->id = $campaignTeamId;
         $this->CampaignTeam->save(['price_plan_group_id' => $pricePlanGroupId], false);
+        $tax = $this->PaymentService->formatCharge(0, Enum\PaymentSetting\Currency::USD);
         $expected = [
             [
                 'id'               => '6',
@@ -249,10 +250,10 @@ class CampaignServiceTest extends GoalousTestCase
                 'price'            => 500,
                 'currency'         => 2,
                 'can_select'       => true,
-                'format_price'     => '$500',
-                'sub_total_charge' => '$500',
-                'tax'              => '$0',
-                'total_charge'     => '$500',
+                'format_price'     => '$500.00',
+                'sub_total_charge' => '$500.00',
+                'tax'              => $tax,
+                'total_charge'     => '$500.00',
                 'max_members'      => '50',
             ],
             [
@@ -262,10 +263,10 @@ class CampaignServiceTest extends GoalousTestCase
                 'price'            => 1000,
                 'currency'         => 2,
                 'can_select'       => true,
-                'format_price'     => '$1,000',
-                'sub_total_charge' => '$1,000',
-                'tax'              => '$0',
-                'total_charge'     => '$1,000',
+                'format_price'     => '$1,000.00',
+                'sub_total_charge' => '$1,000.00',
+                'tax'              => $tax,
+                'total_charge'     => '$1,000.00',
                 'max_members'      => '200',
             ],
             [
@@ -275,10 +276,10 @@ class CampaignServiceTest extends GoalousTestCase
                 'price'            => 1500,
                 'currency'         => 2,
                 'can_select'       => true,
-                'format_price'     => '$1,500',
-                'sub_total_charge' => '$1,500',
-                'tax'              => '$0',
-                'total_charge'     => '$1,500',
+                'format_price'     => '$1,500.00',
+                'sub_total_charge' => '$1,500.00',
+                'tax'              => $tax,
+                'total_charge'     => '$1,500.00',
                 'max_members'      => '300',
             ],
             [
@@ -288,10 +289,10 @@ class CampaignServiceTest extends GoalousTestCase
                 'price'            => 2000,
                 'currency'         => 2,
                 'can_select'       => true,
-                'format_price'     => '$2,000',
-                'sub_total_charge' => '$2,000',
-                'tax'              => '$0',
-                'total_charge'     => '$2,000',
+                'format_price'     => '$2,000.00',
+                'sub_total_charge' => '$2,000.00',
+                'tax'              => $tax,
+                'total_charge'     => '$2,000.00',
                 'max_members'      => '400',
             ],
             [
@@ -301,10 +302,10 @@ class CampaignServiceTest extends GoalousTestCase
                 'price'            => 2500,
                 'currency'         => 2,
                 'can_select'       => true,
-                'format_price'     => '$2,500',
-                'sub_total_charge' => '$2,500',
-                'tax'              => '$0',
-                'total_charge'     => '$2,500',
+                'format_price'     => '$2,500.00',
+                'sub_total_charge' => '$2,500.00',
+                'tax'              => $tax,
+                'total_charge'     => '$2,500.00',
                 'max_members'      => '500',
             ],
         ];

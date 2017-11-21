@@ -44,7 +44,7 @@ export default class Campaign extends Base {
       tax: plan.tax,
       sub_total_charge: plan.sub_total_charge,
       total_charge: plan.total_charge,
-      members: plan.member_count
+      max_members: plan.max_members
     })
     this.props.updateInputData(
       {price_plan_code: plan.code},
@@ -74,7 +74,7 @@ export default class Campaign extends Base {
           </Link>
           <a className="btn btn-primary"
              onClick={this.onClickNext}
-             disabled={selected_price_plan_code == null}>
+             disabled={!selected_price_plan_code}>
             {__('Next')}
           </a>
         </div>

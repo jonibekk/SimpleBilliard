@@ -24,7 +24,7 @@ class ConfirmCharge extends React.Component {
             </div>
             ) : (
               <div>
-                  <strong>{this.props.is_upgrading_plan ? __('Upgrade') : __('Plan')}&nbsp;({sprintf(__("%d members"), this.props.campaign_members)}):</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
+                  <strong>{this.props.is_upgrading_plan ? __('Upgrade') : __('Plan')}&nbsp;({sprintf(__("%d members"), this.props.max_members)}):</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
               </div>
             )
           }
