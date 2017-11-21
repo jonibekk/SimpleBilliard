@@ -3065,9 +3065,9 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->formatCharge(100.12, $currency);
         $this->assertEquals($res, '$100.12');
         $res = $this->PaymentService->formatCharge(0.1, $currency);
-        $this->assertEquals($res, '$0.1');
+        $this->assertEquals($res, '$0.10');
         $res = $this->PaymentService->formatCharge(1234567890, $currency);
-        $this->assertEquals($res, '$1,234,567,890');
+        $this->assertEquals($res, '$1,234,567,890.00');
     }
 
     public function test_formatTotalChargeByAddUsers_jp()
