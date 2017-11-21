@@ -1249,22 +1249,22 @@ class PaymentService extends AppService
             'team_id' => $teamId,
         ];
 
-        if (!$PaymentSetting->softDeleteAll($condition, true)) {
+        if (!$PaymentSetting->softDeleteAll($condition, false)) {
             throw new RuntimeException(sprintf('failed soft delete payment_settings: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
-        if (!$Invoice->softDeleteAll($condition, true)) {
+        if (!$Invoice->softDeleteAll($condition, false)) {
             throw new RuntimeException(sprintf('failed soft delete invoices: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
-        if (!$CreditCard->softDeleteAll($condition, true)) {
+        if (!$CreditCard->softDeleteAll($condition, false)) {
             throw new RuntimeException(sprintf('failed soft delete credit_cards: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
-        if (!$PricePlanPurchaseTeam->softDeleteAll($condition, true)) {
+        if (!$PricePlanPurchaseTeam->softDeleteAll($condition, false)) {
             throw new RuntimeException(sprintf('failed soft delete price_plan_purchase_team: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));

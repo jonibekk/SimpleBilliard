@@ -1,7 +1,6 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Team', 'Model');
-App::import('Service', 'PaymentSettings');
 App::import('Service', 'PaymentService');
 
 /**
