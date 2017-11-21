@@ -212,8 +212,9 @@ class TeamService extends AppService
                     AppUtil::varExportOneLine($Team->validationErrors)));
             }
 
-            if ($serviceUseStatus !== Enum\Team\ServiceUseStatus::PAID) {
-                // Delete all payment data
+            // Delete all payment data only when changing from PAID to READ_ONLY
+            if (TeamService::getServiceUseStatus() == Enum\Team\ServiceUseStatus::PAID &&
+                $serviceUseStatus !== Enum\Team\ServiceUseStatus::READ_ONLY) {
                 /** @var PaymentService $PaymentService */
                 $PaymentService = ClassRegistry::init('PaymentService');
                 $PaymentService->deleteTeamsAllPaymentSetting($teamId);
