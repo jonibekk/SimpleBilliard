@@ -10,6 +10,8 @@ App::uses('TransactionManager', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('ChargeHistory', 'Model');
+App::uses('CampaignTeam', 'Model');
+App::uses('PricePlanPurchaseTeam', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('GoalousDateTime', 'DateTime');
@@ -1241,36 +1243,39 @@ class PaymentService extends AppService
         $Invoice = ClassRegistry::init('Invoice');
         /** @var CreditCard $CreditCard */
         $CreditCard = ClassRegistry::init('CreditCard');
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
 
-        $condition = [
-            'team_id' => $teamId,
-        ];
-
-
         if (!empty($PaymentSetting->getByTeamId($teamId, ['id'])) &&
-            !$PaymentSetting->softDeleteAll($condition, false)) {
+            !$PaymentSetting->softDeleteAll(['PaymentSetting.team_id' => $teamId], false)) {
             throw new RuntimeException(sprintf('failed soft delete payment_settings: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
         if (!empty($Invoice->getByTeamId($teamId, ['id'])) &&
-            !$Invoice->softDeleteAll($condition, false)) {
+            !$Invoice->softDeleteAll(['Invoice.team_id' => $teamId], false)) {
             throw new RuntimeException(sprintf('failed soft delete invoices: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
         if (!empty($CreditCard->getByTeamId($teamId, ['id'])) &&
-            !$CreditCard->softDeleteAll($condition, false)) {
+            !$CreditCard->softDeleteAll(['CreditCard.team_id' => $teamId], false)) {
             throw new RuntimeException(sprintf('failed soft delete credit_cards: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
         if (!empty($PricePlanPurchaseTeam->getByTeamId($teamId, ['id'])) &&
-            !$PricePlanPurchaseTeam->softDeleteAll($condition, false)) {
+            !$PricePlanPurchaseTeam->softDeleteAll(['PricePlanPurchaseTeam.team_id' => $teamId], false)) {
             throw new RuntimeException(sprintf('failed soft delete price_plan_purchase_team: %s', AppUtil::jsonOneLine([
+                'teams.id' => $teamId,
+            ])));
+        }
+        if (!empty($CampaignTeam->getByTeamId($teamId, ['id'])) &&
+            !$CampaignTeam->softDeleteAll(['CampaignTeam.team_id' => $teamId], false)) {
+            throw new RuntimeException(sprintf('failed soft delete campaign_team: %s', AppUtil::jsonOneLine([
                 'teams.id' => $teamId,
             ])));
         }
