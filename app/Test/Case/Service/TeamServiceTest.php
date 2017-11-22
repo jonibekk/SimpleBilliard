@@ -61,7 +61,13 @@ class TeamServiceTest extends GoalousTestCase
         $res = $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_PAID, date('Y-m-d'));
 
         $this->assertTrue($res === true);
-        $this->assertEquals($this->TeamService->getServiceUseStatus(), Team::SERVICE_USE_STATUS_PAID);
+        $this->assertEquals($this->TeamService->getServiceUseStatusByTeamId($teamId), Team::SERVICE_USE_STATUS_PAID);
+
+        // Paid to Read-only
+        $res = $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_READ_ONLY, date('Y-m-d'));
+
+        $this->assertTrue($res === true);
+        $this->assertEquals($this->TeamService->getServiceUseStatusByTeamId($teamId), Team::SERVICE_USE_STATUS_READ_ONLY);
     }
 
     function test_getTeamTimezone_success()

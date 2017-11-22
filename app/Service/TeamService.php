@@ -48,6 +48,16 @@ class TeamService extends AppService
     }
 
     /**
+     * Delete team CACHE_KEY_CURRENT_TEAM
+     *
+     * @param int $teamId
+     */
+    function deleteTeamCache(int $teamId)
+    {
+        Cache::delete(CACHE_KEY_CURRENT_TEAM . ":team:" . $teamId, 'team_info');
+    }
+
+    /**
      * get team service use status
      * # Warning
      * - In Team::getCurrentTeam, use CACHE_KEY_CURRENT_TEAM cache.
@@ -62,6 +72,22 @@ class TeamService extends AppService
 
         $team = $Team->getCurrentTeam();
         return $team['Team']['service_use_status'];
+    }
+
+    /**
+     * Get team service user status
+     *
+     * @param int $teamId
+     *
+     * @return int
+     */
+    public function getServiceUseStatusByTeamId(int $teamId): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $team = $Team->getById($teamId, ['service_use_status']);
+        return $team['service_use_status'];
     }
 
     /**
@@ -206,19 +232,20 @@ class TeamService extends AppService
         ];
 
         try {
+            // Delete all payment data only when changing from PAID to READ_ONLY
+            if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Team\ServiceUseStatus::PAID &&
+                $serviceUseStatus == Enum\Team\ServiceUseStatus::READ_ONLY) {
+                /** @var PaymentService $PaymentService */
+                $PaymentService = ClassRegistry::init('PaymentService');
+                $PaymentService->deleteTeamsAllPaymentSetting($teamId);
+            }
+
             if (!$Team->updateAll($data, $condition)) {
                 throw new Exception(sprintf("Failed update Team use status. data: %s, validationErrors: %s",
                     AppUtil::varExportOneLine($data),
                     AppUtil::varExportOneLine($Team->validationErrors)));
             }
-
-            // Delete all payment data only when changing from PAID to READ_ONLY
-            if (TeamService::getServiceUseStatus() == Enum\Team\ServiceUseStatus::PAID &&
-                $serviceUseStatus !== Enum\Team\ServiceUseStatus::READ_ONLY) {
-                /** @var PaymentService $PaymentService */
-                $PaymentService = ClassRegistry::init('PaymentService');
-                $PaymentService->deleteTeamsAllPaymentSetting($teamId);
-            }
+            $this->deleteTeamCache($teamId);
         }
         catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
