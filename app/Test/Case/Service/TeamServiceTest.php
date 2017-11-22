@@ -20,6 +20,7 @@ class TeamServiceTest extends GoalousTestCase
         'app.invoice',
         'app.credit_card',
         'app.price_plan_purchase_team',
+        'app.campaign_team',
     );
 
     /**

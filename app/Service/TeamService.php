@@ -125,8 +125,6 @@ class TeamService extends AppService
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        /** @var PaymentService $PaymentService */
-        $PaymentService = ClassRegistry::init("PaymentService");
 
         $targetTeamList = $Team->findTeamListStatusExpired($currentStatus, $targetExpireDate);
         if (empty($targetTeamList)) {
@@ -143,10 +141,6 @@ class TeamService extends AppService
             $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
                 AppUtil::varExportOneLine($targetTeamList)));
             $this->log(Debugger::trace());
-        }
-
-        foreach ($targetTeamList as $targetTeam) {
-            $PaymentService->deleteTeamsAllPaymentSetting($targetTeam);
         }
 
         /** @var GlRedis $GlRedis */
@@ -232,12 +226,16 @@ class TeamService extends AppService
         ];
 
         try {
+            $this->TransactionManager->begin();
+
             // Delete all payment data only when changing from PAID to READ_ONLY
             if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Team\ServiceUseStatus::PAID &&
                 $serviceUseStatus == Enum\Team\ServiceUseStatus::READ_ONLY) {
                 /** @var PaymentService $PaymentService */
                 $PaymentService = ClassRegistry::init('PaymentService');
-                $PaymentService->deleteTeamsAllPaymentSetting($teamId);
+                if (!$PaymentService->deleteTeamsAllPaymentSetting($teamId)) {
+                    throw new Exception("Failed to update service status for team_id: $teamId");
+                }
             }
 
             if (!$Team->updateAll($data, $condition)) {
@@ -246,10 +244,15 @@ class TeamService extends AppService
                     AppUtil::varExportOneLine($Team->validationErrors)));
             }
             $this->deleteTeamCache($teamId);
+
+            $this->TransactionManager->commit();
         }
         catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            $this->TransactionManager->rollback();
+
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+
             return false;
         }
         return true;
