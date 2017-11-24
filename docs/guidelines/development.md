@@ -1,76 +1,105 @@
 
 <hr id="setup_stack">
 
-## 開発環境構築手順書
+## Set-up guild for development
 
 ## Introduction
-Goalousで素早く開発を始められるよう心がけております。
-より効率的な手順もしくは運用方法があれば、どんどん修正していきます。
+We are trying to start development quickly for Goalous.
+If there is a more efficient procedure or operation method, we will fix it more and more.
 
 ## Requirements
-以下のツールはローカルにおける開発時に必須である為、必ずインストールしてください。
+Please be sure to install the following tools as they are essential for development on local environment.
 
-- Virtual Box `version = 5.0.x`
-- Vagrant `version = latest`
+- Virtual Box `version = latest`
+- Vagrant `version = 1.8.7` https://releases.hashicorp.com/vagrant/1.8.7/
 - Git `version >= latest`
-- Chef Development Kit `version = 0.17.17`
+- Chef Development Kit `version = 0.17.17` https://downloads.chef.io/chefdk/stable/0.17.17
 
-[インストール手順(windows)](http://bit.ly/2aIo1KH)
-[インストール手順(mac)](http://bit.ly/2adyLyR)
 
-## Recommend
-- [hubコマンド](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（mac,linuxのみ）
+- [Installation guild for tools(windows)](http://bit.ly/2aIo1KH) written in Japanese.
+- [Installation guild for tools(mac)](http://bit.ly/2adyLyR) written in Japanese.
+
+## Recommended
+- [hub command](http://qiita.com/yaotti/items/a4a7f3f9a38d7d3415e3)（Only mac and linux）
 
 ## IDE
-[Phpstorm](http://www.jetbrains.com/phpstorm/)に最適化されています。
+Goalous development is optimized for using [Phpstorm](http://www.jetbrains.com/phpstorm/).
+However you can use another IDE or editor as well.
 
 ## Installation
-1. ソースファイルをClone  
-ターミナルを起動し、以下を実行  
-`git clone --recursive git@github.com:IsaoCorp/goalous2.git`  
-1. vagrantを起動  
-ターミナルで以下を実行  
-`cd goalous2`  
-`vagrant up default`  
-[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](http://bit.ly/1TnOYjQ)  
-1. 動作確認  
-ブラウザから以下にアクセス  
-`http://192.168.50.4`  
+1. Clone the Source files.  
+run below command on terminal.  
+`git clone --recursive git@github.com:IsaoCorp/goalous.git`  
+1. Start vagrant  
+run below command on terminal.  
+`cd goalous`  
+`vagrant up`  
+[Troubleshooting of vagrant](http://bit.ly/1TnOYjQ)  
+1. Operation check  
+Access below url  
+[http://192.168.50.4](http://192.168.50.4)  
 
+## Test Users
+You don't need to make an user registration on local env.
+There are test users already.
+However, of course you can register user by own e-mail address as well.
 
-### ローカル環境のアップデート
-ホスト側(mac or windows)で
+User name list:
+- goalous.test01@gmail.com
+- goalous.test02@gmail.com
+- goalous.test03@gmail.com
+- goalous.test04@gmail.com
+- goalous.test05@gmail.com
+- goalous.test06@gmail.com
+- goalous.test07@gmail.com
+- goalous.test08@gmail.com
+- goalous.test09@gmail.com
+- goalous.test10@gmail.com
+
+Password: `12345678`
+
+### Updating local environment
+On Host OS:
 ```shell
 $ sh etc/local/update_app.sh
 ```
 
-### DB Schemaのみアップデート
-ゲスト側(ubuntu)で
+### Updating DB Schemas
+On Guest OS(VM):
 ```shell
 vagrant@precise64:/vagrant/app$ ./Console/cake migrations.migration run all
 ```
 
-### ローカルでテスト実行
-#### Goalモデルなら
-ゲスト側(ubuntu)で
+### DB information for local environment
+- DB name: `myapp`
+- DB user: `root`
+- DB password: blank
+- DB host: localhost
+
+You can connect the DB from VM.
+
+### To run test cases
+#### In Goal model case
+On Guest OS(VM):
 ```shell
 vagrant@precise64:/vagrant/app$ ./Console/cake test app Model/Goal
 ```
 
-#### Goalsコントローラなら
-ゲスト側(ubuntu)で
+#### In GoalsController case
+On Guest OS(VM):
 ```shell
 vagrant@precise64:/vagrant/app$ ./Console/cake test app Controller/GoalsController
 ```
 
-#### メソッド単体で実行(GoalモデルのtestGetXxxのみ実行)
-ゲスト側(ubuntu)で
+#### Only Single method( e.g. testGetXxx() on Goal model)
+On Guest OS(VM):
 ```
 vagrant@precise64:/vagrant/app$ ./Console/cake test app Model/Goal --filter testGetXxx
 ```
 
-### DB migrationの作成
-ゲスト側(ubuntu)で実際のDBの修正をした後に、以下を実行
+### Creating DB migration file
+On Guest OS(VM):  
+To Run below command after change schema
 ```shell
 vagrant@precise64:/vagrant/app$ ./Console/cake migrations.migration generate -f
 /vagrant/app/Vendor/cakephp/cakephp/libCake Migration Shell
@@ -187,41 +216,37 @@ vagrant@precise64:/vagrant/app$
 
 
 <hr id="development_flow">
-# 開発フロー
-## 概要説明
-PR制度を採用しています。
-各環境(本番、ステージング、ホットフィックス)へのDeployは必ずPRのマージによって行われます。  
-フローはこちら http://bit.ly/1PEeE9D
 
-## 操作手順
-ターミナルでコマンドを実行
+# Development flow
+## Description
+Goalous team adapts Pull Request driven development.  
+All deployment should be already reviewed Pull Request.  
+The flow is here: http://bit.ly/1PEeE9D
 
-1. goalousのディレクトリに移動
-1. vagrantを起動  
-`vagrant up default`
-1. developブランチにチェックアウト    
+## Procedures
+To run the following commands.
+
+1. Switch directory to Goalous root
+1. Start vagrant  
+`vagrant up`
+1. Checkout to `develop` branch    
 `git checkout develop`
-1. developブランチを更新  
+1. Updating the branch  
 `git pull`
-1. 作業用ブランチを作成  
+1. Updating local environment  
+`sh etc/local/update_app.sh`
+1. Creating a working branch  
 `git branch topic-xxxx`
-1. 作業ブランチにチェックアウト  
+1. Checkout to working branch  
 `git checkout topic-xxxx`
-1. VMにログイン  
-`vagrant ssh default`
-1. アプリケーションをアップデート  
-`vagrant@precise32:/vagrant_data/app$ sh ../etc/local/ubuntu_update_app.sh `
-1. gruntでcss,less,coffee,jsファイルをwatch  
-`vagrant@precise32:/vagrant_data/app$ grunt`
-1. 作業後にコミット(関連するIssue番号をコミットログにつける。) ※ここからホストOSで作業  
-`git add .`  
-`git commit`
-1. GitHubにプッシュ  
+1. To make changes  
+Append the Issue number of JIRA to the end of the commit log.
+1. Push to GitHub    
 `git push origin topic-xxx`  
-1. PR発行  
-descriptionに関連Issueの番号を`Connected to #[Issue番号]`という風に記載すると親IssueとWaffle上で紐付けられる。
-1. メンバーにレビュー依頼(Issueのコメントでレビュアーにmentionをする)  
-1. 第三者にレビューをしてもらいマージしてもらう
+1. Creating Pull Request  
+Append the Issue number of JIRA to the end of the title.
+1. To comment to other developers on the Pull Request with mention as requesting to review the changes  
+1. Merge Pull Request after a developer said LGTM.
 
 <hr id="agile">
 

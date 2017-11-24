@@ -246,7 +246,7 @@ class InvitationServiceTest extends GoalousTestCase
         ]);
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
-        $this->createPurchasedTeam($teamId, $pricePlanId = 1, $pricePlanCode = '1-1');
+        $this->createPurchasedTeam($teamId, $pricePlanCode = '1-1');
 
         $emails = ['test1@company.com'];
         $res = $this->InvitationService->invite($teamId, $userId, $emails);

@@ -28,6 +28,7 @@ App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
+App::uses('PaymentUtil', 'Util');
 
 use Goalous\Model\Enum as Enum;
 
@@ -493,7 +494,27 @@ class GoalousTestCase extends CakeTestCase
         $this->Team->deleteAll(['id > ' => 0]);
     }
 
-    function createActiveUser($teamId)
+    /**
+     * Create a specified number of users or target team
+     *
+     * @param $teamId
+     * @param $count
+     */
+    function createActiveUsers(int $teamId, int $count)
+    {
+        for($n = 0; $n < $count; $n++) {
+            $this->createActiveUser($teamId);
+        }
+    }
+
+    /**
+     * Create a single active user for the target team
+     *
+     * @param $teamId
+     *
+     * @return mixed
+     */
+    function createActiveUser(int $teamId)
     {
         $this->Team->TeamMember->User->create();
         $this->Team->TeamMember->User->save(['active_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE], false);
@@ -947,8 +968,10 @@ class GoalousTestCase extends CakeTestCase
      * @param int $teamId
      * @param int $campaignType
      * @param int $pricePlanGroupId
+     *
+     * @return int
      */
-    function createCampaignTeam(int $teamId, int $campaignType, int $pricePlanGroupId)
+    function createCampaignTeam(int $teamId, int $pricePlanGroupId)
     {
         /** @var CampaignTeam $CampaignTeam */
         $CampaignTeam = ClassRegistry::init('CampaignTeam');
@@ -956,16 +979,25 @@ class GoalousTestCase extends CakeTestCase
         // Create campaign team
         $campaignTeam = [
             'team_id'             => $teamId,
-            'campaign_type'       => $campaignType,
             'price_plan_group_id' => $pricePlanGroupId,
             'start_date'          => $this->currentDateTime,
         ];
 
         $CampaignTeam->create();
         $CampaignTeam->save($campaignTeam);
+
+        return $CampaignTeam->getLastInsertID();
     }
 
-    function createPurchasedTeam(int $teamId, int $pricePlanId, string $pricePlanCode)
+    /**
+     * Create PricePlanPurchaseTeam
+     *
+     * @param int    $teamId
+     * @param string $pricePlanCode
+     *
+     * @return int
+     */
+    function createPurchasedTeam(int $teamId, string $pricePlanCode): int
     {
         /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
@@ -973,9 +1005,52 @@ class GoalousTestCase extends CakeTestCase
         $PricePlanPurchaseTeam->create();
         $PricePlanPurchaseTeam->save([
             'team_id'           => $teamId,
-            'price_plan_id'     => $pricePlanId,
             'price_plan_code'   => $pricePlanCode,
             'purchase_datetime' => $this->currentDateTime,
         ]);
+
+        return $PricePlanPurchaseTeam->getLastInsertID();
+    }
+
+
+    function createCcCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
+    {
+        $team = array_merge([
+            'country' => 'JP'
+        ], $team);
+        $paymentSetting = array_merge([
+            'amount_per_user' => 0,
+        ], $paymentSetting);
+        list($teamId) = $this->createCcPaidTeam($team, $paymentSetting);
+        $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
+        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
+
+        return [
+            $teamId,
+            $campaignTeamId,
+            $pricePlanPurchaseId
+        ];
+    }
+
+    function createInvoiceCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
+    {
+        $team = am([
+            'country' => 'JP',
+            'timezone' => 9
+        ], $team);
+        $paymentSetting = am([
+            'company_country' => 'JP',
+            'currency' => Enum\PaymentSetting\Currency::JPY,
+            'amount_per_user' => 0,
+        ], $paymentSetting);
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);
+        $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
+        $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
+
+        return [
+            $teamId,
+            $campaignTeamId,
+            $pricePlanPurchaseId
+        ];
     }
 }

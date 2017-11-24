@@ -215,6 +215,11 @@ class PaymentsController extends AppController
         $this->render('update_credit_card');
     }
 
+    public function upgrade_plan()
+    {
+        $this->render('upgrade_plan');
+    }
+
     public function contact_settings()
     {
         // Check if paid plan

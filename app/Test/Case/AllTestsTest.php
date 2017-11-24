@@ -1,4 +1,5 @@
 <?php
+require_once "BaseTest.php";
 /**
  * AllTests file
  * PHP 5
@@ -13,14 +14,13 @@
  * @since         CakePHP(tm) v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
 /**
- * AllTests class
- * This test group will run all tests.
+ * CIParallelTests2 class
+ * This test group will run 1st tests for Travis CI parallel processes.
  *
  * @package       Cake.Test.Case
  */
-class AllTests extends PHPUnit_Framework_TestSuite
+class AllTests extends BaseTest
 {
 
     /**
@@ -31,14 +31,23 @@ class AllTests extends PHPUnit_Framework_TestSuite
     public static function suite()
     {
         ini_set('memory_limit', '2G');
-        $suite = new CakeTestSuite('All Application Test');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'View' . DS . 'Helper');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Model');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Service' . DS . 'Api');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Console');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Lib' . DS . 'Util');
+        $suite = new CakeTestSuite('All Test');
+        // Flatten all test directories
+        $testDirectories = static::flatten(static::$testDirectories);
+        foreach ($testDirectories as $dir) {
+            $suite->addTestDirectory($dir);
+        }
         return $suite;
+    }
+
+    private static function flatten(array $array) {
+        $return = array();
+        array_walk_recursive($array, function($a) use (&$return) {
+            if (!in_array($a, $return)) {
+                $return[] = $a;
+            }
+        });
+        return $return;
     }
 
 }

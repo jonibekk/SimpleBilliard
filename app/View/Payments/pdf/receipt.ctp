@@ -45,14 +45,30 @@
         </div>
     </div>
     <div class="invoice-table">
+        <?php
+            $type = '';
+            switch ($history['ChargeHistory']['charge_type']) {
+                case Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
+                    $type = __("Monthly");
+                    break;
+                case  Goalous\Model\Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
+                case Goalous\Model\Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
+                    $type = __('Add member(s)');
+                    break;
+                case Goalous\Model\Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
+                    $type = __('Upgrade');
+                    break;
+            }
+            $maxMembers = $maxMembers != 0 ? $maxMembers : h($history['ChargeHistory']['charge_users']);
+        ?>
         <table>
             <tbody>
             <th colspan="2"><?= __("TYPE") ?></th>
             <th><?= $isMonthly ? __('TIME PERIOD') : __('DATE'); ?></th>
             <th><?= __('AMOUNT'); ?></th>
             <tr>
-                <td><?= $isMonthly ? __('Monthly') : __('Add member(s)'); ?></td>
-                <td><?= $maxMembers!=0 ? h($maxMembers) :  h($history['ChargeHistory']['charge_users']) ?> <?= __("members") ?></td>
+                <td><?= $type ?></td>
+                <td><?= sprintf(__("%s members"), $maxMembers); ?></td>
                 <td>
                     <?php if ($isMonthly): ?>
                         <?= h($history['ChargeHistory']['term']) ?>
