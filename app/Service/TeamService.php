@@ -48,6 +48,16 @@ class TeamService extends AppService
     }
 
     /**
+     * Delete team CACHE_KEY_CURRENT_TEAM
+     *
+     * @param int $teamId
+     */
+    function deleteTeamCache(int $teamId)
+    {
+        Cache::delete(CACHE_KEY_CURRENT_TEAM . ":team:" . $teamId, 'team_info');
+    }
+
+    /**
      * get team service use status
      * # Warning
      * - In Team::getCurrentTeam, use CACHE_KEY_CURRENT_TEAM cache.
@@ -62,6 +72,22 @@ class TeamService extends AppService
 
         $team = $Team->getCurrentTeam();
         return $team['Team']['service_use_status'];
+    }
+
+    /**
+     * Get team service user status
+     *
+     * @param int $teamId
+     *
+     * @return int
+     */
+    public function getServiceUseStatusByTeamId(int $teamId): int
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $team = $Team->getById($teamId, ['service_use_status']);
+        return $team['service_use_status'];
     }
 
     /**
@@ -99,8 +125,6 @@ class TeamService extends AppService
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-        /** @var PaymentService $PaymentService */
-        $PaymentService = ClassRegistry::init("PaymentService");
 
         $targetTeamList = $Team->findTeamListStatusExpired($currentStatus, $targetExpireDate);
         if (empty($targetTeamList)) {
@@ -117,10 +141,6 @@ class TeamService extends AppService
             $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
                 AppUtil::varExportOneLine($targetTeamList)));
             $this->log(Debugger::trace());
-        }
-
-        foreach ($targetTeamList as $targetTeam) {
-            $PaymentService->deleteTeamsAllPaymentSetting($targetTeam);
         }
 
         /** @var GlRedis $GlRedis */
@@ -206,23 +226,33 @@ class TeamService extends AppService
         ];
 
         try {
+            $this->TransactionManager->begin();
+
+            // Delete all payment data only when changing from PAID to READ_ONLY
+            if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Team\ServiceUseStatus::PAID &&
+                $serviceUseStatus == Enum\Team\ServiceUseStatus::READ_ONLY) {
+                /** @var PaymentService $PaymentService */
+                $PaymentService = ClassRegistry::init('PaymentService');
+                if (!$PaymentService->deleteTeamsAllPaymentSetting($teamId)) {
+                    throw new Exception("Failed to update service status for team_id: $teamId");
+                }
+            }
+
             if (!$Team->updateAll($data, $condition)) {
                 throw new Exception(sprintf("Failed update Team use status. data: %s, validationErrors: %s",
                     AppUtil::varExportOneLine($data),
                     AppUtil::varExportOneLine($Team->validationErrors)));
             }
+            $this->deleteTeamCache($teamId);
 
-            // Delete all payment data only when changing from PAID to READ_ONLY
-            if (TeamService::getServiceUseStatus() == Enum\Team\ServiceUseStatus::PAID &&
-                $serviceUseStatus !== Enum\Team\ServiceUseStatus::READ_ONLY) {
-                /** @var PaymentService $PaymentService */
-                $PaymentService = ClassRegistry::init('PaymentService');
-                $PaymentService->deleteTeamsAllPaymentSetting($teamId);
-            }
+            $this->TransactionManager->commit();
         }
         catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            $this->TransactionManager->rollback();
+
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+
             return false;
         }
         return true;
