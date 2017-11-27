@@ -83,6 +83,7 @@ class PostsController extends AppController
 
     public function add()
     {
+        CakeLog::info(sprintf("add", AppUtil::jsonOneLine([])));
         $this->_addPost();
         $this->redirect($this->_getRedirectUrl());
     }

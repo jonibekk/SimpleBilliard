@@ -261,6 +261,7 @@ class Post extends AppModel
      */
     public function addNormal($postData, $uid = null, $team_id = null)
     {
+        CakeLog::info(sprintf("post data: %s", AppUtil::jsonOneLine($postData)));
         if (!isset($postData['Post']) || empty($postData['Post'])) {
             return false;
         }
