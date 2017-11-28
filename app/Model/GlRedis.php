@@ -51,6 +51,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_SETUP_GUIDE_STATUS = 'setup_guide_status';
     const KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE = 'fail_email_verify_digit_code';
     const KEY_TYPE_CHANGED_TERM = 'changed_term';
+    const KEY_TYPE_MST_CAMPAIGN_PLANS = 'mst_campaign_plans';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
     const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
@@ -76,6 +77,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_SETUP_GUIDE_STATUS,
         self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE,
         self::KEY_TYPE_CHANGED_TERM,
+        self::KEY_TYPE_MST_CAMPAIGN_PLANS,
     ];
 
     /**
@@ -1368,5 +1370,69 @@ class GlRedis extends AppModel
     {
         $ret = $this->Db->get($this->getKeyName(self::KEY_TYPE_CHANGED_TERM, $teamId));
         return !empty($ret);
+    }
+
+    /**
+     * Save master data for campaign price plans
+     *
+     * @param int   $groupId
+     * @param array $plans
+     *
+     * @return bool
+     */
+    function saveMstCampaignPlans(int $groupId, array $plans)
+    {
+        $expire = MONTH;
+        $key = $this->getKeyNameForMstCampaignPlans($groupId);
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $saveData = base64_encode(msgpack_pack($plans));
+        $this->Db->set($key, $saveData);
+        return $this->Db->setTimeout($key, $expire);
+    }
+
+    /**
+     * Get key name for campaign price plans
+     *
+     * @param int $groupId
+     *
+     * @return bool
+     */
+    function getKeyNameForMstCampaignPlans(int $groupId)
+    {
+        $key = self::KEY_TYPE_MST_CAMPAIGN_PLANS . ":" . $groupId;
+        return $key;
+    }
+
+    /**
+     * Get master data for campaign price plans
+     *
+     * @param  $groupId
+     *
+     * @return array
+     */
+    function getMstCampaignPlans(int $groupId): array
+    {
+        $key = $this->getKeyNameForMstCampaignPlans($groupId);
+        $data = $this->Db->get($key);
+        /** @noinspection PhpUndefinedFunctionInspection */
+        $ret = msgpack_unpack(base64_decode($data));
+        if (empty($ret)) {
+            return [];
+        }
+        return $ret;
+    }
+
+    /**
+     * Delete master data for campaign price plans
+     * ※Currently, this method is called only for unit tests
+     *
+     * @param  $groupId
+     *
+     * @return bool
+     */
+    function deleteMstCampaignPlans(int $groupId): bool
+    {
+        $key = $this->getKeyNameForMstCampaignPlans($groupId);
+        return $this->Db->del($key);
     }
 }

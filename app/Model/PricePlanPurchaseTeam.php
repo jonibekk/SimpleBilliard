@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('PaymentUtil', 'Util');
+App::uses('AppUtil', 'Util');
 
 /**
  * Class PricePlanPurchaseTeam
@@ -16,18 +18,15 @@ class PricePlanPurchaseTeam extends AppModel
      * @var array
      */
     public $validate = [
-        'price_plan_id' => [
-            'numeric'                 => [
-                'rule' => ['numeric'],
-            ],
+        'price_plan_code' => [
             'notBlank'                => [
-                'required' => 'create',
+                'required' => true,
                 'rule'     => 'notBlank',
             ],
-            'customValidateExistPlan' => [
-                'rule' => 'customValidateExistPlan',
+            'customValidateCodeFormat'                => [
+                'rule'     => 'customValidateCodeFormat',
             ],
-        ]
+        ],
     ];
 
     /**
@@ -47,6 +46,29 @@ class PricePlanPurchaseTeam extends AppModel
         $CampaignPricePlan = ClassRegistry::init('CampaignPricePlan');
         $pricePlan = $CampaignPricePlan->getById($pricePlanId);
         return !empty($pricePlan);
+    }
+
+    /**
+     * Check if exist price plan
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateCodeFormat(array $val): bool
+    {
+        $pricePlanCode = array_shift($val);
+        if (empty($pricePlanCode)) {
+            return false;
+        }
+        $pricePlan = PaymentUtil::parsePlanCode($pricePlanCode);
+        if (count($pricePlan) != 2) {
+            return false;
+        }
+        if (!AppUtil::isInt($pricePlan['group_id']) || !AppUtil::isInt($pricePlan['detail_no'])) {
+            return false;
+        }
+        return true;
     }
 
     /**

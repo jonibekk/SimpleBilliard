@@ -1,9 +1,9 @@
 # Goalous 2.0
 
-Goalousリポジトリです。 
-- [旧Goalousはこちら](https://github.com/IsaoCorp/goalous_old)
+This repository is for Goalous application.
+- [Old Goalous version](https://github.com/IsaoCorp/goalous_old)
 
-当プロジェクトで管理しているソース、ドキュメント、一切のものはこのページより見つけられます。
+All source code, documents and anything managed by the project can be found from this page.
 
 ## Health
 
@@ -12,30 +12,30 @@ Goalousリポジトリです。
 | master | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous/badge.svg?branch=master&service=github&t=p8yPfl)](https://coveralls.io/github/IsaoCorp/goalous?branch=master) | - |
 | develop | [![Build Status](https://travis-ci.com/IsaoCorp/goalous.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://travis-ci.com/IsaoCorp/goalous) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous/badge.svg?branch=develop&service=github&t=p8yPfl)](https://coveralls.io/github/IsaoCorp/goalous?branch=develop) | [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed) |
 
-## Progress
-- [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous) ... Goalousの開発状況はこのかんばんボードで管理しています。
+## Project Management tool
+- [JIRA](https://jira.goalous.com)
+
+## Documentation tool
+- [Confluence](https://confluence.goalous.com)
 
 ## What's Goalous ?
-GoalousはIsao発の「最強にオープンな社内SNS」です。
+Goalous is the strongest open enterprise SNS.  
+Goalous is provided by ISAO.
 
+## Environments
 | name | url | branch | branch protected | auto deploy | test by CI | Basic auth |
 |:---|:---|:---|:---|:---|:---|:---|
-| 本番環境 | [www.goalous.com](https://www.goalous.com) | master | ◯ | × | ◯ | - |
-| ISAO環境 | [isao.goalous.com](https://isao.goalous.com) | master-isao | ◯ | × | ◯ | id: isao, pass: Vh6RncG8 (only user registration)|
-| ステージング環境 | [stg.goalous.com](https://stg.goalous.com) | stage | ◯ | ◯ | ◯ | id: stg, pass: c2WgdYaL |
-| ホットフィックス環境 | [hotfix.goalous.com](https://hotfix.goalous.com) | hotfix[issue no]-hoge | × | × | ◯ | id: hotfix, pass: yD69KAEt |
-| 開発環境 | [dev.goalous.com](https://dev.goalous.com) | develop | × | ◯ | ◯ | id: dev, pass: a5PxhqtL |
-| インド開発環境 | [dev-ind.goalous.com](https://dev-ind.goalous.com) | dev-ind | × | ◯ | ◯ | id: dev-ind, pass: W4hViXcb |
-| その他 | - | other | × | - | ◯ | - |
+| Production | [www.goalous.com](https://www.goalous.com) | master | ◯ | × | ◯ | - |
+| ISAO | [isao.goalous.com](https://isao.goalous.com) | master-isao | ◯ | × | ◯ | id: isao, pass: Vh6RncG8 (only user registration)|
+| Staging | [stg.goalous.com](https://stg.goalous.com) | stage | ◯ | ◯ | ◯ | id: stg, pass: c2WgdYaL |
+| Hotfix | [hotfix.goalous.com](https://hotfix.goalous.com) | hotfix[issue no]-hoge | × | × | ◯ | id: hotfix, pass: yD69KAEt |
+| Development | [dev.goalous.com](https://dev.goalous.com) | develop | × | ◯ | ◯ | id: dev, pass: a5PxhqtL |
+| Others | - | other | × | - | ◯ | - |
 
-## ドキュメンテーション
-- すべてのドキュメントはページからアクセスできるようにしてあります。
-- はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
-- いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](docs/guidelines/development.md#setup_stack)の項をご参照ください
+## Start development
+Please see [Set-up guild for development](docs/guidelines/development.md#setup_stack)
 
-より詳しくは、基本ポリシー内の[ドキュメンテーション](docs/guidelines/general.md#documentation)の項目をご参照ください。
-
-### ガイドライン
+## ガイドライン
 
 - [基本ポリシー](docs/guidelines/general.md)
   - [はじめに](docs/guidelines/general.md#intro)
