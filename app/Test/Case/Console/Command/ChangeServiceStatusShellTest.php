@@ -4,6 +4,7 @@ App::uses('ConsoleOutput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
 App::uses('Folder', 'Utility');
+App::uses('AppShell', 'Console/Command');
 App::uses('ChangeServiceStatusShell', 'Console/Command/Batch/Payment/Console/Command');
 App::uses('Team', 'Model');
 
@@ -24,6 +25,10 @@ class ChangeServiceStatusShellTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.team',
+        'app.payment_setting',
+        'app.invoice',
+        'app.credit_card',
+        'app.price_plan_purchase_team',
     ];
 
     /**

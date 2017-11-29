@@ -24,7 +24,7 @@ class ConfirmCharge extends React.Component {
             </div>
             ) : (
               <div>
-                  <strong>{__('Plan')}&nbsp;({sprintf(__("%d members"), this.props.campaign_members)}):</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
+                  <strong>{this.props.is_upgrading_plan ? __('Upgrade') : __('Plan')}&nbsp;({sprintf(__("%d members"), this.props.max_members)}):</strong><span className="info-value">{this.props.sub_total_charge}</span><br/>
               </div>
             )
           }
@@ -54,7 +54,8 @@ ConfirmCharge.propTypes = {
   sub_total_charge: React.PropTypes.string,
   tax: React.PropTypes.string,
   total_charge: React.PropTypes.string,
-  is_campaign: React.PropTypes.bool
+  is_campaign: React.PropTypes.bool,
+  is_upgrading_plan: React.PropTypes.bool
 };
 ConfirmCharge.defaultProps = {
   amount_per_user: "",
@@ -62,6 +63,7 @@ ConfirmCharge.defaultProps = {
   sub_total_charge: "",
   tax: "",
   total_charge: "",
-  is_campaign: false
+  is_campaign: false,
+  is_upgrading_plan: false
 };
 export default connect()(ConfirmCharge);

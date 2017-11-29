@@ -161,7 +161,8 @@ const config = {
     'kr_column',
     'message',
     'invite',
-    'payment_apply'
+    'payment_apply',
+    'campaign_plan_upgrade'
   ],
   css_vendor: {
     src: [

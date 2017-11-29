@@ -3,19 +3,19 @@
 $config['countries'] = [
     [
         "code" => "DE",
-        "name" => __("Germany"),
+        "name" => "Germany",
     ],
     [
         "code" => "JP",
-        "name" => __("Japan"),
+        "name" => "Japan",
         "tax_rate" => 0.08,
     ],
     [
         "code" => "TH",
-        "name" => __("Thailand"),
+        "name" => "Thailand",
     ],
     [
         "code" => "US",
-        "name" => __("United States"),
+        "name" => "United States",
     ],
 ];
