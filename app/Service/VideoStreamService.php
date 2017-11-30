@@ -13,6 +13,25 @@ use Goalous\Model\Enum as Enum;
  */
 class VideoStreamService extends AppService
 {
+    public function findVideoStreamIfExists(int $userId, int $teamId, string $hash): array
+    {
+        /** @var Video $Video */
+        $Video = ClassRegistry::init("Video");
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+
+        $video = $Video->getByUserIdAndTeamIdAndHash($userId, $teamId, $hash);
+        if(empty($video)) {
+            return [];
+        }
+        $videoId = $video['id'];
+        $videoStream = $VideoStream->getFirstByVideoId($videoId);
+        if (empty($videoStream)) {
+            return [];
+        }
+        return $videoStream;
+    }
+
     public function uploadNewVideoStream(array $uploadFile, array $user, int $teamId): array
     {
         /** @var Video $Video */
@@ -28,6 +47,24 @@ class VideoStreamService extends AppService
 
         $filePath = $uploadFile['tmp_name'];
         $fileName = $uploadFile['name'];
+
+        $hash = hash_file('sha256', $filePath);
+
+        $videoStreamIfExists = $this->findVideoStreamIfExists($userId, $teamId, $hash);
+        if (!empty($videoStreamIfExists)) {
+            CakeLog::info(sprintf('uploaded video exists %s', AppUtil::jsonOneLine([
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'hash'    => $hash,
+                'video_streams.id' => $videoStreamIfExists['id'],
+            ])));
+            return $videoStreamIfExists;
+        }
+        CakeLog::info(sprintf('uploaded video NOT exists %s', AppUtil::jsonOneLine([
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'hash'    => $hash,
+        ])));
 
         // create video, video_stream
         // need to be create for Storage Meta data to save ids

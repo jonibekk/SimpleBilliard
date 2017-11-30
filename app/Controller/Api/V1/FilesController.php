@@ -25,17 +25,9 @@ class FilesController extends ApiController
         $isVideo = false !== strpos($form['file']['type'], 'video');
 
         if ($isVideo) {
+            // TODO: /tmp/ ファイルの削除をしないといけないかも？要確認
             CakeLog::info(sprintf('file uploaded: %s', AppUtil::jsonOneLine([
                 'form' => $form,
-                /*
-                    {
-                        "name":"kirin.mp4",
-                        "type":"video/mp4",
-                        "tmp_name":"/tmp/phpR2ThUM",
-                        "error":0,
-                        "size":294972
-                    }
-                 */
                 'isVideo' => $isVideo,
             ])));
 
@@ -45,6 +37,9 @@ class FilesController extends ApiController
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             $videoStream = $VideoStreamService->uploadNewVideoStream($form['file'], $user, $teamId);
 
+            CakeLog::info(sprintf('new video_stream created %s', AppUtil::jsonOneLine([
+                'video_streams.id' => $videoStream['id'],
+            ])));
             return $this->_getResponseSuccess([
                 'error' => false,
                 'msg' => '',
