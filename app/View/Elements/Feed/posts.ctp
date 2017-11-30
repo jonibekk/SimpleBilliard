@@ -245,15 +245,23 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     $videoStreamWidth = 482;
                                     $videoStreamHeight = round($videoStreamWidth / $resource['aspect_ratio']);
                                     ?>
-                                    <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin" controls playsinline poster="<?= $thumbnailPath ?>">
+                                    <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="auto" poster="<?= $thumbnailPath ?>">
                                         <source
                                                 src="<?= $resource["playlist_path"] ?>"
                                                 type="application/x-mpegURL">
                                     </video>
-                                    <script>videojs('<?= $videoStreamId ?>', {
-                                            "width": "<?= $videoStreamWidth ?>",
-                                            "height": "<?= $videoStreamHeight ?>",
-                                        });</script>
+                                    <script>
+                                        videojs('<?= $videoStreamId ?>', {}).ready(function() {
+                                            var myPlayer = this, id = myPlayer.id();
+                                            var aspectRatio = <?= $resource['aspect_ratio'] ?>;
+                                            function resizeVideoJS() {
+                                                var width = document.getElementById(id).parentElement.offsetWidth;
+                                                myPlayer.width(width);
+                                                myPlayer.height(width / aspectRatio);
+                                            }
+                                            resizeVideoJS();
+                                        });
+                                    </script>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
