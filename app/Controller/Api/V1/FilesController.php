@@ -3,6 +3,7 @@ App::uses('ApiController', 'Controller/Api');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'AttachedFileService');
+App::import('Service', 'VideoStreamService');
 
 /**
  * Class FilesController
@@ -18,6 +19,38 @@ class FilesController extends ApiController
         $form = Hash::get($this->request->params, 'form');
         if (empty($form)) {
             return $this->_getResponseBadFail(__('Failed to upload.'));
+        }
+
+        // TODO: is this ok about deciding file type "video"
+        $isVideo = false !== strpos($form['file']['type'], 'video');
+
+        if ($isVideo) {
+            CakeLog::info(sprintf('file uploaded: %s', AppUtil::jsonOneLine([
+                'form' => $form,
+                /*
+                    {
+                        "name":"kirin.mp4",
+                        "type":"video/mp4",
+                        "tmp_name":"/tmp/phpR2ThUM",
+                        "error":0,
+                        "size":294972
+                    }
+                 */
+                'isVideo' => $isVideo,
+            ])));
+
+            $user = $this->User->getById($this->Auth->user('id'));
+            $teamId = $this->current_team_id;
+            /** @var VideoStreamService $VideoStreamService */
+            $VideoStreamService = ClassRegistry::init('VideoStreamService');
+            $videoStream = $VideoStreamService->uploadNewVideoStream($form['file'], $user, $teamId);
+
+            return $this->_getResponseSuccess([
+                'error' => false,
+                'msg' => '',
+                'is_video' => true,
+                'video_stream_id' => $videoStream['id'],
+            ]);
         }
 
         // 正常にファイルが送信されたかチェック

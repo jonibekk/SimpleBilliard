@@ -121,25 +121,36 @@ $(function () {
       // 処理成功
       // submit するフォームに hidden でファイルID追加
       var $form = $('#' + $uploadFileForm._params.formID);
-      $form.append(
-        $('<input type=hidden name=data[file_id][]>')
-          .val(data.id)
-          .attr('id', data.id)
-          .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
 
-      // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
-      $preview.data('file_id', data.id);
-      file.file_id = data.id;
+      console.log("appending file id")
+      //console.log(file)
+      console.log(res)
+      if (undefined !== data.is_video && true === data.is_video) {
+        console.log("append video_stream_id")
+          $form.append(
+              $('<input type=hidden name=data[video_stream_id][]>')
+                  .val(data.video_stream_id)
+                  .attr('id', data.video_stream_id)
+                  .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+      } else {
+          $form.append(
+              $('<input type=hidden name=data[file_id][]>')
+                  .val(data.id)
+                  .attr('id', data.id)
+                  .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+
+          // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
+          $preview.data('file_id', data.id);
+          file.file_id = data.id;
+          // コールバック関数（afterSuccess）
+          $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
+      }
 
       // プログレスバー消す
       // 一瞬で消えるのを防止するため１秒待つ
       setTimeout(function () {
         $preview.find('.progress').css('visibility', 'hidden');
       }, 1000);
-
-      // コールバック関数（afterSuccess）
-      $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
-
     },
     // ファイル削除ボタン押下時
     removedfile: function (file) {
@@ -474,6 +485,7 @@ $(function () {
     formID: 'PostDisplayForm',
     previewContainerID: 'PostUploadFilePreview',
     beforeSending: function () {
+      console.log("posing form: beforeSending")
       if ($uploadFileForm._sending) {
         return;
       }
@@ -482,6 +494,7 @@ $(function () {
       $('#PostSubmit').on('click', $uploadFileForm._forbitSubmit);
     },
     afterQueueComplete: function () {
+      console.log("posing form: afterQueueComplete")
       $uploadFileForm._sending = false;
 
       // フォームをsubmit可能にする
@@ -684,6 +697,7 @@ $(function () {
     afterSuccess: function (file) {
       // メイン画像の hidden を先頭に持ってくる
       // DB内の index 番号を 0 にするため
+      console.log("after success append hidden")
       var $form = $('#' + $uploadFileForm._params.formID);
       var file_id = $(file.previewTemplate).data('file_id');
       var $firstHidden = $form.find('input[name="data[file_id][]"]:first');

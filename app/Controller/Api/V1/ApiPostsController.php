@@ -76,7 +76,6 @@ class ApiPostsController extends ApiController
 
             /** @var VideoService $VideoService */
             $VideoService = ClassRegistry::init('VideoService');
-            // ここ、PostService->postWithVideo() にするべきかも
             // TODO: is here ok about returning VideoStream array
             $videoStream = $VideoService->upload($uploadFile, $user, $teamId);
 

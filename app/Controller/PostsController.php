@@ -2,6 +2,12 @@
 App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
+App::import('Service', 'PostDraftService');
+
+App::uses('Video', 'Model');
+App::uses('VideoStream', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Posts Controller
@@ -83,7 +89,6 @@ class PostsController extends AppController
 
     public function add()
     {
-        CakeLog::info(sprintf("add", AppUtil::jsonOneLine([])));
         $this->_addPost();
         $this->redirect($this->_getRedirectUrl());
     }
@@ -111,11 +116,57 @@ class PostsController extends AppController
                 : $this->request->data['Post']['share_secret'];
         }
 
+        // TODO: video posting process
+        CakeLog::info(AppUtil::jsonOneLine($this->request->data));
+        $countVideoStreamIds =
+            isset($this->request->data) && is_array($this->request->data['video_stream_id'])
+            ? count($this->request->data['video_stream_id']) : 0;
+        if (1 < $countVideoStreamIds) {
+            // TODO: currently, goalous enable only one video on one post
+            throw new RuntimeException("cant post more than two videos({$countVideoStreamIds})");
+        }
+        if (1 === $countVideoStreamIds) {
+            /** @var VideoStream $VideoStream */
+            $VideoStream = ClassRegistry::init("VideoStream");
+
+            $videoStreamId = reset($this->request->data['video_stream_id']);
+            $videoStream = $VideoStream->findById($videoStreamId);
+            $videoStream = reset($videoStream);
+
+            $user = $this->User->getById($this->Auth->user('id'));
+            $teamId = $this->current_team_id;
+            $statusTranscode = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+            switch ($statusTranscode->getValue()) {
+                case Enum\Video\VideoTranscodeStatus::QUEUED:
+                case Enum\Video\VideoTranscodeStatus::TRANSCODING:
+                case Enum\Video\VideoTranscodeStatus::ERROR:
+                    // create draft post
+                    CakeLog::info("video post / creating draft post:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
+                    /** @var PostDraftService $PostDraftService */
+                    $PostDraftService = ClassRegistry::init("PostDraftService");
+                    $PostDraftService->createPostDraftWithResources($this->request->data,
+                        $user,
+                        $teamId,
+                        [$videoStream]
+                    );
+                    return true;
+                case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
+                    CakeLog::info("video post / creating post:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
+                    $this->Post->addNormal($this->request->data, null, null, [$videoStream]);
+                    return true;
+                default:
+                    CakeLog::info("video post / error:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
+                    // TODO: 本来ココには来ない, エラー出してなんとかする
+                    throw new RuntimeException(sprintf("invalid status code: %s", $statusTranscode->getValue()));
+                    break;
+            }
+        }
+
         // 投稿を保存
         $successSavedPost = $this->Post->addNormal($this->request->data);
 
         // 保存に失敗
-        if (!$successSavedPost) {
+        if (false === $successSavedPost) {
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);

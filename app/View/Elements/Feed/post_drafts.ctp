@@ -56,7 +56,7 @@ if (!isset($post_drafts)) {
                 ?>
                 [drafts.id: <?= $post_draft['id'] ?>][resource_id: <?=$post_draft['post_resources'][0]['id'] ?> / status: <?= $transcodeStatus->getValue() ?>(<?= $transcodeStatus->getKey() ?>)]
             </div>
-            <?= $post_draft['data']['body'] ?>
+            <?= nl2br(h($post_draft['data']['Post']['body'])) ?>
             <?php
                 // TODO: foreach the post_resources
                 $videoStreamId = sprintf('video_stream_%d', $post_draft['post_resources'][0]['id']);
@@ -72,7 +72,6 @@ if (!isset($post_drafts)) {
             -->
         </div>
 
-        <div style="display: none;"><?= json_encode($post_draft) ?></div>
     </div>
 </div>
 <?php endforeach; ?>

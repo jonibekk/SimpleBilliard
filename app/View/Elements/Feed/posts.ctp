@@ -221,17 +221,43 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 }
 
                 ?>
-                <?php if (!empty($imgs)): ?>
+                <?php if (!empty($imgs) || !empty($post['PostResources'])): ?>
                     </div>
-                    <div
-                        class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
-                        <?php foreach ($imgs as $v): ?>
-                            <a href="<?= $v['l'] ?>" rel='lightbox'
-                               data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
-                                <?= $this->Html->image($v['s']) ?>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
+                        <?php if (!empty($imgs)): ?>
+                        <div
+                            class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
+                            <?php foreach ($imgs as $v): ?>
+                                <a href="<?= $v['l'] ?>" rel='lightbox'
+                                   data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
+                                    <?= $this->Html->image($v['s']) ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($post['PostResources'])): ?>
+                            <?php foreach ($post['PostResources'] as $resource): ?>
+                                <div class="col pt_10px feed_img_only_one mb_12px" style="">
+                                    <?php
+                                    // TODO: foreach the post_resources
+                                    $videoStreamId = sprintf('video_stream_%d', $resource['id']);
+                                    $thumbnailPath = dirname($resource["playlist_path"])."/thumbs-00001.png";
+                                    $videoStreamWidth = 482;
+                                    $videoStreamHeight = round($videoStreamWidth / $resource['aspect_ratio']);
+                                    ?>
+                                    <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin" controls playsinline poster="<?= $thumbnailPath ?>">
+                                        <source
+                                                src="<?= $resource["playlist_path"] ?>"
+                                                type="application/x-mpegURL">
+                                    </video>
+                                    <script>videojs('<?= $videoStreamId ?>', {
+                                            "width": "<?= $videoStreamWidth ?>",
+                                            "height": "<?= $videoStreamHeight ?>",
+                                        });</script>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
                     <div class="panel-body posts-panel-body pt_10px plr_11px pb_8px">
 
                 <?php endif; ?>
@@ -284,7 +310,6 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         </a>
                     </div>
                 <?php endif; ?>
-
                 <div class="col pt_10px">
                     <?php foreach ($post['PostFile'] as $file): ?>
                         <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {

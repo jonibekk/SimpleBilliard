@@ -32,4 +32,34 @@ class PostDraft extends AppModel
         }
         return $postDrafts;
     }
+
+    function getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
+    {
+        $options = [
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'post_resources',
+                    'alias'      => 'PostResource',
+                    'conditions' => [
+                        'PostResource.post_draft_id = PostDraft.id',
+                    ]
+                ]
+            ],
+            'fields'     => [
+                'PostDraft.*'
+            ],
+            'conditions' => [
+                'PostResource.resource_type' => $postResourceType->getValue(),
+                'PostResource.resource_id'   => $resourceId,
+                'PostResource.del_flg'       => 0,
+            ],
+        ];
+
+        $result = $this->find('first', $options);
+        if (empty($result)) {
+            return [];
+        }
+        return reset($result);
+    }
 }

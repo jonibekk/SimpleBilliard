@@ -6,6 +6,10 @@ App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostResource', 'Model');
+App::import('Service', 'PostResourceService');
+App::uses('PostDraft', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Post Model
@@ -256,10 +260,11 @@ class Post extends AppModel
      * @param      $postData
      * @param null $uid
      * @param null $team_id
+     * @param array $postResources
      *
      * @return bool|mixed
      */
-    public function addNormal($postData, $uid = null, $team_id = null)
+    public function addNormal(array $postData, $uid = null, $team_id = null, array $postResources = [])
     {
         CakeLog::info(sprintf("post data: %s", AppUtil::jsonOneLine($postData)));
         if (!isset($postData['Post']) || empty($postData['Post'])) {
@@ -297,6 +302,21 @@ class Post extends AppModel
                 AttachedFile::TYPE_MODEL_POST,
                 $postData['file_id']);
         }
+        // handling post resources
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init("PostResource");
+        foreach ($postResources as $postResource) {
+            $PostResource->create([
+                'post_id' => $post_id,
+                'post_draft_id' => null,
+                // TODO: 現状では動画1つだけなので, そうでなくなった場合を考慮して修正が必要
+                'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
+                'resource_id' => $postResource['id'],
+            ]);
+            $postResource = $PostResource->save();
+            $postResource = reset($postResource);
+        }
+
         if (!empty($share)) {
             //ユーザとサークルに分割
             $users = [];
@@ -342,7 +362,27 @@ class Post extends AppModel
             }
         }
 
-        return true;
+        return reset($res);
+    }
+
+    public function addNormalFromPostDraft(array $postDraft)
+    {
+        $post = $this->addNormal(
+            json_decode($postDraft['draft_data'], true),
+            $postDraft['user_id'],
+            $postDraft['team_id'],
+            []
+        );
+        CakeLog::info(sprintf("addNormalFromPostDraft / post %s", AppUtil::jsonOneLine([$post])));
+        // change post_resources.post_id = null to posts.id
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
+        $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id']);
+
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init('PostDraft');
+        $PostDraft->delete($postDraft['id']);
+        return $post;
     }
 
     /**

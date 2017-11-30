@@ -216,35 +216,12 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <?php endif ?>
                 <?php $this->Form->unlockField('socket_id') ?>
                 <?php $this->Form->unlockField('file_id') ?>
+                <?php $this->Form->unlockField('video_stream_id') ?>
                 <?php $this->Form->unlockField('Post.file_id') ?>
                 <?php $this->Form->unlockField('deleted_file_id') ?>
 
                 <?= $this->Form->end() ?>
 
-                <? /* TODO: fix to better html */ ?>
-                <form id="video_file_form" enctype="multipart/form-data" >
-                    <input type="file" id="video_file" name="video">
-                    <input type="hidden" name="data[_Token][key]" value="<?= $this->Session->read('_Token')['key'] ?>">
-                </form>
-                <? /* TODO: move to app/static_src */ ?>
-                <script>
-                    $(document).on('change', function(){
-                        var formData = new FormData($("#video_file_form").get()[0]);
-                        $.ajax({
-                            url: "/api/v1/api_posts/video",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            type: 'POST',
-                            success: function(data) {
-                                console.log(data)
-                                if (data.data.code == "success") {
-                                    location.reload();
-                                }
-                            }
-                        });
-                    });
-                </script>
             </div>
         </div>
     </div>
