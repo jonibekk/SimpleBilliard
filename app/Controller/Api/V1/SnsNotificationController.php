@@ -53,10 +53,16 @@ class SnsNotificationController extends ApiController
         $progressState = $transcodeNotificationAwsSns->getProgressState();
         // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id');// not used
         $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
+        if (is_null($videoStreamId)) {
+            return $this->_getResponseNotFound("video_streams.id not found");
+        }
 
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
         $videoStream = $VideoStream->getById($videoStreamId);
+        if (empty($videoStream)) {
+            return $this->_getResponseNotFound("video_streams.id({$videoStreamId}) not found");
+        }
         $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
         if ($progressState->equals(Enum\Video\VideoTranscodeProgress::PROGRESS())) {
             if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::QUEUED())) {
@@ -87,7 +93,7 @@ class SnsNotificationController extends ApiController
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
 
             if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
-                return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not transcoding");
+                //return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not transcoding");
             }
             $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
             $videoStream['duration'] = $transcodeNotificationAwsSns->getDuration();
@@ -103,9 +109,11 @@ class SnsNotificationController extends ApiController
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');
             $postDraft = $PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
+            // TODO: ここ、複数紐付いている下書きがあった場合、一つしかpostされない可能性がある
             if (!empty($postDraft)) {
                 /** @var Post $Post */
                 $Post = ClassRegistry::init('Post');
+                $this->current_team_id = $postDraft['team_id'];
                 $Post->addNormalFromPostDraft($postDraft);
             }
         }

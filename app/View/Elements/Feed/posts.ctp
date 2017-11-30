@@ -240,7 +240,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <div class="col pt_10px feed_img_only_one mb_12px" style="">
                                     <?php
                                     // TODO: foreach the post_resources
-                                    $videoStreamId = sprintf('video_stream_%d', $resource['id']);
+                                    $videoStreamId = sprintf('video_stream_%d_%d', $resource['id'], $post['Post']['id']);
                                     $thumbnailPath = dirname($resource["playlist_path"])."/thumbs-00001.png";
                                     $videoStreamWidth = 482;
                                     $videoStreamHeight = round($videoStreamWidth / $resource['aspect_ratio']);

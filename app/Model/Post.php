@@ -266,8 +266,8 @@ class Post extends AppModel
      */
     public function addNormal(array $postData, $uid = null, $team_id = null, array $postResources = [])
     {
-        CakeLog::info(sprintf("post data: %s", AppUtil::jsonOneLine($postData)));
         if (!isset($postData['Post']) || empty($postData['Post'])) {
+            CakeLog::info(sprintf("post data [Post] not exists: %s", AppUtil::jsonOneLine($postData)));
             return false;
         }
         $this->setUidAndTeamId($uid, $team_id);
@@ -276,7 +276,7 @@ class Post extends AppModel
             $share = explode(",", $postData['Post']['share']);
             foreach ($share as $key => $val) {
                 if (stristr($val, 'public')) {
-                    $teamAllCircle = $this->Circle->getTeamAllCircle();
+                    $teamAllCircle = $this->Circle->getTeamAllCircle($team_id);
                     $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
                 }
             }
@@ -336,7 +336,7 @@ class Post extends AppModel
             }
             if ($circles) {
                 //共有サークル保存
-                $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles);
+                $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles, $team_id);
                 //共有サークル指定されてた場合の未読件数更新
                 $results[] = $this->User->CircleMember->incrementUnreadCount($circles);
                 //共有サークル指定されてた場合、更新日時更新
@@ -373,7 +373,7 @@ class Post extends AppModel
             $postDraft['team_id'],
             []
         );
-        CakeLog::info(sprintf("addNormalFromPostDraft / post %s", AppUtil::jsonOneLine([$post])));
+        //CakeLog::info(sprintf("addNormalFromPostDraft / post %s", AppUtil::jsonOneLine([$post])));
         // change post_resources.post_id = null to posts.id
         /** @var PostResourceService $PostResourceService */
         $PostResourceService = ClassRegistry::init('PostResourceService');

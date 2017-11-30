@@ -37,11 +37,15 @@ class PostResource extends AppModel
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
 
-        return array_map(function($postResource) use ($VideoStream) {
+        $results = [];
+        foreach ($postResources as $postResource) {
             $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
             switch ($resourceType->getValue()) {
                 case Enum\Post\PostResourceType::VIDEO_STREAM:
                     $resourceVideoStream = $VideoStream->getById($postResource['resource_id']);
+                    if (empty($resourceVideoStream)) {
+                        continue;
+                    }
                     $playlistPath = $resourceVideoStream['master_playlist_path'];
                     // TODO: define fqdn to extra_define
                     if (ENV_NAME == 'local') {
@@ -50,9 +54,10 @@ class PostResource extends AppModel
                         $playlistPath = 'https://s3-ap-northeast-1.amazonaws.com/goalous-dev-videos/' . $playlistPath;
                     }
                     $resourceVideoStream['playlist_path'] = $playlistPath;
-                    return $resourceVideoStream;
+                    $results[] = $resourceVideoStream;
             }
-        }, $postResources);
+        }
+        return $results;
     }
 
     function getPostDraftIdByResourceTypeAndResourceId(Enum\Post\PostResourceType $resourceType, int $resourceId)/*: ?int */
