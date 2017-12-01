@@ -20,9 +20,15 @@ if (!isset($post_drafts)) {
                         <i class="fa fa-chevron-down feed-arrow"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                        <li>
-                            <a>下書きを削除(未)</a>
-                        </li>
+                        <li><?=
+                            $this->Form->postLink(__('Delete draft'),
+                                [
+                                    'controller' => 'post_draft',
+                                    'action'     => 'delete',
+                                    $post_draft['id']
+                                ],
+                                null,
+                                __("Do you really want to delete this draft post?")) ?></li>
                     </ul>
                 </div>
             </div>

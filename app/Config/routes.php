@@ -92,6 +92,9 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
 Router::connect('/api/v1/api_posts/video/callback',
     ['controller' => 'sns_notification', 'action' => 'callback_notify', '[method]' => 'POST']
 );
+Router::connect('/post_draft/delete/:id',
+    ['controller' => 'post_draft', 'action' => 'delete', '[method]' => 'POST']
+);
 
 /**
  * エイリアス
