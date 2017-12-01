@@ -41,7 +41,7 @@ if (!isset($post_drafts)) {
                 </span>
             </a>
             <div class="font_11px font_lightgray oneline-ellipsis">
-                <span class="label label-primary">PROCESSING</span><i class="fa fa-2 fa-spinner fa-spin" aria-hidden="true"></i>
+                <span class="label label-primary">PROCESSING</span>
                 <?php
                     $minutesAgo = (time() - $post_draft['created']) / 60;
                     $minutesAgo = floor($minutesAgo);
@@ -54,8 +54,10 @@ if (!isset($post_drafts)) {
                 </div>
             </div>
         </div>
-
         <div class="col feed-contents post-contents showmore font_14px font_verydark box-align" id="PostTextBody_102">
+            <div style="text-align: center">
+                <i class="fa fa-spinner fa-4x fa-spin" aria-hidden="true"></i>
+            </div>
             <div>
                 <?php
                     $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($post_draft['post_resources'][0]['status_transcode']));
