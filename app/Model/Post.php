@@ -338,9 +338,9 @@ class Post extends AppModel
                 //共有サークル保存
                 $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles, $team_id);
                 //共有サークル指定されてた場合の未読件数更新
-                $results[] = $this->User->CircleMember->incrementUnreadCount($circles);
+                $results[] = $this->User->CircleMember->incrementUnreadCount($circles, true, $team_id);
                 //共有サークル指定されてた場合、更新日時更新
-                $results[] = $this->User->CircleMember->updateModified($circles);
+                $results[] = $this->User->CircleMember->updateModified($circles, $team_id);
                 $results[] = $this->PostShareCircle->Circle->updateModified($circles);
             }
         }
