@@ -47,7 +47,14 @@ class PostDraft extends AppModel
                 ]
             ],
             'fields'     => [
-                'PostDraft.*'
+                'PostDraft.id',
+                'PostDraft.user_id',
+                'PostDraft.team_id',
+                'PostDraft.post_id',
+                'PostDraft.draft_data',
+                'PostDraft.del_flg',
+                'PostDraft.created',
+                'PostDraft.modified',
             ],
             'conditions' => [
                 'PostResource.resource_type' => $postResourceType->getValue(),

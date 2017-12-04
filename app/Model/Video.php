@@ -9,9 +9,6 @@ class Video extends AppModel
     public function getByUserIdAndTeamIdAndHash(int $userId, int $teamId, string $hash): array
     {
         $options = [
-            'fields'     => [
-                '*'
-            ],
             'conditions' => [
                 'user_id' => $userId,
                 'team_id' => $teamId,
