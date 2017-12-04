@@ -7,6 +7,7 @@ App::uses('PostShareCircle', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Post', 'Model');
 App::uses('PostResourceService', 'Service');
+App::uses('VideoStreamService', 'Service');
 
 use Goalous\Model\Enum as Enum;
 
@@ -22,36 +23,11 @@ class SnsNotificationController extends ApiController
 
     public function callback_notify()
     {
-        // TODO: fix these code.
-        // current code is for just 動作確認(for test)
         $jsonBody = $this->request->input();
-        $jsonData = json_decode($jsonBody, true);
-        $headers = iterator_to_array($this->getRequestHeaders());
-        /*
-        CakeLog::info(sprintf('log video callback: %s', AppUtil::jsonOneLine([
-            'headers' => $headers,
-            'jsonBody' => $jsonData,
-            'message' => json_decode($jsonData['Message']),
-        ])));
-        */
-        $result = [
-            'meta' => [
-                'status' => '200',
-                'message' => 'ok',
-            ],
-            'data' => [
-                'header' => $headers,
-                'body'   => $jsonData,
-                'message' => json_decode($jsonData['Message']),
-            ],
-        ];
 
-        ///** @var TranscodeNotificationAwsSns $TranscodeNotificationAwsSns */
-        //$TranscodeNotificationAwsSns = ClassRegistry::init('TranscodeNotificationAwsSns');
         $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString($jsonBody);
 
-        $progressState = $transcodeNotificationAwsSns->getProgressState();
-        // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id');// not used
+        // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id'); // currently not using videos.id
         $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
         if (is_null($videoStreamId)) {
             return $this->_getResponseNotFound("video_streams.id not found");
@@ -63,62 +39,11 @@ class SnsNotificationController extends ApiController
         if (empty($videoStream)) {
             return $this->_getResponseNotFound("video_streams.id({$videoStreamId}) not found");
         }
-        $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
-        if ($progressState->equals(Enum\Video\VideoTranscodeProgress::PROGRESS())) {
-            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::QUEUED())) {
-                return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not queued");
-            }
-            $status = Enum\Video\VideoTranscodeStatus::TRANSCODING;
-            $videoStream['status_transcode'] = $status;
-            $videoStream['transcode_info'] = "[]";// TODO: add ETS JobId at least
-            $VideoStream->save($videoStream);
-            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
-                'video_streams.id' => $videoStreamId,
-                'state' => $progressState->getValue(),
-                'status_value' => $status,
-            ])));
-        } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
-            $status = Enum\Video\VideoTranscodeStatus::ERROR;
-            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
-                return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not transcoding");
-            }
-            $videoStream['status_transcode'] = $status;
-            $VideoStream->save($videoStream);
-            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
-                'video_streams.id' => $videoStreamId,
-                'state' => $progressState->getValue(),
-                'status_value' => $status,
-            ])));
-        } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
-            $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
 
-            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
-                //return $this->_getResponseBadFail("video_streams.id({$videoStreamId}) is not transcoding");
-            }
-            $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
-            $videoStream['duration'] = $transcodeNotificationAwsSns->getDuration();
-            $videoStream['aspect_ratio'] = $transcodeNotificationAwsSns->getAspectRatio();
-            $videoStream['master_playlist_path'] = $transcodeNotificationAwsSns->getPlaylistPath();
-            $VideoStream->save($videoStream);
-            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
-                'video_streams.id' => $videoStreamId,
-                'state' => $progressState->getValue(),
-                'status_value' => $status,
-            ])));
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+        $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
 
-            /** @var PostDraft $PostDraft */
-            $PostDraft = ClassRegistry::init('PostDraft');
-            $postDraft = $PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
-            // TODO: ここ、複数紐付いている下書きがあった場合、一つしかpostされない可能性がある
-            if (!empty($postDraft)) {
-                /** @var Post $Post */
-                $Post = ClassRegistry::init('Post');
-                $this->current_team_id = $postDraft['team_id'];
-                $Post->addNormalFromPostDraft($postDraft);
-            }
-        }
-
-        return $this->_getResponseSuccess($result);
+        return $this->_getResponseSuccess([]);
     }
 
     private function getRequestHeaders(): Generator
