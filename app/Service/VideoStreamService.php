@@ -40,9 +40,6 @@ class VideoStreamService extends AppService
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
             // if transcode is error
             $status = Enum\Video\VideoTranscodeStatus::ERROR;
-            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
-                throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
-            }
             $videoStream['status_transcode'] = $status;
             $VideoStream->save($videoStream);
             CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
@@ -55,7 +52,13 @@ class VideoStreamService extends AppService
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
             // if transcode is completed
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
-            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODING())) {
+
+            // if we missed the "PROGRESSING" notification, our video_stream.status_transcode is QUEUED
+            // but this has no problem when we receive "COMPLETE" notification
+            if (!in_array($currentVideoStreamStatus->getValue(), [
+                Enum\Video\VideoTranscodeStatus::TRANSCODING,
+                Enum\Video\VideoTranscodeStatus::QUEUED,
+            ])) {
                 throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
             }
             $videoStream['status_transcode']     = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
