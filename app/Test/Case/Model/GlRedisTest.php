@@ -432,4 +432,14 @@ class GlRedisTest extends GoalousTestCase
         $this->assertFalse((bool)$this->GlRedis->getSetupGuideStatus($user_id));
     }
 
+    function test_saveMstCampaignPlans()
+    {
+        $this->markTestSkipped();
+    }
+
+    function test_getMstCampaignPlans()
+    {
+        $this->markTestSkipped();
+    }
+
 }

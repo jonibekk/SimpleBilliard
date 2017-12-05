@@ -22,9 +22,15 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
 {
     protected $enableOutputLogStartStop = true;
 
+    const OPTION_FORCE_UPDATE_TEAM_ID = 'force_update_team_id';
+
+    // Batch argument for force updating status
+    private $forceUpdateTeamId = null;
+
+
     public $uses = [
         'Team',
-        'TeamMember'
+        'TeamMember',
     ];
 
     public function startup()
@@ -33,6 +39,28 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
         // initializing component
         $this->GlEmail = new GlEmailComponent(new ComponentCollection());
         $this->GlEmail->startup(new AppController());
+
+        $forceUpdateTeamId = Hash::get($this->params, self::OPTION_FORCE_UPDATE_TEAM_ID);
+        if (AppUtil::isInt($forceUpdateTeamId)) {
+            $team = $this->Team->getById($forceUpdateTeamId);
+            if (empty($team)) {
+                $this->logError(sprintf("Team by argument `force_update_team_id` doesn't exist. %s", AppUtil::jsonOneLine([
+                    'force_update_team_id' => $forceUpdateTeamId,
+                ])));
+                exit();
+            }
+            if ((int)$team['service_use_status'] != Enum\Team\ServiceUseStatus::PAID) {
+                $this->logError(sprintf("Team's service use status by argument `force_update_team_id` doesn't equal to paid plan. %s", AppUtil::jsonOneLine([
+                    'force_update_team_id' => $forceUpdateTeamId,
+                ])));
+                exit();
+            }
+
+            $this->logInfo(sprintf('teams.id limited: %s', AppUtil::jsonOneLine([
+                'force_update_team_id' => $forceUpdateTeamId,
+            ])));
+            $this->forceUpdateTeamId = intval($forceUpdateTeamId);
+        }
     }
 
     /**
@@ -45,6 +73,10 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
             'targetTimestamp' => [
                 'short'   => 't',
                 'help'    => 'This is current unix timestamp  as default, if retry, specify the param as target timestamp',
+                'default' => null,
+            ],
+            self::OPTION_FORCE_UPDATE_TEAM_ID => [
+                'help'    => 'pass the teams.id to move forcibly Read-Only status by teams.id',
                 'default' => null,
             ],
         ];
@@ -68,7 +100,12 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
             $startTimestamp,
             GoalousDateTime::createFromTimestamp($startTimestamp)->format('Y-m-d H:i:s')));
 
-        $targetTeamIds = $this->Team->findTargetsForMovingReadOnly($startTimestamp, $targetTimestamp);
+        // Prioritize argument
+        if (!empty($this->forceUpdateTeamId)) {
+            $targetTeamIds = [$this->forceUpdateTeamId];
+        } else {
+            $targetTeamIds = $this->Team->findTargetsForMovingReadOnly($startTimestamp, $targetTimestamp);
+        }
 
         if (empty($targetTeamIds)) {
             $this->logInfo("Target team does not exist");

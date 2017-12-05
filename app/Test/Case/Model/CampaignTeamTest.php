@@ -63,7 +63,6 @@ class CampaignTeamTest extends CakeTestCase {
         // Exist campaign team
         $this->CampaignTeam->save([
             'team_id' => $teamId,
-            'campaign_type' => Enum\CampaignTeam\CampaignType::FIXED_MONTHLY_CHARGE,
             'price_plan_group_id' => 1
         ]);
 
@@ -99,22 +98,21 @@ class CampaignTeamTest extends CakeTestCase {
     function test_isTeamPricePlan() {
         // Not exist campaign team
         $teamId = 1;
-        $pricePlanId = 1;
-        $res = $this->CampaignTeam->isTeamPricePlan($teamId, $pricePlanId);
+        $pricePlanCode = '1-1';
+        $res = $this->CampaignTeam->isTeamPricePlan($teamId, $pricePlanCode);
         $this->assertFalse($res);
 
         // Exist campaign team
         $this->CampaignTeam->save([
             'team_id' => $teamId,
-            'campaign_type' => Enum\CampaignTeam\CampaignType::FIXED_MONTHLY_CHARGE,
             'price_plan_group_id' => 1
         ]);
 
-        $res = $this->CampaignTeam->isTeamPricePlan($teamId, $pricePlanId);
+        $res = $this->CampaignTeam->isTeamPricePlan($teamId, $pricePlanCode);
         $this->assertTrue($res);
 
-        $pricePlanId = 6;
-        $res = $this->CampaignTeam->isTeamPricePlan($teamId, $pricePlanId);
+        $pricePlanCode = "2-1";
+        $res = $this->CampaignTeam->isTeamPricePlan($teamId, $pricePlanCode);
         $this->assertFalse($res);
 
     }

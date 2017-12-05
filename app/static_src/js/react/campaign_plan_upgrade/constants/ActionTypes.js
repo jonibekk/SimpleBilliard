@@ -1,0 +1,5 @@
+export const INVALID = 'INVALID'
+export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA'
+export const ENABLE_SUBMIT = 'ENABLE_SUBMIT';
+export const SELECT_PRICE_PLAN = 'SELECT_PRICE_PLAN';
+export const SAVING = 'SAVING';
