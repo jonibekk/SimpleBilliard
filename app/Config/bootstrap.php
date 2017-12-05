@@ -37,3 +37,4 @@ CakeLog::config('emergency', [
     'file'   => 'emergency',
     'path'   => $logPath
 ]);
+App::uses('GoalousLog', 'Log');
