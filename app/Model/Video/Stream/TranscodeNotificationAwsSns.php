@@ -12,7 +12,7 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
     {
         $jsonData = json_decode($json, true);
         if (is_null($jsonData)) {
-            throw new RuntimeException('failed to parse json string');
+            throw new InvalidArgumentException('failed to parse json string');
         }
         return new self($jsonData);
     }
@@ -25,9 +25,12 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
 
     private function parseMessage()
     {
+        if (!isset($this->data['Message'])) {
+            throw new InvalidArgumentException('failed to parse SNS notification Message column not exists');
+        }
         $messageData = json_decode($this->data['Message'], true);
         if (is_null($messageData)) {
-            throw new RuntimeException('failed to parse json message string');
+            throw new InvalidArgumentException('failed to parse SNS notification format json string');
         }
         $this->messageData = $messageData;
         //CakeLog::info(sprintf('message data: %s', AppUtil::jsonOneLine($messageData)));
@@ -57,10 +60,14 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
 
     public function getAspectRatio(): float
     {
-        // TODO: fix not use magic number 0
+        // TODO: fix the magic number zero
+        if (!isset($this->messageData['outputs'][0]['height'])
+            || !isset($this->messageData['outputs'][0]['width'])) {
+            throw new RuntimeException('outputs height/width not exists');
+        }
         $height = floatval($this->messageData['outputs'][0]['height']);
         $width  = floatval($this->messageData['outputs'][0]['width']);
-        return $width/$height;
+        return $width / $height;
     }
 
     public function getDuration(): int

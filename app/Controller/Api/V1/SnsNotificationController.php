@@ -25,25 +25,47 @@ class SnsNotificationController extends ApiController
     {
         $jsonBody = $this->request->input();
 
-        $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString($jsonBody);
+        try {
+            $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString($jsonBody);
 
-        // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id'); // currently not using videos.id
-        $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
-        if (is_null($videoStreamId)) {
-            return $this->_getResponseNotFound("video_streams.id not found");
+            // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id'); // currently not using videos.id
+            $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
+            if (is_null($videoStreamId)) {
+                return $this->_getResponseNotFound("video_streams.id not found");
+            }
+
+            /** @var VideoStream $VideoStream */
+            $VideoStream = ClassRegistry::init('VideoStream');
+            $videoStream = $VideoStream->getById($videoStreamId);
+            if (empty($videoStream)) {
+                return $this->_getResponseNotFound("video_streams.id({$videoStreamId}) not found");
+            }
+
+            GoalousLog::info("transcode progress notificated", [
+                'video_streams.id' => $videoStream['id'],
+                'state' => $transcodeNotificationAwsSns->getProgressState()->getKey(),
+            ]);
+
+            /** @var VideoStreamService $VideoStreamService */
+            $VideoStreamService = ClassRegistry::init('VideoStreamService');
+            $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
+
+            return $this->_getResponseSuccess([]);
+        } catch (InvalidArgumentException $e) {
+            GoalousLog::error('caught error on transcode SNS notification', [
+                'message' => $e->getMessage(),
+            ]);
+            return $this->_getResponseBadFail([
+                'message' => 'unexpected json format',
+            ]);
+        } catch (Exception $e) {
+            GoalousLog::error('caught error on transcode SNS notification', [
+                'message' => $e->getMessage(),
+            ]);
+            return $this->_getResponseBadFail([
+                'message' => 'internal server error',
+            ]);
         }
-
-        /** @var VideoStream $VideoStream */
-        $VideoStream = ClassRegistry::init('VideoStream');
-        $videoStream = $VideoStream->getById($videoStreamId);
-        if (empty($videoStream)) {
-            return $this->_getResponseNotFound("video_streams.id({$videoStreamId}) not found");
-        }
-
-        $VideoStreamService = ClassRegistry::init('VideoStreamService');
-        $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
-
-        return $this->_getResponseSuccess([]);
     }
 
     private function getRequestHeaders(): Generator
