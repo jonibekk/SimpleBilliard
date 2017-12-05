@@ -23,4 +23,16 @@ class VideoStream extends AppModel
         }
         return reset($result);
     }
+
+    public function getByStatusTranscode(array $statuses): array
+    {
+        $options = [
+            'conditions' => [
+                'status_transcode' => $statuses,
+                'del_flg' => 0,
+            ],
+        ];
+
+        return Hash::extract($this->find('all', $options), '{n}.VideoStream');
+    }
 }
