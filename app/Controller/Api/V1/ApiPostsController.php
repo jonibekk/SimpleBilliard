@@ -18,8 +18,9 @@ class ApiPostsController extends ApiController
     ];
 
     public function beforeFilter() {
-        parent::beforeFilter();
+        //parent::beforeFilter();
         // TODO: remove these security disables
+        $this->Auth->allow();
         $this->Security->validatePost = false;
         $this->Security->csrfCheck = false;
     }
