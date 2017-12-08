@@ -14,10 +14,10 @@
 echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __('Click the below link to reset your email address.');
+echo __('Click the below link to reset your password.');
 echo "\n";
 echo $url;
 echo "\n";
 echo "\n";
-echo __('Please trash this email if you don\'t have any idea why you get this email.');
+echo __('If you\'re unsure why you received this email, you may simply ignore this message.');
 echo "\n";
