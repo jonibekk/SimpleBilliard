@@ -19,6 +19,9 @@ class PostDraft extends AppModel
                 'user_id' => $userId,
                 'team_id' => $teamId,
             ],
+            'order' => [
+                'id' => 'desc',
+            ]
         ];
         $postDrafts = Hash::extract($this->find('all', $options), '{n}.PostDraft');
 

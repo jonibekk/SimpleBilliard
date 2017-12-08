@@ -49,15 +49,12 @@ if (!isset($post_drafts)) {
                 <span title=""><?= $minutesAgo ?>minutes ago</span>
                 <div>
                 <span href="#" data-url="" class="modal-ajax-get-share-circles-users link-dark-gray">
-                    <i class="fa fa-circle-o"></i>&nbsp;~~~~に共有予定(動画処理完了後に公開されます)
+                    <i class="fa fa-circle-o"></i>&nbsp<?= $post_draft['share_text'] ?>
                 </span>
                 </div>
             </div>
         </div>
         <div class="col feed-contents post-contents showmore font_14px font_verydark box-align" id="PostTextBody_102">
-            <div style="text-align: center">
-                <i class="fa fa-spinner fa-4x fa-spin" aria-hidden="true"></i>
-            </div>
             <div>
                 <?php
                     $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($post_draft['post_resources'][0]['status_transcode']));
@@ -69,17 +66,17 @@ if (!isset($post_drafts)) {
                 // TODO: foreach the post_resources
                 $videoStreamId = sprintf('video_stream_%d', $post_draft['post_resources'][0]['id']);
             ?>
-
-            <!--
-            <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin" controls playsinline>
-                <source
-                        src="https://s3-ap-northeast-1.amazonaws.com/goalous-video-post-test/transcoded/1/2017-10-12.aes/playlist.m3u8"
-                        type="application/x-mpegURL">
-            </video>
-            <script>videojs('<?= $videoStreamId ?>');</script>
-            -->
         </div>
 
+    </div>
+    <div class="col pt_10px feed_img_only_one mb_12px">
+        <?php
+            if ($post_draft['hasTranscodeFailed']) {
+                echo "failed";
+            } else {
+                echo "not failed";
+            }
+        ?>
     </div>
 </div>
 <?php endforeach; ?>

@@ -14,6 +14,8 @@ App::import('Service', 'UserService');
 App::import('Service', 'CampaignService');
 App::import('Model', 'PostDraft');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Static content controller
  * Override this controller by placing a copy in controllers directory of an application
@@ -166,10 +168,61 @@ class PagesController extends AppController
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+        $this->set('post_drafts', $this->getDraftPosts());
+    }
+
+    private function getDraftPosts(): array
+    {
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init("PostDraft");
         $postDrafts = $PostDraft->getByUserIdAndTeamId($this->Auth->user('id'), $this->current_team_id);
-        $this->set('post_drafts', $postDrafts);
+
+        // get share circles/peoples
+        foreach ($postDrafts as $key => $postDraft) {
+            if (!isset($postDraft['data']['Post']['share_public'])
+            || !is_string($postDraft['data']['Post']['share_public'])) {
+                continue;
+            }
+            $shares = explode(',', $postDraft['data']['Post']['share_public']);
+            list($userIds, $circleIds) = $this->Post->distributeShareToUserAndCircle($shares);
+            $postDraft['PostShareUser'] = [];
+            $postDraft['PostShareCircle'] = [];
+            foreach ($userIds as $userId) {
+                $postDraft['PostShareUser'][] = [
+                    'user_id' => $userId,
+                ];
+            }
+            foreach ($circleIds as $circleId) {
+                $postDraft['PostShareCircle'][] = [
+                    'circle_id' => $circleId,
+                ];
+            }
+
+            // has transcode failed video
+            $hasTranscodeFailed = false;
+            foreach ($postDraft['post_resources'] as $resource) {
+                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['status_transcode']));
+                if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
+                    $hasTranscodeFailed = true;
+                    break;
+                }
+            }
+            $postDraft['hasTranscodeFailed'] = $hasTranscodeFailed;
+
+            $postDrafts[$key] = $postDraft;
+        }
+        //１件のサークル名をランダムで取得
+        $postDrafts = $this->Post->getRandomShareCircleNames($postDrafts);
+        //１件のユーザ名をランダムで取得
+        $postDrafts = $this->Post->getRandomShareUserNames($postDrafts);
+        //シェアモードの特定
+        $postDrafts = $this->Post->getShareMode($postDrafts);
+        //シェアメッセージの特定
+        $postDrafts = $this->Post->getShareMessages($postDrafts, false);
+
+        GoalousLog::info("", $postDrafts);
+
+        return $postDrafts;
     }
 
     public function _setLanguage()
