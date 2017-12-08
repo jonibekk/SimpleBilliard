@@ -1,153 +1,150 @@
-## プライバシーポリシー
+## Privacy Policy
 
-株式会社ISAO（以下「当社」）は、ネットワークソリューション事業、アプリケーションサービス事業、モバイルサービス企画・運営事業、ネットワークゲーム運営事業等を営んでいることを踏まえ、経営上及び事業上の最重要課題のひとつであるとの認識のもと、情報の適切な管理と保護の徹底をするため、以下の取り組みを実施いたします。
-1. 個人情報保護マネジメントシステムの確立  
-当社は、JIS Q 15001：2006に準拠した個人情報保護マネジメントシステム（個人情報を保護するための方針、体制、計画、実施、運用の確認及び見直しを含むマネジメントシステム）を確立し、これを実施し、維持し、継続的に改善していきます。
+ISAO Corporation (hereafter referred to as “the Company”), based on the recognition of the network solutions business, application services business, mobile service planning and operations, based on the fact that runs a network game management business, etc., is one of the most important issues on the management and on the business, to the appropriate management and thorough protection of information, we will implement the following initiatives.
 
-2. 個人情報の利用および提供  
-当社は、事業の内容及び規模を考慮した個人情報保護のための組織管理体制を確立するとともに、個人情報の取得、利用及び提供に際しては所定の規程・規則を遵守し、目的外利用を行なわず、適切な取扱いを実施するために十分な措置を講じます。
+1. Establishment of personal information protection management system
+the Company, JIS Q 15001: compliant personal information protection management system in 2006 to establish a (policy for the protection of personal information, system, planning, implementation, management system, including the identification and review of the operation), to carry out this, to maintain, we will continue to improve.
 
-3. 法令等の遵守  
-当社は、個人情報の取扱いに関する法令、国が定める指針その他の規範を遵守いたします。また、当社の個人情報保護マネジメントシステムを、当該法令及びその他の規範に適合させます。
+2. Use and provision of personal information
+the Company, as well as establish a management organization for the protection of personal information that takes into account the contents of the business and scale, the acquisition of personal information, to comply with the prescribed rules and regulations in your use and provide, without out-of-target use, we will take adequate measures in order to implement the appropriate handling.
 
-4. 安全管理措置  
-当社は、個人情報の安全管理のために必要かつ適切な対策を講じ、個人情報の漏えい、滅失またはき損の防止および是正を行います。
+3. Compliance with laws and regulations
+the Company will comply with the guidelines and other norms of laws and regulations regarding the handling of personal information, the country set. In addition, the Company’s personal information protection management system, adapt to the laws and regulations and other norms.
 
-5. 苦情および相談への対応  
-当社は、個人情報の苦情や相談に関して、適切かつ迅速に対応し、問題の解決を図るよう努めます。  
+4. Safety management measures
+the Company, take necessary and appropriate measures for the safety management of personal information, disclosure of personal information, and the prevention and correction of loss or damage.
 
-以上
+5. Responding to complaints and consultation
+the Company, with respect to complaints and consultation of personal information, and appropriate and timely response, and strive to achieve a resolution of the problem.
+    
+that’s all  
 
-制定日：2004年 10月 1日  
 
-最終改定日：2007年 10月 1日  
 
-株式会社ISAO 代表取締役　中村 圭志
+Enactment Date: October 01, 2004    
 
-----
+Last Revision Date : October 01, 2007   
 
-## 個人情報の取扱及び当社が保有する開示対象個人情報について
-(個人情報保護法及びJISに基づく「本人の知り得る状態（本人の求めに応じて遅滞なく回答する場合を含む。）」に置く事項)
+ISAO Corporation Representative Director　Keiji Nakamura 
 
 ----
 
-#### 個人情報の範囲
+## About the handling of your personal information held by the Company
 
-弊社は、以下の情報を、個人情報として厳重にお取り扱いさせていただきます。
-
-1. お客様の個人情報（氏名、メールアドレス、電話番号、プロフィール画像、決済情報などの特定の個人を識別できる情報）  
-利用目的：ご契約内容を実施し適切に管理するため
-
-2. お取引先様の個人情報（名刺情報などの特定の個人を識別できる情報）  
-利用目的：お取引先様との間のご契約内容を適切に管理するため
-
-3. 弊社へのお問い合わせをいただいた方の個人情報（氏名、メールアドレス、電話番号）  
-利用目的：弊社の接客態度等の向上のため。お問い合わせやご連絡内容を正確に把握し、対処するため  
-＊ 上記利用目的において、「ご契約内容を適切に管理するため」としているものは、「契約に入る前の段階における利用」と「契約終了後における利用」を含みます。
+Matters based on Personal Information Protection Law and JIS [The individual who acquires knowledge of the circumstances (including cases where the individual requests an answer without delay.)]
 
 ----
 
-#### 個人情報の取得
+#### Scope of personal information
 
-弊社は、本サイトにユーザー登録していただく際に個人情報を取得させていただきます。その際は、利用目的をできる限り特定した上、予めお客様の同意を得た場合、および法令により例外とされる場合を除き、利用目的の範囲内でのみ、個人情報を取り扱います。  
-弊社は、個人情報を取得する際には、適正な手段で取得するものとし、法令により例外とされる場合を除き、利用目的を、あらかじめ公表するか、取得後速やかにお客様に通知または公表します。ただし、お客様から書面（電磁的記録を含みます）で直接取得する場合には、あらかじめ明示します。
+We deal with the following information strictly as personal information.
 
-----
+1. Your personal information (name, email address, phone number, profile image, information that can identify a specific individual such as profile information, payment information)
+Purpose of use: In order to implement and properly manage the contents of the contract
 
-#### 個人情報の利用について
+2. Personal information of business partners (information that can identify specific individuals such as business card information)
+Purpose of use: In order to properly manage the contract contents between suppliers
 
-弊社では、お客様の個人情報を下記の利用目的で利用させていただきます。
-
-1. 本サイトのサービスをご利用いただく場合
-
-2. 本サイトのサービスへのお問い合わせ等に適切にご対応させていただく場合
-
-3. 本サイトのサービス情報、お知らせ、お客様に有益と思われる情報をお届けする場合
-
-4. その他、各種挨拶状、お礼状等のご送付およびご送信をする場合
+3. Personal information (name, email address, telephone number) of the person who received our inquiries
+Purpose of use: For improving our attitude towards customer service etc. To accurately grasp the inquiry and the contents of the inquiry and handle it
+* For the above purpose of use, those which are stated as "to properly manage contract contents" include "use at the time before entering contract" and "use after contract end".
 
 ----
 
-#### 本人が個人情報を与えることの任意性および当該情報を与えなかった場合に本人に生じる結果
+#### Acquisition of personal information
 
-お客さまの個人情報の当社への提供は、任意でございますが、個人情報をご提供いただけない場合は、サービスを提供できない場合がありますのでご了承ください。
-
-----
-
-#### 個人情報の委託について
-
-弊社では、個人情報の取扱の全部又は一部を委託する場合はその取扱を委託された個人情報の安全管理が図られるよう、委託を受けた者に対する必要かつ適切な監督を行います。
+We will acquire personal information when you register as a user on this site. In that case, we will treat personal information only within the scope of the purpose of use unless we identify the purpose of use as much as possible, obtain customer's prior consent in advance, and exceptions that are subject to laws and ordinances.
+When acquiring personal information, we shall acquire it by appropriate means and disclose the purpose of use in advance, except when it is regarded as an exception under law, or promptly notify the customer after acquisition. However, in the case where you acquire it directly in writing (including electromagnetic record) from the customer, it will be specified beforehand.
 
 ----
 
-#### 個人情報の管理
+#### About the use of personal information
 
-弊社では、お預かりした個人情報を、プリントアウト等一切せず、すべてサーバー内において管理するものとします。個人情報は、すべてデータベースに蓄積し、メールアドレス等重要な情報の通信は暗号化するものとします。
-弊社では、お預かりした個人情報について、漏洩、滅失、毀損等がないように適切に管理いたします。
-
-----
-
-#### 個人情報の開示、訂正、利用停止について
-
-弊社では、個人情報について開示対象個人情報の開示、又は訂正、追加、削除、利用の停止をご本人様の申し出により請求することが可能です。その場合は下記のお問い合わせ先までご連絡ください。なお、その場合ご本人確認をさせていただきます。
+We will use your personal information for the following purposes.
+1. When using the services of this site
+2. When inquiries from the service of this site are being addressed to properly
+3. When delivering service information on this site, notices, information that seems to be useful to customers
+4. When sending greeting cards, thank you letters, etc.
 
 ----
 
-#### 行動履歴の取得及び利用について
+#### Results that occur to the individual who provided optional information to this company as well as information that was not provided
 
-弊社は、ユーザーのプライバシーの保護、利便性の向上のため、Cookieを使用します。また、弊社は、CookieやJavaScript等の技術を利用して、サイト内におけるユーザーの行動履歴（アクセスしたURL、コンテンツ、参照順等）を取得することがあります。ただし、Cookieには個人情報は一切含まれません。
-
-- Cookie（クッキー）とは？    
-Cookie（クッキー）とは、ユーザーがWEBサイトを利用した際に、ユーザーによるサービスの履歴や入力内容などをユーザーのコンピュータに保存する仕組みです。
-
-- Cookieの設定方法    
-Cookieに関する設定方法は、ブラウザによって異なりますのでお使いのブラウザの「ヘルプ」メニューでご確認ください。  
-ユーザーは「すべてのクッキーを拒否する」という設定により、Cookieを削除することが出来ます。  
-その際には、認証が必要なサービスが受けられなくなる等、インターネット上の各種サービスの利用上、制約を受ける場合があります。
+Providing individual personal information to this company is optional, however, please understand that we may not be able to provide service if personal information is not provided.
 
 ----
 
-#### 個人情報の取扱及び当社が保有する開示対象個人情報について
+#### About the entrustment of personal information
 
-弊社では、個人情報の取扱及び当社が保有する開示対象個人情報について、適宜見直し、必要に応じて改善することがございます。
-
-----
-
-#### 個人情報保護管理者
-
-Goalousプロジェクト 菊池　厚平（連絡先は下記「個人情報苦情及び相談窓口」)
+When we consign all or part of the handling of personal information, we will conduct necessary and appropriate supervision of persons who have been entrusted with us so that the safety management of the personal information entrusted with the handling will be planned.
 
 ----
 
-#### 個人情報苦情及び相談窓口
+#### Management of personal information
 
-株式会社ISAO　個人情報苦情及び相談窓口担当  
-〒111-0053 東京都台東区浅草橋５丁目２０−８ CSタワー7階  
-Mail: contact@goalous.com  
-制 定 日：2016年2月15日  
-株式会社ISAO  
-代表取締役　中村　圭志
+We will manage all of your personal information within the server without printing or any other similar conducts. All personal information will be accumulated in the database and communication of important information such as e-mail address will be encrypted. We will properly manage your personal information so that it will not be leaked, destroyed, or damaged.
 
 ----
 
-#### 当社の所属する「認定個人情報保護団体」の名称および苦情等 のお申し出先
+#### About disclosure of personal information, correction, suspension of use
 
-当社は、以下の認定個人情報保護団体の対象事業者となっています。  
-当社の個人情報の取扱いに関する苦情については、同協会へ解決の 申出をすることもできます。  
-認定個人情報保護団体の名称及び、苦情の解決の申し出先は以下の 通りです。
+We are able to request that personal information be disclosed, amended, added, deleted, or usage stopped at the individual's request. In that case, please contact following contact information. In addition, we will be verifying the individual’s identity.
 
-- 認定個人情報保護団体の名称  
-    一般財団法人日本情報経済社会推進協会
+----
 
-- 苦情の解決の申出先  
-    消費者相談窓口
+#### About behavioral history acquisition as well as usage
 
-- 住所  
-    〒106-0032 東京都港区六本木一丁目9番9号 六本木ファーストビル内
+We use cookies to protect user's privacy and improve convenience. In addition, we may acquire the user's action history (accessed URL, contents, reference order etc.) in the site by using Cookie, JavaScript, etc. However, cookie does not include any personal information.
 
-- 電話番号  
-    0120-116-213
-    0120-700-779
-    ※当社の商品・サービスに関する問合せ先ではございません。
+- What is Cookie?   
+Cookie is a mechanism that saves user's history of service, input contents etc. on the user's computer when the user uses the website.
 
-  <br>
+- How to set cookie 
+Setting cookie differs on the browser, so please check the "Help" menu of the browser in use.
+Users can delete cookies by setting "disable all cookies".
+In that case, you may be subject to restrictions on the use of various services on the Internet, such services that require authentication.
+
+----
+
+#### Handling of personal information and personal information subject to disclosure possessed by the Company
+
+Regarding the handling of personal information and personal information subject to disclosure possessed by the Company, revisions and improvement can be made as necessary.
+
+----
+
+#### Personal information protection administrator
+
+Goalous Project Kohei Kikuchi (Contact: similar to the following “Personal Information Consultation Service”)
+
+----
+
+#### Inquiries about other personal information or complaints
+
+CS Tower 7th Floor, 5-20-8 Asakusabashi, Taito-ku, Tokyo 111-0053, Japan    
+
+Ltd. ISAO personal information consultation 
+
+Mail: contact@goalous.com
+
+----
+
+#### The offer destination, such as a name and complaints of our affiliation to “authorized personal information protection organization”
+
+Our company, has become a target entities of the following authorized personal information protection organization.
+For complaints about the handling of our personal information, it can also be an offer of a resolution to the association.
+Name of authorized personal information protection organization and, offer destination of complaint resolution is as follows.
+
+- Certify the name of the personal information protection organization  
+JIPDEC
+
+- Offer destination of complaints resolved  
+Consumer consultation
+
+- Street address    
+Roppongi First Building, 9-9 Roppongi 1-chome, Minato-ku Tokyo, 106-0032 Japan
+
+- Phone number  
+0120-116-213
+0120-700-779
+
+* It is not contact form about our products and services.
