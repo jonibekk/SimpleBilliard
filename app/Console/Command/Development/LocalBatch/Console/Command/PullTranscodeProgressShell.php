@@ -33,6 +33,13 @@ class PullTranscodeProgressShell extends AppShell
 
     function main()
     {
+        if (ENV_NAME !== 'local') {
+            GoalousLog::error('this batch shell should run only in local ENV', [
+                'current env' => ENV_NAME,
+            ]);
+            return;
+        }
+
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
         $videoStreamsToCheckStatus = $VideoStream->getByStatusTranscode([
@@ -50,7 +57,8 @@ class PullTranscodeProgressShell extends AppShell
         ]);
 
         $jobs = [];
-        // TODO: end if not ENV is local
+
+
         try {
             $client = \Aws\ElasticTranscoder\ElasticTranscoderClient::factory([
                 'region'   => 'ap-northeast-1',
