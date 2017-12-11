@@ -242,24 +242,29 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     // TODO: foreach the post_resources
                                     $videoStreamId = sprintf('video_stream_%d_%d', $resource['id'], $post['Post']['id']);
                                     $thumbnailPath = dirname($resource["playlist_path"])."/thumbs-00001.png";
-                                    $videoStreamWidth = 482;
-                                    $videoStreamHeight = round($videoStreamWidth / $resource['aspect_ratio']);
                                     ?>
-                                    <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="auto" poster="<?= $thumbnailPath ?>">
-                                        <source
-                                                src="<?= $resource["playlist_path"] ?>"
-                                                type="application/x-mpegURL">
-                                    </video>
+                                    <div id="div<?= $videoStreamId ?>" style="display: none">
+                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="none" poster="<?= $thumbnailPath ?>">
+                                            <source
+                                                    src="<?= $resource["playlist_path"] ?>"
+                                                    type="application/x-mpegURL">
+                                        </video>
+                                    </div>
                                     <script>
                                         videojs('<?= $videoStreamId ?>', {}).ready(function() {
                                             var myPlayer = this, id = myPlayer.id();
                                             var aspectRatio = <?= $resource['aspect_ratio'] ?>;
                                             function resizeVideoJS() {
-                                                var width = document.getElementById(id).parentElement.offsetWidth;
+                                                var width = document.getElementById(id).parentElement.parentElement.offsetWidth;
                                                 myPlayer.width(width);
-                                                myPlayer.height(width / aspectRatio);
+                                                if (1.0 > aspectRatio) {
+                                                    myPlayer.height(width);
+                                                } else {
+                                                    myPlayer.height(width / aspectRatio);
+                                                }
                                             }
                                             resizeVideoJS();
+                                            $('#div<?= $videoStreamId ?>').show()
                                         });
                                     </script>
                                 </div>
