@@ -1,6 +1,9 @@
 <?php
 App::uses('Controller', 'Controller');
+App::uses('TeamStatus', 'Lib/Status');
 App::import('Service', 'TeamService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Application level Controller
@@ -165,7 +168,26 @@ class BaseController extends Controller
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
+
+            $this->_setTeamStatus();
         }
+    }
+
+    private function _setTeamStatus()
+    {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init("CampaignService");
+
+        $teamId = $this->current_team_id;
+
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->setTeamId($teamId);
+        $teamStatus->setIsTeamCampaign($CampaignService->isCampaignTeam($teamId));
+        $teamStatus->setServiceUseStatus(new Enum\Team\ServiceUseStatus(intval($TeamService->getServiceUseStatus())));
+        $teamStatus->setEnabledVideoPostInEnvironment(ENABLE_VIDEO_POST);
+        // $teamStatus->setIsTeamPaidPlusPlan(true/false); // TODO: something
     }
 
     public function _setSecurity()
