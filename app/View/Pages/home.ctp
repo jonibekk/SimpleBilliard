@@ -261,13 +261,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __('What is Goalous? (jp, pdf)') ?>
+                    <?= __('What is Goalous? (pdf)') ?>
                 </dt>
                 <dd>
-                    <?= __('This file is written in Japanese.') ?>
+                    <?= __('Please refer to this document.') ?>
                     <br>
-                    <a href="../composition/pdf/jp_GoalousIntroduction_100.pdf" target="_blank"><i
-                            class="fa fa-arrow-down document-download-icon"></i>
+                    <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=1fYdY9d1tjBIZwQVQznSW6nQo-JomYYjj' : 'https://drive.google.com/open?id=1fo70MPigmy0gWLwfn4fpYXPHVGyA707Y'; ?> target="_blank">
+                        <i class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __('Download the file') ?>
                         </span>
