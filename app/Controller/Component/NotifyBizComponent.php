@@ -230,6 +230,12 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_CHANGED_TERM_SETTING:
                 $this->_setChangedTeamSetting($notify_type, $model_id, $user_id);
                 break;
+            case NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED:
+                $this->_setTranscodeCompleted($model_id, $user_id, $team_id);
+                break;
+            case NotifySetting::TYPE_TRANSCODE_FAILED:
+                $this->_setTranscodeFailed($user_id, $team_id);
+                break;
             default:
                 break;
         }
@@ -883,6 +889,30 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $teamId;
         $this->notify_option['item_name'] = json_encode([$team['name']]);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
+    }
+
+    private function _setTranscodeCompleted($postId, $userId, $teamId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $postId];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(["transcode"]);
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+    }
+
+    private function _setTranscodeFailed($userId, $teamId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSCODE_FAILED;
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'home'];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(["transcode failed"]);
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
     }
 
     /**
