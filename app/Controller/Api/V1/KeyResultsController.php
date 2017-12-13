@@ -57,14 +57,11 @@ class KeyResultsController extends ApiController
         }
         // KR更新
         if (!$KeyResultService->update($this->my_uid, $krId, $requestData)) {
-            $this->_getResponseInternalServerError();
+            return $this->_getResponseInternalServerError();
         }
 
-        // トラッキング
-        $kr = $KeyResultService->get($krId);
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr, $krId);
-
         // TKRかつ紐づくゴールが認定対象の場合、コーチへ通知する(ゴール・TKR編集時の通知と同じ)
+        $kr = $KeyResultService->get($krId);
         $goalId = Hash::get($kr, 'goal_id');
         if (Hash::get($kr, 'tkr_flg') && $GoalMemberService->isApprovableByGoalId($goalId, $this->my_uid)) {
             $this->_sendNotifyToCoach($goalId, NotifySetting::TYPE_COACHEE_CHANGE_GOAL);
