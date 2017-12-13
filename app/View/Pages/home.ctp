@@ -106,7 +106,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <h2 class="title"><strong><?= __('New Event');?>:</strong> <?= __('Free Goalous Seminar');?></h2>
             <p><?= __('Learn all of the ways you can improve your organization using Goalous.');?></p>
         </div>
-        <a href="http://peatix.com/event/319633/view" target="_blank" class="btn btn-cta-primary btn-lg"><?= __('Get Ticket');?></a>
+        <a href="https://peatix.com/group/66244" target="_blank" class="btn btn-cta-primary btn-lg"><?= __('Get Ticket');?></a>
     </div>
 </div>
 
@@ -261,13 +261,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __('What is Goalous? (jp, pdf)') ?>
+                    <?= __('What is Goalous? (pdf)') ?>
                 </dt>
                 <dd>
-                    <?= __('This file is written in Japanese.') ?>
+                    <?= __('Please refer to this document.') ?>
                     <br>
-                    <a href="../composition/pdf/jp_GoalousIntroduction_100.pdf" target="_blank"><i
-                            class="fa fa-arrow-down document-download-icon"></i>
+                    <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=1fYdY9d1tjBIZwQVQznSW6nQo-JomYYjj' : 'https://drive.google.com/open?id=1fo70MPigmy0gWLwfn4fpYXPHVGyA707Y'; ?> target="_blank">
+                        <i class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __('Download the file') ?>
                         </span>
