@@ -13,7 +13,7 @@ use Goalous\Model\Enum as Enum;
  */
 class VideoStreamService extends AppService
 {
-    public function updateFromTranscodeProgressData(array $videoStream, TranscodeProgressData $transcodeProgressData): bool
+    public function updateFromTranscodeProgressData(array $videoStream, TranscodeProgressData $transcodeProgressData): array
     {
         $videoStreamId = $videoStream['id'];
         $progressState = $transcodeProgressData->getProgressState();
@@ -36,7 +36,7 @@ class VideoStreamService extends AppService
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
             ])));
-            return true;
+            return $videoStream;
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
             // if transcode is error
             $status = Enum\Video\VideoTranscodeStatus::ERROR;
@@ -48,7 +48,7 @@ class VideoStreamService extends AppService
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
             ])));
-            return true;
+            return $videoStream;
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
             // if transcode is completed
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
@@ -72,18 +72,7 @@ class VideoStreamService extends AppService
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
             ])));
-
-            /** @var PostDraft $PostDraft */
-            $PostDraft = ClassRegistry::init('PostDraft');
-            $postDraft = $PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
-            // TODO: ここ、複数紐付いている下書きがあった場合、一つしかpostされない可能性がある
-            if (!empty($postDraft)) {
-                /** @var Post $Post */
-                $Post = ClassRegistry::init('Post');
-                $this->current_team_id = $postDraft['team_id'];
-                $Post->addNormalFromPostDraft($postDraft);
-            }
-            return true;
+            return $videoStream;
         }
         throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
     }

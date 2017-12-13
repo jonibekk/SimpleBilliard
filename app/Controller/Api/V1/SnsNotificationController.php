@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::uses('TranscodeNotificationAwsSns', 'Model/Video/Stream');
+App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -11,8 +12,17 @@ App::uses('VideoStreamService', 'Service');
 
 use Goalous\Model\Enum as Enum;
 
+/**
+ * Class SnsNotificationController
+ *
+ * @property NotifyBizComponent NotifyBiz
+ */
 class SnsNotificationController extends ApiController
 {
+    public $components = [
+        'NotifyBiz'
+    ];
+
     public function beforeFilter()
     {
         // parent::beforeFilter();
@@ -41,14 +51,34 @@ class SnsNotificationController extends ApiController
                 return $this->_getResponseNotFound("video_streams.id({$videoStreamId}) not found");
             }
 
-            GoalousLog::info("transcode progress notificated", [
+            GoalousLog::info("transcode progress notified", [
                 'video_streams.id' => $videoStream['id'],
                 'state' => $transcodeNotificationAwsSns->getProgressState()->getKey(),
             ]);
 
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
-            $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
+            $videoStream = $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
+
+            $updatedVideoStreamProgress = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+            /** @var PostDraft $PostDraft */
+            $PostDraft = ClassRegistry::init('PostDraft');
+            if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+                $postDraft = $PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
+                // TODO: ここ、複数紐付いている下書きがあった場合、一つしかpostされない
+                if (!empty($postDraft)) {
+                    /** @var Post $Post */
+                    $Post = ClassRegistry::init('Post');
+                    $this->current_team_id = $postDraft['team_id'];
+                    $post = $Post->addNormalFromPostDraft($postDraft);
+                    $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);
+                }
+            } else if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
+                /** @var Video $Video */
+                $Video = ClassRegistry::init('Video');
+                $video = $Video->getById($videoStream['video_id']);
+                $this->notifyTranscodeFailed($video['user_id'], $video['team_id']);
+            }
 
             return $this->_getResponseSuccess([]);
         } catch (InvalidArgumentException $e) {
@@ -68,12 +98,17 @@ class SnsNotificationController extends ApiController
         }
     }
 
-    private function getRequestHeaders(): Generator
+    private function notifyTranscodeCompleteAndDraftPublished(int $postId, int $userId, int $teamId)
     {
-        foreach ($_SERVER as $k => $v) {
-            if (0 === strpos($k, 'HTTP_')) {
-                yield $k => $v;
-            }
-        }
+        // this is need for relative url
+        // if we don't have this line, the url will be "http://localhost"
+        Router::fullBaseUrl('');
+        $this->NotifyBiz->sendNotify(NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED, $postId, null, null, $userId, $teamId);
+    }
+
+    private function notifyTranscodeFailed(int $userId, int $teamId)
+    {
+        Router::fullBaseUrl('');
+        $this->NotifyBiz->sendNotify(NotifySetting::TYPE_TRANSCODE_FAILED, null, null, null, $userId, $teamId);
     }
 }

@@ -365,7 +365,7 @@ class Post extends AppModel
         return reset($res);
     }
 
-    public function addNormalFromPostDraft(array $postDraft)
+    public function addNormalFromPostDraft(array $postDraft): array
     {
         $post = $this->addNormal(
             json_decode($postDraft['draft_data'], true),
