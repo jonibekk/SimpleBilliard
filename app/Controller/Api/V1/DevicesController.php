@@ -7,17 +7,25 @@ class DevicesController extends  ApiController
 
     public function beforeFilter()
     {
+        // Do not call parent class to prevent the validation of
+        // authenticated users. The API should allow request even if
+        // the users is not logged in
         //parent::beforeFilter();
         $this->Auth->allow();
         $this->Security->validatePost = false;
         $this->Security->csrfCheck = false;
     }
 
-    public function get_list()
-    {
-        return $this->_getResponseSuccess();
-    }
-
+    /**
+     * Accept a JSON with device information
+     * Format:
+     * {
+     *    "installationId": "string",
+     *    "version": "string"
+     * }
+     * 
+     * @return CakeResponse
+     */
     public function post()
     {
         $userId = $this->Auth->user('id');
@@ -41,7 +49,7 @@ class DevicesController extends  ApiController
                 CakeLog::error("Failed to delete installation_id: $installationId");
                 return $this->_getResponseInternalServerError();
             }
-            return $this->_getResponseSuccess("OFF");
+            return $this->_getResponseSuccess();
         }
 
        // Check the request user
@@ -62,7 +70,6 @@ class DevicesController extends  ApiController
             CakeLog::error($e->getTraceAsString());
             return $this->_getResponseInternalServerError();
         }
-
-        return $this->_getResponseSuccess("OK");
+        return $this->_getResponseSuccess();
     }
 }
