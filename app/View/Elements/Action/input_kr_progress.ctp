@@ -34,6 +34,7 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                            name="<?= $inputName ?>"
                            class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
                            value="<?= $kr['current_value'] ?>"
+                           placeholder="<?= $kr['current_value'] ?>"
                            disabled
                     >／<?= $kr['target_value'] ?>
                 </div>
