@@ -747,24 +747,22 @@ class GoalMember extends AppModel
      *
      * @param      $user_id
      * @param      $goal_id
-     * @param bool $owner
      *
-     * @return mixed
+     * @return array
      */
-    function getUnique($user_id, $goal_id, $owner = true)
+    function getUnique($user_id, $goal_id): array
     {
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
                 'user_id' => $user_id,
                 'goal_id' => $goal_id,
-                'type'    => self::TYPE_OWNER,
             ],
         ];
-        if ($owner === false) {
-            $options['conditions']['type'] = self::TYPE_COLLABORATOR;
-        }
         $res = $this->find('first', $options);
+        if (empty($res)) {
+            return [];
+        }
         return $res;
     }
 
