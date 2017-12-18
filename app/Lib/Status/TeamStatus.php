@@ -1,4 +1,6 @@
 <?php
+App::import('Service', 'TeamService');
+App::import('Service', 'CampaignService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -10,8 +12,6 @@ class TeamStatus {
     private static $current = null;
 
     private $teamId = null;
-
-    private $isTeamPaidPlusPlan = false;
 
     private $isTeamCampaign = false;
 
@@ -36,26 +36,78 @@ class TeamStatus {
         return self::$current;
     }
 
+    /**
+     * Initialize instance property from passed team id
+     * normally uses this method to set instance properties
+     *
+     * @param int $teamId
+     */
+    public function initializeByTeamId(int $teamId)
+    {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+        /** @var CampaignService $CampaignService */
+        $CampaignService = ClassRegistry::init('CampaignService');
+
+        $this->setTeamId($teamId);
+        $this->setIsTeamCampaign($CampaignService->isCampaignTeam($teamId));
+
+        $serviceUseStatus = null;
+        try {
+            // getServiceUseStatus() method is not considering guest user(not login)
+            // Not considering method call from non-login user(external API's), batch shell ...
+            // If $Team->current_team is not set, this method
+            // Cause Notice Error and throwing Error Exception (both)
+            // "@" suppressing Notice Error
+            // Catch(\Throwable) is catching Error Exception that can expect
+            // But this method is useful if user is login
+
+            // getServiceUseStatus() はログインユーザー以外からの呼出しを考慮していない作り
+            // 外部APIやバッチからの利用が想定されていない
+            // $Team->current_team に依存しており, 設定されていなければ
+            // Notice Error と Error Exception を同時に発生させる
+            // "@" は Notice Error を抑制する為
+            // catch節は Error Exceptionを補足する為
+            // getServiceUseStatus() はユーザーがログインしている場合に限り有用なので利用する
+            $serviceUseStatus = @$TeamService->getServiceUseStatus();
+        } catch (\Throwable $throwable) {
+            // catching in here is expected behaviour
+            // even logging is not needed
+
+            // ここに到達する事は想定している挙動のため、ログ出力もしない
+        }
+        if (is_null($serviceUseStatus)) {
+            // Could not get from $TeamService->getServiceUseStatus(), fetch from DB
+            $serviceUseStatus = $TeamService->getServiceUseStatusByTeamId($teamId);
+        }
+
+        if (!is_null($serviceUseStatus)) {
+            $this->setServiceUseStatus(new Enum\Team\ServiceUseStatus($serviceUseStatus));
+        }
+
+        if (defined('ENABLE_VIDEO_POST') && is_bool(ENABLE_VIDEO_POST)) {
+            $this->setEnabledVideoPostInEnvironment(ENABLE_VIDEO_POST);
+        }
+    }
+
+    /**
+     * set teams service use status
+     *
+     * @param Enum\Team\ServiceUseStatus $serviceUseStatus
+     */
     public function setServiceUseStatus(Enum\Team\ServiceUseStatus $serviceUseStatus)
     {
         $this->serviceUserStatus = $serviceUseStatus;
     }
 
     /**
+     * set teams id
+     *
      * @param int $teamId
      */
     public function setTeamId(int $teamId)
     {
         $this->teamId = $teamId;
-    }
-
-    /**
-     *
-     * @param bool $isTeamPaidPlusPlan
-     */
-    public function setIsTeamPaidPlusPlan(bool $isTeamPaidPlusPlan)
-    {
-        $this->isTeamPaidPlusPlan = $isTeamPaidPlusPlan;
     }
 
     /**
@@ -86,6 +138,16 @@ class TeamStatus {
     public function isTeamPaid(): bool
     {
         return $this->getServiceUseStatus()->equals(Enum\Team\ServiceUseStatus::PAID());
+    }
+
+    /**
+     * return true if team is campaign team
+     *
+     * @return bool
+     */
+    public function isTeamCampaign(): bool
+    {
+        return $this->isTeamCampaign;
     }
 
     /**
@@ -143,11 +205,7 @@ class TeamStatus {
     public function getTeamPlan(): Enum\TeamPlan
     {
         if ($this->getServiceUseStatus()->equals(Enum\Team\ServiceUseStatus::PAID())) {
-            if ($this->isTeamPaidPlusPlan) {
-                return Enum\TeamPlan::PAID_PLUS();
-            } else {
-                return Enum\TeamPlan::PAID();
-            }
+            return Enum\TeamPlan::PAID();
         }
         return Enum\TeamPlan::REGULAR();
     }
@@ -159,10 +217,6 @@ class TeamStatus {
      */
     public function getTranscodeQuality(): Enum\TranscodePattern
     {
-        if ($this->isTeamPaid()
-            && $this->isTeamPaidPlusPlan) {
-            return Enum\TranscodePattern::FULL();
-        }
         return Enum\TranscodePattern::LIMITED();
     }
 }

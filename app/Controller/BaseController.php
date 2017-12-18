@@ -173,21 +173,19 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * initializing current users TeamStatus from $this->current_team_id
+     * after this method, call TeamStatus::getCurrentTeam() to get current teams settings.
+     */
     private function _setTeamStatus()
     {
-        /** @var TeamService $TeamService */
-        $TeamService = ClassRegistry::init("TeamService");
-        /** @var CampaignService $CampaignService */
-        $CampaignService = ClassRegistry::init("CampaignService");
-
         $teamId = $this->current_team_id;
 
         $teamStatus = TeamStatus::getCurrentTeam();
-        $teamStatus->setTeamId($teamId);
-        $teamStatus->setIsTeamCampaign($CampaignService->isCampaignTeam($teamId));
-        $teamStatus->setServiceUseStatus(new Enum\Team\ServiceUseStatus(intval($TeamService->getServiceUseStatus())));
-        $teamStatus->setEnabledVideoPostInEnvironment(ENABLE_VIDEO_POST);
-        // $teamStatus->setIsTeamPaidPlusPlan(true/false); // TODO: something
+
+        if (AppUtil::isInt($this->current_team_id)) {
+            $teamStatus->initializeByTeamId($teamId);
+        }
     }
 
     public function _setSecurity()

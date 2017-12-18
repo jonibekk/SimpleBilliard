@@ -10,6 +10,16 @@ use Goalous\Model\Enum as Enum;
  */
 class TeamStatusTest extends GoalousTestCase
 {
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.campaign_team',
+        'app.team',
+    ];
+
     function tearDown()
     {
         parent::tearDown();
@@ -21,14 +31,14 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::PAID());
         $teamStatus->setIsTeamCampaign(true);
-        $teamStatus->setIsTeamPaidPlusPlan(true);
         $teamStatus->setEnabledVideoPostInEnvironment(true);
 
         $this->assertFalse($teamStatus->isTeamPlanRegular());
         $this->assertTrue($teamStatus->isTeamPaid());
-        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID_PLUS()));
+        $this->assertTrue($teamStatus->isTeamCampaign());
+        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID()));
         $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::FULL()));
+        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_regular()
@@ -36,11 +46,11 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::FREE_TRIAL());
         $teamStatus->setIsTeamCampaign(false);
-        $teamStatus->setIsTeamPaidPlusPlan(false);
         $teamStatus->setEnabledVideoPostInEnvironment(true);
 
         $this->assertTrue($teamStatus->isTeamPlanRegular());
         $this->assertFalse($teamStatus->isTeamPaid());
+        $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
         $this->assertTrue($teamStatus->isAbleToPostVideo());
         $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
@@ -51,13 +61,83 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::FREE_TRIAL());
         $teamStatus->setIsTeamCampaign(false);
-        $teamStatus->setIsTeamPaidPlusPlan(false);
         $teamStatus->setEnabledVideoPostInEnvironment(false);
 
         $this->assertTrue($teamStatus->isTeamPlanRegular());
         $this->assertFalse($teamStatus->isTeamPaid());
+        $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
         $this->assertFalse($teamStatus->isAbleToPostVideo());
+        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
+    }
+
+    function test_initializeFromTeamId_regular()
+    {
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId(1);
+
+        $this->assertFalse($teamStatus->isTeamPlanRegular());
+        $this->assertTrue($teamStatus->isTeamPaid());
+        $this->assertFalse($teamStatus->isTeamCampaign());
+        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID()));
+        $this->assertTrue($teamStatus->isAbleToPostVideo());
+        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
+    }
+
+    function test_initializeFromTeamId_free_trial()
+    {
+        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_FREE_TRIAL]);
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+
+        $this->assertTrue($teamStatus->isTeamPlanRegular());
+        $this->assertFalse($teamStatus->isTeamPaid());
+        $this->assertFalse($teamStatus->isTeamCampaign());
+        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
+        $this->assertTrue($teamStatus->isAbleToPostVideo());
+        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
+    }
+
+    function test_initializeFromTeamId_read_only()
+    {
+        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_READ_ONLY]);
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+
+        $this->assertTrue($teamStatus->isTeamPlanRegular());
+        $this->assertFalse($teamStatus->isTeamPaid());
+        $this->assertFalse($teamStatus->isTeamCampaign());
+        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
+        $this->assertTrue($teamStatus->isAbleToPostVideo());
+        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
+    }
+
+    function test_initializeFromTeamId_cannot_use()
+    {
+        $teamId = $this->createTeam(['service_use_status' => Team::SERVICE_USE_STATUS_CANNOT_USE]);
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+
+        $this->assertTrue($teamStatus->isTeamPlanRegular());
+        $this->assertFalse($teamStatus->isTeamPaid());
+        $this->assertFalse($teamStatus->isTeamCampaign());
+        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
+        $this->assertTrue($teamStatus->isAbleToPostVideo());
+        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
+    }
+
+    function test_initializeFromTeamId_campaign_team()
+    {
+        $teamId = 1;
+        $this->createCampaignTeam($teamId, $pricePlanGroupId = 0);
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+
+        $this->assertFalse($teamStatus->isTeamPlanRegular());
+        $this->assertTrue($teamStatus->isTeamPaid());
+        $this->assertTrue($teamStatus->isTeamCampaign());
+        $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID()));
+        $this->assertTrue($teamStatus->isAbleToPostVideo());
         $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 }
