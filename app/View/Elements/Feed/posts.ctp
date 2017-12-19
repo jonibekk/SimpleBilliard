@@ -10,7 +10,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
             <?php if ($post['Post']['type'] != Post::TYPE_ACTION && !$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
-                <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
+                <?php if (isset($post['Goal']['id']) && $post['Goal']['id'] && $post['Post']['type'] != Post::TYPE_CREATE_GOAL): ?>
                     <div class="post-heading-goal-area panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col">
                             <div class="post-heading-goal-wrapper pull-left">

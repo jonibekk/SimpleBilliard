@@ -25,12 +25,16 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
 
                     <?php else: ?>
                     <?= Hash::get($units, $kr['value_unit']) ?>
-                    <input type="number"
+                    <?php
+                        // To distinguish input min/max attribute
+                        // Related: https://jira.goalous.com/browse/GL-6453
+                        $isIncreaseProgress = bccomp($kr['target_value'], $kr['current_value'], 3) == 1;
+                    ?>
+                    <input type="text"
                            name="<?= $inputName ?>"
                            class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
-                           min="<?= $kr['current_value'] ?>"
-                           max="<?= $kr['target_value'] ?>"
                            value="<?= $kr['current_value'] ?>"
+                           placeholder="<?= $kr['current_value'] ?>"
                            disabled
                     >／<?= $kr['target_value'] ?>
                 </div>
