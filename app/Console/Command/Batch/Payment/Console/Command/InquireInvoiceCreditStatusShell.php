@@ -248,9 +248,13 @@ class InquireInvoiceCreditStatusShell extends AppShell
             // Update credit status for invoices tables
             $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $orderStatus);
 
-            // Set service to read only
-            $currentDateTimeOfTeamTimeZone = GoalousDateTime::now()->setTimeZoneByHour($timezone);
-            $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $currentDateTimeOfTeamTimeZone->format('Y-m-d'));
+            // Not move Read-Only status if credit has been OK even once in past orders
+            if (!$this->InvoiceHistory->checkCreditOkInPast($invoiceHistory['created'])) {
+                // Set service to read only
+                $currentDateTimeOfTeamTimeZone = GoalousDateTime::now()->setTimeZoneByHour($timezone);
+                $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $currentDateTimeOfTeamTimeZone->format('Y-m-d'));
+            }
+
             return true;
         }
 
