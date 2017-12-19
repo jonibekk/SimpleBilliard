@@ -161,8 +161,8 @@
                                     <div class="media-body">
                                         <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? mb_strimwidth(h($site_info['title']),
                                                 0,
-                                                50,
-                                                "...") : null ?></h4>
+                                                145,
+                                                "&hellip;") : null ?></h4>
 
                                         <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
                                         <?php if (isset($site_info['description'])): ?>

@@ -30,13 +30,11 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                         // Related: https://jira.goalous.com/browse/GL-6453
                         $isIncreaseProgress = bccomp($kr['target_value'], $kr['current_value'], 3) == 1;
                     ?>
-                    <input type="number"
+                    <input type="text"
                            name="<?= $inputName ?>"
                            class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
-                           min="<?= $isIncreaseProgress ? $kr['current_value'] : $kr['target_value'] ?>"
-                           max="<?= $isIncreaseProgress ? $kr['target_value'] : $kr['current_value'] ?>"
                            value="<?= $kr['current_value'] ?>"
-                           step="0.001"
+                           placeholder="<?= $kr['current_value'] ?>"
                            disabled
                     >／<?= $kr['target_value'] ?>
                 </div>

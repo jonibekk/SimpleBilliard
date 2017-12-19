@@ -193,10 +193,8 @@
                 <?php } ?>
             </li>
             <li class="header-nav-function-contents-list">
-                <?=
-                $this->Html->link(__('User Guide (jp)'),
-                    '/document/UserGuidelines.pdf',
-                    ['class' => 'header-nav-function-contents-user-guidelines', 'target' => '_blank']) ?>
+                <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=17c2lbrWEuqQYvOlVSb3Sn1dyFatXq2XD' : 'https://drive.google.com/open?id=1HZBsB3EdS1dciMLY3RXuc1FYHU1uuW73'; ?>
+                    class="header-nav-function-contents-user-guidelines" ><?=__('User Guide');?></a>
             </li>
             <li class="header-nav-function-contents-list">
                 <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
