@@ -246,8 +246,13 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <div id="div<?= $videoStreamId ?>" style="display: none">
                                         <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="none" poster="<?= $thumbnailPath ?>">
                                             <source
-                                                    src="<?= $resource["playlist_path"] ?>"
-                                                    type="application/x-mpegURL">
+                                                    src="<?= dirname($resource["playlist_path"])."/webm_500k/video.webm" ?>"
+                                                    type="video/webm"
+                                            >
+                                            <source
+                                                src="<?= $resource["playlist_path"] ?>"
+                                                type="application/x-mpegURL"
+                                            >
                                         </video>
                                     </div>
                                     <script>
