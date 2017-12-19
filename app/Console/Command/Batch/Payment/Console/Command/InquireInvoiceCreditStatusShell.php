@@ -229,7 +229,12 @@ class InquireInvoiceCreditStatusShell extends AppShell
 
                 // Update credit status for invoices tables
                 $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $orderStatus);
+            } else {
+                $this->InvoiceHistory->clear();
+                $this->InvoiceHistory->id = Hash::get($invoiceHistory, 'id');
+                $this->InvoiceHistory->save(['order_status' => $orderStatus], false);
             }
+
             return true;
         }
 
