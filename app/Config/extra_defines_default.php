@@ -81,6 +81,7 @@ $defines = [
     'MOBILE_APP_IOS_STORE_URL'                    => "https://itunes.apple.com/app/goalous-business-sns/id1060474459",
     'MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST' => "1.0.4",
     'MOBILE_APP_ANDROID_STORE_URL'                => "https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous2",
+    'ENABLE_VIDEO_POST'                           => true,
 ];
 
 foreach ($defines as $k => $v) {
