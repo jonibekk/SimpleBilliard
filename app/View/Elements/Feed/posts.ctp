@@ -117,8 +117,9 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="posts-panel-body panel-body">
                 <div class="col feed-user">
                     <div class="pull-right">
-                        <div class="dropdown">
-                            <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+                        <i class="post-saveItem mod-off" aria-hidden="true"></i>
+                        <div class="dropdown inline-block">
+                            <a href="#" class="font_lightGray-gray" data-toggle="dropdown" id="download">
                                 <i class="fa fa-chevron-down feed-arrow"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
