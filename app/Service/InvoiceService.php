@@ -210,12 +210,13 @@ class InvoiceService extends AppService
     /**
      * Update invoice and invoice history tables with credit status
      *
-     * @param int $invoiceHistoryId
-     * @param int $creditStatus
+     * @param int  $invoiceHistoryId
+     * @param int  $creditStatus
+     * @param null $orderStatus
      *
      * @return bool
      */
-    public function updateCreditStatus(int $invoiceHistoryId, int $creditStatus): bool
+    public function updateCreditStatus(int $invoiceHistoryId, int $creditStatus, $orderStatus = null): bool
     {
         /** @var Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
@@ -231,8 +232,8 @@ class InvoiceService extends AppService
         }
 
         $teamId = $invoiceHistory['team_id'];
-
-        $invoiceHistory['order_status'] = $creditStatus;
+        $orderStatus = $orderStatus ?? $creditStatus;
+        $invoiceHistory['order_status'] = $orderStatus;
         $invoice = $Invoice->getByTeamId($teamId);
         if (empty($invoice)) {
             CakeLog::error("Invoice not found for invoice history. TeamId: " . $teamId);
