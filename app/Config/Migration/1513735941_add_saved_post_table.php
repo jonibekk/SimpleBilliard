@@ -18,9 +18,9 @@ class AddSavedPostTable extends CakeMigration {
 			'create_table' => array(
 				'saved_posts' => array(
 					'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-					'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
 					'post_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
 					'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+					'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 					'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
