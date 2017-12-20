@@ -1,0 +1,273 @@
+<?php
+App::import('Service', 'AppService');
+App::uses('Device', 'Model');
+
+use Goalous\Model\Enum as Enum;
+
+/**
+ * Send Push Notifications thought service providers,
+ * manage device tokens.
+ *
+ * Class PushService
+ */
+class PushService extends AppService
+{
+    /**
+     * Send a push notification to a single device using
+     * Firebase Cloud Messaging
+     *
+     * @param string $token
+     * @param string $message
+     * @param string $postUrl
+     *
+     * @return bool
+     */
+    public function sendFirebasePushNotification(string $token, string $message, string $postUrl): bool
+    {
+        // Request reader
+        $header = [
+            'Content-Type'  => 'application/json',
+            'Authorization' => 'key=' . FIREBASE_SERVER_KEY,
+        ];
+
+        // Request data
+        $data = [
+            'notification' => [
+                'body' => $message
+            ],
+            'data'         => [
+                'url' => $postUrl
+            ],
+            'to'           => $token
+        ];
+
+        // Make request to FCM
+        $client = $this->getHttpClient();
+        try {
+            $response = $client->post(FIREBASE_SEND_URL, [
+                'headers'     => $header,
+                'body'        => json_encode($data)
+            ]);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s] Failed to call FCM API. %s", __METHOD__, $e->getMessage()));
+            return false;
+        }
+
+        $status = $response->getStatusCode();
+        if ($status != 200) {
+            CakeLog::error(sprintf("[%s] Failed to call FCM API. Status code: %s. Reason: %s. Token: %s",
+                __METHOD__, $status, $response->getReasonPhrase(), $token));
+            return false;
+        }
+
+        $body = $response->getBody()->getContents();
+        if (empty($body)) {
+            CakeLog::error(sprintf("[%s] No contents from FCM API call. Token: %s", __METHOD__, $token));
+            return false;
+        }
+
+        $result = json_decode($body, true);
+
+        // Failed to send
+        // Check if it is an invalid token. If so, remove it from database.
+        //
+        // The registration token may change when:
+        //   The app deletes Instance ID
+        //   The app is restored on a new device
+        //   The user uninstalls/reinstall the app
+        //   The user clears app data.
+        if ($result['failure'] === 1) {
+            foreach ($result['results'] as $error) {
+                // This token is invalid
+                if ($error['error'] == "MismatchSenderId") {
+                    $this->removeDevice($token);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Send a push notification to a list of devices using
+     * Nifty Cloud Mobile Backend
+     *
+     * @param array  $deviceTokens
+     * @param string $message
+     * @param string $postUrl
+     */
+    public function sendNCMBPushNotification(array $deviceTokens, string $message, string $postUrl)
+    {
+        $app_key = NCMB_APPLICATION_KEY;
+        $client_key = NCMB_CLIENT_KEY;
+
+        $timestamp = $this->getNCBTimestamp();
+        $signature = $this->getNCMBSignature($timestamp, null, null, $app_key, $client_key);
+
+        $header = array(
+            'X-NCMB-Application-Key: ' . $app_key,
+            'X-NCMB-Signature: ' . $signature,
+            'X-NCMB-Timestamp: ' . $timestamp,
+            'Content-Type: application/json'
+        );
+
+        $options = array(
+            'http' => array(
+                'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
+                'max_redirects' => 0,       // リダイレクトはしない
+                'method'        => NCMB_REST_API_PUSH_METHOD
+            )
+        );
+
+        $body = '{
+                "immediateDeliveryFlag" : true,
+                "target":["ios","android"],
+                "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $deviceTokens) . '"]}},
+                "message":' . $message . ',
+                "userSettingValue":{"url":"' . $postUrl . '"}},
+                "deliveryExpirationTime":"1 day"
+            }';
+        $options['http']['content'] = $body;
+
+        $header['content-length'] = 'Content-Length: ' . strlen($body);
+        $options['http']['header'] = implode("\r\n", $header);
+
+        $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
+        $ret = file_get_contents($url, false, stream_context_create($options));
+    }
+
+    /**
+     * Save a device token to database.
+     *
+     * @param int                     $userId
+     * @param string                  $deviceToken
+     * @param Enum\Devices\DeviceType $deviceType
+     * @param string                  $version
+     *
+     * @return bool
+     */
+    public function saveDeviceToken(int $userId, string $deviceToken, Enum\Devices\DeviceType $deviceType, string $version): bool
+    {
+        /** @var Device $Device */
+        $Device = ClassRegistry::init('Device');
+
+        // Check if the device already exists
+        $data = $Device->getDeviceByToken($deviceToken);
+        if (!empty($data['Device'])) {
+            $data['Device']['user_id'] = $userId;
+            $data['Device']['os_type'] = $deviceType->getValue();
+            $data['Device']['version'] = $version;
+
+            try {
+                $Device->save($data, false);
+            } catch (Exception $e) {
+                CakeLog::error(sprintf("[%s] Failed to save device info. %s Data: %s",
+                    __METHOD__, $e->getMessage(), AppUtil::varExportOneLine($data)));
+                return false;
+            }
+            return true;
+        }
+
+        $data['Device'] = [
+            'user_id'      => $userId,
+            'device_token' => $deviceToken,
+            'os_type'      => $deviceType->getValue(),
+            'version'      => $version,
+        ];
+
+        try {
+            $Device->add($data);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s] Failed to add device info. %s Data: %s",
+                __METHOD__, $e->getMessage(), AppUtil::varExportOneLine($data)));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Soft delete a device from database.
+     * Required cause token can change.
+     *
+     * The registration token may change when:
+     *      The app deletes Instance ID
+     *      The app is restored on a new device
+     *      The user uninstalls/reinstall the app
+     *      The user clears app data.
+     *
+     * @param string $deviceToken
+     *
+     * @return bool
+     */
+    public function removeDevice(string $deviceToken): bool
+    {
+        /** @var Device $Device */
+        $Device = ClassRegistry::init('Device');
+        $data = $Device->getDeviceByToken($deviceToken);
+
+        if (empty($data['Device'])) {
+            return false;
+        }
+
+        try {
+            $Device->softDelete($data['Device']['id'], false);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s] Failed remove device. %s. Token: %s",
+                __METHOD__, $e->getMessage(), $deviceToken));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * NOWなタイムスタンプを生成する。
+     *
+     * Moved from NotifyBizComponent class
+     *
+     * @return string
+     */
+    public function getNCBTimestamp()
+    {
+        $now = microtime(true);
+        $msec = sprintf("%03d", ($now - floor($now)) * 1000);
+        return gmdate('Y-m-d\TH:i:s.', floor($now)) . $msec . 'Z';
+    }
+
+    /**
+     * push通知に必要なパラメータ
+     * X-NCMB-SIGNATUREを生成する
+     * デフォルトではpush通知用のシグネチャ生成
+     *
+     * Moved from NotifyBizComponent class
+     *
+     * @param        $timestamp  シグネチャを生成する時に使うタイムスタンプ
+     * @param        $method     シグネチャを生成する時に使うメソッド
+     * @param        $path       シグネチャを生成する時に使うパス
+     * @param string $app_key    NCMB用 application key
+     * @param string $client_key NCMB用 client key
+     *
+     * @return string X-NCMB-SIGNATUREの値
+     */
+    public function getNCMBSignature(
+        $timestamp,
+        $method = null,
+        $path = null,
+        $app_key = NCMB_APPLICATION_KEY,
+        $client_key = NCMB_CLIENT_KEY
+    ) {
+        $header_string = "SignatureMethod=HmacSHA256&";
+        $header_string .= "SignatureVersion=2&";
+        $header_string .= "X-NCMB-Application-Key=" . $app_key . "&";
+        $header_string .= "X-NCMB-Timestamp=" . $timestamp;
+
+        $signature_string = (($method) ? $method : NCMB_REST_API_PUSH_METHOD) . "\n";
+        $signature_string .= NCMB_REST_API_FQDN . "\n";
+        if ($path) {
+            $signature_string .= $path . "\n";
+        } else {
+            $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
+        }
+        $signature_string .= $header_string;
+
+        return base64_encode(hash_hmac("sha256", $signature_string, $client_key, true));
+    }
+}
