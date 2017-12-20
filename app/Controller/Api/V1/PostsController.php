@@ -10,8 +10,6 @@ class PostsController extends ApiController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->csrfCheck = false;
-        $this->Security->validatePost = false;
     }
 
     /**
