@@ -22,4 +22,58 @@ class PostService extends AppService
         return $ret;
     }
 
+    /**
+     * Save favorite post
+     *
+     * @param int $postId
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    function saveItem(int $postId, int $userId, int $teamId): bool
+    {
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init("SavedPost");
+
+        try {
+            $SavedPost->create();
+            $SavedPost->save([
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId,
+            ]);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Delete favorite post
+     *
+     * @param int $postId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function deleteItem(int $postId, int $userId): bool
+    {
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init("SavedPost");
+
+        try {
+            $SavedPost->deleteAll([
+                'post_id' => $postId,
+                'user_id' => $userId,
+            ]);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return false;
+        }
+        return true;
+    }
 }
