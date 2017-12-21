@@ -53,6 +53,11 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
         throw new RuntimeException('unknown notification state: ' . $this->messageData['state']);
     }
 
+    public function getJobId(): string
+    {
+        return $this->messageData['jobId'];
+    }
+
     public function getOutputKeyPrefix(): string
     {
         return $this->messageData['outputKeyPrefix'];
@@ -92,11 +97,13 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
 
     public function isError(): bool
     {
-        return false;
+        return $this->getProgressState()->equals(Enum\Video\VideoTranscodeProgress::ERROR());
     }
 
     public function getError(): string
     {
-        return '';
+        $errorCode = $this->messageData['errorCode'] ?? '';
+        $errorMessage = $this->messageData['messageDetails'] ?? '';
+        return sprintf('CODE: %s, %s', $errorCode, $errorMessage);
     }
 }

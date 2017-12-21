@@ -28,26 +28,37 @@ class VideoStreamService extends AppService
             }
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODING;
             $videoStream['status_transcode'] = $status;
-            $videoStream['transcode_info'] = "[]";// TODO: add ETS JobId at least
+
+            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
+            $videoStream['transcode_info'] = $transcodeInfo->toJson();
             $VideoStream->save($videoStream);
-            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
+            GoalousLog::info('transcode status changed', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
-            ])));
+            ]);
             return $videoStream;
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
             // if transcode is error
             $status = Enum\Video\VideoTranscodeStatus::ERROR;
             $videoStream['status_transcode'] = $status;
+
+            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
+            if ($transcodeProgressData->isError()) {
+                $transcodeInfo->addTranscodeError($transcodeProgressData->getError());
+            }
+            $videoStream['transcode_info'] = $transcodeInfo->toJson();
+
             $VideoStream->save($videoStream);
-            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
+            GoalousLog::info('transcode status changed', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
-            ])));
+            ]);
             return $videoStream;
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
             // if transcode is completed
@@ -65,13 +76,17 @@ class VideoStreamService extends AppService
             $videoStream['duration']             = $transcodeProgressData->getDuration();
             $videoStream['aspect_ratio']         = $transcodeProgressData->getAspectRatio();
             $videoStream['master_playlist_path'] = $transcodeProgressData->getPlaylistPath();
+
+            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
+            $videoStream['transcode_info'] = $transcodeInfo->toJson();
             $VideoStream->save($videoStream);
-            CakeLog::info(sprintf('transcode status changed: %s', AppUtil::jsonOneLine([
+            GoalousLog::info('transcode status changed ', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
-            ])));
+            ]);
             return $videoStream;
         }
         throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
@@ -105,53 +120,50 @@ class VideoStreamService extends AppService
 
         $userId = $user['id'];
 
-        CakeLog::info(sprintf(__METHOD__."%s", AppUtil::jsonOneLine([
-            'team_id' => $teamId,
-        ])));
-
         $filePath = $uploadFile['tmp_name'];
         $fileName = $uploadFile['name'];
 
-        $hash = hash_file('sha256', $filePath);
+        $hash = hash_file('sha256', $filePath);// TODO: move to some function/class
 
         $videoStreamIfExists = $this->findVideoStreamIfExists($userId, $teamId, $hash);
         if (!empty($videoStreamIfExists)) {
-            CakeLog::info(sprintf('uploaded video exists %s', AppUtil::jsonOneLine([
+            GoalousLog::info('uploaded same hash video exists', [
                 'user_id' => $userId,
                 'team_id' => $teamId,
                 'hash'    => $hash,
                 'video_streams.id' => $videoStreamIfExists['id'],
-            ])));
+            ]);
             return $videoStreamIfExists;
         }
-        CakeLog::info(sprintf('uploaded video NOT exists %s', AppUtil::jsonOneLine([
+        GoalousLog::info('uploaded same hash video NOT exists', [
             'user_id' => $userId,
             'team_id' => $teamId,
             'hash'    => $hash,
-        ])));
+        ]);
 
         // create video, video_stream
         // need to be create for Storage Meta data to save ids
         $Video->create([
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'duration' => null,// TODO: cant estimate now (need ffprove or something)
-            'width' => null,// TODO: cant estimate now
-            'height' => null,// TODO: cant estimate now
-            'hash' => hash_file('sha256', $filePath),//$request->getFileHash(),// TODO: move to some function/class
-            'file_size' => filesize($filePath),
-            'file_name' => $fileName,// TODO: passing wrong name(pass the user's file name)
+            'user_id'       => $userId,
+            'team_id'       => $teamId,
+            'duration'      => null,// currently cant estimate (need ffprove or something)
+            'width'         => null,// (same as above)
+            'height'        => null,// (same as above)
+            'hash'          => $hash,
+            'file_size'     => filesize($filePath),
+            'file_name'     => $fileName,
             'resource_path' => null,
         ]);
         $video = $Video->save();
         $video = reset($video);
         $VideoStream->create([
-            'video_id' => $video['id'],
-            'duration' => 0,// TODO: make null can be taken
-            'aspect_ratio' => 0,// TODO: make null can be taken
-            'master_playlist_path' => '',// TODO: make null can be taken
+            'video_id'         => $video['id'],
+            'duration'         => null,
+            'aspect_ratio'     => null,
+            'storage_path'     => null,
             'status_transcode' => Enum\Video\VideoTranscodeStatus::UPLOADING,
-            'transcode_info' => json_encode([]),
+            'output_version'   => Enum\Video\TranscodeOutputVersion::V1,
+            'transcode_info'   => TranscodeInfo::createNew()->toJson(),
         ]);
         $videoStream = $VideoStream->save();
         $videoStream = reset($videoStream);
@@ -160,26 +172,32 @@ class VideoStreamService extends AppService
         $result = VideoStorageClient::upload($request);
 
         if (!$result->isSucceed()) {
-            CakeLog::error(sprintf(__METHOD__."::failed", AppUtil::jsonOneLine([
-                'code' => $result->getErrorCode(),
+            GoalousLog::info('video uploading to storage failed', [
+                'code'    => $result->getErrorCode(),
                 'message' => $result->getErrorMessage(),
-            ])));
+            ]);
             $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR;
             $VideoStream->save($videoStream);
             throw new RuntimeException("failed upload video:" . $result->getErrorMessage());
         }
-        // Succeeded process
+        // Succeeded upload
         $video['resource_path'] = $result->getResourcePath();
         $Video->save($video);
 
         // Upload complete and queued is same timing on AWS Elastic Transcoder (using S3 event + Lambda)
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
+
+        // TODO: make transcode job on AWS ETS
+
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::QUEUED;
         $VideoStream->save($videoStream);
 
-        CakeLog::info(sprintf(__METHOD__."::succeed", AppUtil::jsonOneLine([
-            'team_id' => $teamId,
-        ])));
+        GoalousLog::info('video uploading to storage succeeded', [
+            'teams.id'         => $teamId,
+            'videos.id'        => $video['id'],
+            'video_streams.id' => $videoStream['id'],
+        ]);
+
         return $videoStream;
     }
 }

@@ -37,3 +37,44 @@ class VideoTranscodeProgress extends Enum
     const WARNING  = 'warning';
     const COMPLETE = 'complete';
 }
+
+/**
+ * @method static static AWS_ETS()
+ */
+class Transcoder extends Enum
+{
+    const AWS_ETS = 'aws_ets';
+}
+
+/**
+ * @see https://confluence.goalous.com/display/GOAL/Video+Transcode+Output+Versions
+ *
+ * @method static static V1()
+ */
+class TranscodeOutputVersion extends Enum
+{
+    const V1 = '1';
+}
+
+/**
+ * Class VideoSourceType
+ *
+ * @see Media Types https://www.rfc-editor.org/rfc/rfc4281.txt
+ *       Media formats for HTML audio and video https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats
+ *
+ * @method static static NOT_RECOMMENDED()
+ * @method static static VIDEO_WEBM()
+ * @method static static PLAYLIST_M3U8_HLS()
+ */
+class VideoSourceType extends Enum
+{
+    /**
+     * this NOT_RECOMMENDED definition is for video source
+     * that should/will not use for video.source tag
+     */
+    const NOT_RECOMMENDED = 'NOT_RECOMMENDED';
+
+    const VIDEO_WEBM = 'video/webm';
+    const PLAYLIST_M3U8_HLS  = 'application/x-mpegURL';
+}
+

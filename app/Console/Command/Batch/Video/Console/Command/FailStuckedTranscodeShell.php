@@ -53,8 +53,10 @@ class FailStuckedTranscodeShell extends AppShell
                 ),
             ]);
             $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR();
+            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            $transcodeInfo->setTranscodeNoProgress(true);
+            $videoStream['transcode_info'] = $transcodeInfo->toJson();
             $VideoStream->save($videoStream);
-            $VideoStream->setTranscodeInfo($videoStream, 'no_notification', true);
         }
     }
 

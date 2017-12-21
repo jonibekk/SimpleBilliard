@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TranscodeInfo', 'Lib/Video/Stream');
 
 use Goalous\Model\Enum as Enum;
 
@@ -8,28 +9,9 @@ use Goalous\Model\Enum as Enum;
  */
 class VideoStream extends AppModel
 {
-    public function setTranscodeInfo(array $videoStream, string $key, $value)
+    public function getTranscodeInfo(array $videoStream): TranscodeInfo
     {
-        $infos = [];
-        if (!isset($videoStream['id'])) {
-            GoalousLog::warning('video_streams.id is undefined');
-        }
-        if (!isset($videoStream['transcode_info']) || !is_string($videoStream['transcode_info'])) {
-            GoalousLog::notice('video_streams.transcode_info is not set', [
-                'video_streams.id' => video_streams['id'],
-            ]);
-        }
-        $currentTranscodeInfo = json_decode($videoStream['transcode_info'], true);
-        if (is_null($currentTranscodeInfo)) {
-            GoalousLog::notice('video_streams.transcode_info is not json', [
-                'video_streams.id' => video_streams['id'],
-            ]);
-        }
-        $currentTranscodeInfo[$key] = $value;
-        $this->save([
-            'id' => $videoStream['id'],
-            'transcode_info' => json_encode($currentTranscodeInfo),
-        ]);
+        return TranscodeInfo::createFromJson($videoStream['transcode_info']);
     }
 
     public function getFirstByVideoId(int $videoId): array
