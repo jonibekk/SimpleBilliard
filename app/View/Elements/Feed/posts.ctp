@@ -117,7 +117,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="posts-panel-body panel-body">
                 <div class="col feed-user">
                     <div class="pull-right">
-                        <i class="post-saveItem mod-off" aria-hidden="true"></i>
+                        <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
+                        <i class="post-saveItem <?=$isSavedItemClass?> js-save-item" aria-hidden="true" data-id="<?= Hash::get($post, 'Post.id')?>" data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item')?>"></i>
                         <div class="dropdown inline-block">
                             <a href="#" class="font_lightGray-gray" data-toggle="dropdown" id="download">
                                 <i class="fa fa-chevron-down feed-arrow"></i>
