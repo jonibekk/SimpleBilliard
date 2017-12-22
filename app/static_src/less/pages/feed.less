@@ -5,9 +5,9 @@
 @import "../partials/postarea";
 @import "../partials/attached_file";
 @import "../partials/action";
+@import "../partials/post";
 @import(reference) "../partials/avatar";
 @import(reference) "../partials/line_number_limit";
-@import "../partials/parent_for_extend";
 
 /**
  * feed.less
@@ -153,26 +153,6 @@
     }
     &-change {
       color:@subColor13;
-    }
-  }
-}
-
-.post-saveItem {
-  &:extend(.fa-module);
-  margin-right: 12px;
-  font-size: 20px;
-  line-height: 1em;
-  cursor: pointer;
-  &.mod-on {
-    color: @subColor15;
-    &:before {
-      content: "\f02e";
-    }
-  }
-  &.mod-off {
-    color: @subColor3;
-    &:before {
-      content: "\f097";
     }
   }
 }

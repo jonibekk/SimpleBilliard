@@ -23,6 +23,11 @@ class SavedPost extends AppModel
      * @param int   $userId
      *
      * @return array
+     *
+     * Example
+     *  Precondition: user(id:1) has already saved post(id:2)
+     *  Argument $postIds = [1,2,5]
+     *  Result: [1 => false, 2 => true, 5 => false]
      */
     public function isSavedEachPost(array $postIds, int $userId): array
     {
