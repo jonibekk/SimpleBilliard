@@ -49,7 +49,7 @@ class DevicesController extends  ApiController
             $Device = ClassRegistry::init('Device');
 
             if (!$Device->softDeleteAll(['Device.installation_id' => $installationId], false)) {
-                CakeLog::error("Failed to delete installation_id: $installationId");
+                GoalousLog::error("Failed to delete installation_id", ["installation_id" => $installationId]);
                 return $this->_getResponseInternalServerError();
             }
             return $this->_getResponseSuccess();
@@ -57,7 +57,7 @@ class DevicesController extends  ApiController
 
        // Check the request user
         if (!$this->User->exists($userId)) {
-            CakeLog::error(sprintf("user id is invalid. user_id: %s", $userId));
+            GoalousLog::error("User id is invalid", ["user_id" => $userId]);
             return $this->_getResponseBadFail(__('Parameters were wrong'));
         }
 
@@ -69,7 +69,7 @@ class DevicesController extends  ApiController
             $this->_updateSetupStatusIfNotCompleted();
         }
         catch (RuntimeException $e) {
-            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            GoalousLog::error("Failed to save Device", ["Exception" => $e->getMessage()]);
             CakeLog::error($e->getTraceAsString());
             return $this->_getResponseInternalServerError();
         }
@@ -113,7 +113,7 @@ class DevicesController extends  ApiController
 
         // Check the request user
         if (!$this->User->exists($userId)) {
-            CakeLog::error(sprintf("user id is invalid. user_id: %s", $userId));
+            GoalousLog::error("User id is invalid", ["user_id" => $userId]);
             return $this->_getResponseBadFail('Invalid Parameters');
         }
 

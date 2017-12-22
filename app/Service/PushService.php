@@ -7,7 +7,6 @@ use Goalous\Model\Enum as Enum;
 /**
  * Send Push Notifications thought service providers,
  * manage device tokens.
- *
  * Class PushService
  */
 class PushService extends AppService
@@ -16,13 +15,13 @@ class PushService extends AppService
      * Send a push notification to a single device using
      * Firebase Cloud Messaging
      *
-     * @param string $token
+     * @param array  $deviceTokens
      * @param string $message
      * @param string $postUrl
      *
      * @return bool
      */
-    public function sendFirebasePushNotification(string $token, string $message, string $postUrl): bool
+    public function sendFirebasePushNotification(array $deviceTokens, string $message, string $postUrl): bool
     {
         // Request reader
         $header = [
@@ -32,37 +31,38 @@ class PushService extends AppService
 
         // Request data
         $data = [
-            'notification' => [
-                'body' => $message
+            'data'             => [
+                'body' => $message,
+                'url'  => $postUrl
             ],
-            'data'         => [
-                'url' => $postUrl
-            ],
-            'to'           => $token
+            'registration_ids' => $deviceTokens
         ];
 
         // Make request to FCM
         $client = $this->getHttpClient();
         try {
             $response = $client->post(FIREBASE_SEND_URL, [
-                'headers'     => $header,
-                'body'        => json_encode($data)
+                'headers' => $header,
+                'body'    => json_encode($data)
             ]);
         } catch (Exception $e) {
-            CakeLog::error(sprintf("[%s] Failed to call FCM API. %s", __METHOD__, $e->getMessage()));
+            GoalousLog::error('Failed to call FCM API.', ['Exception' => $e->getMessage()]);
             return false;
         }
 
         $status = $response->getStatusCode();
         if ($status != 200) {
-            CakeLog::error(sprintf("[%s] Failed to call FCM API. Status code: %s. Reason: %s. Token: %s",
-                __METHOD__, $status, $response->getReasonPhrase(), $token));
+            GoalousLog::error('Failed to call FCM API.', [
+                'StatusCode'   => $status,
+                'Reason'       => $response->getReasonPhrase(),
+                'deviceTokens' => $deviceTokens
+            ]);
             return false;
         }
 
         $body = $response->getBody()->getContents();
         if (empty($body)) {
-            CakeLog::error(sprintf("[%s] No contents from FCM API call. Token: %s", __METHOD__, $token));
+            GoalousLog::error('No contents from FCM API call.', ['deviceTokens' => $deviceTokens]);
             return false;
         }
 
@@ -76,11 +76,17 @@ class PushService extends AppService
         //   The app is restored on a new device
         //   The user uninstalls/reinstall the app
         //   The user clears app data.
-        if ($result['failure'] === 1) {
-            foreach ($result['results'] as $error) {
-                // This token is invalid
-                if ($error['error'] == "MismatchSenderId") {
-                    $this->removeDevice($token);
+        if ($result['failure'] >= 1) {
+            foreach ($result['results'] as $key => $value) {
+                // Check for invalid tokens.
+                // Errors are returned on the same order of request
+                if (!empty($value['error']) &&
+                    ($value['error'] == 'MismatchSenderId' ||
+                        $value['error'] == 'InvalidRegistration' ||
+                        $value['error'] == 'NotRegistered')) {
+
+                    $invalidToken = $deviceTokens[$key];
+                    $this->removeDevice($invalidToken);
                 }
             }
         }
@@ -160,8 +166,10 @@ class PushService extends AppService
             try {
                 $Device->save($data, false);
             } catch (Exception $e) {
-                CakeLog::error(sprintf("[%s] Failed to save device info. %s Data: %s",
-                    __METHOD__, $e->getMessage(), AppUtil::varExportOneLine($data)));
+                GoalousLog::error('Failed to save device info.', [
+                    'Exception' => $e->getMessage(),
+                    'data'      => $data
+                ]);
                 return false;
             }
             return true;
@@ -177,8 +185,10 @@ class PushService extends AppService
         try {
             $Device->add($data);
         } catch (Exception $e) {
-            CakeLog::error(sprintf("[%s] Failed to add device info. %s Data: %s",
-                __METHOD__, $e->getMessage(), AppUtil::varExportOneLine($data)));
+            GoalousLog::error('Failed to save device info.', [
+                'Exception' => $e->getMessage(),
+                'data'      => $data
+            ]);
             return false;
         }
         return true;
@@ -187,7 +197,6 @@ class PushService extends AppService
     /**
      * Soft delete a device from database.
      * Required cause token can change.
-     *
      * The registration token may change when:
      *      The app deletes Instance ID
      *      The app is restored on a new device
@@ -211,8 +220,10 @@ class PushService extends AppService
         try {
             $Device->softDelete($data['Device']['id'], false);
         } catch (Exception $e) {
-            CakeLog::error(sprintf("[%s] Failed remove device. %s. Token: %s",
-                __METHOD__, $e->getMessage(), $deviceToken));
+            GoalousLog::error('Failed remove device.', [
+                'Exception' => $e->getMessage(),
+                'token'     => $deviceToken
+            ]);
             return false;
         }
         return true;
@@ -220,7 +231,6 @@ class PushService extends AppService
 
     /**
      * NOWなタイムスタンプを生成する。
-     *
      * Moved from NotifyBizComponent class
      *
      * @return string
@@ -236,7 +246,6 @@ class PushService extends AppService
      * push通知に必要なパラメータ
      * X-NCMB-SIGNATUREを生成する
      * デフォルトではpush通知用のシグネチャ生成
-     *
      * Moved from NotifyBizComponent class
      *
      * @param        $timestamp  シグネチャを生成する時に使うタイムスタンプ

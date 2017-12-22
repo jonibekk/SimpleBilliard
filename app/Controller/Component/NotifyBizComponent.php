@@ -1372,17 +1372,17 @@ class NotifyBizComponent extends Component
 
         foreach ($uids as $to_user_id) {
 
-            $device_tokens = $this->Device->getDeviceTokens($to_user_id);
-            if (empty($device_tokens)) {
+            $deviceTokens = $this->Device->getDeviceTokens($to_user_id);
+            if (empty($deviceTokens)) {
                 //このユーザーはスマホ持ってないのでスキップ
                 continue;
             }
 
             // ひとつのデバイスが複数のユーザーで登録されている可能性があるので
             // 一度送ったデバイスに対して2度はPUSH通知は送らない
-            foreach ($device_tokens as $key => $value) {
+            foreach ($deviceTokens as $key => $value) {
                 if (array_search($value, $sent_device_tokens) !== false) {
-                    unset($device_tokens[$key]);
+                    unset($deviceTokens[$key]);
                 }
             }
             $this->_setLangByUserId($to_user_id, $original_lang);
@@ -1414,11 +1414,11 @@ class NotifyBizComponent extends Component
             // The ones without installation_id belongs to Firebase
             $firebaseTokens = [];
             $ncmbTokens = [];
-            foreach ($device_tokens as $deviceToken) {
-                if (empty($deviceToken['installation_id'])) {
-                    $firebaseTokens[] = $deviceToken['device_token'];
+            foreach ($deviceTokens as $token) {
+                if (empty($token['installation_id'])) {
+                    $firebaseTokens[] = $token['device_token'];
                 } else {
-                    $ncmbTokens[] = $deviceToken['device_token'];
+                    $ncmbTokens[] = $token['device_token'];
                 }
             }
 
@@ -1428,10 +1428,10 @@ class NotifyBizComponent extends Component
             }
 
             // Send to Firebase
-            foreach ($firebaseTokens as $token) {
-                $PushService->sendFirebasePushNotification($token, $title, $postUrl);
+            if (count($firebaseTokens) > 0) {
+                $PushService->sendFirebasePushNotification($firebaseTokens, $title, $postUrl);
             }
-            $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
+            $sent_device_tokens = array_merge($sent_device_tokens, $deviceTokens);
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく
