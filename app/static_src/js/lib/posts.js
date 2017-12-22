@@ -56,7 +56,6 @@ $(function () {
     'click': function(e) {
       console.log("js-save-item function");
       var self = this;
-      console.log(this);
 
       // jQuery .data() shouldn't be used.
       // Instead we use native dataset
