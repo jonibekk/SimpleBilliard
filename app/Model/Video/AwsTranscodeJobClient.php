@@ -2,67 +2,28 @@
 
 App::uses('VideoUploadRequest', 'Model/Video/Requests');
 App::uses('VideoUploadResultAwsS3', 'Model/Video/Results');
+App::import('Model/Video/Transcode', 'TranscodeOutputVersionDefinition');
+
+use Goalous\Model\Enum as Enum;
 
 class AwsTranscodeJobClient
 {
-    public static function createJob(): VideoUploadResult
+    public static function createJob(string $inputKey, string $pipeLineId, string $outputKeyPrefix, array $userMetaData, bool $putWaterMark)
     {
-        // TODO:
-        $inputKey = "";
-        $outputKeyPrefix = "";
-        $videoId = 1;
-        $videoStreamId = 1;
+        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Video\TranscodeOutputVersion::V1());
         try {
-            self::createAwsEtsClient()->createJob([
-                'PipelineId' => '1510729662392-4lzb0n',
-                'OutputKeyPrefix' => $outputKeyPrefix,
-                'Input' => [
-                    'Key' => $inputKey,
-                    'FrameRate' => 'auto',
-                    'Resolution' => 'auto',
-                    'AspectRatio' => 'auto',
-                    'Interlaced' => 'auto',
-                    'Container' => 'auto',
-                ],
-                'Outputs' => [
-                    [
-                        'Key' => "ts_500k/video",
-                        'ThumbnailPattern' => "thumbs-{count}",
-                        'PresetId' => "1513234427744-pkctj7",
-                        'Rotate' => "auto",
-                        'SegmentDuration' => "10",
-                        'Watermarks' => [
-                            'InputKey' => "images/watermark_h264.png",
-                            'PresetWatermarkId' => "TopLeft",
-                        ],
-                    ],
-                    [
-                        'Key' => "webm_500k/video.webm",
-                        'ThumbnailPattern' => "thumbs-{count}",
-                        'PresetId' => "1513327166916-ghbctw",
-                        'Rotate' => "auto",
-                        'Watermarks' => [
-                            'InputKey' => "images/watermark_vp9.png",
-                            'PresetWatermarkId' => "TopLeft",
-                        ],
-                    ],
-                ],
-                'Playlists' => [
-                    'Format' => 'HLSv3',
-                    'Name' => 'playlist',
-                    'OutputKeys' => [
-                        'ts_500k/video',
-                    ]
-                ],
-                'UserMetadata' => [
-                    'video.id' => $videoId,
-                    'video_streams.id' => $videoStreamId,
-                ],
-            ]);
+            $result = self::createAwsEtsClient()->createJob(
+                $transcodeOutput->getCreateJobArray($inputKey, $pipeLineId, $outputKeyPrefix, $userMetaData, $putWaterMark)
+            );
+            GoalousLog::info('transcode job create result', $result->toArray());
         } catch (\Aws\Common\Exception\ServiceResponseException $exception) {
-            return VideoUploadResultAwsS3::createFromAwsException($exception);
+            GoalousLog::info('transcode job create result failed', [
+                'code' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+            ]);
+            return;// :TODO
         }
-        return VideoUploadResultAwsS3::createFromGuzzleModel($awsResult)->withResourcePath($uploadRequest->getResourcePath());
+        return;// :TODO
     }
 
     private function createAwsEtsClient(): \Aws\ElasticTranscoder\ElasticTranscoderClient

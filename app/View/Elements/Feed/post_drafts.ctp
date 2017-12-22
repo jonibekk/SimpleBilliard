@@ -5,7 +5,18 @@ if (!isset($post_drafts)) {
     $post_drafts = [];
 }
 ?>
+<?php
+// TODO: move these link/scripts to externals, css files
+?>
 <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+<style>
+    .vjs-poster {
+        background-color: #f5f5f5;
+    }
+    .video-js {
+        background-color: #f5f5f5;
+    }
+</style>
 <script src="https://unpkg.com/video.js/dist/video.js"></script>
 <script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
 <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>

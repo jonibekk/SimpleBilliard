@@ -4,13 +4,18 @@ use Goalous\Model\Enum as Enum;
 
 class TranscodeOutputVersionDefinition
 {
-    public static function getVersion(Enum\Video\TranscodeOutputVersion $transcodeOutputVersion)
+    public static function getVersion(Enum\Video\TranscodeOutputVersion $transcodeOutputVersion): TranscodeOutputAwsEts
     {
         switch ($transcodeOutputVersion->getValue()) {
+            // Do not change values of the Version
+            // if necessary to change the value, create the new Version
             case Enum\Video\TranscodeOutputVersion::V1:
                 $outputVp9  = new AwsEtsOutput(Enum\Video\VideoSourceType::VIDEO_WEBM(), 'webm_500k/video.webm', 'thumbs-{count}', '1513327166916-ghbctw');
                 $outputVp9->setForVideoSource(true);
+                $outputVp9->addWaterMark('images/watermark_h264.png', 'TopLeft');
                 $outputH264 = new AwsEtsOutput(Enum\Video\VideoSourceType::NOT_RECOMMENDED(), 'ts_500k/video', 'thumbs-{count}', '1513234427744-pkctj7');
+                $outputH264->addWaterMark('images/watermark_vp9.png', 'TopLeft');
+                $outputH264->setSegmentDuration(10);
                 $outputPlaylistHls = new AwsEtsOutputPlaylist(Enum\Video\VideoSourceType::PLAYLIST_M3U8_HLS(), 'HLSv3', 'playlist', [
                     $outputH264,
                 ]);
@@ -23,11 +28,46 @@ class TranscodeOutputVersionDefinition
                 $transcodeOutput->addOutputPlaylist($outputPlaylistHls);
                 return $transcodeOutput;
         }
+        throw new InvalidArgumentException('version not defined');
+    }
+}
+
+class AwsOutputFileNameDefinition
+{
+    /**
+     * @param Enum\Video\VideoSourceType $videoSourceType
+     * @param                            $key
+     *
+     * @return string
+     */
+    public static function getSourceBaseName(Enum\Video\VideoSourceType $videoSourceType, $key): string
+    {
+        switch ($videoSourceType->getValue()) {
+            case Enum\Video\VideoSourceType::PLAYLIST_M3U8_HLS:
+                // $key expected like 'playlist'
+                return sprintf('%s.m3u8', $key);
+            case Enum\Video\VideoSourceType::VIDEO_WEBM:
+                // $key expected like 'webm_500k/video.webm'
+                return $key;
+            case Enum\Video\VideoSourceType::NOT_RECOMMENDED:
+            default:
+                return $key;
+        }
     }
 }
 
 class TranscodeOutputAwsEts implements TranscodeOutput
 {
+    /**
+     * @var Enum\Video\TranscodeOutputVersion
+     */
+    private $transcodeOutputVersion;
+
+    /**
+     * @var Enum\Video\Transcoder
+     */
+    private $transcoder;
+
     /**
      * @var AwsEtsOutput[]
      */
@@ -40,7 +80,8 @@ class TranscodeOutputAwsEts implements TranscodeOutput
 
     public function __construct(Enum\Video\TranscodeOutputVersion $transcodeOutputVersion, Enum\Video\Transcoder $transcoder)
     {
-
+        $this->transcodeOutputVersion = $transcodeOutputVersion;
+        $this->transcoder = $transcoder;
     }
 
     public function addOutputVideo(AwsEtsOutput $output)
@@ -51,6 +92,43 @@ class TranscodeOutputAwsEts implements TranscodeOutput
     public function addOutputPlaylist(AwsEtsOutputPlaylist $output)
     {
         array_push($this->outputPlaylists, $output);
+    }
+
+    public function getTranscoder(): Enum\Video\Transcoder
+    {
+        return $this->transcoder;
+    }
+
+    public function getCreateJobArray(string $key, string $pipelineId, string $outputKeyPrefix, array $userMetaData, bool $putWaterMark): array
+    {
+        return [
+            'PipelineId'      => $pipelineId,
+            'OutputKeyPrefix' => $outputKeyPrefix,
+            'Input'           => [
+                'Key'         => $key,
+                'FrameRate'   => 'auto',
+                'Resolution'  => 'auto',
+                'AspectRatio' => 'auto',
+                'Interlaced'  => 'auto',
+                'Container'   => 'auto',
+            ],
+            'Outputs'          => array_reduce($this->outputVideos, function ($outputs, $outputVideo) use ($putWaterMark) {
+                /** @var AwsEtsOutput $outputVideo */
+                array_push($outputs, $outputVideo->getOutputArray($putWaterMark));
+                return $outputs;
+            }, []),
+            'Playlists'       => array_reduce($this->outputPlaylists, function ($outputs, $outputPlaylist) {
+                /** @var AwsEtsOutputPlaylist $outputPlaylist */
+                array_push($outputs, $outputPlaylist->getOutputArray());
+                return $outputs;
+            }, []),
+            'UserMetadata'    => am(
+                $userMetaData,
+                [
+                    'transcode_output_version' => $this->transcodeOutputVersion->getValue(),
+                ]
+            ),
+        ];
     }
 
     /**
@@ -75,6 +153,11 @@ class TranscodeOutputAwsEts implements TranscodeOutput
         }
 
         return $sources;
+    }
+
+    public function getThumbnailUrl(string $baseUrl): string
+    {
+        return $baseUrl . 'thumbs-00001.png';
     }
 }
 
@@ -156,14 +239,14 @@ class AwsEtsOutput
         ]);
     }
 
-    public function getOutputArray(): array
+    public function getOutputArray(bool $putWaterMark): array
     {
         $output = [
             'Key' => $this->key,
             'ThumbnailPattern' => $this->thumbnailPattern,
             'PresetId' => $this->presetId,
             'Rotate' => 'auto',
-            'Watermarks' => $this->watermarks,
+            'Watermarks' => $putWaterMark ? $this->watermarks : [],
         ];
         if (!is_null($this->segmentDuration)) {
             $output['SegmentDuration'] = $this->segmentDuration;
@@ -173,7 +256,8 @@ class AwsEtsOutput
 
     public function getVideoSource(string $baseUrl): VideoSource
     {
-        return new VideoSource($this->videoSourceType, $baseUrl);
+        $url = $baseUrl . AwsOutputFileNameDefinition::getSourceBaseName($this->videoSourceType, $this->key);
+        return new VideoSource($this->videoSourceType, $url);
     }
 }
 
@@ -223,7 +307,22 @@ class AwsEtsOutputPlaylist
 
     public function getVideoSource(string $baseUrl): VideoSource
     {
-        return new VideoSource($this->videoSourceType, $baseUrl);
+        $url = $baseUrl . AwsOutputFileNameDefinition::getSourceBaseName($this->videoSourceType, $this->name);
+        return new VideoSource($this->videoSourceType, $url);
+    }
+
+    public function getOutputArray(): array
+    {
+        $output = [
+            'Format' => $this->format,
+            'Name' => $this->name,
+            'OutputKeys' => array_reduce($this->outputKeys, function($keys, $outputKey) {
+                /** @var AwsEtsOutput $outputKey */
+                array_push($keys, $outputKey->getKey());
+                return $keys;
+            }, []),
+        ];
+        return $output;
     }
 }
 
@@ -266,9 +365,9 @@ class VideoSource
         $this->fullPathUrl = $fullPathUrl;
     }
 
-    public function getType(): string
+    public function getType(): Enum\Video\VideoSourceType
     {
-        return $this->sourceType->getValue();
+        return $this->sourceType;
     }
 
     public function getSource(): string

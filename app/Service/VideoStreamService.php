@@ -5,6 +5,7 @@ App::uses('VideoStorageClient', 'Model/Video');
 
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
+App::uses('AwsTranscodeJobClient', 'Model/Video');
 
 use Goalous\Model\Enum as Enum;
 
@@ -75,7 +76,7 @@ class VideoStreamService extends AppService
             $videoStream['status_transcode']     = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
             $videoStream['duration']             = $transcodeProgressData->getDuration();
             $videoStream['aspect_ratio']         = $transcodeProgressData->getAspectRatio();
-            $videoStream['master_playlist_path'] = $transcodeProgressData->getPlaylistPath();
+            $videoStream['storage_path']         = $transcodeProgressData->getOutputKeyPrefix();
 
             $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
             $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
@@ -180,15 +181,50 @@ class VideoStreamService extends AppService
             $VideoStream->save($videoStream);
             throw new RuntimeException("failed upload video:" . $result->getErrorMessage());
         }
+
+        $resourcePath = $result->getResourcePath();
+        GoalousLog::info('video uploaded', [
+            'resource_path' => $resourcePath,
+            'user_id' => $userId,
+            'team_id' => $teamId,
+        ]);
+
         // Succeeded upload
-        $video['resource_path'] = $result->getResourcePath();
+        $video['resource_path'] = $resourcePath;
         $Video->save($video);
 
-        // Upload complete and queued is same timing on AWS Elastic Transcoder (using S3 event + Lambda)
+        // Upload complete
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
+        $VideoStream->save($videoStream);
+        $urlSplits = array_slice(explode('/', trim($resourcePath, '/')), 1, -1);
+        $outputKeyPrefix = sprintf('streams/%s/', implode($urlSplits, '/').'/');
+        GoalousLog::info('send transcode job', [
+            'resource_path' => $resourcePath,
+            'output_to' => $outputKeyPrefix,
+        ]);
+        try {
+            AwsTranscodeJobClient::createJob(
+                $resourcePath, // $inputKey
+                "1509328826229-a6j5yu", // TODO: $pipeLineId
+                $outputKeyPrefix, // $outputKeyPrefix
+                [
+                    'videos.id' => $video['id'],
+                    'video_streams.id' => $videoStream['id'],
+                ],
+                true
+            );
+        } catch (\Throwable $t) {
+            GoalousLog::info('error', [
+                'message' => $t->getMessage(),
+            ]);
+        }
+        GoalousLog::info('created transcode job', [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'hash'    => $hash,
+        ]);
 
-        // TODO: make transcode job on AWS ETS
-
+        // Queued complete
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::QUEUED;
         $VideoStream->save($videoStream);
 

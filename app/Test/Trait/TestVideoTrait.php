@@ -37,7 +37,7 @@ trait TestVideoTrait
             'video_id'             => $video['Video']['id'],
             'duration'             => $isTranscodeCompleted ? 60 : null,
             'aspect_ratio'         => $isTranscodeCompleted ? (640 / 360) : null,
-            'master_playlist_path' => $isTranscodeCompleted ? "streams/{$userId}/{$teamId}/{$hash}/playlist.m3u8" : null,
+            'storage_path'         => $isTranscodeCompleted ? "streams/{$userId}/{$teamId}/{$hash}/" : null,
             'status_transcode'     => $status->getValue(),
             'transcode_info'       => json_encode([]),
         ]);

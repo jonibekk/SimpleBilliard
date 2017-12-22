@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('VideoStream', 'Model');
+App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 
 use Goalous\Model\Enum as Enum;
 
@@ -46,14 +47,19 @@ class PostResource extends AppModel
                     if (empty($resourceVideoStream)) {
                         continue;
                     }
-                    $playlistPath = $resourceVideoStream['master_playlist_path'];
+                    $videoStoragePath = $resourceVideoStream['storage_path'];
                     // TODO: define fqdn to extra_define
+                    $urlBaseStorage = '';
                     if (ENV_NAME == 'local') {
-                        $playlistPath = 'https://s3-ap-northeast-1.amazonaws.com/goalous-local-masuichig-videos/' . $playlistPath;
+                        $urlBaseStorage = 'https://s3-ap-northeast-1.amazonaws.com/goalous-local-masuichig-videos/' . $videoStoragePath;
                     } else if (ENV_NAME == 'dev') {
-                        $playlistPath = 'https://s3-ap-northeast-1.amazonaws.com/goalous-dev-videos/' . $playlistPath;
+                        $urlBaseStorage = 'https://s3-ap-northeast-1.amazonaws.com/goalous-dev-videos/' . $videoStoragePath;
                     }
-                    $resourceVideoStream['playlist_path'] = $playlistPath;
+                    $transcoderOutputVersion = new Enum\Video\TranscodeOutputVersion(intval($resourceVideoStream['output_version']));
+                    $transcodeOutput = TranscodeOutputVersionDefinition::getVersion($transcoderOutputVersion);
+
+                    $resourceVideoStream['video_sources'] = $transcodeOutput->getVideoSources($urlBaseStorage);
+                    $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
                     $results[] = $resourceVideoStream;
             }
         }

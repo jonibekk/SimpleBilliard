@@ -220,8 +220,6 @@ class PagesController extends AppController
         //シェアメッセージの特定
         $postDrafts = $this->Post->getShareMessages($postDrafts, false);
 
-        GoalousLog::info("", $postDrafts);
-
         return $postDrafts;
     }
 

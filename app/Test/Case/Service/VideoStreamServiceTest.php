@@ -127,7 +127,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $videoStreamProgressing = $this->VideoStream->getById($videoStream['id']);
         $this->assertEquals(null, $videoStreamProgressing['duration']);
         $this->assertEquals(null, $videoStreamProgressing['aspect_ratio']);
-        $this->assertEquals(null, $videoStreamProgressing['master_playlist_path']);
+        $this->assertEquals(null, $videoStreamProgressing['storage_path']);
         $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODING, $videoStreamProgressing['status_transcode']);
 
         // COMPLETED notification from AWS SNS
@@ -140,7 +140,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $videoStreamProgressing = $this->VideoStream->getById($videoStream['id']);
         $this->assertTrue(ctype_digit($videoStreamProgressing['duration']));
         $this->assertTrue(is_numeric($videoStreamProgressing['aspect_ratio']));
-        $this->assertTrue(is_string($videoStreamProgressing['master_playlist_path']));
+        $this->assertTrue(is_string($videoStreamProgressing['storage_path']));
         $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['status_transcode']);
     }
 
@@ -166,7 +166,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $videoStreamProgressing = $this->VideoStream->getById($videoStream['id']);
         $this->assertNull($videoStreamProgressing['duration']);
         $this->assertNull($videoStreamProgressing['aspect_ratio']);
-        $this->assertNull($videoStreamProgressing['master_playlist_path']);
+        $this->assertNull($videoStreamProgressing['storage_path']);
         $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODING, $videoStreamProgressing['status_transcode']);
 
         // COMPLETED notification from AWS SNS
@@ -179,7 +179,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $videoStreamProgressing = $this->VideoStream->getById($videoStream['id']);
         $this->assertTrue(ctype_digit($videoStreamProgressing['duration']));
         $this->assertTrue(is_numeric($videoStreamProgressing['aspect_ratio']));
-        $this->assertTrue(is_string($videoStreamProgressing['master_playlist_path']));
+        $this->assertTrue(is_string($videoStreamProgressing['storage_path']));
         $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['status_transcode']);
 
         // check draft post, post resource

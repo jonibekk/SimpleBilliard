@@ -239,20 +239,16 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <?php foreach ($post['PostResources'] as $resource): ?>
                                 <div class="col pt_10px feed_img_only_one mb_12px" style="">
                                     <?php
-                                    // TODO: foreach the post_resources
+                                    // TODO: currently, we have only video resource
+                                    // TODO: check if this is the video resource
+                                    // TODO: move to another .ctp files
                                     $videoStreamId = sprintf('video_stream_%d_%d', $resource['id'], $post['Post']['id']);
-                                    $thumbnailPath = dirname($resource["playlist_path"])."/thumbs-00001.png";
                                     ?>
                                     <div id="div<?= $videoStreamId ?>" style="display: none">
-                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="none" poster="<?= $thumbnailPath ?>">
-                                            <source
-                                                    src="<?= dirname($resource["playlist_path"])."/webm_500k/video.webm" ?>"
-                                                    type="video/webm"
-                                            >
-                                            <source
-                                                src="<?= $resource["playlist_path"] ?>"
-                                                type="application/x-mpegURL"
-                                            >
+                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
+                                        <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
+                                            <source src="<?= $videoSource->getSource() ?>" type="<?= $videoSource->getType()->getValue() ?>">
+                                        <?php endforeach; ?>
                                         </video>
                                     </div>
                                     <script>

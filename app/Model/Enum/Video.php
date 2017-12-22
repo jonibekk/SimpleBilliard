@@ -53,7 +53,7 @@ class Transcoder extends Enum
  */
 class TranscodeOutputVersion extends Enum
 {
-    const V1 = '1';
+    const V1 = 1;
 }
 
 /**

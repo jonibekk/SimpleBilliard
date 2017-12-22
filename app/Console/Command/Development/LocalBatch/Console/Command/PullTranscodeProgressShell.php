@@ -76,8 +76,8 @@ class PullTranscodeProgressShell extends AppShell
             GoalousLog::error('error while getting transcoding statuses', [
                 'message' => $e->getMessage(),
             ]);
+            return;
         }
-
 
         foreach ($jobs['Jobs'] as $job) {
             if (
