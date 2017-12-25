@@ -2,9 +2,9 @@
 $without_header = isset($without_header) ? $without_header : false;
 $without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
 ?>
+<?= $this->element('Feed/post_drafts', compact('post_drafts')) ?>
 <?php if (!empty($posts)): ?>
     <?= $this->App->viewStartComment() ?>
-    <?= $this->element('Feed/post_drafts', compact('post_drafts')) ?>
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
             <?php if ($post['Post']['type'] != Post::TYPE_ACTION && !$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>

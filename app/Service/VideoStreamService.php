@@ -6,6 +6,7 @@ App::uses('VideoStorageClient', 'Model/Video');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('AwsTranscodeJobClient', 'Model/Video');
+App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
 
 use Goalous\Model\Enum as Enum;
 
@@ -163,77 +164,95 @@ class VideoStreamService extends AppService
             'aspect_ratio'     => null,
             'storage_path'     => null,
             'status_transcode' => Enum\Video\VideoTranscodeStatus::UPLOADING,
-            'output_version'   => Enum\Video\TranscodeOutputVersion::V1,
+            'output_version'   => Enum\Video\TranscodeOutputVersion::V1,// TODO: move current transcode version to php define
             'transcode_info'   => TranscodeInfo::createNew()->toJson(),
         ]);
         $videoStream = $VideoStream->save();
         $videoStream = reset($videoStream);
 
+        // video upload
         $request = new VideoUploadRequestOnPost(new SplFileInfo($filePath), $user, $teamId, $video, $videoStream);
         $result = VideoStorageClient::upload($request);
 
         if (!$result->isSucceed()) {
-            GoalousLog::info('video uploading to storage failed', [
-                'code'    => $result->getErrorCode(),
-                'message' => $result->getErrorMessage(),
+            GoalousLog::error('video uploading to storage failed', [
+                'code'             => $result->getErrorCode(),
+                'message'          => $result->getErrorMessage(),
+                'videos.id'        => $video['id'],
+                'video_streams.id' => $videoStream['id'],
             ]);
-            $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR;
-            $VideoStream->save($videoStream);
-            throw new RuntimeException("failed upload video:" . $result->getErrorMessage());
+            $Video->softDelete($video['id'], false);
+            $errorMessage = "failed upload video:" . $result->getErrorMessage();
+            $this->deleteVideoStreamWithError($videoStream, $errorMessage);
+            throw new RuntimeException($errorMessage);
         }
-
-        $resourcePath = $result->getResourcePath();
-        GoalousLog::info('video uploaded', [
-            'resource_path' => $resourcePath,
-            'user_id' => $userId,
-            'team_id' => $teamId,
-        ]);
-
-        // Succeeded upload
-        $video['resource_path'] = $resourcePath;
-        $Video->save($video);
 
         // Upload complete
+        $resourcePath = $result->getResourcePath();
+        $video['resource_path'] = $resourcePath;
+        GoalousLog::info('video uploaded', [
+            'resource_path'    => $resourcePath,
+            'user_id'          => $userId,
+            'team_id'          => $teamId,
+            'videos.id'        => $video['id'],
+            'video_streams.id' => $videoStream['id'],
+        ]);
+        $Video->save($video);
+
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
         $VideoStream->save($videoStream);
-        $urlSplits = array_slice(explode('/', trim($resourcePath, '/')), 1, -1);
-        $outputKeyPrefix = sprintf('streams/%s/', implode($urlSplits, '/').'/');
-        GoalousLog::info('send transcode job', [
-            'resource_path' => $resourcePath,
-            'output_to' => $outputKeyPrefix,
+
+        // create transcode job
+        $transcodeRequest = new AwsVideoTranscodeJobRequest(
+            $resourcePath,
+            "1509328826229-a6j5yu",// TODO: move to definition
+            Enum\Video\TranscodeOutputVersion::V1()
+        );
+        $transcodeRequest->setUserMetaData([
+            'videos.id'        => $video['id'],
+            'video_streams.id' => $videoStream['id'],
         ]);
-        try {
-            AwsTranscodeJobClient::createJob(
-                $resourcePath, // $inputKey
-                "1509328826229-a6j5yu", // TODO: $pipeLineId
-                $outputKeyPrefix, // $outputKeyPrefix
-                [
-                    'videos.id' => $video['id'],
-                    'video_streams.id' => $videoStream['id'],
-                ],
-                true
-            );
-        } catch (\Throwable $t) {
-            GoalousLog::info('error', [
-                'message' => $t->getMessage(),
+        $transcodeRequest->setPutWaterMark(in_array(ENV_NAME, ['local', 'dev', 'stage']));
+        $result = AwsTranscodeJobClient::createJob($transcodeRequest);
+        if (!$result->isSucceed()) {
+            // failed to create transcode job
+            // not doing transaction, set status = ERROR, set delete flag
+            GoalousLog::error('creating video transcode job failed', [
+                'code'             => $result->getErrorCode(),
+                'message'          => $result->getErrorMessage(),
+                'videos.id'        => $video['id'],
+                'video_streams.id' => $videoStream['id'],
             ]);
+            $Video->softDelete($video['id'], false);
+            $errorMessage = "failed upload video:" . $result->getErrorMessage();
+            $this->deleteVideoStreamWithError($videoStream, $errorMessage);
+            throw new RuntimeException($errorMessage);
         }
-        GoalousLog::info('created transcode job', [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'hash'    => $hash,
-        ]);
 
         // Queued complete
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::QUEUED;
         $VideoStream->save($videoStream);
 
-        GoalousLog::info('video uploading to storage succeeded', [
+        GoalousLog::info('video transcode queued', [
+            'job_id'           => $result->getJobId(),
             'teams.id'         => $teamId,
             'videos.id'        => $video['id'],
             'video_streams.id' => $videoStream['id'],
         ]);
 
         return $videoStream;
+    }
+
+    public function deleteVideoStreamWithError(array $videoStream, string $errorMessage)
+    {
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+
+        $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+        $transcodeInfo->addTranscodeError($errorMessage);
+        $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR;
+        $videoStream['transcode_info'] = $transcodeInfo->toJson();
+        $videoStream['del_flag'] = true;
+        $VideoStream->save($videoStream);
     }
 }

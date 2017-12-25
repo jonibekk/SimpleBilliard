@@ -15,9 +15,9 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
      *
      * @var array
      */
-    public $fixtures = array(
-        'app.badge',
-    );
+    public $fixtures = [
+
+    ];
 
     /**
      * setUp method
@@ -119,12 +119,13 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
 
         $this->assertEquals($expectedArray, $transcodeOutput->getCreateJobArray($key, $pipelineId, $outputKeyPrefix, $userMetaData, false));
 
+        // testing if watermark is enabled
         $expectedArray['Outputs'][0]['Watermarks'][0] = [
-            'InputKey' => 'images/watermark_h264.png',
+            'InputKey' => 'images/watermark_vp9.png',
             'PresetWatermarkId' => 'TopLeft',
         ];
         $expectedArray['Outputs'][1]['Watermarks'][0] = [
-            'InputKey' => 'images/watermark_vp9.png',
+            'InputKey' => 'images/watermark_h264.png',
             'PresetWatermarkId' => 'TopLeft',
         ];
         $this->assertEquals($expectedArray, $transcodeOutput->getCreateJobArray($key, $pipelineId, $outputKeyPrefix, $userMetaData, true));

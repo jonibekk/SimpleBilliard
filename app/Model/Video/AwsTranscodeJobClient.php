@@ -2,28 +2,37 @@
 
 App::uses('VideoUploadRequest', 'Model/Video/Requests');
 App::uses('VideoUploadResultAwsS3', 'Model/Video/Results');
+App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
+App::uses('AwsVideoTranscodeJobResult', 'Model/Video/Results');
 App::import('Model/Video/Transcode', 'TranscodeOutputVersionDefinition');
 
 use Goalous\Model\Enum as Enum;
 
 class AwsTranscodeJobClient
 {
-    public static function createJob(string $inputKey, string $pipeLineId, string $outputKeyPrefix, array $userMetaData, bool $putWaterMark)
+    public static function createJob(AwsVideoTranscodeJobRequest $awsVideoTranscodeRequest): AwsVideoTranscodeJobResult
     {
         $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Video\TranscodeOutputVersion::V1());
         try {
             $result = self::createAwsEtsClient()->createJob(
-                $transcodeOutput->getCreateJobArray($inputKey, $pipeLineId, $outputKeyPrefix, $userMetaData, $putWaterMark)
+                $transcodeOutput->getCreateJobArray(
+                    $awsVideoTranscodeRequest->getInputS3FileKey(),
+                    $awsVideoTranscodeRequest->getAwsEtsPipeLineId(),
+                    $awsVideoTranscodeRequest->getOutputKeyPrefix(),
+                    $awsVideoTranscodeRequest->getUserMetaData(),
+                    $awsVideoTranscodeRequest->isPutWaterMark()
+                )
             );
-            GoalousLog::info('transcode job create result', $result->toArray());
+            return new AwsVideoTranscodeJobResult($result->toArray());
         } catch (\Aws\Common\Exception\ServiceResponseException $exception) {
-            GoalousLog::info('transcode job create result failed', [
-                'code' => $exception->getCode(),
-                'message' => $exception->getMessage(),
-            ]);
-            return;// :TODO
+            return (new AwsVideoTranscodeJobResult([]))
+                ->withErrorCodeAws($exception->getAwsErrorCode())
+                ->withErrorMessage($exception->getMessage());
+        } catch (\Throwable $throwable) {
+            return (new AwsVideoTranscodeJobResult([]))
+                ->withErrorCodeAws(0)
+                ->withErrorMessage($throwable->getMessage());
         }
-        return;// :TODO
     }
 
     private function createAwsEtsClient(): \Aws\ElasticTranscoder\ElasticTranscoderClient

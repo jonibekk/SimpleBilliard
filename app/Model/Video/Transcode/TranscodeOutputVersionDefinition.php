@@ -12,9 +12,9 @@ class TranscodeOutputVersionDefinition
             case Enum\Video\TranscodeOutputVersion::V1:
                 $outputVp9  = new AwsEtsOutput(Enum\Video\VideoSourceType::VIDEO_WEBM(), 'webm_500k/video.webm', 'thumbs-{count}', '1513327166916-ghbctw');
                 $outputVp9->setForVideoSource(true);
-                $outputVp9->addWaterMark('images/watermark_h264.png', 'TopLeft');
+                $outputVp9->addWaterMark('images/watermark_vp9.png', 'TopLeft');
                 $outputH264 = new AwsEtsOutput(Enum\Video\VideoSourceType::NOT_RECOMMENDED(), 'ts_500k/video', 'thumbs-{count}', '1513234427744-pkctj7');
-                $outputH264->addWaterMark('images/watermark_vp9.png', 'TopLeft');
+                $outputH264->addWaterMark('images/watermark_h264.png', 'TopLeft');
                 $outputH264->setSegmentDuration(10);
                 $outputPlaylistHls = new AwsEtsOutputPlaylist(Enum\Video\VideoSourceType::PLAYLIST_M3U8_HLS(), 'HLSv3', 'playlist', [
                     $outputH264,

@@ -9,7 +9,7 @@ if (!isset($post_drafts)) {
 // TODO: move these link/scripts to externals, css files
 ?>
 <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
-<style>
+<style type="text/css">
     .vjs-poster {
         background-color: #f5f5f5;
     }
