@@ -3,14 +3,24 @@ App::import('Service', 'AppService');
 App::uses('Device', 'Model');
 
 use Goalous\Model\Enum as Enum;
+use Goalous\Model\Enum\Devices\DeviceType;
 
 /**
  * Send Push Notifications thought service providers,
  * manage device tokens.
+ *
  * Class PushService
  */
 class PushService extends AppService
 {
+    /**
+     * This parameter, when set to true, allows developers to test
+     * a request without actually sending a message.
+     *
+     * @var bool
+     */
+    public $dryRequest = false;
+
     /**
      * Send a push notification to a single device using
      * Firebase Cloud Messaging
@@ -23,27 +33,110 @@ class PushService extends AppService
      */
     public function sendFirebasePushNotification(array $deviceTokens, string $message, string $postUrl): bool
     {
-        // Request reader
-        $header = [
-            'Content-Type'  => 'application/json',
-            'Authorization' => 'key=' . FIREBASE_SERVER_KEY,
-        ];
+        $androidTokens = [];
+        $iosTokens = [];
 
+        foreach ($deviceTokens as $token) {
+            if ($token['os_type'] == DeviceType::ANDROID) {
+                $androidTokens[] = $token['device_token'];
+            } else {
+                $iosTokens[] = $token['device_token'];
+            }
+        }
+
+        // Payload for android and iOS are different,
+        // Tokens must be separated by os type
+        $res = true;
+        if (count($androidTokens) > 0) {
+            $res = $this->_sendFirebasePushNotificationForAndroid($androidTokens, $message, $postUrl);
+        }
+
+        if (count($iosTokens) > 0) {
+            $res = $res & $this->_sendFirebasePushNotificationForIOS($iosTokens, $message, $postUrl);
+        }
+
+        return $res;
+    }
+
+    /**
+     * Send messages to android devices
+     *
+     * @param array  $deviceTokens
+     * @param string $message
+     * @param string $postUrl
+     *
+     * @return bool
+     */
+    private function _sendFirebasePushNotificationForAndroid(array $deviceTokens, string $message, string $postUrl): bool
+    {
         // Request data
         $data = [
             'data'             => [
                 'body' => $message,
                 'url'  => $postUrl
             ],
-            'registration_ids' => $deviceTokens
+            'registration_ids' => $deviceTokens,
+            'dry_run'          => $this->dryRequest
         ];
+        return $this->_sendFirebasePush($deviceTokens, $data);
+    }
+
+    /**
+     * Send messages to iOS devices
+     *
+     * @param array  $deviceTokens
+     * @param string $message
+     * @param string $postUrl
+     *
+     * @return bool
+     */
+    private function _sendFirebasePushNotificationForIOS(array $deviceTokens, string $message, string $postUrl): bool
+    {
+        // Request data
+        $data = [
+            'notification'     => [
+                'body' => $message
+            ],
+            'data'             => [
+                'url' => $postUrl
+            ],
+            'registration_ids' => $deviceTokens,
+            'dry_run'          => $this->dryRequest
+        ];
+        return $this->_sendFirebasePush($deviceTokens, $data);
+    }
+
+    /**
+     * Call Firebase Cloud messaging send API
+     *
+     * @param array $deviceTokens
+     * @param array $data
+     *
+     * @return bool
+     */
+    private function _sendFirebasePush(array $deviceTokens, array $data): bool
+    {
+        // Request reader
+        $header = [
+            'Content-Type'  => 'application/json',
+            'Authorization' => 'key=' . FIREBASE_SERVER_KEY,
+        ];
+
+        $payload = json_encode($data);
+        if (!$payload) {
+            GoalousLog::error('Invalid push notification data.', [
+                'data'         => $data,
+                'deviceTokens' => $deviceTokens
+            ]);
+            return false;
+        }
 
         // Make request to FCM
         $client = $this->getHttpClient();
         try {
             $response = $client->post(FIREBASE_SEND_URL, [
                 'headers' => $header,
-                'body'    => json_encode($data)
+                'body'    => $payload
             ]);
         } catch (Exception $e) {
             GoalousLog::error('Failed to call FCM API.', ['Exception' => $e->getMessage()]);

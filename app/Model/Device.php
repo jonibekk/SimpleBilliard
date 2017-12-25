@@ -178,7 +178,8 @@ class Device extends AppModel
         foreach ($devices as $d) {
             $deviceTokens[] = [
                 'device_token' => $d['Device']['device_token'],
-                'installation_id' => $d['Device']['installation_id']
+                'installation_id' => $d['Device']['installation_id'],
+                'os_type' => $d['Device']['os_type']
             ];
         }
 

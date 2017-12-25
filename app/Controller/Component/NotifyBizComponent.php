@@ -1416,7 +1416,7 @@ class NotifyBizComponent extends Component
             $ncmbTokens = [];
             foreach ($deviceTokens as $token) {
                 if (empty($token['installation_id'])) {
-                    $firebaseTokens[] = $token['device_token'];
+                    $firebaseTokens[] = $token;
                 } else {
                     $ncmbTokens[] = $token['device_token'];
                 }
