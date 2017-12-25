@@ -99,6 +99,17 @@ class TranscodeOutputAwsEts implements TranscodeOutput
         return $this->transcoder;
     }
 
+    /**
+     * @see http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.ElasticTranscoder.ElasticTranscoderClient.html#_createJob
+     *
+     * @param string $key
+     * @param string $pipelineId
+     * @param string $outputKeyPrefix
+     * @param array  $userMetaData
+     * @param bool   $putWaterMark
+     *
+     * @return array
+     */
     public function getCreateJobArray(string $key, string $pipelineId, string $outputKeyPrefix, array $userMetaData, bool $putWaterMark): array
     {
         return [
