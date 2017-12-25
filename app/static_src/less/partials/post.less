@@ -1,0 +1,24 @@
+/* Post */
+//TODO: Related post style move from style.less to this file
+
+@import "parent_for_extend";
+
+.post-saveItem {
+  &:extend(.fa-module);
+  margin-right: 12px;
+  font-size: 20px;
+  line-height: 1em;
+  cursor: pointer;
+  &.mod-on {
+    color: @subColor15;
+    &:before {
+      content: "\f02e"; // fa-bookmark
+    }
+  }
+  &.mod-off {
+    color: @subColor3;
+    &:before {
+      content: "\f097"; // fa-bookmark-o
+    }
+  }
+}
