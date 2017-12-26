@@ -73,16 +73,26 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
             'video_streams.id' => 2,
         ];
 
+        $inputVideo = new TranscodeInputAwsEts($key);
+        $inputVideo->setTimeSpan(60, 0);
+        $transcodeOutput->addInputVideo($inputVideo);
+
         $expectedArray = [
             'PipelineId'      => $pipelineId,
             'OutputKeyPrefix' => $outputKeyPrefix,
-            'Input'           => [
-                'Key'         => $key,
-                'FrameRate'   => 'auto',
-                'Resolution'  => 'auto',
-                'AspectRatio' => 'auto',
-                'Interlaced'  => 'auto',
-                'Container'   => 'auto',
+            'Inputs'           => [
+                [
+                    'Key'         => $key,
+                    'FrameRate'   => 'auto',
+                    'Resolution'  => 'auto',
+                    'AspectRatio' => 'auto',
+                    'Interlaced'  => 'auto',
+                    'Container'   => 'auto',
+                    'TimeSpan'    => [
+                        'Duration'  => '60.000',
+                        'StartTime' => '0.000',
+                    ]
+                ],
             ],
             'Outputs'          => [
                 [
@@ -98,7 +108,7 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
                     'PresetId'         => '1513234427744-pkctj7',
                     'Rotate'           => 'auto',
                     'Watermarks'       => [],
-                    'SegmentDuration'  => 10,
+                    'SegmentDuration'  => '10',
                 ],
             ],
             'Playlists'       => [
@@ -111,13 +121,13 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
                 ],
             ],
             'UserMetadata'    => [
-                'videos.id'                => 1,
-                'video_streams.id'         => 2,
-                'transcode_output_version' => Enum\Video\TranscodeOutputVersion::V1,
+                'videos.id'                => '1',
+                'video_streams.id'         => '2',
+                'transcode_output_version' => strval(Enum\Video\TranscodeOutputVersion::V1),
             ],
         ];
 
-        $this->assertEquals($expectedArray, $transcodeOutput->getCreateJobArray($key, $pipelineId, $outputKeyPrefix, $userMetaData, false));
+        $this->assertSame($expectedArray, $transcodeOutput->getCreateJobArray($pipelineId, $outputKeyPrefix, $userMetaData, false));
 
         // testing if watermark is enabled
         $expectedArray['Outputs'][0]['Watermarks'][0] = [
@@ -128,6 +138,6 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
             'InputKey' => 'images/watermark_h264.png',
             'PresetWatermarkId' => 'TopLeft',
         ];
-        $this->assertEquals($expectedArray, $transcodeOutput->getCreateJobArray($key, $pipelineId, $outputKeyPrefix, $userMetaData, true));
+        $this->assertEquals($expectedArray, $transcodeOutput->getCreateJobArray($pipelineId, $outputKeyPrefix, $userMetaData, true));
     }
 }

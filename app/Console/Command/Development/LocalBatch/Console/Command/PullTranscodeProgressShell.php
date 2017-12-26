@@ -60,8 +60,10 @@ class PullTranscodeProgressShell extends AppShell
 
 
         try {
-            $client = \Aws\ElasticTranscoder\ElasticTranscoderClient::factory([
+            // TODO: move this client create to kind of libs
+            $client = new \Aws\ElasticTranscoder\ElasticTranscoderClient([
                 'region'   => 'ap-northeast-1',
+                'version' => 'latest',
                 'credentials' => [
                     'key'    => "AKIAJWRB3ISRYGDYHV5A",
                     'secret' => "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",
@@ -107,7 +109,9 @@ class PullTranscodeProgressShell extends AppShell
                 ]);
             } catch (Exception $e) {
                 GoalousLog::error('error', [
-                    'message' => $e->getMessage(),
+                    'message'          => $e->getMessage(),
+                    'job_id'           => $job['Id'],
+                    'video_streams.id' => $job['UserMetadata']['video_streams.id'],
                 ]);
             }
         }

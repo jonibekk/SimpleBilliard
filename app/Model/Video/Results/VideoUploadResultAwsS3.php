@@ -27,12 +27,12 @@ class VideoUploadResultAwsS3 implements VideoUploadResult
         return 0 < strlen($this->data['ObjectURL']);
     }
 
-    public static function createFromGuzzleModel(\Guzzle\Service\Resource\Model $model): self
+    public static function createFromAwsResult(\Aws\Result $result): self
     {
-        return new self($model->toArray());
+        return new self($result->toArray());
     }
 
-    public static function createFromAwsException(\Aws\Common\Exception\ServiceResponseException $exception): self
+    public static function createFromAwsException(\Aws\Exception\AwsException $exception): self
     {
         return (new self([]))
             ->withErrorCodeAws($exception->getAwsErrorCode())
