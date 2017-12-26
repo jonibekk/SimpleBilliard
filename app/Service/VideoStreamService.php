@@ -7,6 +7,7 @@ App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('AwsTranscodeJobClient', 'Model/Video');
 App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
+App::import('Model/Video/Transcode', 'TranscodeOutputVersionDefinition');
 
 use Goalous\Model\Enum as Enum;
 
@@ -113,6 +114,24 @@ class VideoStreamService extends AppService
         return $videoStream;
     }
 
+    /**
+     * return video output path
+     * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
+     *
+     * @param string $inputS3FileKey
+     *
+     * @return string
+     */
+    private function getOutputKeyPrefix(string $inputS3FileKey): string
+    {
+        // e.g.
+        // $this->inputS3FileKey() = uploads/111/222/abcdef1234567890/original
+        // return 'streams/111/222/abcdef1234567890/'
+
+        $urlSplits = array_slice(explode('/', trim($inputS3FileKey, '/')), 1, -1);
+        return sprintf('streams/%s/', implode($urlSplits, '/'));
+    }
+
     public function uploadNewVideoStream(array $uploadFile, array $user, int $teamId): array
     {
         /** @var Video $Video */
@@ -204,10 +223,13 @@ class VideoStreamService extends AppService
 
         // create transcode job
         $transcodeRequest = new AwsVideoTranscodeJobRequest(
-            $resourcePath,
+            $this->getOutputKeyPrefix($resourcePath),
             "1509328826229-a6j5yu",// TODO: move to definition
             Enum\Video\TranscodeOutputVersion::V1()
         );
+        $inputVideo = new TranscodeInputAwsEts($resourcePath);
+        $inputVideo->setTimeSpan(60, 0);// 00:00 to 01:00
+        $transcodeRequest->addInputVideo($inputVideo);
         $transcodeRequest->setUserMetaData([
             'videos.id'        => $video['id'],
             'video_streams.id' => $videoStream['id'],

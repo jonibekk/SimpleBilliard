@@ -7,9 +7,30 @@ use Goalous\Model\Enum as Enum;
 class AwsVideoTranscodeJobRequest
 {
     /**
+     * @var TranscodeInputAwsEts[]
+     */
+    private $inputVideos     = [];
+
+    /**
      * @var string
      */
-    protected $inputS3FileKey;
+    private $outputKeyPrefix;
+
+    /**
+     * @return string
+     */
+    public function getOutputKeyPrefix(): string
+    {
+        return $this->outputKeyPrefix;
+    }
+
+    /**
+     * @param string $outputKeyPrefix
+     */
+    public function setOutputKeyPrefix(string $outputKeyPrefix)
+    {
+        $this->outputKeyPrefix = $outputKeyPrefix;
+    }
 
     /**
      * @var string
@@ -30,6 +51,20 @@ class AwsVideoTranscodeJobRequest
      * @var bool
      */
     protected $putWaterMark = false;
+
+
+    public function addInputVideo(TranscodeInputAwsEts $transcodeInputAwsEts)
+    {
+        array_push($this->inputVideos, $transcodeInputAwsEts);
+    }
+
+    /**
+     * @return TranscodeInputAwsEts[]
+     */
+    public function getInputVideos(): array
+    {
+        return $this->inputVideos;
+    }
 
     /**
      * @return bool
@@ -63,19 +98,11 @@ class AwsVideoTranscodeJobRequest
         $this->userMetaData = $userMetaData;
     }
 
-    public function __construct(string $inputS3FileKey, string $awsEtsPipeLineId, Enum\Video\TranscodeOutputVersion $transcodeOutputVersion)
+    public function __construct(string $outputKeyPrefix, string $awsEtsPipeLineId, Enum\Video\TranscodeOutputVersion $transcodeOutputVersion)
     {
-        $this->inputS3FileKey = $inputS3FileKey;
+        $this->outputKeyPrefix = $outputKeyPrefix;
         $this->awsEtsPipeLineId = $awsEtsPipeLineId;
         $this->transcodeOutputVersion = $transcodeOutputVersion;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInputS3FileKey(): string
-    {
-        return $this->inputS3FileKey;
     }
 
     /**
@@ -92,21 +119,5 @@ class AwsVideoTranscodeJobRequest
     public function getTranscodeOutputVersion(): Enum\Video\TranscodeOutputVersion
     {
         return $this->transcodeOutputVersion;
-    }
-
-    /**
-     * return video output path
-     * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
-     *
-     * @return string
-     */
-    public function getOutputKeyPrefix(): string
-    {
-        // e.g.
-        // $this->inputS3FileKey() = uploads/111/222/abcdef1234567890/original
-        // return 'streams/111/222/abcdef1234567890/'
-
-        $urlSplits = array_slice(explode('/', trim($this->getInputS3FileKey(), '/')), 1, -1);
-        return sprintf('streams/%s/', implode($urlSplits, '/'));
     }
 }

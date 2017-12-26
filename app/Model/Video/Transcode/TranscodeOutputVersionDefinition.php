@@ -56,6 +56,53 @@ class AwsOutputFileNameDefinition
     }
 }
 
+class TranscodeInputAwsEts
+{
+    /**
+     * @var string
+     */
+    private $inputKey;
+
+    /**
+     * @var array
+     */
+    private $timeSpan = [];
+
+    public function __construct(string $inputKey)
+    {
+        $this->inputKey = $inputKey;
+    }
+
+    /**
+     * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#shape-timespan
+     * @param int $durationSecond
+     * @param int $startTimeSecond
+     */
+    public function setTimeSpan(int $durationSecond, int $startTimeSecond)
+    {
+        $this->timeSpan = [
+            'Duration'  => sprintf('%d.000', $durationSecond),
+            'StartTime' => sprintf('%d.000', $startTimeSecond),
+        ];
+    }
+
+    /**
+     * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#shape-jobinput
+     */
+    public function getOutputArray(): array
+    {
+        return [
+            'Key'         => $this->inputKey,
+            'FrameRate'   => 'auto',
+            'Resolution'  => 'auto',
+            'AspectRatio' => 'auto',
+            'Interlaced'  => 'auto',
+            'Container'   => 'auto',
+            'TimeSpan'    => $this->timeSpan,
+        ];
+    }
+}
+
 class TranscodeOutputAwsEts implements TranscodeOutput
 {
     /**
@@ -69,6 +116,11 @@ class TranscodeOutputAwsEts implements TranscodeOutput
     private $transcoder;
 
     /**
+     * @var TranscodeInputAwsEts[]
+     */
+    private $inputVideos     = [];
+
+    /**
      * @var AwsEtsOutput[]
      */
     private $outputVideos    = [];
@@ -78,10 +130,16 @@ class TranscodeOutputAwsEts implements TranscodeOutput
      */
     private $outputPlaylists = [];
 
+
     public function __construct(Enum\Video\TranscodeOutputVersion $transcodeOutputVersion, Enum\Video\Transcoder $transcoder)
     {
         $this->transcodeOutputVersion = $transcodeOutputVersion;
         $this->transcoder = $transcoder;
+    }
+
+    public function addInputVideo(TranscodeInputAwsEts $transcodeInputAwsEts)
+    {
+        array_push($this->inputVideos, $transcodeInputAwsEts);
     }
 
     public function addOutputVideo(AwsEtsOutput $output)
@@ -100,9 +158,8 @@ class TranscodeOutputAwsEts implements TranscodeOutput
     }
 
     /**
-     * @see http://docs.aws.amazon.com/aws-sdk-php/v2/api/class-Aws.ElasticTranscoder.ElasticTranscoderClient.html#_createJob
+     * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#createjob
      *
-     * @param string $key
      * @param string $pipelineId
      * @param string $outputKeyPrefix
      * @param array  $userMetaData
@@ -110,19 +167,16 @@ class TranscodeOutputAwsEts implements TranscodeOutput
      *
      * @return array
      */
-    public function getCreateJobArray(string $key, string $pipelineId, string $outputKeyPrefix, array $userMetaData, bool $putWaterMark): array
+    public function getCreateJobArray(string $pipelineId, string $outputKeyPrefix, array $userMetaData, bool $putWaterMark): array
     {
         return [
             'PipelineId'      => $pipelineId,
             'OutputKeyPrefix' => $outputKeyPrefix,
-            'Input'           => [
-                'Key'         => $key,
-                'FrameRate'   => 'auto',
-                'Resolution'  => 'auto',
-                'AspectRatio' => 'auto',
-                'Interlaced'  => 'auto',
-                'Container'   => 'auto',
-            ],
+            'Inputs'           => array_reduce($this->inputVideos, function ($inputs, $inputVideo) {
+                /** @var TranscodeInputAwsEts $inputVideo */
+                array_push($inputs, $inputVideo->getOutputArray());
+                return $inputs;
+            }, []),
             'Outputs'          => array_reduce($this->outputVideos, function ($outputs, $outputVideo) use ($putWaterMark) {
                 /** @var AwsEtsOutput $outputVideo */
                 array_push($outputs, $outputVideo->getOutputArray($putWaterMark));
@@ -134,9 +188,11 @@ class TranscodeOutputAwsEts implements TranscodeOutput
                 return $outputs;
             }, []),
             'UserMetadata'    => am(
-                $userMetaData,
+                // changing values to string
+                // https://github.com/aws/aws-sdk-php-laravel/issues/104
+                array_map('strval', $userMetaData),
                 [
-                    'transcode_output_version' => $this->transcodeOutputVersion->getValue(),
+                    'transcode_output_version' => strval($this->transcodeOutputVersion->getValue()),
                 ]
             ),
         ];
@@ -260,7 +316,7 @@ class AwsEtsOutput
             'Watermarks' => $putWaterMark ? $this->watermarks : [],
         ];
         if (!is_null($this->segmentDuration)) {
-            $output['SegmentDuration'] = $this->segmentDuration;
+            $output['SegmentDuration'] = strval($this->segmentDuration);
         }
         return $output;
     }

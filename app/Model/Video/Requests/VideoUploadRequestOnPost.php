@@ -54,12 +54,17 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
     }
 
     // TODO: rename to kind of resource path
+
+    /**
+     * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
+     * @return string
+     */
     public function getResourcePath(): string
     {
         return sprintf(
             'uploads/%d/%d/%s/original',
-            $this->getUserId(),
             $this->teamId,
+            $this->getUserId(),
             $this->getFileHash()
             );
     }
