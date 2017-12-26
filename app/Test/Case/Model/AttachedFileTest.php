@@ -525,4 +525,8 @@ class AttachedFileTest extends GoalousTestCase
             }
         }
     }
+
+    function test_findAttachedImgEachPost() {
+        // TODO
+    }
 }

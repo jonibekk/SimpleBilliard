@@ -579,4 +579,76 @@ class AttachedFile extends AppModel
         return $upload->attachedFileUrl($file, 'download');
     }
 
+    /**
+     * Get first attached image each post
+     * condition: attached_files.id asc
+     * @param int $teamId
+     * @param array $postIds
+     *
+     * @return array
+     */
+    public function findAttachedImgEachPost(int $teamId, array $postIds)
+    {
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => [
+                'MIN(AttachedFile.id) AS id',
+                'PostFile.post_id'
+            ],
+            'table'      => 'post_files',
+            'alias'      => 'PostFile',
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.file_type' => self::TYPE_FILE_IMG,
+                        'AttachedFile.id = PostFile.attached_file_id',
+                        'AttachedFile.del_flg' => false,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'PostFile.post_id' => $postIds,
+                'PostFile.team_id' => $teamId,
+            ],
+            'group' => 'PostFile.post_id'
+        ], $this);
+
+
+        $options = [
+            'fields' => [
+                'AttachedFile.id',
+                'AttachedFile.user_id',
+                'AttachedFile.team_id',
+                'AttachedFile.attached_file_name',
+                'AttachedFile.file_ext',
+                'AttachedFile.file_size',
+                'AttachedFile2.post_id'
+            ],
+            'joins' => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => "({$subQuery})",
+                    'alias'      => 'AttachedFile2',
+                    'conditions' => [
+                        'AttachedFile.id = AttachedFile2.id',
+                        'AttachedFile.del_flg' => false,
+                    ],
+                ]
+            ],
+        ];
+        $data = $this->find('all', $options);
+        if (empty($data)) {
+            return [];
+        }
+        $res = [];
+        foreach ($data as $v) {
+            $res[] = am($v['AttachedFile'], $v['AttachedFile2']);
+        }
+        return $res;
+    }
+
 }
