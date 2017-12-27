@@ -223,9 +223,14 @@ class VideoStreamService extends AppService
         $VideoStream->save($videoStream);
 
         // create transcode job
+        // TODO: set pipeline id to env value
+        $pipelineId = '1509328826229-a6j5yu';
+        if (ENV_NAME == 'dev') {
+            $pipelineId = '1510729662392-4lzb0n';
+        }
         $transcodeRequest = new AwsVideoTranscodeJobRequest(
             $this->getOutputKeyPrefix($resourcePath),
-            "1509328826229-a6j5yu",// TODO: move to definition
+            $pipelineId,
             Enum\Video\TranscodeOutputVersion::V1()
         );
         $inputVideo = new AwsEtsTranscodeInput($resourcePath);
