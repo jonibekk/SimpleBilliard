@@ -128,4 +128,7 @@ class SavedPostTest extends GoalousTestCase
 
     }
 
+    function test_findByUserId() {
+        // TODO
+    }
 }
