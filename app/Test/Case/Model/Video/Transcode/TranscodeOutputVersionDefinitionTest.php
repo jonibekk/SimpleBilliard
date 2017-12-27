@@ -1,7 +1,7 @@
 <?php
 
 App::uses('GoalousTestCase', 'Test');
-App::import('Model/Video/Transcode', 'TranscodeOutputVersionDefinition');
+App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 
 use Goalous\Model\Enum as Enum;
 
@@ -73,7 +73,7 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
             'video_streams.id' => 2,
         ];
 
-        $inputVideo = new TranscodeInputAwsEts($key);
+        $inputVideo = new AwsEtsTranscodeInput($key);
         $inputVideo->setTimeSpan(60, 0);
         $transcodeOutput->addInputVideo($inputVideo);
 
