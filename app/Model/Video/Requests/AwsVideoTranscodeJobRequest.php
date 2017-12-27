@@ -53,13 +53,13 @@ class AwsVideoTranscodeJobRequest
     protected $putWaterMark = false;
 
 
-    public function addInputVideo(TranscodeInputAwsEts $transcodeInputAwsEts)
+    public function addInputVideo(AwsEtsTranscodeInput $transcodeInputAwsEts)
     {
         array_push($this->inputVideos, $transcodeInputAwsEts);
     }
 
     /**
-     * @return TranscodeInputAwsEts[]
+     * @return AwsEtsTranscodeInput[]
      */
     public function getInputVideos(): array
     {

@@ -7,7 +7,8 @@ App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('AwsTranscodeJobClient', 'Model/Video');
 App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
-App::import('Model/Video/Transcode', 'TranscodeOutputVersionDefinition');
+App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
+App::uses('AwsEtsTranscodeInput', 'Model/Video/Transcode/AwsEtsStructure');
 
 use Goalous\Model\Enum as Enum;
 
@@ -227,7 +228,7 @@ class VideoStreamService extends AppService
             "1509328826229-a6j5yu",// TODO: move to definition
             Enum\Video\TranscodeOutputVersion::V1()
         );
-        $inputVideo = new TranscodeInputAwsEts($resourcePath);
+        $inputVideo = new AwsEtsTranscodeInput($resourcePath);
         $inputVideo->setTimeSpan(60, 0);// 00:00 to 01:00
         $transcodeRequest->addInputVideo($inputVideo);
         $transcodeRequest->setUserMetaData([
