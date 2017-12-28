@@ -254,7 +254,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <script>
                                         videojs('<?= $videoStreamId ?>', {
                                             controlBar: {
-                                                FullscreenToggle: false
+                                                fullscreenToggle: false
                                             }
                                         }).ready(function() {
                                             var myPlayer = this, id = myPlayer.id();
