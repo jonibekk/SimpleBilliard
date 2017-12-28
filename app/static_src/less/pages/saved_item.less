@@ -1,0 +1,94 @@
+/* Topic list/detail page css */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import "../partials/attached_file";
+
+
+.savedItemList {
+  font-size: 12px;
+  &-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0;
+  }
+  &-header {
+    display: flex;
+    padding: 12px;
+    border-bottom: 1px solid @lightGray;
+    &-left {
+      flex: 1;
+    }
+    &-right {
+      font-size: 14px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+  }
+  &-item {
+    width: 100%;
+    &-link {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items:center;
+      justify-content: center;
+      padding: 10px;
+      color: @black;
+      text-decoration: none;
+      &.is-unread {
+        background: @unreadRed;
+      }
+      &.is-hover {
+        color: @black;
+        background: @hoverRed;
+        text-decoration: none;
+      }
+      &:hover {
+        color: @black;
+        text-decoration: none;
+      }
+      -webkit-touch-callout:none;
+      .avatorsBox {
+        .avatorsBox(50px);
+      }
+    }
+    &-main {
+      flex: 1;
+      align-items: flex-start;
+      justify-content: flex-start;
+      min-width: 0;
+      margin-left: 10px;
+      position: relative;
+      &-body {
+        white-space: normal;
+        height: 3em;
+        overflow: hidden;
+        line-height: 1.5em;
+      }
+      &-footer {
+        color: @subColor3;
+        display: flex;
+        & > span {
+          display: block;
+        }
+        &-left {
+          flex:1;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+        &-right {
+
+        }
+      }
+    }
+    &-right {
+      padding: 10px;
+
+    }
+  }
+  &-item + &-item {
+    border-top: 1px solid @lightGray;
+  }
+}
