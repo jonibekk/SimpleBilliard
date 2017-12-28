@@ -1,7 +1,6 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
 
-use Aws\S3\Enum\CannedAcl;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Guzzle\Http\EntityBody;
