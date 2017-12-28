@@ -252,7 +252,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                         </video>
                                     </div>
                                     <script>
-                                        videojs('<?= $videoStreamId ?>', {}).ready(function() {
+                                        videojs('<?= $videoStreamId ?>', {
+                                            controlBar: {
+                                                FullscreenToggle: false
+                                            }
+                                        }).ready(function() {
                                             var myPlayer = this, id = myPlayer.id();
                                             var aspectRatio = <?= $resource['aspect_ratio'] ?>;
                                             function resizeVideoJS() {
