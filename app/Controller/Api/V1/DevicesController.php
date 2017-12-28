@@ -95,7 +95,7 @@ class DevicesController extends  ApiController
         // Validate parameters
         if (empty($requestJsonData['token']) ||
             empty($requestJsonData['version']) ||
-            empty($requestJsonData['os'])) {
+            !isset($requestJsonData['os'])) {
             return $this->_getResponseBadFail('Invalid Parameters');
         }
         $token = $requestJsonData['token'];
