@@ -16,6 +16,9 @@ if (!isset($post_drafts)) {
     .video-js {
         background-color: #f5f5f5;
     }
+    .vjs-texttrack-settings {
+        display: none;
+    }
 </style>
 <script src="https://unpkg.com/video.js/dist/video.js"></script>
 <script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>

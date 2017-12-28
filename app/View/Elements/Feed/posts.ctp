@@ -254,7 +254,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <script>
                                         videojs('<?= $videoStreamId ?>', {
                                             controlBar: {
-                                                fullscreenToggle: false
+                                                fullscreenToggle: false,
+                                                captionsButton: false
+                                            },
+                                            textTrackSettings: false,
+                                            html5: {
+                                                nativeTextTracks: false
                                             }
                                         }).ready(function() {
                                             var myPlayer = this, id = myPlayer.id();
