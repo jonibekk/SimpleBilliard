@@ -28,6 +28,7 @@ class TranscodeInfo
     const HASH_TRANSCODE_JOB_ID = 'job_id';
     const HASH_TRANSCODE_NO_PROGRESS = 'transcode.no_progress';
     const HASH_TRANSCODE_ERRORS = 'transcode.errors';
+    const HASH_TRANSCODE_WARNINGS = 'transcode.warnings';
 
     /**
      * @var array
@@ -62,6 +63,30 @@ class TranscodeInfo
     public function setTranscodeNoProgress(bool $isNoProgress)
     {
         $this->transcodeInfo = Hash::insert($this->transcodeInfo, self::HASH_TRANSCODE_NO_PROGRESS, $isNoProgress);
+    }
+
+
+
+    /**
+     * add transcode warning message
+     *
+     * @param string $warningMessage
+     */
+    public function addTranscodeWarning(string $warningMessage)
+    {
+        $warnings = Hash::get($this->transcodeInfo, self::HASH_TRANSCODE_WARNINGS, []);
+        array_push($warnings, $warningMessage);
+        $this->transcodeInfo = Hash::insert($this->transcodeInfo, self::HASH_TRANSCODE_WARNINGS, $warnings);
+    }
+
+    /**
+     * get transcode warnings
+     *
+     * @return array
+     */
+    public function getTranscodeWarnings(): array
+    {
+        return Hash::get($this->transcodeInfo, self::HASH_TRANSCODE_WARNINGS, []);
     }
 
     /**

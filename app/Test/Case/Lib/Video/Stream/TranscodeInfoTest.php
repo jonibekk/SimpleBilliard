@@ -41,18 +41,21 @@ class TranscodeInfoTest extends GoalousTestCase
         $jobId = '1234567890';
         $transcoder = Enum\Video\Transcoder::AWS_ETS;
         $transcodeErrors = ['a', 'b', 'c'];
+        $transcodeWarnings = ['d', 'e', 'f'];
         $transcodeInfo = TranscodeInfo::createFromJson(json_encode([
             TranscodeInfo::HASH_TRANSCODER => $transcoder,
             TranscodeInfo::HASH_TRANSCODE_JOB_ID => $jobId,
             'transcode' => [
                 'no_progress' => true,
                 'errors' => $transcodeErrors,
+                'warnings' => $transcodeWarnings,
             ]
         ]));
         $this->assertEquals($jobId, $transcodeInfo->getTranscodeJobId());
         $this->assertEquals($transcoder, $transcodeInfo->getTranscoderType());
         $this->assertTrue($transcodeInfo->isTranscodeNoProgress());
         $this->assertEquals($transcodeErrors, $transcodeInfo->getTranscodeErrors());
+        $this->assertEquals($transcodeWarnings, $transcodeInfo->getTranscodeWarnings());
     }
 
     function test_setValues()
@@ -67,6 +70,9 @@ class TranscodeInfoTest extends GoalousTestCase
         $transcodeInfo->addTranscodeError('a');
         $transcodeInfo->addTranscodeError('b');
         $transcodeInfo->addTranscodeError('c');
+        $transcodeInfo->addTranscodeWarning('d');
+        $transcodeInfo->addTranscodeWarning('e');
+        $transcodeInfo->addTranscodeWarning('f');
         $jsonString = $transcodeInfo->toJson();
 
         $transcodeInfoArray = json_decode($jsonString, true);
@@ -77,6 +83,7 @@ class TranscodeInfoTest extends GoalousTestCase
             'transcode' => [
                 'no_progress' => true,
                 'errors' => ['a', 'b', 'c'],
+                'warnings' => ['d', 'e', 'f'],
             ]
         ], $transcodeInfoArray);
 
