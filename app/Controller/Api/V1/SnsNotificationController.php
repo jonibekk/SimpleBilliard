@@ -16,6 +16,8 @@ use Goalous\Model\Enum as Enum;
  * Class SnsNotificationController
  *
  * @property NotifyBizComponent NotifyBiz
+ *
+ * TODO: this notification is especially for video transcoding(should change class name?)
  */
 class SnsNotificationController extends ApiController
 {

@@ -120,4 +120,13 @@ class AwsVideoTranscodeJobRequest
     {
         return $this->transcodeOutputVersion;
     }
+
+    /**
+     * returning transcoder type
+     * @return Enum\Video\Transcoder
+     */
+    public function getTranscoder(): Enum\Video\Transcoder
+    {
+        return Enum\Video\Transcoder::AWS_ETS();
+    }
 }

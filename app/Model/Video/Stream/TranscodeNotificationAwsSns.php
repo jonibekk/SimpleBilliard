@@ -5,7 +5,18 @@ use Goalous\Model\Enum as Enum;
 
 class TranscodeNotificationAwsSns implements TranscodeProgressData
 {
+    /**
+     * parsed data of AWS SNS JSON request body
+     * @see https://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.html
+     * @var array
+     */
     protected $data = [];
+
+    /**
+     * parsed data of "Message" value in AWS SNS JSON request body
+     * @see https://docs.aws.amazon.com/elastictranscoder/latest/developerguide/notifications.html
+     * @var array
+     */
     protected $messageData = [];
 
     public static function parseJsonString(string $json)
@@ -100,10 +111,20 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
         return $this->getProgressState()->equals(Enum\Video\VideoTranscodeProgress::ERROR());
     }
 
+    public function getWarning(): string
+    {
+        return $this->createErrorString();
+    }
+
     public function getError(): string
     {
-        $errorCode = $this->messageData['errorCode'] ?? '';
-        $errorMessage = $this->messageData['messageDetails'] ?? '';
-        return sprintf('CODE: %s, %s', $errorCode, $errorMessage);
+        return $this->createErrorString();
+    }
+
+    private function createErrorString(): string
+    {
+        $errorCode = !empty($this->messageData['errorCode']) ? sprintf('[%s] ', $this->messageData['errorCode']) : '';
+        $errorMessage = !empty($this->messageData['messageDetails']) ? $this->messageData['messageDetails'] : '';
+        return $errorCode . $errorMessage;
     }
 }

@@ -64,6 +64,19 @@ class VideoStreamService extends AppService
                 'status_value_to' => $status,
             ]);
             return $videoStream;
+        } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::WARNING())) {
+            // if transcode notified warning
+            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            $transcodeInfo->addTranscodeWarning($transcodeProgressData->getWarning());// :TODO
+            $videoStream['transcode_info'] = $transcodeInfo->toJson();
+            $VideoStream->save($videoStream);
+
+            GoalousLog::info('transcode status warning notified', [
+                'video_streams.id' => $videoStreamId,
+                'state' => $progressState->getValue(),
+                'message' => $transcodeProgressData->getWarning(),
+            ]);
+            return $videoStream;
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
             // if transcode is completed
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
@@ -224,14 +237,14 @@ class VideoStreamService extends AppService
 
         // create transcode job
         // TODO: set pipeline id to env value
-        $pipelineId = '1509328826229-a6j5yu';
+        $pipelineId = '1509328826229-a6j5yu';// local masuichig
         if (ENV_NAME == 'dev') {
             $pipelineId = '1510729662392-4lzb0n';
         }
         $transcodeRequest = new AwsVideoTranscodeJobRequest(
             $this->getOutputKeyPrefix($resourcePath),
             $pipelineId,
-            Enum\Video\TranscodeOutputVersion::V1()
+            Enum\Video\TranscodeOutputVersion::V1()// TODO: move current transcode version to php define
         );
         $inputVideo = new AwsEtsTranscodeInput($resourcePath);
         $inputVideo->setTimeSpan(60, 0);// 00:00 to 01:00
@@ -241,28 +254,33 @@ class VideoStreamService extends AppService
             'video_streams.id' => $videoStream['id'],
         ]);
         $transcodeRequest->setPutWaterMark(in_array(ENV_NAME, ['local', 'dev', 'stage']));
-        $result = AwsTranscodeJobClient::createJob($transcodeRequest);
-        if (!$result->isSucceed()) {
+        $createJobResult = AwsTranscodeJobClient::createJob($transcodeRequest);
+        if (!$createJobResult->isSucceed()) {
             // failed to create transcode job
             // not doing transaction, set status = ERROR, set delete flag
             GoalousLog::error('creating video transcode job failed', [
-                'code'             => $result->getErrorCode(),
-                'message'          => $result->getErrorMessage(),
+                'code'             => $createJobResult->getErrorCode(),
+                'message'          => $createJobResult->getErrorMessage(),
                 'videos.id'        => $video['id'],
                 'video_streams.id' => $videoStream['id'],
             ]);
             $Video->softDelete($video['id'], false);
-            $errorMessage = "failed upload video:" . $result->getErrorMessage();
+            $errorMessage = "creating video transcode job failed:" . $createJobResult->getErrorMessage();
             $this->deleteVideoStreamWithError($videoStream, $errorMessage);
             throw new RuntimeException($errorMessage);
         }
 
         // Queued complete
+        $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+        $transcodeInfo->setTranscoderType($transcodeRequest->getTranscoder());
+        $transcodeInfo->setTranscodeJobId($createJobResult->getJobId());
+        $videoStream['transcode_info'] = $transcodeInfo->toJson();
+
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::QUEUED;
         $VideoStream->save($videoStream);
 
         GoalousLog::info('video transcode queued', [
-            'job_id'           => $result->getJobId(),
+            'job_id'           => $createJobResult->getJobId(),
             'teams.id'         => $teamId,
             'videos.id'        => $video['id'],
             'video_streams.id' => $videoStream['id'],
