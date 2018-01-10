@@ -71,19 +71,7 @@ if (!isset($post_drafts)) {
             </div>
         </div>
         <div class="col feed-contents post-contents showmore font_14px font_verydark box-align" id="PostTextBody_102">
-            <div>
-                <?php
-                    $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($post_draft['post_resources'][0]['status_transcode']));
-                ?>
-                <!--
-                [drafts.id: <?= $post_draft['id'] ?>][resource_id: <?=$post_draft['post_resources'][0]['id'] ?> / status: <?= $transcodeStatus->getValue() ?>(<?= $transcodeStatus->getKey() ?>)]
-                -->
-            </div>
             <?= nl2br(h($post_draft['data']['Post']['body'])) ?>
-            <?php
-                // TODO: foreach the post_resources
-                $videoStreamId = sprintf('video_stream_%d', $post_draft['post_resources'][0]['id']);
-            ?>
         </div>
 
     </div>

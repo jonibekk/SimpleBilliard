@@ -4,6 +4,7 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'VideoStreamService');
+App::uses('TeamStatus', 'Lib/Status');
 
 /**
  * Class FilesController
@@ -24,7 +25,7 @@ class FilesController extends ApiController
         // TODO: is this ok about deciding file type "video"
         $isVideo = false !== strpos($form['file']['type'], 'video');
 
-        if ($isVideo) {
+        if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
             // TODO: /tmp/ ファイルの削除をしないといけないかも？要確認
             CakeLog::info(sprintf('file uploaded: %s', AppUtil::jsonOneLine([
                 'form' => $form,

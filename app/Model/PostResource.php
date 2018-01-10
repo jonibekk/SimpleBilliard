@@ -1,4 +1,5 @@
 <?php
+App::uses('TeamStatus', 'Lib/Status');
 App::uses('AppModel', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
@@ -43,6 +44,9 @@ class PostResource extends AppModel
             $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
             switch ($resourceType->getValue()) {
                 case Enum\Post\PostResourceType::VIDEO_STREAM:
+                    if (!TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
+                        continue;
+                    }
                     $resourceVideoStream = $VideoStream->getById($postResource['resource_id']);
                     if (empty($resourceVideoStream)) {
                         continue;
