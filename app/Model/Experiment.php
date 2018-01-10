@@ -14,6 +14,8 @@ class Experiment extends AppModel
     //現存する実験の種類。不要になったら削除。
     const NAME_CIRCLE_DEFAULT_SETTING_ON = 'CircleDefaultSettingOn';
     const NAME_ENABLE_EVALUATION_FEATURE = 'EnableEvaluationFeature';
+    const NAME_ENABLE_VIDEO_POST_TRANSCODING = 'EnableVideoPostTranscoding';
+    const NAME_ENABLE_VIDEO_POST_PLAY = 'EnableVideoPostPlay';
 
     /**
      * Validation rules
@@ -50,5 +52,16 @@ class Experiment extends AppModel
         ];
         $ret = $this->find('first', $options);
         return $ret;
+    }
+
+    function findAllByTeamId($teamId)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId
+            ]
+        ];
+        $ret = $this->find('all', $options);
+        return Hash::extract($ret, '{n}.Experiment');
     }
 }
