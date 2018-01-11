@@ -39,6 +39,8 @@ class PostTest extends GoalousTestCase
         'app.circle_member',
         'app.team_member',
         'app.term',
+        'app.post_resource',
+        'app.kr_progress_log',
     );
 
     /**
@@ -103,7 +105,7 @@ class PostTest extends GoalousTestCase
         $this->Post->PostFile->AttachedFile->expects($this->any())
                                            ->method('saveRelatedFiles')
                                            ->will($this->returnValue(true));
-        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
     }
 
@@ -164,7 +166,7 @@ class PostTest extends GoalousTestCase
         $this->Post->PostFile->AttachedFile->expects($this->any())
                                            ->method('saveRelatedFiles')
                                            ->will($this->returnValue(false));
-        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid);
         $this->assertFalse($res);
     }
 
