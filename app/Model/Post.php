@@ -381,6 +381,8 @@ class Post extends AppModel
 
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
+        $postDraft['post_id'] = $post['id'];
+        $PostDraft->save($postDraft);
         $PostDraft->delete($postDraft['id']);
         return $post;
     }
