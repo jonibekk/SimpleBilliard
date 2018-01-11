@@ -1,6 +1,7 @@
 <?php
 
 App::uses('VideoUploadRequest', 'Model/Video/Requests');
+App::uses('VideoFileHasher', 'Lib/Video');
 
 class VideoUploadRequestOnPost implements VideoUploadRequest
 {
@@ -8,6 +9,12 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
      * @var \SplFileObject
      */
     protected $file;
+
+    /**
+     * hashed file string
+     * @var string|null
+     */
+    protected $fileHash = null;
 
     /**
      * array data of user
@@ -49,11 +56,11 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
 
     public function getFileHash(): string
     {
-        // TODO: any cache?
-        return hash_file('sha256', $this->getSourceFilePath());
+        if (empty($this->fileHash)) {
+            $this->fileHash = VideoFileHasher::hashFile($this->file);
+        }
+        return $this->fileHash;
     }
-
-    // TODO: rename to kind of resource path
 
     /**
      * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
@@ -71,19 +78,13 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
 
     public function getContentType(): string
     {
-        // TODO: research this is no problem
-        // the original video does not see from user
+        // the original video does not seen from user, content-type set to simple binary file
         return 'binary/octet-stream';
     }
 
     public function getBucket(): string
     {
-        // TODO: define fqdn to extra_define
-        if (ENV_NAME == 'local') {
-            return 'goalous-local-masuichig-videos-original';
-        } else if (ENV_NAME == 'dev') {
-            return 'goalous-dev-videos-original';
-        }
+        return AWS_S3_BUCKET_VIDEO_ORIGINAL;
     }
 
     public function getAcl(): string
@@ -114,5 +115,14 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
             'ACL'          => $this->getAcl(),
             'Metadata'     => $this->getMetaData(),
         ];
+    }
+
+    /**
+     * set file hash
+     * @param null|string $fileHash
+     */
+    public function setFileHash(string $fileHash)
+    {
+        $this->fileHash = $fileHash;
     }
 }

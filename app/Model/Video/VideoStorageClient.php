@@ -31,9 +31,10 @@ class VideoStorageClient
             'region'      => 'ap-northeast-1',
             'version'     => 'latest',
             'credentials' => [
-                'key'    => "AKIAJWRB3ISRYGDYHV5A",
-                'secret' => "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",
+                'key'    => AWS_ELASTIC_TRANSCODER_KEY,
+                'secret' => AWS_ELASTIC_TRANSCODER_SECRET_KEY,
             ],
         ]);
     }
 }
+

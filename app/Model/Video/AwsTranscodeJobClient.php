@@ -13,7 +13,7 @@ class AwsTranscodeJobClient
 {
     public static function createJob(AwsVideoTranscodeJobRequest $awsVideoTranscodeRequest): AwsVideoTranscodeJobResult
     {
-        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Video\TranscodeOutputVersion::V1());
+        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion($awsVideoTranscodeRequest->getTranscodeOutputVersion());
         foreach ($awsVideoTranscodeRequest->getInputVideos() as $inputVideo) {
             $transcodeOutput->addInputVideo($inputVideo);
         }
@@ -37,12 +37,11 @@ class AwsTranscodeJobClient
     private function createAwsEtsClient(): \Aws\ElasticTranscoder\ElasticTranscoderClient
     {
         return new \Aws\ElasticTranscoder\ElasticTranscoderClient([
-            // TODO: move configurations to config files
             'region'   => 'ap-northeast-1',
             'version' => 'latest',
             'credentials' => [
-                'key'    => "AKIAJWRB3ISRYGDYHV5A",
-                'secret' => "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",
+                'key'    => AWS_ELASTIC_TRANSCODER_KEY,
+                'secret' => AWS_ELASTIC_TRANSCODER_SECRET_KEY,
             ],
         ]);
     }

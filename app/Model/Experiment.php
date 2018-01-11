@@ -14,6 +14,11 @@ class Experiment extends AppModel
     //現存する実験の種類。不要になったら削除。
     const NAME_CIRCLE_DEFAULT_SETTING_ON = 'CircleDefaultSettingOn';
     const NAME_ENABLE_EVALUATION_FEATURE = 'EnableEvaluationFeature';
+
+    /**
+     * Video feature experiment
+     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
+     */
     const NAME_ENABLE_VIDEO_POST_TRANSCODING = 'EnableVideoPostTranscoding';
     const NAME_ENABLE_VIDEO_POST_PLAY = 'EnableVideoPostPlay';
 

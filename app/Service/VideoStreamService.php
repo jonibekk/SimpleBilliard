@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::uses('VideoUploadRequestOnPost', 'Model/Video/Requests');
 App::uses('VideoStorageClient', 'Model/Video');
+App::uses('VideoFileHasher', 'Lib/Video');
 
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
@@ -67,7 +68,7 @@ class VideoStreamService extends AppService
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::WARNING())) {
             // if transcode notified warning
             $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            $transcodeInfo->addTranscodeWarning($transcodeProgressData->getWarning());// :TODO
+            $transcodeInfo->addTranscodeWarning($transcodeProgressData->getWarning());
             $videoStream['transcode_info'] = $transcodeInfo->toJson();
             $VideoStream->save($videoStream);
 
@@ -158,7 +159,9 @@ class VideoStreamService extends AppService
         $filePath = $uploadFile['tmp_name'];
         $fileName = $uploadFile['name'];
 
-        $hash = hash_file('sha256', $filePath);// TODO: move to some function/class
+        $transcodeOutputVersion = TeamStatus::getCurrentTeam()->getTranscodeOutputVersion();
+
+        $hash = VideoFileHasher::hashFile(new \SplFileInfo($filePath));
 
         $videoStreamIfExists = $this->findVideoStreamIfExists($userId, $teamId, $hash);
         if (!empty($videoStreamIfExists)) {
@@ -197,7 +200,7 @@ class VideoStreamService extends AppService
             'aspect_ratio'     => null,
             'storage_path'     => null,
             'status_transcode' => Enum\Video\VideoTranscodeStatus::UPLOADING,
-            'output_version'   => Enum\Video\TranscodeOutputVersion::V1,// TODO: move current transcode version to php define
+            'output_version'   => $transcodeOutputVersion->getValue(),
             'transcode_info'   => TranscodeInfo::createNew()->toJson(),
         ]);
         $videoStream = $VideoStream->save();
@@ -205,6 +208,7 @@ class VideoStreamService extends AppService
 
         // video upload
         $request = new VideoUploadRequestOnPost(new SplFileInfo($filePath), $user, $teamId, $video, $videoStream);
+        $request->setFileHash($hash);
         $result = VideoStorageClient::upload($request);
 
         if (!$result->isSucceed()) {
@@ -236,15 +240,10 @@ class VideoStreamService extends AppService
         $VideoStream->save($videoStream);
 
         // create transcode job
-        // TODO: set pipeline id to env value
-        $pipelineId = '1509328826229-a6j5yu';// local masuichig
-        if (ENV_NAME == 'dev') {
-            $pipelineId = '1510729662392-4lzb0n';
-        }
         $transcodeRequest = new AwsVideoTranscodeJobRequest(
             $this->getOutputKeyPrefix($resourcePath),
-            $pipelineId,
-            Enum\Video\TranscodeOutputVersion::V1()// TODO: move current transcode version to php define
+            AWS_ELASTIC_TRANSCODER_PIPELINE_ID,
+            $transcodeOutputVersion
         );
         $inputVideo = new AwsEtsTranscodeInput($resourcePath);
         $inputVideo->setTimeSpan(60, 0);// 00:00 to 01:00
@@ -253,6 +252,7 @@ class VideoStreamService extends AppService
             'videos.id'        => $video['id'],
             'video_streams.id' => $videoStream['id'],
         ]);
+        // set watermark if env is not production
         $transcodeRequest->setPutWaterMark(in_array(ENV_NAME, ['local', 'dev', 'stage']));
         $createJobResult = AwsTranscodeJobClient::createJob($transcodeRequest);
         if (!$createJobResult->isSucceed()) {

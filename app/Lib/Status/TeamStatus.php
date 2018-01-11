@@ -255,12 +255,10 @@ class TeamStatus {
     }
 
     /**
-     * return teams video transcoding quality
-     *
-     * @return Enum\TranscodePattern
+     * @return Enum\Video\TranscodeOutputVersion
      */
-    public function getTranscodeQuality(): Enum\TranscodePattern
+    public function getTranscodeOutputVersion(): Enum\Video\TranscodeOutputVersion
     {
-        return Enum\TranscodePattern::LIMITED();
+        return Enum\Video\TranscodeOutputVersion::V1();
     }
 }

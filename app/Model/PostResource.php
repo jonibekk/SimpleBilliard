@@ -52,13 +52,7 @@ class PostResource extends AppModel
                         continue;
                     }
                     $videoStoragePath = $resourceVideoStream['storage_path'];
-                    // TODO: define fqdn to extra_define
-                    $urlBaseStorage = '';
-                    if (ENV_NAME == 'local') {
-                        $urlBaseStorage = 'https://s3-ap-northeast-1.amazonaws.com/goalous-local-masuichig-videos/' . $videoStoragePath;
-                    } else if (ENV_NAME == 'dev') {
-                        $urlBaseStorage = 'https://s3-ap-northeast-1.amazonaws.com/goalous-dev-videos/' . $videoStoragePath;
-                    }
+                    $urlBaseStorage = sprintf('%s/%s/%s', S3_BASE_URL, AWS_S3_BUCKET_VIDEO_TRANSCODED, $videoStoragePath);
                     $transcoderOutputVersion = new Enum\Video\TranscodeOutputVersion(intval($resourceVideoStream['output_version']));
                     $transcodeOutput = TranscodeOutputVersionDefinition::getVersion($transcoderOutputVersion);
 

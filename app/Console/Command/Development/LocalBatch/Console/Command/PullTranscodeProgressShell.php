@@ -34,7 +34,7 @@ class PullTranscodeProgressShell extends AppShell
     function main()
     {
         if (ENV_NAME !== 'local') {
-            GoalousLog::error('this batch shell should run only in local ENV', [
+            GoalousLog::error('this batch shell should run only on local ENV', [
                 'current env' => ENV_NAME,
             ]);
             return;
@@ -58,19 +58,18 @@ class PullTranscodeProgressShell extends AppShell
 
         $jobs = [];
 
-
         try {
             // TODO: move this client create to kind of libs
             $client = new \Aws\ElasticTranscoder\ElasticTranscoderClient([
                 'region'   => 'ap-northeast-1',
                 'version' => 'latest',
                 'credentials' => [
-                    'key'    => "AKIAJWRB3ISRYGDYHV5A",
-                    'secret' => "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",
+                    'key'    => AWS_ELASTIC_TRANSCODER_KEY,
+                    'secret' => AWS_ELASTIC_TRANSCODER_SECRET_KEY,
                 ],
             ]);
             $jobs = $client->listJobsByPipeline([
-                'PipelineId' => '1509328826229-a6j5yu',
+                'PipelineId' => AWS_ELASTIC_TRANSCODER_PIPELINE_ID,
                 'Ascending'  => 'false',// this need to be string
             ]);
             $jobs = $jobs->toArray();
