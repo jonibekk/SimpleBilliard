@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * InvoiceHistory Model
  *
@@ -141,5 +143,26 @@ class InvoiceHistory extends AppModel
             ],
         ];
         return $this->find('all', $options);
+    }
+
+    /**
+     * Check if team has ever recorded OK status for order
+     *
+     * @param int    $teamId
+     * @param int $timestamp
+     *
+     * @return bool
+     */
+    public function checkCreditOkInPast(int $teamId, int $timestamp): bool
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'order_status' => Enum\Invoice\CreditStatus::OK,
+                'created <' => $timestamp
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res > 0;
     }
 }

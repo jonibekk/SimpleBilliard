@@ -3627,7 +3627,7 @@ msgstr "評価"
 msgid "Goal Approval"
 msgstr "ゴール認定"
 
-msgid "User Guide (jp)"
+msgid "User Guide"
 msgstr "ユーザー利用ガイド"
 
 msgid "How to make a Goal (jp)"
@@ -4508,10 +4508,8 @@ msgstr "Goalousチーム"
 msgid "Click the below link to authenticate your email address."
 msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
-msgid ""
-"Please trash this email if you don't have any idea why you get this email."
-msgstr ""
-"もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+msgid "If you're unsure why you received this email, you may simply ignore this message."
+msgstr "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
 
 msgid "Thank you for getting contact with Goalous."
 msgstr ""
@@ -4656,7 +4654,7 @@ msgstr ""
 msgid "\"%s\""
 msgstr "「%s」"
 
-msgid "Click the below link to reset your email address."
+msgid "Click the below link to reset your password."
 msgstr "以下のリンクをクリックしてパスワードを再設定してください。"
 
 msgid "Succeeded to reset your password."
@@ -5271,10 +5269,10 @@ msgstr "スマホアプリで、いつでもどこからでも"
 msgid "iOS and Android apps avaliable."
 msgstr "iOS・Androidアプリでもご利用いただけます"
 
-msgid "What is Goalous? (jp, pdf)"
+msgid "What is Goalous? (pdf)"
 msgstr "Goalous紹介資料（PDFファイル）"
 
-msgid "This file is written in Japanese."
+msgid "Please refer to this document."
 msgstr "社内稟議用のサンプル資料です。ぜひご活用ください。"
 
 msgid "Download the file"

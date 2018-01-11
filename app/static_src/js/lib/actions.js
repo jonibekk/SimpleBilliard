@@ -120,7 +120,9 @@ var Page = {
                 var errHtml = "";
 
                 // 多重サブミット対策を解除する
-                $(form).find('.js-action-submit-button').removeClass("is-disabled");
+                var $submitBtn = $(form).find('.js-action-submit-button');
+                $submitBtn.removeClass("is-disabled");
+                $submitBtn.removeAttr("disabled");
 
                 // 既にエラーメッセージが表示されてる場合はそれを非表示にする
                 if ($('.action-form-errors').length) {
