@@ -6,12 +6,13 @@ App::uses('PostResource', 'Model');
 App::uses('TranscodeNotificationAwsSns', 'Model/Video/Stream');
 App::import('Service', 'VideoStreamService');
 App::uses('TestVideoTrait', 'Test/Trait');
+App::uses('TestPostDraftTrait', 'Test/Trait');
 
 use Goalous\Model\Enum as Enum;
 
 class VideoStreamServiceTest extends GoalousTestCase
 {
-    use TestVideoTrait;
+    use TestVideoTrait, TestPostDraftTrait;
 
     /**
      * Fixtures
@@ -41,16 +42,6 @@ class VideoStreamServiceTest extends GoalousTestCase
     private $Post;
 
     /**
-     * @var PostDraft
-     */
-    private $PostDraft;
-
-    /**
-     * @var PostResource
-     */
-    private $PostResource;
-
-    /**
      * setUp method
      *
      * @return void
@@ -64,37 +55,6 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->Post = ClassRegistry::init('Post');
         $this->PostDraft = ClassRegistry::init('PostDraft');
         $this->PostResource = ClassRegistry::init('PostResource');
-    }
-
-    private function createPostDraftWithVideoStreamResource(int $userId, int $teamId, array $videoStream, string $bodyText): array
-    {
-        $postDraft = $this->PostDraft->save([
-            'user_id'    => $userId,
-            'team_id'    => $teamId,
-            'post_id'    => null,
-            'draft_data' => json_encode([
-                "socket_id" => "226623.3380922",
-                "Post"      => [
-                    "body"          => $bodyText,
-                    "site_info_url" => "",
-                    "redirect_url"  => "",
-                    "share_public"  => "public",
-                    "share_secret"  => "",
-                    "share_range"   => "public",
-                    "share"         => "public",
-                ],
-                "video_stream_id" => [
-                    $videoStream['id'],
-                ],
-            ]),
-        ]);
-        $postResource = $this->PostResource->save([
-            'post_id'       => null,
-            'post_draft_id' => $postDraft['PostDraft']['id'],
-            'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM,
-            'resource_id'   => $videoStream['id'],
-        ]);
-        return [reset($postDraft), reset($postResource)];
     }
 
     function test_findVideoStreamIfExists()

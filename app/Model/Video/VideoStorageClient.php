@@ -27,7 +27,6 @@ class VideoStorageClient
     public static function createS3Client(): \Aws\S3\S3Client
     {
         return new \Aws\S3\S3Client([
-            // TODO: move configurations to config files
             'region'      => 'ap-northeast-1',
             'version'     => 'latest',
             'credentials' => [

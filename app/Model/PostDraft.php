@@ -36,9 +36,9 @@ class PostDraft extends AppModel
         return $postDrafts;
     }
 
-    function getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
+    private function getQueryByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
     {
-        $options = [
+        return [
             'joins' => [
                 [
                     'type'       => 'INNER',
@@ -65,8 +65,17 @@ class PostDraft extends AppModel
                 'PostResource.del_flg'       => 0,
             ],
         ];
+    }
 
-        $result = $this->find('first', $options);
+    function getByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
+    {
+        $result = $this->find('all', $this->getQueryByResourceTypeAndResourceId($postResourceType, $resourceId));
+        return Hash::extract($result, '{n}.PostDraft');
+    }
+
+    function getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
+    {
+        $result = $this->find('first', $this->getQueryByResourceTypeAndResourceId($postResourceType, $resourceId));
         if (empty($result)) {
             return [];
         }

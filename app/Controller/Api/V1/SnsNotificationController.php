@@ -68,6 +68,7 @@ class SnsNotificationController extends ApiController
             if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
                 $postDraft = $PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
                 // TODO: ここ、複数紐付いている下書きがあった場合、一つしかpostされない
+                // TODO: $this->>getByResourceTypeAndResourceId() を使うように書き換える
                 if (!empty($postDraft)) {
                     /** @var Post $Post */
                     $Post = ClassRegistry::init('Post');
