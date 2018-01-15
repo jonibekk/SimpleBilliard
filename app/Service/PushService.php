@@ -95,7 +95,8 @@ class PushService extends AppService
         // Request data
         $data = [
             'notification'     => [
-                'body' => $message
+                'body' => $message,
+                'mutable_content'  => true
             ],
             'data'             => [
                 'url' => $postUrl
