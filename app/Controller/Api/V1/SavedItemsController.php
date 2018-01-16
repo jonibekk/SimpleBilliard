@@ -22,7 +22,7 @@ class SavedItemsController extends ApiController
         $ApiSavedPostService = ClassRegistry::init("ApiSavedPostService");
 
         // Check limit param under max
-        if (!$ApiSavedPostService->checkMaxLimit($this->request->query('limit'))) {
+        if (!$ApiSavedPostService->checkMaxLimit((int)$this->request->query('limit'))) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
         $res = $this->_findSearchResults();
