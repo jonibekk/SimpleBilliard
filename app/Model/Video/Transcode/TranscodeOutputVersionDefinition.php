@@ -33,6 +33,7 @@ class TranscodeOutputVersionDefinition
                     $outputH264,
                 ]);
                 $outputPlaylistHls->setForVideoSource(true);
+                $outputPlaylistHls->setEnableHlsContentProtection(true);
                 $transcodeOutput = new AwsEtsTranscodeJob(
                     $transcodeOutputVersion, Enum\Video\Transcoder::AWS_ETS()
                 );

@@ -16,6 +16,8 @@ class AwsEtsTranscodeOutputPlaylist
     private $name;
     private $outputKeys = [];
 
+    private $enableHlsContentProtection = false;
+
     /**
      * AwsEtsTranscodeOutputPlaylist constructor.
      *
@@ -53,6 +55,17 @@ class AwsEtsTranscodeOutputPlaylist
         return new VideoSource($this->videoSourceType, $url);
     }
 
+    /**
+     * @param bool $enableHlsContentProtection
+     *
+     * if enabling this option
+     * AWS ETS Pipeline need configuring encryption key of AWS KMS Key ARN
+     */
+    public function setEnableHlsContentProtection(bool $enableHlsContentProtection)
+    {
+        $this->enableHlsContentProtection = $enableHlsContentProtection;
+    }
+
     public function getOutputArray(): array
     {
         $output = [
@@ -64,6 +77,14 @@ class AwsEtsTranscodeOutputPlaylist
                 return $keys;
             }, []),
         ];
+        if ($this->enableHlsContentProtection) {
+            $output = am($output, [
+                'HlsContentProtection' => [
+                    'Method'           => 'aes-128',
+                    'KeyStoragePolicy' => 'WithVariantPlaylists',
+                ],
+            ]);
+        }
         return $output;
     }
 }
