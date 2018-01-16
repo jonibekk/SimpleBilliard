@@ -43,11 +43,11 @@ class AwsVideoTranscodeJobResult
 
     public function getErrorCode(): string
     {
-        return strval($this->errorCode);
+        return $this->errorCode ?? '';
     }
 
     public function getErrorMessage(): string
     {
-        return $this->errorMessage;
+        return $this->errorMessage ?? '';
     }
 }

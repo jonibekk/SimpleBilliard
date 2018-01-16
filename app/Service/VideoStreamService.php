@@ -210,7 +210,6 @@ class VideoStreamService extends AppService
         $request = new VideoUploadRequestOnPost(new SplFileInfo($filePath), $user, $teamId, $video, $videoStream);
         $request->setFileHash($hash);
         $result = VideoStorageClient::upload($request);
-
         if (!$result->isSucceed()) {
             GoalousLog::error('video uploading to storage failed', [
                 'code'             => $result->getErrorCode(),
@@ -298,7 +297,7 @@ class VideoStreamService extends AppService
         $transcodeInfo->addTranscodeError($errorMessage);
         $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR;
         $videoStream['transcode_info'] = $transcodeInfo->toJson();
-        $videoStream['del_flag'] = true;
         $VideoStream->save($videoStream);
+        $VideoStream->softDelete($videoStream['id'], false);
     }
 }

@@ -36,7 +36,11 @@ class FilesController extends ApiController
             $teamId = $this->current_team_id;
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
-            $videoStream = $VideoStreamService->uploadNewVideoStream($form['file'], $user, $teamId);
+            try {
+                $videoStream = $VideoStreamService->uploadNewVideoStream($form['file'], $user, $teamId);
+            } catch (Exception $e) {
+                return $this->_getResponseBadFail(_('Failed uploading video'));
+            }
 
             CakeLog::info(sprintf('new video_stream created %s', AppUtil::jsonOneLine([
                 'video_streams.id' => $videoStream['id'],
