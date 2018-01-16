@@ -64,12 +64,12 @@ export function fetchMore(url) {
   }
 }
 
-export function unsave(item) {
+export function removeItem(item) {
   return (dispatch, getState) => {
     return del(`/api/v1/posts/${item.post_id}/saved_items`)
       .then((response) => {
         dispatch({
-          type: ActionTypes.UNSAVE,
+          type: ActionTypes.REMOVE,
           item
         })
       })

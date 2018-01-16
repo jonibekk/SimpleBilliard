@@ -6,14 +6,14 @@ import saved_item from "../../reducers/saved_item";
 class SavedItem extends React.Component {
   constructor(props) {
     super(props);
-    this.unsave = this.unsave.bind(this)
+    this.removeItem = this.removeItem.bind(this)
   }
 
-  unsave(e, saved_item) {
+  removeItem(e, saved_item) {
     e.stopPropagation();
     e.preventDefault()
     this.props.dispatch(
-      actions.unsave(saved_item)
+      actions.removeItem(saved_item)
     )
   }
 
@@ -52,9 +52,9 @@ class SavedItem extends React.Component {
                 <i className="fa fa-ellipsis-h savedItemList-item-option-icon"></i>
               </p>
               <ul className="dropdown-menu pull-right" role="menu">
-                <li key={`saved_item_${saved_item.id}_menu`} onClick={(e) => this.unsave(e, saved_item)}>
+                <li key={`saved_item_${saved_item.id}_menu`} onClick={(e) => this.removeItem(e, saved_item)}>
                   <span className="dropdown-menu-item">
-                    {__("Unsave")}
+                    {__("Remove")}
                   </span>
                 </li>
               </ul>

@@ -36,6 +36,7 @@ export default function saved_item(state = initialState, action) {
       }
       return Object.assign({}, state, {
         search_result,
+        search_conditions: action.search_conditions,
         loading: false
       })
 
@@ -50,7 +51,7 @@ export default function saved_item(state = initialState, action) {
         loading_more: false
       })
 
-    case ActionTypes.UNSAVE:
+    case ActionTypes.REMOVE:
       search_result.data = updateSavedItemsByUnsaving(search_result.data, action.item.id);
       search_result.counts.all--;
       if (action.item.type == Post.TYPE.ACTION) {

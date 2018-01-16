@@ -8,8 +8,12 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
-            <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
-            <i class="post-saveItem <?=$isSavedItemClass?> js-save-item" aria-hidden="true" data-id="<?= Hash::get($post, 'Post.id')?>" data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item')?>"></i>
+            <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
+                <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
+                <i class="post-saveItem <?= $isSavedItemClass ?> js-save-item" aria-hidden="true"
+                   data-id="<?= Hash::get($post, 'Post.id') ?>"
+                   data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>"></i>
+            <?php endif; ?>
             <div class="dropdown inline-block">
                 <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
                     <i class="fa fa-chevron-down feed-arrow"></i>

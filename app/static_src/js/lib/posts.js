@@ -85,7 +85,7 @@ function deleteItem(post_id, is_saved_item, $target) {
     success: function (data) {
       new Noty({
         type: 'success',
-        text: __("Unsaved item"),
+        text: __("Removed item"),
       }).show();
     },
     error: function (res, textStatus, errorThrown) {

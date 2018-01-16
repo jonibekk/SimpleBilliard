@@ -11,7 +11,7 @@ function mapDispatchToProps(dispatch) {
     setUaInfo: () => dispatch(actions.setUaInfo()),
     fetchInitialData: () => dispatch(actions.fetchInitialData()),
     updateFilter: (type) => dispatch(actions.updateFilter(type)),
-    unsave: (item) => dispatch(actions.unsave(item)),
+    removeItem: (item) => dispatch(actions.removeItem(item)),
     fetchMore: (url) => dispatch(actions.fetchMore(url))
   }
 }
