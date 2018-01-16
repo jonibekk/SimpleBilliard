@@ -18,21 +18,60 @@ class VideoSource
     /**
      * @var string
      */
-    private $fullPathUrl;
+    private $filePath;
 
-    public function __construct(Enum\Video\VideoSourceType $type, string $fullPathUrl)
+    /**
+     * @var string|null
+     */
+    private $baseUrl;
+
+    /**
+     * VideoSource constructor.
+     *
+     * @param Enum\Video\VideoSourceType $type
+     * @param string                     $filePath
+     */
+    public function __construct(Enum\Video\VideoSourceType $type, string $filePath)
     {
         $this->sourceType = $type;
-        $this->fullPathUrl = $fullPathUrl;
+        $this->filePath = $filePath;
     }
 
+    /**
+     * @param null|string $baseUrl
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
+    /**
+     * @return Enum\Video\VideoSourceType
+     */
     public function getType(): Enum\Video\VideoSourceType
     {
         return $this->sourceType;
     }
 
+    /**
+     * return relative path to video source
+     * e.g. s3 file key
+     * @return string
+     */
+    public function getFilePath(): string
+    {
+        return $this->filePath;
+    }
+
+    /**
+     * return full path url string to video source
+     * @return string
+     */
     public function getSource(): string
     {
-        return $this->fullPathUrl;
+        if (is_string($this->baseUrl)) {
+            return $this->baseUrl . $this->filePath;
+        }
+        return $this->filePath;
     }
 }

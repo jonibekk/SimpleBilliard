@@ -49,10 +49,17 @@ class AwsEtsTranscodeOutputPlaylist
         ];
     }
 
-    public function getVideoSource(string $baseUrl): VideoSource
+    /**
+     * @param string|null $baseUrl
+     *
+     * @return VideoSource
+     */
+    public function getVideoSource($baseUrl = null): VideoSource
     {
-        $url = $baseUrl . AwsEtsTranscodeOutputFileNameDefinition::getSourceBaseName($this->videoSourceType, $this->name);
-        return new VideoSource($this->videoSourceType, $url);
+        $url = AwsEtsTranscodeOutputFileNameDefinition::getSourceBaseName($this->videoSourceType, $this->name);
+        $videoSource = new VideoSource($this->videoSourceType, $url);
+        $videoSource->setBaseUrl($baseUrl);
+        return $videoSource;
     }
 
     /**

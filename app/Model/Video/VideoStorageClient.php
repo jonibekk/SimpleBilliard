@@ -20,6 +20,25 @@ class VideoStorageClient
     }
 
     /**
+     * Create pre-signed url in transcoded bucket
+     * @see https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-presigned-url.html
+     * @param string   $key
+     * @param DateTime $expireAt
+     *
+     * @return string
+     */
+    public static function createPreSignedUriFromTranscoded(string $key, \DateTime $expireAt): string
+    {
+        $s3Client = self::createS3Client();
+        $cmd = $s3Client->getCommand('GetObject', [
+            'Bucket' => AWS_S3_BUCKET_VIDEO_TRANSCODED,
+            'Key'    => $key,
+        ]);
+        $request = $s3Client->createPresignedRequest($cmd, $expireAt);
+        return (string) $request->getUri();
+    }
+
+    /**
      * TODO: move this function to
      * create s3 client
      * @return \Aws\S3\S3Client

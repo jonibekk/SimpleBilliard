@@ -247,7 +247,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <div id="div<?= $videoStreamId ?>" style="display: none">
                                         <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
                                         <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
-                                            <source src="<?= $videoSource->getSource() ?>" type="<?= $videoSource->getType()->getValue() ?>">
+                                            <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()->getValue() ?>" type="<?= $videoSource->getType()->getValue() ?>">
                                         <?php endforeach; ?>
                                         </video>
                                     </div>

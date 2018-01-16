@@ -8,9 +8,9 @@
 interface TranscodeOutput
 {
     /**
-     * @param string $baseUrl
+     * @param string|null $baseUrl
      *
      * @return VideoSource[]
      */
-    public function getVideoSources(string $baseUrl) :array;
+    public function getVideoSources($baseUrl = null) :array;
 }

@@ -78,9 +78,16 @@ class AwsEtsTranscodeOutput
         return $output;
     }
 
-    public function getVideoSource(string $baseUrl): VideoSource
+    /**
+     * @param $baseUrl string|null
+     *
+     * @return VideoSource
+     */
+    public function getVideoSource($baseUrl = null): VideoSource
     {
-        $url = $baseUrl . AwsEtsTranscodeOutputFileNameDefinition::getSourceBaseName($this->videoSourceType, $this->key);
-        return new VideoSource($this->videoSourceType, $url);
+        $url = AwsEtsTranscodeOutputFileNameDefinition::getSourceBaseName($this->videoSourceType, $this->key);
+        $videoSource = new VideoSource($this->videoSourceType, $url);
+        $videoSource->setBaseUrl($baseUrl);
+        return $videoSource;
     }
 }
