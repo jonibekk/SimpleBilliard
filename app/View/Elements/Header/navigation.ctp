@@ -106,7 +106,7 @@
                 <div id="NavSearchResults" class="nav-search-result"></div>
             </form>
         </li>
-        <li>
+        <li class="visible-xxs hidden-xs">
             <?= $this->element('dashboard_saved_item') ?>
         </li>
         <li class="circle-list-in-hamburger visible-xxs hidden-xs">
