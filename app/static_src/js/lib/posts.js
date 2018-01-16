@@ -37,79 +37,62 @@ $(function () {
   });
 
   $(document).on({
-    'mouseenter': function(){
-      var is_saved_item = this.dataset.isSavedItem;
-      if (is_saved_item) {
-        $(this).removeClass("mod-on").addClass("mod-off");
-      } else {
-        $(this).removeClass("mod-off").addClass("mod-on");
-      }
-    },
-    'mouseleave': function(){
-      var is_saved_item = this.dataset.isSavedItem;
-      if (is_saved_item) {
-        $(this).removeClass("mod-off").addClass("mod-on");
-      } else {
-        $(this).removeClass("mod-on").addClass("mod-off");
-      }
-    },
     'click': function(e) {
-      console.log("js-save-item function");
-      var self = this;
+      var $target = $(this);
 
       // jQuery .data() shouldn't be used.
       // Instead we use native dataset
       // Ref: https://stackoverflow.com/questions/8707226/jquery-data-does-not-work-but-attr-does
       var is_saved_item = this.dataset.isSavedItem;
       var post_id = this.dataset.id;
-      changeSavedPostStyle(is_saved_item);
+      changeSavedPostStyle($target, is_saved_item);
       this.dataset.isSavedItem = is_saved_item ? "" : "1";
 
       if (is_saved_item) {
-        deleteItem(post_id, is_saved_item);
+        deleteItem(post_id, is_saved_item, $target);
       } else {
-        saveItem(post_id, is_saved_item);
+        saveItem(post_id, is_saved_item, $target);
       }
     }
   }, '.js-save-item');
 });
 
-function saveItem(post_id, is_saved_item) {
+function saveItem(post_id, is_saved_item, $target) {
   $.ajax({
     url: "/api/v1/posts/" + post_id + "/saved_items",
     type: 'POST',
     success: function (data) {
       new Noty({
         type: 'success',
-        text: __("Saved item"), //TODO: fix after Kohei create translation
+        text: __("Saved item"),
       }).show();
     },
     error: function (res, textStatus, errorThrown) {
-      changeSavedPostStyle(is_saved_item, true);
+      changeSavedPostStyle($target, !is_saved_item);
       var body = res.responseJSON;
       new Noty({
-        type: 'success',
+        type: 'error',
         text: body.message,
       }).show();
       return false;
     }
   });
 }
-function deleteItem(post_id, is_saved_item) {
+function deleteItem(post_id, is_saved_item, $target) {
   $.ajax({
     url: "/api/v1/posts/" + post_id + "/saved_items",
     type: 'DELETE',
     success: function (data) {
       new Noty({
         type: 'success',
-        text: __("Deleted item"), //TODO: fix after Kohei create translation
+        text: __("Unsaved item"),
       }).show();
     },
     error: function (res, textStatus, errorThrown) {
-      changeSavedPostStyle(is_saved_item, true);
+      changeSavedPostStyle($target, !is_saved_item);
       var body = res.responseJSON;
       new Noty({
-        type: 'success',
+        type: 'error',
         text: body.message,
       }).show();
       return false;
@@ -120,16 +103,12 @@ function deleteItem(post_id, is_saved_item) {
 /**
  *
  * @param is_saved_item
- * @param reverse
  */
-function changeSavedPostStyle(is_saved_item, reverse) {
-  if (!reverse) {
-    reverse = false;
-  }
-  if (is_saved_item && !reverse) {
-    $(this).removeClass("mod-on").addClass("mod-off");
+function changeSavedPostStyle($obj, current_status) {
+  if (current_status) {
+    $obj.removeClass("mod-on").addClass("mod-off");
   } else {
-    $(this).removeClass("mod-off").addClass("mod-on");
+    $obj.removeClass("mod-off").addClass("mod-on");
   }
 }
 

@@ -2315,39 +2315,52 @@ textarea.input-lg, select[multiple].input-lg {
     left: auto;
 }
 
-.dropdown-menu > li > a {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: normal;
-    line-height: 1.42857143;
-    color: #333333;
-    white-space: nowrap;
-}
-
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-    text-decoration: none;
-    color: #ffffff;
-    background-color: #d9230f;
-}
-
-.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
-    color: #ffffff;
-    text-decoration: none;
-    outline: 0;
-    background-color: #d9230f;
-}
-
-.dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
-    color: #808080;
-}
-
-.dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
-    text-decoration: none;
-    background-color: transparent;
-    background-image: none;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-    cursor: not-allowed;
+.dropdown-menu {
+  & > li {
+    & > a, & > span.dropdown-menu-item {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: normal;
+      line-height: 1.42857143;
+      color: #333333;
+      white-space: nowrap;
+      &:hover, &:focus {
+        cursor: pointer;
+        text-decoration: none;
+        color: #ffffff;
+        background-color: #d9230f;
+      }
+    }
+  }
+  & > .active {
+    & > a, & > span.dropdown-menu-item {
+      color: #ffffff;
+      text-decoration: none;
+      outline: 0;
+      background-color: #d9230f;
+      &:hover, &:focus {
+        cursor: pointer;
+        color: #ffffff;
+        text-decoration: none;
+        outline: 0;
+        background-color: #d9230f;
+      }
+    }
+  }
+  & > .disabled {
+    & > a, & > span.dropdown-menu-item {
+      color: #808080;
+      &:hover, &:focus {
+        color: #808080;
+        text-decoration: none;
+        background-color: transparent;
+        background-image: none;
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        cursor: not-allowed;
+      }
+    }
+  }
 }
 
 .open > .dropdown-menu {

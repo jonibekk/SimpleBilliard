@@ -10,7 +10,7 @@
 if (!isset($with_header_menu)) {
     $with_header_menu = true;
 }
-if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
+if (in_array($this->request->params['controller'], ['topics', 'saved_items']) && $is_mb_app) {
     $containerClass = "mod-sp";
     $bodyNoScrollClass = "mod-fixed";
 } else {
@@ -35,10 +35,10 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 }
 ?>
 
-<?php 
+<?php
 // TODO: .container is too general of a class for the main body container.
 //       We should update .container styles to .body-container styles.
-?> 
+?>
 <div class="container body-container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
@@ -55,7 +55,7 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
         <!-- /Remark -->
     </div>
 
-    <?php 
+    <?php
         if ($is_mb_app) {
             $loadKR = false;
         } else if ($isMobileBrowser && !$isTablet){

@@ -89,6 +89,11 @@ class PageResourceHelper extends AppHelper
             'index'            => [
                 '/js/goalous_payment.min',
             ],
+        ],
+        'saved_items' => [
+            'index'            => [
+                '/js/react_saved_item_app.min'
+            ],
         ]
     ];
 

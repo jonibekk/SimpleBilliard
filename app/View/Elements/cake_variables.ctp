@@ -689,6 +689,16 @@ App::uses('AttachedFile', 'Model');
             "Current plan": "<?= __("Current plan") ?>",
             "Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.": "<?= __("Your monthly bill will increase from %s to %s. You'll be charged a prorated amount today, shown below, for this upgrade.") ?>",
             "Annual plan(paid monthly)": "<?= __("Annual plan(paid monthly)") ?>",
+            // Saved item
+            "Unsave": "<?= __("Unsave") ?>",
+            "SAVED ITEMS": "<?= __("SAVED ITEMS") ?>",
+            "Actions": "<?= __("Actions") ?>",
+            "Posts": "<?= __("Posts") ?>",
+            "Save item": "<?= __("Save item") ?>",
+            "Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved.": "<?= __("Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved.") ?>",
+            "Item not found": "<?= __("Item not found") ?>",
+            "Saved item": "<?= __("Saved item") ?>",
+            "Unsaved item": "<?= __("Unsaved item") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
