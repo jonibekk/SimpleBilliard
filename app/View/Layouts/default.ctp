@@ -44,6 +44,7 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
         <?php if (!$is_mb_app || $isTablet): ?>
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>
+            <?= $this->element('dashboard_saved_item') ?>
             <?= $this->element('circle_list') ?>
         </div>
         <?php endif; ?>
