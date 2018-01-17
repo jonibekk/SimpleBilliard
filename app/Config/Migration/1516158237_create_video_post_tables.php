@@ -1,12 +1,12 @@
 <?php
-class AddTableVideoPosts extends CakeMigration {
+class CreateVideoPostTables extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'add_table_video_posts';
+	public $description = 'create_video_post_tables';
 
 /**
  * Actions to be performed
@@ -23,6 +23,7 @@ class AddTableVideoPosts extends CakeMigration {
 					'post_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '= posts.id (set if draft published)'),
 					'draft_data' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Json encoded draft post data', 'charset' => 'utf8mb4'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+					'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'indexes' => array(
@@ -39,6 +40,7 @@ class AddTableVideoPosts extends CakeMigration {
 					'resource_type' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 3, 'unsigned' => true, 'comment' => 'type of resource e.g. image, video, ...'),
 					'resource_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'resource table\'s primary key id'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+					'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'indexes' => array(
@@ -58,6 +60,7 @@ class AddTableVideoPosts extends CakeMigration {
 					'output_version' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'specific version of output type'),
 					'transcode_info' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Json encoded transcoding info', 'charset' => 'utf8mb4'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+					'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'indexes' => array(
@@ -77,6 +80,7 @@ class AddTableVideoPosts extends CakeMigration {
 					'file_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'filename of original uploaded file', 'charset' => 'utf8mb4'),
 					'resource_path' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+					'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'indexes' => array(
