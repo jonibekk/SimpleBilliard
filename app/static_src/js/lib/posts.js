@@ -130,8 +130,8 @@ function appendPostOgpInfo(data) {
         .prepend($('<a>').attr('href', '#')
             .addClass('font_lightgray')
             .css({
-                left: '91%',
-                "margin-top": '15px',
+                right: '35px',
+                "margin-top": '25px',
                 position: 'absolute',
                 display: "block",
                 "z-index": '1000'
