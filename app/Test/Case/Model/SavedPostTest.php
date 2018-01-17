@@ -6,6 +6,7 @@ App::uses('SavedPost', 'Model');
  *
  * @property SavedPost $SavedPost
  * @property Post $Post
+ * @property ActionResult $ActionResult
  */
 class SavedPostTest extends GoalousTestCase
 {
@@ -18,7 +19,11 @@ class SavedPostTest extends GoalousTestCase
     public $fixtures = array(
         'app.saved_post',
         'app.post',
+        'app.action_result',
         'app.team',
+        'app.goal',
+        'app.key_result',
+        'app.kr_progress_log',
         'app.user',
     );
 
@@ -32,6 +37,7 @@ class SavedPostTest extends GoalousTestCase
         parent::setUp();
         $this->SavedPost = ClassRegistry::init('SavedPost');
         $this->Post = ClassRegistry::init('Post');
+        $this->ActionResult = ClassRegistry::init('ActionResult');
     }
 
     /**
@@ -128,7 +134,106 @@ class SavedPostTest extends GoalousTestCase
 
     }
 
-    function test_findByUserId() {
-        // TODO
+    function test_search()
+    {
+        $userId = 100;
+        $teamId = 1;
+        // Empty record
+        $res = $this->SavedPost->search($teamId, $userId, [], 0, 10);
+        $this->assertEquals($res, []);
+
+        // saved_posts record exist, but posts record doesn't exist
+        $this->SavedPost->create();
+        $this->SavedPost->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'post_id' => 99999999999,
+        ]);
+        $res = $this->SavedPost->search($teamId, $userId, [], 0, 10);
+        $this->assertEquals($res, []);
+
+        // 1 normal post record
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'type' => Post::TYPE_NORMAL,
+        ]);
+        $postId = $this->Post->getLastInsertID();
+        $this->SavedPost->create();
+        $this->SavedPost->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'post_id' => $postId,
+        ]);
+        $res = $this->SavedPost->search($teamId, $userId, [], 0, 10);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['SavedPost']['post_id'], $postId);
+        $this->assertEquals($res[0]['Post']['type'], Post::TYPE_NORMAL);
+        $this->assertNull($res[0]['ActionResult']['id']);
+        $res = $this->SavedPost->search($teamId, $userId, ['type' => Post::TYPE_NORMAL], 0, 10);
+        $this->assertEquals(count($res), 1);
+
+        $res = $this->SavedPost->search($teamId, $userId, ['type' => Post::TYPE_ACTION], 0, 10);
+        $this->assertEquals($res, []);
+
+        // 1 action post record
+        $this->ActionResult->create();
+        $this->ActionResult->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+        ]);
+        $actionId = $this->ActionResult->getLastInsertID();
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'type' => Post::TYPE_ACTION,
+            'action_result_id' => $actionId,
+        ]);
+        $postId = $this->Post->getLastInsertID();
+        $this->SavedPost->create();
+        $this->SavedPost->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'post_id' => $postId,
+        ]);
+        $res = $this->SavedPost->search($teamId, $userId, [], 0, 10);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['SavedPost']['post_id'], $postId);
+        $this->assertEquals($res[0]['Post']['type'], Post::TYPE_ACTION);
+        $this->assertNotEmpty($res[0]['ActionResult']['id']);
+        $savedPostId2 = $this->SavedPost->getLastInsertID();
+
+        // different team_id, user_id
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => 2,
+            'user_id' => 2,
+            'type' => Post::TYPE_NORMAL,
+            'action_result_id' => $actionId,
+        ]);
+        $postId = $this->Post->getLastInsertID();
+        $this->SavedPost->create();
+        $this->SavedPost->save([
+            'team_id' => 2,
+            'user_id' => 2,
+            'post_id' => $postId,
+        ]);
+
+        $res = $this->SavedPost->search($teamId, 2, [], 0, 10);
+        $this->assertEquals($res, []);
+        $res = $this->SavedPost->search(2, $userId, [], 0, 10);
+        $this->assertEquals($res, []);
+        $res = $this->SavedPost->search($teamId, $userId, [], 0, 10);
+        $this->assertEquals(count($res), 2);
+
+        // cursor, limit
+        $res = $this->SavedPost->search($teamId, $userId, [], 0, 1);
+        $this->assertEquals(count($res), 1);
+        $res = $this->SavedPost->search($teamId, $userId, [], $savedPostId2, 10);
+        $this->assertEquals(count($res), 1);
+        $res = $this->SavedPost->search($teamId, $userId, [], $res[0]['SavedPost']['id'], 10);
+        $this->assertEquals(count($res), 0);
     }
 }

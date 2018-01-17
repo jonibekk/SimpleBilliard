@@ -82,14 +82,21 @@ class SavedPost extends AppModel
      *
      * @param int      $teamId
      * @param int      $userId
-     * @param int|null $cursor
+     * @param array    $conditions
+     * @param int $cursor
      * @param int      $limit
      * @param string   $direction "old" or "new"
      *
      * @return array
      */
-    function findByUserId(int $teamId, int $userId, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
+    function search(int $teamId, int $userId, array $conditions, int $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
     {
+        if (empty($conditions['type'])) {
+            $postTypes = [Post::TYPE_NORMAL, Post::TYPE_ACTION];
+        } else {
+            $postTypes = $conditions['type'];
+        }
+
         $options = [
             'conditions' => [
                 'SavedPost.user_id' => $userId,
@@ -105,6 +112,11 @@ class SavedPost extends AppModel
                 'Post.body',
                 'Post.site_info',
                 'Post.site_photo_file_name',
+                'ActionResult.id',
+                'ActionResult.user_id',
+                'ActionResult.name',
+                'ActionResult.goal_id',
+                'ActionResult.key_result_id',
             ],
             'order'      => [
                 'SavedPost.id' => 'DESC'
@@ -117,15 +129,24 @@ class SavedPost extends AppModel
                     'conditions' => [
                         'SavedPost.team_id' => $teamId,
                         'SavedPost.post_id = Post.id',
-                        'Post.type'         => Post::TYPE_NORMAL,
+                        'Post.type'         => $postTypes,
                         'Post.del_flg'      => false,
+                    ]
+                ],
+                [
+                    'table'      => 'action_results',
+                    'alias'      => 'ActionResult',
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Post.action_result_id = ActionResult.id',
+                        'ActionResult.del_flg'      => false,
                     ]
                 ],
             ],
             'limit'      => $limit,
         ];
 
-        if ($cursor) {
+        if ($cursor > 0) {
             if ($direction == self::DIRECTION_OLD) {
                 $options['conditions']['SavedPost.id <'] = $cursor;
             } elseif ($direction == self::DIRECTION_NEW) {
@@ -134,6 +155,41 @@ class SavedPost extends AppModel
         }
 
         $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * Count saved posts for paging
+     * Except automatic post(eg. 「The goal/circle ** was created.」)
+     *
+     * @param int $teamId
+     * @param int $userId
+     * @param int $type
+     *
+     * @return int
+     */
+    function countByType(int $teamId, int $userId, int $type): int
+    {
+        $options = [
+            'conditions' => [
+                'SavedPost.user_id' => $userId,
+                'SavedPost.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'posts',
+                    'alias'      => 'Post',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'SavedPost.team_id' => $teamId,
+                        'SavedPost.post_id = Post.id',
+                        'Post.type'         => $type,
+                        'Post.del_flg'      => false,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('count', $options);
         return $res;
     }
 

@@ -16,7 +16,7 @@ class ApiSavedPostServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.topic'
+        'app.saved_post'
     ];
 
     /**
@@ -42,7 +42,7 @@ class ApiSavedPostServiceTest extends GoalousTestCase
     }
 
 
-    function test_findReadMembers()
+    function test_search()
     {
         //TODO: it should be written later.
         $this->markTestIncomplete('testClear not implemented.');
@@ -55,12 +55,6 @@ class ApiSavedPostServiceTest extends GoalousTestCase
     }
 
     function test_extend()
-    {
-        //TODO: it should be written later.
-        $this->markTestIncomplete('testClear not implemented.');
-    }
-
-    function test_find()
     {
         //TODO: it should be written later.
         $this->markTestIncomplete('testClear not implemented.');

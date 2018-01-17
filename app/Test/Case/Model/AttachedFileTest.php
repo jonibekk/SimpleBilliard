@@ -6,6 +6,9 @@ App::import('Service', 'AttachedFileService');
  * AttachedFile Test Case
  *
  * @property AttachedFile $AttachedFile
+ * @property Post $Post
+ * @property PostFile $PostFile
+ * @property ActionResultFile $ActionResultFile
  */
 class AttachedFileTest extends GoalousTestCase
 {
@@ -44,6 +47,9 @@ class AttachedFileTest extends GoalousTestCase
     {
         parent::setUp();
         $this->AttachedFile = ClassRegistry::init('AttachedFile');
+        $this->Post = ClassRegistry::init('Post');
+        $this->PostFile = ClassRegistry::init('PostFile');
+        $this->ActionResultFile = ClassRegistry::init('ActionResultFile');
     }
 
     /**
@@ -526,7 +532,177 @@ class AttachedFileTest extends GoalousTestCase
         }
     }
 
-    function test_findAttachedImgEachPost() {
-        // TODO
+    function test_findAttachedImgEachPost()
+    {
+        // Empty
+        $teamId = 1;
+        $userId = 1;
+        // Empty record
+        $res = $this->AttachedFile->findAttachedImgEachPost($teamId, []);
+        $this->assertEquals($res, []);
+
+        // saved_posts record exist, but posts record doesn't exist
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'type' => Post::TYPE_NORMAL,
+        ]);
+        $postId = $this->Post->getLastInsertID();
+
+        $this->AttachedFile->create();
+        $this->AttachedFile->save([
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
+        $attachedFileId = $this->AttachedFile->getLastInsertID();
+        $res = $this->AttachedFile->findAttachedImgEachPost($teamId, [$postId]);
+        $this->assertEquals($res, []);
+
+        $this->PostFile->create();
+        $this->PostFile->save([
+            'team_id' => $teamId,
+            'post_id' => $postId,
+            'attached_file_id' => $attachedFileId
+        ]);
+        $res = $this->AttachedFile->findAttachedImgEachPost($teamId, [$postId]);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], $attachedFileId);
+        $this->assertEquals($res[0]['post_id'], $postId);
+
+        // 1 post with multiple files
+        $this->AttachedFile->create();
+        $this->AttachedFile->save([
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
+        $attachedFileId2 = $this->AttachedFile->getLastInsertID();
+        $this->PostFile->create();
+        $this->PostFile->save([
+            'team_id' => $teamId,
+            'post_id' => $postId,
+            'attached_file_id' => $attachedFileId2
+        ]);
+        $res = $this->AttachedFile->findAttachedImgEachPost($teamId, [$postId]);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], $attachedFileId);
+        $this->assertEquals($res[0]['post_id'], $postId);
+
+
+        // multiple posts
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'type' => Post::TYPE_NORMAL,
+        ]);
+        $postId2 = $this->Post->getLastInsertID();
+
+        $this->AttachedFile->create();
+        $this->AttachedFile->save([
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
+        $attachedFileId3 = $this->AttachedFile->getLastInsertID();
+
+        $this->PostFile->create();
+        $this->PostFile->save([
+            'team_id' => $teamId,
+            'post_id' => $postId2,
+            'attached_file_id' => $attachedFileId3
+        ]);
+        $res = $this->AttachedFile->findAttachedImgEachPost($teamId, [$postId, $postId2]);
+        $this->assertEquals(count($res), 2);
+        $res = $this->AttachedFile->findAttachedImgEachPost($teamId, [$postId2]);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], $attachedFileId3);
+        $this->assertEquals($res[0]['post_id'], $postId2);
+    }
+
+    function test_findAttachedImgEachAction()
+    {
+        // Empty
+        $teamId = 1;
+        $userId = 1;
+        // Empty record
+        $res = $this->AttachedFile->findAttachedImgEachAction($teamId, []);
+        $this->assertEquals($res, []);
+
+        // saved_posts record exist, but posts record doesn't exist
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'type' => Post::TYPE_NORMAL,
+        ]);
+        $actionResultId = $this->Post->getLastInsertID();
+
+        $this->AttachedFile->create();
+        $this->AttachedFile->save([
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
+        $attachedFileId = $this->AttachedFile->getLastInsertID();
+        $res = $this->AttachedFile->findAttachedImgEachAction($teamId, [$actionResultId]);
+        $this->assertEquals($res, []);
+
+        $this->ActionResultFile->create();
+        $this->ActionResultFile->save([
+            'team_id' => $teamId,
+            'action_result_id' => $actionResultId,
+            'attached_file_id' => $attachedFileId
+        ]);
+        $res = $this->AttachedFile->findAttachedImgEachAction($teamId, [$actionResultId]);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], $attachedFileId);
+        $this->assertEquals($res[0]['action_result_id'], $actionResultId);
+
+        // 1 post with multiple files
+        $this->AttachedFile->create();
+        $this->AttachedFile->save([
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
+        $attachedFileId2 = $this->AttachedFile->getLastInsertID();
+        $this->ActionResultFile->create();
+        $this->ActionResultFile->save([
+            'team_id' => $teamId,
+            'action_result_id' => $actionResultId,
+            'attached_file_id' => $attachedFileId2
+        ]);
+        $res = $this->AttachedFile->findAttachedImgEachAction($teamId, [$actionResultId]);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], $attachedFileId);
+        $this->assertEquals($res[0]['action_result_id'], $actionResultId);
+
+
+        // multiple posts
+        $this->Post->create();
+        $this->Post->save([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'type' => Post::TYPE_NORMAL,
+        ]);
+        $actionResultId2 = $this->Post->getLastInsertID();
+
+        $this->AttachedFile->create();
+        $this->AttachedFile->save([
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
+        $attachedFileId3 = $this->AttachedFile->getLastInsertID();
+
+        $this->ActionResultFile->create();
+        $this->ActionResultFile->save([
+            'team_id' => $teamId,
+            'action_result_id' => $actionResultId2,
+            'attached_file_id' => $attachedFileId3
+        ]);
+        $res = $this->AttachedFile->findAttachedImgEachAction($teamId, [$actionResultId, $actionResultId2]);
+        $this->assertEquals(count($res), 2);
+        $res = $this->AttachedFile->findAttachedImgEachAction($teamId, [$actionResultId2]);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], $attachedFileId3);
+        $this->assertEquals($res[0]['action_result_id'], $actionResultId2);
     }
 }

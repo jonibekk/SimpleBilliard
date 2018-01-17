@@ -582,13 +582,18 @@ class AttachedFile extends AppModel
     /**
      * Get first attached image each post
      * condition: attached_files.id asc
-     * @param int $teamId
+     *
+     * @param int   $teamId
      * @param array $postIds
      *
      * @return array
      */
-    public function findAttachedImgEachPost(int $teamId, array $postIds)
+    public function findAttachedImgEachPost(int $teamId, array $postIds): array
     {
+        if (empty($postIds)) {
+            return [];
+        }
+
         /** @var DboSource $db */
         $db = $this->getDataSource();
         $subQuery = $db->buildStatement([
@@ -598,7 +603,7 @@ class AttachedFile extends AppModel
             ],
             'table'      => 'post_files',
             'alias'      => 'PostFile',
-            'joins' => [
+            'joins'      => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'attached_files',
@@ -606,7 +611,7 @@ class AttachedFile extends AppModel
                     'conditions' => [
                         'AttachedFile.file_type' => self::TYPE_FILE_IMG,
                         'AttachedFile.id = PostFile.attached_file_id',
-                        'AttachedFile.del_flg' => false,
+                        'AttachedFile.del_flg'   => false,
                     ],
                 ]
             ],
@@ -614,10 +619,86 @@ class AttachedFile extends AppModel
                 'PostFile.post_id' => $postIds,
                 'PostFile.team_id' => $teamId,
             ],
-            'group' => 'PostFile.post_id'
+            'group'      => 'PostFile.post_id'
         ], $this);
 
+        $options = $this->buildCondAttachedImg($subQuery, 'post_id');
+        $data = $this->find('all', $options);
+        if (empty($data)) {
+            return [];
+        }
+        $res = [];
+        foreach ($data as $v) {
+            $res[] = am($v['AttachedFile'], $v['AttachedFile2']);
+        }
+        return $res;
+    }
 
+    /**
+     * Get first attached image each action
+     * condition: attached_files.id asc
+     *
+     * @param int   $teamId
+     * @param array $actionIds
+     *
+     * @return array
+     */
+    public function findAttachedImgEachAction(int $teamId, array $actionIds): array
+    {
+        if (empty($actionIds)) {
+            return [];
+        }
+
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => [
+                'MIN(AttachedFile.id) AS id',
+                'ActionResultFile.action_result_id'
+            ],
+            'table'      => 'action_result_files',
+            'alias'      => 'ActionResultFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.file_type' => self::TYPE_FILE_IMG,
+                        'AttachedFile.id = ActionResultFile.attached_file_id',
+                        'AttachedFile.del_flg'   => false,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'ActionResultFile.action_result_id' => $actionIds,
+                'ActionResultFile.team_id'          => $teamId,
+            ],
+            'group'      => 'ActionResultFile.action_result_id'
+        ], $this);
+
+        $options = $this->buildCondAttachedImg($subQuery, 'action_result_id');
+        $data = $this->find('all', $options);
+        if (empty($data)) {
+            return [];
+        }
+        $res = [];
+        foreach ($data as $v) {
+            $res[] = am($v['AttachedFile'], $v['AttachedFile2']);
+        }
+        return $res;
+    }
+
+    /**
+     * Build common condition for finding attached img
+     *
+     * @param string $subQuery
+     * @param string $primaryKeyName
+     *
+     * @return array
+     */
+    private function buildCondAttachedImg(string $subQuery, string $primaryKeyName): array
+    {
         $options = [
             'fields' => [
                 'AttachedFile.id',
@@ -626,9 +707,9 @@ class AttachedFile extends AppModel
                 'AttachedFile.attached_file_name',
                 'AttachedFile.file_ext',
                 'AttachedFile.file_size',
-                'AttachedFile2.post_id'
+                'AttachedFile2.' . $primaryKeyName
             ],
-            'joins' => [
+            'joins'  => [
                 [
                     'type'       => 'INNER',
                     'table'      => "({$subQuery})",
@@ -640,15 +721,7 @@ class AttachedFile extends AppModel
                 ]
             ],
         ];
-        $data = $this->find('all', $options);
-        if (empty($data)) {
-            return [];
-        }
-        $res = [];
-        foreach ($data as $v) {
-            $res[] = am($v['AttachedFile'], $v['AttachedFile2']);
-        }
-        return $res;
+        return $options;
     }
 
 }

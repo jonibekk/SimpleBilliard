@@ -19,16 +19,38 @@ class SavedPostService extends AppService
      *
      * @param int         $teamId
      * @param int         $userId
+     * @param array       $conditions
      * @param             $cursor
      * @param             $limit
      *
      * @return array
      */
-    function findByUserId(int $teamId, int $userId, $cursor, $limit): array
+    function search(int $teamId, int $userId, array $conditions, $cursor, $limit): array
     {
         /** @var SavedPost $SavedPost */
         $SavedPost = ClassRegistry::init('SavedPost');
-        $posts = $SavedPost->findByUserId($teamId, $userId, $cursor, $limit);
+        $posts = $SavedPost->search($teamId, $userId, $conditions, $cursor, $limit);
         return $posts;
     }
+
+    /**
+     * Gett count info each type (all, actions, normal posts)
+     * @param int $teamId
+     * @param int $userId
+     *
+     * @return array
+     */
+    function countSavedPostEachType(int $teamId, int $userId): array
+    {
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init('SavedPost');
+        $normalPostCount = $SavedPost->countByType($teamId, $userId, Post::TYPE_NORMAL);
+        $actionPostCount = $SavedPost->countByType($teamId, $userId, Post::TYPE_ACTION);
+        return [
+            'normal' => $normalPostCount,
+            'action' => $actionPostCount,
+            'all'    => $normalPostCount + $actionPostCount
+        ];
+    }
+
 }

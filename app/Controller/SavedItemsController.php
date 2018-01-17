@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Service/Api', 'ApiSavedPostService');
 
 /**
  * SavedItems Controller
@@ -11,14 +12,5 @@ class SavedItemsController extends AppController
      */
     public function index()
     {
-        return $this->render("index");
-    }
-
-    /**
-     * detail pages
-     */
-    public function detail()
-    {
-        return $this->render("index");
     }
 }
