@@ -49,20 +49,19 @@ if (isset($site_info['type']) && (
                             $this->Html->image('pre-load.svg', [
                                 'class'         => 'lazy media-object',
                                 'data-original' => $img_src,
-                                'width'         => '80px',
-                                'height'        => '80px',
                                 'error-img'     => "/img/no-image-link.png",
+                                'style'         => 'max-height: 80px; max-width: 80px;'
                             ])
                             ?>
                         <?php elseif (isset($site_info['image']) && $site_info['image']): ?>
                             <?= $this->Html->image($site_info['image'], [
                                 'class' => 'media-object',
-                                'width' => '80px',
+                                'style' => 'max-height: 80px; max-width: 80px;'
                             ]) ?>
                         <?php else: ?>
                             <?= $this->Html->image("/img/no-image-link.png", [
                                 'class' => 'media-object',
-                                'width' => '80px',
+                                'style' => 'max-height: 80px; max-width: 80px;'
                             ]) ?>
                         <?php endif ?>
                     </div>
