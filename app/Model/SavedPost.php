@@ -83,13 +83,13 @@ class SavedPost extends AppModel
      * @param int      $teamId
      * @param int      $userId
      * @param array    $conditions
-     * @param int|null $cursor
+     * @param int $cursor
      * @param int      $limit
      * @param string   $direction "old" or "new"
      *
      * @return array
      */
-    function search(int $teamId, int $userId, array $conditions, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
+    function search(int $teamId, int $userId, array $conditions, int $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
     {
         if (empty($conditions['type'])) {
             $postTypes = [Post::TYPE_NORMAL, Post::TYPE_ACTION];
@@ -146,7 +146,7 @@ class SavedPost extends AppModel
             'limit'      => $limit,
         ];
 
-        if ($cursor) {
+        if ($cursor > 0) {
             if ($direction == self::DIRECTION_OLD) {
                 $options['conditions']['SavedPost.id <'] = $cursor;
             } elseif ($direction == self::DIRECTION_NEW) {

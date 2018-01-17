@@ -590,6 +590,10 @@ class AttachedFile extends AppModel
      */
     public function findAttachedImgEachPost(int $teamId, array $postIds): array
     {
+        if (empty($postIds)) {
+            return [];
+        }
+
         /** @var DboSource $db */
         $db = $this->getDataSource();
         $subQuery = $db->buildStatement([
@@ -641,6 +645,10 @@ class AttachedFile extends AppModel
      */
     public function findAttachedImgEachAction(int $teamId, array $actionIds): array
     {
+        if (empty($actionIds)) {
+            return [];
+        }
+
         /** @var DboSource $db */
         $db = $this->getDataSource();
         $subQuery = $db->buildStatement([
