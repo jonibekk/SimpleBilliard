@@ -3051,10 +3051,10 @@ msgstr ""
 msgid "Item not found"
 msgstr "アイテムがみつかりません"
 
-msgid "Saved item"
+msgid "Item saved"
 msgstr "アイテムを保存しました"
 
-msgid "Removed item"
+msgid "Item removed"
 msgstr "保存済みアイテムを削除しました"
 
 msgid "Circles"

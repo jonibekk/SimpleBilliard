@@ -697,8 +697,8 @@ App::uses('AttachedFile', 'Model');
             "Save item": "<?= __("Save item") ?>",
             "Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved.": "<?= __("Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved.") ?>",
             "Item not found": "<?= __("Item not found") ?>",
-            "Saved item": "<?= __("Saved item") ?>",
-            "Removed item": "<?= __("Removed item") ?>",
+            "Item saved": "<?= __("Item saved") ?>",
+            "Item removed": "<?= __("Item removed") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"

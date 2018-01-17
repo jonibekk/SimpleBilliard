@@ -103,9 +103,9 @@ export default class SavedItems extends React.Component {
           {counts.all > 0 &&
           <div className="savedItemList-header-right">
             <div role="group">
-              <p className="dropdown-toggle" data-toggle="dropdown" role="button"
+              <button className="dropdown-toggle mod-noAppearance" data-toggle="dropdown" role="button"
                  aria-expanded="false"><span className="true">{filter_label}</span><i
-                className="fa fa-angle-down ml_2px"></i></p>
+                className="fa fa-angle-down ml_2px"></i></button>
               <ul className="dropdown-menu pull-right" role="menu">
                 {(() => {
                   let filters_el = []

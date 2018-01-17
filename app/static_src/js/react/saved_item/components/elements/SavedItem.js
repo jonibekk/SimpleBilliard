@@ -46,11 +46,11 @@ class SavedItem extends React.Component {
             </div>
           </div>
           <div className="">
-            <div role="group" className="">
-              <p className="dropdown-toggle" data-toggle="dropdown" role="button"
+            <div role="group" className="dropdown inline-block">
+              <button className="dropdown-toggle mod-noAppearance" data-toggle="dropdown" role="button"
                  aria-expanded="false">
                 <i className="fa fa-ellipsis-h savedItemList-item-option-icon"></i>
-              </p>
+              </button>
               <ul className="dropdown-menu pull-right" role="menu">
                 <li key={`saved_item_${saved_item.id}_menu`} onClick={(e) => this.removeItem(e, saved_item)}>
                   <span className="dropdown-menu-item">

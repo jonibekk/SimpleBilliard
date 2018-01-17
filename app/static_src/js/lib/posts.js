@@ -64,7 +64,7 @@ function saveItem(post_id, is_saved_item, $target) {
     success: function (data) {
       new Noty({
         type: 'success',
-        text: __("Saved item"),
+        text: __("Item saved"),
       }).show();
     },
     error: function (res, textStatus, errorThrown) {
@@ -85,7 +85,7 @@ function deleteItem(post_id, is_saved_item, $target) {
     success: function (data) {
       new Noty({
         type: 'success',
-        text: __("Removed item"),
+        text: __("Item removed"),
       }).show();
     },
     error: function (res, textStatus, errorThrown) {
