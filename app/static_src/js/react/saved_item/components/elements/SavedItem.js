@@ -46,7 +46,7 @@ class SavedItem extends React.Component {
             </div>
           </div>
           <div className="">
-            <div role="group" className="dropdown inline-block">
+            <div role="group" className="dropdown">
               <button className="dropdown-toggle mod-noAppearance" data-toggle="dropdown" role="button"
                  aria-expanded="false">
                 <i className="fa fa-ellipsis-h savedItemList-item-option-icon"></i>
