@@ -131,7 +131,7 @@ function appendPostOgpInfo(data) {
             .addClass('font_lightgray')
             .css({
                 left: '91%',
-                "margin-top": '15px',
+                "margin-top": '25px',
                 position: 'absolute',
                 display: "block",
                 "z-index": '1000'
