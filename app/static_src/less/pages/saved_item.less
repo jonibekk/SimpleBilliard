@@ -1,0 +1,127 @@
+/* Topic list/detail page css */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import "../partials/attached_file";
+
+
+.savedItemList {
+  font-size: 12px;
+  &-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0;
+  }
+  &-header {
+    display: flex;
+    padding: 12px;
+    border-bottom: 1px solid @lightGray;
+    &-left {
+      flex: 1;
+    }
+    &-right {
+      font-size: 14px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+  }
+  &-item {
+    width: 100%;
+    &-link {
+      background-color: #fff;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items:center;
+      justify-content: center;
+      padding: 10px;
+      color: @black;
+      text-decoration: none;
+      -webkit-touch-callout:none;
+      .avatorsBox {
+        .avatorsBox(50px);
+      }
+      &:visited, &:focus {
+        color: @black;
+        text-decoration: none;
+        background-color: #fff;
+      }
+      &:hover {
+        text-decoration: none;
+      }
+      // 3カラムの場合でのみhoverの色を変える。
+      // 携帯端末でhover設定はui的にNG.
+      @media screen and (min-width: 992px) {
+        &:hover {
+          color: @black;
+          background-color: @hoverRed;
+        }
+      }
+    }
+    &-main {
+      flex: 1;
+      align-items: flex-start;
+      justify-content: flex-start;
+      min-width: 0;
+      margin: 0 10px;
+      position: relative;
+      &-body {
+        white-space: normal;
+        height: 3em;
+        overflow: hidden;
+        line-height: 1.5em;
+        & > i {
+          margin-right: 4px;
+        }
+      }
+      &-footer {
+        color: @subColor3;
+        display: flex;
+        & > span {
+          display: block;
+        }
+        &-left {
+          flex:1;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+    &-option {
+      &-icon {
+        color: @basicGray;
+        font-size: 15px;
+        padding: 12px;
+        &:hover {
+          color: @darkBlack;
+        }
+      }
+    }
+  }
+  &-item + &-item {
+    border-top: 1px solid @lightGray;
+  }
+  &-none {
+    padding: 12px;
+    &-kv {
+      padding: 24px 0 ;
+      text-align: center;
+      i {
+        font-size: 100px;
+      }
+      p {
+        font-size: 24px;
+      }
+    }
+    &-description {
+      padding: 12px 0;
+      font-size: 14px;
+    }
+  }
+  &-notFound {
+    padding: 4px;
+    font-size: 14px;
+    color: @basicGray;
+  }
+}

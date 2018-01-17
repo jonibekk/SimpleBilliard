@@ -89,6 +89,11 @@ class PageResourceHelper extends AppHelper
             'index'            => [
                 '/js/goalous_payment.min',
             ],
+        ],
+        'saved_items' => [
+            'index'            => [
+                '/js/react_saved_item_app.min'
+            ],
         ]
     ];
 
@@ -133,6 +138,9 @@ class PageResourceHelper extends AppHelper
         ],
         'evaluations'   => [
             'default' => ['evaluation.min'],
+        ],
+        'saved_items'   => [
+            'default' => ['saved_item.min'],
         ],
         'teams' => [
             'main'                    => ['team_members.min', 'team_visions.min'],

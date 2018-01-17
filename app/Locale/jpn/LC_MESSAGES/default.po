@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-21 11:25+0900\n"
+"PO-Revision-Date: 2018-01-16 16:26+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -44,18 +44,6 @@ msgstr ""
 
 msgid "5 (Very high)"
 msgstr "5 (とても高い)"
-
-msgid "Germany"
-msgstr "ドイツ"
-
-msgid "Japan"
-msgstr "日本"
-
-msgid "Thailand"
-msgstr "タイ"
-
-msgid "United States"
-msgstr "アメリカ合衆国"
 
 msgid "All Team"
 msgstr "チーム全体"
@@ -459,7 +447,7 @@ msgid "Deleted the post."
 msgstr "投稿を削除しました。"
 
 msgid "This post doesn't exist."
-msgstr "ゴールが存在しません。"
+msgstr "投稿が存在しません。"
 
 msgid "Saved changes."
 msgstr "投稿の変更を保存しました。"
@@ -2772,6 +2760,18 @@ msgstr "毎月、請求書が発行されますので、期限までにお支払
 msgid "Setup"
 msgstr "セットアップ"
 
+msgid "Germany"
+msgstr "ドイツ"
+
+msgid "Japan"
+msgstr "日本"
+
+msgid "Thailand"
+msgstr "タイ"
+
+msgid "United States"
+msgstr "アメリカ合衆国"
+
 msgid "%d members"
 msgstr "%dメンバー"
 
@@ -3026,6 +3026,37 @@ msgstr ""
 msgid "Annual plan(paid monthly)"
 msgstr "年間プラン (月々払い)"
 
+msgid "Remove"
+msgstr "削除する"
+
+msgid "SAVED ITEMS"
+msgstr "保存済みアイテム"
+
+msgid "Actions"
+msgstr "アクション"
+
+msgid "Posts"
+msgstr "投稿"
+
+msgid "Save item"
+msgstr "アイテムを保存する"
+
+msgid ""
+"Save Actions and Posts that you want to see again. No one is notified, and "
+"only you can see what you’ve saved."
+msgstr ""
+"あとでもう一度見たいアクションや投稿を保存できます。保存したことが他の人に通"
+"知されることはなく、そのアイテムも他の人には表示されません。"
+
+msgid "Item not found"
+msgstr "アイテムがみつかりません"
+
+msgid "Item saved"
+msgstr "アイテムを保存しました"
+
+msgid "Item removed"
+msgstr "保存済みアイテムを削除しました"
+
 msgid "Circles"
 msgstr "サークル"
 
@@ -3034,6 +3065,9 @@ msgstr "サークルを見る"
 
 msgid "View All"
 msgstr "すべて表示"
+
+msgid "Saved"
+msgstr "保存済み"
 
 msgid "Blog"
 msgstr "ブログ"
@@ -3315,9 +3349,6 @@ msgstr "編集をやめる"
 
 msgid "Edit comment"
 msgstr "コメントを編集"
-
-msgid "Posts"
-msgstr "投稿"
 
 msgid "Save"
 msgstr "保存する"
@@ -4508,8 +4539,9 @@ msgstr "Goalousチーム"
 msgid "Click the below link to authenticate your email address."
 msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
-msgid "If you're unsure why you received this email, you may simply ignore this message."
-msgstr "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+msgid ""
+"Please trash this email if you don't have any idea why you get this email."
+msgstr ""
 
 msgid "Thank you for getting contact with Goalous."
 msgstr ""
@@ -4656,6 +4688,12 @@ msgstr "「%s」"
 
 msgid "Click the below link to reset your password."
 msgstr "以下のリンクをクリックしてパスワードを再設定してください。"
+
+msgid ""
+"If you're unsure why you received this email, you may simply ignore this "
+"message."
+msgstr ""
+"もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
 
 msgid "Succeeded to reset your password."
 msgstr "パスワードの再設定が完了しました。"
