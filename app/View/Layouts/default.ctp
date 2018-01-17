@@ -10,7 +10,7 @@
 if (!isset($with_header_menu)) {
     $with_header_menu = true;
 }
-if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
+if (in_array($this->request->params['controller'], ['topics', 'saved_items']) && $is_mb_app) {
     $containerClass = "mod-sp";
     $bodyNoScrollClass = "mod-fixed";
 } else {
@@ -35,15 +35,16 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
 }
 ?>
 
-<?php 
+<?php
 // TODO: .container is too general of a class for the main body container.
 //       We should update .container styles to .body-container styles.
-?> 
+?>
 <div class="container body-container <?= $containerClass?>">
     <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>
+            <?= $this->element('dashboard_saved_item') ?>
             <?= $this->element('circle_list') ?>
         </div>
         <?php endif; ?>
@@ -54,7 +55,18 @@ if ($this->request->params['controller'] === 'topics' && $is_mb_app) {
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
-    <?php if (!$is_mb_app && !$isMobileBrowser): ?>
+
+    <?php
+        if ($is_mb_app) {
+            $loadKR = false;
+        } else if ($isMobileBrowser && !$isTablet){
+            $loadKR = false;
+        } else{
+            $loadKR = true;
+        }
+    ?>
+
+    <?php if ($loadKR): ?>
         <div
             class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
             role="goal_area">

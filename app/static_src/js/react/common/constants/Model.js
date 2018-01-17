@@ -64,3 +64,10 @@ export const PaymentSetting = Object.freeze({
     CREDIT_CARD: 1,
   }
 })
+
+export const Post = Object.freeze({
+  TYPE: {
+    NORMAL: 1,
+    ACTION: 3,
+  }
+})
