@@ -94,8 +94,11 @@ class OgpComponent extends CakeObject
         if (isset($ogp->description)) {
             $res['description'] = $ogp->description;
         }
-        // Ignore OGP url tag and use original URL
-        $res['url'] = $url;
+        if (isset($ogp->url)) {
+            $res['url'] = $ogp->url;
+        } else {
+            $res['url'] = $url;
+        }
         $res['type'] = 'external';
         if (isset($ogp->image)) {
             //imageのurlにホストが含まれているかチェックし、
