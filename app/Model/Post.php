@@ -310,7 +310,10 @@ class Post extends AppModel
             $PostResource->create([
                 'post_id' => $post_id,
                 'post_draft_id' => null,
-                // TODO: 現状ではresource種類が動画1つだけなので, そうでなくなった場合を考慮して修正が必要
+                // TODO: currently only resource type of video only
+                // need to determine what type of resource is passed from arguments
+                // (maybe should wrap by class, not simple array)
+                // same as in PostDraftService::createPostDraftWithResources()
                 'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
                 'resource_id' => $postResource['id'],
             ]);

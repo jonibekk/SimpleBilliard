@@ -39,7 +39,6 @@ class VideoStorageClient
     }
 
     /**
-     * TODO: move this function to
      * create s3 client
      * @return \Aws\S3\S3Client
      */

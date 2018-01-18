@@ -43,6 +43,7 @@ class PostDraftService extends AppService
                 // TODO: currently only resource type of video only
                 // need to determine what type of resource is passed from arguments
                 // (maybe should wrap by class, not simple array)
+                // same as in Post::addNormal()
                 'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
                 'resource_id' => $resource['id'],
             ]);
