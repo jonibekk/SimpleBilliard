@@ -144,15 +144,12 @@ class ApiSavedPostService extends ApiService
         $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
         foreach ($items as $i => $item) {
+            $imgUrl = "";
             $items[$i]['display_created'] = $TimeEx->elapsedTime($item['created'], 'normal', false);
             // Separate logic each type(Action or Post)
             if ($item['type'] == Post::TYPE_ACTION) {
                 $actionId = Hash::get($item, 'action_result_id');
                 $attachedImg = Hash::get($attachedImgEachAction, $actionId);
-                $actionForGetImg = [
-                    'id'                   => $item['action_result_id'],
-                    'photo1_file_name' => $item['action_photo_file_name']
-                ];
                 $imgUrl = $Upload->uploadUrl($attachedImg,
                     "AttachedFile.attached",
                     ['style' => 'x_small']);
