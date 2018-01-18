@@ -80,17 +80,23 @@ class SavedPost extends AppModel
      * Find saved posts for paging
      * Except automatic post(eg. 「The goal/circle ** was created.」)
      *
-     * @param int      $teamId
-     * @param int      $userId
-     * @param array    $conditions
-     * @param int $cursor
-     * @param int      $limit
-     * @param string   $direction "old" or "new"
+     * @param int    $teamId
+     * @param int    $userId
+     * @param array  $conditions
+     * @param int    $cursor
+     * @param int    $limit
+     * @param string $direction "old" or "new"
      *
      * @return array
      */
-    function search(int $teamId, int $userId, array $conditions, int $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
-    {
+    function search(
+        int $teamId,
+        int $userId,
+        array $conditions,
+        int $cursor,
+        int $limit,
+        string $direction = self::DIRECTION_OLD
+    ): array {
         if (empty($conditions['type'])) {
             $postTypes = [Post::TYPE_NORMAL, Post::TYPE_ACTION];
         } else {
@@ -139,7 +145,7 @@ class SavedPost extends AppModel
                     'type'       => 'LEFT',
                     'conditions' => [
                         'Post.action_result_id = ActionResult.id',
-                        'ActionResult.del_flg'      => false,
+                        'ActionResult.del_flg' => false,
                     ]
                 ],
             ],
@@ -193,4 +199,28 @@ class SavedPost extends AppModel
         return $res;
     }
 
+    /**
+     * Delete all circle posts
+     * Except automatic post(eg. 「The goal/circle ** was created.」)
+     *
+     * @param int $teamId
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function deleteAllCirclePosts(int $teamId, int $circleId, int $userId): bool
+    {
+        $sql =
+<<<SQL
+    DELETE sp FROM saved_posts sp
+    INNER JOIN post_share_circles psc ON
+    sp.post_id = psc.post_id
+    AND psc.circle_id = $circleId
+    AND psc.team_id = $teamId
+    WHERE sp.user_id = $userId;        
+SQL;
+        $res = $this->query($sql);
+        return $res !== false;
+    }
 }

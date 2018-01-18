@@ -580,14 +580,14 @@ $('.js-dashboard-circle-list.is-hamburger').click(function(){
 });
 
 function circleListHeight(){
-    if(bannerExist[0]!=undefined){ 
+    if(bannerExist[0]!=undefined){
         bannerOffset = bannerExist[0].clientHeight;
     }
-    scrollPos = document.body.scrollTop;
+    var scrollPos = document.body.scrollTop;
     if(window.innerWidth < 992 && scrollPos==0){
         circleListDashboard.style.height = (window.innerHeight-(375+bannerOffset))+'px';
     }else{
-        circleListDashboard.style.height = (window.innerHeight-(331+bannerOffset))+'px';
+        circleListDashboard.style.height = (window.innerHeight-(378+bannerOffset))+'px';
     }
 }
 
