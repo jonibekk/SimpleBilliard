@@ -37,7 +37,7 @@ $(function () {
   });
 
   $(document).on({
-    'click': function(e) {
+    'click': function (e) {
       var $target = $(this);
 
       // jQuery .data() shouldn't be used.
@@ -78,6 +78,7 @@ function saveItem(post_id, is_saved_item, $target) {
     }
   });
 }
+
 function deleteItem(post_id, is_saved_item, $target) {
   $.ajax({
     url: "/api/v1/posts/" + post_id + "/saved_items",
@@ -205,8 +206,8 @@ function appendPostOgpInfo(data) {
     .prepend($('<a>').attr('href', '#')
       .addClass('font_lightgray')
       .css({
-        left: '91%',
-        "margin-top": '15px',
+        right: '35px',
+        "margin-top": '25px',
         position: 'absolute',
         display: "block",
         "z-index": '1000'
