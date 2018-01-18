@@ -36,16 +36,18 @@ class PostDraftService extends AppService
         $postDraft = $PostDraft->save();
         $postDraft = reset($postDraft);
 
-        // TODO: 現状では動画1つだけなので, そうでなくなった場合を考慮して修正が必要
-        $resource = reset($resources);
-
-        $PostResource->create([
-            'post_id' => null,
-            'post_draft_id' => $postDraft['id'],
-            'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
-            'resource_id' => $resource['id'],
-        ]);
-        $postResource = $PostResource->save();
+        foreach ($resources as $resource) {
+            $PostResource->create([
+                'post_id' => null,
+                'post_draft_id' => $postDraft['id'],
+                // TODO: currently only resource type of video only
+                // need to determine what type of resource is passed from arguments
+                // (maybe should wrap by class, not simple array)
+                'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
+                'resource_id' => $resource['id'],
+            ]);
+            $postResource = $PostResource->save();
+        }
 
         return $postDraft;
     }

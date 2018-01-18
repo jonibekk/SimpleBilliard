@@ -116,14 +116,11 @@ class PostsController extends AppController
                 : $this->request->data['Post']['share_secret'];
         }
 
-        // TODO: video posting process
-        CakeLog::info(AppUtil::jsonOneLine($this->request->data));
         $countVideoStreamIds =
-            isset($this->request->data) && is_array($this->request->data['video_stream_id'])
+            isset($this->request->data['video_stream_id']) && is_array($this->request->data['video_stream_id'])
             ? count($this->request->data['video_stream_id']) : 0;
         if (1 < $countVideoStreamIds) {
-            // TODO: currently, goalous enable only one video on one post
-            throw new RuntimeException("cant post more than two videos({$countVideoStreamIds})");
+            throw new RuntimeException(_("Can't post more than two videos"));
         }
         if (1 === $countVideoStreamIds) {
             /** @var VideoStream $VideoStream */
@@ -156,7 +153,6 @@ class PostsController extends AppController
                     return true;
                 default:
                     CakeLog::info("video post / error:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
-                    // TODO: 本来ココには来ない, エラー出してなんとかする
                     throw new RuntimeException(sprintf("invalid status code: %s", $statusTranscode->getValue()));
                     break;
             }

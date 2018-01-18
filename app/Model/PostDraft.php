@@ -67,12 +67,24 @@ class PostDraft extends AppModel
         ];
     }
 
+    /**
+     * @param Enum\Post\PostResourceType $postResourceType
+     * @param int                        $resourceId
+     *
+     * @return array
+     */
     function getByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
     {
         $result = $this->find('all', $this->getQueryByResourceTypeAndResourceId($postResourceType, $resourceId));
         return Hash::extract($result, '{n}.PostDraft');
     }
 
+    /**
+     * @param Enum\Post\PostResourceType $postResourceType
+     * @param int                        $resourceId
+     *
+     * @return array
+     */
     function getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType $postResourceType, int $resourceId): array
     {
         $result = $this->find('first', $this->getQueryByResourceTypeAndResourceId($postResourceType, $resourceId));
