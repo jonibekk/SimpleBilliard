@@ -288,7 +288,7 @@ class VideoStreamService extends AppService
         return $videoStream;
     }
 
-    public function deleteVideoStreamWithError(array $videoStream, string $errorMessage)
+    private function deleteVideoStreamWithError(array $videoStream, string $errorMessage)
     {
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");

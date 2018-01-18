@@ -63,15 +63,16 @@ class SnsNotificationController extends ApiController
             $videoStream = $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
 
             $updatedVideoStreamProgress = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+
+            // if transcode notification is for completed,
+            // video resource related to draft post is prepared for video post
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');
             if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
-                $postDraft = $PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
-                // TODO: ここ、複数紐付いている下書きがあった場合、一つしかpostされない
-                // TODO: $this->>getByResourceTypeAndResourceId() を使うように書き換える
-                if (!empty($postDraft)) {
-                    /** @var Post $Post */
-                    $Post = ClassRegistry::init('Post');
+                $postDrafts = $PostDraft->getByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
+                /** @var Post $Post */
+                $Post = ClassRegistry::init('Post');
+                foreach ($postDrafts as $postDraft) {
                     $this->current_team_id = $postDraft['team_id'];
                     $post = $Post->addNormalFromPostDraft($postDraft);
                     $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);
@@ -88,16 +89,12 @@ class SnsNotificationController extends ApiController
             GoalousLog::error('caught error on transcode SNS notification', [
                 'message' => $e->getMessage(),
             ]);
-            return $this->_getResponseBadFail([
-                'message' => 'unexpected json format',
-            ]);
+            return $this->_getResponseBadFail('unexpected json format');
         } catch (Exception $e) {
             GoalousLog::error('caught error on transcode SNS notification', [
                 'message' => $e->getMessage(),
             ]);
-            return $this->_getResponseBadFail([
-                'message' => 'internal server error',
-            ]);
+            return $this->_getResponseBadFail('internal server error');
         }
     }
 

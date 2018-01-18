@@ -288,6 +288,7 @@ class Post extends AppModel
         }
 
         $this->begin();
+        $this->create();
         $res = $this->save($postData);
         if (empty($res)) {
             $this->rollback();
@@ -309,7 +310,7 @@ class Post extends AppModel
             $PostResource->create([
                 'post_id' => $post_id,
                 'post_draft_id' => null,
-                // TODO: 現状では動画1つだけなので, そうでなくなった場合を考慮して修正が必要
+                // TODO: 現状ではresource種類が動画1つだけなので, そうでなくなった場合を考慮して修正が必要
                 'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
                 'resource_id' => $postResource['id'],
             ]);
@@ -373,10 +374,10 @@ class Post extends AppModel
             $postDraft['team_id'],
             []
         );
-        //CakeLog::info(sprintf("addNormalFromPostDraft / post %s", AppUtil::jsonOneLine([$post])));
-        // change post_resources.post_id = null to posts.id
+
         /** @var PostResourceService $PostResourceService */
         $PostResourceService = ClassRegistry::init('PostResourceService');
+        // changing post_resources.post_id = null to posts.id
         $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id']);
 
         /** @var PostDraft $PostDraft */
@@ -1888,5 +1889,25 @@ class Post extends AppModel
         ];
 
         return (bool)$this->findWithoutTeamId('all', $options);
+    }
+
+    /**
+     * @override
+     * @param array $data
+     * @param bool  $filterKey
+     * @return array
+     */
+    public function create($data = array(), $filterKey = false)
+    {
+        parent::create($data, $filterKey);
+
+        // Posts tables date column default value defined as '0' due to mysql partition.
+        // create() method does not set modified and created column value on current timestamp.
+        // If we do not overwrite value, modified and created value set to 0.
+        $currentTimeStamp = GoalousDateTime::now()->getTimestamp();
+        $this->data[$this->alias]['modified'] = $currentTimeStamp;
+        $this->data[$this->alias]['created'] = $currentTimeStamp;
+
+        return $this->data;
     }
 }

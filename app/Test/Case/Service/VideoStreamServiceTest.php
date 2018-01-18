@@ -154,6 +154,12 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertEquals($bodyText, $post['body']);
     }
 
+    function test_uploadNewVideoStream()
+    {
+        // TODO: implement here
+        $this->assertTrue(true);
+    }
+
     private function createAwsSnsTranscodeNotificationString(array $messageArray): string
     {
         return json_encode([
