@@ -177,7 +177,7 @@ class ApiSavedPostService extends ApiService
                 $user = Hash::get($item, 'post_user');
                 $imgUrl = $Upload->uploadUrl($user,
                     "User.photo",
-                    ['style' => 'small']);
+                    ['style' => 'medium']);
 
             }
             $items[$i]['image_url'] = $imgUrl;
