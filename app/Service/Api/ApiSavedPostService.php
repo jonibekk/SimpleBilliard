@@ -48,7 +48,7 @@ class ApiSavedPostService extends ApiService
         // Format array structure for api response
         $res['data'] = $this->convertResponseForApi($savedItems);
         // Set paging data
-        $res = $this->setPaging($res, $limit);
+        $res = $this->setPaging($res, $limit, $conditions);
         // Extend data (photo, user, etc)
         $res['data'] = $this->extend($res['data'], $teamId);
 
@@ -191,10 +191,11 @@ class ApiSavedPostService extends ApiService
      *
      * @param array $data
      * @param int   $limit
+     * @param array $conditions
      *
      * @return array
      */
-    private function setPaging(array $data, int $limit): array
+    private function setPaging(array $data, int $limit, array $conditions): array
     {
         // If next page is not exists, return
         if (count($data['data']) < $limit + 1) {
@@ -203,10 +204,11 @@ class ApiSavedPostService extends ApiService
         // exclude that extra record for paging
         array_pop($data['data']);
         $cursor = end($data['data'])['id'];
-        $queryParams = [
+        $queryParams = am($conditions, [
             'cursor' => $cursor,
             'limit'  => $limit
-        ];
+        ]);
+
 
         $data['paging']['next'] = "/api/v1/saved_items?" . http_build_query($queryParams);
         return $data;
