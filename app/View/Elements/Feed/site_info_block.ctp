@@ -9,6 +9,7 @@
 $title_max_length = isset($title_max_length) ? $title_max_length : 50;
 $description_max_length = isset($description_max_length) ? $description_max_length : 110;
 $img_src = isset($img_src) ? $img_src : '';
+$isEditing = (isset($site_info['is_editing']) && !empty($site_info['is_editing']) && !empty($comment_id));
 
 // type が存在しないものは外部リンクとする（古いデータ対応）
 if (!isset($site_info['type'])) {
@@ -32,7 +33,7 @@ if (isset($site_info['type']) && (
         <a href="#" class="font_lightgray comment-ogp-close"><i class="fa fa-times js-ogp-close"></i></a>
     <?php endif ?>
     <div class="col pt_10px js-ogp-box"
-    <?php if (isset($site_info['is_editing']) && !empty($site_info['is_editing']) && !empty($comment_id)): ?>
+    <?php if ($isEditing): ?>
         id="CommentOgpEditBox_<?= $comment_id ?>"
     <?php elseif (!empty($comment_id)): ?>
         id="CommentOgpBox_<?= $comment_id ?>"
@@ -43,25 +44,24 @@ if (isset($site_info['type']) && (
             <div class="site-info bd-radius_4px">
                 <div class="media">
                     <div class="pull-left">
-                        <?php if ($img_src): ?>
+                        <?php if ($img_src && !$isEditing): ?>
                             <?=
                             $this->Html->image('pre-load.svg', [
                                 'class'         => 'lazy media-object',
                                 'data-original' => $img_src,
-                                'width'         => '80px',
-                                'height'        => '80px',
                                 'error-img'     => "/img/no-image-link.png",
+                                'style'         => 'max-height: 80px; max-width: 80px;'
                             ])
                             ?>
                         <?php elseif (isset($site_info['image']) && $site_info['image']): ?>
                             <?= $this->Html->image($site_info['image'], [
                                 'class' => 'media-object',
-                                'width' => '80px',
+                                'style' => 'max-height: 80px; max-width: 80px;'
                             ]) ?>
                         <?php else: ?>
                             <?= $this->Html->image("/img/no-image-link.png", [
                                 'class' => 'media-object',
-                                'width' => '80px',
+                                'style' => 'max-height: 80px; max-width: 80px;'
                             ]) ?>
                         <?php endif ?>
                     </div>
