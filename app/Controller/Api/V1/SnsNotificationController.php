@@ -35,6 +35,8 @@ class SnsNotificationController extends ApiController
 
     public function callback_notify()
     {
+        // TODO: for the resistering AWS sns, we need simple logging method
+
         $jsonBody = $this->request->input();
 
         try {

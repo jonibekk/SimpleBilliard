@@ -89,6 +89,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
     );
 }
 
+// TODO: api will move to api v1's ...
 Router::connect('/api/v1/api_posts/video/callback',
     ['controller' => 'sns_notification', 'action' => 'callback_notify', '[method]' => 'POST']
 );

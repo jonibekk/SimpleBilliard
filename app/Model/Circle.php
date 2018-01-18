@@ -432,6 +432,8 @@ class Circle extends AppModel
     }
 
     /**
+     * returning teams circles exists
+     * pass $teamId if this method is called from external API, or batch shell
      * @param int $teamId
      *
      * @return array|null
@@ -440,7 +442,7 @@ class Circle extends AppModel
     {
         $teamId = $teamId ?? $this->current_team_id;
         $model = $this;
-        $this->current_team_id = $teamId;// TODO: [BUG] if this method called by third client API, batch shell, team id is null
+        $this->current_team_id = $teamId;
         $res = Cache::remember($this->getCacheKey(CACHE_KEY_TEAM_ALL_CIRCLE, false, null),
             function () use ($model, $teamId) {
                 $options = [
