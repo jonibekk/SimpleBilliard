@@ -18,7 +18,8 @@ class CircleService extends AppService
      * Create circle
      *
      * @param  array $data
-     * @param  array $members
+     * @param int    $myUserId
+     * @param array  $memberUserIds
      *
      * @return bool
      */
@@ -89,7 +90,7 @@ class CircleService extends AppService
      * Validate create circle
      *
      * @param  array $circle
-     * @param  array $members
+     * @param int    $userId
      *
      * @return true|string
      */
@@ -116,10 +117,12 @@ class CircleService extends AppService
      * - Join circle
      * - Delete my circles cache
      *
-     * @param  array $circles
-     * @param  int   $userId
+     * @param int  $circleId
+     * @param  int $userId
+     * @param bool $isAdmin
      *
      * @return bool
+     * @throws Exception
      */
     function join(int $circleId, int $userId, bool $isAdmin = false): bool
     {
@@ -162,7 +165,7 @@ class CircleService extends AppService
 
         // Validation check
         // TODO: Should extract only existing id, and then should continue joining to other circles.
-        foreach($circleIds as $circleId) {
+        foreach ($circleIds as $circleId) {
             if (!$this->validateJoin($CircleMember->current_team_id, $circleId, $userId)) {
                 return false;
             }
@@ -203,25 +206,56 @@ class CircleService extends AppService
     /**
      * Leave circles
      * - Delete circle member record
+     * - Remove all saved posts related the circle if leaving circle is secret
      * - Delete my circles cache
      *
-     * @param array $circles
-     * @param int   $userId
+     * @param int $teamId
+     * @param int $circleId
+     * @param int $userId
      *
      * @return bool
      */
-    function leave(int $circleId, int $userId): bool
+    function removeCircleMember(int $teamId, int $circleId, int $userId): bool
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init('SavedPost');
 
-        // Leave circles
-        if (!$CircleMember->leave($circleId, $userId)) {
+        try {
+            $circle = $Circle->getById($circleId);
+            if (empty($circle)) {
+                throw new Exception(
+                    sprintf("The circle doesn't exit. circle_id:%d", $circleId)
+                );
+            }
+            // Remove circle member
+            if (!$CircleMember->remove($circleId, $userId)) {
+                throw new Exception(
+                    sprintf("Failed to leave the circle. %s",
+                        AppUtil::jsonOneLine(compact('teamId', 'circleId', 'userId'))
+                    )
+                );
+            }
+
+            // Remove all saved posts related the circle if leaving circle is secret
+            if (!$circle['public_flg'] && !$SavedPost->deleteAllCirclePosts($teamId, $circleId, $userId)) {
+                throw new Exception(
+                    sprintf("Failed to delete saved posts related the circle. %s",
+                        AppUtil::jsonOneLine(compact('teamId', 'circleId', 'userId'))
+                    )
+                );
+            }
+
+            // Delete circles cache
+            $this->deleteUserCirclesCache($userId);
+        } catch (Exception $e) {
+            CakeLog::error($e->getMessage());
+            CakeLog::error($e->getTraceAsString());
             return false;
         }
-
-        // Delete circles cache
-        $this->deleteUserCirclesCache($userId);
 
         return true;
     }
@@ -276,8 +310,10 @@ class CircleService extends AppService
     /**
      * Validate add member to circle
      *
-     * @param  int $circleId
-     * @param  int $userId
+     * @param  int  $circleId
+     * @param int   $myUserId
+     * @param array $memberUserIds
+     * @param bool  $isCreate
      *
      * @return true|string
      */
@@ -400,7 +436,7 @@ class CircleService extends AppService
     /**
      * extract user ids from select2 string
      *
-     * @param  array ['user_{user_id}']
+     * @param string $userListStr
      *
      * @return array [{user_id}]
      */
@@ -416,7 +452,7 @@ class CircleService extends AppService
     /**
      * Delete user's circles cache
      *
-     * @param [type] $userId [description]
+     * @param int $userId
      */
     function deleteUserCirclesCache(int $userId)
     {

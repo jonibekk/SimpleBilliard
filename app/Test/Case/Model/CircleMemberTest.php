@@ -413,7 +413,7 @@ class CircleMemberTest extends GoalousTestCase
             'description' => 'test'
         ]);
         $this->CircleMember->join($circle['Circle']['id'], 1);
-        $this->assertTrue($this->CircleMember->leave($circle['Circle']['id'], 1));
+        $this->assertTrue($this->CircleMember->remove($circle['Circle']['id'], 1));
     }
 
     function testCircleStatusToggle()
