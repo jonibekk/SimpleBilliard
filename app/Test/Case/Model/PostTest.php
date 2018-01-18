@@ -39,6 +39,7 @@ class PostTest extends GoalousTestCase
         'app.circle_member',
         'app.team_member',
         'app.term',
+        'app.saved_post',
     );
 
     /**

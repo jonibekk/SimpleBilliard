@@ -48,3 +48,28 @@
 }
 
 /*=====/ dashboard-profile-card ======*/
+
+.dashboard_saved {
+  border-bottom: 1px solid @subColor4;
+  border-top: 1px solid @subColor4;
+  margin-bottom: 4px;
+  & > a {
+    color: #333;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+    padding: 8px 4px;
+    &:hover,
+    &:active,
+    &:target,
+    &:focus {
+      color: @veryDark;
+      text-decoration: none;
+      background: @lightGray;
+    }
+    & > * {
+      vertical-align: middle;
+      display: inline-block;
+    }
+  }
+}
