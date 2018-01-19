@@ -31,18 +31,59 @@ class TranscodeNotificationController extends ApiController
         $this->Security->csrfCheck = false;
     }
 
+    /**
+     * if posted json from Aws SNS containing SubscribeURL key,
+     * accessing to that URL for registering endpoint
+     * @param array $jsonData
+     *
+     * @return bool
+     */
+    private function subscribeAwsSns(array $jsonData)
+    {
+        if (!isset($jsonData['SubscribeURL'])) {
+            return false;
+        }
+        /**
+         * This "SubscribeURL" process is for registering AWS SNS initialization
+         * Need access to "SubscribeURL" at first time
+         * @see https://docs.aws.amazon.com/sns/latest/dg/json-formats.html#http-subscription-confirmation-json
+         * @see https://docs.aws.amazon.com/ja_jp/sns/latest/dg/json-formats.html#http-subscription-confirmation-json (same document in japanese)
+         * "SubscribeURL" key exists only on first time
+         */
+        $subscribeUrl = $jsonData['SubscribeURL'];
+        GoalousLog::info('SubscribeURL exists, accessing to SubscribeURL', [
+            'SubscribeURL' => $subscribeUrl,
+        ]);
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('GET', $subscribeUrl, [
+            'allow_redirects' => true,
+            'http_errors'     => false,
+        ]);
+        GoalousLog::info('Accessed to AWS SNS SubscribeURL', [
+            'Status' => $res->getStatusCode(),
+            'Body'   => (string)$res->getBody(),
+        ]);
+        return true;
+    }
+
     public function post_callback()
     {
         $jsonBody = $this->request->input();
 
-        if (false) {
-            // TODO: for the resistering AWS sns, we need simple logging method
-            GoalousLog::info($jsonBody);
-            return $this->_getResponseSuccess();
-        }
-
         try {
-            $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString($jsonBody);
+            $jsonData = json_decode($jsonBody, true);
+            if (is_null($jsonData)) {
+                throw new InvalidArgumentException('invalid json posted');
+            }
+
+            if ($this->subscribeAwsSns($jsonData)) {
+                return $this->_getResponseSuccess();
+            }
+
+            /**
+             * From below this, main process of transcode notification.
+             */
+            $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::createFromArray($jsonData);
 
             // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id'); // currently not using videos.id
             $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');

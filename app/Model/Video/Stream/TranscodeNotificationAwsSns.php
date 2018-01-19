@@ -19,13 +19,18 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
      */
     protected $messageData = [];
 
-    public static function parseJsonString(string $json)
+    public static function parseJsonString(string $json): self
     {
         $jsonData = json_decode($json, true);
         if (is_null($jsonData)) {
             throw new InvalidArgumentException('failed to parse json string');
         }
-        return new self($jsonData);
+        return self::createFromArray($jsonData);
+    }
+
+    public static function createFromArray(array $data): self
+    {
+        return new self($data);
     }
 
     private function __construct($data)
