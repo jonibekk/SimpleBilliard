@@ -16,10 +16,8 @@ use Goalous\Model\Enum as Enum;
  * Class SnsNotificationController
  *
  * @property NotifyBizComponent NotifyBiz
- *
- * TODO: this notification is especially for video transcoding(should change class name?)
  */
-class SnsNotificationController extends ApiController
+class TranscodeNotificationController extends ApiController
 {
     public $components = [
         'NotifyBiz'
@@ -33,11 +31,15 @@ class SnsNotificationController extends ApiController
         $this->Security->csrfCheck = false;
     }
 
-    public function callback_notify()
+    public function post_callback()
     {
-        // TODO: for the resistering AWS sns, we need simple logging method
-
         $jsonBody = $this->request->input();
+
+        if (false) {
+            // TODO: for the resistering AWS sns, we need simple logging method
+            GoalousLog::info($jsonBody);
+            return $this->_getResponseSuccess();
+        }
 
         try {
             $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString($jsonBody);
@@ -66,7 +68,7 @@ class SnsNotificationController extends ApiController
 
             $updatedVideoStreamProgress = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
 
-            // if transcode notification is for completed,
+            // if transcode notification is for completed
             // video resource related to draft post is prepared for video post
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');

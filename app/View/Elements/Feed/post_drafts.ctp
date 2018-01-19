@@ -38,11 +38,7 @@ if (!isset($post_drafts)) {
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                         <li><?=
                             $this->Form->postLink(__('Delete draft'),
-                                [
-                                    'controller' => 'post_draft',
-                                    'action'     => 'delete',
-                                    $post_draft['id']
-                                ],
+                                '/api/v1/post_draft/'.$post_draft['id'].'/delete',
                                 null,
                                 __("Do you really want to delete this draft post?")) ?></li>
                     </ul>

@@ -1,5 +1,5 @@
 <?php
-App::uses('AppController', 'Controller');
+App::uses('ApiController', 'Controller/Api');
 App::uses('PostDraft', 'Model');
 App::import('Service', 'GoalService');
 
@@ -8,20 +8,13 @@ App::import('Service', 'GoalService');
  *
  * @property NotificationComponent Notification
  */
-class PostDraftController extends AppController
+class PostDraftController extends ApiController
 {
     public $components = [
         'Notification',
     ];
 
-    public function beforeFilter()
-    {
-        parent::beforeFilter();
-        $this->Security->validatePost = false;
-        $this->Security->csrfCheck = false;
-    }
-
-    public function delete()
+    public function post_delete()
     {
         $postDraftId = $this->request->params['id'];
 

@@ -103,7 +103,7 @@ class PullTranscodeProgressShell extends AppShell
                     'status' => $job['Status'],
                 ]);
                 $client = new \GuzzleHttp\Client();
-                $request = $client->post('http://localhost/api/v1/api_posts/video/callback', [
+                $request = $client->post('http://localhost/api/v1/transcode_notification/callback', [
                     GuzzleHttp\RequestOptions::BODY => $notificationJson,
                 ]);
             } catch (Exception $e) {
