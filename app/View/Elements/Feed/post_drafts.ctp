@@ -6,9 +6,7 @@ if (!isset($post_drafts)) {
 }
 ?>
 <?php foreach ($post_drafts as $post_draft_key => $post_draft): ?>
-<div class="panel panel-default" style="
-    border: dashed #929292 3px;
-    ">
+<div class="panel panel-default panel-draft-post">
     <div class="panel-body">
 
         <div class="col feed-user">
@@ -51,31 +49,16 @@ if (!isset($post_drafts)) {
         <div class="col feed-contents post-contents showmore font_14px font_verydark box-align" id="PostTextBody_102">
             <?= nl2br(h($post_draft['data']['Post']['body'])) ?>
         </div>
-
     </div>
     <?php if ($post_draft['hasTranscodeFailed']): ?>
-    <div style="
-        background-color: #d94e4e;
-        color: white;
-        margin: 5px;
-        padding: 5px;
-        text-align: center;
-        vertical-align:middle;
-    ">
+    <div class="draft-post-message-error">
         <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
-        <span style="font-weight: bold; font-size: 24px; vertical-align:middle;">Fail to share</span>
+        <span>Fail to share</span>
     </div>
     <?php else: ?>
-    <div style="
-        background-color: #9c9c9c;
-        color: white;
-        margin: 5px;
-        padding: 5px;
-        text-align: center;
-        vertical-align:middle;
-    ">
+    <div class="draft-post-message">
         <img src="/img/loader-transcoding.gif">
-        <span style="font-weight: bold; font-size: 24px; vertical-align:middle;">Now Processing...</span>
+        <span>Now Processing...</span>
     </div>
     <?php endif; ?>
 </div>

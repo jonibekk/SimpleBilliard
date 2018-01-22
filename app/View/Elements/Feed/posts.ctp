@@ -243,10 +243,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     // TODO: check if this is the video resource
                                     // TODO: move to another .ctp files
                                     $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'], time());
-                                    $paddingTop = 100/$resource['aspect_ratio'];
-                                    if ($paddingTop > 100) {
+                                    if ($resource['aspect_ratio'] > 0) {
+                                        $paddingTop = 100 / $resource['aspect_ratio'];
+                                    } else {
                                         $paddingTop = 100;
                                     }
+                                    $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
                                     ?>
                                     <div id="div<?= $videoStreamId ?>" class="video-responsive-container" style="padding-top: <?= $paddingTop ?>%">
                                         <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered video-responsive" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
