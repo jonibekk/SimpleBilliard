@@ -5,24 +5,6 @@ if (!isset($post_drafts)) {
     $post_drafts = [];
 }
 ?>
-<?php
-// TODO: move these link/scripts to externals, css files
-?>
-<link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
-<style type="text/css">
-    .vjs-poster {
-        background-color: #f5f5f5;
-    }
-    .video-js {
-        background-color: #f5f5f5;
-    }
-    .vjs-texttrack-settings {
-        display: none;
-    }
-</style>
-<script src="https://unpkg.com/video.js/dist/video.js"></script>
-<script src="https://unpkg.com/videojs-flash/dist/videojs-flash.js"></script>
-<script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
 <?php foreach ($post_drafts as $post_draft_key => $post_draft): ?>
 <div class="panel panel-default" style="
     border: dashed #929292 3px;

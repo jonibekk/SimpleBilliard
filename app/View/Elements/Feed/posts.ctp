@@ -237,46 +237,25 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                         <?php if (!empty($post['PostResources'])): ?>
                             <?php foreach ($post['PostResources'] as $resource): ?>
-                                <div class="col pt_10px feed_img_only_one mb_12px" style="">
+                                <div class="col pt_10px feed_img_only_one mb_12px">
                                     <?php
                                     // TODO: currently, we have only video resource
                                     // TODO: check if this is the video resource
                                     // TODO: move to another .ctp files
-                                    $videoStreamId = sprintf('video_stream_%d_%d', $resource['id'], $post['Post']['id']);
+                                    $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'], time());
+                                    $paddingTop = 100/$resource['aspect_ratio'];
+                                    if ($paddingTop > 100) {
+                                        $paddingTop = 100;
+                                    }
                                     ?>
-                                    <div id="div<?= $videoStreamId ?>" style="display: none">
-                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
+                                    <div id="div<?= $videoStreamId ?>" class="video-responsive-container" style="padding-top: <?= $paddingTop ?>%">
+                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered video-responsive" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
                                         <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
                                             <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()->getValue() ?>" type="<?= $videoSource->getType()->getValue() ?>">
                                         <?php endforeach; ?>
                                         </video>
                                     </div>
-                                    <script>
-                                        videojs('<?= $videoStreamId ?>', {
-                                            controlBar: {
-                                                fullscreenToggle: false,
-                                                captionsButton: false
-                                            },
-                                            textTrackSettings: false,
-                                            html5: {
-                                                nativeTextTracks: false
-                                            }
-                                        }).ready(function() {
-                                            var myPlayer = this, id = myPlayer.id();
-                                            var aspectRatio = <?= $resource['aspect_ratio'] ?>;
-                                            function resizeVideoJS() {
-                                                var width = document.getElementById(id).parentElement.parentElement.offsetWidth;
-                                                myPlayer.width(width);
-                                                if (1.0 > aspectRatio) {
-                                                    myPlayer.height(width);
-                                                } else {
-                                                    myPlayer.height(width / aspectRatio);
-                                                }
-                                            }
-                                            resizeVideoJS();
-                                            $('#div<?= $videoStreamId ?>').show()
-                                        });
-                                    </script>
+                                    <script>feedVideoJs('<?= $videoStreamId ?>')</script>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
