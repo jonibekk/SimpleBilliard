@@ -134,6 +134,8 @@ class PostsController extends AppController
             $teamId = $this->current_team_id;
             $statusTranscode = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
             switch ($statusTranscode->getValue()) {
+                case Enum\Video\VideoTranscodeStatus::UPLOADING:
+                case Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
                 case Enum\Video\VideoTranscodeStatus::QUEUED:
                 case Enum\Video\VideoTranscodeStatus::TRANSCODING:
                 case Enum\Video\VideoTranscodeStatus::ERROR:
