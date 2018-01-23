@@ -16,7 +16,7 @@ class FailStuckedTranscodeShell extends AppShell
         $parser = parent::getOptionParser();
         $options = [
             'seconds_to_be_no_progress' => [
-                'help'    => 'no progress for passed second decided to be trasncode stopped',
+                'help'    => 'no progress for passed second decided to be transcode stopped',
                 'default' => 3600,
             ],
         ];

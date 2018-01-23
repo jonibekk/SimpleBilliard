@@ -161,9 +161,10 @@ class PagesController extends AppController
         }
 
         try {
-            $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
-            //CakeLog::info(AppUtil::jsonOneLine($posts));
-            $this->set(['posts' => $posts]);
+            $this->set([
+                'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
+                    $this->request->params)
+                ]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
@@ -171,6 +172,10 @@ class PagesController extends AppController
         $this->set('post_drafts', $this->getDraftPosts());
     }
 
+    /**
+     * return draft post user has posted
+     * @return array
+     */
     private function getDraftPosts(): array
     {
         /** @var PostDraft $PostDraft */
