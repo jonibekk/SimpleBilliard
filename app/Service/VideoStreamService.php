@@ -25,6 +25,9 @@ class VideoStreamService extends AppService
 
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
+
+        $db = $VideoStream->getDataSource();
+
         $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
         if ($progressState->equals(Enum\Video\VideoTranscodeProgress::PROGRESS())) {
             // if transcode is started
@@ -32,52 +35,71 @@ class VideoStreamService extends AppService
                 throw new RuntimeException("video_streams.id({$videoStreamId}) is not queued");
             }
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODING;
-            $videoStream['status_transcode'] = $status;
 
             $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
             $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
-            $videoStream['transcode_info'] = $transcodeInfo->toJson();
-            $VideoStream->save($videoStream);
+
+            // DO NOT USE $Model->save() method
+            // USE updateAll() for updating video_streams data
+            // because if notification came in short interval, save() method will override old value
+            $VideoStream->updateAll([
+                'status_transcode' => $db->value($status, 'string'),
+                'transcode_info'   => $db->value($transcodeInfo->toJson(), 'string'),
+            ], [
+                'VideoStream.id' => $videoStream['id'],
+            ]);
             GoalousLog::info('transcode status changed', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
             ]);
-            return $videoStream;
+            return $VideoStream->getById($videoStreamId);
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
             // if transcode is error
             $status = Enum\Video\VideoTranscodeStatus::ERROR;
-            $videoStream['status_transcode'] = $status;
 
             $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
             $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
             if ($transcodeProgressData->isError()) {
                 $transcodeInfo->addTranscodeError($transcodeProgressData->getError());
             }
-            $videoStream['transcode_info'] = $transcodeInfo->toJson();
-
-            $VideoStream->save($videoStream);
+            // DO NOT USE $Model->save() method
+            // USE updateAll() for updating video_streams data
+            // because if notification came in short interval, save() method will override old value
+            $VideoStream->updateAll([
+                'status_transcode' => $db->value($status, 'string'),
+                'transcode_info'   => $db->value($transcodeInfo->toJson(), 'string'),
+            ], [
+                'VideoStream.id' => $videoStream['id'],
+            ]);
             GoalousLog::info('transcode status changed', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
             ]);
-            return $videoStream;
+            return $VideoStream->getById($videoStreamId);
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::WARNING())) {
             // if transcode notified warning
             $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
             $transcodeInfo->addTranscodeWarning($transcodeProgressData->getWarning());
-            $videoStream['transcode_info'] = $transcodeInfo->toJson();
-            $VideoStream->save($videoStream);
+
+            // DO NOT USE $Model->save() method
+            // USE updateAll() for updating video_streams data
+            // because if notification came in short interval, save() method will override old value
+            $VideoStream->updateAll([
+                'transcode_info' => $db->value($transcodeInfo->toJson(), 'string'),
+            ], [
+                'VideoStream.id' => $videoStream['id'],
+            ]);
 
             GoalousLog::info('transcode status warning notified', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'message' => $transcodeProgressData->getWarning(),
             ]);
-            return $videoStream;
+            return $VideoStream->getById($videoStreamId);
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
             // if transcode is completed
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
@@ -90,22 +112,25 @@ class VideoStreamService extends AppService
             ])) {
                 throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
             }
-            $videoStream['status_transcode']     = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
-            $videoStream['duration']             = $transcodeProgressData->getDuration();
-            $videoStream['aspect_ratio']         = $transcodeProgressData->getAspectRatio();
-            $videoStream['storage_path']         = $transcodeProgressData->getOutputKeyPrefix();
 
-            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
-            $videoStream['transcode_info'] = $transcodeInfo->toJson();
-            $VideoStream->save($videoStream);
+            // DO NOT USE $Model->save() method
+            // USE updateAll() for updating video_streams data
+            // because if notification came in short interval, save() method will override old value
+            $VideoStream->updateAll([
+                'status_transcode' => $db->value($status, 'string'),
+                'duration'         => $db->value($transcodeProgressData->getDuration(), 'string'),
+                'aspect_ratio'     => $db->value($transcodeProgressData->getAspectRatio(), 'string'),
+                'storage_path'     => $db->value($transcodeProgressData->getOutputKeyPrefix(), 'string'),
+            ], [
+                'VideoStream.id' => $videoStream['id'],
+            ]);
             GoalousLog::info('transcode status changed ', [
                 'video_streams.id' => $videoStreamId,
                 'state' => $progressState->getValue(),
                 'status_value_from' => $currentVideoStreamStatus->getValue(),
                 'status_value_to' => $status,
             ]);
-            return $videoStream;
+            return $VideoStream->getById($videoStreamId);
         }
         throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
     }
