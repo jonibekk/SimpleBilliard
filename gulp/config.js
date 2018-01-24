@@ -162,6 +162,7 @@ const config = {
     'message',
     'invite',
     'payment_apply',
+    'saved_item',
     'campaign_plan_upgrade'
   ],
   css_vendor: {
