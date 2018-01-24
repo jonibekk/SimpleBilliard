@@ -4,11 +4,14 @@ App::import('Service', 'CircleService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 
-
 /**
  * CircleService Test Case
  *
  * @property ActionService $ActionService
+ * @property CircleService $CircleService
+ * @property Circle $Circle
+ * @property CircleMember $CircleMember
+ * @property User $User
  */
 class CircleServiceTest extends GoalousTestCase
 {
@@ -41,12 +44,14 @@ class CircleServiceTest extends GoalousTestCase
         $this->CircleService = ClassRegistry::init('CircleService');
         $this->Circle = ClassRegistry::init('Circle');
         $this->CircleMember = ClassRegistry::init('CircleMember');
+        $this->User = ClassRegistry::init('User');
     }
+
     public function test_validateCreate_validate()
     {
         $circle = [
             'Circle' => [
-                'name' => 'Kohei',
+                'name'        => 'Kohei',
                 'description' => 'I am Kohei'
             ]
         ];
@@ -59,7 +64,7 @@ class CircleServiceTest extends GoalousTestCase
     {
         $circle = [
             'Circle' => [
-                'name' => 'Kohei',
+                'name'        => 'Kohei',
                 'description' => ''
             ]
         ];
@@ -68,7 +73,7 @@ class CircleServiceTest extends GoalousTestCase
 
         $circle = [
             'Circle' => [
-                'name' => '',
+                'name'        => '',
                 'description' => 'I am Kohei'
             ]
         ];
@@ -81,9 +86,9 @@ class CircleServiceTest extends GoalousTestCase
         $this->_setModelProperties();
         $circle = [
             'Circle' => [
-                'name' => 'test circle',
+                'name'        => 'test circle',
                 'description' => 'desc',
-                'public_flg' => true
+                'public_flg'  => true
             ]
         ];
 
@@ -97,11 +102,13 @@ class CircleServiceTest extends GoalousTestCase
         $this->assertNotEmpty($insertedCircle);
 
         // check member
-        $memberCount = $this->CircleMember->find('count', ['conditions' => ['circle_id' => $insertedCircle['Circle']['id']]]);
+        $memberCount = $this->CircleMember->find('count',
+            ['conditions' => ['circle_id' => $insertedCircle['Circle']['id']]]);
         $this->assertEquals($memberCount, 3);
 
         // check post
-        $post = $this->Circle->PostShareCircle->Post->find('first', ['conditions' => ['circle_id' => $insertedCircle['Circle']['id'], 'type' => 7]]);
+        $post = $this->Circle->PostShareCircle->Post->find('first',
+            ['conditions' => ['circle_id' => $insertedCircle['Circle']['id'], 'type' => 7]]);
         $this->assertNotEmpty($post);
     }
 
@@ -110,9 +117,9 @@ class CircleServiceTest extends GoalousTestCase
         $this->_setModelProperties();
         $circle = [
             'Circle' => [
-                'name' => 'test circle',
+                'name'        => 'test circle',
                 'description' => 'desc',
-                'public_flg' => false
+                'public_flg'  => false
             ]
         ];
         $myUserId = $this->createActiveUser(1);
@@ -124,7 +131,8 @@ class CircleServiceTest extends GoalousTestCase
         $this->assertNotEmpty($insertedCircle);
 
         // check post
-        $post = $this->Circle->PostShareCircle->Post->find('first', ['conditions' => ['circle_id' => $insertedCircle['Circle']['id'], 'type' => 7]]);
+        $post = $this->Circle->PostShareCircle->Post->find('first',
+            ['conditions' => ['circle_id' => $insertedCircle['Circle']['id'], 'type' => 7]]);
         $this->assertEmpty($post);
     }
 
@@ -133,9 +141,9 @@ class CircleServiceTest extends GoalousTestCase
         $this->_setModelProperties();
         $circle = [
             'Circle' => [
-                'name' => '',
+                'name'        => '',
                 'description' => 'desc',
-                'public_flg' => true
+                'public_flg'  => true
             ]
         ];
         $myUserId = $this->createActiveUser(1);
@@ -148,9 +156,9 @@ class CircleServiceTest extends GoalousTestCase
         $this->_setModelProperties();
         $circle = [
             'Circle' => [
-                'name' => 'test circle',
+                'name'        => 'test circle',
                 'description' => 'desc',
-                'public_flg' => true
+                'public_flg'  => true
             ]
         ];
 
@@ -160,12 +168,64 @@ class CircleServiceTest extends GoalousTestCase
         $circleId = $insertedCircle['Circle']['id'];
 
         $this->assertTrue($this->CircleService->join($circleId, 2));
-        $this->assertNotEmpty($this->CircleMember->find('first', ['conditions' => ['circle_id' => $circleId, 'user_id' => 2]]));
+        $this->assertNotEmpty($this->CircleMember->find('first',
+            ['conditions' => ['circle_id' => $circleId, 'user_id' => 2]]));
     }
-    //余裕あれば
-    function test_leave()
+
+    function test_removeCircleMember_success()
     {
-        $this->markTestSkipped();
+        $teamId = 1;
+        $circleId = 1;
+        $userId = 1;
+        $userId2 = 2;
+        $this->Team->current_team_id = $teamId;
+        $this->Circle->current_team_id = $teamId;
+        $this->CircleMember->current_team_id = $teamId;
+        $this->CircleMember->my_uid = $userId;
+        $this->User->current_team_id = $teamId;
+        $circleData = [
+            'Circle' => [
+                'name'        => 'サークル1',
+                'public_flg'  => 1,
+                'description' => "説明しちゃうよ",
+                'photo'       => [
+                    'name'     => '',
+                    'type'     => '',
+                    'tmp_name' => '',
+                    'error'    => 4,
+                    'size'     => 0
+                ]
+
+            ]
+
+        ];
+        // Create cache for testing
+        Cache::write($this->CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), true, 'user_data');
+        Cache::write($this->CircleMember->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), true, 'user_data');
+        Cache::write($this->CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), true, 'user_data');
+        $this->CircleService->create($circleData, $userId, [$userId2]);
+        $res = $this->CircleService->removeCircleMember($teamId, $circleId, $userId2);
+        $this->assertTrue($res);
+        $this->assertFalse($this->CircleMember->isJoined($circleId, $userId2));
+        $this->assertTrue($this->CircleMember->isJoined($circleId, $userId));
+
+        $res = Cache::read($this->CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        $this->assertFalse($res);
+        $res = Cache::read($this->CircleMember->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+        $this->assertFalse($res);
+        $res = Cache::read($this->CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        $this->assertFalse($res);
+
+        // TODO: Check whether removed saved posts. But sql which removing saved posts is plain sql. so  The SQlite error occurred for not supported sql syntax.
+    }
+
+    function test_removeCircleMember_failed()
+    {
+        $teamId = 1;
+        $circleId = 1000;
+        $userId = 1;
+        $res = $this->CircleService->removeCircleMember($teamId, $circleId, $userId);
+        $this->assertFalse($res);
     }
 
     //余裕あれば

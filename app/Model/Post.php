@@ -26,6 +26,7 @@ App::uses('PostShareCircle', 'Model');
  * @property AttachedFile    $AttachedFile
  * @property PostFile        $PostFile
  * @property PostSharedLog   $PostSharedLog
+ * @property SavedPost       $SavedPost
  */
 class Post extends AppModel
 {
@@ -221,6 +222,7 @@ class Post extends AppModel
             'fields'    => ['id']
         ],
         'PostFile',
+        'SavedPost',
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -832,6 +834,8 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
         //未読件数を取得
         $res = $this->getCommentMyUnreadCount($res);
+        //Set whether login user saved favorite post
+        $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
         return $res;
     }
 
@@ -1224,6 +1228,24 @@ class Post extends AppModel
                 $data[$key]['unread_count'] =
                     count($comment_list) - $this->Comment->CommentRead->countMyRead($comment_list);
             }
+        }
+        return $data;
+    }
+
+    /**
+     * Set whether loginUser save favorite item each post
+     * @param array $data
+     * @param int   $userId
+     *
+     * @return array
+     */
+    function setIsSavedItemEachPost(array $data, int $userId)
+    {
+        $postIds = Hash::extract($data, '{n}.Post.id');
+        $isSavedEachPost = $this->SavedPost->isSavedEachPost($postIds, $userId);
+        foreach ($data as $key => $val) {
+            $postId = Hash::get($val, 'Post.id');
+            $data[$key]['Post']['is_saved_item'] = $isSavedEachPost[$postId];
         }
         return $data;
     }
