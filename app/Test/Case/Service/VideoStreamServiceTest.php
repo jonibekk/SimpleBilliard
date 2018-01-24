@@ -142,16 +142,17 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertTrue(is_string($videoStreamProgressing['storage_path']));
         $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['status_transcode']);
 
+        // TODO: this process is no more proceed in VideoStreamService, move to another service and write test
         // check draft post, post resource
-        $postDraftUpdated = $this->PostDraft->getById($postDraft['id']);
-        $postResourceUpdated = $this->PostResource->getById($postResource['id']);
-        $this->assertFalse($postDraftUpdated);
-        $this->assertTrue(is_numeric($postResourceUpdated['post_id']));
+        //$postDraftUpdated = $this->PostDraft->getById($postDraft['id']);
+        //$postResourceUpdated = $this->PostResource->getById($postResource['id']);
+        //$this->assertFalse($postDraftUpdated);
+        //$this->assertTrue(is_numeric($postResourceUpdated['post_id']));
 
-        $post = $this->Post->getById($postResourceUpdated['post_id']);
-        $this->assertEquals($userId, intval($post['user_id']));
-        $this->assertEquals($teamId, intval($post['team_id']));
-        $this->assertEquals($bodyText, $post['body']);
+        //$post = $this->Post->getById($postResourceUpdated['post_id']);
+        //$this->assertEquals($userId, intval($post['user_id']));
+        //$this->assertEquals($teamId, intval($post['team_id']));
+        //$this->assertEquals($bodyText, $post['body']);
     }
 
     function test_uploadNewVideoStream()

@@ -111,6 +111,7 @@ class TranscodeNotificationController extends ApiController
 
             // if transcode notification is for completed
             // video resource related to draft post is prepared for video post
+            // TODO: move this process to *Service
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');
             if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
