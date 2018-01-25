@@ -108,7 +108,7 @@ class DevicesController extends  ApiController
         // User not logged, remove device to avoid push notification
         if ($userId === null) {
             $PushService->removeDevice($token);
-            return $this->_getResponseSuccess();
+            return $this->_getResponseSuccess(['action' => 'Unregistered']);
         }
 
         // Check the request user
@@ -125,6 +125,6 @@ class DevicesController extends  ApiController
         // Update setup status
         $this->_updateSetupStatusIfNotCompleted();
 
-        return $this->_getResponseSuccess();
+        return $this->_getResponseSuccess(['action' => 'Registered']);
     }
 }
