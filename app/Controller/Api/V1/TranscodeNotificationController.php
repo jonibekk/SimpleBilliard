@@ -7,8 +7,8 @@ App::uses('PostResource', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Post', 'Model');
-App::uses('PostResourceService', 'Service');
-App::uses('VideoStreamService', 'Service');
+App::import('Service', 'PostResourceService');
+App::import('Service', 'VideoStreamService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -135,11 +135,13 @@ class TranscodeNotificationController extends ApiController
             GoalousLog::error('caught error on transcode SNS notification', [
                 'message' => $e->getMessage(),
             ]);
+            CakeLog::error($e->getTraceAsString());
             return $this->_getResponseBadFail('unexpected json format');
         } catch (Exception $e) {
             GoalousLog::error('caught error on transcode SNS notification', [
                 'message' => $e->getMessage(),
             ]);
+            CakeLog::error($e->getTraceAsString());
             return $this->_getResponseBadFail('internal server error');
         }
     }
