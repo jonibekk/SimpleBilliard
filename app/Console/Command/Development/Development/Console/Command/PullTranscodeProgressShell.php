@@ -13,24 +13,6 @@ use Goalous\Model\Enum as Enum;
  */
 class PullTranscodeProgressShell extends AppShell
 {
-
-    var $uses = [
-    ];
-
-    function startup()
-    {
-    }
-
-    public function getOptionParser()
-    {
-        $parser = parent::getOptionParser();
-        $options = [
-
-        ];
-        $parser->addOptions($options);
-        return $parser;
-    }
-
     function main()
     {
         if (ENV_NAME !== 'local') {
@@ -47,22 +29,22 @@ class PullTranscodeProgressShell extends AppShell
             Enum\Video\VideoTranscodeStatus::QUEUED,
         ]);
 
-        $videoStreamIds = array_map(function($videoStream) {
-            GoalousLog::info($videoStream['id']);
-            return $videoStream['id'];
-        }, $videoStreamsToCheckStatus);
+        $videoStreamIds = Hash::extract($videoStreamsToCheckStatus, '{n}.id');
 
         GoalousLog::info('video_stream.ids to check', [
             'ids' => $videoStreamIds,
         ]);
-
-        $jobs = [];
+        if (count($videoStreamIds) === 0) {
+            GoalousLog::info('video_stream.ids is empty, finish process');
+            return;
+        }
 
         try {
             // TODO: move this client create to kind of libs
             $client = new \Aws\ElasticTranscoder\ElasticTranscoderClient([
                 'region'   => 'ap-northeast-1',
-                'version' => 'latest',
+                // @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html
+                'version' => '2012-09-25',
                 'credentials' => [
                     'key'    => AWS_ELASTIC_TRANSCODER_KEY,
                     'secret' => AWS_ELASTIC_TRANSCODER_SECRET_KEY,
@@ -131,12 +113,9 @@ class PullTranscodeProgressShell extends AppShell
     {
         $status = $transcodeJob['Status'];
 
-        /**
-         * @see
-         * transcode job format from API
-         * http://docs.aws.amazon.com/ja_jp/elastictranscoder/latest/developerguide/get-job.html
-         *
-         */
+        // @see
+        // transcode job format from API
+        // http://docs.aws.amazon.com/ja_jp/elastictranscoder/latest/developerguide/get-job.html
         $jobState = null;
         switch ($status) {
             case 'Progressing':
