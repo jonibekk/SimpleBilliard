@@ -1,10 +1,21 @@
 <?php
-App::uses('AppModel', 'Model');
 App::uses('VideoStream', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
-class FailStuckedTranscodeShell extends AppShell
+/**
+ * This batch shell is for video posting
+ *
+ * If transcoding is taking too long
+ * or we could notify anything about transcode progress,
+ * this batch shell decide the video is failed to transcode
+ *
+ * @uses
+ * ./Console/cake Video.fail_stuck_transcode --seconds_to_be_no_progress=3600
+ *
+ * Class FailStuckTranscodeShell
+ */
+class FailStuckTranscodeShell extends AppShell
 {
     public function startup()
     {
@@ -36,18 +47,18 @@ class FailStuckedTranscodeShell extends AppShell
 
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
-        $stuckedVideoStreams = $VideoStream->getNoProgressBeforeTimestamp(
+        $stuckVideoStreams = $VideoStream->getNoProgressBeforeTimestamp(
             $targetDateTime->getTimestamp()
         );
 
-        GoalousLog::info('fetched stucked video stream', [
-            'count' => count($stuckedVideoStreams),
+        GoalousLog::info('fetched stuck video stream', [
+            'count' => count($stuckVideoStreams),
         ]);
 
-        foreach ($stuckedVideoStreams as $videoStream) {
-            GoalousLog::info('stucked video stream change to error', [
-                'id' => $videoStream['id'],
-                'status_transcode'   => $videoStream['status_transcode'],
+        foreach ($stuckVideoStreams as $videoStream) {
+            GoalousLog::info('stuck video stream change to error', [
+                'video_streams.id' => $videoStream['id'],
+                'transcode_status'   => $videoStream['status_transcode'],
                 'elapse time from modified'   => GoalousDateTime::now()->diffInSeconds(
                     GoalousDateTime::createFromTimestamp($videoStream['modified'])
                 ),
@@ -56,7 +67,11 @@ class FailStuckedTranscodeShell extends AppShell
             $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
             $transcodeInfo->setTranscodeNoProgress(true);
             $videoStream['transcode_info'] = $transcodeInfo->toJson();
-            $VideoStream->save($videoStream);
+            if (false === $VideoStream->save($videoStream)) {
+                GoalousLog::error('save failed on stuck video stream', [
+                    'video_streams.id' => $videoStream['id'],
+                ]);
+            }
         }
     }
 
