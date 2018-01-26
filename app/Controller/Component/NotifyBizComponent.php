@@ -1429,7 +1429,6 @@ class NotifyBizComponent extends Component
 
             // Send to Firebase
             if (count($firebaseTokens) > 0) {
-                $title = json_encode($title, JSON_UNESCAPED_UNICODE);
                 $PushService->sendFirebasePushNotification($firebaseTokens, $title, $postUrl);
             }
             $sent_device_tokens = array_merge($sent_device_tokens, $deviceTokens);
