@@ -123,7 +123,7 @@ class PushService extends AppService
             'Authorization' => 'key=' . FIREBASE_SERVER_KEY,
         ];
 
-        $payload = json_encode($data);
+        $payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         if (!$payload) {
             GoalousLog::error('Invalid push notification data.', [
                 'data'         => $data,

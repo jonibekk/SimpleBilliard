@@ -1407,7 +1407,6 @@ class NotifyBizComponent extends Component
                     $title .= " : " . $item_name;
                 }
             }
-            $title = json_encode($title, JSON_HEX_QUOT);
 
             // Separate the tokens in two groups.
             // The ones with installation_id belongs to Nifty Cloud
@@ -1424,11 +1423,13 @@ class NotifyBizComponent extends Component
 
             // Send to NCMB
             if (count($ncmbTokens) > 0) {
+                $title = json_encode($title, JSON_HEX_QUOT);
                 $PushService->sendNCMBPushNotification($ncmbTokens, $title, $postUrl);
             }
 
             // Send to Firebase
             if (count($firebaseTokens) > 0) {
+                $title = json_encode($title, JSON_UNESCAPED_UNICODE);
                 $PushService->sendFirebasePushNotification($firebaseTokens, $title, $postUrl);
             }
             $sent_device_tokens = array_merge($sent_device_tokens, $deviceTokens);
