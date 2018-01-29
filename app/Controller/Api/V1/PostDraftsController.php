@@ -8,7 +8,7 @@ App::import('Service', 'GoalService');
  *
  * @property NotificationComponent Notification
  */
-class PostDraftController extends ApiController
+class PostDraftsController extends ApiController
 {
     public $components = [
         'Notification',
