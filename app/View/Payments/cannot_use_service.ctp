@@ -9,7 +9,7 @@
         <?php else: ?>
             <h3><?= __('If you want to resume normal usage, please contact to your team administrators.') ?></h3>
         <?php endif; ?>
-        <p class="switchTeam-description"><?= __("Move to other team")?></p>
+        <p class="switchTeam-description"><?= __("Switch team")?></p>
         <form class="">
             <?php echo $this->Form->input('current_team',
                 array(
