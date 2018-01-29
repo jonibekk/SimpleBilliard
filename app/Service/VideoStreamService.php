@@ -6,6 +6,7 @@ App::uses('VideoFileHasher', 'Lib/Video');
 
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
+App::uses('User', 'Model');
 App::uses('AwsTranscodeJobClient', 'Model/Video');
 App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
@@ -18,6 +19,15 @@ use Goalous\Model\Enum as Enum;
  */
 class VideoStreamService extends AppService
 {
+    /**
+     * Update video_streams data from
+     * TranscodeProgressData (currently this data is usually from AWS SNS)
+     *
+     * @param array                 $videoStream
+     * @param TranscodeProgressData $transcodeProgressData
+     *
+     * @return array
+     */
     public function updateFromTranscodeProgressData(array $videoStream, TranscodeProgressData $transcodeProgressData): array
     {
         $videoStreamId = $videoStream['id'];
@@ -135,6 +145,16 @@ class VideoStreamService extends AppService
         throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
     }
 
+    /**
+     * Find video stream by users.id, teams.id, and video hash string.
+     * Return video_streams array if find
+     *
+     * @param int    $userId
+     * @param int    $teamId
+     * @param string $hash
+     *
+     * @return array
+     */
     public function findVideoStreamIfExists(int $userId, int $teamId, string $hash): array
     {
         /** @var Video $Video */
@@ -172,13 +192,28 @@ class VideoStreamService extends AppService
         return sprintf('streams/%s/', implode($urlSplits, '/'));
     }
 
-    public function uploadNewVideoStream(array $uploadFile, array $user, int $teamId): array
+    /**
+     * Upload and transcode video stream
+     *
+     * @param array $uploadFile
+     * @param int   $userId
+     * @param int   $teamId
+     *
+     * @return array
+     */
+    public function uploadVideoStream(array $uploadFile, int $userId, int $teamId): array
     {
         /** @var Video $Video */
         $Video = ClassRegistry::init("Video");
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
 
+        $user = $User->getById($userId);
+        if (is_null($user)) {
+            throw new NotFoundException(sprintf('user(%d) not found', $userId));
+        }
         $userId = $user['id'];
 
         $filePath = $uploadFile['tmp_name'];
@@ -313,6 +348,12 @@ class VideoStreamService extends AppService
         return $videoStream;
     }
 
+    /**
+     * Delete video stream with error message
+     *
+     * @param array  $videoStream
+     * @param string $errorMessage
+     */
     private function deleteVideoStreamWithError(array $videoStream, string $errorMessage)
     {
         /** @var VideoStream $VideoStream */
