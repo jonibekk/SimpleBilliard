@@ -85,7 +85,7 @@ $(function () {
   });
 
   //チーム切り換え
-  $('#SwitchTeam').change(function () {
+  $('#SwitchTeam, .js-switchTeam').change(function () {
     var val = $(this).val();
     var url = "/teams/ajax_switch_team/team_id:" + val;
     $.get(url, function (data) {

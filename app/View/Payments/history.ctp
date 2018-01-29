@@ -48,7 +48,10 @@
                         <span
                             class="hidden-xxs"><?= $text ?></span>
                     </td>
-                    <?php $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS ? "fa fa-check success" : "fa fa-close error" ?>
+                    <?php
+                        $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS
+                            ? "fa fa-check success visible" : "fa fa-close error visible";
+                    ?>
                     <td><span class="<?= $resultIconClass ?>"></span><?= h($v['total']) ?></td>
                     <td class="history-entry-download">
                         <?= $this->Html->link("",
