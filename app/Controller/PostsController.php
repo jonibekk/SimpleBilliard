@@ -133,6 +133,10 @@ class PostsController extends AppController
             $user = $this->User->getById($this->Auth->user('id'));
             $teamId = $this->current_team_id;
             $statusTranscode = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+            $logDataArray = [
+                'video_streams.id' => $videoStream['id'],
+                'transcode_status' => sprintf('%s:%s', $statusTranscode->getValue(), $statusTranscode->getKey()),
+            ];
             switch ($statusTranscode->getValue()) {
                 case Enum\Video\VideoTranscodeStatus::UPLOADING:
                 case Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
@@ -140,7 +144,7 @@ class PostsController extends AppController
                 case Enum\Video\VideoTranscodeStatus::TRANSCODING:
                 case Enum\Video\VideoTranscodeStatus::ERROR:
                     // create draft post
-                    CakeLog::info("video post / creating draft post:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
+                    GoalousLog::info("video post creating draft post", $logDataArray);
                     /** @var PostDraftService $PostDraftService */
                     $PostDraftService = ClassRegistry::init("PostDraftService");
                     $PostDraftService->createPostDraftWithResources($this->request->data,
@@ -150,11 +154,11 @@ class PostsController extends AppController
                     );
                     return true;
                 case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
-                    CakeLog::info("video post / creating post:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
+                    GoalousLog::info("video post creating draft post", $logDataArray);
                     $this->Post->addNormal($this->request->data, null, null, [$videoStream]);
                     return true;
                 default:
-                    CakeLog::info("video post / error:({$statusTranscode->getValue()}:{$statusTranscode->getKey()})");
+                    GoalousLog::info("video post error", $logDataArray);
                     throw new RuntimeException(sprintf("invalid status code: %s", $statusTranscode->getValue()));
                     break;
             }
