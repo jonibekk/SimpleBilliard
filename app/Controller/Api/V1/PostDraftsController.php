@@ -14,7 +14,7 @@ class PostDraftsController extends ApiController
         'Notification',
     ];
 
-    public function post_delete()
+    public function delete()
     {
         $postDraftId = $this->request->params['id'];
 
@@ -22,7 +22,7 @@ class PostDraftsController extends ApiController
         $PostDraft = ClassRegistry::init("PostDraft");
         $postDraft = $PostDraft->getById($postDraftId);
         if (empty($postDraft)) {
-            $this->Notification->outError(__('Draft is deleted'));
+            $this->Notification->outError(__('Draft post not found'));
             return $this->redirect($this->referer());
         }
 
@@ -33,7 +33,7 @@ class PostDraftsController extends ApiController
                 'post_drafts.user_id' => $postDraft['user_id'],
                 'user_id'             => $userId,
             ])));
-            return $this->redirect($this->referer());
+            return $this->_getResponseBadFail('Invalid user id');
         }
         if (intval($postDraft['team_id']) !== intval($this->current_team_id)) {
             CakeLog::notice(sprintf('delete draft post canceled, team id is not match %s', AppUtil::jsonOneLine([
@@ -41,7 +41,7 @@ class PostDraftsController extends ApiController
                 'team_id'             => $this->current_team_id,
             ])));
             $this->Notification->outError(__('current team is not match'));
-            return $this->redirect($this->referer());
+            return $this->_getResponseBadFail('Invalid team id');
         }
 
         CakeLog::info(sprintf('deleted draft post %s', AppUtil::jsonOneLine([
@@ -49,6 +49,6 @@ class PostDraftsController extends ApiController
         ])));
         $this->Notification->outSuccess(__('Deleted the draft.'));
         $PostDraft->delete($postDraft);
-        return $this->redirect($this->referer());
+        return $this->_getResponseSuccess();
     }
 }

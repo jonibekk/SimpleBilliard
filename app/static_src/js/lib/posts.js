@@ -35,6 +35,19 @@ $(function () {
         }
         location.href = url;
     });
+    // register event of deleting post draft
+    $('.delete-post-draft').on('click', function() {
+        var postDraftId = $(this).data('post-draft-id')
+        if (window.confirm('Do you really want to delete this draft post?')) {
+            $.ajax({
+                url: '/api/v1/post_drafts/' + postDraftId,
+                type: 'DELETE'
+            }).always(function (data) {
+                location.reload()
+            })
+        }
+        return false
+    })
 });
 
 // for resizing certainly, exec after window loaded
