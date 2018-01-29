@@ -48,7 +48,7 @@ class PostDraftsController extends ApiController
             'post_drafts.id' => $postDraft['id'],
         ])));
         $this->Notification->outSuccess(__('Deleted the draft.'));
-        $PostDraft->delete($postDraft);
+        $PostDraft->softDelete($postDraft['id'], false);
         return $this->_getResponseSuccess();
     }
 }
