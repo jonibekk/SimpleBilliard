@@ -22,35 +22,10 @@ class FilesController extends ApiController
             return $this->_getResponseBadFail(__('Failed to upload.'));
         }
 
-        // TODO: is this ok about deciding file type "video"
-        $isVideo = false !== strpos($form['file']['type'], 'video');
+        $isVideo = $this->isVideo($form);
 
         if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
-            // TODO: /tmp/ ファイルの削除をしないといけないかも？要確認
-            CakeLog::info(sprintf('file uploaded: %s', AppUtil::jsonOneLine([
-                'form' => $form,
-                'isVideo' => $isVideo,
-            ])));
-
-            $user = $this->User->getById($this->Auth->user('id'));
-            $teamId = $this->current_team_id;
-            /** @var VideoStreamService $VideoStreamService */
-            $VideoStreamService = ClassRegistry::init('VideoStreamService');
-            try {
-                $videoStream = $VideoStreamService->uploadNewVideoStream($form['file'], $user, $teamId);
-            } catch (Exception $e) {
-                return $this->_getResponseBadFail(_('Failed uploading video'));
-            }
-
-            CakeLog::info(sprintf('new video_stream created %s', AppUtil::jsonOneLine([
-                'video_streams.id' => $videoStream['id'],
-            ])));
-            return $this->_getResponseSuccess([
-                'error' => false,
-                'msg' => '',
-                'is_video' => true,
-                'video_stream_id' => $videoStream['id'],
-            ]);
+            return $this->processVideoUpload($form);
         }
 
         // 正常にファイルが送信されたかチェック
@@ -93,5 +68,66 @@ class FilesController extends ApiController
             return $this->_getResponseBadFail($ret['msg']);
         }
         return $this->_getResponseSuccess($ret);
+    }
+
+    /**
+     * Decide the posted file is video file or not
+     *
+     * @param array $requestFileUpload
+     * Posted file data array from 'multipart/form-data'
+     * $requestFileUpload should be the
+     * value get from Hash::get($this->request->params, 'form');
+     *
+     * @return bool
+     */
+    public function isVideo(array $requestFileUpload): bool
+    {
+        // TODO: MUST FIX HERE
+        // php uploaded ['file']['type'] is decided by just only file extension
+        //     e.g. image.gif -> rename to -> image.mp4 -> upload -> ['file']['type'] is "video/mp4"
+        // @see https://www.iana.org/assignments/media-types/media-types.xhtml#video
+        // for approved video mime-types
+        return false !== strpos($requestFileUpload['file']['type'], 'video');
+    }
+
+    /**
+     * Upload single video file for transcoding
+     *
+     * @param array $requestFileUpload
+     * Posted file data array from 'multipart/form-data'
+     * $requestFileUpload should be the
+     * value get from Hash::get($this->request->params, 'form');
+     *
+     * @return CakeResponse
+     */
+    public function processVideoUpload(array $requestFileUpload): CakeResponse
+    {
+        GoalousLog::info('file uploaded', $requestFileUpload);
+
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+        try {
+            $videoStream = $VideoStreamService->uploadVideoStream($requestFileUpload['file'], $userId, $teamId);
+        } catch (Exception $e) {
+            GoalousLog::error('upload new video stream failed', [
+                'message' => $e->getMessage(),
+                'users.id' => $userId,
+                'teams.id' => $teamId,
+            ]);
+            GoalousLog::error($e->getTraceAsString());
+            return $this->_getResponseBadFail(__('Failed uploading video'));
+        }
+        GoalousLog::info('video uploaded stream', [
+            'video_streams.id' => $videoStream['id'],
+        ]);
+
+        return $this->_getResponseSuccess([
+            'error' => false,
+            'msg' => '',
+            'is_video' => true,
+            'video_stream_id' => $videoStream['id'],
+        ]);
     }
 }
