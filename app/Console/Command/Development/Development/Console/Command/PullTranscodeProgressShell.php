@@ -85,7 +85,7 @@ class PullTranscodeProgressShell extends AppShell
                     'status' => $job['Status'],
                 ]);
                 $client = new \GuzzleHttp\Client();
-                $request = $client->post('http://localhost/api/v1/transcode_notification/callback', [
+                $request = $client->post('http://localhost/api/v1/transcode_notifications/callback', [
                     GuzzleHttp\RequestOptions::BODY => $notificationJson,
                 ]);
             } catch (Exception $e) {
