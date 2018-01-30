@@ -9,11 +9,24 @@ use Goalous\Model\Enum as Enum;
  */
 class VideoStream extends AppModel
 {
+    /**
+     * Create TranscodeInfo from video_stream array
+     * TODO: will fix
+     * @param array $videoStream
+     *
+     * @return TranscodeInfo
+     */
     public function getTranscodeInfo(array $videoStream): TranscodeInfo
     {
         return TranscodeInfo::createFromJson($videoStream['transcode_info']);
     }
 
+    /**
+     * Get video_stream from primary-key
+     * @param int $videoId
+     *
+     * @return array
+     */
     public function getFirstByVideoId(int $videoId): array
     {
         $options = [
@@ -32,16 +45,29 @@ class VideoStream extends AppModel
         return reset($result);
     }
 
+    /**
+     * Get multiple video_stream data by transcode status
+     * @param array $statuses
+     *
+     * @return array
+     */
     public function getByStatusTranscode(array $statuses): array
     {
         $options = [
             'conditions' => [
                 'status_transcode' => $statuses,
-                'del_flg' => 0,
+                'del_flg' => false,
             ],
         ];
+        $videoStreams = $this->find('all', $options);
+        if (is_null($videoStreams)) {
+            GoalousLog::error('find error on video_streams', [
+                'status_transcode' => $statuses,
+            ]);
+            return [];
+        }
 
-        return Hash::extract($this->find('all', $options), '{n}.VideoStream');
+        return Hash::extract($videoStreams, '{n}.VideoStream');
     }
 
     /**
@@ -63,9 +89,17 @@ class VideoStream extends AppModel
                     Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
                 ],
                 'modified <' => $timestamp,
-                'del_flg' => 0,
+                'del_flg' => false,
             ],
         ];
-        return Hash::extract($this->find('all', $options), '{n}.VideoStream');
+        $videoStreams = $this->find('all', $options);
+        if (is_null($videoStreams)) {
+            GoalousLog::error('find error on video_streams', [
+                'modified <' => $timestamp,
+            ]);
+            return [];
+        }
+
+        return Hash::extract($videoStreams, '{n}.VideoStream');
     }
 }

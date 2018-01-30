@@ -47,7 +47,7 @@ class VideoStreamTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function test_getNoProgressInSeconds()
+    function test_getNoProgressBeforeTimestamp()
     {
         $userId = 1;
         $teamId = 1;
