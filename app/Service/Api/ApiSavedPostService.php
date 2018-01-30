@@ -48,7 +48,7 @@ class ApiSavedPostService extends ApiService
         // Format array structure for api response
         $res['data'] = $this->convertResponseForApi($savedItems);
         // Set paging data
-        $res = $this->setPaging($res, $limit);
+        $res = $this->setPaging($res, $limit, $conditions);
         // Extend data (photo, user, etc)
         $res['data'] = $this->extend($res['data'], $teamId);
 
@@ -144,15 +144,12 @@ class ApiSavedPostService extends ApiService
         $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
         foreach ($items as $i => $item) {
+            $imgUrl = "";
             $items[$i]['display_created'] = $TimeEx->elapsedTime($item['created'], 'normal', false);
             // Separate logic each type(Action or Post)
             if ($item['type'] == Post::TYPE_ACTION) {
                 $actionId = Hash::get($item, 'action_result_id');
                 $attachedImg = Hash::get($attachedImgEachAction, $actionId);
-                $actionForGetImg = [
-                    'id'                   => $item['action_result_id'],
-                    'photo1_file_name' => $item['action_photo_file_name']
-                ];
                 $imgUrl = $Upload->uploadUrl($attachedImg,
                     "AttachedFile.attached",
                     ['style' => 'x_small']);
@@ -180,7 +177,7 @@ class ApiSavedPostService extends ApiService
                 $user = Hash::get($item, 'post_user');
                 $imgUrl = $Upload->uploadUrl($user,
                     "User.photo",
-                    ['style' => 'small']);
+                    ['style' => 'medium']);
 
             }
             $items[$i]['image_url'] = $imgUrl;
@@ -194,10 +191,11 @@ class ApiSavedPostService extends ApiService
      *
      * @param array $data
      * @param int   $limit
+     * @param array $conditions
      *
      * @return array
      */
-    private function setPaging(array $data, int $limit): array
+    private function setPaging(array $data, int $limit, array $conditions): array
     {
         // If next page is not exists, return
         if (count($data['data']) < $limit + 1) {
@@ -206,10 +204,11 @@ class ApiSavedPostService extends ApiService
         // exclude that extra record for paging
         array_pop($data['data']);
         $cursor = end($data['data'])['id'];
-        $queryParams = [
+        $queryParams = am($conditions, [
             'cursor' => $cursor,
             'limit'  => $limit
-        ];
+        ]);
+
 
         $data['paging']['next'] = "/api/v1/saved_items?" . http_build_query($queryParams);
         return $data;

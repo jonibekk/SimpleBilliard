@@ -25,11 +25,9 @@ class SavedItem extends React.Component {
 
     return (
       <li className="savedItemList-item">
-        <a className="savedItemList-item-link saved-item-click-target" href={`/post_permanent/${saved_item.post_id}`} target="_blank">
-          <div className="avatorsBox">
-            <div className="avatorsBox-one">
-              <img src={saved_item.image_url} className="lazy"/>
-            </div>
+        <a className="savedItemList-item-link saved-item-click-target" href={`/post_permanent/${saved_item.post_id}?back=true`} target="_blank">
+          <div className="savedItemList-item-imgWrapper">
+            <img src={saved_item.image_url} className="lazy"/>
           </div>
           <div className="savedItemList-item-main">
             <div className="savedItemList-item-main-body">
