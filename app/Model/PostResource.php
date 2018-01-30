@@ -71,6 +71,8 @@ class PostResource extends AppModel
         $results = [];
         foreach ($postResources as $postResource) {
             $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
+            // written in switch case
+            // more resource_type will defined in future
             switch ($resourceType->getValue()) {
                 case Enum\Post\PostResourceType::VIDEO_STREAM:
                     if (!TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
