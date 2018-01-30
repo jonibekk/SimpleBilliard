@@ -23,7 +23,12 @@ class PostDraft extends AppModel
                 'id' => 'desc',
             ]
         ];
-        $postDrafts = Hash::extract($this->find('all', $options), '{n}.PostDraft');
+        $postDrafts = $this->find('all', $options);
+        if (is_null($postDrafts)) {
+            GoalousLog::error('finding post draft in error');
+            return [];
+        }
+        $postDrafts = Hash::extract($postDrafts, '{n}.PostDraft');
 
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
@@ -55,14 +60,11 @@ class PostDraft extends AppModel
                 'PostDraft.team_id',
                 'PostDraft.post_id',
                 'PostDraft.draft_data',
-                'PostDraft.del_flg',
-                'PostDraft.created',
-                'PostDraft.modified',
             ],
             'conditions' => [
                 'PostResource.resource_type' => $postResourceType->getValue(),
                 'PostResource.resource_id'   => $resourceId,
-                'PostResource.del_flg'       => 0,
+                'PostResource.del_flg'       => false,
             ],
         ];
     }
