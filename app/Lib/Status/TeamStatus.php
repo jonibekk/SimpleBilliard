@@ -97,6 +97,7 @@ class TeamStatus {
 
         // fetch experiment settings of team
         $experiments = $Experiment->findAllByTeamId($this->getTeamId());
+        $experiments = Hash::extract($experiments, '{n}.Experiment');
         foreach ($experiments as $experiment) {
             $this->teamsExperiments[$experiment['name']] = true;
         }

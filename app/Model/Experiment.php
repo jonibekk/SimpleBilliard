@@ -58,15 +58,4 @@ class Experiment extends AppModel
         $ret = $this->find('first', $options);
         return $ret;
     }
-
-    function findAllByTeamId($teamId)
-    {
-        $options = [
-            'conditions' => [
-                'team_id' => $teamId
-            ]
-        ];
-        $ret = $this->find('all', $options);
-        return Hash::extract($ret, '{n}.Experiment');
-    }
 }
