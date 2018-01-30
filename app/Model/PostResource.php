@@ -14,16 +14,37 @@ class PostResource extends AppModel
     const COLUMN_POST = 'post_id';
     const COLUMN_POST_DRAFT = 'post_draft_id';
 
-    function getResourcesByPostId(int $postDraftId): array
+    /**
+     * Return all post_resources of posts.id
+     *
+     * @param int $postId
+     *
+     * @return array
+     */
+    function getResourcesByPostId(int $postId): array
     {
-        return $this->getResourcesByPostOrPostDraftId($postDraftId, static::COLUMN_POST);
+        return $this->getResourcesByPostOrPostDraftId($postId, static::COLUMN_POST);
     }
 
+    /**
+     * Return all post_resources of post_drafts.id
+     *
+     * @param int $postDraftId
+     *
+     * @return array
+     */
     function getResourcesByPostDraftId(int $postDraftId): array
     {
         return $this->getResourcesByPostOrPostDraftId($postDraftId, static::COLUMN_POST_DRAFT);
     }
 
+    /**
+     * Return all post_resources of {posts or post_drafts}.id
+     * @param int    $id
+     * @param string $postOrDraft
+     *
+     * @return array
+     */
     private function getResourcesByPostOrPostDraftId(int $id, string $postOrDraft): array
     {
         $options = [
@@ -34,7 +55,15 @@ class PostResource extends AppModel
                 $postOrDraft => $id,
             ],
         ];
-        $postResources = Hash::extract($this->find('all', $options), '{n}.PostResource');
+        $postResources = $this->find('all', $options);
+        if (is_null($postResources)) {
+            GoalousLog::error('find error on post_resources', [
+                'post_or_draft' => $postOrDraft,
+                'id'            => $id,
+            ]);
+            return [];
+        }
+        $postResources = Hash::extract($postResources, '{n}.PostResource');
 
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
@@ -64,6 +93,23 @@ class PostResource extends AppModel
         return $results;
     }
 
+    /**
+     * Find post_drafts.id by
+     *      PostResourceType
+     *          (VIDEO_STREAM = 1)
+     *      and
+     *      resource_id (that stands for PostResourceType)
+     *          (PostResourceType = 1 = VIDEO_STREAM = video_streams.id)
+     *
+     * e.g.
+     *  getPostDraftIdByResourceTypeAndResourceId(PostResourceType::VIDEO_STREAM(), 123)
+     *      means finding the post_drafts.id that have relation to 'video_streams.id = 123'
+     *
+     * @param Enum\Post\PostResourceType $resourceType
+     * @param int                        $resourceId
+     *
+     * @return int|null
+     */
     function getPostDraftIdByResourceTypeAndResourceId(Enum\Post\PostResourceType $resourceType, int $resourceId)/*: ?int */
     {
         $options = [
