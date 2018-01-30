@@ -1421,18 +1421,16 @@ class NotifyBizComponent extends Component
                 }
             }
 
+            // Send to NCMB
+            if (count($ncmbTokens) > 0) {
+                $encTitle = json_encode($title, JSON_HEX_QUOT);
+                $PushService->sendNCMBPushNotification($ncmbTokens, $encTitle, $postUrl);
+            }
 
             // Send to Firebase
             if (count($firebaseTokens) > 0) {
                 $PushService->sendFirebasePushNotification($firebaseTokens, $title, $postUrl);
             }
-
-            // Send to NCMB
-            if (count($ncmbTokens) > 0) {
-                $title = json_encode($title, JSON_HEX_QUOT);
-                $PushService->sendNCMBPushNotification($ncmbTokens, $title, $postUrl);
-            }
-
             $sent_device_tokens = array_merge($sent_device_tokens, $deviceTokens);
         }
 
