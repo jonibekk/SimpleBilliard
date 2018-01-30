@@ -369,6 +369,13 @@ class Post extends AppModel
         return reset($res);
     }
 
+    /**
+     * Create Post from PostDraft
+     *
+     * @param array $postDraft
+     *
+     * @return array
+     */
     public function addNormalFromPostDraft(array $postDraft): array
     {
         $post = $this->addNormal(
@@ -387,7 +394,10 @@ class Post extends AppModel
         $PostDraft = ClassRegistry::init('PostDraft');
         $postDraft['post_id'] = $post['id'];
         $PostDraft->save($postDraft);
-        $PostDraft->delete($postDraft['id']);
+
+        // Post is created by PostDraft
+        // Deleting PostDraft because target PostDraft ended role
+        $PostDraft->softDelete($postDraft['id'], false);
         return $post;
     }
 
@@ -1202,10 +1212,18 @@ class Post extends AppModel
         return $data;
     }
 
-    private function getShareMessageDefinitions(string $key, bool $isPostPublished): string
+    /**
+     * Return share message by share type
+     *
+     * @param string $shareType
+     * @param bool   $isPostPublished
+     *
+     * @return string
+     */
+    private function getShareMessageDefinitions(string $shareType, bool $isPostPublished): string
     {
         if ($isPostPublished) {
-            switch ($key) {
+            switch ($shareType) {
                 case 'people': return 'Shared %s';
                 case 'peoples': return 'Shared %1$s and %2$s others';
                 case 'self': return 'Only you';
@@ -1219,7 +1237,7 @@ class Post extends AppModel
             }
         }
         // post is still in draft
-        switch ($key) {
+        switch ($shareType) {
             case 'people': return '%s';
             case 'peoples': return '%1$s and %2$s others';
             case 'self': return 'Only you';
