@@ -17,49 +17,50 @@ class PostResource extends AppModel
     /**
      * Return all post_resources of posts.id
      *
-     * @param int $postId
+     * @param int[] $postIds
      *
      * @return array
      */
-    function getResourcesByPostId(int $postId): array
+    function getResourcesByPostId(array $postIds): array
     {
-        return $this->getResourcesByPostOrPostDraftId($postId, static::COLUMN_POST);
+        return $this->getResourcesByPostOrPostDraftId($postIds, static::COLUMN_POST);
     }
 
     /**
      * Return all post_resources of post_drafts.id
      *
-     * @param int $postDraftId
+     * @param int[] $postDraftIds
      *
      * @return array
      */
-    function getResourcesByPostDraftId(int $postDraftId): array
+    function getResourcesByPostDraftId(array $postDraftIds): array
     {
-        return $this->getResourcesByPostOrPostDraftId($postDraftId, static::COLUMN_POST_DRAFT);
+        return $this->getResourcesByPostOrPostDraftId($postDraftIds, static::COLUMN_POST_DRAFT);
     }
 
     /**
      * Return all post_resources of {posts or post_drafts}.id
-     * @param int    $id
-     * @param string $postOrDraft
+     *
+     * @param int[]  $ids
+     * @param string $postOrDraftColumnName
      *
      * @return array
      */
-    private function getResourcesByPostOrPostDraftId(int $id, string $postOrDraft): array
+    private function getResourcesByPostOrPostDraftId(array $ids, string $postOrDraftColumnName): array
     {
         $options = [
             'fields'     => [
                 '*'
             ],
             'conditions' => [
-                $postOrDraft => $id,
+                $postOrDraftColumnName => $ids,
             ],
         ];
         $postResources = $this->find('all', $options);
         if (is_null($postResources)) {
             GoalousLog::error('find error on post_resources', [
-                'post_or_draft' => $postOrDraft,
-                'id'            => $id,
+                'post_or_draft' => $postOrDraftColumnName,
+                'ids'           => $ids,
             ]);
             return [];
         }
@@ -68,9 +69,20 @@ class PostResource extends AppModel
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
 
-        $results = [];
+        $resources = [];
+        // create $resources:array = [
+        //      PostResourceType:int => [
+        //          resource_id:int => resource data:array,
+        //          ...
+        //      ]
+        // ]
         foreach ($postResources as $postResource) {
             $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
+
+            $hashKeyResource = sprintf('%s.%s', Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
+            if (Hash::check($resources, $hashKeyResource)) {
+                continue;
+            }
             // written in switch case
             // more resource_type will defined in future
             switch ($resourceType->getValue()) {
@@ -89,8 +101,36 @@ class PostResource extends AppModel
 
                     $resourceVideoStream['video_sources'] = $transcodeOutput->getVideoSources($urlBaseStorage);
                     $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
-                    $results[] = $resourceVideoStream;
+                    $resourceVideoStream['post_resource_type'] = Enum\Post\PostResourceType::VIDEO_STREAM();
+                    $resources = Hash::insert($resources, $hashKeyResource, $resourceVideoStream);
             }
+        }
+
+        $results = [];
+        // create $results:array = [
+        //      (posts.id | post_draft_id):int => [
+        //          resource data:array,
+        //          ...
+        //      ]
+        // ]
+        foreach ($postResources as $postResource) {
+            $hashKeyResource = '';
+            $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
+            switch ($resourceType->getValue()) {
+                case Enum\Post\PostResourceType::VIDEO_STREAM:
+                    $hashKeyResource = sprintf('%s.%s', Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
+                    break;
+                default:
+                    GoalousLog::error('resource type not found for post resource', [
+                        'resource_type' => sprintf('%s:%s', $resourceType->getValue(), $resourceType->getKey()),
+                    ]);
+                    continue;
+            }
+            $targetId = $postResource[$postOrDraftColumnName];
+            if (!isset($results[$targetId])) {
+                $results[$targetId] = [];
+            }
+            $results[$targetId][] = Hash::get($resources, $hashKeyResource);
         }
         return $results;
     }

@@ -33,9 +33,12 @@ class PostDraft extends AppModel
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
 
+        $postDraftIds = Hash::extract($postDrafts, '{n}.id') ?? [];
+        $postDraftResources = $PostResource->getResourcesByPostDraftId($postDraftIds);
+
         foreach ($postDrafts as $i => $postDraft) {
             $postDraft['data'] = json_decode($postDraft['draft_data'], true);
-            $postDraft['post_resources'] = $PostResource->getResourcesByPostDraftId($postDraft['id']);
+            $postDraft['post_resources'] = $postDraftResources[$postDraft['id']];
             $postDrafts[$i] = $postDraft;
         }
         return $postDrafts;

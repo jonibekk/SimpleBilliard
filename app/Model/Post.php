@@ -894,9 +894,11 @@ class Post extends AppModel
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
         // get post resources
+        $postIds = Hash::extract($res, '{n}.Post.id') ?? [];
+        $postResources = $PostResource->getResourcesByPostId($postIds);
         foreach ($res as $key => $post) {
             $res[$key] = am($post, [
-                'PostResources' => $PostResource->getResourcesByPostId($post['Post']['id']),
+                'PostResources' => $postResources[$post['Post']['id']],
             ]);
         }
         return $res;
