@@ -898,7 +898,7 @@ class Post extends AppModel
         $postResources = $PostResource->getResourcesByPostId($postIds);
         foreach ($res as $key => $post) {
             $res[$key] = am($post, [
-                'PostResources' => $postResources[$post['Post']['id']],
+                'PostResources' => $postResources[$post['Post']['id']] ?? [],
             ]);
         }
         return $res;

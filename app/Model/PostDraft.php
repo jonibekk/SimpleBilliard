@@ -38,7 +38,7 @@ class PostDraft extends AppModel
 
         foreach ($postDrafts as $i => $postDraft) {
             $postDraft['data'] = json_decode($postDraft['draft_data'], true);
-            $postDraft['post_resources'] = $postDraftResources[$postDraft['id']];
+            $postDraft['post_resources'] = $postDraftResources[$postDraft['id']] ?? [];
             $postDrafts[$i] = $postDraft;
         }
         return $postDrafts;
