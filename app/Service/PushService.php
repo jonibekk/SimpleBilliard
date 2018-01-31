@@ -171,14 +171,11 @@ class PushService extends AppService
         //   The user uninstalls/reinstall the app
         //   The user clears app data.
         if ($result['failure'] >= 1) {
+            $invalidTypes = ['MismatchSenderId', 'InvalidRegistration', 'NotRegistered'];
             foreach ($result['results'] as $key => $value) {
                 // Check for invalid tokens.
                 // Errors are returned on the same order of request
-                if (!empty($value['error']) &&
-                    ($value['error'] == 'MismatchSenderId' ||
-                        $value['error'] == 'InvalidRegistration' ||
-                        $value['error'] == 'NotRegistered')) {
-
+                if (in_array($value['error'], $invalidTypes, true)) {
                     $invalidToken = $deviceTokens[$key];
                     $this->removeDevice($invalidToken);
                 }
