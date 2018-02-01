@@ -8,6 +8,7 @@ App::uses('PostShareCircle', 'Model');
 App::uses('PostResource', 'Model');
 App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
+App::import('Service', 'PostService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -264,141 +265,24 @@ class Post extends AppModel
      *
      * @return bool|mixed
      */
-    public function addNormal(array $postData, $uid = null, $team_id = null, array $postResources = [])
+    public function addNormal(array $postData, int $uid, int $team_id, array $postResources = [])
     {
-        if (!isset($postData['Post']) || empty($postData['Post'])) {
-            CakeLog::info(sprintf("post data [Post] not exists: %s", AppUtil::jsonOneLine($postData)));
-            return false;
-        }
-        $this->setUidAndTeamId($uid, $team_id);
-        $share = null;
-        if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
-            $share = explode(",", $postData['Post']['share']);
-            foreach ($share as $key => $val) {
-                if (stristr($val, 'public')) {
-                    $teamAllCircle = $this->Circle->getTeamAllCircle($team_id);
-                    $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
-                }
-            }
-        }
-        $postData['Post']['user_id'] = $this->uid;
-        $postData['Post']['team_id'] = $this->team_id;
-        if (!isset($postData['Post']['type'])) {
-            $postData['Post']['type'] = Post::TYPE_NORMAL;
-        }
-
-        $this->begin();
-        $this->create();
-        $res = $this->save($postData);
-        if (empty($res)) {
-            $this->rollback();
-            return false;
-        }
-
-        $post_id = $this->getLastInsertID();
-        $results = [];
-        // ファイルが添付されている場合
-        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
-            $results[] = $this->PostFile->AttachedFile->saveRelatedFiles($post_id,
-                AttachedFile::TYPE_MODEL_POST,
-                $postData['file_id']);
-        }
-        // handling post resources
-        /** @var PostResource $PostResource */
-        $PostResource = ClassRegistry::init("PostResource");
-        foreach ($postResources as $postResource) {
-            $PostResource->create([
-                'post_id' => $post_id,
-                'post_draft_id' => null,
-                // TODO: currently only resource type of video only
-                // need to determine what type of resource is passed from arguments
-                // (maybe should wrap by class, not simple array)
-                // same as in PostDraftService::createPostDraftWithResources()
-                'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
-                'resource_id' => $postResource['id'],
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        try {
+            return $PostService->addNormal(
+                $postData, $uid, $team_id, $postResources
+            );
+        } catch (Exception $e) {
+            // TODO: add transaction
+            GoalousLog::error('failed adding post data', [
+                'message' => $e->getMessage(),
+                'userId' => $uid,
+                'teamId' => $team_id,
             ]);
-            $postResource = $PostResource->save();
-            $postResource = reset($postResource);
+            GoalousLog::error($e->getTraceAsString());
         }
-
-        if (!empty($share)) {
-            //ユーザとサークルに分割
-            $users = [];
-            $circles = [];
-            foreach ($share as $val) {
-                //ユーザの場合
-                if (stristr($val, 'user_')) {
-                    $users[] = str_replace('user_', '', $val);
-                } //サークルの場合
-                elseif (stristr($val, 'circle_')) {
-                    $circles[] = str_replace('circle_', '', $val);
-                }
-            }
-            if ($users) {
-                //共有ユーザ保存
-                $results[] = $this->PostShareUser->add($this->getLastInsertID(), $users);
-            }
-            if ($circles) {
-                //共有サークル保存
-                $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles, $team_id);
-                //共有サークル指定されてた場合の未読件数更新
-                $results[] = $this->User->CircleMember->incrementUnreadCount($circles, true, $team_id);
-                //共有サークル指定されてた場合、更新日時更新
-                $results[] = $this->User->CircleMember->updateModified($circles, $team_id);
-                $results[] = $this->PostShareCircle->Circle->updateModified($circles);
-            }
-        }
-        // どこかでエラーが発生した場合は rollback
-        foreach ($results as $r) {
-            if (!$r) {
-                $this->rollback();
-                $this->PostFile->AttachedFile->deleteAllRelatedFiles($post_id, AttachedFile::TYPE_MODEL_POST);
-                return false;
-            }
-        }
-        $this->commit();
-
-        // 添付ファイルが存在する場合は一時データを削除
-        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
-            $Redis = ClassRegistry::init('GlRedis');
-            foreach ($postData['file_id'] as $hash) {
-                $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
-            }
-        }
-
-        return reset($res);
-    }
-
-    /**
-     * Create Post from PostDraft
-     *
-     * @param array $postDraft
-     *
-     * @return array
-     */
-    public function addNormalFromPostDraft(array $postDraft): array
-    {
-        $post = $this->addNormal(
-            json_decode($postDraft['draft_data'], true),
-            $postDraft['user_id'],
-            $postDraft['team_id'],
-            []
-        );
-
-        /** @var PostResourceService $PostResourceService */
-        $PostResourceService = ClassRegistry::init('PostResourceService');
-        // changing post_resources.post_id = null to posts.id
-        $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id']);
-
-        /** @var PostDraft $PostDraft */
-        $PostDraft = ClassRegistry::init('PostDraft');
-        $postDraft['post_id'] = $post['id'];
-        $PostDraft->save($postDraft);
-
-        // Post is created by PostDraft
-        // Deleting PostDraft because target PostDraft ended role
-        $PostDraft->softDelete($postDraft['id'], false);
-        return $post;
+        return false;
     }
 
     /**

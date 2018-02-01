@@ -7,6 +7,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Post', 'Model');
+App::import('Service', 'PostService');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'VideoStreamService');
 
@@ -152,8 +153,8 @@ class TranscodeNotificationsController extends ApiController
                 // TODO: 現在は紐付いている動画が変換完了 = 下書きからの投稿OK と見なしているので修正が必要
                 // Serviceに $PostDraftService->isPreparedToPost($draftPost); という判断するメソッドを追加するべき
                 $postDrafts = $PostDraft->getByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
-                /** @var Post $Post */
-                $Post = ClassRegistry::init('Post');
+                /** @var PostService $PostService */
+                $PostService = ClassRegistry::init('PostService');
                 foreach ($postDrafts as $postDraft) {
                     // This API is called by external service, we do not have $this->current_team_id on this session
                     $this->current_team_id = $postDraft['team_id'];
@@ -161,8 +162,16 @@ class TranscodeNotificationsController extends ApiController
                     // if ($PostDraftService->isPreparedToPost($draftPost);) {
                     //     ...
                     // }
-                    $post = $Post->addNormalFromPostDraft($postDraft);
-                    $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);
+                    $post = $PostService->addNormalFromPostDraft($postDraft);
+                    if (false === $post) {
+                        // failed post from draft post
+                        GoalousLog::error('Failed posting from draft post', [
+                            'post_drafts.id' => $postDraft['id'],
+                        ]);
+                    } else {
+                        // succeed
+                        $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);
+                    }
                 }
             } else if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
                 /** @var Video $Video */

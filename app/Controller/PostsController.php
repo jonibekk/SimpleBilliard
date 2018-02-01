@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
+App::uses('TeamStatus', 'Lib/Status');
 
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
@@ -101,6 +102,8 @@ class PostsController extends AppController
      */
     public function _addPost()
     {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
         $this->request->allowMethod('post');
 
         // OGP処理はメッセ、アクション以外の場合に実行
@@ -115,6 +118,9 @@ class PostsController extends AppController
                 ? $this->request->data['Post']['share_public']
                 : $this->request->data['Post']['share_secret'];
         }
+
+        $userId = $this->Auth->user('id');
+        $teamId = TeamStatus::getCurrentTeam()->getTeamId();
 
         $countVideoStreamIds =
             isset($this->request->data['video_stream_id']) && is_array($this->request->data['video_stream_id'])
@@ -155,7 +161,18 @@ class PostsController extends AppController
                     return true;
                 case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
                     GoalousLog::info("video post creating draft post", $logDataArray);
-                    $this->Post->addNormal($this->request->data, null, null, [$videoStream]);
+                    $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId, [$videoStream]);
+                    // 保存に失敗
+                    if (false === $successSavedPost) {
+                        // バリデーションエラーのケース
+                        if (!empty($this->Post->validationErrors)) {
+                            $error_msg = array_shift($this->Post->validationErrors);
+                            $this->Notification->outError($error_msg[0], ['title' => __("Failed to post.")]);
+                        } else {
+                            $this->Notification->outError(__("Failed to post."));
+                        }
+                        return false;
+                    }
                     return true;
                 default:
                     GoalousLog::info("video post error", $logDataArray);
@@ -165,7 +182,7 @@ class PostsController extends AppController
         }
 
         // 投稿を保存
-        $successSavedPost = $this->Post->addNormal($this->request->data);
+        $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId);
 
         // 保存に失敗
         if (false === $successSavedPost) {

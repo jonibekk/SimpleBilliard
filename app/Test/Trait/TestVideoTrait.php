@@ -16,6 +16,14 @@ trait TestVideoTrait
      */
     public $Video;
 
+    /**
+     * @param int                             $userId
+     * @param int                             $teamId
+     * @param string                          $hash
+     * @param Enum\Video\VideoTranscodeStatus $status
+     *
+     * @return array [videos, video_streams]
+     */
     protected function createVideoSet(int $userId, int $teamId, string $hash, Enum\Video\VideoTranscodeStatus $status): array
     {
         $this->Video->create();
