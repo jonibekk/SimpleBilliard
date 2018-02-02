@@ -222,8 +222,9 @@ class PostService extends AppService
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
             if (false === $PostFile->AttachedFile->saveRelatedFiles($postId,
-                AttachedFile::TYPE_MODEL_POST,
-                $postData['file_id'])) {
+                    AttachedFile::TYPE_MODEL_POST,
+                    $postData['file_id'])
+            ) {
                 throw new RuntimeException('Error on adding post: failed saving related files');
             }
         }
@@ -262,7 +263,7 @@ class PostService extends AppService
                 // Save share users
                 if (false === $PostShareUser->add($postId, $users)) {
                     GoalousLog::error($errorMessage = 'failed saving post share users', [
-                        'posts.id' => $postId,
+                        'posts.id'  => $postId,
                         'users.ids' => $users,
                     ]);
                     throw new RuntimeException('Error on adding post: ' . $errorMessage);
@@ -273,7 +274,7 @@ class PostService extends AppService
                     // Save share circles
                     if (false === $PostShareCircle->add($postId, $circles, $teamId)) {
                         GoalousLog::error($errorMessage = 'failed saving post share circles', [
-                            'posts.id' => $postId,
+                            'posts.id'    => $postId,
                             'circles.ids' => $postId,
                             'teams.id'    => $teamId,
                         ]);
@@ -319,5 +320,60 @@ class PostService extends AppService
         }
 
         return reset($post);
+    }
+
+    /**
+     * Save favorite post
+     *
+     * @param int $postId
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    function saveItem(int $postId, int $userId, int $teamId): bool
+    {
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init("SavedPost");
+
+        try {
+            $SavedPost->create();
+            $SavedPost->save([
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId,
+            ]);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Delete favorite post
+     *
+     * @param int $postId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function deleteItem(int $postId, int $userId): bool
+    {
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init("SavedPost");
+
+        try {
+            $SavedPost->deleteAll([
+                'post_id' => $postId,
+                'user_id' => $userId,
+            ]);
+        } catch (Exception $e) {
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
+            return false;
+        }
+        return true;
     }
 }

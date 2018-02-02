@@ -1353,12 +1353,17 @@ class PostsController extends AppController
             $this->Notification->outError(__("Error in the URL."));
             return $this->redirect($this->referer());
         }
-        $circle_id = $this->request->params['named']['circle_id'];
-        if ($circle_id == $this->Post->Circle->getTeamAllCircleId()) {
+
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init("CircleService");
+
+        $circleId = $this->request->params['named']['circle_id'];
+        if ($circleId == $this->Post->Circle->getTeamAllCircleId()) {
             $this->Notification->outError(__("Not allowed to leave this circle."));
             return $this->redirect($this->referer());
         }
-        $this->Post->Circle->CircleMember->unjoinMember($circle_id);
+        $userId = $this->Auth->user('id');
+        $CircleService->removeCircleMember($this->current_team_id, $circleId, $userId);
         $this->Notification->outSuccess(__("Left the circle"));
         return $this->redirect($this->referer());
     }

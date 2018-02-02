@@ -390,7 +390,7 @@ class CircleMember extends AppModel
      *
      * @return bool
      */
-    function leave(int $circleId, int $userId) :bool
+    function remove(int $circleId, int $userId) :bool
     {
         $conditions = [
             'CircleMember.circle_id' => $circleId,
@@ -398,7 +398,9 @@ class CircleMember extends AppModel
             'CircleMember.team_id'   => $this->current_team_id,
         ];
 
-        $this->deleteAll($conditions);
+        if (!$this->deleteAll($conditions)) {
+            return false;
+        }
         $this->updateCounterCache(['circle_id' => $circleId]);
         return true;
     }

@@ -41,6 +41,7 @@ class PostTest extends GoalousTestCase
         'app.term',
         'app.post_resource',
         'app.kr_progress_log',
+        'app.saved_post',
     );
 
     /**
