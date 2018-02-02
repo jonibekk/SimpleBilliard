@@ -496,7 +496,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['share_user_list'] = $share_user_list;
         $this->notify_option['options']['share_circle_list'] = $share_circle_list;
 
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $share_user_list);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $members);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $share_circle_list);
     }
 
