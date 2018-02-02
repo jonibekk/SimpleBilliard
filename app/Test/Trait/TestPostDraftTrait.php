@@ -16,6 +16,17 @@ trait TestPostDraftTrait
      */
     public $PostResource = null;
 
+    /**
+     * Create post_draft and post_resource
+     * returning post_draft and post_resource data array.
+     *
+     * @param int    $userId
+     * @param int    $teamId
+     * @param array  $videoStream
+     * @param string $bodyText
+     *
+     * @return array list($postDraft, $postResource)
+     */
     private function createPostDraftWithVideoStreamResource(int $userId, int $teamId, array $videoStream, string $bodyText): array
     {
         $postDraft = $this->PostDraft->create([
