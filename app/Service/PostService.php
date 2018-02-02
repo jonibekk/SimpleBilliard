@@ -9,6 +9,7 @@ App::uses('PostResource', 'Model');
 App::uses('Circle', 'Model');
 App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
+App::uses('PostDraft', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -33,11 +34,14 @@ class PostService extends AppService
         return $ret;
     }
 
-
     /**
-     * TODO:
+     * Adding new normal post from post_draft data
+     *
+     * @param array $postDraft
+     *
+     * @return array|false
      */
-    public function addNormalFromPostDraft(array $postDraft): array
+    public function addNormalFromPostDraft(array $postDraft)
     {
         try {
             $this->TransactionManager->begin();
@@ -52,31 +56,40 @@ class PostService extends AppService
             /** @var PostResourceService $PostResourceService */
             $PostResourceService = ClassRegistry::init('PostResourceService');
             // changing post_resources.post_id = null to posts.id
-            $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id']);
+            if (false === $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id'])) {
+                GoalousLog::error($errorMessage = 'failed updating post_resources.post_id', [
+                    'posts.id' => $post['id'],
+                    'post_drafts.id' => $postDraft['id'],
+                ]);
+                throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
+            }
 
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');
             $postDraft['post_id'] = $post['id'];
-            $PostDraft->save($postDraft);
+            if (false === $PostDraft->save($postDraft)) {
+                GoalousLog::error($errorMessage = 'failed saving post_draft', [
+                    'posts.id' => $post['id'],
+                    'post_drafts.id' => $postDraft['id'],
+                ]);
+                throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
+            }
 
             // Post is created by PostDraft
             // Deleting PostDraft because target PostDraft ended role
-            $PostDraft->softDelete($postDraft['id'], false);
+            // Could not judge if delete() is succeed or not (always returning false)
+            $PostDraft->delete($postDraft['id']);
             $this->TransactionManager->commit();
             return $post;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('failed adding post data', [
+            GoalousLog::error('failed adding post data from draft', [
                 'message' => $e->getMessage(),
-                'users.id' => $userId,
-                'teams.id' => $teamId,
             ]);
             GoalousLog::error($e->getTraceAsString());
         }
         return false;
     }
-
-
 
     /**
      * Adding new normal post with transaction
@@ -248,26 +261,46 @@ class PostService extends AppService
             if ($users) {
                 // Save share users
                 if (false === $PostShareUser->add($postId, $users)) {
-                    throw new RuntimeException('PostShareUser->add share user');// TODO:
+                    GoalousLog::error($errorMessage = 'failed saving post share users', [
+                        'posts.id' => $postId,
+                        'users.ids' => $users,
+                    ]);
+                    throw new RuntimeException('Error on adding post: ' . $errorMessage);
                 }
             }
             if ($circles) {
                 try {
                     // Save share circles
                     if (false === $PostShareCircle->add($postId, $circles, $teamId)) {
-                        throw new RuntimeException('PostShareCircle->add');// TODO:
+                        GoalousLog::error($errorMessage = 'failed saving post share circles', [
+                            'posts.id' => $postId,
+                            'circles.ids' => $postId,
+                            'teams.id'    => $teamId,
+                        ]);
+                        throw new RuntimeException('Error on adding post: ' . $errorMessage);
                     }
                     // Update unread post numbers if specified sharing circle
                     if (false === $User->CircleMember->incrementUnreadCount($circles, true, $teamId)) {
-                        throw new RuntimeException('CircleMember->incrementUnreadCount');// TODO:
+                        GoalousLog::error($errorMessage = 'failed increment unread count', [
+                            'circles.ids' => $postId,
+                            'teams.id'    => $teamId,
+                        ]);
+                        throw new RuntimeException('Error on adding post: ' . $errorMessage);
                     }
                     // Update modified date if specified sharing circle
                     if (false === $User->CircleMember->updateModified($circles, $teamId)) {
-                        throw new RuntimeException('CircleMember->updateModified');// TODO:
+                        GoalousLog::error($errorMessage = 'failed update modified of circle member', [
+                            'circles.ids' => $circles,
+                            'teams.id'    => $teamId,
+                        ]);
+                        throw new RuntimeException('Error on adding post: ' . $errorMessage);
                     }
                     // Same as above
                     if (false === $PostShareCircle->Circle->updateModified($circles)) {
-                        throw new RuntimeException('PostShareCircle->Circle->updateModified');// TODO:
+                        GoalousLog::error($errorMessage = 'failed update modified of circles', [
+                            'circles.ids' => $circles,
+                        ]);
+                        throw new RuntimeException('Error on adding post: ' . $errorMessage);
                     }
                 } catch (\Throwable $e) {
                     $PostFile->AttachedFile->deleteAllRelatedFiles($postId, AttachedFile::TYPE_MODEL_POST);

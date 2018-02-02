@@ -9,7 +9,9 @@ App::uses('Post', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::uses('PostResource', 'Model');
+App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
+App::uses('TestPostDraftTrait', 'Test/Trait');
 
 use Goalous\Model\Enum as Enum;
 
@@ -17,7 +19,7 @@ use Goalous\Model\Enum as Enum;
  */
 class PostServiceTest extends GoalousTestCase
 {
-    use TestVideoTrait;
+    use TestVideoTrait, TestPostDraftTrait;
 
     /**
      * Fixtures
@@ -36,6 +38,7 @@ class PostServiceTest extends GoalousTestCase
         'app.video',
         'app.video_stream',
         'app.post_resource',
+        'app.post_draft',
     ];
 
     /**
@@ -79,11 +82,6 @@ class PostServiceTest extends GoalousTestCase
     private $Circle;
 
     /**
-     * @var PostResource
-     */
-    private $PostResource;
-
-    /**
      * setUp method
      *
      * @return void
@@ -102,6 +100,7 @@ class PostServiceTest extends GoalousTestCase
         $this->Video = ClassRegistry::init('Video');
         $this->VideoStream = ClassRegistry::init('VideoStream');
         $this->PostResource = ClassRegistry::init('PostResource');
+        $this->PostDraft = ClassRegistry::init('PostDraft');
     }
 
     function test_addNormal_simpleText()
@@ -447,5 +446,195 @@ class PostServiceTest extends GoalousTestCase
         $countAfter = $this->Post->find('count');
 
         $this->assertSame($countAfter, $countBefore);
+    }
+
+    /**
+     * @expectedException         RuntimeException
+     * @expectedExceptionMessage Error on adding post: failed saving post share users
+     */
+    function test_addNormal_PostShareUser_error()
+    {
+        $mock = $this->getMockForModel('PostShareUser', array('add'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('add')
+             ->will($this->returnValue(false));
+
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'share' => 'public,user_2',
+            ],
+        ];
+        $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
+    }
+
+    /**
+     * @expectedException         RuntimeException
+     * @expectedExceptionMessage Error on adding post: failed saving post share circles
+     */
+    function test_addNormal_PostShareCircle_error()
+    {
+        $mock = $this->getMockForModel('PostShareCircle', array('add'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('add')
+             ->will($this->returnValue(false));
+
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'share' => 'public,circle_2',
+            ],
+        ];
+        $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
+    }
+
+    /**
+     * @expectedException         RuntimeException
+     * @expectedExceptionMessage Error on adding post: failed increment unread count
+     */
+    function test_addNormal_incrementUnreadCount_error()
+    {
+        $mock = $this->getMockForModel('CircleMember', array('incrementUnreadCount'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('incrementUnreadCount')
+             ->will($this->returnValue(false));
+
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'share' => 'public,circle_2',
+            ],
+        ];
+        $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
+    }
+
+    /**
+     * @expectedException         RuntimeException
+     * @expectedExceptionMessage Error on adding post: failed update modified of circle member
+     */
+    function test_addNormal_CircleMember_updateModified_error()
+    {
+        $mock = $this->getMockForModel('CircleMember', array('updateModified'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('updateModified')
+             ->will($this->returnValue(false));
+
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'share' => 'public,circle_2',
+            ],
+        ];
+        $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
+    }
+
+    /**
+     * @expectedException         RuntimeException
+     * @expectedExceptionMessage Error on adding post: failed update modified of circles
+     */
+    function test_addNormal_Circle_updateModified_error()
+    {
+        $mock = $this->getMockForModel('Circle', array('updateModified'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('updateModified')
+             ->will($this->returnValue(false));
+
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'share' => 'public,circle_2',
+            ],
+        ];
+        $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
+    }
+
+    function test_addNormalWithTransaction_Circle_updateModified_error()
+    {
+        $mock = $this->getMockForModel('Circle', array('updateModified'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('updateModified')
+             ->will($this->returnValue(false));
+
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'share' => 'public,circle_2',
+            ],
+        ];
+
+        $countBefore = $this->Post->find('count');
+        $post = $this->PostService->addNormalWithTransaction($postData, $userId = 1, $teamId = 1);
+        $countAfter  = $this->Post->find('count');
+        $this->assertFalse($post);
+        $this->assertSame($countBefore, $countAfter);
+    }
+
+    function test_addNormalFromPostDraft()
+    {
+        $bodyText = sprintf('body text: %s', time());
+        $videoStreamId = 11;
+        list($postDraft, $postResource) = $this->createPostDraftWithVideoStreamResource(
+            $userId = 1,
+            $teamId = 1,
+            $videoStream = ['id' => $videoStreamId],
+            $bodyText);
+
+
+        $countBefore = $this->Post->find('count');
+        $post = $this->PostService->addNormalFromPostDraft($postDraft);
+        $countAfter = $this->Post->find('count');
+        $createdPostId = $post['id'];
+
+        $this->assertSame($bodyText, $post['body']);
+        $this->assertTrue(is_numeric($createdPostId));
+        $this->assertSame($countAfter, $countBefore + 1);
+
+        // assert that draft post used is deleted
+        $postDraftUsed = $this->PostDraft->find('first', [
+            'conditions' => [
+                'PostDraft.id' => $postDraft['id'],
+                'PostDraft.del_flg' => true,
+            ],
+        ]);
+
+        // assert used post_draft deleted
+        $postDraftUsed = reset($postDraftUsed);
+        $this->assertTrue($postDraftUsed['del_flg']);
+        $this->assertEquals($postDraft['id'], $postDraftUsed['id']);
+        $this->assertEquals($createdPostId, $postDraftUsed['post_id']);
+
+        // assert post_resource updated
+        $postResourceUpdated = $this->PostResource->getById($postResource['id']);
+        $this->assertEquals($createdPostId, $postResourceUpdated['post_id']);
+    }
+
+    function test_addNormalFromPostDraft_rollback()
+    {
+        $mock = $this->getMockForModel('PostDraft', array('save'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('save')
+             ->will($this->returnValue(false));
+
+        $bodyText = sprintf('body text: %s', time());
+        $videoStreamId = 11;
+        list($postDraft, $postResource) = $this->createPostDraftWithVideoStreamResource(
+            $userId = 1,
+            $teamId = 1,
+            $videoStream = ['id' => $videoStreamId],
+            $bodyText);
+
+        $countPostBefore = $this->Post->find('count');
+        $post = $this->PostService->addNormalFromPostDraft($postDraft);
+        $countPostAfter = $this->Post->find('count');
+
+        $this->assertFalse($post);
+        $this->assertSame($countPostBefore, $countPostAfter);
     }
 }
