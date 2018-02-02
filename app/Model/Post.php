@@ -256,36 +256,6 @@ class Post extends AppModel
     }
 
     /**
-     * 投稿
-     *
-     * @param      $postData
-     * @param null $uid
-     * @param null $team_id
-     * @param array $postResources
-     *
-     * @return bool|mixed
-     */
-    public function addNormal(array $postData, int $uid, int $team_id, array $postResources = [])
-    {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-        try {
-            return $PostService->addNormal(
-                $postData, $uid, $team_id, $postResources
-            );
-        } catch (Exception $e) {
-            // TODO: add transaction
-            GoalousLog::error('failed adding post data', [
-                'message' => $e->getMessage(),
-                'userId' => $uid,
-                'teamId' => $team_id,
-            ]);
-            GoalousLog::error($e->getTraceAsString());
-        }
-        return false;
-    }
-
-    /**
      * @param        $start
      * @param        $end
      * @param string $order
