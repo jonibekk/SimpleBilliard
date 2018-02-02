@@ -320,47 +320,4 @@ class PostService extends AppService
 
         return reset($post);
     }
-
-
-
-    /**
-     * ユーザIDとチームIDをセット
-     *
-     * @param null $uid
-     * @param null $team_id
-     */
-    public function setUidAndTeamId($uid = null, $team_id = null)
-    {
-        $this->setUid($uid);
-        $this->setTeamId($team_id);
-    }
-
-
-    /**
-     * ユーザIDをセット
-     *
-     * @param null $uid
-     */
-    public function setUid($uid = null)
-    {
-        if (!$uid) {
-            $this->uid = $this->my_uid;
-        } else {
-            $this->uid = $uid;
-        }
-    }
-
-    /**
-     * チームIDをセット
-     *
-     * @param null $team_id
-     */
-    public function setTeamId($team_id = null)
-    {
-        if (!$team_id) {
-            $this->team_id = $this->current_team_id;
-        } else {
-            $this->team_id = $team_id;
-        }
-    }
 }
