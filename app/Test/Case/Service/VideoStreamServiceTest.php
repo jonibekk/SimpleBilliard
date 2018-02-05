@@ -88,7 +88,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertEquals(null, $videoStreamProgressing['duration']);
         $this->assertEquals(null, $videoStreamProgressing['aspect_ratio']);
         $this->assertEquals(null, $videoStreamProgressing['storage_path']);
-        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODING, $videoStreamProgressing['status_transcode']);
+        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODING, $videoStreamProgressing['transcode_status']);
 
         // COMPLETED notification from AWS SNS
         $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString(
@@ -101,7 +101,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertTrue(ctype_digit($videoStreamProgressing['duration']));
         $this->assertTrue(is_numeric($videoStreamProgressing['aspect_ratio']));
         $this->assertTrue(is_string($videoStreamProgressing['storage_path']));
-        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['status_transcode']);
+        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['transcode_status']);
     }
 
     function test_updateFromTranscodeProgressData_withPostDraft()
@@ -127,7 +127,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertNull($videoStreamProgressing['duration']);
         $this->assertNull($videoStreamProgressing['aspect_ratio']);
         $this->assertNull($videoStreamProgressing['storage_path']);
-        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODING, $videoStreamProgressing['status_transcode']);
+        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODING, $videoStreamProgressing['transcode_status']);
 
         // COMPLETED notification from AWS SNS
         $transcodeNotificationAwsSns = TranscodeNotificationAwsSns::parseJsonString(
@@ -140,7 +140,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertTrue(ctype_digit($videoStreamProgressing['duration']));
         $this->assertTrue(is_numeric($videoStreamProgressing['aspect_ratio']));
         $this->assertTrue(is_string($videoStreamProgressing['storage_path']));
-        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['status_transcode']);
+        $this->assertEquals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['transcode_status']);
 
         // TODO: this process is no more proceed in VideoStreamService, move to another service and write test
         // check draft post, post resource

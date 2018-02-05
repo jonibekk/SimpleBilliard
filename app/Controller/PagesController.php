@@ -206,7 +206,7 @@ class PagesController extends AppController
             // has transcode failed video
             $hasTranscodeFailed = false;
             foreach ($postDraft['post_resources'] as $resource) {
-                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['status_transcode']));
+                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
                 if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
                     $hasTranscodeFailed = true;
                     break;

@@ -46,8 +46,7 @@ trait TestVideoTrait
             'duration'             => $isTranscodeCompleted ? 60 : null,
             'aspect_ratio'         => $isTranscodeCompleted ? (640 / 360) : null,
             'storage_path'         => $isTranscodeCompleted ? "streams/{$userId}/{$teamId}/{$hash}/" : null,
-            'status_transcode'     => $status->getValue(),
-            'transcode_info'       => json_encode([]),
+            'transcode_status'     => $status->getValue(),
         ]);
         return [reset($video), reset($videoStream)];
     }

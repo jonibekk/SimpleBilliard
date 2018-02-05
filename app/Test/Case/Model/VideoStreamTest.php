@@ -70,7 +70,7 @@ class VideoStreamTest extends GoalousTestCase
         $this->assertEquals(4, count($fetchedVideoStreams));
 
         foreach ($fetchedVideoStreams as $fetchedVideoStream) {
-            $this->assertTrue(in_array($fetchedVideoStream['status_transcode'], [
+            $this->assertTrue(in_array($fetchedVideoStream['transcode_status'], [
                 Enum\Video\VideoTranscodeStatus::QUEUED,
                 Enum\Video\VideoTranscodeStatus::TRANSCODING,
                 Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,

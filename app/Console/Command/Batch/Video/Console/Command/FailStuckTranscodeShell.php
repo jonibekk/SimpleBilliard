@@ -58,15 +58,17 @@ class FailStuckTranscodeShell extends AppShell
         foreach ($stuckVideoStreams as $videoStream) {
             GoalousLog::info('stuck video stream change to error', [
                 'video_streams.id' => $videoStream['id'],
-                'transcode_status'   => $videoStream['status_transcode'],
+                'transcode_status'   => $videoStream['transcode_status'],
                 'elapse time from modified'   => GoalousDateTime::now()->diffInSeconds(
                     GoalousDateTime::createFromTimestamp($videoStream['modified'])
                 ),
             ]);
-            $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR();
-            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            $transcodeInfo->setTranscodeNoProgress(true);
-            $videoStream['transcode_info'] = $transcodeInfo->toJson();
+            $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::ERROR();
+
+            // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
+            //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            //$transcodeInfo->setTranscodeNoProgress(true);
+            //$videoStream['transcode_info'] = $transcodeInfo->toJson();
             if (false === $VideoStream->save($videoStream)) {
                 GoalousLog::error('save failed on stuck video stream', [
                     'video_streams.id' => $videoStream['id'],

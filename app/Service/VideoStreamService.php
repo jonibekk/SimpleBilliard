@@ -38,7 +38,7 @@ class VideoStreamService extends AppService
 
         $db = $VideoStream->getDataSource();
 
-        $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+        $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
         if ($progressState->equals(Enum\Video\VideoTranscodeProgress::PROGRESS())) {
             // if transcode is started
             if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::QUEUED())) {
@@ -46,15 +46,16 @@ class VideoStreamService extends AppService
             }
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODING;
 
-            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
+            // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
+            //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            //$transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
 
             // DO NOT USE $Model->save() method
             // USE updateAll() for updating video_streams data
             // because if notification came in short interval, save() method will override old value
             $VideoStream->updateAll([
-                'status_transcode' => $db->value($status, 'string'),
-                'transcode_info'   => $db->value($transcodeInfo->toJson(), 'string'),
+                'transcode_status' => $db->value($status, 'string'),
+                //'transcode_info'   => $db->value($transcodeInfo->toJson(), 'string'),
             ], [
                 'VideoStream.id' => $videoStream['id'],
             ]);
@@ -69,17 +70,19 @@ class VideoStreamService extends AppService
             // if transcode is error
             $status = Enum\Video\VideoTranscodeStatus::ERROR;
 
-            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            $transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
-            if ($transcodeProgressData->isError()) {
-                $transcodeInfo->addTranscodeError($transcodeProgressData->getError());
-            }
+            // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
+            //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            //$transcodeInfo->setTranscodeJobId($transcodeProgressData->getJobId());
+            //if ($transcodeProgressData->isError()) {
+            //    $transcodeInfo->addTranscodeError($transcodeProgressData->getError());
+            //}
+
             // DO NOT USE $Model->save() method
             // USE updateAll() for updating video_streams data
             // because if notification came in short interval, save() method will override old value
             $VideoStream->updateAll([
-                'status_transcode' => $db->value($status, 'string'),
-                'transcode_info'   => $db->value($transcodeInfo->toJson(), 'string'),
+                'transcode_status' => $db->value($status, 'string'),
+            //    'transcode_info'   => $db->value($transcodeInfo->toJson(), 'string'),
             ], [
                 'VideoStream.id' => $videoStream['id'],
             ]);
@@ -92,17 +95,19 @@ class VideoStreamService extends AppService
             return $VideoStream->getById($videoStreamId);
         } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::WARNING())) {
             // if transcode notified warning
-            $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            $transcodeInfo->addTranscodeWarning($transcodeProgressData->getWarning());
+            //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+            //$transcodeInfo->addTranscodeWarning($transcodeProgressData->getWarning());
 
+
+            // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
             // DO NOT USE $Model->save() method
             // USE updateAll() for updating video_streams data
             // because if notification came in short interval, save() method will override old value
-            $VideoStream->updateAll([
-                'transcode_info' => $db->value($transcodeInfo->toJson(), 'string'),
-            ], [
-                'VideoStream.id' => $videoStream['id'],
-            ]);
+            //$VideoStream->updateAll([
+            //    'transcode_info' => $db->value($transcodeInfo->toJson(), 'string'),
+            //], [
+            //    'VideoStream.id' => $videoStream['id'],
+            //]);
 
             GoalousLog::info('transcode status warning notified', [
                 'video_streams.id' => $videoStreamId,
@@ -114,7 +119,7 @@ class VideoStreamService extends AppService
             // if transcode is completed
             $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
 
-            // if we missed the "PROGRESSING" notification, our video_stream.status_transcode is QUEUED
+            // if we missed the "PROGRESSING" notification, our video_stream.transcode_status is QUEUED
             // but this has no problem when we receive "COMPLETE" notification
             if (!in_array($currentVideoStreamStatus->getValue(), [
                 Enum\Video\VideoTranscodeStatus::TRANSCODING,
@@ -127,7 +132,7 @@ class VideoStreamService extends AppService
             // USE updateAll() for updating video_streams data
             // because if notification came in short interval, save() method will override old value
             $VideoStream->updateAll([
-                'status_transcode' => $db->value($status, 'string'),
+                'transcode_status' => $db->value($status, 'string'),
                 'duration'         => $db->value($transcodeProgressData->getDuration(), 'string'),
                 'aspect_ratio'     => $db->value($transcodeProgressData->getAspectRatio(), 'string'),
                 'storage_path'     => $db->value($transcodeProgressData->getOutputKeyPrefix(), 'string'),
@@ -259,9 +264,9 @@ class VideoStreamService extends AppService
             'duration'         => null,
             'aspect_ratio'     => null,
             'storage_path'     => null,
-            'status_transcode' => Enum\Video\VideoTranscodeStatus::UPLOADING,
+            'transcode_status' => Enum\Video\VideoTranscodeStatus::UPLOADING,
             'output_version'   => $transcodeOutputVersion->getValue(),
-            'transcode_info'   => TranscodeInfo::createNew()->toJson(),
+            // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
         ]);
         $videoStream = $VideoStream->save();
         $videoStream = reset($videoStream);
@@ -295,7 +300,7 @@ class VideoStreamService extends AppService
         ]);
         $Video->save($video);
 
-        $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
+        $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
         $VideoStream->save($videoStream);
 
         // create transcode job
@@ -330,12 +335,14 @@ class VideoStreamService extends AppService
         }
 
         // Queued complete
-        $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-        $transcodeInfo->setTranscoderType($transcodeRequest->getTranscoder());
-        $transcodeInfo->setTranscodeJobId($createJobResult->getJobId());
-        $videoStream['transcode_info'] = $transcodeInfo->toJson();
 
-        $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::QUEUED;
+        // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
+        //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+        //$transcodeInfo->setTranscoderType($transcodeRequest->getTranscoder());
+        //$transcodeInfo->setTranscodeJobId($createJobResult->getJobId());
+        //$videoStream['transcode_info'] = $transcodeInfo->toJson();
+
+        $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::QUEUED;
         $VideoStream->save($videoStream);
 
         GoalousLog::info('video transcode queued', [
@@ -359,10 +366,11 @@ class VideoStreamService extends AppService
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");
 
-        $transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-        $transcodeInfo->addTranscodeError($errorMessage);
-        $videoStream['status_transcode'] = Enum\Video\VideoTranscodeStatus::ERROR;
-        $videoStream['transcode_info'] = $transcodeInfo->toJson();
+        // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
+        //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
+        //$transcodeInfo->addTranscodeError($errorMessage);
+        $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::ERROR;
+        //$videoStream['transcode_info'] = $transcodeInfo->toJson();
         $VideoStream->save($videoStream);
         $VideoStream->softDelete($videoStream['id'], false);
     }

@@ -142,7 +142,7 @@ class TranscodeNotificationsController extends ApiController
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             $videoStream = $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
 
-            $updatedVideoStreamProgress = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+            $updatedVideoStreamProgress = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
 
             // If transcode notification is COMPLETED notify
             // Video resource related to draft post is prepared for video post

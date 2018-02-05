@@ -138,12 +138,12 @@ class PostsController extends AppController
 
             $user = $this->User->getById($this->Auth->user('id'));
             $teamId = $this->current_team_id;
-            $statusTranscode = new Enum\Video\VideoTranscodeStatus(intval($videoStream['status_transcode']));
+            $transcodeStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
             $logDataArray = [
                 'video_streams.id' => $videoStream['id'],
-                'transcode_status' => sprintf('%s:%s', $statusTranscode->getValue(), $statusTranscode->getKey()),
+                'transcode_status' => sprintf('%s:%s', $transcodeStatus->getValue(), $transcodeStatus->getKey()),
             ];
-            switch ($statusTranscode->getValue()) {
+            switch ($transcodeStatus->getValue()) {
                 case Enum\Video\VideoTranscodeStatus::UPLOADING:
                 case Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
                 case Enum\Video\VideoTranscodeStatus::QUEUED:
@@ -176,7 +176,7 @@ class PostsController extends AppController
                     return true;
                 default:
                     GoalousLog::info("video post error", $logDataArray);
-                    throw new RuntimeException(sprintf("invalid status code: %s", $statusTranscode->getValue()));
+                    throw new RuntimeException(sprintf("invalid status code: %s", $transcodeStatus->getValue()));
                     break;
             }
         }

@@ -1,6 +1,5 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('TranscodeInfo', 'Lib/Video/Stream');
 
 use Goalous\Model\Enum as Enum;
 
@@ -9,18 +8,6 @@ use Goalous\Model\Enum as Enum;
  */
 class VideoStream extends AppModel
 {
-    /**
-     * Create TranscodeInfo from video_stream array
-     * TODO: will fix
-     * @param array $videoStream
-     *
-     * @return TranscodeInfo
-     */
-    public function getTranscodeInfo(array $videoStream): TranscodeInfo
-    {
-        return TranscodeInfo::createFromJson($videoStream['transcode_info']);
-    }
-
     /**
      * Get video_stream from primary-key
      * @param int $videoId
@@ -51,18 +38,18 @@ class VideoStream extends AppModel
      *
      * @return array
      */
-    public function getByStatusTranscode(array $statuses): array
+    public function getByTranscodeStatus(array $statuses): array
     {
         $options = [
             'conditions' => [
-                'status_transcode' => $statuses,
+                'transcode_status' => $statuses,
                 'del_flg' => false,
             ],
         ];
         $videoStreams = $this->find('all', $options);
         if (is_null($videoStreams)) {
             GoalousLog::error('find error on video_streams', [
-                'status_transcode' => $statuses,
+                'transcode_status' => $statuses,
             ]);
             return [];
         }
@@ -82,7 +69,7 @@ class VideoStream extends AppModel
     {
         $options = [
             'conditions' => [
-                'status_transcode' => [
+                'transcode_status' => [
                     Enum\Video\VideoTranscodeStatus::TRANSCODING,
                     Enum\Video\VideoTranscodeStatus::QUEUED,
                     Enum\Video\VideoTranscodeStatus::UPLOADING,
