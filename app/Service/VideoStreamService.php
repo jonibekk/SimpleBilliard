@@ -356,15 +356,16 @@ class VideoStreamService extends AppService
      */
     private function deleteVideoStreamWithError(array $videoStream, string $errorMessage)
     {
+        $videoStreamId = $videoStream['id'];
+
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");
-
-        // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
-        //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-        //$transcodeInfo->addTranscodeError($errorMessage);
         $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::ERROR;
-        //$videoStream['transcode_info'] = $transcodeInfo->toJson();
         $VideoStream->save($videoStream);
-        $VideoStream->softDelete($videoStream['id'], false);
+        $VideoStream->softDelete($videoStreamId, false);
+
+        $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::ERROR(), [
+            'reason' => $errorMessage,
+        ]);
     }
 }

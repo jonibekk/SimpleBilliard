@@ -1,5 +1,6 @@
 <?php
 App::uses('VideoStream', 'Model');
+App::uses('VideoTranscodeLog', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -37,6 +38,9 @@ class FailStuckTranscodeShell extends AppShell
 
     public function main()
     {
+        /** @var VideoTranscodeLog $VideoTranscodeLog */
+        $VideoTranscodeLog = ClassRegistry::init('VideoTranscodeLog');
+
         $seconds = Hash::get($this->params, 'seconds_to_be_no_progress');
         $targetDateTime = GoalousDateTime::now()->subSecond($seconds);
         GoalousLog::info('target base time to decide transcode stopped', [
@@ -56,19 +60,20 @@ class FailStuckTranscodeShell extends AppShell
         ]);
 
         foreach ($stuckVideoStreams as $videoStream) {
+            $videoStreamId = $videoStream['id'];
+            $currentTranscodeStatus = intval($videoStream['transcode_status']);
             GoalousLog::info('stuck video stream change to error', [
-                'video_streams.id' => $videoStream['id'],
-                'transcode_status'   => $videoStream['transcode_status'],
+                'video_streams.id' => $videoStreamId,
+                'transcode_status'   => $currentTranscodeStatus,
                 'elapse time from modified'   => GoalousDateTime::now()->diffInSeconds(
                     GoalousDateTime::createFromTimestamp($videoStream['modified'])
                 ),
             ]);
+            $VideoTranscodeLog->add($videoStreamId, Enum\Video\VideoTranscodeLogType::JUDGED_STUCK(), [
+                'transcode_status' => $currentTranscodeStatus,
+            ]);
             $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::ERROR();
 
-            // 'transcode_info'   => TranscodeInfo::createNew()->toJson(), // TODO: replace using TranscodeInfo to video_transcode_logs
-            //$transcodeInfo = $VideoStream->getTranscodeInfo($videoStream);
-            //$transcodeInfo->setTranscodeNoProgress(true);
-            //$videoStream['transcode_info'] = $transcodeInfo->toJson();
             if (false === $VideoStream->save($videoStream)) {
                 GoalousLog::error('save failed on stuck video stream', [
                     'video_streams.id' => $videoStream['id'],
