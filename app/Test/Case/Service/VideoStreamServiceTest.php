@@ -29,6 +29,7 @@ class VideoStreamServiceTest extends GoalousTestCase
         'app.post_share_circle',
         'app.circle_member',
         'app.post_file',
+        'app.video_transcode_log',
     ];
 
     /**
