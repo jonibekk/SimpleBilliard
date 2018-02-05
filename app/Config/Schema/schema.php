@@ -198,6 +198,7 @@ class AppSchema extends CakeSchema {
 		'stripe_payment_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. if invoice, it will be null', 'charset' => 'utf8mb4'),
 		'campaign_team_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'campaign_team.id'),
 		'price_plan_purchase_team_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'price_plan_purchase_teams.id'),
+		'recharge_target_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'recharge target charge_histories.id'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
