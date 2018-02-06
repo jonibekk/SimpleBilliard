@@ -20,7 +20,7 @@ class VideoTranscodeLog extends AppModel
     {
         $this->create();
         $this->save([
-            'video_streams_id'  => $videoStreamId,
+            'video_stream_id'  => $videoStreamId,
             'log'               => self::createJsonLogString($message->getValue(), $values),
         ]);
     }
