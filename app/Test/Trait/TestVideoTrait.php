@@ -17,12 +17,15 @@ trait TestVideoTrait
     public $Video;
 
     /**
+     * Create video and video_stream
+     * returning video and video_stream data array.
+     *
      * @param int                             $userId
      * @param int                             $teamId
      * @param string                          $hash
      * @param Enum\Video\VideoTranscodeStatus $status
      *
-     * @return array [videos, video_streams]
+     * @return array list($video, $videoStream)
      */
     protected function createVideoSet(int $userId, int $teamId, string $hash, Enum\Video\VideoTranscodeStatus $status): array
     {
@@ -46,6 +49,7 @@ trait TestVideoTrait
             'duration'             => $isTranscodeCompleted ? 60 : null,
             'aspect_ratio'         => $isTranscodeCompleted ? (640 / 360) : null,
             'storage_path'         => $isTranscodeCompleted ? "streams/{$userId}/{$teamId}/{$hash}/" : null,
+            'output_version'       => Enum\Video\TranscodeOutputVersion::V1,
             'transcode_status'     => $status->getValue(),
         ]);
         return [reset($video), reset($videoStream)];
