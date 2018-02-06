@@ -85,8 +85,8 @@ class FilesController extends ApiController
      */
     public function isVideo(array $requestFileUpload): bool
     {
-        // Do not trust the ['file']['mime'] value posted from browser
-        // ['file']['mime'] is resolved from only by file extension in several browser
+        // Do not trust the ['file']['type'](= mime-type) value posted from browser
+        // ['file']['type'] is resolved from only by file extension in several browser
 
         // TODO:
         // Investigating more certainty if the file is video or not.
