@@ -171,6 +171,11 @@ class TranscodeNotificationsController extends ApiController
                         GoalousLog::error('Failed posting from draft post', [
                             'post_drafts.id' => $postDraft['id'],
                         ]);
+                        // Description of this case
+                        // - Transcode is completed, but posting from draft post is failed
+                        // - This is our internal server
+                        // - This is an external API executed from other system(e.g. AWS SNS)
+                        //    - So we do not need return status 500, we returning 200.
                     } else {
                         // succeed
                         $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);

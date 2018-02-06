@@ -60,7 +60,7 @@ class VideoTranscodeLogTest extends GoalousTestCase
 
         $logVideoStreamId_1 = $this->VideoTranscodeLog->find('all', [
             'conditions' => [
-                'video_streams_id' => $videoStreamId_1,
+                'video_stream_id' => $videoStreamId_1,
             ]
         ]);
         $this->assertSame(2, count($logVideoStreamId_1));
@@ -79,7 +79,7 @@ class VideoTranscodeLogTest extends GoalousTestCase
 
         $logVideoStreamId_2 = $this->VideoTranscodeLog->find('all', [
             'conditions' => [
-                'video_streams_id' => $videoStreamId_2,
+                'video_stream_id' => $videoStreamId_2,
             ]
         ]);
         $this->assertSame(1, count($logVideoStreamId_2));

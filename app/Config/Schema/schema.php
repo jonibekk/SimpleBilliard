@@ -1,4 +1,4 @@
-<?php
+<?php 
 class AppSchema extends CakeSchema {
 
 	public function before($event = array()) {
@@ -1317,6 +1317,24 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $post_drafts = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= users.id'),
+		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= teams.id'),
+		'post_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '= posts.id (set if draft published)'),
+		'draft_data' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Json encoded draft post data', 'charset' => 'utf8mb4'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'user_id' => array('column' => 'user_id', 'unique' => 0),
+			'team_id' => array('column' => 'team_id', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $post_files = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'post_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿ID(belongsToでPostモデルに関連)'),
@@ -1390,6 +1408,24 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'post_id' => array('column' => 'post_id', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
+	public $post_resources = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'post_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= posts.id'),
+		'post_draft_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= post_drafts.id'),
+		'resource_type' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 3, 'unsigned' => true, 'comment' => 'type of resource e.g. image, video, ...'),
+		'resource_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'resource table\'s primary key id'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'post_id' => array('column' => 'post_id', 'unique' => 0),
+			'post_draft_id' => array('column' => 'post_draft_id', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
@@ -1638,7 +1674,6 @@ class AppSchema extends CakeSchema {
 		'member_no' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'メンバーナンバー(組織内でメンバーを識別する為のナンバー。exp社員番号)', 'charset' => 'utf8mb4'),
 		'member_type_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'メンバータイプID(belongsToでmember_typesモデルに関連)'),
 		'job_category_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '職種ID(belongsToでJobCategoryモデルに関連)'),
-		'active_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '有効フラグ(Offの場合はチームにログイン不可。チームメンバーによる当該メンバーのチーム内のコンテンツへのアクセスは可能。当該メンバーへの如何なる発信は不可)'),
 		'invitation_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '招待中フラグ(招待済みで非アクティブユーザの管理用途)'),
 		'evaluation_enable_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '評価対象フラグ(Offの場合は評価が不可能。対象ページへのアクセスおよび、一切の評価のアクションが行えない。)'),
 		'admin_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'チーム管理者フラグ(Onの場合はチーム設定が可能)'),
@@ -1875,4 +1910,74 @@ class AppSchema extends CakeSchema {
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
+
+	public $video_streams = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'video_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => '= videos.id'),
+		'duration' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'video stream duration second'),
+		'aspect_ratio' => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'streams width/height ratio'),
+		'storage_path' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
+		'output_version' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'specific version of output type'),
+		'transcode_status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 4, 'unsigned' => false, 'comment' => '-1=error, 0=none, 1=uploading(to cloud storage), 2=upload complete, 3=queued, 4=transcoding, 5=transcode complete'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
+	public $video_transcode_logs = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'video_transcode_logs.id'),
+		'video_stream_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= video_streams.id'),
+		'log' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Json encoded transcoding log', 'charset' => 'utf8mb4'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'video_stream_id' => array('column' => 'video_stream_id', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
+	public $videos = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= users.id'),
+		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= teams.id'),
+		'duration' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'video duration second'),
+		'width' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'video width(px)'),
+		'height' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'video height(px)'),
+		'hash' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 256, 'collate' => 'utf8mb4_general_ci', 'comment' => 'video file hash sha256', 'charset' => 'utf8mb4'),
+		'file_size' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'video file byte size'),
+		'file_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'filename of original uploaded file', 'charset' => 'utf8mb4'),
+		'resource_path' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'user_id' => array('column' => 'user_id', 'unique' => 0),
+			'team_id' => array('column' => 'team_id', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
+	public $view_price_plans = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary'),
+		'group_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'External key:mst_price_plan_groups.id'),
+		'code' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Unique price plan code. Rule {group_id}-{order} (ex. 1-1,1-2,2-1,2-2)', 'charset' => 'utf8mb4'),
+		'price' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Fixed monthly charge amount'),
+		'max_members' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'Maximum number of members in the plan'),
+		'currency' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => 'Currency type(ex 1: yen, 2: US Dollar...)'),
+		'indexes' => array(
+			
+		),
+		'tableParameters' => array('comment' => 'VIEW')
+	);
+
 }
