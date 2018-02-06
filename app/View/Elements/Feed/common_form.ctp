@@ -192,10 +192,12 @@ $only_tab_post =
                 <?php endif ?>
                 <?php $this->Form->unlockField('socket_id') ?>
                 <?php $this->Form->unlockField('file_id') ?>
+                <?php $this->Form->unlockField('video_stream_id') ?>
                 <?php $this->Form->unlockField('Post.file_id') ?>
                 <?php $this->Form->unlockField('deleted_file_id') ?>
 
                 <?= $this->Form->end() ?>
+
             </div>
         </div>
     </div>

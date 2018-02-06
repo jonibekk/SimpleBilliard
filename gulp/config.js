@@ -77,6 +77,8 @@ const config = {
     src: [
       node_modules_dir + '/jquery/dist/jquery.js',
       node_modules_dir + '/intl-tel-input/build/js/intlTelInput.min.js',
+      assets_dir + '/js/vendor/video.js',
+      assets_dir + '/js/lib/video.js',
     ],
     output: {
       file_name: 'goalous.prerender',
@@ -162,6 +164,7 @@ const config = {
     'message',
     'invite',
     'payment_apply',
+    'saved_item',
     'campaign_plan_upgrade'
   ],
   css_vendor: {
@@ -179,6 +182,7 @@ const config = {
       assets_dir + '/css/showmore.css',
       assets_dir + '/css/bootstrap-ext-col.css',
       assets_dir + '/css/customRadioCheck.css',
+      assets_dir + '/css/video-js.css',
 
       // Collapsed design latest node_modules css
       assets_dir + '/css/select2.css',

@@ -322,14 +322,14 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function incrementUnreadCount($circle_list, $without_me = true)
+    function incrementUnreadCount($circle_list, $without_me = true, $team_id = null)
     {
         if (empty($circle_list)) {
             return false;
         }
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
-            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.team_id'   => $team_id ?? $this->current_team_id,
         ];
         if ($without_me) {
             $conditions['NOT']['CircleMember.user_id'] = $this->my_uid;
@@ -390,7 +390,7 @@ class CircleMember extends AppModel
      *
      * @return bool
      */
-    function leave(int $circleId, int $userId) :bool
+    function remove(int $circleId, int $userId) :bool
     {
         $conditions = [
             'CircleMember.circle_id' => $circleId,
@@ -398,19 +398,21 @@ class CircleMember extends AppModel
             'CircleMember.team_id'   => $this->current_team_id,
         ];
 
-        $this->deleteAll($conditions);
+        if (!$this->deleteAll($conditions)) {
+            return false;
+        }
         $this->updateCounterCache(['circle_id' => $circleId]);
         return true;
     }
 
-    function updateModified($circle_list)
+    function updateModified($circle_list, $team_id = null)
     {
         if (empty($circle_list)) {
             return false;
         }
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
-            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.team_id'   => $team_id ?? $this->current_team_id,
             'CircleMember.user_id'   => $this->my_uid,
         ];
 

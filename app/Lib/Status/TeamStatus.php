@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'TeamService');
 App::import('Service', 'CampaignService');
+App::uses('Experiment', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -15,9 +16,16 @@ class TeamStatus {
 
     private $isTeamCampaign = false;
 
-    private $enabledVideoPostInEnvironment = false;
-
     private $serviceUserStatus = null;
+
+    private $teamsExperiments = [];
+
+    /**
+     * Video post feature enable/disable
+     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
+     */
+    private $enableVideoPostTranscodingOnEnvironment = false;
+    private $enableVideoPostPlayOnEnvironment = false;
 
     private function __construct()
     {
@@ -48,6 +56,8 @@ class TeamStatus {
         $TeamService = ClassRegistry::init('TeamService');
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init('CampaignService');
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init('Experiment');
 
         $this->setTeamId($teamId);
         $this->setIsTeamCampaign($CampaignService->isCampaignTeam($teamId));
@@ -85,9 +95,64 @@ class TeamStatus {
             $this->setServiceUseStatus(new Enum\Team\ServiceUseStatus($serviceUseStatus));
         }
 
-        if (defined('ENABLE_VIDEO_POST') && is_bool(ENABLE_VIDEO_POST)) {
-            $this->setEnabledVideoPostInEnvironment(ENABLE_VIDEO_POST);
+        // fetch experiment settings of team
+        $experiments = $Experiment->findAllByTeamId($this->getTeamId());
+        $experiments = Hash::extract($experiments, '{n}.Experiment');
+        foreach ($experiments as $experiment) {
+            $this->teamsExperiments[$experiment['name']] = true;
         }
+
+        $this->setEnableVideoPostTranscodingOnEnvironment(ENABLE_VIDEO_POST_TRANSCODING);
+        $this->setEnableVideoPostPlayOnEnvironment(ENABLE_VIDEO_POST_PLAY);
+    }
+
+    /**
+     * return true if team can transcode video
+     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
+     *
+     * @return bool
+     */
+    public function canVideoPostTranscode(): bool
+    {
+        return $this->enableVideoPostTranscodingOnEnvironment || $this->isEnableExperiment(Experiment::NAME_ENABLE_VIDEO_POST_TRANSCODING);
+    }
+
+    /**
+     * return true if team can play video
+     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
+     *
+     * @return bool
+     */
+    public function canVideoPostPlay(): bool
+    {
+        return $this->enableVideoPostPlayOnEnvironment || $this->isEnableExperiment(Experiment::NAME_ENABLE_VIDEO_POST_PLAY);
+    }
+
+    /**
+     * @param mixed $enableVideoPostTranscodingOnEnvironment
+     */
+    public function setEnableVideoPostTranscodingOnEnvironment(bool $enableVideoPostTranscodingOnEnvironment)
+    {
+        $this->enableVideoPostTranscodingOnEnvironment = $enableVideoPostTranscodingOnEnvironment;
+    }
+
+    /**
+     * @param bool $enableVideoPostPlayOnEnvironment
+     */
+    public function setEnableVideoPostPlayOnEnvironment(bool $enableVideoPostPlayOnEnvironment)
+    {
+        $this->enableVideoPostPlayOnEnvironment = $enableVideoPostPlayOnEnvironment;
+    }
+
+    /**
+     * return true if teams experiment is enabled
+     * @param string $experimentName
+     *
+     * @return bool
+     */
+    public function isEnableExperiment(string $experimentName): bool
+    {
+        return $this->teamsExperiments[$experimentName] ?? false;
     }
 
     /**
@@ -121,16 +186,6 @@ class TeamStatus {
     }
 
     /**
-     * set bool if current environment is video post enabled
-     *
-     * @param bool $isEnabled
-     */
-    public function setEnabledVideoPostInEnvironment(bool $isEnabled)
-    {
-        $this->enabledVideoPostInEnvironment = $isEnabled;
-    }
-
-    /**
      * return true if team is on any paid plan
      *
      * @return bool
@@ -158,16 +213,6 @@ class TeamStatus {
     public function isTeamPlanRegular(): bool
     {
         return !$this->isTeamPaid();
-    }
-
-    /**
-     * return true if able to post video
-     *
-     * @return bool
-     */
-    public function isAbleToPostVideo(): bool
-    {
-        return $this->enabledVideoPostInEnvironment;
     }
 
     /**
@@ -211,12 +256,10 @@ class TeamStatus {
     }
 
     /**
-     * return teams video transcoding quality
-     *
-     * @return Enum\TranscodePattern
+     * @return Enum\Video\TranscodeOutputVersion
      */
-    public function getTranscodeQuality(): Enum\TranscodePattern
+    public function getTranscodeOutputVersion(): Enum\Video\TranscodeOutputVersion
     {
-        return Enum\TranscodePattern::LIMITED();
+        return Enum\Video\TranscodeOutputVersion::V1();
     }
 }

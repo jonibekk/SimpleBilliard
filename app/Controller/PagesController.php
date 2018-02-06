@@ -12,6 +12,9 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'PaymentService');
 App::import('Service', 'UserService');
 App::import('Service', 'CampaignService');
+App::import('Model', 'PostDraft');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Static content controller
@@ -161,11 +164,68 @@ class PagesController extends AppController
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
-            ]);
+                ]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+        $this->set('post_drafts', $this->getDraftPosts());
+    }
+
+    /**
+     * return draft post user has posted
+     * @return array
+     */
+    private function getDraftPosts(): array
+    {
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init("PostDraft");
+        $postDrafts = $PostDraft->getByUserIdAndTeamId($this->Auth->user('id'), $this->current_team_id);
+
+        // get share circles/peoples
+        foreach ($postDrafts as $key => $postDraft) {
+            if (!isset($postDraft['data']['Post']['share_public'])
+            || !is_string($postDraft['data']['Post']['share_public'])) {
+                continue;
+            }
+            $shares = explode(',', $postDraft['data']['Post']['share_public']);
+            list($userIds, $circleIds) = $this->Post->distributeShareToUserAndCircle($shares);
+            $postDraft['PostShareUser'] = [];
+            $postDraft['PostShareCircle'] = [];
+            foreach ($userIds as $userId) {
+                $postDraft['PostShareUser'][] = [
+                    'user_id' => $userId,
+                ];
+            }
+            foreach ($circleIds as $circleId) {
+                $postDraft['PostShareCircle'][] = [
+                    'circle_id' => $circleId,
+                ];
+            }
+
+            // has transcode failed video
+            $hasTranscodeFailed = false;
+            foreach ($postDraft['post_resources'] as $resource) {
+                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+                if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
+                    $hasTranscodeFailed = true;
+                    break;
+                }
+            }
+            $postDraft['hasTranscodeFailed'] = $hasTranscodeFailed;
+
+            $postDrafts[$key] = $postDraft;
+        }
+        //１件のサークル名をランダムで取得
+        $postDrafts = $this->Post->getRandomShareCircleNames($postDrafts);
+        //１件のユーザ名をランダムで取得
+        $postDrafts = $this->Post->getRandomShareUserNames($postDrafts);
+        //シェアモードの特定
+        $postDrafts = $this->Post->getShareMode($postDrafts);
+        //シェアメッセージの特定
+        $postDrafts = $this->Post->getShareMessages($postDrafts, false);
+
+        return $postDrafts;
     }
 
     public function _setLanguage()

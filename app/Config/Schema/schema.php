@@ -1566,6 +1566,26 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $saved_posts = array(
+		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+		'post_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+			'saved_posts_unique' => array('column' => array('post_id', 'user_id'), 'unique' => 1),
+			'team_id' => array('column' => 'team_id', 'unique' => 0),
+			'post_id' => array('column' => 'post_id', 'unique' => 0),
+			'user_id' => array('column' => 'user_id', 'unique' => 0),
+			'created' => array('column' => 'created', 'unique' => 0)
+		),
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $schema_migrations = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'class' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),

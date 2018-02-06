@@ -42,9 +42,20 @@ class ExperimentTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    function testDummy()
-    {
 
+    function testFindExperiment()
+    {
+        $this->createExperiments([
+            [Experiment::NAME_ENABLE_EVALUATION_FEATURE, 1],
+        ]);
+
+        $this->Experiment->current_team_id = 1;
+        $experiment = $this->Experiment->findExperiment(Experiment::NAME_ENABLE_EVALUATION_FEATURE);
+
+        $this->assertSame('1', $experiment['Experiment']['id']);
+        $this->assertSame(Experiment::NAME_ENABLE_EVALUATION_FEATURE, $experiment['Experiment']['name']);
+        $this->assertSame('1', $experiment['Experiment']['team_id']);
+        $this->assertSame(false, $experiment['Experiment']['del_flg']);
     }
 
 }

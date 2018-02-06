@@ -32,7 +32,7 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
 
-        /** @var ExperimentService $ExperimentService */
+        /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
 
         $userId = $this->Auth->user('id');
@@ -275,7 +275,7 @@ class CirclesController extends AppController
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        /** @var ExperimentService $ExperimentService */
+        /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
 
         $toJoin = Hash::get($this->request->data, 'Circle.0.join');
@@ -284,7 +284,7 @@ class CirclesController extends AppController
 
         // Leave circle
         if (!$toJoin) {
-            $isLeaved = $CircleService->leave($circleId, $userId);
+            $isLeaved = $CircleService->removeCircleMember($this->current_team_id, $circleId, $userId);
             if ($isLeaved) {
                 return $this->_ajaxGetResponse(['msg' => __("Leave a circle.")]);
             } else {
@@ -380,6 +380,8 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init("CircleService");
 
         // validate
         $this->Circle->id = $this->request->params['named']['circle_id'];
@@ -395,8 +397,8 @@ class CirclesController extends AppController
         }
 
         // サークルから外す処理
-        $res = $this->Circle->CircleMember->unjoinMember($this->Circle->id,
-            $this->request->data['CircleMember']['user_id']);
+        $res = $CircleService->removeCircleMember($this->current_team_id, $this->Circle->id, $this->request->data['CircleMember']['user_id']);
+
         // 処理失敗
         if (!$res) {
             return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processing.")));

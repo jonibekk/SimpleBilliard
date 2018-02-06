@@ -18,6 +18,7 @@ class TeamStatusTest extends GoalousTestCase
     public $fixtures = [
         'app.campaign_team',
         'app.team',
+        'app.experiment',
     ];
 
     function tearDown()
@@ -31,14 +32,11 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::PAID());
         $teamStatus->setIsTeamCampaign(true);
-        $teamStatus->setEnabledVideoPostInEnvironment(true);
 
         $this->assertFalse($teamStatus->isTeamPlanRegular());
         $this->assertTrue($teamStatus->isTeamPaid());
         $this->assertTrue($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_regular()
@@ -46,14 +44,11 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::FREE_TRIAL());
         $teamStatus->setIsTeamCampaign(false);
-        $teamStatus->setEnabledVideoPostInEnvironment(true);
 
         $this->assertTrue($teamStatus->isTeamPlanRegular());
         $this->assertFalse($teamStatus->isTeamPaid());
         $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_regular_disable_video_post()
@@ -61,14 +56,11 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::FREE_TRIAL());
         $teamStatus->setIsTeamCampaign(false);
-        $teamStatus->setEnabledVideoPostInEnvironment(false);
 
         $this->assertTrue($teamStatus->isTeamPlanRegular());
         $this->assertFalse($teamStatus->isTeamPaid());
         $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
-        $this->assertFalse($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_initializeFromTeamId_regular()
@@ -80,8 +72,6 @@ class TeamStatusTest extends GoalousTestCase
         $this->assertTrue($teamStatus->isTeamPaid());
         $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_initializeFromTeamId_free_trial()
@@ -94,8 +84,6 @@ class TeamStatusTest extends GoalousTestCase
         $this->assertFalse($teamStatus->isTeamPaid());
         $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_initializeFromTeamId_read_only()
@@ -108,8 +96,6 @@ class TeamStatusTest extends GoalousTestCase
         $this->assertFalse($teamStatus->isTeamPaid());
         $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_initializeFromTeamId_cannot_use()
@@ -122,8 +108,6 @@ class TeamStatusTest extends GoalousTestCase
         $this->assertFalse($teamStatus->isTeamPaid());
         $this->assertFalse($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::REGULAR()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
     }
 
     function test_initializeFromTeamId_campaign_team()
@@ -137,7 +121,104 @@ class TeamStatusTest extends GoalousTestCase
         $this->assertTrue($teamStatus->isTeamPaid());
         $this->assertTrue($teamStatus->isTeamCampaign());
         $this->assertTrue($teamStatus->getTeamPlan()->equals(Enum\TeamPlan::PAID()));
-        $this->assertTrue($teamStatus->isAbleToPostVideo());
-        $this->assertTrue($teamStatus->getTranscodeQuality()->equals(Enum\TranscodePattern::LIMITED()));
+    }
+
+    function test_videoPostAllDisable()
+    {
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+        $teamStatus->setEnableVideoPostTranscodingOnEnvironment(false);
+        $teamStatus->setEnableVideoPostPlayOnEnvironment(false);
+
+        $this->assertFalse($teamStatus->canVideoPostTranscode());
+        $this->assertFalse($teamStatus->canVideoPostPlay());
+    }
+
+    function test_videoPostAllEnableByEnvironment()
+    {
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+        $teamStatus->setEnableVideoPostTranscodingOnEnvironment(true);
+        $teamStatus->setEnableVideoPostPlayOnEnvironment(true);
+
+        $this->assertTrue($teamStatus->canVideoPostTranscode());
+        $this->assertTrue($teamStatus->canVideoPostPlay());
+    }
+
+    function test_videoPostAllEnabledByExperiments()
+    {
+        $this->createExperiments([
+            [Experiment::NAME_ENABLE_VIDEO_POST_TRANSCODING, 1],
+            [Experiment::NAME_ENABLE_VIDEO_POST_PLAY, 1],
+        ]);
+
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+        $teamStatus->setEnableVideoPostTranscodingOnEnvironment(false);
+        $teamStatus->setEnableVideoPostPlayOnEnvironment(false);
+
+        $this->assertTrue($teamStatus->canVideoPostTranscode());
+        $this->assertTrue($teamStatus->canVideoPostPlay());
+    }
+
+    function test_videoPostAllEnabledByExperimentsAndEnvironment()
+    {
+        $this->createExperiments([
+            [Experiment::NAME_ENABLE_VIDEO_POST_TRANSCODING, 1],
+            [Experiment::NAME_ENABLE_VIDEO_POST_PLAY, 1],
+        ]);
+
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+        $teamStatus->setEnableVideoPostTranscodingOnEnvironment(true);
+        $teamStatus->setEnableVideoPostPlayOnEnvironment(true);
+
+        $this->assertTrue($teamStatus->canVideoPostTranscode());
+        $this->assertTrue($teamStatus->canVideoPostPlay());
+    }
+
+    function test_videoPostAllEnabledOnlyTranscode()
+    {
+        $this->createExperiments([
+            [Experiment::NAME_ENABLE_VIDEO_POST_TRANSCODING, 1],
+        ]);
+
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+        $teamStatus->setEnableVideoPostTranscodingOnEnvironment(true);
+        $teamStatus->setEnableVideoPostPlayOnEnvironment(false);
+
+        $this->assertTrue($teamStatus->canVideoPostTranscode());
+        $this->assertFalse($teamStatus->canVideoPostPlay());
+    }
+
+    function test_videoPostAllEnabledOnlyPlay()
+    {
+        $this->createExperiments([
+            [Experiment::NAME_ENABLE_VIDEO_POST_PLAY, 1],
+        ]);
+
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+        $teamStatus->setEnableVideoPostTranscodingOnEnvironment(false);
+        $teamStatus->setEnableVideoPostPlayOnEnvironment(true);
+
+        $this->assertFalse($teamStatus->canVideoPostTranscode());
+        $this->assertTrue($teamStatus->canVideoPostPlay());
+    }
+
+    function test_videoPostOutputVersion()
+    {
+        $teamId = 1;
+        $teamStatus = TeamStatus::getCurrentTeam();
+        $teamStatus->initializeByTeamId($teamId);
+
+        $this->assertSame(Enum\Video\TranscodeOutputVersion::V1, $teamStatus->getTranscodeOutputVersion()->getValue());
     }
 }
