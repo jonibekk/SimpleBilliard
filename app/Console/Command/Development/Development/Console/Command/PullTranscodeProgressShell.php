@@ -1,6 +1,7 @@
 <?php
 
 App::uses('VideoStream', 'Model');
+App::import('Lib/Aws', 'AwsClientFactory');
 
 use Goalous\Model\Enum as Enum;
 
@@ -40,16 +41,7 @@ class PullTranscodeProgressShell extends AppShell
         }
 
         try {
-            // TODO: move this client create to kind of libs
-            $client = new \Aws\ElasticTranscoder\ElasticTranscoderClient([
-                'region'   => 'ap-northeast-1',
-                // @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html
-                'version' => '2012-09-25',
-                'credentials' => [
-                    'key'    => AWS_ELASTIC_TRANSCODER_KEY,
-                    'secret' => AWS_ELASTIC_TRANSCODER_SECRET_KEY,
-                ],
-            ]);
+            $client = AwsClientFactory::createElasticTranscoderClient();
             $jobs = $client->listJobsByPipeline([
                 'PipelineId' => AWS_ELASTIC_TRANSCODER_PIPELINE_ID,
                 'Ascending'  => 'false',// this need to be string
