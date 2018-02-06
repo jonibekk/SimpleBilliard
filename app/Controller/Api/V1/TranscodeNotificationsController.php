@@ -9,6 +9,7 @@ App::uses('PostDraft', 'Model');
 App::uses('Post', 'Model');
 App::import('Service', 'PostService');
 App::import('Service', 'PostResourceService');
+App::import('Service', 'PostDraftService');
 App::import('Service', 'VideoStreamService');
 
 use Goalous\Model\Enum as Enum;
@@ -138,6 +139,8 @@ class TranscodeNotificationsController extends ApiController
                 'state' => $transcodeNotificationAwsSns->getProgressState()->getKey(),
             ]);
 
+            /** @var PostDraftService $PostDraftService */
+            $PostDraftService = ClassRegistry::init('PostDraftService');
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             $videoStream = $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
@@ -149,19 +152,19 @@ class TranscodeNotificationsController extends ApiController
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');
             if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
-                // if we received COMPLETE notify, post related draft post
-                // TODO: 現在は紐付いている動画が変換完了 = 下書きからの投稿OK と見なしているので修正が必要
-                // Serviceに $PostDraftService->isPreparedToPost($draftPost); という判断するメソッドを追加するべき
+                // if we received COMPLETE notify, post related draft post if its ready
                 $postDrafts = $PostDraft->getByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
                 /** @var PostService $PostService */
                 $PostService = ClassRegistry::init('PostService');
                 foreach ($postDrafts as $postDraft) {
                     // This API is called by external service, we do not have $this->current_team_id on this session
                     $this->current_team_id = $postDraft['team_id'];
-                    // TODO: related to TODO comment above
-                    // if ($PostDraftService->isPreparedToPost($draftPost);) {
-                    //     ...
-                    // }
+                    if (!$PostDraftService->isPreparedToPost($postDraft['id'])) {
+                        GoalousLog::info('draft post is not prepared to post', [
+                            'post_drafts.id' => $postDraft['id'],
+                        ]);
+                        continue;
+                    }
                     $post = $PostService->addNormalFromPostDraft($postDraft);
                     if (false === $post) {
                         // failed post from draft post
