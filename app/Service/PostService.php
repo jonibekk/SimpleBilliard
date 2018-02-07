@@ -234,7 +234,7 @@ class PostService extends AppService
             $postResource = $PostResource->save([
                 'post_id'       => $postId,
                 'post_draft_id' => null,
-                // TODO: currently only resource type of video only
+                // TODO: currently only resource type of video only https://jira.goalous.com/browse/GL-6601
                 // need to determine what type of resource is passed from arguments
                 // (maybe should wrap by class, not simple array)
                 // same as in PostDraftService::createPostDraftWithResources()
