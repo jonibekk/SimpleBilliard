@@ -229,7 +229,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 ?>
                 <?php if (!empty($imgs) || !empty($post['PostResources'])): ?>
                     </div>
-                        <?php if (!empty($imgs)): ?>
+                        <?php if (
+                                // Not going to show image if we have video posted
+                                // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                                !empty($imgs)
+                                && !($post['hasVideoResource'])
+                            ): ?>
                         <div
                             class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
                             <?php foreach ($imgs as $v): ?>
@@ -323,7 +328,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="col pt_10px">
                     <?php foreach ($post['PostFile'] as $file): ?>
                         <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
-                            continue;
+                            // Showing image as attached file if post has video post resource
+                            // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                            if (!$post['hasVideoResource']) {
+                                continue;
+                            }
                         } ?>
                         <div class="panel panel-default file-wrap-on-post">
                             <div class="panel-body pt_10px plr_11px pb_8px">
