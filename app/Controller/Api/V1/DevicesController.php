@@ -1,5 +1,8 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::import("Service", "PushService");
+
+use Goalous\Model\Enum as Enum;
 
 class DevicesController extends  ApiController
 {
@@ -46,7 +49,7 @@ class DevicesController extends  ApiController
             $Device = ClassRegistry::init('Device');
 
             if (!$Device->softDeleteAll(['Device.installation_id' => $installationId], false)) {
-                CakeLog::error("Failed to delete installation_id: $installationId");
+                GoalousLog::error("Failed to delete installation_id", ["installation_id" => $installationId]);
                 return $this->_getResponseInternalServerError();
             }
             return $this->_getResponseSuccess();
@@ -54,7 +57,7 @@ class DevicesController extends  ApiController
 
        // Check the request user
         if (!$this->User->exists($userId)) {
-            CakeLog::error(sprintf("user id is invalid. user_id: %s", $userId));
+            GoalousLog::error("User id is invalid", ["user_id" => $userId]);
             return $this->_getResponseBadFail(__('Parameters were wrong'));
         }
 
@@ -66,10 +69,62 @@ class DevicesController extends  ApiController
             $this->_updateSetupStatusIfNotCompleted();
         }
         catch (RuntimeException $e) {
-            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            GoalousLog::error("Failed to save Device", ["Exception" => $e->getMessage()]);
             CakeLog::error($e->getTraceAsString());
             return $this->_getResponseInternalServerError();
         }
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Accept a JSON with device information
+     * Format:
+     * {
+     *    "token": "string",
+     *    "version": "string"
+     *    "os": int
+     * }
+     *
+     * @return CakeResponse
+     */
+    public function post_token()
+    {
+        $userId = $this->Auth->user('id');
+        $requestJsonData = $this->request->input("json_decode", true);
+
+        // Validate parameters
+        if (empty($requestJsonData['token']) ||
+            empty($requestJsonData['version']) ||
+            !isset($requestJsonData['os'])) {
+            return $this->_getResponseBadFail('Invalid Parameters');
+        }
+        $token = $requestJsonData['token'];
+        $version = $requestJsonData['version'];
+        $deviceType = new Enum\Devices\DeviceType($requestJsonData['os']);
+
+        /** @var PushService $PushService */
+        $PushService = ClassRegistry::init('PushService');
+
+        // User not logged, remove device to avoid push notification
+        if ($userId === null) {
+            $PushService->removeDevice($token);
+            return $this->_getResponseSuccess(['action' => 'Unregistered']);
+        }
+
+        // Check the request user
+        if (!$this->User->exists($userId)) {
+            GoalousLog::error("User id is invalid", ["user_id" => $userId]);
+            return $this->_getResponseBadFail('Invalid Parameters');
+        }
+
+        // Save device
+        if (!$PushService->saveDeviceToken($userId, $token, $deviceType, $version)) {
+            return $this->_getResponseInternalServerError();
+        }
+
+        // Update setup status
+        $this->_updateSetupStatusIfNotCompleted();
+
+        return $this->_getResponseSuccess(['action' => 'Registered']);
     }
 }

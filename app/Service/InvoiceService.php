@@ -18,20 +18,6 @@ class InvoiceService extends AppService
     const API_URL_INQUIRE_CREDIT_STATUS = ATOBARAI_API_BASE_URL . "/api/status/rest";
 
     /**
-     * @return \GuzzleHttp\Client
-     */
-    private function getHttpClient(): \GuzzleHttp\Client
-    {
-        // use ClassRegistry::getObject() for test cases
-        // usually returning false on default case
-        $registeredClient = ClassRegistry::getObject(\GuzzleHttp\Client::class);
-        if ($registeredClient instanceof \GuzzleHttp\Client) {
-            return $registeredClient;
-        }
-        return new \GuzzleHttp\Client();
-    }
-
-    /**
      * register order for 1 team's invoice via atobarai.com
      *
      * @param int    $teamId
