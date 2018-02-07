@@ -1,5 +1,6 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
+App::import('Lib/Aws', 'AwsClientFactory');
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
@@ -1088,16 +1089,7 @@ class UploadBehavior extends ModelBehavior
         if ($this->s3) {
             return;
         }
-        // S3を操作するためのオブジェクトを生成（リージョンは東京）
-
-        $this->s3 = new \Aws\S3\S3Client([
-            // TODO: move configurations to config files
-            'region'      => 'ap-northeast-1',
-            'version'     => 'latest',
-            'credentials' => [
-                'key'    => AWS_ACCESS_KEY,
-                'secret' => AWS_SECRET_KEY,
-            ],
-        ]);
+        // S3を操作するためのオブジェクトを生成
+        $this->s3 = AwsClientFactory::createS3ClientForFileStorage();
     }
 }

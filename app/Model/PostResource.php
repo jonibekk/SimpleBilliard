@@ -18,24 +18,26 @@ class PostResource extends AppModel
      * Return all post_resources of posts.id
      *
      * @param int[] $postIds
+     * @param bool  $checkTeamStatus
      *
      * @return array
      */
-    function getResourcesByPostId(array $postIds): array
+    function getResourcesByPostId(array $postIds, bool $checkTeamStatus = true): array
     {
-        return $this->getResourcesByPostOrPostDraftId($postIds, static::COLUMN_POST);
+        return $this->getResourcesByPostOrPostDraftId($postIds, static::COLUMN_POST, $checkTeamStatus);
     }
 
     /**
      * Return all post_resources of post_drafts.id
      *
      * @param int[] $postDraftIds
+     * @param bool  $checkTeamStatus
      *
      * @return array
      */
-    function getResourcesByPostDraftId(array $postDraftIds): array
+    function getResourcesByPostDraftId(array $postDraftIds, bool $checkTeamStatus = true): array
     {
-        return $this->getResourcesByPostOrPostDraftId($postDraftIds, static::COLUMN_POST_DRAFT);
+        return $this->getResourcesByPostOrPostDraftId($postDraftIds, static::COLUMN_POST_DRAFT, $checkTeamStatus);
     }
 
     /**
@@ -43,20 +45,26 @@ class PostResource extends AppModel
      *
      * @param int[]  $ids
      * @param string $postOrDraftColumnName
+     * @param bool   $checkTeamStatus
      *
      * @return array
      */
-    private function getResourcesByPostOrPostDraftId(array $ids, string $postOrDraftColumnName): array
+    private function getResourcesByPostOrPostDraftId(array $ids, string $postOrDraftColumnName, bool $checkTeamStatus): array
     {
         $options = [
             'fields'     => [
-                '*'
+                'PostResource.id',
+                'PostResource.post_id',
+                'PostResource.post_draft_id',
+                'PostResource.resource_type',
+                'PostResource.resource_id',
             ],
             'conditions' => [
                 $postOrDraftColumnName => $ids,
             ],
         ];
         $postResources = $this->find('all', $options);
+
         if (is_null($postResources)) {
             GoalousLog::error('find error on post_resources', [
                 'post_or_draft' => $postOrDraftColumnName,
@@ -87,7 +95,7 @@ class PostResource extends AppModel
             // more resource_type will defined in future
             switch ($resourceType->getValue()) {
                 case Enum\Post\PostResourceType::VIDEO_STREAM:
-                    if (!TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
+                    if ($checkTeamStatus && !TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
                         continue;
                     }
                     $resourceVideoStream = $VideoStream->getById($postResource['resource_id']);

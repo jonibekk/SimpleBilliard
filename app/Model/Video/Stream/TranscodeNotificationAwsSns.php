@@ -3,6 +3,11 @@ App::uses('TranscodeProgressData', 'Model/Video/Stream');
 
 use Goalous\Model\Enum as Enum;
 
+/**
+ * Handling about notification json from AWS SNS
+ *
+ * Class TranscodeNotificationAwsSns
+ */
 class TranscodeNotificationAwsSns implements TranscodeProgressData
 {
     /**
@@ -19,6 +24,15 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
      */
     protected $messageData = [];
 
+    /**
+     * Creating self instance parsing from Json string
+     * posted from AWS SNS
+     * @see https://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.html
+     *
+     * @param string $json
+     *
+     * @return TranscodeNotificationAwsSns
+     */
     public static function parseJsonString(string $json): self
     {
         $jsonData = json_decode($json, true);
@@ -28,17 +42,36 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
         return self::createFromArray($jsonData);
     }
 
+    /**
+     * Creating self instance from parsed Json string
+     * posted from AWS SNS
+     * @see https://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.html
+     *
+     * @param array $data
+     *
+     * @return TranscodeNotificationAwsSns
+     */
     public static function createFromArray(array $data): self
     {
         return new self($data);
     }
 
+    /**
+     * TranscodeNotificationAwsSns constructor.
+     *
+     * @param $data
+     */
     private function __construct($data)
     {
         $this->data = $data;
         $this->parseMessage();
     }
 
+    /**
+     * Parsing "Message" string in AWS SNS JSON request body
+     *
+     * @see https://docs.aws.amazon.com/elastictranscoder/latest/developerguide/notifications.html
+     */
     private function parseMessage()
     {
         if (!isset($this->data['Message'])) {
@@ -49,10 +82,15 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
             throw new InvalidArgumentException('failed to parse SNS notification format json string');
         }
         $this->messageData = $messageData;
-        //CakeLog::info(sprintf('message data: %s', AppUtil::jsonOneLine($messageData)));
     }
 
-    public function getProgressState(): Enum\Video\VideoTranscodeProgress {
+    /**
+     * Return Enum defined transcoding progress state
+     *
+     * @return Enum\Video\VideoTranscodeProgress
+     */
+    public function getProgressState(): Enum\Video\VideoTranscodeProgress
+    {
         if (!isset($this->messageData['state'])) {
             throw new RuntimeException('message data: state is not set.');
         }
@@ -69,40 +107,87 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
         throw new RuntimeException('unknown notification state: ' . $this->messageData['state']);
     }
 
+    /**
+     * Throw RuntimeException if 0 key of outputs is not exists
+     *
+     * @throws RuntimeException
+     */
+    private function assertFirstOutputsExists()
+    {
+        if (!isset($this->messageData['outputs'][0])) {
+            throw new RuntimeException('outputs[0] is not exists');
+        }
+    }
+
+    /**
+     * Return jobId string
+     *
+     * @return string
+     */
     public function getJobId(): string
     {
         return $this->messageData['jobId'];
     }
 
+    /**
+     * Return output key of resource path
+     *
+     * @return string
+     */
     public function getOutputKeyPrefix(): string
     {
         return $this->messageData['outputKeyPrefix'];
     }
 
+    /**
+     * Return transcoded video output aspect ratio by float
+     *
+     * @return float
+     */
     public function getAspectRatio(): float
     {
-        // TODO: fix the magic number zero
+        $this->assertFirstOutputsExists();
         if (!isset($this->messageData['outputs'][0]['height'])
             || !isset($this->messageData['outputs'][0]['width'])) {
             throw new RuntimeException('outputs height/width not exists');
         }
         $height = floatval($this->messageData['outputs'][0]['height']);
         $width  = floatval($this->messageData['outputs'][0]['width']);
+        if (0 === $height) {
+            throw new RuntimeException('height is 0');
+        }
         return $width / $height;
     }
 
+    /**
+     * Return output video duration in seconds by int
+     *
+     * @return int
+     */
     public function getDuration(): int
     {
-        // TODO: fix not use magic number 0
+        $this->assertFirstOutputsExists();
         return intval($this->messageData['outputs'][0]['duration']);
     }
 
+    /**
+     * Return master playlist path in the storage
+     *
+     * @return string
+     */
     public function getPlaylistPath(): string
     {
-        // TODO: define somewhere m3u8
         return $this->getOutputKeyPrefix() . 'playlist.m3u8';
     }
 
+    /**
+     * Get the meta-data set ti the job
+     *
+     * @param string $key
+     * @param null   $default
+     *
+     * @return null
+     */
     public function getMetaData(string $key, $default = null)
     {
         if (isset($this->messageData['userMetadata'][$key])) {
@@ -111,21 +196,41 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
         return $default;
     }
 
+    /**
+     * Return true if has error
+     *
+     * @return bool
+     */
     public function isError(): bool
     {
         return $this->getProgressState()->equals(Enum\Video\VideoTranscodeProgress::ERROR());
     }
 
+    /**
+     * Return warning message string
+     *
+     * @return string
+     */
     public function getWarning(): string
     {
         return $this->createErrorString();
     }
 
+    /**
+     * Return error message string
+     *
+     * @return string
+     */
     public function getError(): string
     {
         return $this->createErrorString();
     }
 
+    /**
+     * Return error string
+     *
+     * @return string
+     */
     private function createErrorString(): string
     {
         $errorCode = !empty($this->messageData['errorCode']) ? sprintf('[%s] ', $this->messageData['errorCode']) : '';

@@ -82,12 +82,18 @@ class FilesController extends ApiController
      */
     public function isVideo(array $requestFileUpload): bool
     {
-        // TODO: MUST FIX HERE
-        // php uploaded ['file']['type'] is decided by just only file extension
-        //     e.g. image.gif -> rename to -> image.mp4 -> upload -> ['file']['type'] is "video/mp4"
-        // @see https://www.iana.org/assignments/media-types/media-types.xhtml#video
-        // for approved video mime-types
-        return false !== strpos($requestFileUpload['file']['type'], 'video');
+        // Do not trust the ['file']['type'](= mime-type) value posted from browser
+        // ['file']['type'] is resolved from only by file extension in several browser
+
+        // TODO:
+        // Investigating more certainty if the file is video or not.
+        // We should use ffmpeg/ffprove
+
+        // checking in mime-types in the file for more certain info
+        $fileMimeType = mime_content_type($requestFileUpload['file']['tmp_name']);
+        $fileMimeType = strtolower($fileMimeType);
+        $allowVideoTypes = Configure::read("allow_video_types");
+        return in_array($fileMimeType, $allowVideoTypes);
     }
 
     /**

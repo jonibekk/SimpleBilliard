@@ -1,7 +1,7 @@
 <?php
-
 App::uses('VideoUploadRequest', 'Model/Video/Requests');
 App::uses('VideoUploadResultAwsS3', 'Model/Video/Results');
+App::import('Lib/Aws', 'AwsClientFactory');
 
 use Aws\Exception\AwsException;
 
@@ -44,14 +44,7 @@ class VideoStorageClient
      */
     public static function createS3Client(): \Aws\S3\S3Client
     {
-        return new \Aws\S3\S3Client([
-            'region'      => 'ap-northeast-1',
-            'version'     => 'latest',
-            'credentials' => [
-                'key'    => AWS_ELASTIC_TRANSCODER_KEY,
-                'secret' => AWS_ELASTIC_TRANSCODER_SECRET_KEY,
-            ],
-        ]);
+        return AwsClientFactory::createS3ClientForOriginalVideoStorage();
     }
 }
 
