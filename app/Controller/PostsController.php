@@ -126,7 +126,8 @@ class PostsController extends AppController
             isset($this->request->data['video_stream_id']) && is_array($this->request->data['video_stream_id'])
             ? count($this->request->data['video_stream_id']) : 0;
         if (1 < $countVideoStreamIds) {
-            throw new RuntimeException(__("Can't post more than two videos"));
+            $this->Notification->outError(__("Can't post more than two videos."));
+            return false;
         }
         if (1 === $countVideoStreamIds) {
             /** @var VideoStream $VideoStream */
