@@ -250,7 +250,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <?php foreach ($post['PostResources'] as $resource): ?>
                                 <div class="col pt_10px feed_img_only_one mb_12px">
                                     <?php
-                                    // TODO: currently, we have only video resource
+                                    // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
                                     // TODO: check if this is the video resource
                                     // TODO: move to another .ctp files
                                     $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'], time());
