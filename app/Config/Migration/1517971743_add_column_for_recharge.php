@@ -16,14 +16,14 @@ class AddColumnForRecharge extends CakeMigration {
 	public $migration = array(
 		'up' => array(
 			'create_field' => array(
-				'charge_histories' => array(
-					'recharge_target_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'recharge target charge_histories.id', 'after' => 'price_plan_purchase_team_id'),
+				'invoice_histories' => array(
+					'reorder_target_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '再注文対象の後払い.com注文ID', 'charset' => 'utf8mb4', 'after' => 'order_status'),
 				),
 			),
 		),
 		'down' => array(
 			'drop_field' => array(
-				'charge_histories' => array('recharge_target_id'),
+				'invoice_histories' => array('reorder_target_code'),
 			),
 		),
 	);
