@@ -112,10 +112,74 @@ class PostDraftServiceTest extends GoalousTestCase
         $this->PostDraftService = ClassRegistry::init('PostDraftService');
     }
 
-    public function test_createPostDraftWithResources()
+    public function test_createPostDraftWithResources_fail_validation()
     {
-        // TODO: write test
-        $this->assertTrue(true);
+        $userId = 1;
+        $teamId = 1;
+
+        $stringLongerThanPostBodyRule = str_repeat('A', 1 + $this->Post->validate['body']['maxLength']['rule'][1]);
+
+        $result = $this->PostDraftService->createPostDraftWithResources([
+            'Post' => [
+                'body' => $stringLongerThanPostBodyRule,
+            ]
+        ], $userId, $teamId, []);
+
+        $this->assertFalse($result);
+        $this->assertTrue(isset($this->Post->validationErrors['body'][0]));
+        $this->assertTrue(is_string($this->Post->validationErrors['body'][0]));
+        $this->assertTrue(0 < strlen($this->Post->validationErrors['body'][0]));
+    }
+
+    public function test_createPostDraftWithResources_rollback()
+    {
+        $mock = $this->getMockForModel('PostDraft', array('save'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $mock->expects($this->any())
+             ->method('save')
+             ->will($this->returnValue(false));
+
+        $userId = 1;
+        $teamId = 1;
+
+        $countBefore = $this->PostDraft->find('count');
+        $result = $this->PostDraftService->createPostDraftWithResources([
+            'Post' => [
+                'body' => 'body',
+            ]
+        ], $userId, $teamId, []);
+        $countAfter = $this->PostDraft->find('count');
+        $this->assertSame($countBefore, $countAfter);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_createPostDraftWithResources_success()
+    {
+        $userId = 1;
+        $teamId = 1;
+
+        $resourceId = 123;
+
+        $postDraft = $this->PostDraftService->createPostDraftWithResources([
+            'Post' => [
+                'body' => 'body',
+            ]
+        ], $userId, $teamId, [
+            // TODO: https://jira.goalous.com/browse/GL-6601
+            [
+                'id' => $resourceId,
+            ],
+        ]);
+
+        $this->assertTrue(is_numeric($postDraft['id']));
+        $postResources = $this->PostResource->find('all', [
+            'conditions' => [
+                'post_draft_id' => $postDraft['id'],
+            ],
+        ]);
+        $this->assertTrue(1 === count($postResources));
+        $this->assertSame($resourceId, intval($postResources[0]['PostResource']['resource_id']));
     }
 
     public function test_isPreparedToPost_true()
