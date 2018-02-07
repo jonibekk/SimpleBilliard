@@ -154,11 +154,21 @@ class PostsController extends AppController
                     GoalousLog::info("video post creating draft post", $logDataArray);
                     /** @var PostDraftService $PostDraftService */
                     $PostDraftService = ClassRegistry::init("PostDraftService");
-                    $PostDraftService->createPostDraftWithResources($this->request->data,
-                        $user,
+                    $postDraft = $PostDraftService->createPostDraftWithResources($this->request->data,
+                        $userId,
                         $teamId,
                         [$videoStream]
                     );
+                    if (false === $postDraft) {
+                        // バリデーションエラーのケース
+                        if (!empty($this->Post->validationErrors)) {
+                            $error_msg = array_shift($this->Post->validationErrors);
+                            $this->Notification->outError($error_msg[0], ['title' => __("Failed to post.")]);
+                        } else {
+                            $this->Notification->outError(__("Failed to post."));
+                        }
+                        return false;
+                    }
                     return true;
                 case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
                     GoalousLog::info("video post creating draft post", $logDataArray);
