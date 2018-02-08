@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <?=
-                    $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
+                    $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium_large'],
                         ['class' => 'feed-img']) ?>
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
@@ -273,7 +273,7 @@
                             'class'         => 'lazy comment-img',
                             'data-original' => $this->Upload->uploadUrl($my_prof,
                                 'User.photo',
-                                ['style' => 'small']),
+                                ['style' => 'medium_large']),
                         ]
                     )
                     ?>
