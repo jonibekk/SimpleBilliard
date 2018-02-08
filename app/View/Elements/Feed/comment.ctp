@@ -32,7 +32,7 @@
                 [
                     'class'         => 'lazy comment-img',
                     'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
-                        ['style' => 'small']),
+                        ['style' => 'medium_large']),
                 ]
             )
             ?>

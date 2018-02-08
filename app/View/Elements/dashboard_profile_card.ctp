@@ -19,7 +19,7 @@
                    'action'     => 'view_goals',
                    'user_id'    => $this->Session->read('Auth.User.id')
                ]) ?>">
-                <?= $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium'],
+                <?= $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
                     ['class' => 'dashboard-profile-card-avatarImage inline-block']) ?>
             </a>
         </div>

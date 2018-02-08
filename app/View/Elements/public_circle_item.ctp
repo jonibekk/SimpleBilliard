@@ -23,7 +23,7 @@ $member_count = isset($member_count) ? $member_count : '';
 <?= $this->App->viewStartComment() ?>
 <div class="col col-xxs-12 mpTB0 circle-item-row">
     <?=
-    $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
+    $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'medium_large'],
         ['class' => 'comment-img'])
     ?>
     <div class="comment-body modal-comment">

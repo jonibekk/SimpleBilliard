@@ -101,6 +101,7 @@ class DevicesController extends  ApiController
         $token = $requestJsonData['token'];
         $version = $requestJsonData['version'];
         $deviceType = new Enum\Devices\DeviceType($requestJsonData['os']);
+        $installationIdForDelete = isset($requestJsonData['installationIdForDelete']) ? $requestJsonData['installationIdForDelete'] : "";
 
         /** @var PushService $PushService */
         $PushService = ClassRegistry::init('PushService');
@@ -115,6 +116,13 @@ class DevicesController extends  ApiController
         if (!$this->User->exists($userId)) {
             GoalousLog::error("User id is invalid", ["user_id" => $userId]);
             return $this->_getResponseBadFail('Invalid Parameters');
+        }
+
+        // Save device token only if the installation id is deleted first
+        if (!empty($installationIdForDelete)) {
+            if (!$PushService->removeInstallationId($installationIdForDelete)) {
+                return $this->_getResponseSuccess(['action' => 'Unregistered']);
+            }
         }
 
         // Save device

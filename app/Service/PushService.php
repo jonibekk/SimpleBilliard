@@ -321,6 +321,35 @@ class PushService extends AppService
     }
 
     /**
+     * Soft delete device by its NCMB installation id
+     *
+     * @param string $installationId
+     *
+     * @return bool
+     */
+    public function removeInstallationId(string $installationId): bool
+    {
+        /** @var Device $Device */
+        $Device = ClassRegistry::init('Device');
+        $data = $Device->getDeviceByInstallationId($installationId);
+
+        if (empty($data['Device'])) {
+            return true;
+        }
+
+        try {
+            $Device->softDelete($data['Device']['id'], false);
+        } catch (Exception $e) {
+            GoalousLog::error('Failed remove device.', [
+                'Exception' => $e->getMessage(),
+                'installationId'     => $installationId
+            ]);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * NOWなタイムスタンプを生成する。
      * Moved from NotifyBizComponent class
      *
