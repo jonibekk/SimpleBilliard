@@ -101,7 +101,7 @@ class DevicesController extends  ApiController
         $token = $requestJsonData['token'];
         $version = $requestJsonData['version'];
         $deviceType = new Enum\Devices\DeviceType($requestJsonData['os']);
-        $installationId = isset($requestJsonData['installationId']) ? $requestJsonData['installationId'] : "";
+        $installationIdForDelete = isset($requestJsonData['installationIdForDelete']) ? $requestJsonData['installationIdForDelete'] : "";
 
         /** @var PushService $PushService */
         $PushService = ClassRegistry::init('PushService');
@@ -119,8 +119,8 @@ class DevicesController extends  ApiController
         }
 
         // Save device token only if the installation id is deleted first
-        if (!empty($installationId)) {
-            if (!$PushService->removeInstallationId($installationId)) {
+        if (!empty($installationIdForDelete)) {
+            if (!$PushService->removeInstallationId($installationIdForDelete)) {
                 return $this->_getResponseSuccess(['action' => 'Unregistered']);
             }
         }
