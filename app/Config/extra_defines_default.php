@@ -47,6 +47,8 @@ $defines = [
     'EMAIL_VERIFY_CODE_LOCK_TTL'                  => 60 * 5,
     'EMAIL_VERIFY_CODE_LOCK_COUNT'                => 5,
     'SESSION_RENEW_TTL'                           => 60 * 60 * 24 * 7,//1 week
+    'FIREBASE_SERVER_KEY'                         => "AAAAL6eMdaw:APA91bG8YbMd_OD59h3N_UgYQb8GVOqNzCGOhiPaYdvs6Br1rFAuiFcmGNCbEqpCDxPlGUZP0rcrqy-ZH_7jv75VkWjOIoSldxXhvDNOy-IQIgX5X5yHrO1Hv3rya8Maiyrf1G5PddCj",
+    'FIREBASE_SEND_URL'                           =>  "https://fcm.googleapis.com/fcm/send",
     'NCMB_APPLICATION_KEY'                        => "bf4a9d5e9b501822ba8bbac08d81468d1b4f88f97187220607bc91d77d13441d",
     'NCMB_CLIENT_KEY'                             => "e1dc2a372918258f188855b9717d202acbbafdc6d489ee65d2a2fd413711a084",
     'NCMB_REST_API_FQDN'                          => "mb.api.cloud.nifty.com",
@@ -77,6 +79,8 @@ $defines = [
     'ATOBARAI_ENTERPRISE_ID'                      => '11528',
     'ATOBARAI_SITE_ID'                            => '13868',
     'ATOBARAI_API_USER_ID'                        => '10141',
+    // TODO: Remove reference after NCMB apps been discontinued
+    'MOBILE_APP_IOS_VERSION_NEW_HEADER'           => "1.2",
     'MOBILE_APP_IOS_VERSION_SUPPORTING_LEAST'     => "1.1.2",
     'MOBILE_APP_IOS_STORE_URL'                    => "https://itunes.apple.com/app/goalous-business-sns/id1060474459",
     'MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST' => "1.0.4",

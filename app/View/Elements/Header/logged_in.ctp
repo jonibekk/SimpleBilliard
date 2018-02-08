@@ -23,8 +23,8 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <header class="header">
-    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
-         id="header">
+    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app_ios_high_header ? "mb-app-nav" : null ?>"
+         id="header" >
         <div class="nav-container header-container">
             <?php
             // Condition that returns true if user is on a sub-page and is viewing on mobile app
@@ -46,7 +46,7 @@
             || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
             || (isset($statusPaymentFailed) && $statusPaymentFailed)
         ) : ?>
-        <div class="banner-alert font_verydark <?= $is_mb_app_ios ? "mod-mb-app" : "" ?>">
+        <div class="banner-alert font_verydark <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>">
             <div class="container">
                 <button type="button" class="close js-disappear-banner" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?= $this->Banner->getBannerMessage($serviceUseStatus, $isTeamAdmin, $stateEndDate, $teamCreditCardStatus ?? Team::STATUS_CREDIT_CARD_CLEAR, $teamCreditCardExpireDate ?? '', $statusPaymentFailed ?? false) ?>
