@@ -201,4 +201,86 @@ class PostDraftServiceTest extends GoalousTestCase
 
         $this->assertFalse($this->PostDraftService->isPreparedToPost($postDraft['id']));
     }
+
+    public function test_getPostDraftForFeed_get()
+    {
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'public'),
+            $userId = 1, $teamId = 1, []);
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'circle_1'),
+            $userId = 1, $teamId = 1, []);
+
+        // below is created in another team or another user
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'circle_1'),
+            1, 2, []);
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'circle_1'),
+            2, 1, []);
+
+        $postDrafts = $this->PostDraftService->getPostDraftForFeed($userId, $teamId);
+        $this->assertSame(2, count($postDrafts));
+    }
+
+    public function test_getPostDraftForFeed_limitByCircleIds()
+    {
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'public'),
+            $userId = 1, $teamId = 1, []);
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'public,circle_1'),
+            $userId = 1, $teamId = 1, []);
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'public,circle_2'),
+            $userId = 1, $teamId = 1, []);
+        $this->PostDraftService->createPostDraftWithResources(
+            $this->createPostingArrayFormat('public', 'circle_2'),
+            $userId = 1, $teamId = 1, []);
+
+        // Get circle_1
+        $postDrafts = $this->PostDraftService->getPostDraftForFeed($userId, $teamId, [1]);
+        $this->assertSame(1, count($postDrafts));
+        $postDraft = reset($postDrafts);
+        $this->assertSame('public,circle_1', $postDraft['data']['Post']['share']);
+
+        // Get circle_2
+        $postDrafts = $this->PostDraftService->getPostDraftForFeed($userId, $teamId, ["2"]);
+        $this->assertSame(2, count($postDrafts));
+        list($postDraft0, $postDraft1) = $postDrafts;
+        $this->assertSame('circle_2',        $postDraft0['data']['Post']['share']);
+        $this->assertSame('public,circle_2', $postDraft1['data']['Post']['share']);
+
+        // Get public, circles.id = 3 is specified as team's all circle in CircleFixture
+        $postDrafts = $this->PostDraftService->getPostDraftForFeed($userId, $teamId, [3]);
+        $this->assertSame(3, count($postDrafts));
+    }
+
+    /**
+     * @param string $share_range should be 'public' or 'secret'
+     * @param string $share 'public,circle_1,user_1'
+     *
+     * @return array
+     */
+    private function createPostingArrayFormat(string $share_range, string $share): array
+    {
+        if ('public' === $share_range) {
+            $share_public = $share;
+            $share_secret = '';
+        } else {
+            $share_public = 'public';
+            $share_secret = $share;
+        }
+        return [
+            'Post' => [
+                'body'          => 'body',
+                'site_info_url' => '',
+                'redirect_url'  => '',
+                'share_public'  => $share_public,
+                'share_secret'  => $share_secret,
+                'share_range'   => $share_range,
+                'share'         => $share
+            ]
+        ];
+    }
 }

@@ -13,7 +13,11 @@ class PostDraft extends AppModel
     {
         $options = [
             'fields'     => [
-                '*'
+                'PostDraft.id',
+                'PostDraft.user_id',
+                'PostDraft.team_id',
+                'PostDraft.post_id',
+                'PostDraft.draft_data',
             ],
             'conditions' => [
                 'user_id' => $userId,
