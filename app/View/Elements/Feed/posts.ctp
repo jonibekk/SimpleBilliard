@@ -229,7 +229,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 ?>
                 <?php if (!empty($imgs) || !empty($post['PostResources'])): ?>
                     </div>
-                        <?php if (!empty($imgs)): ?>
+                        <?php if (
+                                // Not going to show image if we have video posted
+                                // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                                !empty($imgs)
+                                && !($post['hasVideoResource'])
+                            ): ?>
                         <div
                             class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
                             <?php foreach ($imgs as $v): ?>
@@ -245,7 +250,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <?php foreach ($post['PostResources'] as $resource): ?>
                                 <div class="col pt_10px feed_img_only_one mb_12px">
                                     <?php
-                                    // TODO: currently, we have only video resource
+                                    // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
                                     // TODO: check if this is the video resource
                                     // TODO: move to another .ctp files
                                     $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'], time());
@@ -323,7 +328,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="col pt_10px">
                     <?php foreach ($post['PostFile'] as $file): ?>
                         <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
-                            continue;
+                            // Showing image as attached file if post has video post resource
+                            // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                            if (!$post['hasVideoResource']) {
+                                continue;
+                            }
                         } ?>
                         <div class="panel panel-default file-wrap-on-post">
                             <div class="panel-body pt_10px plr_11px pb_8px">

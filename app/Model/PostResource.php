@@ -42,6 +42,7 @@ class PostResource extends AppModel
 
     /**
      * Return all post_resources of {posts or post_drafts}.id
+     * TODO: https://jira.goalous.com/browse/GL-6601
      *
      * @param int[]  $ids
      * @param string $postOrDraftColumnName

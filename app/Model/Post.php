@@ -756,6 +756,14 @@ class Post extends AppModel
             $res[$key] = am($post, [
                 'PostResources' => $postResources[$post['Post']['id']] ?? [],
             ]);
+            // check if post_resource have a video or not
+            // TODO: https://jira.goalous.com/browse/GL-6601
+            $res[$key]['hasVideoResource'] = false;
+            foreach ($res[$key]['PostResources'] as $resource) {
+                // we have only video resource now, if in the loop, we have video resource
+                $res[$key]['hasVideoResource'] = true;
+                break;
+            }
         }
 
         //Set whether login user saved favorite post
