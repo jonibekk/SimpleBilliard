@@ -23,7 +23,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <header class="header">
-    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
+    <div class="navbar navbar-fixed-top navbar-default gl-navbar"
          id="header">
         <div class="nav-container header-container">
             <?php

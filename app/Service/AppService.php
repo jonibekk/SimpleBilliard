@@ -87,4 +87,18 @@ class AppService extends CakeObject
         return [];
 
     }
+
+    /**
+     * @return \GuzzleHttp\Client
+     */
+    protected function getHttpClient(): \GuzzleHttp\Client
+    {
+        // use ClassRegistry::getObject() for test cases
+        // usually returning false on default case
+        $registeredClient = ClassRegistry::getObject(\GuzzleHttp\Client::class);
+        if ($registeredClient instanceof \GuzzleHttp\Client) {
+            return $registeredClient;
+        }
+        return new \GuzzleHttp\Client();
+    }
 }

@@ -118,7 +118,7 @@ class DeviceTest extends GoalousTestCase
     public function testGetDeviceTokens2()
     {
         $data = $this->Device->getDeviceTokens(1);
-        $this->assertTrue($data[0] === "ios_dummy1");
+        $this->assertTrue($data[0]['device_token'] === "ios_dummy1");
     }
 
     public function testGetDeviceTokens3()
@@ -130,13 +130,13 @@ class DeviceTest extends GoalousTestCase
     public function testGetDeviceTokens4()
     {
         $data = $this->Device->getDeviceTokens(3);
-        $this->assertTrue($data[0] === "ios_dummy2");
+        $this->assertTrue($data[0]['device_token'] === "ios_dummy2");
     }
 
     public function testGetDeviceTokens5()
     {
         $data = $this->Device->getDeviceTokens(3);
-        $this->assertTrue($data[1] === "android_dummy2");
+        $this->assertTrue($data[1]['device_token'] === "android_dummy2");
     }
 
     public function testGetDeviceTokensNotFound()
