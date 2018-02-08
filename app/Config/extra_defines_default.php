@@ -79,6 +79,8 @@ $defines = [
     'ATOBARAI_ENTERPRISE_ID'                      => '11528',
     'ATOBARAI_SITE_ID'                            => '13868',
     'ATOBARAI_API_USER_ID'                        => '10141',
+    // TODO: Remove reference after NCMB apps been discontinued
+    'MOBILE_APP_IOS_VERSION_NEW_HEADER'           => "1.2",
     'MOBILE_APP_IOS_VERSION_SUPPORTING_LEAST'     => "1.1.2",
     'MOBILE_APP_IOS_STORE_URL'                    => "https://itunes.apple.com/app/goalous-business-sns/id1060474459",
     'MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST' => "1.0.4",
