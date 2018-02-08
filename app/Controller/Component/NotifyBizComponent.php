@@ -3,6 +3,7 @@ App::uses('ModelType', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('AppUtil', 'Util');
+App::import('Service', 'PushService');
 
 /**
  * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
@@ -496,7 +497,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['share_user_list'] = $share_user_list;
         $this->notify_option['options']['share_circle_list'] = $share_circle_list;
 
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $share_user_list);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $members);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $share_circle_list);
     }
 
@@ -1341,37 +1342,19 @@ class NotifyBizComponent extends Component
      * @param string $app_key
      * @param string $client_key
      */
-    private function _sendPushNotify($app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
+    private function _sendPushNotify()
     {
-        if (!$app_key) {
-            return;
-        }
-        $timestamp = $this->_getTimestamp();
-        $signature = $this->_getNCMBSignature($timestamp, null, null, $app_key, $client_key);
-
-        $header = array(
-            'X-NCMB-Application-Key: ' . $app_key,
-            'X-NCMB-Signature: ' . $signature,
-            'X-NCMB-Timestamp: ' . $timestamp,
-            'Content-Type: application/json'
-        );
-
-        $options = array(
-            'http' => array(
-                'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
-                'max_redirects' => 0,       // リダイレクトはしない
-                'method'        => NCMB_REST_API_PUSH_METHOD
-            )
-        );
-
+        // Get list of users to send notifications
         $uids = $this->_getSendMobileNotifyUserList();
         if (empty($uids)) {
             return;
         }
 
+        // Config language
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
+        // URL to be associated with the notification
         $postUrl = null;
         if (Hash::get($this->notify_option, 'url')) {
             $postUrl = $this->notify_option['url'];
@@ -1381,21 +1364,25 @@ class NotifyBizComponent extends Component
         // for switching team when user logged in other team.
         $postUrl = AppUtil::addQueryParamsToUrl($postUrl, ['team_id' => $this->NotifySetting->current_team_id]);
 
+        /** @var PushService $PushService */
+        $PushService = ClassRegistry::init('PushService');
+
+        // Keep track of already sent notifications
         $sent_device_tokens = [];
 
         foreach ($uids as $to_user_id) {
 
-            $device_tokens = $this->Device->getDeviceTokens($to_user_id);
-            if (empty($device_tokens)) {
+            $deviceTokens = $this->Device->getDeviceTokens($to_user_id);
+            if (empty($deviceTokens)) {
                 //このユーザーはスマホ持ってないのでスキップ
                 continue;
             }
 
             // ひとつのデバイスが複数のユーザーで登録されている可能性があるので
             // 一度送ったデバイスに対して2度はPUSH通知は送らない
-            foreach ($device_tokens as $key => $value) {
+            foreach ($deviceTokens as $key => $value) {
                 if (array_search($value, $sent_device_tokens) !== false) {
-                    unset($device_tokens[$key]);
+                    unset($deviceTokens[$key]);
                 }
             }
             $this->_setLangByUserId($to_user_id, $original_lang);
@@ -1420,24 +1407,31 @@ class NotifyBizComponent extends Component
                     $title .= " : " . $item_name;
                 }
             }
-            $title = json_encode($title, JSON_HEX_QUOT);
 
-            $body = '{
-                "immediateDeliveryFlag" : true,
-                "target":["ios","android"],
-                "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $device_tokens) . '"]}},
-                "message":' . $title . ',
-                "userSettingValue":{"url":"' . $postUrl . '"}},
-                "deliveryExpirationTime":"1 day"
-            }';
-            $options['http']['content'] = $body;
+            // Separate the tokens in two groups.
+            // The ones with installation_id belongs to Nifty Cloud
+            // The ones without installation_id belongs to Firebase
+            $firebaseTokens = [];
+            $ncmbTokens = [];
+            foreach ($deviceTokens as $token) {
+                if (empty($token['installation_id'])) {
+                    $firebaseTokens[] = $token;
+                } else {
+                    $ncmbTokens[] = $token['device_token'];
+                }
+            }
 
-            $header['content-length'] = 'Content-Length: ' . strlen($body);
-            $options['http']['header'] = implode("\r\n", $header);
+            // Send to NCMB
+            if (count($ncmbTokens) > 0) {
+                $encTitle = json_encode($title, JSON_HEX_QUOT);
+                $PushService->sendNCMBPushNotification($ncmbTokens, $encTitle, $postUrl);
+            }
 
-            $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
-            $ret = file_get_contents($url, false, stream_context_create($options));
-            $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
+            // Send to Firebase
+            if (count($firebaseTokens) > 0) {
+                $PushService->sendFirebasePushNotification($firebaseTokens, $title, $postUrl);
+            }
+            $sent_device_tokens = array_merge($sent_device_tokens, $deviceTokens);
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく
@@ -1476,55 +1470,6 @@ class NotifyBizComponent extends Component
         }
         //こっちは送信元の名前の言語に効く
         $this->NotifySetting->User->me['language'] = $lang;
-    }
-
-    /**
-     * NOWなタイムスタンプを生成する。
-     *
-     * @return string
-     */
-    private function _getTimestamp()
-    {
-        $now = microtime(true);
-        $msec = sprintf("%03d", ($now - floor($now)) * 1000);
-        return gmdate('Y-m-d\TH:i:s.', floor($now)) . $msec . 'Z';
-    }
-
-    /**
-     * push通知に必要なパラメータ
-     * X-NCMB-SIGNATUREを生成する
-     * デフォルトではpush通知用のシグネチャ生成
-     *
-     * @param        $timestamp  シグネチャを生成する時に使うタイムスタンプ
-     * @param        $method     シグネチャを生成する時に使うメソッド
-     * @param        $path       シグネチャを生成する時に使うパス
-     * @param string $app_key    NCMB用 application key
-     * @param string $client_key NCMB用 client key
-     *
-     * @return string X-NCMB-SIGNATUREの値
-     */
-    private function _getNCMBSignature(
-        $timestamp,
-        $method = null,
-        $path = null,
-        $app_key = NCMB_APPLICATION_KEY,
-        $client_key = NCMB_CLIENT_KEY
-    ) {
-        $header_string = "SignatureMethod=HmacSHA256&";
-        $header_string .= "SignatureVersion=2&";
-        $header_string .= "X-NCMB-Application-Key=" . $app_key . "&";
-        $header_string .= "X-NCMB-Timestamp=" . $timestamp;
-
-        $signature_string = (($method) ? $method : NCMB_REST_API_PUSH_METHOD) . "\n";
-        $signature_string .= NCMB_REST_API_FQDN . "\n";
-        if ($path) {
-            $signature_string .= $path . "\n";
-        } else {
-            $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
-        }
-        $signature_string .= $header_string;
-
-        return base64_encode(hash_hmac("sha256", $signature_string, $client_key, true));
     }
 
     /**
@@ -1988,9 +1933,11 @@ class NotifyBizComponent extends Component
         if (!$app_key) {
             return false;
         }
-        $timestamp = $this->_getTimestamp();
+        /** @var PushService $PushService */
+        $PushService = ClassRegistry::init('PushService');
+        $timestamp = $PushService->getNCBTimestamp();
         $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
-        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
+        $signature = $PushService->getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
 
         $header = array(
             'X-NCMB-Application-Key: ' . $app_key,
