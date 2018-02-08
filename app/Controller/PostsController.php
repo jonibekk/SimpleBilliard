@@ -965,6 +965,19 @@ class PostsController extends AppController
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
             ]);
+
+            // setting draft post data if having circle_id
+            /** @var PostDraftService $PostDraftService */
+            $PostDraftService = ClassRegistry::init('PostDraftService');
+            if (isset($this->request->params['circle_id']) && is_numeric($this->request->params['circle_id'])) {
+                $circleId = $this->request->params['circle_id'];
+                $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
+                    $this->Auth->user('id'),
+                    TeamStatus::getCurrentTeam()->getTeamId(),
+                    [$circleId]
+                    )
+                );
+            }
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
             //サークルページに居て当該サークルから抜けた場合の対応
@@ -991,6 +1004,20 @@ class PostsController extends AppController
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
             $this->request->params);
         $this->set(compact('posts'));
+
+        // setting draft post data if having circle_id
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
+        if (isset($this->request->params['circle_id']) && is_numeric($this->request->params['circle_id'])) {
+            $circleId = $this->request->params['circle_id'];
+            $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
+                $this->Auth->user('id'),
+                TeamStatus::getCurrentTeam()->getTeamId(),
+                [$circleId]
+            )
+            );
+        }
+
         $response = $this->render("Feed/posts");
         $html = $response->__toString();
 
