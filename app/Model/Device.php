@@ -159,6 +159,30 @@ class Device extends AppModel
     }
 
     /**
+     * Return the device by its installation id
+     *
+     * @param string $installationId
+     *
+     * @return array|bool|null
+     */
+    function getDeviceByInstallationId(string $installationId)
+    {
+        if (empty($installationId)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'Device.installation_id' => $installationId,
+                'Device.del_flg'      => false,
+            ],
+        ];
+
+        $data = $this->find('first', $options);
+        return $data;
+    }
+
+    /**
      * Return device_token and installation_id for all devices of user
      *
      * @param $user_id
