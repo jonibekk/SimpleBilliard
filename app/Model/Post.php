@@ -1358,13 +1358,23 @@ class Post extends AppModel
         return $res;
     }
 
-    function distributeShareToUserAndCircle(array $shares): array
+    /**
+     * Return list of users.id and circles.id to share
+     *
+     * @param array    $shares string of post targets to share
+     *      e.g. 'public,circle_1,user_2'
+     * @param int|null $teamId
+     *      if null is passed, teamId is solved from $this->current_team_id
+     *
+     * @return array list($userIds, $circleIds)
+     */
+    function distributeShareToUserAndCircle(array $shares, $teamId = null): array
     {
         $users = [];
         $circles = [];
         foreach ($shares as $val) {
             if (stristr($val, 'public')) {
-                $circles[] = $this->Circle->getTeamAllCircleId();
+                $circles[] = $this->Circle->getTeamAllCircleId($teamId);
                 continue;
             }
             // user case
