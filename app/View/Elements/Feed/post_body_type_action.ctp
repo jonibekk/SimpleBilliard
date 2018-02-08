@@ -64,7 +64,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 [
                     'class'         => 'lazy feed-img',
                     'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
-                        ['style' => 'medium']),
+                        ['style' => 'medium_large']),
                 ]
             )
             ?>
@@ -308,7 +308,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     'class'         => 'lazy comment-img',
                     'data-original' => $this->Upload->uploadUrl($my_prof,
                         'User.photo',
-                        ['style' => 'small']),
+                        ['style' => 'medium_large']),
                 ]
             )
             ?>
