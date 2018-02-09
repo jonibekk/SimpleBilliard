@@ -132,6 +132,7 @@ $(function () {
                   .val(data.video_stream_id)
                   .attr('id', data.video_stream_id)
                   .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+          $preview.data('video_stream_id', data.video_stream_id);
       } else {
           $form.append(
               $('<input type=hidden name=data[file_id][]>')
@@ -178,6 +179,23 @@ $(function () {
       }
       // 新しくアップロードするファイルの場合
       else {
+        // Deleting video stream file
+        var videoStreamId = $preview.data('video_stream_id')
+        if ($preview.data('video_stream_id') !== undefined) {
+          var $form = $('#' + $uploadFileForm._params.formID);
+            $form.find('input[name="data[video_stream_id][]"][value="'+videoStreamId+'"]').remove();
+            setTimeout(function () {
+                $preview.remove();
+            }, 4000);
+            $uploadFileForm.hide();
+            new Noty({
+                type: 'success',
+                text: cake.message.validate.dropzone_deleted
+            }).show();
+            return;
+        }
+
+
         // キューに入ってるアップロードをキャンセルしようとした場合
         //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
         //   このブロックはその前段階のキャンセル時の処理。)

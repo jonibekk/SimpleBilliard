@@ -36,6 +36,7 @@ App::uses('AttachedFile', 'Model');
                 dropzone_response_error: "<?=__('Failed to upload.')?>",
                 dropzone_cancel_upload: "<?=__('Cancelled uploading.')?>",
                 dropzone_cancel_upload_confirmation: "<?=__('Do you want to cancel uploading?')?>",
+                dropzone_deleted: "<?=__('Deleted the file.')?>",
                 dropzone_uploading_not_end: "<?=__('Not finished uploading yet, please wait just a moment.')?>",
                 dropzone_uploaded_file_expired: "<?=__('Uploaded files are invalid due. Please try again.')?>",
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
