@@ -9,7 +9,7 @@ import LoadingButton from "~/common/components/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import {nl2br} from "~/util/element";
-import {isIOSApp, isMobileApp} from "~/util/base";
+import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
 import {HotKeys} from "react-hotkeys";
 
 class Footer extends React.Component {
@@ -27,19 +27,19 @@ class Footer extends React.Component {
 
   componentDidMount() {
     var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
-    autosize(ta);
-
     if (!isMobileApp()) {
+      autosize(ta);
       return;
     }
-  
+
     var threadBody = document.getElementsByClassName('topicDetail-body')[0];
-    
-    ta.addEventListener('autosize:resized', function(){
-      threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
-      // The following line doesn't work on Android app. Fix this issue.
-      threadBody.scrollTo(0,threadBody.scrollHeight);
-    });
+    ta.oninput = function() {
+        ta.style.height = ""; /* Reset the height*/
+        ta.style.height = Math.min(ta.scrollHeight, threadBody.scrollHeight) + "px";
+
+        threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
+        threadBody.scrollTo(0,threadBody.scrollHeight);
+    };
 
     const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
     this.props.dispatch(
@@ -67,15 +67,14 @@ class Footer extends React.Component {
       detail.inputMessage(e.target.value)
     );
 
-    if (!isIOSApp()) {
-      return;
+    if (isOldIOSApp()) {
+        // TODO: Scroll by document height
+        window.scrollTo(0, 1000)
+        const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+        this.props.dispatch(
+            detail.changeLayout({body_bottom})
+        );
     }
-    // TODO: Scroll by document height
-    window.scrollTo(0, 1000)
-    const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
-    this.props.dispatch(
-      detail.changeLayout({body_bottom})
-    );
   }
 
   uploadFiles(files) {
@@ -129,7 +128,7 @@ class Footer extends React.Component {
   }
 
   focusInputBody(e) {
-    if (isIOSApp()) {
+    if (isIOSApp() && isOldIOSApp()) {
       this.props.dispatch(
         detail.changeLayout({
           body_bottom: PositionMobileApp.BODY_BOTTOM,
@@ -140,7 +139,7 @@ class Footer extends React.Component {
   }
 
   blurInputBody(e) {
-    if (isIOSApp()) {
+    if (isIOSApp() && isOldIOSApp()) {
       this.props.dispatch(
         detail.changeLayout({
           body_bottom: PositionIOSApp.BODY_BOTTOM,
