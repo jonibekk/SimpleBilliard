@@ -178,6 +178,7 @@ class TranscodeNotificationsController extends ApiController
                         //    - So we do not need return status 500, we returning 200.
                     } else {
                         // succeed
+                        $this->sendNotification($post['id'], $postDraft);
                         $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);
                     }
                 }
@@ -200,6 +201,48 @@ class TranscodeNotificationsController extends ApiController
             ]);
             GoalousLog::error($e->getTraceAsString());
             return $this->_getResponseBadFail('');
+        }
+    }
+
+    /**
+     * Pushing for notifying new posts to circles
+     *
+     * @param int   $postId
+     * @param array $postDraft post_drafts data array
+     *
+     * @return bool
+     */
+    public function sendNotification(int $postId, array $postDraft)
+    {
+        $teamId = $postDraft['team_id'];
+        $draftData = json_decode($postDraft['draft_data'], true);
+        $socketId = Hash::get($draftData, 'socket_id');
+        $shareTargets = explode(',', Hash::get($draftData, 'Post.share'));
+        $postType = Hash::get($draftData, 'Post.type');
+
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $postId, null, null, $teamId);
+
+        // At least we need socketId and share targets
+        if (!$socketId || empty($shareTargets)) {
+            return false;
+        }
+
+        if ($postType != Post::TYPE_MESSAGE) {
+            // Pushing to Pusher
+            // If containing 'Team All Circle', sharing to that circle only
+            if (in_array('public', $shareTargets)) {
+                $this->NotifyBiz->push($socketId, 'public', $teamId);
+            } else {
+                // otherwise, pushing to each circles
+                foreach ($shareTargets as $shareTarget) {
+                    $this->NotifyBiz->push($socketId, $shareTarget, $teamId);
+                }
+            }
+        }
+
+        // Push for updating circle list
+        if ($postType !== Post::TYPE_MESSAGE) {
+            $this->NotifyBiz->pushUpdateCircleList($socketId, $shareTargets, $teamId);
         }
     }
 
