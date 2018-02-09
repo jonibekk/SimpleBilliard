@@ -4,7 +4,7 @@ import {del, get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
-import {isIOSApp, isMobileApp} from "~/util/base";
+import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
 import {getErrMsg} from "./common";
 
 export function fetchInitialData(topic_id) {
@@ -331,7 +331,7 @@ export function resetTopicTitleSettingStatus() {
 
 export function initLayout() {
   let mobile_app_layout = {}
-  if (isIOSApp()) {
+  if (isOldIOSApp()) {
     mobile_app_layout = {
       header_top: PositionIOSApp.HEADER_TOP,
       body_top: PositionIOSApp.BODY_TOP,
