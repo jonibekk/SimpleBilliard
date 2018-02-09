@@ -57,6 +57,22 @@ export function isIOSApp() {
 }
 
 /**
+ * TODO: Remove after Nifty cloud replacement
+ * @deprecated
+ * Check if iOS app is older than 1.2
+ * @returns bool
+ */
+export function isOldIOSApp() {
+    const parser = new UaParser();
+    var ua = parser.getUA();
+    var match = ua.match("Goalous App iOS \(.*, (.+)\)");
+    if (match!=null && match[2] < '1.2') {
+        return true;
+    }
+    return false;
+}
+
+/**
  * disabled async events other message.
  */
 export function disableAsyncEvents() {
