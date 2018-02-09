@@ -305,7 +305,7 @@ class PushService extends AppService
         $data = $Device->getDeviceByToken($deviceToken);
 
         if (empty($data['Device'])) {
-            return false;
+            return true;
         }
 
         try {
