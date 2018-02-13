@@ -873,4 +873,21 @@ $(function () {
       });
     }
   }
+
+  // Limiting number of video to post
+  $(document).on('submit', '#PostDisplayForm', function (e) {
+      var video_count = $('#PostDisplayForm').find('input[name="data[video_stream_id][]"]').length
+      if (video_count > 1) {
+          new Noty({
+              type: 'error',
+              text: cake.message.validate.dropzone_error_allow_one_video
+          }).show();
+          $('#PostSubmit').removeAttr('disabled');
+          // stopImmediatePropagation() is need for preventing event in "js/lib/forms.js" of "form二重送信防止"
+          // If we did not stop, the submit button is set to disabled
+          e.stopImmediatePropagation();
+          return false;
+      }
+      return true;
+  });
 });

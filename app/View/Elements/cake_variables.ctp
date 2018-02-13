@@ -39,6 +39,7 @@ App::uses('AttachedFile', 'Model');
                 dropzone_deleted: "<?=__('Deleted the file.')?>",
                 dropzone_uploading_not_end: "<?=__('Not finished uploading yet, please wait just a moment.')?>",
                 dropzone_uploaded_file_expired: "<?=__('Uploaded files are invalid due. Please try again.')?>",
+                dropzone_error_allow_one_video: "<?=__('Can\'t post more than two videos.')?>",
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
