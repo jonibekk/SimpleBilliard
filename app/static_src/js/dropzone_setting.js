@@ -122,11 +122,7 @@ $(function () {
       // submit するフォームに hidden でファイルID追加
       var $form = $('#' + $uploadFileForm._params.formID);
 
-      console.log("appending file id")
-      //console.log(file)
-      console.log(res)
       if (undefined !== data.is_video && true === data.is_video) {
-        console.log("append video_stream_id")
           $form.append(
               $('<input type=hidden name=data[video_stream_id][]>')
                   .val(data.video_stream_id)
@@ -513,7 +509,6 @@ $(function () {
       $('#PostSubmit').on('click', $uploadFileForm._forbitSubmit);
     },
     afterQueueComplete: function () {
-      console.log("posing form: afterQueueComplete")
       $uploadFileForm._sending = false;
 
       // フォームをsubmit可能にする
@@ -725,7 +720,6 @@ $(function () {
     afterSuccess: function (file) {
       // メイン画像の hidden を先頭に持ってくる
       // DB内の index 番号を 0 にするため
-      console.log("after success append hidden")
       var $form = $('#' + $uploadFileForm._params.formID);
       var file_id = $(file.previewTemplate).data('file_id');
       var $firstHidden = $form.find('input[name="data[file_id][]"]:first');
