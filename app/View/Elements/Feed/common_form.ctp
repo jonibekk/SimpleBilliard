@@ -33,6 +33,34 @@ $only_tab_post =
 ?>
 <?= $this->App->viewStartComment() ?>
 <div id="ActionFormWrapper">
+    <?php if ($this->request->data['hasVideoResource'] ?? false): ?>
+            <?php if (!empty($this->request->data['PostResources'])): ?>
+                <?php foreach ($this->request->data['PostResources'] as $resource): ?>
+                    <div class="col pt_10px feed_img_only_one mb_12px">
+                        <?php
+                        // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
+                        // TODO: check if this is the video resource
+                        // TODO: move to another .ctp files
+                        $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $this->request->data['Post']['id'], time());
+                        if ($resource['aspect_ratio'] > 0) {
+                            $paddingTop = 100 / $resource['aspect_ratio'];
+                        } else {
+                            $paddingTop = 100;
+                        }
+                        $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
+                        ?>
+                        <div id="div<?= $videoStreamId ?>" class="video-responsive-container" style="padding-top: <?= $paddingTop ?>%">
+                            <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered video-responsive" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
+                                <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
+                                    <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()->getValue() ?>" type="<?= $videoSource->getType()->getValue() ?>">
+                                <?php endforeach; ?>
+                            </video>
+                        </div>
+                        <script>feedVideoJs('<?= $videoStreamId ?>')</script>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+    <?php endif; ?>
     <div class="panel panel-default global-form" id="GlobalForms">
         <div class="post-panel-heading ptb_7px plr_11px">
             <!-- Nav tabs -->
