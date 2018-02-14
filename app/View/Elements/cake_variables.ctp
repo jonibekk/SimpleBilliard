@@ -38,6 +38,7 @@ App::uses('AttachedFile', 'Model');
                 dropzone_cancel_upload_confirmation: "<?=__('Do you want to cancel uploading?')?>",
                 dropzone_uploading_not_end: "<?=__('Not finished uploading yet, please wait just a moment.')?>",
                 dropzone_uploaded_file_expired: "<?=__('Uploaded files are invalid due. Please try again.')?>",
+                dropzone_video_cut_message: "<?=__('If it exceeds 60 seconds, it will be cut in the first 60 seconds.')?>",
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
