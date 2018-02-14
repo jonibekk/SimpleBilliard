@@ -48,7 +48,10 @@ $(function () {
     '  <div class="dz-progress progress">' +
     '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
     '  </div>' +
-    '</div>';
+    '  <div class="video_stream_cut_message text-danger" style="display: none;">' +
+    '    <div>' + cake.message.validate.dropzone_video_cut_message + '</div>' +
+    '  </div>' +
+    '</div>';//a
 
 // アクションのメイン画像表示部分のテンプレート
   var previewTemplateActionImage =
@@ -132,6 +135,7 @@ $(function () {
                   .val(data.video_stream_id)
                   .attr('id', data.video_stream_id)
                   .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+          $preview.find('.video_stream_cut_message').show();
       } else {
           $form.append(
               $('<input type=hidden name=data[file_id][]>')
