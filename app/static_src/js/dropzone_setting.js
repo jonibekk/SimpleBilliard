@@ -411,6 +411,15 @@ $(function () {
     // Dropzone 設定を上書き
     // （Dropzone インスタンスは常に１つ）
     Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
+    if (undefined !== params.requestParams) {
+      if (typeof params.requestParams === 'function') {
+        Dropzone.instances[0].options.params = params.requestParams();
+      } else if (typeof params.requestParams === 'object') {
+        Dropzone.instances[0].options.params = params.requestParams;
+      }
+    } else {
+      Dropzone.instances[0].options.params = {};
+    }
     // acceptedFiles の設定は上書きされないので手動で設定
     Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
     // maxFiles が 1 の場合、もしくは
@@ -484,8 +493,18 @@ $(function () {
   var postParams = {
     formID: 'PostDisplayForm',
     previewContainerID: 'PostUploadFilePreview',
+    requestParams: function() {
+        // decide which editing post or new post page
+        if ($('#PostFormShare').length > 0) {
+          return {
+              'from': 'post_new'
+          };
+        }
+        return {
+            'from': 'post_edit'
+        };
+    },
     beforeSending: function () {
-      console.log("posing form: beforeSending")
       if ($uploadFileForm._sending) {
         return;
       }
@@ -518,6 +537,9 @@ $(function () {
   var messageParams = {
     formID: 'messageDropArea',
     previewContainerID: 'messageUploadFilePreviewArea',
+    requestParams: {
+        'from': 'message'
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -561,6 +583,9 @@ $(function () {
   var actionImageParams = {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
+    requestParams: {
+        'from': 'action_main'
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -639,6 +664,9 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
     disableMultiple: true,
+    requestParams: {
+        'from': 'action_replace'
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -732,6 +760,9 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePreview',
     afterAccept: actionImageParams.afterAccept,
+    requestParams: {
+        'from': 'action_attach'
+    },
     beforeSending: function () {
       if ($uploadFileForm._sending) {
         return;
