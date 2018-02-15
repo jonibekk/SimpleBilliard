@@ -185,8 +185,8 @@ class GlEmailComponent extends Component
     /**
      * Sending a alert of expires
      *
-     * @param int    $toUid
-     * @param int    $teamId
+     * @param int $toUid
+     * @param int $teamId
      */
     public function sendMailMovedReadOnlyForChargeFailure(
         int $toUid,
@@ -198,7 +198,6 @@ class GlEmailComponent extends Component
         $this->SendMail->saveMailData($toUid, $mailTemplate, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
-
 
     /**
      * Sending a alert of charge failure
@@ -320,6 +319,18 @@ class GlEmailComponent extends Component
     public function sendMailRegisterCreditCardPaidPlan(int $toUid, int $teamId)
     {
         $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN, null, null, $teamId);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * Send recharge email to team admin
+     *
+     * @param int $toUid
+     * @param int $teamId
+     */
+    public function sendMailRecharge(int $toUid, int $teamId)
+    {
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_RECHARGE, null, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 

@@ -34,19 +34,20 @@ class SendMail extends AppModel
     const TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN = 17;
     const TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE = 18;
     const TYPE_TMPL_ALERT_CHARGE_FAILURE = 19;
+    const TYPE_TMPL_RECHARGE = 20;
 
     static public $TYPE_TMPL = [
-        self::TYPE_TMPL_ACCOUNT_VERIFY                 => [
+        self::TYPE_TMPL_ACCOUNT_VERIFY                    => [
             'subject'  => null,
             'template' => 'account_verification',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET                 => [
+        self::TYPE_TMPL_PASSWORD_RESET                    => [
             'subject'  => null,
             'template' => 'password_reset',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE        => [
+        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE           => [
             'subject'  => null,
             'template' => 'password_reset_complete',
             'layout'   => 'default',
@@ -111,7 +112,7 @@ class SendMail extends AppModel
             'template' => 'register_invoice_paid_plan',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN => [
+        self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN    => [
             'subject'  => null,
             'template' => 'register_credit_card_paid_plan',
             'layout'   => 'default',
@@ -121,9 +122,14 @@ class SendMail extends AppModel
             'template' => 'move_read_only_for_charge_failure',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_ALERT_CHARGE_FAILURE           => [
+        self::TYPE_TMPL_ALERT_CHARGE_FAILURE              => [
             'subject'  => null,
             'template' => 'alert_charge_failure',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_RECHARGE                          => [
+            'subject'  => null,
+            'template' => 'recharge',
             'layout'   => 'default',
         ],
     ];
@@ -147,6 +153,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_REGISTER_CREDIT_CARD_PAID_PLAN]['subject'] = __("Registration to the paid plan is complete");
         self::$TYPE_TMPL[self::TYPE_TMPL_ALERT_CHARGE_FAILURE]['subject'] = __("We had a problem billing your team");
         self::$TYPE_TMPL[self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE]['subject'] = __("We are downgrading your team to read-only");
+        self::$TYPE_TMPL[self::TYPE_TMPL_RECHARGE]['subject'] = __("We recharged your team");
     }
 
     function __construct($id = false, $table = null, $ds = null)
