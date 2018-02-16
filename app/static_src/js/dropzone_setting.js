@@ -407,14 +407,12 @@ $(function () {
     // Dropzone 設定を上書き
     // （Dropzone インスタンスは常に１つ）
     Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
-    if (undefined !== params.requestParams) {
-      if (typeof params.requestParams === 'function') {
-        Dropzone.instances[0].options.params = params.requestParams();
-      } else if (typeof params.requestParams === 'object') {
-        Dropzone.instances[0].options.params = params.requestParams;
-      }
-    } else {
+    if (undefined === params.requestParams) {
       Dropzone.instances[0].options.params = {};
+    } else if (typeof params.requestParams === 'function') {
+      Dropzone.instances[0].options.params = params.requestParams();
+    } else if (typeof params.requestParams === 'object') {
+      Dropzone.instances[0].options.params = params.requestParams;
     }
     // acceptedFiles の設定は上書きされないので手動で設定
     Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
