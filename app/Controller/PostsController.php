@@ -969,8 +969,8 @@ class PostsController extends AppController
             // setting draft post data if having circle_id
             /** @var PostDraftService $PostDraftService */
             $PostDraftService = ClassRegistry::init('PostDraftService');
-            if (isset($this->request->params['circle_id']) && is_numeric($this->request->params['circle_id'])) {
-                $circleId = $this->request->params['circle_id'];
+            $circleId = Hash::get($this->request->params, 'circle_id');
+            if (isset($circleId) && AppUtil::isInt($circleId)) {
                 $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
                     $this->Auth->user('id'),
                     TeamStatus::getCurrentTeam()->getTeamId(),
@@ -1008,8 +1008,8 @@ class PostsController extends AppController
         // setting draft post data if having circle_id
         /** @var PostDraftService $PostDraftService */
         $PostDraftService = ClassRegistry::init('PostDraftService');
-        if (isset($this->request->params['circle_id']) && is_numeric($this->request->params['circle_id'])) {
-            $circleId = $this->request->params['circle_id'];
+        $circleId = Hash::get($this->request->params, 'circle_id');
+        if (isset($circleId) && AppUtil::isInt($circleId)) {
             $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
                 $this->Auth->user('id'),
                 TeamStatus::getCurrentTeam()->getTeamId(),
