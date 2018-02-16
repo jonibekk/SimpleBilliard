@@ -490,14 +490,8 @@ $(function () {
     formID: 'PostDisplayForm',
     previewContainerID: 'PostUploadFilePreview',
     requestParams: function() {
-        // decide which editing post or new post page
-        if ($('#PostFormShare').length > 0) {
-          return {
-              'from': 'post_new'
-          };
-        }
         return {
-            'from': 'post_edit'
+            'enable_video_transcode': cake.data.is_edit_mode ? 0 : 1
         };
     },
     beforeSending: function () {
@@ -533,7 +527,6 @@ $(function () {
     formID: 'messageDropArea',
     previewContainerID: 'messageUploadFilePreviewArea',
     requestParams: {
-        'from': 'message'
     },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
@@ -579,7 +572,6 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
     requestParams: {
-        'from': 'action_main'
     },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
@@ -660,7 +652,6 @@ $(function () {
     previewContainerID: 'ActionUploadFilePhotoPreview',
     disableMultiple: true,
     requestParams: {
-        'from': 'action_replace'
     },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
@@ -755,7 +746,6 @@ $(function () {
     previewContainerID: 'ActionUploadFilePreview',
     afterAccept: actionImageParams.afterAccept,
     requestParams: {
-        'from': 'action_attach'
     },
     beforeSending: function () {
       if ($uploadFileForm._sending) {
