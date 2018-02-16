@@ -65,6 +65,7 @@ class InvoiceServiceTest extends GoalousTestCase
         $paymentSetting = ['payment_base_day' => 31];
         $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
         list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+        $this->PaymentService->clearCachePaymentSettings();
 
         $targetChargeHistories = [
             (int)0 => [

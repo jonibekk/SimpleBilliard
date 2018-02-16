@@ -86,70 +86,29 @@ class ReorderInvoiceShell extends AppShell
             $result = $PaymentService->reorderInvoice($teamId, $invoiceHistory['id']);
             if ($result === true) {
                 $this->logInfo(sprintf('Reorder registration was succeeded! teamId: %s', $teamId));
+
+                // Send notification email
+                /** @var TeamMember $TeamMember */
+                $TeamMember = ClassRegistry::init('TeamMember');
+                $adminList = $TeamMember->findAdminList($teamId);
+                if (!empty($adminList)) {
+                    // sending emails to each admins.
+                    foreach ($adminList as $toUid) {
+                        $this->GlEmail->sendMailRecharge($toUid, $teamId);
+                    }
+                } else {
+                    $this->logError("This team have no admin: $teamId");
+                }
             } else {
                 $this->logInfo(sprintf('Reorder registration was skipped or failed! teamId: %s', $teamId));
             }
-
-            // Send notification email
-            /** @var TeamMember $TeamMember */
-            $TeamMember = ClassRegistry::init('TeamMember');
-            $adminList = $TeamMember->findAdminList($teamId);
-            if (!empty($adminList)) {
-                // sending emails to each admins.
-                foreach ($adminList as $toUid) {
-                    $this->GlEmail->sendMailRecharge($toUid, $teamId);
-                }
-            } else {
-                CakeLog::error("This team have no admin: $teamId");
-            }
         } catch (Exception $e) {
             $this->logError(sprintf("caught error on registerInvoice: %s", AppUtil::jsonOneLine([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'reorderTargetCode' => $reorderTargetCode
             ])));
             $this->logError($e->getTraceAsString());
         }
 
-    }
-
-    /**
-     * @param int $historyId
-     *
-     * @return array
-     */
-    function getHistory(int $historyId): array
-    {
-        /** @var PaymentService $PaymentService */
-        $PaymentService = ClassRegistry::init('PaymentService');
-
-        $history = $this->ChargeHistory->getById($historyId);
-
-        if (empty($history)) {
-            $this->logError(sprintf("Recharge target history doesn't exit. %s", AppUtil::jsonOneLine([
-                'reorderTargetCode' => $historyId,
-            ])));
-            exit();
-        }
-        $paymentSetting = $PaymentService->get($history['team_id']);
-        if (empty($paymentSetting)) {
-            $this->logError(sprintf("Payment setting doesn't exit. %s", AppUtil::jsonOneLine([
-                'team_id' => $history['team_id']
-            ])));
-            exit();
-        }
-
-        if ((int)$history['payment_type'] !== Enum\PaymentSetting\Type::INVOICE) {
-            $this->logError(sprintf("Payment type is not invoice %s", AppUtil::jsonOneLine([
-                'team_id' => $history['team_id']
-            ])));
-            exit();
-        }
-        if ((int)$history['result_type'] === Enum\ChargeHistory\ResultType::FAIL) {
-            $this->logError(sprintf("Payment type is not invoice %s", AppUtil::jsonOneLine([
-                'team_id' => $history['team_id']
-            ])));
-            exit();
-        }
-
-        return $history;
     }
 }
