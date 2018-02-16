@@ -23,11 +23,12 @@ class FilesController extends ApiController
             return $this->_getResponseBadFail(__('Failed to upload.'));
         }
 
-        // Get what Form is this file uploaded from.
-        $formFrom = $this->request->data('from');
+        // Get enable_video_transcode
+        $enableVideoTranscode = $this->request->data('enable_video_transcode') ?? 0;
+        $enableVideoTranscode = 0 < intval($enableVideoTranscode);
 
-        // Only transcode video is from creating new post form
-        if ('post_new' === $formFrom) {
+        // if $enableVideoTranscode = true from API
+        if ($enableVideoTranscode) {
             $isVideo = $this->isVideo($form);
             if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
                 return $this->processVideoUpload($form);
