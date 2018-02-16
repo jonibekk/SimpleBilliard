@@ -4,6 +4,7 @@ App::import('Service', 'CreditCardService');
 App::import('Service', 'InvoiceService');
 App::import('Service', 'TeamService');
 App::import('Service', 'CampaignService');
+App::import('Service', 'ChargeHistoryService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
 App::uses('TransactionManager', 'Model');
@@ -155,9 +156,10 @@ class PaymentService extends AppService
      */
     public function getUseDaysByNextBaseDate(int $teamId): int
     {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $timezone = $Team->getTimezone();
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+        $timezone = $TeamService->getTeamTimezone($teamId);
+
         $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
         $nextBaseDate = $this->getNextBaseDate($teamId);
         // Calc use days
@@ -175,9 +177,9 @@ class PaymentService extends AppService
      */
     public function getNextBaseDate(int $teamId, $timestamp = null): string
     {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $timezone = $Team->getTimezone();
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init("TeamService");
+        $timezone = $TeamService->getTeamTimezone($teamId);
         if (empty($timestamp)) {
             $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
         } else {
@@ -398,7 +400,6 @@ class PaymentService extends AppService
 
         return $res;
     }
-
 
     /**
      * Calc decimal point by currency
@@ -715,18 +716,18 @@ class PaymentService extends AppService
 
             // ChargeHistory temporary insert
             $historyData = [
-                'team_id'          => $teamId,
-                'user_id'          => $opeUserId,
-                'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-                'charge_type'      => $chargeType->getValue(),
-                'amount_per_user'  => $amountPerUser,
-                'total_amount'     => $chargeInfo['sub_total_charge'],
-                'tax'              => $chargeInfo['tax'],
-                'charge_users'     => $usersCount,
-                'currency'         => $currency,
-                'charge_datetime'  => $chargeDateTime->getTimestamp(),
-                'result_type'      => Enum\ChargeHistory\ResultType::ERROR,
-                'max_charge_users' => $maxChargeUserCnt,
+                'team_id'                     => $teamId,
+                'user_id'                     => $opeUserId,
+                'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'charge_type'                 => $chargeType->getValue(),
+                'amount_per_user'             => $amountPerUser,
+                'total_amount'                => $chargeInfo['sub_total_charge'],
+                'tax'                         => $chargeInfo['tax'],
+                'charge_users'                => $usersCount,
+                'currency'                    => $currency,
+                'charge_datetime'             => $chargeDateTime->getTimestamp(),
+                'result_type'                 => Enum\ChargeHistory\ResultType::ERROR,
+                'max_charge_users'            => $maxChargeUserCnt,
                 'campaign_team_id'            => $campaignTeamId,
                 'price_plan_purchase_team_id' => $pricePlanPurchaseId,
             ];
@@ -746,7 +747,7 @@ class PaymentService extends AppService
                 'team_id'    => $teamId,
                 'history_id' => $historyId,
                 'type'       => $chargeType->getValue(),
-                'campaign'     => $isCampaign,
+                'campaign'   => $isCampaign,
             ];
             if ($isCampaign) {
                 $metaData['plan_purchase_id'] = $pricePlanPurchaseId;
@@ -1156,7 +1157,8 @@ class PaymentService extends AppService
 
         // Check if already registered.
         if (!empty($PaymentSetting->getByTeamId($teamId))) {
-            CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__, $teamId));
+            CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__,
+                $teamId));
             return false;
         }
 
@@ -1288,8 +1290,7 @@ class PaymentService extends AppService
                 }
             }
             $this->TransactionManager->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->TransactionManager->rollback();
             CakeLog::emergency(sprintf("Failed to delete payment data. teamId: %s, errorDetail: %s",
                 $teamId,
@@ -1313,6 +1314,7 @@ class PaymentService extends AppService
      * @param int      $time
      * @param int|null $userId
      * @param bool     $checkSentInvoice
+     * @param int|null $rechargeTargetHistoryId
      *
      * @return bool
      * @internal param float $timezone
@@ -1322,7 +1324,8 @@ class PaymentService extends AppService
         int $chargeMemberCount,
         int $time,
         $userId = null,
-        bool $checkSentInvoice = true
+        bool $checkSentInvoice = true,
+        $rechargeTargetHistoryId = null
     ): bool {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
@@ -1397,16 +1400,6 @@ class PaymentService extends AppService
             CakeLog::info(sprintf('add invoice monthly charge_histories: %s',
                 AppUtil::jsonOneLine($monthlyChargeHistory)));
 
-            // monthly dates
-            $monthlyChargeHistory['monthlyStartDate'] = $localCurrentDate;
-            $nextMonthTs = strtotime('+ 1 month', strtotime($localCurrentDate));
-            $nextBaseDate = AppUtil::correctInvalidDate(
-                date('Y', $nextMonthTs),
-                date('m', $nextMonthTs),
-                $paymentSetting['payment_base_day']
-            );
-            $monthlyChargeHistory['monthlyEndDate'] = AppUtil::dateYesterday($nextBaseDate);
-
             // save the invoice history
             $invoiceHistoryData = [
                 'team_id'           => $teamId,
@@ -1442,10 +1435,10 @@ class PaymentService extends AppService
             }
 
             // send invoice to atobarai.com
+            $targetChargeHistories[] = $monthlyChargeHistory;
             $resAtobarai = $InvoiceService->registerOrder(
                 $teamId,
                 $targetChargeHistories,
-                $monthlyChargeHistory,
                 $localCurrentDate
             );
             if ($resAtobarai['status'] == 'error') {
@@ -1471,10 +1464,27 @@ class PaymentService extends AppService
 
         $this->TransactionManager->commit();
 
-        // [Important]
-        // Updating ChargeHistory is not include transaction.
-        // Because It got necessary to rollback even atobarai.com data if include.
-        // If this process failed, Return success abd we recovery data later.
+        // Update status after order
+        $this->updateAfterInvoiceOrder($teamId, $invoiceHistoryId, $resAtobarai);
+
+        return true;
+    }
+
+    /**
+     * [Important]
+     * Updating ChargeHistory is not include transaction.
+     * Because It got necessary to rollback even atobarai.com data if include.
+     * If this process failed, Return success abd we recovery data later.
+     *
+     * @param int   $teamId
+     * @param int   $invoiceHistoryId
+     * @param array $resAtobarai
+     */
+    public function updateAfterInvoiceOrder(int $teamId, int $invoiceHistoryId, array $resAtobarai)
+    {
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+
         try {
             // update system order code.
             $invoiceHistoryUpdate = [
@@ -1498,6 +1508,112 @@ class PaymentService extends AppService
             CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             CakeLog::emergency($e->getTraceAsString());
         }
+    }
+
+    /**
+     * Invoice reorder for past failed order
+     *
+     * @param int $teamId
+     * @param int $reorderTargetId
+     *
+     * @return bool
+     */
+    public function reorderInvoice(int $teamId, int $reorderTargetId): bool
+    {
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
+        /** @var InvoiceService $InvoiceService */
+        $InvoiceService = ClassRegistry::init('InvoiceService');
+        /** @var  InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        /** @var  InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory */
+        $InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        /** @var ChargeHistoryService $ChargeHistoryService */
+        $ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+
+        try {
+            $this->TransactionManager->begin();
+
+            // Get invoice history
+            $targetInvoiceHistory = $InvoiceHistory->getById($reorderTargetId);
+            if (empty($targetInvoiceHistory)) {
+                throw new Exception(sprintf("Invoice history doesn't exist. data: %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'reorderTargetId'))
+                ));
+            }
+
+            // Get all histories related invoice order
+            $targetChargeHistories = $ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $reorderTargetId);
+            if (empty($targetChargeHistories)) {
+                throw new Exception(sprintf("Target charge history doesn't exist. data: %s",
+                    AppUtil::varExportOneLine(compact('teamId', 'reorderTargetId'))
+                ));
+            }
+
+            // Save a charge history(summarize to one)
+            $newHistory = $ChargeHistoryService->addInvoiceRecharge($teamId, $targetChargeHistories);
+
+            // Save an invoice history
+            $time = GoalousDateTime::now()->getTimestamp();
+            $invoiceHistoryData = [
+                'team_id'             => $teamId,
+                'order_datetime'      => $time,
+                'system_order_code'   => '',
+                'reorder_target_code' => $targetInvoiceHistory['system_order_code']
+            ];
+            $InvoiceHistory->create();
+            $invoiceHistory = $InvoiceHistory->save($invoiceHistoryData);
+            if (!$invoiceHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceHistory. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoryData),
+                    AppUtil::varExportOneLine($InvoiceHistory->validationErrors)
+                ));
+            }
+            CakeLog::info(sprintf('add invoice_histories: %s', AppUtil::jsonOneLine($invoiceHistory)));
+
+            // Save invoice history and charge history relation
+            $invoiceHistoryId = $InvoiceHistory->getLastInsertID();
+            $invoiceHistoriesChargeHistory = [
+                'invoice_history_id' => $invoiceHistoryId,
+                'charge_history_id'  => $newHistory['id'],
+            ];
+            $InvoiceHistoriesChargeHistory->create();
+            $resSaveInvoiceChargeHistory = $InvoiceHistoriesChargeHistory->save($invoiceHistoriesChargeHistory);
+            if (!$resSaveInvoiceChargeHistory) {
+                throw new Exception(sprintf("Failed save an InvoiceChargeHistory. saveData: %s, validationErrors: %s",
+                    AppUtil::varExportOneLine($invoiceHistoriesChargeHistory),
+                    AppUtil::varExportOneLine($InvoiceHistoriesChargeHistory->validationErrors)
+                ));
+            }
+
+            // Send invoice to atobarai.com (reorder)
+            $timezone = $TeamService->getTeamTimezone($teamId);
+            $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
+            $resAtobarai = $InvoiceService->registerOrder($teamId, $targetChargeHistories, $localCurrentDate);
+            if ($resAtobarai['status'] == 'error') {
+                throw new Exception(sprintf("Request to atobarai.com was failed. errorMsg: %s, chargeHistories: %s, requestData: %s",
+                    AppUtil::varExportOneLine($resAtobarai['messages']),
+                    AppUtil::varExportOneLine($targetChargeHistories),
+                    AppUtil::varExportOneLine($resAtobarai['requestData'])
+                ));
+            }
+            CakeLog::info(sprintf('response of atobarai.com: %s', AppUtil::jsonOneLine([
+                'teams.id'          => $teamId,
+                'response_atobarai' => $resAtobarai,
+            ])));
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::emergency($e->getTraceAsString());
+            return false;
+        }
+        $this->TransactionManager->commit();
+
+        // Update status after order
+        $this->updateAfterInvoiceOrder($teamId, $invoiceHistoryId, $resAtobarai);
+
         return true;
     }
 
@@ -1865,7 +1981,6 @@ class PaymentService extends AppService
             $currentPlanCode
         );
 
-
         if (Hash::get($paymentSetting, 'type') == Enum\PaymentSetting\Type::CREDIT_CARD) {
             $res = $this->applyCreditCardCharge(
                 $teamId,
@@ -1894,18 +2009,18 @@ class PaymentService extends AppService
                 $maxChargeUserCnt = $this->getChargeMaxUserCnt($teamId, $chargeType, $usersCount);
                 // Insert ChargeHistory
                 $historyData = [
-                    'team_id'          => $teamId,
-                    'user_id'          => $opeUserId,
-                    'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-                    'charge_type'      => $chargeType->getValue(),
-                    'amount_per_user'  => 0,
-                    'total_amount'     => $chargeInfo['sub_total_charge'],
-                    'tax'              => $chargeInfo['tax'],
-                    'charge_users'     => $usersCount,
-                    'currency'         => $paymentSetting['currency'],
-                    'charge_datetime'  => time(),
-                    'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
-                    'max_charge_users' => $maxChargeUserCnt,
+                    'team_id'                     => $teamId,
+                    'user_id'                     => $opeUserId,
+                    'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
+                    'charge_type'                 => $chargeType->getValue(),
+                    'amount_per_user'             => 0,
+                    'total_amount'                => $chargeInfo['sub_total_charge'],
+                    'tax'                         => $chargeInfo['tax'],
+                    'charge_users'                => $usersCount,
+                    'currency'                    => $paymentSetting['currency'],
+                    'charge_datetime'             => time(),
+                    'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+                    'max_charge_users'            => $maxChargeUserCnt,
                     'campaign_team_id'            => $campaignTeamId,
                     'price_plan_purchase_team_id' => $pricePlanPurchaseId,
                 ];
@@ -2028,7 +2143,8 @@ class PaymentService extends AppService
         if (!empty(Hash::get($fields, 'PricePlanPurchaseTeam'))) {
             $allValidationErrors = am(
                 $allValidationErrors,
-                $this->validateSingleModelFields($data, $fields, 'price_plan_purchase_team', 'PricePlanPurchaseTeam', $PricePlanPurchaseTeam)
+                $this->validateSingleModelFields($data, $fields, 'price_plan_purchase_team', 'PricePlanPurchaseTeam',
+                    $PricePlanPurchaseTeam)
             );
         }
 

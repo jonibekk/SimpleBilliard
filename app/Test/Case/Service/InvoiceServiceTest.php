@@ -2,6 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'InvoiceService');
+App::import('Service', 'PaymentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -42,6 +43,7 @@ class InvoiceServiceTest extends GoalousTestCase
         parent::setUp();
         $this->setDefaultTeamIdAndUid();
         $this->InvoiceService = ClassRegistry::init('InvoiceService');
+        $this->PaymentService = ClassRegistry::init('PaymentService');
     }
 
     /**
@@ -63,6 +65,7 @@ class InvoiceServiceTest extends GoalousTestCase
         $paymentSetting = ['payment_base_day' => 31];
         $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
         list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+        $this->PaymentService->clearCachePaymentSettings();
 
         $targetChargeHistories = [
             (int)0 => [
@@ -128,7 +131,7 @@ class InvoiceServiceTest extends GoalousTestCase
 
         $expectedRequestData = [
             'O_ReceiptOrderDate'     => '2016-12-31',
-            'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + (9 * HOUR)),
+            'O_ServicesProvidedDate' => GoalousDateTime::now()->setTimeZoneByHour(9)->format('Y-m-d'),
             'O_EnterpriseId'         => '11528',
             'O_SiteId'               => '13868',
             'O_ApiUserId'            => '10141',
@@ -161,7 +164,8 @@ class InvoiceServiceTest extends GoalousTestCase
         ]));
         $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
 
-        $res = $this->InvoiceService->registerOrder($teamId, $targetChargeHistories, $monthlyChargeHistory, $orderDate);
+        $targetChargeHistories[] = $monthlyChargeHistory;
+        $res = $this->InvoiceService->registerOrder($teamId, $targetChargeHistories, $orderDate);
 
         $this->assertEquals($expectedRequestData, $res['requestData']);
         $this->assertEquals('success', $res['status']);
@@ -247,7 +251,8 @@ class InvoiceServiceTest extends GoalousTestCase
         $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
 
         $orderDate = "2016-12-31";
-        $res = $this->InvoiceService->registerOrder($teamId, $targetChargeHistories, $monthlyChargeHistory, $orderDate);
+        $targetChargeHistories[] = $monthlyChargeHistory;
+        $res = $this->InvoiceService->registerOrder($teamId, $targetChargeHistories, $orderDate);
         $orderId = $res['systemOrderId'];
 
 
@@ -285,6 +290,51 @@ class InvoiceServiceTest extends GoalousTestCase
         $res = $this->InvoiceService->inquireCreditStatus($orderId);
         $this->assertEquals('error', $res['status']);
         $this->assertEquals(Enum\AtobaraiCom\Credit::ORDER_NOT_FOUND, $res['results']['result']['orderStatus']['@cd']);
+    }
+
+    public function test_getMonthlyFeeItemName()
+    {
+        // payment base day: first day of the month
+        $team = ['timezone' => 9];
+        $paymentSetting = [
+            'payment_base_day' => 1
+        ];
+        $this->PaymentService->clearCachePaymentSettings();
+        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_NG];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+        $datetime = '2018-12-31 14:59:59';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(12/1 - 12/31)');
+
+        $datetime = '2018-12-31 15:00:00';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(1/1 - 1/31)');
+
+        $datetime = '2019-12-31 15:00:00';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(1/1 - 1/31)');
+
+        // payment base day: last day of the month
+        $this->PaymentSetting->clear();
+        $this->PaymentSetting->id = $paymentSettingId;
+        $this->PaymentSetting->save(['payment_base_day' => 31], false);
+        $this->PaymentService->clearCachePaymentSettings();
+        $datetime = '2018-02-27 15:00:00';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(2/28 - 3/30)');
+
+        $datetime = '2018-03-30 15:00:00';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(3/31 - 4/29)');
+
+        $datetime = '2018-05-15 15:00:00';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(4/30 - 5/30)');
+
+        $datetime = '2018-12-30 15:00:00';
+        $res = $this->InvoiceService->getMonthlyFeeItemName($teamId, strtotime($datetime));
+        $this->assertEquals($res, 'Goalous月額利用料(12/31 - 1/30)');
+
     }
 
     public function test_updateCreditStatus()

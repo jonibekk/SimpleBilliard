@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-01-29 18:50+0900\n"
+"PO-Revision-Date: 2018-02-15 18:38+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1403,6 +1403,9 @@ msgstr "請求で問題が発生しています"
 
 msgid "We are downgrading your team to read-only"
 msgstr "読み取り専用にダウングレードしました"
+
+msgid "We recharged your team"
+msgstr "あなたのチームに再請求しました"
 
 msgid "Free Campaign"
 msgstr "無料キャンペーン"
@@ -4707,6 +4710,13 @@ msgstr ""
 
 msgid "Please let us know as soon as possible."
 msgstr "その場合は直ちに以下にご連絡ください。"
+
+msgid ""
+"Our record shows that we failed to charge you last time. We charged you "
+"again because your team delayed the previous payment."
+msgstr ""
+"あなたのチームへの前回の請求に失敗しましたので、再請求しました。前回のお支払"
+"いに遅延などの問題が生じたことが原因です。"
 
 msgid "Thank you very much for registration to the paid plan."
 msgstr "Golaous有料プランへお申し込みいただき、誠にありがとうございました。"

@@ -808,17 +808,62 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
-    function addInvoiceHistoryAndChargeHistory($teamId, $invoiceHistory = [], $chargeHistory = [])
+    /**
+     * @param       $teamId
+     * @param array $invoiceHistory
+     * @param array $chargeHistories
+     *
+     * @return array
+     * @throws Exception
+     */
+    function addInvoiceHistoryAndChargeHistories(int $teamId, array $invoiceHistory = [], array $chargeHistories = []) : array
     {
+        $this->addInvoiceHistory($teamId, $invoiceHistory);
+        $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
+        $chargeHistoryIds = [];
+        foreach ($chargeHistories as $his) {
+            $this->addChargeHistory($teamId, $his);
+            $chargeHistoryIds[] = $this->ChargeHistory->getLastInsertID();
+        }
+        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        foreach ($chargeHistoryIds as $chargeHistoryId) {
+            $this->InvoiceHistoriesChargeHistory->create();
+            $this->InvoiceHistoriesChargeHistory->save([
+                'invoice_history_id' => $invoiceHistoryId,
+                'charge_history_id'  => $chargeHistoryId,
+            ]);
+        }
+        return [
+            $chargeHistoryIds,
+            $invoiceHistoryId,
+        ];
+    }
+
+    /**
+     * @param       $teamId
+     * @param array $invoiceHistory
+     * @param array $chargeHistory
+     *
+     * @return array
+     * @throws Exception
+     */
+    function addInvoiceHistoryAndChargeHistory(int $teamId, array $invoiceHistory = [], array $chargeHistory = []) : array
+    {
+
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
         $this->addChargeHistory($teamId, $chargeHistory);
         $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
         $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->InvoiceHistoriesChargeHistory->create();
         $this->InvoiceHistoriesChargeHistory->save([
             'invoice_history_id' => $invoiceHistoryId,
             'charge_history_id'  => $chargeHistoryId,
         ]);
+        return [
+            $chargeHistoryId,
+            $invoiceHistoryId,
+        ];
     }
 
     function addInvoiceHistory($teamId, $invoiceHistory = [])

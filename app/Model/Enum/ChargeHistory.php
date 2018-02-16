@@ -15,6 +15,7 @@ class ChargeType extends Enum
     const USER_INCREMENT_FEE = 1;
     const USER_ACTIVATION_FEE = 2;
     const UPGRADE_PLAN_DIFF = 3;
+    const RECHARGE = 4;
 }
 
 /**

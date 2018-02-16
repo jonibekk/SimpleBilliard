@@ -25,6 +25,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         'app.invoice',
         'app.user',
         'app.team_member',
+        'app.price_plan_purchase_team',
+        'app.campaign_team',
     ];
 
     /**
@@ -190,7 +192,7 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             'created'            => 1500000000,
             'modified'           => 1500000000,
         ], false);
-            $this->CreditCard->save([
+        $this->CreditCard->save([
             'id'                 => 2,
             'team_id'            => 2,
             'payment_setting_id' => 2,
@@ -219,18 +221,18 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 1980,
-            'payment_type' => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'total_amount' => 2000,
-            'tax' => 20,
+            'payment_type'    => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'total_amount'    => 2000,
+            'tax'             => 20,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type' => ChargeHistory::CHARGE_TYPE_MONTHLY,
-            'charge_users' => 20
+            'charge_type'     => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_users'    => 20
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
         $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥2,000');
         $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,020');
-        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20');
         $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
         $this->assertTrue($res['PaymentSetting']['is_card']);
         $this->assertTrue($res['ChargeHistory']['is_monthly']);
@@ -246,19 +248,19 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 29700,
-            'payment_type' => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'total_amount' => 30000,
-            'tax' => 300,
+            'payment_type'    => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'total_amount'    => 30000,
+            'tax'             => 300,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type' => ChargeHistory::CHARGE_TYPE_ADD_USER,
-            'charge_users' => 10
+            'charge_type'     => ChargeHistory::CHARGE_TYPE_ADD_USER,
+            'charge_users'    => 10
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
         $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥30,000');
         $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥30,300');
-        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥300'); 
-        $this->assertEquals($res['ChargeHistory']['charge_users'], 10); 
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥300');
+        $this->assertEquals($res['ChargeHistory']['charge_users'], 10);
         $this->assertTrue($res['PaymentSetting']['is_card']);
         $this->assertFalse($res['ChargeHistory']['is_monthly']);
     }
@@ -272,18 +274,18 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 1980,
-            'payment_type' => ChargeHistory::PAYMENT_TYPE_INVOICE,
-            'total_amount' => 2000,
-            'tax' => 20,
+            'payment_type'    => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'total_amount'    => 2000,
+            'tax'             => 20,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type' => ChargeHistory::CHARGE_TYPE_MONTHLY,
-            'charge_users' => 20
-            ]);
+            'charge_type'     => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_users'    => 20
+        ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
         $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥2,000');
         $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,020');
-        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20');
         $this->assertFalse($res['PaymentSetting']['is_card']);
         $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
         $this->assertTrue($res['ChargeHistory']['is_monthly']);
@@ -298,20 +300,89 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 1980,
-            'payment_type' => ChargeHistory::PAYMENT_TYPE_INVOICE,
-            'total_amount' => 2000,
-            'tax' => 20,
+            'payment_type'    => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'total_amount'    => 2000,
+            'tax'             => 20,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type' => ChargeHistory::CHARGE_TYPE_ADD_USER,
-            'charge_users' => 20
-            ]);
+            'charge_type'     => ChargeHistory::CHARGE_TYPE_ADD_USER,
+            'charge_users'    => 20
+        ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
         $this->assertEquals($res['Team']['name'], 'Test Team');
         $this->assertEquals($res['ChargeHistory']['sub_total_with_currency'], '¥2,000');
         $this->assertEquals($res['ChargeHistory']['total_with_currency'], '¥2,020');
-        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20'); 
+        $this->assertEquals($res['ChargeHistory']['tax_with_currency'], '¥20');
         $this->assertFalse($res['PaymentSetting']['is_card']);
         $this->assertEquals($res['ChargeHistory']['charge_users'], 20);
         $this->assertFalse($res['ChargeHistory']['is_monthly']);
+    }
+
+    public function test_addInvoiceRecharge()
+    {
+        $teamId = 1;
+        $histories[] = [
+            'total_amount' => 1000,
+            'tax'          => 80
+        ];
+        $baseCorrectData = [
+            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\ChargeHistory\ChargeType::RECHARGE,
+            'amount_per_user'             => 1980,
+            'charge_users'                => 0,
+            'currency'                    => Enum\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'max_charge_users'            => 0,
+            'campaign_team_id'            => null,
+            'price_plan_purchase_team_id' => null,
+
+        ];
+        // history 1
+        GoalousDateTime::setTestNow('2018-01-01 01:23:45');
+        $res = $this->ChargeHistoryService->addInvoiceRecharge($teamId, $histories);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['team_id'], $teamId);
+        foreach ($baseCorrectData as $k => $v) {
+            $this->assertEquals($res[$k], $v);
+        }
+        $this->assertEquals($res['total_amount'], 1000);
+        $this->assertEquals($res['tax'], 80);
+        $this->assertEquals($res['charge_datetime'], GoalousDateTime::now()->getTimestamp());
+
+        // history N
+        $histories = [
+            [
+                'total_amount' => 2000,
+                'tax'          => 160
+            ],
+            [
+                'total_amount' => 10000,
+                'tax'          => 800
+            ]
+        ];
+        $res = $this->ChargeHistoryService->addInvoiceRecharge($teamId, $histories);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['team_id'], $teamId);
+        foreach ($baseCorrectData as $k => $v) {
+            $this->assertEquals($res[$k], $v);
+        }
+        $this->assertEquals($res['total_amount'], 12000);
+        $this->assertEquals($res['tax'], 960);
+        $this->assertEquals($res['charge_datetime'], GoalousDateTime::now()->getTimestamp());
+
+
+        // campaign team
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
+        $baseCorrectData['amount_per_user'] = 0;
+        $baseCorrectData['campaign_team_id'] = $campaignTeamId;
+        $baseCorrectData['price_plan_purchase_team_id'] = $pricePlanPurchaseId;
+        $res = $this->ChargeHistoryService->addInvoiceRecharge($teamId, $histories);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['team_id'], $teamId);
+        foreach ($baseCorrectData as $k => $v) {
+            $this->assertEquals($res[$k], $v);
+        }
+        $this->assertEquals($res['total_amount'], 12000);
+        $this->assertEquals($res['tax'], 960);
+        $this->assertEquals($res['charge_datetime'], GoalousDateTime::now()->getTimestamp());
     }
 }
