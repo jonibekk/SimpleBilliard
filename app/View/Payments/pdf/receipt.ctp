@@ -62,20 +62,29 @@
             $maxMembers = $maxMembers != 0 ? $maxMembers : h($history['ChargeHistory']['charge_users']);
         ?>
         <table>
+            <?php
+                $label = "";
+                $val = "";
+                if ($isMonthly) {
+                    $label = __('TIME PERIOD');
+                    $val = h($history['ChargeHistory']['term']);
+                } elseif ($history['ChargeHistory']['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE) {
+                    $label = __('ID BEING RECHARGED');
+                    $val = implode(', ', $history['ChargeHistory']['recharge_history_ids']);
+                } else {
+                    $label = __('DATE');
+                    $val = h($history['ChargeHistory']['local_charge_date']);
+                }
+            ?>
+
             <tbody>
             <th colspan="2"><?= __("TYPE") ?></th>
-            <th><?= $isMonthly ? __('TIME PERIOD') : __('DATE'); ?></th>
+            <th><?= $label ?></th>
             <th><?= __('AMOUNT'); ?></th>
             <tr>
                 <td><?= $type ?></td>
                 <td><?= sprintf(__("%s members"), $maxMembers); ?></td>
-                <td>
-                    <?php if ($isMonthly): ?>
-                        <?= h($history['ChargeHistory']['term']) ?>
-                    <?php else: ?>
-                        <?= h($history['ChargeHistory']['local_charge_date']) ?>
-                    <?php endif; ?>
-                </td>
+                <td><?= $val ?></td>
                 <td><?= h($history['ChargeHistory']['sub_total_with_currency']) ?></td>
             </tr>
             <tr>

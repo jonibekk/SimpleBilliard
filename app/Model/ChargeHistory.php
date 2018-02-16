@@ -287,6 +287,46 @@ class ChargeHistory extends AppModel
     }
 
     /**
+     * find charge histories by invoice order code.
+     *
+     * @param int    $teamId
+     * @param string $orderCode
+     *
+     * @return array
+     */
+    public function findByInvoiceOrderCode(int $teamId, string $orderCode)
+    {
+        $options = [
+            'conditions' => [
+                'ChargeHistory.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'invoice_histories_charge_histories',
+                    'alias'      => 'InvoiceHistoriesChargeHistory',
+                    'conditions' => [
+                        'ChargeHistory.id = InvoiceHistoriesChargeHistory.charge_history_id',
+                        'InvoiceHistoriesChargeHistory.del_flg'            => false,
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'invoice_histories',
+                    'alias'      => 'InvoiceHistory',
+                    'conditions' => [
+                        'InvoiceHistoriesChargeHistory.invoice_history_id = InvoiceHistory.id',
+                        'InvoiceHistory.system_order_code'      => $orderCode,
+                        'InvoiceHistory.del_flg'      => false,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.ChargeHistory');
+    }
+
+    /**
      * @param int  $teamId
      * @param int  $time
      * @param int  $subTotalCharge

@@ -76,6 +76,10 @@ class ChargeHistoryService extends AppService
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var InvoiceHistory $InvoiceHistory */
+        $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init('ChargeHistory');
         $TimeEx = new TimeExHelper(new View());
 
         $subTotal = $history['ChargeHistory']['total_amount'];
@@ -99,24 +103,39 @@ class ChargeHistoryService extends AppService
             $history['PaymentSetting']['is_card'] = true;
         }
 
-        if ($history['ChargeHistory']['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
-            $teamId = $history['ChargeHistory']['team_id'];
-            $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
-            $prevBaseDate = $PaymentService->getPreviousBaseDate($teamId, $nextBaseDate);
-            $prevBaseDate = $TimeEx->formatYearDayI18nFromDate($prevBaseDate);
-            $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
+        $teamId = $history['ChargeHistory']['team_id'];
+        switch ((int)$history['ChargeHistory']['charge_type']) {
+            case Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
+                $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
+                $prevBaseDate = $PaymentService->getPreviousBaseDate($teamId, $nextBaseDate);
+                $prevBaseDate = $TimeEx->formatYearDayI18nFromDate($prevBaseDate);
+                $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
 
-            $history['ChargeHistory']['term'] = "$prevBaseDate - $endBaseDate";
-            $history['ChargeHistory']['is_monthly'] = true;
-        } else {
-            if ($history['ChargeHistory']['charge_type'] == Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF) {
-                $teamId = $history['ChargeHistory']['team_id'];
+                $history['ChargeHistory']['term'] = "$prevBaseDate - $endBaseDate";
+                $history['ChargeHistory']['is_monthly'] = true;
 
+                break;
+            case Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
                 $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
                 $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
                 $history['ChargeHistory']['term'] = "$localChargeDate - $endBaseDate";
                 $history['ChargeHistory']['is_monthly'] = true;
-            }
+                break;
+            case Enum\ChargeHistory\ChargeType::RECHARGE:
+                $reorderTargetInvoiceHistory = $InvoiceHistory->getByChargeHistoryId($history['ChargeHistory']['id']);
+                if (empty($reorderTargetInvoiceHistory)) {
+                    GoalousLog::emergency(
+                        sprintf("Reorder target of invoice history doesn't exist. history_id:%s",
+                            $history['ChargeHistory']['id'])
+                    );
+                    break;
+                }
+                $reorderTargetOrderCode = Hash::get($reorderTargetInvoiceHistory,
+                    'InvoiceHistory.reorder_target_code');
+                $reorderChargeHistories = $ChargeHistory->findByInvoiceOrderCode($teamId, $reorderTargetOrderCode);
+
+                $history['ChargeHistory']['recharge_history_ids'] = Hash::extract($reorderChargeHistories, '{n}.id');
+                break;
         }
         return $history;
     }
