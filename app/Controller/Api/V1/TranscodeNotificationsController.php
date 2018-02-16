@@ -223,7 +223,18 @@ class TranscodeNotificationsController extends ApiController
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $postId, null, null, $teamId);
 
         // At least we need socketId and share targets
-        if (!$socketId || empty($shareTargets)) {
+        if (empty($socketId)) {
+            GoalousLog::error('socketId not found on notification', [
+                'posts.id'       => $postId,
+                'post_drafts.id' => $postDraft['id'],
+            ]);
+            return false;
+        }
+        if (empty($shareTargets)) {
+            GoalousLog::error('Post.share not found on notification', [
+                'posts.id'       => $postId,
+                'post_drafts.id' => $postDraft['id'],
+            ]);
             return false;
         }
 
@@ -238,10 +249,8 @@ class TranscodeNotificationsController extends ApiController
                     $this->NotifyBiz->push($socketId, $shareTarget, $teamId);
                 }
             }
-        }
 
-        // Push for updating circle list
-        if ($postType !== Post::TYPE_MESSAGE) {
+            // Push for updating circle list
             $this->NotifyBiz->pushUpdateCircleList($socketId, $shareTargets, $teamId);
         }
     }
