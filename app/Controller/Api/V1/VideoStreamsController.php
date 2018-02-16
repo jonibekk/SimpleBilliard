@@ -73,11 +73,10 @@ class VideoStreamsController extends ApiController
     {
         $getObjectResult = VideoStorageClient::getObjectFromTranscodedBucket($manifestFileKey);
         $playlistBody = $getObjectResult['Body'];
-        $directory = $relativeDirectory ?? '';
 
         // $baseUrlVideoStream = https://s3.aws.com/<bucket>/<storage_path>(/<directory>)?
         $baseUrlVideoStream = sprintf('%s/%s/%s/%s'
-            , S3_BASE_URL, AWS_S3_BUCKET_VIDEO_TRANSCODED, rtrim($videoStream['storage_path'], '/'), $directory);
+            , S3_BASE_URL, AWS_S3_BUCKET_VIDEO_TRANSCODED, rtrim($videoStream['storage_path'], '/'), $relativeDirectory);
 
         // replacing .m3u8 file to api playlist url
         // 'ts_500k/video.m3u8' to '/api/v1/video_streams/39/manifest?path=ts_500k/video.m3u8'
@@ -141,10 +140,10 @@ class VideoStreamsController extends ApiController
     function get_manifest($id)
     {
         $path = $this->request->query('path');
+        $path = trim($path);
         if (empty($path)) {
             return $this->_getResponseBadFail('bad request');
         }
-        $path = trim($path);
         $videoStream = $this->VideoStream->getById($id);
         if (empty($videoStream)) {
             return $this->_getResponseNotFound();
@@ -214,6 +213,13 @@ class VideoStreamsController extends ApiController
             return $this->_getResponseNotFound();
         }
 
+        // If user's browser is not supporting cross-origin redirecting of manifest
+        // redirecting to manifest API that showing manifest string in same origin
+        //
+        // @see
+        //  https://developer.mozilla.org/ja/docs/XMLHttpRequest/responseURL
+        //  https://github.com/videojs/videojs-contrib-hls/pull/912#discussion_r164196518
+        //  https://github.com/IsaoCorp/goalous/pull/6640
         if ($type === Enum\Video\VideoSourceType::PLAYLIST_M3U8_HLS
             && !$this->isBrowserSupportManifestRedirects()) {
             $this->redirect(sprintf('/api/v1/video_streams/%d/manifest?path=playlist.m3u8', $id));
