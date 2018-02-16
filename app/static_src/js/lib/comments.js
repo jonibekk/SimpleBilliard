@@ -86,7 +86,6 @@ function getAjaxFormReplaceElm() {
                     },
                     requestParams: function () {
                         return {
-                            'from': 'comment'
                         };
                     },
                     beforeSending: function () {
