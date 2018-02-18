@@ -151,7 +151,17 @@ class TranscodeNotificationsController extends ApiController
             // Video resource related to draft post is prepared for video post
             /** @var PostDraft $PostDraft */
             $PostDraft = ClassRegistry::init('PostDraft');
-            if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+
+            if (// If transcode notification is COMPLETED notify
+                $transcodeNotificationAwsSns->getProgressState()->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())
+                // and if video_streams.transcode_status = TRANSCODE_COMPLETE then, draft is ready to post
+                && $updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+                GoalousLog::info('transcode is completed and try to post from draft', [
+                    'video_streams.id'    => $videoStreamId,
+                    'video_stream_state'  => $updatedVideoStreamProgress->getValue(),
+                    'progress_state'      => $transcodeNotificationAwsSns->getProgressState()->getValue(),
+                ]);
+
                 // if we received COMPLETE notify, post related draft post if its ready
                 $postDrafts = $PostDraft->getByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
                 /** @var PostService $PostService */
