@@ -3004,24 +3004,32 @@ Temporary Properties - YOU MUST FIX
     border: dashed #929292 3px;
 }
 
-.draft-post-message {
-    background-color: #9c9c9c;
-    color: white;
+.draft-post-message-base () {
     margin: 5px;
     padding: 5px;
     text-align: center;
     vertical-align:middle;
+}
+
+.draft-post-message {
+    .draft-post-message-base;
+    background-color: #e5e5e5;
     span {
         font-weight: bold; font-size: 24px; vertical-align:middle;
     }
 }
+
 .draft-post-message-error {
-    background-color: #d94e4e;
-    color: white;
-    margin: 5px;
-    padding: 5px;
-    text-align: center;
-    vertical-align:middle;
+    .draft-post-message-base;
+    background-color: #ffb5b5;
+    span {
+        font-weight: bold; font-size: 24px; vertical-align:middle;
+    }
+}
+
+.draft-post-message-succeed {
+    .draft-post-message-base;
+    background-color: #93fabf;
     span {
         font-weight: bold; font-size: 24px; vertical-align:middle;
     }

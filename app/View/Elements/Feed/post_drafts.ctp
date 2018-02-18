@@ -6,7 +6,7 @@ if (!isset($post_drafts)) {
 }
 ?>
 <?php foreach ($post_drafts as $post_draft_key => $post_draft): ?>
-<div class="panel panel-default panel-draft-post">
+<div class="panel panel-default panel-draft-post post_draft_<?= $post_draft['id'] ?>">
     <div class="panel-body">
 
         <div class="col feed-user">
@@ -51,12 +51,21 @@ if (!isset($post_drafts)) {
     <?php if ($post_draft['hasTranscodeFailed']): ?>
     <div class="draft-post-message-error">
         <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
-        <span>Fail to share</span>
+        <span>Processing Failed</span>
     </div>
     <?php else: ?>
     <div class="draft-post-message">
         <img src="/img/loader-transcoding.gif">
-        <span>Now Processing...</span>
+        <span>Now Processing</span>
+    </div>
+    <div class="draft-post-message-succeed hide">
+        <div>
+            <i class="fa fa-check fa-4x" aria-hidden="true"></i>
+            <span>Succeeded!</span>
+        </div>
+        <div>
+            <a href="" class="link_succeed">Go here to see</a>
+        </div>
     </div>
     <?php endif; ?>
 </div>
