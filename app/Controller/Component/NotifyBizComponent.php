@@ -300,7 +300,7 @@ class NotifyBizComponent extends Component
             'notify_id'      => $notifyId
         ];
         if (!empty($optionValues)) {
-            $data['data'] = $optionValues;
+            $data['options'] = $optionValues;
         }
 
         // push
