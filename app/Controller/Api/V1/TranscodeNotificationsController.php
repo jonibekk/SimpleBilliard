@@ -241,12 +241,16 @@ class TranscodeNotificationsController extends ApiController
         if ($postType != Post::TYPE_MESSAGE) {
             // Pushing to Pusher
             // If containing 'Team All Circle', sharing to that circle only
+            $optionalPushValues = [
+                'post_draft_id'  => $postDraft['id'],
+                'url_post'       => sprintf('/post_permanent/%d', $postId),
+            ];
             if (in_array('public', $shareTargets)) {
-                $this->NotifyBiz->push($socketId, 'public', $teamId);
+                $this->NotifyBiz->push($socketId, 'public', $teamId, $optionalPushValues);
             } else {
                 // otherwise, pushing to each circles
                 foreach ($shareTargets as $shareTarget) {
-                    $this->NotifyBiz->push($socketId, $shareTarget, $teamId);
+                    $this->NotifyBiz->push($socketId, $shareTarget, $teamId, $optionalPushValues);
                 }
             }
 
