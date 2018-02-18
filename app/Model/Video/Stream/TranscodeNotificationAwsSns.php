@@ -208,11 +208,17 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
 
     /**
      * Return warning message string
+     * @see https://confluence.goalous.com/display/GOAL/AWS+SNS+video+transcode+notification
      *
      * @return string
      */
     public function getWarning(): string
     {
+        if (isset($this->messageData['outputs'][0])
+            && isset($this->messageData['outputs'][0]['statusDetail'])) {
+            // if statusDetail is in outputs, return that
+            return $this->messageData['outputs'][0]['statusDetail'];
+        }
         return $this->createErrorString();
     }
 
@@ -227,14 +233,30 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
     }
 
     /**
-     * Return error string
+     * Return error string of job or outputs
+     * @see https://confluence.goalous.com/display/GOAL/AWS+SNS+video+transcode+notification
      *
      * @return string
      */
     private function createErrorString(): string
     {
-        $errorCode = !empty($this->messageData['errorCode']) ? sprintf('[%s] ', $this->messageData['errorCode']) : '';
-        $errorMessage = !empty($this->messageData['messageDetails']) ? $this->messageData['messageDetails'] : '';
-        return $errorCode . $errorMessage;
+        // First, check the job error
+        if (isset($this->messageData['errorCode']) || isset($this->messageData['messageDetails'])) {
+            $errorCode = empty($this->messageData['errorCode']) ? '' : sprintf('[%s] ', $this->messageData['errorCode']);
+            $errorMessage = empty($this->messageData['messageDetails']) ? '' : $this->messageData['messageDetails'];
+            return $errorCode . $errorMessage;
+        }
+
+        // Check output and playlist error
+        $outputs = am($this->messageData['outputs'], $this->messageData['playlists']);
+        foreach ($outputs as $output) {
+            if (isset($output['statusDetail'])) {
+                $errorCode = empty($output['errorCode']) ? '' : sprintf('[%s] ', $output['errorCode']);
+                $errorMessage = empty($output['statusDetail']) ? '' : $output['statusDetail'];
+                return $errorCode . $errorMessage;
+            }
+        }
+
+        return '';
     }
 }
