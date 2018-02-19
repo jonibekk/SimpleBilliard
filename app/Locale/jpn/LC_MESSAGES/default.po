@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-15 18:38+0900\n"
+"PO-Revision-Date: 2018-02-19 12:18+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -5699,6 +5699,9 @@ msgstr "金額"
 msgid "Added Member"
 msgstr "ユーザー追加"
 
+msgid "Recharge"
+msgstr "再請求"
+
 msgid "Team Summary"
 msgstr "チーム概要"
 
@@ -5818,14 +5821,17 @@ msgstr "請求先"
 msgid "charged to card ending in"
 msgstr "カード番号末尾:"
 
-msgid "TYPE"
-msgstr "タイプ"
-
 msgid "TIME PERIOD"
 msgstr "期間"
 
+msgid "ID BEING RECHARGED"
+msgstr "対象の請求ID"
+
 msgid "DATE"
 msgstr "日"
+
+msgid "TYPE"
+msgstr "タイプ"
 
 msgid "AMOUNT"
 msgstr "金額"
