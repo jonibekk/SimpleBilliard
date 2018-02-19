@@ -46,5 +46,21 @@ class VideoStorageClient
     {
         return AwsClientFactory::createS3ClientForOriginalVideoStorage();
     }
+
+    /**
+     * GetObject from video transcoded bucket
+     *
+     * @param string $key
+     *
+     * @return \Aws\Result
+     */
+    public static function getObjectFromTranscodedBucket(string $key): \Aws\Result
+    {
+        $s3Client = self::createS3Client();
+        return $s3Client->getObject([
+            'Bucket' => AWS_S3_BUCKET_VIDEO_TRANSCODED,
+            'Key'    => $key,
+        ]);
+    }
 }
 

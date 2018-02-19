@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 6.6.0 <http://videojs.com/>
+ * Video.js 6.6.3 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/master/LICENSE>
@@ -16,7 +16,7 @@
 	(global.videojs = factory());
 }(this, (function () {
 
-var version = "6.6.0";
+var version = "6.6.3";
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -11388,7 +11388,7 @@ function setSourceHelper() {
       // we've succeeded, now we need to go deeper
       acc.push(mw);
 
-      // if it's the same time, continue does the current chain
+      // if it's the same type, continue down the current chain
       // otherwise, we want to go down the new chain
       setSourceHelper(_src, src.type === _src.type ? mwrest : middlewares[_src.type], next, player, acc, lastRun);
     });
@@ -12432,7 +12432,7 @@ var Button = function (_ClickableComponent) {
   };
 
   /**
-   * Enable the `Button` element so that it cannot be activated or clicked. Use this with
+   * Disable the `Button` element so that it cannot be activated or clicked. Use this with
    * {@link Button#enable}.
    */
 
@@ -14473,7 +14473,7 @@ var SeekBar = function (_Slider) {
      */
     this.player_.trigger({ type: 'timeupdate', target: this, manuallyTriggered: true });
     if (this.videoWasPlaying) {
-      this.player_.play();
+      silencePromise(this.player_.play());
     }
   };
 
@@ -15511,12 +15511,10 @@ var VolumePanel = function (_Component) {
     checkVolumeSupport(_this, player);
 
     // while the slider is active (the mouse has been pressed down and
-    // is dragging) or in focus we do not want to hide the VolumeBar
+    // is dragging) we do not want to hide the VolumeBar
     _this.on(_this.volumeControl, ['slideractive'], _this.sliderActive_);
-    _this.on(_this.muteToggle, 'focus', _this.sliderActive_);
 
     _this.on(_this.volumeControl, ['sliderinactive'], _this.sliderInactive_);
-    _this.on(_this.muteToggle, 'blur', _this.sliderInactive_);
     return _this;
   }
 
@@ -17526,7 +17524,13 @@ var AudioTrackMenuItem = function (_MenuItem) {
 
     _this.track = track;
 
-    var changeHandler = bind(_this, _this.handleTracksChange);
+    var changeHandler = function changeHandler() {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this.handleTracksChange.apply(_this, args);
+    };
 
     tracks.addEventListener('change', changeHandler);
     _this.on('dispose', function () {
@@ -18060,7 +18064,7 @@ var CustomControlSpacer = function (_Spacer) {
 
     // No-flex/table-cell mode requires there be some content
     // in the cell to fill the remaining space of the table.
-    el.innerHTML = '&nbsp;';
+    el.innerHTML = '\xA0';
     return el;
   };
 
@@ -25121,7 +25125,7 @@ videojs.hookOnce = function (type, fn) {
   videojs.hooks(type, [].concat(fn).map(function (original) {
     var wrapper = function wrapper() {
       videojs.removeHook(type, wrapper);
-      original.apply(undefined, arguments);
+      return original.apply(undefined, arguments);
     };
 
     return wrapper;
@@ -25666,4 +25670,3 @@ videojs.url = Url;
 return videojs;
 
 })));
-
