@@ -17,15 +17,22 @@ class FilesController extends ApiController
      */
     public function post_upload()
     {
+        // Get uploaded file data array
         $form = Hash::get($this->request->params, 'form');
         if (empty($form)) {
             return $this->_getResponseBadFail(__('Failed to upload.'));
         }
 
-        $isVideo = $this->isVideo($form);
+        // Get enable_video_transcode
+        $enableVideoTranscode = $this->request->data('enable_video_transcode') ?? 0;
+        $enableVideoTranscode = 0 < intval($enableVideoTranscode);
 
-        if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
-            return $this->processVideoUpload($form);
+        // if $enableVideoTranscode = true from API
+        if ($enableVideoTranscode) {
+            $isVideo = $this->isVideo($form);
+            if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+                return $this->processVideoUpload($form);
+            }
         }
 
         // 正常にファイルが送信されたかチェック

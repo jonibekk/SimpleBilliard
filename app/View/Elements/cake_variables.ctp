@@ -303,7 +303,9 @@ App::uses('AttachedFile', 'Model');
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
             timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
             // Array with country codes
-            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>
+            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>,
+            is_edit_mode: <?= (isset($common_form_mode) && $common_form_mode == 'edit') ? 'true' : 'false' ?>
+
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",

@@ -125,11 +125,7 @@ $(function () {
       // submit するフォームに hidden でファイルID追加
       var $form = $('#' + $uploadFileForm._params.formID);
 
-      console.log("appending file id")
-      //console.log(file)
-      console.log(res)
       if (undefined !== data.is_video && true === data.is_video) {
-        console.log("append video_stream_id")
           $form.append(
               $('<input type=hidden name=data[video_stream_id][]>')
                   .val(data.video_stream_id)
@@ -415,6 +411,13 @@ $(function () {
     // Dropzone 設定を上書き
     // （Dropzone インスタンスは常に１つ）
     Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
+    if (undefined === params.requestParams) {
+      Dropzone.instances[0].options.params = {};
+    } else if (typeof params.requestParams === 'function') {
+      Dropzone.instances[0].options.params = params.requestParams();
+    } else if (typeof params.requestParams === 'object') {
+      Dropzone.instances[0].options.params = params.requestParams;
+    }
     // acceptedFiles の設定は上書きされないので手動で設定
     Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
     // maxFiles が 1 の場合、もしくは
@@ -488,8 +491,12 @@ $(function () {
   var postParams = {
     formID: 'PostDisplayForm',
     previewContainerID: 'PostUploadFilePreview',
+    requestParams: function() {
+        return {
+            'enable_video_transcode': cake.data.is_edit_mode ? 0 : 1
+        };
+    },
     beforeSending: function () {
-      console.log("posing form: beforeSending")
       if ($uploadFileForm._sending) {
         return;
       }
@@ -498,7 +505,6 @@ $(function () {
       $('#PostSubmit').on('click', $uploadFileForm._forbitSubmit);
     },
     afterQueueComplete: function () {
-      console.log("posing form: afterQueueComplete")
       $uploadFileForm._sending = false;
 
       // フォームをsubmit可能にする
@@ -522,6 +528,8 @@ $(function () {
   var messageParams = {
     formID: 'messageDropArea',
     previewContainerID: 'messageUploadFilePreviewArea',
+    requestParams: {
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -565,6 +573,8 @@ $(function () {
   var actionImageParams = {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
+    requestParams: {
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -643,6 +653,8 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
     disableMultiple: true,
+    requestParams: {
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -701,7 +713,6 @@ $(function () {
     afterSuccess: function (file) {
       // メイン画像の hidden を先頭に持ってくる
       // DB内の index 番号を 0 にするため
-      console.log("after success append hidden")
       var $form = $('#' + $uploadFileForm._params.formID);
       var file_id = $(file.previewTemplate).data('file_id');
       var $firstHidden = $form.find('input[name="data[file_id][]"]:first');
@@ -736,6 +747,8 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePreview',
     afterAccept: actionImageParams.afterAccept,
+    requestParams: {
+    },
     beforeSending: function () {
       if ($uploadFileForm._sending) {
         return;
