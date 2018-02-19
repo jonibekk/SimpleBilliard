@@ -129,8 +129,9 @@ $(function () {
           $form.append(
               $('<input type=hidden name=data[video_stream_id][]>')
                   .val(data.video_stream_id)
-                  .attr('id', data.video_stream_id)
                   .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+          $preview.data('video_stream_id', data.video_stream_id);
+          // Show video cutting message to user
           $preview.find('.video_stream_cut_message').removeClass('hide');
       } else {
           $form.append(
@@ -178,6 +179,23 @@ $(function () {
       }
       // 新しくアップロードするファイルの場合
       else {
+        // Deleting video stream file
+        var videoStreamId = $preview.data('video_stream_id')
+        if ($preview.data('video_stream_id') !== undefined) {
+          var $form = $('#' + $uploadFileForm._params.formID);
+            $form.find('input[name="data[video_stream_id][]"][value="'+videoStreamId+'"]').remove();
+            setTimeout(function () {
+                $preview.remove();
+            }, 4000);
+            $uploadFileForm.hide();
+            new Noty({
+                type: 'success',
+                text: cake.message.validate.dropzone_deleted
+            }).show();
+            return;
+        }
+
+
         // キューに入ってるアップロードをキャンセルしようとした場合
         //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
         //   このブロックはその前段階のキャンセル時の処理。)
@@ -880,4 +898,21 @@ $(function () {
       });
     }
   }
+
+  // Limiting number of video to post
+  $(document).on('submit', '#PostDisplayForm', function (e) {
+      var video_count = $(this).find('input[name="data[video_stream_id][]"]').length
+      if (video_count > 1) {
+          new Noty({
+              type: 'error',
+              text: cake.message.validate.dropzone_error_allow_one_video
+          }).show();
+          $(this).find('#PostSubmit').removeAttr('disabled');
+          // stopImmediatePropagation() is need for preventing event in "js/lib/forms.js" of "form二重送信防止"
+          // If we did not stop, the submit button is set to disabled
+          e.stopImmediatePropagation();
+          return false;
+      }
+      return true;
+  });
 });
