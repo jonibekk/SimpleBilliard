@@ -88,6 +88,10 @@ class TranscodeNotificationsController extends ApiController
     {
         $jsonBody = $this->request->input();
 
+        // For investigating post body
+        // comment in if need to see post body
+        // GoalousLog::info('Post body from AWS SNS', ['body' => $jsonBody,]);
+
         try {
             $jsonData = json_decode($jsonBody, true);
             if (is_null($jsonData)) {
