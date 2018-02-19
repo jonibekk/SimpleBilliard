@@ -176,7 +176,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             [
                                 'class'         => 'lazy feed-img',
                                 'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
-                                    ['style' => 'medium']),
+                                    ['style' => 'medium_large']),
                             ]
                         )
                         ?>
@@ -461,7 +461,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     'class'         => 'lazy comment-img',
                                     'data-original' => $this->Upload->uploadUrl($my_prof,
                                         'User.photo',
-                                        ['style' => 'small']),
+                                        ['style' => 'medium_large']),
                                 ]
                             )
                             ?>

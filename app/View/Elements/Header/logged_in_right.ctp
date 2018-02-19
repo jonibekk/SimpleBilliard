@@ -14,7 +14,7 @@
                'user_id'    => $this->Session->read('Auth.User.id')
            ]) ?>">
             <?=
-            $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'small'],
+            $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
                 ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
             <span class="header-user-name js-header-link">
             <?= h($this->Session->read('Auth.User.display_first_name')) ?>
@@ -222,5 +222,5 @@
         </ul>
     </div>
 </div>
-<div class="header-white-bg"></div>
+<div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
 <?= $this->App->viewEndComment() ?>

@@ -722,6 +722,7 @@ App::uses('AttachedFile', 'Model');
         request_params: <?=json_encode($this->request->params)?>,
         is_mb_app: "<?= $is_mb_app ?>",
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
+        is_mb_app_ios_high_header: "<?= $is_mb_app_ios_high_header ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting) ? json_encode($notify_setting) : "''" ?>,
         unread_msg_topic_ids: <?=isset($unread_msg_topic_ids) ? json_encode($unread_msg_topic_ids) : "''"?>,

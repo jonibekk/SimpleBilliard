@@ -250,7 +250,7 @@
                                     </ul>
                                 </div>
                                 <?=
-                                $this->Upload->uploadImage($user['User'], 'User.photo', ['style' => 'small'],
+                                $this->Upload->uploadImage($user['User'], 'User.photo', ['style' => 'medium_large'],
                                     ['class' => 'comment-img'])
                                 ?>
                                 <div class="comment-body modal-comment">
