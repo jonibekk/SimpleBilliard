@@ -256,7 +256,15 @@ class NotifyBizComponent extends Component
         $this->_sendPushNotify();
     }
 
-    public function push($socketId, $share, $teamId = null)
+    /**
+     * Send Pusher
+     *
+     * @param           $socketId
+     * @param           $share string
+     * @param int|null  $teamId
+     * @param array      $optionValues optional data to send pusher
+     */
+    public function push($socketId, $share, $teamId = null, array $optionValues = [])
     {
         if (!$socketId) {
             return;
@@ -291,6 +299,9 @@ class NotifyBizComponent extends Component
             'feed_type'      => $feedType,
             'notify_id'      => $notifyId
         ];
+        if (!empty($optionValues)) {
+            $data['options'] = $optionValues;
+        }
 
         // push
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
