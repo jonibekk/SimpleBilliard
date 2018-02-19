@@ -40,6 +40,10 @@
                                 $icon = 'fa fa-arrow-up';
                                 $text = __('Upgrade');
                                 break;
+                            case Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE:
+                                $icon = 'fa fa-repeat';
+                                $text = __('Recharge');
+                                break;
                         }
                     ?>
                     <td class="history-entry-type">

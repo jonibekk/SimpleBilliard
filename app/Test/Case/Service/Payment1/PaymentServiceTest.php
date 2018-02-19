@@ -66,6 +66,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team = $this->Team ?? ClassRegistry::init('Team');
         $this->CampaignService = ClassRegistry::init('CampaignService');
         $this->TeamMember = $this->TeamMember ?? ClassRegistry::init('TeamMember');
+        $this->InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
     }
 
     private function createTestPaymentData(array $data): array
@@ -2294,7 +2295,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-01-28 23:59:59'),
         ], false);
         $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
@@ -2322,7 +2323,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-02-28 00:00:00'),
         ], false);
         $time = strtotime('2017-01-28 00:00:00');
@@ -2359,7 +2360,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-01-28 00:00:00'),
         ], false);
 
@@ -2374,7 +2375,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-02-28 12:00:00'),
         ], false);
 
@@ -2795,7 +2796,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 1];
-        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // time is difference as base date
@@ -2822,7 +2823,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
         $time = strtotime('2016-12-31') - (9 * HOUR);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
         // expected scope is from 2016-11-30 - 2016-12-30
@@ -2856,7 +2857,7 @@ class PaymentServiceTest extends GoalousTestCase
                 'system_order_code' => "test",
             ],
             [
-                'payment_type'     => ChargeHistory::PAYMENT_TYPE_INVOICE,
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
                 'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
                 'amount_per_user'  => 1980,
                 'total_amount'     => 3960,
@@ -2878,7 +2879,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
         $time = strtotime('2016-12-31') - (9 * HOUR);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
@@ -2916,7 +2917,7 @@ class PaymentServiceTest extends GoalousTestCase
     function _addInvoiceChargeHistory($teamId, $data)
     {
         $data = am([
-            'payment_type'     => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
             'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
             'amount_per_user'  => 1980,
             'total_amount'     => 3960,
@@ -3152,8 +3153,8 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
-        $formattedAmountPerUser = $this->PaymentService->formatCharge(PaymentService::AMOUNT_PER_USER_USD, Enum\PaymentSetting\Currency::USD);
-
+        $formattedAmountPerUser = $this->PaymentService->formatCharge(PaymentService::AMOUNT_PER_USER_USD,
+            Enum\PaymentSetting\Currency::USD);
 
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
@@ -3523,7 +3524,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Setup team and paid plan
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Invoice::CREDIT_STATUS_OK];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
         list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // No history expect true
@@ -3537,7 +3538,7 @@ class PaymentServiceTest extends GoalousTestCase
                 'system_order_code' => "test",
             ],
             [
-                'payment_type'     => ChargeHistory::PAYMENT_TYPE_INVOICE,
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
                 'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
                 'amount_per_user'  => 1980,
                 'total_amount'     => 3960,
@@ -3793,7 +3794,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Prepare data for testing
         $companyCountry = 'US';
         $paymentSetting = ['payment_base_day' => 1, 'company_country' => $companyCountry];
-        list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => -12], $paymentSetting);
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => 0], $paymentSetting);
         $currencyType = Enum\PaymentSetting\Currency::USD();
         $this->PaymentService->clearCachePaymentSettings();
 
@@ -3989,9 +3990,9 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $subTotalCharge = 50000;
         $expected = am($baseExpected, [
-            'id'                          => 1,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 1,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
@@ -4011,9 +4012,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($res['stripe_payment_code']);
         $subTotalCharge = 48333;
         $expected = am($baseExpected, [
-            'id'                          => 2,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 2,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
@@ -4033,9 +4034,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($res['stripe_payment_code']);
         $subTotalCharge = 1612;
         $expected = am($baseExpected, [
-            'id'                          => 3,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 3,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
@@ -4055,7 +4056,7 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentSetting = [
             'payment_base_day' => 31,
             'company_country'  => $companyCountry,
-            'currency'  =>$currencyType
+            'currency'         => $currencyType
         ];
 
         GoalousDateTime::setTestNow('2017-12-01 11:59:00');
@@ -4088,9 +4089,9 @@ class PaymentServiceTest extends GoalousTestCase
         // Ref: https://stripe.com/docs/currencies#zero-decimal
         $subTotalCharge = 2000;
         $expected = am($baseExpected, [
-            'id'                          => 1,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 1,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
@@ -4110,9 +4111,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($res['stripe_payment_code']);
         $subTotalCharge = 1935.48;
         $expected = am($baseExpected, [
-            'id'                          => 2,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 2,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
@@ -4132,9 +4133,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($res['stripe_payment_code']);
         $subTotalCharge = 71.42;
         $expected = am($baseExpected, [
-            'id'                          => 3,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 3,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
@@ -4181,13 +4182,297 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $subTotalCharge = 50000;
         $expected = am($baseExpected, [
-            'id'                          => 1,
-            'total_amount'                => $subTotalCharge,
-            'tax'                         => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
+            'id'           => 1,
+            'total_amount' => $subTotalCharge,
+            'tax'          => $this->PaymentService->calcTax($companyCountry, $subTotalCharge),
         ]);
 
         $res = array_intersect_key($res, $expected);
         $this->assertEquals($res, $expected);
+    }
+
+    function test_reorderInvoice_fail()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        // empty target charge histories
+        $res = $this->PaymentService->reorderInvoice($teamId, 1);
+        $this->assertEquals($res, false);
+
+        // target invoice history exist, but order_status is WAITING(not NG).
+
+        $chargeTs = GoalousDateTime::now()->getTimestamp();
+        $saveHistory = [
+            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => 1980,
+            'total_amount'     => 3960,
+            'tax'              => 310,
+            'charge_users'     => 2,
+            'max_charge_users' => 2,
+            'charge_datetime'  => $chargeTs
+        ];
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => $chargeTs,
+                'system_order_code' => "test1",
+            ],
+            $saveHistory
+        );
+        $res = $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $this->assertEquals($res, false);
+
+        // target invoice history exist, but order_status is OK(not NG).
+        $this->InvoiceHistory->clear();
+        $this->InvoiceHistory->id = $invoiceHistoryId;
+        $this->InvoiceHistory->save([
+            'order_status' => Enum\Invoice\CreditStatus::OK
+        ]);
+
+        $orderCode = "AK23553506";
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $orderCode, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
+        $res = $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $this->assertEquals($res, false);
+    }
+
+    function test_reorderInvoice_normalPricing_singleChargeHistory()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        // target invoice history exist, but order_status is WAITING(not NG).
+
+        $chargeTs = GoalousDateTime::now()->getTimestamp();
+        $saveHistory = [
+            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'amount_per_user'  => 1980,
+            'total_amount'     => 3960,
+            'tax'              => 310,
+            'charge_users'     => 2,
+            'max_charge_users' => 2,
+            'charge_datetime'  => strtotime('2018-02-28')
+        ];
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => $chargeTs,
+                'system_order_code' => "test1",
+                'order_status'      => Enum\Invoice\CreditStatus::NG
+            ],
+            $saveHistory
+        );
+
+        $orderCode = "AK23553506";
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $orderCode, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
+        // Success
+        $res = $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $this->assertEquals($res, true);
+        $newInvoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
+        $newInvoiceHistory = $this->InvoiceHistory->getById($newInvoiceHistoryId);
+        $this->assertEquals($newInvoiceHistory['team_id'], $teamId);
+        $this->assertTrue($newInvoiceHistory['order_datetime'] <= $chargeTs);
+        $this->assertEquals($newInvoiceHistory['system_order_code'], $orderCode);
+        $this->assertEquals($newInvoiceHistory['reorder_target_code'], "test1");
+
+        $newChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
+        $this->assertEquals($newChargeHistory['team_id'], $teamId);
+        $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
+        $this->assertEquals($newChargeHistory['charge_type'], Enum\ChargeHistory\ChargeType::RECHARGE);
+        $this->assertEquals($newChargeHistory['amount_per_user'], 1980);
+        $this->assertEquals($newChargeHistory['total_amount'], 3960);
+        $this->assertEquals($newChargeHistory['tax'], 310);
+        $this->assertEquals($newChargeHistory['charge_users'], 0);
+        $this->assertEquals($newChargeHistory['max_charge_users'], 0);
+        $this->assertEquals($newChargeHistory['campaign_team_id'], null);
+        $this->assertEquals($newChargeHistory['price_plan_purchase_team_id'], null);
+
+        $matchingHistory = $this->InvoiceHistoriesChargeHistory->find('first', [
+            'invoice_history_id' => $newInvoiceHistoryId,
+            'charge_history_id'  => $newChargeHistoryId,
+        ]);
+        $this->assertNotEmpty($matchingHistory);
+    }
+
+    function test_reorderInvoice_normalPricing_multipleChargeHistories()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
+
+        // target invoice history exist, but order_status is WAITING(not NG).
+
+
+        $saveHistories = [
+            [
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+                'amount_per_user'  => 1980,
+                'total_amount'     => 200,
+                'tax'              => 16,
+                'charge_users'     => 1,
+                'max_charge_users' => 2,
+                'charge_datetime'  => strtotime('2018-02-27')
+            ],
+            [
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'amount_per_user'  => 1980,
+                'total_amount'     => 3960,
+                'tax'              => 310,
+                'charge_users'     => 2,
+                'max_charge_users' => 2,
+                'charge_datetime'  => strtotime('2018-02-28')
+            ],
+        ];
+        $chargeTs = GoalousDateTime::now()->getTimestamp();
+        list($chargeHistoryIds, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistories($teamId,
+            [
+                'order_datetime'    => $chargeTs,
+                'system_order_code' => "test1",
+                'order_status'      => Enum\Invoice\CreditStatus::NG
+            ],
+            $saveHistories
+        );
+
+        $orderCode = "AK23553506";
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $orderCode, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
+        // Success
+        $res = $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $this->assertEquals($res, true);
+        $newInvoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
+        $newInvoiceHistory = $this->InvoiceHistory->getById($newInvoiceHistoryId);
+        $this->assertEquals($newInvoiceHistory['team_id'], $teamId);
+        $this->assertTrue($newInvoiceHistory['order_datetime'] <= $chargeTs);
+        $this->assertEquals($newInvoiceHistory['system_order_code'], $orderCode);
+        $this->assertEquals($newInvoiceHistory['reorder_target_code'], "test1");
+
+        $newChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
+        $this->assertEquals($newChargeHistory['team_id'], $teamId);
+        $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
+        $this->assertEquals($newChargeHistory['charge_type'], Enum\ChargeHistory\ChargeType::RECHARGE);
+        $this->assertEquals($newChargeHistory['amount_per_user'], 1980);
+        $subTotal = 0;
+        $tax = 0;
+        foreach ($saveHistories as $v) {
+            $subTotal += $v['total_amount'];
+            $tax += $v['tax'];
+        }
+        $this->assertEquals($newChargeHistory['total_amount'], $subTotal);
+        $this->assertEquals($newChargeHistory['tax'], $tax);
+        $this->assertEquals($newChargeHistory['charge_users'], 0);
+        $this->assertEquals($newChargeHistory['max_charge_users'], 0);
+        $this->assertEquals($newChargeHistory['campaign_team_id'], null);
+        $this->assertEquals($newChargeHistory['price_plan_purchase_team_id'], null);
+
+        $matchingHistories = $this->InvoiceHistoriesChargeHistory->find('all', [
+            'invoice_history_id' => $newInvoiceHistoryId,
+        ]);
+        $this->assertNotEmpty($matchingHistories);
+    }
+
+    function test_reorderInvoice_campaign_multipleChargeHistories()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 31];
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam(
+            $pricePlanGroupId = 1,
+            $pricePlanCode = '1-1',
+            $team
+        );
+
+        // target invoice history exist, but order_status is WAITING(not NG).
+        $saveHistories = [
+            [
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+                'amount_per_user'  => 0,
+                'total_amount'     => 200,
+                'tax'              => 16,
+                'charge_users'     => 1,
+                'max_charge_users' => 2,
+                'charge_datetime'  => strtotime('2018-02-27')
+            ],
+            [
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'amount_per_user'  => 0,
+                'total_amount'     => 3960,
+                'tax'              => 310,
+                'charge_users'     => 2,
+                'max_charge_users' => 2,
+                'charge_datetime'  => strtotime('2018-02-28')
+            ],
+        ];
+        $chargeTs = GoalousDateTime::now()->getTimestamp();
+        list($chargeHistoryIds, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistories($teamId,
+            [
+                'order_datetime'    => $chargeTs,
+                'system_order_code' => "test1",
+                'order_status'      => Enum\Invoice\CreditStatus::NG
+            ],
+            $saveHistories
+        );
+
+        $orderCode = "AK23553506";
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', $orderCode, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
+        // Success
+        $res = $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $this->assertEquals($res, true);
+        $newInvoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
+        $newInvoiceHistory = $this->InvoiceHistory->getById($newInvoiceHistoryId);
+        $this->assertEquals($newInvoiceHistory['team_id'], $teamId);
+        $this->assertTrue($newInvoiceHistory['order_datetime'] <= $chargeTs);
+        $this->assertEquals($newInvoiceHistory['system_order_code'], $orderCode);
+        $this->assertEquals($newInvoiceHistory['reorder_target_code'], "test1");
+
+        $newChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
+        $this->assertEquals($newChargeHistory['team_id'], $teamId);
+        $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
+        $this->assertEquals($newChargeHistory['charge_type'], Enum\ChargeHistory\ChargeType::RECHARGE);
+        $this->assertEquals($newChargeHistory['amount_per_user'], 0);
+        $subTotal = 0;
+        $tax = 0;
+        foreach ($saveHistories as $v) {
+            $subTotal += $v['total_amount'];
+            $tax += $v['tax'];
+        }
+        $this->assertEquals($newChargeHistory['total_amount'], $subTotal);
+        $this->assertEquals($newChargeHistory['tax'], $tax);
+
+        $this->assertEquals($newChargeHistory['charge_users'], 0);
+        $this->assertEquals($newChargeHistory['max_charge_users'], 0);
+        $this->assertEquals($newChargeHistory['campaign_team_id'], $campaignTeamId);
+        $this->assertEquals($newChargeHistory['price_plan_purchase_team_id'], $pricePlanPurchaseId);
+
+        $matchingHistories = $this->InvoiceHistoriesChargeHistory->find('all', [
+            'invoice_history_id' => $newInvoiceHistoryId,
+        ]);
+        $this->assertNotEmpty($matchingHistories);
     }
 
     /**

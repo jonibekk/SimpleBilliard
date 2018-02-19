@@ -17,7 +17,9 @@ class ChargeHistoryTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.charge_history'
+        'app.charge_history',
+        'app.invoice_histories_charge_history',
+        'app.invoice_history',
     );
 
     /**
@@ -61,6 +63,92 @@ class ChargeHistoryTest extends GoalousTestCase
     public function test_getLatestMaxChargeUsers()
     {
         // TODO.Payment: implement test code
+    }
+
+    public function test_findRelatedFailedInvoiceOrder()
+    {
+        $teamId = 1;
+        $reorderTargetId = 1;
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $reorderTargetId);
+        $this->assertEquals($res, []);
+
+        // order status: WAITING
+        $saveHistory = [
+            'payment_type' => Enum\PaymentSetting\Type::INVOICE
+        ];
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
+                'system_order_code' => "test",
+            ],
+            $saveHistory
+        );
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $invoiceHistoryId);
+        $this->assertEquals(count($res), 0);
+
+        // order status: OK
+        $saveHistory = [
+            'payment_type' => Enum\PaymentSetting\Type::INVOICE
+        ];
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
+                'system_order_code' => "test",
+                'order_status' => Enum\Invoice\CreditStatus::OK
+            ],
+            $saveHistory
+        );
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $invoiceHistoryId);
+        $this->assertEquals(count($res), 0);
+
+
+        // invoiceH:chargeH = 1:1
+        $saveHistory = [
+            'payment_type' => Enum\PaymentSetting\Type::INVOICE
+        ];
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
+                'system_order_code' => "test",
+                'order_status' => Enum\Invoice\CreditStatus::NG
+            ],
+            $saveHistory
+        );
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $invoiceHistoryId);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['team_id'], $teamId);
+        $this->assertEquals($res[0]['id'], $chargeHistoryId);
+
+        // invoiceH:chargeH = 1:N
+        $saveHistories = [];
+        for ($i = 0; $i < 3; $i++) {
+            $saveHistories[] = $saveHistory;
+        }
+        list($chargeHistoryIds, $invoiceHistoryId2) = $this->addInvoiceHistoryAndChargeHistories($teamId,
+            [
+                'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
+                'system_order_code' => "test",
+                'order_status' => Enum\Invoice\CreditStatus::NG
+            ],
+            $saveHistories
+
+        );
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $invoiceHistoryId);
+        $this->assertEquals(count($res), 1);
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $invoiceHistoryId2);
+        $this->assertEquals(count($res), 3);
+
+        // different history id
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, 999);
+        $this->assertEquals(count($res), 0);
+
+        // whether to except for deleted invoice
+        $this->InvoiceHistoriesChargeHistory->deleteAll([
+            'charge_history_id' => $chargeHistoryIds[0],
+            'invoice_history_id' => $invoiceHistoryId2,
+        ]);
+        $res = $this->ChargeHistory->findRelatedFailedInvoiceOrder($teamId, $invoiceHistoryId2);
+        $this->assertEquals(count($res), 2);
     }
 
     public function test_getLastChargeHistoryByTeamId()
