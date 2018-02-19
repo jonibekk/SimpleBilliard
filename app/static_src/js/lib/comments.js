@@ -84,6 +84,10 @@ function getAjaxFormReplaceElm() {
                     previewContainerID: function () {
                         return $(this).attr('data-preview-container-id');
                     },
+                    requestParams: function () {
+                        return {
+                        };
+                    },
                     beforeSending: function () {
                         if ($uploadFileForm._sending) {
                             return;

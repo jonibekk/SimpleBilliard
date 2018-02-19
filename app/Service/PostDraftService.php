@@ -12,6 +12,83 @@ use Goalous\Model\Enum as Enum;
 class PostDraftService extends AppService
 {
     /**
+     * Return PostDrafts data to show for top / circle feeds
+     *
+     * @param int   $userId
+     * @param int   $teamId
+     * @param int[] $limitByCircleIds
+     *      Passing circles.id by int array to filter by its id
+     *      If $limitByCircleIds is empty, returning all draft post of users.id + teams.id
+     *
+     * @return array
+     */
+    public function getPostDraftForFeed(int $userId, int $teamId, array $limitByCircleIds = []): array
+    {
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init("PostDraft");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+        $postDrafts = $PostDraft->getByUserIdAndTeamId($userId, $teamId);
+
+        // get share circles/peoples
+        foreach ($postDrafts as $key => $postDraft) {
+            if (!isset($postDraft['data']['Post']['share'])
+                || !is_string($postDraft['data']['Post']['share'])) {
+                continue;
+            }
+            $shares = explode(',', $postDraft['data']['Post']['share']);
+            list($userIds, $circleIds) = $Post->distributeShareToUserAndCircle($shares, $teamId);
+
+            // Filter the targets circles to post
+            // If $limitByCircleIds is empty, no filtering
+            if (!empty($limitByCircleIds)) {
+                // Comparing (array of circles.id) x 2
+                // if having same circles.id in both array, the post_draft is to shown
+                if (0 === count(array_intersect($circleIds, $limitByCircleIds))) {
+                    unset($postDrafts[$key]);
+                    continue;
+                }
+            }
+            $postDraft['PostShareUser'] = [];
+            $postDraft['PostShareCircle'] = [];
+            foreach ($userIds as $userId) {
+                $postDraft['PostShareUser'][] = [
+                    'user_id' => $userId,
+                ];
+            }
+            foreach ($circleIds as $circleId) {
+                $postDraft['PostShareCircle'][] = [
+                    'circle_id' => $circleId,
+                ];
+            }
+
+            // has transcode failed video
+            $hasTranscodeFailed = false;
+            foreach ($postDraft['post_resources'] as $resource) {
+                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+                if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
+                    $hasTranscodeFailed = true;
+                    break;
+                }
+            }
+            $postDraft['hasTranscodeFailed'] = $hasTranscodeFailed;
+
+            $postDrafts[$key] = $postDraft;
+        }
+        //１件のサークル名をランダムで取得
+        $postDrafts = $Post->getRandomShareCircleNames($postDrafts);
+        //１件のユーザ名をランダムで取得
+        $postDrafts = $Post->getRandomShareUserNames($postDrafts);
+        //シェアモードの特定
+        $postDrafts = $Post->getShareMode($postDrafts);
+        //シェアメッセージの特定
+        $postDrafts = $Post->getShareMessages($postDrafts, false);
+
+        return $postDrafts;
+    }
+
+    /**
      * creating new post draft with resources
      *
      * @param array $postData

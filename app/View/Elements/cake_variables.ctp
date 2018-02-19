@@ -40,6 +40,7 @@ App::uses('AttachedFile', 'Model');
                 dropzone_uploading_not_end: "<?=__('Not finished uploading yet, please wait just a moment.')?>",
                 dropzone_uploaded_file_expired: "<?=__('Uploaded files are invalid due. Please try again.')?>",
                 dropzone_error_allow_one_video: "<?=__('Can\'t post more than two videos.')?>",
+                dropzone_video_cut_message: "<?=__('If it exceeds %d seconds, it will be cut in the first %d seconds.', 60, 60)?>",
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
@@ -304,7 +305,9 @@ App::uses('AttachedFile', 'Model');
             google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
             timezones: <?= isset($timezones) ? json_encode($timezones) : "''" ?>,
             // Array with country codes
-            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>
+            countryCodes: <?= json_encode(array_map(function($tag) { return $tag['code']; }, Configure::read("countries"))); ?>,
+            is_edit_mode: <?= (isset($common_form_mode) && $common_form_mode == 'edit') ? 'true' : 'false' ?>
+
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
