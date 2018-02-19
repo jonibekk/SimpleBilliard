@@ -457,9 +457,15 @@ class Circle extends AppModel
         return $res;
     }
 
-    function getTeamAllCircleId()
+    /**
+     * Return team's all circles.id
+     * @param int|null $teamId
+     *
+     * @return string|null circle.id by string
+     */
+    function getTeamAllCircleId($teamId = null)
     {
-        $team_all_circle = $this->getTeamAllCircle();
+        $team_all_circle = $this->getTeamAllCircle($teamId);
         return Hash::get($team_all_circle, 'Circle.id');
     }
 
