@@ -215,7 +215,11 @@ class ChargeHistory extends AppModel
             'conditions' => [
                 'ChargeHistory.team_id'            => $teamId,
                 'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
-                'ChargeHistory.charge_type'        => [self::CHARGE_TYPE_ACTIVATE_USER, self::CHARGE_TYPE_ADD_USER],
+                'ChargeHistory.charge_type'        => [
+                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+                    Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+                    Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+                ],
                 'ChargeHistory.charge_datetime <=' => $timestamp,
                 'InvoiceHistoriesChargeHistory.id' => null,
                 'InvoiceHistory.id'                => null,
