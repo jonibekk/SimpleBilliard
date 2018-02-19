@@ -330,7 +330,10 @@ class GlEmailComponent extends Component
      */
     public function sendMailRecharge(int $toUid, int $teamId)
     {
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_RECHARGE, null, null, $teamId);
+        $url = AppUtil::addQueryParamsToUrl("https://" . ENV_NAME . ".goalous.com/payments/method",
+            ['team_id' => $teamId]);
+        $item = compact('url');
+        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_RECHARGE, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
 
