@@ -6,7 +6,8 @@
         <aside class="visible-xxs">
             <span class="fa fa-calendar"></span> = <?= __('Monthly'); ?> &nbsp;
             <span class="fa fa-user"></span> = <?= __('New Member'); ?> &nbsp;
-            <span class="fa fa-arrow-up"></span> = <?= __('Upgrade'); ?>
+            <span class="fa fa-arrow-up"></span> = <?= __('Upgrade'); ?> &nbsp;
+            <span class="fa fa-repeat"></span> = <?= __('Recharge'); ?>
         </aside>
         <table class="payment-table">
             <thead>
