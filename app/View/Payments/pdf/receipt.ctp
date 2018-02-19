@@ -83,7 +83,7 @@
 
             <tbody>
             <th colspan="<?= !$isRecharge ? 2 : 1; ?>"><?= __("TYPE") ?></th>
-            <th><?= $label ?></th>
+            <th colspan="<?= !$isRecharge ? 1 : 2; ?>"><?= $label ?></th>
             <th><?= __('AMOUNT'); ?></th>
             <tr>
                 <td><?= $type ?></td>
