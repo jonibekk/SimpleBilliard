@@ -246,6 +246,87 @@ class ChargeHistory extends AppModel
     }
 
     /**
+     * find charge histories related failed invoice order.
+     *
+     * @param int $teamId
+     * @param int $invoiceHistoryId
+     *
+     * @return array
+     */
+    public function findRelatedFailedInvoiceOrder(int $teamId, int $invoiceHistoryId)
+    {
+        $options = [
+            'conditions' => [
+                'ChargeHistory.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'invoice_histories_charge_histories',
+                    'alias'      => 'InvoiceHistoriesChargeHistory',
+                    'conditions' => [
+                        'ChargeHistory.id = InvoiceHistoriesChargeHistory.charge_history_id',
+                        'InvoiceHistoriesChargeHistory.invoice_history_id' => $invoiceHistoryId,
+                        'InvoiceHistoriesChargeHistory.del_flg'            => false,
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'invoice_histories',
+                    'alias'      => 'InvoiceHistory',
+                    'conditions' => [
+                        'InvoiceHistoriesChargeHistory.invoice_history_id = InvoiceHistory.id',
+                        'InvoiceHistory.order_status' => Enum\Invoice\CreditStatus::NG,
+                        'InvoiceHistory.del_flg'      => false,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.ChargeHistory');
+    }
+
+    /**
+     * find charge histories by invoice order code.
+     *
+     * @param int    $teamId
+     * @param string $orderCode
+     *
+     * @return array
+     */
+    public function findByInvoiceOrderCode(int $teamId, string $orderCode)
+    {
+        $options = [
+            'conditions' => [
+                'ChargeHistory.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'invoice_histories_charge_histories',
+                    'alias'      => 'InvoiceHistoriesChargeHistory',
+                    'conditions' => [
+                        'ChargeHistory.id = InvoiceHistoriesChargeHistory.charge_history_id',
+                        'InvoiceHistoriesChargeHistory.del_flg'            => false,
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'invoice_histories',
+                    'alias'      => 'InvoiceHistory',
+                    'conditions' => [
+                        'InvoiceHistoriesChargeHistory.invoice_history_id = InvoiceHistory.id',
+                        'InvoiceHistory.system_order_code'      => $orderCode,
+                        'InvoiceHistory.del_flg'      => false,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.ChargeHistory');
+    }
+
+    /**
      * @param int  $teamId
      * @param int  $time
      * @param int  $subTotalCharge
@@ -258,6 +339,7 @@ class ChargeHistory extends AppModel
      * @param null $pricePlanPurchaseId
      *
      * @return array|mixed
+     * @throws Exception
      */
     public function addInvoiceMonthlyCharge(
         int $teamId,
@@ -371,9 +453,9 @@ class ChargeHistory extends AppModel
             'conditions' => [
                 'charge_datetime >=' => $startTimestamp,
                 'charge_datetime <=' => $endTimestamp,
-                'result_type !=' => Enum\ChargeHistory\ResultType::ERROR,
+                'result_type !='     => Enum\ChargeHistory\ResultType::ERROR,
                 // TODO: Remove this condition and add checking for inconsistency of campaign team's charge in DetectInconsistentChargeShell.
-                'campaign_team_id' => null
+                'campaign_team_id'   => null
             ],
         ];
         $res = $this->find('all', $options);

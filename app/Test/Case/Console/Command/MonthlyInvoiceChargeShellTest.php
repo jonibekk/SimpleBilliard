@@ -203,7 +203,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         GoalousDateTime::setTestNow($testNow);
         $this->Team->deleteAll(['del_flg' => false]);
         $usersCount = 10;
-        list ($teamId, $paymentSettingId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
         $this->Team->current_team_id = $teamId;
         $this->createActiveUsers($teamId, $usersCount - 1);
 
@@ -249,7 +249,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $Invoice = ClassRegistry::init('Invoice');
         $invoice = $Invoice->getByTeamId($teamId);
         $this->assertNotEmpty($invoice);
-        $this->assertEquals($paymentSettingId, $invoice['payment_setting_id']);
+        $this->assertEquals($paymentSetting['id'], $invoice['payment_setting_id']);
         $this->assertEquals(Enum\Invoice\CreditStatus::OK, $invoice['credit_status']);
 
         // Check invoice history was created

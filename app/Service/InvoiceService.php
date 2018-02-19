@@ -1,11 +1,14 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PaymentService');
 App::uses('Xml', 'Utility');
 App::uses('InvoiceHistory', 'Model');
 App::uses('InvoiceHistoriesChargeHistory', 'Model');
 App::uses('Invoice', 'Model');
 App::uses('Team', 'Model');
 App::uses('GlRedis', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Class InvoiceService
@@ -22,7 +25,6 @@ class InvoiceService extends AppService
      *
      * @param int    $teamId
      * @param array  $targetChargeHistories
-     * @param array  $monthlyChargeHistory
      * @param string $orderDate
      *
      * @return array response from atobarai.com
@@ -31,7 +33,6 @@ class InvoiceService extends AppService
     function registerOrder(
         int $teamId,
         array $targetChargeHistories,
-        array $monthlyChargeHistory,
         string $orderDate
     ): array {
         /** @var  Invoice $Invoice */
@@ -45,12 +46,10 @@ class InvoiceService extends AppService
             $invoiceInfo = $Invoice->getByTeamId($teamId);
 
             // calc amount total
-            $addedUserAmount = $this->getAddedUserAmount($targetChargeHistories);
-            $amountTotal = $addedUserAmount + $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
-
+            $amountTotal = $this->getAddedUserAmount($targetChargeHistories);
             $data = [
                 'O_ReceiptOrderDate'     => $orderDate,
-                'O_ServicesProvidedDate' => date('Y-m-d', REQUEST_TIMESTAMP + ($timezone * HOUR)),
+                'O_ServicesProvidedDate' => GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'),
                 // provided date cannot be specified past date
                 'O_EnterpriseId'         => ATOBARAI_ENTERPRISE_ID,
                 'O_SiteId'               => ATOBARAI_SITE_ID,
@@ -71,21 +70,20 @@ class InvoiceService extends AppService
             // for added users charge
             $itemIndex = 0;
             if (!empty($targetChargeHistories)) {
-                foreach ($targetChargeHistories as $targetChargeHistory) {
-                    $chargeDate = date('n/j', $targetChargeHistory['charge_datetime'] + ($timezone * HOUR));
-                    $data["I_ItemNameKj_{$itemIndex}"] = "{$chargeDate} Goalous追加利用料";
-                    $data["I_UnitPrice_{$itemIndex}"] = $targetChargeHistory['total_amount'] + $targetChargeHistory['tax'];
+                foreach ($targetChargeHistories as $history) {
+                    if ((int)$history['charge_type'] === Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+
+                        $itemName = $this->getMonthlyFeeItemName($teamId, $history['charge_datetime']);
+                    } else {
+                        $chargeDate = date('n/j', $history['charge_datetime'] + ($timezone * HOUR));
+                        $itemName = "{$chargeDate} Goalous追加利用料";
+                    }
+                    $data["I_ItemNameKj_{$itemIndex}"] = $itemName;
+                    $data["I_UnitPrice_{$itemIndex}"] = $history['total_amount'] + $history['tax'];
                     $data["I_ItemNum_{$itemIndex}"] = 1;
                     $itemIndex++;
                 }
             }
-
-            // for monthly charge
-            $monthlyStartDate = date('n/j', strtotime($monthlyChargeHistory['monthlyStartDate']));
-            $monthlyEndDate = date('n/j', strtotime($monthlyChargeHistory['monthlyEndDate']));
-            $data["I_ItemNameKj_{$itemIndex}"] = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
-            $data["I_UnitPrice_{$itemIndex}"] = $monthlyChargeHistory['total_amount'] + $monthlyChargeHistory['tax'];
-            $data["I_ItemNum_{$itemIndex}"] = 1;
 
             // request to atobarai.com
             $resAtobarai = $this->_postRequestForAtobaraiDotCom(self::API_URL_REGISTER_ORDER, $data);
@@ -94,6 +92,32 @@ class InvoiceService extends AppService
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Create item name for monthly fee
+     * e.g. ``Goalous月額利用料(1/1〜1/31)`
+     *
+     * @param $teamId
+     * @param $ts
+     *
+     * @return string
+     */
+    public function getMonthlyFeeItemName(int $teamId, int $ts): string
+    {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+
+        // monthly dates
+        $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $ts);
+        $monthlyStartDate = $PaymentService->getPreviousBaseDate($teamId, $nextBaseDate);
+        $monthlyEndDate = AppUtil::dateYesterday($nextBaseDate);
+
+        // for monthly charge
+        $monthlyStartDate = date('n/j', strtotime($monthlyStartDate));
+        $monthlyEndDate = date('n/j', strtotime($monthlyEndDate));
+        $itemName = "Goalous月額利用料({$monthlyStartDate} - {$monthlyEndDate})";
+        return $itemName;
     }
 
     /**
@@ -126,7 +150,7 @@ class InvoiceService extends AppService
         $client = $this->getHttpClient();
         $response = $client->post($requestUrl, [
             'http_errors' => 'false',
-            'headers' => [
+            'headers'     => [
                 'Content-Type: application/x-www-form-urlencoded',
                 'Content-Length: ' . http_build_query($data),
             ],
@@ -159,6 +183,7 @@ class InvoiceService extends AppService
 
     /**
      * TODO.Payment: add space between field
+     *
      * @param array $invoice
      *
      * @return string
@@ -170,6 +195,7 @@ class InvoiceService extends AppService
 
     /**
      * TODO.Payment: add space between field
+     *
      * @param array $invoice
      *
      * @return string
@@ -181,6 +207,7 @@ class InvoiceService extends AppService
 
     /**
      * TODO.Payment: add space between field
+     *
      * @param array $invoice
      *
      * @return string

@@ -58,24 +58,41 @@
                 case Goalous\Model\Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
                     $type = __('Upgrade');
                     break;
+                case Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE:
+                    $type = __('Recharge');
+                    break;
             }
             $maxMembers = $maxMembers != 0 ? $maxMembers : h($history['ChargeHistory']['charge_users']);
         ?>
         <table>
+            <?php
+                $label = "";
+                $val = "";
+                $isRecharge = $history['ChargeHistory']['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE;
+                if ($isMonthly) {
+                    $label = __('TIME PERIOD');
+                    $val = h($history['ChargeHistory']['term']);
+                } elseif ($isRecharge) {
+                    $label = __('ID BEING RECHARGED');
+                    $val = implode(', ', $history['ChargeHistory']['recharge_history_ids']);
+                } else {
+                    $label = __('DATE');
+                    $val = h($history['ChargeHistory']['local_charge_date']);
+                }
+            ?>
+
             <tbody>
-            <th colspan="2"><?= __("TYPE") ?></th>
-            <th><?= $isMonthly ? __('TIME PERIOD') : __('DATE'); ?></th>
+            <th colspan="<?= !$isRecharge ? 2 : 1; ?>"><?= __("TYPE") ?></th>
+            <th colspan="<?= !$isRecharge ? 1 : 2; ?>"><?= $label ?></th>
             <th><?= __('AMOUNT'); ?></th>
             <tr>
                 <td><?= $type ?></td>
-                <td><?= sprintf(__("%s members"), $maxMembers); ?></td>
-                <td>
-                    <?php if ($isMonthly): ?>
-                        <?= h($history['ChargeHistory']['term']) ?>
-                    <?php else: ?>
-                        <?= h($history['ChargeHistory']['local_charge_date']) ?>
-                    <?php endif; ?>
-                </td>
+                <?php if (!$isRecharge):?>
+                    <td><?= sprintf(__("%s members"), $maxMembers); ?></td>
+                    <td><?= $val ?></td>
+                <?php else:?>
+                    <td colspan="2"><?= $val ?></td>
+                <?php endif;?>
                 <td><?= h($history['ChargeHistory']['sub_total_with_currency']) ?></td>
             </tr>
             <tr>
