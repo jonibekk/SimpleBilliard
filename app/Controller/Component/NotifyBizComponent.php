@@ -256,14 +256,14 @@ class NotifyBizComponent extends Component
         $this->_sendPushNotify();
     }
 
-    public function push($socketId, $share)
+    public function push($socketId, $share, $teamId = null)
     {
         if (!$socketId) {
             return;
         }
 
-        $teamId = $this->Session->read('current_team_id');
-        $channelName = $share . "_team_" . $teamId;
+        $targetTeamId = $this->Session->read('current_team_id') ?? $teamId;
+        $channelName = $share . "_team_" . $targetTeamId;
 
         // アクション投稿のケース
         if (strpos($share, "goal") !== false) {
@@ -278,7 +278,7 @@ class NotifyBizComponent extends Component
                     $feedType = "all";
                 } // その他
                 else {
-                    $channelName = "team_all_" . $teamId;
+                    $channelName = "team_all_" . $targetTeamId;
                     $feedType = "all";
                 }
             }
@@ -297,13 +297,19 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    public function pushUpdateCircleList($socketId, $share)
+    /**
+     * @param string $socketId
+     * @param string[] $share
+     *      ['public', 'circle_1', ...]
+     * @param int|null $teamId
+     */
+    public function pushUpdateCircleList($socketId, $share, $teamId = null)
     {
         if (!$socketId) {
             return;
         }
 
-        $teamId = $this->Session->read('current_team_id');
+        $teamId = $this->Session->read('current_team_id') ?? $teamId;
         $channelName = "team_" . $teamId;
         $circle_ids = [];
         if (in_array("public", $share)) {
@@ -1509,8 +1515,9 @@ class NotifyBizComponent extends Component
      * @param       $model_id
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
+     * @param int|null $teamId
      */
-    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
+    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null, $teamId = null)
     {
         $set_web_env = "";
         $nohup = "nohup ";
@@ -1531,7 +1538,7 @@ class NotifyBizComponent extends Component
         }
         $cmd .= " -b " . Router::fullBaseUrl();
         $cmd .= " -i " . $this->Auth->user('id');
-        $cmd .= " -o " . $this->Session->read('current_team_id');
+        $cmd .= " -o " . $this->Session->read('current_team_id') ?? $teamId;
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
