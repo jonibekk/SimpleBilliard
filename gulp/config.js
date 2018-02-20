@@ -77,6 +77,7 @@ const config = {
     src: [
       node_modules_dir + '/jquery/dist/jquery.js',
       node_modules_dir + '/intl-tel-input/build/js/intlTelInput.min.js',
+      assets_dir + '/js/vendor/videojs-before.js',
       assets_dir + '/js/vendor/video.js',
       assets_dir + '/js/vendor/videojs-contrib-hls.js',
       assets_dir + '/js/lib/video.js',
