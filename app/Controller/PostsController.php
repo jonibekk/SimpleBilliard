@@ -184,6 +184,7 @@ class PostsController extends AppController
                         }
                         return false;
                     }
+                    $this->processAfterPosted($successSavedPost['id']);
                     return true;
                 default:
                     GoalousLog::info("video post error", $logDataArray);
@@ -207,13 +208,20 @@ class PostsController extends AppController
             return false;
         }
 
+        $this->processAfterPosted($successSavedPost['id']);
+
+        return true;
+    }
+
+    private function processAfterPosted(int $postedPostId)
+    {
         $this->_updateSetupStatusIfNotCompleted();
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
             $notify_type = NotifySetting::TYPE_MESSAGE;
         }
-        $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
+        $this->NotifyBiz->execSendNotify($notify_type, $postedPostId);
 
         $socketId = Hash::get($this->request->data, 'socket_id');
         $share = explode(",", Hash::get($this->request->data, 'Post.share'));
@@ -264,7 +272,6 @@ class PostsController extends AppController
         }
 
         $this->Notification->outSuccess(__("Posted."));
-        return true;
     }
 
     /**
