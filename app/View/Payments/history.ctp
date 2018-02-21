@@ -6,7 +6,8 @@
         <aside class="visible-xxs">
             <span class="fa fa-calendar"></span> = <?= __('Monthly'); ?> &nbsp;
             <span class="fa fa-user"></span> = <?= __('New Member'); ?> &nbsp;
-            <span class="fa fa-arrow-up"></span> = <?= __('Upgrade'); ?>
+            <span class="fa fa-arrow-up"></span> = <?= __('Upgrade'); ?> &nbsp;
+            <span class="fa fa-repeat"></span> = <?= __('Recharge'); ?>
         </aside>
         <table class="payment-table">
             <thead>
@@ -24,27 +25,27 @@
                     <td><?= h($v['id']) ?></td>
                     <td><?= $this->TimeEx->formatYearDayI18n($v['charge_datetime']) ?></td>
                     <?php
-                        $icon = '';
-                        $text = '';
-                        switch ($v['charge_type']) {
-                            case Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
-                                $icon = 'fa fa-calendar';
-                                $text = __("Monthly");
-                                break;
-                            case  Goalous\Model\Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
-                            case Goalous\Model\Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
-                                $icon = 'fa fa-user';
-                                $text = __("Added Member");
-                                break;
-                            case Goalous\Model\Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
-                                $icon = 'fa fa-arrow-up';
-                                $text = __('Upgrade');
-                                break;
-                            case Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE:
-                                $icon = 'fa fa-repeat';
-                                $text = __('Recharge');
-                                break;
-                        }
+                    $icon = '';
+                    $text = '';
+                    switch ($v['charge_type']) {
+                        case Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
+                            $icon = 'fa fa-calendar';
+                            $text = __("Monthly");
+                            break;
+                        case  Goalous\Model\Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
+                        case Goalous\Model\Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
+                            $icon = 'fa fa-user';
+                            $text = __("Added Member");
+                            break;
+                        case Goalous\Model\Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
+                            $icon = 'fa fa-arrow-up';
+                            $text = __('Upgrade');
+                            break;
+                        case Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE:
+                            $icon = 'fa fa-repeat';
+                            $text = __('Recharge');
+                            break;
+                    }
                     ?>
                     <td class="history-entry-type">
                         <span
@@ -52,11 +53,15 @@
                         <span
                             class="hidden-xxs"><?= $text ?></span>
                     </td>
-                    <?php
-                        $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS
-                            ? "fa fa-check success visible" : "fa fa-close error visible";
-                    ?>
-                    <td><span class="<?= $resultIconClass ?>"></span><?= h($v['total']) ?></td>
+                    <td>
+                        <?php if ((int)$v['payment_type'] === Goalous\Model\Enum\PaymentSetting\Type::CREDIT_CARD): ?>
+                            <?php
+                            $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS
+                                ? "fa fa-check success visible" : "fa fa-close error visible";
+                            ?>
+                            <span class="<?= $resultIconClass ?>"></span>
+                        <?php endif; ?>
+                        <?= h($v['total']) ?></td>
                     <td class="history-entry-download">
                         <?= $this->Html->link("",
                             ['controller' => 'payments', 'action' => 'receipt', $v['id'] . '.pdf'],
