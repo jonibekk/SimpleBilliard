@@ -1,5 +1,6 @@
 <?php
 App::uses('Controller', 'Controller');
+App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
 
 /**
@@ -83,6 +84,9 @@ class BaseController extends Controller
      * @var bool
      */
     public $is_mb_app_ios = false;
+    // TODO: Remove reference after NCMB apps been discontinued
+    // temporary fix to support NCMB and Firebase apps
+    public $is_mb_app_ios_high_header = false;
     /**
      * Request from tablet?
      */
@@ -334,6 +338,13 @@ class BaseController extends Controller
             $this->is_mb_app_ios = true;
         }
         $this->set('is_mb_app_ios', $this->is_mb_app_ios);
+
+        // TODO: Remove  after NCMB apps been discontinued
+        $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT') ?? '');
+        if ($userAgent->isiOSApp() && $userAgent->getMobileAppVersion() < MOBILE_APP_IOS_VERSION_NEW_HEADER) {
+            $this->is_mb_app_ios_high_header = true;
+        }
+        $this->set('is_mb_app_ios_high_header', $this->is_mb_app_ios_high_header);
     }
 
     /**

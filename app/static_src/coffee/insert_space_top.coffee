@@ -1,3 +1,4 @@
+# TODO: Remove all contents after NCMB apps been discontinued
 insertSpaceTop = (height) ->
   $header = $('#header')
   $header.css 'max-height', parseInt($header.css('max-height')) + height + 'px'
@@ -18,5 +19,5 @@ insertSpaceTop = (height) ->
     $(elem).css 'margin-top', parseInt($(elem).css('margin-top')) - height + 'px'
 
 $ ->
-  if cake.is_mb_app_ios
+  if cake.is_mb_app_ios_high_header
     insertSpaceTop(20)

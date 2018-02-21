@@ -135,8 +135,55 @@ class Device extends AppModel
     }
 
     /**
-     * ユーザーIDでDevice.device_tokenのみを配列で取得する
-     * これがメインメソッドで、user_idで取得するのは自明なのでメソッド名は短めにしてみた
+     * Return the device by its Token
+     *
+     * @param string $deviceToken
+     *
+     * @return array|bool|null
+     */
+    function getDeviceByToken(string $deviceToken)
+    {
+        if (empty($deviceToken)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'Device.device_token' => $deviceToken,
+                'Device.del_flg'      => false,
+            ],
+        ];
+
+        $data = $this->find('first', $options);
+        return $data;
+    }
+
+    /**
+     * Return the device by its installation id
+     *
+     * @param string $installationId
+     *
+     * @return array|bool|null
+     */
+    function getDeviceByInstallationId(string $installationId)
+    {
+        if (empty($installationId)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'Device.installation_id' => $installationId,
+                'Device.del_flg'      => false,
+            ],
+        ];
+
+        $data = $this->find('first', $options);
+        return $data;
+    }
+
+    /**
+     * Return device_token and installation_id for all devices of user
      *
      * @param $user_id
      *
@@ -153,7 +200,11 @@ class Device extends AppModel
         $deviceTokens = [];
 
         foreach ($devices as $d) {
-            $deviceTokens[] = $d['Device']['device_token'];
+            $deviceTokens[] = [
+                'device_token' => $d['Device']['device_token'],
+                'installation_id' => $d['Device']['installation_id'],
+                'os_type' => $d['Device']['os_type']
+            ];
         }
 
         return $deviceTokens;

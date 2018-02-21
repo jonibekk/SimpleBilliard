@@ -14,7 +14,7 @@
 <?= $this->App->viewStartComment() ?>
 <div class="col col-xxs-12 mpTB0">
     <?=
-    $this->Upload->uploadImage($user, 'User.photo', ['style' => 'small'],
+    $this->Upload->uploadImage($user, 'User.photo', ['style' => 'medium_large'],
         ['class' => 'comment-img'])
     ?>
     <div class="comment-body modal-comment">
