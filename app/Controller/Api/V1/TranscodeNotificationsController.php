@@ -229,12 +229,19 @@ class TranscodeNotificationsController extends ApiController
     public function sendNotification(int $postId, array $postDraft)
     {
         $teamId = $postDraft['team_id'];
+        $userId = $postDraft['user_id'];
         $draftData = json_decode($postDraft['draft_data'], true);
         $socketId = Hash::get($draftData, 'socket_id');
         $shareTargets = explode(',', Hash::get($draftData, 'Post.share'));
         $postType = Hash::get($draftData, 'Post.type');
 
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $postId, null, null, $teamId);
+        $baseUrl = '';
+        if (ENV_NAME === 'local') {
+            $baseUrl = 'http://local.goalous.com';
+        } else {
+            $baseUrl = 'https://' . ENV_NAME . 'goalous.com';
+        }
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $postId, null, null, $teamId, $userId, $baseUrl);
 
         // At least we need socketId and share targets
         if (empty($socketId)) {

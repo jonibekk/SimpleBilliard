@@ -1527,8 +1527,11 @@ class NotifyBizComponent extends Component
      * @param       $sub_model_id
      * @param array $to_user_list json_encodeしてbase64_encodeする
      * @param int|null $teamId
+     * @param int|null $userId
+     * @param string|null $baseUrl the base url of notification list url
+     *                             specify if execSendNotify called from externalAPI, batch shell
      */
-    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null, $teamId = null)
+    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null, $teamId = null, $userId = null, $baseUrl = null)
     {
         $set_web_env = "";
         $nohup = "nohup ";
@@ -1547,11 +1550,12 @@ class NotifyBizComponent extends Component
             $to_user_list = base64_encode(json_encode($to_user_list));
             $cmd .= " -u " . $to_user_list;
         }
-        $cmd .= " -b " . Router::fullBaseUrl();
-        $cmd .= " -i " . $this->Auth->user('id');
-        $cmd .= " -o " . $this->Session->read('current_team_id') ?? $teamId;
+        $cmd .= " -b " . (is_null($baseUrl) ? Router::fullBaseUrl() : $baseUrl);
+        $cmd .= " -i " . ($this->Auth->user('id') ?? $userId);
+        $cmd .= " -o " . ($this->Session->read('current_team_id') ?? $teamId);
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
+
         exec($all_cmd);
     }
 
