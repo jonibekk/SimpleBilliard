@@ -14,10 +14,7 @@ function feedVideoJs(elementId){
         // FYI: https://github.com/videojs/videojs-contrib-hls/pull/912#discussion_r164196518
         //, handleManifestRedirects: true
     }).ready(function() {
-        var userAgent = window.navigator.userAgent.toLowerCase();
-        // decide if IE or not
-        var isIE = userAgent.indexOf('trident') != -1;
-        if (!isIE) {
+        if (!isBrowserIE()) {
             return;
         }
         // below is IE only process
