@@ -36,13 +36,14 @@
 class EmailConfig
 {
 
+    // In the case of a Google account for which 2fauth is set, authentication is passed if issuing and setting an application password
     public $default = array(
         'transport'     => 'Smtp',
         'sendAs'        => 'text',
         'host'          => 'ssl://smtp.gmail.com',
         'port'          => 465,
         'username'      => 'goalous@gmail.com',
-        'password'      => 'isa3degoal',
+        'password'      => 'uhvgfdkkgdcjizti', // Google application password because of 2fauth
         'from'          => array(
             'goalous@gmail.com' => 'Goalous Support'
         ),

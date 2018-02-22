@@ -49,6 +49,13 @@ class InvoiceHistoryFixture extends CakeTestFixtureEx
                                 'unsigned' => true,
                                 'comment'  => '後払い.comから返される与信状況。与信OK:1、与信NG:2、与信中:0 '
         ],
+        'reorder_target_code' => ['type'    => 'string',
+                                'null'    => true,
+                                'default' => null,
+                                'collate' => 'utf8mb4_general_ci',
+                                'comment' => '再注文対象の後払い.com注文ID',
+                                'charset' => 'utf8mb4'
+        ],
         'del_flg'           => ['type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'],
         'deleted'           => ['type'     => 'integer',
                                 'null'     => true,
