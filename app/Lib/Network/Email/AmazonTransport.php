@@ -154,7 +154,8 @@ class AmazonTransport extends AbstractTransport
             [
                 'key'    => $this->_config['key'],
                 'secret' => $this->_config['secret'],
-                'region' => Region::US_EAST_1
+                'region' => 'us-east-1',
+                'version' => '2010-12-01'
             ]
         );
     }
