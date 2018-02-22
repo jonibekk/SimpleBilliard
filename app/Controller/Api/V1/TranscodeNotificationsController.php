@@ -235,7 +235,7 @@ class TranscodeNotificationsController extends ApiController
         $shareTargets = explode(',', Hash::get($draftData, 'Post.share'));
         $postType = Hash::get($draftData, 'Post.type');
 
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $postId, null, null, $teamId, $userId, AppUtil::fullBaseUrl());
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $postId, null, null, $teamId, $userId, AppUtil::fullBaseUrl(ENV_NAME));
 
         // At least we need socketId and share targets
         if (empty($socketId)) {
