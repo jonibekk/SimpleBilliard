@@ -1,6 +1,8 @@
 <?php
 App::uses('Controller', 'Controller');
+App::uses('UserAgent', 'Request');
 App::uses('TeamStatus', 'Lib/Status');
+App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
 
 use Goalous\Model\Enum as Enum;

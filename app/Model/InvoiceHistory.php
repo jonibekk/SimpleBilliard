@@ -91,41 +91,40 @@ class InvoiceHistory extends AppModel
 
     /**
      * Filter: charge history ids
-     * // [Note] currently this method is not called anywhere, but this will be used in near future
-     * Called: inner DetectInconsistentChargeShell.checkAtobaraiComAmountEachHistory method
      *
-     * @param array $chargeHistoryIds
+     * @param int $chargeHistoryId
      *
      * @return array
      */
-    public function findEachChargeHistoryId(array $chargeHistoryIds): array
+    public function getByChargeHistoryId(int $chargeHistoryId): array
     {
         $options = [
             'fields'     => [
                 'InvoiceHistoriesChargeHistory.charge_history_id',
                 'InvoiceHistory.system_order_code',
+                'InvoiceHistory.reorder_target_code',
             ],
             'conditions' => [
                 'InvoiceHistory.del_flg' => false
             ],
-            'join'       => [
+            'joins'       => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'invoice_histories_charge_histories',
                     'alias'      => 'InvoiceHistoriesChargeHistory',
                     'conditions' => [
                         'InvoiceHistory.id = InvoiceHistoriesChargeHistory.invoice_history_id',
-                        'InvoiceHistoriesChargeHistory.charge_history_id' => $chargeHistoryIds,
+                        'InvoiceHistoriesChargeHistory.charge_history_id' => $chargeHistoryId,
                         'InvoiceHistoriesChargeHistory.del_flg'           => false,
                     ]
                 ],
             ]
         ];
-        $res = $this->find('all', $options);
+        $res = $this->find('first', $options);
         if (empty($res)) {
             return [];
         }
-        return Hash::combine($res, '{n}.ChargeHistory.charge_history_id', '{n}.ChargeHistory.system_order_code');
+        return $res;
     }
 
     /**
