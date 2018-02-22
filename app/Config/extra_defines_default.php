@@ -85,6 +85,13 @@ $defines = [
     'MOBILE_APP_IOS_STORE_URL'                    => "https://itunes.apple.com/app/goalous-business-sns/id1060474459",
     'MOBILE_APP_ANDROID_VERSION_SUPPORTING_LEAST' => "1.0.4",
     'MOBILE_APP_ANDROID_STORE_URL'                => "https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous2",
+    'ENABLE_VIDEO_POST_TRANSCODING'               => true,
+    'ENABLE_VIDEO_POST_PLAY'                      => true,
+    'AWS_ELASTIC_TRANSCODER_KEY'                  => 'AKIAJWRB3ISRYGDYHV5A',
+    'AWS_ELASTIC_TRANSCODER_SECRET_KEY'           => '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',
+    'AWS_ELASTIC_TRANSCODER_PIPELINE_ID'          => null,
+    'AWS_S3_BUCKET_VIDEO_ORIGINAL'                => null,
+    'AWS_S3_BUCKET_VIDEO_TRANSCODED'              => null,
 ];
 
 foreach ($defines as $k => $v) {

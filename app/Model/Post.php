@@ -5,6 +5,12 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
+App::uses('PostResource', 'Model');
+App::import('Service', 'PostResourceService');
+App::uses('PostDraft', 'Model');
+App::import('Service', 'PostService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Post Model
@@ -248,100 +254,6 @@ class Post extends AppModel
                 }
             }
         }
-        return true;
-    }
-
-    /**
-     * 投稿
-     *
-     * @param      $postData
-     * @param null $uid
-     * @param null $team_id
-     *
-     * @return bool|mixed
-     */
-    public function addNormal($postData, $uid = null, $team_id = null)
-    {
-        if (!isset($postData['Post']) || empty($postData['Post'])) {
-            return false;
-        }
-        $this->setUidAndTeamId($uid, $team_id);
-        $share = null;
-        if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
-            $share = explode(",", $postData['Post']['share']);
-            foreach ($share as $key => $val) {
-                if (stristr($val, 'public')) {
-                    $teamAllCircle = $this->Circle->getTeamAllCircle();
-                    $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
-                }
-            }
-        }
-        $postData['Post']['user_id'] = $this->uid;
-        $postData['Post']['team_id'] = $this->team_id;
-        if (!isset($postData['Post']['type'])) {
-            $postData['Post']['type'] = Post::TYPE_NORMAL;
-        }
-
-        $this->begin();
-        $res = $this->save($postData);
-        if (empty($res)) {
-            $this->rollback();
-            return false;
-        }
-
-        $post_id = $this->getLastInsertID();
-        $results = [];
-        // ファイルが添付されている場合
-        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
-            $results[] = $this->PostFile->AttachedFile->saveRelatedFiles($post_id,
-                AttachedFile::TYPE_MODEL_POST,
-                $postData['file_id']);
-        }
-        if (!empty($share)) {
-            //ユーザとサークルに分割
-            $users = [];
-            $circles = [];
-            foreach ($share as $val) {
-                //ユーザの場合
-                if (stristr($val, 'user_')) {
-                    $users[] = str_replace('user_', '', $val);
-                } //サークルの場合
-                elseif (stristr($val, 'circle_')) {
-                    $circles[] = str_replace('circle_', '', $val);
-                }
-            }
-            if ($users) {
-                //共有ユーザ保存
-                $results[] = $this->PostShareUser->add($this->getLastInsertID(), $users);
-            }
-            if ($circles) {
-                //共有サークル保存
-                $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles);
-                //共有サークル指定されてた場合の未読件数更新
-                $results[] = $this->User->CircleMember->incrementUnreadCount($circles);
-                //共有サークル指定されてた場合、更新日時更新
-                $results[] = $this->User->CircleMember->updateModified($circles);
-                $results[] = $this->PostShareCircle->Circle->updateModified($circles);
-            }
-        }
-        // どこかでエラーが発生した場合は rollback
-        foreach ($results as $r) {
-            if (!$r) {
-                $this->rollback();
-                $this->PostFile->AttachedFile->deleteAllRelatedFiles($post_id, AttachedFile::TYPE_MODEL_POST);
-                return false;
-            }
-        }
-        $this->commit();
-
-        // 添付ファイルが存在する場合は一時データを削除
-        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
-            $Redis = ClassRegistry::init('GlRedis');
-            foreach ($postData['file_id'] as $hash) {
-                $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
-            }
-        }
-
         return true;
     }
 
@@ -834,6 +746,26 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
         //未読件数を取得
         $res = $this->getCommentMyUnreadCount($res);
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        // get post resources
+        $postIds = Hash::extract($res, '{n}.Post.id') ?? [];
+        $postResources = $PostResource->getResourcesByPostId($postIds);
+        foreach ($res as $key => $post) {
+            $res[$key] = am($post, [
+                'PostResources' => $postResources[$post['Post']['id']] ?? [],
+            ]);
+            // check if post_resource have a video or not
+            // TODO: https://jira.goalous.com/browse/GL-6601
+            $res[$key]['hasVideoResource'] = false;
+            foreach ($res[$key]['PostResources'] as $resource) {
+                // we have only video resource now, if in the loop, we have video resource
+                $res[$key]['hasVideoResource'] = true;
+                break;
+            }
+        }
+
         //Set whether login user saved favorite post
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
         return $res;
@@ -1149,44 +1081,83 @@ class Post extends AppModel
         return $data;
     }
 
-    function getShareMessages($data)
+    /**
+     * Return share message by share type
+     *
+     * @param string $shareType
+     * @param bool   $isPostPublished
+     *
+     * @return string
+     */
+    private function getShareMessageDefinitions(string $shareType, bool $isPostPublished): string
+    {
+        if ($isPostPublished) {
+            switch ($shareType) {
+                case 'people': return 'Shared %s';
+                case 'peoples': return 'Shared %1$s and %2$s others';
+                case 'self': return 'Only you';
+                case 'circle': return 'Shared %s';
+                case 'circles': return 'Shared %1$s and %2$s circle(s)';
+                case 'circle_with_people': return 'Shared %1$s and %2$s';
+                case 'circles_with_people': return 'Shared %1$s, %2$s and %3$s others';
+                case 'circle_with_peoples': return 'Shared %1$s, %2$s and %3$s others';
+                case 'circles_with_peoples': return 'Shared %1$s and %2$s others,%3$s and %4$s circle(s)';
+                default: return 'Shared %s';
+            }
+        }
+        // post is still in draft
+        switch ($shareType) {
+            case 'people': return '%s';
+            case 'peoples': return '%1$s and %2$s others';
+            case 'self': return 'Only you';
+            case 'circle': return '%s';
+            case 'circles': return '%1$s and %2$s circle(s)';
+            case 'circle_with_people': return '%1$s and %2$s';
+            case 'circles_with_people': return '%1$s, %2$s and %3$s others';
+            case 'circle_with_peoples': return '%1$s, %2$s and %3$s others';
+            case 'circles_with_peoples': return '%1$s and %2$s others,%3$s and %4$s circle(s)';
+            default: return '%s';
+        }
+    }
+
+    function getShareMessages($data, bool $isPostPublished = true)
     {
         foreach ($data as $key => $val) {
             $data[$key]['share_text'] = null;
             switch ($val['share_mode']) {
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
-                        $data[$key]['share_text'] = __("Shared %s",
+                        $data[$key]['share_text'] = __($this->getShareMessageDefinitions('people', $isPostPublished),
                             $data[$key]['share_user_name']);
                     } else {
-                        $data[$key]['share_text'] = __('Shared %1$s and %2$s others',
+                        $data[$key]['share_text'] = __($this->getShareMessageDefinitions('peoples', $isPostPublished),
                             $data[$key]['share_user_name'],
                             count($val['PostShareUser']) - 1);
                     }
                     break;
                 case self::SHARE_ONLY_ME:
                     //自分だけ
-                    $data[$key]['share_text'] = __("Only you");
+                    $data[$key]['share_text'] = __($this->getShareMessageDefinitions('self', $isPostPublished));
                     break;
                 case self::SHARE_CIRCLE:
                     //共有ユーザがいない場合
                     if (count($val['PostShareUser']) == 0) {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __("Shared %s",
+                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circle', $isPostPublished),
                                 $data[$key]['share_circle_name']);
                         } else {
-                            $data[$key]['share_text'] = __('Shared %1$s and %2$s circle(s)',
+                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circles', $isPostPublished),
                                 $data[$key]['share_circle_name'],
                                 count($val['PostShareCircle']) - 1);
                         }
                     } //共有ユーザが１人いる場合
                     elseif (count($val['PostShareUser']) == 1) {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __('Shared %1$s and %2$s',
+                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circle_with_people', $isPostPublished),
                                 $data[$key]['share_circle_name'],
                                 $data[$key]['share_user_name']);
                         } else {
-                            $data[$key]['share_text'] = __('Shared %1$s, %2$s and %3$s others',
+                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circles_with_people', $isPostPublished),
                                 $data[$key]['share_user_name'],
                                 $data[$key]['share_circle_name'],
                                 count($val['PostShareCircle']) - 1);
@@ -1195,12 +1166,12 @@ class Post extends AppModel
                     } //共有ユーザが２人以上いる場合
                     else {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __('Shared %1$s, %2$s and %3$s others',
+                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circle_with_peoples', $isPostPublished),
                                 $data[$key]['share_circle_name'],
                                 $data[$key]['share_user_name'],
                                 count($val['PostShareUser']) - 1);
                         } else {
-                            $data[$key]['share_text'] = __('Shared %1$s and %2$s others,%3$s and %4$s circle(s)',
+                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circles_with_peoples', $isPostPublished),
                                 $data[$key]['share_user_name'],
                                 count($val['PostShareUser']) - 1,
                                 $data[$key]['share_circle_name'],
@@ -1387,6 +1358,37 @@ class Post extends AppModel
         return $res;
     }
 
+    /**
+     * Return list of users.id and circles.id to share
+     *
+     * @param array    $shares string of post targets to share
+     *      e.g. 'public,circle_1,user_2'
+     * @param int|null $teamId
+     *      if null is passed, teamId is solved from $this->current_team_id
+     *
+     * @return array list($userIds, $circleIds)
+     */
+    function distributeShareToUserAndCircle(array $shares, $teamId = null): array
+    {
+        $users = [];
+        $circles = [];
+        foreach ($shares as $val) {
+            if (stristr($val, 'public')) {
+                $circles[] = $this->Circle->getTeamAllCircleId($teamId);
+                continue;
+            }
+            // user case
+            if (stristr($val, 'user_')) {
+                $users[] = str_replace('user_', '', $val);
+            }
+            // circle case
+            elseif (stristr($val, 'circle_')) {
+                $circles[] = str_replace('circle_', '', $val);
+            }
+        }
+        return [$users, $circles];
+    }
+
     function doShare($post_id, $share, $share_type = PostShareCircle::SHARE_TYPE_SHARED)
     {
         if (!$share) {
@@ -1402,18 +1404,7 @@ class Post extends AppModel
             }
         }
         //TODO ここまで
-        //ユーザとサークルに分割
-        $users = [];
-        $circles = [];
-        foreach ($share as $val) {
-            //ユーザの場合
-            if (stristr($val, 'user_')) {
-                $users[] = str_replace('user_', '', $val);
-            } //サークルの場合
-            elseif (stristr($val, 'circle_')) {
-                $circles[] = str_replace('circle_', '', $val);
-            }
-        }
+        list($users, $circles) = $this->distributeShareToUserAndCircle($share);
         if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
             $circles[] = $team_all_circle_id;
         }
@@ -1816,5 +1807,25 @@ class Post extends AppModel
         ];
 
         return (bool)$this->findWithoutTeamId('all', $options);
+    }
+
+    /**
+     * @override
+     * @param array $data
+     * @param bool  $filterKey
+     * @return array
+     */
+    public function create($data = array(), $filterKey = false)
+    {
+        parent::create($data, $filterKey);
+
+        // Posts tables date column default value defined as '0' due to mysql partition.
+        // create() method does not set modified and created column value on current timestamp.
+        // If we do not overwrite value, modified and created value set to 0.
+        $currentTimeStamp = GoalousDateTime::now()->getTimestamp();
+        $this->data[$this->alias]['modified'] = $currentTimeStamp;
+        $this->data[$this->alias]['created'] = $currentTimeStamp;
+
+        return $this->data;
     }
 }

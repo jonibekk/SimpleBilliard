@@ -432,16 +432,22 @@ class Circle extends AppModel
     }
 
     /**
+     * returning teams circles exists
+     * pass $teamId if this method is called from external API, or batch shell
+     * @param int $teamId
+     *
      * @return array|null
      */
-    function getTeamAllCircle()
+    function getTeamAllCircle($teamId = null)
     {
+        $teamId = $teamId ?? $this->current_team_id;
         $model = $this;
+        $this->current_team_id = $teamId;
         $res = Cache::remember($this->getCacheKey(CACHE_KEY_TEAM_ALL_CIRCLE, false, null),
-            function () use ($model) {
+            function () use ($model, $teamId) {
                 $options = [
                     'conditions' => [
-                        'team_id'      => $this->current_team_id,
+                        'team_id'      => $teamId,
                         'team_all_flg' => true,
                     ]
                 ];
@@ -451,9 +457,15 @@ class Circle extends AppModel
         return $res;
     }
 
-    function getTeamAllCircleId()
+    /**
+     * Return team's all circles.id
+     * @param int|null $teamId
+     *
+     * @return string|null circle.id by string
+     */
+    function getTeamAllCircleId($teamId = null)
     {
-        $team_all_circle = $this->getTeamAllCircle();
+        $team_all_circle = $this->getTeamAllCircle($teamId);
         return Hash::get($team_all_circle, 'Circle.id');
     }
 

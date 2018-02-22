@@ -16,6 +16,13 @@ class Experiment extends AppModel
     const NAME_ENABLE_EVALUATION_FEATURE = 'EnableEvaluationFeature';
 
     /**
+     * Video feature experiment
+     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
+     */
+    const NAME_ENABLE_VIDEO_POST_TRANSCODING = 'EnableVideoPostTranscoding';
+    const NAME_ENABLE_VIDEO_POST_PLAY = 'EnableVideoPostPlay';
+
+    /**
      * Validation rules
      *
      * @var array

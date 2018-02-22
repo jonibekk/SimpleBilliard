@@ -1,7 +1,10 @@
 <?php
 App::uses('Controller', 'Controller');
 App::uses('UserAgent', 'Request');
+App::uses('TeamStatus', 'Lib/Status');
 App::import('Service', 'TeamService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Application level Controller
@@ -169,6 +172,23 @@ class BaseController extends Controller
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
+
+            $this->_setTeamStatus();
+        }
+    }
+
+    /**
+     * initializing current users TeamStatus from $this->current_team_id
+     * after this method, call TeamStatus::getCurrentTeam() to get current teams settings.
+     */
+    private function _setTeamStatus()
+    {
+        $teamId = $this->current_team_id;
+
+        $teamStatus = TeamStatus::getCurrentTeam();
+
+        if (AppUtil::isInt($this->current_team_id)) {
+            $teamStatus->initializeByTeamId($teamId);
         }
     }
 

@@ -2,6 +2,13 @@
 App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
+App::import('Service', 'PostDraftService');
+App::uses('TeamStatus', 'Lib/Status');
+
+App::uses('Video', 'Model');
+App::uses('VideoStream', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Posts Controller
@@ -95,6 +102,8 @@ class PostsController extends AppController
      */
     public function _addPost()
     {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
         $this->request->allowMethod('post');
 
         // OGP処理はメッセ、アクション以外の場合に実行
@@ -110,11 +119,85 @@ class PostsController extends AppController
                 : $this->request->data['Post']['share_secret'];
         }
 
+        $userId = $this->Auth->user('id');
+        $teamId = TeamStatus::getCurrentTeam()->getTeamId();
+
+        $countVideoStreamIds =
+            isset($this->request->data['video_stream_id']) && is_array($this->request->data['video_stream_id'])
+            ? count($this->request->data['video_stream_id']) : 0;
+        if (1 < $countVideoStreamIds) {
+            $this->Notification->outError(__("Can't post more than two videos."));
+            return false;
+        }
+        if (1 === $countVideoStreamIds) {
+            /** @var VideoStream $VideoStream */
+            $VideoStream = ClassRegistry::init("VideoStream");
+
+            $videoStreamId = reset($this->request->data['video_stream_id']);
+            $videoStream = $VideoStream->findById($videoStreamId);
+            $videoStream = reset($videoStream);
+
+            $user = $this->User->getById($this->Auth->user('id'));
+            $teamId = $this->current_team_id;
+            $transcodeStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
+            $logDataArray = [
+                'video_streams.id' => $videoStream['id'],
+                'transcode_status' => sprintf('%s:%s', $transcodeStatus->getValue(), $transcodeStatus->getKey()),
+            ];
+            switch ($transcodeStatus->getValue()) {
+                case Enum\Video\VideoTranscodeStatus::UPLOADING:
+                case Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
+                case Enum\Video\VideoTranscodeStatus::QUEUED:
+                case Enum\Video\VideoTranscodeStatus::TRANSCODING:
+                case Enum\Video\VideoTranscodeStatus::ERROR:
+                    // create draft post
+                    GoalousLog::info("video post creating draft post", $logDataArray);
+                    /** @var PostDraftService $PostDraftService */
+                    $PostDraftService = ClassRegistry::init("PostDraftService");
+                    $postDraft = $PostDraftService->createPostDraftWithResources($this->request->data,
+                        $userId,
+                        $teamId,
+                        [$videoStream]
+                    );
+                    if (false === $postDraft) {
+                        // バリデーションエラーのケース
+                        if (!empty($this->Post->validationErrors)) {
+                            $error_msg = array_shift($this->Post->validationErrors);
+                            $this->Notification->outError($error_msg[0], ['title' => __("Failed to post.")]);
+                        } else {
+                            $this->Notification->outError(__("Failed to post."));
+                        }
+                        return false;
+                    }
+                    return true;
+                case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
+                    GoalousLog::info("video post creating draft post", $logDataArray);
+                    $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId, [$videoStream]);
+                    // 保存に失敗
+                    if (false === $successSavedPost) {
+                        // バリデーションエラーのケース
+                        if (!empty($this->Post->validationErrors)) {
+                            $error_msg = array_shift($this->Post->validationErrors);
+                            $this->Notification->outError($error_msg[0], ['title' => __("Failed to post.")]);
+                        } else {
+                            $this->Notification->outError(__("Failed to post."));
+                        }
+                        return false;
+                    }
+                    $this->processAfterPosted($successSavedPost['id']);
+                    return true;
+                default:
+                    GoalousLog::info("video post error", $logDataArray);
+                    throw new RuntimeException(sprintf("invalid status code: %s", $transcodeStatus->getValue()));
+                    break;
+            }
+        }
+
         // 投稿を保存
-        $successSavedPost = $this->Post->addNormal($this->request->data);
+        $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId);
 
         // 保存に失敗
-        if (!$successSavedPost) {
+        if (false === $successSavedPost) {
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
@@ -125,13 +208,20 @@ class PostsController extends AppController
             return false;
         }
 
+        $this->processAfterPosted($successSavedPost['id']);
+
+        return true;
+    }
+
+    private function processAfterPosted(int $postedPostId)
+    {
         $this->_updateSetupStatusIfNotCompleted();
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
             $notify_type = NotifySetting::TYPE_MESSAGE;
         }
-        $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
+        $this->NotifyBiz->execSendNotify($notify_type, $postedPostId);
 
         $socketId = Hash::get($this->request->data, 'socket_id');
         $share = explode(",", Hash::get($this->request->data, 'Post.share'));
@@ -182,7 +272,6 @@ class PostsController extends AppController
         }
 
         $this->Notification->outSuccess(__("Posted."));
-        return true;
     }
 
     /**
@@ -883,6 +972,19 @@ class PostsController extends AppController
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
             ]);
+
+            // setting draft post data if having circle_id
+            /** @var PostDraftService $PostDraftService */
+            $PostDraftService = ClassRegistry::init('PostDraftService');
+            $circleId = Hash::get($this->request->params, 'circle_id');
+            if (isset($circleId) && AppUtil::isInt($circleId)) {
+                $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
+                    $this->Auth->user('id'),
+                    TeamStatus::getCurrentTeam()->getTeamId(),
+                    [$circleId]
+                    )
+                );
+            }
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
             //サークルページに居て当該サークルから抜けた場合の対応
@@ -909,6 +1011,20 @@ class PostsController extends AppController
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
             $this->request->params);
         $this->set(compact('posts'));
+
+        // setting draft post data if having circle_id
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
+        $circleId = Hash::get($this->request->params, 'circle_id');
+        if (isset($circleId) && AppUtil::isInt($circleId)) {
+            $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
+                $this->Auth->user('id'),
+                TeamStatus::getCurrentTeam()->getTeamId(),
+                [$circleId]
+            )
+            );
+        }
+
         $response = $this->render("Feed/posts");
         $html = $response->__toString();
 
