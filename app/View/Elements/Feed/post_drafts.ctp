@@ -38,10 +38,7 @@ if (!isset($post_drafts)) {
                         Processing
                     <?php endif ?>
                 </span>
-                &nbsp
-                <span>
-                    <i class="fa fa-circle-o"></i>&nbsp<?= $post_draft['share_text'] ?>
-                </span>
+                &nbsp;<i class="fa fa-circle-o"></i>&nbsp;<?= $post_draft['share_text'] ?>
             </div>
         </div>
         <div class="col feed-contents post-contents showmore font_14px font_verydark box-align" id="PostTextBody_102">
