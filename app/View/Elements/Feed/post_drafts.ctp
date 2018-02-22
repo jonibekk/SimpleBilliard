@@ -38,8 +38,8 @@ if (!isset($post_drafts)) {
                         Processing
                     <?php endif ?>
                 </span>
-                &nbsp;
-                <span href="#" data-url="" class="modal-ajax-get-share-circles-users link-dark-gray">
+                &nbsp
+                <span>
                     <i class="fa fa-circle-o"></i>&nbsp<?= $post_draft['share_text'] ?>
                 </span>
             </div>
