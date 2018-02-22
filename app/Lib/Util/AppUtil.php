@@ -790,4 +790,22 @@ class AppUtil
         }
         return 0;
     }
+
+    /**
+     * Return full base url of Goalous
+     * this method is not influenced by php process
+     * whether user access / batch shell / api access from external service
+     *
+     * @return string
+     */
+    static function fullBaseUrl(): string
+    {
+        $baseUrl = '';
+        if (ENV_NAME === 'local') {
+            $baseUrl = 'http://local.goalous.com';
+        } else {
+            $baseUrl = 'https://' . ENV_NAME . 'goalous.com';
+        }
+        return $baseUrl;
+    }
 }
