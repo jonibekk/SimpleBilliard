@@ -48,6 +48,8 @@ class NotifySetting extends AppModel
     const TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT = 35;
     const TYPE_CHANGED_TEAM_BASIC_SETTING = 36;
     const TYPE_CHANGED_TERM_SETTING = 37;
+    const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
+    const TYPE_TRANSCODE_FAILED = 39;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                                 => [
@@ -313,7 +315,21 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'start_evaluation',
             'icon_class'      => 'fa-users',
             'groups'          => ['all', 'primary'],
-        ]
+        ],
+        self::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'transcode_completed_and_published',
+            'icon_class'      => 'fa-video-camera',
+            'groups'          => ['all'],
+        ],
+        self::TYPE_TRANSCODE_FAILED => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'transcode_failed',
+            'icon_class'      => 'fa-video-camera',
+            'groups'          => ['all'],
+        ],
     ];
 
     static public $TYPE_GROUP = [
@@ -1005,6 +1021,12 @@ class NotifySetting extends AppModel
                         '<span class="notify-card-head-target">%1$s</span> changed term setting.',
                         h($user_text));
                 }
+                break;
+            case self::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED:
+                $title = __('Video processing completed and published post.');
+                break;
+            case self::TYPE_TRANSCODE_FAILED:
+                $title = __('Video processing failed.');
                 break;
         }
 

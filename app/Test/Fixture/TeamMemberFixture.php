@@ -394,6 +394,24 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'created'               => '2014-05-22 02:28:04',
             'modified'              => '2014-05-22 02:28:04'
         ),
+        array(
+            'id'                    => '13',
+            'user_id'               => '3',
+            'team_id'               => '1',
+            'coach_user_id'         => '1',
+            'member_no'             => 'member_2',
+            'job_category_id'       => '',
+            'status' => TeamMember::USER_STATUS_ACTIVE,
+            'invitation_flg'        => 1,
+            'evaluation_enable_flg' => 1,
+            'admin_flg'             => 0,
+            'last_login'            => '2014-05-22 02:28:04',
+            'status'                => 1,
+            'del_flg'               => false,
+            'deleted'               => null,
+            'created'               => '2014-05-22 02:28:04',
+            'modified'              => '2014-05-22 02:28:04'
+        ),
     );
 
 }

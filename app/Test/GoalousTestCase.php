@@ -29,6 +29,7 @@ App::import('Service', 'GoalService');
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
+App::uses('Experiment', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -1097,5 +1098,18 @@ class GoalousTestCase extends CakeTestCase
             $campaignTeamId,
             $pricePlanPurchaseId
         ];
+    }
+
+    function createExperiments(array $experiments)
+    {
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init('Experiment');
+        foreach ($experiments as $experiment) {
+            $experiment = $Experiment->create([
+                'name'    => $experiment[0],
+                'team_id' => $experiment[1],
+            ]);
+            $Experiment->save($experiment);
+        }
     }
 }

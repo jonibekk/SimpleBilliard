@@ -263,6 +263,8 @@ define('REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV', '?st=inv_no&from=csv');
 
 define('SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS', 1209600); //2 weeks
 
+App::uses('GoalousLog', 'Log');
+
 /**
  * 共通関数
  */

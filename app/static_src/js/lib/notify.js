@@ -61,6 +61,16 @@ window.addEventListener('load', function() {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }
+
+                var optionData = data.options;
+                if (undefined !== optionData && undefined !== optionData.post_draft_id) {
+                    var postDraftId = optionData.post_draft_id;
+                    var urlPost = optionData.url_post;
+                    var elementDraftPost = $('.post_draft_' + postDraftId);
+                    elementDraftPost.find('.draft-post-message').toggleClass('hide');
+                    elementDraftPost.find('.link_succeed').attr('href', urlPost);
+                    elementDraftPost.find('.draft-post-message-succeed').toggleClass('hide');
+                }
             }
 
             // 新しいコメント通知の場合
