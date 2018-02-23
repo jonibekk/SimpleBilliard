@@ -60,4 +60,23 @@ class AwsClientFactory
             ],
         ]);
     }
+
+    /**
+     * @param string $key
+     * @param string $secret
+     *
+     * @return \Aws\Ses\SesClient
+     */
+    public static function createSesClient(string $key, string $secret): \Aws\Ses\SesClient
+    {
+        return new \Aws\Ses\SesClient(
+            [
+                'key'    => $key,
+                'secret' => $secret,
+                'region' => 'us-east-1',
+                // @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-email-2010-12-01.html
+                'version' => '2010-12-01'
+            ]
+        );
+    }
 }
