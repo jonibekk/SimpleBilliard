@@ -50,8 +50,14 @@ if (!isset($post_drafts)) {
     </div>
     <?php if ($post_draft['hasTranscodeFailed']): ?>
     <div class="draft-post-message-error">
-        <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
-        <span>Processing Failed</span>
+        <div>
+            <div class="disp_ib">
+                <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
+            </div>
+            <div class="disp_ib text-left">
+                <span>Processing Failed</span>
+            </div>
+        </div>
     </div>
     <?php else: ?>
     <div class="draft-post-message">
@@ -60,11 +66,13 @@ if (!isset($post_drafts)) {
     </div>
     <div class="draft-post-message-succeed hide">
         <div>
-            <i class="fa fa-check fa-4x" aria-hidden="true"></i>
-            <span>Succeeded!</span>
-        </div>
-        <div>
-            <a href="" class="link_succeed">Go here to see</a>
+            <div class="disp_ib">
+                <i class="fa fa-check fa-4x" aria-hidden="true"></i>
+            </div>
+            <div class="disp_ib text-left">
+                <span>Succeeded!</span><br>
+                <a href="" class="link_succeed">Go here to see</a>
+            </div>
         </div>
     </div>
     <?php endif; ?>

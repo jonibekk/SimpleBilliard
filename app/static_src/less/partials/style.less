@@ -3010,26 +3010,58 @@ Temporary Properties - YOU MUST FIX
     vertical-align:middle;
 }
 
+.draft-post-message-span () {
+    font-weight: bold;
+    font-size: 24px;
+    vertical-align:middle;
+    color: #222;
+}
+
 .draft-post-message {
-    .draft-post-message-base;
+    .draft-post-message-base();
     background-color: #e5e5e5;
     span {
-        font-weight: bold; font-size: 24px; vertical-align:middle;
+        .draft-post-message-span();
     }
 }
 
 .draft-post-message-error {
-    .draft-post-message-base;
+    .draft-post-message-base();
+    > div {
+        margin: 0 auto;
+    }
+    > div > div:first-child {
+        padding-right: 10px;
+    }
+    > div > div {
+        vertical-align: middle;
+        float: none;
+    }
     background-color: #ffb5b5;
     span {
-        font-weight: bold; font-size: 24px; vertical-align:middle;
+        .draft-post-message-span();
+    }
+    i {
+        color: white;
     }
 }
 
 .draft-post-message-succeed {
-    .draft-post-message-base;
+    .draft-post-message-base();
+    > div {
+        margin: 0 auto;
+    }
+    > div > div:first-child {
+        padding-right: 10px;
+    }
     background-color: #93fabf;
     span {
-        font-weight: bold; font-size: 24px; vertical-align:middle;
+        .draft-post-message-span();
+    }
+    a, a:hover, a:link {
+        color: #099f3f;
+    }
+    i {
+        color: white;
     }
 }
