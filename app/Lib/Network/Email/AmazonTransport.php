@@ -108,14 +108,16 @@ class AmazonTransport extends AbstractTransport
         $headers = $this->_headersToString($headers);
         $message = implode("\r\n", $this->_cakeEmail->message());
 
-        $this->_data = array();
-        $destinations = array_merge(array_keys($this->_cakeEmail->to()),
-            array_keys($this->_cakeEmail->cc()),
-            array_keys($this->_cakeEmail->bcc()));
+        // @see https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-personalized-email-api.html
+        // see above url for data structure to pass on aws-sdk-php-v3
         $this->_data = [
             'Source'       => key($this->_cakeEmail->from()),
-            'Destinations' => $destinations,
-            'RawMessage'   => ['Data' => base64_encode($headers . "\r\n\r\n" . $message . "\r\n\r\n\r\n.")],
+            'Destination' => [
+                'ToAddresses' => array_keys($this->_cakeEmail->to()),
+                'CcAddresses' => array_keys($this->_cakeEmail->cc()),
+                'BccAddresses' => array_keys($this->_cakeEmail->bcc()),
+            ],
+            'RawMessage'   => ['Data' => ($headers . "\r\n\r\n" . $message . "\r\n\r\n\r\n.")],
         ];
 
         $this->_content = array('headers' => $headers, 'message' => $message);
