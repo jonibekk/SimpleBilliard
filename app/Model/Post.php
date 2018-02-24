@@ -1093,29 +1093,29 @@ class Post extends AppModel
     {
         if ($isPostPublished) {
             switch ($shareType) {
-                case 'people': return 'Shared %s';
-                case 'peoples': return 'Shared %1$s and %2$s others';
-                case 'self': return 'Only you';
-                case 'circle': return 'Shared %s';
-                case 'circles': return 'Shared %1$s and %2$s circle(s)';
-                case 'circle_with_people': return 'Shared %1$s and %2$s';
-                case 'circles_with_people': return 'Shared %1$s, %2$s and %3$s others';
-                case 'circle_with_peoples': return 'Shared %1$s, %2$s and %3$s others';
-                case 'circles_with_peoples': return 'Shared %1$s and %2$s others,%3$s and %4$s circle(s)';
+                case 'people': return __('Shared %s');
+                case 'peoples': return __('Shared %1$s and %2$s others');
+                case 'self': return __('Only you');
+                case 'circle': return __('Shared %s');
+                case 'circles': return __('Shared %1$s and %2$s circle(s)');
+                case 'circle_with_people': return __('Shared %1$s and %2$s');
+                case 'circles_with_people': return __('Shared %1$s, %2$s and %3$s others');
+                case 'circle_with_peoples': return __('Shared %1$s, %2$s and %3$s others');
+                case 'circles_with_peoples': return __('Shared %1$s and %2$s others,%3$s and %4$s circle(s)');
                 default: return 'Shared %s';
             }
         }
         // post is still in draft
         switch ($shareType) {
             case 'people': return '%s';
-            case 'peoples': return '%1$s and %2$s others';
-            case 'self': return 'Only you';
+            case 'peoples': return __('%1$s and %2$s others');
+            case 'self': return __('Only you');
             case 'circle': return '%s';
-            case 'circles': return '%1$s and %2$s circle(s)';
-            case 'circle_with_people': return '%1$s and %2$s';
-            case 'circles_with_people': return '%1$s, %2$s and %3$s others';
-            case 'circle_with_peoples': return '%1$s, %2$s and %3$s others';
-            case 'circles_with_peoples': return '%1$s and %2$s others,%3$s and %4$s circle(s)';
+            case 'circles': return __('%1$s and %2$s circle(s)');
+            case 'circle_with_people': return __('%1$s and %2$s');
+            case 'circles_with_people': return __('%1$s, %2$s and %3$s others');
+            case 'circle_with_peoples': return __('%1$s, %2$s and %3$s others');
+            case 'circles_with_peoples': return __('%1$s and %2$s others,%3$s and %4$s circle(s)');
             default: return '%s';
         }
     }
@@ -1127,37 +1127,43 @@ class Post extends AppModel
             switch ($val['share_mode']) {
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
-                        $data[$key]['share_text'] = __($this->getShareMessageDefinitions('people', $isPostPublished),
+                        $data[$key]['share_text'] = sprintf(
+                            $this->getShareMessageDefinitions('people', $isPostPublished),
                             $data[$key]['share_user_name']);
                     } else {
-                        $data[$key]['share_text'] = __($this->getShareMessageDefinitions('peoples', $isPostPublished),
+                        $data[$key]['share_text'] = sprintf(
+                            $this->getShareMessageDefinitions('peoples', $isPostPublished),
                             $data[$key]['share_user_name'],
                             count($val['PostShareUser']) - 1);
                     }
                     break;
                 case self::SHARE_ONLY_ME:
                     //自分だけ
-                    $data[$key]['share_text'] = __($this->getShareMessageDefinitions('self', $isPostPublished));
+                    $data[$key]['share_text'] = $this->getShareMessageDefinitions('self', $isPostPublished);
                     break;
                 case self::SHARE_CIRCLE:
                     //共有ユーザがいない場合
                     if (count($val['PostShareUser']) == 0) {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circle', $isPostPublished),
+                            $data[$key]['share_text'] = sprintf(
+                                $this->getShareMessageDefinitions('circle', $isPostPublished),
                                 $data[$key]['share_circle_name']);
                         } else {
-                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circles', $isPostPublished),
+                            $data[$key]['share_text'] = sprintf(
+                                $this->getShareMessageDefinitions('circles', $isPostPublished),
                                 $data[$key]['share_circle_name'],
                                 count($val['PostShareCircle']) - 1);
                         }
                     } //共有ユーザが１人いる場合
                     elseif (count($val['PostShareUser']) == 1) {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circle_with_people', $isPostPublished),
+                            $data[$key]['share_text'] = sprintf(
+                                $this->getShareMessageDefinitions('circle_with_people', $isPostPublished),
                                 $data[$key]['share_circle_name'],
                                 $data[$key]['share_user_name']);
                         } else {
-                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circles_with_people', $isPostPublished),
+                            $data[$key]['share_text'] = sprintf(
+                                $this->getShareMessageDefinitions('circles_with_people', $isPostPublished),
                                 $data[$key]['share_user_name'],
                                 $data[$key]['share_circle_name'],
                                 count($val['PostShareCircle']) - 1);
@@ -1166,12 +1172,14 @@ class Post extends AppModel
                     } //共有ユーザが２人以上いる場合
                     else {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circle_with_peoples', $isPostPublished),
+                            $data[$key]['share_text'] = sprintf(
+                                $this->getShareMessageDefinitions('circle_with_peoples', $isPostPublished),
                                 $data[$key]['share_circle_name'],
                                 $data[$key]['share_user_name'],
                                 count($val['PostShareUser']) - 1);
                         } else {
-                            $data[$key]['share_text'] = __($this->getShareMessageDefinitions('circles_with_peoples', $isPostPublished),
+                            $data[$key]['share_text'] = sprintf(
+                                $this->getShareMessageDefinitions('circles_with_peoples', $isPostPublished),
                                 $data[$key]['share_user_name'],
                                 count($val['PostShareUser']) - 1,
                                 $data[$key]['share_circle_name'],
