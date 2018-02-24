@@ -737,7 +737,7 @@ class Post extends AppModel
         }
 
         //１件のサークル名をランダムで取得
-        $res = $this->getRandomShareCircleNames($res);
+        $res = $this->getRandomShareCircleNames($res, $this->current_team_id);
         //１件のユーザ名をランダムで取得
         $res = $this->getRandomShareUserNames($res);
         //シェアモードの特定
@@ -1035,7 +1035,7 @@ class Post extends AppModel
         return $res;
     }
 
-    function getRandomShareCircleNames($data)
+    function getRandomShareCircleNames($data, $teamId = null)
     {
         foreach ($data as $key => $val) {
             if (!empty($val['PostShareCircle'])) {
@@ -1043,7 +1043,7 @@ class Post extends AppModel
                 foreach ($val['PostShareCircle'] as $circle) {
                     $circle_list[] = $circle['circle_id'];
                 }
-                $circle_name = $this->PostShareCircle->Circle->getNameRandom($circle_list);
+                $circle_name = $this->PostShareCircle->Circle->getNameRandom($circle_list, $teamId);
                 $data[$key]['share_circle_name'] = $circle_name;
             }
         }
