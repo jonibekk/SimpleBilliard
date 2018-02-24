@@ -233,6 +233,11 @@ class OgpComponent extends CakeObject
                             break;
                         }
                     }
+
+                    if ($post['hasVideoResource']) {
+                        $ogp['image'] = '/img/no-image-video.png';
+                    }
+
                     // ユーザーのローカル名を全て保存
                     $ogp['user_local_names'] = $this->_getUserLocalNames($post['User']['id']);
                 }

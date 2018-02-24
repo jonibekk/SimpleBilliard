@@ -2,6 +2,7 @@
 App::import('Service/Api', 'ApiService');
 App::import('Service', 'SavedPostService');
 App::uses('SavedPost', 'Model');
+App::uses('PostResource', 'Model');
 
 /**
  * Class ApiSavedPostService
@@ -143,6 +144,11 @@ class ApiSavedPostService extends ApiService
         $attachedImgEachAction = $AttachedFile->findAttachedImgEachAction($teamId, $actionIds);
         $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
+        // Fetch post resource
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        $postResources = $PostResource->getResourcesByPostId($postIds, false);
+
         foreach ($items as $i => $item) {
             $imgUrl = "";
             $items[$i]['display_created'] = $TimeEx->elapsedTime($item['created'], 'normal', false);
@@ -157,7 +163,15 @@ class ApiSavedPostService extends ApiService
                 $postId = Hash::get($item, 'post_id');
                 // Attached image with post
                 $attachedImg = Hash::get($attachedImgEachPost, $postId);
-                if (!empty($attachedImg)) {
+
+                $resources = $postResources[$postId];
+                // check if post_resource have a video or not
+                // TODO: https://jira.goalous.com/browse/GL-6601
+                $hasVideo = (0 < count($resources));
+
+                if ($hasVideo) {
+                    $imgUrl = '/img/no-image-video.png';
+                } else if (!empty($attachedImg)) {
                     $imgUrl = $Upload->uploadUrl($attachedImg,
                         "AttachedFile.attached",
                         ['style' => 'x_small']);
