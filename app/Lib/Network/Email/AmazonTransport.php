@@ -11,10 +11,10 @@
  */
 
 App::uses('AbstractTransport', 'Network/Email');
-use Aws\Common\Aws;
+App::import('Lib/Aws', 'AwsClientFactory');
+
 use Aws\Ses\SesClient;
 use Aws\Ses\Exception\SesException;
-use Aws\Common\Enum\Region;
 
 class AmazonTransport extends AbstractTransport
 {
@@ -108,14 +108,16 @@ class AmazonTransport extends AbstractTransport
         $headers = $this->_headersToString($headers);
         $message = implode("\r\n", $this->_cakeEmail->message());
 
-        $this->_data = array();
-        $destinations = array_merge(array_keys($this->_cakeEmail->to()),
-            array_keys($this->_cakeEmail->cc()),
-            array_keys($this->_cakeEmail->bcc()));
+        // @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-email-2010-12-01.html#sendemail
+        // see above url ,sendEmail() method title of "Parameter Syntax" (page link would not work)
         $this->_data = [
             'Source'       => key($this->_cakeEmail->from()),
-            'Destinations' => $destinations,
-            'RawMessage'   => ['Data' => base64_encode($headers . "\r\n\r\n" . $message . "\r\n\r\n\r\n.")],
+            'Destination' => [
+                'ToAddresses' => array_keys($this->_cakeEmail->to()),
+                'CcAddresses' => array_keys($this->_cakeEmail->cc()),
+                'BccAddresses' => array_keys($this->_cakeEmail->bcc()),
+            ],
+            'RawMessage'   => ['Data' => ($headers . "\r\n\r\n" . $message . "\r\n\r\n\r\n.")],
         ];
 
         $this->_content = array('headers' => $headers, 'message' => $message);
@@ -150,12 +152,6 @@ class AmazonTransport extends AbstractTransport
      */
     protected function _generateAmazonSes()
     {
-        $this->_amazonSes = SesClient::factory(
-            [
-                'key'    => $this->_config['key'],
-                'secret' => $this->_config['secret'],
-                'region' => Region::US_EAST_1
-            ]
-        );
+        $this->_amazonSes = AwsClientFactory::createSesClient($this->_config['key'], $this->_config['secret']);
     }
 }

@@ -183,7 +183,7 @@ $(function () {
         var videoStreamId = $preview.data('video_stream_id')
         if ($preview.data('video_stream_id') !== undefined) {
           var $form = $('#' + $uploadFileForm._params.formID);
-            $form.find('input[name="data[video_stream_id][]"][value="'+videoStreamId+'"]').remove();
+            $form.find('input[name="data[video_stream_id][]"][value="'+videoStreamId+'"]').first().remove();
             setTimeout(function () {
                 $preview.remove();
             }, 4000);
