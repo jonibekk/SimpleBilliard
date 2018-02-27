@@ -235,7 +235,7 @@ class OgpComponent extends CakeObject
                     }
 
                     if ($post['hasVideoResource']) {
-                        $ogp['image'] = '/img/no-image-video.png';
+                        $ogp['image'] = '/img/no-image-video.jpg';
                     }
 
                     // ユーザーのローカル名を全て保存

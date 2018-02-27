@@ -170,7 +170,7 @@ class ApiSavedPostService extends ApiService
                 $hasVideo = (0 < count($resources));
 
                 if ($hasVideo) {
-                    $imgUrl = '/img/no-image-video.png';
+                    $imgUrl = '/img/no-image-video.jpg';
                 } else if (!empty($attachedImg)) {
                     $imgUrl = $Upload->uploadUrl($attachedImg,
                         "AttachedFile.attached",
