@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Post', 'Model');
 
 /**
  * NotifySetting Model
@@ -1089,7 +1090,23 @@ class NotifySetting extends AppModel
                 }
                 break;
             case self::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED:
-                $title = __('Video processing completed and published post.');
+                if (!isset($options['post_id'])) {
+                    $title = __('Your video has been shared.');
+                } else {
+                    $postId = $options['post_id'];
+
+                    /** @var Post $Post */
+                    $Post = ClassRegistry::init('Post');
+                    $post = $Post->getById($postId);
+                    if (empty($post)) {
+                        $title = __('Your video has been shared.');
+                    } else {
+                        $posts = $Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, ['post_id' => $postId]);
+                        $posts = $Post->getShareMessages($posts, false);
+                        $title = __('Your video has been shared to %s.', $posts[0]['share_text']);
+                    }
+                }
+
                 break;
             case self::TYPE_TRANSCODE_FAILED:
                 $title = __('Video processing failed.');

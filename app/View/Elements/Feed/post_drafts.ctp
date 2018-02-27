@@ -17,25 +17,22 @@ if (!isset($post_drafts)) {
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                         <li class="delete-post-draft" data-post-draft-id="<?= $post_draft['id'] ?>">
-                            <a><?= __('Delete draft') ?></a>
+                            <a><?= __('Cancel post') ?></a>
                         </li>
                     </ul>
                 </div>
             </div>
-            <a>
-
-                <?= $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium'],
-                    ['class' => 'lazy feed-img']) ?>
-                <span class="font_14px font_bold font_verydark">
-                    <?= h($this->Session->read('Auth.User.display_username')) ?>
-                </span>
-            </a>
+            <?= $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium'],
+                ['class' => 'lazy feed-img']) ?>
+            <span class="font_14px font_bold font_verydark">
+                <?= h($this->Session->read('Auth.User.display_username')) ?>
+            </span>
             <div class="font_11px font_lightgray oneline-ellipsis">
                 <span class="label label-primary">
                     <?php if ($post_draft['hasTranscodeFailed']): ?>
-                        Error
+                        <?= __("Error") ?>
                     <?php else: ?>
-                        Processing
+                        <?= __("Processing") ?>
                     <?php endif ?>
                 </span>
                 &nbsp;<i class="fa fa-circle-o"></i>&nbsp;<?= $post_draft['share_text'] ?>
@@ -48,20 +45,28 @@ if (!isset($post_drafts)) {
     <?php if ($post_draft['hasTranscodeFailed']): ?>
     <div class="draft-post-message-error">
         <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
-        <span>Processing Failed</span>
+        <span>
+            <?= __("Processing Failed") ?>
+        </span>
     </div>
     <?php else: ?>
     <div class="draft-post-message">
         <img src="/img/loader-transcoding.gif">
-        <span>Now Processing</span>
+        <span>
+            <?= __("Now Processing") ?>
+        </span>
     </div>
     <div class="draft-post-message-succeed hide">
         <div>
             <i class="fa fa-check fa-4x" aria-hidden="true"></i>
-            <span>Succeeded!</span>
+            <span>
+                <?= __("Succeeded") ?>!
+            </span>
         </div>
         <div>
-            <a href="" class="link_succeed">Go here to see</a>
+            <a href="" class="link_succeed">
+                <?= __("Go here to see") ?>
+            </a>
         </div>
     </div>
     <?php endif; ?>

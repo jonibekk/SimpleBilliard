@@ -364,12 +364,12 @@ class Circle extends AppModel
         return $res;
     }
 
-    function getNameRandom($ids)
+    function getNameRandom($ids, $teamId = null)
     {
         $options = [
             'conditions' => [
                 'Circle.id'      => $ids,
-                'Circle.team_id' => $this->current_team_id
+                'Circle.team_id' => $this->current_team_id ?? $teamId,
             ],
             'fields'     => [
                 'Circle.name'
