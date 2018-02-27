@@ -50,27 +50,27 @@ if (!isset($post_drafts)) {
     </div>
     <?php if ($post_draft['hasTranscodeFailed']): ?>
     <div class="draft-post-message-error">
-        <div>
-            <div class="disp_ib">
+        <div class="margin_auto">
+            <div class="disp_ib draft-post-message-content-left">
                 <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
             </div>
             <div class="disp_ib text-left">
-                <span>Processing Failed</span>
+                <span class="draft-post-message-text">Processing Failed</span>
             </div>
         </div>
     </div>
     <?php else: ?>
     <div class="draft-post-message">
         <img src="/img/loader-transcoding.gif">
-        <span>Now Processing</span>
+        <span class="draft-post-message-text">Now Processing</span>
     </div>
-    <div class="draft-post-message-succeed hide">
-        <div>
-            <div class="disp_ib">
+    <div class="draft-post-message-succeed hide" style="vertical-align: middle;">
+        <div class="margin_auto">
+            <div class="disp_ib draft-post-message-content-left">
                 <i class="fa fa-check fa-4x" aria-hidden="true"></i>
             </div>
             <div class="disp_ib text-left">
-                <span>Succeeded!</span><br>
+                <span class="draft-post-message-text">Succeeded!</span><br>
                 <a href="" class="link_succeed">Go here to see</a>
             </div>
         </div>

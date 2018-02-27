@@ -40,6 +40,10 @@ ul {
     clear: both;
 }
 
+.margin_auto {
+    margin: 0 auto;
+}
+
 /*=== Header部のリファクタリング ===*/
 
 .header-user-profile {
@@ -3010,58 +3014,36 @@ Temporary Properties - YOU MUST FIX
     vertical-align:middle;
 }
 
-.draft-post-message-span () {
+.draft-post-message-text {
     font-weight: bold;
     font-size: 24px;
-    vertical-align:middle;
-    color: #222;
+    color: @darkBlack;
+}
+
+.draft-post-message-content-left {
+    padding-right: 10px;
 }
 
 .draft-post-message {
     .draft-post-message-base();
-    background-color: #e5e5e5;
-    span {
-        .draft-post-message-span();
-    }
+    background-color: @colorMessageBackground;
 }
 
 .draft-post-message-error {
     .draft-post-message-base();
-    > div {
-        margin: 0 auto;
-    }
-    > div > div:first-child {
-        padding-right: 10px;
-    }
-    > div > div {
-        vertical-align: middle;
-        float: none;
-    }
-    background-color: #ffb5b5;
-    span {
-        .draft-post-message-span();
-    }
-    i {
-        color: white;
+    background-color: @colorErrorBackground;
+    i.fa {
+        color: @white;
     }
 }
 
 .draft-post-message-succeed {
     .draft-post-message-base();
-    > div {
-        margin: 0 auto;
-    }
-    > div > div:first-child {
-        padding-right: 10px;
-    }
-    background-color: #93fabf;
-    span {
-        .draft-post-message-span();
-    }
+    background-color: @colorSucceedBackground;
     a, a:hover, a:link {
-        color: #099f3f;
+        color: @colorSucceedLink;
     }
-    i {
-        color: white;
+    i.fa {
+        color: @white;
     }
 }
