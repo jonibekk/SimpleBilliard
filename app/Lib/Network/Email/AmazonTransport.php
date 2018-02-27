@@ -108,8 +108,8 @@ class AmazonTransport extends AbstractTransport
         $headers = $this->_headersToString($headers);
         $message = implode("\r\n", $this->_cakeEmail->message());
 
-        // @see https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-personalized-email-api.html
-        // see above url for data structure to pass on aws-sdk-php-v3
+        // @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-email-2010-12-01.html#sendemail
+        // see above url ,sendEmail() method title of "Parameter Syntax" (page link would not work)
         $this->_data = [
             'Source'       => key($this->_cakeEmail->from()),
             'Destination' => [
