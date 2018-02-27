@@ -43,7 +43,8 @@ class EvaluationService extends AppService
                 'name'            => $name,
                 'status'          => $val['status'],
                 'this_turn'       => $val['my_turn_flg'],
-                'other_evaluator' => $otherEvaluator
+                'other_evaluator' => $otherEvaluator,
+                'evaluate_type' => $val['evaluate_type']
             ];
             //update status_text
             if ($val['my_turn_flg'] === false) {
