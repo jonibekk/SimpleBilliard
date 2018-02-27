@@ -44,29 +44,35 @@ if (!isset($post_drafts)) {
     </div>
     <?php if ($post_draft['hasTranscodeFailed']): ?>
     <div class="draft-post-message-error">
-        <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
-        <span>
-            <?= __("Processing Failed") ?>
-        </span>
+        <div class="margin_auto">
+            <div class="disp_ib draft-post-message-content-left">
+                <i class="fa fa-exclamation-circle fa-4x" aria-hidden="true"></i>
+            </div>
+            <div class="disp_ib text-left">
+                <span class="draft-post-message-text"><?= __("Processing Failed") ?></span>
+            </div>
+        </div>
     </div>
     <?php else: ?>
     <div class="draft-post-message">
         <img src="/img/loader-transcoding.gif">
-        <span>
+        <span class="draft-post-message-text">
             <?= __("Now Processing") ?>
         </span>
     </div>
-    <div class="draft-post-message-succeed hide">
-        <div>
-            <i class="fa fa-check fa-4x" aria-hidden="true"></i>
-            <span>
-                <?= __("Succeeded") ?>!
-            </span>
-        </div>
-        <div>
-            <a href="" class="link_succeed">
-                <?= __("Go here to see") ?>
-            </a>
+    <div class="draft-post-message-succeed hide" style="vertical-align: middle;">
+        <div class="margin_auto">
+            <div class="disp_ib draft-post-message-content-left">
+                <i class="fa fa-check fa-4x" aria-hidden="true"></i>
+            </div>
+            <div class="disp_ib text-left">
+                <span class="draft-post-message-text">
+                    <?= __("Succeeded") ?>!
+                </span><br>
+                <a href="" class="link_succeed">
+                    <?= __("Go here to see") ?>
+                </a>
+            </div>
         </div>
     </div>
     <?php endif; ?>

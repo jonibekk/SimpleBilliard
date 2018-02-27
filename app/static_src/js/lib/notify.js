@@ -70,6 +70,7 @@ window.addEventListener('load', function() {
                     elementDraftPost.find('.draft-post-message').toggleClass('hide');
                     elementDraftPost.find('.link_succeed').attr('href', urlPost);
                     elementDraftPost.find('.draft-post-message-succeed').toggleClass('hide');
+                    elementDraftPost.find('.dropdown').toggleClass('hide');
                 }
             }
 
