@@ -83,6 +83,7 @@ class EvaluationsController extends AppController
 
         // Get term frozen status
         $isFrozen = $this->Team->Term->checkFrozenEvaluateTerm($termId);
+        $isFixedEvaluationOrder = $this->Team->EvaluationSetting->isFixedEvaluationOrder();
 
         $this->set(compact(
             'termId',
@@ -92,7 +93,8 @@ class EvaluationsController extends AppController
             'selfEval',
             'evaluateesEval',
             'isFrozen',
-            'isStartedEvaluation'
+            'isStartedEvaluation',
+            'isFixedEvaluationOrder'
         ));
     }
 

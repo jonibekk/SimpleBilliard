@@ -32,7 +32,15 @@
             <div class="eval-list-item-center">
                 <p class="font_bold"><?= h($user['User']['display_username']) ?></p>
                 <?php foreach ($user['flow'] as $k => $v): ?>
-                    <?php if ($k !== 0): ?>&nbsp;<i class="fa fa-long-arrow-right font_lightgray"></i>&nbsp;<?php endif ?>
+                    <?php if ($k !== 0): ?>
+
+                        <?php if (!$isFixedEvaluationOrder && $v['evaluate_type'] == Evaluation::TYPE_EVALUATOR && $k > 1):?>
+                            ・
+                        <?php else:?>
+                            &nbsp;<i class="fa fa-long-arrow-right font_lightgray"></i>&nbsp;
+                        <?php endif;?>
+
+                    <?php endif ?>
                     <span class="<?= $v['this_turn'] ? 'font_bold' : 'font_lightgray' ?>">
                         <i class="fa fa-user <?= $v['other_evaluator'] ? '' : 'none' ?>" aria-hidden="true"></i><?= $v['name'] ?>
                     </span>
