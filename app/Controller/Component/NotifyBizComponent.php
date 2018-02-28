@@ -916,7 +916,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $postId];
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(["transcode"]);
+        $this->notify_option['item_name'] = json_encode(['']);
 
         $this->notify_option['options'] = [
             'post_id' => $postId,
@@ -932,7 +932,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSCODE_FAILED;
         $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'home'];
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(["transcode failed"]);
+        $this->notify_option['item_name'] = json_encode(['']);
         $this->NotifySetting->current_team_id = $teamId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
     }
