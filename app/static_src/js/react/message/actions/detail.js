@@ -161,7 +161,12 @@ export function sendMessage() {
           type: FileUploadModule.RESET_STATE
         })
         var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
-        ta.style.height = ""; /* Reset the height*/
+        // Reset the height
+        if (!isMobileApp()) {
+          autosize.update(ta);
+        }else{
+          ta.style.height = ""; 
+        }
       },
       ({response}) => {
         const err_msg = getErrMsg(response);
