@@ -127,6 +127,10 @@ class PostResource extends AppModel
             $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
             switch ($resourceType->getValue()) {
                 case Enum\Post\PostResourceType::VIDEO_STREAM:
+                    if ($checkTeamStatus && !TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
+                        // continue the foreach, video play is disabled on this team
+                        continue 2;
+                    }
                     $hashKeyResource = sprintf('%s.%s', Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
                     break;
                 default:
