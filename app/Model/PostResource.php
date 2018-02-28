@@ -116,6 +116,10 @@ class PostResource extends AppModel
         }
 
         $results = [];
+        // make the empty array of specified id's
+        foreach ($ids as $id) {
+            $results[$id] = [];
+        }
         // create $results:array = [
         //      (posts.id | post_draft_id):int => [
         //          resource data:array,
@@ -139,9 +143,6 @@ class PostResource extends AppModel
                     break;
             }
             $targetId = $postResource[$postOrDraftColumnName];
-            if (!isset($results[$targetId])) {
-                $results[$targetId] = [];
-            }
             $results[$targetId][] = Hash::get($resources, $hashKeyResource);
         }
         return $results;
