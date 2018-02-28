@@ -66,7 +66,8 @@ class EvaluationServiceTest extends GoalousTestCase
                     'name'            => 'You',
                     'status'          => '5',
                     'this_turn'       => true,
-                    'other_evaluator' => false
+                    'other_evaluator' => false,
+                    'evaluate_type' => Evaluation::TYPE_ONESELF
                 ]
             ],
             'status_text' => [
@@ -128,13 +129,15 @@ class EvaluationServiceTest extends GoalousTestCase
                     'name'            => 'You',
                     'status'          => '0',
                     'this_turn'       => false,
-                    'other_evaluator' => false
+                    'other_evaluator' => false,
+                    'evaluate_type' => Evaluation::TYPE_ONESELF
                 ],
                 [
                     'name'            => '1(firstname lastname)',
                     'status'          => '0',
                     'this_turn'       => false,
-                    'other_evaluator' => true
+                    'other_evaluator' => true,
+                    'evaluate_type' => Evaluation::TYPE_EVALUATOR
                 ]
             ],
             'status_text' => [
@@ -242,13 +245,17 @@ class EvaluationServiceTest extends GoalousTestCase
                         'name'            => 'Members',
                         'status'          => '2',
                         'this_turn'       => false,
-                        'other_evaluator' => false
+                        'other_evaluator' => false,
+                        'evaluate_type' => Evaluation::TYPE_ONESELF
+
                     ],
                     (int)1 => [
                         'name'            => 'You',
                         'status'          => '1',
                         'this_turn'       => true,
-                        'other_evaluator' => false
+                        'other_evaluator' => false,
+                        'evaluate_type' => Evaluation::TYPE_EVALUATOR
+
                     ]
                 ],
                 'status_text' => [
@@ -282,13 +289,16 @@ class EvaluationServiceTest extends GoalousTestCase
                         'name'            => 'Members',
                         'status'          => '2',
                         'this_turn'       => false,
-                        'other_evaluator' => false
+                        'other_evaluator' => false,
+                        'evaluate_type' => Evaluation::TYPE_ONESELF
+
                     ],
                     (int)1 => [
                         'name'            => 'You',
                         'status'          => '1',
                         'this_turn'       => true,
-                        'other_evaluator' => false
+                        'other_evaluator' => false,
+                        'evaluate_type' => Evaluation::TYPE_EVALUATOR
                     ]
                 ],
                 'status_text' => [
