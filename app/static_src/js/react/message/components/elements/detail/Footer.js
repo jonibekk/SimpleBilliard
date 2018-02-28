@@ -36,7 +36,6 @@ class Footer extends React.Component {
     ta.oninput = function() {
         ta.style.height = ""; /* Reset the height*/
         ta.style.height = Math.min(ta.scrollHeight, threadBody.scrollHeight) + "px";
-
         threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
         threadBody.scrollTo(0,threadBody.scrollHeight);
     };
