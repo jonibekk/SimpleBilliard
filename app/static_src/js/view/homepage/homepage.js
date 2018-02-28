@@ -44,14 +44,18 @@ $(document).ready(function() {
     });
 
     faqInit();
-
+    contactFormInit();
 });
 
 $(window).resize(function(){
     faqInit();
 });
 
-faqInit = function(){
+let canSubmit = 0;
+const $requiredInput = $('#contact_section').find('input:required');
+const $contactSubmit = $('#contact_section button')[0];
+
+function faqInit(){
     var $questions = $('#faqs .question');
     
     $questions.each(function(){
@@ -71,4 +75,33 @@ faqInit = function(){
             }
         });
     });
+}
+
+function contactFormInit(){
+    $contactSubmit.setAttribute('disabled','disabled');
+    $requiredInput.each(function(){
+        const $this = $(this);
+        $(this).keyup(function(){
+            if($this.val() !== '' && !$this.hasClass('valid')){
+                $this.addClass('valid');
+                checkForm(true);
+            }else if($this.val() === '' && $this.hasClass('valid')){
+                $this.removeClass('valid');
+                checkForm(false);
+            }
+        });
+    });
+}
+
+const checkForm = function(isValid){
+    if(isValid){
+        canSubmit++;
+    }else{
+        canSubmit--;
+    }
+    if(canSubmit === $requiredInput.length){
+        $contactSubmit.removeAttribute('disabled');
+    }else{
+        $contactSubmit.setAttribute('disabled','disabled');
+    }
 }
