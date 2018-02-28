@@ -161,9 +161,7 @@ export function sendMessage() {
           type: FileUploadModule.RESET_STATE
         })
         var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
-        var threadBody = document.getElementsByClassName('topicDetail-body')[0];
-        autosize.update(ta);
-        threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
+        ta.style.height = ""; /* Reset the height*/
       },
       ({response}) => {
         const err_msg = getErrMsg(response);

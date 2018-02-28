@@ -27,8 +27,8 @@ class Footer extends React.Component {
 
   componentDidMount() {
     var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
-    autosize(ta);
     if (!isMobileApp()) {
+      autosize(ta);
       return;
     }
 
