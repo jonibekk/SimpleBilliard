@@ -176,8 +176,8 @@ class VideoStreamService extends AppService
     private function getOutputKeyPrefix(string $inputS3FileKey): string
     {
         // e.g.
-        // $this->inputS3FileKey() = uploads/111/222/abcdef1234567890/original
-        // return 'streams/111/222/abcdef1234567890/'
+        // $this->inputS3FileKey() = uploads/<env_name>/111/222/abcdef1234567890/original
+        // return 'streams/<env_name>/111/222/abcdef1234567890/'
 
         $urlSplits = array_slice(explode('/', trim($inputS3FileKey, '/')), 1, -1);
         return sprintf('streams/%s/', implode($urlSplits, '/'));

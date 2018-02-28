@@ -63,17 +63,55 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
     }
 
     /**
+     * @param string $envName
+     *
+     * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
+     * @return string
+     */
+    public function getResourcePathFromEnvName(string $envName): string
+    {
+        return sprintf(
+            'uploads/%s/%d/%d/%s/original',
+            $envName,
+            $this->teamId,
+            $this->getUserId(),
+            $this->getFileHash()
+        );
+    }
+
+    /**
      * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
      * @return string
      */
     public function getResourcePath(): string
     {
-        return sprintf(
-            'uploads/%d/%d/%s/original',
-            $this->teamId,
-            $this->getUserId(),
-            $this->getFileHash()
-            );
+        return $this->getResourcePathFromEnvName($this->estimateSeparatorString());
+    }
+
+    /**
+     * return separator string to store in storage
+     * e.g.
+     *      'streams/<separator>/<team_id>/<user_id>/abcdef1234567890/'
+     *      isao env: 'streams/isao/<team_id>/<user_id>/abcdef1234567890/'
+     *      dev env: 'streams/dev/<team_id>/<user_id>/abcdef1234567890/'
+     *      on someones local: 'streams/user_who_develop/<team_id>/<user_id>/abcdef1234567890/'
+     *
+     * @return string
+     */
+    private function estimateSeparatorString(): string
+    {
+        if (!defined('ENV_NAME') && empty(ENV_NAME)) {
+            throw new RuntimeException('ENV_NAME is must defined');
+        }
+        // On local, user defined separator name for directory separation
+        if ('local' === ENV_NAME) {
+            if (!defined('AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR')
+                && empty(AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR)) {
+                throw new RuntimeException('VIDEO_TRANSCODE_LOCAL_SEPARATOR is must defined on local');
+            }
+            return AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR;
+        }
+        return ENV_NAME;
     }
 
     public function getContentType(): string
