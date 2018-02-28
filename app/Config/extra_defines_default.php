@@ -92,6 +92,10 @@ $defines = [
     'AWS_ELASTIC_TRANSCODER_PIPELINE_ID'          => null,
     'AWS_S3_BUCKET_VIDEO_ORIGINAL'                => null,
     'AWS_S3_BUCKET_VIDEO_TRANSCODED'              => null,
+    // For local env
+    // Used for storage key name sharing AWS ElasticTranscode PipeLine on
+    // Local and development env
+    'AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR' => null,
 ];
 
 foreach ($defines as $k => $v) {
