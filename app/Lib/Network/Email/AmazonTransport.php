@@ -137,11 +137,9 @@ class AmazonTransport extends AbstractTransport
          * @var Guzzle\Service\Resource\Model $response
          */
         $response = $this->_amazonSes->sendRawEmail($this->_data);
-        /** @noinspection PhpUndefinedMethodInspection */
         $response_array = $response->toArray();
-        if (!isset($response_array['ResponseMetadata']['RequestId'])) {
-            /** @noinspection PhpUndefinedFieldInspection */
-            throw new CakeException((string)$response->body->Error->Message);
+        if (!isset($response_array['@metadata']['statusCode']) || 200 !== $response_array['@metadata']['statusCode']) {
+            throw new CakeException($response_array['message'] ?? json_encode($response_array));
         }
     }
 
