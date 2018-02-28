@@ -102,8 +102,8 @@ class TeamStatus {
             $this->teamsExperiments[$experiment['name']] = true;
         }
 
-        $this->setEnableVideoPostTranscodingOnEnvironment(ENABLE_VIDEO_POST_TRANSCODING);
-        $this->setEnableVideoPostPlayOnEnvironment(ENABLE_VIDEO_POST_PLAY);
+        $this->setEnableVideoPostTranscodingOnEnvironment(boolval(ENABLE_VIDEO_POST_TRANSCODING));
+        $this->setEnableVideoPostPlayOnEnvironment(boolval(ENABLE_VIDEO_POST_PLAY));
     }
 
     /**
