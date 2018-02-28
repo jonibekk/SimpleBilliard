@@ -100,13 +100,12 @@ class VideoUploadRequestOnPost implements VideoUploadRequest
      */
     private function estimateSeparatorString(): string
     {
-        if (!defined('ENV_NAME') && empty(ENV_NAME)) {
+        if (empty(ENV_NAME)) {
             throw new RuntimeException('ENV_NAME is must defined');
         }
         // On local, user defined separator name for directory separation
         if ('local' === ENV_NAME) {
-            if (!defined('AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR')
-                && empty(AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR)) {
+            if (empty(AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR)) {
                 throw new RuntimeException('VIDEO_TRANSCODE_LOCAL_SEPARATOR is must defined on local');
             }
             return AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR;
