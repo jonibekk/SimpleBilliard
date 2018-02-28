@@ -151,11 +151,11 @@ class PostResource extends AppModel
      * Return bool if team is not need to see target resource
      *
      * @param Enum\Post\PostResourceType $postResourceType
-     * @param                            $checkTeamStatus
+     * @param bool                       $checkTeamStatus
      *
      * @return bool
      */
-    private function shouldIgnoreResource(Enum\Post\PostResourceType $postResourceType, $checkTeamStatus): bool
+    private function shouldIgnoreResource(Enum\Post\PostResourceType $postResourceType, bool $checkTeamStatus): bool
     {
         switch ($postResourceType->getValue()) {
             case Enum\Post\PostResourceType::VIDEO_STREAM:
