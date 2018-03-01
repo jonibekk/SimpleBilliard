@@ -47,7 +47,7 @@ class PostDraftsController extends ApiController
         CakeLog::info(sprintf('deleted draft post %s', AppUtil::jsonOneLine([
             'post_drafts.id' => $postDraft['id'],
         ])));
-        $this->Notification->outSuccess(__('Deleted the draft.'));
+        $this->Notification->outSuccess(__('Canceled the post.'));
         $PostDraft->softDelete($postDraft['id'], false);
         return $this->_getResponseSuccess();
     }

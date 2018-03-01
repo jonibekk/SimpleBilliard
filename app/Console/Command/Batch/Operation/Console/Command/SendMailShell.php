@@ -108,6 +108,9 @@ class SendMailShell extends AppShell
         try {
             $data = $this->_getDataAndProcessPreSend();
         } catch (RuntimeException $e) {
+            GoalousLog::info('failed to send mail', [
+                'message' => $e->getMessage(),
+            ]);
             return;
         }
 
@@ -309,9 +312,16 @@ class SendMailShell extends AppShell
          */
         $Email = $this->_getMailInstance();
         /** @noinspection PhpUndefinedMethodInspection */
-        $Email->to($options['to'])->subject($options['subject'])
-              ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
-        $Email->reset();
+
+        try {
+            $Email->to($options['to'])->subject($options['subject'])
+                  ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
+            $Email->reset();
+        } catch (Exception $e) {
+            GoalousLog::info('failed to send mail item', [
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

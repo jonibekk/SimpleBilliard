@@ -7,6 +7,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Post', 'Model');
+App::uses('User', 'Model');
 App::import('Service', 'PostService');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostDraftService');
@@ -274,17 +275,32 @@ class TranscodeNotificationsController extends ApiController
         }
     }
 
+    /**
+     * Change Config.language to passed users.id language
+     *
+     * @param int $userId
+     */
+    private function changeToUsersLanguage(int $userId)
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $user = $User->getById($userId);
+        Configure::write('Config.language', $user['language']);
+    }
+
     private function notifyTranscodeCompleteAndDraftPublished(int $postId, int $userId, int $teamId)
     {
         // this is need for relative url
         // if we don't have this line, the url will be "http://localhost"
         Router::fullBaseUrl('');
+        $this->changeToUsersLanguage($userId);
         $this->NotifyBiz->sendNotify(NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED, $postId, null, null, $userId, $teamId);
     }
 
     private function notifyTranscodeFailed(int $userId, int $teamId)
     {
         Router::fullBaseUrl('');
+        $this->changeToUsersLanguage($userId);
         $this->NotifyBiz->sendNotify(NotifySetting::TYPE_TRANSCODE_FAILED, null, null, null, $userId, $teamId);
     }
 }

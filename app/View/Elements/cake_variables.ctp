@@ -39,8 +39,8 @@ App::uses('AttachedFile', 'Model');
                 dropzone_deleted: "<?=__('Deleted the file.')?>",
                 dropzone_uploading_not_end: "<?=__('Not finished uploading yet, please wait just a moment.')?>",
                 dropzone_uploaded_file_expired: "<?=__('Uploaded files are invalid due. Please try again.')?>",
-                dropzone_error_allow_one_video: "<?=__('Can\'t post more than two videos.')?>",
-                dropzone_video_cut_message: "<?=__('If it exceeds %d seconds, it will be cut in the first %d seconds.', 60, 60)?>",
+                dropzone_error_allow_one_video: "<?=__('You can only post one video file.')?>",
+                dropzone_video_cut_message: "<?=__('Videos that exceed %d seconds will automatically be trimmed.', 60)?>",
                 date_format: "<?=__("Enter such date as YYYY/MM/DD.")?>",
                 signup_team_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
                 signup_user_name_length: "<?= __('%1$d or more and %2$d or less characters.', 1, 128)?>",
@@ -64,7 +64,8 @@ App::uses('AttachedFile', 'Model');
                 h: "<?=__("This comment was deleted.")?>",
                 i: "<?=__("Failed to get comment.")?>",
                 search_result_zero: "<?=__("N/A")?>",
-                leave_secret_circle: "<?=__('After leaving secret circle, you can\'t join again by yourself. Do you really want to leave this secret circle?')?>"
+                leave_secret_circle: "<?=__('After leaving secret circle, you can\'t join again by yourself. Do you really want to leave this secret circle?')?>",
+                confirm_cancel_post: "<?=__('Do you really want to cancel this post?')?>",
             },
             info: {
                 a: "<?=__("Copied the post URL to the clipboard.")?>",

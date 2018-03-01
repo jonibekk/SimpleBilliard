@@ -109,5 +109,18 @@ $config['allow_video_types'] = [
     'video/vnd-vivo',
     'video/vp8',
     'video/webm',
+
+    // Windows Media Files
+    // @see https://msdn.microsoft.com/ja-jp/library/cc430207.aspx
+    // .wmv
+    'video/x-ms-asf',
+    'video/x-ms-wmv',
+    // .avi
+    'video/x-msvideo',
+
+    // .flv
+    'video/x-flv',
+    // .mkv
+    'video/x-matroska',
 ];
 

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-19 12:18+0900\n"
+"PO-Revision-Date: 2018-02-27 15:35+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -430,6 +430,9 @@ msgstr "請求書が見つかりません"
 
 msgid "Due to using an old URL, you have been redirected to this page."
 msgstr "古いURLにアクセスされたので、このページにリダイレクトされました。"
+
+msgid "You can only post one video file."
+msgstr "1つの動画ファイルしか投稿できません。"
 
 msgid "Failed to post."
 msgstr "投稿に失敗しました。"
@@ -854,6 +857,9 @@ msgstr "データの検証に失敗しました。"
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
 
+msgid "Failed uploading video"
+msgstr "動画のアップロードに失敗しました"
+
 msgid "Complete the approval of %d Goal(s)."
 msgstr "%d件のゴール認定を完了してください"
 
@@ -898,6 +904,15 @@ msgstr "選択したプランは購入出来ません。"
 
 msgid "Invoice payment are available for Japan only"
 msgstr "日本のみ請求書払いを利用できます"
+
+msgid "Draft post not found"
+msgstr "下書きがありませんでした"
+
+msgid "current team is not match"
+msgstr ""
+
+msgid "Canceled the post."
+msgstr "投稿をキャンセルしました"
 
 msgid "Parameter is invalid."
 msgstr "パラメータが不正です。"
@@ -1320,6 +1335,15 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が期間設定を変更しました。"
 
+msgid "Your video has been shared."
+msgstr "あなたのビデオファイルが共有されました。"
+
+msgid "Your video has been shared to %s."
+msgstr "あなたのビデオファイルが %s に共有されました。"
+
+msgid "Video processing failed."
+msgstr "ビデオファイルの処理に失敗しました。"
+
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -1355,6 +1379,21 @@ msgstr "%1$s、%2$sと%3$sに共有"
 
 msgid "Shared %1$s and %2$s others,%3$s and %4$s circle(s)"
 msgstr "%1$sと他%2$s人、%3$s他%4$sサークルに共有"
+
+msgid "%1$s and %2$s others"
+msgstr "%1$sと他%2$s人"
+
+msgid "%1$s and %2$s circle(s)"
+msgstr "%1$s他%2$sサークル"
+
+msgid "%1$s and %2$s"
+msgstr "%1$sと%2$s"
+
+msgid "%1$s, %2$s and %3$s others"
+msgstr "%1$s、%2$sと%3$s"
+
+msgid "%1$s and %2$s others,%3$s and %4$s circle(s)"
+msgstr "%1$sと他%2$s人、%3$s他%4$sサークル"
 
 msgid "Registered temporarily"
 msgstr "アカウントの仮登録が完了しました"
@@ -1960,6 +1999,9 @@ msgstr ""
 "アップロードしたファイルの有効期限が切れています。再度アップロードしてくださ"
 "い。"
 
+msgid "Videos that exceed %d seconds will automatically be trimmed."
+msgstr "%s秒を超える動画は自動的にカットされます。"
+
 msgid "Enter such date as YYYY/MM/DD."
 msgstr "日付はYYYY/MM/DDの形式で入力してください。"
 
@@ -1998,6 +2040,9 @@ msgid ""
 msgstr ""
 "秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいです"
 "か？"
+
+msgid "Do you really want to cancel this post?"
+msgstr "本当にこの投稿をキャンセルしますか？"
 
 msgid "Copied the post URL to the clipboard."
 msgstr "クリップボードに投稿URLをコピーしました。"
@@ -3403,6 +3448,24 @@ msgstr "コメント"
 
 msgid "(%s)"
 msgstr "(%s)"
+
+msgid "Cancel post"
+msgstr "投稿をキャンセルする"
+
+msgid "Processing"
+msgstr "処理中"
+
+msgid "Processing Failed"
+msgstr "処理に失敗しました。"
+
+msgid "Now Processing"
+msgstr "処理中です。"
+
+msgid "Succeeded"
+msgstr "成功しました"
+
+msgid "Go here to see"
+msgstr "投稿を見る"
 
 msgid "Edit post"
 msgstr "投稿を編集"
@@ -5684,6 +5747,9 @@ msgstr "月額"
 msgid "New Member"
 msgstr "新しいメンバー"
 
+msgid "Recharge"
+msgstr "再請求"
+
 msgid "ID"
 msgstr "ID"
 
@@ -5698,9 +5764,6 @@ msgstr "金額"
 
 msgid "Added Member"
 msgstr "ユーザー追加"
-
-msgid "Recharge"
-msgstr "再請求"
 
 msgid "Team Summary"
 msgstr "チーム概要"
@@ -6111,6 +6174,9 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Deleted the draft."
+#~ msgstr "下書きを削除しました"
 
 #~ msgid "5 Feb 2016"
 #~ msgstr "2016年2月5日"
