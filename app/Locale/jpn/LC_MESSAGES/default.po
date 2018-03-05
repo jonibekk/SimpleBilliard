@@ -6130,6 +6130,9 @@ msgstr "会社名(オプション)"
 msgid "By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
 msgstr "下の“同意して、問い合わせる“をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
 
+msgid "I Agree, Contact us"
+msgstr "同意して、問い合わせる"
+
 #~ msgid "5 Feb 2016"
 #~ msgstr "2016年2月5日"
 
