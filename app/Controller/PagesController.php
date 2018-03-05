@@ -231,13 +231,6 @@ class PagesController extends AppController
         $Email->set($this->request->data);
         $data = Hash::extract($this->request->data, 'Email');
         if ($Email->validates()) {
-            if (empty($data['sales_people'])) {
-                $data['sales_people_text'] = __('Anyone');
-            } else {
-                $data['sales_people_text'] = implode(', ', $data['sales_people']);
-            }
-            $data['want_text'] = $this->_getContactTypeOption()[$data['want']];
-
             $this->Session->write('contact_form_data', $data);
             $lang = $this->_getLangFromParam();
             return $this->redirect(['action' => 'contact_confirm', 'lang' => $lang]);
@@ -296,12 +289,7 @@ class PagesController extends AppController
             ->subject(__('Goalous - Thanks for your contact.'))
             ->send();
         $lang = $this->_getLangFromParam();
-        return $this->redirect([
-            'controller' => 'pages',
-            'action'     => 'display',
-            'pagename'   => 'contact_thanks',
-            'lang'       => $lang,
-        ]);
+        return $this->redirect('/contact_thanks');
     }
 
     public function _setUrlParams()

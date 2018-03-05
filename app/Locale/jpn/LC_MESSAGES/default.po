@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-19 12:18+0900\n"
+"PO-Revision-Date: 2018-02-27 15:35+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.3\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -5699,9 +5699,6 @@ msgstr "金額"
 msgid "Added Member"
 msgstr "ユーザー追加"
 
-msgid "Recharge"
-msgstr "再請求"
-
 msgid "Team Summary"
 msgstr "チーム概要"
 
@@ -6111,6 +6108,30 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+msgid "Say <q>Hello</q> to your company&rsquo;s next communication tool"
+msgstr "社員が目標でつながり、未来のコミュニケーションをあなたの組織に。"
+
+msgid "Through goal oriented communication, you can revolutionize your team&rsquo;s power! Contact us today, and we&rsquo;ll help you get started along with a <strong>free trial</strong> of Goalous!"
+msgstr "Goalousによって、あなたの組織のチーム力を革命的に上げることができます。コンタクトにご入力いただけますと、無料トライアルのご案内をいたします。お気軽にお問い合わせくださいませ。"
+
+msgid "Contact Us Today"
+msgstr "お問い合わせ"
+
+msgid "Your Work Email Address"
+msgstr "仕事のメールアドレス"
+
+msgid "Phone Number (Optional)"
+msgstr "電話番号(オプション)"
+
+msgid "Company Name (Optional)"
+msgstr "会社名(オプション)"
+
+msgid "By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
+msgstr "下の<q>同意して、問い合わせる</q>をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
+
+msgid "I Agree, Contact us"
+msgstr "同意して、問い合わせる"
 
 #~ msgid "5 Feb 2016"
 #~ msgstr "2016年2月5日"
