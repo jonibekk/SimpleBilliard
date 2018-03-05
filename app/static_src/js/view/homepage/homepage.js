@@ -78,23 +78,25 @@ function faqInit(){
 }
 
 function contactFormInit(){
-    $contactSubmit.setAttribute('disabled','disabled');
-    $requiredInput.each(function(){
-        var $this = $(this);
-        $(this).keyup(function(){
+    if($contactSubmit === 'undefined'){ 
+        $contactSubmit.setAttribute('disabled','disabled');
+        $requiredInput.each(function(){
+            var $this = $(this);
+            $(this).keyup(function(){
+                if($this.val() !== '' && !$this.hasClass('valid')){
+                    $this.addClass('valid');
+                    checkForm(true);
+                }else if($this.val() === '' && $this.hasClass('valid')){
+                    $this.removeClass('valid');
+                    checkForm(false);
+                }
+            });
             if($this.val() !== '' && !$this.hasClass('valid')){
                 $this.addClass('valid');
                 checkForm(true);
-            }else if($this.val() === '' && $this.hasClass('valid')){
-                $this.removeClass('valid');
-                checkForm(false);
             }
         });
-        if($this.val() !== '' && !$this.hasClass('valid')){
-            $this.addClass('valid');
-            checkForm(true);
-        }
-    });
+    }
 }
 
 function checkForm(isValid){
