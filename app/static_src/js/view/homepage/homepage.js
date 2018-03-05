@@ -51,9 +51,9 @@ $(window).resize(function(){
     faqInit();
 });
 
-let canSubmit = 0;
-const $requiredInput = $('#contact_section').find('input:required');
-const $contactSubmit = $('#contact_section button')[0];
+var canSubmit = 0;
+var $requiredInput = $('#contact_section').find('input:required');
+var $contactSubmit = $('#contact_section button')[0];
 
 function faqInit(){
     var $questions = $('#faqs .question');
@@ -80,7 +80,7 @@ function faqInit(){
 function contactFormInit(){
     $contactSubmit.setAttribute('disabled','disabled');
     $requiredInput.each(function(){
-        const $this = $(this);
+        var $this = $(this);
         $(this).keyup(function(){
             if($this.val() !== '' && !$this.hasClass('valid')){
                 $this.addClass('valid');
@@ -97,7 +97,7 @@ function contactFormInit(){
     });
 }
 
-const checkForm = function(isValid){
+function checkForm(isValid){
     if(isValid){
         canSubmit++;
     }else{
