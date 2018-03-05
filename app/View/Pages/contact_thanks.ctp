@@ -129,6 +129,20 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div><!--//row-->
     </div><!--//container-->
 </section><!--//contact-->
-
 <?= $this->element('Homepage/signup') ?>
+<!-- Goalous-Mar2018-spot-GoogleSearch -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 956754448;
+var google_conversion_label = "Z1J_CJ7HhH4QkNSbyAM";
+var google_remarketing_only = false;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/956754448/?label=Z1J_CJ7HhH4QkNSbyAM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
 <?= $this->App->viewEndComment()?>
