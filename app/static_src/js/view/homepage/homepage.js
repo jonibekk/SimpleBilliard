@@ -90,6 +90,10 @@ function contactFormInit(){
                 checkForm(false);
             }
         });
+        if($this.val() !== '' && !$this.hasClass('valid')){
+            $this.addClass('valid');
+            checkForm(true);
+        }
     });
 }
 

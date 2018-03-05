@@ -101,8 +101,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             $this->Form->create('Email', [
                 'id'            => 'contact-form',
                 'class'         => 'form',
-                'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false],
-                'novalidate'    => true
+                'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false]
             ]); ?>
                 <div class="half">
                     <label for="lastName"><?= __('Last Name ');?> <sup class="req">*</sup></label>
@@ -124,17 +123,21 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <?= $this->Form->input('email', [
                     'placeholder' => __('Your Work Email Address'),
                     'id'          => 'email',
-                    'required'     => true,
+                    'required'    => true,
+                    'type'        => 'email'
                 ]) ?>
                 <label for="phone"><?= __('Phone Number (Optional)');?></label>
             <?= $this->Form->input('phone', [
                 'placeholder' => __('Phone Number (Optional)'),
                 'id'          => 'phone',
+                'type'        => 'tel',
+                'required'    => false,
             ]) ?>
                 <label for="company"><?= __('Company Name (Optional)'); ?></label>
             <?= $this->Form->input('company', [
                 'placeholder' => __('Company Name (Optional)'),
                 'id'          => 'company',
+                'required'    => false
             ]) ?>
                 <div class="container-submit">
                     <p><small><?= __("By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>.");?></small></p>
