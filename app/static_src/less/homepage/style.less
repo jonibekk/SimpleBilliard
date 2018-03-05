@@ -1176,6 +1176,82 @@ select {
     }
 }
 
+.contact-main {
+    padding-top: 80px;
+}
+.contact-main .title {
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+.contact-main .intro {
+    margin-bottom: 30px;
+    color: @basicGray;
+}
+.contact-main .item {
+    margin-bottom: 60px;
+}
+.contact-main .item .item-inner {
+    margin: 30px;
+    padding: 30px 10px;
+    background: @smokyWhite;
+    min-height: 300px;
+    border-radius: 4px;
+    background-clip: padding-box;
+}
+.contact-main .item .icon {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border: 2px solid @serviceColor;
+    background-color: @white;
+    border-radius: 50%;
+    background-clip: padding-box;
+    display: table;
+    margin: 0 auto;
+    transition: transform ease-out 0.2s, background-color 0.3s;
+    margin-bottom: 30px;
+}
+.contact-main .item .icon:hover {
+    background-color: @serviceColor;
+    color: @white;
+}
+.contact-main .item .icon:hover .fa, .contact-main .item .icon:hover .pe-icon {
+    color: @white;
+    transform: scale(0.93);
+}
+.contact-main .item .icon .fa, .contact-main .item .icon .pe-icon {
+    color: @serviceColor;
+    font-size: 48px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+.contact-main .item .details {
+    font-size: 18px;
+}
+.contact-main .item .details .day {
+    font-size: 13px;
+    color: @basicGray;
+}
+.contact-form-section {
+    padding-bottom: 80px;
+}
+.contact-form-section .title {
+    margin-bottom: 15px;
+    margin-top: 0;
+    font-size: 18px;
+}
+.contact-form-section .intro {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    color: @subColor2;
+}
+.contact-form-section .form-control {
+    font-size: 16px;
+    color: @basicGray;
+}
+
 
 #map {
     height: 420px;
