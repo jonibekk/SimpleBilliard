@@ -96,26 +96,52 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div>
         <div class="container-half">
             <h2><?= __('Contact Us Today'); ?></h2>
-            <form action="#">
-                <div class="half">
-                    <label for="firstName"><?= __('First Name ');?> <sup class="req">*</sup></label>
-                    <input type="text" name="firstName" placeholder="<?= __('First Name ');?>" required>
-                </div>
+
+            <?=
+            $this->Form->create('Email', [
+                'id'            => 'contact-form',
+                'class'         => 'form',
+                'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false],
+                'novalidate'    => true
+            ]); ?>
                 <div class="half">
                     <label for="lastName"><?= __('Last Name ');?> <sup class="req">*</sup></label>
-                    <input type="text" name="lastName" placeholder="<?= __('Last Name ');?>" required>
+                    <?= $this->Form->input('name_last', [
+                        'placeholder' => __('Last Name '),
+                        'id'          => 'name_last',
+                        'required'     => true,
+                    ]) ?>
                 </div>
-                <label for="email"><? __('Your Work Email Address');?> <sup class="req">*</sup></label>
-                <input type="email" name="email" placeholder="<?= __('Your Work Email Address');?>" required>
+                <div class="half">
+                    <label for="firstName"><?= __('First Name ');?> <sup class="req">*</sup></label>
+                    <?= $this->Form->input('name_first', [
+                        'placeholder' => __('First Name '),
+                        'id'          => 'name_first',
+                        'required'     => true,
+                    ]) ?>
+                </div>
+                <label for="email"><?= __('Your Work Email Address');?> <sup class="req">*</sup></label>
+                <?= $this->Form->input('email', [
+                    'placeholder' => __('Your Work Email Address'),
+                    'id'          => 'email',
+                    'required'     => true,
+                ]) ?>
                 <label for="phone"><?= __('Phone Number (Optional)');?></label>
-                <input type="tel" name="phone" placeholder="<?= __('Phone Number (Optional)');?>">
+            <?= $this->Form->input('phone', [
+                'placeholder' => __('Phone Number (Optional)'),
+                'id'          => 'phone',
+            ]) ?>
                 <label for="company"><?= __('Company Name (Optional)'); ?></label>
-                <input type="text" name="company" placeholder="<?= __('Company Name (Optional)'); ?>">                
+            <?= $this->Form->input('company', [
+                'placeholder' => __('Company Name (Optional)'),
+                'id'          => 'company',
+            ]) ?>
                 <div class="container-submit">
                     <p><small><?= __("By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>.");?></small></p>
                     <button class="btn btn-cta-primary"><?=__('I Agree, Contact us');?></button>
                 </div>
-            </form>
+            <?= $this->Form->end() ?>
+
         </div>
     </div>
 </section>
