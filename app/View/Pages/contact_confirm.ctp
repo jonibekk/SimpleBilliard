@@ -94,49 +94,36 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="col-md-8 col-md-offset-2 text-left">
             <form class="form-horizontal">
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('Appointed') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Last Name ') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= h($data['want_text']) ?></p>
+                        <p class="form-control-static"><?= h($data['name_last'] ?? '') ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('Your company name') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('First Name ') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= h($data['company']) ?></p>
+                        <p class="form-control-static"><?= h($data['name_first'] ?? '') ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('Your name') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Your Work Email Address') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= h($data['name']) ?></p>
+                        <p class="form-control-static"><?= h($data['email'] ?? '') ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('Email address') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Phone Number (Optional)') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= h($data['email']) ?></p>
+                        <p class="form-control-static"><?= h($data['phone'] ?? '') ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('What you want to ask') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Company Name (Optional)') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= nl2br(h($data['message'])) ?></p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('Sales person you appointed') ?></label>
-                    <div class="col-sm-8">
-                        <p class="form-control-static"><?= h($data['sales_people_text']) ?></p>
+                        <p class="form-control-static"><?= h($data['company'] ?? '') ?></p>
                     </div>
                 </div>
 
-                <a href="<?= $this->Html->url([
-                    'controller'   => 'pages',
-                    'action'       => 'contact',
-                    'lang'         => $top_lang,
-                    'from_confirm' => true
-                ]) ?>"
-                   class="btn btn-block btn-cta-secondary"><?= __('Back') ?></a>
                 <a href="<?= $this->Html->url([
                     'controller' => 'pages',
                     'action'     => 'contact_send',
@@ -144,6 +131,13 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 ]) ?>"
                    class="btn btn-block btn-cta-primary contact-confirm-send" id="SendContactLink"><?= __(
                         'Send') ?></a>
+                <a href="<?= $this->Html->url([
+                    'controller'   => 'pages',
+                    'action'       => 'contact',
+                    'lang'         => $top_lang,
+                    'from_confirm' => true
+                ]) ?>"
+                   class="btn btn-block btn-cta-secondary"><?= __('Back') ?></a>
             </form><!--//form-->
         </div>
     </div><!--//row-->

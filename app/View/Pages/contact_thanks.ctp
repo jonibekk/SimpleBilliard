@@ -86,7 +86,6 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container text-center">
         <h2 class="title"><?= __('Thank you for contacting us.') ?></h2>
         <p class="intro"><?= __('Support member will reply to you.') ?></p>
-        <p class="intro"><?= __('Please check our Blog and SNS, if you get interested.') ?></p>
 
         <div class="row">
             <div class="item col-md-4 col-sm-12 col-xs-12">
@@ -95,9 +94,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         <i class="fa fa-rss"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __('IsaB') ?></h4>
-                        <p><?= __('Make your job joyful! ISAO blog') ?></p>
-                        <p><a href="http://blog.goalous.com/" target="_blank"><?= __('http://blog.goalous.com/') ?></a>
+                        <h4><?= __('Goalous Blog') ?></h4>
+                        <p><?= __('The story of the team') ?></p>
+                        <p><a href="http://blog.goalous.com/" target="_blank">http://blog.goalous.com/</a>
                         </p>
                     </div><!--details-->
                 </div><!--//item-inner-->
@@ -108,9 +107,9 @@ for ($i = 0; $i < $num_ogp; $i++) {
                         <i class="fa fa-facebook"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __('facebook page') ?></h4>
+                        <h4><?= __('Facebook page') ?></h4>
                         <p><?= __('Like us!') ?></p>
-                        <p><a href="https://www.facebook.com/isao.jp" target="_blank"><?= __('isao.jp') ?></a></p>
+                        <p><a href="https://www.facebook.com/goalous" target="_blank">goalous</a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
             </div><!--//item-->
@@ -122,13 +121,27 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     <div class="details">
                         <h4><?= __('Twitter') ?></h4>
                         <p><?= __('Follow now!') ?></p>
-                        <p><a href="https://twitter.com/ISAOcorp" target="_blank"><?= __('@ISAOcorp') ?></a></p>
+                        <p><a href="https://twitter.com/goalous" target="_blank">@goalous</a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
             </div><!--//item-->
         </div><!--//row-->
     </div><!--//container-->
 </section><!--//contact-->
-
 <?= $this->element('Homepage/signup') ?>
+<!-- Goalous-Mar2018-spot-GoogleSearch -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 956754448;
+var google_conversion_label = "Z1J_CJ7HhH4QkNSbyAM";
+var google_remarketing_only = false;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/956754448/?label=Z1J_CJ7HhH4QkNSbyAM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
 <?= $this->App->viewEndComment()?>
