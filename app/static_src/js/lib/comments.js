@@ -63,6 +63,7 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
+                Mention.bind(replace_elm.find('textarea'))
                 replace_elm.children("form").submit(function(e) {
                     // アップロードファイルの有効期限が切れていなければコメント投稿
                     var res = checkUploadFileExpire($(this).attr('id'));
