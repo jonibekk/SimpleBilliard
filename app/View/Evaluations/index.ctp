@@ -9,7 +9,11 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                     <li>
-                        <a href="/"><?= __('Set evaluators') ?></a>
+                        <a href="<?=
+                        $this->Html->url([
+                            'controller' => 'evaluator_settings',
+                            'action'     => 'index',
+                        ]) ?>"><?= __('Set evaluators') ?></a>
                     </li>
                 </ul>
             </div>
