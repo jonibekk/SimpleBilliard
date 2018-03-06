@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Evaluation', 'Model');
+App::uses('TeamMember', 'Model');
 
 class EvaluationService extends AppService
 {
@@ -85,14 +86,37 @@ class EvaluationService extends AppService
     {
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');
+        $evaluateeList = $Evaluation->getEvaluateeListEvaluableAsEvaluator($termId);
+
+        return $this->getEvaluateesFromUserIds($termId, $evaluateeList);
+    }
+
+    /**
+     * Return the evaluatees of who have a coach as $coachUserId
+     *
+     * @param int $termId
+     * @param int $coachUserId
+     *
+     * @return array
+     */
+    function getEvaluateeFromCoachUserId(int $termId, int $coachUserId): array
+    {
+        /** @var  TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $teamMembers = $TeamMember->findAllByCoachUserId($coachUserId);
+        $coacheeUserIds = Hash::extract($teamMembers, '{n}.TeamMember.user_id');
+
+        return $this->getEvaluateesFromUserIds($termId, $coacheeUserIds);
+    }
+
+    private function getEvaluateesFromUserIds(int $termId, array $userIds): array
+    {
         /** @var  User $User */
         $User = ClassRegistry::init('User');
-
-        $evaluateeList = $Evaluation->getEvaluateeListEvaluableAsEvaluator($termId);
         $evaluatees = [];
-        foreach ($evaluateeList as $uid) {
-            $user = $User->getProfileAndEmail($uid);
-            $evaluation = $this->getEvalStatus($termId, $uid);
+        foreach ($userIds as $userId) {
+            $user = $User->getProfileAndEmail($userId);
+            $evaluation = $this->getEvalStatus($termId, $userId);
             $evaluatees[] = array_merge($user, $evaluation);
         }
         return $evaluatees;
