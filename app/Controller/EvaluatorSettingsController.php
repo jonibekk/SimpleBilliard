@@ -20,4 +20,13 @@ class EvaluatorSettingsController extends AppController
     function index()
     {
     }
+
+    /**
+     * TODO: implement here
+     */
+    function detail()
+    {
+        $userId = $this->request->params['user_id'];
+        $this->set('userId', $userId);
+    }
 }
