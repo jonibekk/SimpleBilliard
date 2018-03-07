@@ -24,7 +24,9 @@ class TextExHelper extends AppHelper
         'Text',
         'Html',
     );
-
+    function replaceMention($text) {
+        return preg_replace('/<@.*?:(.*)?>/m', '<@${1}>', $text);
+    }
     function autoLink($text)
     {
         $option = [];
