@@ -87,7 +87,10 @@
             </div>
             <div
                 class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
-                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= nl2br($this->TextEx->autoLink($comment['body'])) ?></div>
+                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= 
+                    nl2br($this->TextEx->autoLink($this->TextEx->replaceMention($comment['body']))) 
+                ?>
+                </div>
 
             <?php
             /**
