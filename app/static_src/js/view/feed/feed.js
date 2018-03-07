@@ -11,7 +11,9 @@ $(function () {
     });
     Mention.bind($('#CommonActionName'))
     Mention.bind($('#CommonPostBody'))
-
+    $('#PostDisplayForm').submit(function(e) {
+        
+    })
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {

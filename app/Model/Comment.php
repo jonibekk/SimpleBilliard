@@ -21,6 +21,10 @@ App::import('Model','Circle');
  */
 class Comment extends AppModel
 {
+
+    public $hasMention = true;
+    public $bodyProperty = 'body';
+
     public $uses = [
         'AttachedFile'
     ];
@@ -632,31 +636,5 @@ class Comment extends AppModel
             $ranking[$v['Comment']['post_id']] = $v[0]['cnt'];
         }
         return $ranking;
-    }
-    public function afterFind($results, $primary = false) {
-        if (count($results) > 0 && isset($results[0]['Comment']) && isset($results[0]['Comment']['body'])) {
-            $body = $results[0]['Comment']['body'];
-            preg_match_all('/<@(.*)?>/m', $body, $matches);
-            if (count($matches[1]) > 0) {
-                $cache = array();
-                foreach ($matches[1] as $match) {
-                    $replacement = null;
-                    if (strpos($match, 'user') === 0) {
-                        $userModel = new User();
-                        $data = $userModel->findById(str_replace('user_', '', $match));
-                        $user = $data['User'];
-                        $replacement = $user['display_username'];
-                    }else if (strpos($match, 'circle') === 0) {
-                        $circleModel = new Circle();
-                        $data = $circleModel->findById(str_replace('circle_', '', $match));
-                        $circle = $data['Circle'];
-                        $replacement = $circle['name'];
-                    }
-                    $body = preg_replace('/<@'.$match.'>/m', '<@'.$match.':'.$replacement.'>', $body);
-                    $results[0]['Comment']['body'] = $body;
-                }
-            }
-        }
-        return $results;
     }
 }
