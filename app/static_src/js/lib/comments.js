@@ -227,7 +227,7 @@ function addComment(e) {
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
     var formData = new FormData(e.target);
-
+    formData.set('data[Comment][body]', $('textarea#CommentFormBody_'+formData.get('data[Comment][post_id]'))[0].submitValue())
     // Add content of ogp box if visible
     var comment_id = submit_id.split('_')[1];
     var $ogp_box = $('#CommentOgpSiteInfo_' + comment_id);
