@@ -658,4 +658,34 @@ class AppModel extends Model
         return !empty($ret);
     }
 
+    public function afterFind($results, $primary = false) {
+        if ($this->hasMention) {
+            if (count($results) > 0 && isset($results[0][$this->alias]) && isset($results[0][$this->alias][$this->bodyProperty])) {
+                $body = $results[0][$this->alias][$this->bodyProperty];
+                preg_match_all('/<@(.*)?>/m', $body, $matches);
+                if (count($matches[1]) > 0) {
+                    $cache = array();
+                    foreach ($matches[1] as $match) {
+                        $replacement = null;
+                        if (strpos($match, 'user') === 0) {
+                            $userModel = new User();
+                            $data = $userModel->findById(str_replace('user_', '', $match));
+                            $user = $data['User'];
+                            $replacement = $user['display_username'];
+                        }else if (strpos($match, 'circle') === 0) {
+                            $circleModel = new Circle();
+                            $data = $circleModel->findById(str_replace('circle_', '', $match));
+                            $circle = $data['Circle'];
+                            $replacement = $circle['name'];
+                        }
+                        $body = preg_replace('/<@'.$match.'>/m', '<@'.$match.':'.$replacement.'>', $body);
+                        $results[0][$this->alias][$this->bodyProperty] = $body;
+                    }
+                }
+            }
+            return $results;
+        }
+        return $results;
+    }
+
 }

@@ -1,6 +1,9 @@
 <?php
 App::uses('AppModel', 'Model');
 
+App::import('Model','User');
+App::import('Model','Circle');
+
 /**
  * ActionResult Model
  *
@@ -18,6 +21,9 @@ class ActionResult extends AppModel
     const TYPE_USER = 0;
     const TYPE_GOAL = 1;
     const TYPE_KR = 2;
+
+    public $hasMention = true;
+    public $bodyProperty = 'name';
 
     public $actsAs = [
         'Upload' => [
