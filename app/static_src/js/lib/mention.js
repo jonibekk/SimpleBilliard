@@ -1,12 +1,26 @@
 var Mention = {
   bind: function(target) {
+    function normalize(str) {
+      return str
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)')
+    }
+    var values = {}
+    target[0].submitValue = function() {
+      var replaced = target.val()
+      $.each(values, function(key, value) {
+        var regexp = new RegExp('<@'+normalize(key)+'>', 'g')
+        replaced = replaced.replace(regexp, '<@'+value+'>')
+      })
+      return replaced
+    }
     target.atwho({
       at: '@',
-      displayTpl: '<li><div style="display:flex;align-items: center;width:200px;">\
+      displayTpl: '<li data-id="${id}" data-text="${text}"><div style="display:flex;align-items: center;width:200px;">\
         <div class="mention-options-image" style="background-image:url(${image})"></div>\
         <div class="mention-options-text">${text}</div>\
       </div></li>',
-      insertTpl: '@${text}',
+      insertTpl: '<@${text}>',
       searchKey : 'text',
       // data: [{text:'A'}]
       callbacks: {
@@ -38,6 +52,9 @@ var Mention = {
           })
         }
       }
+    })
+    target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
+      values[$li.data('text')] = $li.data('id')
     })
   }
 }
