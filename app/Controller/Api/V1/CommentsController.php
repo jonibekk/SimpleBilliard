@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
+App::uses('TextUtil', 'Lib/Util');
 
 /**
  * Class ActionsController
@@ -77,12 +78,23 @@ class CommentsController extends ApiController
         $post = $Post->findById($postId);
         $type = Hash::get($post, 'Post.type');
 
+        $mentions = TextUtil::extractAllIdFromMention(Hash::get($this->request->data, 'Comment.body'));
+        $notifyUsers = array();
+        foreach ($mentions as $key => $mention) {
+            if ($mention['isUser']) {
+                $notifyUsers[] = $mention['id'];
+            }else if($mentions['isCircle']) {
+                $notifyCircles[] = $mention['id'];
+            }
+        }
+
         switch ($type) {
             case Post::TYPE_NORMAL:
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $postId, $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED, $postId, $comment->id, $notifyUsers);
                 break;
             case Post::TYPE_ACTION:
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
@@ -90,6 +102,7 @@ class CommentsController extends ApiController
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                     $postId, $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED, $postId, $comment->id, $notifyUsers);
                 break;
         }
         // Push comments notifications
