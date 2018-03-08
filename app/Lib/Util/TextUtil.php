@@ -6,7 +6,7 @@
 class TextUtil
 {
     static function extractAllIdFromMention($text) {
-        preg_match_all('/<@(.*)?>/m', $text, $matches);
+        preg_match_all('/<@(.*?)>/m', $text, $matches);
         $result = array();
         if (count($matches[1]) > 0) {
 	        foreach ($matches[1] as $match) {
