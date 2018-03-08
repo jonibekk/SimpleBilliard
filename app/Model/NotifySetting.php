@@ -51,6 +51,7 @@ class NotifySetting extends AppModel
     const TYPE_CHANGED_TERM_SETTING = 37;
     const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
     const TYPE_TRANSCODE_FAILED = 39;
+    const TYPE_FEED_MENTIONED = 40;
 
     /**
      * @var array
@@ -103,6 +104,13 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'feed_commented_on_my_commented_post',
             'icon_class'      => 'fa-comment-o',
             'groups'          => ['all', 'primary'],
+        ],
+        self::TYPE_FEED_MENTIONED                            => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'feed_mentioned',
+            'icon_class'      => 'fa-comment-o',
+            'groups'          => ['all'],
         ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
             'mail_template'   => "notify_basic",
@@ -701,6 +709,19 @@ class NotifySetting extends AppModel
                         h($user_text),
                         ($count_num > 0) ? h(__("and %s others", $count_num)) : null,
                         h($target_user_name));
+                }
+                break;
+            case self::TYPE_FEED_MENTIONED:
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you. ',
+                        $user_text,
+                        ($count_num > 0) ? __("and %s others", $count_num) : null);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you. ',
+                        h($user_text),
+                        ($count_num > 0) ? h(__("and %s others", $count_num)) : null);
                 }
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
