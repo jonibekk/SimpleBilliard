@@ -466,10 +466,16 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             )
                             ?>
                             <div class="comment-body" id="NewCommentForm_<?= $post['Post']['id'] ?>">
-                                <form action="#" id="" method="post" accept-charset="utf-8">
+                                <form action="#" id="CommentAjaxGetNewCommentForm_c<?= $post['Post']['id'] ?>"
+                                      class="form-feed-notify ajax-add-comment comment-form"
+                                      method="post" accept-charset="utf-8"
+                                      error-msg-id="CommentFormErrorMsg_<?= $post['Post']['id'] ?>"
+                                      submit-id="CommentSubmit_<?= $post['Post']['id'] ?>"
+                                      first-form-id="NewCommentForm_<?= $post['Post']['id'] ?>"
+                                      refresh-link-id="Comments_new_<?= $post['Post']['id'] ?>" >
                                     <div class="form-group mlr_-1px">
                                     <textarea
-                                        class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
+                                        class="form-control font_12px comment-post-form box-align"
                                         replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
                                         click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                                         post-id="<?= $post['Post']['id'] ?>"
@@ -482,8 +488,37 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                         wrap="soft" rows="1"
                                         placeholder="<?= __("Comment") ?>"
                                         cols="30"
+                                        maxlength="5000"
+                                        required="required"
                                         id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                         init-height="15"></textarea>
+                                    </div>
+
+                                    <?= $this->Form->hidden('site_info_url', ['id' => "CommentSiteInfoUrl_{$post['Post']['id']}"]) ?>
+
+                                    <div id="CommentOgpSiteInfo_<?= $post['Post']['id'] ?>" class="comment-ogp-site-info"></div>
+                                    <div id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>" class="comment-upload-file-preview"></div>
+                                    <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
+
+                                    <div class="comment-btn" id="Comment_<?= $post['Post']['id'] ?>" >
+                                        <div>
+                                            <a href="#" class="link-red new-comment-add-pic comment-file-attach-button"
+                                               id="CommentUploadFileButton_<?= $post['Post']['id'] ?>"
+                                               data-preview-container-id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"
+                                               data-form-id="CommentAjaxGetNewCommentForm_<?= $post['Post']['id'] ?>">
+                                                <button type="button" class="btn pull-left btn-photo-up"><i class="fa fa-paperclip post-camera-icon"></i></button>
+                                            </a>
+                                        </div>
+                                        <div class="pull-left mt_12px font_brownRed"><span id="CommentFormErrorMsg_<?= $post['Post']['id'] ?>"></span>
+                                        </div>
+                                        <div class="pull-right">
+                                            <?=
+                                            $this->Form->submit(__("Comment"),
+                                                ['class'    => 'btn btn-primary submit-btn comment-submit-button',
+                                                 'id'       => "CommentSubmit_{$post['Post']['id']}"
+                                                ]) ?>
+                                        </div>
+                                        <div class="clearfix"></div>
                                     </div>
                                 </form>
                             </div>
