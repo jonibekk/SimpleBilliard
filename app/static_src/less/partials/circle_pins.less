@@ -1,0 +1,28 @@
+/**
+ * サークルリストピンのスタイル
+ */
+
+.pin-circle {
+  display: inline-flex;
+  &:hover, &:active, &:focus {
+    background-color: lightgray;
+  }
+}
+
+.circle-list {
+  padding: 3px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.pin-circle-text{
+  display: inline-block;
+}
+
+.pin-circle-avatar{
+  display: inline;
+}
+
+#pinned,#unpinned{
+  min-height: 36px;
+}

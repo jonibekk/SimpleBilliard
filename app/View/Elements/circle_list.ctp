@@ -13,7 +13,9 @@
 <?= $this->App->viewStartComment() ?>
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
-        <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?></p>
+        <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?>
+          <a class="pull-right" href="/CirclePins/index">Edit</a>
+        </p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
         <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
