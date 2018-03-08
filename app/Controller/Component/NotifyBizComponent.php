@@ -145,6 +145,10 @@ class NotifyBizComponent extends Component
                 $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $model_id, $sub_model_id);
                 break;
+            case NotifySetting::TYPE_FEED_MENTIONED:
+                $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED,
+                    $model_id, $sub_model_id, $to_user_list);
+                break;                
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
                 break;
@@ -1311,6 +1315,38 @@ class NotifyBizComponent extends Component
             json_encode([trim($comment['Comment']['body'])]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $post['Post']['user_id']);
+    }
+
+    /**
+     * get notification options for the mention
+     *
+     * @param $notify_type
+     * @param $post_id
+     * @param $comment_id
+     */
+    private function _setFeedMentionedOption($notify_type, $post_id, $comment_id, $to_user_ids)
+    {
+        $post = $this->Post->findById($post_id);
+        if (empty($post)) {
+            return;
+        }
+        //通知対象者の通知設定確認
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
+            $notify_type);
+        $comment = $this->Post->Comment->read(null, $comment_id);
+
+        $this->notify_option['notify_type'] = $notify_type;
+        $this->notify_option['count_num'] = count($to_user_ids);
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ];
+        $this->notify_option['model_id'] = $post_id;
+        $this->notify_option['item_name'] = !empty($comment) ?
+            json_encode([trim($comment['Comment']['body'])]) : null;
+        $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
 
     private function _saveNotifications()
