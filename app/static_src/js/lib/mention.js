@@ -17,8 +17,8 @@ var Mention = {
     target.atwho({
       at: '@',
       displayTpl: '<li data-id="${id}" data-text="${text}"><div style="display:flex;align-items: center;width:200px;">\
-        <div class="mention-options-image" style="background-image:url(${image})"></div>\
-        <div class="mention-options-text">${text}</div>\
+        <div style="background-image:url(${image});background-size:cover;width:32px;height:32px;"></div>\
+        <div style="flex:1;">${text}</div>\
       </div></li>',
       insertTpl: '<@${text}>',
       searchKey : 'text',
