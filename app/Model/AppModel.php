@@ -1,6 +1,7 @@
 <?php
 App::uses('Model', 'Model');
 App::uses('Sanitize', 'Utility');
+App::uses('TextUtil', 'Lib/Util');
 
 /**
  * Application model for Cake.
@@ -659,26 +660,26 @@ class AppModel extends Model
     }
 
     public function afterFind($results, $primary = false) {
-        if ($this->hasMention) {
+        if (isset($this->hasMention) && $this->hasMention) {
             if (count($results) > 0 && isset($results[0][$this->alias]) && isset($results[0][$this->alias][$this->bodyProperty])) {
                 $body = $results[0][$this->alias][$this->bodyProperty];
-                preg_match_all('/<@(.*)?>/m', $body, $matches);
-                if (count($matches[1]) > 0) {
+                $matches = TextUtil::extractAllIdFromMention($body);
+                if (count($matches) > 0) {
                     $cache = array();
-                    foreach ($matches[1] as $match) {
+                    foreach ($matches as $key => $match) {
                         $replacement = null;
-                        if (strpos($match, 'user') === 0) {
+                        if ($match['isUser'] === true) {
                             $userModel = new User();
-                            $data = $userModel->findById(str_replace('user_', '', $match));
+                            $data = $userModel->findById($match['id']);
                             $user = $data['User'];
                             $replacement = $user['display_username'];
-                        }else if (strpos($match, 'circle') === 0) {
+                        }else if ($match['isCircle'] === true) {
                             $circleModel = new Circle();
-                            $data = $circleModel->findById(str_replace('circle_', '', $match));
+                            $data = $circleModel->findById($match['id']);
                             $circle = $data['Circle'];
                             $replacement = $circle['name'];
                         }
-                        $body = preg_replace('/<@'.$match.'>/m', '<@'.$match.':'.$replacement.'>', $body);
+                        $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
                         $results[0][$this->alias][$this->bodyProperty] = $body;
                     }
                 }
