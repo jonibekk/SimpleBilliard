@@ -2,15 +2,14 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
 App::uses('TextUtil', 'Lib/Util');
+App::import('Service', 'MentionService');
 
 /**
  * Class ActionsController
  */
 class CommentsController extends ApiController
 {
-    public $uses = [
-        'Circle'
-    ];
+    public $components = ['Mention'];
     /**
      * @param $id
      * Get Comment data on JSON format
@@ -81,27 +80,7 @@ class CommentsController extends ApiController
         $post = $Post->findById($postId);
         $type = Hash::get($post, 'Post.type');
 
-        $mentions = TextUtil::extractAllIdFromMention(Hash::get($this->request->data, 'Comment.body'));
-        $notifyUsers = array();
-        foreach ($mentions as $key => $mention) {
-            if ($mention['isUser']) {
-                $notifyUsers[] = $mention['id'];
-            }else if($mention['isCircle']) {
-                $notifyCircles[] = $mention['id'];
-            }
-        }
-        $myId = $this->Auth->user('id');
-        if (!empty($notifyCircles)) {
-            foreach ($notifyCircles as $circleId) {
-                $circle_members = $this->Circle->CircleMember->getMembers($circleId, true);
-                foreach ($circle_members as $member) {
-                    $userId = $member['CircleMember']['user_id'];
-                    if ($userId != $myId) {
-                        $notifyUsers[] = $userId;
-                    }
-                }
-            }
-        }
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Comment.body'), $this->Auth->user('id'));
 
         switch ($type) {
             case Post::TYPE_NORMAL:
