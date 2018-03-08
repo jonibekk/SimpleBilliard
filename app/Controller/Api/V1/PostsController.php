@@ -7,6 +7,7 @@ App::import('Service', 'PostService');
  */
 class PostsController extends ApiController
 {
+    public $components = ['Mention'];
     public function beforeFilter()
     {
         parent::beforeFilter();

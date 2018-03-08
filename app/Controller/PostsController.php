@@ -222,6 +222,8 @@ class PostsController extends AppController
             $notify_type = NotifySetting::TYPE_MESSAGE;
         }
         $this->NotifyBiz->execSendNotify($notify_type, $postedPostId);
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Post.body'), $this->Auth->user('id'));
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_POST, $postedPostId, null, $notifyUsers);
 
         $socketId = Hash::get($this->request->data, 'socket_id');
         $share = explode(",", Hash::get($this->request->data, 'Post.share'));

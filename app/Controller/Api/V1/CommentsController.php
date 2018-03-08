@@ -1,8 +1,6 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
-App::uses('TextUtil', 'Lib/Util');
-App::import('Service', 'MentionService');
 
 /**
  * Class ActionsController
@@ -88,7 +86,7 @@ class CommentsController extends ApiController
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $postId, $comment->id);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED, $postId, $comment->id, $notifyUsers);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
             case Post::TYPE_ACTION:
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
@@ -96,7 +94,7 @@ class CommentsController extends ApiController
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                     $postId, $comment->id);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED, $postId, $comment->id, $notifyUsers);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
         }
         // Push comments notifications
