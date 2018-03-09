@@ -167,7 +167,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         id="PostTextBody_<?= $post['Post']['id'] ?>">
         <?php //チェックアイコンはすぐに戻す可能性があるのでコメントアウト ?>
         <!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
-        <?= nl2br($this->TextEx->autoLink($this->TextEx->replaceMention($post['ActionResult']['name']))) ?>
+        <?= $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($post['ActionResult']['name']))) ?>
     </div>
     <?php if ($post['Post']['site_info']): ?>
         <?php $site_info = json_decode($post['Post']['site_info'], true) ?>

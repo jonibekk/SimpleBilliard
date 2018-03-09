@@ -4,6 +4,10 @@ App::uses('TextUtil', 'Lib/Util');
  * Class MessageService
  */
 class MentionComponent extends Component {
+    public function replaceMention($text) {
+        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $text);
+        return $result;
+    }
     public function isMentioned($body, $userId, $teamId) {
         $users = $this->getUserList($body, $teamId, $userId, true);
         return in_array($userId, $users);
@@ -13,7 +17,7 @@ class MentionComponent extends Component {
         $notifyUsers = array();
         foreach ($mentions as $key => $mention) {
             if ($mention['isUser']) {
-                $notifyUsers[] = $mention['id'];
+                $notifyUsers[] = explode(':', $mention['id'])[0];
             }else if($mention['isCircle']) {
                 $notifyCircles[] = $mention['id'];
             }else if ($mention['isGroup']) {
