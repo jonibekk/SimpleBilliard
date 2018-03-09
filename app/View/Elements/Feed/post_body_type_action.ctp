@@ -163,7 +163,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <?php endif; ?>
     <?php endif; ?>
     <div
-        class="<?= viaIsSet($long_text) ? null : "showmore-action" ?> col col-xxs-12 feed-contents post-contents mod-action font_14px font_verydark box-align"
+        class="<?= viaIsSet($long_text) ? null : "showmore-action" ?> col col-xxs-12 feed-contents post-contents mod-action font_14px font_verydark box-align <?= $this->Mention->isMentioned($post['ActionResult']['name'], $my_id, $my_team_id) ? "mentioned" : "showmore" ?>"
         id="PostTextBody_<?= $post['Post']['id'] ?>">
         <?php //チェックアイコンはすぐに戻す可能性があるのでコメントアウト ?>
         <!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
