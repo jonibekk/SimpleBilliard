@@ -119,7 +119,8 @@ $hasPostResources = !empty($this->request->data['PostResources']);
                         'maxlength'   => 10000,
                     ])
                     ?>
-
+                    <?= $this->Form->hidden('actual_body', ['id' => 'ActualCommonPostBody']) ?>
+                    <?php $this->Form->unlockField('Post.actual_body') ?>
                     <?= $this->Form->hidden('site_info_url', ['id' => 'PostSiteInfoUrl']) ?>
                     <?php $this->Form->unlockField('Post.site_info_url') ?>
                     <?= $this->Form->hidden('redirect_url', ['id' => 'PostRedirectUrl']) ?>
