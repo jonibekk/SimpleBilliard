@@ -11,7 +11,7 @@ var Mention = {
       var replaced = target.val()
       $.each(values, function(key, value) {
         var regexp = new RegExp('<@'+normalize(key)+'>', 'g')
-        replaced = replaced.replace(regexp, '<@'+value+'>')
+        replaced = replaced.replace(regexp, '%%%'+value+'%%%')
       })
       return replaced
     }
