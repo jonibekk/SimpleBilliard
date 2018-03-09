@@ -1,4 +1,4 @@
-<?php App::uses('GoalousControllerTestCase', 'Test');
+ <?php App::uses('GoalousControllerTestCase', 'Test');
 App::uses('PagesController', 'Controller');
 
 /**
