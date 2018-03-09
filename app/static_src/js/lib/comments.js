@@ -526,6 +526,8 @@ function evCommendEditSubmit(e) {
         formData.OGP = ogpData;
     }
 
+    formData['data[Comment][body]'] = $('textarea#CommentEditFormBody_'+commentId)[0].submitValue()
+
     $.ajax({
         type: 'PUT',
         url: "/api/v1/comments/" + commentId,
@@ -793,6 +795,7 @@ function evTargetToggleClick() {
 
                     // Load OGP for edit field
                     var $editField = $('#CommentEditFormBody_' + comment_id);
+                    Mention.bind($editField)
                     if ($editField.length > 0) {
                         require(['ogp'], function (ogp) {
                             var onKeyUp = function () {
