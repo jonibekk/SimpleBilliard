@@ -12,7 +12,7 @@ $(function () {
     Mention.bind($('#CommonActionName'))
     Mention.bind($('#CommonPostBody'))
     $('#PostDisplayForm').submit(function(e) {
-        
+        $('#ActualCommonPostBody').val($('#CommonPostBody')[0].submitValue())
     })
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
