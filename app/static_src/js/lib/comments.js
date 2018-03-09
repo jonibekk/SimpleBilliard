@@ -796,6 +796,7 @@ function evTargetToggleClick() {
                     // Load OGP for edit field
                     var $editField = $('#CommentEditFormBody_' + comment_id);
                     Mention.bind($editField)
+                    $editField.val(Mention.convert($editField.val()))
                     if ($editField.length > 0) {
                         require(['ogp'], function (ogp) {
                             var onKeyUp = function () {

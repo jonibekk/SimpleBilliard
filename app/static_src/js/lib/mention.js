@@ -1,4 +1,7 @@
 var Mention = {
+  convert: function(text) {
+      return text.replace(/%%%(.*?):.*?%%%/g, '<@$1>')
+  },
   bind: function(target) {
     if (!target[0]) return
     function normalize(str) {
