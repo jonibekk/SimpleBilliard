@@ -17,6 +17,11 @@ use Goalous\Model\Enum as Enum;
  */
 class PostsController extends AppController
 {
+
+    public $components = [
+        'Mention'
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -194,6 +199,7 @@ class PostsController extends AppController
         }
 
         // 投稿を保存
+        $this->request->data['Post']['body'] = $this->request->data['Post']['actual_body'];
         $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId);
 
         // 保存に失敗
@@ -222,7 +228,7 @@ class PostsController extends AppController
             $notify_type = NotifySetting::TYPE_MESSAGE;
         }
         $this->NotifyBiz->execSendNotify($notify_type, $postedPostId);
-        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Post.body'), $this->Auth->user('id'));
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Post.body'), $this->current_team_id, $this->my_uid);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_POST, $postedPostId, null, $notifyUsers);
 
         $socketId = Hash::get($this->request->data, 'socket_id');
