@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div
-                class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
+                class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align <?= $this->Mention->isMentioned($comment['body'], $my_id, $my_team_id) ? "mentioned" : "showmore" ?>"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= 
                     nl2br($this->TextEx->autoLink($this->TextEx->replaceMention($comment['body']))) 
                 ?>

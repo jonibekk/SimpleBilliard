@@ -4,7 +4,11 @@ App::uses('TextUtil', 'Lib/Util');
  * Class MessageService
  */
 class MentionComponent extends Component {
-    public function getUserList($body, $my, $me) {
+    public function isMentioned($body, $userId, $teamId) {
+        $users = $this->getUserList($body, $teamId, $userId, true);
+        return in_array($userId, $users);
+    }
+    public function getUserList($body, $my, $me, $all = false) {
         $mentions = TextUtil::extractAllIdFromMention($body);
         $notifyUsers = array();
         foreach ($mentions as $key => $mention) {
@@ -22,7 +26,7 @@ class MentionComponent extends Component {
                 $circle_members = $CircleMember->getMembers($circleId, true);
                 foreach ($circle_members as $member) {
                     $userId = $member['CircleMember']['user_id'];
-                    if ($userId != $me) {
+                    if ($all || $userId != $me) {
                         $notifyUsers[] = $userId;
                     }
                 }
@@ -34,7 +38,7 @@ class MentionComponent extends Component {
                 $group_members = $MemberGroup->getGroupMemberUserId($my, $groupId);
                 foreach ($group_members as $member) {
                     $userId = $member;
-                    if ($userId != $me) {
+                    if ($all || $userId != $me) {
                         $notifyUsers[] = $userId;
                     }
                 }

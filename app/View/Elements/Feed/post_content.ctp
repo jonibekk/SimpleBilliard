@@ -1,6 +1,6 @@
 <?= $this->App->viewStartComment() ?>
 <div
-    class="col feed-contents post-contents <?= viaIsSet($long_text) ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
+    class="col feed-contents post-contents <?= viaIsSet($long_text) ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align <?= $this->Mention->isMentioned($post['Post']['body'], $my_id, $my_team_id) ? "mentioned" : "showmore" ?>"
     id="PostTextBody_<?= $post['Post']['id'] ?>">
     <?php if (($post['Post']['type'] == Post::TYPE_NORMAL) || ($post['Post']['type'] == Post::TYPE_MESSAGE)): ?>
         <?= nl2br($this->TextEx->autoLink($this->TextEx->replaceMention($post['Post']['body']))) ?>
