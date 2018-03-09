@@ -660,34 +660,39 @@ class AppModel extends Model
     }
 
     public function afterFind($results, $primary = false) {
-        if (isset($this->hasMention) && $this->hasMention) {
-            if (count($results) > 0 && isset($results[0][$this->alias]) && isset($results[0][$this->alias][$this->bodyProperty])) {
-                $body = $results[0][$this->alias][$this->bodyProperty];
-                $matches = TextUtil::extractAllIdFromMention($body);
-                if (count($matches) > 0) {
-                    $cache = array();
-                    foreach ($matches as $key => $match) {
-                        $replacementName = 'name';
-                        $model = null;
-                        if ($match['isUser'] === true) {
-                            $model = new User();
-                            $replacementName = 'display_username';
-                        }else if ($match['isCircle'] === true) {
-                            $model = new Circle();
-                        }else if ($match['isGroup'] === true) {
-                            $model = ClassRegistry::init('Group');
-                        }
-                        if (!is_null($model)) {
-                            $data = $model->findById($match['id']);
-                            $obj = $data[$model->alias];
-                            $replacement = $obj[$replacementName];
-                            $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
-                            $results[0][$this->alias][$this->bodyProperty] = $body;
+        $hasMention = 
+            $this->hasMention &&
+            count($results) > 0;
+
+        if ($hasMention) {
+            foreach ($results as &$result) {
+                if (isset($result[$this->alias]) && isset($result[$this->alias][$this->bodyProperty])) {
+                    $body = $result[$this->alias][$this->bodyProperty];
+                    $matches = TextUtil::extractAllIdFromMention($body);
+                    if (count($matches) > 0) {
+                        $cache = array();
+                        foreach ($matches as $key => $match) {
+                            $replacementName = 'name';
+                            $model = null;
+                            if ($match['isUser'] === true) {
+                                $model = new User();
+                                $replacementName = 'display_username';
+                            }else if ($match['isCircle'] === true) {
+                                $model = new Circle();
+                            }else if ($match['isGroup'] === true) {
+                                $model = ClassRegistry::init('Group');
+                            }
+                            if (!is_null($model)) {
+                                $data = $model->findById($match['id']);
+                                $obj = $data[$model->alias];
+                                $replacement = $obj[$replacementName];
+                                $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
+                                $result[$this->alias][$this->bodyProperty] = $body;
+                            }
                         }
                     }
                 }
             }
-            return $results;
         }
         return $results;
     }
