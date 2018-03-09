@@ -2,6 +2,7 @@
 App::uses('ModelType', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'PushService');
 
@@ -237,6 +238,12 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_TRANSCODE_FAILED:
                 $this->_setTranscodeFailed($user_id, $team_id);
                 break;
+            case NotifySetting::TYPE_EVALUATOR_SET_TO_COACH:
+                $this->_setAddedEvaluatorToCoach($team_id, $user_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE:
+                $this->_setAddedEvaluatorToEvaluee($team_id, $to_user_list, $user_id);
+                break;
             default:
                 break;
         }
@@ -260,9 +267,9 @@ class NotifyBizComponent extends Component
      * Send Pusher
      *
      * @param           $socketId
-     * @param           $share string
+     * @param           $share        string
      * @param int|null  $teamId
-     * @param array      $optionValues optional data to send pusher
+     * @param array     $optionValues optional data to send pusher
      */
     public function push($socketId, $share, $teamId = null, array $optionValues = [])
     {
@@ -309,7 +316,7 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * @param string $socketId
+     * @param string   $socketId
      * @param string[] $share
      *      ['public', 'circle_1', ...]
      * @param int|null $teamId
@@ -938,6 +945,46 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * @param $teamId
+     * @param $userId
+     * @param $coachId
+     */
+    private function _setAddedEvaluatorToEvaluee($teamId, $userId, $coachId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE;
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['options'] = [
+            'coach_user_id' => $coachId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+    }
+
+    /**
+     * @param $teamId
+     * @param $userId
+     * @param $coachId
+     */
+    private function _setAddedEvaluatorToCoach($teamId, $userId, $coachId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($coachId,
+            NotifySetting::TYPE_EVALUATOR_SET_TO_COACH);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_COACH;
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['options'] = [
+            'coachee_user_id' => $userId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $coachId);
+    }
+
+    /**
      * ゴールのリーダーが変更されたときのオプション
      *
      * @param $notify_type
@@ -1526,17 +1573,24 @@ class NotifyBizComponent extends Component
     /**
      * execコマンドにて通知を行う
      *
-     * @param       $type
-     * @param       $model_id
-     * @param       $sub_model_id
-     * @param array $to_user_list json_encodeしてbase64_encodeする
-     * @param int|null $teamId
-     * @param int|null $userId
-     * @param string|null $baseUrl the base url of notification list url
-     *                             specify if execSendNotify called from externalAPI, batch shell
+     * @param             $type
+     * @param             $model_id
+     * @param             $sub_model_id
+     * @param array       $to_user_list json_encodeしてbase64_encodeする
+     * @param int|null    $teamId
+     * @param int|null    $userId
+     * @param string|null $baseUrl      the base url of notification list url
+     *                                  specify if execSendNotify called from externalAPI, batch shell
      */
-    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null, $teamId = null, $userId = null, $baseUrl = null)
-    {
+    public function execSendNotify(
+        $type,
+        $model_id,
+        $sub_model_id = null,
+        $to_user_list = null,
+        $teamId = null,
+        $userId = null,
+        $baseUrl = null
+    ) {
         $set_web_env = "";
         $nohup = "nohup ";
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';

@@ -23,7 +23,7 @@ use Goalous\Model\Enum as Enum;
  *
  * @package       app.Controller
  * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
- * @property User  $User
+ * @property User           $User
  * @property TermsOfService TermsOfService
  * @noinspection  PhpInconsistentReturnPointsInspection
  */
@@ -86,7 +86,7 @@ class PagesController extends AppController
     {
         $path = func_get_args();
         $page = $path[0];
-        
+
         if ($page === 'pricing') {
             $this->_setPricingValues();
         } elseif ($page === 'terms') {
@@ -99,7 +99,7 @@ class PagesController extends AppController
                 throw new NotFoundException();
             }
         }
-        
+
         $this->set('is_mb_app', $this->is_mb_app);
         $this->layout = LAYOUT_HOMEPAGE;
         return $this->render(implode('/', $path));
@@ -165,14 +165,15 @@ class PagesController extends AppController
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
-                ]);
+            ]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
         /** @var PostDraftService $PostDraftService */
         $PostDraftService = ClassRegistry::init('PostDraftService');
-        $this->set('post_drafts', $PostDraftService->getPostDraftForFeed($this->Auth->user('id'), $current_team['Team']['id']));
+        $this->set('post_drafts',
+            $PostDraftService->getPostDraftForFeed($this->Auth->user('id'), $current_team['Team']['id']));
     }
 
     public function _setLanguage()
