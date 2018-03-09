@@ -17,9 +17,9 @@ var Mention = {
     }
     target.atwho({
       at: '@',
-      displayTpl: '<li data-id="${id}" data-text="${text}"><div style="display:flex;align-items: center;width:200px;">\
-        <div style="background-image:url(${image});background-size:cover;width:32px;height:32px;"></div>\
-        <div style="flex:1;">${text}</div>\
+      displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
+        <div class="mention-image" style="background-image:url(${image});"></div>\
+        <div class="mention-text">${text}</div>\
       </div></li>',
       insertTpl: '<@${text}>',
       searchKey : 'text',
@@ -37,6 +37,11 @@ var Mention = {
             url: cake.url.a,
             data: params
           }).then(function(res) {
+            for (var i=0; i<res.results.length; i++) {
+              if (!res.results[i].image) {
+                res.results[i].image = 'img/no-image-team.jpg'
+              }
+            }
             results = results.concat(res.results)
             return $.ajax({
               url: cake.url.select2_circles,
