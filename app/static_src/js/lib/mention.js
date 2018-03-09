@@ -1,5 +1,6 @@
 var Mention = {
   bind: function(target) {
+    if (!target[0]) return
     function normalize(str) {
       return str
         .replace(/\(/g, '\\(')
@@ -28,7 +29,8 @@ var Mention = {
           if (!query) callback([])
           var params = {
             term: query,
-            page_limit: '20'
+            page_limit: '20',
+            with_group: 1
           }
           var results = []
           $.ajax({
@@ -38,12 +40,6 @@ var Mention = {
             results = results.concat(res.results)
             return $.ajax({
               url: cake.url.select2_circles,
-              data: params
-            })
-          }).then(function(res) {
-            results = results.concat(res.results)
-            return $.ajax({
-              url: cake.url.k,
               data: params
             })
           }).then(function(res) {
