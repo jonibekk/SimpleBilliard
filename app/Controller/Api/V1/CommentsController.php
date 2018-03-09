@@ -78,7 +78,7 @@ class CommentsController extends ApiController
         $post = $Post->findById($postId);
         $type = Hash::get($post, 'Post.type');
 
-        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Comment.body'), $this->Auth->user('id'));
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Comment.body'), $this->current_team_id, $this->my_uid);
 
         switch ($type) {
             case Post::TYPE_NORMAL:

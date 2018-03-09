@@ -65,7 +65,7 @@ class ActionsController extends ApiController
             $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
-        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'ActionResult.name'), $this->Auth->user('id'));
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'ActionResult.name'), $this->current_team_id, $this->my_uid);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_ACTION, $this->Goal->ActionResult->getLastInsertID(), null, $notifyUsers);
 
         // TODO:削除 APIはステートレスであるべき

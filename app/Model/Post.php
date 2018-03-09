@@ -36,6 +36,9 @@ use Goalous\Model\Enum as Enum;
  */
 class Post extends AppModel
 {
+
+    public $hasMention = true;
+    public $bodyProperty = 'body';
     /**
      * post type
      */

@@ -12,16 +12,20 @@ class TextUtil
 	        foreach ($matches[1] as $match) {
 	        	$isUser = strpos($match, 'user') === 0;
 	        	$isCircle = strpos($match, 'circle') === 0;
+	        	$isGroup = strpos($match, 'group') === 0;
 	        	$replacement = '';
 	        	if ($isUser) {
 	        		$replacement = 'user_';
 	        	}else if ($isCircle) {
 	        		$replacement = 'circle_';
+	        	}else if ($isGroup) {
+	        		$replacement = 'group_';
 	        	}
 	        	$result[$match] = array(
 	        		'id' => str_replace($replacement, '', $match),
-	        		'isUser' => strpos($match, 'user') === 0, 
-	        		'isCircle' => strpos($match, 'circle') === 0
+	        		'isUser' => $isUser, 
+	        		'isCircle' => $isCircle,
+	        		'isGroup' => $isGroup
 	        	);
 	        }
 	    }

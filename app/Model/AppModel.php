@@ -667,20 +667,23 @@ class AppModel extends Model
                 if (count($matches) > 0) {
                     $cache = array();
                     foreach ($matches as $key => $match) {
-                        $replacement = null;
+                        $replacementName = 'name';
+                        $model = null;
                         if ($match['isUser'] === true) {
-                            $userModel = new User();
-                            $data = $userModel->findById($match['id']);
-                            $user = $data['User'];
-                            $replacement = $user['display_username'];
+                            $model = new User();
+                            $replacementName = 'display_username';
                         }else if ($match['isCircle'] === true) {
-                            $circleModel = new Circle();
-                            $data = $circleModel->findById($match['id']);
-                            $circle = $data['Circle'];
-                            $replacement = $circle['name'];
+                            $model = new Circle();
+                        }else if ($match['isGroup'] === true) {
+                            $model = ClassRegistry::init('Group');
                         }
-                        $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
-                        $results[0][$this->alias][$this->bodyProperty] = $body;
+                        if (!is_null($model)) {
+                            $data = $model->findById($match['id']);
+                            $obj = $data[$model->alias];
+                            $replacement = $obj[$replacementName];
+                            $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
+                            $results[0][$this->alias][$this->bodyProperty] = $body;
+                        }
                     }
                 }
             }
