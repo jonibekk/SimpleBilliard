@@ -150,12 +150,10 @@ class NotifyBizComponent extends Component
                     $model_id, $sub_model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_FEED_MENTIONED_IN_ACTION:
-                $this->_setFeedMentionedInActionOption(NotifySetting::TYPE_FEED_MENTIONED_IN_ACTION,
-                    $model_id, $to_user_list);
+                $this->_setFeedMentionedInActionOption($model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_FEED_MENTIONED_IN_POST:
-                $this->_setFeedMentionedInPostOption(NotifySetting::TYPE_FEED_MENTIONED_IN_POST,
-                    $model_id, $to_user_list);
+                $this->_setFeedMentionedInPostOption($model_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
@@ -1388,6 +1386,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
+
 
     private function _setFeedMentionedInPostOption($post_id, $to_user_ids)
     {
