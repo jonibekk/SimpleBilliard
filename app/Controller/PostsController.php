@@ -726,6 +726,8 @@ class PostsController extends AppController
         }
         $this->set('long_text', $long_text);
         $this->set(compact('comments'));
+        $this->set('my_id', $this->Auth->user('id'));
+        $this->set('my_team_id', $this->current_team_id);
 
         // コメントを既読にする
         $this->Post->Comment->CommentRead->red(Hash::extract($comments, '{n}.Comment.id'));
@@ -747,7 +749,8 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
-
+        $this->set('my_id', $this->Auth->user('id'));
+        $this->set('my_team_id', $this->current_team_id);
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/ajax_comments');
