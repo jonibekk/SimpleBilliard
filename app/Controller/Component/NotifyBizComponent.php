@@ -478,11 +478,12 @@ class NotifyBizComponent extends Component
     private function _fixReceiver($team_id, $user_ids, $body) {
         $mentionedUsers = $this->Mention->getUserList($body, $team_id, null, true);
         foreach ($mentionedUsers as $user) {
-            $index = array_search($user_ids, $user);
+            $index = array_search($user, $user_ids);
             if ($index) {
                 unset($user_ids[$index]);
             }
         }
+        return $user_ids;
     }
 
     /**
@@ -527,7 +528,7 @@ class NotifyBizComponent extends Component
         }
 
         //対象ユーザの通知設定確認
-        $this->_fixReceiver($members);
+        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $post['Post']['body']);
         if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_FEED_POST);
@@ -654,6 +655,8 @@ class NotifyBizComponent extends Component
         $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
         unset($members[$this->Team->my_uid]);
+        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $comment['Comment']['body']);
+        if (!count($members)) return;
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
@@ -1274,7 +1277,7 @@ class NotifyBizComponent extends Component
         if (empty($commented_user_list)) {
             return;
         }
-        $this->_fixReceiver($commented_user_list);
+        $commented_user_list = $this->_fixReceiver($this->Team->current_team_id, $commented_user_list, $comment['Comment']['body']);
         if (!count($commented_user_list)) return;
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commented_user_list,
@@ -1319,7 +1322,7 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $members = array($post['Post']['user_id']);
-        $this->_fixReceiver($members);
+        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $comment['Comment']['body']);
         if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($post['Post']['user_id'],
             $notify_type);
