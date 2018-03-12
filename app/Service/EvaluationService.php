@@ -99,7 +99,7 @@ class EvaluationService extends AppService
      *
      * @return array
      */
-    function getEvaluateeFromCoachUserId(int $termId, int $coachUserId): array
+    function getEvaluateesFromCoachUserId(int $termId, int $coachUserId): array
     {
         /** @var  TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -109,6 +109,15 @@ class EvaluationService extends AppService
         return $this->getEvaluateesFromUserIds($termId, $coacheeUserIds);
     }
 
+    /**
+     * Fetch the array of Users data with Evaluation status
+     * from teams.id and users.ids
+     *
+     * @param int   $termId
+     * @param int[] $userIds
+     *
+     * @return array
+     */
     private function getEvaluateesFromUserIds(int $termId, array $userIds): array
     {
         /** @var  User $User */

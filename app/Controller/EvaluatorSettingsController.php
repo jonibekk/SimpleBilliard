@@ -39,11 +39,10 @@ class EvaluatorSettingsController extends AppController
         $userId = $this->Auth->user('id');
 
         $selfEvaluation = $EvaluationService->getEvalStatus($termId, $userId);
-        $evaluateesEvaluation = $EvaluationService->getEvaluateeFromCoachUserId($termId, $userId);
+        $evaluateesEvaluation = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
 
-        // Reconstruct evaluation flow data structure
-        $selfEvaluation = $this->reconstructFlows([$selfEvaluation])[0];
-        $evaluateesEvaluation = $this->reconstructFlows($evaluateesEvaluation);
+        $selfEvaluation = $this->extractEvaluatorsInFlow([$selfEvaluation])[0];
+        $evaluateesEvaluation = $this->extractEvaluatorsInFlow($evaluateesEvaluation);
 
         // Count zero evaluatee users
         $countOfZeroEvaluateeUsers = 0;
@@ -70,7 +69,7 @@ class EvaluatorSettingsController extends AppController
      *
      * @return array
      */
-    private function reconstructFlows(array $evaluations): array
+    private function extractEvaluatorsInFlow(array $evaluations): array
     {
         foreach ($evaluations as $key => $evaluation) {
             $flow = $evaluation['flow'] ?? [];

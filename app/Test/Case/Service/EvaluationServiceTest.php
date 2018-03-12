@@ -317,15 +317,15 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    function testGetEvaluateeFromCoachUserId_empty()
+    function testGetEvaluateesFromCoachUserId_empty()
     {
         $termId = 1;
         // no evaluatee test
-        $ret = $this->EvaluationService->getEvaluateeFromCoachUserId($termId, 3);
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 3);
         $this->assertSame([], $ret);
     }
 
-    function testGetEvaluateeFromCoachUserId_succeed()
+    function testGetEvaluateesFromCoachUserId_succeed()
     {
         $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
         $termId = 1;
@@ -363,7 +363,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $teamMember = $this->TeamMember->save($teamMember);
 
         // no evaluatee test
-        $ret = $this->EvaluationService->getEvaluateeFromCoachUserId($termId, 1);
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 1);
         $this->assertSame(2, count($ret));
         $userHasFlow = $ret[0];
         $this->assertSame(2, count($userHasFlow['flow']));
