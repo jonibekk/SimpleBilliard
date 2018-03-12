@@ -1,10 +1,4 @@
 <?= $this->App->viewStartComment()?>
-<style>
-/*#pinnned { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-#pinnned li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-#pinnned li div { position: absolute; margin-left: -1.3em; }*/
-</style>
-
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
     <div class="panel-heading">
         <?= __("PinCircle") ?>
@@ -41,33 +35,31 @@
                             </div>
                         <ul id="pinned" class="list-group">
                             <?php foreach ($pinnedCircles as $circle): ?>
-                                <?php if (isset($circle['Circle']['id'])): ?>
-                                    <li id="<?= $circle['Circle']['id']?>"" class="list-group-item">
-                                        <?=
-                                        $this->Html->image('pre-load.svg',
-                                            [
-                                                'class'         => 'pin-circle-avatar lazy media-object',
-                                                'data-original' => $circle['Circle']['image'],
-                                                'width'         => '32',
-                                                'height'        => '32',
-                                                'error-img'     => "/img/no-image-link.png",
-                                            ]
-                                        )
-                                        ?>
-                                        <div class="pin-circle-text"><label><?php echo $circle['Circle']['name'];?></label></div>
-                                        <?=
-                                        $this->Html->image('pre-load.svg',
-                                            [
-                                                'class'         => 'pull-right lazy media-object',
-                                                'data-original' => "/img/no-image-link.png",
-                                                'width'         => '32',
-                                                'height'        => '32',
-                                                'error-img'     => "/img/no-image-link.png",
-                                            ]
-                                        )
-                                        ?>
-                                    </li>
-                                <?php endif; ?>
+                                <li id="<?= $circle['Circle']['id']?>"" class="list-group-item">
+                                    <?=
+                                    $this->Html->image('pre-load.svg',
+                                        [
+                                            'class'         => 'pin-circle-avatar lazy media-object',
+                                            'data-original' => $circle['Circle']['image'],
+                                            'width'         => '32',
+                                            'height'        => '32',
+                                            'error-img'     => "/img/no-image-link.png",
+                                        ]
+                                    )
+                                    ?>
+                                    <div class="pin-circle-text"><label><?php echo $circle['Circle']['name'];?></label></div>
+                                    <?=
+                                    $this->Html->image('pre-load.svg',
+                                        [
+                                            'class'         => 'pull-right lazy media-object',
+                                            'data-original' => "/img/no-image-link.png",
+                                            'width'         => '32',
+                                            'height'        => '32',
+                                            'error-img'     => "/img/no-image-link.png",
+                                        ]
+                                    )
+                                    ?>
+                                </li>
                             <?php endforeach; ?>
                             <!-- <li class="list-group-item">Element 1</li>
                             <li class="list-group-item">Element 2</li> -->
@@ -114,14 +106,66 @@
 <!-- Sortable.js -->
 <script type="text/javascript" src="/js/Sortable.min.js"></script>
 <script type="text/javascript">
-$(function () {
-'use strict';
-    $(document).ready(function () {
-        // document.getElementById('unpinned').sort((a, b) => {
-        //     if(a.find('label').innerHTML < b.find('label').innerHTML) return -1;
-        //     if(a.find('label').innerHTML > b.find('label').innerHTML) return 1;
-        //     return 0;
-        // });
+(function () {
+    'use strict';
+
+    var forEach = function (array, callback, scope) {
+      for (var i = 0; i < array.length; i++) {
+        callback.call(scope, i, array[i]); // passes back stuff we need
+      }
+    };
+
+    var makeParams = function() {
+        var data = [];
+        var index = 0;
+        var pins = document.getElementById('pinned').getElementsByClassName('list-group-item');
+        for (var pin of pins) {
+            var id = pin.id;
+            data.push({circle_id:id,pin_order:index});
+            index++;
+        }
+        return data;
+    }
+
+    var updateOrder = function() {
+        var data = {
+            'data[_Token][key]': cake.data.csrf_token.key,
+            'json' : JSON.stringify(makeParams()),
+        };
+        var formData = {};
+        formData['data[_Token][key]'] = cake.data.csrf_token.key;
+        formData['json'] = JSON.stringify(makeParams());
+        console.log(formData);
+        $.ajax({
+          url: '/api/v1/circlepin/',
+          type:"POST",
+          data: formData,//JSON.stringify(data),
+          contentType:"application/x-www-form-urlencoded; charset=utf-8",
+          // dataType:"json",
+          success: function(data){
+            console.log(data);
+          },
+          error: function(data){
+            console.log(data);
+          }
+        });
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('POST', '/api/v1/circlepin/');
+    //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+    //     xhr.onload = function(data) {
+    //         if (xhr.status !== 200) {
+    //             var response  = JSON.parse(xhr.response);
+    //             new Noty({
+    //                 type: 'error',
+    //                 text: response.message ? response.message : xhr.statusText
+    //             }).show();
+    //         }else{
+    //             console.log(data);
+    //         }
+    //     };
+    //     xhr.send(data);
+    }
+
     var pinnedsortable = Sortable.create(document.getElementById("pinned"), {
         group: "circles",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
         sort: true,  // sorting inside list
@@ -189,12 +233,14 @@ $(function () {
         onSort: function (/**Event*/evt) {
             // same properties as onEnd
             //alert(evt.item.getAttribute("id"));
+            updateOrder();
+            console.log("onSort");
         },
 
         // Element is removed from the list into another list
         onRemove: function (/**Event*/evt) {
             // same properties as onEnd
-            //alert("Removed" + evt.item.getAttribute("id"));
+
         },
 
         // Attempt to drag a filtered element
@@ -315,7 +361,6 @@ $(function () {
             //var cloneEl = evt.clone;
         }
     });
-    });
-});
+})();
 </script>
 <?= $this->App->viewEndComment()?>

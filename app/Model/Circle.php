@@ -583,16 +583,6 @@ class Circle extends AppModel
         return ['results' => $res];
     }
 
-    function convertPhotoUrls($circles){
-        
-        $Upload = new UploadHelper(new View());
-
-        foreach ($circles as &$circle) {
-            $circle['image'] = $Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']);
-        }
-        return $circles;
-    }
-
     /**
      * belong to team
      *

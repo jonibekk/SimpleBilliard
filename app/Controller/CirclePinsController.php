@@ -7,10 +7,14 @@ App::import('Service', 'CirclePinService');
  */
 class CirclePinsController extends AppController
 {
-    function beforeFilter()
+    /**
+     * beforeFilter callback
+     *
+     * @return void
+     */
+    public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Security->enabled = true;
     }
 
     function index()
@@ -22,8 +26,10 @@ class CirclePinsController extends AppController
 
         try {
             $defaultCircle = $CirclePinService->getDefaultCircle();
-            $pinnedCircles = $CirclePinService->getPinned();
-            $unpinnedCircles = $CirclePinService->getUnpinned();
+            $results = $CirclePinService->getPinned();
+
+            $pinnedCircles = $results['pinned'];
+            $unpinnedCircles = $results['unpinned'];
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
@@ -33,5 +39,4 @@ class CirclePinsController extends AppController
         $this->set('pinnedCircles', $pinnedCircles);
         $this->set('unpinnedCircles', $unpinnedCircles);
     }
-
 }
