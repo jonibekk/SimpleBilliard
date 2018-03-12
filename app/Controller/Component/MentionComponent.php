@@ -35,15 +35,14 @@ class MentionComponent extends Component {
         return $result;
     }
     public function replaceMention($text) {
-        $result = $this->appendName($text);
-        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $result);
+        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $text);
         return $result;
     }
     public function isMentioned($body, $userId, $teamId) {
         $users = $this->getUserList($body, $teamId, $userId, true);
         return in_array($userId, $users);
     }
-    public function appendName($body) {
+    static public function appendName($body) {
         $matches = MentionComponent::extractAllIdFromMention($body);
         if (count($matches) > 0) {
             $cache = array();
