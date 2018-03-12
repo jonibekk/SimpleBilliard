@@ -14,8 +14,11 @@
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?>
-          <a class="pull-right" href="/CirclePins/index">Edit</a>
+          <a href="/CirclePins/index" class="pull-right">Edit</a>
         </p>
+    </div>
+    <div class="idashboard-circle-list-row-wrap">
+      <input type="text" id="filter-circles-list-side" class="form-control" placeholder="サークルフィルター">
     </div>
     <div class="dashboard-circle-list-body-wrap">
         <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
@@ -24,7 +27,7 @@
             <?php endif; ?>
         </div>
     </div>
-    <div class="dashboard-circle-list-footer">
+      <div class="dashboard-circle-list-footer">
         <div class="clearfix dashboard-circle-list-seek">
             <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i>
             <a href="#"
@@ -45,4 +48,5 @@
         </div>
     </div>
 </div>
+<?php echo $this->Html->script('/js/goalous_circle.min'); ?>
 <?= $this->App->viewEndComment() ?>
