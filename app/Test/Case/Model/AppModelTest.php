@@ -60,6 +60,16 @@ class AppModelTest extends GoalousTestCase
         $this->assertEqual($this->ActionResult->field('name'), '%%%user_1:firstname lastname%%%');
     }
 
+    function testAfterFindWithoutConvertingNotHasMention()
+    {
+        $this->ActionResult->read(null, 1);
+        $this->ActionResult->set('name', '%%%user_1%%%');
+        $this->ActionResult->save();
+        $this->ActionResult->hasMention = false;
+        $this->ActionResult->read(null, 1);
+        $this->assertEqual($this->ActionResult->field('name'), '%%%user_1%%%');
+    }
+
     function testAfterFindWithoutConverting() {
         $this->User->read(null, 1);
         $this->User->set('first_name', '%%%user_1%%%');
