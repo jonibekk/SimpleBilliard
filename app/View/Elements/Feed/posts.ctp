@@ -2,6 +2,7 @@
 $without_header = isset($without_header) ? $without_header : false;
 $without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
 ?>
+<?= $this->element('Feed/post_drafts', compact('post_drafts')) ?>
 <?php if (!empty($posts)): ?>
     <?= $this->App->viewStartComment() ?>
     <?php foreach ($posts as $post_key => $post): ?>
@@ -226,17 +227,52 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 }
 
                 ?>
-                <?php if (!empty($imgs)): ?>
+                <?php if (!empty($imgs) || !empty($post['PostResources'])): ?>
                     </div>
-                    <div
-                        class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
-                        <?php foreach ($imgs as $v): ?>
-                            <a href="<?= $v['l'] ?>" rel='lightbox'
-                               data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
-                                <?= $this->Html->image($v['s']) ?>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
+                        <?php if (
+                                // Not going to show image if we have video posted
+                                // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                                !empty($imgs)
+                                && !($post['hasVideoResource'])
+                            ): ?>
+                        <div
+                            class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
+                            <?php foreach ($imgs as $v): ?>
+                                <a href="<?= $v['l'] ?>" rel='lightbox'
+                                   data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
+                                    <?= $this->Html->image($v['s']) ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($post['PostResources'])): ?>
+                            <?php foreach ($post['PostResources'] as $resource): ?>
+                                <div class="col pt_10px feed_img_only_one mb_12px">
+                                    <?php
+                                    // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
+                                    // TODO: check if this is the video resource
+                                    // TODO: move to another .ctp files
+                                    $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'], time());
+                                    if ($resource['aspect_ratio'] > 0) {
+                                        $paddingTop = 100 / $resource['aspect_ratio'];
+                                    } else {
+                                        $paddingTop = 100;
+                                    }
+                                    $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
+                                    ?>
+                                    <div id="div<?= $videoStreamId ?>" class="video-responsive-container" style="padding-top: <?= $paddingTop ?>%">
+                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered video-responsive" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
+                                        <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
+                                            <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()->getValue() ?>" type="<?= $videoSource->getType()->getValue() ?>">
+                                        <?php endforeach; ?>
+                                        </video>
+                                    </div>
+                                    <script>feedVideoJs('<?= $videoStreamId ?>')</script>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
                     <div class="panel-body posts-panel-body pt_10px plr_11px pb_8px">
 
                 <?php endif; ?>
@@ -289,11 +325,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         </a>
                     </div>
                 <?php endif; ?>
-
                 <div class="col pt_10px">
                     <?php foreach ($post['PostFile'] as $file): ?>
                         <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
-                            continue;
+                            // Showing image as attached file if post has video post resource
+                            // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                            if (!$post['hasVideoResource']) {
+                                continue;
+                            }
                         } ?>
                         <div class="panel panel-default file-wrap-on-post">
                             <div class="panel-body pt_10px plr_11px pb_8px">

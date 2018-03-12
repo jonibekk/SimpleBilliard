@@ -286,4 +286,12 @@ class AppUtilTest extends GoalousTestCase
         $this->assertEquals( 10 * 1024, AppUtil::sizeStringToByte('10K'));
         $this->assertEquals(0, AppUtil::sizeStringToByte('ABC'));
     }
+
+    function test_fullBaseUrl()
+    {
+        $fullBaseUrl = AppUtil::fullBaseUrl('local');
+        $this->assertSame('http://local.goalous.com', $fullBaseUrl);
+        $fullBaseUrl = AppUtil::fullBaseUrl('dev');
+        $this->assertSame('https://dev.goalous.com', $fullBaseUrl);
+    }
 }

@@ -286,7 +286,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <dd>
                     <?= __('Goalous Flyer (Japanese)') ?>
                     <br>
-                    <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i
+                    <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=1LO_RRoxlI_Ntg3Wm6gXJIFwDKcGiRF10' : 'https://drive.google.com/open?id=1eq7t30yKZifHIiWK7ZFtUqEt2-MT86G6'; ?> target="_blank"><i
                             class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __('Download the file') ?>

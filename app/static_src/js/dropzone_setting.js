@@ -48,6 +48,9 @@ $(function () {
     '  <div class="dz-progress progress">' +
     '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
     '  </div>' +
+    '  <div class="video_stream_cut_message text-danger hide">' +
+    '    <div>' + cake.message.validate.dropzone_video_cut_message + '</div>' +
+    '  </div>' +
     '</div>';
 
 // アクションのメイン画像表示部分のテンプレート
@@ -121,25 +124,34 @@ $(function () {
       // 処理成功
       // submit するフォームに hidden でファイルID追加
       var $form = $('#' + $uploadFileForm._params.formID);
-      $form.append(
-        $('<input type=hidden name=data[file_id][]>')
-          .val(data.id)
-          .attr('id', data.id)
-          .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
 
-      // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
-      $preview.data('file_id', data.id);
-      file.file_id = data.id;
+      if (undefined !== data.is_video && true === data.is_video) {
+          $form.append(
+              $('<input type=hidden name=data[video_stream_id][]>')
+                  .val(data.video_stream_id)
+                  .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+          $preview.data('video_stream_id', data.video_stream_id);
+          // Show video cutting message to user
+          $preview.find('.video_stream_cut_message').removeClass('hide');
+      } else {
+          $form.append(
+              $('<input type=hidden name=data[file_id][]>')
+                  .val(data.id)
+                  .attr('id', data.id)
+                  .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
+
+          // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
+          $preview.data('file_id', data.id);
+          file.file_id = data.id;
+          // コールバック関数（afterSuccess）
+          $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
+      }
 
       // プログレスバー消す
       // 一瞬で消えるのを防止するため１秒待つ
       setTimeout(function () {
         $preview.find('.progress').css('visibility', 'hidden');
       }, 1000);
-
-      // コールバック関数（afterSuccess）
-      $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
-
     },
     // ファイル削除ボタン押下時
     removedfile: function (file) {
@@ -167,6 +179,23 @@ $(function () {
       }
       // 新しくアップロードするファイルの場合
       else {
+        // Deleting video stream file
+        var videoStreamId = $preview.data('video_stream_id')
+        if ($preview.data('video_stream_id') !== undefined) {
+          var $form = $('#' + $uploadFileForm._params.formID);
+            $form.find('input[name="data[video_stream_id][]"][value="'+videoStreamId+'"]').first().remove();
+            setTimeout(function () {
+                $preview.remove();
+            }, 4000);
+            $uploadFileForm.hide();
+            new Noty({
+                type: 'success',
+                text: cake.message.validate.dropzone_deleted
+            }).show();
+            return;
+        }
+
+
         // キューに入ってるアップロードをキャンセルしようとした場合
         //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
         //   このブロックはその前段階のキャンセル時の処理。)
@@ -400,6 +429,13 @@ $(function () {
     // Dropzone 設定を上書き
     // （Dropzone インスタンスは常に１つ）
     Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
+    if (undefined === params.requestParams) {
+      Dropzone.instances[0].options.params = {};
+    } else if (typeof params.requestParams === 'function') {
+      Dropzone.instances[0].options.params = params.requestParams();
+    } else if (typeof params.requestParams === 'object') {
+      Dropzone.instances[0].options.params = params.requestParams;
+    }
     // acceptedFiles の設定は上書きされないので手動で設定
     Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
     // maxFiles が 1 の場合、もしくは
@@ -473,6 +509,11 @@ $(function () {
   var postParams = {
     formID: 'PostDisplayForm',
     previewContainerID: 'PostUploadFilePreview',
+    requestParams: function() {
+        return {
+            'enable_video_transcode': cake.data.is_edit_mode ? 0 : 1
+        };
+    },
     beforeSending: function () {
       if ($uploadFileForm._sending) {
         return;
@@ -505,6 +546,8 @@ $(function () {
   var messageParams = {
     formID: 'messageDropArea',
     previewContainerID: 'messageUploadFilePreviewArea',
+    requestParams: {
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -548,6 +591,8 @@ $(function () {
   var actionImageParams = {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
+    requestParams: {
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -626,6 +671,8 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePhotoPreview',
     disableMultiple: true,
+    requestParams: {
+    },
     beforeSending: function (file) {
       if ($uploadFileForm._sending) {
         return;
@@ -718,6 +765,8 @@ $(function () {
     formID: 'CommonActionDisplayForm',
     previewContainerID: 'ActionUploadFilePreview',
     afterAccept: actionImageParams.afterAccept,
+    requestParams: {
+    },
     beforeSending: function () {
       if ($uploadFileForm._sending) {
         return;
@@ -849,4 +898,21 @@ $(function () {
       });
     }
   }
+
+  // Limiting number of video to post
+  $(document).on('submit', '#PostDisplayForm', function (e) {
+      var video_count = $(this).find('input[name="data[video_stream_id][]"]').length
+      if (video_count > 1) {
+          new Noty({
+              type: 'error',
+              text: cake.message.validate.dropzone_error_allow_one_video
+          }).show();
+          $(this).find('#PostSubmit').removeAttr('disabled');
+          // stopImmediatePropagation() is need for preventing event in "js/lib/forms.js" of "form二重送信防止"
+          // If we did not stop, the submit button is set to disabled
+          e.stopImmediatePropagation();
+          return false;
+      }
+      return true;
+  });
 });
