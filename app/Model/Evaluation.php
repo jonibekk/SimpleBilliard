@@ -198,7 +198,7 @@ class Evaluation extends AppModel
                 $evaluator_type_name = __("Final Evaluator");
             } else {
                 if ($evaluate_type == self::TYPE_EVALUATOR) {
-                    $evaluator_type_name = __("Evaluator").$index_num;
+                    $evaluator_type_name = __("Evaluator") . $index_num;
                 }
             }
         }
@@ -298,7 +298,19 @@ class Evaluation extends AppModel
 
     }
 
-    function getEvaluations($evaluateTermId, $evaluateeId)
+    function getEvaluationsForEvaluatee(int $evaluateTermId, int $evaluateeId): array
+    {
+        return $this->getEvaluations($evaluateTermId, $evaluateeId, ['evaluator_user_id' => $evaluateeId]);
+
+    }
+
+    function getEvaluationsForEvaluator(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
+    {
+        return $this->getEvaluations($evaluateTermId, $evaluateeId, ['evaluator_user_id' => $evaluatorId]);
+
+    }
+
+    function getEvaluations(int $evaluateTermId, int $evaluateeId, array $conditions = []): array
     {
         $options = [
             'conditions' => [
@@ -358,6 +370,7 @@ class Evaluation extends AppModel
                 ],
             ]
         ];
+        $options['conditions'] = am($options['conditions'], $conditions);
         $res = $this->find('all', $options);
         return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
     }
@@ -692,7 +705,7 @@ class Evaluation extends AppModel
         $timezone = $Team->getTimezone();
 
         if ($previousStartDate) {
-            $options['conditions']['created >='] = AppUtil::getTimestampByTimezone($previousStartDate,$timezone);
+            $options['conditions']['created >='] = AppUtil::getTimestampByTimezone($previousStartDate, $timezone);
         }
 
         // freeze
@@ -815,27 +828,6 @@ class Evaluation extends AppModel
             'term_id'           => $termId
         ];
         $this->updateAll(['my_turn_flg' => false], $conditions);
-    }
-
-    function getIsEditable($evaluateTermId, $evaluateeId)
-    {
-        // check frozen
-        $evalIsFrozen = $this->Term->checkFrozenEvaluateTerm($evaluateTermId);
-        if ($evalIsFrozen) {
-            return false;
-        }
-
-        // check my turn
-        $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
-        $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
-        $isMyTurn = !empty(Hash::extract($evaluationList,
-            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$this->my_uid}]"));
-        $isNextTurn = !empty(Hash::extract($evaluationList,
-            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
-        if ($isMyTurn || $isNextTurn) {
-            return true;
-        }
-        return false;
     }
 
     function getAllStatusesForTeamSettings($termId)
@@ -1053,6 +1045,27 @@ class Evaluation extends AppModel
 
         $res = $this->find('first', $options);
         return Hash::get($res, 'Evaluation.id');
+    }
+
+    /**
+     * @param int $evaluateeId
+     * @param int $evaluatorId
+     * @param int $termId
+     *
+     * @return array
+     */
+    function getUnique(int $evaluateeId, int $evaluatorId, int $termId): array
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $evaluatorId,
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        return Hash::get($res, 'Evaluation');
     }
 
     function isThisEvaluateType($id, $type)

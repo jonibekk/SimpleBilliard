@@ -1,6 +1,10 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Evaluation', 'Model');
+App::uses('EvaluationSetting', 'Model');
+App::uses('Term', 'Model');
+
+use Goalous\Model\Enum as Enum;
 
 class EvaluationService extends AppService
 {
@@ -44,7 +48,7 @@ class EvaluationService extends AppService
                 'status'          => $val['status'],
                 'this_turn'       => $val['my_turn_flg'],
                 'other_evaluator' => $otherEvaluator,
-                'evaluate_type' => $val['evaluate_type']
+                'evaluate_type'   => $val['evaluate_type']
             ];
             //update status_text
             if ($val['my_turn_flg'] === false) {
@@ -131,5 +135,97 @@ class EvaluationService extends AppService
 
         /** @noinspection PhpUndefinedVariableInspection */
         return $isStartedEvaluation;
+    }
+
+    /**
+     * 評価期間中かどうか判定
+     * - 頻繁に確認されるフラグなので結果をキャッシュする
+     * - キャッシュの保持期限は期の終わり
+     *
+     * @param int $userId
+     * @param int $evaluateeId
+     * @param int $termId
+     *
+     * @return array
+     */
+    function findEvaluations(int $userId, int $evaluateeId, int $termId): array
+    {
+        /** @var  Evaluation $Evaluation */
+        $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var  EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+        /** @var  Term $Term */
+        $Term = ClassRegistry::init('Term');
+        $term = $Term->getById($termId);
+        if (empty($term)) {
+            return [];
+        }
+
+        // Don't showかつ凍結前かどうか
+        if ($EvaluationSetting->isShowAllEvaluationBeforeFreeze()
+            || (int)$term['evaluate_status'] !== Enum\Term\EvaluateStatus::IN_PROGRESS) {
+            $evaluations = $Evaluation->getEvaluations($termId, $evaluateeId);
+            return $evaluations;
+        }
+
+        $evaluations = $Evaluation->getEvaluationsForEvaluatee($termId, $evaluateeId);
+        // Case: login user is evaluatee
+        if ($userId == $evaluateeId) {
+            return $evaluations;
+        }
+
+        // Case: login user is evaluator
+        $evaluations[0] = $evaluations[0] + $Evaluation->getEvaluationsForEvaluator($termId, $evaluateeId, $userId)[0];
+        return $evaluations;
+
+    }
+
+    /**
+     *
+     * @param $evaluateTermId
+     * @param $evaluateeId
+     * @param $userId
+     *
+     * @return bool
+     */
+    function isEditable($evaluateTermId, $evaluateeId, $userId)
+    {
+        /** @var  Evaluation $Evaluation */
+        $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var  EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+        /** @var  Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        // check frozen
+        $evalIsFrozen = $Term->checkFrozenEvaluateTerm($evaluateTermId);
+        if ($evalIsFrozen) {
+            return false;
+        }
+
+        // Don't showかつ凍結前かどうか
+        if (!$EvaluationSetting->isShowAllEvaluationBeforeFreeze()) {
+            if ($evaluateeId == $userId) {
+                return true;
+            } else {
+                $evaluation = $Evaluation->getUnique($evaluateeId, $evaluateeId, $evaluateTermId);
+                if ((int)Hash::get($evaluation, 'status') === Enum\Evaluation\Status::DONE) {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        // check my turn
+        $evaluationList = $Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
+        $nextEvaluatorId = $Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
+        $isMyTurn = !empty(Hash::extract($evaluationList,
+            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$userId}]"));
+        $isNextTurn = !empty(Hash::extract($evaluationList,
+            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
+        if ($isMyTurn || $isNextTurn) {
+            return true;
+        }
+        return false;
     }
 }
