@@ -1084,7 +1084,15 @@ class User extends AppModel
         return false;
     }
 
-    public function getUsersByKeyword($keyword, $limit = 10, $notMe = true, array $excludeUserIds = [])
+    /**
+     * @param       $keyword
+     * @param int   $limit
+     * @param bool  $excludeAuthUser If set to true, auth user in php session will be excluded from result.
+     * @param array $excludeUserIds
+     *
+     * @return array|null
+     */
+    public function getUsersByKeyword($keyword, $limit = 10, $excludeAuthUser = true, array $excludeUserIds = [])
     {
         $user_list = $this->TeamMember->getAllMemberUserIdList();
 
@@ -1113,7 +1121,7 @@ class User extends AppModel
                 ]
             ]
         ];
-        if ($notMe && !in_array($this->my_uid, $excludeUserIds)) {
+        if ($excludeAuthUser && !in_array($this->my_uid, $excludeUserIds)) {
             $excludeUserIds[] = $this->my_uid;
         }
         if (count($excludeUserIds) > 0) {
