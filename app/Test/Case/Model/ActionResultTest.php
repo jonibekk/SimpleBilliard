@@ -532,4 +532,14 @@ class ActionResultTest extends GoalousTestCase
         }
     }
 
+    function testAfterFind()
+    {
+        $this->ActionResult->read(null, 1);
+        $this->ActionResult->set('name', '%%%user_1%%%');
+        $this->ActionResult->save();
+        $this->ActionResult->read(null, 1);
+        $this->assertEqual($this->ActionResult->field('name'), '%%%user_1:firstname lastname%%%');
+    }
+
+
 }

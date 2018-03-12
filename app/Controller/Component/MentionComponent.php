@@ -1,4 +1,5 @@
 <?php
+App::uses('Component', 'Controller');
 /**
  * Class MessageService
  */
