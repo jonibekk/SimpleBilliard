@@ -1,18 +1,16 @@
-var Mention = {
-  convert: function(text) {
-      return text.replace(/%%%(.*?):.*?%%%/g, '<@$1>')
-  },
-  bind: function(target) {
+var Mention = function(target) {
+  this.values = {}
+  var self = this
+  var bind = function(target) {
     if (!target[0]) return
     function normalize(str) {
       return str
         .replace(/\(/g, '\\(')
         .replace(/\)/g, '\\)')
     }
-    var values = {}
     target[0].submitValue = function() {
       var replaced = target.val()
-      $.each(values, function(key, value) {
+      $.each(self.values, function(key, value) {
         var regexp = new RegExp('<@'+normalize(key)+'>', 'g')
         replaced = replaced.replace(regexp, '%%%'+value+'%%%')
       })
@@ -58,7 +56,20 @@ var Mention = {
       }
     })
     target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
-      values[$li.data('text')] = $li.data('id')
+      self.values[$li.data('text')] = $li.data('id')
     })
+  }
+  bind(target)
+  var convert = function(text) {
+    var matches = text.match(/%%%(.*?:.*?)%%%/g)
+    if (!matches) return text
+    for (var i=0; i<matches.length; i++) {
+      var split = matches[i].replace(/%/g, '').split(':')
+      self.values[split[1]] = split[0]
+    }
+    return text.replace(/%%%.*?:(.*?)%%%/g, '<@$1>')
+  }
+  if (target.val()) {
+    target.val(convert(target.val()))
   }
 }

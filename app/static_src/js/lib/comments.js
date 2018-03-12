@@ -63,7 +63,7 @@ function getAjaxFormReplaceElm() {
             else {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
-                Mention.bind($('textarea#CommentFormBody_'+post_id))
+                new Mention($('textarea#CommentFormBody_'+post_id))
                 replace_elm.children("form").submit(function(e) {
                     // アップロードファイルの有効期限が切れていなければコメント投稿
                     var res = checkUploadFileExpire($(this).attr('id'));
@@ -795,8 +795,7 @@ function evTargetToggleClick() {
 
                     // Load OGP for edit field
                     var $editField = $('#CommentEditFormBody_' + comment_id);
-                    Mention.bind($editField)
-                    $editField.val(Mention.convert($editField.val()))
+                    new Mention($editField)
                     if ($editField.length > 0) {
                         require(['ogp'], function (ogp) {
                             var onKeyUp = function () {

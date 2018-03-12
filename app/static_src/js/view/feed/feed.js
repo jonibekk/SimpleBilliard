@@ -9,8 +9,8 @@ $(function () {
     bindCtrlEnterAction('#PostDisplayForm', function (e) {
         $('#PostSubmit').trigger('click');
     });
-    Mention.bind($('#CommonActionName'))
-    Mention.bind($('#CommonPostBody'))
+    new Mention($('#CommonActionName'))
+    new Mention($('#CommonPostBody'))
     $('#PostDisplayForm').submit(function(e) {
         $('#ActualCommonPostBody').val($('#CommonPostBody')[0].submitValue())
     })
