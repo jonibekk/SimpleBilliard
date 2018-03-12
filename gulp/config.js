@@ -35,6 +35,10 @@ const config = {
         payments: [
             assets_dir + '/js/view/payments/*.js'
         ],
+        circle: [
+            node_modules_dir + '/sortablejs/Sortable.min.js',
+            assets_dir + '/js/view/circle/*.js'
+        ],
         homepage: [
             assets_dir + '/js/view/homepage/*.js'
         ]
@@ -63,6 +67,7 @@ const config = {
       user_script_name: 'goalous_user',
       evaluation_script_name: 'goalous_evaluation',
       payments_script_name: 'goalous_payment',
+      circle_script_name: 'goalous_circle',
       homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },

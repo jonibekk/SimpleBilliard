@@ -16,6 +16,7 @@ gulp.task('jsbuild', done => {
         'js_app',
         'js_vendor',
         'js_payment',
+        'js_circle',
         'js_homepage'], done)
 });
 
@@ -34,6 +35,7 @@ gulp.task('js', done => {
       'js_vendor',
       'js_prerender',
       'js_payment',
+      'js_circle',
       'js_homepage',
       'angular_app',
       'angular_vendor',
@@ -96,6 +98,16 @@ gulp.task('js_payment', done => {
         'js_payment:concat',
         'js_payment:uglify',
         'js_payment:clean',
+        done
+    );
+});
+
+// js circle
+gulp.task('js_circle', done => {
+    return runSequence(
+        'js_circle:concat',
+        'js_circle:uglify',
+        'js_circle:clean',
         done
     );
 });
