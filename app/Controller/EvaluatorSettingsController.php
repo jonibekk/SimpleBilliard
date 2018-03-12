@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
+App::import('Service', 'ExperimentService');
 App::import('Service', 'EvaluationService');
 
 /**
@@ -13,6 +14,14 @@ class EvaluatorSettingsController extends AppController
 
     function beforeFilter()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init("ExperimentService");
+        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+            throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
+        }
+
         parent::beforeFilter();
     }
 
@@ -22,7 +31,6 @@ class EvaluatorSettingsController extends AppController
      */
     function index()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
 
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');
