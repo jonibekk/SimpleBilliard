@@ -1,9 +1,39 @@
 <?php
-App::uses('TextUtil', 'Lib/Util');
 /**
  * Class MessageService
  */
 class MentionComponent extends Component {
+    static function extractAllIdFromMention($text) {
+        preg_match_all('/%%%(.*?)%%%/m', $text, $matches);
+        $result = array();
+        if (count($matches[1]) > 0) {
+            foreach ($matches[1] as $match) {
+                $isUser = strpos($match, 'user') === 0;
+                $isCircle = strpos($match, 'circle') === 0;
+                $isGroup = strpos($match, 'group') === 0;
+                $replacement = '';
+                if ($isUser) {
+                    $replacement = 'user_';
+                }else if ($isCircle) {
+                    $replacement = 'circle_';
+                }else if ($isGroup) {
+                    $replacement = 'group_';
+                }
+                $result[$match] = array(
+                    'id' => str_replace($replacement, '', $match),
+                    'isUser' => $isUser, 
+                    'isCircle' => $isCircle,
+                    'isGroup' => $isGroup
+                );
+            }
+        }
+        return $result;
+    }
+
+    static function replaceAndAddNameToMention($pattern, $replacement, $subject) {
+        $result = preg_replace('/%%%'.$pattern.'%%%/m', '%%%'.$pattern.':'.$replacement.'%%%', $subject);
+        return $result;
+    }
     public function replaceMention($text) {
         $result = $this->appendName($text);
         $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $result);
@@ -14,7 +44,7 @@ class MentionComponent extends Component {
         return in_array($userId, $users);
     }
     public function appendName($body) {
-        $matches = TextUtil::extractAllIdFromMention($body);
+        $matches = MentionComponent::extractAllIdFromMention($body);
         if (count($matches) > 0) {
             $cache = array();
             foreach ($matches as $key => $match) {
@@ -32,14 +62,14 @@ class MentionComponent extends Component {
                     $data = $model->findById($match['id']);
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
-                    $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
+                    $body = MentionComponent::replaceAndAddNameToMention($key, $replacement, $body);
                 }
             }
         }
         return $body;
     }
     public function getUserList($body, $my, $me, $all = false) {
-        $mentions = TextUtil::extractAllIdFromMention($body);
+        $mentions = MentionComponent::extractAllIdFromMention($body);
         $notifyUsers = array();
         foreach ($mentions as $key => $mention) {
             if ($mention['isUser']) {

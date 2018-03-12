@@ -1,7 +1,6 @@
 <?php
 App::uses('Model', 'Model');
 App::uses('Sanitize', 'Utility');
-App::uses('TextUtil', 'Lib/Util');
 
 /**
  * Application model for Cake.
