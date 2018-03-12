@@ -31,6 +31,7 @@ class NotifyBizComponent extends Component
         'Session',
         'GlEmail',
         'Redis',
+        'Mention'
     ];
 
     public $notify_option = [
@@ -474,6 +475,16 @@ class NotifyBizComponent extends Component
             = $team_id;
     }
 
+    private function _fixReceiver($team_id, $user_ids, $body) {
+        $mentionedUsers = $this->Mention->getUserList($body, $team_id, null, true);
+        foreach ($mentionedUsers as $user) {
+            $index = array_search($user_ids, $user);
+            if ($index) {
+                unset($user_ids[$index]);
+            }
+        }
+    }
+
     /**
      * 自分が閲覧可能な投稿があった場合
      *
@@ -516,6 +527,8 @@ class NotifyBizComponent extends Component
         }
 
         //対象ユーザの通知設定確認
+        $this->_fixReceiver($members);
+        if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_FEED_POST);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_POST;
@@ -1261,6 +1274,8 @@ class NotifyBizComponent extends Component
         if (empty($commented_user_list)) {
             return;
         }
+        $this->_fixReceiver($commented_user_list);
+        if (!count($commented_user_list)) return;
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commented_user_list,
             $notify_type);
@@ -1303,6 +1318,9 @@ class NotifyBizComponent extends Component
             return;
         }
         //通知対象者の通知設定確認
+        $members = array($post['Post']['user_id']);
+        $this->_fixReceiver($members);
+        if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($post['Post']['user_id'],
             $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
