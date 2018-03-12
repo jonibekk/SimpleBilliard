@@ -1,17 +1,17 @@
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix eval-list">
+<div class="panel panel-default col-sm-8 col-sm-offset-2 eval-list">
     <div class="panel-heading">
-        Evaluation member list
+        <?= __('Evaluation member list') ?>
     </div>
     <div class="panel-body eval-view-panel-body">
         <?php if ($countOfZeroEvaluateeUsers > 0): ?>
         <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-            <?= $countOfZeroEvaluateeUsers ?> coachee has no evaluators.
+            <?= __('%d  coachee has no evaluators.', $countOfZeroEvaluateeUsers) ?>
         </div>
         <?php endif ?>
         <div class="form-group">
             <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                <p class="font_bold">You</p>
+                <p class="font_bold"><?= __('You') ?></p>
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
@@ -20,7 +20,7 @@
                     'eval_is_frozen' => $isFrozen
                 ]) ?>
             <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                <p class="font_bold">Coachee, members you evaluate (<?= count($evaluateesEvaluation) ?>)</p>
+                <p class="font_bold"><?= __('Coachee, members you evaluate') ?> (<?= count($evaluateesEvaluation) ?>)</p>
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
