@@ -465,13 +465,4 @@ class CommentTest extends GoalousTestCase
         $this->assertEquals([], $ranking);
     }
 
-    function testAfterFind()
-    {
-        $this->Comment->read(null, 1);
-        $this->Comment->set('body', '%%%user_1%%%');
-        $this->Comment->save();
-        $this->Comment->read(null, 1);
-        $this->assertEqual($this->Comment->field('body'), '%%%user_1:firstname lastname%%%');
-    }
-
 }

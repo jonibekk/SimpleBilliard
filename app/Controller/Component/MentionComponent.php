@@ -5,12 +5,38 @@ App::uses('TextUtil', 'Lib/Util');
  */
 class MentionComponent extends Component {
     public function replaceMention($text) {
-        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $text);
+        $result = $this->appendName($text);
+        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $result);
         return $result;
     }
     public function isMentioned($body, $userId, $teamId) {
         $users = $this->getUserList($body, $teamId, $userId, true);
         return in_array($userId, $users);
+    }
+    public function appendName($body) {
+        $matches = TextUtil::extractAllIdFromMention($body);
+        if (count($matches) > 0) {
+            $cache = array();
+            foreach ($matches as $key => $match) {
+                $replacementName = 'name';
+                $model = null;
+                if ($match['isUser'] === true) {
+                    $model = ClassRegistry::init('User');
+                    $replacementName = 'display_username';
+                }else if ($match['isCircle'] === true) {
+                    $model = ClassRegistry::init('Circle');
+                }else if ($match['isGroup'] === true) {
+                    $model = ClassRegistry::init('Group');
+                }
+                if (!is_null($model)) {
+                    $data = $model->findById($match['id']);
+                    $obj = $data[$model->alias];
+                    $replacement = $obj[$replacementName];
+                    $body = TextUtil::replaceAndAddNameToMention($key, $replacement, $body);
+                }
+            }
+        }
+        return $body;
     }
     public function getUserList($body, $my, $me, $all = false) {
         $mentions = TextUtil::extractAllIdFromMention($body);
