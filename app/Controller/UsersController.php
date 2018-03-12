@@ -888,7 +888,8 @@ class UsersController extends AppController
         $res = ['results' => []];
         if (isset($query['term']) && !empty($query['term']) && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $with_group = (isset($query['with_group']) && $query['with_group']);
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group);
+            $with_self = (isset($query['with_self']) && $query['with_self']);
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
         }
         return $this->_ajaxGetResponse($res);
     }
