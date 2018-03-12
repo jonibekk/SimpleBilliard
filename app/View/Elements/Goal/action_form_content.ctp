@@ -61,6 +61,8 @@
                 'maxlength'   => 10000
             ])
             ?>
+            <?= $this->Form->hidden('actual_name', ['id' => 'ActualCommonActionName']) ?>
+            <?php $this->Form->unlockField('ActionResult.actual_name') ?>
         </div>
         <!-- 目印 -->
         <div id="ActionUploadFileDropArea" class="action-upload-file-drop-area">

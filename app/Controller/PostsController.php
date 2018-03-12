@@ -341,6 +341,7 @@ class PostsController extends AppController
             }
 
             // 投稿を保存
+            $this->request->data['Post']['body'] = $this->request->data['Post']['actual_body'];
             if ($this->Post->postEdit($this->request->data)) {
                 $this->Notification->outSuccess(__("Saved changes."));
             } else {
