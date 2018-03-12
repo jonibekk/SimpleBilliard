@@ -1,6 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('ActionResult', 'Model');
-
+App::uses('User', 'Model');
 /**
  * ActionResult Test Case
  *
@@ -530,6 +530,15 @@ class ActionResultTest extends GoalousTestCase
             $this->ActionResult->create();
             $this->ActionResult->save($action, false);
         }
+    }
+
+    function testAfterFind()
+    {
+        $this->ActionResult->read(null, 1);
+        $this->ActionResult->set('name', '%%%user_1%%%');
+        $this->ActionResult->save();
+        $this->ActionResult->read(null, 1);
+        $this->assertEqual($this->ActionResult->field('name'), '%%%user_1:firstname lastname%%%');
     }
 
 }

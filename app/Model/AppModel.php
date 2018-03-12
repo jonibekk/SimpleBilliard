@@ -675,10 +675,10 @@ class AppModel extends Model
                             $replacementName = 'name';
                             $model = null;
                             if ($match['isUser'] === true) {
-                                $model = new User();
+                                $model = ClassRegistry::init('User');
                                 $replacementName = 'display_username';
                             }else if ($match['isCircle'] === true) {
-                                $model = new Circle();
+                                $model = ClassRegistry::init('Circle');
                             }else if ($match['isGroup'] === true) {
                                 $model = ClassRegistry::init('Group');
                             }
