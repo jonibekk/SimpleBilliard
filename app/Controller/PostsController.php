@@ -227,6 +227,8 @@ class PostsController extends AppController
         if (Hash::get($this->request->data, 'Post.type') == Post::TYPE_MESSAGE) {
             $notify_type = NotifySetting::TYPE_MESSAGE;
         }
+        // This notification must not be sent to those who mentioned
+        // because we exlude them in NotifyBiz#execSendNotify.
         $this->NotifyBiz->execSendNotify($notify_type, $postedPostId);
         $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Post.body'), $this->current_team_id, $this->my_uid);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_POST, $postedPostId, null, $notifyUsers);

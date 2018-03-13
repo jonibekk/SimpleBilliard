@@ -63,6 +63,8 @@ class ActionsController extends ApiController
         $krId = $this->request->data['ActionResult']['key_result_id'] ?? null;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goalId, $krId,
             $this->Goal->ActionResult->getLastInsertID());
+        // This notification must not be sent to those who mentioned
+        // because we exlude them in NotifyBiz#execSendNotify.
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
         $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'ActionResult.name'), $this->current_team_id, $this->my_uid);

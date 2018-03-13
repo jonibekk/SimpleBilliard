@@ -82,6 +82,8 @@ class CommentsController extends ApiController
 
         switch ($type) {
             case Post::TYPE_NORMAL:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
@@ -89,6 +91,8 @@ class CommentsController extends ApiController
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
             case Post::TYPE_ACTION:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
                     $postId,
                     $comment->id);
