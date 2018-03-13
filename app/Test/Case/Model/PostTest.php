@@ -39,6 +39,8 @@ class PostTest extends GoalousTestCase
         'app.circle_member',
         'app.team_member',
         'app.term',
+        'app.post_resource',
+        'app.kr_progress_log',
         'app.saved_post',
     );
 
@@ -64,109 +66,6 @@ class PostTest extends GoalousTestCase
         unset($this->Post);
 
         parent::tearDown();
-    }
-
-    public function testAdd()
-    {
-        $uid = '1';
-        $team_id = '1';
-        $this->_setDefault();
-
-        $postData = [
-            'Post' => [
-                'body' => 'test',
-            ]
-        ];
-        $res = $this->Post->addNormal($postData, $uid, $team_id);
-        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
-
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $this->Post->create();
-        $res = $this->Post->addNormal($postData);
-        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
-    }
-
-    public function testAddWithFile()
-    {
-        $uid = '1';
-        $team_id = '1';
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $postData = [
-            'Post'    => [
-                'body' => 'test',
-            ],
-            'file_id' => ['aaaaaa']
-        ];
-        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->Post->PostFile->AttachedFile->expects($this->any())
-                                           ->method('saveRelatedFiles')
-                                           ->will($this->returnValue(true));
-        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
-        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
-    }
-
-    public function testAddWithSharing()
-    {
-        $uid = '1';
-        $team_id = '1';
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $this->Post->Circle->my_uid = $uid;
-        $this->Post->Circle->current_team_id = $team_id;
-        $this->Post->PostShareCircle->my_uid = $uid;
-        $this->Post->PostShareCircle->current_team_id = $team_id;
-        $this->Post->User->CircleMember->my_uid = $uid;
-        $this->Post->User->CircleMember->current_team_id = $team_id;
-        $postData = [
-            'Post' => [
-                'team_id' => 1,
-                'user_id' => 1,
-                'body'    => 'test',
-                'share'   => 'public',
-            ],
-        ];
-        //save circle member
-        $this->Post->User->CircleMember->save([
-            'user_id'   => 2,
-            'circle_id' => 3,
-            'team_id'   => 1,
-        ]);
-
-        $res = $this->Post->addNormal($postData);
-        $this->assertNotEmpty($res);
-
-        $last_id = $this->Post->getLastInsertID();
-        $all = $this->Post->PostShareCircle->find('all', [
-            'conditions' => [
-                'PostShareCircle.post_id' => $last_id,
-            ]
-        ]);
-        $this->assertCount(1, $all);
-        $this->assertEquals(3, $all[0]['PostShareCircle']['circle_id']);
-    }
-
-    public function testAddError()
-    {
-        $uid = '1';
-        $team_id = '1';
-        $this->Post->my_uid = $uid;
-        $this->Post->current_team_id = $team_id;
-        $postData = [
-            'Post'    => [
-                'body' => 'test',
-            ],
-            'file_id' => ['aaaaaa']
-        ];
-        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->Post->PostFile->AttachedFile->expects($this->any())
-                                           ->method('saveRelatedFiles')
-                                           ->will($this->returnValue(false));
-        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
-        $this->assertFalse($res);
     }
 
     public function testAddInvalidOgp()

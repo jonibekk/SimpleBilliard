@@ -278,7 +278,8 @@ class TeamMemberTest extends GoalousTestCase
         $expected = [
             (int)2 => '2',
             (int)3 => '12',
-            (int)4 => '13'
+            (int)4 => '13',
+            (int)13 => '3',
         ];
         $actual = $this->TeamMember->getAllMemberUserIdList(true, true, true);
         $this->assertEquals($expected, $actual);
