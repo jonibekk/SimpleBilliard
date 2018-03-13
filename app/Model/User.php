@@ -329,13 +329,11 @@ class User extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Badge',
         'CommentLike',
         'CommentMention',
         'CommentRead',
         'Comment',
         'Email',
-        'GivenBadge',
         'OauthToken',
         'PostLike',
         'PostMention',
@@ -347,7 +345,6 @@ class User extends AppModel
         'Goal',
         'MemberGroup',
         'GoalMember',
-        'Evaluator',
         'RecoveryCode',
         'Device',
         'TopicMember'
