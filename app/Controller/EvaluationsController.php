@@ -8,12 +8,14 @@ App::import('Service', 'EvaluationService');
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
+ * @property EvaluationSetting $EvaluationSetting
  * @var                 $selectedTabTermId
  */
 class EvaluationsController extends AppController
 {
     public $uses = [
-        'Evaluation'
+        'Evaluation',
+        'EvaluationSetting'
     ];
 
     function beforeFilter()
@@ -26,6 +28,7 @@ class EvaluationsController extends AppController
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $userId = $this->Auth->user('id');
         try {
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
@@ -75,9 +78,8 @@ class EvaluationsController extends AppController
 
         $incompSelfEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF, $termId, false);
         $incompEvaluateeEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR, $termId, false);
-        $selfEval = $EvaluationService->getEvalStatus($termId, $this->Auth->user('id'));
+        $selfEval = $EvaluationService->getEvalStatus($termId, $userId);
         $evaluateesEval = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($termId);
-
         // 該当期間が評価開始されているか
         $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($termId);
 

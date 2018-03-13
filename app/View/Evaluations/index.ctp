@@ -14,7 +14,6 @@
             'default'      => $termId,
         ])
         ?>
-
         <?php // 評価が開始されているか ?>
         <?php if (!$isStartedEvaluation): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
@@ -60,7 +59,8 @@
                         [
                             'evaluatees'     => $evaluateesEval,
                             'eval_term_id'   => $termId,
-                            'eval_is_frozen' => $isFrozen
+                            'eval_is_frozen' => $isFrozen,
+                            'isFixedEvaluationOrder' => $isFixedEvaluationOrder,
                         ]) ?>
                 <?php endif; ?>
             </div>

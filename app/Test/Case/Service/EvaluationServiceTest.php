@@ -3,6 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('Term', 'Model');
 App::import('Service', 'EvaluationService');
 
+use Goalous\Model\Enum as Enum;
 /**
  * EvaluationServiceTest Class
  * Created by PhpStorm.
@@ -11,6 +12,8 @@ App::import('Service', 'EvaluationService');
  * Time: 9:42
  *
  * @property EvaluationService $EvaluationService
+ * @property Evaluation $Evaluation
+ * @property EvaluationSetting $EvaluationSetting
  */
 class EvaluationServiceTest extends GoalousTestCase
 {
@@ -24,6 +27,9 @@ class EvaluationServiceTest extends GoalousTestCase
         'app.user',
         'app.local_name',
         'app.email',
+        'app.term',
+        'app.team',
+        'app.evaluation_setting'
     );
 
     /**
@@ -35,6 +41,8 @@ class EvaluationServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->EvaluationService = ClassRegistry::init('EvaluationService');
+        $this->Evaluation = ClassRegistry::init('Evaluation');
+        $this->EvaluationSetting = ClassRegistry::init('EvaluationSetting');
     }
 
     function testGetEvalStatusEmpty()
@@ -51,7 +59,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 5,
@@ -67,7 +75,7 @@ class EvaluationServiceTest extends GoalousTestCase
                     'status'          => '5',
                     'this_turn'       => true,
                     'other_evaluator' => false,
-                    'evaluate_type' => Evaluation::TYPE_ONESELF
+                    'evaluate_type'   => Evaluation::TYPE_ONESELF
                 ]
             ],
             'status_text' => [
@@ -108,7 +116,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'evaluate_type'     => Evaluation::TYPE_ONESELF,
@@ -116,7 +124,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => 2,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
@@ -130,14 +138,14 @@ class EvaluationServiceTest extends GoalousTestCase
                     'status'          => '0',
                     'this_turn'       => false,
                     'other_evaluator' => false,
-                    'evaluate_type' => Evaluation::TYPE_ONESELF
+                    'evaluate_type'   => Evaluation::TYPE_ONESELF
                 ],
                 [
                     'name'            => '1(firstname lastname)',
                     'status'          => '0',
                     'this_turn'       => false,
                     'other_evaluator' => true,
-                    'evaluate_type' => Evaluation::TYPE_EVALUATOR
+                    'evaluate_type'   => Evaluation::TYPE_EVALUATOR
                 ]
             ],
             'status_text' => [
@@ -176,7 +184,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 2,
@@ -186,7 +194,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
                 'status'            => 1,
@@ -196,7 +204,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 3,
                 'evaluator_user_id' => 3,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 2,
@@ -206,7 +214,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 3,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
                 'status'            => 1,
@@ -246,7 +254,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '2',
                         'this_turn'       => false,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_ONESELF
+                        'evaluate_type'   => Evaluation::TYPE_ONESELF
 
                     ],
                     (int)1 => [
@@ -254,7 +262,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '1',
                         'this_turn'       => true,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_EVALUATOR
+                        'evaluate_type'   => Evaluation::TYPE_EVALUATOR
 
                     ]
                 ],
@@ -290,7 +298,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '2',
                         'this_turn'       => false,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_ONESELF
+                        'evaluate_type'   => Evaluation::TYPE_ONESELF
 
                     ],
                     (int)1 => [
@@ -298,7 +306,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '1',
                         'this_turn'       => true,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_EVALUATOR
+                        'evaluate_type'   => Evaluation::TYPE_EVALUATOR
                     ]
                 ],
                 'status_text' => [
@@ -317,6 +325,125 @@ class EvaluationServiceTest extends GoalousTestCase
         $Evaluation->current_team_id = $teamId;
         $Evaluation->my_uid = $userId;
         return $Evaluation;
+    }
+
+    function test_isEditable()
+    {
+
+        // Term doesn't exist
+        $res = $this->EvaluationService->isEditable(99, 1, 1);
+        $this->assertFalse($res);
+
+        $this->_setDefault();
+        $teamId = 1;
+        $userId = 1;
+        $this->Team->current_team_id = $teamId;
+        $this->Team->my_uid = $userId;
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $termId = $this->Term->getTermId(Term::TYPE_CURRENT);
+
+        // Evaluate status: not started
+        $res = $this->EvaluationService->isEditable($termId, 1, $userId);
+        $this->assertFalse($res);
+        // Evaluate status: freeze
+        $this->Term->changeFreezeStatus($termId);
+        $res = $this->EvaluationService->isEditable($termId, 1, $userId);
+        $this->assertFalse($res);
+
+        // Evaluate status: started
+        $this->Term->changeToInProgress($termId);
+
+        $res = $this->EvaluationService->isEditable($termId, 1, $userId);
+        $this->assertFalse($res);
+
+        // Evaluate status: started, No evaluation data
+        $res = $this->EvaluationService->isEditable($termId, 1, $userId);
+        $this->assertFalse($res);
+
+        // Evaluatee can edit evaluation
+        $evaluatorId1 = 2;
+        $evaluatorId2 = 3;
+        $finalEvaluatorId = 4;
+        $this->Evaluation->saveAll([
+            [
+                'evaluatee_user_id' => $userId,
+                'evaluator_user_id' => $userId,
+                'term_id'           => $termId,
+                'team_id'           => $teamId,
+                'index_num'         => 0,
+                'evaluate_type'     => Evaluation::TYPE_ONESELF,
+            ],
+            [
+                'evaluatee_user_id' => $userId,
+                'evaluator_user_id' => $evaluatorId1,
+                'term_id'           => $termId,
+                'team_id'           => $teamId,
+                'index_num'         => 0,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+            ],
+            [
+                'evaluatee_user_id' => $userId,
+                'evaluator_user_id' => $evaluatorId2,
+                'term_id'           => $termId,
+                'team_id'           => $teamId,
+                'index_num'         => 0,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+            ],
+            [
+                'evaluatee_user_id' => $userId,
+                'evaluator_user_id' => $finalEvaluatorId,
+                'term_id'           => $termId,
+                'team_id'           => $teamId,
+                'index_num'         => 0,
+                'evaluate_type'     => Evaluation::TYPE_FINAL_EVALUATOR,
+            ],
+        ]);
+        $this->EvaluationSetting->save([
+            'team_id' => $teamId,
+            'enable_flg' => true,
+        ]);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId2);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
+        $this->assertFalse($res);
+
+        // Evaluator can't edit evaluation
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DRAFT]);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
+        $this->assertFalse($res);
+
+
+        // Evaluator can edit evaluation
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE]);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId2);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
+        $this->assertFalse($res);
+    }
+
+    private function _setDefault()
+    {
+        $this->Evaluation->current_team_id = 1;
+        $this->Evaluation->my_uid = 1;
+        $this->Term->current_team_id = 1;
+        $this->Term->my_uid = 1;
+        $this->Team->current_team_id = 1;
+        $this->Team->my_uid = 1;
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->Term->addTermData(Term::TYPE_NEXT);
     }
 
 }

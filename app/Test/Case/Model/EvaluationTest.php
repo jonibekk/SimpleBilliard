@@ -881,17 +881,6 @@ class EvaluationTest extends GoalousTestCase
         $this->assertEquals($nextEvaluatorId, null);
     }
 
-    function testGetIsEditableCaseTermIsFrozen()
-    {
-        $this->_setDefault();
-        $this->Evaluation->Team->current_team_id = 1;
-        $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->Term->addTermData(Term::TYPE_CURRENT);
-        $termId = $this->Evaluation->Team->Term->getTermId(Term::TYPE_NEXT);
-        $this->Evaluation->Team->Term->changeFreezeStatus($termId);
-        $this->Evaluation->getIsEditable($termId, null);
-    }
-
     function testGetAllStatusesForTeamSettings()
     {
         $this->_setDefault();

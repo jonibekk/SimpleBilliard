@@ -8,6 +8,15 @@ use Goalous\Model\Enum as Enum;
 
 class EvaluationService extends AppService
 {
+    /* Evaluation stage */
+    const STAGE_NONE = 0;
+    const STAGE_SELF_EVAL = 1;
+    const STAGE_EVALUATOR_EVAL = 2;
+    const STAGE_FINAL_EVALUATOR_EVAL = 3;
+    const STAGE_COMPLETE = 4;
+
+    private $cachedEvalStages = [];
+
     /**
      * 認定リストのステータスをフォーマット
      *
@@ -20,12 +29,17 @@ class EvaluationService extends AppService
     {
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var  EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+
+        $isFixedEvaluationOrder = $EvaluationSetting->isFixedEvaluationOrder();
 
         $evaluations = $Evaluation->getEvaluationListForIndex($termId, $userId);
         $evaluations = Hash::combine($evaluations, '{n}.id', '{n}');
         $flow = [];
         $evaluator_index = 1;
         $status_text = ['your_turn' => false, 'body' => null];
+        $myEval = [];
         //update flow
         foreach ($evaluations as $val) {
             $name = Evaluation::$TYPE[$val['evaluate_type']]['index'];
@@ -50,37 +64,112 @@ class EvaluationService extends AppService
                 'other_evaluator' => $otherEvaluator,
                 'evaluate_type'   => $val['evaluate_type']
             ];
+
+            if ($val['evaluator_user_id'] == $Evaluation->my_uid) {
+                $myEval = $val;
+            }
             //update status_text
             if ($val['my_turn_flg'] === false) {
                 continue;
             }
-            if ($val['evaluator_user_id'] != $Evaluation->my_uid) {
-                $status_text['body'] = __("Waiting for the evaluation by %s.", $name);
-                continue;
-            }
-            //your turn
-            $status_text['your_turn'] = true;
-            switch ($val['evaluate_type']) {
-                case Evaluation::TYPE_ONESELF:
-                    $status_text['body'] = __("Please evaluate yourself.");
-                    break;
-                case Evaluation::TYPE_EVALUATOR:
-                    $status_text['body'] = __("Please evaluate.");
-                    break;
+            if ($isFixedEvaluationOrder) {
+                if ($val['evaluator_user_id'] != $Evaluation->my_uid) {
+                    $status_text['body'] = __("Waiting for the evaluation by %s.", $name);
+                    continue;
+                }
+                //your turn
+                $status_text['your_turn'] = true;
+                switch ($val['evaluate_type']) {
+                    case Evaluation::TYPE_ONESELF:
+                        $status_text['body'] = __("Please evaluate yourself.");
+                        break;
+                    case Evaluation::TYPE_EVALUATOR:
+                        $status_text['body'] = __("Please evaluate.");
+                        break;
+                }
             }
         }
         if (empty($flow)) {
             return [];
         }
 
+        $evalStage = $this->getEvalStageIfNotFixedEvalOrder($termId, $userId);
+        if (!$isFixedEvaluationOrder) {
+            switch ($evalStage) {
+                case self::STAGE_SELF_EVAL:
+                    if ($userId == $Evaluation->my_uid) {
+                        $status_text['body'] = __("Please evaluate yourself.");
+                    } else {
+                        $status_text['body'] = __("Waiting for the evaluation by %s.", __("Members"));
+                    }
+                    break;
+                case self::STAGE_EVALUATOR_EVAL:
+                    if ($myEval['evaluate_type'] == Evaluation::TYPE_EVALUATOR
+                        && $myEval['status'] != Enum\Evaluation\Status::DONE) {
+                        $status_text['body'] = __("Please evaluate.");
+                    } else {
+                        $status_text['body'] = __("Waiting for the evaluation by %s.", __("Evaluator"));
+                    }
+                    break;
+                case self::STAGE_FINAL_EVALUATOR_EVAL:
+                    $status_text['body'] = __("Waiting for the evaluation by %s.", __("Final Evaluator"));
+                    break;
+            }
+        }
+
         /** @var  User $User */
         $User = ClassRegistry::init('User');
         $user = $User->getProfileAndEmail($userId);
-        $res = array_merge(['flow' => $flow, 'status_text' => $status_text], $user);
+        $res = array_merge(['flow' => $flow, 'status_text' => $status_text, 'eval_stage' => $evalStage], $user);
         return $res;
     }
 
     /**
+     * Get stage who can input evaluation(Evaluatee, Evaluator, Final Evaluator)
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return int
+     */
+    function getEvalStageIfNotFixedEvalOrder(int $termId, int $evaluateeId): int
+    {
+        /** @var  Evaluation $Evaluation */
+        $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var  EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+
+        $key = $termId.'-'.$evaluateeId;
+        if (isset($this->cachedEvalStages[$key])) {
+            return $this->cachedEvalStages[$key];
+        }
+
+        $isFixedEvaluationOrder = $EvaluationSetting->isFixedEvaluationOrder();
+        if ($isFixedEvaluationOrder) {
+            $this->cachedEvalStages[$key] = self::STAGE_NONE;
+            return self::STAGE_NONE;
+        }
+
+        $selfEval = $Evaluation->getUnique($evaluateeId, $evaluateeId, $termId, Evaluation::TYPE_ONESELF);
+        if ((int)$selfEval['status'] !== Enum\Evaluation\Status::DONE) {
+            $this->cachedEvalStages[$key] = self::STAGE_SELF_EVAL;
+            return self::STAGE_SELF_EVAL;
+        }
+
+        if (!$Evaluation->isCompleteEvalByEvaluator($termId, $evaluateeId)) {
+            $this->cachedEvalStages[$key] = self::STAGE_EVALUATOR_EVAL;
+            return self::STAGE_EVALUATOR_EVAL;
+        }
+
+        if (!$Evaluation->isCompleteEvalByFinalEvaluator($termId, $evaluateeId)) {
+            $this->cachedEvalStages[$key] = self::STAGE_FINAL_EVALUATOR_EVAL;
+            return self::STAGE_FINAL_EVALUATOR_EVAL;
+        }
+        $this->cachedEvalStages[$key] = self::STAGE_COMPLETE;
+        return self::STAGE_COMPLETE;
+    }
+
+
+        /**
      * @param int $termId
      *
      * @return array
@@ -188,7 +277,7 @@ class EvaluationService extends AppService
      *
      * @return bool
      */
-    function isEditable($evaluateTermId, $evaluateeId, $userId)
+    function isEditable(int $evaluateTermId, int $evaluateeId, int $userId) : bool
     {
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');
@@ -197,15 +286,23 @@ class EvaluationService extends AppService
         /** @var  Term $Term */
         $Term = ClassRegistry::init('Term');
 
+        $term = $Term->getById($evaluateTermId);
+        if (empty($term)) {
+            return false;
+        }
         // check frozen
-        $evalIsFrozen = $Term->checkFrozenEvaluateTerm($evaluateTermId);
-        if ($evalIsFrozen) {
+        if ((int)$term['evaluate_status'] !== Enum\Term\EvaluateStatus::IN_PROGRESS) {
+            return false;
+        }
+        $evaluation = $Evaluation->getUnique($evaluateeId, $userId, $evaluateTermId);
+        // Check if exist evaluation
+        if (empty($evaluation)) {
             return false;
         }
 
-        // Don't showかつ凍結前かどうか
-        if (!$EvaluationSetting->isShowAllEvaluationBeforeFreeze()) {
-            if ($evaluateeId == $userId) {
+        // If not fixed evaluation order
+        if (!$EvaluationSetting->isFixedEvaluationOrder()) {
+            if ($evaluateeId == $userId && (int)$evaluation['status'] !== Enum\Evaluation\Status::DONE) {
                 return true;
             } else {
                 $evaluation = $Evaluation->getUnique($evaluateeId, $evaluateeId, $evaluateTermId);
@@ -216,7 +313,7 @@ class EvaluationService extends AppService
             }
         }
 
-        // check my turn
+        // Check my turn if all evaluation show before freeze
         $evaluationList = $Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
         $nextEvaluatorId = $Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
         $isMyTurn = !empty(Hash::extract($evaluationList,
