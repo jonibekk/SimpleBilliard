@@ -284,6 +284,8 @@ class Evaluation extends AppModel
             }
         }
 
+        // TODO: fix not to use turn flg. This is not simple.
+        // Currently, we use turn flg if only fixed evaluation order
         // Move turn flg to next
         if ($saveType == self::TYPE_STATUS_DONE && $this->Team->EvaluationSetting->isFixedEvaluationOrder()) {
             $baseEvaId = $data[0]['Evaluation']['id'];
@@ -301,26 +303,60 @@ class Evaluation extends AppModel
 
     }
 
+    /**
+     * `getEvaluations` wrapper for getting evaluatee
+     *
+     * @param int $evaluateTermId
+     * @param int $evaluateeId
+     *
+     * @return array
+     */
     function getEvaluationsForEvaluatee(int $evaluateTermId, int $evaluateeId): array
     {
-        return $this->getEvaluations($evaluateTermId, $evaluateeId, ['evaluator_user_id' => $evaluateeId]);
+        return $this->getEvaluations($evaluateTermId, $evaluateeId,
+            ['evaluator_user_id' => $evaluateeId, 'evaluate_type' => self::TYPE_ONESELF]);
 
     }
 
-    function getEvaluationsForEvaluator(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
+    /**
+     * `getEvaluations` wrapper for getting evaluator
+     *
+     * @param int $evaluateTermId
+     * @param int $evaluateeId
+     * @param int $evaluatorId
+     *
+     * @return array
+     */
+    function getEvaluationsForEvaluatorAndEvaluatee(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
     {
-        return $this->getEvaluations($evaluateTermId, $evaluateeId, ['evaluator_user_id' => $evaluatorId]);
+        return $this->getEvaluations($evaluateTermId, $evaluateeId,
+            [
+                'evaluator_user_id' => [$evaluatorId, $evaluateeId],
+                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR]
+            ]
+        );
 
     }
 
+    /**
+     * Getting each evaluation detail
+     *
+     * @param int   $evaluateTermId
+     * @param int   $evaluateeId
+     * @param array $conditions
+     *
+     * @return array
+     */
     function getEvaluations(int $evaluateTermId, int $evaluateeId, array $conditions = []): array
     {
         $options = [
             'conditions' => [
                 'term_id'           => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'NOT'               => [
-                    ['evaluate_type' => self::TYPE_LEADER]
+                'evaluate_type'     => [
+                    self::TYPE_ONESELF,
+                    self::TYPE_EVALUATOR,
+                    self::TYPE_FINAL_EVALUATOR
                 ]
             ],
             'order'      => 'Evaluation.index_num asc',
@@ -506,6 +542,8 @@ class Evaluation extends AppModel
         }
         if (!empty($all_evaluations)) {
             $res = $this->saveAll($all_evaluations);
+            // TODO: fix not to use turn flg. This is not simple.
+            // Currently, we use turn flg if only fixed evaluation order
             if ($this->Team->EvaluationSetting->isFixedEvaluationOrder()) {
                 //set my_turn
                 $this->updateAll(['Evaluation.my_turn_flg' => true],
@@ -820,7 +858,8 @@ class Evaluation extends AppModel
             if ($eval['status'] == Enum\Evaluation\Status::DONE) {
                 continue;
             }
-            $evalStage = $EvaluationService->getEvalStageIfNotFixedEvalOrder($eval['term_id'], $eval['evaluatee_user_id']);
+            $evalStage = $EvaluationService->getEvalStageIfNotFixedEvalOrder($eval['term_id'],
+                $eval['evaluatee_user_id']);
             switch ($eval['evaluate_type']) {
                 case Evaluation::TYPE_ONESELF:
                     if ($evalStage == EvaluationService::STAGE_SELF_EVAL) {
@@ -1088,7 +1127,15 @@ class Evaluation extends AppModel
         return $res;
     }
 
-    function isCompleteEvalByEvaluator(int $termId, int $evaluateeId)
+    /**
+     * Check whether all evaluators completed evaluating
+     *
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return bool
+     */
+    function isCompleteEvalByEvaluator(int $termId, int $evaluateeId): bool
     {
         $options = [
             'conditions' => [
@@ -1104,7 +1151,15 @@ class Evaluation extends AppModel
         return $res === 0;
     }
 
-    function isCompleteEvalByFinalEvaluator(int $termId, int $evaluateeId)
+    /**
+     * Check whether final evaluator completed evaluating
+     *
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return bool
+     */
+    function isCompleteEvalByFinalEvaluator(int $termId, int $evaluateeId): bool
     {
         $options = [
             'conditions' => [
@@ -1191,6 +1246,8 @@ class Evaluation extends AppModel
     }
 
     /**
+     * Get unique evaluation record
+     *
      * @param int  $evaluateeId
      * @param int  $evaluatorId
      * @param int  $termId

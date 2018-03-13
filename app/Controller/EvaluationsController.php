@@ -151,7 +151,7 @@ class EvaluationsController extends AppController
             }
             $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
-            $evaluationList = $EvaluationService->findEvaluations($userId, $evaluateeId, $evaluateTermId);
+            $evaluationList = array_values($EvaluationService->findEvaluations($userId, $evaluateeId, $evaluateTermId));
 
             // order by priority
             //TODO: このコードは一時的なもの(今後は評価開始時に既にソート済になるので削除予定)

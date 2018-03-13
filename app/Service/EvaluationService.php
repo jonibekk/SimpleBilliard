@@ -283,27 +283,26 @@ class EvaluationService extends AppService
             return [];
         }
 
-        // Don't showかつ凍結前かどうか
+        // Get all evaluations
         if ($EvaluationSetting->isShowAllEvaluationBeforeFreeze()
             || (int)$term['evaluate_status'] !== Enum\Term\EvaluateStatus::IN_PROGRESS) {
             $evaluations = $Evaluation->getEvaluations($termId, $evaluateeId);
             return $evaluations;
         }
 
-        $evaluations = $Evaluation->getEvaluationsForEvaluatee($termId, $evaluateeId);
-        // Case: login user is evaluatee
+        // Case: login user is evaluatee (only my evaluation)
         if ($userId == $evaluateeId) {
-            return $evaluations;
+            return $Evaluation->getEvaluationsForEvaluatee($termId, $evaluateeId);
         }
 
-        // Case: login user is evaluator
-        $evaluations[0] = $evaluations[0] + $Evaluation->getEvaluationsForEvaluator($termId, $evaluateeId, $userId)[0];
+        // Case: login user is evaluator (evaluatee + my evaluation)
+        $evaluations = $Evaluation->getEvaluationsForEvaluatorAndEvaluatee($termId, $evaluateeId, $userId);
         return $evaluations;
 
     }
 
     /**
-     *
+     * Check whether login user edit evaluation
      * @param $evaluateTermId
      * @param $evaluateeId
      * @param $userId
