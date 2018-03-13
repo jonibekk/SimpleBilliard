@@ -92,7 +92,19 @@ class EvaluatorSettingsController extends AppController
      */
     function detail()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
         $userId = $this->request->params['user_id'];
-        $this->set('userId', $userId);
+
+        /** @var  User $User */
+        $User = ClassRegistry::init('User');
+        $userEvaluatee = $User->findById($userId);
+
+        // TODO: fetch evaluators
+        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee, null, null, null, null,];
+
+        $this->set('userEvaluatee', $userEvaluatee);
+        $this->set('userEvaluateeCoach', $userEvaluatee);
+        $this->set('userEvaluators', $userEvaluators);
     }
 }
