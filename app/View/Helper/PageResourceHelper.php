@@ -139,6 +139,9 @@ class PageResourceHelper extends AppHelper
         'evaluations'   => [
             'default' => ['evaluation.min'],
         ],
+        'evaluator_settings'   => [
+            'default' => ['evaluation.min'],
+        ],
         'saved_items'   => [
             'default' => ['saved_item.min'],
         ],

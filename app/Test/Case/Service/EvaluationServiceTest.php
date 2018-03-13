@@ -1,6 +1,8 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('Term', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('User', 'Model');
 App::import('Service', 'EvaluationService');
 
 use Goalous\Model\Enum as Enum;
@@ -14,6 +16,8 @@ use Goalous\Model\Enum as Enum;
  * @property EvaluationService $EvaluationService
  * @property Evaluation $Evaluation
  * @property EvaluationSetting $EvaluationSetting
+ * @property TeamMember        $TeamMember
+ * @property User              $User
  */
 class EvaluationServiceTest extends GoalousTestCase
 {
@@ -29,7 +33,8 @@ class EvaluationServiceTest extends GoalousTestCase
         'app.email',
         'app.term',
         'app.team',
-        'app.evaluation_setting'
+        'app.evaluation_setting',
+        'app.team_member',
     );
 
     /**
@@ -43,6 +48,8 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->EvaluationService = ClassRegistry::init('EvaluationService');
         $this->Evaluation = ClassRegistry::init('Evaluation');
         $this->EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+        $this->TeamMember = ClassRegistry::init('TeamMember');
+        $this->User = ClassRegistry::init('User');
     }
 
     function testGetEvalStatusEmpty()
@@ -316,6 +323,58 @@ class EvaluationServiceTest extends GoalousTestCase
             ]
         ];
         $this->assertEquals($expected, $ret);
+    }
+
+    function testGetEvaluateesFromCoachUserId_empty()
+    {
+        $termId = 1;
+        // no evaluatee test
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 3);
+        $this->assertSame([], $ret);
+    }
+
+    function testGetEvaluateesFromCoachUserId_succeed()
+    {
+        $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
+        $termId = 1;
+        $Evaluation->saveAll([
+            [
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => $userId,
+                'term_id'           => $termId,
+                'team_id'           => $teamId,
+                'index_num'         => 1,
+                'status'            => 1,
+                'my_turn_flg'       => 1,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+            ],
+            [
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 3,
+                'term_id'           => $termId,
+                'team_id'           => $teamId,
+                'index_num'         => 1,
+                'status'            => 1,
+                'my_turn_flg'       => 1,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+            ],
+        ]);
+        $user = $this->User->create();
+        $user = $this->User->save($user);
+
+        $teamMember = $this->TeamMember->create();
+        $teamMember = reset($teamMember);
+        $teamMember['user_id'] = $user['User']['id'];
+        $teamMember['team_id'] = $teamId;
+        $teamMember['evaluation_enable_flg'] = 1;
+        $teamMember['coach_user_id'] = $userId;
+        $teamMember = $this->TeamMember->save($teamMember);
+
+        // no evaluatee test
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 1);
+        $this->assertSame(2, count($ret));
+        $userHasFlow = $ret[0];
+        $this->assertSame(2, count($userHasFlow['flow']));
     }
 
     function _getEvaluationObject(int $teamId, int $userId): Evaluation

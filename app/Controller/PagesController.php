@@ -12,6 +12,10 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'PaymentService');
 App::import('Service', 'UserService');
 App::import('Service', 'CampaignService');
+App::import('Service', 'PostDraftService');
+App::import('Model', 'PostDraft');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Static content controller
@@ -161,11 +165,14 @@ class PagesController extends AppController
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
-            ]);
+                ]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
+        $this->set('post_drafts', $PostDraftService->getPostDraftForFeed($this->Auth->user('id'), $current_team['Team']['id']));
     }
 
     public function _setLanguage()
@@ -231,13 +238,6 @@ class PagesController extends AppController
         $Email->set($this->request->data);
         $data = Hash::extract($this->request->data, 'Email');
         if ($Email->validates()) {
-            if (empty($data['sales_people'])) {
-                $data['sales_people_text'] = __('Anyone');
-            } else {
-                $data['sales_people_text'] = implode(', ', $data['sales_people']);
-            }
-            $data['want_text'] = $this->_getContactTypeOption()[$data['want']];
-
             $this->Session->write('contact_form_data', $data);
             $lang = $this->_getLangFromParam();
             return $this->redirect(['action' => 'contact_confirm', 'lang' => $lang]);
@@ -296,12 +296,7 @@ class PagesController extends AppController
             ->subject(__('Goalous - Thanks for your contact.'))
             ->send();
         $lang = $this->_getLangFromParam();
-        return $this->redirect([
-            'controller' => 'pages',
-            'action'     => 'display',
-            'pagename'   => 'contact_thanks',
-            'lang'       => $lang,
-        ]);
+        return $this->redirect('/contact_thanks');
     }
 
     public function _setUrlParams()
