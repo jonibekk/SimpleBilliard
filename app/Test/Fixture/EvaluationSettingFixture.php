@@ -202,6 +202,18 @@ class EvaluationSettingFixture extends CakeTestFixtureEx
             'default' => '1',
             'comment' => 'リーダ評価 ゴール コメント必須 on/off'
         ),
+        'fixed_evaluation_order_flg'    => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => '評価者による評価順序固定 on/off'
+        ),
+        'show_all_evaluation_before_freeze_flg'    => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => '評価凍結前に他の評価者の評価を閲覧可能 on/off'
+        ),
         'del_flg'                             => array(
             'type'    => 'boolean',
             'null'    => false,
