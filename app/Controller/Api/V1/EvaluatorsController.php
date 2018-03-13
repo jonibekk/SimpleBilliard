@@ -73,9 +73,14 @@ class EvaluatorsController extends ApiController
         /** @var EvaluatorService $EvaluatorService */
         $EvaluatorService = ClassRegistry::init("EvaluatorService");
 
+        /** @var EvaluatorChangeLogService $EvaluatorChangeLogService */
+        $EvaluatorChangeLogService = ClassRegistry::init("EvaluatorChangeLogService");
+
         $teamId = $this->current_team_id;
 
-        $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds);
+        $EvaluatorChangeLogService->saveLog($teamId, $evaluateeUserId, $userId);
+
+        $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds, $userId);
 
         if ($setByCoachFlag) {
             $this->_notifyUserOfEvaluatorToEvaluatee($teamId, $evaluateeUserId, $coachId);
