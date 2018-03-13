@@ -35,13 +35,20 @@ class MentionComponent extends Component {
         $result = preg_replace('/%%%'.$pattern.'%%%/m', '%%%'.$pattern.':'.$replacement.'%%%', $subject);
         return $result;
     }
-    public function replaceMention($text) {
+    public function replaceMention($text, $mentions) {
+        $result = $text
+        foreach ($mentions as $mention) {
+            $result = preg_replace('/%%%'.$mention.':(.*?)%%%/m', '<b><i><@${1}></i></b>', $text);
+        }
         $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $text);
         return $result;
     }
     public function isMentioned($body, $userId, $teamId) {
         $users = $this->getUserList($body, $teamId, $userId, true);
-        return in_array($userId, $users);
+        if (in_array($userId, $users)) {
+            
+        }
+        return false;
     }
     static public function appendName($body) {
         $matches = MentionComponent::extractAllIdFromMention($body);
