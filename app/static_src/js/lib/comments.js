@@ -237,8 +237,14 @@ function addComment(e) {
                 // 通信が成功したときの処理
                 evCommentLatestView.call($refresh_link.get(0), {
                     afterSuccess: function () {
-                        $first_form.children().toggle();
-                        $f.remove();
+                        var post_id = sanitize($f.attr("post-id"));
+                        var $commentButtons = $('#Comment_' + post_id);
+                        $f.trigger('reset')
+                        document.getElementById('CommentFormBody_' + post_id).style.height = null;
+                        $('#CommentUploadFilePreview_' + post_id).empty();
+                        $('#CommentOgpSiteInfo_' + post_id).empty();
+                        $('#CommentFormBody_' + post_id).removeClass('no-border');
+                        $commentButtons.toggle();
                         ajaxProcess.resolve();
                     }
                 });
@@ -258,7 +264,6 @@ function addComment(e) {
         $loader_html.remove();
         $submit.removeAttr('disabled');
     });
-
 }
 
 /**
@@ -404,7 +409,7 @@ function evCommentDelete(e) {
         '        <h5 class="modal-title text-danger">' + __("Delete comment") + '</h5>' +
         '     </div>' +
         '     <div class="modal-body">' +
-        '         <h4>' + __("Do you really want to delete this comment?") +'</h4>' +
+        '         <h4>' + __("Do you really want to delete this comment?") + '</h4>' +
         '     </div>' +
         '     <div class="modal-footer">' +
         '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.cancel + '</button>' +
@@ -442,7 +447,7 @@ function evCommentDeleteConfirm() {
         success: function () {
             // Remove modal and comment box
             $modal.modal('hide');
-            $commentBox.fadeOut('slow', function(){
+            $commentBox.fadeOut('slow', function () {
                 $(this).remove();
             });
         },
@@ -450,7 +455,7 @@ function evCommentDeleteConfirm() {
             // Display error message
             new Noty({
                 type: 'error',
-                text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.i,
+                text: '<h4>' + cake.word.error + '</h4>' + cake.message.notice.i,
             }).show();
             $modal.modal('hide');
         }
@@ -480,7 +485,7 @@ function evCommendEditSubmit(e) {
         OGP: null
     };
 
-    var $ogp = $('#CommentOgpEditBox_'+commentId);
+    var $ogp = $('#CommentOgpEditBox_' + commentId);
     if ($ogp.find('.media-object').length > 0) {
         var image = $ogp.find('.media-object').attr('src');
         var title = $ogp.find('.media-heading').text().trim();
@@ -531,7 +536,7 @@ function evCommendEditSubmit(e) {
             // Display error message
             new Noty({
                 type: 'error',
-                text: '<h4>'+cake.word.error+'</h4>'+cake.message.notice.i,
+                text: '<h4>' + cake.word.error + '</h4>' + cake.message.notice.i,
             }).show();
             // Cancel editing
             $('[target-id="CommentEditForm_' + commentId + '"]').click();
