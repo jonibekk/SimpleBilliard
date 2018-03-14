@@ -90,12 +90,14 @@ class Evaluator extends AppModel
     function insertEvaluators(int $teamId, int $userId, array $evaluatorIds)
     {
         $saveData = [];
+        $evaluatorCount = 0;
 
         foreach ($evaluatorIds as $evaluatorId) {
             $saveData[] = [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $evaluatorId,
-                'team_id'           => $teamId
+                'team_id'           => $teamId,
+                'index_num'         => $evaluatorCount++
             ];
         }
 
