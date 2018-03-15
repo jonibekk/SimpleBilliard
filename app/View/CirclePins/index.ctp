@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment()?>
-<link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+<?php echo $this->Html->Css('fontawesome-all.min'); ?>
 <div id="circles-edit-page" class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
     <div class="panel-heading">
         <?= __("PinCircle") ?>
