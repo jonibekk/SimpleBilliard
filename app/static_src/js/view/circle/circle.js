@@ -277,24 +277,8 @@ window.onload = function(){
     }
     var circles = document.querySelectorAll('.list-group-item');
     if(circles){
-        var pinEvent = function(evt) {
-            evt = evt || window.event;
-            this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
-            this.classList.toggle('fa-disabled');
-
-            this.parentElement.querySelector('.fa-ellipsis-h').onclick = showAdminOptions;
-
-            if(this.classList.contains('fa-disabled')) {
-                document.getElementById('unpinned').appendChild(this.parentElement);
-            } else {
-                document.getElementById('pinned').appendChild(this.parentElement);
-            }
-            
-            updateOrder();
-            updateDisplayCount();
-        };
-        for(var i = 0; i < circles.length; i++){
-            circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
+        var showCircleEditModal = function(){
+            console.log("TODO");
         }
         var showAdminOptions = function(evt) {
             evt = evt || window.event;
@@ -316,23 +300,41 @@ window.onload = function(){
               success: function(data){
                 console.log(data);
                 //var alink = self.parentElement.querySelector('.a-black-link');
-                if(!data){
-                    return;
-                }
+                // if(!data){
+                //     return;
+                // }
                 self.parentElement.appendChild(data);
                 self.parentElement.querySelector('.fa-ellipsis-h').onclick = showCircleEditModal;
-                self.parentElement.querySelector('.fa-ellipsis-h').classList.toggle('style-hidden');
               },
               error: function(data){
                 new Noty({
                     type: 'error',
                     text: '<h4>' + cake.word.error + '</h4>' + 'Network/Data error',
                 }).show();
+                console.log(data);
+                //self.parentElement.appendChild(data);
+                self.parentElement.querySelector('.fa-ellipsis-h').onclick = showCircleEditModal;
               }
             });
         }
-        var showCircleEditModal = function(){
-            alert("TODO");
+        var pinEvent = function(evt) {
+            evt = evt || window.event;
+            this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+            this.parentElement.querySelector('.fa-ellipsis-h').classList.toggle('style-hidden');
+            this.classList.toggle('fa-disabled');
+
+            if(this.classList.contains('fa-disabled')) {
+                document.getElementById('unpinned').appendChild(this.parentElement);
+            } else {
+                document.getElementById('pinned').appendChild(this.parentElement);
+            }
+            
+            updateOrder();
+            updateDisplayCount();
+        };
+        for(var i = 0; i < circles.length; i++){
+            circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
+            circles[i].querySelector('.fa-ellipsis-h').onclick = showAdminOptions;
         }
     }
 
