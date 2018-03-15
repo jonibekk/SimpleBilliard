@@ -71,9 +71,12 @@ class CirclesController extends AppController
         return $this->redirect($this->referer());
     }
 
-    private function isAdminCircle(int $circle_id): bool 
+    public function ajax_get_edit_modal()
     {
-        $this->Circle->id = $circle_id;
+        $this->Circle->id = $this->request->params['named']['circle_id'];
+        if(!isset($this->Circle->id)){
+            return false;
+        }
         try {
             if (!$this->Circle->exists()) {
                 throw new RuntimeException(__("This circle does not exist."));
@@ -85,18 +88,6 @@ class CirclesController extends AppController
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
             return false;
-        }
-        return true;
-    }
-
-    public function ajax_get_edit_modal()
-    {
-        $circle_id = $this->request->params['named']['circle_id'];
-        if(!isset($circle_id)){
-            return;
-        }
-        if(!$this->isAdminCircle($circle_id)){
-            return;
         }
         $this->_ajaxPreProcess();
         $this->request->data = $this->Circle->findById($circle_id);
