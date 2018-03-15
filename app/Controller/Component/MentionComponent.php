@@ -51,18 +51,16 @@ class MentionComponent extends Component {
                 $replacementName = 'name';
                 $model = null;
                 if ($match['isUser'] === true) {
-                    $model = ClassRegistry::init('User');
+                    $model = ClassRegistry::init('PlainUser');
                     $replacementName = 'display_username';
-                    $condition = 'User.id';
+                    $model->alias = 'User';
                 }else if ($match['isCircle'] === true) {
                     $model = ClassRegistry::init('Circle');
-                    $condition = 'Circle.id';
                 }else if ($match['isGroup'] === true) {
                     $model = ClassRegistry::init('Group');
-                    $condition = 'Group.id';
                 }
                 if (!is_null($model)) {
-                    $data = $model->find('first', array('contain'=>false, 'conditions'=>array($condition=>$match['id'])));
+                    $data = $model->findById($match['id']);
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
                     $body = MentionComponent::replaceAndAddNameToMention($key, $replacement, $body);
