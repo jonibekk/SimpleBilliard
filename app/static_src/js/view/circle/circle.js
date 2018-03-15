@@ -1,14 +1,14 @@
 window.onload = function(){
     'use strict';
     //Toggling
-    if(document.getElementById('pinned-header-icon') && document.getElementById('unpinned-header-icon')) {
-    	var toggleCaret = function () {
-			this.classList.toggle('fa-caret-down');
-			this.classList.toggle('fa-caret-up');
-	    }
-        document.getElementById('pinned-header-icon').onclick = toggleCaret;
-        document.getElementById('unpinned-header-icon').onclick = toggleCaret;
-    }
+   //  if(document.getElementById('pinned-header-icon') && document.getElementById('unpinned-header-icon')) {
+   //  	var toggleCaret = function () {
+			// this.classList.toggle('fa-caret-down');
+			// this.classList.toggle('fa-caret-up');
+	  //   }
+   //      document.getElementById('pinned-header-icon').onclick = toggleCaret;
+   //      document.getElementById('unpinned-header-icon').onclick = toggleCaret;
+   //  }
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')){
         var pinnedSortable = new Sortable(document.getElementById('pinned'), {
