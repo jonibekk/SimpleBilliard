@@ -47,4 +47,60 @@ class CirclePin extends AppModel
         }
         return Hash::get($res, 'CirclePin');
     }
+    
+    /**
+     * Save Circle Pin Order Information
+     *
+     * @param $userId
+     * @param $teamId
+     * @param $pinOrders
+     *
+     * @return bool|mixed
+     */
+    public function insertUpdate(int $userId, int $teamId, string $pinOrders): bool {
+        $db = $this->getDataSource();
+
+        $options = [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+        ];
+
+        $data = [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'circle_orders' => $db->value($pinOrders, 'string'),
+            'del_flg' => false,
+        ];
+
+        try {
+            $this->begin();
+            $row = $this->getUnique($userId, $teamId);
+            if(empty($row)){
+                $this->create($data);
+                $this->user_id = $userId;
+                $this->team_id = $teamId;
+                $this->circle_orders = $db->value($pinOrders, 'string');
+                if(!$this->save($data)){
+                    GoalousLog::error("[CirclePin]: Insert Failure", $data);
+                    throw new Exception("Error Processing save Request", 1);
+                }
+                
+            } else {
+                $row['circle_orders'] = $db->value($pinOrders, 'string');
+                if(!$this->updateAll($row, $options)) {
+                    GoalousLog::error("[CirclePin]: Update Failure", $row);
+                    throw new Exception("Error Processing update Request", 1);             
+                }
+            }
+            $this->commit();         
+        } catch (Exception $e) {    
+            GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $this->rollback();
+            return false;
+        }
+        
+        return true;
+    }
 }
