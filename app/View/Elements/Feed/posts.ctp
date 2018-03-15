@@ -229,14 +229,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 ?>
                 <?php if (!empty($imgs) || !empty($post['PostResources'])): ?>
                     </div>
-                        <?php if (
-                                // Not going to show image if we have video posted
-                                // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
-                                !empty($imgs)
-                                && !($post['hasVideoResource'])
-                            ): ?>
+                    <?php if (
+                        // Not going to show image if we have video posted
+                        // https://confluence.goalous.com/display/GOAL/Video+post+technical+info#Videoposttechnicalinfo-Uploadinglimitation
+                        !empty($imgs)
+                        && !($post['hasVideoResource'])
+                    ): ?>
                         <div
-                            class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
+                                class="col pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
                             <?php foreach ($imgs as $v): ?>
                                 <a href="<?= $v['l'] ?>" rel='lightbox'
                                    data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
@@ -244,34 +244,40 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                        <?php endif; ?>
+                    <?php endif; ?>
 
-                        <?php if (!empty($post['PostResources'])): ?>
-                            <?php foreach ($post['PostResources'] as $resource): ?>
-                                <div class="col pt_10px feed_img_only_one mb_12px">
-                                    <?php
-                                    // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
-                                    // TODO: check if this is the video resource
-                                    // TODO: move to another .ctp files
-                                    $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'], time());
-                                    if ($resource['aspect_ratio'] > 0) {
-                                        $paddingTop = 100 / $resource['aspect_ratio'];
-                                    } else {
-                                        $paddingTop = 100;
-                                    }
-                                    $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
-                                    ?>
-                                    <div id="div<?= $videoStreamId ?>" class="video-responsive-container" style="padding-top: <?= $paddingTop ?>%">
-                                        <video id="<?= $videoStreamId ?>" class="video-js vjs-default-skin vjs-big-play-centered video-responsive" controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
+                    <?php if (!empty($post['PostResources'])): ?>
+                        <?php foreach ($post['PostResources'] as $resource): ?>
+                            <div class="col pt_10px feed_img_only_one mb_12px">
+                                <?php
+                                // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
+                                // TODO: check if this is the video resource
+                                // TODO: move to another .ctp files
+                                $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'],
+                                    time());
+                                if ($resource['aspect_ratio'] > 0) {
+                                    $paddingTop = 100 / $resource['aspect_ratio'];
+                                } else {
+                                    $paddingTop = 100;
+                                }
+                                $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
+                                ?>
+                                <div id="div<?= $videoStreamId ?>" class="video-responsive-container"
+                                     style="padding-top: <?= $paddingTop ?>%">
+                                    <video id="<?= $videoStreamId ?>"
+                                           class="video-js vjs-default-skin vjs-big-play-centered video-responsive"
+                                           controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
                                         <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
-                                            <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()->getValue() ?>" type="<?= $videoSource->getType()->getValue() ?>">
+                                            <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()
+                                                                                                                                  ->getValue() ?>"
+                                                    type="<?= $videoSource->getType()->getValue() ?>">
                                         <?php endforeach; ?>
-                                        </video>
-                                    </div>
-                                    <script>feedVideoJs('<?= $videoStreamId ?>')</script>
+                                    </video>
                                 </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                <script>feedVideoJs('<?= $videoStreamId ?>')</script>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 
                     <div class="panel-body posts-panel-body pt_10px plr_11px pb_8px">
 
@@ -454,40 +460,9 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         <i class="fa fa-exclamation-circle"></i><span class="message"></span>
                     </div>
                     <?php if (!$without_add_comment): ?>
-                        <div class="col-xxs-12 box-align feed-contents comment-contents">
-                            <?=
-                            $this->Html->image('pre-load.svg',
-                                [
-                                    'class'         => 'lazy comment-img',
-                                    'data-original' => $this->Upload->uploadUrl($my_prof,
-                                        'User.photo',
-                                        ['style' => 'medium_large']),
-                                ]
-                            )
-                            ?>
-                            <div class="comment-body" id="NewCommentForm_<?= $post['Post']['id'] ?>">
-                                <form action="#" id="" method="post" accept-charset="utf-8">
-                                    <div class="form-group mlr_-1px">
-                                    <textarea
-                                        class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
-                                        replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
-                                        click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                                        post-id="<?= $post['Post']['id'] ?>"
-                                        tmp-target-height="32"
-                                        ajax-url="<?= $this->Html->url([
-                                            'controller' => 'posts',
-                                            'action'     => 'ajax_get_new_comment_form',
-                                            'post_id'    => $post['Post']['id']
-                                        ]) ?>"
-                                        wrap="soft" rows="1"
-                                        placeholder="<?= __("Comment") ?>"
-                                        cols="30"
-                                        id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
-                                        init-height="15"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        <?= $this->element('Feed/comment_form', [
+                                'post'  => $post
+                        ]) ?>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
