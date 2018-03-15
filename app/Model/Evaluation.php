@@ -1332,4 +1332,27 @@ class Evaluation extends AppModel
         return $retData;
     }
 
+    /**
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return int
+     */
+    function countCompletedByEvaluators(int $termId, int $evaluateeId) : int
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type' => self::TYPE_EVALUATOR,
+                'goal_id' => null,
+                'status' => Enum\Evaluation\Status::DONE
+            ],
+        ];
+
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+
 }

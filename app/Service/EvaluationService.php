@@ -334,11 +334,13 @@ class EvaluationService extends AppService
 
         // If not fixed evaluation order
         if (!$EvaluationSetting->isFixedEvaluationOrder()) {
-            if ($evaluateeId == $userId && (int)$evaluation['status'] !== Enum\Evaluation\Status::DONE) {
-                return true;
+            // login user = evaluatee
+            if ($evaluateeId == $userId) {
+                // evaluatee can't edit if even one of the evaluators evaluated.
+                return $Evaluation->countCompletedByEvaluators($evaluateTermId, $evaluateeId) == 0;
             } else {
-                $evaluation = $Evaluation->getUnique($evaluateeId, $evaluateeId, $evaluateTermId);
-                if ((int)Hash::get($evaluation, 'status') === Enum\Evaluation\Status::DONE) {
+                $selfEvaluation = $Evaluation->getUnique($evaluateeId, $evaluateeId, $evaluateTermId);
+                if ((int)Hash::get($selfEvaluation, 'status') === Enum\Evaluation\Status::DONE) {
                     return true;
                 }
                 return false;
@@ -346,11 +348,11 @@ class EvaluationService extends AppService
         }
 
         // Check my turn if all evaluation show before freeze
-        $evaluationList = $Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
+        $evaluations = $Evaluation->getEvaluations($evaluateTermId, $evaluateeId);
         $nextEvaluatorId = $Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
-        $isMyTurn = !empty(Hash::extract($evaluationList,
+        $isMyTurn = !empty(Hash::extract($evaluations,
             "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$userId}]"));
-        $isNextTurn = !empty(Hash::extract($evaluationList,
+        $isNextTurn = !empty(Hash::extract($evaluations,
             "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
         if ($isMyTurn || $isNextTurn) {
             return true;
