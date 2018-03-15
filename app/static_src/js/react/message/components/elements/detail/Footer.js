@@ -149,7 +149,7 @@ class Footer extends React.Component {
   }
 
   render() {
-    const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
+    const sp_class = this.props.is_mobile_app ? "mod-sp not-autosize" : "";
     const footer_style = {
       bottom: this.props.mobile_app_layout.footer_bottom
     }
