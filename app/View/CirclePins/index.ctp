@@ -32,7 +32,7 @@
                                 ?>
                                 <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
                                 <span>
-                                <i class="fa-pull-right fas fa-cog fa-lg style-hidden"></i>
+                                <i class='fa-pull-right-less fas fa-ellipsis-h fa-lg style-hidden a-black-link'></i>
                                 <i class="fa-pull-right fas fa-thumbtack fa-lg style-hidden"></i>
                                 </span>
                         </div>
