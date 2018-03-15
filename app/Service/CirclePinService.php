@@ -112,7 +112,7 @@ class CirclePinService extends AppService
             //$memberArray = Hash::combine($memberResults, '{n}.circle_id', '{n}');
             //TODO:by hash command or set or classic set
         }
-GoalousLog::error("memberResults",$memberResults);
+
         $pinOptions = [
             'conditions' => [
                 'user_id' => $userId,
