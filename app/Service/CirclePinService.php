@@ -4,6 +4,7 @@ App::import('Service', 'UserService');
 App::uses('Circle', 'Model');
 App::uses('CirclePin', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('CirclesController', 'Controller');
 App::uses('AppUtil', 'Util');
 
 /**
@@ -11,6 +12,37 @@ App::uses('AppUtil', 'Util');
  */
 class CirclePinService extends AppService
 {
+    /**
+     * 自分が所属しているサークルのAdminか判定する
+     * @return bool
+     */
+    public function isUserCircleAdmin(int $userId, int $circleId): bool {
+        $isAdmin = false;
+        try{
+            $isAdmin = ClassRegistry::init('CircleMember')->isAdmin($userId, $circleId);
+        }catch (RuntimeException $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return false;
+        }
+        $html = "";
+
+        if($isAdmin){
+            $circleEdit = ClassRegistry::init('Circle')->Html->url([
+                'controller' => 'circles',
+                'action'     => 'ajax_get_edit_modal',
+                'circle_id'  => intval($circleId),
+            ]);
+            $html = "<a href='#'
+                       data-url='" . $circleEdit . "'
+                       class='a-black-link'>
+                       <i class='fa-pull-right fas fa-ellipsis-h fa-lg'></i>
+                    </a>";
+        }
+
+        return $html;
+    }
+
     /**
      * 自分が所属しているサークルを抜けるときに更新処理を行うメソッド
      * @return bool
@@ -77,8 +109,10 @@ class CirclePinService extends AppService
                     'unread_count' => $a['CircleMember']['unread_count']
                 ]; 
             }, $memberResults);
+            //$memberArray = Hash::combine($memberResults, '{n}.circle_id', '{n}');
+            //TODO:by hash command or set or classic set
         }
-
+GoalousLog::error("memberResults",$memberResults);
         $pinOptions = [
             'conditions' => [
                 'user_id' => $userId,
@@ -125,19 +159,25 @@ class CirclePinService extends AppService
         $circles = $Circle->find('all', $circleOptions);
         $circles = Hash::combine($circles, '{n}.Circle.id', '{n}.Circle');
 
+
         $defaultCircle;
         $regularaCircles = [];
         foreach ($circles as &$circle) {
             $key = $circle['id'];
-
-            if(array_key_exists($key, $memberArray)){
-                $index = array_search($key, $memberArray);
-                $circle['admin_flg'] = $memberArray[$index]['admin_flg'];
-                $circle['unread_count'] = $memberArray[$index]['unread_count'];
-            } else {
-                $circle['admin_flg'] = false;
-                $circle['unread_count'] = 0;
+            $keyMember = array_search($key, array_column($memberArray, 'circle_id'));
+            $circle['admin_flg'] = $memberArray[$keyMember]['admin_flg'];
+            $circle['unread_count'] = $memberArray[$keyMember]['unread_count'];
+            if($circle['unread_count'] == null){
+                $circle['unread_count'] = 100;
             }
+            // if(in_array($key, $memberArray)){
+            //     $index = array_search($key, $memberArray);
+            //     $circle['admin_flg'] = $memberArray[$index]['admin_flg'];
+            //     $circle['unread_count'] = $memberArray[$index]['unread_count'];
+            // } else {
+            //     $circle['admin_flg'] = true;//TODO:debug
+            //     $circle['unread_count'] = 0;
+            // }
 
             if(in_array($key, $pinOrders)){
                 $circle['order'] = array_search($key, $pinOrders) + 1;
@@ -160,7 +200,8 @@ class CirclePinService extends AppService
         //debug(ClassRegistry::init('CirclePin')->getDataSource()->getLog(false, false));
         $returnArray['regular_circle'] = $regularaCircles;
         $returnArray['default_circle'] = $defaultCircle;
-
+        
+GoalousLog::error("CIRCLES",$regularaCircles);
         return $returnArray;
     }
 }
