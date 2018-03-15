@@ -78,22 +78,18 @@ class CirclesController extends AppController
             return false;
         }
         try {
-            if (!$this->Circle->exists()) {
-                throw new RuntimeException(__("This circle does not exist."));
-            }
-            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__("It's only a circle administrator that can change circle settings."));
+            if (!$this->Circle->exists() || !$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
+                return false;
             }
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            $this->redirect($this->referer());
             return false;
         }
         $this->_ajaxPreProcess();
-        $this->request->data = $this->Circle->findById($circle_id);
+        $this->request->data = $this->Circle->findById($this->Circle->id);
         $this->request->data['Circle']['members'] = null;
 
-        $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
+        $circle_members = $this->Circle->CircleMember->getMembers($$this->Circle->id, true);
         $this->set('circle_members', $circle_members);
         //htmlレンダリング結果
         $response = $this->render('modal_edit_circle');
