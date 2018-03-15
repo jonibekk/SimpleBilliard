@@ -95,7 +95,7 @@ class CirclesController extends AppController
         if(!isset($circle_id)){
             return;
         }
-        if(!$this->isAuthorizedCircle($circle_id)){
+        if(!$this->isAdminCircle($circle_id)){
             return;
         }
         $this->_ajaxPreProcess();
