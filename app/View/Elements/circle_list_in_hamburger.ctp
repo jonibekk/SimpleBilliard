@@ -12,8 +12,10 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<p class="circle_heading is-humberger"><?= __("Circles") ?></p>
-<div class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
+<p class="circle_heading is-humberger"><?= __("Circles") ?>
+    <a href="/CirclePins/index" class="pull-right"><?= __("Edit") ?></a>
+</p>
+<div id="filter-circles-list-hamburger" class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
     <?php if (!empty($my_circles)): ?>
         <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'isHamburger' => true]) ?>
         <?php if (count($my_circles) > 8): ?>
@@ -44,4 +46,5 @@
         </div>
     </div>
 </div>
+<?php echo $this->Html->script('/js/goalous_circle.min'); ?>
 <?= $this->App->viewEndComment() ?>
