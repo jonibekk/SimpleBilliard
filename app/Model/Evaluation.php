@@ -735,9 +735,9 @@ class Evaluation extends AppModel
      * Get evaluable count
      * condition: not fixed evaluation order
      *
-     * @param $evaluateType
-     * @param $termId
-     * @param $isAll
+     * @param int|null $evaluateType
+     * @param int|null $termId
+     * @param bool $isAll
      *
      * @return int
      */
@@ -797,9 +797,9 @@ class Evaluation extends AppModel
      * Get evaluable count
      * condition: not fixed evaluation order
      *
-     * @param $evaluateType
-     * @param $termId
-     * @param $isAll
+     * @param int|null $evaluateType
+     * @param int|null $termId
+     * @param bool $isAll
      *
      * @return int
      */
