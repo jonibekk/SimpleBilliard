@@ -24,6 +24,12 @@
            class='a-black-link'>
             <i class='fa-pull-right-less fas fa-ellipsis-h fa-lg style-hidden'></i>
         </a>
+    <?php else: ?>
+    	<a href='#'
+           data-url=''
+           class='a-black-link'>
+            <i class='fa-pull-right-less fas fa-ellipsis-h fa-lg style-hidden'></i>
+        </a>
     <?php endif; ?>
 	<i class="fa-pull-right-less fas fa-thumbtack fa-lg fa-disabled"></i>
 </li>
