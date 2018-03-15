@@ -1,7 +1,7 @@
 <?= $this->App->viewStartComment() ?>
 <?php $isUnread = ($circle['unread_count'] > 0); ?>
 <div class="dashboard-circle-list-row-wrap circle-layout <?= $isHamburger ? 'circleListMore' : '' ?>" circle_id="<?= $circle['id'] ?>">
-    <!-- <?php if ($circle['admin_flg']): ?>
+    <?php if ($circle['admin_flg']): ?>
         <a href="#"
            data-url="<?= $this->Html->url([
                'controller' => 'circles',
@@ -11,7 +11,7 @@
            class="dashboard-circle-list-edit-wrap modal-ajax-get-circle-edit">
             <i class="fa fa-cog dashboard-circle-list-edit"></i>
         </a>
-    <?php endif; ?> -->
+    <?php endif; ?> 
     <a class="dashboard-circle-list-row js-dashboard-circle-list <?= $isUnread ? 'is-unread' : 'is-read' ?> <?= $isHamburger ? 'is-hamburger' : '' ?>"
        get-url="<?= $this->Html->url([
            'controller' => 'posts',
