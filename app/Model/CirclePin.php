@@ -6,55 +6,45 @@ App::uses('AppModel', 'Model');
  */
 class CirclePin extends AppModel
 {
-    function __construct($id = false, $table = null, $ds = null)
+    public function __construct($id = false, $table = null, $ds = null)
     {
         parent::__construct($id, $table, $ds);
-        //$this->_setPublicTypeName();
     }
 
     /**
-     * Add Circle Pin
+     * Validation rules
      *
-     * @param $userId
-     * @param $teamId
-     * @param $circleId
-     * @param $pinOrder
-     *
-     * @return bool|mixed
+     * @var array
      */
-    function add($userId, $circleId, $pinOrder) : bool
-    {
-        $data = [
-            'user_id' => $userId,
-            'team_id' => $this->current_team_id,
-            'circle_id' => $circleId,
-            'pin_order' => $pinOrder,
-        ];
-        return $this->save($data);
-    }
+    public $validate = [
+        'circle_orders'         => [
+            'isString'  => [
+                'rule' => ['isString',],
+            ],
+            'maxLength' => ['rule' => ['maxLength', 4294967295]],
+        ],
+    ];
 
-    public function deleteAllUserPins(int $userId) : bool
+    /**
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    public function getUnique(int $userId, int $teamId)
     {
-        $conditions = [
-            'CirclePin.user_id' => $userId,
-        ];
-        return $this-->deleteAll($conditions);
-    }
-
-    function getPinnedCircles()
-    {
-        $CircleMember = ClassRegistry::init('CircleMember');
-        $my_circle_list = $CircleMember->getMyCircleList();
-
         $options = [
             'conditions' => [
-                'circle_id'        => $my_circle_list,
+                'CirclePin.user_id' => $userId,
+                'CirclePin.team_id' => $teamId,
+                'CirclePin.del_flgl' => false,
             ],
-            'fields'     => ['circle_id', 'pin_order'],
-            'order'      => ['pin_order ASC'],
         ];
+        $res = $this->find('first', $options);
 
-        $results = $this->find('all', $options);
-        return $results;
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::get($res, 'CirclePin');
     }
 }
