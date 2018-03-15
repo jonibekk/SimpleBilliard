@@ -71,9 +71,9 @@ class CirclesController extends AppController
         return $this->redirect($this->referer());
     }
 
-    private function isAdminCircle(int $circle_id): bool 
+    private function isAuthorizedCircle(int $circle_id): bool 
     {
-        $this->Circle->id = $circle_id;
+        $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
                 throw new RuntimeException(__("This circle does not exist."));
