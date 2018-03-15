@@ -44,4 +44,123 @@ class CirclePinService extends AppService
 
         return true;
     }
+    /**
+     * 自分が所属しているサークルをソートして返す
+     * @return array
+     */
+    public function getMyCircleSortedList(int $userId, int $teamId): array
+    {
+        //
+        $Circle = ClassRegistry::init('Circle');
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $CirclePin = ClassRegistry::init('CirclePin');
+        $Upload = new UploadHelper(new View());
+
+        $memberOptions = [
+            'conditions' => [
+                'user_id' => $userId,
+            ],
+            'fields'     => [
+                'circle_id',
+                'admin_flg',
+                'unread_count',
+            ],
+        ];
+        $memberResults = $CircleMember->find('all', $memberOptions);
+
+        $memberArray = [];
+        if(!empty($memberResults)){
+            $memberArray = array_map(function ($a) { 
+                return [
+                    'circle_id' => $a['CircleMember']['circle_id'], 
+                    'admin_flg' => $a['CircleMember']['admin_flg'],
+                    'unread_count' => $a['CircleMember']['unread_count']
+                ]; 
+            }, $memberResults);
+        }
+
+        $pinOptions = [
+            'conditions' => [
+                'user_id' => $userId,
+                'team_id' => $teamId,
+            ],
+            'fields'     => [
+                'circle_orders',
+            ],
+        ];
+        $pinResults = $CirclePin->find('list', $pinOptions);
+
+        $pinOrderString = '';
+        if(!empty($pinResults)){
+            $pinOrderString = reset($pinResults);
+        }
+        $pinOrders = explode(',', $pinOrderString);
+
+        $idOptions = [
+            'conditions' => [
+                'user_id' => $userId,
+                'team_id' => $teamId,
+            ],
+            'fields'     => [
+                'circle_id',
+            ],
+        ];        
+        $circleIds = $CircleMember->find('list', $idOptions);
+
+        $circleOptions = [
+            'conditions' => [
+                'id' => $circleIds,
+                'team_id' => $teamId,
+            ],
+            'fields'     => [
+                'id',
+                'name',
+                'photo_file_name',
+                'public_flg',
+                'team_all_flg',
+                'created',
+                'modified',
+            ],
+        ];
+        $circles = $Circle->find('all', $circleOptions);
+        $circles = Hash::combine($circles, '{n}.Circle.id', '{n}.Circle');
+
+        $defaultCircle;
+        $regularaCircles = [];
+        foreach ($circles as &$circle) {
+            $key = $circle['id'];
+
+            if(array_key_exists($key, $memberArray)){
+                $index = array_search($key, $memberArray);
+                $circle['admin_flg'] = $memberArray[$index]['admin_flg'];
+                $circle['unread_count'] = $memberArray[$index]['unread_count'];
+            } else {
+                $circle['admin_flg'] = false;
+                $circle['unread_count'] = 0;
+            }
+
+            if(in_array($key, $pinOrders)){
+                $circle['order'] = array_search($key, $pinOrders) + 1;
+            } else {
+                $circle['order'] = null;
+            }
+
+            $circle['image'] = $Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']);
+
+            if($circle['team_all_flg']) {
+                $defaultCircle = $circle;
+            } else {
+                $regularaCircles[] = $circle;
+            }
+        }
+
+        $regularaCircles = Hash::sort($regularaCircles, '{n}.modified', 'desc', 'numeric');
+        $regularaCircles = Hash::sort($regularaCircles, '{n}.order', 'asc', 'numeric');
+        //TODO:For Debugging SQL Queries
+        //debug(ClassRegistry::init('CirclePin')->getDataSource()->getLog(false, false));
+        $returnArray['regular_circle'] = $regularaCircles;
+        $returnArray['default_circle'] = $defaultCircle;
+
+        return $returnArray;
+    }
 }
