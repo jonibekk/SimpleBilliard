@@ -254,7 +254,7 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-		'circle_orders' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'circle_orders' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'del_flg' => array('type' => 'boolean', 'null' => true, 'default' => null),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
