@@ -71,9 +71,33 @@ class CirclesController extends AppController
         return $this->redirect($this->referer());
     }
 
+    private function isAuthorizedCircle(int $circle_id): bool 
+    {
+        $this->Circle->id = $this->request->params['named']['circle_id'];
+        try {
+            if (!$this->Circle->exists()) {
+                throw new RuntimeException(__("This circle does not exist."));
+            }
+            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
+                throw new RuntimeException(__("It's only a circle administrator that can change circle settings."));
+            }
+        } catch (RuntimeException $e) {
+            $this->Notification->outError($e->getMessage());
+            $this->redirect($this->referer());
+            return false;
+        }
+        return true;
+    }
+
     public function ajax_get_edit_modal()
     {
         $circle_id = $this->request->params['named']['circle_id'];
+        if(!isset($circle_id)){
+            return;
+        }
+        if(!$this->isAuthorizedCircle($circle_id)){
+            return;
+        }
         $this->_ajaxPreProcess();
         $this->request->data = $this->Circle->findById($circle_id);
         $this->request->data['Circle']['members'] = null;
