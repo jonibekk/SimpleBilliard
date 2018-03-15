@@ -12,12 +12,11 @@
     <div class="panel-body pin-circle-view-panel-body">
         <div class="row">
             <div class="column">
-                <div class="panel panel-primary">
-                    <div id="pinned-header" class="panel panel-heading accordion-toggle">
-                        <div class="alighn-center"><label>Pinned </label><label id='pinnedCount'></label></div>
-                         <i id="pinned-header-icon" class="pull-right fas fa-caret-up fa-2x fa-custom-caret-position" data-toggle="collapse" data-target="#pinned-body"></i>
+                <div class="panel">
+                    <div id="pinned-header" class="panel panel-heading">
+                        <div class="alighn-center"><label class="circle-header-label">Pinned </label>  <label id='pinnedCount' class="circle-header-label"></label></div>
                     </div>
-                    <div id="pinned-body" class="accordion-body collapse">
+                    <div id="pinned-body">
                         <div class="list-group-item ignore-elements">
                             <i class="fas fa-align-justify style-hidden"></i>
                                 <?=
@@ -31,13 +30,13 @@
                                     ]
                                 )
                                 ?>
-                                <div class="pin-circle-text"><label><?php echo $defaultCircle['name'];?></label></div>
+                                <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
                                 <span>
                                 <i class="fa-pull-right fas fa-cog fa-lg style-hidden"></i>
                                 <i class="fa-pull-right fas fa-thumbtack fa-lg style-hidden"></i>
                                 </span>
                         </div>
-                        <ul id="pinned" class="list-group accordion-toggle">
+                        <ul id="pinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>
                                 <?php if(isset($circle['order'])): ?>
                                       <?= $this->element('CirclePins/pinned_element', ['circle' => $circle]) ?>
@@ -46,13 +45,12 @@
                         </ul>
                     </div>
                 </div>
-                <div class="panel panel-primary">
-                    <div id="unpinned-header" class="panel panel-heading accordion-toggle">
-                        <div class="alighn-center"><label>UnPinned </label><label id='unpinnedCount'></label></div>
-                        <i id="unpinned-header-icon" class="pull-right fas fa-caret-up fa-2x fa-custom-caret-position" data-toggle="collapse" data-target="#unpinned-body"></i>
+                <div class="panel">
+                    <div id="unpinned-header" class="panel panel-heading">
+                        <div class="alighn-center"><label class="circle-header-label">UnPinned </label>  <label id='unpinnedCount' class="circle-header-label"></label></div>
                     </div>
-                    <div id="unpinned-body" class="accordion-body collapse">
-                        <ul id="unpinned" class="list-group accordion-toggle">
+                    <div id="unpinned-body" class="accordion-body">
+                        <ul id="unpinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>
                                 <?php if(!isset($circle['order'])): ?>
                                     <?= $this->element('CirclePins/unpinned_element', ['circle' => $circle]) ?>

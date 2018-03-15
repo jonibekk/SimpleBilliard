@@ -12,7 +12,7 @@
 	        ]
 	    )
 	?>
-	<label class='circle-name'><?php echo $circle['name'];?></label>
+	<label class='circle-name-label'><?php echo $circle['name'];?></label>
 	<i class="fa-pull-right fas fa-cog fa-lg<?php if(!$circle['admin_flg']){echo ' style-hidden';} ?>"></i>
 	<i class="fa-pull-right fas fa-thumbtack fa-lg fa-disabled"></i>
 </li>
