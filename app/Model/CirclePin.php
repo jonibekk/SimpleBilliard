@@ -37,7 +37,7 @@ class CirclePin extends AppModel
             'conditions' => [
                 'CirclePin.user_id' => $userId,
                 'CirclePin.team_id' => $teamId,
-                'CirclePin.del_flgl' => false,
+                'CirclePin.del_flg' => false,
             ],
         ];
         $res = $this->find('first', $options);
@@ -103,7 +103,7 @@ class CirclePin extends AppModel
         
         return true;
     }
-    
+
     /**
      * Deletes specified circleId from circle pin order information
      * example: 3,4,5 => ,3,4,5, => (,4,) => ,3,5, => 3,5 
