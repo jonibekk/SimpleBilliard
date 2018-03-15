@@ -14,11 +14,8 @@
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?>
-          <a href="/CirclePins/index" class="pull-right">Edit</a>
+          <a href="/CirclePins/index" class="pull-right"><?= __("Edit") ?></a>
         </p>
-    </div>
-    <div class="idashboard-circle-list-row-wrap">
-      <input type="text" id="filter-circles-list-side" class="form-control" placeholder="サークルフィルター">
     </div>
     <div class="dashboard-circle-list-body-wrap">
         <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
