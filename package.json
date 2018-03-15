@@ -85,7 +85,6 @@
     "gulp-cssmin": "^0.1.7",
     "gulp-duration": "0.0.0",
     "gulp-eslint": "^3.0.1",
-    "gulp-font2css": "^0.1.2",
     "gulp-lesshint": "^1.1.0",
     "gulp-ng-annotate": "^2.0.0",
     "gulp-notify": "^2.2.0",
