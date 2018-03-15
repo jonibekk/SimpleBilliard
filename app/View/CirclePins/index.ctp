@@ -1,102 +1,62 @@
 <?= $this->App->viewStartComment()?>
-<div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
+<link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+<div id="circles-edit-page" class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
     <div class="panel-heading">
         <?= __("PinCircle") ?>
     </div>
-    <div class="list-group-item justify-content-between">
+    <!-- Todo Filter Commented out/ -->
+    <!-- <div class="list-group-item justify-content-between">
       <input type="text" id="filter-circles-list" class="form-control" placeholder="サークルフィルター">
-    </div>
+    </div> -->
 <!--     <div class="panel-body eval-view-panel-body"> -->
     <div class="panel-body pin-circle-view-panel-body">
         <div class="row">
             <div class="column">
                 <div class="panel panel-primary">
-                    <div class="panel-body">
+                    <div id="pinned-header" class="panel panel-heading accordion-toggle">
+                        <div class="alighn-center"><label>Pinned </label><label id='pinnedCount'></label></div>
+                         <i id="pinned-header-icon" class="pull-right fas fa-caret-up fa-2x fa-custom-caret-position" data-toggle="collapse" data-target="#pinned-body"></i>
+                    </div>
+                    <div id="pinned-body" class="accordion-body collapse">
                         <div class="list-group-item ignore-elements">
+                            <i class="fas fa-align-justify style-hidden"></i>
                                 <?=
                                 $this->Html->image('pre-load.svg',
                                     [
                                         'class'         => 'pin-circle-avatar lazy media-object',
-                                        'data-original' => $defaultCircle[0]['Circle']['image'],
+                                        'data-original' => $defaultCircle['image'],
                                         'width'         => '32',
                                         'height'        => '32',
                                         'error-img'     => "/img/no-image-link.png",
                                     ]
                                 )
                                 ?>
-                                <div class="pin-circle-text"><label><?php echo $defaultCircle[0]['Circle']['name'];?></label></div>
-                                <?=
-                                $this->Html->image('pre-load.svg',
-                                    [
-                                        'class'         => 'pull-right lazy media-object',
-                                        'data-original' => "/img/no-image-link.png",
-                                        'width'         => '32',
-                                        'height'        => '32',
-                                        'error-img'     => "/img/no-image-link.png",
-                                    ]
-                                )
-                                ?>
+                                <div class="pin-circle-text"><label><?php echo $defaultCircle['name'];?></label></div>
+                                <span>
+                                <i class="fa-pull-right fas fa-cog fa-lg style-hidden"></i>
+                                <i class="fa-pull-right fas fa-thumbtack fa-lg style-hidden"></i>
+                                </span>
                         </div>
-                        <ul id="pinned" class="list-group">
-                            <?php foreach ($pinnedCircles as $circle): ?>
-                              <li id="<?= $circle['Circle']['id']?>" class="list-group-item justify-content-between">
-                                <?=
-                                    $this->Html->image('pre-load.svg',
-                                        [
-                                            'class'         => 'pin-circle-avatar lazy media-object',
-                                            'data-original' => $circle['Circle']['image'],
-                                            'width'         => '32',
-                                            'height'        => '32',
-                                            'error-img'     => "/img/no-image-link.png",
-                                        ]
-                                    )
-                                    ?>
-                                <label class='circle-name'><?php echo $circle['Circle']['name'];?></label>
-                                <?=
-                                    $this->Html->image('pre-load.svg',
-                                        [
-                                            'class'         => 'pin pull-right lazy media-object',
-                                            'data-original' => "/img/npin-image.png",
-                                            'width'         => '32',
-                                            'height'        => '32',
-                                            'error-img'     => "/img/no-image-link.png",
-                                        ]
-                                    )
-                                    ?>
-                              </li>
+                        <ul id="pinned" class="list-group accordion-toggle">
+                            <?php foreach ($circles as $circle): ?>
+                                <?php if(isset($circle['order'])): ?>
+                                      <?= $this->element('CirclePins/pinned_element', ['circle' => $circle]) ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
                 <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <ul id="unpinned" class="list-group">
-                            <?php foreach ($unpinnedCircles as $circle): ?>
-                              <li id="<?= $circle['Circle']['id']?>" class="list-group-item justify-content-between">
-                                <?=
-                                    $this->Html->image('pre-load.svg',
-                                        [
-                                            'class'         => 'pin-circle-avatar lazy media-object',
-                                            'data-original' => $circle['Circle']['image'],
-                                            'width'         => '32',
-                                            'height'        => '32',
-                                            'error-img'     => "/img/no-image-link.png",
-                                        ]
-                                    )
-                                    ?>
-                                <label class='circle-name'><?php echo $circle['Circle']['name'];?></label>
-                                <?=
-                                    $this->Html->image('pre-load.svg',
-                                        [
-                                            'class'         => 'unpin pull-right lazy media-object',
-                                            'data-original' => "/img/nunpin-image.png",
-                                            'width'         => '32',
-                                            'height'        => '32',
-                                            'error-img'     => "/img/no-image-link.png",
-                                        ]
-                                    )
-                                    ?>
-                              </li>
+                    <div id="unpinned-header" class="panel panel-heading accordion-toggle">
+                        <div class="alighn-center"><label>UnPinned </label><label id='unpinnedCount'></label></div>
+                        <i id="unpinned-header-icon" class="pull-right fas fa-caret-up fa-2x fa-custom-caret-position" data-toggle="collapse" data-target="#unpinned-body"></i>
+                    </div>
+                    <div id="unpinned-body" class="accordion-body collapse">
+                        <ul id="unpinned" class="list-group accordion-toggle">
+                            <?php foreach ($circles as $circle): ?>
+                                <?php if(!isset($circle['order'])): ?>
+                                    <?= $this->element('CirclePins/unpinned_element', ['circle' => $circle]) ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </ul>
                     </div>
