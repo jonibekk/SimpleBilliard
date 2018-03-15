@@ -21,7 +21,7 @@ class MentionComponent extends Component {
                     $replacement = 'group_';
                 }
                 $result[$match] = array(
-                    'id' => str_replace($replacement, '', $match),
+                    'id' => explode(':', str_replace($replacement, '', $match))[0],
                     'isUser' => $isUser, 
                     'isCircle' => $isCircle,
                     'isGroup' => $isGroup
@@ -35,13 +35,16 @@ class MentionComponent extends Component {
         $result = preg_replace('/%%%'.$pattern.'%%%/m', '%%%'.$pattern.':'.$replacement.'%%%', $subject);
         return $result;
     }
-    public function replaceMention($text) {
-        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $text);
+    public function replaceMention($text, $mentions) {
+        $result = $text;
+        foreach ($mentions as $mention) {
+            $result = preg_replace('/%%%'.$mention.':(.*?)%%%/m', '<b><i class="mentioned-to-me"><@${1}></i></b>', $result);
+        }
+        $result = preg_replace('/%%%.*?:(.*?)%%%/m', '<b><i><@${1}></i></b>', $result);
         return $result;
     }
-    public function isMentioned($body, $userId, $teamId) {
-        $users = $this->getUserList($body, $teamId, $userId, true);
-        return in_array($userId, $users);
+    public function getMyMentions($body, $userId, $teamId) {
+        return $this->getUserList($body, $teamId, $userId, true, true);
     }
     static public function appendName($body) {
         $matches = MentionComponent::extractAllIdFromMention($body);
@@ -69,12 +72,16 @@ class MentionComponent extends Component {
         }
         return $body;
     }
-    public function getUserList($body, $my, $me, $all = false) {
+    // TODO It's too bad that $onlyMe has multiple meanings to use to extract just me and to append user/circle/group prefix.
+    public function getUserList($body, $my, $me, $includeMe = false, $onlyMe = false) {
         $mentions = MentionComponent::extractAllIdFromMention($body);
-        $notifyUsers = array();
+        $result = array();
+        
         foreach ($mentions as $key => $mention) {
             if ($mention['isUser']) {
-                $notifyUsers[] = explode(':', $mention['id'])[0];
+                $userId = $mention['id'];
+                if ($onlyMe && $userId != $me) continue;
+                $result[] = $onlyMe ? 'user_'.$userId : $userId;
             }else if($mention['isCircle']) {
                 $notifyCircles[] = $mention['id'];
             }else if ($mention['isGroup']) {
@@ -87,8 +94,9 @@ class MentionComponent extends Component {
                 $circle_members = $CircleMember->getMembers($circleId, true);
                 foreach ($circle_members as $member) {
                     $userId = $member['CircleMember']['user_id'];
-                    if ($all || $userId != $me) {
-                        $notifyUsers[] = $userId;
+                    if ($onlyMe && $userId != $me) continue;
+                    if ($includeMe || $userId != $me) {
+                        $result[] = $onlyMe ? 'circle_'.$circleId : $userId;
                     }
                 }
             }
@@ -99,12 +107,13 @@ class MentionComponent extends Component {
                 $group_members = $MemberGroup->getGroupMemberUserId($my, $groupId);
                 foreach ($group_members as $member) {
                     $userId = $member;
-                    if ($all || $userId != $me) {
-                        $notifyUsers[] = $userId;
+                    if ($onlyMe && $userId != $me) continue;
+                    if ($includeMe || $userId != $me) {
+                        $result[] = $onlyMe ? 'group_'.$groupId : $userId;
                     }
                 }
             }
         }
-        return $notifyUsers;
+        return $result;
     }
 }
