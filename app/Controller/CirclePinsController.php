@@ -1,12 +1,17 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'CirclePinService');
-
 /**
- * Circle Pins Controller
+ * Circles Members Controller
+ *
+ * @property CircleMember $CircleMember
  */
 class CirclePinsController extends AppController
 {
+    public $uses = [
+        'CirclePin'
+    ];
+
     /**
      * beforeFilter callback
      *
@@ -17,26 +22,25 @@ class CirclePinsController extends AppController
         parent::beforeFilter();
     }
 
-    function index()
+    /**
+     * index method
+     *
+     * @return void
+     */
+    public function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        /** @var CirclePinService $CirclePinService */
-        $CirclePinService = ClassRegistry::init('CirclePinService');
-
         try {
-            $defaultCircle = $CirclePinService->getDefaultCircle();
-            $results = $CirclePinService->getPinned();
-
-            $pinnedCircles = $results['pinned'];
-            $unpinnedCircles = $results['unpinned'];
+            $circles = ClassRegistry::init('CirclePinService')->getMyCircleSortedList($this->Auth->user('id'), $this->current_team_id);
+            $defaultCircle = $circles['default_circle'];
+            $regularCircles = $circles['regular_circle'];
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
 
         $this->set('defaultCircle', $defaultCircle);
-        $this->set('pinnedCircles', $pinnedCircles);
-        $this->set('unpinnedCircles', $unpinnedCircles);
+        $this->set('circles', $regularCircles);
     }
 }
