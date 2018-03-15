@@ -20,7 +20,7 @@ class CirclePinsController extends ApiController
     /**
      * Update all pin orders relevant to the user using csv.
      * 
-     * usage: /api/v1/circle
+     * usage: PUT:/api/v1/circle_pins/
      *
      * @return CakeResponse
      */
@@ -31,7 +31,8 @@ class CirclePinsController extends ApiController
         }
 
         if(!array_key_exists('csv', $this->request->data)) {
-            return $this->_getResponseBadFail("Missing Data");
+            //TODO:fix call procedure use PUT instedad jsut for testing
+            $this->circle_edit_ajax($this->request->data);
         }
 
         if (!ClassRegistry::init("CirclePinService")->setCircleOrders($this->Auth->user('id'), $this->current_team_id, $this->request->data['csv'])) {
@@ -39,5 +40,25 @@ class CirclePinsController extends ApiController
         } else {
             //TODO:hamburger update => ClassRegistry::init('AppController')->_setMyCircle();
         }
+    }
+
+    /**
+     * Opens the circle edit modal if the user_id is circle's admin
+     * 
+     * usage: POST:/api/v1/circle_pins/
+     *
+     * @return CakeResponse
+     */
+    public function circle_edit_ajax($data)
+    {
+        if(!isset($data)) {
+            return $this->_getResponseBadFail("No Data");
+        }
+
+        if(!array_key_exists('circle_id', $data)) {
+            return $this->_getResponseBadFail("Missing Data");
+        }
+
+        return ClassRegistry::init("CirclePinService")->isUserCircleAdmin($this->Auth->user('id'), $data['circle_id']);
     }
 }
