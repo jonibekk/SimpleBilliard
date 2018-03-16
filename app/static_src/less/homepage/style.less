@@ -537,6 +537,8 @@ select {
     }
 }
 
+
+
 .section-container{
     max-width: 600px;
     margin: 0 auto;
@@ -1090,6 +1092,90 @@ select {
 
 /* ======= Contact ======= */
 
+#contact_section{
+    width:100%;
+    padding: 2em 0 4em;
+    text-align:center;
+    background-image: url('../../img/homepage/background/geometry.png');
+    background-size: 412px 412px;
+    @media screen and (min-width: 53em){
+        text-align:left;
+    }
+    .container{
+        width: 90%;
+        padding: 0 5%;
+        max-width:1000px;
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        @media screen and (min-width:52em){
+            width: 100%;
+            padding: 0;
+        }
+    }
+    .container-half{
+        padding:0;
+        flex-basis: 100%;
+        width:100%;
+        @media screen and (min-width: 52em){
+            flex-basis: 46%;
+        }
+    }
+    img{
+        width: 100%;
+        max-width:400px;
+    }
+    p{
+        padding-right: 1em;
+    }
+    form{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-between;
+        .half{
+            flex-basis: 48%;
+        }
+        input,textarea{
+            display:block;
+            width:100%;
+            margin: 0 0 1em;
+        }
+        label{
+            display:none;
+        }
+        .req{
+            color:@goalous;
+        }
+        input,textarea{
+            border:1px solid #ccc;
+            border-radius: .25em;
+            padding: .25em .5em;
+            font-size: 18px;
+            &:focus{
+                outline:none;
+                border: 1px solid @goalous;
+            }
+        }
+        textarea{
+            resize: none;
+            min-height: 6em;
+        }
+        p{
+            text-align:left !important;
+        }
+        .container-submit{
+            display:flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            button{
+                flex-basis: 100%;
+                align-self: flex-start;
+                padding: 1em;
+            }
+        }
+    }
+}
+
 .contact-main {
     padding-top: 80px;
 }
@@ -1165,6 +1251,8 @@ select {
     font-size: 16px;
     color: @basicGray;
 }
+
+
 #map {
     height: 420px;
     margin-bottom: 0;

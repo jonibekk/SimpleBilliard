@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
+App::import('Service', 'ExperimentService');
 App::import('Service', 'EvaluationService');
 
 /**
@@ -13,6 +14,14 @@ class EvaluatorSettingsController extends AppController
 
     function beforeFilter()
     {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init("ExperimentService");
+        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+            throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
+        }
+
         parent::beforeFilter();
     }
 
@@ -22,7 +31,6 @@ class EvaluatorSettingsController extends AppController
      */
     function index()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
 
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');
@@ -31,11 +39,10 @@ class EvaluatorSettingsController extends AppController
         $userId = $this->Auth->user('id');
 
         $selfEvaluation = $EvaluationService->getEvalStatus($termId, $userId);
-        $evaluateesEvaluation = $EvaluationService->getEvaluateeFromCoachUserId($termId, $userId);
+        $evaluateesEvaluation = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
 
-        // Reconstruct evaluation flow data structure
-        $selfEvaluation = $this->reconstructFlows([$selfEvaluation])[0];
-        $evaluateesEvaluation = $this->reconstructFlows($evaluateesEvaluation);
+        $selfEvaluation = $this->extractEvaluatorsInFlow([$selfEvaluation])[0];
+        $evaluateesEvaluation = $this->extractEvaluatorsInFlow($evaluateesEvaluation);
 
         // Count zero evaluatee users
         $countOfZeroEvaluateeUsers = 0;
@@ -62,7 +69,7 @@ class EvaluatorSettingsController extends AppController
      *
      * @return array
      */
-    private function reconstructFlows(array $evaluations): array
+    private function extractEvaluatorsInFlow(array $evaluations): array
     {
         foreach ($evaluations as $key => $evaluation) {
             $flow = $evaluation['flow'] ?? [];

@@ -1,15 +1,3 @@
-<?php /**
- * Created by PhpStorm.
- * User: bigplants
- * Date: 3/26/15
- * Time: 3:45 PM
- *
- * @var CodeCompletionView $this
- * @var                    $evaluatees
- * @var                    $eval_term_id
- * @var                    $eval_is_frozen
- */
-?>
 <?= $this->App->viewStartComment()?>
 <?php foreach ($evaluatees as $user): ?>
     <a href="<?= $this->Html->url(['controller'       => 'evaluator_settings',
@@ -30,7 +18,7 @@
             <div class="eval-list-item-center">
                 <p class="font_bold"><?= h($user['User']['display_username']) ?></p>
                 <?php if (0 === count($user['flow'])): ?>
-                    No evaluators
+                    <?= __('No evaluators') ?>
                 <?php else: ?>
                     <?php foreach ($user['flow'] as $key => $evaluateFlow): ?>
                         <?php if ($key !== 0): ?>

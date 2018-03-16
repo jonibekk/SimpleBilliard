@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Post', 'Model');
 
 /**
  * NotifySetting Model
@@ -48,7 +49,35 @@ class NotifySetting extends AppModel
     const TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT = 35;
     const TYPE_CHANGED_TEAM_BASIC_SETTING = 36;
     const TYPE_CHANGED_TERM_SETTING = 37;
+    const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
+    const TYPE_TRANSCODE_FAILED = 39;
+    const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
+    const TYPE_EVALUATOR_SET_TO_COACH = 41;
 
+    /**
+     * @var array
+     * @key mail_template string
+     *      Mail template name on app\View\Emails\text\*.ctp
+     * @key field_real_name null
+     *      Not using currently.
+     * @key field_prefix string
+     *      string
+     *          Prefix name of DB table columns of
+     *          notify_settings.*_app_flg
+     *          notify_settings.*_email_flg
+     *          notify_settings.*_mobile_flg
+     * @key icon_class string
+     *      The Font-Awesome icon show in the web notification.
+     * @key groups string[] 'all' || 'primary' || 'none'
+     *      'all': notify all
+     *      'primary': notify important event
+     *      'none': no notify
+     * @key force_notify bool
+     *      This is optional
+     *      force notify to user or not
+     *      true: notify to user every time
+     *      false: never notifying
+     */
     static public $TYPE = [
         self::TYPE_FEED_POST                                 => [
             'mail_template'   => "notify_basic",
@@ -305,7 +334,7 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-users',
             'groups'          => ['all', 'primary'],
         ],
-        self::TYPE_CHANGED_TERM_SETTING                => [
+        self::TYPE_CHANGED_TERM_SETTING                      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             // TODO: using start_evaluation notify setting because same as what to do.
@@ -313,7 +342,39 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'start_evaluation',
             'icon_class'      => 'fa-users',
             'groups'          => ['all', 'primary'],
-        ]
+        ],
+        self::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED         => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-video-camera',
+            'groups'          => ['all'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_TRANSCODE_FAILED                          => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-video-camera',
+            'groups'          => ['all'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                  => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'evaluator_set',
+            'groups'          => ['all', 'primary'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_EVALUATOR_SET_TO_COACH                    => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-evaluator_set-camera',
+            'groups'          => ['all', 'primary'],
+            'force_notify'    => true,
+        ],
     ];
 
     static public $TYPE_GROUP = [
@@ -321,6 +382,24 @@ class NotifySetting extends AppModel
         'primary' => null,
         'none'    => null,
     ];
+
+    /**
+     * Return generator of notification type of user can set
+     *
+     * @return Generator
+     *      self::TYPE_* => []
+     */
+    public static function getUserSettableNotifyTypeGroups(): Generator
+    {
+        foreach (static::$TYPE as $typeKey => $typeValue) {
+            if (isset($typeValue['force_notify']) && is_bool($typeValue['force_notify'])) {
+                continue;
+            }
+            if (is_string($typeValue['field_prefix'])) {
+                yield $typeKey => $typeValue;
+            }
+        }
+    }
 
     public function _setFieldRealName()
     {
@@ -433,6 +512,9 @@ class NotifySetting extends AppModel
         $result = $this->find('all', $options);
         $res_data = [];
         $field_prefix = self::$TYPE[$type]['field_prefix'];
+        if (isset(self::$TYPE[$type]['force_notify']) && is_bool(self::$TYPE[$type]['force_notify'])) {
+            return $this->createSettingOfForceNotify($user_ids, self::$TYPE[$type]['force_notify'], $default_data);
+        }
         if (!empty($result)) {
             foreach ($result as $val) {
                 // アプリ
@@ -457,6 +539,19 @@ class NotifySetting extends AppModel
             }
         }
         return $res_data;
+    }
+
+    private function createSettingOfForceNotify(array $userIds, bool $bool, array $defaultData): array
+    {
+        $r = [];
+        foreach ($userIds as $userId) {
+            $r[$userId] = $bool ? $defaultData : [
+                'app'    => false,
+                'email'  => false,
+                'mobile' => false,
+            ];
+        }
+        return $r;
     }
 
     /**
@@ -484,7 +579,9 @@ class NotifySetting extends AppModel
         if ($item_name && !is_array($item_name)) {
             $item_name = json_decode($item_name, true);
         }
+        //Notification's content
         $title = null;
+        //User names for the sender of notification
         $user_text = null;
         //カウント数はユーザ名リストを引いた数
         if ($from_user_names) {
@@ -503,9 +600,9 @@ class NotifySetting extends AppModel
 
         // getting goalName.
         $goalName = null;
-        if(Hash::get($options,'goal_id')){
+        if (Hash::get($options, 'goal_id')) {
             $goal = $this->User->Goal->findById($options['goal_id']);
-            $goalName = Hash::get($goal,'Goal.name');
+            $goalName = Hash::get($goal, 'Goal.name');
         }
 
         switch ($type) {
@@ -1006,6 +1103,59 @@ class NotifySetting extends AppModel
                         h($user_text));
                 }
                 break;
+            case self::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED:
+                if (!isset($options['post_id'])) {
+                    $title = __('Your video has been shared.');
+                } else {
+                    $postId = $options['post_id'];
+
+                    /** @var Post $Post */
+                    $Post = ClassRegistry::init('Post');
+                    $post = $Post->getById($postId);
+                    if (empty($post)) {
+                        $title = __('Your video has been shared.');
+                    } else {
+                        $posts = $Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, ['post_id' => $postId]);
+                        $posts = $Post->getShareMessages($posts, false);
+                        $title = __('Your video has been shared to %s.', $posts[0]['share_text']);
+                    }
+                }
+                break;
+            case self::TYPE_TRANSCODE_FAILED:
+                $title = __('Video processing failed.');
+                break;
+            case self::TYPE_EVALUATOR_SET_TO_EVALUATEE :
+
+                $user = $this->User->findById($options['coach_user_id']);
+                $target_user_name = $user['User']['display_username'];
+
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has set <span class="notify-card-head-target">%2$s</span>\'s evaluator(s).',
+                        $target_user_name,
+                        $user_text);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has set <span class="notify-card-head-target">%2$s</span>\'s evaluator(s).',
+                        h($target_user_name),
+                        h($user_text));
+                }
+                break;
+            case self::TYPE_EVALUATOR_SET_TO_COACH :
+
+                $user = $this->User->findById($options['coachee_user_id']);
+                $coachee_user_name = $user['User']['display_username'];
+
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has set his/her evaluator(s).',
+                        $coachee_user_name);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has set his/her evaluator(s).',
+                        h($coachee_user_name));
+                }
+                break;
         }
 
         if ($options['style'] == 'plain') {
@@ -1025,7 +1175,7 @@ class NotifySetting extends AppModel
     public function getSettingValues($notify_target, $type_group)
     {
         $values = [];
-        foreach (NotifySetting::$TYPE as $k => $v) {
+        foreach (NotifySetting::getUserSettableNotifyTypeGroups() as $k => $v) {
             $values["{$v['field_prefix']}_{$notify_target}_flg"] = in_array($type_group, $v['groups']);
         }
         return $values;

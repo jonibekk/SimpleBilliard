@@ -15,5 +15,4 @@ class ServiceUseStatus extends Enum
     const PAID = 1;
     const READ_ONLY = 2;
     const CANNOT_USE = 3;
-    // TODO: add status withdrawal
 }

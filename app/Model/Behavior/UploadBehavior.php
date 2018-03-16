@@ -1,9 +1,7 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
+App::import('Lib/Aws', 'AwsClientFactory');
 
-use Aws\Common\Aws;
-use Aws\Common\Enum\Region;
-use Aws\S3\Enum\CannedAcl;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Guzzle\Http\EntityBody;
@@ -1049,6 +1047,9 @@ class UploadBehavior extends ModelBehavior
         $to_path = $img_path_exp[1];
 
         try {
+            /**
+             * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#putobject
+             */
             $response = $this->s3
                 ->putObject(
                     array(
@@ -1058,7 +1059,7 @@ class UploadBehavior extends ModelBehavior
                         'ContentType'          => $type,
                         'StorageClass'         => 'STANDARD',
                         'ServerSideEncryption' => 'AES256',
-                        'ACL'                  => CannedAcl::AUTHENTICATED_READ
+                        'ACL'                  => 'authenticated-read',
                     ));
             return $response;
 
@@ -1088,13 +1089,7 @@ class UploadBehavior extends ModelBehavior
         if ($this->s3) {
             return;
         }
-        // S3を操作するためのオブジェクトを生成（リージョンは東京）
-        $this->s3 = Aws::factory(
-            array(
-                'key'    => AWS_ACCESS_KEY,
-                'secret' => AWS_SECRET_KEY,
-                'region' => Region::AP_NORTHEAST_1
-            ))
-                       ->get('s3');
+        // S3を操作するためのオブジェクトを生成
+        $this->s3 = AwsClientFactory::createS3ClientForFileStorage();
     }
 }

@@ -2,6 +2,7 @@
 App::uses('ModelType', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'PushService');
 
@@ -231,6 +232,18 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_CHANGED_TERM_SETTING:
                 $this->_setChangedTeamSetting($notify_type, $model_id, $user_id);
                 break;
+            case NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED:
+                $this->_setTranscodeCompleted($model_id, $user_id, $team_id);
+                break;
+            case NotifySetting::TYPE_TRANSCODE_FAILED:
+                $this->_setTranscodeFailed($user_id, $team_id);
+                break;
+            case NotifySetting::TYPE_EVALUATOR_SET_TO_COACH:
+                $this->_setAddedEvaluatorToCoach($team_id, $user_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE:
+                $this->_setAddedEvaluatorToEvaluee($team_id, $to_user_list, $user_id);
+                break;
             default:
                 break;
         }
@@ -250,14 +263,22 @@ class NotifyBizComponent extends Component
         $this->_sendPushNotify();
     }
 
-    public function push($socketId, $share)
+    /**
+     * Send Pusher
+     *
+     * @param           $socketId
+     * @param           $share        string
+     * @param int|null  $teamId
+     * @param array     $optionValues optional data to send pusher
+     */
+    public function push($socketId, $share, $teamId = null, array $optionValues = [])
     {
         if (!$socketId) {
             return;
         }
 
-        $teamId = $this->Session->read('current_team_id');
-        $channelName = $share . "_team_" . $teamId;
+        $targetTeamId = $this->Session->read('current_team_id') ?? $teamId;
+        $channelName = $share . "_team_" . $targetTeamId;
 
         // アクション投稿のケース
         if (strpos($share, "goal") !== false) {
@@ -272,7 +293,7 @@ class NotifyBizComponent extends Component
                     $feedType = "all";
                 } // その他
                 else {
-                    $channelName = "team_all_" . $teamId;
+                    $channelName = "team_all_" . $targetTeamId;
                     $feedType = "all";
                 }
             }
@@ -285,19 +306,28 @@ class NotifyBizComponent extends Component
             'feed_type'      => $feedType,
             'notify_id'      => $notifyId
         ];
+        if (!empty($optionValues)) {
+            $data['options'] = $optionValues;
+        }
 
         // push
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    public function pushUpdateCircleList($socketId, $share)
+    /**
+     * @param string   $socketId
+     * @param string[] $share
+     *      ['public', 'circle_1', ...]
+     * @param int|null $teamId
+     */
+    public function pushUpdateCircleList($socketId, $share, $teamId = null)
     {
         if (!$socketId) {
             return;
         }
 
-        $teamId = $this->Session->read('current_team_id');
+        $teamId = $this->Session->read('current_team_id') ?? $teamId;
         $channelName = "team_" . $teamId;
         $circle_ids = [];
         if (in_array("public", $share)) {
@@ -884,6 +914,74 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $teamId;
         $this->notify_option['item_name'] = json_encode([$team['name']]);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
+    }
+
+    private function _setTranscodeCompleted($postId, $userId, $teamId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $postId];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+
+        $this->notify_option['options'] = [
+            'post_id' => $postId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+    }
+
+    private function _setTranscodeFailed($userId, $teamId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSCODE_FAILED;
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'home'];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+    }
+
+    /**
+     * @param $teamId
+     * @param $userId
+     * @param $coachId
+     */
+    private function _setAddedEvaluatorToEvaluee($teamId, $userId, $coachId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE;
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['options'] = [
+            'coach_user_id' => $coachId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+    }
+
+    /**
+     * @param $teamId
+     * @param $userId
+     * @param $coachId
+     */
+    private function _setAddedEvaluatorToCoach($teamId, $userId, $coachId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($coachId,
+            NotifySetting::TYPE_EVALUATOR_SET_TO_COACH);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_COACH;
+        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['options'] = [
+            'coachee_user_id' => $userId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $coachId);
     }
 
     /**
@@ -1475,13 +1573,24 @@ class NotifyBizComponent extends Component
     /**
      * execコマンドにて通知を行う
      *
-     * @param       $type
-     * @param       $model_id
-     * @param       $sub_model_id
-     * @param array $to_user_list json_encodeしてbase64_encodeする
+     * @param             $type
+     * @param             $model_id
+     * @param             $sub_model_id
+     * @param array       $to_user_list json_encodeしてbase64_encodeする
+     * @param int|null    $teamId
+     * @param int|null    $userId
+     * @param string|null $baseUrl      the base url of notification list url
+     *                                  specify if execSendNotify called from externalAPI, batch shell
      */
-    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null)
-    {
+    public function execSendNotify(
+        $type,
+        $model_id,
+        $sub_model_id = null,
+        $to_user_list = null,
+        $teamId = null,
+        $userId = null,
+        $baseUrl = null
+    ) {
         $set_web_env = "";
         $nohup = "nohup ";
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
@@ -1499,11 +1608,12 @@ class NotifyBizComponent extends Component
             $to_user_list = base64_encode(json_encode($to_user_list));
             $cmd .= " -u " . $to_user_list;
         }
-        $cmd .= " -b " . Router::fullBaseUrl();
-        $cmd .= " -i " . $this->Auth->user('id');
-        $cmd .= " -o " . $this->Session->read('current_team_id');
+        $cmd .= " -b " . (is_null($baseUrl) ? Router::fullBaseUrl() : $baseUrl);
+        $cmd .= " -i " . ($this->Auth->user('id') ?? $userId);
+        $cmd .= " -o " . ($this->Session->read('current_team_id') ?? $teamId);
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
+
         exec($all_cmd);
     }
 

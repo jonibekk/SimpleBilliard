@@ -75,15 +75,44 @@ class Evaluator extends AppModel
         return $res;
     }
 
-    function getExistingEvaluatorsIds($team_id, $evaluatee_user_id)
+    function getExistingEvaluatorsIds($teamId, $evaluateeUserId): array
     {
         $options = [
             'conditions' => [
-                'team_id' => $team_id,
-                'evaluatee_user_id' => $evaluatee_user_id,
+                'team_id'           => $teamId,
+                'evaluatee_user_id' => $evaluateeUserId,
             ]
         ];
         $res = $this->Team->Evaluator->find('list', $options);
         return $res;
+    }
+
+    function insertEvaluators(int $teamId, int $userId, array $evaluatorIds)
+    {
+        $saveData = [];
+        $evaluatorCount = 0;
+
+        foreach ($evaluatorIds as $evaluatorId) {
+            $saveData[] = [
+                'evaluatee_user_id' => $userId,
+                'evaluator_user_id' => $evaluatorId,
+                'team_id'           => $teamId,
+                'index_num'         => $evaluatorCount++
+            ];
+        }
+
+        $res = $this->bulkInsert($saveData);
+
+        return $res;
+
+    }
+
+    function resetEvaluators(int $teamId, int $userId)
+    {
+        $conditions = [
+            'Evaluator.evaluatee_user_id' => $userId,
+            'Evaluator.team_id'           => $teamId
+        ];
+        return $this->deleteAll($conditions);
     }
 }

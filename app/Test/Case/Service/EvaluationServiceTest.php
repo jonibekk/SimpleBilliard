@@ -58,7 +58,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 5,
@@ -74,7 +74,7 @@ class EvaluationServiceTest extends GoalousTestCase
                     'status'          => '5',
                     'this_turn'       => true,
                     'other_evaluator' => false,
-                    'evaluate_type' => Evaluation::TYPE_ONESELF
+                    'evaluate_type'   => Evaluation::TYPE_ONESELF
                 ]
             ],
             'status_text' => [
@@ -115,7 +115,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'evaluate_type'     => Evaluation::TYPE_ONESELF,
@@ -123,7 +123,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => $userId,
                 'evaluator_user_id' => 2,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
@@ -137,14 +137,14 @@ class EvaluationServiceTest extends GoalousTestCase
                     'status'          => '0',
                     'this_turn'       => false,
                     'other_evaluator' => false,
-                    'evaluate_type' => Evaluation::TYPE_ONESELF
+                    'evaluate_type'   => Evaluation::TYPE_ONESELF
                 ],
                 [
                     'name'            => '1(firstname lastname)',
                     'status'          => '0',
                     'this_turn'       => false,
                     'other_evaluator' => true,
-                    'evaluate_type' => Evaluation::TYPE_EVALUATOR
+                    'evaluate_type'   => Evaluation::TYPE_EVALUATOR
                 ]
             ],
             'status_text' => [
@@ -183,7 +183,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => 2,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 2,
@@ -193,7 +193,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 2,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
                 'status'            => 1,
@@ -203,7 +203,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 3,
                 'evaluator_user_id' => 3,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 0,
                 'status'            => 2,
@@ -213,7 +213,7 @@ class EvaluationServiceTest extends GoalousTestCase
             [
                 'evaluatee_user_id' => 3,
                 'evaluator_user_id' => $userId,
-                'term_id'  => $termId,
+                'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
                 'status'            => 1,
@@ -253,7 +253,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '2',
                         'this_turn'       => false,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_ONESELF
+                        'evaluate_type'   => Evaluation::TYPE_ONESELF
 
                     ],
                     (int)1 => [
@@ -261,7 +261,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '1',
                         'this_turn'       => true,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_EVALUATOR
+                        'evaluate_type'   => Evaluation::TYPE_EVALUATOR
 
                     ]
                 ],
@@ -297,7 +297,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '2',
                         'this_turn'       => false,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_ONESELF
+                        'evaluate_type'   => Evaluation::TYPE_ONESELF
 
                     ],
                     (int)1 => [
@@ -305,7 +305,7 @@ class EvaluationServiceTest extends GoalousTestCase
                         'status'          => '1',
                         'this_turn'       => true,
                         'other_evaluator' => false,
-                        'evaluate_type' => Evaluation::TYPE_EVALUATOR
+                        'evaluate_type'   => Evaluation::TYPE_EVALUATOR
                     ]
                 ],
                 'status_text' => [
@@ -317,15 +317,15 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    function testGetEvaluateeFromCoachUserId_empty()
+    function testGetEvaluateesFromCoachUserId_empty()
     {
         $termId = 1;
         // no evaluatee test
-        $ret = $this->EvaluationService->getEvaluateeFromCoachUserId($termId, 3);
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 3);
         $this->assertSame([], $ret);
     }
 
-    function testGetEvaluateeFromCoachUserId_succeed()
+    function testGetEvaluateesFromCoachUserId_succeed()
     {
         $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
         $termId = 1;
@@ -363,8 +363,8 @@ class EvaluationServiceTest extends GoalousTestCase
         $teamMember = $this->TeamMember->save($teamMember);
 
         // no evaluatee test
-        $ret = $this->EvaluationService->getEvaluateeFromCoachUserId($termId, 1);
-        $this->assertSame(2, count($ret));
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 1);
+        $this->assertSame(3, count($ret));
         $userHasFlow = $ret[0];
         $this->assertSame(2, count($userHasFlow['flow']));
     }
