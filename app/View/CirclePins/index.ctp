@@ -31,10 +31,11 @@
                                 )
                                 ?>
                                 <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
-                                <span>
-                                <i class='fa-pull-right-less fas fa-ellipsis-h fa-lg style-hidden a-black-link'></i>
-                                <i class="fa-pull-right fas fa-thumbtack fa-lg style-hidden"></i>
-                                </span>
+                                <i class="fas fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
+                                <div class="dropdown-content style-hidden">
+                                    <div class="dropdown-element ajax-url style-hidden" data-url="">Edit</div>
+                                </div>                                
+                                <i class="fa-pull-right-less fas fa-thumbtack fa-lg style-hidden"></i>
                         </div>
                         <ul id="pinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>
