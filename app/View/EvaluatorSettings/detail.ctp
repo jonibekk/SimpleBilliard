@@ -1,8 +1,8 @@
 <?= $this->App->viewStartComment()?>
-<form method="post" action="" id="setEvaluators"><!-- TODO: -->
+<form method="post" action="" id="setEvaluators">
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix eval-list">
         <div class="panel-heading">
-            Set evaluators
+            <?= __('Set evaluators') ?>
         </div>
         <div class="panel-body eval-view-panel-body">
             <div class="form-group">
@@ -47,7 +47,6 @@
                     <?php foreach ($userEvaluators as $evaluatorKeyNumber => $userEvaluator): ?>
                     <div class="eval-list-item col-xxs-12 list-group-item">
                         <?php
-                        $evaluatorNoDisplayed = ($evaluatorKeyNumber + 1);
                         $evaluatorsImageElementId = sprintf('evaluator_image_%d', $evaluatorKeyNumber);
                         $evaluatorsInputElementName = sprintf('evaluators[]');
                         ?>
@@ -80,7 +79,7 @@
                     <?php endforeach ?>
                 </div>
                 <div class="pull-right">
-                    <button id="button_add_evaluator" class="btn btn-primary"><i class="fa fa-plus fa-1x"></i> Add <span class="can_add_left"></span></button>
+                    <button id="button_add_evaluator" class="btn btn-primary"><i class="fa fa-plus fa-1x"></i> <?= __('Add') ?> <span class="can_add_left"></span></button>
                 </div>
             </div>
         </div>
