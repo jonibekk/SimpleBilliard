@@ -335,6 +335,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
     function testGetEvaluateesFromCoachUserId_succeed()
     {
+        $this->EvaluationSetting->current_team_id = 1;
         $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
         $termId = 1;
         $Evaluation->saveAll([
@@ -372,7 +373,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         // no evaluatee test
         $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 1);
-        $this->assertSame(2, count($ret));
+        $this->assertSame(3, count($ret));
         $userHasFlow = $ret[0];
         $this->assertSame(2, count($userHasFlow['flow']));
     }

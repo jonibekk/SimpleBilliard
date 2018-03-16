@@ -34,9 +34,12 @@ class EvaluationService extends AppService
         $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
 
         $isFixedEvaluationOrder = $EvaluationSetting->isFixedEvaluationOrder();
-
         $evaluations = $Evaluation->getEvaluationListForIndex($termId, $userId);
         $evaluations = Hash::combine($evaluations, '{n}.id', '{n}');
+        if (empty($evaluations)) {
+            return [];
+        }
+
         $flow = [];
         $evaluator_index = 1;
         $status_text = ['your_turn' => false, 'body' => null];
@@ -89,9 +92,6 @@ class EvaluationService extends AppService
                         break;
                 }
             }
-        }
-        if (empty($flow)) {
-            return [];
         }
 
         $evalStage = $this->getEvalStageIfNotFixedEvalOrder($termId, $userId);
