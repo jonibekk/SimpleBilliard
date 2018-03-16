@@ -12,6 +12,18 @@ class CirclePin extends AppModel
     }
 
     /**
+     * belongsTo associations
+     *
+     * @var array
+     */
+    public $belongsTo = [
+        'CircleMember' => [
+            "counterCache" => true,
+            'counterScope' => ['CircleMember.del_flg' => false]
+        ],
+    ];
+
+    /**
      * Validation rules
      *
      * @var array
