@@ -94,7 +94,7 @@ class EvaluatorSettingsController extends AppController
         $userEvaluatee = $User->findById($userId);
 
         // TODO: fetch evaluators
-        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee, null, null, null, null,];
+        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee];
 
         $this->set('userEvaluatee', $userEvaluatee);
         $this->set('userEvaluateeCoach', $userEvaluatee);
