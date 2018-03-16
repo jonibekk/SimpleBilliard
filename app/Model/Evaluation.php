@@ -1133,10 +1133,11 @@ class Evaluation extends AppModel
      *
      * @return array
      */
-    function getEvaluatorIdsByEvaluatee(int $termId, int $evaluateeId): array
+    function getEvaluatorsByEvaluatee(int $termId, int $evaluateeId): array
     {
         $options = [
             'fields' =>[
+                'id',
                 'evaluator_user_id'
             ],
             'conditions' => [
@@ -1148,7 +1149,7 @@ class Evaluation extends AppModel
         ];
 
         $res = $this->find('all', $options);
-        return Hash::extract($res, '{n}.Evaluation.evaluator_user_id');
+        return Hash::extract($res, '{n}.Evaluation');
     }
 
     /**

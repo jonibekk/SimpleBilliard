@@ -293,17 +293,17 @@ class EvaluationsController extends AppController
      */
     private function notifyAndDelCacheIfNotFixedEvalOrder(int $evaluateeId, int $evaluateTermId)
     {
-        $evaluatorIds = $this->Evaluation->getEvaluatorIdsByEvaluatee($evaluateTermId, $evaluateeId);
+        $evaluatorEvals = $this->Evaluation->getEvaluatorsByEvaluatee($evaluateTermId, $evaluateeId);
         if ($evaluateeId == $this->Auth->user('id')) {
-            foreach ($evaluatorIds as $evaluatorId) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR, $evaluatorId);
+            foreach ($evaluatorEvals as $v) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR, $v['id']);
             }
 
         }
         Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
 
-        foreach ($evaluatorIds as $evaluatorId) {
-            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $evaluatorId),
+        foreach ($evaluatorEvals as $v) {
+            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $v['evaluator_user_id']),
                 'team_info');
         }
     }
