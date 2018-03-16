@@ -55,7 +55,7 @@ window.onload = function(){
 
             // Element dragging ended
             onEnd: function (/**Event*/evt) {
-                // var itemEl = evt.item;  // dragged HTMLElement
+                // var itemEl = evt.target;  // dragged HTMLElement
                 // evt.to;    // target list
                 // evt.from;  // previous list
                 // evt.oldIndex;  // element's old index within old parent
@@ -65,7 +65,7 @@ window.onload = function(){
             // Element is dropped into the list from another list
             onAdd: function (/**Event*/evt) {
                 // same properties as onEnd
-                // evt.item.querySelector('i').classList.remove('fa-disabled');
+                // evt.target.querySelector('i').classList.remove('fa-disabled');
                 // // updateElements = [];
                 // // setElementInformations(evt.newIndex);
                 // updateOrder();
@@ -96,14 +96,14 @@ window.onload = function(){
             onRemove: function (/**Event*/evt) {
                 // same properties as onEnd
                 // updateElements = [];
-                // evt.item.dataset.beforeid = '';
+                // evt.target.dataset.beforeid = '';
                 // setElementInformations(evt.oldIndex);
                 // updateOrder();
             },
 
             // Attempt to drag a filtered element
             onFilter: function (/**Event*/evt) {
-                // var itemEl = evt.item;  // HTMLElement receiving the `mousedown|tapstart` event.
+                // var itemEl = evt.target;  // HTMLElement receiving the `mousedown|tapstart` event.
             },
 
             // Event when you move an item in the list or between lists
@@ -119,7 +119,7 @@ window.onload = function(){
 
             // Called when creating a clone of element
             onClone: function (/**Event*/evt) {
-                // var origEl = evt.item;
+                // var origEl = evt.target;
                 // var cloneEl = evt.clone;
             }
         });
@@ -163,31 +163,31 @@ window.onload = function(){
             // Element dragging started
             onStart: function (/**Event*/evt) {
                 // evt.oldIndex;  // element index within parent
-                // if(!evt.item.previousElement){
+                // if(!evt.target.previousElement){
                 //     previousElemntBeforeId = null;
                 // }else {
-                //     previousElemntBeforeId = evt.item.previousElement.id;
+                //     previousElemntBeforeId = evt.target.previousElement.id;
                 //     console.log(previousElemntBeforeId);
                 // }
             },
 
             // Element dragging ended
             onEnd: function (/**Event*/evt) {
-                // var itemEl = evt.item;  // dragged HTMLElement
+                // var itemEl = evt.target;  // dragged HTMLElement
                 // evt.to;    // target list
                 // evt.from;  // previous list
                 // evt.oldIndex;  // element's old index within old parent
                 // evt.newIndex;  // element's new index within new parent
                 //TODO:
-                // if(!evt.item.previousElement){
-                //     evt.item.setAttributeByName('data-id', 0);
+                // if(!evt.target.previousElement){
+                //     evt.target.setAttributeByName('data-id', 0);
                 // }
             },
 
             // Element is dropped into the list from another list
             onAdd: function (/**Event*/evt) {
                 // same properties as onEnd
-                // evt.item.querySelector('i').classList.add('fa-disabled');
+                // evt.target.querySelector('i').classList.add('fa-disabled');
             },
 
             // Changed sorting within list
@@ -208,7 +208,7 @@ window.onload = function(){
 
             // Attempt to drag a filtered element
             onFilter: function (/**Event*/evt) {
-                // var itemEl = evt.item;  // HTMLElement receiving the `mousedown|tapstart` event.
+                // var itemEl = evt.target;  // HTMLElement receiving the `mousedown|tapstart` event.
             },
 
             // Event when you move an item in the list or between lists
@@ -224,7 +224,7 @@ window.onload = function(){
 
             // Called when creating a clone of element
             onClone: function (/**Event*/evt) {
-                // var origEl = evt.item;
+                // var origEl = evt.target;
                 // var cloneEl = evt.clone;
             }
         });
@@ -277,50 +277,79 @@ window.onload = function(){
     }
     var circles = document.querySelectorAll('.list-group-item');
     if(circles){
-        var showCircleEditModal = function(){
-            console.log("TODO");
+        var makeParams = function() {
+            var data = [];
+            var pins = document.getElementById('pinned').getElementsByClassName('list-group-item');
+            for (var pin of pins) {
+                data.push(pin.id);
+            }
+            return data.join(',');
         }
-        var showAdminOptions = function(evt) {
+        var editMenu = function(evt) {
             evt = evt || window.event;
-            var id = this.parentElement.parentElement.id;
+            evt.preventDefault();
             var self = this;
-            var senddata = {
-                'data[_Token][key]': cake.data.csrf_token.key,
-                'circle_id': id,
-            };
+            if (self.classList.contains('double_click')) {
+                return false;
+            }
+            self.classList.add('double_click');
 
-            console.log(senddata);
-
-            $.ajax({
-              url: '/api/v1/circle_pins/',
-              type: "POST",
-              data: senddata,
-              contentType:"application/x-www-form-urlencoded; charset=utf-8",
-              // dataType:"json",
-              success: function(data){
-                console.log(data);
-                //var alink = self.parentElement.querySelector('.a-black-link');
-                // if(!data){
-                //     return;
-                // }
-                self.parentElement.appendChild(data);
-                self.parentElement.querySelector('.fa-ellipsis-h').onclick = showCircleEditModal;
-              },
-              error: function(data){
-                new Noty({
-                    type: 'error',
-                    text: '<h4>' + cake.word.error + '</h4>' + 'Network/Data error',
-                }).show();
-                console.log(data);
-                //self.parentElement.appendChild(data);
-                self.parentElement.querySelector('.fa-ellipsis-h').onclick = showCircleEditModal;
-              }
+            var modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+            modal_elm.on('hidden.bs.modal', function (e) {
+                e.target.remove();
+                document.getElementById('circles-edit-page').classList.remove('modal-open');
             });
+            var url = this.getAttribute('data-url');
+            if(!url){
+                return false;
+            }
+            if (!url.indexOf('#')) {
+                url.modal('open');
+            } else {
+                $.get(url, function (data) {
+                    modal_elm.append(data);
+                    //noinspection JSUnresolvedFunction
+                    bindSelect2Members(modal_elm);
+                    //アップロード画像選択時にトリムして表示
+                    modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+                        self.children('.nailthumb-container').nailthumb({
+                            width: 96,
+                            height: 96,
+                            fitDirection: 'center center'
+                        });
+                    });
+                    modal_elm.modal();
+                }).done(function (data) {
+                    self.classList.remove('double_click');
+                    document.getElementById('circles-edit-page').classList.add('modal-open');
+                    self.parentElement.style.display = "none";
+                });
+            }
+        }
+        var toggleMenu = function(evt) {
+            evt = evt || window.event;
+            hideMenuAll();
+            var next = this.nextElementSibling;
+            if(next.style.display ==="block") {
+                next.style.display = "none";
+            } else {
+                next.style.display = "block";
+            }
+        }
+        var hideMenu = function(evt) {
+            evt = evt || window.event;
+            evt.target.parentElement.style.display = "none";
+        }
+        var hideMenuAll = function(evt) {
+            evt = evt || window.event;
+            var nodes = document.querySelectorAll('.dropdown-content');
+            for(var i=0;i<nodes.length;i++){
+                nodes[i].style.display = "none";
+            }
         }
         var pinEvent = function(evt) {
             evt = evt || window.event;
             this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
-            this.parentElement.querySelector('.fa-ellipsis-h').classList.toggle('style-hidden');
             this.classList.toggle('fa-disabled');
 
             if(this.classList.contains('fa-disabled')) {
@@ -334,24 +363,67 @@ window.onload = function(){
         };
         for(var i = 0; i < circles.length; i++){
             circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
-            circles[i].querySelector('.fa-ellipsis-h').onclick = showAdminOptions;
+            circles[i].querySelector('.fa-ellipsis-h').onclick = toggleMenu;
+            var nodes = circles[i].querySelector('.dropdown-content').querySelectorAll('.dropdown-element');
+            for(var j = 0; j < nodes.length; j++){
+                nodes[j].onclick = hideMenu;
+            }
+            var editlink = circles[i].querySelector('.ajax-url');
+            if(editlink){
+                editlink.onclick = editMenu;
+            }     
         }
     }
 
-    var forEach = function (array, callback, scope) {
-      for (var i = 0; i < array.length; i++) {
-        callback.call(scope, i, array[i]); // passes back stuff we need
-      }
-    };
+    function bindSelect2Members($this) {
+        var $select2elem = $this.find(".ajax_add_select2_members");
+        var url = $select2elem.attr('data-url');
 
-    var makeParams = function() {
-        var data = [];
-        var pins = document.getElementById('pinned').getElementsByClassName('list-group-item');
-        for (var pin of pins) {
-            data.push(pin.id);
-        }
-        return data.join(',');
+        //noinspection JSUnusedLocalSymbols
+        $select2elem.select2({
+            'val': null,
+            multiple: true,
+            minimumInputLength: 1,
+            placeholder: cake.message.notice.b,
+            ajax: {
+                url: url ? url : cake.url.a,
+                dataType: 'json',
+                quietMillis: 100,
+                cache: true,
+                data: function (term, page) {
+                    return {
+                        term: term, //search term
+                        page_limit: 10 // page size
+                    };
+                },
+                results: function (data, page) {
+                    return {results: data.results};
+                }
+            },
+            formatSelection: format,
+            formatResult: format,
+            escapeMarkup: function (m) {
+                return m;
+            }
+        })
+            .on('change', function () {
+                var $this = $(this);
+                // グループを選択した場合
+                // グループに所属するユーザーを展開して入力済にする
+                $this.select2('data', select2ExpandGroup($this.select2('data')));
+            });
     }
+
+
+    // var forEach = function (array, callback, scope) {
+    //   for (var i = 0; i < array.length; i++) {
+    //     callback.call(scope, i, array[i]); // passes back stuff we need
+    //   }
+    // };
+
+    
+
+    
 
     
 
