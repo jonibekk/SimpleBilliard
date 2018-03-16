@@ -1,14 +1,6 @@
 window.onload = function(){
     'use strict';
-    //Toggling
-   //  if(document.getElementById('pinned-header-icon') && document.getElementById('unpinned-header-icon')) {
-   //  	var toggleCaret = function () {
-			// this.classList.toggle('fa-caret-down');
-			// this.classList.toggle('fa-caret-up');
-	  //   }
-   //      document.getElementById('pinned-header-icon').onclick = toggleCaret;
-   //      document.getElementById('unpinned-header-icon').onclick = toggleCaret;
-   //  }
+
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')){
         var pinnedSortable = new Sortable(document.getElementById('pinned'), {
@@ -361,6 +353,18 @@ window.onload = function(){
             updateOrder();
             updateDisplayCount();
         };
+        var moveToBottom = function(evt) {
+            evt = evt || window.event;
+            console.log(this.parentElement.parentElement.parentElement);
+            this.parentElement.parentElement.parentElement.parentElement.appendChild(this.parentElement.parentElement.parentElement);
+            hideMenuAll();
+        }
+        var moveToTop = function(evt) {
+            evt = evt || window.event;
+            var list = this.parentElement.parentElement.parentElement.parentElement;
+            list.insertBefore(this.parentElement.parentElement.parentElement, list.querySelector('li'));
+            hideMenuAll();
+        }
         for(var i = 0; i < circles.length; i++){
             circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
             circles[i].querySelector('.fa-ellipsis-h').onclick = toggleMenu;
@@ -368,10 +372,18 @@ window.onload = function(){
             for(var j = 0; j < nodes.length; j++){
                 nodes[j].onclick = hideMenu;
             }
-            var editlink = circles[i].querySelector('.ajax-url');
-            if(editlink){
-                editlink.onclick = editMenu;
-            }     
+            var editLink = circles[i].querySelector('.ajax-url');
+            if(editLink){
+                editLink.onclick = editMenu;
+            }
+            var toTopLink = circles[i].querySelector('.move-top');
+            if(toTopLink){
+                toTopLink.onclick = moveToTop;
+            } 
+            var toBottomLink = circles[i].querySelector('.move-bottom');
+            if(toBottomLink){
+                toBottomLink.onclick = moveToBottom;
+            } 
         }
     }
 
@@ -413,49 +425,6 @@ window.onload = function(){
                 $this.select2('data', select2ExpandGroup($this.select2('data')));
             });
     }
-
-
-    // var forEach = function (array, callback, scope) {
-    //   for (var i = 0; i < array.length; i++) {
-    //     callback.call(scope, i, array[i]); // passes back stuff we need
-    //   }
-    // };
-
-    
-
-    
-
-    
-
-    // var updateOrder = function(element) {
-    //     var previousElement = element.previousSibling;
-    //     var elementId = element.id;
-    //     var beforeId = null;
-    //     if(previousElement){
-    //         var beforeId = previous.id;
-    //     }
-    //     // var data = {
-    //     //     'data[_Token][key]': cake.data.csrf_token.key,
-    //     //     'json' : JSON.stringify({circle_id:elementId,before_id:beforeId}),
-    //     // };
-    //     var formData = {};
-    //     formData['data[_Token][key]'] = cake.data.csrf_token.key;
-    //     formData['json'] = JSON.stringify({circle_id:elementId,before_id:beforeId});
-    //     console.log(formData);
-    //     $.ajax({
-    //       url: '/api/v1/circlepin/',
-    //       type:"POST",
-    //       data: formData,
-    //       contentType:"application/x-www-form-urlencoded; charset=utf-8",
-    //       // dataType:"json",
-    //       success: function(data){
-    //         //console.log(data);
-    //       },
-    //       error: function(data){
-    //         //console.log(data);
-    //       }
-    //     });
-    // }
 
     //Filter
     var filterList = document.getElementById('filter-circles-list');
