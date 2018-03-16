@@ -17,8 +17,8 @@
 	<div class="dropdown fa-pull-right-dropdown">
 		<i class="fas fa-ellipsis-h fa-lg a-black-link"></i>
 		<div class="dropdown-content">
-			<div class="dropdown-element">Move to top</div>
-			<div class="dropdown-element">Move to bottom</div>
+			<div class="dropdown-element move-top">Move to top</div>
+			<div class="dropdown-element move-bottom">Move to bottom</div>
 			<a href="#" class="dropdown-elementajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>">Edit</a>
 		</div>
 	</div>
@@ -26,8 +26,8 @@
 	<div class="dropdown fa-pull-right-dropdown">
 		<i class="fas fa-ellipsis-h fa-lg a-black-link"></i>
 		<div class="dropdown-content">
-			<div class="dropdown-element">Move to top</div>
-			<div class="dropdown-element">Move to bottom</div>
+			<div class="dropdown-element move-top">Move to top</div>
+			<div class="dropdown-element move-bottom">Move to bottom</div>
 		</div>
 	</div>
 	<?php endif; ?>
