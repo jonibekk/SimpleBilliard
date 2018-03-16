@@ -60,6 +60,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
     function testGetEvalStatusOnlyMe()
     {
+        $this->EvaluationSetting->current_team_id = 1;
         $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
         $termId = 1;
         $Evaluation->saveAll([
@@ -108,7 +109,8 @@ class EvaluationServiceTest extends GoalousTestCase
                     'email' => 'from@email.com',
                     'id'    => '1'
                 ]
-            ]
+            ],
+            'eval_stage' => EvaluationService::STAGE_NONE
         ];
 
         $this->assertEquals($expected, $ret);
@@ -116,6 +118,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
     function testGetEvalStatusMulti()
     {
+        $this->EvaluationSetting->current_team_id = 1;
         $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
         $termId = 1;
 
@@ -178,13 +181,15 @@ class EvaluationServiceTest extends GoalousTestCase
                     'email' => 'from@email.com',
                     'id'    => '1'
                 ]
-            ]
+            ],
+            'eval_stage' => EvaluationService::STAGE_NONE
         ];
         $this->assertEquals($expected, $retMulti);
     }
 
     function testGetEvaluateeEvalStatusAsEvaluator()
     {
+        $this->EvaluationSetting->current_team_id = 1;
         $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
         $termId = 1;
         $Evaluation->saveAll([
@@ -276,7 +281,8 @@ class EvaluationServiceTest extends GoalousTestCase
                 'status_text' => [
                     'your_turn' => true,
                     'body'      => 'Please evaluate.'
-                ]
+                ],
+                'eval_stage' => EvaluationService::STAGE_NONE
             ],
             (int)1 => [
                 'User'        => [
@@ -319,7 +325,8 @@ class EvaluationServiceTest extends GoalousTestCase
                 'status_text' => [
                     'your_turn' => true,
                     'body'      => 'Please evaluate.'
-                ]
+                ],
+                'eval_stage' => EvaluationService::STAGE_NONE
             ]
         ];
         $this->assertEquals($expected, $ret);
@@ -472,7 +479,11 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluator can't edit evaluation
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DRAFT]);
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DRAFT], [
+            'term_id' => $termId,
+            'evaluatee_user_id' => $userId,
+            'evaluator_user_id' => $userId
+        ]);
         $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
         $this->assertTrue($res);
         $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
@@ -480,15 +491,60 @@ class EvaluationServiceTest extends GoalousTestCase
         $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
         $this->assertFalse($res);
 
-
         // Evaluator can edit evaluation
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE]);
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
+            'term_id' => $termId,
+            'evaluatee_user_id' => $userId,
+            'evaluator_user_id' => $userId
+        ]);
         $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
         $this->assertTrue($res);
         $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
         $this->assertTrue($res);
         $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId2);
         $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
+        $this->assertFalse($res);
+
+        // Evaluatee can't edit evaluation after one evaluator evaluated
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
+            'term_id' => $termId,
+            'evaluatee_user_id' => $userId,
+            'evaluator_user_id' => $evaluatorId1
+        ]);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId2);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
+        $this->assertFalse($res);
+
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
+            'term_id' => $termId,
+            'evaluatee_user_id' => $userId,
+            'evaluator_user_id' => $evaluatorId2
+        ]);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId2);
+        $this->assertTrue($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
+        $this->assertFalse($res);
+
+        $this->Term->clear();
+        $this->Term->id = $termId;
+        $this->Term->save(['evaluate_status' => Enum\Term\EvaluateStatus::FROZEN], false);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
+        $this->assertFalse($res);
+        $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId2);
+        $this->assertFalse($res);
+        // Final can only update evaluations by uploading csv and not allowed to edit evaluation on page even after frozen evaluation
         $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
         $this->assertFalse($res);
     }
