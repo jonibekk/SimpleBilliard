@@ -33,7 +33,6 @@ const config = {
             assets_dir + '/js/view/evaluations/*.js'
         ],
         evaluator_settings: [
-            node_modules_dir + '/sortablejs/Sortable.min.js',
             assets_dir + '/js/view/evaluator_settings/*.js'
         ],
         payments: [
@@ -95,6 +94,7 @@ const config = {
   },
   js_vendor: {
     src: [
+      node_modules_dir + '/sortablejs/Sortable.min.js',
       node_modules_dir + '/dropzone/dist/min/dropzone.min.js',
       node_modules_dir + '/jquery-lazy/jquery.lazy.js',
       node_modules_dir + '/raven-js/dist/raven.js',

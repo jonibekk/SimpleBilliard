@@ -113,5 +113,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/js/goalous_evaluator_setting.min.js"></script>
 <?= $this->App->viewEndComment()?>
