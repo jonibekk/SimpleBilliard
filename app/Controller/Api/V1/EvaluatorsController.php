@@ -53,7 +53,7 @@ class EvaluatorsController extends ApiController
         //Check duplicate
         foreach (array_values(array_count_values($evaluatorUserIds)) as $count) {
             if ($count > 1) {
-                return $this->_getResponseBadFail('Invalid evaluators ID; More than 7 IDs');
+                return $this->_getResponseBadFail('Invalid evaluators ID; Having duplicate ID');
             }
         }
         /** @var TeamMember $TeamMember */
