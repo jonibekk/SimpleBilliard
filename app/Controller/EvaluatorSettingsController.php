@@ -88,7 +88,7 @@ class EvaluatorSettingsController extends AppController
     }
 
     /**
-     * TODO: implement here (GL-6618)
+     * TODO: implement here (https://jira.goalous.com/browse/GL-6618)
      */
     function detail()
     {
@@ -104,8 +104,8 @@ class EvaluatorSettingsController extends AppController
         /**@var EvaluatorChangeLog $EvaluatorChangeLog */
         $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
         $evaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($userId, $teamId);
-
-        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee, null, null, null, null,];
+        // TODO: fetch evaluators (https://jira.goalous.com/browse/GL-6618)
+        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee];
 
         $this->set('userEvaluatee', $userEvaluatee);
         $this->set('userEvaluateeCoach', $userEvaluatee);
