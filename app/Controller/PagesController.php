@@ -12,6 +12,10 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'PaymentService');
 App::import('Service', 'UserService');
 App::import('Service', 'CampaignService');
+App::import('Service', 'PostDraftService');
+App::import('Model', 'PostDraft');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Static content controller
@@ -161,11 +165,14 @@ class PagesController extends AppController
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
-            ]);
+                ]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
+        $this->set('post_drafts', $PostDraftService->getPostDraftForFeed($this->Auth->user('id'), $current_team['Team']['id']));
     }
 
     public function _setLanguage()
