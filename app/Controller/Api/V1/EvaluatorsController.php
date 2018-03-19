@@ -119,7 +119,7 @@ class EvaluatorsController extends ApiController
         int $userId,
         int $coachId
     ) {
-        $this->NotifyBiz->sendNotify(NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE, null, null,
+        $this->NotifyBiz->sendNotify(NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE, null, null,
             (array)$userId, $coachId,
             $teamId);
     }
