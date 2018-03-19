@@ -45,7 +45,8 @@ function toggleCommentForm() {
     }
 
     // Register the form for submit
-    $("#CommentAjaxGetNewCommentForm_" + post_id).on('submit', function (e) {
+    $commentForm.off('submit');
+    $commentForm.on('submit', function (e) {
         // アップロードファイルの有効期限が切れていなければコメント投稿
         var res = checkUploadFileExpire($(this).attr('id'));
         if (res) {
