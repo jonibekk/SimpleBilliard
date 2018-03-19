@@ -1,6 +1,8 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('Evaluator', 'Model');
 App::import('Service', 'ExperimentService');
 App::import('Service', 'EvaluationService');
 
@@ -88,23 +90,41 @@ class EvaluatorSettingsController extends AppController
     }
 
     /**
-     * TODO: implement here (https://jira.goalous.com/browse/GL-6618)
+     * Evaluator setting page
      */
     function detail()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
         $userId = $this->request->params['user_id'];
+        $teamId = $this->current_team_id;
 
         /** @var  User $User */
         $User = ClassRegistry::init('User');
+        /** @var  TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var  Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
+
         $userEvaluatee = $User->findById($userId);
 
-        // TODO: fetch evaluators (https://jira.goalous.com/browse/GL-6618)
-        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee];
+        // Fetching coach User
+        $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($userId);
+        $userCoach = null;
+        if (!empty($coachUserId)) {
+            $userCoach = $User->findById($coachUserId);
+        }
+
+        // Fetching evaluatee's evaluators
+        $evaluatorsIds = $Evaluator->getExistingEvaluatorsIds($teamId, $userId);
+        $userEvaluators = [];
+        foreach ($evaluatorsIds as $evaluatorsId) {
+            $evaluator = $Evaluator->getById($evaluatorsId);
+            $userEvaluators[] = $User->findById($evaluator['evaluator_user_id']);
+        }
 
         $this->set('userEvaluatee', $userEvaluatee);
-        $this->set('userEvaluateeCoach', $userEvaluatee);
+        $this->set('userEvaluateeCoach', $userCoach);
         $this->set('userEvaluators', $userEvaluators);
     }
 }
