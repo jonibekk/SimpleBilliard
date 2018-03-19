@@ -47,7 +47,7 @@ function toggleCommentForm() {
     var $txtArea = $(this);
     var post_id = sanitize($txtArea.attr("post-id"));
     var $commentButtons = $('#Comment_' + post_id);
-    var $commentForm = $('$CommentAjaxGetNewCommentForm_' + post_id);
+    var $commentForm = $('#CommentAjaxGetNewCommentForm_' + post_id);
 
     if ($commentButtons.is(':visible')) {
         return;
