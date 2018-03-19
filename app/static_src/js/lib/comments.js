@@ -47,6 +47,7 @@ function toggleCommentForm() {
     var $txtArea = $(this);
     var post_id = sanitize($txtArea.attr("post-id"));
     var $commentButtons = $('#Comment_' + post_id);
+    var $commentForm = $('$CommentAjaxGetNewCommentForm_' + post_id);
 
     if ($commentButtons.is(':visible')) {
         return;
@@ -54,6 +55,8 @@ function toggleCommentForm() {
     // Display the buttons
     $commentButtons.toggle();
     $(this).addClass('no-border');
+    // Remove comment file fields
+    $commentForm.find("input[name^='data[file_id]']").remove();
 
     // コメントフォームをドラッグ＆ドロップ対象エリアにする
     var $uploadFileForm = $(document).data('uploadFileForm');
@@ -89,6 +92,7 @@ function toggleCommentForm() {
             }, 4000);
         }
     };
+    $uploadFileForm.trigger('reset');
     $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
     $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
 
@@ -239,7 +243,12 @@ function addComment(e) {
                     afterSuccess: function () {
                         var post_id = sanitize($f.attr("post-id"));
                         var $commentButtons = $('#Comment_' + post_id);
-                        $f.trigger('reset')
+                        var $uploadFileForm = $(document).data('uploadFileForm');
+                        // Reset forms
+                        $f.trigger('reset');
+                        $f.find("input[name^='data[file_id]']").remove();
+                        $uploadFileForm.trigger('reset');
+                        // Clear upload data
                         document.getElementById('CommentFormBody_' + post_id).style.height = null;
                         $('#CommentUploadFilePreview_' + post_id).empty();
                         $('#CommentOgpSiteInfo_' + post_id).empty();
