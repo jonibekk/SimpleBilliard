@@ -41,8 +41,8 @@ class EvaluatorChangeLogService extends AppService
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
 
-            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::emergency($e->getTraceAsString());
+            CakeLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            CakeLog::error($e->getTraceAsString());
 
             return false;
         }

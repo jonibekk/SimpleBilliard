@@ -45,7 +45,7 @@ class EvaluatorChangeLogServiceTest extends GoalousTestCase
         $this->EvaluatorChangeLogService = ClassRegistry::init("EvaluatorChangeLogService");
     }
 
-    public function test_insertChangeLog_success()
+    public function test_saveLog_success()
     {
         $teamId = 1;
         $evaluateeId = 1;
@@ -54,10 +54,9 @@ class EvaluatorChangeLogServiceTest extends GoalousTestCase
         $this->EvaluatorChangeLogService->saveLog($teamId, $evaluateeId, $updaterId);
         $queryResult = $this->EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $evaluateeId);
 
-        $this->assertCount(1, $queryResult);
-        $this->assertEquals($teamId, $queryResult['EvaluatorChangeLog']['team_id']);
-        $this->assertEquals($evaluateeId, $queryResult['EvaluatorChangeLog']['evaluatee_user_id']);
-        $this->assertEquals($updaterId, $queryResult['EvaluatorChangeLog']['last_update_user_id']);
+        $this->assertEquals($teamId, $queryResult['team_id']);
+        $this->assertEquals($evaluateeId, $queryResult['evaluatee_user_id']);
+        $this->assertEquals($updaterId, $queryResult['last_update_user_id']);
     }
 
 }

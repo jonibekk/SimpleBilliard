@@ -32,7 +32,7 @@ class EvaluatorChangeLog extends AppModel
      *
      * @return array|null
      */
-    public function getLatestLogByUserIdAndTeamId(int $teamId, int $userId)
+    public function getLatestLogByUserIdAndTeamId(int $teamId, int $userId): array
     {
         $options = [
             'conditions' => [
@@ -42,10 +42,10 @@ class EvaluatorChangeLog extends AppModel
 
         ];
 
-        $options['conditions'][] = $this->_getLatestChangeLog();
+        $options['conditions'][] = $this->_getLatestChangeLogSubQuery();
         $ret = $this->find('first', $options);
 
-        return $ret;
+        return Hash::get($ret, 'EvaluatorChangeLog');
     }
 
     /**
@@ -76,9 +76,9 @@ class EvaluatorChangeLog extends AppModel
     /**
      * Subquery for getting latest modified changelog of an evaluatee in a team
      *
-     * @return stdClass
+     * @return stdClass SubQuery Object
      */
-    private function _getLatestChangeLog()
+    private function _getLatestChangeLogSubQuery(): stdClass
     {
         /** @var DboSource $db */
         $db = $this->getDataSource();
