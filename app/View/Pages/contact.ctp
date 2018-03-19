@@ -83,210 +83,70 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>
 <?php $this->end() ?>
 <?= $this->App->viewStartComment() ?>
-<!-- ******CONTACT MAIN****** -->
-<section id="contact-promo" class="contact-promo section">
-    <div class="bg-mask"></div>
+
+
+<section id="contact_section">
     <div class="container">
-        <div class="row">
-            <div class="contact-intro col-xs-12 text-center">
-                <h2 class="title"><?= __('Contact us about Goalous') ?></h2>
-                <p class="contact-list">
-                    <?=
-                    __('Goalous is managed by ISAO, a visionary company that brings joy to work around the world.') .
-                    '<br>' .
-                    __('Feel free to contact us.');
-                    ?>
-                </p>
-            </div>
+        <div class="container-half">
+            <h1><?= __('Say <q>Hello</q> to your company&rsquo;s next communication tool');?></h1>
+            <p><?= __('Through goal oriented communication, you can revolutionize your team&rsquo;s power! Contact us today, and we&rsquo;ll help you get started along with a <strong>free trial</strong> of Goalous!'); ?></p>
+            <figure>
+                <img src="<?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? '/img/homepage/goalous-contact-jp.png' : '/img/homepage/goalous-contact-en.png'?>" alt="Screenshots of the Goalous Application">
+            </figure>
+        </div>
+        <div class="container-half">
+            <h2><?= __('Contact Us Today'); ?></h2>
+
+            <?=
+            $this->Form->create('Email', [
+                'id'            => 'contact-form',
+                'class'         => 'form',
+                'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false]
+            ]); ?>
+                <div class="half">
+                    <label for="lastName"><?= __('Last Name ');?> <sup class="req">*</sup></label>
+                    <?= $this->Form->input('name_last', [
+                        'placeholder' => __('Last Name '),
+                        'id'          => 'name_last',
+                        'required'     => true,
+                    ]) ?>
+                </div>
+                <div class="half">
+                    <label for="firstName"><?= __('First Name ');?> <sup class="req">*</sup></label>
+                    <?= $this->Form->input('name_first', [
+                        'placeholder' => __('First Name '),
+                        'id'          => 'name_first',
+                        'required'     => true,
+                    ]) ?>
+                </div>
+                <label for="email"><?= __('Your Work Email Address');?> <sup class="req">*</sup></label>
+                <?= $this->Form->input('email', [
+                    'placeholder' => __('Your Work Email Address'),
+                    'id'          => 'email',
+                    'required'    => true,
+                    'type'        => 'email'
+                ]) ?>
+                <label for="phone"><?= __('Phone Number (Optional)');?></label>
+            <?= $this->Form->input('phone', [
+                'placeholder' => __('Phone Number (Optional)'),
+                'id'          => 'phone',
+                'type'        => 'tel',
+                'required'    => false,
+            ]) ?>
+                <label for="company"><?= __('Company Name (Optional)'); ?></label>
+            <?= $this->Form->input('company', [
+                'placeholder' => __('Company Name (Optional)'),
+                'id'          => 'company',
+                'required'    => false
+            ]) ?>
+                <div class="container-submit">
+                    <p><small><?= __("By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>.");?></small></p>
+                    <button class="btn btn-cta-primary"><?=__('I Agree, Contact us');?></button>
+                </div>
+            <?= $this->Form->end() ?>
+
         </div>
     </div>
-</section>
-
-<section class="container contact-form-section">
-    <div class="row">
-        <?=
-        $this->Form->create('Email', [
-            'id'            => 'contact-form',
-            'class'         => 'form',
-            'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false],
-            'novalidate'    => true
-        ]); ?>
-        <div class="contact-form col-md-8 col-xs-12 col-md-offset-2">
-            <div class="form-group name">
-                <span class="label label-danger"><?= __('Required') ?></span>
-                <?= $this->Form->input('name', [
-                    'placeholder' => __('eg. Isao Suzuki'),
-                    'id'          => 'EmailName',
-                    'class'       => 'form-control lp-contact-form-control',
-                    'label'       => [
-                        'text'  => __('Your name'),
-                        'class' => 'control-label lp-contact-control-label',
-                    ],
-                ]) ?>
-                <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
-            </div>
-            <div class="form-group email">
-                <span class="label label-danger"><?= __('Required') ?></span>
-                <?= $this->Form->input('email', [
-                    'placeholder' => __('eg. example@goalous.com'),
-                    'id'          => 'email',
-                    'class'       => 'form-control lp-contact-form-control',
-                    'label'       => [
-                        'text'  => __('Email address'),
-                        'class' => 'control-label lp-contact-control-label',
-                    ],
-                ]) ?>
-                <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block']) ?>
-            </div>
-            <div class="form-group company">
-                <?= $this->Form->input('company', [
-                    'placeholder' => __('eg. ISAO Corporation'),
-                    'id'          => 'company',
-                    'class'       => 'form-control lp-contact-form-control',
-                    'label'       => [
-                        'text'  => __('Company name, Organization name or Something like that.'),
-                        'class' => 'control-label lp-contact-control-label',
-                    ],
-                ])
-                ?>
-                <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block']) ?>
-            </div>
-            <div class="form-group want">
-                <span class="label label-danger"><?= __('Required') ?></span>
-                <?=
-                $this->Form->input('want', [
-                    'options' => $type_options, // PagesController - ln.184,
-                    'value'   => $selected_type,
-                    'label'   => [
-                        'text'  => __('What is your question about?'),
-                        'class' => 'control-label lp-contact-control-label',
-                        'empty' => false,
-                    ],
-                    'class'   => 'form-control lp-contact-form-control',
-                ]); ?>
-                <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block']) ?>
-            </div>
-            <div class="form-group messsage">
-                <span class="label label-danger"><?= __('Required') ?></span>
-                <?=
-                $this->Form->input('message', [
-                    'class'       => 'form-control lp-contact-form-control',
-                    'type'        => 'text',
-                    'rows'        => 8,
-                    'placeholder' => __('eg. We want to use it. So, we need more explanation in detail.'),
-                    'label'       => [
-                        'text'  => __('Question (3,000 character limit)'),
-                        'class' => 'control-label lp-contact-control-label',
-                    ],
-                ]);
-                ?>
-                <?= $this->Form->error('message', null, ['class' => 'contact-error-msg-block']) ?>
-            </div>
-        </div>
-
-        <div class="contact-form col-md-8 col-xs-12 col-md-offset-2 text-center">
-            <label class="control-label"><?= __('You can request your sales person.') ?></label>
-            <?php $this->Form->unlockField('sales_people') ?>
-            <div class="form-group sales text-left">
-                <?php
-                $sales_people = [
-                    [
-                        'name'        => __('Keita Yukawa'),
-                        'description' => __('Cool like Japanese actor'),
-                        'img'         => 'homepage/people/sales1.jpg',
-                    ],
-                    [
-                        'name'        => __('Kohei Kikuchi'),
-                        'description' => __('Owner of Goalous'),
-                        'img'         => 'homepage/people/sales2.jpg',
-                    ],
-                    [
-                        'name'        => __('Makoto Yoshioka'),
-                        'description' => __('Sales person full of joy'),
-                        'img'         => 'homepage/people/sales3.jpg',
-                    ],
-                    [
-                        'name'        => __('Yusuke Ishihara'),
-                        'description' => __('A DJ since my teens'),
-                        'img'         => 'homepage/people/sales4.jpg',
-                    ],
-                ]
-                ?>
-                <?php foreach ($sales_people as $k => $v): ?>
-                    <label class="col-sm-6 col-xs-12 salesperson">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <?= $this->Form->checkbox('sales_people.',
-                                    [
-                                        'value'       => $v['name'],
-                                        'hiddenField' => false,
-                                        'checked'     => isset($this->request->data['Email']['sales_people']) &&
-                                        in_array($v['name'],
-                                            $this->request->data['Email']['sales_people']) ? 'checked' : null
-                                    ]) ?>
-                            </span>
-                            <div class="media">
-                                <div class="media-left media-middle">
-                                    <?= $this->Html->image($v['img'],
-                                        array(
-                                            'alt'    => 'photo',
-                                            'width'  => '60',
-                                            'height' => '60',
-                                            'class'  => 'img-circle'
-                                        )); ?>
-                                </div>
-                                <div class="media-body media-middle">
-                                    <?=
-                                    $v['name'] .
-                                    '<br>' .
-                                    $v['description']
-                                    ?>
-                                </div>
-                            </div>
-                        </div><!-- /input-group -->
-                    </label><!-- /.col-sm-6 col-xs-12 -->
-
-                <?php endforeach; ?>
-            </div><!--//form-group-->
-        </div>
-        <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
-            <div class="checkbox contact-form-checkbox">
-                <label>
-                    <?= $this->Form->checkbox('need') ?>
-                    <?= $this->Html->link(__('Terms of service'), [
-                        'controller' => 'pages',
-                        'action'     => 'display',
-                        'pagename'   => 'terms',
-                        'lang'       => $top_lang,
-                    ],
-                        [
-                            'target' => '_blank',
-                        ]
-                    ) ?>
-                    <?= __('・') ?>
-                    <?= $this->Html->link(__('PrivacyPolicy'), [
-                        'controller' => 'pages',
-                        'action'     => 'display',
-                        'pagename'   => 'privacy_policy',
-                        'lang'       => $top_lang,
-                    ],
-                        [
-                            'target' => '_blank',
-                        ]
-                    ) ?>
-                    <?= __(' - Do you agree with them?') ?>
-                </label>
-                <?= $this->Form->error('need', __('Need to agree to terms and policy.'),
-                    ['class' => 'contact-error-msg-block']) ?>
-            </div>
-            <p>
-                <?= $this->Form->submit(__('Go to confirm'), ['class' => 'btn btn-block btn-cta-primary']) ?>
-            </p>
-        </div><!--//contact-form-->
-
-        <?= $this->Form->end() ?>
-        <!--//form-->
-    </div><!--//row-->
 </section>
 
 <?= $this->App->viewEndComment() ?>
