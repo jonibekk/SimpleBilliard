@@ -120,7 +120,10 @@ class EvaluatorSettingsController extends AppController
         $userEvaluators = [];
         foreach ($evaluatorsIds as $evaluatorsId) {
             $evaluator = $Evaluator->getById($evaluatorsId);
-            $userEvaluators[] = $User->findById($evaluator['evaluator_user_id']);
+            $user = $User->findById($evaluator['evaluator_user_id']);
+            if (!empty($user)) {
+                $userEvaluators[] = $user;
+            }
         }
 
         $this->set('userEvaluatee', $userEvaluatee);
