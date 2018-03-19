@@ -32,17 +32,18 @@ $(document).ready(function() {
         // TODO: change to evaluator set api
         var form = $(this)
         $.post(
-            '/v1/evaluator/set',
+            '/api/v1/evaluators',
             form.serializeArray()
         ).done(function(data) {
             new Noty({
                 type: 'success',
                 text: '<h4>success</h4>TODO: save message',
             }).show();
-        }).fail(function() {
+        }).fail(function(xhr) {
+            var data = $.parseJSON(xhr.responseText);
             new Noty({
                 type: 'error',
-                text: '<h4>error</h4>TODO: fail message',
+                text: '<h4>error</h4>' + data.message,
             }).show();
         }).always(function() {
             form.find('input[type=submit]').prop("disabled", false);
