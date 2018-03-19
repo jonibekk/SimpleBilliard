@@ -88,7 +88,7 @@ class EvaluatorSettingsController extends AppController
     }
 
     /**
-     * TODO: implement here
+     * TODO: implement here (https://jira.goalous.com/browse/GL-6618)
      */
     function detail()
     {
@@ -100,8 +100,8 @@ class EvaluatorSettingsController extends AppController
         $User = ClassRegistry::init('User');
         $userEvaluatee = $User->findById($userId);
 
-        // TODO: fetch evaluators
-        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee, null, null, null, null,];
+        // TODO: fetch evaluators (https://jira.goalous.com/browse/GL-6618)
+        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee];
 
         $this->set('userEvaluatee', $userEvaluatee);
         $this->set('userEvaluateeCoach', $userEvaluatee);
