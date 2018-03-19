@@ -16,7 +16,7 @@ class EvaluatorService extends AppService
      *
      * @param int   $teamId
      * @param int   $userId
-     *      User ID of evaluee
+     *      User ID of evaluatee
      * @param array $evaluatorIds
      *      Array of user IDs of evaluators
      *
