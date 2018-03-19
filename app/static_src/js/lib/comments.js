@@ -55,8 +55,10 @@ function toggleCommentForm() {
     // Display the buttons
     $commentButtons.toggle();
     $(this).addClass('no-border');
-    // Remove comment file fields
+    // Remove comment file field
     $commentForm.find("input[name^='data[file_id]']").remove();
+    // Clear OGP info
+    $commentForm.find("input[name^='data[Comment][site_info_url]']").val('');
 
     // コメントフォームをドラッグ＆ドロップ対象エリアにする
     var $uploadFileForm = $(document).data('uploadFileForm');
@@ -247,6 +249,7 @@ function addComment(e) {
                         // Reset forms
                         $f.trigger('reset');
                         $f.find("input[name^='data[file_id]']").remove();
+                        $f.find("input[name^='data[Comment][site_info_url]']").val('');
                         $uploadFileForm.trigger('reset');
                         // Clear upload data
                         document.getElementById('CommentFormBody_' + post_id).style.height = null;
