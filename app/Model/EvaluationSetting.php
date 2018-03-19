@@ -15,6 +15,7 @@ class EvaluationSetting extends AppModel
     const FLG_FINAL = 'final_flg';
     const FLG_LEADER = 'leader_flg';
     const FLG_FIXED_EVALUATION_ORDER_FLG = 'fixed_evaluation_order_flg';
+    const FLG_SHOW_ALL_EVALUATION_BEFORE_FREEZE_FLG = 'show_all_evaluation_before_freeze_flg';
     /**
      * Validation rules
      *
@@ -263,6 +264,14 @@ class EvaluationSetting extends AppModel
     function isFixedEvaluationOrder(): bool
     {
         return $this->isFlagOn(self::FLG_FIXED_EVALUATION_ORDER_FLG);
+    }
+
+    /**
+     * @return bool
+     */
+    function isShowAllEvaluationBeforeFreeze(): bool
+    {
+        return $this->isFlagOn(self::FLG_SHOW_ALL_EVALUATION_BEFORE_FREEZE_FLG);
     }
 
     private function isFlagOn($flag_name)

@@ -41,7 +41,33 @@
                         <?php endif;?>
 
                     <?php endif ?>
-                    <span class="<?= $v['this_turn'] ? 'font_bold' : 'font_lightgray' ?>">
+                    <?php
+                        $fontWeightCls = 'font_lightgray';
+                        if ($isFixedEvaluationOrder) {
+                            $fontWeightCls =  $v['this_turn'] ? 'font_bold' : 'font_lightgray';
+                        } else {
+                            switch ($v['evaluate_type']) {
+                                case Evaluation::TYPE_ONESELF:
+
+                                    if ($user['eval_stage'] == EvaluationService::STAGE_SELF_EVAL) {
+                                        $fontWeightCls = 'font_bold';
+                                    }
+                                    break;
+                                case Evaluation::TYPE_EVALUATOR:
+                                    if ($user['eval_stage'] == EvaluationService::STAGE_EVALUATOR_EVAL) {
+                                        $fontWeightCls = 'font_bold';
+                                    }
+                                    break;
+                                case Evaluation::TYPE_FINAL_EVALUATOR:
+                                    if ($user['eval_stage'] == EvaluationService::STAGE_FINAL_EVALUATOR_EVAL) {
+                                        $fontWeightCls = 'font_bold';
+                                    }
+                                    break;
+
+                            }
+                        }
+                    ?>
+                    <span class="<?= $fontWeightCls ?>">
                         <i class="fa fa-user <?= $v['other_evaluator'] ? '' : 'none' ?>" aria-hidden="true"></i><?= $v['name'] ?>
                     </span>
                 <?php endforeach ?>
