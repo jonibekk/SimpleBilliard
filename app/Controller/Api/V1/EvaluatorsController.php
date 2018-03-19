@@ -80,7 +80,7 @@ class EvaluatorsController extends ApiController
 
         $EvaluatorChangeLogService->saveLog($teamId, $evaluateeUserId, $userId);
 
-        $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds, $userId);
+        $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds);
 
         if ($setByCoachFlag) {
             $this->_notifyUserOfEvaluatorToEvaluatee($teamId, $evaluateeUserId, $coachId);

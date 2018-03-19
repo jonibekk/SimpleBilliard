@@ -1,5 +1,5 @@
 <?php
-App::uses("AppModel", Model);
+App::uses("AppModel", 'Model');
 
 /**
  * Evaluator Change Log Model
@@ -85,7 +85,7 @@ class EvaluatorChangeLog extends AppModel
         $subQuery = $db->buildStatement([
             'fields'     => [
                 'EvLog.evaluatee_user_id',
-                'MAX(EvLog.modified)'
+                'MAX(EvLog.created)'
             ],
             'table'      => 'evaluator_change_logs',
             'alias'      => 'EvLog',
