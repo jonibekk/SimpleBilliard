@@ -52,8 +52,12 @@ class EvaluatorChangeLogServiceTest extends GoalousTestCase
         $updaterId = 6;
 
         $this->EvaluatorChangeLogService->saveLog($teamId, $evaluateeId, $updaterId);
+        $queryResult = $this->EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $evaluateeId);
 
-        $this->assertNotEmpty($this->EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $evaluateeId));
+        $this->assertCount(1, $queryResult);
+        $this->assertEquals($teamId, $queryResult['EvaluatorChangeLog']['team_id']);
+        $this->assertEquals($evaluateeId, $queryResult['EvaluatorChangeLog']['evaluatee_user_id']);
+        $this->assertEquals($updaterId, $queryResult['EvaluatorChangeLog']['last_update_user_id']);
     }
 
 }

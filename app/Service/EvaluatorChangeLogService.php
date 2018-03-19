@@ -26,7 +26,7 @@ class EvaluatorChangeLogService extends AppService
         $existingEvaluatorIds = $Evaluator->getExistingEvaluatorsIds($teamId, $evaluateeUserId);
 
         if (empty($existingEvaluatorIds)) {
-            return true;
+            $existingEvaluatorIds = [];
         }
 
         try {
