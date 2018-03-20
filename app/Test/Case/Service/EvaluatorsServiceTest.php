@@ -53,4 +53,11 @@ class EvaluatorsServiceTest extends GoalousTestCase
         $this->assertCount(3, $this->Evaluator->getExistingEvaluatorsIds(2, 1));
     }
 
+    public function test_getEvaluatorsByTeamIdAndEvaluateeUserId()
+    {
+        $evaluatorsUserIds = [6, 7, 8];
+        $this->EvaluatorService->setEvaluators($teamId = 2, $evaluateeUserId = 1, $evaluatorsUserIds);
+        $r = $this->EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $evaluateeUserId);
+        $this->assertCount(count($evaluatorsUserIds), $r);
+    }
 }

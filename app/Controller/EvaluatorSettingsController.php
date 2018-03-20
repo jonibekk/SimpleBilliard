@@ -5,6 +5,7 @@ App::uses('TeamMember', 'Model');
 App::uses('Evaluator', 'Model');
 App::import('Service', 'ExperimentService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'EvaluatorService');
 
 /**
  * EvaluatorSettingsController Controller
@@ -105,6 +106,8 @@ class EvaluatorSettingsController extends AppController
         $TeamMember = ClassRegistry::init('TeamMember');
         /** @var  Evaluator $Evaluator */
         $Evaluator = ClassRegistry::init('Evaluator');
+        /** @var  EvaluatorService $EvaluatorService */
+        $EvaluatorService = ClassRegistry::init('EvaluatorService');
 
         $userEvaluatee = $User->findById($userId);
 
@@ -116,15 +119,7 @@ class EvaluatorSettingsController extends AppController
         }
 
         // Fetching evaluatee's evaluators
-        $evaluatorsIds = $Evaluator->getExistingEvaluatorsIds($teamId, $userId);
-        $userEvaluators = [];
-        foreach ($evaluatorsIds as $evaluatorsId) {
-            $evaluator = $Evaluator->getById($evaluatorsId);
-            $user = $User->findById($evaluator['evaluator_user_id']);
-            if (!empty($user)) {
-                $userEvaluators[] = $user;
-            }
-        }
+        $userEvaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
 
         /**@var EvaluatorChangeLog $EvaluatorChangeLog */
         $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
