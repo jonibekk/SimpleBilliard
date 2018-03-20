@@ -2,6 +2,7 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'ExperimentService');
 App::import('Service', "EvaluatorService");
+App::import('Service', "EvaluatorChangeLogService");
 App::uses('TeamMember', 'Model');
 
 /**
@@ -73,7 +74,12 @@ class EvaluatorsController extends ApiController
         /** @var EvaluatorService $EvaluatorService */
         $EvaluatorService = ClassRegistry::init("EvaluatorService");
 
+        /** @var EvaluatorChangeLogService $EvaluatorChangeLogService */
+        $EvaluatorChangeLogService = ClassRegistry::init("EvaluatorChangeLogService");
+
         $teamId = $this->current_team_id;
+
+        $EvaluatorChangeLogService->saveLog($teamId, $evaluateeUserId, $userId);
 
         $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds);
 

@@ -8,12 +8,14 @@ App::import('Service', 'EvaluationService');
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
+ * @property EvaluationSetting $EvaluationSetting
  * @var                 $selectedTabTermId
  */
 class EvaluationsController extends AppController
 {
     public $uses = [
-        'Evaluation'
+        'Evaluation',
+        'EvaluationSetting'
     ];
 
     function beforeFilter()
@@ -26,6 +28,7 @@ class EvaluationsController extends AppController
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $userId = $this->Auth->user('id');
         try {
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
@@ -75,9 +78,8 @@ class EvaluationsController extends AppController
 
         $incompSelfEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF, $termId, false);
         $incompEvaluateeEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR, $termId, false);
-        $selfEval = $EvaluationService->getEvalStatus($termId, $this->Auth->user('id'));
+        $selfEval = $EvaluationService->getEvalStatus($termId, $userId);
         $evaluateesEval = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($termId);
-
         // 該当期間が評価開始されているか
         $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($termId);
 
@@ -134,10 +136,12 @@ class EvaluationsController extends AppController
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
         $evaluateeId = Hash::get($this->request->params, 'named.user_id');
         $evaluateTermId = Hash::get($this->request->params, 'named.evaluate_term_id');
         $this->layout = LAYOUT_ONE_COLUMN;
-        $my_uid = $this->Auth->user('id');
+        $userId = $this->Auth->user('id');
 
         try {
             // check authorities
@@ -147,8 +151,7 @@ class EvaluationsController extends AppController
             }
             $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
-            // get evaluation list
-            $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+            $evaluationList = array_values($EvaluationService->findEvaluations($userId, $evaluateeId, $evaluateTermId));
 
             // order by priority
             //TODO: このコードは一時的なもの(今後は評価開始時に既にソート済になるので削除予定)
@@ -167,7 +170,7 @@ class EvaluationsController extends AppController
             array_multisort($order_priority_list, SORT_DESC, SORT_NUMERIC, $evaluationList);
             //TODO 削除ここまで
 
-            $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
+            $isEditable = $EvaluationService->isEditable($evaluateTermId, $evaluateeId, $userId);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
@@ -175,7 +178,7 @@ class EvaluationsController extends AppController
 
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($this->Session->read('current_team_id'));
-        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $my_uid);
+        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $userId);
         $saveIndex = 0;
 
         $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));

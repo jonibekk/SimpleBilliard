@@ -19,7 +19,7 @@ $(document).ready(function() {
         return true
     })
     $('#button_add_evaluator').on('click', function(e) {
-        var $evaluatorElement = $('#template_evaluator').children('div').first().clone();
+        var $evaluatorElement = $('#template_evaluator').children('li').first().clone();
         $evaluatorElement.removeClass('hide')
 
         $evaluatorsList.append($evaluatorElement)
@@ -29,20 +29,20 @@ $(document).ready(function() {
         return true
     })
     $('#setEvaluators').on('submit', function (e) {
-        // TODO: change to evaluator set api
         var form = $(this)
         $.post(
-            '/v1/evaluator/set',
+            '/api/v1/evaluators',
             form.serializeArray()
         ).done(function(data) {
             new Noty({
                 type: 'success',
                 text: '<h4>success</h4>TODO: save message',
             }).show();
-        }).fail(function() {
+        }).fail(function(xhr) {
+            var data = $.parseJSON(xhr.responseText);
             new Noty({
                 type: 'error',
-                text: '<h4>error</h4>TODO: fail message',
+                text: '<h4>error</h4>' + data.message,
             }).show();
         }).always(function() {
             form.find('input[type=submit]').prop("disabled", false);
@@ -53,10 +53,8 @@ $(document).ready(function() {
     function applySelect2ToElement(element) {
         element.each(function(i, e) {
             var $element = $(e)
-            var $evalListItem = $element.closest('.eval-list-item').first()
             $element.on("change", function(e) {
-                $evalListItem.find("img").attr('src', e.added['image']);
-                // this is getting the hidden form to submit value
+                // Setting the value to submit on hidden form
                 var userId = e.added["id"].replace("user_", "")
                 $(this).closest(".eval-list-item").find("input[type=hidden]").val(userId)
                 adjustFormsView()
@@ -105,11 +103,11 @@ $(document).ready(function() {
             }
         })
         var evaluatorsCount = $evaluatorsList.find('.eval-list-item').length
-        var left = MAX_EVALUATORS - evaluatorsCount;
-        if (left > 0) {
-            $('#button_add_evaluator').find(".can_add_left").text("(You can add " + left + " more)")
+        var remaining = MAX_EVALUATORS - evaluatorsCount;
+        if (remaining > 0) {
+            $('#remaining_to_add').text(remaining + " remaining ")
         }
-        if (left === 0 || hasEmptyEvaluator) {
+        if (remaining === 0 || hasEmptyEvaluator) {
             $('#button_add_evaluator').addClass('hide')
         } else {
             $('#button_add_evaluator').removeClass('hide')

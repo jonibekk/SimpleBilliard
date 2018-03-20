@@ -11,9 +11,16 @@
         <div class="panel-heading">
             <?= __('Set evaluators') ?>
         </div>
+        <div class="panel-body bg-lightGray">
+            <div class="col col-xxs-12 eval-view-panel-body font_verydark p_4px">
+                <p>
+                    TODO: Last update: *********
+                </p>
+            </div>
+        </div>
         <div class="panel-body eval-view-panel-body">
             <div class="form-group">
-                <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
+                <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px mb_8px font_18px">
                     <p class="font_bold"><?= __('Evaluatee') ?></p>
                 </div>
                 <div class="eval-list-item col-xxs-12">
@@ -43,54 +50,45 @@
                         </span>
                     </div>
                 </div>
-                <hr class="col-xxs-12">
-                <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                    <p class="font_bold"><?= __('Evaluators') ?></p>
-                </div>
-                <p>
-                    TODO: Last update: *********
-                </p>
-                <div id="evaluators" class="list-group">
-                    <?php foreach ($userEvaluators as $evaluatorKeyNumber => $userEvaluator): ?>
-                    <div class="eval-list-item col-xxs-12 list-group-item">
-                        <?php
-                        $evaluatorsImageElementId = sprintf('evaluator_image_%d', $evaluatorKeyNumber);
-                        $evaluatorsInputElementName = 'evaluator_user_ids[]';
-                        ?>
-                        <div class="evaluator_sort eval-list-item-left font_bold vertical-center horizontal-center">
-                            <i class="fa fa-align-justify"></i>
-                        </div>
-                        <div class="evaluator_key_number eval-list-item-left font_bold vertical-center horizontal-center">
-                        </div>
-                        <div class="eval-list-item-left">
-                            <?=
-                            $this->Upload->uploadImage($userEvaluator, 'User.photo', ['style' => 'medium'],
-                                ['width'  => '48px',
-                                 'height' => '48px',
-                                 'alt'    => 'icon',
-                                 'class'  => 'pull-left img-circle mtb_3px',
-                                 'id'     => $evaluatorsImageElementId,
-                                ]) ?>
-                        </div>
-                        <div class="eval-list-item-center vertical-center">
-                            <input type="hidden" class="form-input evaluator_select"
-                                   name="<?= $evaluatorsInputElementName ?>"
-                                   data-default-id="<?= $userEvaluator['User']['id'] ?>"
-                                   data-default-text="<?= $userEvaluator['User']['display_username'] ?>"
-                                   data-default-image="<?= $this->Upload->uploadUrl($userEvaluator, 'User.photo', ['style' => 'medium']) ?>"
-                            />
-                            &nbsp;
-                            <button class="btn_remove btn btn-primary "><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <?php endforeach ?>
-                </div>
-                <div class="pull-right">
-                    <button id="button_add_evaluator" class="btn btn-primary"><i class="fa fa-plus fa-1x"></i> <?= __('Add') ?> <span class="can_add_left"></span></button>
+                <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px mb_8px font_18px">
+                    <p class="font_bold"><?= __('Evaluator(s)') ?></p>
                 </div>
             </div>
         </div>
-        <div class="panel-footer addteam_pannel-footer">
+        <ul id="evaluators" class="list-group">
+            <?php foreach ($userEvaluators as $evaluatorKeyNumber => $userEvaluator): ?>
+            <li class="eval-list-item col-xxs-12 list-group-item">
+                <?php
+                $evaluatorsInputElementName = sprintf('evaluator_user_ids[]');
+                ?>
+                <div class="evaluator_sort eval-list-item-left font_bold vertical-center horizontal-center">
+                    <i class="fa fa-align-justify"></i>
+                </div>
+                <div class="evaluator_key_number eval-list-item-left font_bold vertical-center horizontal-center">
+                </div>
+                <div class="eval-list-item-center vertical-center">
+                    <input type="hidden" class="form-input evaluator_select"
+                           name="<?= $evaluatorsInputElementName ?>"
+                           data-default-id="<?= $userEvaluator['User']['id'] ?>"
+                           data-default-text="<?= $userEvaluator['User']['display_username'] ?>"
+                           data-default-image="<?= $this->Upload->uploadUrl($userEvaluator, 'User.photo', ['style' => 'medium']) ?>"
+                    />
+                </div>
+                <div class="eval-list-item-left vertical-center horizontal-center">
+                    <a href="#" class="font_lightGray-gray">
+                        <i class="btn_remove fa fa-times-circle fa-2x"></i>
+                    </a>
+                </div>
+            </li>
+            <?php endforeach ?>
+        </ul>
+        <div class="panel-body eval-list-item">
+            <div class="eval-list-item-left"></div>
+            <div class="eval-list-item-center vertical-center">
+                <p id="button_add_evaluator" class="font_bold color-blue pointer">+ <?= __('Add another Evaluator') ?><span id="remaining_to_add" class="p_5px font_normal font_lightgray"></span></p>
+            </div>
+        </div>
+        <div class="panel-body addteam_pannel-footer">
             <div class="row">
                 <div class="team-button pull-right">
                     <a class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal" href="<?= $this->Html->url(['controller'       => 'evaluator_settings', 'action'           => 'index',
@@ -104,20 +102,20 @@
     </div>
 <?= $this->Form->end(); ?>
 <div id="template_evaluator" class="hide">
-    <div class="eval-list-item col-xxs-12 list-group-item">
+    <li class="eval-list-item col-xxs-12 list-group-item">
         <div class="evaluator_sort eval-list-item-left font_bold vertical-center horizontal-center">
             <i class="fa fa-align-justify"></i>
         </div>
         <div class="evaluator_key_number eval-list-item-left font_bold vertical-center horizontal-center">
         </div>
-        <div class="eval-list-item-left">
-            <img src="/img/no-image-user.jpg" width="48px" height="48px" alt="icon" class="pull-left img-circle mtb_3px">
-        </div>
         <div class="eval-list-item-center vertical-center">
             <input type="hidden" class="form-input evaluator_select" name="evaluator_user_ids[]" />
-            &nbsp;
-            <button class="btn_remove btn btn-primary "><i class="fa fa-times"></i></button>
         </div>
-    </div>
+        <div class="eval-list-item-left vertical-center horizontal-center">
+            <a href="#" class="font_lightGray-gray">
+                <i class="btn_remove fa fa-times-circle fa-2x"></i>
+            </a>
+        </div>
+    </li>
 </div>
 <?= $this->App->viewEndComment()?>

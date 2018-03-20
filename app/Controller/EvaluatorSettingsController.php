@@ -76,8 +76,8 @@ class EvaluatorSettingsController extends AppController
         foreach ($evaluations as $key => $evaluation) {
             $flow = $evaluation['flow'] ?? [];
             $evaluations[$key]['flow'] = array_values(
-                // leave the leader and evaluator in the flow array
-                // removing "self" and "final evaluator"
+            // leave the leader and evaluator in the flow array
+            // removing "self" and "final evaluator"
                 array_filter($flow, function ($evaluateFlow) {
                     return in_array($evaluateFlow['evaluate_type'], [
                         Evaluation::TYPE_EVALUATOR,
@@ -126,8 +126,13 @@ class EvaluatorSettingsController extends AppController
             }
         }
 
+        /**@var EvaluatorChangeLog $EvaluatorChangeLog */
+        $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
+        //$evaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($userId, $teamId);
+
         $this->set('userEvaluatee', $userEvaluatee);
         $this->set('userEvaluateeCoach', $userCoach);
         $this->set('userEvaluators', $userEvaluators);
+        //$this->set('EvaluatorChangeLog', $evaluatorChangeLog);
     }
 }
