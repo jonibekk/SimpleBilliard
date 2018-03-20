@@ -1,5 +1,12 @@
 <?= $this->App->viewStartComment()?>
-<form method="post" action="" id="setEvaluators">
+    <?=
+    $this->Form->create([
+        'id'            => 'setEvaluators',
+        'method'        => 'post',
+        'url'           => '',
+        'class'         => 'form',
+    ]); ?>
+    <input type="hidden" name="evaluatee_user_id" value="<?= $userEvaluatee['User']['id'] ?>">
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix eval-list">
         <div class="panel-heading">
             <?= __('Set evaluators') ?>
@@ -53,7 +60,7 @@
             <li class="eval-list-item col-xxs-12 list-group-item">
                 <?php
                 $evaluatorsImageElementId = sprintf('evaluator_image_%d', $evaluatorKeyNumber);
-                $evaluatorsInputElementName = sprintf('evaluators[]');
+                $evaluatorsInputElementName = sprintf('evaluator_user_ids[]');
                 ?>
                 <div class="evaluator_sort eval-list-item-left font_bold vertical-center horizontal-center">
                     <i class="fa fa-align-justify"></i>
@@ -104,7 +111,7 @@
             </div>
         </div>
     </div>
-</form>
+<?= $this->Form->end(); ?>
 <div id="template_evaluator" class="hide">
     <li class="eval-list-item col-xxs-12 list-group-item">
         <div class="evaluator_sort eval-list-item-left font_bold vertical-center horizontal-center">
@@ -116,7 +123,7 @@
             <img src="/img/no-image-user.jpg" width="48px" height="48px" alt="icon" class="pull-left img-circle mtb_3px">
         </div>
         <div class="eval-list-item-center vertical-center">
-            <input type="hidden" class="form-input evaluator_select" name="evaluators[]" />
+            <input type="hidden" class="form-input evaluator_select" name="evaluator_user_ids[]" />
         </div>
         <div class="eval-list-item-left vertical-center horizontal-center">
             <a href="#" class="font_lightGray-gray">
