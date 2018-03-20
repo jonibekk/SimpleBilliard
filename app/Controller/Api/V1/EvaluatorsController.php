@@ -2,6 +2,7 @@
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'ExperimentService');
 App::import('Service', "EvaluatorService");
+App::import('Service', "EvaluatorChangeLogService");
 App::uses('TeamMember', 'Model');
 
 /**
