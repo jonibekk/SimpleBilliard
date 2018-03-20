@@ -242,7 +242,7 @@ class NotifyBizComponent extends Component
                 $this->_setAddedEvaluatorToCoach($team_id, $user_id, $to_user_list);
                 break;
             case NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE:
-                $this->_setAddedEvaluatorToEvaluee($team_id, $to_user_list, $user_id);
+                $this->_setAddedEvaluatorToEvaluatee($team_id, $to_user_list, $user_id);
                 break;
             default:
                 break;
@@ -949,11 +949,11 @@ class NotifyBizComponent extends Component
      * @param $userId
      * @param $coachId
      */
-    private function _setAddedEvaluatorToEvaluee($teamId, $userId, $coachId)
+    private function _setAddedEvaluatorToEvaluatee($teamId, $userId, $coachId)
     {
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
-            NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUEE;
+            NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE;
         $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode(['']);

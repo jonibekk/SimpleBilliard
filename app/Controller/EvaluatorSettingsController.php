@@ -1,8 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('Evaluator', 'Model');
 App::import('Service', 'ExperimentService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'EvaluatorService');
 
 /**
  * EvaluatorSettingsController Controller
@@ -88,7 +91,7 @@ class EvaluatorSettingsController extends AppController
     }
 
     /**
-     * TODO: implement here (https://jira.goalous.com/browse/GL-6618)
+     * Evaluator setting page
      */
     function detail()
     {
@@ -99,16 +102,31 @@ class EvaluatorSettingsController extends AppController
 
         /** @var  User $User */
         $User = ClassRegistry::init('User');
+        /** @var  TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var  Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
+        /** @var  EvaluatorService $EvaluatorService */
+        $EvaluatorService = ClassRegistry::init('EvaluatorService');
+
         $userEvaluatee = $User->findById($userId);
+
+        // Fetching coach User
+        $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($userId);
+        $userCoach = null;
+        if (!empty($coachUserId)) {
+            $userCoach = $User->findById($coachUserId);
+        }
+
+        // Fetching evaluatee's evaluators
+        $userEvaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
 
         /**@var EvaluatorChangeLog $EvaluatorChangeLog */
         $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
         //$evaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($userId, $teamId);
-        // TODO: fetch evaluators (https://jira.goalous.com/browse/GL-6618)
-        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee];
 
         $this->set('userEvaluatee', $userEvaluatee);
-        $this->set('userEvaluateeCoach', $userEvaluatee);
+        $this->set('userEvaluateeCoach', $userCoach);
         $this->set('userEvaluators', $userEvaluators);
         //$this->set('EvaluatorChangeLog', $evaluatorChangeLog);
     }
