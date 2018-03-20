@@ -19,7 +19,7 @@ $(document).ready(function() {
         return true
     })
     $('#button_add_evaluator').on('click', function(e) {
-        var $evaluatorElement = $('#template_evaluator').children('div').first().clone();
+        var $evaluatorElement = $('#template_evaluator').children('li').first().clone();
         $evaluatorElement.removeClass('hide')
 
         $evaluatorsList.append($evaluatorElement)
@@ -105,11 +105,11 @@ $(document).ready(function() {
             }
         })
         var evaluatorsCount = $evaluatorsList.find('.eval-list-item').length
-        var left = MAX_EVALUATORS - evaluatorsCount;
-        if (left > 0) {
-            $('#button_add_evaluator').find(".can_add_left").text("(You can add " + left + " more)")
+        var remaining = MAX_EVALUATORS - evaluatorsCount;
+        if (remaining > 0) {
+            $('#remaining_to_add').text(remaining + " remaining ")
         }
-        if (left === 0 || hasEmptyEvaluator) {
+        if (remaining === 0 || hasEmptyEvaluator) {
             $('#button_add_evaluator').addClass('hide')
         } else {
             $('#button_add_evaluator').removeClass('hide')
@@ -117,7 +117,7 @@ $(document).ready(function() {
     }
     function select2Format(state) {
         if (!state.id) return state.text; // optgroup
-        return "<img src='" + state.image + "' width='16' height='16' />" + state.text;
+        return state.text;
     }
     (function () {
         var elements = $('.evaluator_select')
