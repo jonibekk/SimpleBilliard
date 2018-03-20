@@ -83,7 +83,7 @@ class GlRedis extends AppModel
     /**
      * Expire day of notification
      */
-    const EXPIRE_DAY_OF_NOTIFICATION = 60;
+    const EXPIRE_DAY_OF_NOTIFICATION = 14;
     /**
      * Key Name: team:[team_id]:user:[user_id]:notifications:unread:[0 or 1]:
      *
