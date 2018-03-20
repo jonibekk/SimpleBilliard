@@ -55,6 +55,8 @@ function toggleCommentForm() {
         return res;
     });
 
+    autosize($txtArea);
+
     // Display the buttons
     $commentButtons.toggle();
     $(this).addClass('no-border');
