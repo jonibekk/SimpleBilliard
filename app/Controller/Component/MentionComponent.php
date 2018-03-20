@@ -144,8 +144,8 @@ class MentionComponent extends Component {
         if (!empty($notifyCircles)) {
             foreach ($notifyCircles as $circleId) {
                 $CircleMember = ClassRegistry::init('CircleMember');
-                $circle_members = $CircleMember->getMembers($circleId, true);
-                foreach ($circle_members as $member) {
+                $circleMembers = $CircleMember->getMembers($circleId, true);
+                foreach ($circleMembers as $member) {
                     $userId = $member['CircleMember']['user_id'];
                     if ($returnAsBelonging && $userId != $me) continue;
                     if ($includeMe || $userId != $me) {
@@ -157,8 +157,8 @@ class MentionComponent extends Component {
         if (!empty($notifyGroups)) {
             foreach ($notifyGroups as $groupId) {
                 $MemberGroup = ClassRegistry::init('MemberGroup');
-                $group_members = $MemberGroup->getGroupMemberUserId($my, $groupId);
-                foreach ($group_members as $member) {
+                $groupMembers = $MemberGroup->getGroupMemberUserId($my, $groupId);
+                foreach ($groupMembers as $member) {
                     $userId = $member;
                     if ($returnAsBelonging && $userId != $me) continue;
                     if ($includeMe || $userId != $me) {
