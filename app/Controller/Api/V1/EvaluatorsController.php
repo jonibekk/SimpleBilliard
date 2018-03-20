@@ -45,7 +45,7 @@ class EvaluatorsController extends ApiController
             return $this->_getResponseBadFail('Invalid Parameters');
         }
         //If evaluatee user_id in evaluator array, send error
-        if (in_array($userId, $evaluatorUserIds)) {
+        if (in_array($evaluateeUserId, $evaluatorUserIds)) {
             return $this->_getResponseBadFail('Evaluatee ID in Evaluator IDs');
         }
         if (count($evaluatorUserIds) > self::MAX_NUMBER_OF_EVALUATORS) {
@@ -59,7 +59,7 @@ class EvaluatorsController extends ApiController
         }
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        $coachId = $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId);
+        $coachId = ($TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId))[0];
         $setByCoachFlag = false;
 
         //Check if user has authority to set evaluators
@@ -83,10 +83,12 @@ class EvaluatorsController extends ApiController
 
         $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds);
 
-        if ($setByCoachFlag) {
-            $this->_notifyUserOfEvaluatorToEvaluatee($teamId, $evaluateeUserId, $coachId);
-        } else {
-            $this->_notifyUserOfEvaluatorToCoach($teamId, $evaluateeUserId, $coachId);
+        if (!empty($coachId)) {
+            if ($setByCoachFlag) {
+                $this->_notifyUserOfEvaluatorToEvaluatee($teamId, $evaluateeUserId, $coachId);
+            } else {
+                $this->_notifyUserOfEvaluatorToCoach($teamId, $evaluateeUserId, $coachId);
+            }
         }
 
         return $this->_getResponseSuccess();
