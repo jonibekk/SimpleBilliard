@@ -1354,21 +1354,36 @@ class TeamsController extends AppController
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
 
-        // あらかじめ決められた期間でなければエラー
+        $start_date = $end_date = $date_range_type = null;
+        $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            throw new NotFoundException();
+            $isPast = false;
+            foreach ($date_info['date_ranges']['past_terms'] as $term) {
+                if ($term['id'] == $date_range) {
+                    $isPast = true;
+                    $start_date = $term['start'];
+                    $end_date = $term['end'];
+                    $date_range_type = 'term';
+                    break;
+                }
+            }
+            if (!$isPast) {
+                throw new NotFoundException();
+            }
+        }else {
+            // 集計 開始日付, 終了日付
+            $start_date = $date_info['date_ranges'][$date_range]['start'];
+            $end_date = $date_info['date_ranges'][$date_range]['end'];
+            // 'week' or 'month' or 'term'
+            $date_range_type = $this->_insightGetDateRangeType($date_range);
         }
 
         // 集計 開始日付, 終了日付
-        $start_date = $date_info['date_ranges'][$date_range]['start'];
-        $end_date = $date_info['date_ranges'][$date_range]['end'];
         $this->set('start_date', $start_date);
         $this->set('end_date', $end_date);
 
         // 今週、今月、今期の場合に true
         $is_current = $this->_insightIsCurrentDateRange($date_range);
-        // 'week' or 'month' or 'term'
-        $date_range_type = $this->_insightGetDateRangeType($date_range);
 
         // 指定期間 + １つ前の期間 のデータ
         $insights = [];
@@ -1407,6 +1422,8 @@ class TeamsController extends AppController
                 $start_term_id = $this->Team->Term->getPreviousTermId();
             } elseif ($date_range == 'current_term') {
                 $start_term_id = $this->Team->Term->getCurrentTermId();
+            }else {
+                $start_term_id = $date_range;
             }
             $skip = true;
             foreach ($all_terms as $term_id => $v) {
@@ -1475,20 +1492,37 @@ class TeamsController extends AppController
         $date_info = $this->_getInsightDateInfo($timezone);
 
         // あらかじめ決められた期間でなければエラー
+        $start_date = $end_date = $date_range_type = null;
+        $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            throw new NotFoundException();
+            $isPast = false;
+            foreach ($date_info['date_ranges']['past_terms'] as $term) {
+                if ($term['id'] == $date_range) {
+                    $isPast = true;
+                    $start_date = $term['start'];
+                    $end_date = $term['end'];
+                    $date_range_type = 'term';
+                    break;
+                }
+            }
+            if (!$isPast) {
+                throw new NotFoundException();
+            }
+        }else {
+            // 集計 開始日付, 終了日付
+            $start_date = $date_info['date_ranges'][$date_range]['start'];
+            $end_date = $date_info['date_ranges'][$date_range]['end'];
+            // 'week' or 'month' or 'term'
+            $date_range_type = $this->_insightGetDateRangeType($date_range);
         }
 
         // 集計 開始日付, 終了日付
-        $start_date = $date_info['date_ranges'][$date_range]['start'];
-        $end_date = $date_info['date_ranges'][$date_range]['end'];
         $this->set('start_date', $start_date);
         $this->set('end_date', $end_date);
 
         // 今週、今月、今期の場合に true
         $is_current = $this->_insightIsCurrentDateRange($date_range);
         // 'week' or 'month' or 'term'
-        $date_range_type = $this->_insightGetDateRangeType($date_range);
 
         // 集計期間とグラフ種類の組み合わせが有効かチェック
         if ($date_range_type == 'term') {
@@ -1617,6 +1651,8 @@ class TeamsController extends AppController
                 $start_term_id = $this->Team->Term->getPreviousTermId();
             } elseif ($date_range == 'current_term') {
                 $start_term_id = $this->Team->Term->getCurrentTermId();
+            }else {
+                $start_term_id = $date_range;
             }
 
             // キャッシュの有効期限
@@ -1698,21 +1734,35 @@ class TeamsController extends AppController
         $date_info = $this->_getInsightDateInfo($timezone);
 
         // あらかじめ決められた期間でなければエラー
+        $start_date = $end_date = $date_range_type = null;
+        $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            throw new NotFoundException();
+            $isPast = false;
+            foreach ($date_info['date_ranges']['past_terms'] as $term) {
+                if ($term['id'] == $date_range) {
+                    $isPast = true;
+                    $start_date = $term['start'];
+                    $end_date = $term['end'];
+                    $date_range_type = 'term';
+                    break;
+                }
+            }
+            if (!$isPast) {
+                throw new NotFoundException();
+            }
+        }else {
+            // 集計 開始日付, 終了日付
+            $start_date = $date_info['date_ranges'][$date_range]['start'];
+            $end_date = $date_info['date_ranges'][$date_range]['end'];
+            // 'week' or 'month' or 'term'
+            $date_range_type = $this->_insightGetDateRangeType($date_range);
         }
 
-        // 集計 開始日付, 終了日付
-        $start_date = $date_info['date_ranges'][$date_range]['start'];
-        $end_date = $date_info['date_ranges'][$date_range]['end'];
         $this->set('start_date', $start_date);
         $this->set('end_date', $end_date);
 
         // 今週、今月、今期の場合に true
         $is_current = $this->_insightIsCurrentDateRange($date_range);
-        // 'week' or 'month' or 'term'
-        $date_range_type = $this->_insightGetDateRangeType($date_range);
-
         // 今週、今月、今期 の場合
         // 最新データが変動するのでキャッシュの有効期限を１日にする
         $cache_expire = $is_current ? DAY : WEEK;
@@ -1743,7 +1793,7 @@ class TeamsController extends AppController
                 $prev_term2 = $this->Team->Term->getPreviousTermData();
             } elseif ($date_range == 'prev_term') {
                 // 前々期の日付
-                $prev_term_id = $this->Team->Term->getPreviousTermId();
+                $prev_term_id = $isPast ? $date_range : $this->Team->Term->getPreviousTermId();
                 $all_terms = $this->Team->Term->getAllTerm();
                 $found = false;
                 foreach ($all_terms as $term_id => $v) {
@@ -1864,14 +1914,28 @@ class TeamsController extends AppController
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
 
-        // あらかじめ決められた期間でなければエラー
+        $start_date = $end_date = null;
+        $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            throw new NotFoundException();
+            $isPast = false;
+            foreach ($date_info['date_ranges']['past_terms'] as $term) {
+                if ($term['id'] == $date_range) {
+                    $isPast = true;
+                    $start_date = $term['start'];
+                    $end_date = $term['end'];
+                    break;
+                }
+            }
+            if (!$isPast) {
+                throw new NotFoundException();
+            }
+        }else {
+            // 集計 開始日付, 終了日付
+            $start_date = $date_info['date_ranges'][$date_range]['start'];
+            $end_date = $date_info['date_ranges'][$date_range]['end'];
         }
 
         // 集計 開始日付, 終了日付
-        $start_date = $date_info['date_ranges'][$date_range]['start'];
-        $end_date = $date_info['date_ranges'][$date_range]['end'];
         $this->set('start_date', $start_date);
         $this->set('end_date', $end_date);
         $this->set('type', $type);

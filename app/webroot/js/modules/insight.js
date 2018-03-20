@@ -221,7 +221,7 @@ define(function () {
         }
         // 今期、前期の場合
         // 期、月 グラフを有効にする
-        else if (dateRange.indexOf('term') != -1) {
+        else {
             $buttonGroup.find('label[data-value=term], label[data-value=month]').removeAttr('disabled');
             graphType = 'term';
         }
