@@ -18,15 +18,6 @@ $(function () {
     $(document).on("click", ".click-comment-all", evCommentOldView);
     $(document).on("click", ".target-toggle-click", evTargetToggleClick);
 
-    $('[id*="CommentAjaxGetNewCommentForm_"]').submit(function (e) {
-        // アップロードファイルの有効期限が切れていなければコメント投稿
-        var res = checkUploadFileExpire($(this).attr('id'));
-        if (res) {
-            validatorCallback(e);
-        }
-        return res;
-    });
-
     // コメント
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
@@ -52,6 +43,18 @@ function toggleCommentForm() {
     if ($commentButtons.is(':visible')) {
         return;
     }
+
+    // Register the form for submit
+    $commentForm.off('submit');
+    $commentForm.on('submit', function (e) {
+        // アップロードファイルの有効期限が切れていなければコメント投稿
+        var res = checkUploadFileExpire($(this).attr('id'));
+        if (res) {
+            validatorCallback(e);
+        }
+        return res;
+    });
+
     // Display the buttons
     $commentButtons.toggle();
     $(this).addClass('no-border');
