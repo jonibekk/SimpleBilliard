@@ -7,6 +7,7 @@ App::uses('View', 'View');
 
 App::import('Model','User');
 App::import('Model','Circle');
+App::import('Model', 'HavingMentionTrait');
 
 /**
  * Comment Model
@@ -22,7 +23,7 @@ App::import('Model','Circle');
 class Comment extends AppModel
 {
 
-    public $hasMention = true;
+    use HavingMentionTrait;
     public $bodyProperty = 'body';
 
     public $uses = [

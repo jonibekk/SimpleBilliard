@@ -3,6 +3,7 @@ App::uses('AppModel', 'Model');
 
 App::import('Model','User');
 App::import('Model','Circle');
+App::import('Model', 'HavingMentionTrait');
 
 /**
  * ActionResult Model
@@ -22,7 +23,7 @@ class ActionResult extends AppModel
     const TYPE_GOAL = 1;
     const TYPE_KR = 2;
 
-    public $hasMention = true;
+    use HavingMentionTrait;
     public $bodyProperty = 'name';
 
     public $actsAs = [

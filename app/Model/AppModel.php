@@ -1,7 +1,6 @@
 <?php
 App::uses('Model', 'Model');
 App::uses('Sanitize', 'Utility');
-App::uses('MentionComponent', 'Controller/Component');
 
 /**
  * Application model for Cake.
@@ -657,23 +656,5 @@ class AppModel extends Model
         ], $condition);
 
         return !empty($ret);
-    }
-
-    public function afterFind($results, $primary = false) {
-        $hasMention = 
-            $this->hasMention &&
-            count($results) > 0;
-
-        if ($hasMention) {
-            foreach ($results as &$result) {
-                if (isset($result[$this->alias]) && isset($result[$this->alias][$this->bodyProperty])) {
-                    $body = $result[$this->alias][$this->bodyProperty];
-                    // I know that we don't use Component in Model 
-                    // but an error occurs when I use Model(s) here like 'Badge' class blah, blah, blah
-                    $result[$this->alias][$this->bodyProperty] = MentionComponent::appendName($body);
-                }
-            }
-        }
-        return $results;
     }
 }
