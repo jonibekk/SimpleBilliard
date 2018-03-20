@@ -19,7 +19,7 @@ class MentionComponent extends Component {
      * @param $text string content of Post/Action/Comment
      * @return array 
      */
-    static function extractAllIdFromMention($text) {
+    static function extractAllIdFromMention(string $text = null): array {
         $result = array();
         if (preg_match_all(self::getMentionReg('(.*?)', 'm'), $text, $matches) && count($matches[1]) > 0) {
             foreach ($matches[1] as $match) {
@@ -55,7 +55,7 @@ class MentionComponent extends Component {
      * @param $subject string a subject to replace 
      * @return string 
      */
-    static function replaceAndAddNameToMention($pattern, $replacement, $subject) {
+    static function replaceAndAddNameToMention(string $pattern, string $replacement, string $subject = null): string {
         $result = preg_replace(self::getMentionReg($pattern, 'm'), self::$PREFIX.$pattern.':'.$replacement.self::$SUFFIX, $subject);
         return $result;
     }
@@ -66,7 +66,7 @@ class MentionComponent extends Component {
      * @param $mentions array[string] mentions should be replaced
      * @return string 
      */
-    public function replaceMention($text, $mentions) {
+    public function replaceMention(string $text = null, array $mentions): string {
         $result = $text;
         foreach ($mentions as $mention) {
             $result = preg_replace(self::getMentionReg($mention.':(.*?)', 'm'), '<b><i class="mentioned-to-me"><@${1}></i></b>', $result);
@@ -82,7 +82,7 @@ class MentionComponent extends Component {
      * @param $teamId int the team ID to identify the circle uniquely
      * @return array
      */
-    public function getMyMentions($body, $userId, $teamId) {
+    public function getMyMentions(string $body = null, int $userId, int $teamId): array {
         return $this->getUserList($body, $teamId, $userId, true, true);
     }
     /**
@@ -91,7 +91,7 @@ class MentionComponent extends Component {
      * @param $body string the content which can contain mentions
      * @return string
      */
-    static public function appendName($body) {
+    static public function appendName(string $body = null): string {
         $matches = self::extractAllIdFromMention($body);
         if (count($matches) > 0) {
             $cache = array();
@@ -126,7 +126,7 @@ class MentionComponent extends Component {
      * @param $includeMe boolean whether the result should include $me or not
      * @param $returnAsBelonging boolean whether the result should be user/circle/group which contains $me
      */
-    public function getUserList($body, $teamId, $me, $includeMe = false, $returnAsBelonging = false) {
+    public function getUserList(string $body = null, int $teamId, int $me, $includeMe = false, $returnAsBelonging = false): array {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
         
