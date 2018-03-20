@@ -2030,7 +2030,14 @@ class TeamsController extends AppController
                 'start' => $row['start_date'],
                 'end'   => $row['end_date'],
             ];
+            $rows = $this->Team->Term->getPreviousTermDataMore($row);
+            $dateRangesMore = array();
+            foreach ($rows as $r) {
+                $dateRangesMore[] = array('id' => $r['id'], 'start' => $r['start_date'], 'end' => $r['end_date']);
+            }
+            $date_ranges['past_terms'] = $dateRangesMore;
         }
+
 
         return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }
