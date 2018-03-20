@@ -81,9 +81,13 @@ class Evaluator extends AppModel
             'conditions' => [
                 'team_id'           => $teamId,
                 'evaluatee_user_id' => $evaluateeUserId,
+            ],
+            'fields'     => [
+                'evaluator_user_id'
             ]
         ];
         $res = $this->Team->Evaluator->find('list', $options);
+
         return $res;
     }
 
