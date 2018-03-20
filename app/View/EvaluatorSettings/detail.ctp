@@ -59,23 +59,12 @@
             <?php foreach ($userEvaluators as $evaluatorKeyNumber => $userEvaluator): ?>
             <li class="eval-list-item col-xxs-12 list-group-item">
                 <?php
-                $evaluatorsImageElementId = sprintf('evaluator_image_%d', $evaluatorKeyNumber);
                 $evaluatorsInputElementName = sprintf('evaluator_user_ids[]');
                 ?>
                 <div class="evaluator_sort eval-list-item-left font_bold vertical-center horizontal-center">
                     <i class="fa fa-align-justify"></i>
                 </div>
                 <div class="evaluator_key_number eval-list-item-left font_bold vertical-center horizontal-center">
-                </div>
-                <div class="eval-list-item-left">
-                    <?=
-                    $this->Upload->uploadImage($userEvaluator, 'User.photo', ['style' => 'medium'],
-                        ['width'  => '48px',
-                         'height' => '48px',
-                         'alt'    => 'icon',
-                         'class'  => 'pull-left img-circle mtb_3px',
-                         'id'     => $evaluatorsImageElementId,
-                        ]) ?>
                 </div>
                 <div class="eval-list-item-center vertical-center">
                     <input type="hidden" class="form-input evaluator_select"
@@ -118,9 +107,6 @@
             <i class="fa fa-align-justify"></i>
         </div>
         <div class="evaluator_key_number eval-list-item-left font_bold vertical-center horizontal-center">
-        </div>
-        <div class="eval-list-item-left">
-            <img src="/img/no-image-user.jpg" width="48px" height="48px" alt="icon" class="pull-left img-circle mtb_3px">
         </div>
         <div class="eval-list-item-center vertical-center">
             <input type="hidden" class="form-input evaluator_select" name="evaluator_user_ids[]" />
