@@ -18,6 +18,8 @@ class ActionResultTest extends GoalousTestCase
         'app.action_result',
         'app.team',
         'app.user',
+        'app.circle',
+        'app.group',
         'app.email',
         'app.goal',
         'app.goal_category',
@@ -539,6 +541,16 @@ class ActionResultTest extends GoalousTestCase
         $this->ActionResult->save();
         $this->ActionResult->read(null, 1);
         $this->assertEqual($this->ActionResult->field('name'), '%%%user_1:firstname lastname%%%');
+        $this->ActionResult->read(null, 1);
+        $this->ActionResult->set('name', '%%%circle_4%%%');
+        $this->ActionResult->save();
+        $this->ActionResult->read(null, 1);
+        $this->assertEqual($this->ActionResult->field('name'), '%%%circle_4:秘密サークル%%%');
+        $this->ActionResult->read(null, 1);
+        $this->ActionResult->set('name', '%%%group_1%%%');
+        $this->ActionResult->save();
+        $this->ActionResult->read(null, 1);
+        $this->assertEqual($this->ActionResult->field('name'), '%%%group_1:グループ1%%%');
     }
 
 
