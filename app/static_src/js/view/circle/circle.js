@@ -248,7 +248,6 @@ window.onload = function(){
               type:"POST",
               data: senddata,
               contentType:"application/x-www-form-urlencoded; charset=utf-8",
-              // dataType:"json",
               success: function(data){
               },
               error: function(data){
@@ -321,6 +320,7 @@ window.onload = function(){
         var toggleMenu = function(evt) {
             evt = evt || window.event;
             hideMenuAll();
+            this.classList.toggle('fa-disabled');
             var next = this.nextElementSibling;
             if(next.style.display ==="block") {
                 next.style.display = "none";
@@ -355,15 +355,18 @@ window.onload = function(){
         };
         var moveToBottom = function(evt) {
             evt = evt || window.event;
-            console.log(this.parentElement.parentElement.parentElement);
-            this.parentElement.parentElement.parentElement.parentElement.appendChild(this.parentElement.parentElement.parentElement);
+            this.parentElement.parentElement.parentElement.querySelector('.fa-thumbtack').classList.remove('fa-disabled');
+            document.getElementById('pinned').appendChild(this.parentElement.parentElement.parentElement);
             hideMenuAll();
+            updateOrder();
         }
         var moveToTop = function(evt) {
             evt = evt || window.event;
-            var list = this.parentElement.parentElement.parentElement.parentElement;
+            this.parentElement.parentElement.parentElement.querySelector('.fa-thumbtack').classList.remove('fa-disabled');
+            var list = document.getElementById('pinned');
             list.insertBefore(this.parentElement.parentElement.parentElement, list.querySelector('li'));
             hideMenuAll();
+            updateOrder();
         }
         for(var i = 0; i < circles.length; i++){
             circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
