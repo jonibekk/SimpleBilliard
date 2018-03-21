@@ -9,7 +9,7 @@
       <input type="text" id="filter-circles-list" class="form-control" placeholder="サークルフィルター">
     </div> -->
 <!--     <div class="panel-body eval-view-panel-body"> -->
-    <div class="panel-body pin-circle-view-panel-body">
+    <div id="pin-panel" class="panel-body pin-circle-view-panel-body">
         <div class="row">
             <div class="column">
                 <div class="panel">
