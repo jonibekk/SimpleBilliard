@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Circle', 'Model');
 
 /**
  * CirclePin Model
@@ -10,18 +11,6 @@ class CirclePin extends AppModel
     {
         parent::__construct($id, $table, $ds);
     }
-
-    /**
-     * belongsTo associations
-     *
-     * @var array
-     */
-    public $belongsTo = [
-        'CircleMember' => [
-            "counterCache" => true,
-            'counterScope' => ['CircleMember.del_flg' => false]
-        ],
-    ];
 
     /**
      * Validation rules
@@ -96,7 +85,6 @@ class CirclePin extends AppModel
                     GoalousLog::error("[CirclePin]: Insert Failure", $data);
                     throw new Exception("Error Processing save Request", 1);
                 }
-                
             } else {
                 $row['circle_orders'] = $db->value($pinOrders, 'string');
                 if(!$this->updateAll($row, $options)) {
@@ -169,5 +157,78 @@ class CirclePin extends AppModel
         }
 
         return true;
+    }
+
+    /**
+     * Get Circles
+     *
+     * @param $userId
+     * @param $teamId
+     *
+     * @return array
+     */
+    public function getJoinedCircleData(int $userId, int $teamId): array
+    {
+        $options = [
+            'joins'      => [
+                [
+                    'table' => 'circle_members',
+                    'alias' => 'CircleMember',
+                    'type' => 'RIGHT',
+                    'foreignKey' => false,
+                    'conditions'=> [
+                        'CircleMember.circle_id = Circle.id',
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'CircleMember.team_id' => $teamId,
+                'CircleMember.user_id' => $userId,
+                'Circle.del_flg'    => false,
+            ],
+            'order'      => [
+                'Circle.modified' => 'DESC',
+            ],
+            'fields'    => [
+                'Circle.id',
+                'Circle.name',
+                'Circle.photo_file_name',
+                'Circle.public_flg',
+                'Circle.team_all_flg',
+                'Circle.modified',
+                'Circle.created',
+                'CircleMember.admin_flg',
+                'CircleMember.unread_count',
+            ]
+        ];
+        return ClassRegistry::init('Circle')->find('all', $options);
+    }
+
+    /**
+     * Get Circle Pin Order Information
+     *
+     * @param $userId
+     * @param $teamId
+     *
+     * @return string
+     */
+    public function getPinData(int $userId, int $teamId): string {
+        $options = [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+        ];
+
+        try {
+            $row = $this->getUnique($userId, $teamId);
+            if(!empty($row)){
+                return $row['circle_orders'];
+            }      
+        } catch (Exception $e) {    
+            GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+        }
+
+        return "";
     }
 }
