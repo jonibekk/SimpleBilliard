@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Service', 'EvaluationService');
+
+use Goalous\Model\Enum as Enum;
 
 /**
  * Evaluation Model
@@ -198,7 +201,7 @@ class Evaluation extends AppModel
                 $evaluator_type_name = __("Final Evaluator");
             } else {
                 if ($evaluate_type == self::TYPE_EVALUATOR) {
-                    $evaluator_type_name = __("Evaluator").$index_num;
+                    $evaluator_type_name = __("Evaluator") . $index_num;
                 }
             }
         }
@@ -281,8 +284,10 @@ class Evaluation extends AppModel
             }
         }
 
+        // TODO: fix not to use turn flg. This is not simple.
+        // Currently, we use turn flg if only fixed evaluation order
         // Move turn flg to next
-        if ($saveType == self::TYPE_STATUS_DONE) {
+        if ($saveType == self::TYPE_STATUS_DONE && $this->Team->EvaluationSetting->isFixedEvaluationOrder()) {
             $baseEvaId = $data[0]['Evaluation']['id'];
             $termId = $this->getTermIdByEvaluationId($baseEvaId);
             $evaluateeId = $this->getEvaluateeIdByEvaluationId($baseEvaId);
@@ -298,14 +303,60 @@ class Evaluation extends AppModel
 
     }
 
-    function getEvaluations($evaluateTermId, $evaluateeId)
+    /**
+     * `getEvaluations` wrapper for getting evaluatee
+     *
+     * @param int $evaluateTermId
+     * @param int $evaluateeId
+     *
+     * @return array
+     */
+    function getEvaluationsForEvaluatee(int $evaluateTermId, int $evaluateeId): array
+    {
+        return $this->getEvaluations($evaluateTermId, $evaluateeId,
+            ['evaluator_user_id' => $evaluateeId, 'evaluate_type' => self::TYPE_ONESELF]);
+
+    }
+
+    /**
+     * `getEvaluations` wrapper for getting evaluator
+     *
+     * @param int $evaluateTermId
+     * @param int $evaluateeId
+     * @param int $evaluatorId
+     *
+     * @return array
+     */
+    function getEvaluationsForEvaluatorAndEvaluatee(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
+    {
+        return $this->getEvaluations($evaluateTermId, $evaluateeId,
+            [
+                'evaluator_user_id' => [$evaluatorId, $evaluateeId],
+                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR]
+            ]
+        );
+
+    }
+
+    /**
+     * Getting each evaluation detail
+     *
+     * @param int   $evaluateTermId
+     * @param int   $evaluateeId
+     * @param array $conditions
+     *
+     * @return array
+     */
+    function getEvaluations(int $evaluateTermId, int $evaluateeId, array $conditions = []): array
     {
         $options = [
             'conditions' => [
                 'term_id'           => $evaluateTermId,
                 'evaluatee_user_id' => $evaluateeId,
-                'NOT'               => [
-                    ['evaluate_type' => self::TYPE_LEADER]
+                'evaluate_type'     => [
+                    self::TYPE_ONESELF,
+                    self::TYPE_EVALUATOR,
+                    self::TYPE_FINAL_EVALUATOR
                 ]
             ],
             'order'      => 'Evaluation.index_num asc',
@@ -358,6 +409,7 @@ class Evaluation extends AppModel
                 ],
             ]
         ];
+        $options['conditions'] = am($options['conditions'], $conditions);
         $res = $this->find('all', $options);
         return Hash::combine($res, '{n}.Evaluation.id', '{n}', '{n}.Goal.id');
     }
@@ -490,14 +542,18 @@ class Evaluation extends AppModel
         }
         if (!empty($all_evaluations)) {
             $res = $this->saveAll($all_evaluations);
-            //set my_turn
-            $this->updateAll(['Evaluation.my_turn_flg' => true],
-                [
-                    'Evaluation.team_id'   => $this->current_team_id,
-                    'Evaluation.term_id'   => $term_id,
-                    'Evaluation.index_num' => 0,
-                ]
-            );
+            // TODO: fix not to use turn flg. This is not simple.
+            // Currently, we use turn flg if only fixed evaluation order
+            if ($this->Team->EvaluationSetting->isFixedEvaluationOrder()) {
+                //set my_turn
+                $this->updateAll(['Evaluation.my_turn_flg' => true],
+                    [
+                        'Evaluation.team_id'   => $this->current_team_id,
+                        'Evaluation.term_id'   => $term_id,
+                        'Evaluation.index_num' => 0,
+                    ]
+                );
+            }
             $this->Term->changeToInProgress($term_id);
 
             return (bool)$res;
@@ -663,13 +719,38 @@ class Evaluation extends AppModel
                 return $count;
             }
         }
+        if ($this->Team->EvaluationSetting->isFixedEvaluationOrder()) {
+            $count = $this->getEvaluableCntIfFixedEvalOrder($evaluate_type, $term_id, $is_all);
+        } else {
+            $count = $this->getEvaluableCntIfNotFixedEvalOrder($evaluate_type, $term_id, $is_all);
+
+        }
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), $count, 'team_info');
+        }
+        return $count;
+    }
+
+    /**
+     * Get evaluable count
+     * condition: not fixed evaluation order
+     *
+     * @param int|null $evaluateType
+     * @param int|null $termId
+     * @param bool     $isAll
+     *
+     * @return int
+     */
+    function getEvaluableCntIfFixedEvalOrder($evaluateType, $termId, $isAll): int
+    {
+
         $options = [
             'conditions' => [
                 'evaluator_user_id' => $this->my_uid,
                 'team_id'           => $this->current_team_id,
                 'my_turn_flg'       => true,
-                'evaluate_type'     => $evaluate_type,
-                'term_id'           => $term_id,
+                'evaluate_type'     => $evaluateType,
+                'term_id'           => $termId,
                 'NOT'               => [
                     ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
                     ['evaluate_type' => self::TYPE_LEADER]
@@ -677,10 +758,10 @@ class Evaluation extends AppModel
             ],
             'group'      => ['term_id', 'evaluatee_user_id']
         ];
-        if (is_null($evaluate_type)) {
+        if (is_null($evaluateType)) {
             unset($options['conditions']['evaluate_type']);
         }
-        if (is_null($term_id) && $is_all === true) {
+        if (is_null($termId) && $isAll === true) {
             unset($options['conditions']['term_id']);
         }
 
@@ -692,7 +773,7 @@ class Evaluation extends AppModel
         $timezone = $Team->getTimezone();
 
         if ($previousStartDate) {
-            $options['conditions']['created >='] = AppUtil::getTimestampByTimezone($previousStartDate,$timezone);
+            $options['conditions']['created >='] = AppUtil::getTimestampByTimezone($previousStartDate, $timezone);
         }
 
         // freeze
@@ -708,8 +789,90 @@ class Evaluation extends AppModel
         if (!$count) {
             $count = 0;
         }
-        if ($is_default) {
-            Cache::write($this->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), $count, 'team_info');
+        return $count;
+    }
+
+    /**
+     * TODO: Move this method to service
+     * Get evaluable count
+     * condition: not fixed evaluation order
+     *
+     * @param int|null $evaluateType
+     * @param int|null $termId
+     * @param bool     $isAll
+     *
+     * @return int
+     */
+    function getEvaluableCntIfNotFixedEvalOrder($evaluateType, $termId, $isAll): int
+    {
+        // FIXME: don't call Service from Model
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
+
+        $options = [
+            'conditions' => [
+                'evaluator_user_id' => $this->my_uid,
+                'team_id'           => $this->current_team_id,
+                'evaluate_type'     => $evaluateType,
+                'term_id'           => $termId,
+                'NOT'               => [
+                    ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
+                    ['evaluate_type' => self::TYPE_LEADER]
+                ]
+            ],
+            'group'      => ['term_id', 'evaluatee_user_id']
+        ];
+        if (is_null($evaluateType)) {
+            unset($options['conditions']['evaluate_type']);
+        }
+        if (is_null($termId) && $isAll === true) {
+            unset($options['conditions']['term_id']);
+        }
+
+        //前期以前のデータは無視する (現状の仕様上その情報に一切アクセスができないため)
+        $previousStartDate = Hash::get($this->Team->Term->getPreviousTermData(), 'start_date');
+        //getting timezone
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        $timezone = $Team->getTimezone();
+
+        if ($previousStartDate) {
+            $options['conditions']['created >='] = AppUtil::getTimestampByTimezone($previousStartDate, $timezone);
+        }
+
+        // freeze
+        $currentTermId = $this->Team->Term->getCurrentTermId();
+        $previousTermId = $this->Team->Term->getPreviousTermId();
+        if ($this->Team->Term->checkFrozenEvaluateTerm($currentTermId)) {
+            $options['conditions']['NOT'][] = ['term_id' => $currentTermId];
+        }
+        if ($this->Team->Term->checkFrozenEvaluateTerm($previousTermId)) {
+            $options['conditions']['NOT'][] = ['term_id' => $previousTermId];
+        }
+        $evaluations = $this->find('all', $options) ?? [];
+        $evaluations = Hash::extract($evaluations, '{n}.Evaluation');
+
+        // Count increase if login user can evaluate
+        $count = 0;
+        foreach ($evaluations as $eval) {
+            if ($eval['status'] == Enum\Evaluation\Status::DONE) {
+                continue;
+            }
+            $evalStage = $EvaluationService->getEvalStageIfNotFixedEvalOrder($eval['term_id'],
+                $eval['evaluatee_user_id']);
+            switch ($eval['evaluate_type']) {
+                case Evaluation::TYPE_ONESELF:
+                    if ($evalStage == EvaluationService::STAGE_SELF_EVAL) {
+                        $count++;
+                    }
+                    break;
+                case Evaluation::TYPE_EVALUATOR:
+                    if ($evalStage == EvaluationService::STAGE_EVALUATOR_EVAL) {
+                        $count++;
+                    }
+                    break;
+            }
+
         }
         return $count;
     }
@@ -815,27 +978,6 @@ class Evaluation extends AppModel
             'term_id'           => $termId
         ];
         $this->updateAll(['my_turn_flg' => false], $conditions);
-    }
-
-    function getIsEditable($evaluateTermId, $evaluateeId)
-    {
-        // check frozen
-        $evalIsFrozen = $this->Term->checkFrozenEvaluateTerm($evaluateTermId);
-        if ($evalIsFrozen) {
-            return false;
-        }
-
-        // check my turn
-        $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
-        $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
-        $isMyTurn = !empty(Hash::extract($evaluationList,
-            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$this->my_uid}]"));
-        $isNextTurn = !empty(Hash::extract($evaluationList,
-            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
-        if ($isMyTurn || $isNextTurn) {
-            return true;
-        }
-        return false;
     }
 
     function getAllStatusesForTeamSettings($termId)
@@ -985,6 +1127,79 @@ class Evaluation extends AppModel
         return $res;
     }
 
+    /**
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return array
+     */
+    function getEvaluatorsByEvaluatee(int $termId, int $evaluateeId): array
+    {
+        $options = [
+            'fields' =>[
+                'id',
+                'evaluator_user_id'
+            ],
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'goal_id' => null
+            ],
+        ];
+
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.Evaluation');
+    }
+
+    /**
+     * Check whether all evaluators completed evaluating
+     *
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return bool
+     */
+    function isCompleteEvalByEvaluator(int $termId, int $evaluateeId): bool
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'status !='         => Enum\Evaluation\Status::DONE,
+                'goal_id'           => null
+            ],
+        ];
+
+        $res = $this->find('count', $options);
+        return $res === 0;
+    }
+
+    /**
+     * Check whether final evaluator completed evaluating
+     *
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return bool
+     */
+    function isCompleteEvalByFinalEvaluator(int $termId, int $evaluateeId): bool
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_FINAL_EVALUATOR,
+                'status !='         => Enum\Evaluation\Status::DONE,
+                'goal_id'           => null
+            ],
+        ];
+
+        $res = $this->find('count', $options);
+        return $res === 0;
+    }
+
     function getEvaluateesByEvaluator($termId, $evaluatorId)
     {
         $options = [
@@ -1055,6 +1270,39 @@ class Evaluation extends AppModel
         return Hash::get($res, 'Evaluation.id');
     }
 
+    /**
+     * Get unique evaluation record
+     *
+     * @param int  $evaluateeId
+     * @param int  $evaluatorId
+     * @param int  $termId
+     * @param null $type
+     *
+     * @return array
+     */
+    function getUnique(int $evaluateeId, int $evaluatorId, int $termId, $type = null): array
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $evaluatorId,
+                'goal_id'           => null,
+            ],
+        ];
+
+        if (is_null($type)) {
+            $options['conditions']['evaluate_type !='] = self::TYPE_FINAL_EVALUATOR;
+        } else {
+            $options['conditions']['evaluate_type'] = $type;
+        }
+        $res = $this->find('first', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::get($res, 'Evaluation');
+    }
+
     function isThisEvaluateType($id, $type)
     {
         return $this->find('first',
@@ -1107,6 +1355,28 @@ class Evaluation extends AppModel
             $retData[$key]['evaluator_user'] = $val['EvaluatorUser'];
         }
         return $retData;
+    }
+
+    /**
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return int
+     */
+    function countCompletedByEvaluators(int $termId, int $evaluateeId): int
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'goal_id'           => null,
+                'status'            => Enum\Evaluation\Status::DONE
+            ],
+        ];
+
+        $res = $this->find('count', $options);
+        return $res;
     }
 
 }
