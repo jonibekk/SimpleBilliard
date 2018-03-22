@@ -31,6 +31,7 @@
     echo $this->fetch('meta');
     echo $this->fetch('css');
 
+    echo $this->Html->Css('vendors_fonts.min', array('media' => 'screen'));
     echo $this->Html->css('vendors.min', array('media' => 'screen'));
     echo $this->Html->css('common.min', array('media' => 'screen'));
     echo $this->PageResource->outputPageCss();

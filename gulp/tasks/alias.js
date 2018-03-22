@@ -196,6 +196,7 @@ gulp.task('css', done => {
     'css_vendor',
     'css_fonts:min',
     'css_fonts:copy',
+    'css_fonts:copyold',
     'less',
     done
   )
