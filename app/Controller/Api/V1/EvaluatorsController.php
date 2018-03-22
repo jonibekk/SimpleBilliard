@@ -59,7 +59,7 @@ class EvaluatorsController extends ApiController
         }
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        $coachId = ($TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId))[0];
+        $coachId = $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId);
         $setByCoachFlag = false;
 
         //Check if user has authority to set evaluators

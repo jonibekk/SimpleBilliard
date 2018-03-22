@@ -1751,7 +1751,7 @@ class TeamMember extends AppModel
      *
      * @param $user_id
      *
-     * @return array|null
+     * @return int|null
      */
     function getCoachUserIdByMemberUserId($user_id = null)
     {
