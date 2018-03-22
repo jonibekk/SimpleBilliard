@@ -120,24 +120,19 @@ class CirclePin extends AppModel
             'team_id' => $teamId,
         ];
 
-        $data = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'circle_orders' => '',
-            'del_flg' => false,
-        ];
-
         try {    
             $row = $this->getUnique($userId, $teamId);
+
             if(empty($row)) {
                 return true;
             }
                 
             $orders = ',' . $row['circle_orders'] . ',';
+
             $find = ',' . $circleId . ',';
             if(strpos($orders, $find) !== false){
                 $orders = str_replace($find, ',', $orders);
-                $data['circle_orders'] = $this->getDataSource()->value(substr($orders, 1, -1), 'string');
+                $row['circle_orders'] = $this->getDataSource()->value(substr($orders, 1, -1), 'string');
 
                 $this->begin();
 
@@ -174,7 +169,7 @@ class CirclePin extends AppModel
                 [
                     'table' => 'circle_members',
                     'alias' => 'CircleMember',
-                    'type' => 'RIGHT',
+                    'type' => 'LEFT',
                     'foreignKey' => false,
                     'conditions'=> [
                         'CircleMember.circle_id = Circle.id',
