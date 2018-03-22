@@ -75,18 +75,39 @@ class Evaluator extends AppModel
         return $res;
     }
 
+    /**
+     * Method for getting user IDs of evaluators of an evaluatee in specific team
+     *
+     * @param $teamId
+     * @param $evaluateeUserId
+     *
+     * @return array Array of user IDs of evaluators
+     */
     function getExistingEvaluatorsIds($teamId, $evaluateeUserId): array
     {
         $options = [
             'conditions' => [
                 'team_id'           => $teamId,
                 'evaluatee_user_id' => $evaluateeUserId,
+            ],
+            'fields'     => [
+                'evaluator_user_id'
             ]
         ];
         $res = $this->Team->Evaluator->find('list', $options);
+
         return $res;
     }
 
+    /**
+     * Insert array of evaluator IDs for an evaluatee in specific team
+     *
+     * @param int   $teamId
+     * @param int   $evaluateeUserId
+     * @param array $evaluatorIds
+     *
+     * @return bool
+     */
     function insertEvaluators(int $teamId, int $evaluateeUserId, array $evaluatorIds)
     {
         $saveData = [];
@@ -107,11 +128,19 @@ class Evaluator extends AppModel
 
     }
 
+    /**
+     * Hard delete all evaluators of an evaluatee in specific team
+     *
+     * @param int $teamId
+     * @param int $userId
+     *
+     * @return bool Deletion result. True = success
+     */
     function resetEvaluators(int $teamId, int $userId)
     {
         $conditions = [
-            'Evaluator.evaluatee_user_id' => $userId,
-            'Evaluator.team_id'           => $teamId
+            'evaluatee_user_id' => $userId,
+            'team_id'           => $teamId
         ];
         return $this->deleteAll($conditions);
     }

@@ -45,6 +45,10 @@ class EvaluatorChangeLog extends AppModel
         $options['conditions'][] = $this->_getLatestChangeLogSubQuery();
         $ret = $this->find('first', $options);
 
+        if (empty($ret)) {
+            return [];
+        }
+
         return Hash::get($ret, 'EvaluatorChangeLog');
     }
 

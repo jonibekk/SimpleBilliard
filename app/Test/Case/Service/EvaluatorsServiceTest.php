@@ -49,15 +49,25 @@ class EvaluatorsServiceTest extends GoalousTestCase
      */
     public function test_setEvaluators_success()
     {
-        $this->EvaluatorService->setEvaluators(2, 1, [6, 7, 8]);
-        $this->assertCount(3, $this->Evaluator->getExistingEvaluatorsIds(2, 1));
+        $teamId = 2;
+        $evaluateeUserId = 1;
+        $evaluatorsUserIds = [6, 7, 8];
+
+        $this->EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorsUserIds);
+        $this->assertCount(count($evaluatorsUserIds), $this->Evaluator->getExistingEvaluatorsIds($teamId, $evaluateeUserId));
     }
 
+    /**
+     * Test getting the evaluators of an user
+     */
     public function test_getEvaluatorsByTeamIdAndEvaluateeUserId()
     {
+        $teamId = 2;
+        $evaluateeUserId = 1;
         $evaluatorsUserIds = [6, 7, 8];
-        $this->EvaluatorService->setEvaluators($teamId = 2, $evaluateeUserId = 1, $evaluatorsUserIds);
-        $r = $this->EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $evaluateeUserId);
-        $this->assertCount(count($evaluatorsUserIds), $r);
+
+        $this->EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorsUserIds);
+        $queryResult = $this->EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $evaluateeUserId);
+        $this->assertCount(count($evaluatorsUserIds), $queryResult);
     }
 }
