@@ -14,20 +14,20 @@
 	?>
 	<label class='circle-name-label'><?php echo $circle['name'];?></label>
 	<?php if ($circle['admin_flg']): ?>
-	<div class="dropdown fa-pull-right-dropdown">
+	<div class="pin-circle-dropdown fa-pull-right-pin-circle-dropdown">
 		<i class="fas fa-ellipsis-h fa-lg a-black-link"></i>
-		<div class="dropdown-content">
-			<div class="dropdown-element move-top">Pin to top</div>
-			<div class="dropdown-element move-bottom">Pin to bottom</div>
-			<a href="#" class="dropdown-element ajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>">Edit</a>
+		<div class="pin-circle-dropdown-content">
+			<div class="pin-circle-dropdown-element move-top">Pin to top</div>
+			<div class="pin-circle-dropdown-element move-bottom">Pin to bottom</div>
+			<a href="#" class="pin-circle-dropdown-element ajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>">Edit</a>
 		</div>
 	</div>
 	<?php else :?>
-	<div class="dropdown fa-pull-right-dropdown style-hidden">
+	<div class="pin-circle-dropdown fa-pull-right-pin-circle-dropdown style-hidden">
 		<i class="fas fa-ellipsis-h fa-lg a-black-link"></i>
-		<div class="dropdown-content">
-			<div class="dropdown-element move-top">Pin to top</div>
-			<div class="dropdown-element move-bottom">Pin to bottom</div>
+		<div class="pin-circle-dropdown-content">
+			<div class="pin-circle-dropdown-element move-top">Pin to top</div>
+			<div class="pin-circle-dropdown-element move-bottom">Pin to bottom</div>
 		</div>
 	</div>
 	<?php endif; ?>

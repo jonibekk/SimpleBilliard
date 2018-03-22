@@ -319,22 +319,12 @@ window.onload = function(){
         }
         var toggleMenu = function(evt) {
             evt = evt || window.event;
-            hideMenuAll();
-            this.classList.toggle('fa-disabled');
-            var next = this.nextElementSibling;
-            if(next.style.display ==="block") {
-                next.style.display = "none";
-            } else {
-                next.style.display = "block";
-            }
-        }
-        var hideMenu = function(evt) {
-            evt = evt || window.event;
-            evt.target.parentElement.style.display = "none";
+            var target = this.parentElement.querySelector('.pin-circle-dropdown-content');
+            target.style.display = target.style.display === "block" ? "none" : "block";
         }
         var hideMenuAll = function(evt) {
             evt = evt || window.event;
-            var nodes = document.querySelectorAll('.dropdown-content');
+            var nodes = document.querySelectorAll('.pin-circle-dropdown-content');
             for(var i=0;i<nodes.length;i++){
                 nodes[i].style.display = "none";
             }
@@ -349,13 +339,14 @@ window.onload = function(){
             } else {
                 document.getElementById('pinned').appendChild(this.parentElement);
             }
-            
+            hideMenuAll();
             updateOrder();
             updateDisplayCount();
         };
         var moveToBottom = function(evt) {
             evt = evt || window.event;
             this.parentElement.parentElement.parentElement.querySelector('.fa-thumbtack').classList.remove('fa-disabled');
+            this.parentElement.parentElement.parentElement.querySelector('.fa-align-justify').classList.remove('style-hidden');
             document.getElementById('pinned').appendChild(this.parentElement.parentElement.parentElement);
             hideMenuAll();
             updateOrder();
@@ -363,17 +354,19 @@ window.onload = function(){
         var moveToTop = function(evt) {
             evt = evt || window.event;
             this.parentElement.parentElement.parentElement.querySelector('.fa-thumbtack').classList.remove('fa-disabled');
+            this.parentElement.parentElement.parentElement.querySelector('.fa-align-justify').classList.remove('style-hidden');
             var list = document.getElementById('pinned');
             list.insertBefore(this.parentElement.parentElement.parentElement, list.querySelector('li'));
             hideMenuAll();
             updateOrder();
         }
+        // document.getElementById('pin-circle-panel').onclick = hideMenuAll;
         for(var i = 0; i < circles.length; i++){
             circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
             circles[i].querySelector('.fa-ellipsis-h').onclick = toggleMenu;
-            var nodes = circles[i].querySelector('.dropdown-content').querySelectorAll('.dropdown-element');
+            var nodes = circles[i].querySelector('.pin-circle-dropdown-content').querySelectorAll('.pin-circle-dropdown-element');
             for(var j = 0; j < nodes.length; j++){
-                nodes[j].onclick = hideMenu;
+                nodes[j].onclick = hideMenuAll;
             }
             var editLink = circles[i].querySelector('.ajax-url');
             if(editLink){
@@ -387,7 +380,7 @@ window.onload = function(){
             if(toBottomLink){
                 toBottomLink.onclick = moveToBottom;
             } 
-        }
+        } 
     }
 
     function bindSelect2Members($this) {

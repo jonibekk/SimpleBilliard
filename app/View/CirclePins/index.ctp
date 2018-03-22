@@ -9,7 +9,7 @@
       <input type="text" id="filter-circles-list" class="form-control" placeholder="サークルフィルター">
     </div> -->
 <!--     <div class="panel-body eval-view-panel-body"> -->
-    <div id="pin-panel" class="panel-body pin-circle-view-panel-body">
+    <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
         <div class="row">
             <div class="column">
                 <div class="panel">
@@ -32,8 +32,8 @@
                                 ?>
                                 <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
                                 <i class="fas fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
-                                <div class="dropdown-content style-hidden">
-                                    <div class="dropdown-element ajax-url style-hidden" data-url="">Edit</div>
+                                <div class="pin-circle-dropdown-content style-hidden">
+                                    <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url="">Edit</div>
                                 </div>                                
                                 <i class="fa-pull-right-less fas fa-thumbtack fa-lg style-hidden"></i>
                         </div>

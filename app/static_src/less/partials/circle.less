@@ -9,7 +9,7 @@
   }
 }
 
-.circle-list {
+.pin-circle-list {
   padding: 3px;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
@@ -35,11 +35,6 @@
   opacity: 0;
 }
 
-.justify-content-fraction {
-  display: grid;
-  grid-template-columns: 1fr 1fr 10fr 1fr 1fr; /* fraction*/
-}
-
 .fa-pull-right {
   float: right;
   margin-top: 10px;
@@ -51,7 +46,7 @@
     float: right;
 }
 
-.fa-pull-right-dropdown {
+.fa-pull-right-pin-circle-dropdown {
     margin-top: 8px;
     margin-right: 0.5em;
     float: right;
@@ -77,17 +72,17 @@
   color: black;
 }
 
-.dropdown-content {
+.pin-circle-dropdown-content {
     right: 0;
 }
 
-.dropdown {
+.pin-circle-dropdown:focus {
     position: relative;
     display: inline-block;
     float:right;
 }
 
-.dropdown-content {
+.pin-circle-dropdown-content {
     display: none;
     position: absolute;
     right: 0;
@@ -97,16 +92,16 @@
     z-index: 1;
 }
 
-.dropdown-content div,
-.dropdown-content a {
+.pin-circle-dropdown-content div,
+.pin-circle-dropdown-content a {
     color: black;
     padding: 8px;
     text-decoration: none;
     display: block;
 }
 
-.dropdown-content div:hover,
-.dropdown-content a:hover {
+.pin-circle-dropdown-content div:hover,
+.pin-circle-dropdown-content a:hover {
     background-color: #f1f1f1
 }
 
