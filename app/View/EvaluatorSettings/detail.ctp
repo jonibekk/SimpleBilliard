@@ -13,14 +13,18 @@
         </div>
         <div class="panel-body bg-lightGray">
             <div class="col col-xxs-12 eval-view-panel-body font_verydark p_4px">
-                <?php if (empty($latestEvaluatorChangeLog)): ?>
+                <?php
+                $hasLastUpdate = !empty($latestEvaluatorChangeLog);
+                ?>
                 <p>
-                    <span class="font_bold">Last update: </span>-
+                    <span class="font_bold">Last update: </span>
+                    <?php if ($hasLastUpdate): ?>
+                        <?= $latestEvaluatorChangeLog['display_update_time'] ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
                 </p>
-                <?php else: ?>
-                <p>
-                    <span class="font_bold">Last update: </span><?= $latestEvaluatorChangeLog['display_update_time'] ?>
-                </p>
+                <?php if ($hasLastUpdate): ?>
                 <p>
                     By <?= $latestEvaluatorChangeLog["User"]["display_username"] ?>
                 </p>
