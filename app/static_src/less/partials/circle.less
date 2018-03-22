@@ -10,7 +10,7 @@
 }
 
 .pin-circle-list {
-  padding: 3px;
+  padding: 0px;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
 }
@@ -21,6 +21,7 @@
 
 .pin-circle-avatar{
   display: inline;
+  margin-right: 8px;
 }
 
 #pinned,#unpinned{
@@ -32,7 +33,7 @@
 }
 
 .style-hidden {
-  opacity: 0;
+  opacity: 0 !important;
 }
 
 .fa-pull-right {
@@ -41,12 +42,12 @@
 }
 
 .fa-pull-right-less {
-    margin-top: 10px;
-    margin-right: 0.5em;
+    margin-top: 12px;
+    margin-right: 16px;
     float: right;
 }
 
-.fa-pull-right-pin-circle-dropdown {
+.fa-pull-right-pin-circle-cog {
     margin-top: 8px;
     margin-right: 0.5em;
     float: right;
@@ -58,6 +59,7 @@
 
 #pinned-header,#unpinned-header {
   margin-bottom: 0px;
+  background-color: #e5e5e5;
 }
 
 .circle-header-label {
@@ -109,4 +111,47 @@
   padding-left: 0px;
   padding-right: 0px;
   padding-bottom: 0px;
+}
+
+.pin-circle-front-drag-handler {
+  opacity: 0.5;
+  margin-right: 8px;
+}
+
+.pin-circle-view-panel-body {
+  padding: 0px !important;
+}
+
+.pin-circle-list-item {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: -1px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dddddd !important;
+  border-top: 1px solid #dddddd !important;
+}
+
+.pin-circle-cog {
+  color: #6d6e71; 
+}
+
+.pin-circle-panel-heading {
+    padding: 10px 15px;
+    border-bottom: 0px solid transparent;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.pin-circle-panel {
+    margin-bottom: 0px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.pin-circle-body {
+  margin-bottom: -20px;
 }
