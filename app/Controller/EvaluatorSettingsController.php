@@ -34,23 +34,27 @@ class EvaluatorSettingsController extends AppController
      */
     function index()
     {
-
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');
+        /** @var  EvaluatorService $EvaluatorService */
+        $EvaluatorService = ClassRegistry::init('EvaluatorService');
+        /** @var  User $User */
+        $User = ClassRegistry::init('User');
 
         $termId = $this->Team->Term->getCurrentTermId();
         $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
 
-        $selfEvaluation = $EvaluationService->getEvalStatus($termId, $userId);
-        $evaluateesEvaluation = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
-
-        $selfEvaluation = $this->extractEvaluatorsInFlow([$selfEvaluation])[0];
-        $evaluateesEvaluation = $this->extractEvaluatorsInFlow($evaluateesEvaluation);
+        $self = $User->findById($userId);
+        $self['evaluators'] = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
 
         // Count zero evaluatee users
         $countOfZeroEvaluateeUsers = 0;
-        foreach ($evaluateesEvaluation as $key => $evaluateeEvaluation) {
-            if (0 === count($evaluateeEvaluation['flow'])) {
+        foreach ($coachees as $key => $coachee) {
+            $evaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $coachee['User']['id']);
+            $coachees[$key]['evaluators'] = $evaluators;
+            if (0 === count($evaluators)) {
                 $countOfZeroEvaluateeUsers++;
             }
         }
@@ -58,36 +62,11 @@ class EvaluatorSettingsController extends AppController
         $isFixedEvaluationOrder = $this->Team->EvaluationSetting->isFixedEvaluationOrder();
 
         $this->set('termId', $termId);
-        $this->set('selfEvaluation', $selfEvaluation);
-        $this->set('evaluateesEvaluation', $evaluateesEvaluation);
+        $this->set('self', $self);
+        $this->set('coachees', $coachees);
         $this->set('isFrozen', false);
         $this->set('isFixedEvaluationOrder', $isFixedEvaluationOrder);
         $this->set('countOfZeroEvaluateeUsers', $countOfZeroEvaluateeUsers);
-    }
-
-    /**
-     * Filtering for using to showing only evaluators
-     *
-     * @param array $evaluations
-     *
-     * @return array
-     */
-    private function extractEvaluatorsInFlow(array $evaluations): array
-    {
-        foreach ($evaluations as $key => $evaluation) {
-            $flow = $evaluation['flow'] ?? [];
-            $evaluations[$key]['flow'] = array_values(
-            // leave the leader and evaluator in the flow array
-            // removing "self" and "final evaluator"
-                array_filter($flow, function ($evaluateFlow) {
-                    return in_array($evaluateFlow['evaluate_type'], [
-                        Evaluation::TYPE_EVALUATOR,
-                        Evaluation::TYPE_LEADER,
-                    ]);
-                })
-            );
-        }
-        return $evaluations;
     }
 
     /**
