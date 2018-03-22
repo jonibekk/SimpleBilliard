@@ -70,7 +70,7 @@
                     <input type="hidden" class="form-input evaluator_select"
                            name="<?= $evaluatorsInputElementName ?>"
                            data-default-id="<?= $userEvaluator['User']['id'] ?>"
-                           data-default-text="<?= $userEvaluator['User']['display_username'] ?>"
+                           data-default-text="<?= sprintf("%s (%s)", $userEvaluator['User']['display_username'], $userEvaluator['User']['roman_username']) ?>"
                            data-default-image="<?= $this->Upload->uploadUrl($userEvaluator, 'User.photo', ['style' => 'medium']) ?>"
                     />
                 </div>

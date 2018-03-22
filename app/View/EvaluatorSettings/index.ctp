@@ -15,18 +15,14 @@
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
-                    'evaluatees'     => [$selfEvaluation],
-                    'eval_term_id'   => $termId,
-                    'eval_is_frozen' => $isFrozen
+                    'evaluatees'     => [$selfUser],
                 ]) ?>
             <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                <p class="font_bold"><?= __('Coachee, members you evaluate') ?> (<?= count($evaluateesEvaluation) ?>)</p>
+                <p class="font_bold"><?= __('Coachee, members you evaluate') ?> (<?= count($coachees) ?>)</p>
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
-                    'evaluatees'     => $evaluateesEvaluation,
-                    'eval_term_id'   => $termId,
-                    'eval_is_frozen' => $isFrozen
+                    'evaluatees'     => $coachees,
                 ]) ?>
         </div>
     </div>
