@@ -311,6 +311,26 @@ class TermTest extends GoalousTestCase
         $this->Term->addTermData(Term::TYPE_PREVIOUS);
         $this->assertNotEmpty($this->Term->getPreviousTermData());
     }
+    
+    function test_GetPreviousTermDataMore()
+    {
+        $this->_setDefault();
+        $this->assertEmpty($this->Term->getPreviousTermData());
+        $this->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->Term->create();
+        $this->Term->set(array(
+            'team_id' => $this->Term->current_team_id,
+            'start_date' => '2010-01-01',
+            'end_date' => '2010-12-31'
+        ));
+        $this->Term->save();
+        $previous = $this->Term->getPreviousTermData();
+        $more = $this->Term->getPreviousTermDataMore($previous);
+        $this->assertNotEmpty($more);
+        $this->assertEquals('2010-01-01', $more[0]['start_date']);
+        $this->assertEquals('2010-12-31', $more[0]['end_date']);
+    }
 
     function testGetCurrentTermId()
     {
