@@ -2,7 +2,7 @@
 <?php echo $this->Html->Css('fontawesome-all.min'); ?>
 <div id="circles-edit-page" class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
     <div class="panel-heading">
-        <?= __("PinCircle") ?>
+        <?= __("Edit Circles") ?>
     </div>
     <!-- Todo Filter Commented out/ -->
     <!-- <div class="list-group-item justify-content-between">
@@ -14,7 +14,7 @@
             <div class="column">
                 <div class="pin-circle-panel">
                     <div id="pinned-header" class="pin-circle-panel-heading">
-                        <div class="alighn-center"><label class="circle-header-label">Pinned </label>  <label id='pinnedCount' class="circle-header-label"></label></div>
+                        <div class="alighn-center"><label class="circle-header-label"><?= __("Pinned") ?> </label>  <label id='pinnedCount' class="circle-header-label"></label></div>
                     </div>
                     <div id="pinned-body" class="pin-circle-body">
                         <div class="pin-circle-list-item ignore-elements">
@@ -33,7 +33,7 @@
                                 <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
                                 <i class="fas fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
                                 <div class="pin-circle-dropdown-content style-hidden">
-                                    <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url="">Edit</div>
+                                    <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url=""></div>
                                 </div>                                
                                 <i class="fa-pull-right-less fas fa-thumbtack fa-lg style-hidden"></i>
                         </div>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="pin-circle-panel">
                     <div id="unpinned-header" class="pin-circle-panel-heading">
-                        <div class="alighn-center"><label class="circle-header-label">UnPinned </label>  <label id='unpinnedCount' class="circle-header-label"></label></div>
+                        <div class="alighn-center"><label class="circle-header-label"><?= __("Unpinned") ?></label>  <label id='unpinnedCount' class="circle-header-label"></label></div>
                     </div>
                     <div id="unpinned-body" class="pin-circle-body">
                         <ul id="unpinned" class="list-group">

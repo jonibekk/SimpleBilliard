@@ -12,7 +12,7 @@
 	        ]
 	    )
 	?>
-	<label class='circle-name-label'><?php echo $circle['name'];?></label>
+	<label class='circle-name-label'><?php $out = strlen($circle['name']) > 14 ? substr($circle['name'],0,14)."..." : $circle['name']; echo $out;?></label>
 	<?php if ($circle['admin_flg']): ?>
 	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>"><i class="fas fa-cog fa-lg pin-circle-cog"></i></a>
 	<?php else :?>
