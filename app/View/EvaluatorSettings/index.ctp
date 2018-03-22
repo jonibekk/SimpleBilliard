@@ -15,7 +15,7 @@
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
-                    'evaluatees'     => [$self],
+                    'evaluatees'     => [$selfUser],
                 ]) ?>
             <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                 <p class="font_bold"><?= __('Coachee, members you evaluate') ?> (<?= count($coachees) ?>)</p>

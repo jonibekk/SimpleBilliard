@@ -45,8 +45,8 @@ class EvaluatorSettingsController extends AppController
         $userId = $this->Auth->user('id');
         $teamId = $this->current_team_id;
 
-        $self = $User->findById($userId);
-        $self['evaluators'] = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
+        $selfUser = $User->findById($userId);
+        $selfUser['evaluators'] = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
         $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
 
         // Count zero evaluatee users
@@ -62,7 +62,7 @@ class EvaluatorSettingsController extends AppController
         $isFixedEvaluationOrder = $this->Team->EvaluationSetting->isFixedEvaluationOrder();
 
         $this->set('termId', $termId);
-        $this->set('self', $self);
+        $this->set('selfUser', $selfUser);
         $this->set('coachees', $coachees);
         $this->set('isFrozen', false);
         $this->set('isFixedEvaluationOrder', $isFixedEvaluationOrder);
