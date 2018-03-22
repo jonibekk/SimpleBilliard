@@ -1,6 +1,27 @@
 <?= $this->App->viewStartComment()?>
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix eval-list">
-    <div class="panel-heading"><?= __("Evaluation") ?></div>
+    <div class="panel-heading">
+        <?= __("Evaluation") ?>
+        <?php //TODO: this comment out is temporarily, delete comment out when Evaluation v2-2 ?>
+        <!--
+        <div class="pull-right">
+            <div class="dropdown inline-block">
+                <a href="#" class="font_lightGray-gray" data-toggle="dropdown" id="download" aria-expanded="false">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                    <li>
+                        <a href="<?=
+                        $this->Html->url([
+                            'controller' => 'evaluator_settings',
+                            'action'     => 'index',
+                        ]) ?>"><?= __('Set evaluators') ?></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        -->
+    </div>
     <div class="panel-body eval-view-panel-body">
         <?php // 評価期間選択プルダウン ?>
         <?=
@@ -14,7 +35,6 @@
             'default'      => $termId,
         ])
         ?>
-
         <?php // 評価が開始されているか ?>
         <?php if (!$isStartedEvaluation): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
@@ -60,7 +80,8 @@
                         [
                             'evaluatees'     => $evaluateesEval,
                             'eval_term_id'   => $termId,
-                            'eval_is_frozen' => $isFrozen
+                            'eval_is_frozen' => $isFrozen,
+                            'isFixedEvaluationOrder' => $isFixedEvaluationOrder,
                         ]) ?>
                 <?php endif; ?>
             </div>

@@ -18,15 +18,6 @@ $(function () {
     $(document).on("click", ".click-comment-all", evCommentOldView);
     $(document).on("click", ".target-toggle-click", evTargetToggleClick);
 
-    $('[id*="CommentAjaxGetNewCommentForm_"]').submit(function (e) {
-        // アップロードファイルの有効期限が切れていなければコメント投稿
-        var res = checkUploadFileExpire($(this).attr('id'));
-        if (res) {
-            validatorCallback(e);
-        }
-        return res;
-    });
-
     // コメント
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
@@ -47,13 +38,32 @@ function toggleCommentForm() {
     var $txtArea = $(this);
     var post_id = sanitize($txtArea.attr("post-id"));
     var $commentButtons = $('#Comment_' + post_id);
+    var $commentForm = $('#CommentAjaxGetNewCommentForm_' + post_id);
 
     if ($commentButtons.is(':visible')) {
         return;
     }
+
+    // Register the form for submit
+    $commentForm.off('submit');
+    $commentForm.on('submit', function (e) {
+        // アップロードファイルの有効期限が切れていなければコメント投稿
+        var res = checkUploadFileExpire($(this).attr('id'));
+        if (res) {
+            validatorCallback(e);
+        }
+        return res;
+    });
+
+    autosize($txtArea);
+
     // Display the buttons
     $commentButtons.toggle();
     $(this).addClass('no-border');
+    // Remove comment file field
+    $commentForm.find("input[name^='data[file_id]']").remove();
+    // Clear OGP info
+    $commentForm.find("input[name^='data[Comment][site_info_url]']").val('');
 
     // コメントフォームをドラッグ＆ドロップ対象エリアにする
     var $uploadFileForm = $(document).data('uploadFileForm');
@@ -90,6 +100,7 @@ function toggleCommentForm() {
             }, 4000);
         }
     };
+    $uploadFileForm.trigger('reset');
     $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
     $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
 
@@ -241,7 +252,13 @@ function addComment(e) {
                     afterSuccess: function () {
                         var post_id = sanitize($f.attr("post-id"));
                         var $commentButtons = $('#Comment_' + post_id);
-                        $f.trigger('reset')
+                        var $uploadFileForm = $(document).data('uploadFileForm');
+                        // Reset forms
+                        $f.trigger('reset');
+                        $f.find("input[name^='data[file_id]']").remove();
+                        $f.find("input[name^='data[Comment][site_info_url]']").val('');
+                        $uploadFileForm.trigger('reset');
+                        // Clear upload data
                         document.getElementById('CommentFormBody_' + post_id).style.height = null;
                         $('#CommentUploadFilePreview_' + post_id).empty();
                         $('#CommentOgpSiteInfo_' + post_id).empty();

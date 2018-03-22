@@ -9,7 +9,7 @@
     "angular-ui-bootstrap": "0.13.0",
     "angular-ui-router": "0.2.15",
     "at.js": "^1.5.3",
-    "autosize": "^3.0.21",
+    "autosize": "git+https://github.com/IsaoCorp/autosize.git",
     "axios": "^0.15.3",
     "bootstrap": "^3.3.7",
     "bootstrap-datepicker": "^1.6.4",

@@ -8,12 +8,14 @@ App::import('Service', 'EvaluationService');
  * Evaluations Controller
  *
  * @property Evaluation $Evaluation
+ * @property EvaluationSetting $EvaluationSetting
  * @var                 $selectedTabTermId
  */
 class EvaluationsController extends AppController
 {
     public $uses = [
-        'Evaluation'
+        'Evaluation',
+        'EvaluationSetting'
     ];
 
     function beforeFilter()
@@ -26,6 +28,7 @@ class EvaluationsController extends AppController
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $userId = $this->Auth->user('id');
         try {
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
@@ -75,14 +78,14 @@ class EvaluationsController extends AppController
 
         $incompSelfEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_ONESELF, $termId, false);
         $incompEvaluateeEvalCnt = (int)$this->Evaluation->getMyTurnCount(Evaluation::TYPE_EVALUATOR, $termId, false);
-        $selfEval = $EvaluationService->getEvalStatus($termId, $this->Auth->user('id'));
+        $selfEval = $EvaluationService->getEvalStatus($termId, $userId);
         $evaluateesEval = $EvaluationService->getEvaluateeEvalStatusAsEvaluator($termId);
-
         // 該当期間が評価開始されているか
         $isStartedEvaluation = $this->Team->Term->isStartedEvaluation($termId);
 
         // Get term frozen status
         $isFrozen = $this->Team->Term->checkFrozenEvaluateTerm($termId);
+        $isFixedEvaluationOrder = $this->Team->EvaluationSetting->isFixedEvaluationOrder();
 
         $this->set(compact(
             'termId',
@@ -92,7 +95,8 @@ class EvaluationsController extends AppController
             'selfEval',
             'evaluateesEval',
             'isFrozen',
-            'isStartedEvaluation'
+            'isStartedEvaluation',
+            'isFixedEvaluationOrder'
         ));
     }
 
@@ -132,10 +136,12 @@ class EvaluationsController extends AppController
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
+        /** @var EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init("EvaluationService");
         $evaluateeId = Hash::get($this->request->params, 'named.user_id');
         $evaluateTermId = Hash::get($this->request->params, 'named.evaluate_term_id');
         $this->layout = LAYOUT_ONE_COLUMN;
-        $my_uid = $this->Auth->user('id');
+        $userId = $this->Auth->user('id');
 
         try {
             // check authorities
@@ -145,8 +151,7 @@ class EvaluationsController extends AppController
             }
             $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
-            // get evaluation list
-            $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+            $evaluationList = array_values($EvaluationService->findEvaluations($userId, $evaluateeId, $evaluateTermId));
 
             // order by priority
             //TODO: このコードは一時的なもの(今後は評価開始時に既にソート済になるので削除予定)
@@ -165,7 +170,7 @@ class EvaluationsController extends AppController
             array_multisort($order_priority_list, SORT_DESC, SORT_NUMERIC, $evaluationList);
             //TODO 削除ここまで
 
-            $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
+            $isEditable = $EvaluationService->isEditable($evaluateTermId, $evaluateeId, $userId);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             return $this->redirect($this->referer());
@@ -173,7 +178,7 @@ class EvaluationsController extends AppController
 
         $evaluateType = $this->Evaluation->getEvaluateType($evaluateTermId, $evaluateeId);
         $scoreList = $this->Evaluation->EvaluateScore->getScoreList($this->Session->read('current_team_id'));
-        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $my_uid);
+        $status = $this->Evaluation->getStatus($evaluateTermId, $evaluateeId, $userId);
         $saveIndex = 0;
 
         $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
@@ -236,33 +241,71 @@ class EvaluationsController extends AppController
         if ($status == Evaluation::TYPE_STATUS_DRAFT) {
             $savedMsg = $successMsg = __("Saved the draft.");
         } elseif ($status == Evaluation::TYPE_STATUS_DONE) {
-            //次の評価へ通知
-            $next_evaluation_id = $this->Evaluation->getCurrentTurnEvaluationId($evaluateeId, $evaluateTermId);
-            $is_final_evaluation = $this->Evaluation->isThisEvaluateType($next_evaluation_id,
-                Evaluation::TYPE_FINAL_EVALUATOR);
-            //キャッシュ削除
-            $next_evaluator_id = $this->Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
-            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
-            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $next_evaluator_id),
-                'team_info');
-
-            if ($next_evaluation_id && !$is_final_evaluation) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
-                    $next_evaluation_id);
-            }
-            $mixpanel_member_type = null;
+            $this->notifyAndDelCache($evaluateeId, $evaluateTermId);
             if ($evalType == Evaluation::TYPE_ONESELF) {
                 $savedMsg = __("Submitted the self-evaluation.");
-                $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_SELF;
-
             } elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
                 $savedMsg = __("Submitted the evaluation by evaluator.");
-                $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_EVALUATOR;
             }
-            $this->Mixpanel->trackEvaluation($mixpanel_member_type);
         }
         $this->Notification->outSuccess($savedMsg);
         return $this->redirect($this->referer());
+    }
+
+    /**
+     * @param int $evaluateeId
+     * @param int $evaluateTermId
+     */
+    private function notifyAndDelCache(int $evaluateeId, int $evaluateTermId)
+    {
+        if ($this->EvaluationSetting->isFixedEvaluationOrder()) {
+            $this->notifyAndDelCacheIfFixedEvalOrder($evaluateeId, $evaluateTermId);
+        } else {
+            $this->notifyAndDelCacheIfNotFixedEvalOrder($evaluateeId, $evaluateTermId);
+        }
+    }
+
+    /**
+     * @param int $evaluateeId
+     * @param int $evaluateTermId
+     */
+    private function notifyAndDelCacheIfFixedEvalOrder(int $evaluateeId, int $evaluateTermId)
+    {
+        //次の評価へ通知
+        $next_evaluation_id = $this->Evaluation->getCurrentTurnEvaluationId($evaluateeId, $evaluateTermId);
+        $is_final_evaluation = $this->Evaluation->isThisEvaluateType($next_evaluation_id,
+            Evaluation::TYPE_FINAL_EVALUATOR);
+        //キャッシュ削除
+        $next_evaluator_id = $this->Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
+        Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
+        Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $next_evaluator_id),
+            'team_info');
+
+        if ($next_evaluation_id && !$is_final_evaluation) {
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
+                $next_evaluation_id);
+        }
+    }
+
+    /**
+     * @param int $evaluateeId
+     * @param int $evaluateTermId
+     */
+    private function notifyAndDelCacheIfNotFixedEvalOrder(int $evaluateeId, int $evaluateTermId)
+    {
+        $evaluatorEvals = $this->Evaluation->getEvaluatorsByEvaluatee($evaluateTermId, $evaluateeId);
+        if ($evaluateeId == $this->Auth->user('id')) {
+            foreach ($evaluatorEvals as $v) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR, $v['id']);
+            }
+
+        }
+        Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
+
+        foreach ($evaluatorEvals as $v) {
+            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $v['evaluator_user_id']),
+                'team_info');
+        }
     }
 
     public function ajax_get_incomplete_evaluatees()
