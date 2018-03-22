@@ -12,13 +12,13 @@
     <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
         <div class="row">
             <div class="column">
-                <div class="panel">
-                    <div id="pinned-header" class="panel panel-heading">
+                <div class="pin-circle-panel">
+                    <div id="pinned-header" class="pin-circle-panel-heading">
                         <div class="alighn-center"><label class="circle-header-label">Pinned </label>  <label id='pinnedCount' class="circle-header-label"></label></div>
                     </div>
-                    <div id="pinned-body">
-                        <div class="list-group-item ignore-elements">
-                            <i class="fas fa-align-justify style-hidden"></i>
+                    <div id="pinned-body" class="pin-circle-body">
+                        <div class="pin-circle-list-item ignore-elements">
+                            <i class="fas fa-align-justify style-hidden pin-circle-front-drag-handler"></i>
                                 <?=
                                 $this->Html->image('pre-load.svg',
                                     [
@@ -46,11 +46,11 @@
                         </ul>
                     </div>
                 </div>
-                <div class="panel">
-                    <div id="unpinned-header" class="panel panel-heading">
+                <div class="pin-circle-panel">
+                    <div id="unpinned-header" class="pin-circle-panel-heading">
                         <div class="alighn-center"><label class="circle-header-label">UnPinned </label>  <label id='unpinnedCount' class="circle-header-label"></label></div>
                     </div>
-                    <div id="unpinned-body" class="accordion-body">
+                    <div id="unpinned-body" class="pin-circle-body">
                         <ul id="unpinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>
                                 <?php if(!isset($circle['order'])): ?>

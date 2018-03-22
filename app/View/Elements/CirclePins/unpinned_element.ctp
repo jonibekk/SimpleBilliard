@@ -1,6 +1,6 @@
 <?= $this->App->viewStartComment()?>
-<li id="<?= $circle['id']?>" class="list-group-item justify-content-between">
-	<i class="fas fa-align-justify style-hidden"></i>
+<li id="<?= $circle['id']?>" class="justify-content-between pin-circle-list-item">
+	<i class="fas fa-align-justify style-hidden pin-circle-front-drag-handler"></i>
 	<?=
 	    $this->Html->image('pre-load.svg',
 	        [
@@ -14,23 +14,10 @@
 	?>
 	<label class='circle-name-label'><?php echo $circle['name'];?></label>
 	<?php if ($circle['admin_flg']): ?>
-	<div class="pin-circle-dropdown fa-pull-right-pin-circle-dropdown">
-		<i class="fas fa-ellipsis-h fa-lg a-black-link"></i>
-		<div class="pin-circle-dropdown-content">
-			<div class="pin-circle-dropdown-element move-top">Pin to top</div>
-			<div class="pin-circle-dropdown-element move-bottom">Pin to bottom</div>
-			<a href="#" class="pin-circle-dropdown-element ajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>">Edit</a>
-		</div>
-	</div>
+	<a href="#" class="fa-pull-right-pin-circle-cog ajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>"><i class="fas fa-cog fa-lg pin-circle-cog"></i></a>
 	<?php else :?>
-	<div class="pin-circle-dropdown fa-pull-right-pin-circle-dropdown style-hidden">
-		<i class="fas fa-ellipsis-h fa-lg a-black-link"></i>
-		<div class="pin-circle-dropdown-content">
-			<div class="pin-circle-dropdown-element move-top">Pin to top</div>
-			<div class="pin-circle-dropdown-element move-bottom">Pin to bottom</div>
-		</div>
-	</div>
+	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fas fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
 	<?php endif; ?>
-	<i class="fa-pull-right-less fas fa-thumbtack fa-lg fa-disabled"></i>
+	<i class="fa-pull-right-less fas fa-thumbtack fa-lg fa-disabled a-black-link"></i>
 </li>
 <?= $this->App->viewEndComment()?>
