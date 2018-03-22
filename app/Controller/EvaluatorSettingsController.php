@@ -98,7 +98,6 @@ class EvaluatorSettingsController extends AppController
         if (!in_array($targetUserId, $usersIdsCanView)) {
             throw new RuntimeException(__("You have no permission."));
         }
-        GoalousLog::info('$usersIdsCanView', $usersIdsCanView);
 
         $userEvaluatee = $User->findById($targetUserId);
 
