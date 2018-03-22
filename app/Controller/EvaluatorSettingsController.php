@@ -102,11 +102,20 @@ class EvaluatorSettingsController extends AppController
 
         /**@var EvaluatorChangeLog $EvaluatorChangeLog */
         $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
-        //$evaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($userId, $teamId);
+        $latestEvaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $userId);
+        if (!empty($latestEvaluatorChangeLog['last_update_user_id'])) {
+            $latestUpdateUser = $User->getById($latestEvaluatorChangeLog['last_update_user_id']);
+            if (!empty($latestUpdateUser)) {
+                $latestEvaluatorChangeLog['User'] = $latestUpdateUser;
+            }
+            $updateTime = GoalousDateTime::createFromTimestamp($latestEvaluatorChangeLog['created']);
+            $updateTime->setTimeZoneTeam();
+            $latestEvaluatorChangeLog['display_update_time'] = $updateTime->format('Y-m-d H:i:s');
+        }
 
         $this->set('userEvaluatee', $userEvaluatee);
         $this->set('userEvaluateeCoach', $userCoach);
         $this->set('userEvaluators', $userEvaluators);
-        //$this->set('EvaluatorChangeLog', $evaluatorChangeLog);
+        $this->set('latestEvaluatorChangeLog', $latestEvaluatorChangeLog);
     }
 }
