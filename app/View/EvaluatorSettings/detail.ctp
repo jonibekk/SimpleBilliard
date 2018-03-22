@@ -13,9 +13,22 @@
         </div>
         <div class="panel-body bg-lightGray">
             <div class="col col-xxs-12 eval-view-panel-body font_verydark p_4px">
+                <?php
+                $hasLastUpdate = !empty($latestEvaluatorChangeLog);
+                ?>
                 <p>
-                    TODO: Last update: *********
+                    <span class="font_bold">Last update: </span>
+                    <?php if ($hasLastUpdate): ?>
+                        <?= $latestEvaluatorChangeLog['display_update_time'] ?>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
                 </p>
+                <?php if ($hasLastUpdate): ?>
+                <p>
+                    By <?= $latestEvaluatorChangeLog["User"]["display_username"] ?>
+                </p>
+                <?php endif; ?>
             </div>
         </div>
         <div class="panel-body eval-view-panel-body">
