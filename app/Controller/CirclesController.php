@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
+App::uses('CirclePin', 'Model');
 
 /**
  * Circles Controller
@@ -382,6 +383,8 @@ class CirclesController extends AppController
         $this->_ajaxPreProcess();
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
+        /** @var CirclePin $CirclePin */
+        $CirclePin = ClassRegistry::init("CirclePin");
 
         // validate
         $this->Circle->id = $this->request->params['named']['circle_id'];
@@ -398,7 +401,10 @@ class CirclesController extends AppController
 
         // サークルから外す処理
         $res = $CircleService->removeCircleMember($this->current_team_id, $this->Circle->id, $this->request->data['CircleMember']['user_id']);
-
+        // Remove and update circle pin information
+        if($res){
+            $res = $CirclePin->removeId($this->request->data['CircleMember']['user_id'], $this->current_team_id, $this->Circle->id);
+        }
         // 処理失敗
         if (!$res) {
             return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processing.")));

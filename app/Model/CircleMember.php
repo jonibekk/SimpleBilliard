@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('CirclePin', 'Model');
 
 /**
  * CircleMember Model
@@ -399,6 +400,9 @@ class CircleMember extends AppModel
         ];
 
         if (!$this->deleteAll($conditions)) {
+            return false;
+        }
+        if (!ClassRegistry::init('CirclePin')->deleteId($userId, $this->current_team_id, $circleId)) {
             return false;
         }
         $this->updateCounterCache(['circle_id' => $circleId]);
