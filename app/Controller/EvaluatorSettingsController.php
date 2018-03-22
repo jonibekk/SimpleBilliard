@@ -77,7 +77,7 @@ class EvaluatorSettingsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         $authUserId = $this->Auth->user('id');
-        $targetUserId = $this->request->params['user_id'];
+        $evaluateeUserId = $this->request->params['user_id'];
         $teamId = $this->current_team_id;
 
         /** @var  User $User */
@@ -95,25 +95,25 @@ class EvaluatorSettingsController extends AppController
         $termId = $this->Team->Term->getCurrentTermId();
         $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId);
         $usersIdsCanView = array_merge(Hash::extract($coachees, '{n}.User.id'), [$authUserId]);
-        if (!in_array($targetUserId, $usersIdsCanView)) {
+        if (!in_array($evaluateeUserId, $usersIdsCanView)) {
             throw new RuntimeException(__("You have no permission."));
         }
 
-        $userEvaluatee = $User->findById($targetUserId);
+        $userEvaluatee = $User->findById($evaluateeUserId);
 
         // Fetching coach User
-        $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($targetUserId);
+        $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId);
         $userCoach = null;
         if (!empty($coachUserId)) {
             $userCoach = $User->findById($coachUserId);
         }
 
         // Fetching evaluatee's evaluators
-        $userEvaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $targetUserId);
+        $userEvaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $evaluateeUserId);
 
         /**@var EvaluatorChangeLog $EvaluatorChangeLog */
         $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
-        $latestEvaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $targetUserId);
+        $latestEvaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $evaluateeUserId);
         if (!empty($latestEvaluatorChangeLog['last_update_user_id'])) {
             $latestUpdateUser = $User->getById($latestEvaluatorChangeLog['last_update_user_id']);
             if (!empty($latestUpdateUser)) {
