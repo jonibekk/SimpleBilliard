@@ -177,7 +177,8 @@ const config = {
   ],
   css_vendor: {
     src: [
-      node_modules_dir + '/font-awesome/css/font-awesome.css',
+      assets_dir + '/css/font-awesome.min.css',
+      // node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
 
@@ -203,6 +204,20 @@ const config = {
     output: {
       file_name: 'vendors',
       path: compiled_assets_dir + '/css'
+    }
+  },
+  css_fonts: {
+    src: [
+      assets_dir + '/css/fontawesome-all.min.css',
+    ],
+    font_src: [
+      assets_dir + '/webfonts/*.{eot,svg,ttf,woff,woff2}'
+    ],
+    watch_files: [assets_dir + '/css/fontawesome-all.min.css'],
+    output: {
+      file_name: 'vendors_fonts',
+      path: compiled_assets_dir + '/css',
+      path_name: compiled_assets_dir + '/webfonts',
     }
   },
   less: {
