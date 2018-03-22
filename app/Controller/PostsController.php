@@ -468,6 +468,9 @@ class PostsController extends AppController
             $this->request->params);
         $this->set(compact('posts'));
 
+        $this->set('my_id', $this->Auth->user('id'));
+        $this->set('my_team_id', $this->current_team_id);
+
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
@@ -1040,7 +1043,8 @@ class PostsController extends AppController
             )
             );
         }
-
+        $this->set('my_id', $this->Auth->user('id'));
+        $this->set('my_team_id', $this->current_team_id);
         $response = $this->render("Feed/posts");
         $html = $response->__toString();
 
