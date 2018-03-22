@@ -43,7 +43,7 @@ function toggleCommentForm() {
     if ($commentButtons.is(':visible')) {
         return;
     }
-
+    new Mention($txtArea)
     // Register the form for submit
     $commentForm.off('submit');
     $commentForm.on('submit', function (e) {
@@ -81,7 +81,6 @@ function toggleCommentForm() {
             if ($uploadFileForm._sending) {
                 return;
             }
-            new Mention($('textarea#CommentFormBody_'+post_id))
             $uploadFileForm._sending = true;
             // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
             $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
