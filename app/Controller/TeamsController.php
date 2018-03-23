@@ -1857,6 +1857,7 @@ class TeamsController extends AppController
         $group_id = $this->request->query('group');
         $type = $this->request->query('type');
         $timezone = $this->request->query('timezone');
+        $lastRank = intval($this->request->query('last_rank') || 0);
 
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
@@ -1875,6 +1876,9 @@ class TeamsController extends AppController
         $this->set('start_date', $start_date);
         $this->set('end_date', $end_date);
         $this->set('type', $type);
+        $this->set('group', $group_id);
+        $this->set('date_range', $date_range);
+        $this->set('timezone', $timezone);
 
         // 今週、今月、今期の場合に true
         $is_current = $this->_insightIsCurrentDateRange($date_range);
@@ -1971,8 +1975,9 @@ class TeamsController extends AppController
         // $count_rank with key as count and value as rank
         $count_rank = $filter_ranking = [];
         $rank = 1;
-        $max_ranking_no = 30;
+        $max_ranking_no = $lastRank + 3;
         foreach ($ranking as $rankKey => $rankArrVal) {
+            if ($rank < $lastRank) continue;
             if (!isset($count_rank[$rankArrVal['count']])) {
                 if ($rank > $max_ranking_no) {
                     break;
@@ -1987,6 +1992,7 @@ class TeamsController extends AppController
         }
 
         $this->set('ranking', $filter_ranking);
+        $this->set('last_rank', $max_ranking_no);
 
         $response = $this->render('Team/insight_ranking_result');
         $html = $response->__toString();

@@ -62,5 +62,26 @@
             </tr>
         <?php endforeach ?>
     </table>
+    <div class="panel panel-default feed-read-more" id="RankingMoreRead">
+        <div class="panel-body panel-read-more-body">
+            <span class="none" id="ShowMoreNoData"><?= __("There is no more post to show.") ?></span>
+            <a href="#" class="click-feed-read-more"
+               parent-id="RankingMoreRead"
+               no-data-text-id="ShowMoreNoData"
+               get-url="<?=
+               $this->Html->url([
+                   'controller'     => 'teams',
+                   'action'         => 'ajax_get_insight_ranking',
+                   'date_range'     => $date_range,
+                   'group'          => $group,
+                   'type'           => $type,
+                   'timezone'       => $timezone,
+                   'last_rank'      => $last_rank,
+               ]) ?>"
+               id="RankingMoreReadLink"
+            >
+                <?= $more_read_text ?> </a>
+        </div>
+    </div>
     <?= $this->App->viewEndComment()?>
 <?php endif ?>
