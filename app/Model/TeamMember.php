@@ -1291,7 +1291,8 @@ class TeamMember extends AppModel
                             'fields'     => ['member_no']
                         ],
                     ]
-                ]
+                ],
+                'order' => 'index_num ASC'
             ];
             $evaluators = $this->Team->Evaluator->find('all', $options);
             foreach ($evaluators as $r_k => $r_v) {

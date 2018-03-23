@@ -1,23 +1,25 @@
 Connected to #issue_no
 
-## レビュー前チェックリスト
-### 共通(全て必須)
-- [ ] 仕様を満たしている
-- [ ] PRのマージ先は正しい
-- [ ] 更新したファイルはリフォーマットされている
-- [ ] 修正したファイルにタイプミスによる意図しない文字が混入していない
-- [ ] travisでエラーが出ていない
-- [ ] エビデンスを残してある
+## Pre-Review Checklist
+### Basic Requirements
+- [ ] Meets specification
+- [ ] Merge destination is correct
+- [ ] Code has been reformatted
+- [ ] No typos
 
-### クライアントサイド
-- [ ] ブラウザのコンソールでエラーが出ていない
-- [ ] cssのクラス定義を変更した場合、同じクラスが利用されている箇所で問題が発生していない
-- [ ] jsの変数名を変更している場合、同じ変数を利用している箇所に問題が発生していない
-- [ ] jsのメソッド名、引数を変更している場合、同じメソッドを利用している箇所に問題が発生していない
+### Client Side
+- [ ] JS has been tested in strict mode
+- [ ] Tested on IE11
+- [ ] Tested all pages with changed code
+- [ ] No errors in internet browser's console log
+- [ ] If CSS class definition was changed, ensure no error in all instances after refactoring
+- [ ] If JS variable was renamed, ensure no error in all instances after refactoring 
+- [ ] If JS method and/or its arguments were renamed, ensure no error in all instances after refactoring 
+- [ ] Save screenshots of any UI change
 
-### サーバサイド
-- [ ] cakeのerrorログ、debugログでエラーが出ていない
-- [ ] Modelに修正がある場合、テストコードも修正している
-- [ ] coverallsでカバレッジが下がっていない(Modelで単に不要な行を削除した場合を除きます)
-- [ ] 変数名を変更している場合、同じ変数を利用している箇所に問題が発生していない
-- [ ] メソッド名、引数を変更している場合、同じメソッドを利用している箇所に問題が発生していない
+### Server Side
+- [ ] No error in Cake & debug log
+- [ ] If model was edited, update its test case
+- [ ] No reduction in code coverage in Coveralls (Excluding when only deleting unnecessary code)
+- [ ] If a variable was renamed, ensure no error in all instances after refactoring 
+- [ ] If a method and/or its arguments were renamed, ensure no error in all instances after refactoring

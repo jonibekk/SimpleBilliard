@@ -102,7 +102,7 @@ Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action'
 Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
 Router::connect('/goals/:id/edit',
-    ['controller' => 'goals', 'action' => 'edit', '[method' => 'GET'],
+    ['controller' => 'goals', 'action' => 'edit', '[method]' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);

@@ -46,24 +46,29 @@
                         if ($isFixedEvaluationOrder) {
                             $fontWeightCls =  $v['this_turn'] ? 'font_bold' : 'font_lightgray';
                         } else {
-                            switch ($v['evaluate_type']) {
-                                case Evaluation::TYPE_ONESELF:
+                            if ($eval_is_frozen) {
+                                if ((int)$v['evaluate_type'] === Evaluation::TYPE_FINAL_EVALUATOR && (int)$v['status'] !== Goalous\Model\Enum\Evaluation\Status::DONE) {
+                                    $fontWeightCls = 'font_bold';
+                                }
+                            } else {
+                                switch ($v['evaluate_type']) {
+                                    case Evaluation::TYPE_ONESELF:
+                                        if ($user['eval_stage'] == EvaluationService::STAGE_SELF_EVAL) {
+                                            $fontWeightCls = 'font_bold';
+                                        }
+                                        break;
+                                    case Evaluation::TYPE_EVALUATOR:
+                                        if ($user['eval_stage'] == EvaluationService::STAGE_EVALUATOR_EVAL) {
+                                            $fontWeightCls = 'font_bold';
+                                        }
+                                        break;
+                                    case Evaluation::TYPE_FINAL_EVALUATOR:
+                                        if ($user['eval_stage'] == EvaluationService::STAGE_FINAL_EVALUATOR_EVAL) {
+                                            $fontWeightCls = 'font_bold';
+                                        }
+                                        break;
 
-                                    if ($user['eval_stage'] == EvaluationService::STAGE_SELF_EVAL) {
-                                        $fontWeightCls = 'font_bold';
-                                    }
-                                    break;
-                                case Evaluation::TYPE_EVALUATOR:
-                                    if ($user['eval_stage'] == EvaluationService::STAGE_EVALUATOR_EVAL) {
-                                        $fontWeightCls = 'font_bold';
-                                    }
-                                    break;
-                                case Evaluation::TYPE_FINAL_EVALUATOR:
-                                    if ($user['eval_stage'] == EvaluationService::STAGE_FINAL_EVALUATOR_EVAL) {
-                                        $fontWeightCls = 'font_bold';
-                                    }
-                                    break;
-
+                                }
                             }
                         }
                     ?>

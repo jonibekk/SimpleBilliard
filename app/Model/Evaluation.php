@@ -737,7 +737,7 @@ class Evaluation extends AppModel
      *
      * @param int|null $evaluateType
      * @param int|null $termId
-     * @param bool $isAll
+     * @param bool     $isAll
      *
      * @return int
      */
@@ -799,7 +799,7 @@ class Evaluation extends AppModel
      *
      * @param int|null $evaluateType
      * @param int|null $termId
-     * @param bool $isAll
+     * @param bool     $isAll
      *
      * @return int
      */
@@ -1128,6 +1128,31 @@ class Evaluation extends AppModel
     }
 
     /**
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return array
+     */
+    function getEvaluatorsByEvaluatee(int $termId, int $evaluateeId): array
+    {
+        $options = [
+            'fields' =>[
+                'id',
+                'evaluator_user_id'
+            ],
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'goal_id' => null
+            ],
+        ];
+
+        $res = $this->find('all', $options);
+        return Hash::extract($res, '{n}.Evaluation');
+    }
+
+    /**
      * Check whether all evaluators completed evaluating
      *
      * @param int $termId
@@ -1338,21 +1363,20 @@ class Evaluation extends AppModel
      *
      * @return int
      */
-    function countCompletedByEvaluators(int $termId, int $evaluateeId) : int
+    function countCompletedByEvaluators(int $termId, int $evaluateeId): int
     {
         $options = [
             'conditions' => [
                 'term_id'           => $termId,
                 'evaluatee_user_id' => $evaluateeId,
-                'evaluate_type' => self::TYPE_EVALUATOR,
-                'goal_id' => null,
-                'status' => Enum\Evaluation\Status::DONE
+                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'goal_id'           => null,
+                'status'            => Enum\Evaluation\Status::DONE
             ],
         ];
 
         $res = $this->find('count', $options);
         return $res;
     }
-
 
 }
