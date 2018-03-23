@@ -468,9 +468,6 @@ class PostsController extends AppController
             $this->request->params);
         $this->set(compact('posts'));
 
-        $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $this->current_team_id);
-
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
@@ -732,8 +729,6 @@ class PostsController extends AppController
         }
         $this->set('long_text', $long_text);
         $this->set(compact('comments'));
-        $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $this->current_team_id);
 
         // コメントを既読にする
         $this->Post->Comment->CommentRead->red(Hash::extract($comments, '{n}.Comment.id'));
@@ -755,8 +750,6 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
-        $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $this->current_team_id);
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/ajax_comments');
@@ -989,9 +982,6 @@ class PostsController extends AppController
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
             ]);
-
-            $this->set('my_id', $this->Auth->user('id'));
-            $this->set('my_team_id', $this->current_team_id);
             // setting draft post data if having circle_id
             /** @var PostDraftService $PostDraftService */
             $PostDraftService = ClassRegistry::init('PostDraftService');
@@ -1043,8 +1033,6 @@ class PostsController extends AppController
             )
             );
         }
-        $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $this->current_team_id);
         $response = $this->render("Feed/posts");
         $html = $response->__toString();
 

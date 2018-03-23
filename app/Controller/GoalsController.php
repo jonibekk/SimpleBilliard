@@ -1388,8 +1388,6 @@ class GoalsController extends AppController
         $this->_setGoalsForTopAction();
         $row = $this->Goal->ActionResult->getWithAttachedFiles($ar_id);
         $this->request->data = $row;
-        $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $this->current_team_id);
         $this->set('common_form_type', 'action');
         $this->set('common_form_mode', 'edit');
         $this->layout = LAYOUT_ONE_COLUMN;

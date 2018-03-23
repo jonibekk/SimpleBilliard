@@ -152,8 +152,6 @@ class PagesController extends AppController
         $this->set('current_team', $current_team);
         // チーム全体サークル
         $this->set('team_all_circle', $this->Team->Circle->getTeamAllCircle());
-        $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $current_team['Team']['id']);
         $current_global_menu = "home";
         $feed_filter = 'all';
         $this->set(compact('feed_filter', 'current_global_menu'));

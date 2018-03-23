@@ -266,6 +266,8 @@ class AppController extends BaseController
             $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
+        $this->set('my_id', $this->Auth->user('id'));
+        $this->set('my_team_id', $this->current_team_id);
         $this->_redirectIfMobileAppVersionUnsupported();
     }
 
