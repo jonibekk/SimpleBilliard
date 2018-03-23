@@ -55,7 +55,7 @@ class MentionComponent extends Component {
      * @param $subject string a subject to replace 
      * @return string 
      */
-    static function replaceAndAddNameToMention(string $pattern, string $replacement, string $subject = null): string {
+    static function replaceAndAddNameToMention(string $pattern, $replacement, string $subject = null): string {
         $result = preg_replace(self::getMentionReg($pattern, 'm'), self::$PREFIX.$pattern.':'.$replacement.self::$SUFFIX, $subject);
         return $result;
     }
@@ -108,7 +108,11 @@ class MentionComponent extends Component {
                     $model = ClassRegistry::init('Group');
                 }
                 if (!is_null($model)) {
-                    $data = $model->findById($match['id']);
+                    // ExtContainableBehavior set del_flg false by default
+                    // However we want to get this even if it is deleted
+                    $data = $model->find('first', array(
+                        'conditions' => array('id' => $match['id'], 'del_flg' => [true, false])
+                    ));
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
                     $body = self::replaceAndAddNameToMention($key, $replacement, $body);
