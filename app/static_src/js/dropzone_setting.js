@@ -274,23 +274,46 @@ $(function () {
     },
     // サムネイル
     thumbnail: function (file, dataUrl) {
-      var orientation = 0;
       EXIF.getData(file, function () {
-        switch (parseInt(EXIF.getTag(file, "Orientation"))) {
+        var orientation = parseInt(EXIF.getTag(this, "Orientation") || 0);
+        var angle = 0;
+        var flip = false;
+        // console.log(orientation);
+        switch (orientation) {
+          case 1:
+            angle = 0;
+            break;
+          case 2:
+            angle = 0;
+            flip = true;
+            break;
           case 3:
-            orientation = 180;
+            angle = 180;
+            break;
+          case 4:
+            angle = 180;
+            flip = true;
+            break;
+          case 5:
+            angle = 270;
+            flip = true;
             break;
           case 6:
-            orientation = -90;
+            angle = 90;
+            break;
+          case 7:
+            angle = 90;
+            flip = true;
             break;
           case 8:
-            orientation = 90;
+            angle = 270;
+            break;
+          default :
+          case 0:
+            angle = 0;
             break;
         }
         var thumbnailElement, _i, _ref;
-        if (orientation != 0) {
-          orientation = orientation + 180;
-        }
         var $container = $(file.previewTemplate).find('.dz-thumb-container');
         if (file.type.match(/image/)) {
           $container.find('.fa').hide();
@@ -303,11 +326,19 @@ $(function () {
         thumbnailElement.alt = file.name;
         thumbnailElement.src = dataUrl;
         thumbnailElement.id = "exif";
-        var styles = {
-          "transform": "rotate(" + orientation + "deg)",
-          "-ms-transform": "rotate(" + orientation + "deg)",
-          "-webkit-transform": "rotate(" + orientation + "deg)"
-        };
+        if(!flip){
+          var styles = {
+            "transform": "rotate(" + angle + "deg)",
+            "-ms-transform": "rotate(" + angle + "deg)",
+            "-webkit-transform": "rotate(" + angle + "deg)"
+          };
+        } else {
+          var styles = {
+            "transform": "rotate(" + angle + "deg) rotateY(180deg)",
+            "-ms-transform": "rotate(" + angle + "deg) rotateY(180deg)",
+            "-webkit-transform": "rotate(" + angle + "deg) rotateY(180deg)"
+          };
+        }
         $("#exif").css(styles);
         $("#exif").removeAttr("id");
       });
