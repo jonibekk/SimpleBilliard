@@ -64,7 +64,7 @@
     </table>
     <div class="panel panel-default feed-read-more" id="RankingMoreRead">
         <div class="panel-body panel-read-more-body">
-            <span class="none" id="ShowMoreNoData"><?= __("There is no more post to show.") ?></span>
+            <span class="" id="ShowMoreNoData"><?= __("There is no more ranking to show.") ?></span>
             <a href="#" class="click-feed-read-more"
                parent-id="RankingMoreRead"
                no-data-text-id="ShowMoreNoData"
