@@ -278,7 +278,6 @@ $(function () {
         var orientation = parseInt(EXIF.getTag(this, "Orientation") || 0);
         var angle = 0;
         var flip = false;
-        // console.log(orientation);
         switch (orientation) {
           case 1:
             angle = 0;

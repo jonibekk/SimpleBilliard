@@ -45,10 +45,10 @@
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label form-label"><?= __("Team Image") ?></label>
 
-                    <div class="col col-sm-6">
+                    <div id="photo-chooose" class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container photo-design"
-                                 data-trigger="fileinput"
+                                 data-trigger="fileinput" id="photo-file"
                                  style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
                             </div>
@@ -67,7 +67,8 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false
+                                    'required'     => false,
+                                    'id'           => 'photo-input',
                                 ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
@@ -130,10 +131,70 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src='/js/vendor/exifrotate.min.js'></script>
+
 <?php $this->append('script') ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-
+    window.onload = function(){
+        document.getElementById('photo-input').onchange = function (e) {
+            var orientation = 1;
+            //parse meta data
+            loadImage.parseMetaData(this.files[0], function(data) {
+                //if exif data available, update orientation
+                if (data.exif) {
+                    orientation = data.exif.get('Orientation');
+                }
+                var angle = 0;
+                var flip = false;
+                switch (orientation) {
+                  case 1:
+                    angle = 0;
+                    break;
+                  case 2:
+                    angle = 0;
+                    flip = true;
+                    break;
+                  case 3:
+                    angle = 180;
+                    break;
+                  case 4:
+                    angle = 180;
+                    flip = true;
+                    break;
+                  case 5:
+                    angle = 270;
+                    flip = true;
+                    break;
+                  case 6:
+                    angle = 90;
+                    break;
+                  case 7:
+                    angle = 90;
+                    flip = true;
+                    break;
+                  case 8:
+                    angle = 270;
+                    break;
+                  default :
+                    angle = 0;
+                    break;
+                }
+                if(!flip){
+                  var styles = {
+                    "transform": "rotate(" + angle + "deg)",
+                    "-ms-transform": "rotate(" + angle + "deg)",
+                    "-webkit-transform": "rotate(" + angle + "deg)"
+                  };
+                } else {
+                  var styles = {
+                    "transform": "rotate(" + angle + "deg) rotateY(180deg)",
+                    "-ms-transform": "rotate(" + angle + "deg) rotateY(180deg)",
+                    "-webkit-transform": "rotate(" + angle + "deg) rotateY(180deg)"
+                  };
+                }
+                $('#photo-file').find('img').css(styles);
+            });
+        };
         $('[rel="tooltip"]').tooltip();
 
         $('#addOtherTeam').bootstrapValidator({
@@ -151,7 +212,7 @@
                 }
             }
         });
-    });
+    };
 </script>
 <?php $this->end() ?>
 <?= $this->App->viewEndComment()?>
