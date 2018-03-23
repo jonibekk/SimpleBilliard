@@ -1,6 +1,9 @@
 $(document).ready(function() {
     // setting sortable
     var el = document.getElementById('evaluators');
+    if (el === null) {
+        return;
+    }
     var sortable = Sortable.create(el, {
         handle: '.evaluator_sort',
         chosenClass: 'list-group-item-success',
