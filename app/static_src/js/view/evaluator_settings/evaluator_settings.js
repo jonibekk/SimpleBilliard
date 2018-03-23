@@ -69,7 +69,8 @@ $(document).ready(function() {
                     $.get('/users/ajax_select2_get_users', {
                         term: query.term,
                         page_limit: 10,
-                        _: (new Date()).getTime()
+                        _: (new Date()).getTime(),
+                        with_self: 1
                     }).done(function (data) {
                         query.callback(data);
                     })
