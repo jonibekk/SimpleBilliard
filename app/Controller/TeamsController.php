@@ -1857,7 +1857,7 @@ class TeamsController extends AppController
         $group_id = $this->request->query('group');
         $type = $this->request->query('type');
         $timezone = $this->request->query('timezone');
-        $lastRank = intval($this->request->query('last_rank') || 0);
+        $lastRank = intval(!empty($this->request->query('last_rank')) ? $this->request->query('last_rank') : 0);
 
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
@@ -1975,19 +1975,20 @@ class TeamsController extends AppController
         // $count_rank with key as count and value as rank
         $count_rank = $filter_ranking = [];
         $rank = 1;
-        $max_ranking_no = $lastRank + 3;
+        $max_ranking_no = $lastRank + 30;
         foreach ($ranking as $rankKey => $rankArrVal) {
-            if ($rank < $lastRank) continue;
-            if (!isset($count_rank[$rankArrVal['count']])) {
-                if ($rank > $max_ranking_no) {
-                    break;
+            if ($rank > $lastRank) {
+                if (!isset($count_rank[$rankArrVal['count']])) {
+                    if ($rank > $max_ranking_no) {
+                        break;
+                    }
+                    $count_rank[$rankArrVal['count']] = $rank;
+                    $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
+                } else {
+                    $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
                 }
-                $count_rank[$rankArrVal['count']] = $rank;
-                $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
-            } else {
-                $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
+                $filter_ranking[$rankKey] = $ranking[$rankKey];                
             }
-            $filter_ranking[$rankKey] = $ranking[$rankKey];
             $rank++;
         }
 
