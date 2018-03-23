@@ -42,19 +42,19 @@ class EvaluatorsController extends ApiController
 
         // Validate parameters
         if (empty($evaluateeUserId)) {
-            return $this->_getResponseBadFail('Invalid Parameters');
+            return $this->_getResponseBadFail(__('Parameter is invalid'));
         }
         //If evaluatee user_id in evaluator array, send error
         if (in_array($evaluateeUserId, $evaluatorUserIds)) {
-            return $this->_getResponseBadFail('Evaluatee ID in Evaluator IDs');
+            return $this->_getResponseBadFail(__('Evaluatee cannot be assigned as his/her own evaluator.'));
         }
         if (count($evaluatorUserIds) > self::MAX_NUMBER_OF_EVALUATORS) {
-            return $this->_getResponseBadFail('Invalid evaluators ID; More than 7 IDs');
+            return $this->_getResponseBadFail(__('Evaluator setting cannot be saved.'));
         }
         //Check duplicate
         foreach (array_values(array_count_values($evaluatorUserIds)) as $count) {
             if ($count > 1) {
-                return $this->_getResponseBadFail('Invalid evaluators ID; Having duplicate ID');
+                return $this->_getResponseBadFail(__('Evaluator has duplicates.'));
             }
         }
         /** @var TeamMember $TeamMember */
@@ -67,7 +67,7 @@ class EvaluatorsController extends ApiController
             if ($userId == $coachId) {
                 $setByCoachFlag = true;
             } else {
-                return $this->_getResponseForbidden('User have no permission');
+                return $this->_getResponseForbidden(__('You have no permission.'));
             }
         }
 
