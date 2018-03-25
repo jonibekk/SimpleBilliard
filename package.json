@@ -15,7 +15,7 @@
     "bootstrap-switch": "^3.3.4",
     "c3": "^0.4.11",
     "dropzone": "^4.3.0",
-    "exif-js": "^2.2.1",
+    "exif-js": "^2.3.0",
     "fastclick": "^1.0.6",
     "font-awesome": "^4.7.0",
     "form-data": "^1.0.1",
