@@ -274,11 +274,12 @@ $(function () {
     },
     // サムネイル
     thumbnail: function (file, dataUrl) {
-      EXIF.getData(file, function () {
-        var orientation = parseInt(EXIF.getTag(this, "Orientation") || 0);
+      EXIF.getData(this, function () {
+        var orientation = parseInt(EXIF.getTag(this, "Orientation") || 1);
         var angle = 0;
         var flip = false;
         switch (orientation) {
+         default:
           case 1:
             angle = 0;
             break;
@@ -307,10 +308,6 @@ $(function () {
           case 8:
             angle = 270;
             break;
-          default :
-          case 0:
-            angle = 0;
-            break;
         }
         var thumbnailElement, _i, _ref;
         var $container = $(file.previewTemplate).find('.dz-thumb-container');
@@ -329,13 +326,17 @@ $(function () {
           var styles = {
             "transform": "rotate(" + angle + "deg)",
             "-ms-transform": "rotate(" + angle + "deg)",
+            "-o-transform": "rotate(" + angle + "deg)",
+            "-moz-transform": "rotate(" + angle + "deg)",
             "-webkit-transform": "rotate(" + angle + "deg)"
           };
         } else {
           var styles = {
-            "transform": "rotate(" + angle + "deg) rotateY(180deg)",
-            "-ms-transform": "rotate(" + angle + "deg) rotateY(180deg)",
-            "-webkit-transform": "rotate(" + angle + "deg) rotateY(180deg)"
+            "transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-ms-transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-o-transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-moz-transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-webkit-transform": "rotate(" + angle + "deg) scaleX(-1)"
           };
         }
         $("#exif").css(styles);
