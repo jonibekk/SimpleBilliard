@@ -954,32 +954,43 @@ class UploadBehavior extends ModelBehavior
 
     function saveRotatedFile($filePath)
     {
-        $degrees = $this->getDegrees($filePath);
-        //回転の必要ない場合は何もしない
-        if ($degrees === 0) {
-            return true;
-        }
+        $flip = false;
+        $degrees = $this->getDegrees($filePath, $flip);
+        // //回転の必要ない場合は何もしない
+        // if ($degrees === 0 && $flip !== false) {
+        //     return true;
+        // }
 
         $imgMimeType = $this->getImageMimeSubType($filePath);
 
         $createHandler = $this->getCreateHandler($imgMimeType);
         $outputHandler = $this->getOutputHandler($imgMimeType);
-        $src = $this->_getImgSource($createHandler, $filePath);
-        if (!$src) {
+        $image = $this->_getImgSource($createHandler, $filePath);
+        if (!$image) {
             $this->log(sprintf('creating img object was failed.'));
             $this->log(Debugger::trace());
             $this->_backupFailedImgFile(basename($filePath), $filePath);
             return false;
         }
         // 回転
-        $rotate = imagerotate($src, $degrees, 0);
+        $rotate = imagerotate($image, $degrees, 0);
+        imagedestroy($image);
+        // 反転
+        if($flip && !imageflip($rotate, IMG_FLIP_VERTICAL)){
+            $this->log(sprintf('flipping image object has failed.'));
+            $this->log(Debugger::trace());
+            $this->_backupFailedImgFile(basename($filePath), $filePath);
+            return false;
+        }
         //保存
         $outputHandler($rotate, $filePath);
+        imagedestroy($rotate);
         return true;
     }
 
-    function getDegrees($file_path)
+    function getDegrees($file_path, &$flip)
     {
+        $flip = false;
         //exifをサポートしているのはjpegとtiffのみ。それ以外は0をreturn
         $image_type = exif_imagetype($file_path);
         if ($image_type != IMAGETYPE_JPEG && $image_type != IMAGETYPE_JPEG2000) {
@@ -993,47 +1004,27 @@ class UploadBehavior extends ModelBehavior
         }
         switch ($r_data) {
             case 1: //通常
-                $degrees = 0;
-                return $degrees;
-                break;
-
+                return 0;
             case 2: //左右反転
-                $degrees = 0;
-                return $degrees;
-                break;
-
+                $flip = true;
+                return 180;
             case 3: //180°回転
-                $degrees = 180;
-                return $degrees;
-                break;
-
+                return 180;
             case 4: //上下反転
-                $degrees = 0;
-                return $degrees;
-                break;
-
+                $flip = true;
+                return 0;
             case 5: //反時計回りに90°回転 上下反転
-                $degrees = 270;
-                return $degrees;
-                break;
-
+                $flip = true;
+                return 90;
             case 6: //反時計回りに90°回転
-                $degrees = 270;
-                return $degrees;
-                break;
-
+                return 270;
             case 7: //　時計回りに90°回転 上下反転
-                $degrees = 90;
-                return $degrees;
-                break;
-
+                $flip = true;
+                return 270;
             case 8: //時計回りに90°回転
-                $degrees = 90;
-                return $degrees;
-                break;
-
+                return 90;
         }
-        return null;
+        return 0;
     }
 
     function s3Upload($from_path, $type)
