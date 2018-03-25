@@ -160,7 +160,7 @@
 
                 <div class="col col-sm-6">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
-                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                        <div id="photo-preview-profile" class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                              style="width: 150px; height: 150px;">
                             <?=
                             $this->Upload->uploadImage($this->request->data, 'User.photo',
@@ -181,7 +181,8 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false
+                                    'required'     => false,
+                                    'id'           => 'photo-input-profile'
                                 ]) ?>
                         </span>
                             <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
@@ -208,7 +209,7 @@
                 <div class="col col-sm-6">
                     <div class="fileinput_cover fileinput-new profile-setting-cover" data-provides="fileinput">
                         <?php $noCoverClass = empty($me['User']['cover_photo_file_name']) ? "mod-no-image" : ""; ?>
-                        <div class="fileinput-preview profile-setting-cover-upload <?= $noCoverClass ?> mb_8px"
+                        <div id="photo-preview-cover" class="fileinput-preview profile-setting-cover-upload <?= $noCoverClass ?> mb_8px"
                              data-trigger="fileinput">
                             <?php if (empty($me['User']['cover_photo_file_name'])): ?>
                                 <a href="#" class="profile-setting-cover-upload-frame">
@@ -235,7 +236,8 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false
+                                    'required'     => false,
+                                    'id'           => 'photo-input-cover'
                                 ]) ?>
                         </span>
                             <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?>
@@ -343,6 +345,14 @@ Need New Customers?<br>\n
                 }
             }
         });
+    });
+</script>
+<?php $this->end() ?>
+<?php $this->append('script') ?>
+<script type="text/javascript">
+    $(function() {
+        bindExifRotate('photo-input-profile', 'photo-preview-profile');
+        bindExifRotate('photo-input-cover', 'photo-preview-cover');
     });
 </script>
 <?php $this->end() ?>
