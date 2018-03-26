@@ -69,9 +69,9 @@ class MentionComponent extends Component {
     public function replaceMention(string $text = null, array $mentions): string {
         $result = $text;
         foreach ($mentions as $mention) {
-            $result = preg_replace(self::getMentionReg($mention.':(.*?)', 'm'), '<b><i class="mentioned-to-me"><@${1}></i></b>', $result);
+            $result = preg_replace(self::getMentionReg($mention.':(.*?)', 'm'), '<b><i class="mention to-me">@${1}</i></b>', $result);
         }
-        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'), '<b><i><@${1}></i></b>', $result);
+        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'), '<b><i class="mention">@${1}</i></b>', $result);
         return $result;
     }
     /**

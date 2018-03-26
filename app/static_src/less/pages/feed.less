@@ -157,9 +157,12 @@
   }
 }
 
-i.mentioned-to-me {
+i.mention {
   padding: 3px;
-  border-radius: 50px;
-  background-color: @goalous;
-  color: #fff;
+  border-radius: 5px;
+  background-color: @unreadRed;
+  &.to-me {
+    background-color: @goalous;
+    color: #fff;
+  }
 }

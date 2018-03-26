@@ -11,7 +11,7 @@ var Mention = function(target) {
     target[0].submitValue = function() {
       var replaced = target.val()
       $.each(self.values, function(key, value) {
-        var regexp = new RegExp('<@'+normalize(key)+'>', 'g')
+        var regexp = new RegExp('@'+normalize(key), 'g')
         replaced = replaced.replace(regexp, '%%%'+value+'%%%')
       })
       return replaced
@@ -22,7 +22,7 @@ var Mention = function(target) {
         <div class="mention-image" style="background-image:url(${image});"></div>\
         <div class="mention-text">${text}</div>\
       </div></li>',
-      insertTpl: '<@${text}>',
+      insertTpl: '@${text}',
       searchKey : 'text',
       // data: [{text:'A'}]
       callbacks: {
@@ -67,7 +67,7 @@ var Mention = function(target) {
       var split = matches[i].replace(/%/g, '').split(':')
       self.values[split[1]] = split[0]
     }
-    return text.replace(/%%%.*?:(.*?)%%%/g, '<@$1>')
+    return text.replace(/%%%.*?:(.*?)%%%/g, '@$1')
   }
   if (target.val()) {
     target.val(convert(target.val()))
