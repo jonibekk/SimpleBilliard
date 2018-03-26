@@ -40,7 +40,7 @@ class EvaluatorChangeLog extends AppModel
                 'evaluatee_user_id' => $userId
             ],
             'order'      => [
-                'modified' => 'DESC'
+                'created' => 'DESC'
             ]
         ];
 
