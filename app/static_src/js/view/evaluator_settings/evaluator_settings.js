@@ -1,7 +1,10 @@
 $(document).ready(function() {
     // setting sortable
-    var el = document.getElementById('evaluators');
-    var sortable = Sortable.create(el, {
+    var elementEvaluators = document.getElementById('evaluators');
+    if (elementEvaluators === null) {
+        return;
+    }
+    var sortable = Sortable.create(elementEvaluators, {
         handle: '.evaluator_sort',
         chosenClass: 'list-group-item-success',
         animation: 150,
@@ -11,7 +14,7 @@ $(document).ready(function() {
     });
 
     var MAX_EVALUATORS = 7
-    var $evaluatorsList = $('#evaluators')
+    var $evaluatorsList = $(elementEvaluators)
     $(document).on('click', '.btn_remove', function(e) {
         $(this).closest('.eval-list-item').remove()
         adjustFormsView()
