@@ -97,7 +97,7 @@
 
                     <div class="ccc">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                            <div id="preview-edit-circle" class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                                  style="width: 96px; height: 96px; line-height: 96px;"
                             >
                                 <?=
@@ -121,7 +121,8 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false
+                                    'required'     => false,
+                                    'id'           => 'photo-input-edit-circle'
                                 ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
@@ -356,4 +357,12 @@
 
     </div>
 </div>
+<?php $this->Html->Script('js/gl_basic') ?>
+<?php $this->append('script') ?>
+<script type="text/javascript">
+    $(function() {
+        bindExifRotate('photo-input-edit-circle', 'preview-edit-circle');
+    });
+</script>
+<?php $this->end() ?>
 <?= $this->App->viewEndComment()?>
