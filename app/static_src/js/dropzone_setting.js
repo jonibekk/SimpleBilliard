@@ -274,8 +274,9 @@ $(function () {
     },
     // サムネイル
     thumbnail: function (file, dataUrl) {
-      EXIF.getData(this, function () {
+      EXIF.getData(file, function () {
         var orientation = parseInt(EXIF.getTag(this, "Orientation") || 1);
+        // console.log(orientation);
         var angle = 0;
         var flip = false;
         switch (orientation) {
