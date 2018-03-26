@@ -36,13 +36,14 @@ class EvaluatorChangeLog extends AppModel
     {
         $options = [
             'conditions' => [
-                'EvaluatorChangeLog.team_id'           => $teamId,
-                'EvaluatorChangeLog.evaluatee_user_id' => $userId,
+                'team_id'           => $teamId,
+                'evaluatee_user_id' => $userId
             ],
-
+            'order'      => [
+                'created' => 'DESC'
+            ]
         ];
 
-        $options['conditions'][] = $this->_getLatestChangeLogSubQuery();
         $ret = $this->find('first', $options);
 
         if (empty($ret)) {
@@ -72,33 +73,10 @@ class EvaluatorChangeLog extends AppModel
             'last_update_user_id' => $updaterId
         ];
 
+        $this->create();
         $res = $this->save($saveData);
 
         return $res;
     }
 
-    /**
-     * Subquery for getting latest modified changelog of an evaluatee in a team
-     *
-     * @return stdClass SubQuery Object
-     */
-    private function _getLatestChangeLogSubQuery(): stdClass
-    {
-        /** @var DboSource $db */
-        $db = $this->getDataSource();
-        $subQuery = $db->buildStatement([
-            'fields'     => [
-                'EvLog.evaluatee_user_id',
-                'MAX(EvLog.created)'
-            ],
-            'table'      => 'evaluator_change_logs',
-            'alias'      => 'EvLog',
-            'conditions' => [
-                'EvLog.team_id'           => 'EvaluatorChangeLog.team_id',
-                'EvLog.evaluatee_user_id' => 'EvaluatorChangeLog.evaluatee_user_id',
-            ],
-        ], $this);
-        $queryObj = $db->expression("EXISTS (" . $subQuery . ")");
-        return $queryObj;
-    }
 }

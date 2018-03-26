@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', "EvaluatorChangeLogService");
 App::Uses("Evaluator", "Model");
 App::Uses("User", "Model");
 
@@ -20,11 +21,12 @@ class EvaluatorService extends AppService
      *      User ID of evaluatee
      * @param array $evaluatorIds
      *      Array of user IDs of evaluators
+     * @param int   $lastUpdaterUserId
      *
      * @return bool
      *      Insertion result; true for success
      */
-    function setEvaluators(int $teamId, int $userId, array $evaluatorIds)
+    function setEvaluators(int $teamId, int $userId, array $evaluatorIds, int $lastUpdaterUserId = null)
     {
         try {
             $this->TransactionManager->begin();
@@ -33,6 +35,12 @@ class EvaluatorService extends AppService
             $Evaluator = ClassRegistry::init('Evaluator');
             $Evaluator->resetEvaluators($teamId, $userId);
             $Evaluator->insertEvaluators($teamId, $userId, $evaluatorIds);
+
+            if (!empty($lastUpdaterUserId)) {
+                /** @var EvaluatorChangeLogService $EvaluatorChangeLogService */
+                $EvaluatorChangeLogService = ClassRegistry::init("EvaluatorChangeLogService");
+                $EvaluatorChangeLogService->saveLog($teamId, $userId, $lastUpdaterUserId);
+            }
 
             $this->TransactionManager->commit();
 
@@ -61,7 +69,7 @@ class EvaluatorService extends AppService
         /** @var Evaluator $Evaluator */
         $Evaluator = ClassRegistry::init('Evaluator');
         $options = [
-            'fields' => [
+            'fields'     => [
                 'Evaluator.id',
                 'Evaluator.evaluatee_user_id',
                 'Evaluator.evaluator_user_id',
