@@ -66,7 +66,7 @@ class CirclePinsControllerTest extends GoalousControllerTestCase
 
     function testAjaxGetEditModal()
     {
-        // $this->_getCirclePinsCommonMock();
+        $this->_getCirclePinsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         ControllerTestCase::testAction('/circle_pins/ajax_get_edit_modal/circle_id:1', ['method' => 'GET']);
@@ -75,7 +75,7 @@ class CirclePinsControllerTest extends GoalousControllerTestCase
 
     function testPost()
     {
-        // $this->_getCirclePinsCommonMock();
+        $this->_getCirclePinsCommonMock();
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = [
@@ -91,9 +91,9 @@ class CirclePinsControllerTest extends GoalousControllerTestCase
     function _getCirclePinsCommonMock()
     {
         /**
-         * @var CirclePinsController $CirclePins
+         * @var CirclesController $Circles
          */
-        $CirclePins = $this->getMock('CirclePins', [
+        $CirclePins = $this->generate('CirclePins', [
             'components' => [
                 'Session',
                 'Auth'     => ['user', 'loggedIn'],
@@ -132,8 +132,10 @@ class CirclePinsControllerTest extends GoalousControllerTestCase
         $CirclePins->Auth->staticExpects($this->any())->method('user')
                       ->will($this->returnValueMap($value_map)
                       );
-        $CirclePins->CirclePin->current_team_id = 1;
-        $CirclePins->CirclePin->my_uid = 1;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $CirclePins->CirclePin->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $CirclePins->CirclePin->current_team_id = '1';
 
         return $CirclePins;
     }
