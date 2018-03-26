@@ -16,6 +16,7 @@ class GroupTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.group',
+        'app.member_group',
         'app.team',
         'app.team_member'
     );
@@ -109,6 +110,16 @@ class GroupTest extends GoalousTestCase
         foreach ($groups as $v) {
             $this->assertEquals(0, strpos($v['Group']['name'], 'テスト'));
         }
+    }
+
+    function test_findIdsHavingMembers() {
+        $this->_setDefault();
+        $this->Group->MemberGroup->delete(7);
+        $data = $this->Group->findIdsHavingMembers();
+        $this->assertCount(3, $data);
+        $this->assertContains(1, $data);
+        $this->assertContains(4, $data);
+        $this->assertContains(5, $data);
     }
 
     function _setDefault()
