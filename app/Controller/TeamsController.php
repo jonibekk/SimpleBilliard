@@ -1034,7 +1034,7 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         // グループ名を取得
-        $group_info = $this->Team->Group->findAllList($team_id);
+        $group_info = $this->Team->Group->findAllList($team_id, true);
         return $this->_ajaxGetResponse($group_info);
     }
 

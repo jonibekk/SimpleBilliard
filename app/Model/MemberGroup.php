@@ -94,7 +94,7 @@ class MemberGroup extends AppModel
         return $this->find('list', $options);
     }
 
-    function getMyGroupList()
+    function getMyGroupList(bool $requiresUser = false)
     {
         $options = [
             'conditions' => [
@@ -108,6 +108,9 @@ class MemberGroup extends AppModel
                 ]
             ]
         ];
+        if ($requiresUser) {
+            $options['conditions']['MemberGroup.group_id'] = $this->Group->findIdsHavingMembers();
+        }
         $res = $this->find('all', $options);
         $res = Hash::combine($res, '{n}.Group.id', '{n}.Group.name');
         return $res;
@@ -123,9 +126,9 @@ class MemberGroup extends AppModel
     function findGroupListNotExistsVision($isOnlyMyGroup = true)
     {
         if ($isOnlyMyGroup) {
-            $group_list = $this->getMyGroupList();
+            $group_list = $this->getMyGroupList(true);
         } else {
-            $group_list = $this->Group->getAllList();
+            $group_list = $this->Group->getAllList(true, true);
         }
         $group_ids = array_keys($group_list);
         $group_visions = $this->Group->GroupVision->getGroupVisionsByGroupIds($group_ids, true);
