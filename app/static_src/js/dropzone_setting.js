@@ -81,7 +81,6 @@ $(function () {
     previewTemplate: previewTemplateDefault,
     thumbnailWidth: null,
     thumbnailHeight: 240,
-    parallelUploads: 1,
     // ファイルがドロップされた時の処理
     drop: function (e) {
       $uploadFileForm.hide();
