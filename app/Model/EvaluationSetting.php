@@ -3,6 +3,7 @@ App::uses('AppModel', 'Model');
 
 /**
  * EvaluationSetting Model
+ * TODO: make flag management more efficient
  *
  * @property Team $Team
  */
@@ -13,7 +14,8 @@ class EvaluationSetting extends AppModel
     const FLG_EVALUATOR = 'evaluator_flg';
     const FLG_FINAL = 'final_flg';
     const FLG_LEADER = 'leader_flg';
-
+    const FLG_FIXED_EVALUATION_ORDER_FLG = 'fixed_evaluation_order_flg';
+    const FLG_SHOW_ALL_EVALUATION_BEFORE_FREEZE_FLG = 'show_all_evaluation_before_freeze_flg';
     /**
      * Validation rules
      *
@@ -254,6 +256,22 @@ class EvaluationSetting extends AppModel
     function isEnabledLeader()
     {
         return $this->isFlagOn(self::FLG_LEADER);
+    }
+
+    /**
+     * @return bool
+     */
+    function isFixedEvaluationOrder(): bool
+    {
+        return $this->isFlagOn(self::FLG_FIXED_EVALUATION_ORDER_FLG);
+    }
+
+    /**
+     * @return bool
+     */
+    function isShowAllEvaluationBeforeFreeze(): bool
+    {
+        return $this->isFlagOn(self::FLG_SHOW_ALL_EVALUATION_BEFORE_FREEZE_FLG);
     }
 
     private function isFlagOn($flag_name)
