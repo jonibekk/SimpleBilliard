@@ -15,7 +15,7 @@
                         $this->Html->url([
                             'controller' => 'evaluator_settings',
                             'action'     => 'index',
-                        ]) ?>"><?= __('Set evaluators') ?></a>
+                        ]) ?>"><?= __('Evaluator setting') ?></a>
                     </li>
                 </ul>
             </div>

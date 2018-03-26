@@ -39,13 +39,13 @@ $(document).ready(function() {
         ).done(function(data) {
             new Noty({
                 type: 'success',
-                text: '<h4>success</h4>TODO: save message',
+                text: '<h4>'+ cake.word.success + '</h4>' + cake.word.evaluator_setting_saved,
             }).show();
         }).fail(function(xhr) {
             var data = $.parseJSON(xhr.responseText);
             new Noty({
                 type: 'error',
-                text: '<h4>error</h4>' + data.message,
+                text: '<h4>'+ cake.word.error + '</h4>' + data.message,
             }).show();
         }).always(function() {
             form.find('input[type=submit]').prop("disabled", false);
@@ -109,7 +109,7 @@ $(document).ready(function() {
         var evaluatorsCount = $evaluatorsList.find('.eval-list-item').length
         var remaining = MAX_EVALUATORS - evaluatorsCount;
         if (remaining > 0) {
-            $('#remaining_to_add').text(remaining + " remaining ")
+            $('#remaining_to_add').text(cake.word.remaining.replace('%d', remaining.toString()))
         }
         if (remaining === 0 || hasEmptyEvaluator) {
             $('#button_add_evaluator').addClass('hide')

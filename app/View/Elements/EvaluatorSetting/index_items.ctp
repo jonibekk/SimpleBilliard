@@ -18,7 +18,7 @@
             <div class="eval-list-item-center">
                 <p class="font_bold"><?= h($user['User']['display_username']) ?></p>
                 <?php if (0 === count($user['evaluators'])): ?>
-                    <?= __('No evaluators') ?>
+                    <?= __('No evaluator') ?>
                 <?php else: ?>
                     <?php foreach ($user['evaluators'] as $key => $evaluator): ?>
                     <?php if ($key !== 0): ?>

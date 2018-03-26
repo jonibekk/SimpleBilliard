@@ -9,7 +9,7 @@
     <input type="hidden" name="evaluatee_user_id" value="<?= $userEvaluatee['User']['id'] ?>">
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix eval-list">
         <div class="panel-heading">
-            <?= __('Set evaluators') ?>
+            <?= __('Evaluator edit') ?>
         </div>
         <div class="panel-body bg-lightGray">
             <div class="col col-xxs-12 eval-view-panel-body font_verydark p_4px">
@@ -17,7 +17,7 @@
                 $hasLastUpdate = !empty($latestEvaluatorChangeLog);
                 ?>
                 <p>
-                    <span class="font_bold">Last update: </span>
+                    <span><?= __('Last updated') ?>: </span>
                     <?php if ($hasLastUpdate): ?>
                         <?= $latestEvaluatorChangeLog['display_update_time'] ?>
                     <?php else: ?>
@@ -26,17 +26,17 @@
                 </p>
                 <?php if ($hasLastUpdate): ?>
                 <p>
-                    By <?= $latestEvaluatorChangeLog["User"]["display_username"] ?>
+                    <?= $latestEvaluatorChangeLog["User"]["display_username"] ?>
                 </p>
                 <?php endif; ?>
             </div>
         </div>
         <div class="panel-body eval-view-panel-body">
             <div class="form-group">
-                <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px mb_8px font_18px">
+                <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px font_18px">
                     <p class="font_bold"><?= __('Evaluatee') ?></p>
                 </div>
-                <div class="eval-list-item col-xxs-12">
+                <div class="eval-list-item col-xxs-12 mb_8px">
                     <div class="eval-list-item-left">
                         <?=
                         $this->Upload->uploadImage($userEvaluatee, 'User.photo', ['style' => 'medium'],
@@ -50,7 +50,7 @@
                         <p class="font_bold"><?= h($userEvaluatee['User']['display_username']) ?></p>
                         <span class="font_bold">
                             <?php if (!is_null($userEvaluateeCoach)): ?>
-                                Coach: <?=
+                                <?= __('Coach') ?>: <?=
                                 $this->Upload->uploadImage($userEvaluateeCoach, 'User.photo', ['style' => 'medium'],
                                     ['width'  => '24px',
                                      'height' => '24px',
@@ -58,13 +58,14 @@
                                      'class'  => 'img-circle mtb_3px'
                                     ]) ?> <?= h($userEvaluateeCoach['User']['display_username']) ?>
                             <?php else: ?>
-                                Coach: <i class="fa fa-user" aria-hidden="true"></i> No Coach
+                                <?= __('Coach') ?>: <i class="fa fa-user" aria-hidden="true"></i> -
                             <?php endif ?>
                         </span>
                     </div>
                 </div>
-                <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px mb_8px font_18px">
-                    <p class="font_bold"><?= __('Evaluator(s)') ?></p>
+                <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px">
+                    <p class="font_bold font_18px"><?= __('Evaluators') ?></p>
+                    <p class="font_gray"><?= __('Insert team member.') ?></p>
                 </div>
             </div>
         </div>
@@ -98,7 +99,7 @@
         <div class="panel-body eval-list-item">
             <div class="eval-list-item-left"></div>
             <div class="eval-list-item-center vertical-center">
-                <p id="button_add_evaluator" class="font_bold color-blue pointer">+ <?= __('Add another Evaluator') ?><span id="remaining_to_add" class="p_5px font_normal font_lightgray"></span></p>
+                <p id="button_add_evaluator" class="font_bold color-blue pointer">+ <?= __('Add evaluator') ?><span id="remaining_to_add" class="p_5px font_normal font_lightgray"></span></p>
             </div>
         </div>
         <div class="panel-body addteam_pannel-footer">
@@ -108,7 +109,7 @@
                     ]) ?>">
                         <?= __('Cancel') ?>
                     </a>
-                    <input class="btn btn-primary" type="submit" value="Save">
+                    <input class="btn btn-primary" type="submit" value="<?= __('Save') ?>">
                 </div>
             </div>
         </div>
