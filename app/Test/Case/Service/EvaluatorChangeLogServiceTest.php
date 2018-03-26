@@ -78,4 +78,30 @@ class EvaluatorChangeLogServiceTest extends GoalousTestCase
         $this->assertEquals($evaluateeId, $queryResult['evaluatee_user_id']);
         $this->assertEquals($updaterId, $queryResult['last_update_user_id']);
     }
+
+    public function test_getLatestLog_success()
+    {
+        $teamId = 1;
+        $evaluateeId = 2;
+        $evaluatorIdFirstArray = [3, 4];
+        $evaluatorIdSecondArray = [4, 5];
+        $firstUpdaterId = 6;
+        $secondUpdaterId = 7;
+
+        $this->Evaluator->insertEvaluators($teamId, $evaluateeId, $evaluatorIdFirstArray);
+        $this->EvaluatorChangeLogService->saveLog($teamId, $evaluateeId, $firstUpdaterId);
+
+        $this->Evaluator->resetEvaluators($teamId, $evaluateeId);
+        sleep(1);
+
+        $this->Evaluator->insertEvaluators($teamId, $evaluateeId, $evaluatorIdSecondArray);
+        $this->EvaluatorChangeLogService->saveLog($teamId, $evaluateeId, $secondUpdaterId);
+
+        $query = $this->EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $evaluateeId);
+
+        $this->assertEquals($teamId, $query['team_id']);
+        $this->assertEquals($evaluateeId, $query['evaluatee_user_id']);
+        $this->assertEquals($secondUpdaterId, $query['last_update_user_id']);
+        $this->assertEquals(implode(",", $evaluatorIdSecondArray), $query['evaluator_user_ids']);
+    }
 }
