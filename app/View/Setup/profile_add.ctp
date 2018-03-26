@@ -29,7 +29,7 @@
 
                     <div class="col setup-profile-add-picture-container">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
-                            <div id="preview-profile-add" 
+                            <div
                                 class="fileinput-preview thumbnail nailthumb-container setup-profile-add-picture-thumbnail"
                                 data-trigger="fileinput"
                                 style="width: 150px; height: 150px;">
@@ -52,8 +52,7 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false,
-                                    'id'           => 'photo-input-profile-add'
+                                    'required'     => false
                                 ]) ?>
                         </span>
                             </div>
@@ -153,14 +152,6 @@ Need New Customers?<br>\n
                         }
                     }
                 });
-            });
-        </script>
-        <?php $this->end() ?>
-        <?php $this->Html->Script('js/gl_basic') ?>
-        <?php $this->append('script') ?>
-        <script type="text/javascript">
-            $(function() {
-                bindExifRotate('photo-input-profile-add', 'preview-profile-add');
             });
         </script>
         <?php $this->end() ?>

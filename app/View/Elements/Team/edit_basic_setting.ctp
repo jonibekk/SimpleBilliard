@@ -47,7 +47,7 @@
 
             <div class="col col-sm-6">
                 <div class="fileinput_small fileinput-new" data-provides="fileinput">
-                    <div id="photo-preview-edit-basic" class="fileinput-preview thumbnail nailthumb-container photo-design"
+                    <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                          data-trigger="fileinput"
                          style="width: 96px; height: 96px; line-height:96px;">
                         <?php
@@ -74,8 +74,7 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false,
-                                    'id'           => 'photo-input-edit-basic'
+                                    'required'     => false
                                 ]) ?>
                         </span>
                         <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
@@ -163,13 +162,6 @@
                 $('#TeamDeleteForm').submit();
             }
         });
-    });
-</script>
-<?php $this->end() ?>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(function() {
-        bindExifRotate('photo-input-edit-basic', 'photo-preview-edit-basic');
     });
 </script>
 <?php $this->end() ?>

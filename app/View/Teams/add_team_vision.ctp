@@ -47,7 +47,7 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
-                            <div id="preview-add-team-vision" class="fileinput-preview thumbnail nailthumb-container photo-design"
+                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
                                  style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
@@ -67,8 +67,7 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false,
-                                    'id'           => 'photo-input-add-team-vision'
+                                    'required'     => false
                                 ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
@@ -132,14 +131,6 @@
                 }
             }
         });
-    });
-</script>
-<?php $this->end() ?>
-<?php $this->Html->Script('js/gl_basic') ?>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(function() {
-        bindExifRotate('photo-input-add-team-vision', 'preview-add-team-vision');
     });
 </script>
 <?php $this->end() ?>

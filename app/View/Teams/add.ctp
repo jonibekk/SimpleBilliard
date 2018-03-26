@@ -47,7 +47,7 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
-                            <div id="preview-team-add" class="fileinput-preview thumbnail nailthumb-container photo-design"
+                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
                                  style="width: 96px; height: 96px; line-height:96px;">
                                 <i class="fa fa-plus photo-plus-large"></i>
@@ -67,8 +67,7 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false,
-                                    'id'           => 'photo-input-team-add',
+                                    'required'     => false
                                 ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
@@ -135,7 +134,6 @@
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(function() {
-        bindExifRotate('photo-input-team-add', 'preview-team-add');
         $('[rel="tooltip"]').tooltip();
 
         $('#addOtherTeam').bootstrapValidator({
