@@ -1,20 +1,28 @@
 $(document).ready(function () {
 
   //アップロード画像選択時にトリムして表示
-  $('.fileinput').fileinput().on('change.bs.fileinput', function () {
+  $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
   });
   //アップロード画像選択時にトリムして表示
-  $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
+  $('.fileinput_small').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
   });
   //アップロード画像選択時にトリムして表示
-  $('.fileinput_very_small').fileinput().on('change.bs.fileinput', function () {
+  $('.fileinput_very_small').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 34, height: 34, fitDirection: 'center center'});
   });
   //アップロード画像選択時にトリムして表示
-  $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+  $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
+  });
+  // //アップロード画像選択時にトリムして表示
+  // $('.fileinput_cover').fileinput().on('change.bs.fileinput', function (e) {
+  //   $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
+  // });
+
+  $('.fileinput-exists,.fileinput-new').fileinput().on('change.bs.fileinput', function (e) {
+    bindExifRotatation(this);
   });
 
 
@@ -643,23 +651,19 @@ window.addEventListener('load', function () {
 });
 
 // EXIF解析＋画像反転
-function bindExifRotate(inputid, inputpreviewid){
-  document.getElementById(inputpreviewid).addEventListener('DOMNodeInserted', function() {
-    console.log("DOMNodeInserted");
-    var input = document.getElementById(inputid);
-    if(!input.files || !input.files[0]){
-      return false;
-    }
-    var file = input.files[0];
-    loadImage.parseMetaData(file, function(data) {
+function bindExifRotatation(parentElement){
+var fileinput = $(parentElement).find('input:file').first().get(0);
+if(!fileinput.files ||!fileinput.files.length){
+  return;
+}
+var inputSelector = $(parentElement).find('.fileinput-preview').first();
+loadImage.parseMetaData(fileinput.files[0], function(data) {
       var styles;
       var orientation = 1;
       //if exif data available, update orientation
       if (data.exif) {
           orientation = data.exif.get('Orientation');
       }
-      
-      console.log(orientation);
 
       var angle = 0;
       var flip = false;
@@ -714,8 +718,6 @@ function bindExifRotate(inputid, inputpreviewid){
         };
       }
 
-      $('#' + inputpreviewid).find('img').css(styles);
-    console.log(styles);
-    }); 
-  }, false);
+      $(parentElement).find('img').css(styles);
+    });
 }
