@@ -19,12 +19,77 @@ class CirclePin extends AppModel
      */
     public $validate = [
         'circle_orders'         => [
-            'isString'  => [
-                'rule' => ['isString',],
-            ],
-            'maxLength' => ['rule' => ['maxLength', 4294967295]],
+            'isString'      => ['rule' => ['isString']],
+            'maxLength'     => ['rule' => ['maxLength', 4294967295]],
+            'csv_format'    => ['rule' => ['customValidateIsCsvFormat']],
+            'circle_exists'  => ['rule' => ['customValidateIsCircleExists']],
+            'is_belong'     => ['rule' => ['customValidateIsBelong']],
         ],
     ];
+
+    /**
+     * Is Csv Format
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateIsCsvFormat(array $val): bool
+    {
+        if(!preg_match("/^'\d+(?:,\d+)*'$/", $val['circle_orders'])){
+            GoalousLog::error("customValidateIsCsvFormat", $val);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Is Circle Exists
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateIsCircleExists(array $val): bool
+    {
+        $circleIds = explode(',', substr($val['circle_orders'],1,-1));
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init("Circle");
+
+        foreach ($circleIds as $key => $circleId) {
+            $exists = $Circle->getCirclesByIds($circleId);
+            if(empty($exists)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Is Belong
+     *
+     * @param array $val
+     *
+     * @return bool
+     */
+    function customValidateIsBelong(array $val): bool
+    {
+        $circleIds = explode(',', substr($val['circle_orders'],1,-1));
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init("CircleMember");
+
+        foreach ($circleIds as $key => $circleId) {
+            $belongs = $CircleMember->isBelong($circleId);
+            if(!$belongs) {
+                GoalousLog::error("customValidateIsBelong", [false]);
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     /**
      * @param int $userId
@@ -86,8 +151,9 @@ class CirclePin extends AppModel
                 }
             } else {
                 $row['circle_orders'] = $db->value($pinOrders, 'string');
-                $options['id'] = $row['id'];
+                // $options['id'] = $row['id'];
                 if(!$this->save($row, $options)) {
+                    debug($this->validationErrors); die();
                     GoalousLog::error("[CirclePin]: Update Failure", $row);
                     throw new Exception("Error Processing update Request", 1);             
                 }
@@ -188,8 +254,6 @@ class CirclePin extends AppModel
                 'Circle.photo_file_name',
                 'Circle.public_flg',
                 'Circle.team_all_flg',
-                'Circle.modified',
-                'Circle.created',
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ]

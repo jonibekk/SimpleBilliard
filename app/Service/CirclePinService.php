@@ -8,10 +8,35 @@ App::uses('CirclesController', 'Controller');
 App::uses('AppUtil', 'Util');
 
 /**
- * Class CircleMemberService
+ * Class CirclePinService
  */
 class CirclePinService extends AppService
 {
+    /**
+     * Circle Pins Order Validation
+     *
+     * @param  string $pinOrder
+     *
+     * @return true|CakeResponse
+     */
+    function validateApprovalPinOrder($pinOrder)
+    {
+        /** @var CirclePin $CirclePin */
+        $CirclePin = ClassRegistry::init("CirclePin");
+
+        $validation = $CirclePin->validates();
+
+        if($validation !== true){
+            $validation['circle_orders'] = $this->_validationExtract($CirclePin->validationErrors);
+        }
+
+        if(isset($validation)){
+            return $validation;
+        }
+
+        return true;
+    }
+
     /**
      * 自分が所属しているサークルのソート順をDBへセットする
      * @return bool

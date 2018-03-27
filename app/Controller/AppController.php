@@ -505,9 +505,11 @@ class AppController extends BaseController
 
     public function _setMyCircle()
     {
-        $my_circles = ClassRegistry::init('CirclePinService')->getMyCircleSortedList($this->Auth->user('id'), $this->current_team_id);
-        $defaultCircle = $my_circles['default_circle'];
-        $regularCircles = $my_circles['regular_circle'];
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init('CirclePinService');
+        $myCircles = $CirclePinService->getMyCircleSortedList($this->Auth->user('id'), $this->current_team_id);
+        $defaultCircle = $myCircles['default_circle'];
+        $regularCircles = $myCircles['regular_circle'];
 
         $this->set('defaultCircle', $defaultCircle);
         $this->set('my_circles', $regularCircles);

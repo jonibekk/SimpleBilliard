@@ -223,7 +223,7 @@ window.onload = function(){
         var updateOrder = function(){
             var senddata = {
                 'data[_Token][key]': cake.data.csrf_token.key,
-                'csv': makeParams(),
+                'pin_order': makeParams(),
             };
 
             // var xhr = new XMLHttpRequest();
@@ -291,6 +291,7 @@ window.onload = function(){
                 document.getElementById('circles-edit-page').classList.remove('modal-open');
             });
             var url = self.getAttribute('data-url');
+            console.log(url);
             if(!url){
                 return false;
             }

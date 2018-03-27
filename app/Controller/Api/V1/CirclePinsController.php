@@ -1,8 +1,5 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
-App::uses('AppController', 'Controller');
-App::uses('CirclesController', 'Controller');
-App::uses('Circle', 'Model');
 App::import('Service', 'CirclePinService');
 /**
  * Class CirclePinsController
@@ -29,15 +26,22 @@ class CirclePinsController extends ApiController
     public function post()
     {
         if(!isset($this->request->data)) {
-            return $this->_getResponseBadFail("No Data");
+            return $this->_getResponseBadFail();
         }
 
-        if(!array_key_exists('csv', $this->request->data)) {
-            return $this->_getResponseInternalServerError("Invalid Data");
+        if(!array_key_exists('pin_order', $this->request->data)) {
+            return $this->_getResponseBadFail();
         }
 
-        if (!ClassRegistry::init("CirclePinService")->setCircleOrders($this->Auth->user('id'), $this->current_team_id, $this->request->data['csv'])) {
-            return $this->_getResponseInternalServerError("Failed updating circle pin information");
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init("CirclePinService");
+
+        if(!$CirclePinService->validateApprovalPinOrder($this->request->data['pin_order'])) {
+            return $this->_getResponseBadFail();
+        }
+      
+        if (!$CirclePinService->setCircleOrders($this->Auth->user('id'), $this->current_team_id, $this->request->data['pin_order'])) {
+            return $this->_getResponseInternalServerError();
         } else {
             //TODO:hamburger update => ClassRegistry::init('AppController')->_setMyCircle();
         }
