@@ -58,7 +58,7 @@ class CirclePin extends AppModel
         $Circle = ClassRegistry::init("Circle");
 
         foreach ($circleIds as $key => $circleId) {
-            $exists = $Circle->getCirclesByIds($circleId);
+            $exists = $Circle->getById($circleId);
             if(empty($exists)) {
                 return false;
             }
@@ -190,7 +190,7 @@ class CirclePin extends AppModel
         try {    
             $row = $this->getUnique($userId, $teamId);
 
-            if(!isset($row)){
+            if(empty($row)){
                 return true;
             }
 

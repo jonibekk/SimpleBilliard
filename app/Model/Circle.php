@@ -338,32 +338,6 @@ class Circle extends AppModel
         return $this->find('list', $options);
     }
 
-    function getCirclesByIds($circle_ids)
-    {
-        $options = [
-            'conditions' => [
-                'Circle.id'      => $circle_ids,
-                'Circle.team_all_flg' => false,
-            ],
-            'fields'     => [
-                'Circle.id',
-                'Circle.name',
-                'Circle.photo_file_name',
-                'Circle.circle_member_count',
-                'Circle.created',
-                'Circle.modified',
-                'Circle.public_flg',
-                'Circle.team_all_flg',
-            ],
-        ];
-        $results = $this->find('all', $options);
-        $Upload = new UploadHelper(new View());
-        foreach ($results as &$result) {
-            $result['Circle']['image'] = $Upload->uploadUrl($result, 'Circle.photo', ['style' => 'small']);
-        }
-        return $results;
-    }
-
     function getCirclesAndMemberById($circle_ids)
     {
         $active_user_ids = $this->Team->TeamMember->getActiveTeamMembersList();
