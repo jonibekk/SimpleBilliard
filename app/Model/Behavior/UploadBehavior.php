@@ -954,48 +954,50 @@ class UploadBehavior extends ModelBehavior
 
     function saveRotatedFile($filePath)
     {
+        // Temporarly increase memory limit for image manipulation
         ini_set('memory_limit', '512M');
-        try {
-            $flip = false;
-            $degrees = $this->getDegrees($filePath, $flip);
-            // //回転の必要ない場合は何もしない
-            // if ($degrees === 0 && $flip !== false) {
-            //     return true;
-            // }
 
-            $imgMimeType = $this->getImageMimeSubType($filePath);
+        $flip = false;
+        $degrees = $this->getDegrees($filePath, $flip);
 
-            $createHandler = $this->getCreateHandler($imgMimeType);
-            $outputHandler = $this->getOutputHandler($imgMimeType);
-            // Model/AttachFileTest gives error using _getImgSrc
-            // $image = $this->_getImgSource($createHandler, $filePath);
-            $image = function(){
-                return $createHandler($filePath);
-            };
-            if (!$image) {
-                $this->log(sprintf('creating img object was failed.'));
-                $this->log(Debugger::trace());
-                $this->_backupFailedImgFile(basename($filePath), $filePath);
-                return false;
-            }
-            // 回転
-            $image = imagerotate($image, $degrees, 0);
-            // 反転
-            if($flip && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
-                $this->log(sprintf('flipping image object has failed.'));
-                $this->log(Debugger::trace());
-                $this->_backupFailedImgFile(basename($filePath), $filePath);
-                return false;
-            }
-            //保存
-            $outputHandler($image, $filePath);
-            imagedestroy($image);
-            return true;
-        } catch (Exception $e) {
+        $imgMimeType = $this->getImageMimeSubType($filePath);
+
+        $createHandler = $this->getCreateHandler($imgMimeType);
+        if($createHandler === false){
             return false;
-        } finally {
-            ini_set('memory_limit', '256M');
         }
+        $outputHandler = $this->getOutputHandler($imgMimeType);
+
+        $image = $this->_getImgSource($createHandler, $filePath);
+
+        if (!$image) {
+            $this->log(sprintf('creating img object was failed.'));
+            $this->log(Debugger::trace());
+            $this->_backupFailedImgFile(basename($filePath), $filePath);
+            return false;
+        }
+
+        // Rotation
+        $image = imagerotate($image, $degrees, 0);
+
+        // Flipping
+        if($flip && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
+            $this->log(sprintf('flipping image object has failed.'));
+            $this->log(Debugger::trace());
+            $this->_backupFailedImgFile(basename($filePath), $filePath);
+            return false;
+        }
+
+        // Save
+        $outputHandler($image, $filePath);
+
+        // Destroy
+        imagedestroy($image);
+
+        // Set back the memory limit
+        ini_set('memory_limit', '256M');
+
+        return true;
     }
 
     function getDegrees($file_path, &$flip)
