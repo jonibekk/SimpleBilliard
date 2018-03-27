@@ -24,6 +24,7 @@ var Mention = function(target) {
       </div></li>',
       insertTpl: '@${text}',
       searchKey : 'text',
+      suspendOnComposing: false,
       // data: [{text:'A'}]
       callbacks: {
         remoteFilter: function(query, callback) {
