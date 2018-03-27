@@ -203,7 +203,7 @@ class CircleTest extends GoalousTestCase
         $circles = $this->Circle->getCirclesByKeyword('チーム');
         $this->assertNotEmpty($circles);
         $circles = $this->Circle->getCirclesByKeyword('全体');
-        $this->assertEmpty($circles);
+        $this->assertNotEmpty($circles);
 
         // 秘密サークル
         $circles = $this->Circle->getCirclesByKeyword('秘密サークル');
@@ -231,7 +231,7 @@ class CircleTest extends GoalousTestCase
         $circles = $this->Circle->getPublicCirclesByKeyword('チーム');
         $this->assertNotEmpty($circles);
         $circles = $this->Circle->getPublicCirclesByKeyword('全体');
-        $this->assertEmpty($circles);
+        $this->assertNotEmpty($circles);
 
         // 秘密サークル
         $circles = $this->Circle->getPublicCirclesByKeyword('秘密サークル');
