@@ -59,6 +59,17 @@ class EvaluatorsServiceTest extends GoalousTestCase
     }
 
     /**
+     * Test removing all evaluators from an user
+     */
+    public function test_setEmptyEvaluator_success()
+    {
+        $teamId = 2;
+        $evaluateeUserId = 1;
+
+        $this->assertTrue($this->EvaluatorService->setEvaluators($teamId, $evaluateeUserId));
+    }
+
+    /**
      * Test getting the evaluators of an user
      */
     public function test_getEvaluatorsByTeamIdAndEvaluateeUserId()
