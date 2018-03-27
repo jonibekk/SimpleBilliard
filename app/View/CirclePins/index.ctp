@@ -17,7 +17,7 @@
                     </div>
                     <div id="pinned-body" class="pin-circle-body">
                         <div class="pin-circle-list-item ignore-elements">
-                            <i class="fas fa-align-justify style-hidden pin-circle-front-drag-handler"></i>
+                            <i class="fa fa-align-justify style-hidden pin-circle-front-drag-handler"></i>
                                 <?=
                                 $this->Html->image('pre-load.svg',
                                     [
@@ -30,11 +30,11 @@
                                 )
                                 ?>
                                 <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
-                                <i class="fas fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
+                                <i class="fa fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
                                 <div class="pin-circle-dropdown-content style-hidden">
                                     <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url=""></div>
                                 </div>                                
-                                <i class="fa-pull-right-less fas fa-thumbtack fa-lg style-hidden"></i>
+                                <i class="fa-pull-right-less fa fa-thumbtack fa-lg style-hidden"></i>
                         </div>
                         <ul id="pinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>

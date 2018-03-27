@@ -206,25 +206,6 @@ const config = {
       path: compiled_assets_dir + '/css'
     }
   },
-  css_fonts: {
-    src: [
-      assets_dir + '/css/fontawesome-all.min.css',
-      // assets_dir + '/css/font-awesome.min.css',
-    ],
-    webfont_src: [
-      assets_dir + '/webfonts/*.{eot,svg,ttf,woff,woff2}',
-    ],
-    font_src: [
-      assets_dir + '/fonts/*.{eot,svg,ttf,woff,woff2}',
-    ],
-    watch_files: [assets_dir + '/css/fontawesome-all.min.css'],
-    output: {
-      file_name: 'vendors_fonts',
-      path: compiled_assets_dir + '/css',
-      path_name_webfonts: compiled_assets_dir + '/webfonts',
-      path_name_fonts: compiled_assets_dir + '/fonts',
-    }
-  },
   less: {
     src: {
       common: assets_dir + '/less/common.less',

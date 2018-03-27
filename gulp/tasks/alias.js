@@ -194,9 +194,6 @@ gulp.task('react', done => {
 gulp.task('css', done => {
   return runSequence(
     'css_vendor',
-    'css_fonts:min',
-    'css_fonts:copy',
-    'css_fonts:copyold',
     'less',
     done
   )

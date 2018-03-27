@@ -24,32 +24,6 @@ gulp.task('css_vendor', () => {
     .pipe(duration('css_vendor'))
 })
 
-gulp.task('css_fonts:min', () => {
-  let obj = gulp.src([...config.css_fonts.src])
-    .pipe(plumber())
-    .pipe(autoprefixer())
-    .pipe(concat(config.css_fonts.output.file_name + '.min.css'))
-
-  if (process.env.NODE_ENV === "production") {
-    obj = obj.pipe(cssmin());
-  }
-
-  return obj.pipe(gulp.dest(config.css_fonts.output.path))
-    .pipe(duration('css_fonts:min'))
-})
-
-gulp.task('css_fonts:copy', () => {
-  return gulp.src([...config.css_fonts.webfont_src])
-    .pipe(gulp.dest(config.css_fonts.output.path_name_webfonts))
-    .pipe(duration('css_fonts:copy'))    
-})
-
-gulp.task('css_fonts:copyold', () => {
-  return gulp.src([...config.css_fonts.font_src])
-    .pipe(gulp.dest(config.css_fonts.output.path_name_fonts))
-    .pipe(duration('css_fonts:copyold'))    
-})
-
 gulp.task('less:common', () => {
     buildLess(config.less.src.common, false)
 })
