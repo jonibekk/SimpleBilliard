@@ -35,9 +35,9 @@ class CirclePin extends AppModel
     public function getUnique(int $userId, int $teamId)
     {
         $options = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'del_flg' => false,
+            'CirclePin.user_id' => $userId,
+            'CirclePin.team_id' => $teamId,
+            'CirclePin.del_flg' => false,
         ];
 
         $res = $this->find('first', $options);
@@ -86,11 +86,13 @@ class CirclePin extends AppModel
                 }
             } else {
                 $row['circle_orders'] = $db->value($pinOrders, 'string');
-                if(!$this->updateAll($row, $options)) {
+                $options['id'] = $row['id'];
+                if(!$this->save($row, $options)) {
                     GoalousLog::error("[CirclePin]: Update Failure", $row);
                     throw new Exception("Error Processing update Request", 1);             
                 }
             }
+
             $this->commit();         
         } catch (Exception $e) {    
             GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);
@@ -99,7 +101,7 @@ class CirclePin extends AppModel
             $this->rollback();
             return false;
         }
-        
+      
         return true;
     }
 
@@ -122,7 +124,7 @@ class CirclePin extends AppModel
         try {    
             $row = $this->getUnique($userId, $teamId);
 
-            if(!isset($row) || !array_key_exists('circle_orders', $row)){
+            if(!isset($row)){
                 return true;
             }
 
@@ -132,10 +134,10 @@ class CirclePin extends AppModel
             if(strpos($orders, $find) !== false){
                 $orders = str_replace($find, ',', $orders);
                 $row['circle_orders'] = $this->getDataSource()->value(substr($orders, 1, -1), 'string');
-
+                $options['id'] = $row['id'];
                 $this->begin();
 
-                if(!$this->updateAll($row, $options)) {
+                if(!$this->save($row, $options)) {
                     throw new Exception("Error Processing update Request", 1);             
                 }
                 $this->commit(); 
@@ -212,7 +214,7 @@ class CirclePin extends AppModel
         try {
             $row = $this->getUnique($userId, $teamId);
             if(!empty($row)){
-                return $row['circle_orders'];
+                return substr($row['circle_orders'],1,-1);
             }      
         } catch (Exception $e) {    
             GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);

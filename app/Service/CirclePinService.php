@@ -12,23 +12,6 @@ App::uses('AppUtil', 'Util');
  */
 class CirclePinService extends AppService
 {
-    // /**
-    //  * 自分が所属しているサークルを抜けるときに更新処理を行うメソッド
-    //  * @return bool
-    //  */
-    // public function deleteCircleOrder(int $userId, int $teamId, int $circleId): bool
-    // {
-    //     try{
-    //         ClassRegistry::init('CirclePin')->deleteId($userId, $teamId, $circleId);
-    //     } catch (RuntimeException $e) {
-    //         $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-    //         $this->log($e->getTraceAsString());
-    //         return false;
-    //     }
-
-    //     return true;
-    // }
-
     /**
      * 自分が所属しているサークルのソート順をDBへセットする
      * @return bool
@@ -61,7 +44,7 @@ class CirclePinService extends AppService
         if($pinOrderInformation !== ''){
             $pinOrders = explode(',', $pinOrderInformation);
         }
-        
+
         foreach ($circles as &$circle) {
             $circle['Data'] = array_merge($circle['Circle'],$circle['CircleMember']);
             $circle['Data']['image'] = $Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']);
@@ -77,9 +60,9 @@ class CirclePinService extends AppService
         $counter = 0;
         $circleIds = array_column($circles, 'id');
         foreach ($pinOrders as $key => $circleId) {
-            $key = array_search($circleId, $circleIds);
-            if($key !== false){
-                $circles[$key]['order'] = $counter;
+            $arrayKey = array_search($circleId, $circleIds);
+            if($arrayKey !== false){
+                $circles[$arrayKey]['order'] = $counter;
                 $counter++;
             }
         }
