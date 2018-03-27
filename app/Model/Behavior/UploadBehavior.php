@@ -990,6 +990,8 @@ class UploadBehavior extends ModelBehavior
             return true;
         } catch (Exception $e) {
             return false;
+        } finally {
+            ini_set('memory_limit', '256M');
         }
     }
 
