@@ -54,10 +54,10 @@ class CirclePinTest extends GoalousTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $circle_orders = '1,2,3,4,5,6,7,8,9,10';
+        $circle_orders = '1,2,3,4,5,6,7,8,9,10,11';
         $this->_setDefault($uid, $team_id, $circle_orders);
-        $res = $this->CirclePin->getUnique(1, 1);
-        $this->assertNotEmpty($res);
+        $res = $this->CirclePin->getUnique($uid, $team_id);
+        $this->assertEquals($circle_orders,$res['circle_orders']);
     }
 
     function testInsertUpdate()
@@ -78,8 +78,11 @@ class CirclePinTest extends GoalousTestCase
         $circle_id = 2;
         $this->_setDefault($uid, $team_id, $circle_orders);
         $res = $this->CirclePin->insertUpdate($uid,$team_id,$circle_orders);
+        $this->assertTrue($res);
         $res = $this->CirclePin->deleteId($uid, $team_id, $circle_id);
         $this->assertTrue($res);
+        $res = $this->CirclePin->getUnique($uid, $team_id);
+        $this->assertEquals('1,3,4,5,6,7,8,9,10',substr($res['circle_orders'],1,-1));
     }
 
     public function testGetJoinedCircleData()

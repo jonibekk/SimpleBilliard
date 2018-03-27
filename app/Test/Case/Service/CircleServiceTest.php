@@ -26,6 +26,7 @@ class CircleServiceTest extends GoalousTestCase
         'app.user',
         'app.circle',
         'app.circle_member',
+        'app.circle_pin',
         'app.post',
         'app.post_share_circle',
         'app.local_name',
