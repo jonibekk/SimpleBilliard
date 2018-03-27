@@ -967,7 +967,11 @@ class UploadBehavior extends ModelBehavior
 
             $createHandler = $this->getCreateHandler($imgMimeType);
             $outputHandler = $this->getOutputHandler($imgMimeType);
-            $image = $this->_getImgSource($createHandler, $filePath);
+            // Model/AttachFileTest gives error using _getImgSrc
+            // $image = $this->_getImgSource($createHandler, $filePath);
+            $image = function(){
+                return $createHandler($filePath);
+            };
             if (!$image) {
                 $this->log(sprintf('creating img object was failed.'));
                 $this->log(Debugger::trace());
@@ -976,9 +980,8 @@ class UploadBehavior extends ModelBehavior
             }
             // 回転
             $image = imagerotate($image, $degrees, 0);
-            // imagedestroy($image);
             // 反転
-            if($flip && !imageflip($image, IMG_FLIP_VERTICAL)){
+            if($flip && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
                 $this->log(sprintf('flipping image object has failed.'));
                 $this->log(Debugger::trace());
                 $this->_backupFailedImgFile(basename($filePath), $filePath);
