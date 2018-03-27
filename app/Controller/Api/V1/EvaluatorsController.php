@@ -29,7 +29,7 @@ class EvaluatorsController extends ApiController
     {
         $userId = $this->Auth->user('id');
         $evaluateeUserId = Hash::get($this->request->data, 'evaluatee_user_id');
-        $evaluatorUserIds = Hash::get($this->request->data, 'evaluator_user_ids');
+        $evaluatorUserIds = Hash::get($this->request->data, 'evaluator_user_ids') ?? [];
 
         //Check if team has evaluation feature
         /** @var ExperimentService $ExperimentService */
@@ -56,6 +56,7 @@ class EvaluatorsController extends ApiController
                 return $this->_getResponseBadFail(__('Evaluator has duplicates.'));
             }
         }
+
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
         $coachId = $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId);

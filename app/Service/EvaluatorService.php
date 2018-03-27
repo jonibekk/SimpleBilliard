@@ -26,7 +26,7 @@ class EvaluatorService extends AppService
      * @return bool
      *      Insertion result; true for success
      */
-    function setEvaluators(int $teamId, int $userId, array $evaluatorIds, int $lastUpdaterUserId = null)
+    function setEvaluators(int $teamId, int $userId, array $evaluatorIds = [], int $lastUpdaterUserId = null)
     {
         try {
             $this->TransactionManager->begin();
