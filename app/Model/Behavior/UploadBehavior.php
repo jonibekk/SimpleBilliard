@@ -989,7 +989,6 @@ class UploadBehavior extends ModelBehavior
             imagedestroy($image);
             return true;
         } catch (Exception $e) {
-            ini_set('memory_limit', '256M');
             return false;
         }
     }
