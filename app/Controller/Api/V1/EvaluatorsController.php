@@ -3,6 +3,7 @@ App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'ExperimentService');
 App::import('Service', "EvaluatorService");
 App::uses('TeamMember', 'Model');
+App::uses("User", "Model");
 
 /**
  * Created by PhpStorm.
@@ -40,7 +41,7 @@ class EvaluatorsController extends ApiController
         }
 
         // Validate parameters
-        if (empty($evaluateeUserId)) {
+        if (empty($evaluateeUserId) || !is_int($evaluateeUserId)) {
             return $this->_getResponseBadFail(__('Parameter is invalid'));
         }
         //If evaluatee user_id in evaluator array, send error
@@ -50,11 +51,39 @@ class EvaluatorsController extends ApiController
         if (count($evaluatorUserIds) > self::MAX_NUMBER_OF_EVALUATORS) {
             return $this->_getResponseBadFail(__('Evaluator setting cannot be saved.'));
         }
+        // Check for invalid evaluator user IDs
+        foreach ($evaluatorUserIds as $evaluatorID) {
+            if ($evaluatorID == 0 || !is_int($evaluatorID)) {
+                return $this->_getResponseBadFail(__('Parameter is invalid'));
+            }
+        }
         //Check duplicate
         foreach (array_values(array_count_values($evaluatorUserIds)) as $count) {
             if ($count > 1) {
                 return $this->_getResponseBadFail(__('Evaluator has duplicates.'));
             }
+        }
+
+        /**@var User $User */
+        $User = ClassRegistry::init("User");
+        $User->team_id = $this->current_team_id;
+
+        $existInactiveUserFlag = false;
+        $inactiveNamesList = [];
+
+        //Check inactive user
+        foreach ($evaluatorUserIds as $evaluatorUserId) {
+
+            if (!($User->isActiveUsers([$evaluatorUserId]))) {
+                $existInactiveUserFlag = true;
+                $inactiveNamesList[] = $User->getById($evaluatorUserId)['display_username'];
+            }
+        }
+
+        if ($existInactiveUserFlag) {
+            $connectorString = (count($inactiveNamesList) > 1) ? ' are ' : ' is ';
+            return $this->_getResponseBadFail(__('%s %s inactive',
+                implode(", ", $inactiveNamesList), $connectorString));
         }
 
         /** @var TeamMember $TeamMember */
