@@ -1244,7 +1244,7 @@ class TeamsController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        $redirectTo = "http://goalous2/teams/main#/group_vision/" . $this->current_team_id;
+        $redirectTo = "/teams/main#/group_vision/" . $this->current_team_id;
 
         if (!$groupVisionId = Hash::get($this->request->params, 'named.group_vision_id')) {
             $this->Notification->outError(__("Invalid screen transition."));

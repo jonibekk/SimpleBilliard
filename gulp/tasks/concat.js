@@ -45,6 +45,14 @@ gulp.task('js_evaluation:concat', () => {
     .pipe(duration('js_evaluation:concat'))
 });
 
+gulp.task('js_evaluator_settings:concat', () => {
+    return gulp.src([...config.js.pages.evaluator_settings])
+.pipe(plumber())
+    .pipe(concat(config.js.output.evaluator_setting_script_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/jseval_cat'))
+    .pipe(duration('js_evaluator_settings:concat'))
+});
+
 gulp.task('js_payment:concat', () => {
     return gulp.src([...config.js.pages.payments])
         .pipe(plumber())

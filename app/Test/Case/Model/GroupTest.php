@@ -98,7 +98,7 @@ class GroupTest extends GoalousTestCase
         $groups = $this->Group->getGroupsByKeyword('グループ');
         $this->assertNotEmpty($groups);
         foreach ($groups as $v) {
-            $this->assertEquals(0, strpos($v['Group']['name'], 'グループ'));
+            $this->assertTrue(strpos($v['Group']['name'], 'グループ') !== false);
         }
 
         $groups = $this->Group->getGroupsByKeyword('');
@@ -107,7 +107,7 @@ class GroupTest extends GoalousTestCase
         $groups = $this->Group->getGroupsByKeyword('テスト');
         $this->assertNotEmpty($groups);
         foreach ($groups as $v) {
-            $this->assertEquals(0, strpos($v['Group']['name'], 'テスト'));
+            $this->assertTrue(strpos($v['Group']['name'], 'テスト') !== false);
         }
     }
 

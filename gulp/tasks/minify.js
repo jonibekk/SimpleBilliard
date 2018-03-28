@@ -84,6 +84,19 @@ gulp.task("js_evaluation:uglify", () => {
         .pipe(duration('js_evaluation:uglify'));
 });
 
+gulp.task("js_evaluator_settings:uglify", () => {
+    let obj = gulp.src(config.dest + "/jseval_cat/" + config.js.output.evaluator_setting_script_name + '.js');
+    if (process.env.NODE_ENV === "production") {
+        obj = obj.pipe(uglify());
+    }
+
+    return obj.pipe(rename({
+        suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.js.output.path))
+    .pipe(duration('js_evaluator_setting:uglify'));
+});
+
 gulp.task("js_payment:uglify", () => {
     let obj = gulp.src(config.dest + "/jspayment_cat/" + config.js.output.payments_script_name + '.js');
     if (process.env.NODE_ENV === "production") {
