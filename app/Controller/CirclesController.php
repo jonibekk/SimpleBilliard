@@ -1,7 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
-App::uses('CirclePin', 'Model');
+App::import('Service', 'CirclePinService');
 
 /**
  * Circles Controller
@@ -383,8 +383,8 @@ class CirclesController extends AppController
         $this->_ajaxPreProcess();
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
-        /** @var CirclePin $CirclePin */
-        $CirclePin = ClassRegistry::init("CirclePin");
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init("CirclePinService");
 
         // validate
         $this->Circle->id = $this->request->params['named']['circle_id'];
@@ -403,7 +403,7 @@ class CirclesController extends AppController
         $res = $CircleService->removeCircleMember($this->current_team_id, $this->Circle->id, $this->request->data['CircleMember']['user_id']);
         // Remove and update circle pin information
         if($res){
-            $res = $CirclePin->removeId($this->request->data['CircleMember']['user_id'], $this->current_team_id, $this->Circle->id);
+            $res = $CirclePinService->deleteCircleId($this->request->data['CircleMember']['user_id'], $this->current_team_id, $this->Circle->id);
         }
         // 処理失敗
         if (!$res) {
