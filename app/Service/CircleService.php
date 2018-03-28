@@ -1,7 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'ExperimentService');
-App::uses('CirclePin', 'Model');
+App::uses('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
