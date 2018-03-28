@@ -36,32 +36,28 @@
                 <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px font_18px">
                     <p class="font_bold"><?= __('Evaluatee') ?></p>
                 </div>
-                <div class="eval-list-item2 col-xxs-12 mb_8px">
-                    <div class="eval-list-item-left2">
-                        <?=
-                        $this->Upload->uploadImage($userEvaluatee, 'User.photo', ['style' => 'medium'],
-                            ['width'  => '48px',
-                             'height' => '48px',
-                             'alt'    => 'icon',
-                             'class'  => 'pull-left img-circle mtb_3px'
-                            ]) ?>
-                    </div>
-                    <div class="eval-list-item-center2">
-                        <p class="font_bold"><?= h($userEvaluatee['User']['display_username']) ?></p>
-                        <span class="font_bold">
-                            <?php if (!is_null($userEvaluateeCoach)): ?>
-                                <?= __('Coach') ?>: <?=
-                                $this->Upload->uploadImage($userEvaluateeCoach, 'User.photo', ['style' => 'medium'],
-                                    ['width'  => '24px',
-                                     'height' => '24px',
-                                     'alt'    => 'icon',
-                                     'class'  => 'img-circle mtb_3px'
-                                    ]) ?> <?= h($userEvaluateeCoach['User']['display_username']) ?>
-                            <?php else: ?>
-                                <?= __('Coach') ?>: <i class="fa fa-user" aria-hidden="true"></i> -
-                            <?php endif ?>
-                        </span>
-                    </div>
+                <div class="col-xxs-12 mb_8px">
+                    <?=
+                    $this->Upload->uploadImage($userEvaluatee, 'User.photo', ['style' => 'medium'],
+                        ['width'  => '48px',
+                         'height' => '48px',
+                         'alt'    => 'icon',
+                         'class'  => 'pull-left img-circle mtb_3px'
+                        ]) ?>
+                    <p class="font_bold"><?= h($userEvaluatee['User']['display_username']) ?></p>
+                    <span class="font_bold">
+                        <?php if (!is_null($userEvaluateeCoach)): ?>
+                            <?= __('Coach') ?>: <?=
+                            $this->Upload->uploadImage($userEvaluateeCoach, 'User.photo', ['style' => 'medium'],
+                                ['width'  => '24px',
+                                 'height' => '24px',
+                                 'alt'    => 'icon',
+                                 'class'  => 'img-circle mtb_3px'
+                                ]) ?> <?= h($userEvaluateeCoach['User']['display_username']) ?>
+                        <?php else: ?>
+                            <?= __('Coach') ?>: <i class="fa fa-user" aria-hidden="true"></i> -
+                        <?php endif ?>
+                    </span>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px">
                     <p class="font_bold font_18px"><?= __('Evaluators') ?></p>
