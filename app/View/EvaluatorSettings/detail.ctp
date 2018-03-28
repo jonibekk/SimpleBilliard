@@ -116,7 +116,7 @@
     </div>
 <?= $this->Form->end(); ?>
 <div id="template_evaluator" class="hide">
-    <li class="list-group-item row eval-list-item p_0px plr_11px">
+    <li class="list-group-item row eval-list-item p_5px plr_11px">
         <div class="col-xxs-1 eval-list-item-parts evaluator_sort pointer vertical-center horizontal-center">
             <i class="fa fa-align-justify"></i>
         </div>
