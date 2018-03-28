@@ -11,9 +11,13 @@ App::uses('TeamMember', 'Model');
  * Time: 10:57
  *
  * @property NotifyBizComponent $NotifyBiz
+ * @property NotificationComponent Notification
  */
 class EvaluatorsController extends ApiController
 {
+    public $components = [
+        'Notification',
+    ];
 
     const MAX_NUMBER_OF_EVALUATORS = 7;
 
@@ -85,6 +89,7 @@ class EvaluatorsController extends ApiController
                 $this->_notifyUserOfEvaluatorToCoach($teamId, $evaluateeUserId, $coachId);
             }
         }
+        $this->Notification->outSuccess(__("Evaluator setting saved."));
 
         return $this->_getResponseSuccess();
 
