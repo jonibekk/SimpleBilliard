@@ -55,9 +55,9 @@ class CirclePinService extends AppService
             'user_id' => $userId,
             'team_id' => $teamId,
         ];
-    
+   
         try {    
-           $row = $CirclePin->getUnique($userId, $teamId);
+            $row = $CirclePin->getUnique($userId, $teamId);
 
             if(empty($row)){
                 return true;
@@ -68,13 +68,13 @@ class CirclePinService extends AppService
 
             if(strpos($orders, $find) !== false){
                 $orders = str_replace($find, ',', $orders);
-                $row['circle_orders'] = $CirclePin->getDataSource()->value(substr($orders, 1, -1), 'string');
+                $row['circle_orders'] = substr($orders, 1, -1);
                 $options['id'] = $row['id'];
 
                 if(!$CirclePin->save($row, $options)) {
-                    throw new Exception("Error Processing Update Request", 1);             
+                    throw new Exception("Error Processing Delete Request", 1);             
                 }
-            }    
+            }   
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());

@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('CirclePin', 'Model');
+App::import('Service', 'CirclePinService');
 
 /**
  * CircleMember Model
@@ -402,7 +402,9 @@ class CircleMember extends AppModel
         if (!$this->deleteAll($conditions)) {
             return false;
         }
-        if (!ClassRegistry::init('CirclePin')->deleteId($userId, $this->current_team_id, $circleId)) {
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init('CirclePinService');
+        if (!$CirclePinService->deleteCircleId($userId, $this->current_team_id, $circleId)) {
             return false;
         }
         $this->updateCounterCache(['circle_id' => $circleId]);
