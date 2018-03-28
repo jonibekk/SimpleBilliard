@@ -42,8 +42,6 @@ class CirclePinsController extends ApiController
       
         if (!$CirclePinService->setCircleOrders($this->Auth->user('id'), $this->current_team_id, $this->request->data['pin_order'])) {
             return $this->_getResponseInternalServerError();
-        } else {
-            //TODO:hamburger update => ClassRegistry::init('AppController')->_setMyCircle();
         }
     }
 }

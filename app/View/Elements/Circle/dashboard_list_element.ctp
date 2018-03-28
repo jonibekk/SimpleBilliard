@@ -1,6 +1,6 @@
 <?= $this->App->viewStartComment() ?>
 <?php $isUnread = ($circle['unread_count'] > 0); ?>
-<div class="dashboard-circle-list-row-wrap circle-layout <?= $isHamburger ? 'circleListMore' : '' ?>" circle_id="<?= $circle['id'] ?>">
+<li class="dashboard-circle-list-row-wrap circle-layout <?= $isHamburger ? 'circleListMore' : '' ?>" circle_id="<?= $circle['id'] ?>">
     <?php if ($circle['admin_flg']): ?>
         <a href="#"
            data-url="<?= $this->Html->url([
@@ -42,5 +42,5 @@
             </div>
         </div>
     </a>
-</div>
+</li>
 <?= $this->App->viewEndComment() ?>

@@ -17,6 +17,7 @@
 </p>
 <div id="filter-circles-list-hamburger" class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
     <?php if (!empty($my_circles)): ?>
+        <ul>
         <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'isHamburger' => true]) ?>
         <?php if (count($my_circles) > 8): ?>
             <div class="circle-view-all-block">
@@ -24,6 +25,7 @@
                 <a class="pl_5px font_12px font_gray click-circle-trigger on"><?= __("View All") ?></a>
             </div>
         <?php endif; ?>
+        </ul>
     <?php endif; ?>
     <div class="circle-list-footer">
         <div class="clearfix develop--circle-seek mtb_15px">

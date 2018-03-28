@@ -1,6 +1,20 @@
 window.onload = function(){
     'use strict';
 
+    $.fn.insertIndex = function (i) {
+        // The element we want to swap with
+        var $target = this.parent().children().eq(i);
+
+        // Determine the direction of the appended index so we know what side to place it on
+        if (this.index() > i) {
+            $target.before(this);
+        } else {
+            $target.after(this);
+        }
+
+        return this;
+    };
+
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')){
         var pinnedSortable = new Sortable(document.getElementById('pinned'), {
@@ -27,7 +41,6 @@ window.onload = function(){
             fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
 
             scroll: true, // or HTMLElement
-            //scrollFn: function(offsetX, offsetY, originalEvent, touchEvt, hoverTargetEl) { ... }, // if you have custom scrollbar scrollFn may be used for autoscrolling
             scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
             scrollSpeed: 10, // px
 
@@ -47,72 +60,37 @@ window.onload = function(){
 
             // Element dragging ended
             onEnd: function (/**Event*/evt) {
-                // var itemEl = evt.target;  // dragged HTMLElement
-                // evt.to;    // target list
-                // evt.from;  // previous list
-                // evt.oldIndex;  // element's old index within old parent
-                // evt.newIndex;  // element's new index within new parent
             },
 
             // Element is dropped into the list from another list
             onAdd: function (/**Event*/evt) {
-                // same properties as onEnd
-                // evt.target.querySelector('i').classList.remove('fa-disabled');
-                // // updateElements = [];
-                // // setElementInformations(evt.newIndex);
-                // updateOrder();
             },
 
             // Changed sorting within list
             onUpdate: function (/**Event*/evt) {
-                // same properties as onEnd
-                // updateElements = [];
-                // if(evt.oldIndex === evt.newIndex){
-                //     return false;
-                // } else {
-                //     setElementInformations(evt.newIndex);
-                //     setElementInformations(evt.oldIndex);  
-                //     console.log("old:"+evt.oldIndex+ " new:" + evt.newIndex);
-                //     updateOrder();
-                // } 
-                // updateOrder();
             },
 
             // Called by any change to the list (add / update / remove)
             onSort: function (/**Event*/evt) {
+                $($('#dashboard-pinned').find('li').eq(evt.oldIndex)).insertIndex(evt.newIndex);
                 updateOrder();
                 updateDisplayCount();
             },
 
             // Element is removed from the list into another list
             onRemove: function (/**Event*/evt) {
-                // same properties as onEnd
-                // updateElements = [];
-                // evt.target.dataset.beforeid = '';
-                // setElementInformations(evt.oldIndex);
-                // updateOrder();
             },
 
             // Attempt to drag a filtered element
             onFilter: function (/**Event*/evt) {
-                // var itemEl = evt.target;  // HTMLElement receiving the `mousedown|tapstart` event.
             },
 
             // Event when you move an item in the list or between lists
             onMove: function (/**Event*/evt, /**Event*/originalEvent) {
-                // Example: http://jsbin.com/tuyafe/1/edit?js,output
-                // evt.dragged; // dragged HTMLElement
-                // evt.draggedRect; // TextRectangle {left, top, right и bottom}
-                // evt.related; // HTMLElement on which have guided
-                // evt.relatedRect; // TextRectangle
-                // originalEvent.clientY; // mouse position
-                // return false; — for cancel
             },
 
             // Called when creating a clone of element
             onClone: function (/**Event*/evt) {
-                // var origEl = evt.target;
-                // var cloneEl = evt.clone;
             }
         });
         var unpinnedSortable = new Sortable(document.getElementById('unpinned'), {
@@ -144,80 +122,47 @@ window.onload = function(){
             scrollSpeed: 10, // px
 
             setData: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
-                // dataTransfer.setData('Text', dragEl.textContent); // `dataTransfer` object of HTML5 DragEvent
             },
 
             // Element is chosen
             onChoose: function (/**Event*/evt) {
-                // evt.oldIndex;  // element index within parent
             },
 
             // Element dragging started
             onStart: function (/**Event*/evt) {
-                // evt.oldIndex;  // element index within parent
-                // if(!evt.target.previousElement){
-                //     previousElemntBeforeId = null;
-                // }else {
-                //     previousElemntBeforeId = evt.target.previousElement.id;
-                //     console.log(previousElemntBeforeId);
-                // }
             },
 
             // Element dragging ended
             onEnd: function (/**Event*/evt) {
-                // var itemEl = evt.target;  // dragged HTMLElement
-                // evt.to;    // target list
-                // evt.from;  // previous list
-                // evt.oldIndex;  // element's old index within old parent
-                // evt.newIndex;  // element's new index within new parent
-                //TODO:
-                // if(!evt.target.previousElement){
-                //     evt.target.setAttributeByName('data-id', 0);
-                // }
             },
 
             // Element is dropped into the list from another list
             onAdd: function (/**Event*/evt) {
-                // same properties as onEnd
-                // evt.target.querySelector('i').classList.add('fa-disabled');
             },
 
             // Changed sorting within list
             onUpdate: function (/**Event*/evt) {
-                // same properties as onEnd
             },
 
             // Called by any change to the list (add / update / remove)
             onSort: function (/**Event*/evt) {
-                // same properties as onEnd
             },
 
             // Element is removed from the list into another list
             onRemove: function (/**Event*/evt) {
-                // same properties as onEnd
 
             },
 
             // Attempt to drag a filtered element
             onFilter: function (/**Event*/evt) {
-                // var itemEl = evt.target;  // HTMLElement receiving the `mousedown|tapstart` event.
             },
 
             // Event when you move an item in the list or between lists
             onMove: function (/**Event*/evt, /**Event*/originalEvent) {
-                // Example: http://jsbin.com/tuyafe/1/edit?js,output
-                // evt.dragged; // dragged HTMLElement
-                // evt.draggedRect; // TextRectangle {left, top, right и bottom}
-                // evt.related; // HTMLElement on which have guided
-                // evt.relatedRect; // TextRectangle
-                // originalEvent.clientY; // mouse position
-                // return false; — for cancel
             },
 
             // Called when creating a clone of element
             onClone: function (/**Event*/evt) {
-                // var origEl = evt.target;
-                // var cloneEl = evt.clone;
             }
         });
         var updateOrder = function(){
@@ -225,24 +170,6 @@ window.onload = function(){
                 'data[_Token][key]': cake.data.csrf_token.key,
                 'pin_order': makeParams(),
             };
-
-            // var xhr = new XMLHttpRequest();
-            // xhr.open('POST', '/api/v1/circle_pins/');
-            // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-            // xhr.onload = function () {
-            //     if (xhr.status !== 200) {
-            //         var response = JSON.parse(xhr.response);
-            //         console.log(xhr);
-            //         // Display error message
-            //         new Noty({
-            //             type: 'error',
-            //             text: '<h4>' + cake.word.error + '</h4>' + response.message,
-            //         }).show();
-            //     }
-            // };
-            // console.log(senddata);
-            // xhr.send(senddata);
-            // console.log(senddata);
             $.ajax({
               url: '/api/v1/circle_pins/',
               type:"POST",
@@ -264,6 +191,7 @@ window.onload = function(){
             document.getElementById('pinnedCount').innerHTML = '(' + pincount + ')';
             document.getElementById('unpinnedCount').innerHTML = '(' + unpincount + ')';
         }
+        var dashboard = $(".js-dashboard-circle-list-body > ul").find('li');        
         updateDisplayCount();
     }
     var circles = document.querySelectorAll('.pin-circle-list-item');
@@ -317,73 +245,30 @@ window.onload = function(){
                 });
             }
         }
-        // var toggleMenu = function(evt) {
-        //     evt = evt || window.event;
-        //     var target = this.parentElement.querySelector('.pin-circle-dropdown-content');
-        //     target.style.display = target.style.display === "block" ? "none" : "block";
-        // }
-        // var hideMenuAll = function(evt) {
-        //     evt = evt || window.event;
-        //     var nodes = document.querySelectorAll('.pin-circle-dropdown-content');
-        //     for(var i=0;i<nodes.length;i++){
-        //         nodes[i].style.display = "none";
-        //     }
-        // }
         var pinEvent = function(evt) {
             evt = evt || window.event;
             this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
             this.classList.toggle('fa-disabled');
 
+            //console.log($(".js-dashboard-circle-list-body > ul").find('[circle_id='+this.parentElement.id+']').get(0));
             if(this.classList.contains('fa-disabled')) {
                 document.getElementById('unpinned').appendChild(this.parentElement);
+                var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
+                document.getElementById('dashboard-unpinned').appendChild(moveElement);
             } else {
                 document.getElementById('pinned').appendChild(this.parentElement);
-            }
-            // hideMenuAll();
+                var moveElement = $('#dashboard-unpinned').find('[circle_id='+this.parentElement.id+']').get(0);
+                document.getElementById('dashboard-pinned').appendChild(moveElement);
+            }      
             updateOrder();
             updateDisplayCount();
         };
-        // var moveToBottom = function(evt) {
-        //     evt = evt || window.event;
-        //     this.parentElement.parentElement.parentElement.querySelector('.fa-thumbtack').classList.remove('fa-disabled');
-        //     this.parentElement.parentElement.parentElement.querySelector('.fa-align-justify').classList.remove('style-hidden');
-        //     document.getElementById('pinned').appendChild(this.parentElement.parentElement.parentElement);
-        //     hideMenuAll();
-        //     updateOrder();
-        // }
-        // var moveToTop = function(evt) {
-        //     evt = evt || window.event;
-        //     this.parentElement.parentElement.parentElement.querySelector('.fa-thumbtack').classList.remove('fa-disabled');
-        //     this.parentElement.parentElement.parentElement.querySelector('.fa-align-justify').classList.remove('style-hidden');
-        //     var list = document.getElementById('pinned');
-        //     list.insertBefore(this.parentElement.parentElement.parentElement, list.querySelector('li'));
-        //     hideMenuAll();
-        //     updateOrder();
-        // }
-        // document.getElementById('pin-circle-panel').onclick = hideMenuAll;
         for(var i = 0; i < circles.length; i++){
             circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
             var cog = circles[i].querySelector('.fa-cog');
             if(cog){
                 cog.onclick = editMenu;
             }
-            
-            // var nodes = circles[i].querySelector('.pin-circle-dropdown-content').querySelectorAll('.pin-circle-dropdown-element');
-            // for(var j = 0; j < nodes.length; j++){
-            //     nodes[j].onclick = hideMenuAll;
-            // }
-            // var editLink = circles[i].querySelector('.ajax-url');
-            // if(editLink){
-            //     editLink.onclick = editMenu;
-            // }
-            // var toTopLink = circles[i].querySelector('.move-top');
-            // if(toTopLink){
-            //     toTopLink.onclick = moveToTop;
-            // } 
-            // var toBottomLink = circles[i].querySelector('.move-bottom');
-            // if(toBottomLink){
-            //     toBottomLink.onclick = moveToBottom;
-            // } 
         } 
     }
 
@@ -418,66 +303,11 @@ window.onload = function(){
                 return m;
             }
         })
-            .on('change', function () {
-                var $this = $(this);
-                // グループを選択した場合
-                // グループに所属するユーザーを展開して入力済にする
-                $this.select2('data', select2ExpandGroup($this.select2('data')));
-            });
-    }
-
-    //Filter
-    var filterList = document.getElementById('filter-circles-list');
-    if(filterList != null){
-        var filterCirlcleList = function(filter) {
-          var circleNames = document.getElementsByClassName('circle-name');
-          for (i = 0; i < circleNames.length; i++) {
-            if (circleNames[i].innerHTML.toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-                circleNames[i].parentElement.style.display = "block";
-            } else {
-                circleNames[i].parentElement.style.display = "none";
-            }
-          }
-        }
-        filterList.onkeyup = function(evt) {
-          evt = evt || window.event;
-          filterCirlcleList(this.value);
-        };
-    }
-
-    var filterListSide = document.getElementById('filter-circles-list-side');
-    if(filterListSide != null){
-        var filterCirlcleListSide = function(filter) {
-          var circleNames = document.getElementsByClassName('dashboard-circle-name-box');
-          for (i = 0; i < circleNames.length; i++) {
-            if (circleNames[i].innerHTML.toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-                circleNames[i].parentElement.parentElement.style.display = "block";
-            } else {
-                circleNames[i].parentElement.parentElement.style.display = "none";
-            }
-          }
-        }
-        filterListSide.onkeyup = function(evt) {
-          evt = evt || window.event;
-          filterCirlcleListSide(this.value);
-        };
-    }
-
-    var filterListHamburger = document.getElementById('filter-circles-list-hamburger');
-    if(filterListHamburger != null){
-        var filterCirlcleListHamburger = function(filter) {
-          var circleNames = document.getElementsByClassName('ashboard-circle-list-row-wrap');
-          for (i = 0; i < circleNames.length; i++) {
-            if (circleNames[i].innerHTML.toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-                circleNames[i].parentElement.parentElement.style.display = "block";
-            } else {
-                circleNames[i].parentElement.parentElement.style.display = "none";
-            }
-          }
-        }
-        filterListHamburger.onkeyup = function(evt) {
-          evt = evt || window.event;
-          filterCirlcleListHamburger(this.value);
-        };
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合
+            // グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
     }
 };
