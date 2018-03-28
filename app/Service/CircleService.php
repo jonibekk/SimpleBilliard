@@ -218,8 +218,8 @@ class CircleService extends AppService
      */
     function removeCircleMember(int $teamId, int $circleId, int $userId): bool
     {
-        /** @var CirclePin $CirclePin */
-        $CirclePin = ClassRegistry::init('CirclePin');
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init('CirclePinService');
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
         /** @var Circle $Circle */
@@ -244,7 +244,7 @@ class CircleService extends AppService
             }
 
             // Remove circle pin information
-            if (!$CirclePin->deleteId($userId, $teamId, $circleId)) {
+            if (!$CirclePinService->deleteCircleId($userId, $teamId, $circleId)) {
                 throw new Exception(
                     sprintf("Failed to remove circle pin information. %s",
                         AppUtil::jsonOneLine(compact('teamId', 'circleId', 'userId'))
