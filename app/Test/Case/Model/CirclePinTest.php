@@ -54,7 +54,7 @@ class CirclePinTest extends GoalousTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $circle_orders = '1,2,3,4,5,6,7,8,9,10,11';
+        $circle_orders = '1,2,3,4';
         $this->_setDefault($uid, $team_id, $circle_orders);
         $res = $this->CirclePin->getUnique($uid, $team_id);
         $this->assertEquals($circle_orders,$res['circle_orders']);
@@ -64,7 +64,7 @@ class CirclePinTest extends GoalousTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $circle_orders = '1,2,3,4,5,6,7,8,9,10';
+        $circle_orders = '1,2,3,4';
         $this->_setDefault($uid, $team_id, $circle_orders);
         $res = $this->CirclePin->getJoinedCircleData($uid, $team_id);
         $this->assertNotEmpty($res);
@@ -74,7 +74,7 @@ class CirclePinTest extends GoalousTestCase
     {
         $uid = 1;
         $team_id = 1;
-        $circle_orders = '1,2,3,4,5,6,7,8,9,10';
+        $circle_orders = '1,2,3,4';
         $this->_setDefault($uid, $team_id, $circle_orders);
         $res = $this->CirclePin->getPinData($uid, $team_id);
         $this->assertNotEquals($res, "");
