@@ -22,8 +22,8 @@ class CirclePin extends AppModel
             'isString'      => ['rule' => ['isString']],
             'maxLength'     => ['rule' => ['maxLength', 4294967295]],
             'csv_format'    => ['rule' => ['customValidateIsCsvFormat']],
-            // 'circle_exists'  => ['rule' => ['customValidateIsCircleExists']],
-            // 'is_belong'     => ['rule' => ['customValidateIsBelong']],
+            'circle_exists'  => ['rule' => ['customValidateIsCircleExists']],
+            'is_belong'     => ['rule' => ['customValidateIsBelong']],
         ],
     ];
 
