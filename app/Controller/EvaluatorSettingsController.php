@@ -96,7 +96,7 @@ class EvaluatorSettingsController extends AppController
         $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId);
         $usersIdsCanView = array_merge(Hash::extract($coachees, '{n}.User.id'), [$authUserId]);
         if (!in_array($evaluateeUserId, $usersIdsCanView)) {
-            throw new RuntimeException(__("You have no permission."));
+            throw new NotFoundException();
         }
 
         $userEvaluatee = $User->findById($evaluateeUserId);
