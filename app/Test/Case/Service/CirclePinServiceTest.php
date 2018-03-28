@@ -23,8 +23,8 @@ class CirclePinsServiceTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.circle_pin',
-        'app.circle_member',
         'app.circle',
+        'app.circle_member',
     ];
 
     /**
@@ -38,16 +38,17 @@ class CirclePinsServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid();
         $this->CirclePinService = ClassRegistry::init('CirclePinService');
         $this->Circle = ClassRegistry::init('Circle');
-        $this->CirclePin = ClassRegistry::init('Circle');
         $this->CircleMember = ClassRegistry::init('CircleMember');
         $this->User = ClassRegistry::init('User');
     }
 
     public function test_SetCircleOrders()
     {
-        $user_id = 2;
-        $team_id = 2;
-        $circle_orders = '1,2,3,4,5';
+        $user_id = 1;
+        $team_id = 1;
+        $circle_orders = '1,2,3,4';
+        $this->CircleMember->my_uid = $user_id;
+        $this->CircleMember->current_team_id = $team_id;
         $res = $this->CirclePinService->setCircleOrders($user_id, $team_id, $circle_orders);
         $this->assertTrue($res);
     }
@@ -62,9 +63,9 @@ class CirclePinsServiceTest extends GoalousTestCase
 
     function test_DeleteCircleId()
     {
-        $uid = 2;
-        $team_id = 2;
-        $res = $this->CirclePinService->deleteCircleId($uid, $team_id, 2);
+        $uid = 3;
+        $team_id = 3;
+        $res = $this->CirclePinService->deleteCircleId($uid, $team_id, 20);
         $this->assertTrue($res);
     }
 }

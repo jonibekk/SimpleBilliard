@@ -23,11 +23,12 @@ class CirclePinService extends AppService
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init("CirclePin");
+        $validation = [];
 
         $validation = $CirclePin->validates();
 
         if($validation !== true){
-            $validation['circle_orders'] = $this->_validationExtract($CirclePin->validationErrors);
+            $validation = $this->_validationExtract($CirclePin->validationErrors);
         }
 
         if(isset($validation)){
@@ -104,22 +105,21 @@ class CirclePinService extends AppService
         ];
 
         $data = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'circle_orders' => $db->value($pinOrders, 'string'),
-            'del_flg' => false,
+            'CirclePin' => [
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'circle_orders' => $db->value($pinOrders, 'string'),
+                'del_flg' => false,
+            ],
         ];
         $row = $CirclePin->getUnique($userId, $teamId);
             if(empty($row)){
                 $CirclePin->create($data);
-                // $CirclePin->user_id = $userId;
-                // $CirclePin->team_id = $teamId;
-                // $CirclePin->circle_orders = $db->value($pinOrders, 'string');
                 if(!$CirclePin->save($data)){
                     throw new Exception("Error Processing Insert Request", 1);
                 }
             } else {
-                $row['circle_orders'] = $db->value($pinOrders, 'string');
+                $row['circle_orders'] = $data['CirclePin']['circle_orders'];
                 $options['id'] = $row['id'];
                 if(!$CirclePin->save($row, $options)) {
                     throw new Exception("Error Processing Update Request", 1);             
