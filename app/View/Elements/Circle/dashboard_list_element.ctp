@@ -23,7 +23,7 @@
        circle-id="<?= $circle['id'] ?>"
        public-flg="<?= $circle['public_flg'] ?>"
        team-all-flg="<?= $circle['team_all_flg'] ?>"
-       oldest-post-time="<?= $circle['created'] ?>"
+       oldest-post-time="<?= $circle['modified'] ?>"
        href="<?= $this->Html->url("/circle_feed/{$circle['id']}") ?>">
         <div class="dashboard-circle-unread-point">
             <div class="circle"></div>

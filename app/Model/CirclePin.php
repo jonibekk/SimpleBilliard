@@ -164,6 +164,7 @@ class CirclePin extends AppModel
                 'Circle.photo_file_name',
                 'Circle.public_flg',
                 'Circle.team_all_flg',
+                'Circle.modified',
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ]
