@@ -32,6 +32,9 @@ const config = {
         evaluation: [
             assets_dir + '/js/view/evaluations/*.js'
         ],
+        evaluator_settings: [
+            assets_dir + '/js/view/evaluator_settings/*.js'
+        ],
         payments: [
             assets_dir + '/js/view/payments/*.js'
         ],
@@ -66,6 +69,7 @@ const config = {
       team_script_name: 'goalous_team',
       user_script_name: 'goalous_user',
       evaluation_script_name: 'goalous_evaluation',
+      evaluator_setting_script_name: 'goalous_evaluator_setting',
       payments_script_name: 'goalous_payment',
       circle_script_name: 'goalous_circle',
       homepage_script_name: 'goalous_homepage',
@@ -95,6 +99,7 @@ const config = {
   },
   js_vendor: {
     src: [
+      node_modules_dir + '/sortablejs/Sortable.min.js',
       node_modules_dir + '/dropzone/dist/min/dropzone.min.js',
       node_modules_dir + '/jquery-lazy/jquery.lazy.js',
       node_modules_dir + '/raven-js/dist/raven.js',
