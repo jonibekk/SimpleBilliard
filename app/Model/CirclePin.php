@@ -22,8 +22,8 @@ class CirclePin extends AppModel
             'isString'      => ['rule' => ['isString']],
             'maxLength'     => ['rule' => ['maxLength', 4294967295]],
             'csv_format'    => ['rule' => ['customValidateIsCsvFormat']],
-            'circle_exists'  => ['rule' => ['customValidateIsCircleExists']],
-            'is_belong'     => ['rule' => ['customValidateIsBelong']],
+            // 'circle_exists'  => ['rule' => ['customValidateIsCircleExists']],
+            // 'is_belong'     => ['rule' => ['customValidateIsBelong']],
         ],
     ];
 
@@ -37,7 +37,6 @@ class CirclePin extends AppModel
     function customValidateIsCsvFormat(array $val): bool
     {
         if(!preg_match("/^'\d+(?:,\d+)*'$/", $val['circle_orders'])){
-            GoalousLog::error("customValidateIsCsvFormat", $val);
             return false;
         }
 
@@ -83,7 +82,6 @@ class CirclePin extends AppModel
         foreach ($circleIds as $key => $circleId) {
             $belongs = $CircleMember->isBelong($circleId);
             if(!$belongs) {
-                GoalousLog::error("customValidateIsBelong", [false]);
                 return false;
             }
         }
@@ -100,9 +98,17 @@ class CirclePin extends AppModel
     public function getUnique(int $userId, int $teamId)
     {
         $options = [
-            'CirclePin.user_id' => $userId,
-            'CirclePin.team_id' => $teamId,
-            'CirclePin.del_flg' => false,
+            'conditions' => [
+                'CirclePin.user_id' => $userId,
+                'CirclePin.team_id' => $teamId,
+                'CirclePin.del_flg' => false,
+            ],
+            'fields'    => [
+                'CirclePin.id',
+                'CirclePin.user_id',
+                'CirclePin.team_id',
+                'CirclePin.circle_orders',
+            ],
         ];
 
         $res = $this->find('first', $options);
@@ -111,111 +117,6 @@ class CirclePin extends AppModel
             return [];
         }
         return Hash::get($res, 'CirclePin');
-    }
-
-    /**
-     * Save Circle Pin Order Information
-     *
-     * @param $userId
-     * @param $teamId
-     * @param $pinOrders
-     *
-     * @return bool|mixed
-     */
-    public function insertUpdate(int $userId, int $teamId, string $pinOrders): bool {
-        $db = $this->getDataSource();
-
-        $options = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-        ];
-
-        $data = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'circle_orders' => $db->value($pinOrders, 'string'),
-            'del_flg' => false,
-        ];
-
-        try {
-            $this->begin();
-            $row = $this->getUnique($userId, $teamId);
-            if(empty($row)){
-                $this->create($data);
-                $this->user_id = $userId;
-                $this->team_id = $teamId;
-                $this->circle_orders = $db->value($pinOrders, 'string');
-                if(!$this->save($data)){
-                    GoalousLog::error("[CirclePin]: Insert Failure", $data);
-                    throw new Exception("Error Processing save Request", 1);
-                }
-            } else {
-                $row['circle_orders'] = $db->value($pinOrders, 'string');
-                // $options['id'] = $row['id'];
-                if(!$this->save($row, $options)) {
-                    debug($this->validationErrors); die();
-                    GoalousLog::error("[CirclePin]: Update Failure", $row);
-                    throw new Exception("Error Processing update Request", 1);             
-                }
-            }
-
-            $this->commit();         
-        } catch (Exception $e) {    
-            GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-            $this->rollback();
-            return false;
-        }
-      
-        return true;
-    }
-
-    /**
-     * Deletes specified circleId from circle pin order information
-     * example: 3,4,5 => ,3,4,5, => (,4,) => ,3,5, => 3,5 
-     * @param $userId
-     * @param $teamId
-     * @param $circleId
-     *
-     * @return bool
-     */
-    public function deleteId(int $userId, int $teamId, string $circleId): bool 
-    {
-        $options = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-        ];
-
-        try {    
-            $row = $this->getUnique($userId, $teamId);
-
-            if(empty($row)){
-                return true;
-            }
-
-            $orders = ',' . $row['circle_orders'] . ',';
-            $find = ',' . $circleId . ',';
-
-            if(strpos($orders, $find) !== false){
-                $orders = str_replace($find, ',', $orders);
-                $row['circle_orders'] = $this->getDataSource()->value(substr($orders, 1, -1), 'string');
-                $options['id'] = $row['id'];
-                $this->begin();
-
-                if(!$this->save($row, $options)) {
-                    throw new Exception("Error Processing update Request", 1);             
-                }
-                $this->commit(); 
-            }       
-        } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
-            $this->rollback();
-            return false;
-        }
-
-        return true;
     }
 
     /**

@@ -38,13 +38,95 @@ class CirclePinService extends AppService
     }
 
     /**
-     * 自分が所属しているサークルのソート順をDBへセットする
+     * Deletes specified circleId from circle pin order information
+     * example: 3,4,5 => ,3,4,5, => (,4,) => ,3,5, => 3,5 
+     * @param $userId
+     * @param $teamId
+     * @param $circleId
+     *
      * @return bool
      */
-    public function setCircleOrders(int $userId, int $teamId, string $orders): bool
+    public function deleteCircleId(int $userId, int $teamId, string $circleId): bool 
     {
+        /** @var CirclePin $CirclePin */
+        $CirclePin = ClassRegistry::init('CirclePin');
+        $options = [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+        ];
+    
+        try {    
+           $row = $CirclePin->getUnique($userId, $teamId);
+
+            if(empty($row)){
+                return true;
+            }
+
+            $orders = ',' . $row['circle_orders'] . ',';
+            $find = ',' . $circleId . ',';
+
+            if(strpos($orders, $find) !== false){
+                $orders = str_replace($find, ',', $orders);
+                $row['circle_orders'] = $CirclePin->getDataSource()->value(substr($orders, 1, -1), 'string');
+                $options['id'] = $row['id'];
+
+                if(!$CirclePin->save($row, $options)) {
+                    throw new Exception("Error Processing Update Request", 1);             
+                }
+            }    
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Save Circle Pin Order Information
+     *
+     * @param $userId
+     * @param $teamId
+     * @param $pinOrders
+     *
+     * @return bool
+     */
+    public function setCircleOrders(int $userId, int $teamId, string $pinOrders): bool
+    {
+        /** @var CirclePin $CirclePin */
+        $CirclePin = ClassRegistry::init('CirclePin');
+        $db = $CirclePin->getDataSource();
+
+        $options = [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+        ];
+
+        $data = [
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'circle_orders' => $db->value($pinOrders, 'string'),
+            'del_flg' => false,
+        ];
+        $row = $CirclePin->getUnique($userId, $teamId);
+            if(empty($row)){
+                $CirclePin->create($data);
+                // $CirclePin->user_id = $userId;
+                // $CirclePin->team_id = $teamId;
+                // $CirclePin->circle_orders = $db->value($pinOrders, 'string');
+                if(!$CirclePin->save($data)){
+                    throw new Exception("Error Processing Insert Request", 1);
+                }
+            } else {
+                $row['circle_orders'] = $db->value($pinOrders, 'string');
+                $options['id'] = $row['id'];
+                if(!$CirclePin->save($row, $options)) {
+                    throw new Exception("Error Processing Update Request", 1);             
+                }
+            }
         try{
-            ClassRegistry::init('CirclePin')->insertUpdate($userId, $teamId, $orders);
+            
         } catch (RuntimeException $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
@@ -54,11 +136,16 @@ class CirclePinService extends AppService
         return true;
     }
     /**
-     * 自分が所属しているサークルをソートして返す
+     * Get Relevant Ordered Circles Data
+     *
+     * @param $userId
+     * @param $teamId
+     *
      * @return array
      */
     public function getMyCircleSortedList(int $userId, int $teamId): array
     {
+        /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
         $Upload = new UploadHelper(new View());
 
@@ -109,8 +196,6 @@ class CirclePinService extends AppService
         $sortedCircles = Hash::sort($sortedCircles, '{n}.order', 'asc', 'numeric');
         $orderedCircles = array_merge($sortedCircles, $unsortedCircles);
 
-        //TODO:For Debugging SQL Queries
-        //debug(ClassRegistry::init('CirclePin')->getDataSource()->getLog(false, false));
         $returnArray['regular_circle'] = $orderedCircles;
         $returnArray['default_circle'] = $defaultCircle;
         return $returnArray;

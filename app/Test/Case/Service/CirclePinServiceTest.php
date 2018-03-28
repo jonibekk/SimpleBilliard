@@ -47,7 +47,7 @@ class CirclePinsServiceTest extends GoalousTestCase
     {
         $user_id = 2;
         $team_id = 2;
-        $circle_orders = '1,2,3,4,5,6,7,8,9,10,11';
+        $circle_orders = '1,2,3,4,5';
         $res = $this->CirclePinService->setCircleOrders($user_id, $team_id, $circle_orders);
         $this->assertTrue($res);
     }
@@ -58,5 +58,13 @@ class CirclePinsServiceTest extends GoalousTestCase
         $team_id = 2;
         $res = $this->CirclePinService->getMyCircleSortedList($user_id, $team_id);
         $this->assertNotEmpty($res);
+    }
+
+    function test_DeleteCircleId()
+    {
+        $uid = 2;
+        $team_id = 2;
+        $res = $this->CirclePinService->deleteCircleId($uid, $team_id, 2);
+        $this->assertTrue($res);
     }
 }
