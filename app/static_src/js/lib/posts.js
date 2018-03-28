@@ -7,21 +7,32 @@ $(function () {
   // 投稿フォームが表示されるページのみ
   if ($('#CommonPostBody').length) {
     require(['ogp'], function (ogp) {
+      // OGP
+      var patterns = {
+        protocol: '^(http(s)?(:\/\/))?(www\.)?',
+        domain: '[a-zA-Z0-9-_\.]+',
+        tld: '(\.[a-zA-Z0-9]{2,})',
+        params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
+      }
+
+      var p = patterns;
+      var pattern = new RegExp(p.protocol + p.domain + p.tld + p.params, 'gi');
+
+      $('#CommonPostBody').on('keyup', function (e) {
+        if(e.keyCode == 32 || e.keyCode == 13) {
+          var input = $('#CommonPostBody').val();
+          var res = pattern.exec(input);
+          if(res) {
+            getPostOGPInfo(ogp, res[0]);
+          }
+        }
+      });
       // 投稿編集の場合で、OGPのurlが登録されている場合
       if ($('.post-edit').length) {
         if ($('.post-edit').attr('data-default-ogp-url')) {
           getPostOGPInfo(ogp, $('.post-edit').attr('data-default-ogp-url'));
         }
       }
-
-      var onKeyUp = function () {
-        getPostOGPInfo(ogp, $('#CommonPostBody').val());
-      };
-      var timer = null;
-      $('#CommonPostBody').on('keyup', function () {
-        clearTimeout(timer);
-        timer = setTimeout(onKeyUp, 800);
-      });
     });
     // register event of deleting post draft
     $('.delete-post-draft').on('click', function() {
@@ -225,7 +236,7 @@ function appendPostOgpInfo(data) {
         display: "block",
         "z-index": '1000'
       })
-      .append('<i class="fa fa-times"></i>')
+      .append('<i class="fa fa-times fa-2x"></i>')
       .on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();

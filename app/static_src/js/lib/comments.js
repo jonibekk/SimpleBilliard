@@ -105,10 +105,10 @@ function toggleCommentForm() {
 
     // OGP 情報を取得してプレビューする処理
     require(['ogp'], function (ogp) {
-        var onKeyUp = function () {
+        function ogpComments(ogp, url) {
             ogp.getOGPSiteInfo({
                 // URL が含まれるテキスト
-                text: $('#CommentFormBody_' + post_id).val(),
+                text: url,
 
                 // ogp 情報を取得する必要があるかチェック
                 readyLoading: function () {
@@ -129,7 +129,7 @@ function toggleCommentForm() {
                         // プレビュー削除ボタンを重ねて表示
                         .prepend($('<a>').attr('href', '#')
                             .addClass('font_lightgray comment-ogp-close')
-                            .append('<i class="fa fa-times"></i>')
+                            .append('<i class="fa fa-times fa-2x"></i>')
                             .on('click', function (e) {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -167,10 +167,27 @@ function toggleCommentForm() {
                 }
             });
         };
-        var timer = null;
-        $('#CommentFormBody_' + post_id).on('keyup', function () {
-            clearTimeout(timer);
-            timer = setTimeout(onKeyUp, 800);
+        // OGP
+        var patterns = {
+            protocol: '^(http(s)?(:\/\/))?(www\.)?',
+            domain: '[a-zA-Z0-9-_\.]+',
+            tld: '(\.[a-zA-Z0-9]{2,})',
+            params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
+        }
+
+        var p = patterns;
+        var pattern = new RegExp(p.protocol + p.domain + p.tld + p.params, 'gi');
+
+        $('#CommentFormBody_' + post_id).on('keyup', function (e) {
+            console.log("keyup");
+            if(e.keyCode == 32 || e.keyCode == 13) {
+              var input = $('#CommentFormBody_' + post_id).val();
+              var res = pattern.exec(input);
+              if(res) {
+                console.log(res[0]);
+                ogpComments(ogp, res[0]);
+              }
+            }
         });
     });
 }
@@ -829,7 +846,7 @@ function evTargetToggleClick() {
                                         $newOgp.before($closeButton);
                                         $closeButton.attr('href', '#')
                                             .addClass('font_lightgray comment-ogp-close')
-                                            .append('<i class="fa fa-times"></i>')
+                                            .append('<i class="fa fa-times fa-2x"></i>')
                                             .on('click', function (e) {
                                                 e.preventDefault();
                                                 e.stopPropagation();
