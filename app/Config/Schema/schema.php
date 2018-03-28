@@ -501,6 +501,8 @@ class AppSchema extends CakeSchema {
 		'leader_goal_score_reuqired_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'リーダ評価 ゴール スコア必須 on/off'),
 		'leader_goal_comment_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'リーダ評価 ゴール コメント on/off'),
 		'leader_goal_comment_required_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'リーダ評価 ゴール コメント必須 on/off'),
+		'fixed_evaluation_order_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価者による評価順序固定 on/off'),
+		'show_all_evaluation_before_freeze_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価凍結前に他の評価者の評価を閲覧可能 on/off'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '追加した日付時刻'),
