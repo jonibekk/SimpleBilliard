@@ -1816,4 +1816,48 @@ class User extends AppModel
         $res = $this->find('count', $options);
         return $res == 1;
     }
+
+    /**
+     * Function for filter user ids, and returning users who are inactive in team
+     *
+     * @param array $userIds
+     *          User IDs to be filtered
+     *
+     * @return array | null Array of inactive users
+     */
+    public function filterInactiveTeamUsers(array $userIds): array
+    {
+        $options = [
+            'conditions' => [
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.status'  => TeamMember::USER_STATUS_INACTIVE,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id'
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
+    /**
+     * @param $userID
+     *
+     * @return bool Validation result; true for successful validation
+     */
+    public function validateUserID($userID): bool
+    {
+        return !empty($userID) && ctype_digit(strval($userID)) && $userID != 0;
+    }
 }
