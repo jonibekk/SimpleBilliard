@@ -477,7 +477,6 @@ function evCommentDeleteConfirm() {
             $modal.modal('hide');
         }
     });
-    $(".dropdown-comment").show();
     $("#jsGoTop").show();
     return false;
 }
@@ -753,15 +752,166 @@ function evTargetToggleClick() {
     if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
         //開いてるとき
         if ($("#" + target_id).is(':visible')) {
-            $(".dropdown-comment").show();
+            //閉じてる表示
             $("#jsGoTop").show();
+            $obj.text($obj.attr("closed-text"));
+        }
+        //閉じてるとき
+        else {
+            //開いてる表示
+            $obj.text($obj.attr("opend-text"));
+            $("#jsGoTop").hide();
+            evTargetCancelAnyEdit();
+        }
+    }
+    if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
+        $.ajax({
+            url: $obj.attr("ajax-url"),
+            async: false,
+            success: function (data) {
+                //noinspection JSUnresolvedVariable
+                if (data.error) {
+                    //noinspection JSUnresolvedVariable
+                    alert(data.msg);
+                }
+                else {
+                    var $editForm = $(data.html);
+                    var $ogp = $editForm.find('.js-ogp-box');
+                    if ($ogp.length > 0) {
+                        var $btnClose = $editForm.find('.js-ogp-close');
+                        $btnClose.on('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            $ogp.remove();
+                            $btnClose.remove();
+                            var $submitButton = $('#CommentEditSubmit_' + comment_id);
+                            if ($submitButton.length > 0) {
+                                $submitButton.removeAttr("disabled");
+                            }
+                        });
+                    }
+                    $("#" + $obj.attr("hidden-target-id")).after($editForm);
+
+                    // Load OGP for edit field
+                    var $editField = $('#CommentEditFormBody_' + comment_id);
+                    if ($editField.length > 0) {
+                        require(['ogp'], function (ogp) {
+                            var onKeyUp = function () {
+                                // Do not search for new OGP if there is one already present
+                                var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                                if ($ogpBox.length > 0) {
+                                    return;
+                                }
+
+                                // Search OGP info
+                                ogp.getOGPSiteInfo({
+                                    // Give text to OGP class
+                                    text: $editField.val(),
+
+                                    // Only search if there is none OGP info box displayed
+                                    readyLoading: function () {
+                                        if ($ogpBox.length > 0) {
+                                            return false;
+                                        }
+                                        return true;
+                                    },
+
+                                    // ogp data acquired
+                                    success: function (data) {
+                                        // Remove any OGP if already exists
+                                        var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                                        if ($ogpBox.length > 0) {
+                                            $ogpBox.remove();
+                                            return;
+                                        }
+
+                                        // Display the new acquired OGP on the edit form
+                                        var $newOgp = $(data.html);
+                                        $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
+                                        $editField.after($newOgp);
+                                        var $closeButton = $('<a>');
+                                        $newOgp.before($closeButton);
+                                        $closeButton.attr('href', '#')
+                                            .addClass('font_lightgray comment-ogp-close')
+                                            .append('<i class="fa fa-times"></i>')
+                                            .on('click', function (e) {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                $closeButton.remove();
+                                                $newOgp.remove();
+                                            });
+                                    },
+
+                                    error: function () {
+                                        // loading アイコン削除
+                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                    },
+
+                                    loadingStart: function () {
+                                        // loading アイコン表示
+                                        $('<i class="fa fa-refresh fa-spin"></i>')
+                                            .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
+                                            .addClass('mr_8px lh_20px')
+                                            .insertBefore('#CommentEditSubmit_' + comment_id);
+                                    },
+
+                                    loadingEnd: function () {
+                                        // loading アイコン削除
+                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                    }
+                                });
+                            };
+                            var timer = null;
+                            $editField.on('keyup', function () {
+                                clearTimeout(timer);
+                                timer = setTimeout(onKeyUp, 800);
+                            });
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    $("form#" + target_id).bootstrapValidator();
+    $("#" + target_id).find('.custom-radio-check').customRadioCheck();
+
+    //noinspection JSJQueryEfficiency
+    $("#" + target_id).toggle();
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).trigger('click');
+    //noinspection JSJQueryEfficiency
+    $("#" + click_target_id).focus();
+    return false;
+}
+
+function evTargetToggleClickByElement(elem) {
+    attrUndefinedCheck(elem, 'target-id');
+    attrUndefinedCheck(elem, 'click-target-id');
+
+    var $obj = $(elem);
+    var target_id = $obj.attr("target-id");
+    var click_target_id = $obj.attr("click-target-id");
+    var comment_id = target_id.split('_')[1];
+    if ($obj.attr("hidden-target-id")) {
+        var $commentBox = $('#' + $obj.attr("hidden-target-id"));
+        $commentBox.toggle();
+        // Hide OGP box
+        var $ogpBox = $('#CommentOgpBox_' + comment_id);
+        if ($ogpBox.length > 0) {
+            $ogpBox.toggle();
+        }
+    }
+
+    //開いている時と閉じてる時のテキストの指定があった場合は置き換える
+    if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
+        //開いてるとき
+        if ($("#" + target_id).is(':visible')) {
             //閉じてる表示
             $obj.text($obj.attr("closed-text"));
         }
         //閉じてるとき
         else {
-            $(".dropdown-comment").not($(this).parent().parent().parent()).hide();
-            $("#jsGoTop").hide();
             //開いてる表示
             $obj.text($obj.attr("opend-text"));
         }
@@ -884,6 +1034,17 @@ function evTargetToggleClick() {
     $("#" + click_target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).focus();
+    return false;
+}
+
+function evTargetCancelAnyEdit() {
+    var openForm = $(".bv-form:visible");
+    if(openForm.length == 1){
+        var target = openForm.find(".comment-edit-form");
+        var editId = target.prop("id").replace("CommentEditFormBody_","");
+        var targetLink = $("[target-id=CommentEditForm_" + editId +"]").get(0);
+        evTargetToggleClickByElement(targetLink);
+    }
     return false;
 }
 
