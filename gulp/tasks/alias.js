@@ -13,6 +13,7 @@ gulp.task('jsbuild', done => {
         'js_team',
         'js_user',
         'js_evaluation',
+        'js_evaluator_settings',
         'js_app',
         'js_vendor',
         'js_payment',
@@ -30,6 +31,7 @@ gulp.task('js', done => {
       'js_team',
       'js_user',
       'js_evaluation',
+      'js_evaluator_settings',
       'js_app',
       'js_vendor',
       'js_prerender',
@@ -86,6 +88,16 @@ gulp.task('js_evaluation', done => {
         'js_evaluation:concat',
         'js_evaluation:uglify',
         'js_evaluation:clean',
+        done
+    );
+});
+
+// js user
+gulp.task('js_evaluator_settings', done => {
+    return runSequence(
+        'js_evaluator_settings:concat',
+        'js_evaluator_settings:uglify',
+        'js_evaluator_settings:clean',
         done
     );
 });

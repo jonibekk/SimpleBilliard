@@ -1084,7 +1084,15 @@ class User extends AppModel
         return false;
     }
 
-    public function getUsersByKeyword($keyword, $limit = 10, $notMe = true, array $excludeUserIds = [])
+    /**
+     * @param       $keyword
+     * @param int   $limit
+     * @param bool  $excludeAuthUser If set to true, auth user in php session will be excluded from result.
+     * @param array $excludeUserIds
+     *
+     * @return array|null
+     */
+    public function getUsersByKeyword($keyword, $limit = 10, $excludeAuthUser = true, array $excludeUserIds = [])
     {
         $user_list = $this->TeamMember->getAllMemberUserIdList();
 
@@ -1113,7 +1121,7 @@ class User extends AppModel
                 ]
             ]
         ];
-        if ($notMe && !in_array($this->my_uid, $excludeUserIds)) {
+        if ($excludeAuthUser && !in_array($this->my_uid, $excludeUserIds)) {
             $excludeUserIds[] = $this->my_uid;
         }
         if (count($excludeUserIds) > 0) {
@@ -1171,9 +1179,21 @@ class User extends AppModel
         return $res;
     }
 
-    public function getUsersSelect2($keyword, $limit = 10, $with_group = false)
+    /**
+     * Return the array for called from ajax via Select2 (jQuery based plugin)
+     * @see https://select2.github.io/select2/ (v 3.5.x)
+     *
+     * @param      $keyword User typed string in input type=text
+     * @param int  $limit
+     * @param bool $with_group
+     * @param bool $with_self Include authorized user in the result.
+     *
+     * @return array
+     */
+    public function getUsersSelect2($keyword, $limit = 10, $with_group = false, $with_self = false)
     {
-        $users = $this->getUsersByKeyword($keyword, $limit);
+        $exclude_auth_user = !$with_self;
+        $users = $this->getUsersByKeyword($keyword, $limit, $exclude_auth_user);
         $user_res = $this->makeSelect2UserList($users);
 
         // グループを結果に含める場合
