@@ -17,15 +17,22 @@ class EvaluatorSettingsController extends AppController
 
     function beforeFilter()
     {
+        parent::beforeFilter();
+
         $this->layout = LAYOUT_ONE_COLUMN;
 
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init("ExperimentService");
-        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
-            throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
-        }
 
-        parent::beforeFilter();
+        if (!empty($this->Auth->user('id'))) {
+            if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+                throw new NotFoundException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
+            } else {
+                if (!$this->Team->EvaluationSetting->isEnabled()) {
+                    throw new NotFoundException(__("Evaluation feature is turned off. Please contact the team administrator."));
+                }
+            }
+        }
     }
 
     /**
@@ -41,8 +48,8 @@ class EvaluatorSettingsController extends AppController
         /** @var  User $User */
         $User = ClassRegistry::init('User');
 
-        $termId = $this->Team->Term->getCurrentTermId();
         $userId = $this->Auth->user('id');
+        $termId = $this->Team->Term->getCurrentTermId();
         $teamId = $this->current_team_id;
 
         $selfUser = $User->findById($userId);
