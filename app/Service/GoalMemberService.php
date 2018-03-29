@@ -291,6 +291,8 @@ class GoalMemberService extends AppService
     {
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
 
