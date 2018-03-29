@@ -1190,11 +1190,17 @@ class NotifySetting extends AppModel
                 $res = $model->findByUserId($model->my_uid);
                 $res = Hash::extract($res, 'NotifySetting');
                 if (!empty($res)) {
+                    $res['force_notify'] = true;
+                }
+                if (!empty($res)) {
                     return $res;
                 }
                 $schema = $model->schema();
                 foreach ($schema as $k => $v) {
                     $res[$k] = $v['default'];
+                }
+                if (!empty($res)) {
+                    $res['force_notify'] = true;
                 }
                 return $res;
             }, 'user_data');
