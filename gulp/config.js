@@ -39,7 +39,6 @@ const config = {
             assets_dir + '/js/view/payments/*.js'
         ],
         circle: [
-            node_modules_dir + '/sortablejs/Sortable.min.js',
             assets_dir + '/js/view/circle/*.js'
         ],
         homepage: [
