@@ -477,6 +477,8 @@ function evCommentDeleteConfirm() {
             $modal.modal('hide');
         }
     });
+    $(".dropdown-comment").show();
+    $("#jsGoTop").show();
     return false;
 }
 
@@ -751,11 +753,15 @@ function evTargetToggleClick() {
     if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
         //開いてるとき
         if ($("#" + target_id).is(':visible')) {
+            $(".dropdown-comment").show();
+            $("#jsGoTop").show();
             //閉じてる表示
             $obj.text($obj.attr("closed-text"));
         }
         //閉じてるとき
         else {
+            $(".dropdown-comment").not($(this).parent().parent().parent()).hide();
+            $("#jsGoTop").hide();
             //開いてる表示
             $obj.text($obj.attr("opend-text"));
         }

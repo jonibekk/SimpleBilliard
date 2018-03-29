@@ -41,7 +41,7 @@
         <div class="comment-body">
             <div class="col comment-user">
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                    <div class="dropdown pull-right">
+                    <div class="dropdown dropdown-comment pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
                             <i class="fa fa-chevron-down comment-arrow"></i>
                         </a>
