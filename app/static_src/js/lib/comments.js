@@ -263,6 +263,8 @@ function addComment(e) {
                         $('#CommentFormBody_' + post_id).removeClass('no-border');
                         $commentButtons.toggle();
                         ajaxProcess.resolve();
+                        // always blur since the focus remains in textarea even after CTRL+ENTER 
+                        $('#CommentFormBody_' + post_id).blur()
                     }
                 });
             }
