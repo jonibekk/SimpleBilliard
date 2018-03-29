@@ -37,10 +37,6 @@ $(document).ready(function() {
             '/api/v1/evaluators',
             form.serializeArray()
         ).done(function(data) {
-            new Noty({
-                type: 'success',
-                text: '<h4>'+ cake.word.success + '</h4>' + cake.word.evaluator_setting_saved,
-            }).show();
             location.href="/evaluator_settings";
         }).fail(function(xhr) {
             var data = $.parseJSON(xhr.responseText);
