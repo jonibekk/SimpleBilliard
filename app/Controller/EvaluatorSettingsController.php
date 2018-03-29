@@ -27,10 +27,9 @@ class EvaluatorSettingsController extends AppController
         if (!empty($this->Auth->user('id'))) {
             if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
                 throw new NotFoundException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
-            } else {
-                if (!$this->Team->EvaluationSetting->isEnabled()) {
-                    throw new NotFoundException(__("Evaluation feature is turned off. Please contact the team administrator."));
-                }
+            }
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new NotFoundException(__("Evaluation feature is turned off. Please contact the team administrator."));
             }
         }
     }
