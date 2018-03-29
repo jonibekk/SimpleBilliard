@@ -4,12 +4,12 @@
 "use strict";
 
 $(function () {
-  var elm = document.createElement('input');
-  elm.setAttribute('type', 'url');
+  var inputUrlCheckingElement = document.createElement('input');
+  inputUrlCheckingElement.setAttribute('type', 'url');
   
   function isValidURL(u){
-    elm.value = u;
-    return elm.validity.valid;
+    inputUrlCheckingElement.value = u;
+    return inputUrlCheckingElement.validity.valid;
   }
   // 投稿フォームが表示されるページのみ
     require(['ogp'], function (ogp) {

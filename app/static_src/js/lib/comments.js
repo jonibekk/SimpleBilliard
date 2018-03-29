@@ -104,11 +104,11 @@ function toggleCommentForm() {
 
     // OGP 情報を取得してプレビューする処理
     require(['ogp'], function (ogp) {
-        var elm = document.createElement('input');
-        elm.setAttribute('type', 'url');
+        var inputUrlCheckingElement = document.createElement('input');
+        inputUrlCheckingElement.setAttribute('type', 'url');
         function isValidURL(u){
-            elm.value = u;
-            return elm.validity.valid;
+            inputUrlCheckingElement.value = u;
+            return inputUrlCheckingElement.validity.valid;
         }
         $('#CommentFormBody_' + post_id).on('keyup', function (e) {
             if(e.keyCode == 32 || e.keyCode == 13) {
