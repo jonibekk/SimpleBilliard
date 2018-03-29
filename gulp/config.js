@@ -128,6 +128,15 @@ const config = {
       path: compiled_assets_dir + '/js'
     }
   },
+  js_exif: {
+    src: [
+      assets_dir + '/js/vendor/load-image.all.min.js',
+    ],
+    output: {
+      file_name: 'goalous_exifrotate',
+      path: compiled_assets_dir + '/js'
+    }
+  },
   coffee: {
     src: [assets_dir + '/coffee/**/*.coffee'],
     watch_files: [assets_dir + '/coffee/**/*.coffee']

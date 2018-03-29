@@ -74,6 +74,13 @@ gulp.task('js_vendor:clean', () => {
     .on('end', () => { gutil.log('----------------- js_vendor task finished --------------------------') })
 })
 
+gulp.task('js_exif:clean', () => {
+  return gulp.src([config.dest + '/js_exif_cat'], { read: false })
+    .pipe(rimraf({ force: true }))
+    .pipe(duration('js_exif:clean'))
+    .on('end', () => { gutil.log('----------------- js_exif task finished --------------------------') })
+})
+
 gulp.task('js_prerender:clean', () => {
   return gulp.src([config.dest + '/js_prerender_cat'], { read: false })
     .pipe(rimraf({ force: true }))

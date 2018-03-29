@@ -34,6 +34,7 @@ gulp.task('js', done => {
       'js_evaluator_settings',
       'js_app',
       'js_vendor',
+      'js_exif',
       'js_prerender',
       'js_payment',
       'js_homepage',
@@ -151,6 +152,16 @@ gulp.task('js_vendor', done => {
     'js_vendor:concat',
     'js_vendor:uglify',
     'js_vendor:clean',
+    done
+  )
+})
+
+// js exif
+gulp.task('js_exif', done => {
+  return runSequence(
+    'js_exif:concat',
+    'js_exif:uglify',
+    'js_exif:clean',
     done
   )
 })

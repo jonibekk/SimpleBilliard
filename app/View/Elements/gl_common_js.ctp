@@ -31,7 +31,7 @@ if ($this->request->params['controller'] === 'teams' && $this->request->params['
     echo $this->Html->script('/js/ng_vendors.min');
     echo $this->Html->script('/js/ng_app.min');
 }
-echo $this->Html->script('/js/vendor/load-image.all.min');
+echo $this->Html->script('/js/goalous_exifrotate.min');
 echo $this->Html->script('/js/vendors.min');
 echo $this->Html->script('/js/goalous.min');
 echo $this->PageResource->getPageScript();

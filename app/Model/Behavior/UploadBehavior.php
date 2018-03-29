@@ -1019,20 +1019,20 @@ class UploadBehavior extends ModelBehavior
                 return 0;
             case 2: //左右反転
                 $flip = true;
-                return 180;
+                return 0;
             case 3: //180°回転
                 return 180;
             case 4: //上下反転
                 $flip = true;
-                return 0;
+                return 180;
             case 5: //反時計回りに90°回転 上下反転
                 $flip = true;
-                return 90;
+                return 270;
             case 6: //反時計回りに90°回転
                 return 270;
             case 7: //　時計回りに90°回転 上下反転
                 $flip = true;
-                return 270;
+                return 90;
             case 8: //時計回りに90°回転
                 return 90;
         }

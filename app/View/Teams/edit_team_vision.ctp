@@ -138,7 +138,6 @@
     });
 </script>
 <?php $this->end() ?>
-<?php $this->Html->Script('js/gl_basic') ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(function() {
