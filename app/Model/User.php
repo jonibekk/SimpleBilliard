@@ -1,6 +1,8 @@
 <?php
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
+App::uses('AppUtil', 'Util');
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -1820,18 +1822,20 @@ class User extends AppModel
     /**
      * Function for filter user ids, and returning users who are inactive in team
      *
+     * @param int @teamID
+     *          Team ID of the users
      * @param array $userIds
      *          User IDs to be filtered
      *
      * @return array | null Array of inactive users
      */
-    public function filterInactiveTeamUsers(array $userIds): array
+    public function filterInactiveTeamUsers(int $teamID, array $userIds): array
     {
         $options = [
             'conditions' => [
                 'User.id'            => $userIds,
                 'User.active_flg'    => true,
-                'TeamMember.team_id' => $this->current_team_id,
+                'TeamMember.team_id' => $teamID,
                 'TeamMember.status'  => TeamMember::USER_STATUS_INACTIVE,
             ],
             'joins'      => [
@@ -1858,6 +1862,6 @@ class User extends AppModel
      */
     public function validateUserID($userID): bool
     {
-        return !empty($userID) && ctype_digit(strval($userID)) && $userID != 0;
+        return !empty($userID) && AppUtil::isInt($userID) && $userID != 0;
     }
 }

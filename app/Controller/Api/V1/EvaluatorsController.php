@@ -63,12 +63,14 @@ class EvaluatorsController extends ApiController
             }
         }
 
-        $inactiveUsersList = $this->User->filterInactiveTeamUsers($evaluatorUserIds);
+        $teamId = $this->current_team_id;
+        
+        $inactiveUsersList = $this->User->filterInactiveTeamUsers($teamId, $evaluatorUserIds);
 
         if (count($inactiveUsersList) > 0) {
             $connectorString = (count($inactiveUsersList) > 1) ? ' are ' : ' is ';
             return $this->_getResponseBadFail(__('%s %s inactive',
-                implode(", ", Hash::extract($inactiveUsersList,'{n}.User.display_username')), $connectorString));
+                implode(", ", Hash::extract($inactiveUsersList, '{n}.User.display_username')), $connectorString));
         }
 
         /** @var TeamMember $TeamMember */
@@ -87,8 +89,6 @@ class EvaluatorsController extends ApiController
 
         /** @var EvaluatorService $EvaluatorService */
         $EvaluatorService = ClassRegistry::init("EvaluatorService");
-
-        $teamId = $this->current_team_id;
 
         $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds, $userId);
 
