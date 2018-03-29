@@ -76,7 +76,7 @@ if (isset($site_info['type']) && (
                                     $_title = $local_username;
                                 }
                                 ?>
-                                <?= mb_strimwidth(h($_title), 0, $title_max_length, "...") ?>
+                                <?= mb_strimwidth($_title, 0, $title_max_length, "...") ?>
                             <?php endif ?>
                         </h4>
 

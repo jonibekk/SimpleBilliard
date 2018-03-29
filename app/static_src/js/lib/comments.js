@@ -7,12 +7,6 @@ $(function () {
     require.config({
         baseUrl: '/js/modules/'
     });
-    var elm = document.createElement('input');
-    elm.setAttribute('type', 'url');
-    function isValidURL(u){
-        elm.value = u;
-        return elm.validity.valid;
-    }
     $(document).on("click", ".click-get-ajax-form-toggle", toggleCommentForm);
     $(document).on("click", ".click-comment-new", evCommentLatestView);
     $(document).on("click", ".js-click-comment-delete", evCommentDelete);
@@ -110,10 +104,24 @@ function toggleCommentForm() {
 
     // OGP 情報を取得してプレビューする処理
     require(['ogp'], function (ogp) {
-        function ogpComments(ogp, url) {
-            ogp.getOGPSiteInfo({
+        var elm = document.createElement('input');
+        elm.setAttribute('type', 'url');
+        function isValidURL(u){
+            elm.value = u;
+            return elm.validity.valid;
+        }
+        $('#CommentFormBody_' + post_id).on('keyup', function (e) {
+            if(e.keyCode == 32 || e.keyCode == 13) {
+              var input = $.trim($('#CommentFormBody_' + post_id).val());
+              if(isValidURL(input)){
+                ogpComments(ogp, input);
+              }
+            }
+        });
+        function ogpComments(ogp, text) {
+            var options = {
                 // URL が含まれるテキスト
-                text: url,
+                text: text,
 
                 // ogp 情報を取得する必要があるかチェック
                 readyLoading: function () {
@@ -126,28 +134,7 @@ function toggleCommentForm() {
 
                 // ogp 情報取得成功時
                 success: function (data) {
-                    var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
-                    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
-                    $siteInfo
-                    // プレビュー用 HTML
-                        .html(data.html)
-                        // プレビュー削除ボタンを重ねて表示
-                        .prepend($('<a>').attr('href', '#')
-                            .addClass('font_lightgray comment-ogp-close')
-                            .append('<i class="fa fa-times fa-2x"></i>')
-                            .on('click', function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                $siteInfoUrl.val('');
-                                $siteInfo.empty();
-                            }))
-                        // プレビュー削除ボタンの表示スペースを作る
-                        .find('.site-info').css({
-                        "padding-right": "30px"
-                    });
-
-                    // hidden に URL 追加
-                    $siteInfoUrl.val(data.url);
+                    appendCommentOgpInfo(data);
                 },
 
                 // ogp 情報 取得失敗時
@@ -170,17 +157,41 @@ function toggleCommentForm() {
                     // loading アイコン削除
                     $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
                 }
-            });
-        };
-        $('#CommentFormBody_' + post_id).on('keyup', function (e) {
-            if(e.keyCode == 32 || e.keyCode == 13) {
-              var input = $.trim($('#CommentFormBody_' + post_id).val());
-              if(isValidURL(input)){
-                getPostOGPInfo(ogp, input);
-              }
-            }
-        });
+            };
+            ogp.getOGPSiteInfo(options);
+            return false;
+        }
     });
+
+/**
+ * Append the acquired OGP info to requested commment
+ * @param data
+ */
+function appendCommentOgpInfo(data) {
+    var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
+    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
+    $siteInfo
+    // プレビュー用 HTML
+        .html(data.html)
+        // プレビュー削除ボタンを重ねて表示
+        .prepend($('<a>').attr('href', '#')
+            .addClass('font_lightgray comment-ogp-close')
+            .append('<i class="fa fa-times fa-2x"></i>')
+            .on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $siteInfoUrl.val('');
+                $siteInfo.empty();
+            }))
+        // プレビュー削除ボタンの表示スペースを作る
+        .find('.site-info').css({
+        "padding-right": "30px"
+    });
+
+    // hidden に URL 追加
+    return false;
+}
+
 }
 
 /**
