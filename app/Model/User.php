@@ -1510,15 +1510,15 @@ class User extends AppModel
         if (strpos($keyword, ' ') !== false || strpos($keyword, '　') !== false) {
             $keyword = str_replace('　', ' ', $keyword);
             $keyword_conditions = [
-                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
-                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
+                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => '%' . $keyword . '%',
+                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => '%' . $keyword . '%',
             ];
         } else {
             $keyword_conditions = [
-                'User.first_name LIKE'            => $keyword . "%",
-                'User.last_name LIKE'             => $keyword . "%",
-                'SearchLocalName.first_name LIKE' => $keyword . "%",
-                'SearchLocalName.last_name LIKE'  => $keyword . "%",
+                'User.first_name LIKE'            => '%' . $keyword . '%',
+                'User.last_name LIKE'             => '%' . $keyword . '%',
+                'SearchLocalName.first_name LIKE' => '%' . $keyword . '%',
+                'SearchLocalName.last_name LIKE'  => '%' . $keyword . '%',
             ];
         }
         return $keyword_conditions;
