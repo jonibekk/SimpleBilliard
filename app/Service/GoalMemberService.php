@@ -331,20 +331,19 @@ class GoalMemberService extends AppService
             // ゴール脱退
             if ($changeType === self::CHANGE_LEADER_WITH_QUIT) {
                 $goalMemberId = Hash::get($data, 'GoalMember.id');
+                // 認定対象の場合のみ未認定カウントキャッシュを削除
+                if ($this->isApprovableGoalMember($goalMemberId)) {
+                    $quitUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
+                    $coachId = $TeamMember->getCoachId($quitUserId);
+                    Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
+                }
+
                 $GoalMember->delete($goalMemberId);
                 // 論理削除している関係で必ずdelete()メソッドは必ずfalseを返す。
                 // よって削除が成功してるかどうか泥臭くチェックしてる。泣
                 if (!empty($GoalMember->findById($goalMemberId))) {
                     throw new Exception(sprintf("Failed to quit goal. data:%s"
                         , var_export($goalMemberId, true)));
-                }
-
-                // 認定対象の場合のみ未認定カウントキャッシュを削除
-                $goalMemberId = Hash::get($data, 'GoalMember.id');
-                if ($this->isApprovableGoalMember($goalMemberId)) {
-                    $quitUserId = $GoalMember->getUserIdByGoalMemberId($goalMemberId);
-                    $coachId = $TeamMember->getCoachId($quitUserId);
-                    Cache::delete($Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId), 'user_data');
                 }
 
                 // アクション可能ゴール一覧キャッシュ削除(旧リーダー)
