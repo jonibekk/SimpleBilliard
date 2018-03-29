@@ -1857,7 +1857,7 @@ class TeamsController extends AppController
         $group_id = $this->request->query('group');
         $type = $this->request->query('type');
         $timezone = $this->request->query('timezone');
-        $lastRank = intval(!empty($this->request->query('last_rank')) ? $this->request->query('last_rank') : 0);
+        $lastRank = !empty($this->request->query('last_rank')) ? intval($this->request->query('last_rank')) : 0;
 
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
