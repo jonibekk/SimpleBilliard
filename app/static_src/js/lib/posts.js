@@ -6,6 +6,7 @@
 $(function () {
   var elm = document.createElement('input');
   elm.setAttribute('type', 'url');
+  
   function isValidURL(u){
     elm.value = u;
     return elm.validity.valid;
@@ -13,7 +14,7 @@ $(function () {
   // 投稿フォームが表示されるページのみ
     require(['ogp'], function (ogp) {
 
-      $('#CommonPostBody').on('input', function (e) {
+      $('#CommonPostBody').on('keyup', function (e) {
         if(e.keyCode == 32 || e.keyCode == 13) {
           var input = $.trim($('#CommonPostBody').val());
           if(isValidURL(input)){
