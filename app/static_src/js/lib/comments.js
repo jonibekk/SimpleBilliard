@@ -7,7 +7,12 @@ $(function () {
     require.config({
         baseUrl: '/js/modules/'
     });
-
+    var elm = document.createElement('input');
+    elm.setAttribute('type', 'url');
+    function isValidURL(u){
+        elm.value = u;
+        return elm.validity.valid;
+    }
     $(document).on("click", ".click-get-ajax-form-toggle", toggleCommentForm);
     $(document).on("click", ".click-comment-new", evCommentLatestView);
     $(document).on("click", ".js-click-comment-delete", evCommentDelete);
@@ -167,25 +172,11 @@ function toggleCommentForm() {
                 }
             });
         };
-        // OGP
-        var patterns = {
-            protocol: '^(http(s)?(:\/\/))?(www\.)?',
-            domain: '[a-zA-Z0-9-_\.]+',
-            tld: '(\.[a-zA-Z0-9]{2,})',
-            params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
-        }
-
-        var p = patterns;
-        var pattern = new RegExp(p.protocol + p.domain + p.tld + p.params, 'gi');
-
         $('#CommentFormBody_' + post_id).on('keyup', function (e) {
-            console.log("keyup");
             if(e.keyCode == 32 || e.keyCode == 13) {
-              var input = $('#CommentFormBody_' + post_id).val();
-              var res = pattern.exec(input);
-              if(res) {
-                console.log(res[0]);
-                ogpComments(ogp, res[0]);
+              var input = $.trim($('#CommentFormBody_' + post_id).val());
+              if(isValidURL(input)){
+                getPostOGPInfo(ogp, input);
               }
             }
         });

@@ -4,26 +4,20 @@
 "use strict";
 
 $(function () {
+  var elm = document.createElement('input');
+  elm.setAttribute('type', 'url');
+  function isValidURL(u){
+    elm.value = u;
+    return elm.validity.valid;
+  }
   // 投稿フォームが表示されるページのみ
-  if ($('#CommonPostBody').length) {
     require(['ogp'], function (ogp) {
-      // OGP
-      var patterns = {
-        protocol: '^(http(s)?(:\/\/))?(www\.)?',
-        domain: '[a-zA-Z0-9-_\.]+',
-        tld: '(\.[a-zA-Z0-9]{2,})',
-        params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
-      }
 
-      var p = patterns;
-      var pattern = new RegExp(p.protocol + p.domain + p.tld + p.params, 'gi');
-
-      $('#CommonPostBody').on('keyup', function (e) {
+      $('#CommonPostBody').on('input', function (e) {
         if(e.keyCode == 32 || e.keyCode == 13) {
-          var input = $('#CommonPostBody').val();
-          var res = pattern.exec(input);
-          if(res) {
-            getPostOGPInfo(ogp, res[0]);
+          var input = $.trim($('#CommonPostBody').val());
+          if(isValidURL(input)){
+            getPostOGPInfo(ogp, input);
           }
         }
       });
@@ -47,7 +41,6 @@ $(function () {
         }
         return false
     })
-  }
   //サークルページの添付ファイルタイプ切替え
   $('#SwitchFileType').change(function () {
     var file_type = $(this).val();
