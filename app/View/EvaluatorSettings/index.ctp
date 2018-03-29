@@ -1,12 +1,12 @@
 <?= $this->App->viewStartComment()?>
 <div class="panel panel-default col-sm-8 col-sm-offset-2 eval-list">
     <div class="panel-heading">
-        <?= __('Evaluation member list') ?>
+        <?= __('Evaluatees overview') ?>
     </div>
     <div class="panel-body eval-view-panel-body">
         <?php if ($countOfZeroEvaluateeUsers > 0): ?>
         <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-            <?= __('%d  coachee has no evaluators.', $countOfZeroEvaluateeUsers) ?>
+            <?= __('%d coached member has no evaluators.', $countOfZeroEvaluateeUsers) ?>
         </div>
         <?php endif ?>
         <div class="form-group">
@@ -15,18 +15,14 @@
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
-                    'evaluatees'     => [$selfEvaluation],
-                    'eval_term_id'   => $termId,
-                    'eval_is_frozen' => $isFrozen
+                    'evaluatees'     => [$selfUser],
                 ]) ?>
             <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                <p class="font_bold"><?= __('Coachee, members you evaluate') ?> (<?= count($evaluateesEvaluation) ?>)</p>
+                <p class="font_bold"><?= __('Coached member(s)') ?> (<?= count($coachees) ?>)</p>
             </div>
             <?= $this->element('EvaluatorSetting/index_items',
                 [
-                    'evaluatees'     => $evaluateesEvaluation,
-                    'eval_term_id'   => $termId,
-                    'eval_is_frozen' => $isFrozen
+                    'evaluatees'     => $coachees,
                 ]) ?>
         </div>
     </div>

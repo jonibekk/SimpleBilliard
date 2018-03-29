@@ -17,6 +17,7 @@ use Goalous\Model\Enum as Enum;
 class TeamMember extends AppModel
 {
     const ADMIN_USER_FLAG = 1;
+    const MAX_NUMBER_OF_EVALUATORS = 7;
 
     /**
      * User status valid codes
@@ -42,7 +43,7 @@ class TeamMember extends AppModel
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'status'                => [
-            'inEnumList' => [
+            'inEnumList'      => [
                 'rule' => [
                     'inEnumList',
                     "TeamMember\Status"
@@ -132,8 +133,8 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'status' => self::USER_STATUS_ACTIVE,
-                'team_id'    => $this->current_team_id
+                'status'  => self::USER_STATUS_ACTIVE,
+                'team_id' => $this->current_team_id
             ],
             'fields'     => ['user_id', 'user_id']
         ];
@@ -339,9 +340,9 @@ class TeamMember extends AppModel
             return $this->save($team_member);
         }
         $data = [
-            'user_id'    => $uid,
-            'team_id'    => $team_id,
-            'status'     => self::USER_STATUS_ACTIVE,
+            'user_id' => $uid,
+            'team_id' => $team_id,
+            'status'  => self::USER_STATUS_ACTIVE,
         ];
         return $this->save($data);
     }
@@ -355,7 +356,7 @@ class TeamMember extends AppModel
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
-                'team_id'    => $teamId
+                'team_id' => $teamId
             ],
             'fields'     => ['user_id'],
         ];
@@ -1236,7 +1237,7 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['member_no'] = Hash::get($v,
                 'TeamMember.member_no') ? $v['TeamMember']['member_no'] : null;
             $this->csv_datas[$k]['status'] = Hash::get($v,
-                'TeamMember.status')  == self::USER_STATUS_ACTIVE ? 'ON' : 'OFF';
+                'TeamMember.status') == self::USER_STATUS_ACTIVE ? 'ON' : 'OFF';
             $this->csv_datas[$k]['admin_flg'] = Hash::get($v,
                 'TeamMember.admin_flg') && $v['TeamMember']['admin_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
@@ -1578,12 +1579,13 @@ class TeamMember extends AppModel
             'total.self.comment' => __('Comment by him/herself'),
         ];
         //evaluator
-        for ($ek = 1; $ek <= 7; $ek++) {
+        for ($ek = 1; $ek <= self:: MAX_NUMBER_OF_EVALUATORS; $ek++) {
             $record["total.evaluator.$ek.name"] = __('Name of evaluator %s', $ek);
             $record["total.evaluator.$ek.score"] = __('Score of evaluator %s', $ek);
             $record["total.evaluator.$ek.comment"] = __('Comment by evaluator %s', $ek);
         }
-        //final
+
+//final
         $record["total.final.score"] = __('Score by final evaluator');
         $record["total.final.comment"] = __('Comment by final evaluator');
 
@@ -1750,7 +1752,7 @@ class TeamMember extends AppModel
      *
      * @param $user_id
      *
-     * @return array|null
+     * @return int|null
      */
     function getCoachUserIdByMemberUserId($user_id = null)
     {
@@ -1974,8 +1976,11 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isActiveAdmin(int $userId, int $teamId): bool
-    {
+    public
+    function isActiveAdmin(
+        int $userId,
+        int $teamId
+    ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2082,8 +2087,11 @@ class TeamMember extends AppModel
      *
      * @return array|null
      */
-    public function getTeamMemberListByStatus($status, $teamId = null)
-    {
+    public
+    function getTeamMemberListByStatus(
+        $status,
+        $teamId = null
+    ) {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2106,11 +2114,14 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isTeamMember(int $teamId, int $teamMemberId): bool
-    {
+    public
+    function isTeamMember(
+        int $teamId,
+        int $teamMemberId
+    ): bool {
         $options = [
             'conditions' => [
-                'id' => $teamMemberId,
+                'id'      => $teamMemberId,
                 'team_id' => $teamId
             ]
         ];
@@ -2124,8 +2135,10 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isInactive(int $teamMemberId): bool
-    {
+    public
+    function isInactive(
+        int $teamMemberId
+    ): bool {
         $options = [
             'conditions' => [
                 'id'     => $teamMemberId,
@@ -2142,8 +2155,10 @@ class TeamMember extends AppModel
      *
      * @return array
      */
-    public function getUserById(int $teamMemberId): array
-    {
+    public
+    function getUserById(
+        int $teamMemberId
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
@@ -2169,11 +2184,13 @@ class TeamMember extends AppModel
      * @return array
      * @internal param int $teamMemberId
      */
-    public function findBelongsByUser(int $userId): array
-    {
+    public
+    function findBelongsByUser(
+        int $userId
+    ): array {
         $options = [
             'conditions' => [
-                'TeamMember.user_id' => $userId,
+                'TeamMember.user_id'   => $userId,
                 'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
             ],
         ];
