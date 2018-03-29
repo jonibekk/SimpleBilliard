@@ -40,7 +40,7 @@ class EvaluatorsController extends ApiController
         }
 
         // Validate parameters
-        if (!$this->User->validateUserID($evaluateeUserId)) {
+        if (!$this->User->validateUserId($evaluateeUserId)) {
             return $this->_getResponseBadFail(__('Parameter is invalid'));
         }
         //If evaluatee user_id in evaluator array, send error
@@ -51,8 +51,8 @@ class EvaluatorsController extends ApiController
             return $this->_getResponseBadFail(__('Evaluator setting cannot be saved.'));
         }
         // Check for invalid evaluator user IDs
-        foreach ($evaluatorUserIds as $evaluatorID) {
-            if (!$this->User->validateUserID($evaluatorID)) {
+        foreach ($evaluatorUserIds as $evaluatorId) {
+            if (!$this->User->validateUserId($evaluatorId)) {
                 return $this->_getResponseBadFail(__('Parameter is invalid'));
             }
         }
@@ -64,7 +64,7 @@ class EvaluatorsController extends ApiController
         }
 
         $teamId = $this->current_team_id;
-        
+
         $inactiveUsersList = $this->User->filterInactiveTeamUsers($teamId, $evaluatorUserIds);
 
         if (count($inactiveUsersList) > 0) {

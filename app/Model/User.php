@@ -1822,20 +1822,20 @@ class User extends AppModel
     /**
      * Function for filter user ids, and returning users who are inactive in team
      *
-     * @param int @teamID
+     * @param int @teamId
      *          Team ID of the users
      * @param array $userIds
      *          User IDs to be filtered
      *
      * @return array | null Array of inactive users
      */
-    public function filterInactiveTeamUsers(int $teamID, array $userIds): array
+    public function filterInactiveTeamUsers(int $teamId, array $userIds): array
     {
         $options = [
             'conditions' => [
                 'User.id'            => $userIds,
                 'User.active_flg'    => true,
-                'TeamMember.team_id' => $teamID,
+                'TeamMember.team_id' => $teamId,
                 'TeamMember.status'  => TeamMember::USER_STATUS_INACTIVE,
             ],
             'joins'      => [
@@ -1856,12 +1856,12 @@ class User extends AppModel
     }
 
     /**
-     * @param $userID
+     * @param $userId
      *
      * @return bool Validation result; true for successful validation
      */
-    public function validateUserID($userID): bool
+    public function validateUserId($userId): bool
     {
-        return !empty($userID) && AppUtil::isInt($userID) && $userID != 0;
+        return !empty($userId) && AppUtil::isInt($userId) && $userId != 0;
     }
 }
