@@ -1,8 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('User', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('Evaluator', 'Model');
 App::import('Service', 'ExperimentService');
 App::import('Service', 'EvaluationService');
+App::import('Service', 'EvaluatorService');
 
 /**
  * EvaluatorSettingsController Controller
@@ -14,15 +17,21 @@ class EvaluatorSettingsController extends AppController
 
     function beforeFilter()
     {
+        parent::beforeFilter();
+
         $this->layout = LAYOUT_ONE_COLUMN;
 
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init("ExperimentService");
-        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
-            throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
-        }
 
-        parent::beforeFilter();
+        if (!empty($this->Auth->user('id'))) {
+            if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+                throw new NotFoundException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
+            }
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new NotFoundException(__("Evaluation feature is turned off. Please contact the team administrator."));
+            }
+        }
     }
 
     /**
@@ -31,23 +40,27 @@ class EvaluatorSettingsController extends AppController
      */
     function index()
     {
-
         /** @var  EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init('EvaluationService');
+        /** @var  EvaluatorService $EvaluatorService */
+        $EvaluatorService = ClassRegistry::init('EvaluatorService');
+        /** @var  User $User */
+        $User = ClassRegistry::init('User');
 
-        $termId = $this->Team->Term->getCurrentTermId();
         $userId = $this->Auth->user('id');
+        $termId = $this->Team->Term->getCurrentTermId();
+        $teamId = $this->current_team_id;
 
-        $selfEvaluation = $EvaluationService->getEvalStatus($termId, $userId);
-        $evaluateesEvaluation = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
-
-        $selfEvaluation = $this->extractEvaluatorsInFlow([$selfEvaluation])[0];
-        $evaluateesEvaluation = $this->extractEvaluatorsInFlow($evaluateesEvaluation);
+        $selfUser = $User->findById($userId);
+        $selfUser['evaluators'] = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
 
         // Count zero evaluatee users
         $countOfZeroEvaluateeUsers = 0;
-        foreach ($evaluateesEvaluation as $key => $evaluateeEvaluation) {
-            if (0 === count($evaluateeEvaluation['flow'])) {
+        foreach ($coachees as $key => $coachee) {
+            $evaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $coachee['User']['id']);
+            $coachees[$key]['evaluators'] = $evaluators;
+            if (0 === count($evaluators)) {
                 $countOfZeroEvaluateeUsers++;
             }
         }
@@ -55,56 +68,71 @@ class EvaluatorSettingsController extends AppController
         $isFixedEvaluationOrder = $this->Team->EvaluationSetting->isFixedEvaluationOrder();
 
         $this->set('termId', $termId);
-        $this->set('selfEvaluation', $selfEvaluation);
-        $this->set('evaluateesEvaluation', $evaluateesEvaluation);
+        $this->set('selfUser', $selfUser);
+        $this->set('coachees', $coachees);
         $this->set('isFrozen', false);
         $this->set('isFixedEvaluationOrder', $isFixedEvaluationOrder);
         $this->set('countOfZeroEvaluateeUsers', $countOfZeroEvaluateeUsers);
     }
 
     /**
-     * Filtering for using to showing only evaluators
-     *
-     * @param array $evaluations
-     *
-     * @return array
-     */
-    private function extractEvaluatorsInFlow(array $evaluations): array
-    {
-        foreach ($evaluations as $key => $evaluation) {
-            $flow = $evaluation['flow'] ?? [];
-            $evaluations[$key]['flow'] = array_values(
-                // leave the leader and evaluator in the flow array
-                // removing "self" and "final evaluator"
-                array_filter($flow, function ($evaluateFlow) {
-                    return in_array($evaluateFlow['evaluate_type'], [
-                        Evaluation::TYPE_EVALUATOR,
-                        Evaluation::TYPE_LEADER,
-                    ]);
-                })
-            );
-        }
-        return $evaluations;
-    }
-
-    /**
-     * TODO: implement here
+     * Evaluator setting page
      */
     function detail()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
 
-        $userId = $this->request->params['user_id'];
+        $authUserId = $this->Auth->user('id');
+        $evaluateeUserId = $this->request->params['user_id'];
+        $teamId = $this->current_team_id;
 
         /** @var  User $User */
         $User = ClassRegistry::init('User');
-        $userEvaluatee = $User->findById($userId);
+        /** @var  TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var  Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
+        /** @var  EvaluatorService $EvaluatorService */
+        $EvaluatorService = ClassRegistry::init('EvaluatorService');
+        /** @var  EvaluationService $EvaluationService */
+        $EvaluationService = ClassRegistry::init('EvaluationService');
 
-        // TODO: fetch evaluators
-        $userEvaluators = [$userEvaluatee, $userEvaluatee, $userEvaluatee, null, null, null, null,];
+        // Check auth user have authority to see this page.
+        $termId = $this->Team->Term->getCurrentTermId();
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId);
+        $usersIdsCanView = array_merge(Hash::extract($coachees, '{n}.User.id'), [$authUserId]);
+        if (!in_array($evaluateeUserId, $usersIdsCanView)) {
+            throw new NotFoundException();
+        }
+
+        $userEvaluatee = $User->findById($evaluateeUserId);
+
+        // Fetching coach User
+        $coachUserId = $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId);
+        $userCoach = null;
+        if (!empty($coachUserId)) {
+            $userCoach = $User->findById($coachUserId);
+        }
+
+        // Fetching evaluatee's evaluators
+        $userEvaluators = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $evaluateeUserId);
+
+        /**@var EvaluatorChangeLog $EvaluatorChangeLog */
+        $EvaluatorChangeLog = ClassRegistry::init('EvaluatorChangeLog');
+        $latestEvaluatorChangeLog = $EvaluatorChangeLog->getLatestLogByUserIdAndTeamId($teamId, $evaluateeUserId);
+        if (!empty($latestEvaluatorChangeLog['last_update_user_id'])) {
+            $latestUpdateUser = $User->getById($latestEvaluatorChangeLog['last_update_user_id']);
+            if (!empty($latestUpdateUser)) {
+                $latestEvaluatorChangeLog['User'] = $latestUpdateUser;
+            }
+            $updateTime = GoalousDateTime::createFromTimestamp($latestEvaluatorChangeLog['created']);
+            $updateTime->setTimeZoneTeam();
+            $latestEvaluatorChangeLog['display_update_time'] = $updateTime->format('Y-m-d H:i:s');
+        }
 
         $this->set('userEvaluatee', $userEvaluatee);
-        $this->set('userEvaluateeCoach', $userEvaluatee);
+        $this->set('userEvaluateeCoach', $userCoach);
         $this->set('userEvaluators', $userEvaluators);
+        $this->set('latestEvaluatorChangeLog', $latestEvaluatorChangeLog);
     }
 }

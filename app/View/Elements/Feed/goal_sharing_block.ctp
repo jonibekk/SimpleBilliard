@@ -14,23 +14,49 @@
     <div class="site-info bd-radius_4px">
         <div class="media">
             <div class="pull-left">
-                <?=
-                $this->Html->image('pre-load.svg',
-                    [
-                        'class'         => 'lazy media-object',
-                        'data-original' => $this->Upload->uploadUrl($post,
-                            "Goal.photo",
-                            ['style' => 'medium_large']),
-                        'width'         => '80px',
-                        'height'        => '80px'
-                    ]
-                )
-                ?>
+                <a href="<?= $this->Html->url([
+                    'controller' => 'goals',
+                    'action'     => 'view_krs',
+                    'goal_id'    => $post['Goal']['id']
+                ]) ?>"
+                   data-url="<?= $this->Html->url([
+                       'controller' => 'goals',
+                       'action'     => 'ajax_get_goal_description_modal',
+                       'goal_id'    => $post['Goal']['id']
+                   ]) ?>"
+                   class="post-heading-goal
+                    no-line font_verydark modal-ajax-get">
+                    <?=
+                    $this->Html->image('pre-load.svg',
+                        [
+                            'class'         => 'lazy media-object',
+                            'data-original' => $this->Upload->uploadUrl($post,
+                                "Goal.photo",
+                                ['style' => 'medium_large']),
+                            'width'         => '80px',
+                            'height'        => '80px'
+                        ]
+                    )
+                    ?>
+                </a>
             </div>
             <div class="media-body">
+                <a href="<?= $this->Html->url([
+                        'controller' => 'goals',
+                        'action'     => 'view_krs',
+                        'goal_id'    => $post['Goal']['id']
+                    ]) ?>"
+                       data-url="<?= $this->Html->url([
+                           'controller' => 'goals',
+                           'action'     => 'ajax_get_goal_description_modal',
+                           'goal_id'    => $post['Goal']['id']
+                       ]) ?>"
+                       class="post-heading-goal
+                        no-line font_verydark modal-ajax-get">
                 <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Goal']['name']),
                         0, 145,
                         "...") ?></h4>
+                </a>
             </div>
         </div>
         <?php if ($this->Post->isDisplayableGoalButtons($post['Post'], $post['Goal'], $current_term)) : ?>

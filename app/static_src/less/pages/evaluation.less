@@ -14,6 +14,9 @@
     .horizontal-center {
       .flex-horizontal-center;
     }
+    .evaluator_select {
+      width: 100%;
+    }
     &-left {
       width: 48px;
     }
@@ -34,6 +37,15 @@
       }
     }
   }
+}
+
+// hiding the Select2 plugin of up/down arrow
+#evaluators .select2-arrow {
+  display: none;
+}
+
+#evaluators .select2-container {
+  width: 100%;
 }
 
 .eval-view {
