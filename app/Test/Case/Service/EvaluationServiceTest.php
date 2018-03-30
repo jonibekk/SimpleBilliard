@@ -390,7 +390,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $teamMember['team_id'] = $teamId;
         $teamMember['evaluation_enable_flg'] = true;
         $teamMember['coach_user_id'] = $coachUserId;
-        $teamMember['status'] = Enum\TeamMember\Status::ACTIVE();
+        $teamMember['status'] = Enum\TeamMember\Status::ACTIVE;
 
         $this->TeamMember->save($teamMember);
 
