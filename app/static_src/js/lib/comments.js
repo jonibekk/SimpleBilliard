@@ -836,7 +836,7 @@ function evTargetToggleClick() {
                                 // Checks if necessary to obtain ogp
                                 readyLoading: function () {
                                     // Returns if the ogp data is already obtained
-                                    if ($('#CommentOgpEditBox_' + comment_id).val()) {
+                                    if ($('#CommentOgpEditBox_' + comment_id).length {
                                         return false;
                                     }
                                     return true;
@@ -992,7 +992,7 @@ function evTargetToggleClickByElement(elem) {
                                 // Checks if necessary to obtain ogp
                                 readyLoading: function () {
                                     // Returns if the ogp data is already obtained
-                                    if ($('#CommentOgpEditBox_' + comment_id).val()) {
+                                    if ($('#CommentOgpEditBox_' + comment_id).length) {
                                         return false;
                                     }
                                     return true;
