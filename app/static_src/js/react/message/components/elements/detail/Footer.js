@@ -118,6 +118,15 @@ class Footer extends React.Component {
   }
 
   selectFile(e) {
+    const originalEvent = document.body.onfocus
+    document.body.onfocus = () => {
+      // addEventListener('focus') does not work
+      // just is_uploading will be false if no file selected
+      // is_uploading will be true in uploadFiles right after is_uploading chages here
+      //  if any files selected 
+      this.props.dispatch(file_upload.setUploadingStatus(false))
+      document.body.onfocus = originalEvent
+    }
     ReactDom.findDOMNode(this.refs.file).click();
   }
 
