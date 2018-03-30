@@ -1820,7 +1820,7 @@ class User extends AppModel
     }
 
     /**
-     * Function for filter user ids, and returning users who are inactive in team
+     * Function for filter user ids based on their activity status in a team
      *
      * @param int @teamId
      *          Team ID of the users
