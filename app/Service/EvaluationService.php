@@ -205,7 +205,7 @@ class EvaluationService extends AppService
         $teamMembers = $TeamMember->findAllByCoachUserId($coachUserId);
         $coacheeUserIds = Hash::extract($teamMembers, '{n}.TeamMember.user_id');
 
-        $team_id = Hash::get($Term->getTermData($termId), 'team_id');
+        $team_id = $Term->getById($termId, ['team_id']);
 
         return $this->getEvaluateesFromUserIds($termId,
             Hash::extract($User->filterUsersOnTeamActivity($team_id, $coacheeUserIds, true), '{n}.User.id'));
