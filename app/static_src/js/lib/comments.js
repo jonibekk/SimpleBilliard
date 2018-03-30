@@ -125,7 +125,7 @@ function toggleCommentForm() {
 
                 // Checks if necessary to obtain ogp
                 readyLoading: function () {
-                    // 既に OGP 情報を取得している場合は終了
+                    // Returns if the ogp data is already obtained
                     if ($('#CommentSiteInfoUrl_' + post_id).val()) {
                         return false;
                     }
