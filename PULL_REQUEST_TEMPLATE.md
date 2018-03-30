@@ -18,7 +18,7 @@ https://jira.goalous.com/browse/GL-****
 - [ ] If CSS class definition was changed, ensure no error in all instances after refactoring
 - [ ] If JS variable was renamed, ensure no error in all instances after refactoring 
 - [ ] If JS method and/or its arguments were renamed, ensure no error in all instances after refactoring 
-- [ ] Save screenshots of any UI change
+- [ ] UI review by other developers or product owner is OK
 
 ### Server Side
 - [ ] Follow [Coding Guideline](https://confluence.goalous.com/x/qoPT)
