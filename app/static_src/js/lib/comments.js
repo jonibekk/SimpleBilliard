@@ -64,7 +64,7 @@ function toggleCommentForm() {
     // Clear OGP info
     $commentForm.find("input[name^='data[Comment][site_info_url]']").val('');
 
-    // コメントフォームをドラッグ＆ドロップ対象エリアにする
+    // Enables drag and drop functionality to the comments section
     var $uploadFileForm = $(document).data('uploadFileForm');
     var commentParams = {
         formID: function () {
@@ -81,17 +81,17 @@ function toggleCommentForm() {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            // While submitting disables form submit
             $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function () {
             $uploadFileForm._sending = false;
-            // フォームをsubmit可能にする
+            // Enables form submit
             $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._forbitSubmit);
         },
         afterError: function (file) {
             var $preview = $(file.previewTemplate);
-            // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
+            // Make it stand out and last long so the user can see and recognize the error
             $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
             setTimeout(function () {
                 $preview.remove();
@@ -102,7 +102,7 @@ function toggleCommentForm() {
     $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
     $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
 
-    // OGP 情報を取得してプレビューする処理
+    // OGP preview and get procedure
     require(['ogp'], function (ogp) {
         var inputUrlCheckingElement = document.createElement('input');
         inputUrlCheckingElement.setAttribute('type', 'url');
@@ -120,10 +120,10 @@ function toggleCommentForm() {
         });
         function ogpComments(ogp, text) {
             var options = {
-                // URL が含まれるテキスト
+                // Text containing the url
                 text: text,
 
-                // ogp 情報を取得する必要があるかチェック
+                // Checks if necessary to obtain ogp
                 readyLoading: function () {
                     // 既に OGP 情報を取得している場合は終了
                     if ($('#CommentSiteInfoUrl_' + post_id).val()) {
@@ -132,29 +132,29 @@ function toggleCommentForm() {
                     return true;
                 },
 
-                // ogp 情報取得成功時
+                // On success retreiving the ogp data
                 success: function (data) {
                     appendCommentOgpInfo(data);
                 },
 
-                // ogp 情報 取得失敗時
+                // On failure retreiving the ogp data
                 error: function () {
-                    // loading アイコン削除
+                    // remove loading icon
                     $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
                 },
 
-                // ogp 情報 取得開始時
+                // Start retreiving the ogp data
                 loadingStart: function () {
-                    // loading アイコン表示
+                    // show loading icon
                     $('<i class="fa fa-refresh fa-spin"></i>')
                         .attr('id', 'CommentSiteInfoLoadingIcon_' + post_id)
                         .addClass('mr_8px lh_20px')
                         .insertBefore('#CommentSubmit_' + post_id);
                 },
 
-                // ogp 情報 取得完了時
+                // Finish retreiving the ogp data
                 loadingEnd: function () {
-                    // loading アイコン削除
+                    // remove loading icon
                     $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
                 }
             };
@@ -171,9 +171,9 @@ function appendCommentOgpInfo(data) {
     var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
     var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
     $siteInfo
-    // プレビュー用 HTML
+    // Preview Html
         .html(data.html)
-        // プレビュー削除ボタンを重ねて表示
+        // Show delete button
         .prepend($('<a>').attr('href', '#')
             .addClass('font_lightgray comment-ogp-close')
             .append('<i class="fa fa-times fa-2x"></i>')
@@ -183,12 +183,13 @@ function appendCommentOgpInfo(data) {
                 $siteInfoUrl.val('');
                 $siteInfo.empty();
             }))
-        // プレビュー削除ボタンの表示スペースを作る
+        // Make space for delete button
         .find('.site-info').css({
         "padding-right": "30px"
     });
 
-    // hidden に URL 追加
+    // add url to hidden
+    $siteInfoUrl.val(data.url);
     return false;
 }
 
@@ -222,10 +223,8 @@ function addComment(e) {
     // Display loading button
     $("#" + submit_id).before($loader_html);
 
-    // アップロードファイルの上限数をリセット
+    // Set max upload count
     if (typeof Dropzone.instances[0] !== "undefined" && Dropzone.instances[0].files.length > 0) {
-        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-        // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
     }
 
@@ -264,7 +263,7 @@ function addComment(e) {
     })
         .done(function (data) {
             if (!data.error) {
-                // 通信が成功したときの処理
+                // on Success transmitting
                 evCommentLatestView.call($refresh_link.get(0), {
                     afterSuccess: function () {
                         var post_id = sanitize($f.attr("post-id"));
@@ -296,7 +295,7 @@ function addComment(e) {
         });
 
     ajaxProcess.always(function () {
-        // 通信が完了したとき
+        // When done transmitting
         $loader_html.remove();
         $submit.removeAttr('disabled');
     });
@@ -345,9 +344,9 @@ function evCommentLatestView(options) {
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     var $errorBox = $obj.siblings("div.new-comment-error");
     var get_url = $obj.attr('get-url') + "/" + lastCommentId;
-    //リンクを無効化
+    // disable link
     $obj.attr('disabled', 'disabled');
-    //ローダー表示
+    // show loader
 
     $.ajax({
         type: 'GET',
@@ -356,7 +355,7 @@ function evCommentLatestView(options) {
         dataType: 'json',
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
-                //取得したhtmlをオブジェクト化
+                // create object from retreived data
                 var $posts = $(data.html);
 
                 // Get the comment id for the new post
