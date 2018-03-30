@@ -1826,10 +1826,12 @@ class User extends AppModel
      *          Team ID of the users
      * @param array $userIds
      *          User IDs to be filtered
+     * @param bool $activeFlag
+     *          Whether the user is active in the team
      *
      * @return array | null Array of inactive users
      */
-    public function filterInactiveTeamUsers(int $teamId, array $userIds): array
+    public function filterUsersOnTeamActivity(int $teamId, array $userIds, bool $activeFlag = false): array
     {
         $options = [
             'conditions' => [
@@ -1849,6 +1851,12 @@ class User extends AppModel
                 ]
             ]
         ];
+
+        if ($activeFlag) {
+            $options['conditions']['TeamMember.status'] = TeamMember::USER_STATUS_ACTIVE;
+        } else {
+            $options['conditions']['TeamMember.status'] = TeamMember::USER_STATUS_INACTIVE;
+        }
 
         $res = $this->find('all', $options);
 

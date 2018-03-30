@@ -69,7 +69,7 @@ class EvaluatorsController extends ApiController
 
         $teamId = $this->current_team_id;
 
-        $inactiveUsersList = $this->User->filterInactiveTeamUsers($teamId, $evaluatorUserIds);
+        $inactiveUsersList = $this->User->filterUsersOnTeamActivity($teamId, $evaluatorUserIds);
 
         if (count($inactiveUsersList) > 0) {
             $connectorString = (count($inactiveUsersList) > 1) ? ' are ' : ' is ';

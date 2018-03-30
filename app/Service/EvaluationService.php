@@ -4,6 +4,7 @@ App::uses('Evaluation', 'Model');
 App::uses('EvaluationSetting', 'Model');
 App::uses('Term', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('User', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -127,6 +128,7 @@ class EvaluationService extends AppService
 
     /**
      * Get stage who can input evaluation(Evaluatee, Evaluator, Final Evaluator)
+     *
      * @param int $termId
      * @param int $evaluateeId
      *
@@ -139,7 +141,7 @@ class EvaluationService extends AppService
         /** @var  EvaluationSetting $EvaluationSetting */
         $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
 
-        $key = $termId.'-'.$evaluateeId;
+        $key = $termId . '-' . $evaluateeId;
         if (isset($this->cachedEvalStages[$key])) {
             return $this->cachedEvalStages[$key];
         }
@@ -169,8 +171,7 @@ class EvaluationService extends AppService
         return self::STAGE_COMPLETE;
     }
 
-
-        /**
+    /**
      * @param int $termId
      *
      * @return array
@@ -194,12 +195,20 @@ class EvaluationService extends AppService
      */
     function getEvaluateesFromCoachUserId(int $termId, int $coachUserId): array
     {
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
         /** @var  TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
         $teamMembers = $TeamMember->findAllByCoachUserId($coachUserId);
         $coacheeUserIds = Hash::extract($teamMembers, '{n}.TeamMember.user_id');
 
-        return $this->getEvaluateesFromUserIds($termId, $coacheeUserIds);
+        $team_id = Hash::get($Term->getTermData($termId), 'team_id');
+
+        return $this->getEvaluateesFromUserIds($termId,
+            Hash::extract($User->filterUsersOnTeamActivity($team_id, $coacheeUserIds, true), '{n}.User.id'));
     }
 
     /**
@@ -303,13 +312,14 @@ class EvaluationService extends AppService
 
     /**
      * Check whether login user edit evaluation
+     *
      * @param $evaluateTermId
      * @param $evaluateeId
      * @param $userId
      *
      * @return bool
      */
-    function isEditable(int $evaluateTermId, int $evaluateeId, int $userId) : bool
+    function isEditable(int $evaluateTermId, int $evaluateeId, int $userId): bool
     {
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');
