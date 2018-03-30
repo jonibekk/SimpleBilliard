@@ -1826,19 +1826,19 @@ class User extends AppModel
      *          Team ID of the users
      * @param array $userIds
      *          User IDs to be filtered
-     * @param bool $activeFlag
+     * @param bool  $activeFlag
      *          Whether the user is active in the team
      *
      * @return array | null Array of inactive users
      */
     public function filterUsersOnTeamActivity(int $teamId, array $userIds, bool $activeFlag = false): array
     {
+
         $options = [
             'conditions' => [
                 'User.id'            => $userIds,
                 'User.active_flg'    => true,
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => TeamMember::USER_STATUS_INACTIVE,
             ],
             'joins'      => [
                 [

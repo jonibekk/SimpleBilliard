@@ -190,10 +190,11 @@ class EvaluationService extends AppService
      *
      * @param int $termId
      * @param int $coachUserId
+     * @param     $activeOnlyFlag
      *
      * @return array
      */
-    function getEvaluateesFromCoachUserId(int $termId, int $coachUserId): array
+    function getEvaluateesFromCoachUserId(int $termId, int $coachUserId, bool $activeOnlyFlag = false): array
     {
 
         /** @var User $User */
@@ -205,10 +206,11 @@ class EvaluationService extends AppService
         $teamMembers = $TeamMember->findAllByCoachUserId($coachUserId);
         $coacheeUserIds = Hash::extract($teamMembers, '{n}.TeamMember.user_id');
 
-        $team_id = $Term->getById($termId, ['team_id']);
+        $team_id = Hash::get($Term->getById($termId), ['team_id']);
+        $userIds = $activeOnlyFlag ? Hash::extract($User->filterUsersOnTeamActivity($team_id, $coacheeUserIds,
+            true), '{n}.User.id') : $coacheeUserIds;
 
-        return $this->getEvaluateesFromUserIds($termId,
-            Hash::extract($User->filterUsersOnTeamActivity($team_id, $coacheeUserIds, true), '{n}.User.id'));
+        return $this->getEvaluateesFromUserIds($termId, $userIds);
     }
 
     /**
