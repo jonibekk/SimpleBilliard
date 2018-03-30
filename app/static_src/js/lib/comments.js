@@ -813,81 +813,86 @@ function evTargetToggleClick() {
                     $("#" + $obj.attr("hidden-target-id")).after($editForm);
 
                     // Load OGP for edit field
-                    var $editField = $('#CommentEditFormBody_' + comment_id);
-                    if ($editField.length > 0) {
-                        require(['ogp'], function (ogp) {
-                            var onKeyUp = function () {
-                                // Do not search for new OGP if there is one already present
-                                var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
-                                if ($ogpBox.length > 0) {
-                                    return;
-                                }
-
-                                // Search OGP info
-                                ogp.getOGPSiteInfo({
-                                    // Give text to OGP class
-                                    text: $editField.val(),
-
-                                    // Only search if there is none OGP info box displayed
-                                    readyLoading: function () {
-                                        if ($ogpBox.length > 0) {
-                                            return false;
-                                        }
-                                        return true;
-                                    },
-
-                                    // ogp data acquired
-                                    success: function (data) {
-                                        // Remove any OGP if already exists
-                                        var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
-                                        if ($ogpBox.length > 0) {
-                                            $ogpBox.remove();
-                                            return;
-                                        }
-
-                                        // Display the new acquired OGP on the edit form
-                                        var $newOgp = $(data.html);
-                                        $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
-                                        $editField.after($newOgp);
-                                        var $closeButton = $('<a>');
-                                        $newOgp.before($closeButton);
-                                        $closeButton.attr('href', '#')
-                                            .addClass('font_lightgray comment-ogp-close')
-                                            .append('<i class="fa fa-times fa-2x"></i>')
-                                            .on('click', function (e) {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                $closeButton.remove();
-                                                $newOgp.remove();
-                                            });
-                                    },
-
-                                    error: function () {
-                                        // loading アイコン削除
-                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
-                                    },
-
-                                    loadingStart: function () {
-                                        // loading アイコン表示
-                                        $('<i class="fa fa-refresh fa-spin"></i>')
-                                            .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
-                                            .addClass('mr_8px lh_20px')
-                                            .insertBefore('#CommentEditSubmit_' + comment_id);
-                                    },
-
-                                    loadingEnd: function () {
-                                        // loading アイコン削除
-                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
-                                    }
-                                });
-                            };
-                            var timer = null;
-                            $editField.on('keyup', function () {
-                                clearTimeout(timer);
-                                timer = setTimeout(onKeyUp, 800);
-                            });
+                    require(['ogp'], function (ogp) {
+                        var inputUrlCheckingElement = document.createElement('input');
+                        inputUrlCheckingElement.setAttribute('type', 'url');
+                        function isValidURL(u){
+                            inputUrlCheckingElement.value = u;
+                            return inputUrlCheckingElement.validity.valid;
+                        }
+                        $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
+                            if(e.keyCode == 32 || e.keyCode == 13) {
+                              var input = $.trim($('#CommentEditFormBody_' + comment_id).val());
+                              if(isValidURL(input)){
+                                ogpComments(ogp, input);
+                              }
+                            }
                         });
-                    }
+                        function ogpComments(ogp, text) {
+                            var options = {
+                                // Text containing the url
+                                text: text,
+
+                                // Checks if necessary to obtain ogp
+                                readyLoading: function () {
+                                    // Returns if the ogp data is already obtained
+                                    if ($('#CommentOgpEditBox_' + comment_id).val()) {
+                                        return false;
+                                    }
+                                    return true;
+                                },
+
+                                // On success retreiving the ogp data
+                                success: function (data) {console.log("success");
+                                    // Remove any OGP if already exists
+                                    var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                                    if ($ogpBox.length > 0) {
+                                        $ogpBox.remove();
+                                        // return;
+                                    }
+
+                                    // Display the new acquired OGP on the edit form
+                                    var $newOgp = $(data.html);
+                                    $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
+                                    $('#CommentEditFormBody_' + comment_id).after($newOgp);
+                                    var $closeButton = $('<a>');
+                                    $newOgp.before($closeButton);
+                                    $closeButton.attr('href', '#')
+                                        .addClass('font_lightgray comment-ogp-close')
+                                        .append('<i class="fa fa-times fa-2x"></i>')
+                                        .on('click', function (e) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            $closeButton.remove();
+                                            $newOgp.remove();
+                                        });
+                                },
+
+                                // On failure retreiving the ogp data
+                                error: function () {
+                                    // remove loading icon
+                                    $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                },
+
+                                // Start retreiving the ogp data
+                                loadingStart: function () {
+                                    // show loading icon
+                                    $('<i class="fa fa-refresh fa-spin"></i>')
+                                        .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
+                                        .addClass('mr_8px lh_20px')
+                                        .insertBefore('#CommentEditSubmit_' + comment_id);
+                                },
+
+                                // Finish retreiving the ogp data
+                                loadingEnd: function () {
+                                    // remove loading icon
+                                    $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                }
+                            };
+                            ogp.getOGPSiteInfo(options);
+                            return false;
+                        }
+                    });
                 }
             }
         });
@@ -939,7 +944,6 @@ function evTargetToggleClickByElement(elem) {
     if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
         $.ajax({
             url: $obj.attr("ajax-url"),
-            async: false,
             success: function (data) {
                 //noinspection JSUnresolvedVariable
                 if (data.error) {
@@ -965,81 +969,86 @@ function evTargetToggleClickByElement(elem) {
                     $("#" + $obj.attr("hidden-target-id")).after($editForm);
 
                     // Load OGP for edit field
-                    var $editField = $('#CommentEditFormBody_' + comment_id);
-                    if ($editField.length > 0) {
-                        require(['ogp'], function (ogp) {
-                            var onKeyUp = function () {
-                                // Do not search for new OGP if there is one already present
-                                var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
-                                if ($ogpBox.length > 0) {
-                                    return;
-                                }
-
-                                // Search OGP info
-                                ogp.getOGPSiteInfo({
-                                    // Give text to OGP class
-                                    text: $editField.val(),
-
-                                    // Only search if there is none OGP info box displayed
-                                    readyLoading: function () {
-                                        if ($ogpBox.length > 0) {
-                                            return false;
-                                        }
-                                        return true;
-                                    },
-
-                                    // ogp data acquired
-                                    success: function (data) {
-                                        // Remove any OGP if already exists
-                                        var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
-                                        if ($ogpBox.length > 0) {
-                                            $ogpBox.remove();
-                                            return;
-                                        }
-
-                                        // Display the new acquired OGP on the edit form
-                                        var $newOgp = $(data.html);
-                                        $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
-                                        $editField.after($newOgp);
-                                        var $closeButton = $('<a>');
-                                        $newOgp.before($closeButton);
-                                        $closeButton.attr('href', '#')
-                                            .addClass('font_lightgray comment-ogp-close')
-                                            .append('<i class="fa fa-times"></i>')
-                                            .on('click', function (e) {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                $closeButton.remove();
-                                                $newOgp.remove();
-                                            });
-                                    },
-
-                                    error: function () {
-                                        // loading アイコン削除
-                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
-                                    },
-
-                                    loadingStart: function () {
-                                        // loading アイコン表示
-                                        $('<i class="fa fa-refresh fa-spin"></i>')
-                                            .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
-                                            .addClass('mr_8px lh_20px')
-                                            .insertBefore('#CommentEditSubmit_' + comment_id);
-                                    },
-
-                                    loadingEnd: function () {
-                                        // loading アイコン削除
-                                        $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
-                                    }
-                                });
-                            };
-                            var timer = null;
-                            $editField.on('keyup', function () {
-                                clearTimeout(timer);
-                                timer = setTimeout(onKeyUp, 800);
-                            });
+                    require(['ogp'], function (ogp) {
+                        var inputUrlCheckingElement = document.createElement('input');
+                        inputUrlCheckingElement.setAttribute('type', 'url');
+                        function isValidURL(u){
+                            inputUrlCheckingElement.value = u;
+                            return inputUrlCheckingElement.validity.valid;
+                        }
+                        $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
+                            if(e.keyCode == 32 || e.keyCode == 13) {
+                              var input = $.trim($('#CommentEditFormBody_' + comment_id).val());
+                              if(isValidURL(input)){
+                                ogpComments(ogp, input);
+                              }
+                            }
                         });
-                    }
+                        function ogpComments(ogp, text) {
+                            var options = {
+                                // Text containing the url
+                                text: text,
+
+                                // Checks if necessary to obtain ogp
+                                readyLoading: function () {
+                                    // Returns if the ogp data is already obtained
+                                    if ($('#CommentOgpEditBox_' + comment_id).val()) {
+                                        return false;
+                                    }
+                                    return true;
+                                },
+
+                                // On success retreiving the ogp data
+                                success: function (data) {console.log("success");
+                                    // Remove any OGP if already exists
+                                    var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
+                                    if ($ogpBox.length > 0) {
+                                        $ogpBox.remove();
+                                        // return;
+                                    }
+
+                                    // Display the new acquired OGP on the edit form
+                                    var $newOgp = $(data.html);
+                                    $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
+                                    $('#CommentEditFormBody_' + comment_id).after($newOgp);
+                                    var $closeButton = $('<a>');
+                                    $newOgp.before($closeButton);
+                                    $closeButton.attr('href', '#')
+                                        .addClass('font_lightgray comment-ogp-close')
+                                        .append('<i class="fa fa-times fa-2x"></i>')
+                                        .on('click', function (e) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            $closeButton.remove();
+                                            $newOgp.remove();
+                                        });
+                                },
+
+                                // On failure retreiving the ogp data
+                                error: function () {
+                                    // remove loading icon
+                                    $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                },
+
+                                // Start retreiving the ogp data
+                                loadingStart: function () {
+                                    // show loading icon
+                                    $('<i class="fa fa-refresh fa-spin"></i>')
+                                        .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
+                                        .addClass('mr_8px lh_20px')
+                                        .insertBefore('#CommentEditSubmit_' + comment_id);
+                                },
+
+                                // Finish retreiving the ogp data
+                                loadingEnd: function () {
+                                    // remove loading icon
+                                    $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
+                                }
+                            };
+                            ogp.getOGPSiteInfo(options);
+                            return false;
+                        }
+                    });
                 }
             }
         });
