@@ -4,24 +4,30 @@
 "use strict";
 
 $(function () {
-  // 投稿フォームが表示されるページのみ
-  if ($('#CommonPostBody').length) {
+  var inputUrlCheckingElement = document.createElement('input');
+  inputUrlCheckingElement.setAttribute('type', 'url');
+  
+  function isValidURL(u){
+    inputUrlCheckingElement.value = u;
+    return inputUrlCheckingElement.validity.valid;
+  }
+  // Only on the where the Posts Page is displayed
     require(['ogp'], function (ogp) {
-      // 投稿編集の場合で、OGPのurlが登録されている場合
+
+      $('#CommonPostBody').on('keyup', function (e) {
+        if(e.keyCode == 32 || e.keyCode == 13) {
+          var input = $.trim($('#CommonPostBody').val());
+          if(isValidURL(input)){
+            getPostOGPInfo(ogp, input);
+          }
+        }
+      });
+      // When editing posts and OGP'S url has been set
       if ($('.post-edit').length) {
         if ($('.post-edit').attr('data-default-ogp-url')) {
           getPostOGPInfo(ogp, $('.post-edit').attr('data-default-ogp-url'));
         }
       }
-
-      var onKeyUp = function () {
-        getPostOGPInfo(ogp, $('#CommonPostBody').val());
-      };
-      var timer = null;
-      $('#CommonPostBody').on('keyup', function () {
-        clearTimeout(timer);
-        timer = setTimeout(onKeyUp, 800);
-      });
     });
     // register event of deleting post draft
     $('.delete-post-draft').on('click', function() {
@@ -36,8 +42,7 @@ $(function () {
         }
         return false
     })
-  }
-  //サークルページの添付ファイルタイプ切替え
+  // Circle Page's Attachment file type switching
   $('#SwitchFileType').change(function () {
     var file_type = $(this).val();
     if (file_type == "") {
@@ -162,41 +167,41 @@ function bindPostBalancedGallery($obj) {
  */
 function getPostOGPInfo(ogp, text) {
   var options = {
-    // URL が含まれるテキスト
+    // Text containting the url
     text: text,
 
-    // ogp 情報を取得する必要があるかチェック
+    // Checks if necessary to obtain ogp
     readyLoading: function () {
-      // 既に OGP 情報を取得している場合は終了
+      // If OGP is already obtained finish
       if ($('#PostSiteInfoUrl').val()) {
         return false;
       }
       return true;
     },
 
-    // ogp 情報取得成功時
+    // On success retreiving the ogp data
     success: function (data) {
       appendPostOgpInfo(data);
     },
 
-    // ogp 情報 取得失敗時
+    // On failure retreiving the ogp data
     error: function () {
-      // loading アイコン削除
+      // remove loading icon
       $('#PostSiteInfoLoadingIcon').remove();
     },
 
-    // ogp 情報 取得開始時
+    // Start retreiving the ogp data
     loadingStart: function () {
-      // loading アイコン表示
+      // show loading icon
       $('<i class="fa fa-refresh fa-spin"></i>')
         .attr('id', 'PostSiteInfoLoadingIcon')
         .addClass('pull-right lh_20px')
         .insertBefore('#CommonFormTabs');
     },
 
-    // ogp 情報 取得完了時
+    // Finish retreiving the ogp data
     loadingEnd: function () {
-      // loading アイコン削除
+      // remove loading icon
       $('#PostSiteInfoLoadingIcon').remove();
     }
   };
@@ -213,9 +218,9 @@ function appendPostOgpInfo(data) {
   var $siteInfoUrl = $('#PostSiteInfoUrl');
   var $siteInfo = $('#PostOgpSiteInfo');
   $siteInfo
-  // プレビュー用 HTML
+  // html for preview
     .html(data.html)
-    // プレビュー削除ボタンを重ねて表示
+    // show delete button
     .prepend($('<a>').attr('href', '#')
       .addClass('font_lightgray')
       .css({
@@ -225,19 +230,19 @@ function appendPostOgpInfo(data) {
         display: "block",
         "z-index": '1000'
       })
-      .append('<i class="fa fa-times"></i>')
+      .append('<i class="fa fa-times fa-2x"></i>')
       .on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         $siteInfoUrl.val('');
         $siteInfo.empty();
       }))
-    // プレビュー削除ボタンの表示スペースを作る
+    // makes additional room for the delete button
     .find('.site-info').css({
     "padding-right": "30px"
   });
 
-  // hidden に URL 追加
+  // add url to hidden
   $siteInfoUrl.val(data.url);
   return false;
 }
