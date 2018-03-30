@@ -4,7 +4,7 @@
 "use strict";
 
 $(function () {
-    // white list for cache to be cleared 
+    // white list for back and forth cache to be cleared 
     // do not clear at post_edit or something like that for edit
     var clearPath = ['/']
     $(window).on("pageshow", function(event){
