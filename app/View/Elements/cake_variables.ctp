@@ -110,7 +110,6 @@ App::uses('AttachedFile', 'Model');
             config: "<?=__("Settings")?>",
             waiting_message: "<?=__("Ironing your data. Please wait...")?>",
             remaining: "<?= __("%d remaining") ?>",
-            evaluator_setting_saved: "<?= __("Evaluator setting saved.") ?>",
         },
         url: {
             a: "<?=$this->Html->url(['controller' => 'users', 'action' => 'ajax_select2_get_users'])?>",
