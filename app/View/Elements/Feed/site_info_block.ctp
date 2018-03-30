@@ -30,7 +30,7 @@ if (isset($site_info['type']) && (
 ?>
 <?php if (isset($site_info)): ?>
     <?php if (isset($site_info['is_editing']) && $site_info['is_editing'] === true) : ?>
-        <a href="#" class="font_lightgray comment-ogp-close"><i class="fa fa-times js-ogp-close"></i></a>
+        <a href="#" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></a>
     <?php endif ?>
     <div class="col pt_10px js-ogp-box"
     <?php if ($isEditing): ?>
