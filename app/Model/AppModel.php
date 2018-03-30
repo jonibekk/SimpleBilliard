@@ -110,6 +110,7 @@ class AppModel extends Model
 
     /**
      * トランザクション開始
+     *
      * @deprecated
      * TODO: Delete this method and use TransactionManager
      */
@@ -121,6 +122,7 @@ class AppModel extends Model
 
     /**
      * トランザクションコミット
+     *
      * @deprecated
      * TODO: Delete this method and use TransactionManager
      */
@@ -132,6 +134,7 @@ class AppModel extends Model
 
     /**
      * トランザクションロールバック
+     *
      * @deprecated
      * TODO: Delete this method and use TransactionManager
      */

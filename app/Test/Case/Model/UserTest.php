@@ -812,7 +812,7 @@ class UserTest extends GoalousTestCase
         $res = $this->User->getUsersByKeyword("first");
         $this->assertNotEmpty($res);
         $res = $this->User->getUsersByKeyword("irstname");
-        $this->assertEmpty($res);
+        $this->assertNotEmpty($res);
         $res = $this->User->getUsersByKeyword("");
         $this->assertEmpty($res);
     }
@@ -830,7 +830,7 @@ class UserTest extends GoalousTestCase
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("first", 10, true, 9999999);
         $this->assertNotEmpty($res);
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("irstname", 10, true, 9999999);
-        $this->assertEmpty($res);
+        $this->assertNotEmpty($res);
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("", 10, true, 9999999);
         $this->assertEmpty($res);
     }
@@ -984,6 +984,32 @@ class UserTest extends GoalousTestCase
             }
         }
         $this->assertTrue($group_found);
+    }
+
+    function testGetUsersSelect2_withSelf()
+    {
+        $userIdAuthorized = 1;
+        $this->User->my_uid = $userIdAuthorized;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = $userIdAuthorized;
+        $this->User->LocalName->my_uid = $userIdAuthorized;
+        $this->User->LocalName->current_team_id = 1;
+
+        $usersWithOutSelf = $this->User->getUsersSelect2('first', 10, true);
+        $usersWithSelf    = $this->User->getUsersSelect2('first', 10, true, true);
+        $this->assertTrue(count($usersWithOutSelf['results']) !== $this->count($usersWithSelf['results']));
+
+        $isContainingUserId = function (string $userId, array $resultSelect2) {
+            $stringUserIdAuthorized = sprintf('user_%d', $userId);
+            $extractedUserIds = Hash::extract($resultSelect2, 'results.{n}.id');
+            return in_array($stringUserIdAuthorized, $extractedUserIds);
+        };
+
+        $this->assertTrue($isContainingUserId($userIdAuthorized, $usersWithSelf));
+        $this->assertFalse($isContainingUserId($userIdAuthorized, $usersWithOutSelf));
+
     }
 
     function testMakeSelect2UserList()
