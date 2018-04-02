@@ -30,7 +30,7 @@
                                     ]
                                 )
                                 ?>
-                                <div class="pin-circle-text"><label class="circle-name-label"><?php echo $defaultCircle['name'];?></label></div>
+                                <div class="pin-circle-text"><label class="circle-name-label"><?php echo mb_strimwidth ($defaultCircle['name'] , 0 , 16, '...', 'UTF-8');?></label></div>
                                 <i class="fa fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
                                 <div class="pin-circle-dropdown-content style-hidden">
                                     <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url=""></div>
@@ -64,5 +64,4 @@
         </div>
     </div>
 </div>
-<?php echo $this->Html->script('/js/goalous_circle.min'); ?>
 <?= $this->App->viewEndComment()?>
