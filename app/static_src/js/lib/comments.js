@@ -28,6 +28,11 @@ $(function () {
 window.addEventListener("load", function () {
     bindCommentBalancedGallery($('.comment_gallery'));
 });
+$(".click-get-ajax-form-toggle").on("focus", function() {
+    $("#jsGoTop").hide();
+}).on("blur", function() {
+    $("#jsGoTop").show();
+});
 
 /**
  * Display comment input
