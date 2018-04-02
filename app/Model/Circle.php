@@ -185,7 +185,7 @@ class Circle extends AppModel
         $options = [
             'conditions' => [
                 'id'        => $my_circle_list,
-                'name LIKE' => $keyword . "%",
+                'name LIKE' => '%' . $keyword . '%',
             ],
             'limit'      => $limit,
             'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
@@ -500,7 +500,7 @@ class Circle extends AppModel
                     'Circle.id'         => $circle_list,
                     'Circle.public_flg' => 1,
                 ],
-                'Circle.name LIKE' => $keyword . '%',
+                'Circle.name LIKE' => '%' . $keyword . '%',
                 'Circle.team_id'   => $this->current_team_id,
             ],
             'limit'      => $limit,
