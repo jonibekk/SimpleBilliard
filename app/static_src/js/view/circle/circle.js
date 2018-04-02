@@ -219,7 +219,6 @@ window.onload = function(){
                 document.getElementById('circles-edit-page').classList.remove('modal-open');
             });
             var url = self.getAttribute('data-url');
-            console.log(url);
             if(!url){
                 return false;
             }
@@ -250,7 +249,6 @@ window.onload = function(){
             this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
             this.classList.toggle('fa-disabled');
 
-            //console.log($(".js-dashboard-circle-list-body > ul").find('[circle_id='+this.parentElement.id+']').get(0));
             if(this.classList.contains('fa-disabled')) {
                 document.getElementById('unpinned').appendChild(this.parentElement);
                 var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
@@ -305,8 +303,7 @@ window.onload = function(){
         })
         .on('change', function () {
             var $this = $(this);
-            // グループを選択した場合
-            // グループに所属するユーザーを展開して入力済にする
+            // When group is selected enters the users belonging to the group and sets as entered
             $this.select2('data', select2ExpandGroup($this.select2('data')));
         });
     }
