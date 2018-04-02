@@ -46,6 +46,7 @@
                 'wrap'        => 'soft',
                 'rows'        => 1,
                 'required'    => true,
+                'has-mention' => true,
                 'post-id'     => $post['Post']['id'],
                 'placeholder' => __("Comment"),
                 'class'       => 'form-control font_12px comment-post-form box-align click-get-ajax-form-toggle',
