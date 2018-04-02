@@ -24,13 +24,13 @@ window.onload = function(){
             touchStartThreshold: 0, // px, how many pixels the point should move before cancelling a delayed drag event
             disabled: false, // Disables the sortable if set to true.
             store: null,  // @see Store
-            animation: 0,  // ms, animation speed moving items when sorting, `0` — without animation
+            animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
             handle: ".fa-align-justify",  // Drag handle selector within list items
             filter: ".ignore-elements",  // Selectors that do not lead to dragging (String or Function)
             preventOnFilter: true, // Call `event.preventDefault()` when triggered `filter`
             draggable: "li",  // Specifies which items inside the element should be draggable
             ghostClass: "sortable-ghost",  // Class name for the drop placeholder
-            chosenClass: "sortable-chosen",  // Class name for the chosen item
+            chosenClass: "circle-sortable-chosen",  // Class name for the chosen item
             dragClass: "sortable-drag",  // Class name for the dragging item
             dataIdAttr: 'data-id',
 
