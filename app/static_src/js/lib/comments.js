@@ -43,6 +43,11 @@ function toggleCommentForm() {
         return;
     }
 
+    evTargetCancelAnyEdit(this);
+
+    // reset textarea
+    $txtArea.val("");
+
     // Register the form for submit
     $commentForm.off('submit');
     $commentForm.on('submit', function (e) {
@@ -53,12 +58,15 @@ function toggleCommentForm() {
         }
         return res;
     });
-
+    $('#CommentSubmit_' + post_id).on('click', function() {
+        $("#jsGoTop").show();
+    });
     autosize($txtArea);
 
     // Display the buttons
+    $commentButtons.removeClass('no-border');
     $commentButtons.toggle();
-    $(this).addClass('no-border');
+    $txtArea.addClass('no-border');
     // Remove comment file field
     $commentForm.find("input[name^='data[file_id]']").remove();
     // Clear OGP info
@@ -98,12 +106,14 @@ function toggleCommentForm() {
             }, 4000);
         }
     };
+    
     $uploadFileForm.trigger('reset');
     $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
     $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
 
     // OGP preview and get procedure
     require(['ogp'], function (ogp) {
+            console.log("OGP SET");
         var inputUrlCheckingElement = document.createElement('input');
         inputUrlCheckingElement.setAttribute('type', 'url');
         function isValidURL(u){
@@ -111,6 +121,9 @@ function toggleCommentForm() {
             return inputUrlCheckingElement.validity.valid;
         }
         $('#CommentFormBody_' + post_id).on('keyup', function (e) {
+            if ($('#CommentSiteInfoUrl_' + post_id).val()) {
+                return false;
+            }
             if(e.keyCode == 32 || e.keyCode == 13) {
               var input = $.trim($('#CommentFormBody_' + post_id).val());
               if(isValidURL(input)){
@@ -134,7 +147,28 @@ function toggleCommentForm() {
 
                 // On success retreiving the ogp data
                 success: function (data) {
-                    appendCommentOgpInfo(data);
+                    var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
+                    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
+                    $siteInfo
+                    // Preview Html
+                        .html(data.html)
+                        // Show delete button
+                        .prepend($('<a>').attr('href', '#')
+                            .addClass('font_lightgray comment-ogp-close')
+                            .append('<i class="fa fa-times fa-2x"></i>')
+                            .on('click', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                $siteInfoUrl.val('');
+                                $siteInfo.empty();
+                            }))
+                        // Make space for delete button
+                        .find('.site-info').css({
+                        "padding-right": "30px"
+                    });
+
+                    // add url to hidden
+                    $siteInfoUrl.val(data.url);
                 },
 
                 // On failure retreiving the ogp data
@@ -162,37 +196,49 @@ function toggleCommentForm() {
             return false;
         }
     });
-
-/**
- * Append the acquired OGP info to requested commment
- * @param data
- */
-function appendCommentOgpInfo(data) {
-    var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
-    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
-    $siteInfo
-    // Preview Html
-        .html(data.html)
-        // Show delete button
-        .prepend($('<a>').attr('href', '#')
-            .addClass('font_lightgray comment-ogp-close')
-            .append('<i class="fa fa-times fa-2x"></i>')
-            .on('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $siteInfoUrl.val('');
-                $siteInfo.empty();
-            }))
-        // Make space for delete button
-        .find('.site-info').css({
-        "padding-right": "30px"
-    });
-
-    // add url to hidden
-    $siteInfoUrl.val(data.url);
-    return false;
 }
 
+/**
+ * Hide comment input
+ */
+function hideCommentForm(element) {
+    var $txtArea = $(element);
+    attrUndefinedCheck($txtArea, 'post-id');
+
+    var post_id = sanitize($txtArea.attr("post-id"));
+    var $commentButtons = $('#Comment_' + post_id);
+    var $commentForm = $('#CommentAjaxGetNewCommentForm_' + post_id);
+
+    // Clear upload data
+    document.getElementById('CommentFormBody_' + post_id).style.height = null;
+    $('#CommentUploadFilePreview_' + post_id).empty();
+    $('#CommentOgpSiteInfo_' + post_id).empty();
+    $('#CommentFormBody_' + post_id).removeClass('no-border');
+
+    // Clears comment input field
+    $txtArea.val("");
+
+    // Resets ogp
+    var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
+    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
+    $siteInfoUrl.val('');
+    $siteInfo.empty();
+
+    // unregister the form for submit
+    $commentForm.off('submit');
+
+    // Toggle display the buttons
+    $commentButtons.removeClass('no-border');
+    $commentButtons.toggle();
+    $txtArea.removeClass('no-border');
+
+    // Remove comment file field
+    $commentForm.find("input[name^='data[file_id]']").remove();
+    // Clear OGP info
+    $commentForm.find("input[name^='data[Comment][site_info_url]']").val('');
+
+    // Enables drag and drop functionality to the comments section
+    $(document).data('uploadFileForm').trigger('reset');
 }
 
 /**
@@ -821,6 +867,9 @@ function evTargetToggleClick() {
                             return inputUrlCheckingElement.validity.valid;
                         }
                         $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
+                            if ($('#CommentOgpEditBox_' + comment_id).length) {
+                                return false;
+                            }
                             if(e.keyCode == 32 || e.keyCode == 13) {
                               var input = $.trim($('#CommentEditFormBody_' + comment_id).val());
                               if(isValidURL(input)){
@@ -836,14 +885,14 @@ function evTargetToggleClick() {
                                 // Checks if necessary to obtain ogp
                                 readyLoading: function () {
                                     // Returns if the ogp data is already obtained
-                                    if ($('#CommentOgpEditBox_' + comment_id).length {
+                                    if ($('#CommentOgpEditBox_' + comment_id).length) {
                                         return false;
                                     }
                                     return true;
                                 },
 
                                 // On success retreiving the ogp data
-                                success: function (data) {console.log("success");
+                                success: function (data) {
                                     // Remove any OGP if already exists
                                     var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
                                     if ($ogpBox.length > 0) {
@@ -977,6 +1026,9 @@ function evTargetToggleClickByElement(elem) {
                             return inputUrlCheckingElement.validity.valid;
                         }
                         $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
+                            if ($('#CommentOgpEditBox_' + comment_id).length) {
+                                return false;
+                            }
                             if(e.keyCode == 32 || e.keyCode == 13) {
                               var input = $.trim($('#CommentEditFormBody_' + comment_id).val());
                               if(isValidURL(input)){
@@ -999,7 +1051,7 @@ function evTargetToggleClickByElement(elem) {
                                 },
 
                                 // On success retreiving the ogp data
-                                success: function (data) {console.log("success");
+                                success: function (data) {
                                     // Remove any OGP if already exists
                                     var $ogpBox = $('#CommentOgpEditBox_' + comment_id);
                                     if ($ogpBox.length > 0) {
@@ -1066,14 +1118,23 @@ function evTargetToggleClickByElement(elem) {
     return false;
 }
 
-function evTargetCancelAnyEdit() {
+function evTargetCancelAnyEdit(element) {
     var openForm = $(".bv-form:visible");
     if(openForm.length == 1){
         var target = openForm.find(".comment-edit-form");
         var editId = target.prop("id").replace("CommentEditFormBody_","");
         var targetLink = $("[target-id=CommentEditForm_" + editId +"]").get(0);
         evTargetToggleClickByElement(targetLink);
+        
     }
+    var commentButton = $(".comment-btn:visible");
+    if(commentButton.length === 1) {
+        var commentEdit = commentButton.find(".comment-submit-button");
+        var postId = commentEdit.prop("id").replace("CommentSubmit_","");
+        var targetEdit = document.getElementById("CommentFormBody_" + postId);
+        hideCommentForm(targetEdit);
+    }
+    
     return false;
 }
 
