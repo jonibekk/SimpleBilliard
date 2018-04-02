@@ -529,7 +529,6 @@ class NotifyBizComponent extends Component
         }
 
         //対象ユーザの通知設定確認
-        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $post['Post']['body']);
         if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_FEED_POST);
@@ -656,7 +655,6 @@ class NotifyBizComponent extends Component
         $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
         unset($members[$this->Team->my_uid]);
-        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $comment['Comment']['body']);
         if (!count($members)) return;
 
         //対象ユーザの通知設定確認
