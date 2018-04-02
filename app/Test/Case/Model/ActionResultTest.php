@@ -531,5 +531,5 @@ class ActionResultTest extends GoalousTestCase
             $this->ActionResult->save($action, false);
         }
     }
-    
+
 }
