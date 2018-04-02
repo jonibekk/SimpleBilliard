@@ -9,7 +9,7 @@ $(function () {
     bindCtrlEnterAction('#PostDisplayForm', function (e) {
         $('#PostSubmit').trigger('click');
     });
-    
+
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {

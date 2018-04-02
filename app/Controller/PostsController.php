@@ -739,7 +739,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
-        
+
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/ajax_comments');
@@ -972,7 +972,7 @@ class PostsController extends AppController
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
             ]);
-            
+
             // setting draft post data if having circle_id
             /** @var PostDraftService $PostDraftService */
             $PostDraftService = ClassRegistry::init('PostDraftService');
@@ -1024,7 +1024,7 @@ class PostsController extends AppController
             )
             );
         }
-        
+
         $response = $this->render("Feed/posts");
         $html = $response->__toString();
 

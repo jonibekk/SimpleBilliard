@@ -41,11 +41,6 @@ var Mention = function(target) {
             url: cake.url.a,
             data: params
           }).then(function(res) {
-            for (var i=0; i<res.results.length; i++) {
-              if (!res.results[i].image) {
-                res.results[i].image = 'img/no-image-team.jpg'
-              }
-            }
             results = results.concat(res.results)
             return $.ajax({
               url: cake.url.select2_circles,

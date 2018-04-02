@@ -152,11 +152,13 @@ class MentionComponent extends Component {
         return $result;
     }
     private function filterAsMentionable(string $type, int $postId, array $list = []) {
+        if ($type == 'User') return [];
         $model = ClassRegistry::init('PostShare'.$type);
         $model->displayField = strtolower($type).'_id';
         $data = $model->find('list', [
             'conditions' => array('post_id', $postId)
         ]);
+        if (count($data) == 0) return []; 
         $data = array_values($data);
         $result = array_filter($list, function($l) {
             return array_search($l['id'], $data) !== false;

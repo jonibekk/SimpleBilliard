@@ -1014,5 +1014,4 @@ class PostTest extends GoalousTestCase
         return str_replace($str, '`', '"');
     }
 
-    
 }
