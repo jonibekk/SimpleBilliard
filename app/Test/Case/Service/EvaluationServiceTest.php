@@ -1,11 +1,13 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('Email', 'Model');
 App::uses('Term', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::import('Service', 'EvaluationService');
 
 use Goalous\Model\Enum as Enum;
+
 /**
  * EvaluationServiceTest Class
  * Created by PhpStorm.
@@ -14,7 +16,7 @@ use Goalous\Model\Enum as Enum;
  * Time: 9:42
  *
  * @property EvaluationService $EvaluationService
- * @property Evaluation $Evaluation
+ * @property Evaluation        $Evaluation
  * @property EvaluationSetting $EvaluationSetting
  * @property TeamMember        $TeamMember
  * @property User              $User
@@ -110,7 +112,7 @@ class EvaluationServiceTest extends GoalousTestCase
                     'id'    => '1'
                 ]
             ],
-            'eval_stage' => EvaluationService::STAGE_NONE
+            'eval_stage'  => EvaluationService::STAGE_NONE
         ];
 
         $this->assertEquals($expected, $ret);
@@ -182,7 +184,7 @@ class EvaluationServiceTest extends GoalousTestCase
                     'id'    => '1'
                 ]
             ],
-            'eval_stage' => EvaluationService::STAGE_NONE
+            'eval_stage'  => EvaluationService::STAGE_NONE
         ];
         $this->assertEquals($expected, $retMulti);
     }
@@ -282,7 +284,7 @@ class EvaluationServiceTest extends GoalousTestCase
                     'your_turn' => true,
                     'body'      => 'Please evaluate.'
                 ],
-                'eval_stage' => EvaluationService::STAGE_NONE
+                'eval_stage'  => EvaluationService::STAGE_NONE
             ],
             (int)1 => [
                 'User'        => [
@@ -326,7 +328,7 @@ class EvaluationServiceTest extends GoalousTestCase
                     'your_turn' => true,
                     'body'      => 'Please evaluate.'
                 ],
-                'eval_stage' => EvaluationService::STAGE_NONE
+                'eval_stage'  => EvaluationService::STAGE_NONE
             ]
         ];
         $this->assertEquals($expected, $ret);
@@ -343,12 +345,12 @@ class EvaluationServiceTest extends GoalousTestCase
     function testGetEvaluateesFromCoachUserId_succeed()
     {
         $this->EvaluationSetting->current_team_id = 1;
-        $Evaluation = $this->_getEvaluationObject($teamId = 1, $userId = 1);
+        $Evaluation = $this->_getEvaluationObject($teamId = 1, $coachUserId = 1);
         $termId = 1;
         $Evaluation->saveAll([
             [
                 'evaluatee_user_id' => 2,
-                'evaluator_user_id' => $userId,
+                'evaluator_user_id' => $coachUserId,
                 'term_id'           => $termId,
                 'team_id'           => $teamId,
                 'index_num'         => 1,
@@ -368,18 +370,33 @@ class EvaluationServiceTest extends GoalousTestCase
             ],
         ]);
         $user = $this->User->create();
+        $user['User']['active_flg'] = true;
         $user = $this->User->save($user);
+
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        $email = $Email->create();
+        $email = reset($email);
+        $email['user_id'] = $user['User']['id'];
+        $email['email'] = 'test@test.com';
+        $email['email_verified'] = true;
+
+        $Email->save($email);
 
         $teamMember = $this->TeamMember->create();
         $teamMember = reset($teamMember);
         $teamMember['user_id'] = $user['User']['id'];
         $teamMember['team_id'] = $teamId;
-        $teamMember['evaluation_enable_flg'] = 1;
-        $teamMember['coach_user_id'] = $userId;
-        $teamMember = $this->TeamMember->save($teamMember);
+        $teamMember['evaluation_enable_flg'] = true;
+        $teamMember['coach_user_id'] = $coachUserId;
+        $teamMember['status'] = Enum\TeamMember\Status::ACTIVE;
+
+        $this->TeamMember->save($teamMember);
 
         // no evaluatee test
-        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, 1);
+        $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, $coachUserId);
+
         $this->assertSame(3, count($ret));
         $userHasFlow = $ret[0];
         $this->assertSame(2, count($userHasFlow['flow']));
@@ -466,7 +483,7 @@ class EvaluationServiceTest extends GoalousTestCase
             ],
         ]);
         $this->EvaluationSetting->save([
-            'team_id' => $teamId,
+            'team_id'    => $teamId,
             'enable_flg' => true,
         ]);
         $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
@@ -480,7 +497,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         // Evaluator can't edit evaluation
         $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DRAFT], [
-            'term_id' => $termId,
+            'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $userId
         ]);
@@ -493,7 +510,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         // Evaluator can edit evaluation
         $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
-            'term_id' => $termId,
+            'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $userId
         ]);
@@ -508,7 +525,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         // Evaluatee can't edit evaluation after one evaluator evaluated
         $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
-            'term_id' => $termId,
+            'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $evaluatorId1
         ]);
@@ -522,7 +539,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
-            'term_id' => $termId,
+            'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $evaluatorId2
         ]);

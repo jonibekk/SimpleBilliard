@@ -53,7 +53,7 @@ class EvaluatorSettingsController extends AppController
 
         $selfUser = $User->findById($userId);
         $selfUser['evaluators'] = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
-        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId, true);
 
         // Count zero evaluatee users
         $countOfZeroEvaluateeUsers = 0;
@@ -99,7 +99,7 @@ class EvaluatorSettingsController extends AppController
 
         // Check auth user have authority to see this page.
         $termId = $this->Team->Term->getCurrentTermId();
-        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId);
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId, true);
         $usersIdsCanView = array_merge(Hash::extract($coachees, '{n}.User.id'), [$authUserId]);
         if (!in_array($evaluateeUserId, $usersIdsCanView)) {
             throw new NotFoundException();
