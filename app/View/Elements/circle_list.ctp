@@ -14,7 +14,7 @@
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?>
-          <a href="/CirclePins/index" class="pull-right pin-circle-edit-color"><?= __("Edit") ?></a>
+          <a href="/CirclePins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Edit") ?></a>
         </p>
     </div>
     <div class="dashboard-circle-list-body-wrap">

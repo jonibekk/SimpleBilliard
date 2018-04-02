@@ -1,13 +1,14 @@
 <?= $this->App->viewStartComment()?>
 <div id="circles-edit-page" class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
-    <div class="panel-heading">
+    <div id="circle-pin-heading" class="panel-heading">
         <?= __("Edit Circles") ?>
+        <div class="circle-pin-heading-description">
+            Description line 1.........
+        </div>
+        <div class="circle-pin-heading-description">
+            Description line 2.........
+        </div>
     </div>
-    <!-- Todo Filter Commented out/ -->
-    <!-- <div class="list-group-item justify-content-between">
-      <input type="text" id="filter-circles-list" class="form-control" placeholder="サークルフィルター">
-    </div> -->
-<!--     <div class="panel-body eval-view-panel-body"> -->
     <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
         <div class="row">
             <div class="column">
