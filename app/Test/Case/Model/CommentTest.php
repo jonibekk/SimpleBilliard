@@ -478,11 +478,6 @@ class CommentTest extends GoalousTestCase
         $this->Comment->save();
         $this->Comment->read(null, 1);
         $this->assertEqual($this->Comment->field('body'), '%%%circle_4:秘密サークル%%%');
-        $this->Comment->read(null, 1);
-        $this->Comment->set('body', '%%%group_1%%%');
-        $this->Comment->save();
-        $this->Comment->read(null, 1);
-        $this->assertEqual($this->Comment->field('body'), '%%%group_1:グループ1%%%');
     }
 
 }
