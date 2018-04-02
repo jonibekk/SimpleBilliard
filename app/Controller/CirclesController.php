@@ -122,6 +122,9 @@ class CirclesController extends AppController
         if (isset($query['term']) && $query['term'] && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && $query['page_limit']) {
             $res = $this->Circle->getAccessibleCirclesSelect2($query['term'], $query['page_limit']);
         }
+        if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
+            $res = $this->Mention->filterAsMentionableUser($query['in_post_id'], $res);
+        }
         return $this->_ajaxGetResponse($res);
     }
 

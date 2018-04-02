@@ -31,6 +31,7 @@ class UsersController extends AppController
     ];
     public $components = [
         'TwoFa',
+        'Mention'
     ];
 
     public function beforeFilter()
@@ -890,6 +891,9 @@ class UsersController extends AppController
             $with_group = boolval($query['with_group'] ?? false);
             $with_self  = boolval($query['with_self'] ?? false);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
+        }
+        if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
+            $res = $this->Mention->filterAsMentionableUser($query['in_post_id'], $res);
         }
         return $this->_ajaxGetResponse($res);
     }
