@@ -739,7 +739,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
-        
+
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/ajax_comments');
