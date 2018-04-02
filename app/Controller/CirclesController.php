@@ -74,14 +74,15 @@ class CirclesController extends AppController
     public function ajax_get_edit_modal()
     {
         $circle_id = $this->request->params['named']['circle_id'];
-        $Circle = ClassRegistry::init('Circle');
-        try {
-            if (!$Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
-                return false;
-            }
-        } catch (RuntimeException $e) {
-            $this->Notification->outError($e->getMessage());
-            return false;
+        if(!isset($circle_id)){
+            /** @noinspection PhpInconsistentReturnPointsInspection */
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        if(!$this->Circle->CircleMember->isAdmin($this->Auth->User('id'), $circle_id)){
+            /** @noinspection PhpInconsistentReturnPointsInspection */
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
         }
         $this->_ajaxPreProcess();
         $this->request->data = $this->Circle->findById($circle_id);
