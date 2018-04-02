@@ -1,9 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
 
-App::import('Model','User');
-App::import('Model','Circle');
-
 /**
  * ActionResult Model
  *

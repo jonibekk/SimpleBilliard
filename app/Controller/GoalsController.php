@@ -1354,7 +1354,6 @@ class GoalsController extends AppController
         // フォームが submit された時
         if ($this->request->is('put')) {
             $this->request->data['ActionResult']['id'] = $ar_id;
-            $this->request->data['ActionResult']['name'] = $this->request->data['ActionResult']['actual_name'];
             if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
                 $this->Notification->outError(__("Failed to save data."));
                 /** @noinspection PhpVoidFunctionResultUsedInspection */

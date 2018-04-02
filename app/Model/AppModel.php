@@ -660,4 +660,5 @@ class AppModel extends Model
 
         return !empty($ret);
     }
+    
 }

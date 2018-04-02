@@ -1,6 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('ActionResult', 'Model');
-App::uses('User', 'Model');
+
 /**
  * ActionResult Test Case
  *
@@ -18,8 +18,6 @@ class ActionResultTest extends GoalousTestCase
         'app.action_result',
         'app.team',
         'app.user',
-        'app.circle',
-        'app.group',
         'app.email',
         'app.goal',
         'app.goal_category',
@@ -533,4 +531,5 @@ class ActionResultTest extends GoalousTestCase
             $this->ActionResult->save($action, false);
         }
     }
+    
 }

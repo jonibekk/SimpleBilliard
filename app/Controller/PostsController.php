@@ -17,7 +17,6 @@ use Goalous\Model\Enum as Enum;
  */
 class PostsController extends AppController
 {
-
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -195,7 +194,6 @@ class PostsController extends AppController
         }
 
         // 投稿を保存
-        $this->request->data['Post']['body'] = $this->request->data['Post']['actual_body'];
         $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId);
 
         // 保存に失敗
@@ -335,7 +333,6 @@ class PostsController extends AppController
             }
 
             // 投稿を保存
-            $this->request->data['Post']['body'] = $this->request->data['Post']['actual_body'];
             if ($this->Post->postEdit($this->request->data)) {
                 $this->Notification->outSuccess(__("Saved changes."));
             } else {
@@ -742,6 +739,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
+        
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/ajax_comments');
@@ -974,6 +972,7 @@ class PostsController extends AppController
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
             ]);
+            
             // setting draft post data if having circle_id
             /** @var PostDraftService $PostDraftService */
             $PostDraftService = ClassRegistry::init('PostDraftService');
@@ -1025,6 +1024,7 @@ class PostsController extends AppController
             )
             );
         }
+        
         $response = $this->render("Feed/posts");
         $html = $response->__toString();
 

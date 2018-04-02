@@ -24,6 +24,7 @@ class TextExHelper extends AppHelper
         'Text',
         'Html',
     );
+    
     function autoLink($text)
     {
         $option = [];

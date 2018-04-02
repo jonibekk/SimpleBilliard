@@ -23,7 +23,6 @@ class PostTest extends GoalousTestCase
         'app.key_result',
         'app.post',
         'app.user',
-        'app.group',
         'app.team',
         'app.goal',
         'app.local_name',
@@ -1014,4 +1013,6 @@ class PostTest extends GoalousTestCase
     {
         return str_replace($str, '`', '"');
     }
+
+    
 }
