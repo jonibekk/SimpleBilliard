@@ -13,7 +13,7 @@ class ActionsController extends ApiController
 {
 
     public $components = [
-        'Notification'
+        'Notification',
     ];
 
     /**
@@ -62,7 +62,6 @@ class ActionsController extends ApiController
         $krId = $this->request->data['ActionResult']['key_result_id'] ?? null;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goalId, $krId,
             $this->Goal->ActionResult->getLastInsertID());
-
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
 

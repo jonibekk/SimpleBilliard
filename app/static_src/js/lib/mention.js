@@ -1,4 +1,5 @@
 var Mention = function(target) {
+  console.log(target.attr('post-id'))
   this.values = {}
   var self = this
   var bind = function(target) {
