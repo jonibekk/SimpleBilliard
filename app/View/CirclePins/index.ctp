@@ -34,7 +34,7 @@
                                 <div class="pin-circle-dropdown-content style-hidden">
                                     <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url=""></div>
                                 </div>                                
-                                <i class="fa-pull-right-less fa fa-thumbtack fa-lg style-hidden"></i>
+                                <i class="fa-pull-right-less fa fa-thumb-tack fa-lg style-hidden"></i>
                         </div>
                         <ul id="pinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>

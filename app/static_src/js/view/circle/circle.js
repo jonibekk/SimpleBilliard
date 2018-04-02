@@ -264,7 +264,7 @@ window.onload = function(){
             updateDisplayCount();
         };
         for(var i = 0; i < circles.length; i++){
-            circles[i].querySelector('.fa-thumbtack').onclick = pinEvent;
+            circles[i].querySelector('.fa-thumb-tack').onclick = pinEvent;
             var cog = circles[i].querySelector('.fa-cog');
             if(cog){
                 cog.onclick = editMenu;

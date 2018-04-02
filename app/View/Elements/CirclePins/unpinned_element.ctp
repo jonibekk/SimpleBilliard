@@ -18,6 +18,6 @@
 	<?php else :?>
 	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
 	<?php endif; ?>
-	<i class="fa-pull-right-less fa fa-thumbtack fa-lg fa-disabled a-black-link"></i>
+	<i class="fa-pull-right-less fa fa-thumb-tack fa-lg fa-disabled a-black-link"></i>
 </li>
 <?= $this->App->viewEndComment()?>
