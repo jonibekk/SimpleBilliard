@@ -31,8 +31,7 @@ var Mention = function(target) {
           if (!query) callback([])
           var params = {
             term: query,
-            page_limit: '20',
-            with_group: 1
+            page_limit: '20'
           }
           var results = []
           $.ajax({
