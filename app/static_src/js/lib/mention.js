@@ -1,5 +1,6 @@
 var Mention = function(target) {
-  console.log(target.attr('post-id'))
+  this.postId = target.attr('post-id')
+  this.hasMention = target.attr('has-mention') == 1
   this.values = {}
   var self = this
   var bind = function(target) {
@@ -32,7 +33,8 @@ var Mention = function(target) {
           if (!query) callback([])
           var params = {
             term: query,
-            page_limit: '20'
+            page_limit: '20',
+            in_post_id: self.postId
           }
           var results = []
           $.ajax({
@@ -62,6 +64,7 @@ var Mention = function(target) {
   }
   bind(target)
   var convert = function(text) {
+    if (!self.postId) return text
     var matches = text.match(/%%%(.*?:.*?)%%%/g)
     if (!matches) return text
     for (var i=0; i<matches.length; i++) {
