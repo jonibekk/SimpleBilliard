@@ -110,20 +110,6 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-comment-o',
             'groups'          => ['all'],
         ],
-        self::TYPE_FEED_MENTIONED_IN_ACTION                 => [
-            'mail_template'   => "notify_basic",
-            'field_real_name' => null,
-            'field_prefix'    => 'feed_mentioned_in_action',
-            'icon_class'      => 'fa-comment-o',
-            'groups'          => ['all'],
-        ],
-        self::TYPE_FEED_MENTIONED_IN_POST                   => [
-            'mail_template'   => "notify_basic",
-            'field_real_name' => null,
-            'field_prefix'    => 'feed_mentioned_in_post',
-            'icon_class'      => 'fa-comment-o',
-            'groups'          => ['all'],
-        ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
@@ -750,32 +736,6 @@ class NotifySetting extends AppModel
                 } else {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in a comment. ',
-                        h($user_text),
-                        ($count_num > 0) ? h(__("and %s others", $count_num)) : null);
-                }
-                break;
-            case self::TYPE_FEED_MENTIONED_IN_POST:
-                if ($is_plain_mode) {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in a post. ',
-                        $user_text,
-                        ($count_num > 0) ? __("and %s others", $count_num) : null);
-                } else {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in a post. ',
-                        h($user_text),
-                        ($count_num > 0) ? h(__("and %s others", $count_num)) : null);
-                }
-                break;
-            case self::TYPE_FEED_MENTIONED_IN_ACTION:
-                if ($is_plain_mode) {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in an action. ',
-                        $user_text,
-                        ($count_num > 0) ? __("and %s others", $count_num) : null);
-                } else {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in an action. ',
                         h($user_text),
                         ($count_num > 0) ? h(__("and %s others", $count_num)) : null);
                 }

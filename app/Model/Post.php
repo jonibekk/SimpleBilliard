@@ -9,7 +9,6 @@ App::uses('PostResource', 'Model');
 App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
 App::import('Service', 'PostService');
-App::import('Model', 'HavingMentionTrait');
 
 use Goalous\Model\Enum as Enum;
 
@@ -37,8 +36,6 @@ use Goalous\Model\Enum as Enum;
  */
 class Post extends AppModel
 {
-    use HavingMentionTrait;
-    public $bodyProperty = 'body';
     /**
      * post type
      */

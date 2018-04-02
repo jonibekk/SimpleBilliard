@@ -151,12 +151,6 @@ class NotifyBizComponent extends Component
                 $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
                     $model_id, $sub_model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_FEED_MENTIONED_IN_ACTION:
-                $this->_setFeedMentionedInActionOption($model_id, $to_user_list);
-                break;
-            case NotifySetting::TYPE_FEED_MENTIONED_IN_POST:
-                $this->_setFeedMentionedInPostOption($model_id, $to_user_list);
-                break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
                 break;
@@ -1424,59 +1418,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
-    /**
-     * 自分が閲覧可能なアクションがあった場合
-     *
-     * @param $action_result_id
-     */
-    private function _setFeedMentionedInActionOption($action_result_id, $to_user_ids)
-    {
-        $action = $this->Goal->ActionResult->findById($action_result_id);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $post = $this->Post->findByActionResultId($action_result_id);
-        if (empty($action)) {
-            return;
-        }
-        $goal_id = $action['ActionResult']['goal_id'];
-
-        //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
-            NotifySetting::TYPE_FEED_MENTIONED_IN_ACTION);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_ACTION;
-        $this->notify_option['url_data'] = [
-            'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
-        ];
-        $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
-            json_encode([trim($action['ActionResult']['name'])]) : null;
-        $this->notify_option['options']['goal_id'] = $goal_id;
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
-    }
-
-
-    private function _setFeedMentionedInPostOption($post_id, $to_user_ids)
-    {
-        $post = $this->Post->findById($post_id);
-        if (empty($post)) {
-            return;
-        }
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
-            NotifySetting::TYPE_FEED_MENTIONED_IN_POST);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_POST;
-        $this->notify_option['url_data'] = [
-            'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
-        ];
-        $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
-            json_encode([trim($post['Post']['body'])]) : null;
-
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
-    }
-
+    
     private function _saveNotifications()
     {
         //通知onのユーザを取得

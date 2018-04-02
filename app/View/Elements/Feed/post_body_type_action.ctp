@@ -167,8 +167,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         id="PostTextBody_<?= $post['Post']['id'] ?>">
         <?php //チェックアイコンはすぐに戻す可能性があるのでコメントアウト ?>
         <!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
-        <?php $mentions = $this->Mention->getMyMentions($post['ActionResult']['name'], $my_id, $my_team_id) ?>
-        <?= $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($post['ActionResult']['name'])), $mentions) ?>
+        <?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
     </div>
     <?php if ($post['Post']['site_info']): ?>
         <?php $site_info = json_decode($post['Post']['site_info'], true) ?>

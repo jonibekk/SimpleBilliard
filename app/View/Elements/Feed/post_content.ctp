@@ -2,9 +2,8 @@
 <div
     class="col feed-contents post-contents <?= viaIsSet($long_text) ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
     id="PostTextBody_<?= $post['Post']['id'] ?>">
-    <?php $mentions = $this->Mention->getMyMentions($post['Post']['body'], $my_id, $my_team_id) ?>
     <?php if (($post['Post']['type'] == Post::TYPE_NORMAL) || ($post['Post']['type'] == Post::TYPE_MESSAGE)): ?>
-        <?= $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($post['Post']['body'])), $mentions) ?>
+        <?= nl2br($this->TextEx->autoLink($post['Post']['body'])) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
         <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>

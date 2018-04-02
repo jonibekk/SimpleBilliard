@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 
 App::import('Model','User');
 App::import('Model','Circle');
-App::import('Model', 'HavingMentionTrait');
 
 /**
  * ActionResult Model
@@ -22,9 +21,6 @@ class ActionResult extends AppModel
     const TYPE_USER = 0;
     const TYPE_GOAL = 1;
     const TYPE_KR = 2;
-
-    use HavingMentionTrait;
-    public $bodyProperty = 'name';
 
     public $actsAs = [
         'Upload' => [

@@ -1014,24 +1014,4 @@ class PostTest extends GoalousTestCase
     {
         return str_replace($str, '`', '"');
     }
-
-    function testAfterFind()
-    {
-        $this->Post->read(null, 1);
-        $this->Post->set('body', '%%%user_1%%%');
-        $this->Post->save();
-        $this->Post->read(null, 1);
-        $this->assertEqual($this->Post->field('body'), '%%%user_1:firstname lastname%%%');
-        $this->Post->read(null, 1);
-        $this->Post->set('body', '%%%circle_4%%%');
-        $this->Post->save();
-        $this->Post->read(null, 1);
-        $this->assertEqual($this->Post->field('body'), '%%%circle_4:秘密サークル%%%');
-        $this->Post->read(null, 1);
-        $this->Post->set('body', '%%%group_1%%%');
-        $this->Post->save();
-        $this->Post->read(null, 1);
-        $this->assertEqual($this->Post->field('body'), '%%%group_1:グループ1%%%');
-    }
-
 }
