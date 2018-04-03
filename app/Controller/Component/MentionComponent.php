@@ -98,14 +98,10 @@ class MentionComponent extends Component {
                 $model = null;
                 // access control check assumes that mentions in the content are not so many.
                 if ($match['isUser'] === true) {
-                    // $checked = self::filterAsMentionableUser($accessControlledId, [['id' => self::$USER_ID_PREFIX.self::$ID_DELIMITER.$match['id']]]);
-                    // if (count($checked) == 0) continue;
                     $model = ClassRegistry::init('PlainUser');
                     $replacementName = 'display_username';
                     $model->alias = 'User';
                 }else if ($match['isCircle'] === true) {
-                    // $checked = self::filterAsMentionableCircle($accessControlledId, [['id' => self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER.$match['id']]]);
-                    // if (count($checked) == 0) continue;
                     $model = ClassRegistry::init('Circle');
                 }
                 if (!is_null($model)) {
