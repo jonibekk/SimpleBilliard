@@ -1185,17 +1185,18 @@ class User extends AppModel
      *
      * @see https://select2.github.io/select2/ (v 3.5.x)
      *
-     * @param      $keyword   User typed string in input type=text
-     * @param int  $limit
-     * @param bool $with_group
-     * @param bool $with_self Include authorized user in the result.
+     * @param       $keyword       User typed string in input type=text
+     * @param int   $limit
+     * @param bool  $with_group
+     * @param bool  $with_self     Include authorized user in the result.
+     * @param array $excludedUsers User IDs to be removed from the query
      *
      * @return array
      */
-    public function getUsersSelect2($keyword, $limit = 10, $with_group = false, $with_self = false)
+    public function getUsersSelect2($keyword, $limit = 10, $with_group = false, $with_self = false, $excludedUsers = [])
     {
         $exclude_auth_user = !$with_self;
-        $users = $this->getUsersByKeyword($keyword, $limit, $exclude_auth_user);
+        $users = $this->getUsersByKeyword($keyword, $limit, $exclude_auth_user, $excludedUsers);
         $user_res = $this->makeSelect2UserList($users);
 
         // グループを結果に含める場合
