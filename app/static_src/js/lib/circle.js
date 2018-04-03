@@ -135,6 +135,12 @@ $(function () {
             }).done(function () {
                 $this.removeClass('double_click');
                 $('body').addClass('modal-open');
+            }).fail(function () {
+                $this.removeClass('double_click')
+                new Noty({
+                    type: 'error',
+                    text: cake.message.notice.d,
+                }).show();
             });
         }
     });
