@@ -15,7 +15,7 @@
                     </div>
                     <div id="pinned-body" class="pin-circle-body">
                         <div class="pin-circle-list-item ignore-elements">
-                            <i class="fa fa-align-justify style-hidden pin-circle-front-drag-handler"></i>
+                            <i class="fa fa-align-justify fa-lg style-hidden pin-circle-front-drag-handler"></i>
                                 <?=
                                 $this->Html->image('pre-load.svg',
                                     [
@@ -29,11 +29,11 @@
                                 ?>
                                 <label class="circle-name-label"><?php echo $defaultCircle['name'];?></label>
                                 <?php if ($defaultCircle['admin_flg']): ?>
-                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $defaultCircle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
+                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $defaultCircle['id']; ?>"><i class="fa fa-cog fa-2x pin-circle-cog"></i></a>
                                 <?php else :?>
-                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
+                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-2x pin-circle-cog style-hidden"></i></a>
                                 <?php endif; ?>                            
-                                <i class="fa-pull-right-less fa fa-thumb-tack fa-lg style-hidden"></i>
+                                <i class="fa-pull-right-less fa fa-thumb-tack fa-2x style-hidden"></i>
                         </div>
                         <ul id="pinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>
