@@ -3,7 +3,7 @@
     <div id="circle-pin-heading" class="panel-heading">
         <?= __("Edit Circles") ?>
         <div class="circle-pin-heading-description">
-            <?= __("One can pin a circle to list on the top and of which can be reordered. Moreover, 'All Team' circle cannot be reordered or unpinned.") ?>
+            <?= __('You can pin a circle to the top as a sortable list. "All Team" will automatically be your top pin.') ?>
         </div>
     </div>
     <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
@@ -29,11 +29,11 @@
                                 ?>
                                 <label class="circle-name-label"><?php echo $defaultCircle['name'];?></label>
                                 <?php if ($defaultCircle['admin_flg']): ?>
-                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $defaultCircle['id']; ?>"><i class="fa fa-cog fa-2x pin-circle-cog"></i></a>
+                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $defaultCircle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
                                 <?php else :?>
-                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-2x pin-circle-cog style-hidden"></i></a>
+                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
                                 <?php endif; ?>                            
-                                <i class="fa-pull-right-less fa fa-thumb-tack fa-2x style-hidden"></i>
+                                <i class="fa-pull-right-less fa fa-thumb-tack fa-lg style-hidden"></i>
                         </div>
                         <ul id="pinned" class="list-group">
                             <?php foreach ($circles as $circle): ?>
