@@ -103,8 +103,6 @@ class UploadBehaviorTest extends GoalousTestCase
         $this->AssertTrue($res);
         $res = $this->UploadBehavior->saveRotatedFile("Test/Images/non-exisiting.jpg", "Test/OutputImages/non-exisiting.jpg");
         $this->AssertFalse($res);
-        $res = $this->UploadBehavior->saveRotatedFile("Test/Images/less-than-10mb.jpg", "Test/OutputImages/less-than-10mb.jpg");
-        $this->AssertTrue($res);
     }
 
     public function test_getDegrees(){
