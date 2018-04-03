@@ -15,9 +15,6 @@ class UploadBehaviorTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = array(
-        // 'app.action_result_file',
-        // 'app.action_result',
-        // 'app.attached_file',
     );
 
     /**
@@ -106,8 +103,6 @@ class UploadBehaviorTest extends GoalousTestCase
         $this->AssertTrue($res);
         $res = $this->UploadBehavior->saveRotatedFile("Test/Images/non-exisiting.jpg", "Test/OutputImages/non-exisiting.jpg");
         $this->AssertFalse($res);
-        $res = $this->UploadBehavior->saveRotatedFile("Test/Images/greater-than-10mb.jpg", "Test/OutputImages/greater-than-10mb.jpg");
-        $this->AssertTrue($res);
         $res = $this->UploadBehavior->saveRotatedFile("Test/Images/less-than-10mb.jpg", "Test/OutputImages/less-than-10mb.jpg");
         $this->AssertTrue($res);
     }
