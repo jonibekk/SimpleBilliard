@@ -15,11 +15,14 @@ window.onload = function(){
         return this;
     };
     var resizeLabels = function(){
-        var width = $(window).width();
-        var labels = $(".circle-name-label");
-        var newWidth = (width - 200) + "px";
-        for (var i = 0; i < labels.length; i++) {
-            $(labels[i]).css("width", newWidth);
+        var target = $(".pin-circle-list-item").first();
+        if(target.length) {
+            var width = $(target).width();
+            var labels = $(".circle-name-label");
+            var newWidth = (width - 200) + "px";
+            for (var i = 0; i < labels.length; i++) {
+                $(labels[i]).css("width", newWidth);
+            }
         }
     }
     $(window).on("resize load", function(){
