@@ -16,13 +16,9 @@ $(document).ready(function () {
   $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
   });
-  // //アップロード画像選択時にトリムして表示
-  // $('.fileinput_cover').fileinput().on('change.bs.fileinput', function (e) {
-  //   $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
-  // });
 
   $('.fileinput-exists,.fileinput-new').fileinput().on('change.bs.fileinput', function (e) {
-    bindExifRotatation(this);
+    exifRotate(this);
   });
 
 
@@ -649,75 +645,3 @@ function getModalFormFromUrl(e) {
 window.addEventListener('load', function () {
   $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
-
-// EXIF解析＋画像反転
-function bindExifRotatation(parentElement){
-var fileinput = $(parentElement).find('input:file').first().get(0);
-if(!fileinput.files ||!fileinput.files.length){
-  return;
-}
-var inputSelector = $(parentElement).find('.fileinput-preview').first();
-loadImage.parseMetaData(fileinput.files[0], function(data) {
-      var styles;
-      var orientation = 1;
-      //if exif data available, update orientation
-      if (data.exif) {
-          orientation = data.exif.get('Orientation');
-      }
-
-      var angle = 0;
-      var flip = false;
-      switch (orientation) {
-        case 1:
-          angle = 0;
-          break;
-        case 2:
-          angle = 0;
-          flip = true;
-          break;
-        case 3:
-          angle = 180;
-          break;
-        case 4:
-          angle = 180;
-          flip = true;
-          break;
-        case 5:
-          angle = 270;
-          flip = true;
-          break;
-        case 6:
-          angle = 90;
-          break;
-        case 7:
-          angle = 90;
-          flip = true;
-          break;
-        case 8:
-          angle = 270;
-          break;
-        default :
-          angle = 0;
-          break;
-      }
-      if(!flip){
-        styles = {
-          "transform": "rotate(" + angle + "deg)",
-          "-ms-transform": "rotate(" + angle + "deg)",
-          "-o-transform": "rotate(" + angle + "deg)",
-          "-moz-transform": "rotate(" + angle + "deg)",
-          "-webkit-transform": "rotate(" + angle + "deg)"
-        };
-      } else {
-        styles = {
-          "transform": "rotate(" + angle + "deg) scaleX(-1)",
-          "-ms-transform": "rotate(" + angle + "deg) scaleX(-1)",
-          "-o-transform": "rotate(" + angle + "deg) scaleX(-1)",
-          "-moz-transform": "rotate(" + angle + "deg) scaleX(-1)",
-          "-webkit-transform": "rotate(" + angle + "deg) scaleX(-1)"
-        };
-      }
-
-      $(parentElement).find('img').css(styles);
-    });
-}

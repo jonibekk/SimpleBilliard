@@ -133,16 +133,6 @@ gulp.task("js_vendor:uglify", () => {
     .pipe(duration('js_vendor:uglify'))
 })
 
-gulp.task("js_exif:uglify", () => {
-  return gulp.src(config.dest + "/js_exif_cat/" + config.js_exif.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.js_exif.output.path))
-    .pipe(duration('js_exif:uglify'))
-})
-
 gulp.task("js_prerender:uglify", () => {
   return gulp.src(config.dest + "/js_prerender_cat/" + config.js_prerender.output.file_name + '.js')
     .pipe(uglify())
@@ -151,6 +141,16 @@ gulp.task("js_prerender:uglify", () => {
     }))
     .pipe(gulp.dest(config.js_prerender.output.path))
     .pipe(duration('js_prerender:uglify'))
+})
+
+gulp.task("js_prerender_exif:uglify", () => {
+  return gulp.src(config.dest + "/js_prerender_exif_cat/" + config.js_prerender_exif.output.file_name + '.js')
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.js_prerender_exif.output.path))
+    .pipe(duration('js_prerender_exif:uglify'))
 })
 
 gulp.task("angular_vendor:uglify", () => {

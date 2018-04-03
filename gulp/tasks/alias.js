@@ -34,7 +34,7 @@ gulp.task('js', done => {
       'js_evaluator_settings',
       'js_app',
       'js_vendor',
-      'js_exif',
+      'js_prerender_exif',
       'js_prerender',
       'js_payment',
       'js_homepage',
@@ -146,22 +146,22 @@ gulp.task('js_prerender', done => {
   )
 })
 
+// js prerender exif
+gulp.task('js_prerender_exif', done => {
+  return runSequence(
+    'js_prerender_exif:concat',
+    'js_prerender_exif:uglify',
+    'js_prerender_exif:clean',
+    done
+  )
+})
+
 // js vendor
 gulp.task('js_vendor', done => {
   return runSequence(
     'js_vendor:concat',
     'js_vendor:uglify',
     'js_vendor:clean',
-    done
-  )
-})
-
-// js exif
-gulp.task('js_exif', done => {
-  return runSequence(
-    'js_exif:concat',
-    'js_exif:uglify',
-    'js_exif:clean',
     done
   )
 })

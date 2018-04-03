@@ -971,9 +971,7 @@ class UploadBehavior extends ModelBehavior
         $image = $this->_getImgSource($createHandler, $filePath);
 
         if (!$image) {
-            $this->log(sprintf('creating img object was failed.'));
-            $this->log(Debugger::trace());
-            $this->_backupFailedImgFile(basename($filePath), $filePath);
+            GoalousLog::error("saveRotatedFile", ["creating img object was failed.",Debugger::trace(),$this->_backupFailedImgFile(basename($filePath), $filePath)]);
             return false;
         }
 

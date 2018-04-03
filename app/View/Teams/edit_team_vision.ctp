@@ -114,35 +114,4 @@
         </div>
     </div>
 </div>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $('[rel="tooltip"]').tooltip();
-
-        $('#AddTeamVisionForm').bootstrapValidator({
-            live: 'enabled',
-            fields: {
-                "data[TeamVision][photo]": {
-                    validators: {
-                        file: {
-                            extension: 'jpeg,jpg,png,gif',
-                            type: 'image/jpeg,image/png,image/gif',
-                            maxSize: 10485760,   // 10mb
-                            message: "<?=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>"
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
-<?php $this->end() ?>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(function() {
-        bindExifRotate('photo-input-edit-team-vision', 'preview-edit-team-vision');
-    });
-</script>
-<?php $this->end() ?>
 <?= $this->App->viewEndComment()?>

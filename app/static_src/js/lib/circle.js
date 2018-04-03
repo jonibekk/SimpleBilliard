@@ -103,7 +103,7 @@ $(function () {
                         fitDirection: 'center center'
                     });
                     //EXIF
-                    bindExifRotatation(this);
+                    exifRotate(this);
                 });
 
                 // var $editCircleForm = $modal_elm.find('#EditCircleForm');

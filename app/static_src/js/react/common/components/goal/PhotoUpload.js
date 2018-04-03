@@ -1,5 +1,5 @@
 import React from "react";
-import { bindExifRotate } from '../../../helper_functions/helpers.js';
+import {setExifRotateStyle} from "~/helper_functions/helpers.js";
 
 export default class PhotoUpload extends React.Component {
   constructor(props) {
@@ -13,7 +13,9 @@ export default class PhotoUpload extends React.Component {
       $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
       });
-      bindExifRotate('file_photo','preview-photoupload');
+      $('.fileinput-exists,.fileinput-new').fileinput().on('change.bs.fileinput', function (e) {
+        setExifRotateStyle(this);
+      });
     });
     // TODO:アップロードして画面遷移した後戻った時のサムネイル表示がおかしくなる不具合対応
     // 本来リサイズ後の画像でないと表示がおかしくなるが、アップロードにjqueryプラグインを使用すると

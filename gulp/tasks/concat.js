@@ -84,20 +84,20 @@ gulp.task('js_vendor:concat', () => {
     .pipe(duration('js_vendor:concat'))
 })
 
-gulp.task('js_exif:concat', () => {
-  return gulp.src(config.js_exif.src)
-    .pipe(plumber())
-    .pipe(concat(config.js_exif.output.file_name + '.js'))
-    .pipe(gulp.dest(config.dest + '/js_exif_cat'))
-    .pipe(duration('js_exif:concat'))
-})
-
 gulp.task('js_prerender:concat', () => {
   return gulp.src(config.js_prerender.src)
     .pipe(plumber())
     .pipe(concat(config.js_prerender.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/js_prerender_cat'))
     .pipe(duration('js_prerender:concat'))
+})
+
+gulp.task('js_prerender_exif:concat', () => {
+  return gulp.src(config.js_prerender_exif.src)
+    .pipe(plumber())
+    .pipe(concat(config.js_prerender_exif.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/js_prerender_exif_cat'))
+    .pipe(duration('js_prerender_exif:concat'))
 })
 
 gulp.task('angular_app:concat', () => {

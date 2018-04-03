@@ -1,19 +1,24 @@
-export const setExifRotateStyle = function(parentElement) {
-  const parent = $(parentElement).parent();
-  const input = parent.find('input:file').first().get(0);
+/**
+ * This file contains script to image rotation
+ */
+"use strict";
+
+function exifRotate(parentElement){
+  var parent = $(parentElement).parent();
+  var input = parent.find('input:file').first().get(0);
   if(!input.files ||!input.files.length){
     return;
   }    
-  const reader = new FileReader();
-  const exifImg = new Image();
+  var reader = new FileReader();
+  var exifImg = new Image();
 
   reader.onload = function (e) {
     exifImg.onload = function() {
       EXIF.getData(exifImg, function () {
-        const orientation = parseInt(EXIF.getTag(this, "Orientation") || 1);
-        let styles;
-        let angle = 0;
-        let flip = false;
+        var orientation = parseInt(EXIF.getTag(this, "Orientation") || 1);
+        var styles;
+        var angle = 0;
+        var flip = false;
         switch (orientation) {
          default:
           case 1:
