@@ -12,7 +12,7 @@
 	        ]
 	    )
 	?>
-	<label class='circle-name-label'><?php echo mb_strimwidth ($circle['name'] , 0 , 16, '...', 'UTF-8');?></label>
+	<label class='circle-name-label'><?php echo $circle['name'];?></label>
 	<?php if ($circle['admin_flg']): ?>
 	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
 	<?php else :?>

@@ -14,7 +14,14 @@ window.onload = function(){
 
         return this;
     };
-
+    $(window).on("resize load", function(){
+        var width = $(window).width();
+        var labels = $(".circle-name-label");
+        var newWidth = (width - 200) + "px";
+        for (var i = 0; i < labels.length; i++) {
+            $(labels[i]).css("width", newWidth);
+        }
+    });
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')){
         var pinnedSortable = new Sortable(document.getElementById('pinned'), {

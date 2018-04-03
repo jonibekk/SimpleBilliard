@@ -41,12 +41,15 @@
     margin-top: 12px;
     margin-right: 16px;
     float: right;
+    position: absolute;
+    right: 64px;
 }
 
 .fa-pull-right-pin-circle-cog {
     margin-top: 8px;
-    margin-right: 20px;
-    margin-left: 8px;
+    margin-right: none;
+    position: absolute;
+    right: 32px;
     float: right;
 }
 
@@ -60,8 +63,15 @@
 }
 
 .circle-name-label {
-  font-size: 1.1em;
-  display: initial !important;
+    margin-top: 6px;
+    font-size: 1.1em;
+    display: initial !important;
+    background: #fff;
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .a-black-link {
@@ -198,6 +208,6 @@ a.circle-sortable-chosen.active, a.circle-sortable-chosen.active:hover, a.circle
 }
 
 div.circle-pin-heading-description{
-  font-size: 1em !important;
+  font-size: 12pt !important;
   font-weight: normal !important;
 }

@@ -3,10 +3,7 @@
     <div id="circle-pin-heading" class="panel-heading">
         <?= __("Edit Circles") ?>
         <div class="circle-pin-heading-description">
-            <?= __("Description line 1.........") ?>
-        </div>
-        <div class="circle-pin-heading-description">
-            <?= __("Description line 2.........") ?>
+            <?= __("One can pin a circle to list on the top and of which can be reordered. Moreover, 'All Team' circle cannot be reordered or unpinned.") ?>
         </div>
     </div>
     <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
@@ -30,7 +27,7 @@
                                     ]
                                 )
                                 ?>
-                                <div class="pin-circle-text"><label class="circle-name-label"><?php echo mb_strimwidth ($defaultCircle['name'] , 0 , 16, '...', 'UTF-8');?></label></div>
+                                <label class="circle-name-label"><?php echo $defaultCircle['name'];?></label>
                                 <?php if ($defaultCircle['admin_flg']): ?>
                                 <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $defaultCircle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
                                 <?php else :?>
