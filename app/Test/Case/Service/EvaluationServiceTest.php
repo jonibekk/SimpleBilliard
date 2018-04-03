@@ -6,10 +6,13 @@ App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('Evaluator', 'Model');
 App::uses('Evaluation', 'Model');
+App::uses('Experiment', 'Model');
+App::uses('EvaluationSetting', 'Model');
 App::import('Service', 'EvaluationService');
 App::uses('TestTermTrait', 'Test/Trait');
 App::uses('TestEvaluationTrait', 'Test/Trait');
 App::uses('TestGoalTrait', 'Test/Trait');
+App::import('Service', 'ExperimentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -22,6 +25,7 @@ use Goalous\Model\Enum as Enum;
  *
  * @property EvaluationService $EvaluationService
  * @property Evaluation        $Evaluation
+ * @property Experiment        $Experiment
  * @property EvaluationSetting $EvaluationSetting
  * @property TeamMember        $TeamMember
  * @property User              $User
@@ -53,6 +57,8 @@ class EvaluationServiceTest extends GoalousTestCase
         'app.post',
         'app.circle',
         'app.evaluate_score',
+        'app.experiment',
+        'app.evaluation_setting',
     );
 
     /**
@@ -68,6 +74,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->EvaluationSetting = ClassRegistry::init('EvaluationSetting');
         $this->TeamMember = ClassRegistry::init('TeamMember');
         $this->User = ClassRegistry::init('User');
+        $this->Experiment = ClassRegistry::init('Experiment');
     }
 
     function testGetEvalStatusEmpty()
@@ -598,6 +605,15 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->Team->my_uid = $userId;
         $this->TeamMember->current_team_id = $teamId;
         $this->TeamMember->my_uid = $userId;
+        $this->Experiment->current_team_id = $teamId;
+        $this->Experiment->my_uid = $userId;
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init("Experiment");
+        $Experiment->create();
+        $Experiment->save([
+            'name'    => 'EnableEvaluationFeature',
+            'team_id' => $teamId,
+        ]);
         $this->Term->addTermData(Term::TYPE_CURRENT);
         $this->Term->addTermData(Term::TYPE_PREVIOUS);
         $this->Term->addTermData(Term::TYPE_NEXT);
@@ -652,6 +668,11 @@ class EvaluationServiceTest extends GoalousTestCase
         $Evaluation = ClassRegistry::init('Evaluation');
         $evaluations = $Evaluation->findAllByTeamIdAndTermId($teamId, $termId);
 
+        // Check $evaluations.term_id is equal
+        foreach ($evaluations as $evaluation) {
+            $this->assertEquals($evaluation['Evaluation']['term_id'], $termId);
+        }
+
         // Check $evaluations contains the evaluatee_user_id=1, evaluator_user_id=3
         $result = Hash::extract($evaluations, '{n}.Evaluation[evaluatee_user_id=1][evaluator_user_id=3]');
         $this->assertCount(1, $result);
@@ -667,6 +688,9 @@ class EvaluationServiceTest extends GoalousTestCase
             }
         }
         $this->assertEquals(0, $countNotNull);
+
+        $term = $this->Term->getById($termId);
+        $this->assertEquals($term['evaluate_status'], Enum\Term\EvaluateStatus::IN_PROGRESS);
     }
 
     /**
@@ -698,17 +722,29 @@ class EvaluationServiceTest extends GoalousTestCase
         $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
 
-        // This Goal will be target of evaluate
+        // This Goal will be target of evaluate (evaluation term)
         // because "goal end date" is before "term end date"
         $goalWillEvaluate = $this->createGoalSimple($userId = 1, $teamId, GoalousDateTime::now(), GoalousDateTime::now()->addMonth(2));
         $goalIdWillEvaluate = $goalWillEvaluate['id'];
         $this->makeGoalAsTargetEvaluation($goalIdWillEvaluate);
 
-        // This Goal will NOT be target of evaluate
+        // This Goal will NOT be target of evaluate (evaluation term, but not target of evaluation)
+        // because "goal end date" is before "term end date"
+        $goalNotTargetOfEvaluation = $this->createGoalSimple($userId = 1, $teamId, GoalousDateTime::now(), GoalousDateTime::now()->addMonth(2));
+        $goalIdNotTargetOfEvaluation = $goalNotTargetOfEvaluation['id'];
+
+        // This Goal will NOT be target of evaluate (previous term)
         // because "goal end date" is after "term end date"
-        $goalWillNotEvaluate = $this->createGoalSimple($userId = 1, $teamId, GoalousDateTime::now(), GoalousDateTime::now()->addMonth(3));
-        $goalIdWillNotEvaluate = $goalWillNotEvaluate['id'];
-        $this->makeGoalAsTargetEvaluation($goalIdWillNotEvaluate);
+        $dateTime3MonthAgo = GoalousDateTime::now()->subMonth(3);
+        $goalWillNotEvaluatePreviousTerm = $this->createGoalSimple($userId = 1, $teamId, $dateTime3MonthAgo, $dateTime3MonthAgo->addMonth(2));
+        $goalIdWillNotEvaluatePreviousTerm = $goalWillNotEvaluatePreviousTerm['id'];
+        $this->makeGoalAsTargetEvaluation($goalIdWillNotEvaluatePreviousTerm);
+
+        // This Goal will NOT be target of evaluate (next term)
+        // because "goal end date" is after "term end date"
+        $goalWillNotEvaluateNextTerm = $this->createGoalSimple($userId = 1, $teamId, GoalousDateTime::now(), GoalousDateTime::now()->addMonth(3));
+        $goalIdWillNotEvaluateNextTerm = $goalWillNotEvaluateNextTerm['id'];
+        $this->makeGoalAsTargetEvaluation($goalIdWillNotEvaluateNextTerm);
 
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $result = $this->EvaluationService->startEvaluation($teamId, $term['id']);
@@ -728,8 +764,16 @@ class EvaluationServiceTest extends GoalousTestCase
         $countEvaluationForOnlyEvaluatee = count($userEvaluations);
         $this->assertSame($countEvaluation, $countEvaluationForOnlyEvaluatee);
 
+        // un-evaluation goal is not included to evaluation
+        $goalEvaluations = Hash::extract($evaluations, sprintf('{n}.Evaluation[goal_id=%d]', $goalIdNotTargetOfEvaluation));
+        $this->assertCount(0, $goalEvaluations);
+
+        // previous term goal is not included to evaluation
+        $goalEvaluations = Hash::extract($evaluations, sprintf('{n}.Evaluation[goal_id=%d]', $goalIdWillNotEvaluatePreviousTerm));
+        $this->assertCount(0, $goalEvaluations);
+
         // next term goal is not included to evaluation
-        $goalEvaluations = Hash::extract($evaluations, sprintf('{n}.Evaluation[goal_id=%d]', $goalIdWillNotEvaluate));
+        $goalEvaluations = Hash::extract($evaluations, sprintf('{n}.Evaluation[goal_id=%d]', $goalIdWillNotEvaluateNextTerm));
         $this->assertCount(0, $goalEvaluations);
     }
 
@@ -786,5 +830,88 @@ class EvaluationServiceTest extends GoalousTestCase
         $countEvaluationsAfterRollback = $Evaluation->find('count');
         $this->assertSame($countEvaluationsBeforeStart, $countEvaluationsAfterRollback);
         throw $exception;
+    }
+
+    /**
+     * test startEvaluation() function throw error because experiment not defined
+     * @expectedException RuntimeException
+     */
+    function test_startEvaluation_experiment_undefined()
+    {
+        $this->_setDefault();
+        $teamId = 1;
+
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init("Experiment");
+        $Experiment->deleteAll([
+            'team_id' => $teamId,
+        ]);
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $termId = $term['id'];
+        $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
+        $this->EvaluationService->startEvaluation($teamId, $term['id']);
+    }
+
+    /**
+     * test startEvaluation() works my_turn_flg if enabled fixed order
+     */
+    function test_startEvaluation_fixed_order_enabled()
+    {
+        $this->_setDefault();
+        $teamId = 1;
+
+        /** @var EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+        $EvaluationSetting->updateAll([
+            'fixed_evaluation_order_flg' => true,
+        ], [
+            'team_id' => $teamId,
+        ]);
+
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $termId = $term['id'];
+        $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
+        $this->EvaluationService->startEvaluation($teamId, $term['id']);
+
+        /** @var Evaluation $Evaluation */
+        $Evaluation = ClassRegistry::init('Evaluation');
+        $evaluations = $Evaluation->find('all');
+
+        $index0Evaluations = Hash::extract($evaluations, '{n}.Evaluation[index_num=0]');
+        $this->assertTrue(0 < count($index0Evaluations));
+        foreach ($index0Evaluations as $evaluation) {
+            $this->assertTrue($evaluation['my_turn_flg']);
+        }
+    }
+
+    /**
+     * test startEvaluation() my_turn_flg set to false if disabled fixed order
+     */
+    function test_startEvaluation_fixed_order_disabled()
+    {
+        $this->_setDefault();
+        $teamId = 1;
+
+        /** @var EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+        $EvaluationSetting->updateAll([
+            'fixed_evaluation_order_flg' => false,
+        ], [
+            'team_id' => $teamId,
+        ]);
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $termId = $term['id'];
+        $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
+        $this->EvaluationService->startEvaluation($teamId, $term['id']);
+
+        /** @var Evaluation $Evaluation */
+        $Evaluation = ClassRegistry::init('Evaluation');
+        $evaluations = $Evaluation->find('all');
+
+        foreach ($evaluations as $evaluation) {
+            if (isset($evaluation['my_turn_flg'])) {
+                $this->assertFalse($evaluation['my_turn_flg']);
+            }
+        }
     }
 }

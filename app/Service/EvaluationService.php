@@ -5,6 +5,7 @@ App::uses('EvaluationSetting', 'Model');
 App::uses('Term', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
+App::import('Service', 'ExperimentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -395,6 +396,12 @@ class EvaluationService extends AppService
         $Evaluator = ClassRegistry::init('Evaluator');
         /** @var  Evaluation $Evaluation */
         $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init("ExperimentService");
+
+        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+            throw new RuntimeException("Evaluation setting of the team is not enabled. Please contact the team administrator.");
+        }
 
         if (!$EvaluationSetting->isEnabled()) {
             throw new RuntimeException("evaluation is not enabled");
