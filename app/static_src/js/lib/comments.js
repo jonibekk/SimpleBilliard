@@ -21,18 +21,27 @@ $(function () {
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
     });
-
+    $(".comment-post-form").on("focus", function() {
+        $("#jsGoTop").hide();
+    }).on("blur", function() {
+        $("#jsGoTop").show();
+    });
 });
 
 // for resizing certainly, exec after window loaded
 window.addEventListener("load", function () {
     bindCommentBalancedGallery($('.comment_gallery'));
 });
-$(".click-get-ajax-form-toggle").on("focus", function() {
-    $("#jsGoTop").hide();
-}).on("blur", function() {
-    $("#jsGoTop").show();
-});
+
+/**
+ * Checks valid Url
+ */
+var inputUrlCheckingElement = document.createElement('input');
+inputUrlCheckingElement.setAttribute('type', 'url');
+function isValidURL(u){
+    inputUrlCheckingElement.value = u;
+    return inputUrlCheckingElement.validity.valid;
+}
 
 /**
  * Display comment input
@@ -118,13 +127,6 @@ function toggleCommentForm() {
 
     // OGP preview and get procedure
     require(['ogp'], function (ogp) {
-            console.log("OGP SET");
-        var inputUrlCheckingElement = document.createElement('input');
-        inputUrlCheckingElement.setAttribute('type', 'url');
-        function isValidURL(u){
-            inputUrlCheckingElement.value = u;
-            return inputUrlCheckingElement.validity.valid;
-        }
         $('#CommentFormBody_' + post_id).on('keyup', function (e) {
             if ($('#CommentSiteInfoUrl_' + post_id).val()) {
                 return false;
@@ -865,12 +867,6 @@ function evTargetToggleClick() {
 
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
-                        var inputUrlCheckingElement = document.createElement('input');
-                        inputUrlCheckingElement.setAttribute('type', 'url');
-                        function isValidURL(u){
-                            inputUrlCheckingElement.value = u;
-                            return inputUrlCheckingElement.validity.valid;
-                        }
                         $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
                             if ($('#CommentOgpEditBox_' + comment_id).length) {
                                 return false;
@@ -1024,12 +1020,6 @@ function evTargetToggleClickByElement(elem) {
 
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
-                        var inputUrlCheckingElement = document.createElement('input');
-                        inputUrlCheckingElement.setAttribute('type', 'url');
-                        function isValidURL(u){
-                            inputUrlCheckingElement.value = u;
-                            return inputUrlCheckingElement.validity.valid;
-                        }
                         $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
                             if ($('#CommentOgpEditBox_' + comment_id).length) {
                                 return false;
