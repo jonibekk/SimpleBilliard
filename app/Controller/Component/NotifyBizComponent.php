@@ -1410,7 +1410,7 @@ class NotifyBizComponent extends Component
         ];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([trim($comment['Comment']['body'])]) : null;
+            $this->Mention->replaceMention(json_encode([trim($comment['Comment']['body'])])) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }

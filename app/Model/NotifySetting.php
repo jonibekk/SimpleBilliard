@@ -107,6 +107,7 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'feed_mentioned_in_comment',
             'icon_class'      => 'fa-comment-o',
             'groups'          => ['all'],
+            'force_notify'    => true,
         ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
             'mail_template'   => "notify_basic",
