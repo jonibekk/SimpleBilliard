@@ -241,6 +241,12 @@ window.onload = function(){
                 }).done(function (data) {
                     self.classList.remove('double_click');
                     document.getElementById('circles-edit-page').classList.add('modal-open');
+                }).fail(function () {
+                    self.classList.remove('double_click')
+                    new Noty({
+                        type: 'error',
+                        text: cake.message.notice.d,
+                    }).show();
                 });
             }
         }

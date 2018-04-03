@@ -14,7 +14,7 @@
 	?>
 	<label class='circle-name-label'><?php echo mb_strimwidth ($circle['name'] , 0 , 16, '...', 'UTF-8');?></label>
 	<?php if ($circle['admin_flg']): ?>
-	<a href="#" class="fa-pull-right-pin-circle-cog ajax-url" data-url="/circle_pins/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
+	<a href="#" class="fa-pull-right-pin-circle-cog ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
 	<?php else :?>
 	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
 	<?php endif; ?>
