@@ -16,9 +16,8 @@
     <a href="/CirclePins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Edit") ?></a>
 </p>
 <div id="filter-circles-list-hamburger" class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
-    <?php if (!empty($my_circles)): ?>
         <ul>
-        <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'isHamburger' => true]) ?>
+        <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'defaultCircle' => $defaultCircle, 'isHamburger' => true]) ?>
         <?php if (count($my_circles) > 8): ?>
             <div class="circle-view-all-block">
                 <i class="fa fa-angle-double-down circle-toggle-icon"></i>
@@ -26,7 +25,6 @@
             </div>
         <?php endif; ?>
         </ul>
-    <?php endif; ?>
     <div class="circle-list-footer">
         <div class="clearfix develop--circle-seek mtb_15px">
             <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i>

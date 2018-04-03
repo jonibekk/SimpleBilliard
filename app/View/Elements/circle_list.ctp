@@ -19,9 +19,7 @@
     </div>
     <div class="dashboard-circle-list-body-wrap">
         <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
-            <?php if (!empty($my_circles)): ?>
-                <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'isHamburger' => false]) ?>
-            <?php endif; ?>
+          <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'defaultCircle' => $defaultCircle, 'isHamburger' => false]) ?>
         </div>
     </div>
       <div class="dashboard-circle-list-footer">

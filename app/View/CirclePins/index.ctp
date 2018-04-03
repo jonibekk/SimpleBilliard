@@ -3,10 +3,10 @@
     <div id="circle-pin-heading" class="panel-heading">
         <?= __("Edit Circles") ?>
         <div class="circle-pin-heading-description">
-            Description line 1.........
+            <?= __("Description line 1.........") ?>
         </div>
         <div class="circle-pin-heading-description">
-            Description line 2.........
+            <?= __("Description line 2.........") ?>
         </div>
     </div>
     <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
