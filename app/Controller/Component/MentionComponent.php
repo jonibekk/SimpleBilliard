@@ -89,7 +89,7 @@ class MentionComponent extends Component {
      * @param $body string the content which can contain mentions
      * @return string
      */
-    static public function appendName(string $type, int $accessControlledId, string $body = null): string {
+    public function appendName(string $type, int $accessControlledId, string $body = null): string {
         $matches = self::extractAllIdFromMention($body);
         if (count($matches) > 0) {
             $cache = array();
@@ -115,6 +115,7 @@ class MentionComponent extends Component {
                 }
             }
         }
+        self::getPostWithShared($accessControlledId);
         return $body;
     }
     /**
@@ -157,8 +158,11 @@ class MentionComponent extends Component {
     static private function getPostWithShared(int $postId) : array {
         $postModel = ClassRegistry::init('Post');
         $postModel->Behaviors->unload('ExtContainable');
+        $postModel->PostShareUser->Behaviors->unload('ExtContainable');
+        $postModel->PostShareCircle->Behaviors->unload('ExtContainable');
+        $postModel->PostShareCircle->Circle->Behaviors->unload('ExtContainable');
         $post = $postModel->find('first', [
-            'conditions' => ['Post.id' => $postId],
+            'conditions' => ['id' => $postId],
             'contain'    => [
                 'PostShareUser' => [],
                 'PostShareCircle' => [],
