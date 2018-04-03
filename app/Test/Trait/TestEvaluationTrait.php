@@ -6,6 +6,16 @@ use Goalous\Model\Enum as Enum;
 
 trait TestEvaluationTrait
 {
+    /**
+     * Create evaluator for test
+     *
+     * @param int $teamId
+     * @param int $evaluateeUserId
+     * @param int $evaluatorUserId
+     * @param int $indexNum
+     *
+     * @return array
+     */
     protected function createEvaluator(int $teamId, int $evaluateeUserId, int $evaluatorUserId, int $indexNum): array
     {
         /** @var Evaluator $Evaluator */

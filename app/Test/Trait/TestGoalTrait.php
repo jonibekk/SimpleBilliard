@@ -8,6 +8,16 @@ use Goalous\Model\Enum as Enum;
 
 trait TestGoalTrait
 {
+    /**
+     * Create Goal for test
+     *
+     * @param int             $userId
+     * @param int             $teamId
+     * @param GoalousDateTime $startDate
+     * @param GoalousDateTime $endDate
+     *
+     * @return array
+     */
     public function createGoalSimple(int $userId, int $teamId, GoalousDateTime $startDate, GoalousDateTime $endDate): array
     {
         /** @var Goal $Goal */
@@ -50,6 +60,11 @@ trait TestGoalTrait
         return $Goal->getById($createdGoalId);
     }
 
+    /**
+     * Make a goal to be target of evaluate for test
+     *
+     * @param int $goalId
+     */
     public function makeGoalAsTargetEvaluation(int $goalId)
     {
         /** @var GoalMember $GoalMember */

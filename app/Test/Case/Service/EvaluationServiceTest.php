@@ -666,7 +666,6 @@ class EvaluationServiceTest extends GoalousTestCase
                 $countNotNull++;
             }
         }
-        //var_dump($evaluations);
         $this->assertEquals(0, $countNotNull);
     }
 

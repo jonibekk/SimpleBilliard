@@ -5,6 +5,16 @@ use Goalous\Model\Enum as Enum;
 
 trait TestTermTrait
 {
+    /**
+     * Create Term for test
+     *
+     * @param int                      $teamId
+     * @param GoalousDateTime          $startDate
+     * @param int                      $termMonth
+     * @param Enum\Term\EvaluateStatus $evaluateStatus
+     *
+     * @return array
+     */
     protected function createTerm(int $teamId, GoalousDateTime $startDate, int $termMonth, Enum\Term\EvaluateStatus $evaluateStatus): array
     {
         $format = 'Y-m-d';
