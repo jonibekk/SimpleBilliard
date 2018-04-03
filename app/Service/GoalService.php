@@ -313,7 +313,7 @@ class GoalService extends AppService
      * @param $userId
      * @param $requestData
      *
-     * @return int
+     * @return int|bool
      */
     function create($userId, $requestData)
     {
