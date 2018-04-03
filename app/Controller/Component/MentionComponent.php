@@ -96,7 +96,6 @@ class MentionComponent extends Component {
             foreach ($matches as $key => $match) {
                 $replacementName = 'name';
                 $model = null;
-                // access control check assumes that mentions in the content are not so many.
                 if ($match['isUser'] === true) {
                     $model = ClassRegistry::init('PlainUser');
                     $replacementName = 'display_username';
@@ -116,6 +115,7 @@ class MentionComponent extends Component {
                 }
             }
         }
+        self::getPostWithShared($accessControlledId);
         return $body;
     }
     /**
@@ -157,13 +157,9 @@ class MentionComponent extends Component {
     }
     static private function getPostWithShared(int $postId) : array {
         $postModel = ClassRegistry::init('Post');
+        $postModel->Behaviors->unload('ExtContainable');
         $post = $postModel->find('first', [
             'conditions' => ['Post.id' => $postId],
-            'contain'    => [
-                'PostShareUser' => [],
-                'PostShareCircle' => [],
-                'PostShareCircle.Circle' => []
-            ]
         ]);
         return $post;
     }
