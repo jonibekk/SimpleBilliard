@@ -13,6 +13,7 @@
   padding: 0px;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
+  border: 0px transparent;
 }
 
 .pin-circle-text{
@@ -57,6 +58,7 @@
 #pinned-header,#unpinned-header {
   margin-bottom: 0px;
   background-color: #e5e5e5;
+  background: #e5e5e5;
 }
 
 .circle-header-label {
@@ -163,10 +165,6 @@
   margin-bottom: -20px;
 }
 
-#circles-edit-page {
-  max-width: 640px;
-}
-
 .dashboard-pin-circle-border {
   border: 0.5px solid #ccc;
   color: #ccc;
@@ -225,7 +223,9 @@ div.circle-pin-heading-description{
 }
 
 @media (min-width: 640px) {
-  #container {
+  #circles-edit-page {
       width: 640px;
+      max-width: 640px;
+      min-width: 640px;
   }
 }
