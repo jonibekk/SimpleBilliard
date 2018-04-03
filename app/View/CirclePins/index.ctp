@@ -31,10 +31,11 @@
                                 )
                                 ?>
                                 <div class="pin-circle-text"><label class="circle-name-label"><?php echo mb_strimwidth ($defaultCircle['name'] , 0 , 16, '...', 'UTF-8');?></label></div>
-                                <i class="fa fa-ellipsis-h fa-lg a-black-link style-hidden"></i>
-                                <div class="pin-circle-dropdown-content style-hidden">
-                                    <div class="pin-circle-dropdown-element ajax-url style-hidden" data-url=""></div>
-                                </div>                                
+                                <?php if ($defaultCircle['admin_flg']): ?>
+                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $defaultCircle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
+                                <?php else :?>
+                                <a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
+                                <?php endif; ?>                            
                                 <i class="fa-pull-right-less fa fa-thumb-tack fa-lg style-hidden"></i>
                         </div>
                         <ul id="pinned" class="list-group">
