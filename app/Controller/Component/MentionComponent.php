@@ -151,24 +151,70 @@ class MentionComponent extends Component {
         }
         return $result;
     }
-    private function filterAsMentionable(string $type, int $postId, array $list = []) {
-        if ($type == 'User') return [];
-        $model = ClassRegistry::init('PostShare'.$type);
-        $model->displayField = strtolower($type).'_id';
-        $data = $model->find('list', [
-            'conditions' => array('post_id', $postId)
+    private function getPostWithShared(int $postId) : array {
+        $postModel = ClassRegistry::init('Post');
+        $post = $postModel->find('first', [
+            'conditions' => ['Post.id' => $postId],
+            'contain'    => [
+                'PostShareUser' => [],
+                'PostShareCircle' => [],
+                'PostShareCircle.Circle' => []
+            ]
         ]);
-        if (count($data) == 0) return []; 
-        $data = array_values($data);
-        $result = array_filter($list, function($l) {
-            return array_search($l['id'], $data) !== false;
-        });
-        return $result;
+        return $post;
     }
     public function filterAsMentionableUser(int $postId, array $list = []) {
-        $filtered = $this->filterAsMentionable('User', $postId, $list);
+        $post = $this->getPostWithShared($postId, $list);
+        $filterMembers = [];
+        foreach($post['PostShareCircle'] as $circle) {
+            $isPublic = $circle['Circle']['public_flg'];
+            if (!$isPublic) {
+                $circleMemberModel = ClassRegistry::init('CircleMember');
+                $members = $circleMemberModel->find('list', [
+                    'fields' => ['user_id'],
+                    'conditions' => ['circle_id' => $circle['circle_id']]
+                ]);
+                $filterMembers = array_merge($filterMembers, array_values($members));
+            }
+        }
+        foreach($post['PostShareUser'] as $user) {
+            $filterMembers = $user['user_id'];
+        }
+        $filterMembers = array_unique($filterMembers);
+        if (count($filterMembers) == 0) return $list;
+        $result = array_filter($list, function($l) use ($filterMembers) {
+            return in_array(str_replace('user_', '', $l['id']), $filterMembers);
+        });
+        return array_values($result);
     }
     public function filterAsMentionableCircle(int $postId, array $list = []) {
-        return $this->filterAsMentionable('Circle', $postId, $list);
+        $post = $this->getPostWithShared($postId, $list);
+        $publicCircles = [];
+        $secretCircles = [];
+        foreach($post['PostShareCircle'] as $circle) {
+            $isPublic = $circle['Circle']['public_flg'];
+            if ($isPublic) {
+                $publicCircles[] = $circle['circle_id'];
+            }else {
+                $secretCircles[] = $circle['circle_id'];
+            }
+        }
+        if (count($publicCircles) > 0) {
+            $circleModel = ClassRegistry::init('Circle');
+            $ids = array_map(function($l) {
+                return str_replace('circle_', '', $l['id']);                
+            }, $list);
+            $filtered = $circleModel->find('list', [
+                'conditions' => ['id' => $ids, 'public_flg' => true]
+            ]);
+            if (count($filtered) == 0) return [];
+            $filtered = array_keys($filtered);
+            return array_values(array_filter($list, function($l) use ($filtered) {
+                return in_array(str_replace('circle_', '', $l['id']), $filtered);
+            }));
+        }
+        return array_values(array_filter($list, function($l) use ($secretCircles) {
+            return in_array(str_replace('circle_', '', $l['id']), $secretCircles);
+        }));
     }
 }
