@@ -115,7 +115,6 @@ class MentionComponent extends Component {
                 }
             }
         }
-        self::getPostWithShared($accessControlledId);
         return $body;
     }
     /**
@@ -160,6 +159,11 @@ class MentionComponent extends Component {
         $postModel->Behaviors->unload('ExtContainable');
         $post = $postModel->find('first', [
             'conditions' => ['Post.id' => $postId],
+            'contain'    => [
+                'PostShareUser' => [],
+                'PostShareCircle' => [],
+                'PostShareCircle.Circle' => []
+            ]
         ]);
         return $post;
     }
