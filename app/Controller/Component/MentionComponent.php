@@ -183,7 +183,7 @@ class MentionComponent extends Component {
         $filterMembers = array_unique($filterMembers);
         if (count($filterMembers) == 0) return $list;
         $result = array_filter($list, function($l) use ($filterMembers) {
-            return in_array(str_replace('user_', '', $l['id']), $filterMembers);
+            return in_array(str_replace(self::USER_ID_PREFIX.self::ID_DELIMITER, '', $l['id']), $filterMembers);
         });
         return array_values($result);
     }
@@ -202,7 +202,7 @@ class MentionComponent extends Component {
         if (count($publicCircles) > 0) {
             $circleModel = ClassRegistry::init('Circle');
             $ids = array_map(function($l) {
-                return str_replace('circle_', '', $l['id']);                
+                return str_replace(self::CIRCLE_ID_PREFIX.self::ID_DELIMITER, '', $l['id']);                
             }, $list);
             $filtered = $circleModel->find('list', [
                 'conditions' => ['id' => $ids, 'public_flg' => true]
@@ -210,11 +210,11 @@ class MentionComponent extends Component {
             if (count($filtered) == 0) return [];
             $filtered = array_keys($filtered);
             return array_values(array_filter($list, function($l) use ($filtered) {
-                return in_array(str_replace('circle_', '', $l['id']), $filtered);
+                return in_array(str_replace(self::CIRCLE_ID_PREFIX.self::ID_DELIMITER, '', $l['id']), $filtered);
             }));
         }
         return array_values(array_filter($list, function($l) use ($secretCircles) {
-            return in_array(str_replace('circle_', '', $l['id']), $secretCircles);
+            return in_array(str_replace(self::CIRCLE_ID_PREFIX.self::ID_DELIMITER, '', $l['id']), $secretCircles);
         }));
     }
 }
