@@ -252,7 +252,6 @@ class NotifyBizComponent extends Component
             default:
                 break;
         }
-
         //通知するアイテムかどうかチェック
         if (!$this->_canNotify()) {
             return;
