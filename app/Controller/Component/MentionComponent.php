@@ -89,7 +89,7 @@ class MentionComponent extends Component {
      * @param $body string the content which can contain mentions
      * @return string
      */
-    public function appendName(string $type, int $accessControlledId, string $body = null): string {
+    public static function appendName(string $type, int $accessControlledId, string $body = null): string {
         $matches = self::extractAllIdFromMention($body);
         if (count($matches) > 0) {
             $cache = array();
@@ -97,10 +97,18 @@ class MentionComponent extends Component {
                 $replacementName = 'name';
                 $model = null;
                 if ($match['isUser'] === true) {
+                    $checked = self::filterAsMentionableUser($accessControlledId, [['id'=>$match['id']]]);
+                    if (!count($checked)) {
+                        continue;
+                    }
                     $model = ClassRegistry::init('PlainUser');
                     $replacementName = 'display_username';
                     $model->alias = 'User';
                 }else if ($match['isCircle'] === true) {
+                    $checked = self::filterAsMentionableCircle($accessControlledId, [['id'=>$match['id']]]);
+                    if (!count($checked)) {
+                        continue;
+                    }
                     $model = ClassRegistry::init('Circle');
                 }
                 if (!is_null($model)) {
@@ -156,17 +164,13 @@ class MentionComponent extends Component {
         return $result;
     }
     static private function getPostWithShared(int $postId) : array {
-        $postModel = ClassRegistry::init('Post');
-        $postModel->Behaviors->unload('ExtContainable');
-        $postModel->PostShareUser->Behaviors->unload('ExtContainable');
-        $postModel->PostShareCircle->Behaviors->unload('ExtContainable');
-        $postModel->PostShareCircle->Circle->Behaviors->unload('ExtContainable');
+        $postModel = ClassRegistry::init('PlainPost');
         $post = $postModel->find('first', [
             'conditions' => ['id' => $postId],
             'contain'    => [
                 'PostShareUser' => [],
                 'PostShareCircle' => [],
-                'PostShareCircle.Circle' => []
+                // 'PostShareCircle.Circle' => []
             ]
         ]);
         return $post;
@@ -175,7 +179,9 @@ class MentionComponent extends Component {
         $post = self::getPostWithShared($postId, $list);
         $filterMembers = [];
         foreach($post['PostShareCircle'] as $circle) {
-            $isPublic = $circle['Circle']['public_flg'];
+            $circleModel = ClassRegistry::init('Circle');
+            $circleData = $circleModel->findById($circle['circle_id']);
+            $isPublic = $circleData['Circle']['public_flg'];
             if (!$isPublic) {
                 $circleMemberModel = ClassRegistry::init('CircleMember');
                 $members = $circleMemberModel->find('list', [
@@ -200,7 +206,9 @@ class MentionComponent extends Component {
         $publicCircles = [];
         $secretCircles = [];
         foreach($post['PostShareCircle'] as $circle) {
-            $isPublic = $circle['Circle']['public_flg'];
+            $circleModel = ClassRegistry::init('Circle');
+            $circleData = $circleModel->findById($circle['circle_id']);
+            $isPublic = $circleData['Circle']['public_flg'];
             if ($isPublic) {
                 $publicCircles[] = $circle['circle_id'];
             }else {
