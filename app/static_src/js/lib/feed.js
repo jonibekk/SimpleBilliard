@@ -9,8 +9,6 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
         var $this = $(this);
-        new Mention($('#CommonActionName'))
-        new Mention($('#CommonPostBody'))
         var currentScrollTop = $this.scrollTop();
         evNotifyMoreView.call(this, e, {
             locationType: "page"

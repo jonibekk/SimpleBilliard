@@ -18,44 +18,64 @@ var Mention = function(target) {
       })
       return replaced
     }
-    target.atwho({
-      at: '@',
-      displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
-        <div class="mention-image" style="background-image:url(${image});"></div>\
-        <div class="mention-text">${text}</div>\
-      </div></li>',
-      insertTpl: '@${text}',
-      searchKey : 'text',
-      suspendOnComposing: false,
-      // data: [{text:'A'}]
-      callbacks: {
-        remoteFilter: function(query, callback) {
-          if (!query) callback([])
-          var params = {
-            term: query,
-            page_limit: '20',
-            in_post_id: self.postId
-          }
-          var results = []
-          $.ajax({
-            url: cake.url.a,
-            data: params
-          }).then(function(res) {
-            results = results.concat(res.results)
-            return $.ajax({
-              url: cake.url.select2_circles,
+    if (self.hasMention) {
+      target.atwho({
+        at: '@',
+        displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
+          <div class="mention-image" style="background-image:url(${image});"></div>\
+          <div class="mention-text">${text}</div>\
+        </div></li>',
+        insertTpl: '@${text}',
+        searchKey : 'text',
+        suspendOnComposing: false,
+        // data: [{text:'A'}]
+        callbacks: {
+          remoteFilter: function(query, callback) {
+            if (!query) callback([])
+            var params = {
+              term: query,
+              page_limit: '20',
+              in_post_id: self.postId
+            }
+            var results = []
+            $.ajax({
+              url: cake.url.a,
               data: params
+            }).then(function(res) {
+              results = results.concat(res.results)
+              return $.ajax({
+                url: cake.url.select2_circles,
+                data: params
+              })
+            }).then(function(res) {
+              results = results.concat(res.results)
+              callback(results)
             })
-          }).then(function(res) {
-            results = results.concat(res.results)
-            callback(results)
-          })
+          }
         }
-      }
-    })
-    target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
-      self.values[$li.data('text')] = $li.data('id')
-    })
+      })
+      target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
+        self.values[$li.data('text')] = $li.data('id')
+      })
+    }else {
+      var data = [{id:0,text:'dame'}]
+      target.atwho({
+        at: '@',
+        displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
+          <div class="mention-text">${text}</div>\
+        </div></li>',
+        insertTpl: '@${text}',
+        data: data,
+        callbacks: {
+          filter: function(query, data, searchKey) {
+            return [{id:0,text:__('You can mention to no one here.')}]
+          },
+          beforeInsert: function() {
+            return ''
+          }
+        }
+      })
+    }
   }
   bind(target)
   var convert = function(text) {

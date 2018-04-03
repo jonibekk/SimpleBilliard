@@ -4,6 +4,7 @@ App::uses('Component', 'Controller');
  * Class MentionComponent
  */
 class MentionComponent extends Component {
+    
     private static $PREFIX = '%%%';
     private static $SUFFIX = '%%%';
     private static $USER_ID_PREFIX = 'user';
@@ -83,21 +84,28 @@ class MentionComponent extends Component {
     /**
      * append the name to the ID in each mention in the content
      * 
+     * @param $type string the type of the content
+     * @param $accessControlledId int the ID used for access control to show mentions
      * @param $body string the content which can contain mentions
      * @return string
      */
-    static public function appendName(string $body = null): string {
+    static public function appendName(string $type, int $accessControlledId, string $body = null): string {
         $matches = self::extractAllIdFromMention($body);
         if (count($matches) > 0) {
             $cache = array();
             foreach ($matches as $key => $match) {
                 $replacementName = 'name';
                 $model = null;
+                // access control check assumes that mentions in the content are not so many.
                 if ($match['isUser'] === true) {
+                    // $checked = self::filterAsMentionableUser($accessControlledId, [['id' => self::$USER_ID_PREFIX.self::$ID_DELIMITER.$match['id']]]);
+                    // if (count($checked) == 0) continue;
                     $model = ClassRegistry::init('PlainUser');
                     $replacementName = 'display_username';
                     $model->alias = 'User';
                 }else if ($match['isCircle'] === true) {
+                    // $checked = self::filterAsMentionableCircle($accessControlledId, [['id' => self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER.$match['id']]]);
+                    // if (count($checked) == 0) continue;
                     $model = ClassRegistry::init('Circle');
                 }
                 if (!is_null($model)) {
@@ -151,7 +159,7 @@ class MentionComponent extends Component {
         }
         return $result;
     }
-    private function getPostWithShared(int $postId) : array {
+    static private function getPostWithShared(int $postId) : array {
         $postModel = ClassRegistry::init('Post');
         $post = $postModel->find('first', [
             'conditions' => ['Post.id' => $postId],
@@ -163,8 +171,8 @@ class MentionComponent extends Component {
         ]);
         return $post;
     }
-    public function filterAsMentionableUser(int $postId, array $list = []) {
-        $post = $this->getPostWithShared($postId, $list);
+    static public function filterAsMentionableUser(int $postId, array $list = []) {
+        $post = self::getPostWithShared($postId, $list);
         $filterMembers = [];
         foreach($post['PostShareCircle'] as $circle) {
             $isPublic = $circle['Circle']['public_flg'];
@@ -183,12 +191,12 @@ class MentionComponent extends Component {
         $filterMembers = array_unique($filterMembers);
         if (count($filterMembers) == 0) return $list;
         $result = array_filter($list, function($l) use ($filterMembers) {
-            return in_array(str_replace(self::USER_ID_PREFIX.self::ID_DELIMITER, '', $l['id']), $filterMembers);
+            return in_array(str_replace(self::$USER_ID_PREFIX.self::$ID_DELIMITER, '', $l['id']), $filterMembers);
         });
         return array_values($result);
     }
-    public function filterAsMentionableCircle(int $postId, array $list = []) {
-        $post = $this->getPostWithShared($postId, $list);
+    static public function filterAsMentionableCircle(int $postId, array $list = []) {
+        $post = self::getPostWithShared($postId, $list);
         $publicCircles = [];
         $secretCircles = [];
         foreach($post['PostShareCircle'] as $circle) {
@@ -202,7 +210,7 @@ class MentionComponent extends Component {
         if (count($publicCircles) > 0) {
             $circleModel = ClassRegistry::init('Circle');
             $ids = array_map(function($l) {
-                return str_replace(self::CIRCLE_ID_PREFIX.self::ID_DELIMITER, '', $l['id']);                
+                return str_replace(self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER, '', $l['id']);                
             }, $list);
             $filtered = $circleModel->find('list', [
                 'conditions' => ['id' => $ids, 'public_flg' => true]
@@ -210,11 +218,11 @@ class MentionComponent extends Component {
             if (count($filtered) == 0) return [];
             $filtered = array_keys($filtered);
             return array_values(array_filter($list, function($l) use ($filtered) {
-                return in_array(str_replace(self::CIRCLE_ID_PREFIX.self::ID_DELIMITER, '', $l['id']), $filtered);
+                return in_array(str_replace(self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER, '', $l['id']), $filtered);
             }));
         }
         return array_values(array_filter($list, function($l) use ($secretCircles) {
-            return in_array(str_replace(self::CIRCLE_ID_PREFIX.self::ID_DELIMITER, '', $l['id']), $secretCircles);
+            return in_array(str_replace(self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER, '', $l['id']), $secretCircles);
         }));
     }
 }

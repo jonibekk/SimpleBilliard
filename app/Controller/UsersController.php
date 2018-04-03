@@ -893,7 +893,7 @@ class UsersController extends AppController
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
-            $res['results'] = $this->Mention->filterAsMentionableUser($query['in_post_id'], $res['results']);
+            $res['results'] = $this->Mention::filterAsMentionableUser($query['in_post_id'], $res['results']);
         }
         return $this->_ajaxGetResponse($res);
     }

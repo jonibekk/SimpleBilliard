@@ -125,7 +125,7 @@ class CirclesController extends AppController
             $res = $this->Circle->getAccessibleCirclesSelect2($query['term'], $query['page_limit']);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
-            $res['results'] = $this->Mention->filterAsMentionableCircle($query['in_post_id'], $res['results']);
+            $res['results'] = $this->Mention::filterAsMentionableCircle($query['in_post_id'], $res['results']);
         }
         return $this->_ajaxGetResponse($res);
     }
