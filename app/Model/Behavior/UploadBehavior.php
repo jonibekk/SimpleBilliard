@@ -952,10 +952,14 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
-    function saveRotatedFile($filePath)
+    function saveRotatedFile($filePath, $outPath = null)
     {
+        if(!file_exists($filePath)){
+            return false;
+        }
         // Temporarly increase memory limit for image manipulation
-        ini_set('memory_limit', '512M');
+        // Tested upto 17MB+ files
+        ini_set('memory_limit', '640M');
 
         $flip = false;
         $degrees = $this->getDegrees($filePath, $flip);
@@ -985,10 +989,12 @@ class UploadBehavior extends ModelBehavior
             $this->_backupFailedImgFile(basename($filePath), $filePath);
             return false;
         }
-
         // Save
-        $outputHandler($image, $filePath);
-
+        if(empty($outPath)) {
+            $outputHandler($image, $filePath);
+        } else {
+            $outputHandler($image, $outPath);
+        }
         // Destroy
         imagedestroy($image);
 
@@ -1007,12 +1013,8 @@ class UploadBehavior extends ModelBehavior
             return 0;
         }
         $exif = @exif_read_data($file_path); //　Exif情報読み込み
-        if (isset($exif['Orientation'])) {
-            $r_data = $exif['Orientation']; //　画像の向き情報を取り出す
-        } else {
-            return 0;
-        }
-        switch ($r_data) {
+        $orientation = !empty($exif['Orientation']) ? $exif['Orientation'] : 1;
+        switch ($orientation) {
             case 1: //通常
                 return 0;
             case 2: //左右反転
