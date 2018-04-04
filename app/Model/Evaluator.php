@@ -55,14 +55,15 @@ class Evaluator extends AppModel
      * [Evaluator.id] => Evaluator.evaluator_user_id
      * )
      * )
+     * @param int|null $teamId
      *
      * @return array
      */
-    function getEvaluatorsCombined()
+    function getEvaluatorsCombined($teamId = null)
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id,
+                'team_id' => $teamId ?? $this->current_team_id,
             ],
             'order'      => [
                 'evaluatee_user_id' => 'asc',

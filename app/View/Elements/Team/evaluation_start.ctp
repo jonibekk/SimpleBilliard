@@ -21,6 +21,7 @@
  * @var                    $previous_term_end_date
  * @var                    $previous_eval_is_frozen
  * @var                    $previous_term_id
+ * @var                    $previous_eval_start_button_enabled
  */
 ?>
 <?= $this->App->viewStartComment()?>
@@ -30,37 +31,54 @@
     </header>
     <div class="panel-body form-horizontal">
         <div class="form-group">
-            <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
-
-            <div class="col col-sm-6">
+            <div class="col col-sm-12">
                 <p class="form-control-static">
-                    <?= __("You can start evaluation with the current settings.") ?>
+                    <?= __("You may start evaluations with your team's current settings. Only one term can be selected for evaluations.") ?>
                 </p>
 
                 <p class="form-control-static">
-                    <?= __("Notice - These settings can't be canceled.") ?>
+                    <?= __("Notice: Team evaluation settings cannot be changed after starting evaluations.") ?>
                 </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __("Current term") ?></label>
 
-            <div class="col col-sm-6">
-                <p class="form-control-static"><b><?= $this->TimeEx->date($current_term_start_date) ?>
-                        - <?= $this->TimeEx->date($current_term_end_date) ?></b></p>
+                <?php if ($both_term_selectable): ?>
+                <p class="form-control-static font_rouge font_bold">
+                    <?= __("Please select.") ?>
+                </p>
+                <?php endif; ?>
+
+                <div class="form-group">
+                    <?php if ($previous_term_exists): ?>
+                    <div class="radio">
+                        <label class="<?= $disable_previous_radio ? " font-cgray" : "" ?>">
+                            <input type="radio" name="term_id" value="<?= $previous_term_id ?>"<?= $previous_radio_checked ? " checked" : "" ?><?= $disable_previous_radio ? " disabled" : "" ?>>
+                            <?= __("Previous term") ?><br>
+                            <?= $this->TimeEx->date($previous_term_start_date) ?> - <?= $this->TimeEx->date($previous_term_end_date) ?>
+                        </label>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($current_term_exists): ?>
+                    <div class="radio">
+                        <label class="<?= $disable_current_radio ? " font-cgray" : "" ?>">
+                            <input type="radio" name="term_id" value="<?= $current_term_id ?>"<?= $current_radio_checked ? " checked" : "" ?><?= $disable_current_radio ? " disabled" : "" ?>>
+                            <?= __("Current term") ?><br>
+                            <?= $this->TimeEx->date($current_term_start_date) ?> - <?= $this->TimeEx->date($current_term_end_date) ?>
+                        </label>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
         <?php if (!$eval_enabled): ?>
             <div class="alert alert-danger" role="alert">
                 <?= __("You need to active Evaluation settings before starting Evaluation.") ?>
             </div>
-        <?php elseif (!$eval_start_button_enabled): ?>
+        <?php elseif (!$can_start_evaluation): ?>
             <div class="alert alert-info" role="alert">
-                <?= __("In evaluation term") ?>
+                <?= __("Evaluation commenced") ?>
             </div>
         <?php endif; ?>
     </div>
-    <?php if ($eval_enabled && $eval_start_button_enabled): ?>
+    <?php if ($can_start_evaluation && $eval_enabled && ($eval_start_button_enabled || $previous_eval_start_button_enabled)): ?>
         <?php $existScore = count($eval_scores['EvaluateScore']) > 0; ?>
         <footer>
             <?php if(!$existScore): ?>
@@ -68,14 +86,11 @@
                         <p class="eval-setting-alert-text"><b><?= __('Add definition of evaluation score') ?></b></p>
                 </div>
             <?php endif; ?>
-            <?= $this->Form->postLink(__("Start current term evaluations"),
-                        ['controller' => 'teams', 'action' => 'start_evaluation',],
-                        [
-                            'class' => "btn btn-primary",
-                            'disabled' => $existScore ? '' : 'disabled'
-                        ],
-                        __("Unable to cancel. Do you really want to start evaluations?")) ?>
-
+            <?php if($eval_start_button_enabled || $previous_eval_start_button_enabled): ?>
+            <button id="buttonStartEvaluation" class="btn btn-primary width100_per"<?= $either_start_button_enabled ? "" : " disabled" ?>>
+                <?= __("Start evaluations") ?>
+            </button>
+            <?php endif; ?>
         </footer>
     <?php endif; ?>
 </section>
