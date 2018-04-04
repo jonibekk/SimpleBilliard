@@ -25,10 +25,31 @@ $(function(){
             }
         }
     }
+    function resizeBoundary() {
+        var target = $("#container");
+        if(target.length) {
+            var deviceWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+            if(deviceWidth <= 640) {
+                target.css("margin-left", "-5px");
+                var newWidth = (deviceWidth+ 5) + "px";
+                target.css("width", newWidth);
+                target.css("overflow-x", "hidden");
+                $("#container > footer").css("margin-left", "25px");
+            } else {
+                target.css("margin-left", "auto");
+                target.css("width", "auto");
+                $("#container > footer").css("margin-left", "auto");
+                var computedMargin = ((deviceWidth - 640) / 2 ) + "px";
+                $("#circles-edit-page").css("margin-left", computedMargin);
+            }
+        } 
+    }
     $(window).on("resize load", function(){
         resizeLabels();
+        resizeBoundary();
     });
     resizeLabels();
+    resizeBoundary();
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')){
         var pinnedSortable = new Sortable(document.getElementById('pinned'), {
