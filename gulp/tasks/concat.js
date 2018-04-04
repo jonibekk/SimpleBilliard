@@ -92,6 +92,14 @@ gulp.task('js_prerender:concat', () => {
     .pipe(duration('js_prerender:concat'))
 })
 
+gulp.task('js_prerender_exif:concat', () => {
+  return gulp.src(config.js_prerender_exif.src)
+    .pipe(plumber())
+    .pipe(concat(config.js_prerender_exif.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/js_prerender_exif_cat'))
+    .pipe(duration('js_prerender_exif:concat'))
+})
+
 gulp.task('angular_app:concat', () => {
   return gulp.src(config.angular_app.src)
     .pipe(plumber())

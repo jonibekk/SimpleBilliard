@@ -102,6 +102,8 @@ $(function () {
                         height: 96,
                         fitDirection: 'center center'
                     });
+                    //EXIF
+                    exifRotate(this);
                 });
 
                 // var $editCircleForm = $modal_elm.find('#EditCircleForm');
