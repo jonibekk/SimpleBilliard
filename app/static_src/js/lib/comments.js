@@ -46,7 +46,6 @@ var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patt
 function getValidURL(input){
     var result = regex.exec(input);
     if(result){
-        console.log(result[0]);
         return result[0];
     } else {
         return null;
