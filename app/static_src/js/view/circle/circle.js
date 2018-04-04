@@ -1,4 +1,4 @@
-window.onload = function(){
+$(function(){
     'use strict';
 
     $.fn.insertIndex = function (i) {
@@ -14,7 +14,7 @@ window.onload = function(){
 
         return this;
     };
-    var resizeLabels = function(){
+    function resizeLabels() {
         var target = $(".pin-circle-list-item").first();
         if(target.length) {
             var width = $(target).width();
@@ -179,7 +179,7 @@ window.onload = function(){
             onClone: function (/**Event*/evt) {
             }
         });
-        var updateOrder = function(){
+        function updateOrder() {
             var senddata = {
                 'data[_Token][key]': cake.data.csrf_token.key,
                 'pin_order': makeParams(),
@@ -199,7 +199,7 @@ window.onload = function(){
               }
             });
         }
-        var updateDisplayCount = function() {
+        function updateDisplayCount() {
             var pincount = document.getElementById('pinned').querySelectorAll('li').length + 1;
             var unpincount = document.getElementById('unpinned').querySelectorAll('li').length;
             document.getElementById('pinnedCount').innerHTML = '(' + pincount + ')';
@@ -210,15 +210,15 @@ window.onload = function(){
     }
     var circles = document.querySelectorAll('.pin-circle-list-item');
     if(circles){
-        var makeParams = function() {
+        function makeParams() {
             var data = [];
             var pins = document.getElementById('pinned').getElementsByClassName('pin-circle-list-item');
-            for (var pin of pins) {
-                data.push(pin.id);
+            for (var i = 0; i < pins.length; i++) {
+                data.push(pins[i].id);
             }
             return data.join(',');
         }
-        var editMenu = function(evt) {
+        function editMenu(evt) {
             evt = evt || window.event;
             evt.preventDefault();
             var self = this.parentElement;
@@ -244,12 +244,15 @@ window.onload = function(){
                     //noinspection JSUnresolvedFunction
                     bindSelect2Members(modal_elm);
                     //アップロード画像選択時にトリムして表示
-                    modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
-                        self.children('.nailthumb-container').nailthumb({
+                    modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function (e) {
+                        var me = $(e.currentTarget);
+                        me.children('.nailthumb-container').nailthumb({
                             width: 96,
                             height: 96,
                             fitDirection: 'center center'
                         });
+                        //EXIF
+                        exifRotate(me);
                     });
                     modal_elm.modal();
                 }).done(function (data) {
@@ -264,7 +267,7 @@ window.onload = function(){
                 });
             }
         }
-        var pinEvent = function(evt) {
+        function pinEvent(evt) {
             evt = evt || window.event;
             this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
             this.classList.toggle('fa-disabled');
@@ -327,4 +330,4 @@ window.onload = function(){
             $this.select2('data', select2ExpandGroup($this.select2('data')));
         });
     }
-};
+});
