@@ -244,14 +244,15 @@ $(function(){
                     //noinspection JSUnresolvedFunction
                     bindSelect2Members(modal_elm);
                     //アップロード画像選択時にトリムして表示
-                    modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
-                        self.children('.nailthumb-container').nailthumb({
+                    modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function (e) {
+                        var me = $(e.currentTarget);
+                        me.children('.nailthumb-container').nailthumb({
                             width: 96,
                             height: 96,
                             fitDirection: 'center center'
                         });
                         //EXIF
-                        exifRotate(this);
+                        exifRotate(me);
                     });
                     modal_elm.modal();
                 }).done(function (data) {
