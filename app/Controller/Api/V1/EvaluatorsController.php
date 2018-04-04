@@ -11,9 +11,13 @@ App::uses('TeamMember', 'Model');
  * Time: 10:57
  *
  * @property NotifyBizComponent $NotifyBiz
+ * @property NotificationComponent Notification
  */
 class EvaluatorsController extends ApiController
 {
+    public $components = [
+        'Notification',
+    ];
 
     const MAX_NUMBER_OF_EVALUATORS = 7;
 
@@ -40,7 +44,7 @@ class EvaluatorsController extends ApiController
         }
 
         // Validate parameters
-        if (empty($evaluateeUserId)) {
+        if (!$this->User->validateUserId($evaluateeUserId)) {
             return $this->_getResponseBadFail(__('Parameter is invalid'));
         }
         //If evaluatee user_id in evaluator array, send error
@@ -50,11 +54,27 @@ class EvaluatorsController extends ApiController
         if (count($evaluatorUserIds) > self::MAX_NUMBER_OF_EVALUATORS) {
             return $this->_getResponseBadFail(__('Evaluator setting cannot be saved.'));
         }
+        // Check for invalid evaluator user IDs
+        foreach ($evaluatorUserIds as $evaluatorId) {
+            if (!$this->User->validateUserId($evaluatorId)) {
+                return $this->_getResponseBadFail(__('Parameter is invalid'));
+            }
+        }
         //Check duplicate
         foreach (array_values(array_count_values($evaluatorUserIds)) as $count) {
             if ($count > 1) {
                 return $this->_getResponseBadFail(__('Evaluator has duplicates.'));
             }
+        }
+
+        $teamId = $this->current_team_id;
+
+        $inactiveUsersList = $this->User->filterUsersOnTeamActivity($teamId, $evaluatorUserIds, false);
+
+        if (count($inactiveUsersList) > 0) {
+            $connectorString = (count($inactiveUsersList) > 1) ? ' are ' : ' is ';
+            return $this->_getResponseBadFail(__('%s %s inactive',
+                implode(", ", Hash::extract($inactiveUsersList, '{n}.User.display_username')), $connectorString));
         }
 
         /** @var TeamMember $TeamMember */
@@ -74,8 +94,6 @@ class EvaluatorsController extends ApiController
         /** @var EvaluatorService $EvaluatorService */
         $EvaluatorService = ClassRegistry::init("EvaluatorService");
 
-        $teamId = $this->current_team_id;
-
         $EvaluatorService->setEvaluators($teamId, $evaluateeUserId, $evaluatorUserIds, $userId);
 
         if (!empty($coachId)) {
@@ -85,6 +103,7 @@ class EvaluatorsController extends ApiController
                 $this->_notifyUserOfEvaluatorToCoach($teamId, $evaluateeUserId, $coachId);
             }
         }
+        $this->Notification->outSuccess(__("Evaluator setting saved."));
 
         return $this->_getResponseSuccess();
 

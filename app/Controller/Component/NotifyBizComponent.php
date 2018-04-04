@@ -969,9 +969,14 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
             NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE;
-        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
+        $this->notify_option['url_data'] = [
+            'controller' => 'evaluator_settings',
+            'user_id'    => $userId[0],
+            'action'     => 'detail',
+        ];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
         $this->notify_option['options'] = [
             'coach_user_id' => $coachId,
         ];
@@ -989,9 +994,14 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($coachId,
             NotifySetting::TYPE_EVALUATOR_SET_TO_COACH);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_COACH;
-        $this->notify_option['url_data'] = ['controller' => 'pages', 'action' => 'evaluator', 'user_id' => $userId];
+        $this->notify_option['url_data'] = [
+            'controller' => 'evaluator_settings',
+            'user_id'    => $userId,
+            'action'     => 'detail',
+        ];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
         $this->notify_option['options'] = [
             'coachee_user_id' => $userId,
         ];
@@ -1448,6 +1458,9 @@ class NotifyBizComponent extends Component
         if ($this->notify_option['notify_type'] == NotifySetting::TYPE_MESSAGE) {
             $this->msgNotifyPush($this->notify_option['from_user_id'], $flag_name, $this->notify_option['topic_id']);
         } else {
+            if ($this->notify_option['force_notify'] ?? false) {
+                $flag_name = 'force_notify';
+            }
             $this->bellPush($this->notify_option['from_user_id'], $flag_name);
         }
         return true;
@@ -1727,6 +1740,7 @@ class NotifyBizComponent extends Component
             $limit,
             $from_date
         );
+
         if (empty($notify_from_redis)) {
             return [];
         }

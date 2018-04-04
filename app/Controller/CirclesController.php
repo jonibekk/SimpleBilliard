@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
+App::import('Service', 'CirclePinService');
 
 /**
  * Circles Controller
@@ -74,11 +75,24 @@ class CirclesController extends AppController
     }
 
     public function ajax_get_edit_modal()
-    {
+    {        
         $circle_id = $this->request->params['named']['circle_id'];
-        $this->_ajaxPreProcess();
+
+        if(empty($circle_id)) {
+            $this->response->type('json');
+            $this->response->body(null);
+            return $this->response;
+        }
+
         $this->request->data = $this->Circle->findById($circle_id);
         $this->request->data['Circle']['members'] = null;
+
+        if(!$this->Circle->CircleMember->isAdmin($this->Auth->User('id'), $circle_id)) {
+            $this->response->type('json');
+            $this->response->body(null);
+            return $this->response;
+        }
+        $this->_ajaxPreProcess();
 
         $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
         $this->set('circle_members', $circle_members);
@@ -387,6 +401,8 @@ class CirclesController extends AppController
         $this->_ajaxPreProcess();
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init("CirclePinService");
 
         // validate
         $this->Circle->id = $this->request->params['named']['circle_id'];
@@ -403,7 +419,10 @@ class CirclesController extends AppController
 
         // サークルから外す処理
         $res = $CircleService->removeCircleMember($this->current_team_id, $this->Circle->id, $this->request->data['CircleMember']['user_id']);
-
+        // Remove and update circle pin information
+        if($res){
+            $res = $CirclePinService->deleteCircleId($this->request->data['CircleMember']['user_id'], $this->current_team_id, $this->Circle->id);
+        }
         // 処理失敗
         if (!$res) {
             return $this->_ajaxGetResponse($this->_makeEditErrorResult(__("An error occurred while processing.")));

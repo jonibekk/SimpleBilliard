@@ -305,7 +305,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         Model $Model,
         $check
     ) {
-        // This method is for to activate sisuation
+        // This method is for to activate situation
         // So it's not needed in to inactivate situation
         if (isset($Model->data['TeamMember']['status'])
             && $Model->data['TeamMember']['status'] != TeamMember::USER_STATUS_ACTIVE

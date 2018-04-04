@@ -530,6 +530,7 @@ class GlRedis extends AppModel
         }
 
         $score = substr_replace((string)(microtime(true) * 10000), '1', -1, 1);
+
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
@@ -718,7 +719,12 @@ class GlRedis extends AppModel
             $pipe->hGetAll($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, $user_id, $notify_id));
         }
         $pipe_res = $pipe->exec();
+
         foreach ($pipe_res as $k => $v) {
+            if (empty($v)) {
+                unset($pipe_res[$k]);
+                continue;
+            }
             $score = $notify_list[$v['id']];
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
@@ -728,7 +734,8 @@ class GlRedis extends AppModel
 
             }
         }
-        return $pipe_res;
+
+        return array_values($pipe_res);
     }
 
     public function getNotifyIds($team_id, $user_id, $limit = null, $from_date = null)

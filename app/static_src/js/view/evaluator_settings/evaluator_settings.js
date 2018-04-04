@@ -33,14 +33,17 @@ $(document).ready(function() {
     })
     $('#setEvaluators').on('submit', function (e) {
         var form = $(this)
+        // removing empty text field value on posting
+        var postData = form.serializeArray().filter(function( element, index, array ){
+            if ('evaluator_user_ids[]' !== element.name) {
+                return true;
+            }
+            return ("" !== element.value && 0 < element.value);
+        });
         $.post(
             '/api/v1/evaluators',
-            form.serializeArray()
+            postData
         ).done(function(data) {
-            new Noty({
-                type: 'success',
-                text: '<h4>'+ cake.word.success + '</h4>' + cake.word.evaluator_setting_saved,
-            }).show();
             location.href="/evaluator_settings";
         }).fail(function(xhr) {
             var data = $.parseJSON(xhr.responseText);
