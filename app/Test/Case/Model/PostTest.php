@@ -27,6 +27,7 @@ class PostTest extends GoalousTestCase
         'app.team_vision',
         'app.team_insight',
         'app.recovery_code',
+        'app.topic_member',
         'app.goal',
         'app.local_name',
         'app.follower',
