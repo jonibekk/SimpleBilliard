@@ -2,6 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {deleteUploadedFile} from "~/message/modules/file_upload";
 import {formatFileSize} from "~/util/base.js";
+import {setExifRotateStyle} from "~/helper_functions/helpers.js";
 import {FileUpload} from "~/common/constants/App";
 
 class UploadPreview extends React.Component {
@@ -24,7 +25,6 @@ class UploadPreview extends React.Component {
     return (
       <div className="uploadPreviews">
         {this.props.files.map((file, i) => {
-
           const [size, unit] = formatFileSize(file.size);
           return (
             <div className="uploadPreviews-item" key={i}>
