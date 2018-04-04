@@ -765,6 +765,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetAddRecordsOfEvaluatee()
     {
         $this->_setDefault();
+        $term_id =  $this->Evaluation->Team->Term->getCurrentTermData()['id'];
         $current_start = $this->Evaluation->Team->Term->getCurrentTermData()['start_date'];
         $current_end = $this->Evaluation->Team->Term->getCurrentTermData()['end_date'];
         $evaluators_save_data = [
@@ -793,7 +794,7 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Goal->saveField('start_date', $current_start);
         $this->Evaluation->Goal->saveField('end_date', $current_end);
 
-        $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, 1, $evaluators, 0);
+        $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, $term_id, $evaluators, 0);
         $this->assertCount(5, $res);
     }
 

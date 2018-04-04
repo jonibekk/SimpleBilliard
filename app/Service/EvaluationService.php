@@ -5,6 +5,7 @@ App::uses('EvaluationSetting', 'Model');
 App::uses('Term', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
+App::import('Service', 'ExperimentService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -370,5 +371,97 @@ class EvaluationService extends AppService
             return true;
         }
         return false;
+    }
+
+    /**
+     * Start the evaluation that specified terms.id evaluation
+     *
+     * @param int $teamId
+     * @param int $termId
+     *
+     * @throws Exception, RuntimeException
+     * @return bool
+     */
+    function startEvaluation(int $teamId, int $termId): bool
+    {
+        /** @var  Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var  Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var  TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var  EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+        /** @var  Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
+        /** @var  Evaluation $Evaluation */
+        $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init("ExperimentService");
+
+        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+            throw new RuntimeException("Evaluation setting of the team is not enabled. Please contact the team administrator.");
+        }
+
+        if (!$EvaluationSetting->isEnabled()) {
+            throw new RuntimeException("evaluation is not enabled");
+        }
+
+        $term = $Term->getById($termId);
+
+        if (empty($term)) {
+            throw new RuntimeException(sprintf('term(%d) is empty', $termId));
+        }
+        if (intval($term['team_id']) !== $teamId) {
+            throw new RuntimeException(sprintf('term(%d) is not belongs to team(%d)', $termId, $teamId));
+        }
+        if (intval($term['evaluate_status']) !== Enum\Term\EvaluateStatus::NOT_STARTED) {
+            throw new RuntimeException(sprintf('term(%d) evaluation is already started', $termId));
+        }
+
+        $team_members_list = $TeamMember->getAllMemberUserIdList(true, true, true, $teamId);
+        $evaluators = [];
+        if ($EvaluationSetting->isEnabledEvaluator()) {
+            $evaluators = $Evaluator->getEvaluatorsCombined($teamId);
+        }
+        $all_evaluations = [];
+        try {
+            $this->TransactionManager->begin();
+
+            // Creating a record data of evaluations table by each user
+            foreach ($team_members_list as $uid) {
+                $all_evaluations = array_merge(
+                    $all_evaluations,
+                    $Evaluation->getAddRecordsOfEvaluatee($uid, $termId, $evaluators)
+                );
+            }
+            if (empty($all_evaluations)) {
+                throw new RuntimeException('evaluations are empty');
+            }
+            $res = $Evaluation->saveAll($all_evaluations);
+            if (false === $res) {
+                throw new RuntimeException("failed to save evaluations");
+            }
+            // TODO: fix not to use turn flg. This is not simple.
+            // Currently, we use turn flg if only fixed evaluation order
+            if ($Team->EvaluationSetting->isFixedEvaluationOrder()) {
+                //set my_turn
+                $Evaluation->updateAll(['Evaluation.my_turn_flg' => true],
+                    [
+                        'Evaluation.team_id'   => $teamId,
+                        'Evaluation.term_id'   => $termId,
+                        'Evaluation.index_num' => 0,
+                    ]
+                );
+            }
+            $Term->changeToInProgress($termId);
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+
+        return true;
     }
 }

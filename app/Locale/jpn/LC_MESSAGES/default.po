@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-03-29 18:38+0900\n"
+"PO-Revision-Date: 2018-04-03 22:20+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -220,6 +220,10 @@ msgstr "自己評価を確定しました。"
 
 msgid "Submitted the evaluation by evaluator."
 msgstr "評価者の評価を確定しました。"
+
+msgid ""
+"Evaluation feature is turned off. Please contact the team administrator."
+msgstr ""
 
 msgid "Internal Server Error."
 msgstr "サーバーエラー"
@@ -865,6 +869,12 @@ msgstr "評価者設定を保存できませんでした。"
 
 msgid "Evaluator has duplicates."
 msgstr "評価者が重複しています。"
+
+msgid "%s %s inactive"
+msgstr ""
+
+msgid "Evaluator setting saved."
+msgstr "評価者設定を保存しました。"
 
 msgid "Failed uploading video"
 msgstr "動画のアップロードに失敗しました"
@@ -2064,6 +2074,9 @@ msgstr ""
 msgid "Do you really want to cancel this post?"
 msgstr "本当にこの投稿をキャンセルしますか？"
 
+msgid "Unable to cancel. Do you really want to start evaluations?"
+msgstr "取り消しができません。よろしいですか？"
+
 msgid "Copied the post URL to the clipboard."
 msgstr "クリップボードに投稿URLをコピーしました。"
 
@@ -2162,9 +2175,6 @@ msgstr "データをロード中です。少々お待ちください。"
 
 msgid "%d remaining"
 msgstr "残り %d人"
-
-msgid "Evaluator setting saved."
-msgstr "評価者設定を保存しました。"
 
 msgid "Coach"
 msgstr "コーチ"
@@ -4171,11 +4181,23 @@ msgstr "最終評価者評価 トータル コメント 必須"
 msgid "Begin evaluation"
 msgstr "評価開始"
 
-msgid "You can start evaluation with the current settings."
-msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
+msgid ""
+"You may start evaluations with your team's current settings. Only one term "
+"can be selected for evaluations."
+msgstr ""
+"現在のチームの設定内容で評価を開始することができます。評価は1つの期のみで開始"
+"することができます。"
 
-msgid "Notice - These settings can't be canceled."
-msgstr "この設定は取り消すことができませんので気を付けてください。"
+msgid ""
+"Notice: Team evaluation settings cannot be changed after starting "
+"evaluations."
+msgstr "注意：評価を開始した後、チームの評価設定を変更することはできません。"
+
+msgid "Please select."
+msgstr "選択してください。"
+
+msgid "Previous term"
+msgstr "前期"
 
 msgid "Current term"
 msgstr "今期"
@@ -4183,17 +4205,14 @@ msgstr "今期"
 msgid "You need to active Evaluation settings before starting Evaluation."
 msgstr "評価設定が有効でないため、評価を開始することができません。"
 
-msgid "In evaluation term"
-msgstr "評価期間中です。"
+msgid "Evaluation commenced"
+msgstr "評価の実施中"
 
 msgid "Add definition of evaluation score"
 msgstr "評価スコアの定義を1つ以上追加してください。"
 
-msgid "Start current term evaluations"
-msgstr "今期の評価を開始する"
-
-msgid "Unable to cancel. Do you really want to start evaluations?"
-msgstr "取り消しができません。よろしいですか？"
+msgid "Start evaluations"
+msgstr "評価を開始する"
 
 msgid "Final evaluation"
 msgstr "最終評価"
@@ -6161,6 +6180,18 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "You can start evaluation with the current settings."
+#~ msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
+
+#~ msgid "Notice - These settings can't be canceled."
+#~ msgstr "この設定は取り消すことができませんので気を付けてください。"
+
+#~ msgid "In evaluation term"
+#~ msgstr "評価期間中です。"
+
+#~ msgid "Start current term evaluations"
+#~ msgstr "今期の評価を開始する"
 
 #~ msgid "Anyone"
 #~ msgstr "指定なし"

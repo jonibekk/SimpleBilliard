@@ -198,3 +198,21 @@ if (document.getElementById("editTerm")) {
     teamSettings.updateStartMonth();
   };
 }
+
+if (document.getElementById("buttonStartEvaluation")) {
+    var $buttonStartEvaluation = $('#buttonStartEvaluation')
+    $('input[name=term_id][type=radio]').on('change', function () {
+        $buttonStartEvaluation.prop("disabled", false);
+    })
+    $buttonStartEvaluation.on('click', function() {
+        if (window.confirm(cake.message.notice.confirm_evaluation_start)) {
+            var termId = $('input[name=term_id][type=radio]').filter(":checked").val();
+            $.post({
+                url: "/api/v1/terms/" + termId + "/start_evaluation",
+            }).always(function() {
+                location.reload(true)
+            })
+        }
+        return false;
+    });
+}
