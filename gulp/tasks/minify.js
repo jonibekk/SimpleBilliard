@@ -113,7 +113,9 @@ gulp.task("js_payment:uglify", () => {
 gulp.task("js_circle:uglify", () => {
     let obj = gulp.src(config.dest + "/jscircle_cat/" + config.js.output.circle_script_name + '.js');
     if (process.env.NODE_ENV === "production") {
-        obj = obj.pipe(uglify());
+        obj = obj.pipe(uglify().on('error', function(e){
+            console.log(e);
+         }));
     }
 
     return obj.pipe(rename({
