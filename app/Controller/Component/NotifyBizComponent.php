@@ -1388,7 +1388,7 @@ class NotifyBizComponent extends Component
             $item[$k] = mb_strimwidth($v, 0, 40, "...");
         }
         $item = json_encode($item);
-        //TODO save to redis.
+
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
@@ -1796,29 +1796,6 @@ class NotifyBizComponent extends Component
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
-    }
-
-    /**
-     * set notifications
-     *
-     * @param array|int $to_user_ids
-     * @param int       $type
-     * @param string    $url
-     * @param string    $body
-     *
-     * @return bool
-     */
-    function setNotifications($to_user_ids, $type, $url, $body = null)
-    {
-        $this->GlRedis->setNotifications(
-            $type,
-            $this->NotifySetting->current_team_id,
-            $to_user_ids,
-            $this->NotifySetting->my_uid,
-            $body,
-            $url
-        );
-        return true;
     }
 
     /**

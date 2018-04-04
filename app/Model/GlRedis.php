@@ -469,17 +469,17 @@ class GlRedis extends AppModel
     }
 
     /**
-     * @param string $type
-     * @param int    $team_id
-     * @param array  $to_user_ids
-     * @param int    $my_id
-     * @param string $body
-     * @param string $url
-     * @param int    $date
-     * @param int    $post_id
+     * @param string $type        Notification type
+     * @param int    $team_id     Team ID for the notification
+     * @param array  $to_user_ids User IDs of notification receivers
+     * @param int    $my_id       User ID of notification sender
+     * @param string $body        Notification message
+     * @param string $url         Page URL when the notification is clicked
+     * @param int    $date        UNIX timestamp of when the notification was created
+     * @param int    $post_id     ID of post related to the notification
      * @param array  $options
      *
-     * @return bool
+     * @return bool TRUE = succesfully save notification into REDIS.
      */
     public function setNotifications(
         $type,
@@ -492,6 +492,33 @@ class GlRedis extends AppModel
         $post_id = null,
         $options = []
     ) {
+        $parameterErrorFlag = false;
+
+        //validate parameters
+        if (empty ($type)) {
+            $parameterErrorFlag = true;
+        }
+        if (empty ($team_id) || !is_int($team_id)) {
+            $parameterErrorFlag = true;
+        }
+        if (empty ($my_id) || !is_int($team_id)) {
+            $parameterErrorFlag = true;
+        }
+        if (empty ($body)) {
+            $parameterErrorFlag = true;
+        }
+        if (empty ($url)) {
+            $parameterErrorFlag = true;
+        }
+        if (empty ($date) || !is_int($date)) {
+            $parameterErrorFlag = true;
+        }
+
+        if ($parameterErrorFlag) {
+            GoalousLog::error(Debugger::trace());
+            return false;
+        }
+
         $notify_id = $this->generateId();
         if ($post_id) {
             // $post_idが渡ってきている場合はメッセージ
