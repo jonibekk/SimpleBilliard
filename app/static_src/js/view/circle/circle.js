@@ -250,6 +250,8 @@ $(function(){
                             height: 96,
                             fitDirection: 'center center'
                         });
+                        //EXIF
+                        exifRotate(this);
                     });
                     modal_elm.modal();
                 }).done(function (data) {
