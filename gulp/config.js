@@ -38,6 +38,9 @@ const config = {
         payments: [
             assets_dir + '/js/view/payments/*.js'
         ],
+        circle: [
+            assets_dir + '/js/view/circle/*.js'
+        ],
         homepage: [
             assets_dir + '/js/view/homepage/*.js'
         ]
@@ -67,6 +70,7 @@ const config = {
       evaluation_script_name: 'goalous_evaluation',
       evaluator_setting_script_name: 'goalous_evaluator_setting',
       payments_script_name: 'goalous_payment',
+      circle_script_name: 'goalous_circle',
       homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },
@@ -186,7 +190,8 @@ const config = {
   ],
   css_vendor: {
     src: [
-      node_modules_dir + '/font-awesome/css/font-awesome.css',
+      assets_dir + '/css/font-awesome.min.css',
+      // node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
 

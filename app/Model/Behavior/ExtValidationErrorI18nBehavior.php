@@ -47,6 +47,9 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'bodyOrAttachedFileRequired' => __("Body or attached file is required. "),
             'phoneNo'                    => __("Invalid telephone number"),
             'customValidateExistPlan'                    => __("Invalid value"),
+            'customValidateIsCsvFormat'                  => __("Invalid csv format"),
+            'customValidateIsCircleExists'               => __("Circle does not exist"),
+            'customValidateIsBelong'                     => __("Do not belong to Circle"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

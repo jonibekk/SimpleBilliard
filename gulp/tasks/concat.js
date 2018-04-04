@@ -61,6 +61,14 @@ gulp.task('js_payment:concat', () => {
         .pipe(duration('js_payment:concat'))
 });
 
+gulp.task('js_circle:concat', () => {
+    return gulp.src([...config.js.pages.circle])
+        .pipe(plumber())
+        .pipe(concat(config.js.output.circle_script_name + '.js'))
+        .pipe(gulp.dest(config.dest + '/jscircle_cat'))
+        .pipe(duration('js_circlet:concat'))
+});
+
 gulp.task('js_homepage:concat', () => {
     return gulp.src([...config.js.pages.homepage])
         .pipe(plumber())
