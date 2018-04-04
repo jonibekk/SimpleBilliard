@@ -6,11 +6,24 @@ App::import('Service', 'EvaluationSetting');
 use Goalous\Model\Enum as Enum;
 
 /**
+ * Class TermsController
+ *
+ * @property NotificationComponent Notification
  */
 class TermsController extends ApiController
 {
-    public $uses = [];
+    public $uses = [
+        'Notification',
+    ];
 
+    /**
+     * Starting the specified terms.id evaluation on loggin user
+     *
+     * /api/v1/terms/:termId/start_evaluation
+     * @param int $termId
+     *
+     * @return CakeResponse
+     */
     function post_start_evaluation($termId)
     {
         /** @var EvaluationSetting $EvaluationSetting */
