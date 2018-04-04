@@ -40,9 +40,11 @@
                     <?= __("Notice: Team evaluation settings cannot be changed after starting evaluations.") ?>
                 </p>
 
+                <?php if ($both_term_selectable): ?>
                 <p class="form-control-static font_rouge font_bold">
                     <?= __("Please select.") ?>
                 </p>
+                <?php endif; ?>
 
                 <div class="form-group">
                     <?php if ($previous_term_exists): ?>

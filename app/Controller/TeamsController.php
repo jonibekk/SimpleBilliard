@@ -389,6 +389,11 @@ class TeamsController extends AppController
             $previous_radio_checked = ($either_start_button_enabled && $previous_eval_start_button_enabled);
         }
 
+        $both_term_selectable = ($current_term_exists
+            && $previous_term_exists
+            && $current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())
+            && $previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED()));
+
         // term changing init data
         /** @var TermService $TermService */
         $TermService = ClassRegistry::init("TermService");
@@ -444,7 +449,8 @@ class TeamsController extends AppController
             'disable_current_radio',
             'either_start_button_enabled',
             'current_radio_checked',
-            'previous_radio_checked'
+            'previous_radio_checked',
+            'both_term_selectable'
         ));
 
         return $this->render();
