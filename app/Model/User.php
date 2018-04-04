@@ -3,6 +3,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Model\Enum as Enum;
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -1513,15 +1515,15 @@ class User extends AppModel
         if (strpos($keyword, ' ') !== false || strpos($keyword, '　') !== false) {
             $keyword = str_replace('　', ' ', $keyword);
             $keyword_conditions = [
-                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
-                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
+                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => '%' . $keyword . '%',
+                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => '%' . $keyword . '%',
             ];
         } else {
             $keyword_conditions = [
-                'User.first_name LIKE'            => $keyword . "%",
-                'User.last_name LIKE'             => $keyword . "%",
-                'SearchLocalName.first_name LIKE' => $keyword . "%",
-                'SearchLocalName.last_name LIKE'  => $keyword . "%",
+                'User.first_name LIKE'            => '%' . $keyword . '%',
+                'User.last_name LIKE'             => '%' . $keyword . '%',
+                'SearchLocalName.first_name LIKE' => '%' . $keyword . '%',
+                'SearchLocalName.last_name LIKE'  => '%' . $keyword . '%',
             ];
         }
         return $keyword_conditions;
@@ -1820,23 +1822,25 @@ class User extends AppModel
     }
 
     /**
-     * Function for filter user ids, and returning users who are inactive in team
+     * Function for filter user ids based on their activity status in a team
      *
      * @param int @teamId
      *          Team ID of the users
      * @param array $userIds
      *          User IDs to be filtered
+     * @param bool  $activeFlag
+     *          Whether the user is active in the team
      *
      * @return array | null Array of inactive users
      */
-    public function filterInactiveTeamUsers(int $teamId, array $userIds): array
+    public function filterUsersOnTeamActivity(int $teamId, array $userIds, bool $activeFlag = false): array
     {
+
         $options = [
             'conditions' => [
                 'User.id'            => $userIds,
                 'User.active_flg'    => true,
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => TeamMember::USER_STATUS_INACTIVE,
             ],
             'joins'      => [
                 [
@@ -1849,6 +1853,12 @@ class User extends AppModel
                 ]
             ]
         ];
+
+        if ($activeFlag) {
+            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::ACTIVE;
+        } else {
+            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::INACTIVE;
+        }
 
         $res = $this->find('all', $options);
 
