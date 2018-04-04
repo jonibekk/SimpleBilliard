@@ -31,8 +31,7 @@ class TermsController extends ApiController
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'team_info');
 
             $this->Notification->outSuccess(__("Evaluation started."));
-            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
-                $this->Team->Term->getCurrentTermId());
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START, $termId);
             Cache::clear(false, 'team_info');
         } catch (Exception $e) {
             GoalousLog::error('failed on starting evaluation', [
