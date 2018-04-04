@@ -15,11 +15,11 @@ $(function(){
         return this;
     };
     function resizeLabels() {
-        var target = $(".pin-circle-list-item").first();
+        var target = $("#pinned-body");
         if(target.length) {
             var width = $(target).width();
             var labels = $(".circle-name-label");
-            var newWidth = (width - 160) + "px";
+            var newWidth = (width - 180) + "px";
             for (var i = 0; i < labels.length; i++) {
                 $(labels[i]).css("width", newWidth);
             }
