@@ -6290,14 +6290,14 @@ msgstr "認定ステータス: %s"
 #~ "by Idem -"
 #~ msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
 
-#~ msgid "Pinned"
-#~ msgstr "ピン済み"
+msgid "Pinned"
+msgstr "ピン済み"
 
-#~ msgid "Unpinned"
-#~ msgstr "ピンなし"
+msgid "Unpinned"
+msgstr "ピンなし"
 
-#~ msgid 'You can pin a circle to the top as a sortable list. "All Team" will automatically be your top pin.'
-#~ msgstr "サークルにピンすると上位に表示され、並べ替えることができます。なお、「チーム全体」サークルはデフォルトでピン済みとなり並べ替えられません。"
+msgid "You can pin a circle to the top as a sortable list. \"All Team\" will automatically be your top pin."
+msgstr "サークルにピンすると上位に表示され、並べ替えることができます。なお、「チーム全体」サークルはデフォルトでピン済みとなり並べ替えられません。"
 
-#~ msgid "Edit Circles"
-#~ msgstr "サークル順序編集"
+msgid "Edit Circles"
+msgstr "サークル編集"
