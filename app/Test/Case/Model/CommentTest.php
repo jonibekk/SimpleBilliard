@@ -30,6 +30,7 @@ class CommentTest extends GoalousTestCase
         'app.action_result',
         'app.key_result',
         'app.post_share_circle',
+        'app.circle_member',
         'app.local_name',
         'app.post_share_user',
     );
@@ -471,13 +472,45 @@ class CommentTest extends GoalousTestCase
         $this->Comment->read(null, 1);
         $this->Comment->set('body', '%%%user_1%%%');
         $this->Comment->save();
-        $this->Comment->read(null, 1);
-        $this->assertEqual($this->Comment->field('body'), '%%%user_1:firstname lastname%%%');
+        $comment = $this->Comment->read(null, 1)['Comment'];
+        $this->assertEqual($comment['body'], '%%%user_1:firstname lastname%%%');
+        $this->Comment->Post->PostShareCircle->read(null, 2);
+        $this->Comment->Post->PostShareCircle->set('circle_id', 4);
+        $this->Comment->Post->PostShareCircle->save();
         $this->Comment->read(null, 1);
         $this->Comment->set('body', '%%%circle_4%%%');
         $this->Comment->save();
-        $this->Comment->read(null, 1);
-        $this->assertEqual($this->Comment->field('body'), '%%%circle_4:秘密サークル%%%');
+        $comment = $this->Comment->read(null, 1)['Comment'];
+        $this->assertEqual($comment['body'], '%%%circle_4:秘密サークル%%%');
     }
-
+    function testAfterFind_violated_mentioned_to_private_circle_in_public_circle()
+    {
+        $this->Comment->read(null, 1);
+        $this->Comment->set('body', '%%%circle_4%%%');
+        $this->Comment->save();
+        $comment = $this->Comment->read(null, 1)['Comment'];
+        $this->assertEqual($comment['body'], '%%%circle_4%%%');
+    }
+    function testAfterFind_violated_mentioned_to_public_circle_in_private_circle()
+    {
+        $this->Comment->read(null, 1);
+        $this->Comment->set('body', '%%%circle_3%%%');
+        $this->Comment->save();
+        $this->Comment->Post->PostShareCircle->read(null, 2);
+        $this->Comment->Post->PostShareCircle->set('circle_id', 4);
+        $this->Comment->Post->PostShareCircle->save();
+        $comment = $this->Comment->read(null, 1)['Comment'];
+        $this->assertEqual($comment['body'], '%%%circle_3%%%');
+    }
+    function testAfterFind_violated_mentioned_to_non_member_user_in_private_circle()
+    {
+        $this->Comment->read(null, 1);
+        $this->Comment->set('body', '%%%circle_4%%%');
+        $this->Comment->save();
+        $this->Comment->Post->PostShareCircle->read(null, 2);
+        $this->Comment->Post->PostShareCircle->set('circle_id', 6);
+        $this->Comment->Post->PostShareCircle->save();
+        $comment = $this->Comment->read(null, 1)['Comment'];
+        $this->assertEqual($comment['body'], '%%%circle_4%%%');
+    }
 }
