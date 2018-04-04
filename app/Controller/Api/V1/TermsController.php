@@ -25,8 +25,7 @@ class TermsController extends ApiController
                 $this->_getResponseBadFail(__("Evaluation setting is not active."));
             }
 
-            // TODO: this method is not exist on this branch yet
-            // $EvaluationService->startEvaluation($teamId, $termId);
+            $EvaluationService->startEvaluation($teamId, $termId);
 
             // 評価期間判定キャッシュ削除
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_IS_STARTED_EVALUATION, true), 'team_info');
