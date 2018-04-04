@@ -883,7 +883,6 @@ function evTargetToggleClick() {
                             if ($('#CommentOgpEditBox_' + comment_id).length) {
                                 return false;
                             }
-                            console.log("no ogp");
                             if(e.keyCode == 32 || e.keyCode == 13) {
                                 var url = getValidURL($('#CommentEditFormBody_' + comment_id).val());
                                 if(url) {
@@ -1026,7 +1025,6 @@ function evTargetToggleClickByElement(elem) {
                             if ($('#CommentOgpEditBox_' + comment_id).length) {
                                 return false;
                             }
-                            console.log("no ogp");
                             if(e.keyCode == 32 || e.keyCode == 13) {
                                 var url = getValidURL($('#CommentEditFormBody_' + comment_id).val());
                                 if(url) {
