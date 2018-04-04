@@ -38,6 +38,9 @@ const config = {
         payments: [
             assets_dir + '/js/view/payments/*.js'
         ],
+        circle: [
+            assets_dir + '/js/view/circle/*.js'
+        ],
         homepage: [
             assets_dir + '/js/view/homepage/*.js'
         ]
@@ -68,6 +71,7 @@ const config = {
       evaluation_script_name: 'goalous_evaluation',
       evaluator_setting_script_name: 'goalous_evaluator_setting',
       payments_script_name: 'goalous_payment',
+      circle_script_name: 'goalous_circle',
       homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },
@@ -78,6 +82,15 @@ const config = {
       assets_dir + '/js/view/**/*.js'
     ]
   },
+  js_prerender_exif: {
+    src: [
+      node_modules_dir + '/exif-js/exif.js',
+    ],
+    output: {
+      file_name: 'goalous.prerender.exif',
+      path: compiled_assets_dir + '/js'
+    }
+  },
   js_prerender: {
     src: [
       assets_dir + '/js/lib/global_prerender.js',
@@ -87,6 +100,7 @@ const config = {
       assets_dir + '/js/vendor/video.js',
       assets_dir + '/js/vendor/videojs-contrib-hls.js',
       assets_dir + '/js/lib/video.js',
+      assets_dir + '/js/lib/exifrotate.js',
     ],
     output: {
       file_name: 'goalous.prerender',
@@ -124,7 +138,6 @@ const config = {
       node_modules_dir + '/fastclick/lib/fastClick.js',
       node_modules_dir + '/select2/select2.js',
       node_modules_dir + '/requirejs/require.js',
-      node_modules_dir + '/exif-js/exif.js'
     ],
     output: {
       file_name: 'vendors',
@@ -180,7 +193,8 @@ const config = {
   ],
   css_vendor: {
     src: [
-      node_modules_dir + '/font-awesome/css/font-awesome.css',
+      assets_dir + '/css/font-awesome.min.css',
+      // node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
 

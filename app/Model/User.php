@@ -1,6 +1,10 @@
 <?php
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
+App::uses('AppUtil', 'Util');
+
+use Goalous\Model\Enum as Enum;
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -1178,9 +1182,10 @@ class User extends AppModel
 
     /**
      * Return the array for called from ajax via Select2 (jQuery based plugin)
+     *
      * @see https://select2.github.io/select2/ (v 3.5.x)
      *
-     * @param      $keyword User typed string in input type=text
+     * @param      $keyword   User typed string in input type=text
      * @param int  $limit
      * @param bool $with_group
      * @param bool $with_self Include authorized user in the result.
@@ -1708,6 +1713,7 @@ class User extends AppModel
         ];
 
         $res = $this->find('count', $options);
+
         return $res === count($userIds);
     }
 
@@ -1812,4 +1818,57 @@ class User extends AppModel
         return $res == 1;
     }
 
+    /**
+     * Function for filter user ids based on their activity status in a team
+     *
+     * @param int @teamId
+     *          Team ID of the users
+     * @param array $userIds
+     *          User IDs to be filtered
+     * @param bool  $activeFlag
+     *          Whether the user is active in the team
+     *
+     * @return array | null Array of inactive users
+     */
+    public function filterUsersOnTeamActivity(int $teamId, array $userIds, bool $activeFlag = false): array
+    {
+
+        $options = [
+            'conditions' => [
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id'
+                    ]
+                ]
+            ]
+        ];
+
+        if ($activeFlag) {
+            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::ACTIVE;
+        } else {
+            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::INACTIVE;
+        }
+
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return bool Validation result; true for successful validation
+     */
+    public function validateUserId($userId): bool
+    {
+        return !empty($userId) && AppUtil::isInt($userId) && $userId != 0;
+    }
 }

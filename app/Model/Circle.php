@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-
+App::uses('UploadHelper', 'View/Helper');
 /**
  * Circle Model
  *
@@ -324,6 +324,16 @@ class Circle extends AppModel
                 'Circle.team_id'    => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
+            'fields'     => [
+                'Circle.id',
+                'Circle.name',
+                'Circle.photo_file_name',
+                'Circle.circle_member_count',
+                'Circle.created',
+                'Circle.modified',
+                'Circle.public_flg',
+                'Circle.team_all_flg',
+            ],
         ];
         return $this->find('list', $options);
     }
@@ -510,7 +520,6 @@ class Circle extends AppModel
     {
         $circles = $this->getAccessibleCirclesByKeyword($keyword, $limit);
 
-        App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
         $res = [];
         foreach ($circles as $val) {

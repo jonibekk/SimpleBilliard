@@ -925,7 +925,7 @@ class GoalTest extends GoalousTestCase
         $this->setDefault();
         $goalId = $this->createGoal(1);
         $term = $this->Goal->getGoalTermData($goalId);
-        $this->assertEquals(1, $term['id']);
+        $this->assertEquals(3, $term['id']);
         $term = $this->Goal->getGoalTermData(999999);
         $this->assertFalse($term);
     }

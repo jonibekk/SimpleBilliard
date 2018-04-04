@@ -1153,12 +1153,12 @@ class NotifySetting extends AppModel
 
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has set <span class="notify-card-head-target">%2$s</span>\'s evaluator(s).',
+                        '<span class="notify-card-head-target">%1$s</span> has assigned your evaluator(s).',
                         $target_user_name,
                         $user_text);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has set <span class="notify-card-head-target">%2$s</span>\'s evaluator(s).',
+                        '<span class="notify-card-head-target">%1$s</span> has assigned your evaluator(s).',
                         h($target_user_name),
                         h($user_text));
                 }
@@ -1170,11 +1170,11 @@ class NotifySetting extends AppModel
 
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has set his/her evaluator(s).',
+                        '<span class="notify-card-head-target">%1$s</span> has assigned his/her evaluator(s).',
                         $coachee_user_name);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has set his/her evaluator(s).',
+                        '<span class="notify-card-head-target">%1$s</span> has assigned his/her evaluator(s).',
                         h($coachee_user_name));
                 }
                 break;
@@ -1212,11 +1212,17 @@ class NotifySetting extends AppModel
                 $res = $model->findByUserId($model->my_uid);
                 $res = Hash::extract($res, 'NotifySetting');
                 if (!empty($res)) {
+                    $res['force_notify'] = true;
+                }
+                if (!empty($res)) {
                     return $res;
                 }
                 $schema = $model->schema();
                 foreach ($schema as $k => $v) {
                     $res[$k] = $v['default'];
+                }
+                if (!empty($res)) {
+                    $res['force_notify'] = true;
                 }
                 return $res;
             }, 'user_data');

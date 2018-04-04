@@ -17,15 +17,21 @@ class EvaluatorSettingsController extends AppController
 
     function beforeFilter()
     {
+        parent::beforeFilter();
+
         $this->layout = LAYOUT_ONE_COLUMN;
 
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init("ExperimentService");
-        if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
-            throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
-        }
 
-        parent::beforeFilter();
+        if (!empty($this->Auth->user('id'))) {
+            if (!$ExperimentService->isDefined("EnableEvaluationFeature")) {
+                throw new NotFoundException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
+            }
+            if (!$this->Team->EvaluationSetting->isEnabled()) {
+                throw new NotFoundException(__("Evaluation feature is turned off. Please contact the team administrator."));
+            }
+        }
     }
 
     /**
@@ -41,13 +47,13 @@ class EvaluatorSettingsController extends AppController
         /** @var  User $User */
         $User = ClassRegistry::init('User');
 
-        $termId = $this->Team->Term->getCurrentTermId();
         $userId = $this->Auth->user('id');
+        $termId = $this->Team->Term->getCurrentTermId();
         $teamId = $this->current_team_id;
 
         $selfUser = $User->findById($userId);
         $selfUser['evaluators'] = $EvaluatorService->getEvaluatorsByTeamIdAndEvaluateeUserId($teamId, $userId);
-        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId);
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $userId, true);
 
         // Count zero evaluatee users
         $countOfZeroEvaluateeUsers = 0;
@@ -93,7 +99,7 @@ class EvaluatorSettingsController extends AppController
 
         // Check auth user have authority to see this page.
         $termId = $this->Team->Term->getCurrentTermId();
-        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId);
+        $coachees = $EvaluationService->getEvaluateesFromCoachUserId($termId, $authUserId, true);
         $usersIdsCanView = array_merge(Hash::extract($coachees, '{n}.User.id'), [$authUserId]);
         if (!in_array($evaluateeUserId, $usersIdsCanView)) {
             throw new NotFoundException();

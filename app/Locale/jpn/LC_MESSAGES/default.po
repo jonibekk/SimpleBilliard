@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-03-23 16:40+0900\n"
+"PO-Revision-Date: 2018-04-04 13:09+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -220,6 +220,16 @@ msgstr "自己評価を確定しました。"
 
 msgid "Submitted the evaluation by evaluator."
 msgstr "評価者の評価を確定しました。"
+
+#, fuzzy
+#| msgid ""
+#| "Evaluation setting of the team is not enabled. Please contact the team "
+#| "administrator."
+msgid ""
+"Evaluation feature is turned off. Please contact the team administrator."
+msgstr ""
+"チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
+"い。"
 
 msgid "Internal Server Error."
 msgstr "サーバーエラー"
@@ -866,6 +876,12 @@ msgstr "評価者設定を保存できませんでした。"
 msgid "Evaluator has duplicates."
 msgstr "評価者が重複しています。"
 
+msgid "%s %s inactive"
+msgstr ""
+
+msgid "Evaluator setting saved."
+msgstr "評価者設定を保存しました。"
+
 msgid "Failed uploading video"
 msgstr "動画のアップロードに失敗しました"
 
@@ -1351,14 +1367,18 @@ msgid "Video processing failed."
 msgstr "ビデオファイルの処理に失敗しました。"
 
 msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> has set <span class="
-"\"notify-card-head-target\">%2$s</span>'s evaluator(s)."
-msgstr ""
-
-msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span> has set his/her "
+"<span class=\"notify-card-head-target\">%1$s</span> has assigned your "
 "evaluator(s)."
 msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> があなたの評価者を設定し"
+"ました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has assigned his/her "
+"evaluator(s)."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> が自分の評価者を設定しま"
+"した。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -1841,6 +1861,21 @@ msgstr "本文か添付ファイルは必須です。"
 msgid "Invalid telephone number"
 msgstr "不正な電話番号です。"
 
+#, fuzzy
+#| msgid "Invalid score."
+msgid "Invalid csv format"
+msgstr "定義されていないスコアです。"
+
+#, fuzzy
+#| msgid "This circle does not exist."
+msgid "Circle does not exist"
+msgstr "このサークルは存在しません。"
+
+#, fuzzy
+#| msgid "You don't belong to any circle."
+msgid "Do not belong to Circle"
+msgstr "参加しているサークルはありません。"
+
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
@@ -1975,6 +2010,22 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
+
+msgid "Edit Circles"
+msgstr "サークル編集"
+
+msgid ""
+"You can pin a circle to the top as a sortable list. \"All Team\" will "
+"automatically be your top pin."
+msgstr ""
+"サークルにピンすると上位に表示され、並べ替えることができます。なお、「チーム"
+"全体」サークルはデフォルトでピン済みとなり並べ替えられません。"
+
+msgid "Pinned"
+msgstr "ピン済み"
+
+msgid "Unpinned"
+msgstr "ピンなし"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
@@ -2158,9 +2209,6 @@ msgstr "データをロード中です。少々お待ちください。"
 
 msgid "%d remaining"
 msgstr "残り %d人"
-
-msgid "Evaluator setting saved."
-msgstr "評価者設定を保存しました。"
 
 msgid "Coach"
 msgstr "コーチ"
@@ -3130,6 +3178,9 @@ msgstr "保存済みアイテムを削除しました"
 msgid "Circles"
 msgstr "サークル"
 
+msgid "Edit"
+msgstr "編集"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -3566,9 +3617,6 @@ msgstr "KRを削除する"
 
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこのKRを削除しますか？"
-
-msgid "Edit"
-msgstr "編集"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -4893,10 +4941,10 @@ msgid "Evaluatees overview"
 msgstr "被評価者一覧"
 
 msgid "%d coached member has no evaluators."
-msgstr "%d人のコーチされるメンバーに評価者がありません。"
+msgstr "%d人のコーチされるメンバーに評価者が設定されていません。"
 
 msgid "Coached member(s)"
-msgstr "コーチされるメンバー"
+msgstr "コーチするメンバー"
 
 msgid "You haven't created any actions&hellip; yet."
 msgstr "あなたはまだアクションをしていません。"
