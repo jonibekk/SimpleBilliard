@@ -5,7 +5,7 @@ function resizeLabels() {
     if(target.length) {
         var width = $(target).width();
         var labels = $(".circle-name-label");
-        var newWidth = (width - 180) + "px";
+        var newWidth = (width - 190) + "px";
         for (var i = 0; i < labels.length; i++) {
             $(labels[i]).css("width", newWidth);
         }
