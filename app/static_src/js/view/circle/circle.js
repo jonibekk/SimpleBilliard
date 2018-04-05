@@ -355,9 +355,3 @@ window.addEventListener('resize', function() {
     resizeLabels();
     resizeBoundary();
 }, false);
-
-// for debugging mobilde
-// window.onerror = function (message, url, lineNo){
-//     console.log('Error: ' + message + '\n' + 'Line Number: ' + lineNo);
-//     return true;
-// }
