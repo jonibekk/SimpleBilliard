@@ -827,38 +827,15 @@ class AppUtil
         $traceResult = [];
 
         foreach (debug_backtrace(null, $stepsLimit) as $trace) {
-            $line = $trace['class'] . "(" . $trace['line'] . ")" . ":" . $trace['function'];
+            $line = $trace['class'] . "(line:" . $trace['line'] . ")" . ":" . $trace['function'];
 
             if (!empty($trace['args'])) {
-                $line .= "(" . self::flattenArray($trace['args']) . ")";
+                $line .= "(" . implode(",", Hash::flatten($trace['args'])) . ")";
             }
 
             $traceResult[] = $line;
         }
 
         return $traceResult;
-    }
-
-    /**
-     * Flatten multidimensional array into single dimensional array
-     *
-     * @param array $inputArray
-     *
-     * @return array Flattened array
-     */
-    static function flattenArray(array $inputArray): array
-    {
-        $return = array();
-        foreach ($inputArray as $key => $value) {
-            $line = $key . "=>";
-            if (is_array($value)) {
-                $line .= "{" . implode(",'", self::flattenArray($value)) . "}";
-            } else {
-                $line .= $value;
-            }
-            $return[] = $line;
-        }
-        return $return;
-
     }
 }

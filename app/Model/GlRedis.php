@@ -494,28 +494,36 @@ class GlRedis extends AppModel
         $options = []
     ) {
         $parameterErrorFlag = false;
+        $errorParameters = [];
 
         //validate parameters
         if (empty ($type)) {
+            $errorParameters[] = 'type';
             $parameterErrorFlag = true;
         }
-        if (empty ($team_id) || !is_int($team_id)) {
+        if (empty ($team_id) || !Apputil::isInt($team_id)) {
+            $errorParameters[] = 'team_id';
             $parameterErrorFlag = true;
         }
-        if (empty ($my_id) || !is_int($team_id)) {
+        if (empty ($my_id) || !Apputil::isInt($my_id)) {
+            $errorParameters[] = 'my_id';
             $parameterErrorFlag = true;
         }
         if (empty ($body)) {
+            $errorParameters[] = 'body';
             $parameterErrorFlag = true;
         }
         if (empty ($url)) {
+            $errorParameters[] = 'url';
             $parameterErrorFlag = true;
         }
-        if (empty ($date) || !is_int($date)) {
+        if (empty ($date) || !Apputil::isInt($date)) {
+            $errorParameters[] = 'date';
             $parameterErrorFlag = true;
         }
         if ($parameterErrorFlag) {
-            GoalousLog::error(implode("\n", AppUtil::getMethodCallerTrace()));
+            GoalousLog::error("Parameter error at " . implode(",", $errorParameters) . " | Trace:\n" .
+                implode("\n", AppUtil::getMethodCallerTrace()));
             return false;
         }
 
