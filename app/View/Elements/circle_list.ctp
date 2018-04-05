@@ -43,5 +43,4 @@
         </div>
     </div>
 </div>
-<?php echo $this->Html->script('/js/goalous_circle.min'); ?>
 <?= $this->App->viewEndComment() ?>
