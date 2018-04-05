@@ -157,18 +157,13 @@ function pinEvent(evt) {
     this.classList.toggle('fa-disabled');
     var self = this;
     if(this.classList.contains('fa-disabled')) {
+        setTimeout(function(){ document.getElementById('unpinned').appendChild(self.parentElement); }, 500);
         var moveElement = $('#dashboard-pinned').find('[circle_id='+self.parentElement.id+']').get(0);
         document.getElementById('dashboard-unpinned').appendChild(moveElement);
-        window.setTimeout(function(){
-            document.getElementById('unpinned').appendChild(self.parentElement);
-        }, 500);
-        
     } else {
+        setTimeout(function(){ document.getElementById('pinned').appendChild(self.parentElement); }, 500);
         var moveElement = $('#dashboard-unpinned').find('[circle_id='+self.parentElement.id+']').get(0);
         document.getElementById('dashboard-pinned').appendChild(moveElement);
-        window.setTimeout(function(){
-            document.getElementById('pinned').appendChild(self.parentElement);
-        }, 500);   
     }      
     updateOrder();
     updateDisplayCount();
