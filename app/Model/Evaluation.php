@@ -607,7 +607,7 @@ class Evaluation extends AppModel
     {
         $goalEvaluations = [];
         $goalList = $this->Goal->GoalMember->findEvaluatableGoalList($uid);
-        $goalList = $this->Goal->filterThisTermIds($goalList);
+        $goalList = $this->Goal->filterByTermId($termId, $goalList);
         //order by priority of goal
         $goalList = $this->Goal->GoalMember->goalIdOrderByPriority($uid, $goalList);
 

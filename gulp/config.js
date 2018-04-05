@@ -38,8 +38,8 @@ const config = {
         payments: [
             assets_dir + '/js/view/payments/*.js'
         ],
-        circle: [
-            assets_dir + '/js/view/circle/*.js'
+        circle_pins: [
+            assets_dir + '/js/view/circle_pins/*.js'
         ],
         homepage: [
             assets_dir + '/js/view/homepage/*.js'
@@ -70,7 +70,7 @@ const config = {
       evaluation_script_name: 'goalous_evaluation',
       evaluator_setting_script_name: 'goalous_evaluator_setting',
       payments_script_name: 'goalous_payment',
-      circle_script_name: 'goalous_circle',
+      circle_script_name: 'goalous_circle_pin',
       homepage_script_name: 'goalous_homepage',
       path: compiled_assets_dir + '/js'
     },
