@@ -498,27 +498,36 @@ class GlRedis extends AppModel
 
         //validate parameters
         if (empty ($type)) {
-            $errorParameters[] = 'type';
+            $errorParameters[] = 'type empty';
             $parameterErrorFlag = true;
         }
-        if (empty ($team_id) || !Apputil::isInt($team_id)) {
-            $errorParameters[] = 'team_id';
+        if (empty ($team_id)) {
+            $errorParameters[] = 'team_id empty';
+            $parameterErrorFlag = true;
+        } elseif (!Apputil::isInt($team_id)) {
+            $errorParameters[] = 'team_id not int';
             $parameterErrorFlag = true;
         }
-        if (empty ($my_id) || !Apputil::isInt($my_id)) {
-            $errorParameters[] = 'my_id';
+        if (empty ($my_id)) {
+            $errorParameters[] = 'my_id empty';
+            $parameterErrorFlag = true;
+        } elseif (!Apputil::isInt($my_id)) {
+            $errorParameters[] = 'my_id not int';
             $parameterErrorFlag = true;
         }
         if (empty ($body)) {
-            $errorParameters[] = 'body';
+            $errorParameters[] = 'body empty';
             $parameterErrorFlag = true;
         }
         if (empty ($url)) {
-            $errorParameters[] = 'url';
+            $errorParameters[] = 'url empty';
             $parameterErrorFlag = true;
         }
         if (empty ($date) || !Apputil::isInt($date)) {
-            $errorParameters[] = 'date';
+            $errorParameters[] = 'date empty';
+            $parameterErrorFlag = true;
+        } elseif (!Apputil::isInt($date)) {
+            $errorParameters[] = 'date not int';
             $parameterErrorFlag = true;
         }
         if ($parameterErrorFlag) {
