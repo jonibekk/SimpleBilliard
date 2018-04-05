@@ -158,25 +158,32 @@ function pinEvent(evt) {
     var self = this;
     if(this.classList.contains('fa-disabled')) {
         var moveElement = $('#dashboard-pinned').find('[circle_id='+self.parentElement.id+']').get(0);
-        if(moveElement) {
-            document.getElementById('dashboard-unpinned').appendChild(moveElement);
-        }
+        document.getElementById('dashboard-unpinned').appendChild(moveElement);
         setTimeout(function(){
             document.getElementById('unpinned').appendChild(self.parentElement);
         }, 500);
         
     } else {
         var moveElement = $('#dashboard-unpinned').find('[circle_id='+self.parentElement.id+']').get(0);
-        if(moveElement) {
-            document.getElementById('dashboard-pinned').appendChild(moveElement);
-        }
+        document.getElementById('dashboard-pinned').appendChild(moveElement);
         setTimeout(function(){
             document.getElementById('pinned').appendChild(self.parentElement);
-        }, 500);
+        }, 500);   
     }      
     updateOrder();
     updateDisplayCount();
 };
+jQuery.fn.insertAt = function(index, element) {
+  var lastIndex = this.children().length;
+  if (index < 0) {
+    index = Math.max(0, lastIndex + 1 + index);
+  }
+  this.append(element);
+  if (index < lastIndex) {
+    this.children().eq(index).before(this.children().last());
+  }
+  return this;
+}
 function initialize() {
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')) {
@@ -235,7 +242,7 @@ function initialize() {
 
             // Called by any change to the list (add / update / remove)
             onSort: function (/**Event*/evt) {
-                $($('#dashboard-pinned').find('li').eq(evt.oldIndex)).insertIndex(evt.newIndex);
+                $('#dashboard-pinned').insertAt(evt.newIndex, $($('#dashboard-pinned').find('li').eq(evt.oldIndex)));
                 updateOrder();
                 updateDisplayCount();
             },
@@ -340,19 +347,6 @@ function initialize() {
         } 
     }
 }
-$.fn.insertIndex = function (i) {
-    // The element we want to swap with
-    var $target = this.siblings().eq(i);
-
-    // Determine the direction of the appended index so we know what side to place it on
-    if (this.index() > i) {
-        $target.before(this);
-    } else {
-        $target.after(this);
-    }
-
-    return this;
-};
 
 window.addEventListener('load', function() { 
     resizeLabels();
