@@ -523,11 +523,11 @@ class GlRedis extends AppModel
             $errorParameters[] = 'url empty';
             $parameterErrorFlag = true;
         }
-        if (empty ($date) || !Apputil::isInt($date)) {
+        if (empty ($date)) {
             $errorParameters[] = 'date empty';
             $parameterErrorFlag = true;
-        } elseif (!Apputil::isInt($date)) {
-            $errorParameters[] = 'date not int';
+        } elseif (!is_numeric($date)) {
+            $errorParameters[] = 'date not numeric';
             $parameterErrorFlag = true;
         }
         if ($parameterErrorFlag) {
