@@ -330,6 +330,7 @@ function initialize() {
             circles[i].querySelector(".fa-cog").onclick = editMenu;
         } 
     }
+    console.log("initialize...")
 }
 $.fn.insertIndex = function (i) {
     // The element we want to swap with
@@ -349,11 +350,13 @@ window.addEventListener('load', function() {
     resizeLabels();
     resizeBoundary();
     initialize();
+    console.log("loaded...")
 }, false);
 
 window.addEventListener('resize', function() { 
     resizeLabels();
     resizeBoundary();
+    console.log("resize....")
 }, false);
 
 window.onerror = function (message, url, lineNo){
