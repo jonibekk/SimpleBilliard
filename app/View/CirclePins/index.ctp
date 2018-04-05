@@ -11,7 +11,7 @@
             <div class="column">
                 <div class="pin-circle-panel">
                     <div id="pinned-header" class="pin-circle-panel-heading">
-                        <div class="alighn-center"><label class="circle-header-label"><?= __("Pinned") ?> </label>  <label id='pinnedCount' class="circle-header-label"></label></div>
+                        <div class="alighn-center"><label class="circle-header-label"><?= __("PINNED") ?> </label>  <label id='pinnedCount' class="circle-header-label"></label></div>
                     </div>
                     <div id="pinned-body" class="pin-circle-body">
                         <div class="pin-circle-list-item ignore-elements">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="pin-circle-panel">
                     <div id="unpinned-header" class="pin-circle-panel-heading">
-                        <div class="alighn-center"><label class="circle-header-label"><?= __("Unpinned") ?></label>  <label id='unpinnedCount' class="circle-header-label"></label></div>
+                        <div class="alighn-center"><label class="circle-header-label"><?= __("UNPINNED") ?></label>  <label id='unpinnedCount' class="circle-header-label"></label></div>
                     </div>
                     <div id="unpinned-body" class="pin-circle-body">
                         <ul id="unpinned" class="list-group">
