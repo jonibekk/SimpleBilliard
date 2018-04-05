@@ -159,14 +159,14 @@ function pinEvent(evt) {
     if(this.classList.contains('fa-disabled')) {
         var moveElement = $('#dashboard-pinned').find('[circle_id='+self.parentElement.id+']').get(0);
         document.getElementById('dashboard-unpinned').appendChild(moveElement);
-        setTimeout(function(){
+        window.setTimeout(function(){
             document.getElementById('unpinned').appendChild(self.parentElement);
         }, 500);
         
     } else {
         var moveElement = $('#dashboard-unpinned').find('[circle_id='+self.parentElement.id+']').get(0);
         document.getElementById('dashboard-pinned').appendChild(moveElement);
-        setTimeout(function(){
+        window.setTimeout(function(){
             document.getElementById('pinned').appendChild(self.parentElement);
         }, 500);   
     }      
