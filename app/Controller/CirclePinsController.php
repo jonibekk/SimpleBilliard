@@ -1,8 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Service', 'CirclePinService');
-App::uses('Circle', 'Model');
-App::uses('CircleMember', 'Model');
+
 /**
  * Circle Pins Controller
  *
@@ -11,7 +10,6 @@ App::uses('CircleMember', 'Model');
 class CirclePinsController extends AppController
 {
     public $uses = [
-        'CirclePin'
     ];
 
     /**
