@@ -5,7 +5,7 @@
 .pin-circle {
   display: inline-flex;
   &:hover, &:active, &:focus {
-    background-color: lightgray;
+    background-color: @slightGray;
   }
 }
 
@@ -57,64 +57,31 @@
 
 #pinned-header,#unpinned-header {
   margin-bottom: 0px;
-  background-color: #e5e5e5;
-  background: #e5e5e5;
+  background-color: @baseGray;
+  background: @baseGray;
 }
 
 .circle-header-label {
-  font-size: 16px;
+  font-size: 1.2em;
 }
 
 .circle-name-label {
     margin-top: 6px;
-    font-size: 14px;
+    font-size: 1.0em;
     display: initial !important;
-    background: #fff;
+    background: @white;
     display: block;
     position: absolute;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     background-color: inherit !important;
-    color: #231814;
+    color: @veryDark;
     font-weight: normal;
 }
 
 .a-black-link {
-  color: black;
-}
-
-.pin-circle-dropdown-content {
-    right: 0;
-}
-
-.pin-circle-dropdown:focus {
-    position: relative;
-    display: inline-block;
-    float:right;
-}
-
-.pin-circle-dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.pin-circle-dropdown-content div,
-.pin-circle-dropdown-content a {
-    color: black;
-    padding: 8px;
-    text-decoration: none;
-    display: block;
-}
-
-.pin-circle-dropdown-content div:hover,
-.pin-circle-dropdown-content a:hover {
-    background-color: #f1f1f1
+  color: @black;
 }
 
 #pin-panel {
@@ -138,8 +105,8 @@
   display: block;
   padding: 10px 15px;
   margin-bottom: -1px;
-  background-color: #ffffff;
-  border-bottom: 8px solid #e5e5e5 !important;
+  background-color: @white;
+  border-bottom: 8px solid @baseGray !important;
 }
 
 .pin-circle-cog {
@@ -155,7 +122,7 @@
 
 .pin-circle-panel {
     margin-bottom: 0px;
-    background-color: #ffffff;
+    background-color: @white;
     border: none;
     border-radius: 0px;
     -webkit-box-shadow: none;
@@ -167,13 +134,13 @@
 }
 
 .dashboard-pin-circle-border {
-  border: 0.5px solid #ccc;
-  color: #ccc;
+  border: 0.5px solid @cGray;
+  color: @cGray;
   margin-left: 10px;
 }
 
 .pin-circle-edit-color{
-  color: #ae2f2f;
+  color: @goalous;
 }
 
 li.pin-circle-list-item > i.fa.fa-thumb-tack,
@@ -183,12 +150,12 @@ li.pin-circle-list-item > i.fa.fa-align-justify {
 }
 
 .circle-sortable-chosen {
-    color: #468847;
-    background-color: #dff0d8;
+    color: @colorSortableDragged;
+    background-color: @colorSortableBackground;
 }
 
 a.circle-sortable-chosen {
-    color: #468847;
+    color: @colorSortableDragged;
 }
 
 a.circle-sortable-chosen .list-group-item-heading {
@@ -196,14 +163,14 @@ a.circle-sortable-chosen .list-group-item-heading {
 }
 
 a.circle-sortable-chosen:hover, a.circle-sortable-chosen:focus {
-    color: #468847;
-    background-color: #d0e9c6;
+    color: @colorSortableDragged;
+    background-color: @colorSortableHandle;
 }
 
 a.circle-sortable-chosen.active, a.circle-sortable-chosen.active:hover, a.circle-sortable-chosen.active:focus {
-    color: #fff;
-    background-color: #468847;
-    border-color: #468847;
+    color: @white;
+    background-color: @colorSortableDragged;
+    border-color: @colorSortableDragged;
 }
 
 .circle-edit-link {
@@ -211,9 +178,9 @@ a.circle-sortable-chosen.active, a.circle-sortable-chosen.active:hover, a.circle
 }
 
 div.circle-pin-heading-description{
-  font-size: 12pt !important;
+  font-size: 0.8em !important;
   font-weight: normal !important;
-  color: #6d6e71;
+  color: @darkGray;
 }
 
 @media (min-width: 641px) {
@@ -225,6 +192,6 @@ div.circle-pin-heading-description{
 }
 
 #circle-pin-heading {
-  color: black;
-  font-size: 20px;
+  color: @black;
+  font-size: 1.4em;
 }
