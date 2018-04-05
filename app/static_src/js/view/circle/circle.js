@@ -69,14 +69,14 @@ function bindSelect2Members($this) {
     });
 }
 function updateOrder() {
-    var senddata = {
+    var sendData = {
         'data[_Token][key]': cake.data.csrf_token.key,
         'pin_order': makeParams(),
     };
     $.ajax({
       url: '/api/v1/circle_pins/',
       type:"POST",
-      data: senddata,
+      data: sendData,
       contentType:"application/x-www-form-urlencoded; charset=utf-8",
       success: function(data){
       },
@@ -333,7 +333,7 @@ function initialize() {
 }
 $.fn.insertIndex = function (i) {
     // The element we want to swap with
-    var $target = this.parent().children().eq(i);
+    var $target = this.siblings().eq(i);
 
     // Determine the direction of the appended index so we know what side to place it on
     if (this.index() > i) {
