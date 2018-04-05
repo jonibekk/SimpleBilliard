@@ -155,15 +155,24 @@ function pinEvent(evt) {
     evt = evt || window.event;
     this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     this.classList.toggle('fa-disabled');
-
+    var self = this;
     if(this.classList.contains('fa-disabled')) {
-        document.getElementById('unpinned').appendChild(this.parentElement);
-        var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
-        document.getElementById('dashboard-unpinned').appendChild(moveElement);
+        var moveElement = $('#dashboard-pinned').find('[circle_id='+self.parentElement.id+']').get(0);
+        if(moveElement) {
+            document.getElementById('dashboard-unpinned').appendChild(moveElement);
+        }
+        setTimeout(function(){
+            document.getElementById('unpinned').appendChild(self.parentElement);
+        }, 500);
+        
     } else {
-        document.getElementById('pinned').appendChild(this.parentElement);
-        var moveElement = $('#dashboard-unpinned').find('[circle_id='+this.parentElement.id+']').get(0);
-        document.getElementById('dashboard-pinned').appendChild(moveElement);
+        var moveElement = $('#dashboard-unpinned').find('[circle_id='+self.parentElement.id+']').get(0);
+        if(moveElement) {
+            document.getElementById('dashboard-pinned').appendChild(moveElement);
+        }
+        setTimeout(function(){
+            document.getElementById('pinned').appendChild(self.parentElement);
+        }, 500);
     }      
     updateOrder();
     updateDisplayCount();
