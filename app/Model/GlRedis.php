@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('ConnectionManager', 'Model');
 App::uses('NotifySetting', 'Model');
+App::uses('AppUtil', 'Util');
 
 /**
  * GlRedis Model
@@ -513,9 +514,8 @@ class GlRedis extends AppModel
         if (empty ($date) || !is_int($date)) {
             $parameterErrorFlag = true;
         }
-
         if ($parameterErrorFlag) {
-            GoalousLog::error(Debugger::trace());
+            GoalousLog::error(implode("\n", AppUtil::getMethodCallerTrace()));
             return false;
         }
 
