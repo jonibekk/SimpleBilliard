@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-04 13:09+0900\n"
+"PO-Revision-Date: 2018-04-05 16:38+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2017,10 +2017,10 @@ msgstr ""
 "サークルにピンすると上位に表示され、並べ替えることができます。なお、「チーム"
 "全体」サークルはデフォルトでピン済みとなり並べ替えられません。"
 
-msgid "Pinned"
+msgid "PINNED"
 msgstr "ピン済み"
 
-msgid "Unpinned"
+msgid "UNPINNED"
 msgstr "ピンなし"
 
 msgid "%1$d or more and %2$d or less characters."
@@ -6213,6 +6213,12 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Pinned"
+#~ msgstr "ピン済み"
+
+#~ msgid "Unpinned"
+#~ msgstr "ピンなし"
 
 #~ msgid "You can start evaluation with the current settings."
 #~ msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
