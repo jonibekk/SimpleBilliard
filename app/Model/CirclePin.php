@@ -189,12 +189,11 @@ class CirclePin extends AppModel
         try {
             $row = $this->getUnique($userId, $teamId);
             if(!empty($row)){
-                return $row['circle_orders'];
+                $returnValue = $row['circle_orders'] == null ? "" : $row['circle_orders'];
+                return $returnValue;
             }      
         } catch (Exception $e) {    
             GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
         }
 
         return "";
