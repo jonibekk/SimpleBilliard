@@ -109,8 +109,8 @@ class KeyResultService extends AppService
         // 完了/未完了
         if ($keyResult['value_unit'] == KeyResult::UNIT_BINARY) {
             $keyResult['display_value'] = __('Complete/Incomplete');
-            $keyResult['display_in_progress_bar'] = $keyResult['completed'] ? __('Completed') : __('Incomplete');
-            $keyResult['progress_rate'] = $keyResult['completed'] ? 100 : 0;
+            $keyResult['display_in_progress_bar'] = boolval($keyResult['completed'] ?? false) ? __('Completed') : __('Incomplete');
+            $keyResult['progress_rate'] = boolval($keyResult['completed'] ?? false) ? 100 : 0;
             return $keyResult;
         }
         $NumberEx = new NumberExHelper(new View());
@@ -123,8 +123,8 @@ class KeyResultService extends AppService
             $keyResult['current_value']);
         // 3桁区切りversion
         $keyResult['comma_start_value'] = AppUtil::formatThousand($keyResult['start_value']);
- +      $keyResult['comma_target_value'] = AppUtil::formatThousand($keyResult['target_value']);
- +      $keyResult['comma_current_value'] = AppUtil::formatThousand($keyResult['current_value']);
+        $keyResult['comma_target_value'] = AppUtil::formatThousand($keyResult['target_value']);
+        $keyResult['comma_current_value'] = AppUtil::formatThousand($keyResult['current_value']);
         // 単位を文頭におくか文末に置くか決める
         $unitName = KeyResult::$UNIT[$keyResult['value_unit']];
         $headUnit = '';
