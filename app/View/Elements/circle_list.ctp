@@ -13,16 +13,16 @@
 <?= $this->App->viewStartComment() ?>
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
-        <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?>
-          <a href="/CirclePins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Edit") ?></a>
-        </p>
+        <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?></p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
         <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
-          <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'defaultCircle' => $defaultCircle, 'isHamburger' => false]) ?>
+            <?php if (!empty($my_circles)): ?>
+                <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'isHamburger' => false]) ?>
+            <?php endif; ?>
         </div>
     </div>
-      <div class="dashboard-circle-list-footer">
+    <div class="dashboard-circle-list-footer">
         <div class="clearfix dashboard-circle-list-seek">
             <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i>
             <a href="#"
@@ -43,5 +43,4 @@
         </div>
     </div>
 </div>
-<?php echo $this->Html->script('/js/goalous_circle.min'); ?>
 <?= $this->App->viewEndComment() ?>

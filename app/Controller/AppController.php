@@ -19,7 +19,6 @@ App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
-App::import('Service', 'CirclePinService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -505,14 +504,23 @@ class AppController extends BaseController
 
     public function _setMyCircle()
     {
-        /** @var CirclePinService $CirclePinService */
-        $CirclePinService = ClassRegistry::init('CirclePinService');
-        $myCircles = $CirclePinService->getMyCircleSortedList($this->Auth->user('id'), $this->current_team_id);
-        $defaultCircle = $myCircles['default_circle'];
-        $regularCircles = $myCircles['regular_circle'];
-
-        $this->set('defaultCircle', $defaultCircle);
-        $this->set('my_circles', $regularCircles);
+        $my_circles = $this->User->CircleMember->getMyCircle();
+        if (isset($this->request->params['circle_id']) &&
+            !empty($this->request->params['circle_id']) &&
+            !empty($my_circles)
+        ) {
+            foreach ($my_circles as $key => $circle) {
+                if ($circle['Circle']['id'] == $this->request->params['circle_id']) {
+                    //未読件数を0セット
+                    if ($circle['CircleMember']['unread_count'] != 0) {
+                        $this->User->CircleMember->updateUnreadCount($circle['Circle']['id']);
+                        $my_circles[$key]['CircleMember']['unread_count'] = 0;
+                    }
+                    break;
+                }
+            }
+        }
+        $this->set('my_circles', $my_circles);
     }
 
     public function _setCurrentCircle()

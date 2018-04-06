@@ -1,7 +1,6 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'ExperimentService');
-App::uses('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
@@ -218,8 +217,6 @@ class CircleService extends AppService
      */
     function removeCircleMember(int $teamId, int $circleId, int $userId): bool
     {
-        /** @var CirclePinService $CirclePinService */
-        $CirclePinService = ClassRegistry::init('CirclePinService');
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
         /** @var Circle $Circle */
@@ -238,15 +235,6 @@ class CircleService extends AppService
             if (!$CircleMember->remove($circleId, $userId)) {
                 throw new Exception(
                     sprintf("Failed to leave the circle. %s",
-                        AppUtil::jsonOneLine(compact('teamId', 'circleId', 'userId'))
-                    )
-                );
-            }
-
-            // Remove circle pin information
-            if (!$CirclePinService->deleteCircleId($userId, $teamId, $circleId)) {
-                throw new Exception(
-                    sprintf("Failed to remove circle pin information. %s",
                         AppUtil::jsonOneLine(compact('teamId', 'circleId', 'userId'))
                     )
                 );

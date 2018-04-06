@@ -4,20 +4,6 @@
 "use strict";
 
 $(function () {
-    // white list for back and forth cache to be cleared 
-    // do not clear at post_edit or something like that for edit
-    var clearPath = ['/']
-    $(window).on("pageshow", function(event){
-        // event.originalEvent.persisted is always false (kind of browser bug)
-        // and checking dummy element value does not work for this kind of cache
-        // so check the location here and clear textarea if needed
-        if (clearPath.indexOf(location.pathname) >= 0) {
-            // We want to clear all of form values but we will clear just each textarea just in case
-            $('#CommonPostBody').val('')
-            $('#CommonActionName').val('')
-        }
-    });
-
     // お知らせ一覧ページの次のページ読込みボタン
     $(document).on("click", ".click-notify-read-more-page", function (e) {
         e.preventDefault();

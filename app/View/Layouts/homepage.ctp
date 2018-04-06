@@ -41,7 +41,7 @@
           type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <?php
-    echo $this->Html->css('fontawesome-all.min');
+    echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('homepage/bootstrap.min');
     echo $this->Html->css('homepage/pe-icon-7-stroke');
     echo $this->Html->css('homepage/animate.min');

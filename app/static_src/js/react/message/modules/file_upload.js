@@ -7,7 +7,6 @@ export const UPLOAD_SUCCESS = 'file_upload/UPLOAD_SUCCESS'
 export const UPLOAD_ERROR = 'file_upload/UPLOAD_ERROR'
 export const DELETE_UPLOADED_FILE = 'file_upload/DELETE_UPLOADED_FILE'
 export const RESET_STATE = 'file_upload/RESET_STATE'
-export const SET_UPLOADING_STATE = 'file_upload/SET_UPLOADING_STATE'
 
 export function deleteUploadedFile(file_index) {
   return (dispatch, getState) => {
@@ -121,14 +120,6 @@ export function resetState() {
 
 }
 
-export function setUploadingStatus(status) {
-  return {
-    type: SET_UPLOADING_STATE,
-    is_uploading: status
-  }
-
-}
-
 export function uploadError(file, file_index, preview_files, response) {
   file.status = FileUpload.Error
   file.err_msg = response.response.data.message
@@ -176,10 +167,6 @@ export function file_upload(state = initial_state, action) {
       return Object.assign({}, state, {
         uploaded_file_ids: [],
         preview_files: [],
-      })
-    case SET_UPLOADING_STATE:
-      return Object.assign({}, state, {
-        is_uploading: action.is_uploading
       })
     default:
       return state;

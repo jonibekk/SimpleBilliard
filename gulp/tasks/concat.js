@@ -61,14 +61,6 @@ gulp.task('js_payment:concat', () => {
         .pipe(duration('js_payment:concat'))
 });
 
-gulp.task('js_circle:concat', () => {
-    return gulp.src([...config.js.pages.circle])
-        .pipe(plumber())
-        .pipe(concat(config.js.output.circle_script_name + '.js'))
-        .pipe(gulp.dest(config.dest + '/jscircle_cat'))
-        .pipe(duration('js_circlet:concat'))
-});
-
 gulp.task('js_homepage:concat', () => {
     return gulp.src([...config.js.pages.homepage])
         .pipe(plumber())
@@ -98,14 +90,6 @@ gulp.task('js_prerender:concat', () => {
     .pipe(concat(config.js_prerender.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/js_prerender_cat'))
     .pipe(duration('js_prerender:concat'))
-})
-
-gulp.task('js_prerender_exif:concat', () => {
-  return gulp.src(config.js_prerender_exif.src)
-    .pipe(plumber())
-    .pipe(concat(config.js_prerender_exif.output.file_name + '.js'))
-    .pipe(gulp.dest(config.dest + '/js_prerender_exif_cat'))
-    .pipe(duration('js_prerender_exif:concat'))
 })
 
 gulp.task('angular_app:concat', () => {

@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('UploadHelper', 'View/Helper');
+
 /**
  * Circle Model
  *
@@ -185,7 +185,7 @@ class Circle extends AppModel
         $options = [
             'conditions' => [
                 'id'        => $my_circle_list,
-                'name LIKE' => '%' . $keyword . '%',
+                'name LIKE' => $keyword . "%",
             ],
             'limit'      => $limit,
             'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
@@ -323,16 +323,6 @@ class Circle extends AppModel
             'conditions' => [
                 'Circle.team_id'    => $this->current_team_id,
                 'Circle.public_flg' => true,
-            ],
-            'fields'     => [
-                'Circle.id',
-                'Circle.name',
-                'Circle.photo_file_name',
-                'Circle.circle_member_count',
-                'Circle.created',
-                'Circle.modified',
-                'Circle.public_flg',
-                'Circle.team_all_flg',
             ],
         ];
         return $this->find('list', $options);
@@ -500,7 +490,7 @@ class Circle extends AppModel
                     'Circle.id'         => $circle_list,
                     'Circle.public_flg' => 1,
                 ],
-                'Circle.name LIKE' => '%' . $keyword . '%',
+                'Circle.name LIKE' => $keyword . '%',
                 'Circle.team_id'   => $this->current_team_id,
             ],
             'limit'      => $limit,
@@ -520,6 +510,7 @@ class Circle extends AppModel
     {
         $circles = $this->getAccessibleCirclesByKeyword($keyword, $limit);
 
+        App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
         $res = [];
         foreach ($circles as $val) {
