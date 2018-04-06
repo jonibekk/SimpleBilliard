@@ -79,6 +79,7 @@ function updateOrder() {
       data: sendData,
       contentType:"application/x-www-form-urlencoded; charset=utf-8",
       success: function(data){
+        console.log("Update order success");
       },
       error: function(data){
         new Noty({
@@ -154,16 +155,24 @@ function editMenu(evt) {
 function pin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
-    var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
-    document.getElementById('dashboard-pinned').appendChild(moveElement);
+    if($('#dashboard-unpinned').length){
+        var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
+        if(moveElement){
+            document.getElementById('dashboard-pinned').appendChild(moveElement);
+        }
+    }
     updateOrder();
     updateDisplayCount();
 }
 function unpin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
-    var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
-    document.getElementById('dashboard-unpinned').appendChild(moveElement);
+    if($('#dashboard-unpinned').length){
+        var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
+        if(moveElement){
+            document.getElementById('dashboard-unpinned').appendChild(moveElement);
+        }
+    }
     updateOrder();
     updateDisplayCount();
 }
@@ -173,15 +182,18 @@ function pinEvent() {
     
     var parent = self.parentElement;
     if(self.classList.contains('fa-disabled')) {
-        window.setTimeout(function() {
+        $(this).delay(500).queue(function() {
             $(parent).appendTo($("#unpinned"));
             unpin(self)
-        }, 500);
+            $(this).dequeue();
+
+        });
     } else {
-        window.setTimeout(function() {
+        $(this).delay(500).queue(function() {
             $(parent).appendTo($("#pinned"));
             pin(self)
-        }, 500);
+            $(this).dequeue();
+        });
     }
 };
 function bindPinEvent(target) {
