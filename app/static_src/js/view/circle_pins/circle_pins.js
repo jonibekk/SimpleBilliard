@@ -181,18 +181,18 @@ function pinEvent() {
     
     var parent = self.parentElement;
     if(self.classList.contains('fa-disabled')) {
-        $(this).delay(500).queue(function() {
+        window.setTimeout(function() {
             $(parent).appendTo($("#unpinned"));
             unpin(self)
             $(this).dequeue();
 
-        });
+        }, 500);
     } else {
-        $(this).delay(500).queue(function() {
+        window.setTimeout(function() {
             $(parent).appendTo($("#pinned"));
             pin(self)
             $(this).dequeue();
-        });
+        }, 500);
     }
 };
 function bindPinEvent(target) {
