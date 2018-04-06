@@ -152,35 +152,45 @@ function editMenu(evt) {
     }
 }
 function firstPin(target) {
-   return new Promise(function(resolve, reject) {
-         setTimeout((function() {
-            document.getElementById('pinned').appendChild(target.parentElement);
-            resolve(toggleDragger(target));
-        }), 500);
-    });
+    setTimeout((function() {
+        document.getElementById('pinned').appendChild(target.parentElement);
+    }), 500, function(){console.log("pinned")});
+    // $.when(
+        
+    // ).then(function() {
+    //         toggleDragger(target)
+    //     }
+    // );
 }
 function firstUnpin(target) {
-   return new Promise(function(resolve, reject) {
-         setTimeout((function() {
-            document.getElementById('unpinned').appendChild(target.parentElement);
-            resolve(toggleDragger(target));
-        }), 500);
-    });
+    setTimeout((function() {
+        document.getElementById('unpinned').appendChild(target.parentElement);
+    }), 500, function(){console.log("unpinned")});
+    // $.when(
+        
+    // ).then(function() {
+    //         toggleDragger(target)
+    //     }
+    // );
 }
 function toggleDragger(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
 }
 function pinEvent() {
     this.classList.toggle('fa-disabled');
-    $(this).off('click', editMenu);
 
     var self = this;
     if(this.classList.contains('fa-disabled')) {
-        firstUnpin(self).then($(self).on('click', pinEvent));
+        // console.log("unpinning");
+        $.when(firstUnpin(self)).then(toggleDragger(self));
+        // firstUnpin(self).then($(self).on('click', pinEvent));
         var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
         document.getElementById('dashboard-unpinned').appendChild(moveElement);
     } else {
-        firstPin(self).then($(self).on('click', pinEvent));
+        // console.log("pinning");
+        $.when(firstPin(self)).then(toggleDragger(self));
+        // firstPin(self).then($(self).on('click', pinEvent));
         var moveElement = $('#dashboard-unpinned').find('[circle_id='+this.parentElement.id+']').get(0);
         document.getElementById('dashboard-pinned').appendChild(moveElement);
     }
@@ -188,7 +198,7 @@ function pinEvent() {
     updateDisplayCount();
 };
 function bindPinEvent(target) {
-    $(target).on('click', pinEvent);
+    $(target).one('click', pinEvent);
 }
 function bindEditMenu(target) {
     $(target).on('click', editMenu);
