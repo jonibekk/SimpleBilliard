@@ -1799,31 +1799,6 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * Set notifications.
-     *
-     * DO NOT DELETE
-     *
-     * @param array|int $to_user_ids
-     * @param int       $type
-     * @param string    $url
-     * @param string    $body
-     *
-     * @return bool
-     */
-    function setNotifications($to_user_ids, $type, $url, $body = null)
-    {
-        $this->GlRedis->setNotifications(
-            $type,
-            $this->NotifySetting->current_team_id,
-            $to_user_ids,
-            $this->NotifySetting->my_uid,
-            $body,
-            $url
-        );
-        return true;
-    }
-
-    /**
      * get count of new notifications from redis.
      *
      * @return int

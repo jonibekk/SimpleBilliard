@@ -2,7 +2,6 @@
 App::uses('AppModel', 'Model');
 App::uses('ConnectionManager', 'Model');
 App::uses('NotifySetting', 'Model');
-App::uses('AppUtil', 'Util');
 
 /**
  * GlRedis Model
@@ -504,14 +503,14 @@ class GlRedis extends AppModel
         if (empty ($team_id)) {
             $errorParameters[] = 'team_id empty';
             $parameterErrorFlag = true;
-        } elseif (!Apputil::isInt($team_id)) {
+        } elseif (!ctype_digit(strval($team_id))) {
             $errorParameters[] = 'team_id not int';
             $parameterErrorFlag = true;
         }
         if (empty ($my_id)) {
             $errorParameters[] = 'my_id empty';
             $parameterErrorFlag = true;
-        } elseif (!Apputil::isInt($my_id)) {
+        } elseif (!ctype_digit(strval($my_id))) {
             $errorParameters[] = 'my_id not int';
             $parameterErrorFlag = true;
         }
