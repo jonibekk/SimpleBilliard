@@ -829,26 +829,8 @@ function evTargetToggleClick() {
         // Hide OGP box
         var $ogpBox = $('#CommentOgpBox_' + comment_id);
         if ($ogpBox.length > 0) {
-            var backup = $('#CommentOgpBackup_' + comment_id);
-            backup.empty();
-            backup.html($ogpBox.clone().html().replace("CommentOgpBox_","CommentOgpEditBox_"));
             $ogpBox.toggle();
-            console.log(backup.get(0));
-            console.log("Got backup");
         }
-        var $btnClose = $('#CommentOgpClose_' + comment_id);//$editForm.find('.js-ogp-close');
-        $btnClose.off('click').on('click', function () {
-            backup.html($ogp.clone().html());
-            $ogp.empty();
-            $btnClose.hide();
-            var $submitButton = $('#CommentEditSubmit_' + comment_id);
-            if ($submitButton.length > 0) {
-                $submitButton.removeAttr("disabled");
-            }
-            console.log("del opg 0");
-            console.log(backup.get(0));
-        });
-        console.log("set del button");
     }
 
     //開いている時と閉じてる時のテキストの指定があった場合は置き換える
@@ -864,19 +846,6 @@ function evTargetToggleClick() {
             //開いてる表示
             $obj.text($obj.attr("opend-text"));
             $("#jsGoTop").hide();
-            $('#CommentOgpClose_' + comment_id).show();
-            if(!$('#CommentOgpEditBox_' + comment_id).length){
-                var $ogpEdit = $(document.createElement("div"));
-                $ogpEdit.prop('id','CommentOgpEditBox_' + comment_id);
-                $ogpEdit.prop('class','col pt_10px js-ogp-box');
-                $ogpEdit.html(backup.clone().html());
-                console.log($ogpEdit.get(0));
-            } else {
-                $('#CommentOgpEditBox_' + comment_id).empty();
-                $('#CommentOgpEditBox_' + comment_id).html(backup.clone().html());
-                console.log($('#CommentOgpEditBox_' + comment_id).get(0));
-            }
-            
             evTargetCancelAnyEdit();
         }
     }
@@ -893,20 +862,17 @@ function evTargetToggleClick() {
                 else {
                     var $editForm = $(data.html);
                     var $ogp = $editForm.find('.js-ogp-box');
-                    var backup = $('#CommentOgpBackup_' + comment_id);
-                    // backup.empty();
                     if ($ogp.length > 0) {
-                        var $btnClose = $('#CommentOgpClose_' + comment_id);//$editForm.find('.js-ogp-close');
-                        $btnClose.off('click').on('click', function () {
-                            backup.html($ogp.clone().html());
-                            $ogp.empty();
-                            $btnClose.hide();
+                        var $btnClose = $editForm.find('.js-ogp-close');
+                        $btnClose.on('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            $ogp.remove();
+                            $btnClose.remove();
                             var $submitButton = $('#CommentEditSubmit_' + comment_id);
                             if ($submitButton.length > 0) {
                                 $submitButton.removeAttr("disabled");
                             }
-                            console.log("del opg 1");
-                            console.log(backup.get(0));
                         });
                     }
                     $("#" + $obj.attr("hidden-target-id")).after($editForm);
@@ -914,7 +880,7 @@ function evTargetToggleClick() {
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
                         $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
-                            if ($('#CommentOgpEditBox_' + comment_id).not(':empty')) {
+                            if ($('#CommentOgpEditBox_' + comment_id).length) {
                                 return false;
                             }
                             if(e.keyCode == 32 || e.keyCode == 13) {
@@ -938,22 +904,19 @@ function evTargetToggleClick() {
                                 success: function (data) {
                                     // Display the new acquired OGP on the edit form
                                     var $newOgp = $(data.html);
-                                    var backup = $('CommentOgpBackup_' + comment_id);
                                     $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
                                     $('#CommentEditFormBody_' + comment_id).after($newOgp);
-                                    var $closeButton = $('<div></div>');
+                                    var $closeButton = $('<a>');
                                     $newOgp.before($closeButton);
-                                    $closeButton.attr('href', '#').prop('id','CommentOgpClose_' + comment_id)
+                                    $closeButton.attr('href', '#')
                                     .addClass('font_lightgray comment-ogp-close')
                                     .append('<i class="fa fa-times fa-2x"></i>')
-                                    .off('click').on('click', function () {
-                                        $closeButton.hide();
-                                        backup.html($ogp.clone().html());
-                                        $newOgp.empty();
-                                        console.log("del opg 2");
-                                        console.log(backup.get(0));
+                                    .on('click', function (e) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        $closeButton.remove();
+                                        $newOgp.remove();
                                     });
-                                    console.log("success ogp");
                                 },
 
                                 // On failure retreiving the ogp data
