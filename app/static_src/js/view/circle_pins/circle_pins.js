@@ -151,51 +151,41 @@ function editMenu(evt) {
         });
     }
 }
-function firstPin(target) {
-    setTimeout((function() {
-        document.getElementById('pinned').appendChild(target.parentElement);
-    }), 500, function(){console.log("pinned")});
-    // $.when(
-        
-    // ).then(function() {
-    //         toggleDragger(target)
-    //     }
-    // );
-}
-function firstUnpin(target) {
-    setTimeout((function() {
-        document.getElementById('unpinned').appendChild(target.parentElement);
-    }), 500, function(){console.log("unpinned")});
-    // $.when(
-        
-    // ).then(function() {
-    //         toggleDragger(target)
-    //     }
-    // );
-}
-function toggleDragger(target) {
+function Pin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
-}
-function pinEvent() {
-    this.classList.toggle('fa-disabled');
-
-    var self = this;
-    if(this.classList.contains('fa-disabled')) {
-        // console.log("unpinning");
-        $.when(firstUnpin(self)).then(toggleDragger(self));
-        // firstUnpin(self).then($(self).on('click', pinEvent));
-        var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
-        document.getElementById('dashboard-unpinned').appendChild(moveElement);
-    } else {
-        // console.log("pinning");
-        $.when(firstPin(self)).then(toggleDragger(self));
-        // firstPin(self).then($(self).on('click', pinEvent));
-        var moveElement = $('#dashboard-unpinned').find('[circle_id='+this.parentElement.id+']').get(0);
-        document.getElementById('dashboard-pinned').appendChild(moveElement);
-    }
+    var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
+    document.getElementById('dashboard-pinned').appendChild(moveElement);
     updateOrder();
     updateDisplayCount();
+}
+function Unpin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
+    document.getElementById('dashboard-unpinned').appendChild(moveElement);
+    updateOrder();
+    updateDisplayCount();
+}
+function pinEvent() {
+    var self = this;
+    self.classList.toggle('fa-disabled');
+    
+    var parent = self.parentElement;
+    if(self.classList.contains('fa-disabled')) {
+        $(this).delay(500).queue(function() {
+            $(parent).appendTo($("#unpinned"));
+            Unpin(self)
+            $(this).dequeue();
+
+        });
+    } else {
+        $(this).delay(500).queue(function() {
+            $(parent).appendTo($("#pinned"));
+            Pin(self)
+            $(this).dequeue();
+        });
+    }
 };
 function bindPinEvent(target) {
     $(target).one('click', pinEvent);
