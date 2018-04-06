@@ -151,23 +151,48 @@ function editMenu(evt) {
         });
     }
 }
-function pinEvent(evt) {
-    evt = evt || window.event;
-    this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
-    this.classList.toggle('fa-disabled');
-    var self = this;
-    if(this.classList.contains('fa-disabled')) {
-        setTimeout(function(){ document.getElementById('unpinned').appendChild(self.parentElement); }, 500);
-        var moveElement = $('#dashboard-pinned').find('[circle_id='+self.parentElement.id+']').get(0);
-        document.getElementById('dashboard-unpinned').appendChild(moveElement);
-    } else {
-        setTimeout(function(){ document.getElementById('pinned').appendChild(self.parentElement); }, 500);
-        var moveElement = $('#dashboard-unpinned').find('[circle_id='+self.parentElement.id+']').get(0);
-        document.getElementById('dashboard-pinned').appendChild(moveElement);
-    }      
+function pin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
+    document.getElementById('dashboard-pinned').appendChild(moveElement);
     updateOrder();
     updateDisplayCount();
+}
+function unpin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
+    document.getElementById('dashboard-unpinned').appendChild(moveElement);
+    updateOrder();
+    updateDisplayCount();
+}
+function pinEvent() {
+    var self = this;
+    self.classList.toggle('fa-disabled');
+    
+    var parent = self.parentElement;
+    if(self.classList.contains('fa-disabled')) {
+        $(this).delay(500).queue(function() {
+            $(parent).appendTo($("#unpinned"));
+            unpin(self)
+            $(this).dequeue();
+
+        });
+    } else {
+        $(this).delay(500).queue(function() {
+            $(parent).appendTo($("#pinned"));
+            pin(self)
+            $(this).dequeue();
+        });
+    }
 };
+function bindPinEvent(target) {
+    $(target).one('click', pinEvent);
+}
+function bindEditMenu(target) {
+    $(target).on('click', editMenu);
+}
 jQuery.fn.insertAt = function(index, element) {
   var lastIndex = this.children().length;
   if (index < 0) {
@@ -178,6 +203,15 @@ jQuery.fn.insertAt = function(index, element) {
     this.children().eq(index).before(this.children().last());
   }
   return this;
+}
+function setEvents() {
+    var circles = document.querySelectorAll('.pin-circle-list-item');
+    if(circles){   
+        for(var i = 0; i < circles.length; i++){
+            bindPinEvent($(circles[i]).find('.fa-thumb-tack'));
+            bindEditMenu($(circles[i]).find('.fa-cog'));
+        } 
+    }
 }
 function initialize() {
     //Reorder
@@ -334,19 +368,13 @@ function initialize() {
         var dashboard = $(".js-dashboard-circle-list-body > ul").find('li');        
         updateDisplayCount();
     }
-    var circles = document.querySelectorAll('.pin-circle-list-item');
-    if(circles){   
-        for(var i = 0; i < circles.length; i++){
-            circles[i].querySelector(".fa-thumb-tack").onclick = pinEvent;
-            circles[i].querySelector(".fa-cog").onclick = editMenu;
-        } 
-    }
 }
 
 window.addEventListener('load', function() { 
     resizeLabels();
     resizeBoundary();
     initialize();
+    setEvents();
 }, false);
 
 window.addEventListener('resize', function() { 
