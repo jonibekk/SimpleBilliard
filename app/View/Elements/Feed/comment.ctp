@@ -43,7 +43,7 @@
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div class="dropdown dropdown-comment pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down comment-arrow"></i>
+                            <i class="fa fa-chevron-down fa-lg comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
