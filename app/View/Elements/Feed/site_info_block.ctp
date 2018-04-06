@@ -30,10 +30,10 @@ if (isset($site_info['type']) && (
 ?>
 <?php if (isset($site_info)): ?>
     <?php if (isset($site_info['is_editing']) && $site_info['is_editing'] === true) : ?>
-        <a href="#" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></a>
+        <div id="CommentOgpClose_<?= $comment_id ?>" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></div>
     <?php endif ?>
     <div class="col pt_10px js-ogp-box"
-    <?php if ($isEditing): ?>
+    <?php if ($isEditing && !empty($comment_id)): ?>
         id="CommentOgpEditBox_<?= $comment_id ?>"
     <?php elseif (!empty($comment_id)): ?>
         id="CommentOgpBox_<?= $comment_id ?>"

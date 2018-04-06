@@ -49,6 +49,7 @@ $this->Form->create('Comment', [
     ])
     ?>
 </div>
+<div id="CommentOgpBackup_<?php echo $comment['id'];?>" style="display: none;"></div>
 <?php if ($comment['site_info']): ?>
     <?php $site_info = json_decode($comment['site_info'], true); $site_info['is_editing'] = true; ?>
     <?= $this->element('Feed/site_info_block', [

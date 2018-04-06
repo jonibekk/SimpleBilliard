@@ -128,7 +128,7 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-
+            <div id="CommentOgpBackup_<?php echo $comment['id'];?>" style="display: none;"></div>
             <?php if ($comment['site_info']): ?>
                 <?php $site_info = json_decode($comment['site_info'], true) ?>
                 <?= $this->element('Feed/site_info_block', [
