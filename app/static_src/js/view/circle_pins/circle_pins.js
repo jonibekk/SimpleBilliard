@@ -151,7 +151,7 @@ function editMenu(evt) {
         });
     }
 }
-function Pin(target) {
+function pin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
     var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
@@ -159,7 +159,7 @@ function Pin(target) {
     updateOrder();
     updateDisplayCount();
 }
-function Unpin(target) {
+function unpin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
     var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
@@ -175,14 +175,14 @@ function pinEvent() {
     if(self.classList.contains('fa-disabled')) {
         $(this).delay(500).queue(function() {
             $(parent).appendTo($("#unpinned"));
-            Unpin(self)
+            unpin(self)
             $(this).dequeue();
 
         });
     } else {
         $(this).delay(500).queue(function() {
             $(parent).appendTo($("#pinned"));
-            Pin(self)
+            pin(self)
             $(this).dequeue();
         });
     }
