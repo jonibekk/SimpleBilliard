@@ -174,7 +174,7 @@ class Group extends AppModel
         }
         $options = [
             'conditions' => [
-                'Group.name LIKE' => '%' . $keyword .'%',
+                'Group.name LIKE' => $keyword . "%",
             ],
             'limit'      => $limit,
         ];

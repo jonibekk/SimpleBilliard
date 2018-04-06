@@ -17,7 +17,6 @@ gulp.task('jsbuild', done => {
         'js_app',
         'js_vendor',
         'js_payment',
-        'js_circle',
         'js_homepage'], done)
 });
 
@@ -35,10 +34,8 @@ gulp.task('js', done => {
       'js_evaluator_settings',
       'js_app',
       'js_vendor',
-      'js_prerender_exif',
       'js_prerender',
       'js_payment',
-      'js_circle',
       'js_homepage',
       'angular_app',
       'angular_vendor',
@@ -115,16 +112,6 @@ gulp.task('js_payment', done => {
     );
 });
 
-// js circle
-gulp.task('js_circle', done => {
-    return runSequence(
-        'js_circle:concat',
-        'js_circle:uglify',
-        'js_circle:clean',
-        done
-    );
-});
-
 // js homepage
 gulp.task('js_homepage', done => {
   return runSequence(
@@ -154,16 +141,6 @@ gulp.task('js_prerender', done => {
     'js_prerender:concat',
     'js_prerender:uglify',
     'js_prerender:clean',
-    done
-  )
-})
-
-// js prerender exif
-gulp.task('js_prerender_exif', done => {
-  return runSequence(
-    'js_prerender_exif:concat',
-    'js_prerender_exif:uglify',
-    'js_prerender_exif:clean',
     done
   )
 })

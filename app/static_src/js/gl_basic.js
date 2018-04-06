@@ -1,24 +1,20 @@
 $(document).ready(function () {
 
   //アップロード画像選択時にトリムして表示
-  $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
+  $('.fileinput').fileinput().on('change.bs.fileinput', function () {
     $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
   });
   //アップロード画像選択時にトリムして表示
-  $('.fileinput_small').fileinput().on('change.bs.fileinput', function (e) {
+  $('.fileinput_small').fileinput().on('change.bs.fileinput', function () {
     $(this).children('.nailthumb-container').nailthumb({width: 96, height: 96, fitDirection: 'center center'});
   });
   //アップロード画像選択時にトリムして表示
-  $('.fileinput_very_small').fileinput().on('change.bs.fileinput', function (e) {
+  $('.fileinput_very_small').fileinput().on('change.bs.fileinput', function () {
     $(this).children('.nailthumb-container').nailthumb({width: 34, height: 34, fitDirection: 'center center'});
   });
   //アップロード画像選択時にトリムして表示
-  $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function (e) {
+  $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
     $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
-  });
-
-  $('.fileinput-exists,.fileinput-new').fileinput().on('change.bs.fileinput', function (e) {
-    exifRotate(this);
   });
 
 
