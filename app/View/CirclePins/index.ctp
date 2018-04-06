@@ -3,7 +3,7 @@
     <div id="circle-pin-heading" class="panel-heading">
         <?= __("Edit Circles") ?>
         <div class="circle-pin-heading-description">
-            <?= __('You can pin a circle to the top as a sortable list. "All Team" will automatically be your top pin.') ?>
+            <?= __('You can pin a circle to the top as a sortable list. *Entire Team* circle will automatically be your top pin.') ?>
         </div>
     </div>
     <div id="pin-circle-panel" class="panel-body pin-circle-view-panel-body">
