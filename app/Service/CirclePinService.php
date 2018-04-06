@@ -51,6 +51,8 @@ class CirclePinService extends AppService
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
+        $db = $CirclePin->getDataSource();
+
         $options = [
             'user_id' => $userId,
             'team_id' => $teamId,
@@ -68,16 +70,15 @@ class CirclePinService extends AppService
 
             if(strpos($orders, $find) !== false){
                 $orders = str_replace($find, ',', $orders);
-                $row['circle_orders'] = substr($orders, 1, -1);
+                $row['circle_orders'] = $db->value(substr($orders, 1, -1), 'default');
                 $options['id'] = $row['id'];
 
-                if(!$CirclePin->save($row, $options)) {
-                    throw new Exception("Error Processing Delete Request", 1);             
+                if(!$CirclePin->updateAll($row, $options)) {
+                    throw new Exception($row['circle_orders'], 1);             
                 }
             }   
         } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            GoalousLog::error("deleteCircleId",[$e->getMessage(),$e->getTraceAsString()]);
             return false;
         }
 
@@ -108,7 +109,7 @@ class CirclePinService extends AppService
             'CirclePin' => [
                 'user_id' => $userId,
                 'team_id' => $teamId,
-                'circle_orders' => $db->value($pinOrders, 'string'),
+                'circle_orders' => $db->value($pinOrders, 'default'),
                 'del_flg' => false,
             ],
         ];
@@ -121,15 +122,14 @@ class CirclePinService extends AppService
             } else {
                 $row['circle_orders'] = $data['CirclePin']['circle_orders'];
                 $options['id'] = $row['id'];
-                if(!$CirclePin->save($row, $options)) {
+                if(!$CirclePin->updateAll($row, $options)) {
                     throw new Exception("Error Processing Update Request", 1);             
                 }
             }
         try{
             
         } catch (RuntimeException $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            GoalousLog::error("setCircleOrders",[$e->getMessage(),$e->getTraceAsString()]);
             return false;
         }
 

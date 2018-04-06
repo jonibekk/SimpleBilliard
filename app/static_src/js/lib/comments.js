@@ -21,7 +21,7 @@ $(function () {
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
     });
-    $(".comment-post-form").on("focus", function() {
+    $(".comment-post-form,.comment-form").on("focus", function() {
         $("#jsGoTop").hide();
     }).on("blur", function() {
         $("#jsGoTop").show();

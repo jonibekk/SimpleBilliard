@@ -5,7 +5,7 @@ function resizeLabels() {
     if(target.length) {
         var width = $(target).width();
         var labels = $(".circle-name-label");
-        var newWidth = (width - 180) + "px";
+        var newWidth = (width - 190) + "px";
         for (var i = 0; i < labels.length; i++) {
             $(labels[i]).css("width", newWidth);
         }
@@ -151,23 +151,68 @@ function editMenu(evt) {
         });
     }
 }
-function pinEvent(evt) {
-    evt = evt || window.event;
-    this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
-    this.classList.toggle('fa-disabled');
-
-    if(this.classList.contains('fa-disabled')) {
-        document.getElementById('unpinned').appendChild(this.parentElement);
-        var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
-        document.getElementById('dashboard-unpinned').appendChild(moveElement);
-    } else {
-        document.getElementById('pinned').appendChild(this.parentElement);
-        var moveElement = $('#dashboard-unpinned').find('[circle_id='+this.parentElement.id+']').get(0);
-        document.getElementById('dashboard-pinned').appendChild(moveElement);
-    }      
+function pin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
+    document.getElementById('dashboard-pinned').appendChild(moveElement);
     updateOrder();
     updateDisplayCount();
+}
+function unpin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
+    document.getElementById('dashboard-unpinned').appendChild(moveElement);
+    updateOrder();
+    updateDisplayCount();
+}
+function pinEvent() {
+    var self = this;
+    self.classList.toggle('fa-disabled');
+    
+    var parent = self.parentElement;
+    if(self.classList.contains('fa-disabled')) {
+        $(this).delay(500).queue(function() {
+            $(parent).appendTo($("#unpinned"));
+            unpin(self)
+            $(this).dequeue();
+
+        });
+    } else {
+        $(this).delay(500).queue(function() {
+            $(parent).appendTo($("#pinned"));
+            pin(self)
+            $(this).dequeue();
+        });
+    }
 };
+function bindPinEvent(target) {
+    $(target).one('click', pinEvent);
+}
+function bindEditMenu(target) {
+    $(target).on('click', editMenu);
+}
+jQuery.fn.insertAt = function(index, element) {
+  var lastIndex = this.children().length;
+  if (index < 0) {
+    index = Math.max(0, lastIndex + 1 + index);
+  }
+  this.append(element);
+  if (index < lastIndex) {
+    this.children().eq(index).before(this.children().last());
+  }
+  return this;
+}
+function setEvents() {
+    var circles = document.querySelectorAll('.pin-circle-list-item');
+    if(circles){   
+        for(var i = 0; i < circles.length; i++){
+            bindPinEvent($(circles[i]).find('.fa-thumb-tack'));
+            bindEditMenu($(circles[i]).find('.fa-cog'));
+        } 
+    }
+}
 function initialize() {
     //Reorder
     if(document.getElementById('pinned') && document.getElementById('unpinned')) {
@@ -226,7 +271,7 @@ function initialize() {
 
             // Called by any change to the list (add / update / remove)
             onSort: function (/**Event*/evt) {
-                $($('#dashboard-pinned').find('li').eq(evt.oldIndex)).insertIndex(evt.newIndex);
+                $('#dashboard-pinned').insertAt(evt.newIndex, $($('#dashboard-pinned').find('li').eq(evt.oldIndex)));
                 updateOrder();
                 updateDisplayCount();
             },
@@ -323,32 +368,13 @@ function initialize() {
         var dashboard = $(".js-dashboard-circle-list-body > ul").find('li');        
         updateDisplayCount();
     }
-    var circles = document.querySelectorAll('.pin-circle-list-item');
-    if(circles){   
-        for(var i = 0; i < circles.length; i++){
-            circles[i].querySelector(".fa-thumb-tack").onclick = pinEvent;
-            circles[i].querySelector(".fa-cog").onclick = editMenu;
-        } 
-    }
 }
-$.fn.insertIndex = function (i) {
-    // The element we want to swap with
-    var $target = this.siblings().eq(i);
-
-    // Determine the direction of the appended index so we know what side to place it on
-    if (this.index() > i) {
-        $target.before(this);
-    } else {
-        $target.after(this);
-    }
-
-    return this;
-};
 
 window.addEventListener('load', function() { 
     resizeLabels();
     resizeBoundary();
     initialize();
+    setEvents();
 }, false);
 
 window.addEventListener('resize', function() { 
