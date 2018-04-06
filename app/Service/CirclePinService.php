@@ -108,7 +108,7 @@ class CirclePinService extends AppService
             'CirclePin' => [
                 'user_id' => $userId,
                 'team_id' => $teamId,
-                'circle_orders' => $db->value($pinOrders, 'string'),
+                'circle_orders' => $db->value($pinOrders, 'default'),
                 'del_flg' => false,
             ],
         ];
@@ -121,7 +121,7 @@ class CirclePinService extends AppService
             } else {
                 $row['circle_orders'] = $data['CirclePin']['circle_orders'];
                 $options['id'] = $row['id'];
-                if(!$CirclePin->save($row, $options)) {
+                if(!$CirclePin->updateAll($row, $options)) {
                     throw new Exception("Error Processing Update Request", 1);             
                 }
             }
