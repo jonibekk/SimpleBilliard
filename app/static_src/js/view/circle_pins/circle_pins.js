@@ -154,16 +154,24 @@ function editMenu(evt) {
 function pin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
-    var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
-    document.getElementById('dashboard-pinned').appendChild(moveElement);
+    if($('#dashboard-unpinned').length){
+        var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
+        if(moveElement){
+            document.getElementById('dashboard-pinned').appendChild(moveElement);
+        }
+    }
     updateOrder();
     updateDisplayCount();
 }
 function unpin(target) {
     target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
     $(target).one('click', pinEvent);
-    var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
-    document.getElementById('dashboard-unpinned').appendChild(moveElement);
+    if($('#dashboard-unpinned').length){
+        var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
+        if(moveElement){
+            document.getElementById('dashboard-unpinned').appendChild(moveElement);
+        }
+    }
     updateOrder();
     updateDisplayCount();
 }
@@ -175,12 +183,12 @@ function pinEvent() {
     if(self.classList.contains('fa-disabled')) {
         window.setTimeout(function() {
             $(parent).appendTo($("#unpinned"));
-            unpin(self)
+            unpin(self);
         }, 500);
     } else {
         window.setTimeout(function() {
             $(parent).appendTo($("#pinned"));
-            pin(self)
+            pin(self);
         }, 500);
     }
 };
