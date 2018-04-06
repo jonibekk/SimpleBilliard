@@ -183,15 +183,12 @@ function pinEvent() {
     if(self.classList.contains('fa-disabled')) {
         window.setTimeout(function() {
             $(parent).appendTo($("#unpinned"));
-            unpin(self)
-            $(this).dequeue();
-
+            unpin(self);
         }, 500);
     } else {
         window.setTimeout(function() {
             $(parent).appendTo($("#pinned"));
-            pin(self)
-            $(this).dequeue();
+            pin(self);
         }, 500);
     }
 };
