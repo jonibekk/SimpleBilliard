@@ -79,7 +79,6 @@ function updateOrder() {
       data: sendData,
       contentType:"application/x-www-form-urlencoded; charset=utf-8",
       success: function(data){
-        console.log("Update order success");
       },
       error: function(data){
         new Noty({
