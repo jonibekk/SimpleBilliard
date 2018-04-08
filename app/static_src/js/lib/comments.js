@@ -42,10 +42,10 @@ var patterns = {
     tld: '(\.[a-zA-Z0-9]{2,})',
     params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
 }
+var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'g');
 function getValidURL(input){
-    var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'g');
     var result = regex.exec(input);
-    console.log(result);
+    regex.lasIndex = 0;
     if(result){
         return result[0];
     } else {
@@ -853,9 +853,12 @@ function evTargetToggleClick() {
                             if ($('#CommentOgpEditBox_' + comment_id).html() !== "") {
                                 return false;
                             }
-                            var key = (e.keyCode ? e.keyCode : e.which);
-                            console.log("keyup:" + key);
-                            if(key == 32 || key == 13) {
+                            var input = this.value;
+                            var position = $('#CommentEditFormBody_' + comment_id).get(0).selectionStart - 1;
+                            // var key = e.keyCode || e.which;
+                            var key = input.charCodeAt(position);
+                            console.log("keyup:" + key + " at position:" + position);
+                            if(key == 32 || key == 10) {
                                 var url = getValidURL($('#CommentEditFormBody_' + comment_id).val());
                                 if(url) {
                                     ogpComments(ogp, url);
