@@ -359,8 +359,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <?= __("Like!") ?></a>
                         <?php if (!$without_add_comment): ?>
                             <a href="#" class="feeds-post-comment-btn trigger-click"
-                               target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
-                               after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                               target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                             >
                                 <i class="fa-comments-o fa"></i>
                                 <?= __("Comments") ?>

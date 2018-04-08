@@ -42,9 +42,10 @@ var patterns = {
     tld: '(\.[a-zA-Z0-9]{2,})',
     params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
 }
-var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'gi');
 function getValidURL(input){
+    var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'g');
     var result = regex.exec(input);
+    console.log(result);
     if(result){
         return result[0];
     } else {
@@ -66,7 +67,7 @@ function toggleCommentForm() {
         return;
     }
 
-    evTargetCancelAnyEdit(this);
+    evTargetCancelAnyEdit();
 
     // reset textarea
     $txtArea.val("");
@@ -418,7 +419,6 @@ function evCommentLatestView(options) {
     $.ajax({
         type: 'GET',
         url: get_url,
-        async: true,
         dataType: 'json',
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
@@ -703,7 +703,6 @@ function evNotifyPost(options) {
     $.ajax({
         type: 'GET',
         url: url,
-        async: true,
         dataType: 'json',
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
@@ -771,7 +770,6 @@ function evCommentOldView() {
     $.ajax({
         type: 'GET',
         url: get_url,
-        async: true,
         dataType: 'json',
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
@@ -818,72 +816,22 @@ function evCommentOldView() {
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    attrUndefinedCheck(this, 'opend-text');
+    attrUndefinedCheck(this, 'closed-text');
 
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
     var comment_id = target_id.split('_')[1];
-    if ($obj.attr("hidden-target-id")) {
-        var $commentBox = $('#' + $obj.attr("hidden-target-id"));
-        $commentBox.toggle();
-        // Hide OGP box
-        var $ogpBox = $('#CommentOgpBox_' + comment_id);
-        if ($ogpBox.length > 0) {
-            var backup = $('#CommentOgpBackup_' + comment_id);
-            backup.empty();
-            backup.html($ogpBox.clone().html().replace("CommentOgpBox_","CommentOgpEditBox_"));
-            $ogpBox.toggle();
-            console.log(backup.get(0));
-            console.log("Got backup");
-        }
-        var $btnClose = $('#CommentOgpClose_' + comment_id);//$editForm.find('.js-ogp-close');
-        $btnClose.off('click').on('click', function () {
-            backup.html($ogp.clone().html());
-            $ogp.empty();
-            $btnClose.hide();
-            var $submitButton = $('#CommentEditSubmit_' + comment_id);
-            if ($submitButton.length > 0) {
-                $submitButton.removeAttr("disabled");
-            }
-            console.log("del opg 0");
-            console.log(backup.get(0));
-        });
-        console.log("set del button");
+
+    if($obj.text() === $obj.attr("closed-text")){
+        evTargetCancelAnyEdit();
     }
 
-    //開いている時と閉じてる時のテキストの指定があった場合は置き換える
-    if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
-        //開いてるとき
-        if ($("#" + target_id).is(':visible')) {
-            //閉じてる表示
-            $("#jsGoTop").show();
-            $obj.text($obj.attr("closed-text"));
-        }
-        //閉じてるとき
-        else {
-            //開いてる表示
-            $obj.text($obj.attr("opend-text"));
-            $("#jsGoTop").hide();
-            $('#CommentOgpClose_' + comment_id).show();
-            if(!$('#CommentOgpEditBox_' + comment_id).length){
-                var $ogpEdit = $(document.createElement("div"));
-                $ogpEdit.prop('id','CommentOgpEditBox_' + comment_id);
-                $ogpEdit.prop('class','col pt_10px js-ogp-box');
-                $ogpEdit.html(backup.clone().html());
-                console.log($ogpEdit.get(0));
-            } else {
-                $('#CommentOgpEditBox_' + comment_id).empty();
-                $('#CommentOgpEditBox_' + comment_id).html(backup.clone().html());
-                console.log($('#CommentOgpEditBox_' + comment_id).get(0));
-            }
-            
-            evTargetCancelAnyEdit();
-        }
-    }
-    if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
+    if (0 == $("#" + target_id).length) {
         $.ajax({
             url: $obj.attr("ajax-url"),
-            async: false,
             success: function (data) {
                 //noinspection JSUnresolvedVariable
                 if (data.error) {
@@ -891,33 +839,23 @@ function evTargetToggleClick() {
                     alert(data.msg);
                 }
                 else {
+
                     var $editForm = $(data.html);
-                    var $ogp = $editForm.find('.js-ogp-box');
-                    var backup = $('#CommentOgpBackup_' + comment_id);
-                    // backup.empty();
-                    if ($ogp.length > 0) {
-                        var $btnClose = $('#CommentOgpClose_' + comment_id);//$editForm.find('.js-ogp-close');
-                        $btnClose.off('click').on('click', function () {
-                            backup.html($ogp.clone().html());
-                            $ogp.empty();
-                            $btnClose.hide();
-                            var $submitButton = $('#CommentEditSubmit_' + comment_id);
-                            if ($submitButton.length > 0) {
-                                $submitButton.removeAttr("disabled");
-                            }
-                            console.log("del opg 1");
-                            console.log(backup.get(0));
-                        });
-                    }
+                    var $ogp = $($editForm.find('.js-ogp-box'));
+                    $('#CommentOgpBackup_' + comment_id).html($ogp.html());
+                    $ogp.prop('id','CommentOgpEditBox_' + comment_id);
                     $("#" + $obj.attr("hidden-target-id")).after($editForm);
 
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
-                        $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
-                            if ($('#CommentOgpEditBox_' + comment_id).not(':empty')) {
+                        console.log("ogp");
+                        $('#CommentEditFormBody_' + comment_id).off('keyup').on('keyup', function (e) {
+                            if ($('#CommentOgpEditBox_' + comment_id).html() !== "") {
                                 return false;
                             }
-                            if(e.keyCode == 32 || e.keyCode == 13) {
+                            var key = (e.keyCode ? e.keyCode : e.which);
+                            console.log("keyup:" + key);
+                            if(key == 32 || key == 13) {
                                 var url = getValidURL($('#CommentEditFormBody_' + comment_id).val());
                                 if(url) {
                                     ogpComments(ogp, url);
@@ -938,22 +876,9 @@ function evTargetToggleClick() {
                                 success: function (data) {
                                     // Display the new acquired OGP on the edit form
                                     var $newOgp = $(data.html);
-                                    var backup = $('CommentOgpBackup_' + comment_id);
                                     $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
                                     $('#CommentEditFormBody_' + comment_id).after($newOgp);
-                                    var $closeButton = $('<div></div>');
-                                    $newOgp.before($closeButton);
-                                    $closeButton.attr('href', '#').prop('id','CommentOgpClose_' + comment_id)
-                                    .addClass('font_lightgray comment-ogp-close')
-                                    .append('<i class="fa fa-times fa-2x"></i>')
-                                    .off('click').on('click', function () {
-                                        $closeButton.hide();
-                                        backup.html($ogp.clone().html());
-                                        $newOgp.empty();
-                                        console.log("del opg 2");
-                                        console.log(backup.get(0));
-                                    });
-                                    console.log("success ogp");
+                                    $('#CommentOgpClose_' + comment_id).show();
                                 },
 
                                 // On failure retreiving the ogp data
@@ -983,8 +908,55 @@ function evTargetToggleClick() {
                     });
                 }
             }
+        }).then(function(){
+            $obj.text($obj.attr("opend-text"));
+            $("#jsGoTop").hide();
+            $('#CommentTextBody_' + comment_id).hide();
+            $('#CommentEdit_' + comment_id).show();
+            $('#CommentOgpBox_' + comment_id).hide();
+            $('#CommentEditForm_' + comment_id).show();
+            $('#CommentOgpBackup_' + comment_id).data('text', $('#CommentEditFormBody_' + comment_id).val());
+            var $ogpBox = $('#CommentOgpBox_' + comment_id);
+            if ($ogpBox.length) {
+                $ogpBox.hide();
+            }
+            var $btnClose = $('#CommentOgpClose_' + comment_id);
+            $btnClose.off('click').on('click', function () {
+                var $ogp = $('#CommentOgpEditBox_' + comment_id);
+                $ogp.empty();
+                $ogp.hide();
+                $btnClose.hide();
+                var $submitButton = $('#CommentEditSubmit_' + comment_id);
+                if ($submitButton.length) {
+                    $submitButton.removeAttr("disabled");
+                }
+            });
+            $btnClose.show();
         });
+    } else {
+        if ($('#CommentEditForm_' + comment_id).is(':visible')) {
+            $("#jsGoTop").show();
+            $obj.text($obj.attr("closed-text"));
+            $('#CommentOgpClose_' + comment_id).hide();
+            $('#CommentOgpBox_' + comment_id).show();
+            $('#CommentTextBody_' + comment_id).show();
+            $('#CommentOgpEditBox_' + comment_id).html($('#CommentOgpBackup_' + comment_id).html());
+            $('#CommentEditFormBody_' + comment_id).val($('#CommentOgpBackup_' + comment_id).data('text'));
+            $('#CommentOgpEditBox_' + comment_id).hide();
+        }
+        else {
+            $obj.text($obj.attr("opend-text"));
+            $("#jsGoTop").hide();
+            $('#CommentOgpClose_' + comment_id).show();
+            $('#CommentOgpBox_' + comment_id).hide();
+            $('#CommentTextBody_' + comment_id).hide();
+            $('#CommentOgpEditBox_' + comment_id).html($('#CommentOgpBackup_' + comment_id).html());
+            $('#CommentEditFormBody_' + comment_id).val($('#CommentOgpBackup_' + comment_id).data('text'));
+            $('#CommentOgpEditBox_' + comment_id).show();
+            evTargetCancelAnyEdit();
+        }
     }
+    
 
     $("form#" + target_id).bootstrapValidator();
     $("#" + target_id).find('.custom-radio-check').customRadioCheck();
@@ -995,159 +967,49 @@ function evTargetToggleClick() {
     $("#" + click_target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).focus();
+
+    $('.dropdown-comment.open').removeClass('open')
+
     return false;
 }
 
 function evTargetToggleClickByElement(elem) {
     attrUndefinedCheck(elem, 'target-id');
     attrUndefinedCheck(elem, 'click-target-id');
+    attrUndefinedCheck(elem, 'opend-text');
+    attrUndefinedCheck(elem, 'closed-text');
+    attrUndefinedCheck(elem, 'hidden-target-id');
 
     var $obj = $(elem);
     var target_id = $obj.attr("target-id");
     var click_target_id = $obj.attr("click-target-id");
     var comment_id = target_id.split('_')[1];
-    if ($obj.attr("hidden-target-id")) {
-        var $commentBox = $('#' + $obj.attr("hidden-target-id"));
-        $commentBox.toggle();
-        // Hide OGP box
-        var $ogpBox = $('#CommentOgpBox_' + comment_id);
-        if ($ogpBox.length > 0) {
-            $ogpBox.toggle();
-        }
+    var $commentBox = $('#' + $obj.attr("hidden-target-id"));
+    $commentBox.toggle();
+    // Hide OGP box
+    var $ogpBox = $('#CommentOgpBox_' + comment_id);
+    if ($ogpBox.length > 0) {
+        $ogpBox.toggle();
     }
 
-    //開いている時と閉じてる時のテキストの指定があった場合は置き換える
-    if ($obj.attr("opend-text") != undefined && $obj.attr("closed-text") != undefined) {
-        //開いてるとき
-        if ($("#" + target_id).is(':visible')) {
-            //閉じてる表示
-            $obj.text($obj.attr("closed-text"));
-        }
-        //閉じてるとき
-        else {
-            //開いてる表示
-            $obj.text($obj.attr("opend-text"));
-        }
+    if ($("#" + target_id).is(':visible')) {
+        $obj.text($obj.attr("closed-text"));
+        $('#CommentOgpClose_' + comment_id).hide();//.find('.js-ogp-close').hide();
+        $('#CommentOgpBox_' + comment_id).show();
+        $('#CommentTextBody_' + comment_id).show();
     }
-    if (0 == $("#" + target_id).length && $obj.attr("ajax-url") != undefined) {
-        $.ajax({
-            url: $obj.attr("ajax-url"),
-            success: function (data) {
-                //noinspection JSUnresolvedVariable
-                if (data.error) {
-                    //noinspection JSUnresolvedVariable
-                    alert(data.msg);
-                }
-                else {
-                    var $editForm = $(data.html);
-                    var $ogp = $editForm.find('.js-ogp-box');
-                    if ($ogp.length > 0) {
-                        var $btnClose = $editForm.find('.js-ogp-close');
-                        $btnClose.on('click', function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            $ogp.remove();
-                            $btnClose.remove();
-                            var $submitButton = $('#CommentEditSubmit_' + comment_id);
-                            if ($submitButton.length > 0) {
-                                $submitButton.removeAttr("disabled");
-                            }
-                        });
-                    }
-                    $("#" + $obj.attr("hidden-target-id")).after($editForm);
-
-                    // Load OGP for edit field
-                    require(['ogp'], function (ogp) {
-                        $('#CommentEditFormBody_' + comment_id).on('keyup', function (e) {
-                            if ($('#CommentOgpEditBox_' + comment_id).length) {
-                                return false;
-                            }
-                            if(e.keyCode == 32 || e.keyCode == 13) {
-                                var url = getValidURL($('#CommentEditFormBody_' + comment_id).val());
-                                if(url) {
-                                    ogpComments(ogp, url);
-                                }
-                            }
-                        });
-                        function ogpComments(ogp, text) {
-                            var options = {
-                                // Text containing the url
-                                text: text,
-
-                                // Checks if necessary to obtain ogp
-                                readyLoading: function () {
-                                    return true;
-                                },
-
-                                // On success retreiving the ogp data
-                                success: function (data) {
-                                    // Display the new acquired OGP on the edit form
-                                    var $newOgp = $(data.html);
-                                    $newOgp.attr('id', 'CommentOgpEditBox_' + comment_id);
-                                    $('#CommentEditFormBody_' + comment_id).after($newOgp);
-                                    var $closeButton = $('<a>');
-                                    $newOgp.before($closeButton);
-                                    $closeButton.attr('href', '#')
-                                    .addClass('font_lightgray comment-ogp-close')
-                                    .append('<i class="fa fa-times fa-2x"></i>')
-                                    .on('click', function (e) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        $closeButton.remove();
-                                        $newOgp.remove();
-                                    });
-                                },
-
-                                // On failure retreiving the ogp data
-                                error: function () {
-                                    // remove loading icon
-                                    $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
-                                },
-
-                                // Start retreiving the ogp data
-                                loadingStart: function () {
-                                    // show loading icon
-                                    $('<i class="fa fa-refresh fa-spin"></i>')
-                                        .attr('id', 'CommentSiteInfoLoadingIcon_' + comment_id)
-                                        .addClass('mr_8px lh_20px')
-                                        .insertBefore('#CommentEditSubmit_' + comment_id);
-                                },
-
-                                // Finish retreiving the ogp data
-                                loadingEnd: function () {
-                                    // remove loading icon
-                                    $('#CommentSiteInfoLoadingIcon_' + comment_id).remove();
-                                }
-                            };
-                            ogp.getOGPSiteInfo(options);
-                            return false;
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    $("form#" + target_id).bootstrapValidator();
-    $("#" + target_id).find('.custom-radio-check').customRadioCheck();
 
     //noinspection JSJQueryEfficiency
     $("#" + target_id).toggle();
-    //noinspection JSJQueryEfficiency
-    $("#" + click_target_id).trigger('click');
-    //noinspection JSJQueryEfficiency
-    $("#" + click_target_id).focus();
     return false;
 }
 
 function evTargetCancelAnyEdit() {
-    var openForm = $(".bv-form:visible");
+    var openForm = $(".comment-edit-form:visible");
     if(openForm.length == 1){
-        var target = openForm.find(".comment-edit-form");
-        var editId = target.prop("id").replace("CommentEditFormBody_","");
+        var editId = openForm.prop("id").replace("CommentEditFormBody_","");
         var targetLink = $("[target-id=CommentEditForm_" + editId +"]").get(0);
         evTargetToggleClickByElement(targetLink);
-        
     }
     var commentButton = $(".comment-btn:visible");
     if(commentButton.length === 1) {
