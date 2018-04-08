@@ -42,10 +42,10 @@ var patterns = {
     tld: '(\.[a-zA-Z0-9]{2,})',
     params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
 }
-var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'g');
+
 function getValidURL(input){
+    var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'g');
     var result = regex.exec(input);
-    regex.lasIndex = 0;
     if(result){
         return result[0];
     } else {
@@ -137,15 +137,25 @@ function toggleCommentForm() {
 
     // OGP preview and get procedure
     require(['ogp'], function (ogp) {
-        $('#CommentFormBody_' + post_id).on('keyup', function (e) {
-            if ($('#CommentSiteInfoUrl_' + post_id).val()) {
+        $('#CommentFormBody_' + post_id).off('keyup').on('keyup', function (e) {
+            if ($('#CommentOgpSiteInfo_' + post_id).html() !== '') {
                 return false;
             }
-            if(e.keyCode == 32 || e.keyCode == 13) {
-              var url = getValidURL($('#CommentFormBody_' + post_id).val());
-              if(url){
-                ogpComments(ogp, url);
-              }
+            var position = $('#CommentFormBody_' + post_id).get(0).selectionStart - 1;
+            var key = this.value.charCodeAt(position);
+            if(key == 32 || key == 10) {
+                var url = getValidURL($('#CommentFormBody_' + post_id).val());
+                if(url) {
+                    ogpComments(ogp, url);
+                }
+            }
+        });
+        $('#CommentFormBody_' + post_id).off('paste').on('paste', function (e) {
+            if($('#CommentOgpSiteInfo_' + post_id).html() === ''){
+                var url = getValidURL(e.originalEvent.clipboardData.getData('text'));
+                if(url) {
+                    ogpComments(ogp, url);
+                }
             }
         });
         function ogpComments(ogp, text) {
@@ -155,10 +165,6 @@ function toggleCommentForm() {
 
                 // Checks if necessary to obtain ogp
                 readyLoading: function () {
-                    // Returns if the ogp data is already obtained
-                    if ($('#CommentSiteInfoUrl_' + post_id).val()) {
-                        return false;
-                    }
                     return true;
                 },
 
@@ -177,7 +183,7 @@ function toggleCommentForm() {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 $siteInfoUrl.val('');
-                                $siteInfo.remove();
+                                $siteInfo.empty();
                             }))
                         // Make space for delete button
                         .find('.site-info').css({
@@ -259,6 +265,8 @@ function hideCommentForm(element) {
 
     // Enables drag and drop functionality to the comments section
     $(document).data('uploadFileForm').trigger('reset');
+
+    $txtArea.css('height', '19px');
 }
 
 /**
@@ -848,18 +856,22 @@ function evTargetToggleClick() {
 
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
-                        console.log("ogp");
                         $('#CommentEditFormBody_' + comment_id).off('keyup').on('keyup', function (e) {
-                            if ($('#CommentOgpEditBox_' + comment_id).html() !== "") {
+                            if ($('#CommentOgpEditBox_' + comment_id).html() !== '') {
                                 return false;
                             }
-                            var input = this.value;
                             var position = $('#CommentEditFormBody_' + comment_id).get(0).selectionStart - 1;
-                            // var key = e.keyCode || e.which;
-                            var key = input.charCodeAt(position);
-                            console.log("keyup:" + key + " at position:" + position);
+                            var key = this.value.charCodeAt(position);
                             if(key == 32 || key == 10) {
                                 var url = getValidURL($('#CommentEditFormBody_' + comment_id).val());
+                                if(url) {
+                                    ogpComments(ogp, url);
+                                }
+                            }
+                        });
+                        $('#CommentEditFormBody_' + comment_id).off('paste').on('paste', function (e) {
+                            if ($('#CommentOgpEditBox_' + comment_id).html() === '') {
+                                var url = getValidURL(e.originalEvent.clipboardData.getData('text'));
                                 if(url) {
                                     ogpComments(ogp, url);
                                 }
