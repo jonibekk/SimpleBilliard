@@ -1467,29 +1467,35 @@ class GlRedis extends AppModel
         $errorParameters = [];
 
         //validate parameters
-        if (empty ($type)) {
+        if (empty($type)) {
             $errorParameters[] = 'type empty';
         }
         if (empty ($teamId)) {
             $errorParameters[] = 'team_id empty';
         } elseif (!ctype_digit(strval($teamId))) {
             $errorParameters[] = 'team_id not int';
+        } elseif ($teamId <= 0) {
+            $errorParameters[] = 'team_id not positive';
         }
         if (empty ($myId)) {
             $errorParameters[] = 'my_id empty';
         } elseif (!ctype_digit(strval($myId))) {
             $errorParameters[] = 'my_id not int';
+        } elseif ($myId <= 0) {
+            $errorParameters[] = 'myId not positive';
         }
-        if (empty ($body)) {
+        if (empty($body)) {
             $errorParameters[] = 'body empty';
         }
-        if (empty ($url)) {
+        if (empty($url)) {
             $errorParameters[] = 'url empty';
         }
         if (empty ($date)) {
             $errorParameters[] = 'date empty';
         } elseif (!is_numeric($date)) {
             $errorParameters[] = 'date not numeric';
+        } elseif ($date <= 0) {
+            $errorParameters[] = 'date not positive';
         }
 
         return $errorParameters;
