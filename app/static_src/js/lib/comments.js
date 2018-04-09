@@ -968,7 +968,6 @@ function evTargetToggleClick() {
         else {
             $obj.text($obj.attr("opend-text"));
             $("#jsGoTop").hide();
-            // 
             $('#CommentOgpBox_' + comment_id).hide();
             $('#CommentTextBody_' + comment_id).hide();
             $('#CommentOgpEditBox_' + comment_id).html($('#CommentOgpBackup_' + comment_id).html());
