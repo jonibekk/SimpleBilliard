@@ -73,10 +73,13 @@ $(document).ready(function () {
                 formatSelection: select2Format,
                 minimumInputLength: 1,
                 query: function (query) {
+                    //Insert existing evaluator IDs
                     var evElement = $('.eval-list-item').find("input[type=hidden]");
                     $.each(evElement, function (index, value) {
                         excluded_users_list.push($(evElement[index]).val());
                     });
+                    //Insert evaluatee ID
+                    excluded_users_list.push($("input[name='evaluatee_user_id']").val());
                     if (query.term === undefined) {
                         return;
                     }
@@ -84,7 +87,7 @@ $(document).ready(function () {
                         term: query.term,
                         page_limit: 10,
                         _: (new Date()).getTime(),
-                        with_self: 0,
+                        with_self: 1,
                         excluded_users: excluded_users_list.filter(Number)
                     }).done(function (data) {
                         query.callback(data);
