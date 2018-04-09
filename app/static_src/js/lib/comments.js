@@ -857,7 +857,10 @@ function evTargetToggleClick() {
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
                         $('#CommentEditFormBody_' + comment_id).off('keyup').on('keyup', function (e) {
-                            if ($('#CommentOgpEditBox_' + comment_id).html() !== '') {
+                            if($('#CommentEditSubmit_' + comment_id).prop('disabled') && $('#CommentEditFormBody_' + comment_id).val() !== $('#CommentOgpBackup_' + comment_id).data('text')){
+                                $('#CommentEditSubmit_' + comment_id).prop('disabled', false);
+                            }
+                            if ($('#CommentOgpEditBox_' + comment_id).text() !== '') {
                                 return false;
                             }
                             var position = $('#CommentEditFormBody_' + comment_id).get(0).selectionStart - 1;
@@ -870,7 +873,7 @@ function evTargetToggleClick() {
                             }
                         });
                         $('#CommentEditFormBody_' + comment_id).off('paste').on('paste', function (e) {
-                            if ($('#CommentOgpEditBox_' + comment_id).html() === '') {
+                            if ($('#CommentOgpEditBox_' + comment_id).text() === '') {
                                 var url = getValidURL(e.originalEvent.clipboardData.getData('text'));
                                 if(url) {
                                     ogpComments(ogp, url);
@@ -935,6 +938,7 @@ function evTargetToggleClick() {
             if ($ogpBox.length) {
                 $ogpBox.hide();
             }
+
             var $btnClose = $('#CommentOgpClose_' + comment_id);
             $btnClose.off('click').on('click', function () {
                 var $ogp = $('#CommentOgpEditBox_' + comment_id);
@@ -946,7 +950,9 @@ function evTargetToggleClick() {
                     $submitButton.removeAttr("disabled");
                 }
             });
-            $btnClose.show();
+            if($('#CommentOgpEditBox_' + comment_id).length) {
+                $btnClose.show();
+            }
         });
     } else {
         if ($('#CommentEditForm_' + comment_id).is(':visible')) {
@@ -962,12 +968,15 @@ function evTargetToggleClick() {
         else {
             $obj.text($obj.attr("opend-text"));
             $("#jsGoTop").hide();
-            $('#CommentOgpClose_' + comment_id).show();
+            // 
             $('#CommentOgpBox_' + comment_id).hide();
             $('#CommentTextBody_' + comment_id).hide();
             $('#CommentOgpEditBox_' + comment_id).html($('#CommentOgpBackup_' + comment_id).html());
             $('#CommentEditFormBody_' + comment_id).val($('#CommentOgpBackup_' + comment_id).data('text'));
             $('#CommentOgpEditBox_' + comment_id).show();
+            if($('#CommentOgpEditBox_' + comment_id).length){
+                $('#CommentOgpClose_' + comment_id).show();
+            }
             evTargetCancelAnyEdit();
         }
     }
