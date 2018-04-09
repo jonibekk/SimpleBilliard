@@ -70,10 +70,10 @@ class CirclePinService extends AppService
 
             if(strpos($orders, $find) !== false){
                 $orders = str_replace($find, ',', $orders);
-                $row['circle_orders'] = $db->value(substr($orders, 1, -1), 'default');
+                $row['circle_orders'] = substr($orders, 1, -1);
                 $options['id'] = $row['id'];
 
-                if(!$CirclePin->updateAll($row, $options)) {
+                if(!$CirclePin->save($row, false)) {
                     throw new Exception($row['circle_orders'], 1);             
                 }
             }   
@@ -98,43 +98,37 @@ class CirclePinService extends AppService
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
-        $db = $CirclePin->getDataSource();
 
-        $options = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-        ];
-
-        $data = [
-            'CirclePin' => [
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'circle_orders' => $db->value($pinOrders, 'default'),
-                'del_flg' => false,
-            ],
-        ];
-        $row = $CirclePin->getUnique($userId, $teamId);
-            if(empty($row)){
-                $CirclePin->create($data);
-                if(!$CirclePin->save($data)){
+        try {
+            $data = [
+                'CirclePin' => [
+                    'user_id'       => $userId,
+                    'team_id'       => $teamId,
+                    'circle_orders' => $pinOrders,
+                ],
+            ];
+            $row = $CirclePin->getUnique($userId, $teamId);
+            if (empty($row)) {
+                $CirclePin->create();
+                if (!$CirclePin->save($data, false)) {
                     throw new Exception("Error Processing Insert Request", 1);
                 }
             } else {
-                $row['circle_orders'] = $data['CirclePin']['circle_orders'];
-                $options['id'] = $row['id'];
-                if(!$CirclePin->updateAll($row, $options)) {
-                    throw new Exception("Error Processing Update Request", 1);             
+                $CirclePin->clear();
+                $CirclePin->id = $row['id'];
+                if (!$CirclePin->save($data, false)) {
+                    throw new Exception("Error Processing Update Request", 1);
                 }
             }
-        try{
-            
-        } catch (RuntimeException $e) {
-            GoalousLog::error("setCircleOrders",[$e->getMessage(),$e->getTraceAsString()]);
+
+        } catch (Exception $e) {
+            GoalousLog::error("setCircleOrders", [$e->getMessage(), $e->getTraceAsString()]);
             return false;
         }
 
         return true;
     }
+
     /**
      * Get Relevant Ordered Circles Data
      *
