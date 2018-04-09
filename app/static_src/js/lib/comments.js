@@ -36,7 +36,7 @@ window.addEventListener("load", function () {
 /**
  * Checks valid Url
  */
-var patterns = {
+var url_pattern = {
     protocol: 'https?:\/\/(www\.)?',
     domain: '[a-zA-Z0-9-_\.]+',
     tld: '(\.[a-zA-Z0-9]{2,})',
@@ -44,7 +44,7 @@ var patterns = {
 }
 
 function getValidURL(input){
-    var regex = new RegExp(patterns.protocol + patterns.domain + patterns.tld + patterns.params, 'g');
+    var regex = new RegExp(url_pattern.protocol + url_pattern.domain + url_pattern.tld + url_pattern.params, 'g');
     var result = regex.exec(input);
     if(result){
         return result[0];
