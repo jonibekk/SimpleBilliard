@@ -636,7 +636,7 @@ class NotifySetting extends AppModel
 
         // getting goalName.
         $goalName = null;
-        if (key_exists('goal_id', $options) && isset($options['goal_id'])) {
+        if (!empty($options) && isset($options['goal_id'])) {
             $goal = $this->User->Goal->findById($options['goal_id']);
             $goalName = Hash::get($goal, 'Goal.name');
         }
