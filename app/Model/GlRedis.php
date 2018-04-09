@@ -492,45 +492,11 @@ class GlRedis extends AppModel
         $post_id = null,
         $options = []
     ) {
-        $parameterErrorFlag = false;
-        $errorParameters = [];
 
-        //validate parameters
-        if (empty ($type)) {
-            $errorParameters[] = 'type empty';
-            $parameterErrorFlag = true;
-        }
-        if (empty ($team_id)) {
-            $errorParameters[] = 'team_id empty';
-            $parameterErrorFlag = true;
-        } elseif (!ctype_digit(strval($team_id))) {
-            $errorParameters[] = 'team_id not int';
-            $parameterErrorFlag = true;
-        }
-        if (empty ($my_id)) {
-            $errorParameters[] = 'my_id empty';
-            $parameterErrorFlag = true;
-        } elseif (!ctype_digit(strval($my_id))) {
-            $errorParameters[] = 'my_id not int';
-            $parameterErrorFlag = true;
-        }
-        if (empty ($body)) {
-            $errorParameters[] = 'body empty';
-            $parameterErrorFlag = true;
-        }
-        if (empty ($url)) {
-            $errorParameters[] = 'url empty';
-            $parameterErrorFlag = true;
-        }
-        if (empty ($date)) {
-            $errorParameters[] = 'date empty';
-            $parameterErrorFlag = true;
-        } elseif (!is_numeric($date)) {
-            $errorParameters[] = 'date not numeric';
-            $parameterErrorFlag = true;
-        }
-        if ($parameterErrorFlag) {
-            GoalousLog::error("Parameter error at " . implode(",", $errorParameters) . " | Trace:\n" .
+        $parameterErrorArray = $this->_validateGlRedisParameters($type, $team_id, $my_id, $body, $url, $date);
+
+        if (!empty($parameterErrorArray)) {
+            GoalousLog::error("Parameter error at " . implode(",", $parameterErrorArray) . " | Trace:\n" .
                 implode("\n", AppUtil::getMethodCallerTrace()));
             return false;
         }
@@ -1484,5 +1450,48 @@ class GlRedis extends AppModel
     {
         $key = $this->getKeyNameForMstCampaignPlans($groupId);
         return $this->Db->del($key);
+    }
+
+    /**
+     * @param $type
+     * @param $teamId
+     * @param $myId
+     * @param $body
+     * @param $url
+     * @param $date
+     *
+     * @return array List of parameters with error
+     */
+    private function _validateGlRedisParameters($type, $teamId, $myId, $body, $url, $date): array
+    {
+        $errorParameters = [];
+
+        //validate parameters
+        if (empty ($type)) {
+            $errorParameters[] = 'type empty';
+        }
+        if (empty ($teamId)) {
+            $errorParameters[] = 'team_id empty';
+        } elseif (!ctype_digit(strval($teamId))) {
+            $errorParameters[] = 'team_id not int';
+        }
+        if (empty ($myId)) {
+            $errorParameters[] = 'my_id empty';
+        } elseif (!ctype_digit(strval($myId))) {
+            $errorParameters[] = 'my_id not int';
+        }
+        if (empty ($body)) {
+            $errorParameters[] = 'body empty';
+        }
+        if (empty ($url)) {
+            $errorParameters[] = 'url empty';
+        }
+        if (empty ($date)) {
+            $errorParameters[] = 'date empty';
+        } elseif (!is_numeric($date)) {
+            $errorParameters[] = 'date not numeric';
+        }
+
+        return $errorParameters;
     }
 }
