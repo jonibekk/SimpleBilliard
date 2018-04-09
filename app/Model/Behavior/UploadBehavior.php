@@ -964,6 +964,10 @@ class UploadBehavior extends ModelBehavior
         $flip = false;
         $degrees = $this->getDegrees($filePath, $flip);
 
+        //回転の必要ない場合は何もしない
+        if ($degrees === 0 && $flip === false) {
+            return true;
+        }
         $imgMimeType = $this->getImageMimeSubType($filePath);
 
         $createHandler = $this->getCreateHandler($imgMimeType);
@@ -980,7 +984,9 @@ class UploadBehavior extends ModelBehavior
         }
 
         // Rotation
-        $image = imagerotate($image, $degrees, 0);
+        if($degrees !== 0){
+            $image = imagerotate($image, $degrees, 0);
+        }
 
         // Flipping
         if($flip && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
@@ -989,6 +995,7 @@ class UploadBehavior extends ModelBehavior
             $this->_backupFailedImgFile(basename($filePath), $filePath);
             return false;
         }
+
         // Save
         if(empty($outPath)) {
             $outputHandler($image, $filePath);
@@ -997,7 +1004,7 @@ class UploadBehavior extends ModelBehavior
         }
         // Destroy
         imagedestroy($image);
-
+        // imagedestroy($transparency);
         // Set back the memory limit
         ini_set('memory_limit', '256M');
 
