@@ -170,25 +170,12 @@ function toggleCommentForm() {
 
                 // On success retreiving the ogp data
                 success: function (data) {
+                    // Display the new acquired OGP on the edit form
                     var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
                     var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
-                    $siteInfo
-                    // Preview Html
-                        .html(data.html)
-                        // Show delete button
-                        .prepend($('<a>').attr('href', '#')
-                            .addClass('font_lightgray comment-ogp-close')
-                            .append('<i class="fa fa-times fa-2x"></i>')
-                            .on('click', function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                $siteInfoUrl.val('');
-                                $siteInfo.empty();
-                            }))
-                        // Make space for delete button
-                        .find('.site-info').css({
-                        "padding-right": "30px"
-                    });
+                    $siteInfo.html(data.html);
+                    $('#CommentOgpClose_' + comment_id).show();
+                    console.log("this function");
 
                     // add url to hidden
                     $siteInfoUrl.val(data.url);
