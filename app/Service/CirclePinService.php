@@ -105,7 +105,6 @@ class CirclePinService extends AppService
                     'user_id'       => $userId,
                     'team_id'       => $teamId,
                     'circle_orders' => $pinOrders,
-                    'del_flg'       => false,
                 ],
             ];
             $row = $CirclePin->getUnique($userId, $teamId);
@@ -122,7 +121,7 @@ class CirclePinService extends AppService
                 }
             }
 
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             GoalousLog::error("setCircleOrders", [$e->getMessage(), $e->getTraceAsString()]);
             return false;
         }
