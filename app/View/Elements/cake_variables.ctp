@@ -66,6 +66,7 @@ App::uses('AttachedFile', 'Model');
                 search_result_zero: "<?=__("N/A")?>",
                 leave_secret_circle: "<?=__('After leaving secret circle, you can\'t join again by yourself. Do you really want to leave this secret circle?')?>",
                 confirm_cancel_post: "<?=__('Do you really want to cancel this post?')?>",
+                confirm_evaluation_start: "<?=__('Unable to cancel. Do you really want to start evaluations?')?>",
             },
             info: {
                 a: "<?=__("Copied the post URL to the clipboard.")?>",

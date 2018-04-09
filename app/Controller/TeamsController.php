@@ -299,14 +299,38 @@ class TeamsController extends AppController
 
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
+        // current term data
         $current_term_id = $this->Team->Term->getCurrentTermId();
+        $current_term = $this->Team->Term->getById($current_term_id);
+        /** @var bool $current_term_exists */
+        $current_term_exists = !is_null($current_term);
+        /** @var Enum\Term\EvaluateStatus $current_term_evaluation_status */
+        $current_term_evaluation_status = null;
+        if ($current_term_exists) {
+            $current_term_evaluation_status = new Enum\Term\EvaluateStatus(intval($current_term['evaluate_status']));
+        }
+
+        // previous term data
         $previous_term_id = $this->Team->Term->getPreviousTermId();
+        $previous_term = $this->Team->Term->getById($previous_term_id);
+        /** @var bool $previous_term_exists */
+        $previous_term_exists = !is_null($previous_term);
+        /** @var Enum\Term\EvaluateStatus $previous_term_evaluation_status */
+        $previous_term_evaluation_status = null;
+        if ($previous_term_exists) {
+            $previous_term_evaluation_status = new Enum\Term\EvaluateStatus(intval($previous_term['evaluate_status']));
+        }
+
         $eval_start_button_enabled = true;
         if (!$this->Team->Term->isAbleToStartEvaluation($current_term_id)) {
             $eval_start_button_enabled = false;
         }
+        $previous_eval_start_button_enabled = true;
+        if (!$this->Team->Term->isAbleToStartEvaluation($previous_term_id)) {
+            $previous_eval_start_button_enabled = false;
+        }
         $this->set(compact('team', 'term_start_date', 'term_end_date', 'eval_enabled', 'eval_start_button_enabled',
-            'eval_scores'));
+            'previous_eval_start_button_enabled', 'eval_scores'));
         $current_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($current_term_id);
         $current_progress = $this->_getEvalProgress($current_statuses);
         $previous_statuses = $this->Team->Evaluation->getAllStatusesForTeamSettings($previous_term_id);
@@ -330,6 +354,45 @@ class TeamsController extends AppController
         $next_term_start_date = Hash::get($next_term, 'start_date');
         $next_term_end_date = Hash::get($next_term, 'end_date');
         $next_term_timezone = Hash::get($next_term, 'timezone');
+
+        $can_start_evaluation = false;
+        // Decide $can_start_evaluation
+        if (!$previous_term_exists) {
+            $can_start_evaluation = !$current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED());
+        } else if (!$current_term_exists) {
+            $can_start_evaluation = !$previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED());
+        } else {
+            $isInProgress = $current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS()) || $previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS());
+            $can_start_evaluation = !$isInProgress;
+        }
+        $disable_current_radio = false;
+        if (!$can_start_evaluation || !$current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())) {
+            $disable_current_radio = true;
+        }
+        $disable_previous_radio = false;
+        if (!$can_start_evaluation || !$previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())) {
+            $disable_previous_radio = true;
+        }
+
+        $either_start_button_enabled = ($eval_start_button_enabled xor $previous_eval_start_button_enabled);
+        $current_radio_checked = false;
+        if ($current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS())) {
+            $current_radio_checked = true;
+        } elseif ($can_start_evaluation) {
+            $current_radio_checked = ($either_start_button_enabled && $eval_start_button_enabled);
+        }
+
+        $previous_radio_checked = false;
+        if ($previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS())) {
+            $previous_radio_checked = true;
+        } elseif ($can_start_evaluation) {
+            $previous_radio_checked = ($either_start_button_enabled && $previous_eval_start_button_enabled);
+        }
+
+        $both_term_selectable = ($current_term_exists
+            && $previous_term_exists
+            && $current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())
+            && $previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED()));
 
         // term changing init data
         /** @var TermService $TermService */
@@ -378,7 +441,16 @@ class TeamsController extends AppController
             'termLength',
             'isStartedEvaluation',
             'isPaidPlan',
-            'timezoneLabel'
+            'timezoneLabel',
+            'current_term_exists',
+            'previous_term_exists',
+            'can_start_evaluation',
+            'disable_previous_radio',
+            'disable_current_radio',
+            'either_start_button_enabled',
+            'current_radio_checked',
+            'previous_radio_checked',
+            'both_term_selectable'
         ));
 
         return $this->render();
