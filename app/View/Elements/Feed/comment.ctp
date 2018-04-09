@@ -20,7 +20,7 @@
 }
 ?>
 <?= $this->App->viewStartComment() ?>
-<div id="CommentOgpBackup_<?= $comment['id'] ?>" data-text="" style="display: none;"></div>
+<div id="CommentOgpBackup_<?= $comment['id'] ?>" class="always-hidden" data-text=""></div>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_8px pb_8px">
         <a href="<?= $this->Html->url([
