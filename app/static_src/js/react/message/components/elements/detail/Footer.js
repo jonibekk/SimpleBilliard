@@ -77,7 +77,7 @@ class Footer extends React.Component {
   }
 
   uploadFiles(files) {
-    if (!files) {
+    if (!files || !files.length) {
       return;
     }
 
