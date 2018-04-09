@@ -20,6 +20,7 @@
 }
 ?>
 <?= $this->App->viewStartComment() ?>
+<div id="CommentOgpBackup_<?= $comment['id'] ?>" data-text="" style="display: none;"></div>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_8px pb_8px">
         <a href="<?= $this->Html->url([
@@ -41,9 +42,9 @@
         <div class="comment-body">
             <div class="col comment-user">
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                    <div class="dropdown dropdown-comment pull-right">
+                    <div id="dropdown_<?= $comment['id'] ?>" class="dropdown dropdown-comment pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down comment-arrow"></i>
+                            <i class="fa fa-chevron-down fa-lg comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
@@ -58,7 +59,7 @@
                                    ]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
-
+                                   id="CommentEditButton_<?= $comment['id'] ?>"
                                 ><?= __("Edit comment") ?></a>
                             </li>
                             <li>
@@ -128,7 +129,6 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-
             <?php if ($comment['site_info']): ?>
                 <?php $site_info = json_decode($comment['site_info'], true) ?>
                 <?= $this->element('Feed/site_info_block', [

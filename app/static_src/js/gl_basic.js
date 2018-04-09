@@ -376,10 +376,7 @@ function evTriggerClick() {
   $("#" + target_id).trigger('click');
   //noinspection JSJQueryEfficiency
   $("#" + target_id).focus();
-  if ($(this).attr("after-replace-target-id") != undefined) {
-    $(this).attr("target-id", $(this).attr("after-replace-target-id"));
-    $(this).removeAttr("after-replace-target-id");
-  }
+
   return false;
 }
 /**
