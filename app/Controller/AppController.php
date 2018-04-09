@@ -41,7 +41,9 @@ use Goalous\Model\Enum as Enum;
  */
 class AppController extends BaseController
 {
-// アクション件数 キャッシュ有効期限
+    /**
+     * アクション件数 キャッシュ有効期限
+     */
     const CACHE_KEY_ACTION_COUNT_EXPIRE = 60 * 60 * 24; // 1日
 
     /**
@@ -81,9 +83,14 @@ class AppController extends BaseController
         'PaymentSetting'
     ];
 
-//基本タイトル
+    /**
+     * 基本タイトル
+     */
     public $title_for_layout;
-//基本description
+
+    /**
+     * 基本description
+     */
     public $meta_description;
     /**
      * ページネータの初期設定
@@ -94,12 +101,12 @@ class AppController extends BaseController
 //        'limit' => 20,
 //    ];
 
-    /*
+    /**
      * 認定対象ゴール件数
      */
     public $unapproved_cnt = 0;
 
-    /*
+    /**
      * 評価対象ゴール件数
      */
     public $evaluable_cnt = 0;
@@ -357,7 +364,7 @@ class AppController extends BaseController
      *
      * @param CakeRequest $request
      *
-     * @return void
+     * @return bool
      */
     public function invokeAction(CakeRequest $request)
     {
@@ -396,7 +403,7 @@ class AppController extends BaseController
         $this->next_term_id = $this->Team->Term->getNextTermId();
     }
 
-    /*
+    /**
      * 各種アラート件数の合計
      */
     public function _setAllAlertCnt()
@@ -411,15 +418,16 @@ class AppController extends BaseController
         $this->set('notify_setting', $this->notify_setting);
     }
 
-    /*
+    /**
      * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
      * - チームの評価設定がoffの場合はカウントしない。(0を返す)
+     *
      * @param $login_uid
      */
     public function _setUnApprovedCnt($login_uid)
     {
         if ($this->Team->EvaluationSetting->isEnabled() === false) {
-            return 0;
+            return;
         }
 
         /** @var GoalApprovalService $GoalApprovalService */
@@ -965,8 +973,8 @@ class AppController extends BaseController
 
     function _setValsForAlert()
     {
-// TODO.Payment: must refactoring.
-// Acquire only necessary information when necessary
+        // TODO.Payment: must refactoring.
+        // Acquire only necessary information when necessary
 
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
@@ -978,14 +986,14 @@ class AppController extends BaseController
 
         $isAdmin = $this->_isAdmin();
         if ($isAdmin && $serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
-// show message if team last creditcard payment failed
+            // show message if team last creditcard payment failed
             /** @var ChargeHistoryService $ChargeHistoryService */
             $ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
             $this->set('statusPaymentFailed', $ChargeHistoryService->isLatestChargeFailed($this->current_team_id));
         }
 
         $paymentSetting = $this->PaymentSetting->getCcByTeamId($this->current_team_id);
-// check if team credit card expire in one month
+        // check if team credit card expire in one month
         if ($isAdmin && !empty($paymentSetting)) {
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init("CreditCardService");
@@ -995,12 +1003,12 @@ class AppController extends BaseController
                 $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_CLEAR);
                 $dateCreditCardExpireBeforeOneMonth = $dateCreditCardExpire->copy()->subMonth(1);
                 if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpire)) {
-// team credit card has been expired
+                    // team credit card has been expired
                     $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRED);
                     $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
                 } else {
                     if ($dateNow->greaterThanOrEqualTo($dateCreditCardExpireBeforeOneMonth)) {
-// team credit card expire in 1 month at least
+                        // team credit card expire in 1 month at least
                         $this->set('teamCreditCardStatus', Team::STATUS_CREDIT_CARD_EXPIRE_SOON);
                         $this->set('teamCreditCardExpireDate', $dateCreditCardExpire->format('Y-m-d'));
                     }
@@ -1047,20 +1055,20 @@ class AppController extends BaseController
         $this->Mixpanel->setUser($this->User->id);
     }
 
-    /*
-    * 自動でログインする
-    */
+    /**
+     * 自動でログインする
+     */
     public function _autoLogin($user_id, $is_not_change_current_team = false)
     {
-//リダイレクト先を退避
+        //リダイレクト先を退避
         $redirect = null;
         if ($this->Session->read('Auth.redirect')) {
             $redirect = $this->Session->read('Auth.redirect');
         }
         $current_team_id = $this->Session->read('current_team_id');
-//自動ログイン
+        //自動ログイン
         if ($this->_refreshAuth($user_id)) {
-//リダイレクト先をセッションに保存
+            //リダイレクト先をセッションに保存
             $this->Session->write('redirect', $redirect);
             if ($is_not_change_current_team) {
                 $this->_setAfterLogin($current_team_id);
