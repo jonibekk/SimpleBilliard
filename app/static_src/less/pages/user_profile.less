@@ -424,7 +424,7 @@
 .comment-contents a {
   color: #ccc;
   display: block;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -454,8 +454,23 @@
 
 .comment-ogp-close {
   right: 4px;
-  margin-top: 16px;
+  margin-top: 24px;
   position: absolute;
-  display: block;
+  display: none;
   cursor: pointer;
+  font-size: 12px;
+}
+
+.post-ogp-close {
+  right: 28px;
+  margin-top: 10px;
+  position: absolute;
+  display: none;
+  cursor: pointer;
+}
+
+.js-ogp-box{
+  float:left;
+  width: 100%;
+  margin: 10px auto;
 }

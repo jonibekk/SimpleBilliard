@@ -21,8 +21,9 @@ $(function () {
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
     });
-    $(".comment-post-form,.comment-form").on("focus", function() {
+    $(".comment-post-form,.comment-form").off("focus").off("blur").on("focus", function() {
         $("#jsGoTop").hide();
+        console.log("hide");
     }).on("blur", function() {
         $("#jsGoTop").show();
     });
@@ -67,14 +68,20 @@ function toggleCommentForm() {
         return;
     }
 
+    $(".comment-post-form,.comment-form").off("focus").off("blur").on("focus", function() {
+        $("#jsGoTop").hide();
+    }).on("blur", function() {
+        $("#jsGoTop").show();
+    });
+
     evTargetCancelAnyEdit();
 
     // reset textarea
     $txtArea.val("");
 
     // Register the form for submit
-    $commentForm.off('submit');
-    $commentForm.on('submit', function (e) {
+    $commentForm.off('submit').on('submit', function (e) {
+        $('#CommentOgpClose_' + post_id).hide();
         // アップロードファイルの有効期限が切れていなければコメント投稿
         var res = checkUploadFileExpire($(this).attr('id'));
         if (res) {
@@ -173,13 +180,28 @@ function toggleCommentForm() {
                     // Display the new acquired OGP on the edit form
                     var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
                     var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
+                    // var $closeButtonHtml = '<div id="CommentOgpClose_' +  post_id + '" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></div>'
+                    // $siteInfo.before($closeButtonHtml);
                     $siteInfo.html(data.html);
-                    $('#CommentOgpClose_' + comment_id).show();
-                    console.log("this function");
+                    var $btnClose = $('#CommentOgpClose_' + post_id);
+                    $btnClose.off('click').on('click', function() {
+                        var $ogp = $('#CommentOgpSiteInfo_' + post_id);
+                        $ogp.empty();
+                        $ogp.hide();
+                        $btnClose.hide();
+                        var $submitButton = $('#CommentEditSubmit_' + post_id);
+                        if ($submitButton.length) {
+                            $submitButton.removeAttr("disabled");
+                        }
+                    });
+                    $btnClose.show();
+                    if($('#CommentOgpSiteInfo_' + post_id).html !== '') {
+                        $btnClose.show();
+                        $siteInfo.show();
+                    }
 
                     // add url to hidden
                     $siteInfoUrl.val(data.url);
-                    return false;
                 },
 
                 // On failure retreiving the ogp data
@@ -840,6 +862,7 @@ function evTargetToggleClick() {
                     $('#CommentOgpBackup_' + comment_id).html($ogp.html());
                     $ogp.prop('id','CommentOgpEditBox_' + comment_id);
                     $("#" + $obj.attr("hidden-target-id")).after($editForm);
+                    $('#CommentOgpBackup_' + comment_id).hide();
 
                     // Load OGP for edit field
                     require(['ogp'], function (ogp) {
@@ -925,9 +948,8 @@ function evTargetToggleClick() {
             if ($ogpBox.length) {
                 $ogpBox.hide();
             }
-
             var $btnClose = $('#CommentOgpClose_' + comment_id);
-            $btnClose.off('click').on('click', function () {
+            $btnClose.off('click').on('click', function() {
                 var $ogp = $('#CommentOgpEditBox_' + comment_id);
                 $ogp.empty();
                 $ogp.hide();
