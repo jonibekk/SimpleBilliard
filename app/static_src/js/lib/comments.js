@@ -11,7 +11,7 @@ $(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
     $(document).on("click", ".js-click-comment-delete", evCommentDelete);
     $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
-    $(document).on("click", '[id*="CommentEditSubmit_"]', evCommendEditSubmit);
+    $(document).on("click", '[id*="CommentEditSubmit_"]', evCommentEditSubmit);
 
     $(document).on("click", ".notify-click-target", evNotifyPost);
     $(document).on("click", ".click-comment-all", evCommentOldView);
@@ -582,7 +582,7 @@ function evCommentDeleteConfirm() {
  * @param e
  * @returns {boolean}
  */
-function evCommendEditSubmit(e) {
+function evCommentEditSubmit(e) {
     e.preventDefault();
     var $form = $(this).parents('form');
     var formUrl = $form.attr('action');
