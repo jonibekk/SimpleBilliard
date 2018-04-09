@@ -57,6 +57,15 @@ class Term extends AppModel
         'Team',
     ];
 
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = [
+        'Evaluation'
+    ];
+
     public $update_validate = [
         'next_start_ym' => [
             'notBlank' => [
