@@ -190,8 +190,7 @@ const config = {
   ],
   css_vendor: {
     src: [
-      assets_dir + '/css/font-awesome.min.css',
-      // node_modules_dir + '/font-awesome/css/font-awesome.css',
+      node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',
       assets_dir + '/css/bootstrapValidator.css',
 
