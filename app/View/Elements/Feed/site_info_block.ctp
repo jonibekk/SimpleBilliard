@@ -30,12 +30,10 @@ if (isset($site_info['type']) && (
 ?>
 <?php if (isset($site_info)): ?>
     <?php if (isset($site_info['is_editing']) && $site_info['is_editing'] === true) : ?>
-        <a href="#" class="font_lightgray comment-ogp-close"><i class="fa fa-times js-ogp-close"></i></a>
+        
     <?php endif ?>
     <div class="col pt_10px js-ogp-box"
-    <?php if ($isEditing): ?>
-        id="CommentOgpEditBox_<?= $comment_id ?>"
-    <?php elseif (!empty($comment_id)): ?>
+    <?php if (!empty($comment_id)): ?>
         id="CommentOgpBox_<?= $comment_id ?>"
     <?php endif; ?> >
         <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
@@ -76,7 +74,7 @@ if (isset($site_info['type']) && (
                                     $_title = $local_username;
                                 }
                                 ?>
-                                <?= mb_strimwidth(h($_title), 0, $title_max_length, "...") ?>
+                                <?= mb_strimwidth($_title, 0, $title_max_length, "...") ?>
                             <?php endif ?>
                         </h4>
 

@@ -111,11 +111,20 @@
 }
 
 .comment-ogp-close {
-  right: 10px;
-  margin-top: 25px;
+  right: 4px;
+  margin-top: 24px;
   position: absolute;
-  display: block;
-  z-index: 1000;
+  display: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.post-ogp-close {
+  right: 28px;
+  margin-top: 10px;
+  position: absolute;
+  display: none;
+  cursor: pointer;
 }
 
 .js-ogp-box{
@@ -128,7 +137,7 @@
   a {
     color: @subColor4;
     display: block;
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
     &:hover,
@@ -155,4 +164,8 @@
       color:@subColor13;
     }
   }
+}
+
+.always-hidden {
+  display: none !important;
 }
