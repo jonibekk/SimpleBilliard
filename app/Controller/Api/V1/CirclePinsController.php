@@ -36,7 +36,7 @@ class CirclePinsController extends ApiController
         /** @var CirclePinService $CirclePinService */
         $CirclePinService = ClassRegistry::init("CirclePinService");
 
-        if(!$CirclePinService->validateApprovalPinOrder($this->request->data['pin_order'])) {
+        if($CirclePinService->validateApprovalPinOrder($this->request->data['pin_order']) !== true) {
             return $this->_getResponseBadFail();
         }
       

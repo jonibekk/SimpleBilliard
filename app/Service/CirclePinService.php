@@ -25,13 +25,15 @@ class CirclePinService extends AppService
         $CirclePin = ClassRegistry::init("CirclePin");
         $validation = [];
 
+        $CirclePin->set(['circle_orders' => $pinOrder]);
+
         $validation = $CirclePin->validates();
 
         if($validation !== true){
-            $validation = $this->_validationExtract($CirclePin->validationErrors);
+            $validation = $CirclePin->_validationExtract($CirclePin->validationErrors);
         }
 
-        if(isset($validation)){
+        if(!empty($validation)){
             return $validation;
         }
 
@@ -51,7 +53,6 @@ class CirclePinService extends AppService
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
-        $db = $CirclePin->getDataSource();
 
         $options = [
             'user_id' => $userId,
