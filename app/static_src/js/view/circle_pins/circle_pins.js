@@ -377,12 +377,12 @@ function initialize() {
 
 window.addEventListener('load', function() { 
     resizeLabels();
-    resizeBoundary();
+    // resizeBoundary();
     initialize();
     setEvents();
 }, false);
 
 window.addEventListener('resize', function() { 
     resizeLabels();
-    resizeBoundary();
+    // resizeBoundary();
 }, false);
