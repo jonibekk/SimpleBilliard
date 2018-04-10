@@ -115,7 +115,7 @@ class GroupTest extends GoalousTestCase
     function test_findIdsHavingMembers() {
         $this->_setDefault();
         $this->Group->MemberGroup->delete(7);
-        $data = $this->Group->findIdsHavingMembers();
+        $data = $this->Group->findIdsHavingMembers($this->Group->current_team_id);
         $this->assertCount(3, $data);
         $this->assertContains(1, $data);
         $this->assertContains(4, $data);

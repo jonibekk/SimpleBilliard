@@ -46,9 +46,12 @@ class Group extends AppModel
         'GroupVision',
     ];
 
-    function findIdsHavingMembers() {
+    function findIdsHavingMembers($teamId) {
         return $this->MemberGroup->find('list', array(
             'fields' => array('group_id'),
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
             'group' => 'group_id having COUNT(group_id) > 0'
         ));
     }
@@ -62,7 +65,7 @@ class Group extends AppModel
             ],
         ];
         if ($requiresUser) {
-            $options['conditions']['id'] = $this->findIdsHavingMembers();
+            $options['conditions']['id'] = $this->findIdsHavingMembers($team_id);
         }
         $res = $this->find('list', $options);
         return $res;
@@ -165,7 +168,7 @@ class Group extends AppModel
             ]
         ];
         if ($requiresUser) {
-            $options['conditions']['id'] = $this->findIdsHavingMembers();
+            $options['conditions']['id'] = $this->findIdsHavingMembers($this->current_team_id);
         }
         $res = $this->find('list', $options);
         return (array)$res;
