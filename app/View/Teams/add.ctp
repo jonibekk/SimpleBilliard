@@ -132,8 +132,7 @@
 </div>
 <?php $this->append('script') ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-
+    $(function() {
         $('[rel="tooltip"]').tooltip();
 
         $('#addOtherTeam').bootstrapValidator({
