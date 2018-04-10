@@ -17,6 +17,7 @@ class CircleMemberTest extends GoalousTestCase
     public $fixtures = array(
         'app.circle_member',
         'app.circle',
+        'app.circle_pin',
         'app.team',
         'app.user',
         'app.team_member',

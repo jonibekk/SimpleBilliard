@@ -2070,7 +2070,7 @@ class Goal extends AppModel
         $keyword = trim($keyword);
         $options = [
             'conditions' => [
-                'Goal.name LIKE' => $keyword . '%',
+                'Goal.name LIKE' => '%' . $keyword . '%',
                 'Goal.team_id'   => $this->current_team_id,
             ],
             'limit'      => $limit,
