@@ -502,7 +502,7 @@ class GlRedis extends AppModel
         }
 
         $notify_id = $this->generateId();
-        if ($post_id) {
+        if (!empty($post_id)) {
             // $post_idが渡ってきている場合はメッセージ
             // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
             $notify_id = $post_id;
@@ -734,6 +734,10 @@ class GlRedis extends AppModel
                 unset($pipe_res[$k]);
                 continue;
             }
+            if (!key_exists('id', $v)) {
+                GoalousLog::error('$v', $v);
+                continue;
+            }
             $score = $notify_list[$v['id']];
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
@@ -812,6 +816,10 @@ class GlRedis extends AppModel
         }
         $pipe_res = $pipe->exec();
         foreach ($pipe_res as $k => $v) {
+            if (!key_exists('id', $v)) {
+                GoalousLog::error('$v', $v);
+                continue;
+            }
             $score = $notify_list[$v['id']];
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
