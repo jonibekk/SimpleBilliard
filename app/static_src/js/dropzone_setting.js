@@ -38,7 +38,7 @@ $(function () {
   var previewTemplateDefault =
     '<div class="dz-preview dz-default-preview panel">' +
     '  <div class="dz-details">' +
-    '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
+    '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times fa-lg"></i></a>' +
     '    <div class="dz-thumb-container pull-left">' +
     '      <i class="fa fa-file-o file-other-icon"></i>' +
     '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +

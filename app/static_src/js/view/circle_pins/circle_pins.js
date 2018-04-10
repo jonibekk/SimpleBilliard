@@ -1,9 +1,11 @@
+"use strict"
+
 function resizeLabels() {
     var target = $("#pinned-body");
     if(target.length) {
         var width = $(target).width();
         var labels = $(".circle-name-label");
-        var newWidth = (width - 180) + "px";
+        var newWidth = (width - 190) + "px";
         for (var i = 0; i < labels.length; i++) {
             $(labels[i]).css("width", newWidth);
         }
@@ -29,32 +31,196 @@ function resizeBoundary() {
         }
     } 
 }
-window.addEventListener('load', function() { 
-    resizeLabels();
-    resizeBoundary();
-}, false);
-window.addEventListener('resize', function() { 
-    resizeLabels();
-    resizeBoundary();
-}, false);
-$(function(){
-    'use strict';
+function bindSelect2Members($this) {
+    var $select2elem = $this.find(".ajax_add_select2_members");
+    var url = $select2elem.attr('data-url');
 
-    $.fn.insertIndex = function (i) {
-        // The element we want to swap with
-        var $target = this.parent().children().eq(i);
-
-        // Determine the direction of the appended index so we know what side to place it on
-        if (this.index() > i) {
-            $target.before(this);
-        } else {
-            $target.after(this);
+    //noinspection JSUnusedLocalSymbols
+    $select2elem.select2({
+        'val': null,
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: url ? url : cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
         }
-
-        return this;
+    })
+    .on('change', function () {
+        var $this = $(this);
+        // When group is selected enters the users belonging to the group and sets as entered
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
+    });
+}
+function updateOrder() {
+    var sendData = {
+        'data[_Token][key]': cake.data.csrf_token.key,
+        'pin_order': makeParams(),
     };
+    $.ajax({
+      url: '/api/v1/circle_pins/',
+      type:"POST",
+      data: sendData,
+      contentType:"application/x-www-form-urlencoded; charset=utf-8",
+      success: function(data){
+      },
+      error: function(data){
+        new Noty({
+            type: 'error',
+            text: '<h4>' + cake.word.error + '</h4>' + 'Network/Data error',
+        }).show();
+      }
+    });
+}
+function updateDisplayCount() {
+    var pincount = document.getElementById('pinned').querySelectorAll('li').length + 1;
+    var unpincount = document.getElementById('unpinned').querySelectorAll('li').length;
+    document.getElementById('pinnedCount').innerHTML = '(' + pincount + ')';
+    document.getElementById('unpinnedCount').innerHTML = '(' + unpincount + ')';
+}
+function makeParams() {
+    var data = [];
+    var pins = document.getElementById('pinned').getElementsByClassName('pin-circle-list-item');
+    for (var i = 0; i < pins.length; i++) {
+        data.push(pins[i].id);
+    }
+    return data.join(',');
+}
+function editMenu(evt) {
+    evt = evt || window.event;
+    evt.preventDefault();
+    var self = this.parentElement;
+    if (self.classList.contains('double_click')) {
+        return false;
+    }
+    self.classList.add('double_click');
+
+    var modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    modal_elm.on('hidden.bs.modal', function (e) {
+        e.target.remove();
+        document.getElementById('circles-edit-page').classList.remove('modal-open');
+    });
+    var url = self.getAttribute('data-url');
+    if(!url){
+        return false;
+    }
+    if (!url.indexOf('#')) {
+        url.modal('open');
+    } else {
+        $.get(url, function (data) {
+            modal_elm.append(data);
+            //noinspection JSUnresolvedFunction
+            bindSelect2Members(modal_elm);
+            //アップロード画像選択時にトリムして表示
+            modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function (e) {
+                var me = $(e.currentTarget);
+                me.children('.nailthumb-container').nailthumb({
+                    width: 96,
+                    height: 96,
+                    fitDirection: 'center center'
+                });
+                //EXIF
+                exifRotate(me);
+            });
+            modal_elm.modal();
+        }).done(function (data) {
+            self.classList.remove('double_click');
+            document.getElementById('circles-edit-page').classList.add('modal-open');
+        }).fail(function () {
+            self.classList.remove('double_click')
+            new Noty({
+                type: 'error',
+                text: cake.message.notice.d,
+            }).show();
+        });
+    }
+}
+function pin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    if($('#dashboard-unpinned').length){
+        var moveElement = $('#dashboard-unpinned').find('[circle_id='+target.parentElement.id+']').get(0);
+        if(moveElement){
+            document.getElementById('dashboard-pinned').appendChild(moveElement);
+        }
+    }
+    updateOrder();
+    updateDisplayCount();
+}
+function unpin(target) {
+    target.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
+    $(target).one('click', pinEvent);
+    if($('#dashboard-unpinned').length){
+        var moveElement = $('#dashboard-pinned').find('[circle_id='+target.parentElement.id+']').get(0);
+        if(moveElement){
+            document.getElementById('dashboard-unpinned').appendChild(moveElement);
+        }
+    }
+    updateOrder();
+    updateDisplayCount();
+}
+function pinEvent() {
+    var self = this;
+    self.classList.toggle('fa-disabled');
+    
+    var parent = self.parentElement;
+    if(self.classList.contains('fa-disabled')) {
+        window.setTimeout(function() {
+            $(parent).appendTo($("#unpinned"));
+            unpin(self);
+        }, 500);
+    } else {
+        window.setTimeout(function() {
+            $(parent).appendTo($("#pinned"));
+            pin(self);
+        }, 500);
+    }
+};
+function bindPinEvent(target) {
+    $(target).one('click', pinEvent);
+}
+function bindEditMenu(target) {
+    $(target).on('click', editMenu);
+}
+jQuery.fn.insertAt = function(index, element) {
+  var lastIndex = this.children().length;
+  if (index < 0) {
+    index = Math.max(0, lastIndex + 1 + index);
+  }
+  this.append(element);
+  if (index < lastIndex) {
+    this.children().eq(index).before(this.children().last());
+  }
+  return this;
+}
+function setEvents() {
+    var circles = document.querySelectorAll('.pin-circle-list-item');
+    if(circles){   
+        for(var i = 0; i < circles.length; i++){
+            bindPinEvent($(circles[i]).find('.fa-thumb-tack'));
+            bindEditMenu($(circles[i]).find('.fa-cog'));
+        } 
+    }
+}
+function initialize() {
     //Reorder
-    if(document.getElementById('pinned') && document.getElementById('unpinned')){
+    if(document.getElementById('pinned') && document.getElementById('unpinned')) {
         var pinnedSortable = new Sortable(document.getElementById('pinned'), {
             // group: "circles-list",  // or { name: "...", pull: [true, false, clone], put: [true, false, array] }
             sort: true,  // sorting inside list
@@ -110,7 +276,7 @@ $(function(){
 
             // Called by any change to the list (add / update / remove)
             onSort: function (/**Event*/evt) {
-                $($('#dashboard-pinned').find('li').eq(evt.oldIndex)).insertIndex(evt.newIndex);
+                $('#dashboard-pinned').insertAt(evt.newIndex, $($('#dashboard-pinned').find('li').eq(evt.oldIndex)));
                 updateOrder();
                 updateDisplayCount();
             },
@@ -203,155 +369,20 @@ $(function(){
             onClone: function (/**Event*/evt) {
             }
         });
-        function updateOrder() {
-            var senddata = {
-                'data[_Token][key]': cake.data.csrf_token.key,
-                'pin_order': makeParams(),
-            };
-            $.ajax({
-              url: '/api/v1/circle_pins/',
-              type:"POST",
-              data: senddata,
-              contentType:"application/x-www-form-urlencoded; charset=utf-8",
-              success: function(data){
-              },
-              error: function(data){
-                new Noty({
-                    type: 'error',
-                    text: '<h4>' + cake.word.error + '</h4>' + 'Network/Data error',
-                }).show();
-              }
-            });
-        }
-        function updateDisplayCount() {
-            var pincount = document.getElementById('pinned').querySelectorAll('li').length + 1;
-            var unpincount = document.getElementById('unpinned').querySelectorAll('li').length;
-            document.getElementById('pinnedCount').innerHTML = '(' + pincount + ')';
-            document.getElementById('unpinnedCount').innerHTML = '(' + unpincount + ')';
-        }
+        
         var dashboard = $(".js-dashboard-circle-list-body > ul").find('li');        
         updateDisplayCount();
     }
-    var circles = document.querySelectorAll('.pin-circle-list-item');
-    if(circles){
-        function makeParams() {
-            var data = [];
-            var pins = document.getElementById('pinned').getElementsByClassName('pin-circle-list-item');
-            for (var i = 0; i < pins.length; i++) {
-                data.push(pins[i].id);
-            }
-            return data.join(',');
-        }
-        function editMenu(evt) {
-            evt = evt || window.event;
-            evt.preventDefault();
-            var self = this.parentElement;
-            if (self.classList.contains('double_click')) {
-                return false;
-            }
-            self.classList.add('double_click');
+}
 
-            var modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-            modal_elm.on('hidden.bs.modal', function (e) {
-                e.target.remove();
-                document.getElementById('circles-edit-page').classList.remove('modal-open');
-            });
-            var url = self.getAttribute('data-url');
-            if(!url){
-                return false;
-            }
-            if (!url.indexOf('#')) {
-                url.modal('open');
-            } else {
-                $.get(url, function (data) {
-                    modal_elm.append(data);
-                    //noinspection JSUnresolvedFunction
-                    bindSelect2Members(modal_elm);
-                    //アップロード画像選択時にトリムして表示
-                    modal_elm.find('.fileinput_small').fileinput().on('change.bs.fileinput', function (e) {
-                        var me = $(e.currentTarget);
-                        me.children('.nailthumb-container').nailthumb({
-                            width: 96,
-                            height: 96,
-                            fitDirection: 'center center'
-                        });
-                        //EXIF
-                        exifRotate(me);
-                    });
-                    modal_elm.modal();
-                }).done(function (data) {
-                    self.classList.remove('double_click');
-                    document.getElementById('circles-edit-page').classList.add('modal-open');
-                }).fail(function () {
-                    self.classList.remove('double_click')
-                    new Noty({
-                        type: 'error',
-                        text: cake.message.notice.d,
-                    }).show();
-                });
-            }
-        }
-        function pinEvent(evt) {
-            evt = evt || window.event;
-            this.parentElement.querySelector('.fa-align-justify').classList.toggle('style-hidden');
-            this.classList.toggle('fa-disabled');
+window.addEventListener('load', function() { 
+    resizeLabels();
+    // resizeBoundary();
+    initialize();
+    setEvents();
+}, false);
 
-            if(this.classList.contains('fa-disabled')) {
-                document.getElementById('unpinned').appendChild(this.parentElement);
-                var moveElement = $('#dashboard-pinned').find('[circle_id='+this.parentElement.id+']').get(0);
-                document.getElementById('dashboard-unpinned').appendChild(moveElement);
-            } else {
-                document.getElementById('pinned').appendChild(this.parentElement);
-                var moveElement = $('#dashboard-unpinned').find('[circle_id='+this.parentElement.id+']').get(0);
-                document.getElementById('dashboard-pinned').appendChild(moveElement);
-            }      
-            updateOrder();
-            updateDisplayCount();
-        };
-        for(var i = 0; i < circles.length; i++){
-            circles[i].querySelector('.fa-thumb-tack').onclick = pinEvent;
-            var cog = circles[i].querySelector('.fa-cog');
-            if(cog){
-                cog.onclick = editMenu;
-            }
-        } 
-    }
-
-    function bindSelect2Members($this) {
-        var $select2elem = $this.find(".ajax_add_select2_members");
-        var url = $select2elem.attr('data-url');
-
-        //noinspection JSUnusedLocalSymbols
-        $select2elem.select2({
-            'val': null,
-            multiple: true,
-            minimumInputLength: 1,
-            placeholder: cake.message.notice.b,
-            ajax: {
-                url: url ? url : cake.url.a,
-                dataType: 'json',
-                quietMillis: 100,
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term, //search term
-                        page_limit: 10 // page size
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data.results};
-                }
-            },
-            formatSelection: format,
-            formatResult: format,
-            escapeMarkup: function (m) {
-                return m;
-            }
-        })
-        .on('change', function () {
-            var $this = $(this);
-            // When group is selected enters the users belonging to the group and sets as entered
-            $this.select2('data', select2ExpandGroup($this.select2('data')));
-        });
-    }
-});
+window.addEventListener('resize', function() { 
+    resizeLabels();
+    // resizeBoundary();
+}, false);

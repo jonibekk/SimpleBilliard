@@ -964,6 +964,10 @@ class UploadBehavior extends ModelBehavior
         $flip = false;
         $degrees = $this->getDegrees($filePath, $flip);
 
+        //回転の必要ない場合は何もしない
+        if ($degrees === 0 && $flip === false) {
+            return true;
+        }
         $imgMimeType = $this->getImageMimeSubType($filePath);
 
         $createHandler = $this->getCreateHandler($imgMimeType);

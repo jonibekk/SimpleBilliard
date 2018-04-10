@@ -23,6 +23,9 @@ class PageResourceHelper extends AppHelper
         'evaluator_settings'   => [
             'default' => ['/js/goalous_evaluator_setting.min']
         ],
+        'circle_pins'   => [
+            'default' => ['/js/goalous_circle_pin.min']
+        ],
         'goals'         => [
             'default'     => ['/js/goalous_goal.min'],
             'index'       => ['/js/react_goal_search_app.min'],

@@ -20,6 +20,7 @@
 }
 ?>
 <?= $this->App->viewStartComment() ?>
+<div id="CommentOgpBackup_<?= $comment['id'] ?>" class="always-hidden" data-text=""></div>
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_8px pb_8px">
         <a href="<?= $this->Html->url([
@@ -41,9 +42,9 @@
         <div class="comment-body">
             <div class="col comment-user">
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
-                    <div class="dropdown dropdown-comment pull-right">
+                    <div id="dropdown_<?= $comment['id'] ?>" class="dropdown dropdown-comment pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down comment-arrow"></i>
+                            <i class="fa fa-chevron-down fa-lg comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
@@ -58,7 +59,7 @@
                                    ]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
-
+                                   id="CommentEditButton_<?= $comment['id'] ?>"
                                 ><?= __("Edit comment") ?></a>
                             </li>
                             <li>
@@ -128,13 +129,17 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-
+            <?php if (!empty($comment['id'])): ?>
+            <div id="CommentOgpClose_<?= $comment['id'] ?>" class="font_lightgray comment-ogp-close">
+                <i class="fa fa-times fa-2x js-ogp-close"></i>
+            </div>
+            <?php endif; ?>
             <?php if ($comment['site_info']): ?>
                 <?php $site_info = json_decode($comment['site_info'], true) ?>
                 <?= $this->element('Feed/site_info_block', [
                     'site_info'              => $site_info,
-                    'title_max_length'       => 40,
-                    'description_max_length' => 95,
+                    'title_max_length'       => 50,
+                    'description_max_length' => 110,
                     'comment_id'             => $comment['id'],
                     'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",
                         ['style' => 'small']),

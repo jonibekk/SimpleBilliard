@@ -469,17 +469,17 @@ class GlRedis extends AppModel
     }
 
     /**
-     * @param string $type
-     * @param int    $team_id
-     * @param array  $to_user_ids
-     * @param int    $my_id
-     * @param string $body
-     * @param string $url
-     * @param int    $date
-     * @param int    $post_id
+     * @param string $type        Notification type
+     * @param int    $team_id     Team ID for the notification
+     * @param array  $to_user_ids User IDs of notification receivers
+     * @param int    $my_id       User ID of notification sender
+     * @param string $body        Notification message
+     * @param string $url         Page URL when the notification is clicked
+     * @param int    $date        UNIX timestamp of when the notification was created
+     * @param int    $post_id     ID of post related to the notification
      * @param array  $options
      *
-     * @return bool
+     * @return bool TRUE = succesfully save notification into REDIS.
      */
     public function setNotifications(
         $type,
@@ -492,8 +492,17 @@ class GlRedis extends AppModel
         $post_id = null,
         $options = []
     ) {
+
+        $parameterErrorArray = $this->_validateGlRedisParameters($type, $team_id, $my_id, $body, $url, $date);
+
+        if (!empty($parameterErrorArray)) {
+            GoalousLog::error("Parameter error at " . implode(",", $parameterErrorArray) . " | Trace:\n" .
+                implode("\n", AppUtil::getMethodCallerTrace()));
+            return false;
+        }
+
         $notify_id = $this->generateId();
-        if ($post_id) {
+        if (!empty($post_id)) {
             // $post_idが渡ってきている場合はメッセージ
             // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
             $notify_id = $post_id;
@@ -725,6 +734,10 @@ class GlRedis extends AppModel
                 unset($pipe_res[$k]);
                 continue;
             }
+            if (!key_exists('id', $v)) {
+                GoalousLog::error('Empty notification content:', $v);
+                continue;
+            }
             $score = $notify_list[$v['id']];
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
@@ -803,6 +816,10 @@ class GlRedis extends AppModel
         }
         $pipe_res = $pipe->exec();
         foreach ($pipe_res as $k => $v) {
+            if (!key_exists('id', $v)) {
+                GoalousLog::error('Empty notification content:', $v);
+                continue;
+            }
             $score = $notify_list[$v['id']];
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
@@ -1441,5 +1458,54 @@ class GlRedis extends AppModel
     {
         $key = $this->getKeyNameForMstCampaignPlans($groupId);
         return $this->Db->del($key);
+    }
+
+    /**
+     * @param $type
+     * @param $teamId
+     * @param $myId
+     * @param $body
+     * @param $url
+     * @param $date
+     *
+     * @return array List of parameters with error
+     */
+    private function _validateGlRedisParameters($type, $teamId, $myId, $body, $url, $date): array
+    {
+        $errorParameters = [];
+
+        //validate parameters
+        if (empty($type)) {
+            $errorParameters[] = 'type empty';
+        }
+        if (empty ($teamId)) {
+            $errorParameters[] = 'team_id empty';
+        } elseif (!ctype_digit(strval($teamId))) {
+            $errorParameters[] = 'team_id not int';
+        } elseif ($teamId <= 0) {
+            $errorParameters[] = 'team_id not positive';
+        }
+        if (empty ($myId)) {
+            $errorParameters[] = 'my_id empty';
+        } elseif (!ctype_digit(strval($myId))) {
+            $errorParameters[] = 'my_id not int';
+        } elseif ($myId <= 0) {
+            $errorParameters[] = 'myId not positive';
+        }
+        if (empty($body)) {
+            $errorParameters[] = 'body empty';
+        }
+        if (empty($url)) {
+            $errorParameters[] = 'url empty';
+        }
+        if (empty ($date)) {
+            $errorParameters[] = 'date empty';
+        } elseif (!is_numeric($date)) {
+            $errorParameters[] = 'date not numeric';
+        } elseif ($date <= 0) {
+            $errorParameters[] = 'date not positive';
+        }
+
+        return $errorParameters;
     }
 }
