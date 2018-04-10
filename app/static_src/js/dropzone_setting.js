@@ -38,7 +38,7 @@ $(function () {
   var previewTemplateDefault =
     '<div class="dz-preview dz-default-preview panel">' +
     '  <div class="dz-details">' +
-    '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
+    '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times fa-lg"></i></a>' +
     '    <div class="dz-thumb-container pull-left">' +
     '      <i class="fa fa-file-o file-other-icon"></i>' +
     '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +
@@ -81,6 +81,7 @@ $(function () {
     previewTemplate: previewTemplateDefault,
     thumbnailWidth: null,
     thumbnailHeight: 240,
+    parallelUploads: 1,
     // ファイルがドロップされた時の処理
     drop: function (e) {
       $uploadFileForm.hide();
@@ -274,23 +275,42 @@ $(function () {
     },
     // サムネイル
     thumbnail: function (file, dataUrl) {
-      var orientation = 0;
       EXIF.getData(file, function () {
-        switch (parseInt(EXIF.getTag(file, "Orientation"))) {
+        var orientation = parseInt(EXIF.getTag(this, "Orientation") || 1);
+        var angle = 0;
+        var flip = false;
+        switch (orientation) {
+         default:
+          case 1:
+            angle = 0;
+            break;
+          case 2:
+            angle = 0;
+            flip = true;
+            break;
           case 3:
-            orientation = 180;
+            angle = 180;
+            break;
+          case 4:
+            angle = 180;
+            flip = true;
+            break;
+          case 5:
+            angle = 270;
+            flip = true;
             break;
           case 6:
-            orientation = -90;
+            angle = 90;
+            break;
+          case 7:
+            angle = 90;
+            flip = true;
             break;
           case 8:
-            orientation = 90;
+            angle = 270;
             break;
         }
         var thumbnailElement, _i, _ref;
-        if (orientation != 0) {
-          orientation = orientation + 180;
-        }
         var $container = $(file.previewTemplate).find('.dz-thumb-container');
         if (file.type.match(/image/)) {
           $container.find('.fa').hide();
@@ -303,11 +323,23 @@ $(function () {
         thumbnailElement.alt = file.name;
         thumbnailElement.src = dataUrl;
         thumbnailElement.id = "exif";
-        var styles = {
-          "transform": "rotate(" + orientation + "deg)",
-          "-ms-transform": "rotate(" + orientation + "deg)",
-          "-webkit-transform": "rotate(" + orientation + "deg)"
-        };
+        if(!flip){
+          var styles = {
+            "transform": "rotate(" + angle + "deg)",
+            "-ms-transform": "rotate(" + angle + "deg)",
+            "-o-transform": "rotate(" + angle + "deg)",
+            "-moz-transform": "rotate(" + angle + "deg)",
+            "-webkit-transform": "rotate(" + angle + "deg)"
+          };
+        } else {
+          var styles = {
+            "transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-ms-transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-o-transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-moz-transform": "rotate(" + angle + "deg) scaleX(-1)",
+            "-webkit-transform": "rotate(" + angle + "deg) scaleX(-1)"
+          };
+        }
         $("#exif").css(styles);
         $("#exif").removeAttr("id");
       });

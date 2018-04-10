@@ -18,12 +18,6 @@ export default class PostCreate extends React.Component {
   componentDidMount() {
   }
   render() {
-    const textareaStyle = {
-      overflow: 'hidden',
-      resize: "none",
-      height: "25px",
-      "wordWrap":"break-word"
-    }
     const share_public_value = () => {
       let val = ''
       if (this.props.post.selected_circle.team_all_flg) {
@@ -66,7 +60,6 @@ export default class PostCreate extends React.Component {
                             cols="30"
                             placeholder={__("Write something...")}
                             required="required"
-                            style={textareaStyle}
                             maxLength="10000"
                             onChange={() => {this.props.toggleButtonClickable(this.refs)}}></textarea>
                 </div>

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-03 22:20+0900\n"
+"PO-Revision-Date: 2018-04-06 15:00+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -224,6 +224,8 @@ msgstr "評価者の評価を確定しました。"
 msgid ""
 "Evaluation feature is turned off. Please contact the team administrator."
 msgstr ""
+"チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
+"い。"
 
 msgid "Internal Server Error."
 msgstr "サーバーエラー"
@@ -1855,6 +1857,21 @@ msgstr "本文か添付ファイルは必須です。"
 msgid "Invalid telephone number"
 msgstr "不正な電話番号です。"
 
+#, fuzzy
+#| msgid "Invalid score."
+msgid "Invalid csv format"
+msgstr "定義されていないスコアです。"
+
+#, fuzzy
+#| msgid "This circle does not exist."
+msgid "Circle does not exist"
+msgstr "このサークルは存在しません。"
+
+#, fuzzy
+#| msgid "You don't belong to any circle."
+msgid "Do not belong to Circle"
+msgstr "参加しているサークルはありません。"
+
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
@@ -1989,6 +2006,26 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
+
+msgid "Edit Circles"
+msgstr "サークル編集"
+
+#, fuzzy
+#| msgid ""
+#| "You can pin a circle to the top as a sortable list. \"All Team\" will "
+#| "automatically be your top pin."
+msgid ""
+"You can pin a circle to the top as a sortable list. *Entire Team* circle "
+"will automatically be your top pin."
+msgstr ""
+"サークルにピンすると上位に表示され、並べ替えることができます。なお、*チーム全"
+"体用の*サークルはデフォルトでピン済みとなり並べ替えられません。"
+
+msgid "PINNED"
+msgstr "ピン済み"
+
+msgid "UNPINNED"
+msgstr "ピンなし"
 
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
@@ -3144,6 +3181,9 @@ msgstr "保存済みアイテムを削除しました"
 msgid "Circles"
 msgstr "サークル"
 
+msgid "Edit"
+msgstr "編集"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -3580,9 +3620,6 @@ msgstr "KRを削除する"
 
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこのKRを削除しますか？"
-
-msgid "Edit"
-msgstr "編集"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -6180,6 +6217,12 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Pinned"
+#~ msgstr "ピン済み"
+
+#~ msgid "Unpinned"
+#~ msgstr "ピンなし"
 
 #~ msgid "You can start evaluation with the current settings."
 #~ msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
