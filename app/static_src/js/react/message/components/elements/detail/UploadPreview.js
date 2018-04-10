@@ -2,8 +2,8 @@ import React from "react";
 import {connect} from "react-redux";
 import {deleteUploadedFile} from "~/message/modules/file_upload";
 import {formatFileSize} from "~/util/base.js";
-import {setExifRotateStyle} from "~/helper_functions/helpers.js";
 import {FileUpload} from "~/common/constants/App";
+import {setExifRotateStyleFile} from "~/helper_functions/helpers.js";
 
 class UploadPreview extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class UploadPreview extends React.Component {
     if (this.props.files.length == 0) {
       return null;
     }
-
+    const nodes = document.getElementsByClassName("uploadPreviews-item");
     return (
       <div className="uploadPreviews">
         {this.props.files.map((file, i) => {
@@ -35,6 +35,7 @@ class UploadPreview extends React.Component {
                       <img className="uploadPreviews-item-thumbnail"
                            alt={file.name}
                            src={file.previewUrl}
+                           onLoad={setExifRotateStyleFile(file,nodes[i])}
                       /> :
                       <i className="fa fa-file-o file-other-icon"/>
                     }
