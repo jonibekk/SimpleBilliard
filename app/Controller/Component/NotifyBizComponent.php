@@ -1376,13 +1376,13 @@ class NotifyBizComponent extends Component
     private function _saveNotifications()
     {
         //通知onのユーザを取得
-        $notificationReceiverIds = [];
+        $notificationReceiverUserIds = [];
         foreach ($this->notify_settings as $user_id => $val) {
             if ($val['app']) {
-                $notificationReceiverIds[] = $user_id;
+                $notificationReceiverUserIds[] = $user_id;
             }
         }
-        if (empty($notificationReceiverIds)) {
+        if (empty($notificationReceiverUserIds)) {
             return;
         }
         //to be short text
@@ -1395,7 +1395,7 @@ class NotifyBizComponent extends Component
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
-            $notificationReceiverIds,
+            $notificationReceiverUserIds,
             $this->notify_option['from_user_id'],
             $notificationBody,
             $this->notify_option['url_data'],

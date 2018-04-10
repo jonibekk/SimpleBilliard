@@ -735,7 +735,7 @@ class GlRedis extends AppModel
                 continue;
             }
             if (!key_exists('id', $v)) {
-                GoalousLog::error('$v', $v);
+                GoalousLog::error('Empty notification content:', $v);
                 continue;
             }
             $score = $notify_list[$v['id']];
@@ -817,7 +817,7 @@ class GlRedis extends AppModel
         $pipe_res = $pipe->exec();
         foreach ($pipe_res as $k => $v) {
             if (!key_exists('id', $v)) {
-                GoalousLog::error('$v', $v);
+                GoalousLog::error('Empty notification content:', $v);
                 continue;
             }
             $score = $notify_list[$v['id']];
