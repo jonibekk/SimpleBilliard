@@ -59,7 +59,6 @@ $(document).ready(function () {
 
     // see select2 document: https://select2.github.io/select2/ (3.5.3)
     function applySelect2ToElement(element) {
-        var excluded_users_list = [];
         element.each(function (i, e) {
             var $element = $(e);
             $element.on("change", function (e) {
@@ -73,6 +72,7 @@ $(document).ready(function () {
                 formatSelection: select2Format,
                 minimumInputLength: 1,
                 query: function (query) {
+                    var excluded_users_list = [];
                     //Insert existing evaluator IDs
                     var evElement = $('.eval-list-item').find("input[type=hidden]");
                     $.each(evElement, function (index, value) {
