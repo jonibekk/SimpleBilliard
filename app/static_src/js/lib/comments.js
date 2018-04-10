@@ -23,7 +23,6 @@ $(function () {
     });
     $(".comment-post-form,.comment-form").off("focus").off("blur").on("focus", function() {
         $("#jsGoTop").hide();
-        console.log("hide");
     }).on("blur", function() {
         $("#jsGoTop").show();
     });
