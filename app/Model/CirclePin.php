@@ -39,7 +39,7 @@ class CirclePin extends AppModel
         if($val['circle_orders'] === "") {
             return true;
         } 
-        if(!preg_match("/^'\d+(?:,\d+)*'$/", $val['circle_orders'])){
+        if(!preg_match("/^\d+(?:,\d+)*$/", $val['circle_orders'])){
             return false;
         }
 
@@ -57,8 +57,8 @@ class CirclePin extends AppModel
     {
         if($val['circle_orders'] === "") {
             return true;
-        } 
-        $circleIds = explode(',', substr($val['circle_orders'],1,-1));
+        }
+        $circleIds = explode(',', $val['circle_orders']);
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
 
@@ -84,7 +84,7 @@ class CirclePin extends AppModel
         if($val['circle_orders'] === "") {
             return true;
         } 
-        $circleIds = explode(',', substr($val['circle_orders'],1,-1));
+        $circleIds = explode(',', $val['circle_orders']);
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init("CircleMember");
 
