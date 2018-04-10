@@ -300,10 +300,10 @@ class AppUtil
      *
      * @return array
      */
-    static function moveMonthYm(int $year, int $month, int $moveMonth = 1) : array
+    static function moveMonthYm(int $year, int $month, int $moveMonth = 1): array
     {
         $date = self::dateFromYMD($year, $month, 1);
-        $date = date('Y-m', strtotime($date. ' '. $moveMonth. ' month'));
+        $date = date('Y-m', strtotime($date . ' ' . $moveMonth . ' month'));
         return explode('-', $date);
     }
 
@@ -316,7 +316,7 @@ class AppUtil
      *
      * @return string
      */
-    static function dateFromYMD(int $y, int $m, int $d) : string
+    static function dateFromYMD(int $y, int $m, int $d): string
     {
         return sprintf("%4d-%02d-%02d", $y, $m, $d);
     }
@@ -332,7 +332,7 @@ class AppUtil
      *
      * @return string
      */
-    static function correctInvalidDate(int $y, int $m, int $d) : string
+    static function correctInvalidDate(int $y, int $m, int $d): string
     {
         // Check invalid
         if (checkdate($m, $d, $y) === false) {
@@ -719,13 +719,13 @@ class AppUtil
 
     /**
      * Check if int
-     *
      * String type allow compare to `is_int` func
+     *
      * @param $val
      *
      * @return bool
      */
-    static function isInt($val) : bool
+    static function isInt($val): bool
     {
         if (!is_numeric($val)) {
             return false;
@@ -741,7 +741,7 @@ class AppUtil
      * - format as thousand comma
      * - add symbol before of after
      *
-     * @param int $amount
+     * @param int    $amount
      * @param string $symbol
      * @param string $beforeAfter
      *
@@ -772,6 +772,7 @@ class AppUtil
 
     /**
      * change size string like '2G', '128M' to integer bytes
+     *
      * @param string $sizeString
      *
      * @return int
@@ -784,9 +785,12 @@ class AppUtil
         $unit = strtoupper(substr($sizeString, -1));
         $sizeNum = floatval($sizeString);
         switch ($unit) {
-            case 'G': return $sizeNum * 1024 * 1024 * 1024;
-            case 'M': return $sizeNum * 1024 * 1024;
-            case 'K': return $sizeNum * 1024;
+            case 'G':
+                return $sizeNum * 1024 * 1024 * 1024;
+            case 'M':
+                return $sizeNum * 1024 * 1024;
+            case 'K':
+                return $sizeNum * 1024;
         }
         return 0;
     }
@@ -809,5 +813,29 @@ class AppUtil
             $baseUrl = 'https://' . $envName . '.goalous.com';
         }
         return $baseUrl;
+    }
+
+    /**
+     * Get list of caller functions
+     *
+     * @param int $stepsLimit Number of maximum caller stack
+     *
+     * @return array Array of function names
+     */
+    static function getMethodCallerTrace(int $stepsLimit = 10): array
+    {
+        $traceResult = [];
+
+        foreach (debug_backtrace(null, $stepsLimit) as $trace) {
+            $line = $trace['class'] . "(line:" . $trace['line'] . ")" . ":" . $trace['function'];
+
+            if (!empty($trace['args'])) {
+                $line .= "(" . implode(",", Hash::flatten($trace['args'])) . ")";
+            }
+
+            $traceResult[] = $line;
+        }
+
+        return $traceResult;
     }
 }
