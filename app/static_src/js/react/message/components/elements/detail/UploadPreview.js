@@ -25,7 +25,6 @@ class UploadPreview extends React.Component {
     return (
       <div className="uploadPreviews">
         {this.props.files.map((file, i) => {
-
           const [size, unit] = formatFileSize(file.size);
           return (
             <div className="uploadPreviews-item" key={i}>
