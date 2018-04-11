@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-06 15:00+0900\n"
+"PO-Revision-Date: 2018-04-11 17:19+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1857,21 +1857,6 @@ msgstr "本文か添付ファイルは必須です。"
 msgid "Invalid telephone number"
 msgstr "不正な電話番号です。"
 
-#, fuzzy
-#| msgid "Invalid score."
-msgid "Invalid csv format"
-msgstr "定義されていないスコアです。"
-
-#, fuzzy
-#| msgid "This circle does not exist."
-msgid "Circle does not exist"
-msgstr "このサークルは存在しません。"
-
-#, fuzzy
-#| msgid "You don't belong to any circle."
-msgid "Do not belong to Circle"
-msgstr "参加しているサークルはありません。"
-
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
@@ -2007,8 +1992,8 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
 
-msgid "Edit Circles"
-msgstr "サークル編集"
+msgid "Manage Circles"
+msgstr "サークル管理"
 
 #, fuzzy
 #| msgid ""
@@ -3181,8 +3166,8 @@ msgstr "保存済みアイテムを削除しました"
 msgid "Circles"
 msgstr "サークル"
 
-msgid "Edit"
-msgstr "編集"
+msgid "Manage"
+msgstr "管理"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -3620,6 +3605,9 @@ msgstr "KRを削除する"
 
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこのKRを削除しますか？"
+
+msgid "Edit"
+msgstr "編集"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -6217,6 +6205,24 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#, fuzzy
+#~| msgid "Invalid score."
+#~ msgid "Invalid csv format"
+#~ msgstr "定義されていないスコアです。"
+
+#, fuzzy
+#~| msgid "This circle does not exist."
+#~ msgid "Circle does not exist"
+#~ msgstr "このサークルは存在しません。"
+
+#, fuzzy
+#~| msgid "You don't belong to any circle."
+#~ msgid "Do not belong to Circle"
+#~ msgstr "参加しているサークルはありません。"
+
+#~ msgid "Edit Circles"
+#~ msgstr "サークル編集"
 
 #~ msgid "Pinned"
 #~ msgstr "ピン済み"
