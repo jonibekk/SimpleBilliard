@@ -840,12 +840,12 @@ class GlRedis extends AppModel
 
     /**
      * @param    int|string    $userId
-     * @param    string $ipAddress
+     * @param    $ipAddress
      *
      * @return bool|string
      * @throws Exception
      */
-    function makeDeviceHash($userId, string $ipAddress = null)
+    function makeDeviceHash($userId, $ipAddress = null)
     {
         $browscap = new \BrowscapPHP\Browscap();
         $browser_info = $browscap->getBrowser(CakeRequest::header('User-Agent'));
