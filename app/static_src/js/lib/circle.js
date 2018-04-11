@@ -433,7 +433,7 @@ function evCircleFeed(options) {
 
 function updateNotifyOnHamburger() {
 
-    var $list_elem = $('.js-dashboard-circle-list.is-hamburger');
+    var $list_elem = $('.js-dashboard-circle-list');
     var existUnreadCircle = $list_elem.hasClass('is-unread');
     if (existUnreadCircle) {
         $('.js-unread-point-on-hamburger').removeClass('is-read');
