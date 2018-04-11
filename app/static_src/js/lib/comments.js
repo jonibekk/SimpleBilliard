@@ -26,7 +26,7 @@ $(function () {
     }).on("blur", function() {
         $("#jsGoTop").show();
     });
-    $(".comment-ogp-close").hide();
+    $(".comment-ogp-close").remove();
 });
 
 // for resizing certainly, exec after window loaded
@@ -81,7 +81,8 @@ function toggleCommentForm() {
 
     // Register the form for submit
     $commentForm.off('submit').on('submit', function (e) {
-        $('#CommentOgpClose_' + post_id).hide();
+        $('#CommentOgpClose_' + post_id).remove();
+        $(".comment-ogp-close").remove();
         // アップロードファイルの有効期限が切れていなければコメント投稿
         var res = checkUploadFileExpire($(this).attr('id'));
         if (res) {
