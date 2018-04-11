@@ -1235,13 +1235,10 @@ class NotifyBizComponent extends Component
         if (!$this->Team->TeamMember->isActive($evaluation['Evaluation']['evaluator_user_id'])) {
             return;
         }
-
-        $evaluateeUserId = $evaluation['Evaluation']['evaluatee_user_id'];
-
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
             NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
-        $evaluatee = $this->Goal->User->getUsersProf($evaluateeUserId);
+        $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
 
         $url = [
             'controller'       => 'evaluations',
@@ -1251,7 +1248,7 @@ class NotifyBizComponent extends Component
             'team_id'          => $this->NotifySetting->current_team_id
         ];
 
-        $this->notify_option['from_user_id'] = $evaluateeUserId;
+        $this->notify_option['from_user_id'] = null;
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR;
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = null;
@@ -1430,28 +1427,28 @@ class NotifyBizComponent extends Component
     private function _saveNotifications()
     {
         //通知onのユーザを取得
-        $notificationReceiverUserIds = [];
+        $uids = [];
         foreach ($this->notify_settings as $user_id => $val) {
             if ($val['app']) {
-                $notificationReceiverUserIds[] = $user_id;
+                $uids[] = $user_id;
             }
         }
-        if (empty($notificationReceiverUserIds)) {
+        if (empty($uids)) {
             return;
         }
         //to be short text
-        $notificationBody = json_decode($this->notify_option['item_name']);
-        foreach ($notificationBody as $k => $v) {
-            $notificationBody[$k] = mb_strimwidth($v, 0, 40, "...");
+        $item = json_decode($this->notify_option['item_name']);
+        foreach ($item as $k => $v) {
+            $item[$k] = mb_strimwidth($v, 0, 40, "...");
         }
-        $notificationBody = json_encode($notificationBody);
-
+        $item = json_encode($item);
+        //TODO save to redis.
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
-            $notificationReceiverUserIds,
+            $uids,
             $this->notify_option['from_user_id'],
-            $notificationBody,
+            $item,
             $this->notify_option['url_data'],
             microtime(true),
             $this->notify_option['topic_id'] ?? null,
@@ -1853,6 +1850,29 @@ class NotifyBizComponent extends Component
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
+    }
+
+    /**
+     * set notifications
+     *
+     * @param array|int $to_user_ids
+     * @param int       $type
+     * @param string    $url
+     * @param string    $body
+     *
+     * @return bool
+     */
+    function setNotifications($to_user_ids, $type, $url, $body = null)
+    {
+        $this->GlRedis->setNotifications(
+            $type,
+            $this->NotifySetting->current_team_id,
+            $to_user_ids,
+            $this->NotifySetting->my_uid,
+            $body,
+            $url
+        );
+        return true;
     }
 
     /**
