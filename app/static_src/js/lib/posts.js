@@ -244,14 +244,7 @@ function appendPostOgpInfo(data) {
     // show delete button
     .prepend($('<a>').attr('href', '#')
       .addClass('font_lightgray')
-      .css({
-        right: '35px',
-        "margin-top": '25px',
-        position: 'absolute',
-        display: "block",
-        "z-index": '1000'
-      })
-      .append('<i class="fa fa-times fa-2x"></i>')
+      .append('<i class="fa fa-times fa-2x feed-post-ogp-close"></i>')
       .on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
