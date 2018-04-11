@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment() ?>
-<ul>
+<ul id="dashboard-defaultpin">
 <?= $this->element('Circle/dashboard_list_element', ['circle' => $defaultCircle, 'isHamburger' => false]) ?>
 </ul>
 <ul id="dashboard-pinned">

@@ -237,21 +237,18 @@ function getPostOGPInfo(ogp, text) {
  */
 function appendPostOgpInfo(data) {
   var $siteInfoUrl = $('#PostSiteInfoUrl');
-  var $siteInfo = $('#PostOgpSiteInfo');
+  var $siteInfo = $('#PostOgpSiteInfo').html(data.html);
+  if($siteInfo.hasClass('edit-post-ogp-site-info')){
+    var addClass = 'edit-feed-post-ogp-close';
+  } else {
+    var addClass = 'feed-post-ogp-close';
+  }
   $siteInfo
-  // html for preview
-    .html(data.html)
     // show delete button
     .prepend($('<a>').attr('href', '#')
       .addClass('font_lightgray')
-      .css({
-        right: '35px',
-        "margin-top": '25px',
-        position: 'absolute',
-        display: "block",
-        "z-index": '1000'
-      })
-      .append('<i class="fa fa-times fa-2x"></i>')
+      .addClass(addClass)
+      .append('<i class="fa fa-times fa-2x js-ogp-close"></i>')
       .on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
