@@ -110,7 +110,6 @@ class MentionComponent extends Component {
                         continue;
                     }
                     $model = ClassRegistry::init('PlainCircle');
-                    $model->alias = 'Circle';
                 }
                 if (!is_null($model)) {
                     // ExtContainableBehavior set del_flg false by default
@@ -178,7 +177,7 @@ class MentionComponent extends Component {
                 ],
             ],
             'fields'    => [
-                'PostShareCircle.*'
+                'PostShareCircle.circle_id'
             ]
         ]);
         $shareUsers = $postModel->find('all', [
@@ -194,7 +193,7 @@ class MentionComponent extends Component {
                 ],
             ],
             'fields'    => [
-                'PostShareUser.*'
+                'PostShareUser.user_id'
             ]
         ]);
         return ['PostShareCircles' => $shareCircles, 'PostShareUsers' => $shareUsers];
@@ -206,7 +205,7 @@ class MentionComponent extends Component {
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
             $circleData = $circleModel->findById($circleId);
-            $isPublic = $circleData['Circle']['public_flg'];
+            $isPublic = $circleData['PlainCircle']['public_flg'];
             if (!$isPublic) {
                 $circleMemberModel = ClassRegistry::init('CircleMember');
                 $members = $circleMemberModel->find('list', [
