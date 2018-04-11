@@ -7,6 +7,7 @@ App::import('Service/Api', 'ApiCommentService');
  */
 class CommentsController extends ApiController
 {
+    public $components = ['Mention'];
     /**
      * @param $id
      * Get Comment data on JSON format
@@ -77,19 +78,27 @@ class CommentsController extends ApiController
         $post = $Post->findById($postId);
         $type = Hash::get($post, 'Post.type');
 
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Comment.body'), $this->current_team_id, $this->my_uid);
+
         switch ($type) {
             case Post::TYPE_NORMAL:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $postId, $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
             case Post::TYPE_ACTION:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
                     $postId,
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                     $postId, $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
         }
         // Push comments notifications

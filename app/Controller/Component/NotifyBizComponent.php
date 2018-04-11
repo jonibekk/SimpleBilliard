@@ -32,6 +32,7 @@ class NotifyBizComponent extends Component
         'Session',
         'GlEmail',
         'Redis',
+        'Mention'
     ];
 
     public $notify_option = [
@@ -146,6 +147,10 @@ class NotifyBizComponent extends Component
                 $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $model_id, $sub_model_id);
                 break;
+            case NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT:
+                $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $model_id, $sub_model_id, $to_user_list);
+                break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
                 break;
@@ -247,7 +252,6 @@ class NotifyBizComponent extends Component
             default:
                 break;
         }
-
         //通知するアイテムかどうかチェック
         if (!$this->_canNotify()) {
             return;
@@ -469,6 +473,17 @@ class NotifyBizComponent extends Component
             = $this->Team->Invite->FromUser->current_team_id
             = $this->Team->EvaluationSetting->current_team_id
             = $team_id;
+    }
+
+    private function _fixReceiver($team_id, $user_ids, $body) {
+        $mentionedUsers = $this->Mention->getUserList($body, $team_id, null, true);
+        foreach ($mentionedUsers as $user) {
+            $index = array_search($user, $user_ids);
+            if ($index) {
+                unset($user_ids[$index]);
+            }
+        }
+        return $user_ids;
     }
 
     /**
@@ -1220,10 +1235,13 @@ class NotifyBizComponent extends Component
         if (!$this->Team->TeamMember->isActive($evaluation['Evaluation']['evaluator_user_id'])) {
             return;
         }
+
+        $evaluateeUserId = $evaluation['Evaluation']['evaluatee_user_id'];
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
             NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
-        $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
+        $evaluatee = $this->Goal->User->getUsersProf($evaluateeUserId);
 
         $url = [
             'controller'       => 'evaluations',
@@ -1233,7 +1251,7 @@ class NotifyBizComponent extends Component
             'team_id'          => $this->NotifySetting->current_team_id
         ];
 
-        $this->notify_option['from_user_id'] = null;
+        $this->notify_option['from_user_id'] = $evaluateeUserId;
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR;
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = null;
@@ -1308,6 +1326,8 @@ class NotifyBizComponent extends Component
         if (empty($commented_user_list)) {
             return;
         }
+        $commented_user_list = $this->_fixReceiver($this->Team->current_team_id, $commented_user_list, $comment['Comment']['body']);
+        if (!count($commented_user_list)) return;
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commented_user_list,
             $notify_type);
@@ -1350,6 +1370,9 @@ class NotifyBizComponent extends Component
             return;
         }
         //通知対象者の通知設定確認
+        $members = array($post['Post']['user_id']);
+        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $comment['Comment']['body']);
+        if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($post['Post']['user_id'],
             $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
@@ -1370,31 +1393,65 @@ class NotifyBizComponent extends Component
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $post['Post']['user_id']);
     }
 
+    /**
+     * get notification options for the mention
+     *
+     * @param $notify_type
+     * @param $post_id
+     * @param $comment_id
+     */
+    private function _setFeedMentionedOption($notify_type, $post_id, $comment_id, $to_user_ids)
+    {
+        $post = $this->Post->findById($post_id);
+        if (empty($post)) {
+            return;
+        }
+        //通知対象者の通知設定確認
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
+            $notify_type);
+        if (!is_null($comment_id)) {
+            $comment = $this->Post->Comment->read(null, $comment_id);
+        }
+
+        $this->notify_option['notify_type'] = $notify_type;
+        $this->notify_option['count_num'] = count($to_user_ids);
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ];
+        $this->notify_option['model_id'] = $post_id;
+        $this->notify_option['item_name'] = !empty($comment) ?
+            $this->Mention->replaceMention(json_encode([trim($comment['Comment']['body'])])) : null;
+        $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
+    }
+    
     private function _saveNotifications()
     {
         //通知onのユーザを取得
-        $uids = [];
+        $notificationReceiverUserIds = [];
         foreach ($this->notify_settings as $user_id => $val) {
             if ($val['app']) {
-                $uids[] = $user_id;
+                $notificationReceiverUserIds[] = $user_id;
             }
         }
-        if (empty($uids)) {
+        if (empty($notificationReceiverUserIds)) {
             return;
         }
         //to be short text
-        $item = json_decode($this->notify_option['item_name']);
-        foreach ($item as $k => $v) {
-            $item[$k] = mb_strimwidth($v, 0, 40, "...");
+        $notificationBody = json_decode($this->notify_option['item_name']);
+        foreach ($notificationBody as $k => $v) {
+            $notificationBody[$k] = mb_strimwidth($v, 0, 40, "...");
         }
-        $item = json_encode($item);
-        //TODO save to redis.
+        $notificationBody = json_encode($notificationBody);
+
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
-            $uids,
+            $notificationReceiverUserIds,
             $this->notify_option['from_user_id'],
-            $item,
+            $notificationBody,
             $this->notify_option['url_data'],
             microtime(true),
             $this->notify_option['topic_id'] ?? null,
@@ -1796,29 +1853,6 @@ class NotifyBizComponent extends Component
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
-    }
-
-    /**
-     * set notifications
-     *
-     * @param array|int $to_user_ids
-     * @param int       $type
-     * @param string    $url
-     * @param string    $body
-     *
-     * @return bool
-     */
-    function setNotifications($to_user_ids, $type, $url, $body = null)
-    {
-        $this->GlRedis->setNotifications(
-            $type,
-            $this->NotifySetting->current_team_id,
-            $to_user_ids,
-            $this->NotifySetting->my_uid,
-            $body,
-            $url
-        );
-        return true;
     }
 
     /**

@@ -54,6 +54,7 @@ var Page = {
         $(this.conf.kr_progress).on("click", "input", function (e) {
             e.stopPropagation();
         });
+        new Mention($(this.conf.form).find('#CommonActionName'))
         // フォームサブミット
         $(this.conf.form).submit(function (e) {
             // アクション編集の場合submitさせる
@@ -96,6 +97,11 @@ var Page = {
         $(form).find(".changed").removeClass("changed");
 
         var form_data = $(form).serializeArray();
+        for (var fi=0; fi<form_data.length; fi++) {
+            if (form_data[fi].name === 'data[ActionResult][name]') {
+                form_data[fi].value = $('#CommonActionName')[0].submitValue()
+            }
+        }
         var switch_el = $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
         if (switch_el.length > 0 && !switch_el.prop('checked')) {
             form_data.push({name: "data[ActionResult][key_result_current_value]", value: 0});
