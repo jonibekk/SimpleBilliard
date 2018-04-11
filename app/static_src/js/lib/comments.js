@@ -26,6 +26,7 @@ $(function () {
     }).on("blur", function() {
         $("#jsGoTop").show();
     });
+    $(".comment-ogp-close").hide();
 });
 
 // for resizing certainly, exec after window loaded
