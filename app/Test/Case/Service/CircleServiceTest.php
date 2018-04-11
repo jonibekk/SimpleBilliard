@@ -206,7 +206,7 @@ class CircleServiceTest extends GoalousTestCase
         Cache::write($this->CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), true, 'user_data');
         $this->CircleService->create($circleData, $userId, [$userId2]);
         $res = $this->CircleService->removeCircleMember($teamId, $circleId, $userId2);
-        $this->assertFalse($res);
+        $this->assertTrue($res);
         $this->assertFalse($this->CircleMember->isJoined($circleId, $userId2));
         $this->assertTrue($this->CircleMember->isJoined($circleId, $userId));
 

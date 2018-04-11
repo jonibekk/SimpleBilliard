@@ -36,10 +36,10 @@ class CirclePin extends AppModel
      */
     function customValidateIsCsvFormat(array $val): bool
     {
-        if($val['circle_orders'] == "''"){
+        if($val['circle_orders'] === "") {
             return true;
         } 
-        if(!preg_match("/^'\d+(?:,\d+)*'$/", $val['circle_orders'])){
+        if(!preg_match("/^\d+(?:,\d+)*$/", $val['circle_orders'])){
             return false;
         }
 
@@ -55,10 +55,10 @@ class CirclePin extends AppModel
      */
     function customValidateIsCircleExists(array $val): bool
     {
-        if($val['circle_orders'] == "''"){
+        if($val['circle_orders'] === "") {
             return true;
-        } 
-        $circleIds = explode(',', substr($val['circle_orders'],1,-1));
+        }
+        $circleIds = explode(',', $val['circle_orders']);
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
 
@@ -81,10 +81,10 @@ class CirclePin extends AppModel
      */
     function customValidateIsBelong(array $val): bool
     {
-        if($val['circle_orders'] == "''"){
+        if($val['circle_orders'] === "") {
             return true;
         } 
-        $circleIds = explode(',', substr($val['circle_orders'],1,-1));
+        $circleIds = explode(',', $val['circle_orders']);
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init("CircleMember");
 
@@ -189,12 +189,11 @@ class CirclePin extends AppModel
         try {
             $row = $this->getUnique($userId, $teamId);
             if(!empty($row)){
-                return substr($row['circle_orders'],1,-1);
+                $returnValue = $row['circle_orders'] == null ? "" : $row['circle_orders'];
+                return $returnValue;
             }      
         } catch (Exception $e) {    
             GoalousLog::error("[CirclePin]:",[$e->getMessage(),$e->getTraceAsString()]);
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
         }
 
         return "";

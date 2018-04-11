@@ -25,13 +25,15 @@ class CirclePinService extends AppService
         $CirclePin = ClassRegistry::init("CirclePin");
         $validation = [];
 
+        $CirclePin->set(['circle_orders' => $pinOrder]);
+
         $validation = $CirclePin->validates();
 
         if($validation !== true){
-            $validation = $this->_validationExtract($CirclePin->validationErrors);
+            $validation = $CirclePin->_validationExtract($CirclePin->validationErrors);
         }
 
-        if(isset($validation)){
+        if(!empty($validation)){
             return $validation;
         }
 
@@ -51,6 +53,7 @@ class CirclePinService extends AppService
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
+
         $options = [
             'user_id' => $userId,
             'team_id' => $teamId,
@@ -71,13 +74,12 @@ class CirclePinService extends AppService
                 $row['circle_orders'] = substr($orders, 1, -1);
                 $options['id'] = $row['id'];
 
-                if(!$CirclePin->save($row, $options)) {
-                    throw new Exception("Error Processing Delete Request", 1);             
+                if(!$CirclePin->save($row, false)) {
+                    throw new Exception($row['circle_orders'], 1);             
                 }
             }   
         } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+            GoalousLog::error("deleteCircleId",[$e->getMessage(),$e->getTraceAsString()]);
             return false;
         }
 
@@ -97,44 +99,37 @@ class CirclePinService extends AppService
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
-        $db = $CirclePin->getDataSource();
 
-        $options = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-        ];
-
-        $data = [
-            'CirclePin' => [
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'circle_orders' => $db->value($pinOrders, 'string'),
-                'del_flg' => false,
-            ],
-        ];
-        $row = $CirclePin->getUnique($userId, $teamId);
-            if(empty($row)){
-                $CirclePin->create($data);
-                if(!$CirclePin->save($data)){
+        try {
+            $data = [
+                'CirclePin' => [
+                    'user_id'       => $userId,
+                    'team_id'       => $teamId,
+                    'circle_orders' => $pinOrders,
+                ],
+            ];
+            $row = $CirclePin->getUnique($userId, $teamId);
+            if (empty($row)) {
+                $CirclePin->create();
+                if (!$CirclePin->save($data, false)) {
                     throw new Exception("Error Processing Insert Request", 1);
                 }
             } else {
-                $row['circle_orders'] = $data['CirclePin']['circle_orders'];
-                $options['id'] = $row['id'];
-                if(!$CirclePin->save($row, $options)) {
-                    throw new Exception("Error Processing Update Request", 1);             
+                $CirclePin->clear();
+                $CirclePin->id = $row['id'];
+                if (!$CirclePin->save($data, false)) {
+                    throw new Exception("Error Processing Update Request", 1);
                 }
             }
-        try{
-            
-        } catch (RuntimeException $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+
+        } catch (Exception $e) {
+            GoalousLog::error("setCircleOrders", [$e->getMessage(), $e->getTraceAsString()]);
             return false;
         }
 
         return true;
     }
+
     /**
      * Get Relevant Ordered Circles Data
      *

@@ -3,24 +3,49 @@
  */
 "use strict";
 
+/**
+ * Checks valid Url
+ */
+var url_pattern = {
+    protocol: 'https?:\/\/(www\.)?',
+    domain: '[a-zA-Z0-9-_\.]+',
+    tld: '(\.[a-zA-Z0-9]{2,})',
+    params: '([-a-zA-Z0-9:%_\+.~#?&//=]*)'
+}
+
+function getValidURL(input){
+    var regex = new RegExp(url_pattern.protocol + url_pattern.domain + url_pattern.tld + url_pattern.params, 'g');
+    var result = regex.exec(input);
+    if(result){
+        return result[0];
+    } else {
+        return null;
+    }
+}
+
 $(function () {
-  var inputUrlCheckingElement = document.createElement('input');
-  inputUrlCheckingElement.setAttribute('type', 'url');
-  
-  function isValidURL(u){
-    inputUrlCheckingElement.value = u;
-    return inputUrlCheckingElement.validity.valid;
-  }
   // Only on the where the Posts Page is displayed
     require(['ogp'], function (ogp) {
-
-      $('#CommonPostBody').on('keyup', function (e) {
-        if(e.keyCode == 32 || e.keyCode == 13) {
-          var input = $.trim($('#CommonPostBody').val());
-          if(isValidURL(input)){
-            getPostOGPInfo(ogp, input);
+      $('#CommonPostBody').off('keyup').on('keyup', function (e) {
+          if ($('#PostSiteInfoUrl').val()) {
+              return false;
           }
-        }
+          var position = $('#CommonPostBody').get(0).selectionStart - 1;
+          var key = this.value.charCodeAt(position);
+          if(key == 32 || key == 10) {
+              var url = getValidURL($('#CommonPostBody').val());
+              if(url) {
+                  getPostOGPInfo(ogp, url);
+              }
+          }
+      });
+      $('#CommonPostBody').off('paste').on('paste', function (e) {
+          if (!$('#PostSiteInfoUrl').val()) {
+            var url = getValidURL(e.originalEvent.clipboardData.getData('text'));
+            if(url) {
+                getPostOGPInfo(ogp, url);
+            }
+          }
       });
       // When editing posts and OGP'S url has been set
       if ($('.post-edit').length) {
@@ -172,10 +197,6 @@ function getPostOGPInfo(ogp, text) {
 
     // Checks if necessary to obtain ogp
     readyLoading: function () {
-      // If OGP is already obtained finish
-      if ($('#PostSiteInfoUrl').val()) {
-        return false;
-      }
       return true;
     },
 

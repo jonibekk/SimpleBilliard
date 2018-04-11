@@ -57,13 +57,15 @@
         </div>
         <?= $this->Form->hidden('site_info_url',
             ['id' => "CommentSiteInfoUrl_{$post['Post']['id']}"]) ?>
-
+        <div id="CommentOgpClose_<?= $post['Post']['id'] ?>" class="font_lightgray comment-ogp-close">
+            <i class="fa fa-times fa-2x js-ogp-close"></i>
+        </div>
         <div id="CommentOgpSiteInfo_<?= $post['Post']['id'] ?>"
              class="comment-ogp-site-info"></div>
         <div id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"
              class="comment-upload-file-preview"></div>
         <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
-
+        
         <div class="comment-btn" id="Comment_<?= $post['Post']['id'] ?>">
             <div>
                 <a href="#" class="link-red new-comment-add-pic comment-file-attach-button"
