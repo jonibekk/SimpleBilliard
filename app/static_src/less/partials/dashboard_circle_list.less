@@ -68,10 +68,6 @@
 .dashboard-circle-list-body {
   overflow-y: scroll;
   width: 100%;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 .dashboard-circle-list-seek {
   font-size: 12px;
@@ -225,5 +221,10 @@
         text-align:left;
       }
     }
+  }
+}
+@media screen and (min-width: 480px) {
+  #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
+    width: 94%;
   }
 }
