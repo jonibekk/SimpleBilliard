@@ -29,9 +29,6 @@ if (isset($site_info['type']) && (
 }
 ?>
 <?php if (isset($site_info)): ?>
-    <?php if (isset($site_info['is_editing']) && $site_info['is_editing'] === true) : ?>
-        
-    <?php endif ?>
     <div class="col pt_10px js-ogp-box"
     <?php if (!empty($comment_id)): ?>
         id="CommentOgpBox_<?= $comment_id ?>"
