@@ -123,7 +123,6 @@ class MentionComponent extends Component {
                 }
             }
         }
-        self::getPostWithShared($accessControlledId);
         return $body;
     }
     /**
