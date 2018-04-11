@@ -13,7 +13,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <p class="circle_heading is-humberger"><?= __("Circles") ?>
-    <a href="/circle_pins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Edit") ?></a>
+    <a href="/circle_pins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Manage") ?></a>
 </p>
 <div id="filter-circles-list-hamburger" class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
         <ul>

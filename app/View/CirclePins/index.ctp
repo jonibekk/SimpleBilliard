@@ -1,7 +1,7 @@
 <?= $this->App->viewStartComment()?>
 <div id="circles-edit-page" class="panel panel-default col-sm-8 col-sm-offset-2 clearfix pin-circle-list">
     <div id="circle-pin-heading" class="panel-heading">
-        <?= __("Edit Circles") ?>
+        <?= __("Manage Circles") ?>
         <div class="circle-pin-heading-description">
             <?= __('You can pin a circle to the top as a sortable list. *Entire Team* circle will automatically be your top pin.') ?>
         </div>
