@@ -109,7 +109,8 @@ class MentionComponent extends Component {
                     if (!count($checked)) {
                         continue;
                     }
-                    $model = ClassRegistry::init('Circle');
+                    $model = ClassRegistry::init('PlainCircle');
+                    $model->alias = 'Circle';
                 }
                 if (!is_null($model)) {
                     // ExtContainableBehavior set del_flg false by default
@@ -202,14 +203,15 @@ class MentionComponent extends Component {
         $post = self::getPostWithShared($postId, $list);
         $filterMembers = [];
         foreach($post['PostShareCircles'] as $circle) {
-            $circleModel = ClassRegistry::init('Circle');
-            $circleData = $circleModel->findById($circle['PostShareCircle']['circle_id']);
+            $circleModel = ClassRegistry::init('PlainCircle');
+            $circleId = $circle['PostShareCircle']['circle_id'];
+            $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['Circle']['public_flg'];
             if (!$isPublic) {
                 $circleMemberModel = ClassRegistry::init('CircleMember');
                 $members = $circleMemberModel->find('list', [
                     'fields' => ['user_id'],
-                    'conditions' => ['circle_id' => $circle['PostShareCircle']['circle_id']]
+                    'conditions' => ['circle_id' => $circleId]
                 ]);
                 $filterMembers = array_merge($filterMembers, array_values($members));
             }
@@ -228,18 +230,19 @@ class MentionComponent extends Component {
         $post = self::getPostWithShared($postId, $list);
         $publicCircles = [];
         $secretCircles = [];
-        foreach($post['PostShareCircle'] as $circle) {
-            $circleModel = ClassRegistry::init('Circle');
-            $circleData = $circleModel->findById($circle['circle_id']);
-            $isPublic = $circleData['Circle']['public_flg'];
+        foreach($post['PostShareCircles'] as $circle) {
+            $circleModel = ClassRegistry::init('PlainCircle');
+            $circleId = $circle['PostShareCircle']['circle_id'];
+            $circleData = $circleModel->findById($circleId);
+            $isPublic = $circleData['PlainCircle']['public_flg'];
             if ($isPublic) {
-                $publicCircles[] = $circle['circle_id'];
+                $publicCircles[] = $circleId;
             }else {
-                $secretCircles[] = $circle['circle_id'];
+                $secretCircles[] = $circleId;
             }
         }
         if (count($publicCircles) > 0) {
-            $circleModel = ClassRegistry::init('Circle');
+            $circleModel = ClassRegistry::init('PlainCircle');
             $ids = array_map(function($l) {
                 return str_replace(self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER, '', $l['id']);                
             }, $list);
