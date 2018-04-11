@@ -63,8 +63,7 @@ class Term extends AppModel
      * @var array
      */
     public $hasMany = [
-        'Evaluation',
-        'Evaluator',
+        'Evaluation'
     ];
 
     public $update_validate = [

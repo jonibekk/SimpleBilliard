@@ -66,6 +66,7 @@ function toggleCommentForm() {
     if ($commentButtons.is(':visible')) {
         return;
     }
+    new Mention($txtArea)
 
     $(".comment-post-form,.comment-form").off("focus").off("blur").on("focus", function() {
         $("#jsGoTop").hide();
@@ -77,7 +78,7 @@ function toggleCommentForm() {
 
     // reset textarea
     $txtArea.val("");
-
+  
     // Register the form for submit
     $commentForm.off('submit').on('submit', function (e) {
         $('#CommentOgpClose_' + post_id).hide();
@@ -313,7 +314,8 @@ function addComment(e) {
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
     var formData = new FormData(e.target);
-
+    var textarea = $(e.target).find('textarea')
+    formData.append('data[Comment][body]', textarea[0].submitValue())
     // Add content of ogp box if visible
     var comment_id = submit_id.split('_')[1];
     var $ogp_box = $('#CommentOgpSiteInfo_' + comment_id);
@@ -625,6 +627,8 @@ function evCommendEditSubmit(e) {
         formData.OGP = ogpData;
     }
 
+    formData['data[Comment][body]'] = $('textarea#CommentEditFormBody_'+commentId)[0].submitValue()
+
     $.ajax({
         type: 'PUT',
         url: "/api/v1/comments/" + commentId,
@@ -864,6 +868,8 @@ function evTargetToggleClick() {
                     $('#CommentOgpBackup_' + comment_id).hide();
 
                     // Load OGP for edit field
+                    var $editField = $('#CommentEditFormBody_' + comment_id);
+                    new Mention($editField)
                     require(['ogp'], function (ogp) {
                         $('#CommentEditFormBody_' + comment_id).off('keyup').on('keyup', function (e) {
                             if($('#CommentEditSubmit_' + comment_id).prop('disabled') && $('#CommentEditFormBody_' + comment_id).val() !== $('#CommentOgpBackup_' + comment_id).data('text')){
