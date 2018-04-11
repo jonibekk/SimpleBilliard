@@ -199,7 +199,7 @@ class MentionComponent extends Component {
         return ['PostShareCircles' => $shareCircles, 'PostShareUsers' => $shareUsers];
     }
     static public function filterAsMentionableUser(int $postId, array $list = []) {
-        $post = self::getPostWithShared($postId, $list);
+        $post = self::getPostWithShared($postId);
         $filterMembers = [];
         foreach($post['PostShareCircles'] as $circle) {
             $circleModel = ClassRegistry::init('PlainCircle');
@@ -226,7 +226,7 @@ class MentionComponent extends Component {
         return array_values($result);
     }
     static public function filterAsMentionableCircle(int $postId, array $list = []) {
-        $post = self::getPostWithShared($postId, $list);
+        $post = self::getPostWithShared($postId);
         $publicCircles = [];
         $secretCircles = [];
         foreach($post['PostShareCircles'] as $circle) {
