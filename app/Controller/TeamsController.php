@@ -1357,7 +1357,6 @@ class TeamsController extends AppController
         $start_date = $end_date = $date_range_type = null;
         $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            $isPast = false;
             foreach ($date_info['date_ranges']['past_terms'] as $term) {
                 if ($term['id'] == $date_range) {
                     $isPast = true;
@@ -1495,7 +1494,6 @@ class TeamsController extends AppController
         $start_date = $end_date = $date_range_type = null;
         $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            $isPast = false;
             foreach ($date_info['date_ranges']['past_terms'] as $term) {
                 if ($term['id'] == $date_range) {
                     $isPast = true;
@@ -1737,7 +1735,6 @@ class TeamsController extends AppController
         $start_date = $end_date = $date_range_type = null;
         $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            $isPast = false;
             foreach ($date_info['date_ranges']['past_terms'] as $term) {
                 if ($term['id'] == $date_range) {
                     $isPast = true;
@@ -1917,7 +1914,6 @@ class TeamsController extends AppController
         $start_date = $end_date = null;
         $isPast = false;
         if (!isset($date_info['date_ranges'][$date_range])) {
-            $isPast = false;
             foreach ($date_info['date_ranges']['past_terms'] as $term) {
                 if ($term['id'] == $date_range) {
                     $isPast = true;
