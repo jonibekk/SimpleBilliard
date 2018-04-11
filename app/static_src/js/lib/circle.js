@@ -583,7 +583,7 @@ var circleListDashboard=document.getElementsByClassName('dashboard-circle-list-b
     bannerExist = document.getElementsByClassName('banner-alert'),
     bannerOffset = 0;
 
-$('.js-dashboard-circle-list.is-hamburger').click(function(){
+$('.js-dashboard-circle-list').click(function(){
     $('.js-nav-toggle').click();
 });
 
