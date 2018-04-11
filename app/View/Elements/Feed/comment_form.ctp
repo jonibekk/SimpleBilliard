@@ -57,9 +57,6 @@
         </div>
         <?= $this->Form->hidden('site_info_url',
             ['id' => "CommentSiteInfoUrl_{$post['Post']['id']}"]) ?>
-        <div id="CommentOgpClose_<?= $post['Post']['id'] ?>" class="font_lightgray comment-ogp-close">
-            <i class="fa fa-times fa-2x js-ogp-close"></i>
-        </div>
         <div id="CommentOgpSiteInfo_<?= $post['Post']['id'] ?>"
              class="comment-ogp-site-info"></div>
         <div id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"

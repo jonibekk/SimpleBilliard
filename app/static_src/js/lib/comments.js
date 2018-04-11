@@ -180,26 +180,24 @@ function toggleCommentForm() {
                 success: function (data) {
                     // Display the new acquired OGP on the edit form
                     var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
-                    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
-                    // var $closeButtonHtml = '<div id="CommentOgpClose_' +  post_id + '" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></div>'
+                    var $siteInfo = $('#CommentOgpSiteInfo_' + post_id).html(data.html);
+                    var $btnClose = $('<div id="CommentOgpClose_' +  post_id + '" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></div>');
                     // $siteInfo.before($closeButtonHtml);
-                    $siteInfo.html(data.html);
-                    var $btnClose = $('#CommentOgpClose_' + post_id);
+                    // console.log($siteInfo.get(0));
+
+                    // $siteInfoUrl.append($btnClose).append($)
+                    // $btnClose.before($siteInfo);
+                    // $siteInfo.before($siteInfoUrl);
+                    // var $btnClose = $('#CommentOgpClose_' + post_id);
                     $btnClose.off('click').on('click', function() {
-                        var $ogp = $('#CommentOgpSiteInfo_' + post_id);
-                        $ogp.empty();
-                        $ogp.hide();
-                        $btnClose.hide();
+                        $siteInfo.empty();
+                        $btnClose.remove();
                         var $submitButton = $('#CommentEditSubmit_' + post_id);
                         if ($submitButton.length) {
                             $submitButton.removeAttr("disabled");
                         }
                     });
-                    $btnClose.show();
-                    if($('#CommentOgpSiteInfo_' + post_id).html !== '') {
-                        $btnClose.show();
-                        $siteInfo.show();
-                    }
+                    $btnClose.insertBefore($siteInfo);
 
                     // add url to hidden
                     $siteInfoUrl.val(data.url);
