@@ -224,14 +224,31 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media (max-width: 479px) {
+  #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
+    width: 102%;
+  }
+  .circle-view-all-block {
+    display: none !important;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
   #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
     width: 104%;
   }
 }
-
-@media screen and (min-width: 480px) {
+@media (min-width: 768px) and (max-width: 991px) {
   #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
-    width: 94%;
+    width: 104%;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
+    width: 104%;
+  }
+}
+@media (min-width: 1200px) {
+  #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
+    width: 104%;
   }
 }

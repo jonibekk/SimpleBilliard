@@ -36,7 +36,7 @@
     echo $this->PageResource->outputPageCss();
     echo $this->Html->script('/js/goalous.prerender.exif.min');
     echo $this->Html->script('/js/goalous.prerender.min');
-
+    echo $this->Html->script('/js/goalous.prerender.scrollbar.min');
     ?>
 
     <!--suppress HtmlUnknownTarget -->

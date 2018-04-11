@@ -108,6 +108,14 @@ gulp.task('js_prerender_exif:concat', () => {
     .pipe(duration('js_prerender_exif:concat'))
 })
 
+gulp.task('js_prerender_scrollbar:concat', () => {
+  return gulp.src(config.js_prerender_scrollbar.src)
+    .pipe(plumber())
+    .pipe(concat(config.js_prerender_scrollbar.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/js_prerender_scrollbar_cat'))
+    .pipe(duration('js_prerender_scrollbar:concat'))
+})
+
 gulp.task('angular_app:concat', () => {
   return gulp.src(config.angular_app.src)
     .pipe(plumber())

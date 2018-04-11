@@ -18,7 +18,7 @@
         </p>
     </div>
     <div class="dashboard-circle-list-body-wrap">
-        <div class="dashboard-circle-list-body js-dashboard-circle-list-body">
+        <div id="dashboard-circle-list-body-element" class="dashboard-circle-list-body js-dashboard-circle-list-body">
           <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'defaultCircle' => $defaultCircle, 'isHamburger' => false]) ?>
         </div>
     </div>

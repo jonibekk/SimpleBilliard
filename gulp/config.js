@@ -59,7 +59,7 @@ const config = {
       assets_dir + '/js/lib/comments.js',
       assets_dir + '/js/lib/circle.js',
       assets_dir + '/js/lib/cookie.js',
-      assets_dir + '/js/gl_basic.js'
+      assets_dir + '/js/gl_basic.js',
     ],
     output: {
       file_name: 'goalous',
@@ -87,6 +87,16 @@ const config = {
     ],
     output: {
       file_name: 'goalous.prerender.exif',
+      path: compiled_assets_dir + '/js'
+    }
+  },
+  js_prerender_scrollbar: {
+    src: [
+      node_modules_dir + '/perfect-scrollbar/dist/perfect-scrollbar.js',
+      assets_dir + '/js/lib/removescrollbar.js',
+    ],
+    output: {
+      file_name: 'goalous.prerender.scrollbar',
       path: compiled_assets_dir + '/js'
     }
   },
@@ -212,6 +222,7 @@ const config = {
 
       node_modules_dir + '/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       node_modules_dir + '/intl-tel-input/build/css/intlTelInput.css',
+      node_modules_dir + '/perfect-scrollbar/css/perfect-scrollbar.css',
     ],
     watch_files: [assets_dir + '/css/**/*.css'],
     output: {

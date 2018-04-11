@@ -36,6 +36,7 @@ gulp.task('js', done => {
       'js_app',
       'js_vendor',
       'js_prerender_exif',
+      'js_prerender_scrollbar',
       'js_prerender',
       'js_payment',
       'js_circle',
@@ -164,6 +165,16 @@ gulp.task('js_prerender_exif', done => {
     'js_prerender_exif:concat',
     'js_prerender_exif:uglify',
     'js_prerender_exif:clean',
+    done
+  )
+})
+
+// js prerender scrollbar
+gulp.task('js_prerender_scrollbar', done => {
+  return runSequence(
+    'js_prerender_scrollbar:concat',
+    'js_prerender_scrollbar:uglify',
+    'js_prerender_scrollbar:clean',
     done
   )
 })
