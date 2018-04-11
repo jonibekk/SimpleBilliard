@@ -4391,6 +4391,9 @@ msgstr "インサイト"
 msgid "Rankings"
 msgstr "ランキング"
 
+msgid "There are no further rankings to show."
+msgstr "これ以下のランキングはありません。"
+
 msgid "Usage status of Circles"
 msgstr "サークル利用状況"
 
