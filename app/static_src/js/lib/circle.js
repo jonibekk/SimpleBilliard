@@ -433,13 +433,15 @@ function evCircleFeed(options) {
 
 function updateNotifyOnHamburger() {
 
-    var $list_elem = $('.js-dashboard-circle-list.is-hamburger');
+    var $list_elem = $('.js-dashboard-circle-list');
     var existUnreadCircle = $list_elem.hasClass('is-unread');
+    console.log($list_elem.get(0));
     if (existUnreadCircle) {
         $('.js-unread-point-on-hamburger').removeClass('is-read');
     } else {
         $('.js-unread-point-on-hamburger').addClass('is-read');
     }
+    console.log("updateNotifyOnHamburger()");
 }
 
 // サークルフィード用のcake value 更新
