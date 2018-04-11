@@ -439,6 +439,26 @@ class Term extends AppModel
         return $term;
     }
 
+    public function getPreviousTermDataMore(array $lastTerm): array
+    {
+        $timezone = $this->Team->getTimezone();
+        $options = [
+            'conditions' => [
+                'team_id'       => $this->current_team_id,
+                'end_date <'   => $lastTerm['start_date'],
+            ],
+            'order' => ['start_date desc']
+        ];
+        $res = $this->find('all', $options);
+        $result = array();
+        foreach ($res as $r) {
+            $row = Hash::extract($r, 'Term');
+            $row['timezone'] = $timezone;
+            $result[] = $row;
+        }
+        return $result;
+    }
+
     /**
      * get current term id
      */
