@@ -22,7 +22,7 @@
   margin-top:1rem;
   .circle-layout {
     width: 100%;
-    height: 30px;
+    height: 24px;
     position: relative;
     margin: 5px 0 0 0;
   }
@@ -223,6 +223,13 @@
     }
   }
 }
+
+@media screen and (max-width: 480px) {
+  #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
+    width: 102%;
+  }
+}
+
 @media screen and (min-width: 480px) {
   #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
     width: 94%;
