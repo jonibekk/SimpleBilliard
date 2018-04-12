@@ -8,7 +8,7 @@ $(function () {
 	  minScrollbarLength: 0,
 	  swipeEasing: true,
 	});
-	const psHamburger = new PerfectScrollbar('#NavbarOffcanvas', {
+	const psHamburger = new PerfectScrollbar('#circle-list-in-hamburger-element', {
 	  wheelSpeed: 1,
 	  wheelPropagation: false,
 	  suppressScrollY: false,

@@ -109,7 +109,7 @@
         <li class="visible-xxs hidden-xs">
             <?= $this->element('dashboard_saved_item') ?>
         </li>
-        <li class="circle-list-in-hamburger visible-xxs hidden-xs">
+        <li id="circle-list-in-hamburger-element" class="circle-list-in-hamburger visible-xxs hidden-xs">
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
     </ul>
