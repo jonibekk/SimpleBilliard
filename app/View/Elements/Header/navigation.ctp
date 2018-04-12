@@ -63,7 +63,7 @@
                 ?>
             </form>
         </li>
-        <li class="header-search-group hidden-xxs visible-xs">
+        <li class="header-search-group hidden-xxs">
             <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search"
                   autocomplete="off">
                 <div class="input-group">
