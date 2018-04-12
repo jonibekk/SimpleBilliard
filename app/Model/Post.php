@@ -10,8 +10,6 @@ App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
 App::import('Service', 'PostService');
 
-use Goalous\Model\Enum as Enum;
-
 /**
  * Post Model
  *
@@ -47,7 +45,9 @@ class Post extends AppModel
     const TYPE_GOAL_COMPLETE = 6;
     const TYPE_CREATE_CIRCLE = 7;
     const TYPE_MESSAGE = 8;
-
+    const SHARE_PEOPLE = 2;
+    const SHARE_ONLY_ME = 3;
+    const SHARE_CIRCLE = 4;
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL        => null,
         self::TYPE_CREATE_GOAL   => null,
@@ -58,17 +58,6 @@ class Post extends AppModel
         self::TYPE_CREATE_CIRCLE => null,
         self::TYPE_MESSAGE       => null,
     ];
-
-    function _setTypeMessage()
-    {
-        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __("Created a new Goal.");
-        self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __("Created a new circle.");
-    }
-
-    const SHARE_PEOPLE = 2;
-    const SHARE_ONLY_ME = 3;
-    const SHARE_CIRCLE = 4;
-
     public $orgParams = [
         'author_id'     => null,
         'circle_id'     => null,
@@ -79,11 +68,9 @@ class Post extends AppModel
         'filter_goal'   => null,
         'type'          => null,
     ];
-
     public $uses = [
         'AttachedFile'
     ];
-
     public $actsAs = [
         'Upload' => [
             'photo1'     => [
@@ -136,7 +123,6 @@ class Post extends AppModel
             ],
         ],
     ];
-
     /**
      * Validation rules
      *
@@ -178,9 +164,6 @@ class Post extends AppModel
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
-
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
-
     /**
      * belongsTo associations
      *
@@ -195,6 +178,7 @@ class Post extends AppModel
         'KeyResult',
     ];
 
+    //The Associations below have been created with all possible keys, those that are not needed can be removed
     /**
      * hasMany associations
      *
@@ -236,6 +220,12 @@ class Post extends AppModel
         parent::__construct($id, $table, $ds);
 
         $this->_setTypeMessage();
+    }
+
+    function _setTypeMessage()
+    {
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __("Created a new Goal.");
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __("Created a new circle.");
     }
 
     public function beforeValidate($options = [])
@@ -288,27 +278,6 @@ class Post extends AppModel
         ];
         $res = $this->find('list', $options);
         return $res;
-    }
-
-    public function isMyPost($post_id)
-    {
-        $options = [
-            'conditions' => [
-                'id'      => $post_id,
-                'team_id' => $this->current_team_id,
-                'user_id' => $this->my_uid,
-            ]
-        ];
-        $res = $this->find('list', $options);
-        if (!empty($res)) {
-            return true;
-        }
-        return false;
-    }
-
-    public function getConditionGetMyPostList()
-    {
-        return ['Post.user_id' => $this->my_uid];
     }
 
     public function getPostById($post_id)
@@ -771,6 +740,238 @@ class Post extends AppModel
         return $res;
     }
 
+    public function getConditionGetMyPostList()
+    {
+        return ['Post.user_id' => $this->my_uid];
+    }
+
+    /**
+     * 自分に共有された投稿のID一覧を返す
+     *
+     * @param DboSource $db
+     * @param           $start
+     * @param           $end
+     * @param array     $params
+     *                 'user_id' : 指定すると投稿者で絞る
+     *
+     * @return array|null
+     */
+    public function getSubQueryFilterPostIdShareWithMe(DboSource $db, $start, $end, array $params = [])
+    {
+        // パラメータデフォルト
+        $params = array_merge(['user_id' => null], $params);
+        $query = [
+            'fields'     => ['PostShareUser.post_id'],
+            'table'      => $db->fullTableName($this->PostShareUser),
+            'alias'      => 'PostShareUser',
+            'conditions' => [
+                'PostShareUser.user_id'                 => $this->my_uid,
+                'PostShareUser.team_id'                 => $this->current_team_id,
+                'PostShareUser.created BETWEEN ? AND ?' => [$start, $end],
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $query['conditions']['Post.user_id'] = $params['user_id'];
+            $query['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => $db->fullTableName($this),
+                'alias'      => 'Post',
+                'conditions' => '`PostShareUser`.`post_id`=`Post`.`id`',
+            ];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
+    public function getSubQueryFilterMyCirclePostId(
+        DboSource $db,
+        $start,
+        $end,
+        $my_circle_list = null,
+        $share_type = null
+    ) {
+        if (!$my_circle_list) {
+            $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
+        }
+
+        $query = [
+            'fields'     => ['PostShareCircle.post_id'],
+            'table'      => $db->fullTableName($this->PostShareCircle),
+            'alias'      => 'PostShareCircle',
+            'conditions' => [
+                'PostShareCircle.circle_id'               => $my_circle_list,
+                'PostShareCircle.team_id'                 => $this->current_team_id,
+                'PostShareCircle.created BETWEEN ? AND ?' => [$start, $end],
+            ],
+        ];
+        if ($share_type !== null) {
+            $query['conditions']['PostShareCircle.share_type'] = $share_type;
+        }
+        if (!is_array($my_circle_list) && $this->Circle->isTeamAllCircle($my_circle_list)) {
+            $query['conditions']['NOT'] = [
+                'type' => [
+                    self::TYPE_ACTION,
+                    self::TYPE_CREATE_GOAL,
+                    self::TYPE_GOAL_COMPLETE,
+                    self::TYPE_KR_COMPLETE
+                ]
+            ];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
+    /**
+     * @param  DboSource $db
+     * @param            $start
+     * @param            $end
+     * @param array      $post_types
+     *
+     * @return array
+     */
+    public function getSubQueryFilterRelatedGoalPost(DboSource $db, $start, $end, $post_types)
+    {
+        $related_goal_ids = $this->Goal->getRelatedGoals();
+
+        $query = [
+            'fields'     => ['Post.id'],
+            'table'      => $db->fullTableName($this->Goal),
+            'alias'      => 'Goal',
+            'conditions' => [
+                'Goal.team_id' => $this->current_team_id,
+                'Goal.id'      => $related_goal_ids,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName($this),
+                    'alias'      => 'Post',
+                    'conditions' => [
+                        '`Goal`.`id`=`Post`.`goal_id`',
+                        'Post.created BETWEEN ? AND ?' => [$start, $end],
+                        'Post.type'                    => $post_types,
+                    ],
+                ]
+            ]
+        ];
+        $res = $db->buildStatement($query, $this);
+
+        return $res;
+    }
+
+    /**
+     * @param $post_types
+     *
+     * @return array
+     */
+    public function getConditionAllGoalPostId($post_types)
+    {
+        $res = [
+            'NOT'       => [
+                'Post.goal_id' => null,
+            ],
+            'Post.type' => $post_types
+        ];
+        return $res;
+    }
+
+    public function isGoalPost($post_id)
+    {
+        $post = $this->find('first', ['conditions' => ['Post.id' => $post_id], 'fields' => ['Post.goal_id']]);
+        if (!isset($post['Post']['goal_id']) || !$post['Post']['goal_id']) {
+            return false;
+        }
+        return true;
+    }
+
+    public function isMyPost($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $post_id,
+                'team_id' => $this->current_team_id,
+                'user_id' => $this->my_uid,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getSubQueryFilterKrPostList(
+        DboSource $db,
+        $key_result_id,
+        $user_id = null,
+        $type,
+        $start = null,
+        $end = null
+    ) {
+        $query = [
+            'fields'     => ['Post.id'],
+            'table'      => $db->fullTableName($this),
+            'alias'      => 'Post',
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName($this->ActionResult),
+                    'alias'      => 'ActionResult',
+                    'conditions' => '`ActionResult`.`id`=`Post`.`action_result_id`',
+                ],
+            ],
+            'conditions' => [
+                'Post.type'                  => $type,
+                'Post.team_id'               => $this->current_team_id,
+                'ActionResult.key_result_id' => $key_result_id,
+            ],
+        ];
+
+        // 仕様上アクションの投稿日時は必ずゴールの期間内になるためこの条件は必要無いが、
+        // MySQLで投稿テーブルを日付でパーティショニングしてるため、検索条件に投稿日時を追加している。
+        // これが無いと投稿データをフルスキャンしてしまう。
+        if ($start !== null && $end !== null) {
+            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
+        }
+        if ($user_id) {
+            $query['conditions']['Post.user_id'] = $user_id;
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
+    public function getSubQueryFilterGoalPostList(
+        DboSource $db,
+        $goal_id = null,
+        $type = self::TYPE_ACTION,
+        $start = null,
+        $end = null
+    ) {
+        $query = [
+            'fields'     => ['Post.id'],
+            'table'      => $db->fullTableName($this),
+            'alias'      => 'Post',
+            'conditions' => [
+                'Post.type'    => $type,
+                'Post.team_id' => $this->current_team_id,
+            ],
+        ];
+        // 仕様上アクションの投稿日時は必ずゴールの期間内になるためこの条件は必要無いが、
+        // MySQLで投稿テーブルを日付でパーティショニングしてるため、検索条件に投稿日時を追加している。
+        // これが無いと投稿データをフルスキャンしてしまう。
+        if ($start && $end) {
+            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
+        }
+        if ($goal_id) {
+            $query['conditions']['Post.goal_id'] = $goal_id;
+        }
+        if ($this->orgParams['author_id']) {
+            $query['conditions']['Post.user_id'] = $this->orgParams['author_id'];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
     /**
      * 自分の閲覧可能な投稿のID一覧を返す
      * （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
@@ -824,217 +1025,6 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getSubQueryFilterMyCirclePostId(
-        DboSource $db,
-        $start,
-        $end,
-        $my_circle_list = null,
-        $share_type = null
-    ) {
-        if (!$my_circle_list) {
-            $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
-        }
-
-        $query = [
-            'fields'     => ['PostShareCircle.post_id'],
-            'table'      => $db->fullTableName($this->PostShareCircle),
-            'alias'      => 'PostShareCircle',
-            'conditions' => [
-                'PostShareCircle.circle_id'               => $my_circle_list,
-                'PostShareCircle.team_id'                 => $this->current_team_id,
-                'PostShareCircle.created BETWEEN ? AND ?' => [$start, $end],
-            ],
-        ];
-        if ($share_type !== null) {
-            $query['conditions']['PostShareCircle.share_type'] = $share_type;
-        }
-        if (!is_array($my_circle_list) && $this->Circle->isTeamAllCircle($my_circle_list)) {
-            $query['conditions']['NOT'] = [
-                'type' => [
-                    self::TYPE_ACTION,
-                    self::TYPE_CREATE_GOAL,
-                    self::TYPE_GOAL_COMPLETE,
-                    self::TYPE_KR_COMPLETE
-                ]
-            ];
-        }
-        $res = $db->buildStatement($query, $this);
-        return $res;
-    }
-
-    /**
-     * @param $post_types
-     *
-     * @return array
-     */
-    public function getConditionAllGoalPostId($post_types)
-    {
-        $res = [
-            'NOT'       => [
-                'Post.goal_id' => null,
-            ],
-            'Post.type' => $post_types
-        ];
-        return $res;
-    }
-
-    /**
-     * @param  DboSource $db
-     * @param            $start
-     * @param            $end
-     * @param array      $post_types
-     *
-     * @return array
-     */
-    public function getSubQueryFilterRelatedGoalPost(DboSource $db, $start, $end, $post_types)
-    {
-        $related_goal_ids = $this->Goal->getRelatedGoals();
-
-        $query = [
-            'fields'     => ['Post.id'],
-            'table'      => $db->fullTableName($this->Goal),
-            'alias'      => 'Goal',
-            'conditions' => [
-                'Goal.team_id' => $this->current_team_id,
-                'Goal.id'      => $related_goal_ids,
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => $db->fullTableName($this),
-                    'alias'      => 'Post',
-                    'conditions' => [
-                        '`Goal`.`id`=`Post`.`goal_id`',
-                        'Post.created BETWEEN ? AND ?' => [$start, $end],
-                        'Post.type'                    => $post_types,
-                    ],
-                ]
-            ]
-        ];
-        $res = $db->buildStatement($query, $this);
-
-        return $res;
-    }
-
-    /**
-     * 自分に共有された投稿のID一覧を返す
-     *
-     * @param DboSource $db
-     * @param           $start
-     * @param           $end
-     * @param array     $params
-     *                 'user_id' : 指定すると投稿者で絞る
-     *
-     * @return array|null
-     */
-    public function getSubQueryFilterPostIdShareWithMe(DboSource $db, $start, $end, array $params = [])
-    {
-        // パラメータデフォルト
-        $params = array_merge(['user_id' => null], $params);
-        $query = [
-            'fields'     => ['PostShareUser.post_id'],
-            'table'      => $db->fullTableName($this->PostShareUser),
-            'alias'      => 'PostShareUser',
-            'conditions' => [
-                'PostShareUser.user_id'                 => $this->my_uid,
-                'PostShareUser.team_id'                 => $this->current_team_id,
-                'PostShareUser.created BETWEEN ? AND ?' => [$start, $end],
-            ],
-        ];
-        if ($params['user_id'] !== null) {
-            $query['conditions']['Post.user_id'] = $params['user_id'];
-            $query['joins'][] = [
-                'type'       => 'LEFT',
-                'table'      => $db->fullTableName($this),
-                'alias'      => 'Post',
-                'conditions' => '`PostShareUser`.`post_id`=`Post`.`id`',
-            ];
-        }
-        $res = $db->buildStatement($query, $this);
-        return $res;
-    }
-
-    public function getSubQueryFilterGoalPostList(
-        DboSource $db,
-        $goal_id = null,
-        $type = self::TYPE_ACTION,
-        $start = null,
-        $end = null
-    ) {
-        $query = [
-            'fields'     => ['Post.id'],
-            'table'      => $db->fullTableName($this),
-            'alias'      => 'Post',
-            'conditions' => [
-                'Post.type'    => $type,
-                'Post.team_id' => $this->current_team_id,
-            ],
-        ];
-        // 仕様上アクションの投稿日時は必ずゴールの期間内になるためこの条件は必要無いが、
-        // MySQLで投稿テーブルを日付でパーティショニングしてるため、検索条件に投稿日時を追加している。
-        // これが無いと投稿データをフルスキャンしてしまう。
-        if ($start && $end) {
-            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
-        }
-        if ($goal_id) {
-            $query['conditions']['Post.goal_id'] = $goal_id;
-        }
-        if ($this->orgParams['author_id']) {
-            $query['conditions']['Post.user_id'] = $this->orgParams['author_id'];
-        }
-        $res = $db->buildStatement($query, $this);
-        return $res;
-    }
-
-    public function isGoalPost($post_id)
-    {
-        $post = $this->find('first', ['conditions' => ['Post.id' => $post_id], 'fields' => ['Post.goal_id']]);
-        if (!isset($post['Post']['goal_id']) || !$post['Post']['goal_id']) {
-            return false;
-        }
-        return true;
-    }
-
-    public function getSubQueryFilterKrPostList(
-        DboSource $db,
-        $key_result_id,
-        $user_id = null,
-        $type,
-        $start = null,
-        $end = null
-    ) {
-        $query = [
-            'fields'     => ['Post.id'],
-            'table'      => $db->fullTableName($this),
-            'alias'      => 'Post',
-            'joins'      => [
-                [
-                    'type'       => 'LEFT',
-                    'table'      => $db->fullTableName($this->ActionResult),
-                    'alias'      => 'ActionResult',
-                    'conditions' => '`ActionResult`.`id`=`Post`.`action_result_id`',
-                ],
-            ],
-            'conditions' => [
-                'Post.type'                  => $type,
-                'Post.team_id'               => $this->current_team_id,
-                'ActionResult.key_result_id' => $key_result_id,
-            ],
-        ];
-
-        // 仕様上アクションの投稿日時は必ずゴールの期間内になるためこの条件は必要無いが、
-        // MySQLで投稿テーブルを日付でパーティショニングしてるため、検索条件に投稿日時を追加している。
-        // これが無いと投稿データをフルスキャンしてしまう。
-        if ($start !== null && $end !== null) {
-            $query['conditions']['Post.created BETWEEN ? AND ?'] = [$start, $end];
-        }
-        if ($user_id) {
-            $query['conditions']['Post.user_id'] = $user_id;
-        }
-        $res = $db->buildStatement($query, $this);
-        return $res;
-    }
-
     function getRandomShareCircleNames($data, $teamId = null)
     {
         foreach ($data as $key => $val) {
@@ -1079,45 +1069,6 @@ class Post extends AppModel
             }
         }
         return $data;
-    }
-
-    /**
-     * Return share message by share type
-     *
-     * @param string $shareType
-     * @param bool   $isPostPublished
-     *
-     * @return string
-     */
-    private function getShareMessageDefinitions(string $shareType, bool $isPostPublished): string
-    {
-        if ($isPostPublished) {
-            switch ($shareType) {
-                case 'people': return __('Shared %s');
-                case 'peoples': return __('Shared %1$s and %2$s others');
-                case 'self': return __('Only you');
-                case 'circle': return __('Shared %s');
-                case 'circles': return __('Shared %1$s and %2$s circle(s)');
-                case 'circle_with_people': return __('Shared %1$s and %2$s');
-                case 'circles_with_people': return __('Shared %1$s, %2$s and %3$s others');
-                case 'circle_with_peoples': return __('Shared %1$s, %2$s and %3$s others');
-                case 'circles_with_peoples': return __('Shared %1$s and %2$s others,%3$s and %4$s circle(s)');
-                default: return 'Shared %s';
-            }
-        }
-        // post is still in draft
-        switch ($shareType) {
-            case 'people': return '%s';
-            case 'peoples': return __('%1$s and %2$s others');
-            case 'self': return __('Only you');
-            case 'circle': return '%s';
-            case 'circles': return __('%1$s and %2$s circle(s)');
-            case 'circle_with_people': return __('%1$s and %2$s');
-            case 'circles_with_people': return __('%1$s, %2$s and %3$s others');
-            case 'circle_with_peoples': return __('%1$s, %2$s and %3$s others');
-            case 'circles_with_peoples': return __('%1$s and %2$s others,%3$s and %4$s circle(s)');
-            default: return '%s';
-        }
     }
 
     function getShareMessages($data, bool $isPostPublished = true)
@@ -1193,6 +1144,65 @@ class Post extends AppModel
         return $data;
     }
 
+    /**
+     * Return share message by share type
+     *
+     * @param string $shareType
+     * @param bool   $isPostPublished
+     *
+     * @return string
+     */
+    private function getShareMessageDefinitions(string $shareType, bool $isPostPublished): string
+    {
+        if ($isPostPublished) {
+            switch ($shareType) {
+                case 'people':
+                    return __('Shared %s');
+                case 'peoples':
+                    return __('Shared %1$s and %2$s others');
+                case 'self':
+                    return __('Only you');
+                case 'circle':
+                    return __('Shared %s');
+                case 'circles':
+                    return __('Shared %1$s and %2$s circle(s)');
+                case 'circle_with_people':
+                    return __('Shared %1$s and %2$s');
+                case 'circles_with_people':
+                    return __('Shared %1$s, %2$s and %3$s others');
+                case 'circle_with_peoples':
+                    return __('Shared %1$s, %2$s and %3$s others');
+                case 'circles_with_peoples':
+                    return __('Shared %1$s and %2$s others,%3$s and %4$s circle(s)');
+                default:
+                    return 'Shared %s';
+            }
+        }
+        // post is still in draft
+        switch ($shareType) {
+            case 'people':
+                return '%s';
+            case 'peoples':
+                return __('%1$s and %2$s others');
+            case 'self':
+                return __('Only you');
+            case 'circle':
+                return '%s';
+            case 'circles':
+                return __('%1$s and %2$s circle(s)');
+            case 'circle_with_people':
+                return __('%1$s and %2$s');
+            case 'circles_with_people':
+                return __('%1$s, %2$s and %3$s others');
+            case 'circle_with_peoples':
+                return __('%1$s, %2$s and %3$s others');
+            case 'circles_with_peoples':
+                return __('%1$s and %2$s others,%3$s and %4$s circle(s)');
+            default:
+                return '%s';
+        }
+    }
+
     function getCommentMyUnreadCount($data)
     {
         foreach ($data as $key => $val) {
@@ -1213,6 +1223,7 @@ class Post extends AppModel
 
     /**
      * Set whether loginUser save favorite item each post
+     *
      * @param array $data
      * @param int   $userId
      *
@@ -1366,37 +1377,6 @@ class Post extends AppModel
         return $res;
     }
 
-    /**
-     * Return list of users.id and circles.id to share
-     *
-     * @param array    $shares string of post targets to share
-     *      e.g. 'public,circle_1,user_2'
-     * @param int|null $teamId
-     *      if null is passed, teamId is solved from $this->current_team_id
-     *
-     * @return array list($userIds, $circleIds)
-     */
-    function distributeShareToUserAndCircle(array $shares, $teamId = null): array
-    {
-        $users = [];
-        $circles = [];
-        foreach ($shares as $val) {
-            if (stristr($val, 'public')) {
-                $circles[] = $this->Circle->getTeamAllCircleId($teamId);
-                continue;
-            }
-            // user case
-            if (stristr($val, 'user_')) {
-                $users[] = str_replace('user_', '', $val);
-            }
-            // circle case
-            elseif (stristr($val, 'circle_')) {
-                $circles[] = str_replace('circle_', '', $val);
-            }
-        }
-        return [$users, $circles];
-    }
-
     function doShare($post_id, $share, $share_type = PostShareCircle::SHARE_TYPE_SHARED)
     {
         if (!$share) {
@@ -1428,6 +1408,36 @@ class Post extends AppModel
             $this->PostShareCircle->Circle->updateModified($circles);
         }
         return true;
+    }
+
+    /**
+     * Return list of users.id and circles.id to share
+     *
+     * @param array    $shares string of post targets to share
+     *                         e.g. 'public,circle_1,user_2'
+     * @param int|null $teamId
+     *                         if null is passed, teamId is solved from $this->current_team_id
+     *
+     * @return array list($userIds, $circleIds)
+     */
+    function distributeShareToUserAndCircle(array $shares, $teamId = null): array
+    {
+        $users = [];
+        $circles = [];
+        foreach ($shares as $val) {
+            if (stristr($val, 'public')) {
+                $circles[] = $this->Circle->getTeamAllCircleId($teamId);
+                continue;
+            }
+            // user case
+            if (stristr($val, 'user_')) {
+                $users[] = str_replace('user_', '', $val);
+            } // circle case
+            elseif (stristr($val, 'circle_')) {
+                $circles[] = str_replace('circle_', '', $val);
+            }
+        }
+        return [$users, $circles];
     }
 
     /**
@@ -1819,8 +1829,10 @@ class Post extends AppModel
 
     /**
      * @override
+     *
      * @param array $data
      * @param bool  $filterKey
+     *
      * @return array
      */
     public function create($data = array(), $filterKey = false)
