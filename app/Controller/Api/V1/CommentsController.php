@@ -198,23 +198,22 @@ class CommentsController extends ApiController
     private function _notifyUserOfGoalComment(int $commenterUserId, array $postData)
     {
         $postId = $postData['Post']['id'];
-        $notificationReceiverUserList = [];
+        $postOwnerUserId = $postData['Post']['user_id'];
+        $excludedUserList = array($postOwnerUserId, $commenterUserId);
 
         //If commenter is not post owner, send notification to owner
         if ($commenterUserId != $postData['Post']['user_id']) {
             $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_GOAL, null, null,
-                [$postData['Post']['user_id']], $commenterUserId, $postData['Post']['team_id'], $postId);
+                [$postOwnerUserId], $commenterUserId, $postData['Post']['team_id'], $postId);
         }
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
-        $notificationReceiverUserList[] = $Comment->getCommentedUniqueUsersList($postId);
+        $notificationReceiverUserList = $Comment->getCommentedUniqueUsersList($postId, false, $excludedUserList);
 
-        if (empty($notificationReceiverUserList)) {
-            return;
+        if (!empty($notificationReceiverUserList)) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL, null, null,
+                $notificationReceiverUserList, $commenterUserId, $postData['Post']['team_id'], $postId);
         }
-
-        $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL, null, null,
-            $notificationReceiverUserList, $commenterUserId, $postData['Post']['team_id'], $postId);
     }
 }
