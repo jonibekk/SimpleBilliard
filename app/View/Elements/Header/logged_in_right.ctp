@@ -24,6 +24,10 @@
                 'Home') ?></a>
     <?php endif; ?>
 
+    <div class="header-icon-zoom-toggle visible-inline-xxs hidden-xs">
+        <i class="fa fa-search header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+    </div>
+
     <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
@@ -221,6 +225,18 @@
             </li>
         </ul>
     </div>
+</div>
+<div class="header-search-toggle">
+    <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group" role="search"
+          autocomplete="off">
+        <div class="input-group">
+            <input type="text"
+                   id="NavSearchInputToggle"
+                   maxlength="<?= SELECT2_QUERY_LIMIT ?>"
+                   class="form-control nav-search font_12px disable-change-warning">
+        </div>
+        <div id="NavSearchResultsToggle" class="nav-search-result"></div>
+    </form>
 </div>
 <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
 <?= $this->App->viewEndComment() ?>

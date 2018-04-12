@@ -260,6 +260,29 @@
     }
 }
 
+.nav-search-toggle-result-item {
+    /*color: #9197a3;*/
+    color: black;
+    /*width: 100%;*/
+    padding: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    &:hover, &:focus{
+        background-color: #f8f8f8;
+        text-decoration: none;
+        color: #9197a3;
+    }
+    img {
+        width: 25px;
+        margin-right: 10px;
+    }
+    span {
+        font-size: 14px;
+    }
+}
+
 .nav-search-result-notfound {
     padding: 10px 10px 10px 20px;
 }
@@ -689,4 +712,10 @@
             display:none;
         }
     }   
+}
+
+@media (max-width: 479px) {
+    .visible-inline-xxs {
+        display: inline-block !important;
+    }
 }

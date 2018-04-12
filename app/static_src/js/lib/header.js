@@ -98,6 +98,10 @@ $(function () {
     search.headerSearch.setup();
   });
 
+  require(['searchToggle'], function (searchToggle) {
+    searchToggle.headerSearchToggle.setup();
+  });
+
   // close banner
   $('.js-disappear-banner').click(function () {
     $('.banner-alert').remove();

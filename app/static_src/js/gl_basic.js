@@ -206,6 +206,16 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
+
+    $(".header-icon-zoom-toggle").off("click").on("click", function() {
+      $(".header-search-toggle").toggleClass("open");
+    });
+
+    $(window).on('load resize', function(){
+      if($(window).width() > 479){
+        $(".header-search-toggle").css("display", "none");
+      }
+    });
 });
 
 
