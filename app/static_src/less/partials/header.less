@@ -354,33 +354,35 @@
 }
 
 .header-search-toggle {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
   list-style: none;
   line-height: 0px;
   height: 0px;
   margin: 0;
   padding: 0 8px;
   vertical-align: top;
-  -webkit-transition: height 1.2s linear;
-  -moz-transition: height 1.2s linear;
-  -ms-transition: height 1.2s linear;
-  -o-transition: height 1.2s linear;
-  transition: height 1.2s linear;
+  -webkit-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  -moz-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  -ms-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  -o-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
 }
 
 .header-search-toggle.open {
-  display: block;
+  visibility: visible;
+  opacity: 1;
   list-style: none;
   line-height: 50px;
   height: 50px;
   margin: 0;
   padding: 0 8px;
   vertical-align: top;
-  -webkit-transition: height 1.2s linear;
-  -moz-transition: height 1.2s linear;
-  -ms-transition: height 1.2s linear;
-  -o-transition: height 1.2s linear;
-  transition: height 1.2s linear;
+  -webkit-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  -moz-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  -ms-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  -o-transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
+  transition: opacity 0.6s linear, visibility 0.8s linear, height 0.6s linear;
 }
 
 .header-icon-zoom-toggle {

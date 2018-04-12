@@ -213,7 +213,7 @@ $(function () {
 
     $(window).on('load resize', function(){
       if($(window).width() > 479){
-        $(".header-search-toggle").css("display", "none");
+        $(".header-search-toggle").css("visibility", "hidden");
       }
     });
 });
