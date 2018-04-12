@@ -1219,16 +1219,28 @@ class NotifySetting extends AppModel
                 $postOwnerUser = $this->User->findById($options['post_owner_user_id']);
                 $postOwnerUserName = $postOwnerUser['User']['display_username'];;
 
-                if ($is_plain_mode) {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has commented on <span class="notify-card-head-target">%2$s</span>\'s Goal.',
-                        $commenterUserDisplayName,
-                        $postOwnerUserName);
+                if ($commenterUser['User']['id'] === $postOwnerUser['User']['id']) {
+                    if ($is_plain_mode) {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on his/her Goal.',
+                            $postOwnerUserName);
+                    } else {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on his/her Goal.',
+                            h($postOwnerUserName));
+                    }
                 } else {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> has commented on <span class="notify-card-head-target">%2$s</span>\'s Goal.',
-                        h($commenterUserDisplayName),
-                        h($postOwnerUserName));
+                    if ($is_plain_mode) {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on <span class="notify-card-head-target">%2$s</span>\'s Goal.',
+                            $commenterUserDisplayName,
+                            $postOwnerUserName);
+                    } else {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on <span class="notify-card-head-target">%2$s</span>\'s Goal.',
+                            h($commenterUserDisplayName),
+                            h($postOwnerUserName));
+                    }
                 }
                 break;
         }

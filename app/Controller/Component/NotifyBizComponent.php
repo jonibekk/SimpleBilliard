@@ -1076,10 +1076,9 @@ class NotifyBizComponent extends Component
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
-
         $this->notify_option['options'] = [
             'commenter_user_id'  => $commenterUserId,
-            'post_owner_user_id' => $Post->getById($postId)['Post']['user_id']
+            'post_owner_user_id' => $Post->getById($postId)['user_id']
         ];
         $this->NotifySetting->current_team_id = $teamId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
