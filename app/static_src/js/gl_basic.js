@@ -211,15 +211,7 @@ $(function () {
       $(".header-search-toggle").toggleClass("open");
     });
 
-    $(window).on('resize load', function(){
-      if($(window).width() > 479){
-        $(".header-search-toggle").removeClass("open");
-        $(".header-icon-zoom-toggle").css("display","none");
-      } else {
-        $(".header-icon-zoom-toggle").css("display","inline-block");
-      }
-    });
-    $(window).on("pageshow", function(){
+    $(window).on('resize load pageshow', function(){
       $(".header-search-toggle").removeClass("open");
       if($(window).width() > 479){
         $(".header-icon-zoom-toggle").css("display","none");
