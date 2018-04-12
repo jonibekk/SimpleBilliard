@@ -24,7 +24,7 @@
                 'Home') ?></a>
     <?php endif; ?>
 
-    <div class="header-icon-zoom-toggle visible-inline-xxs hidden-xs">
+    <div class="header-icon-zoom-toggle">
         <i class="fa fa-search header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
     </div>
 

@@ -43,6 +43,8 @@
   background-color: @white;
   height: 50px;
   line-height: 50px;
+  position: absolute:
+  left: 0;
   i {
     transform: rotate(0deg);
     transition: transform .3s;
@@ -285,12 +287,14 @@
 }
 
 .header-right-navigations {
-  float: right;
+  z-index: 3;
+  position: absolute;
   display: inline-block;
   vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
   height: 45px;
+  right: 0;
 }
 
 .header-right-navigations-mb-app {

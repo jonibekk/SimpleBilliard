@@ -214,6 +214,9 @@ $(function () {
     $(window).on('load resize', function(){
       if($(window).width() > 479){
         $(".header-search-toggle").removeClass("open");
+        $(".header-icon-zoom-toggle").css("display","none");
+      } else {
+        $(".header-icon-zoom-toggle").css("display","inline-block");
       }
     });
 });
