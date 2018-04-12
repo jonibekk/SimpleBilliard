@@ -211,7 +211,7 @@ $(function () {
       $(".header-search-toggle").toggleClass("open");
     });
 
-    $(window).on('resize', function(){
+    $(window).on('resize load', function(){
       if($(window).width() > 479){
         $(".header-search-toggle").removeClass("open");
         $(".header-icon-zoom-toggle").css("display","none");
@@ -219,7 +219,7 @@ $(function () {
         $(".header-icon-zoom-toggle").css("display","inline-block");
       }
     });
-    $(window).on('load', function(){
+    $(window).on("pageshow", function(){
       $(".header-search-toggle").removeClass("open");
       $(".header-icon-zoom-toggle").css("display","none");
     });
