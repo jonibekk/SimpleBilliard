@@ -221,7 +221,6 @@ $(function () {
     });
     $(window).on("pageshow", function(){
       $(".header-search-toggle").removeClass("open");
-      $(".header-icon-zoom-toggle").css("display","none");
     });
 });
 
