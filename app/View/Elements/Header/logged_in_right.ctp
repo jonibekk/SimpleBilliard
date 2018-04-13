@@ -4,7 +4,7 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="header-right-navigations clearfix"
+<div id="rightHeaderNavigation" class="header-right-navigations clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
