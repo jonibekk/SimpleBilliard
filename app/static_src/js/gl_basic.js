@@ -225,12 +225,14 @@ $(function () {
       $(this).prev().focus();
       $(this).hide();
       $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
     });
     $("#NavSearchInputToggleClear").off("click").on("click", function() {
       $(this).prev().val('');
       $(this).prev().focus();
       $(this).hide();
       $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
     });
 });
 
