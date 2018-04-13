@@ -85,6 +85,12 @@ define(function () {
                         };
 
                         $NavSearchResults.empty();
+                        if(!$('#notFoundElement').length){
+                            var $notFoundText = $('<div id="notFoundElement">')
+                                .text(cake.message.notice.search_result_zero)
+                                .addClass('nav-search-result-notfound');
+                            $notFoundText.appendTo($NavSearchResults);
+                        }
 
                         if (cache['user'][inputText]) {
                             var ajaxUser = ajaxCallbackUser(cache['user'][inputText]);
@@ -123,6 +129,7 @@ define(function () {
                            // Each argument is an array with the following structure:
                            // [ data, statusText, jqXHR ]
                            if (userResult && userResult[0].results) {
+                                $('#notFoundElement').remove();
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-result-item user-select')
@@ -139,6 +146,7 @@ define(function () {
                                 }
                             }
                             if (goalResult && goalResult[0].results) {
+                                $('#notFoundElement').remove();
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-result-item goal-select')
@@ -155,6 +163,7 @@ define(function () {
                                 }
                             }
                            if (circleResult && circleResult[0].results) {
+                                $('#notFoundElement').remove();
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-result-item circle-select')
@@ -170,12 +179,7 @@ define(function () {
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
-                            if (!$NavSearchResults.find('a').length) {
-                                var $notFoundText = $('<div>')
-                                    .text(cake.message.notice.search_result_zero)
-                                    .addClass('nav-search-result-notfound');
-                                $notFoundText.appendTo($NavSearchResults);
-                            }
+
                             // ポップアップ下の画面をスクロールさせないようにする
                             $("body").addClass('nav-search-results-open');
 
