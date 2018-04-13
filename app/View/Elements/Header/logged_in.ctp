@@ -25,7 +25,7 @@
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app_ios_high_header ? "mb-app-nav" : null ?>"
          id="header" >
-        <div class="nav-container header-container">
+        <div id="goalousNavigation" class="nav-container header-container">
             <?php
             // Condition that returns true if user is on a sub-page and is viewing on mobile app
             if ( $this->BackBtn->checkPage() && $is_mb_app) { ?>

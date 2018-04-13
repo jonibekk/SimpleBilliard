@@ -254,6 +254,7 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
+    $(window).trigger('resize');
 });
 
 
