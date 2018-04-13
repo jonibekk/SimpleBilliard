@@ -25,12 +25,12 @@
     <?php endif; ?>
 
     <div class="header-icon-zoom-toggle">
-        <i class="fa fa-search header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+        <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
 
     <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
-            <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
+            <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
                id="setupIcon"></i>
             <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
                 <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
@@ -42,7 +42,7 @@
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
-            <i class="fa fa-plus-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+            <i class="fa fa-plus-circle header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
@@ -137,12 +137,12 @@
         </div>
     </div>
     <div
-        class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
+        class="header-dropdown-functions header-icon-zoom header-function">
         <a href="#"
            class="btn-function-header"
            data-toggle="dropdown"
            id="header-cog-dropdown">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons header-drop-icons js-header-link"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span>
@@ -227,19 +227,19 @@
     </div>
 </div>
 <div class="header-search-toggle">
-    <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group" role="search"
-          autocomplete="off">
+    <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group" role="search" autocomplete="off">
         <div class="input-group">
             <span class="deleteicon">
                 <input type="text"
                        id="NavSearchInputToggle"
                        maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                       class="form-control nav-search font_12px disable-change-warning">
+                       class="form-control nav-search font_12px disable-change-warning"
+                       placeholder='<?= __("Search Members, Goals, Circles") ?>'>
                 <i id="NavSearchInputToggleClear" class="fa fa-times search-header-icon"></i>
             </span>
         </div>
         <div id="NavSearchResultsToggle" class="nav-search-result"></div>
     </form>
 </div>
-<div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
+<div class="header-white-bg"></div>
 <?= $this->App->viewEndComment() ?>

@@ -212,7 +212,23 @@ $(function () {
     });
 
     $(window).on('resize load pageshow', function(){
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").trigger("click");
+      $("#NavSearchInputToggleClear").trigger("click");
       $(".header-search-toggle").removeClass("open");
+      if($(window).width() > 479){
+        $(".header-icon-zoom-toggle").css("display","none");
+      } else {
+        $(".header-icon-zoom-toggle").css("display","inline-block");
+      }
+    });
+
+    $(window).on('pageshow', function(){
+      $(".header-search-toggle").removeClass("open");
+      $(".header-icon-zoom-toggle").css("display","none");
       if($(window).width() > 479){
         $(".header-icon-zoom-toggle").css("display","none");
       } else {

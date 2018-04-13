@@ -16,17 +16,17 @@ define(function () {
                 user: {
                     url: cake.url.a,
                     link_base: cake.url.user_page,
-                    placeholder: cake.word.search_placeholder_user
+                    label: cake.word.members
                 },
                 goal: {
                     url: cake.url.select2_goals,
                     link_base: cake.url.goal_page,
-                    placeholder: cake.word.search_placeholder_goal
+                    label: cake.word.goals
                 },
                 circle: {
                     url: cake.url.select2_circles,
                     link_base: cake.url.circle_page,
-                    placeholder: cake.word.search_placeholder_circle
+                    label: cake.word.circles
                 }
             };
 
@@ -36,19 +36,8 @@ define(function () {
                     e.preventDefault();
                     return false;
                 });
-                // // 検索種類切り替え（ユーザー、ゴール、サークル）
-                // .find('.nav-search-category-item').on('click', function () {
-                //     var $this = $(this);
-                //     //var category = $this.attr('data-category');
-                //     //$NavSearchInput.attr('placeholder', config[category].placeholder);
-                //     $NavSearchForm.find('.nav-search-category-icon')
-                //         .hide()
-                //         //.filter('[data-category=' + category + ']')
-                //         .show();
-                // });
 
             $NavSearchInput
-                .attr('placeholder', config.user.placeholder)
                 .on('keydown', function (e) {
                     // down
                     if (e.keyCode == 40) {
@@ -66,8 +55,8 @@ define(function () {
                     }
 
                     // キー連打考慮してすこし遅らせて ajax リクエストする
-                    clearTimeout(keyupTimer);
-                    keyupTimer = setTimeout(function () {
+                    // clearTimeout(keyupTimer);
+                    // keyupTimer = setTimeout(function () {
                         // 入力テキストが空
                         if (inputText.length == 0) {
                             $NavSearchResults.hide();
@@ -127,6 +116,10 @@ define(function () {
 
                            if (userResult && userResult[0].results && userResult[0].results.length) {
                                 $('#notFoundElement').remove();
+                                var $userLabel = $('<div>')
+                                    .text(config['user'].label)
+                                    .addClass('nav-search-result-label');
+                                $NavSearchResults.append($userLabel);
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-result-item user-select')
@@ -144,6 +137,10 @@ define(function () {
                             }
                             if (goalResult && goalResult[0].results && goalResult[0].results.length) {
                                 $('#notFoundElement').remove();
+                                var $goalLabel = $('<div>')
+                                    .text(config['goal'].label)
+                                    .addClass('nav-search-result-label');
+                                $NavSearchResults.append($goalLabel);
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-result-item goal-select')
@@ -161,6 +158,10 @@ define(function () {
                             }
                            if (circleResult && circleResult[0].results && circleResult[0].results.length) {
                                 $('#notFoundElement').remove();
+                                var $circleLabel = $('<div>')
+                                    .text(config['circle'].label)
+                                    .addClass('nav-search-result-label');
+                                $NavSearchResults.append($circleLabel);
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-result-item circle-select')
@@ -187,7 +188,7 @@ define(function () {
                             });
                             $NavSearchResults.show();
                         });
-                    }, 150);
+                    // }, 150);
                 });
 
             // 矢印キーで選択可能にする

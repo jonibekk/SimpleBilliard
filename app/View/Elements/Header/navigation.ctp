@@ -77,7 +77,8 @@
                         <input type="text"
                                id="NavSearchInput"
                                maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                               class="form-control nav-search font_12px disable-change-warning">
+                               class="form-control nav-search font_12px disable-change-warning"
+                               placeholder='<?= __("Search Members, Goals, Circles") ?>'>
                         <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
                     </span>
                 </div>
