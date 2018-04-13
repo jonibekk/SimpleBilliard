@@ -219,30 +219,29 @@ $(function () {
       hideNav();
     });
 
+    var lastWidth = $(window).width();
     $(window).on('resize load pageshow', function(){
-      $("#NavSearchInputClear").trigger("click");
-      $("#NavSearchInputToggleClear").trigger("click");
-
-      if($(window).width() > 479){
+      if($(window).width() !== lastWidth){
+        lastWidth = $(window).width();
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputToggleClear").trigger("click");
+        $(".header-search-toggle").removeClass("open");
+        $(".header-search").removeClass("open");
         $(".header-icon-search-toggle").css("display","none");
-        $(".header-icon-search").css("display","inline-block");
-      } else {
-        $(".header-icon-search-toggle").css("display","inline-block");
         $(".header-icon-search").css("display","none");
-      }
-    });
 
-    $(window).on('load pageshow', function(){
-      $("#NavSearchResults").empty();
-      $("#NavSearchResults").hide();
-      $("#NavSearchResultsToggle").empty();
-      $("#NavSearchResultsToggle").hide();
-      $("#NavSearchInputClear").trigger("click");
-      $("#NavSearchInputToggleClear").trigger("click");
-      $(".header-search-toggle").removeClass("open");
-      $(".header-search").removeClass("open");
-      $(".header-icon-search-toggle").css("display","none");
-      $(".header-icon-search").css("display","none");
+        if($(window).width() > 479){
+          $(".header-icon-search-toggle").css("display","none");
+          $(".header-icon-search").css("display","inline-block");
+        } else {
+          $(".header-icon-search-toggle").css("display","inline-block");
+          $(".header-icon-search").css("display","none");
+        }
+      }
     });
 
     $("#NavSearchInputClear").off("click").on("click", function() {
