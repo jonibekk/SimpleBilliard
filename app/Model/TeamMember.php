@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('View', 'View');
+App::import('Service', 'UserService');
 
 use Goalous\Model\Enum as Enum;
 
@@ -450,8 +451,19 @@ class TeamMember extends AppModel
      */
     public function activate(int $teamMemberId): bool
     {
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+
         $this->deleteCacheMember($teamMemberId);
         $this->id = $teamMemberId;
+
+        $user = $this->getUserById($teamMemberId);
+        $activateUserId = $user['id'];
+        $user = $this->User->getById($activateUserId);
+        if (is_null($user['default_team_id'])) {
+            $UserService->updateDefaultTeam($activateUserId, $this->current_team_id);
+        }
+
         return (bool)$this->saveField('status', self::USER_STATUS_ACTIVE);
     }
 
