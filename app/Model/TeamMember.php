@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('View', 'View');
+App::uses('TransactionManager', 'Model');
 App::import('Service', 'UserService');
 
 use Goalous\Model\Enum as Enum;
@@ -452,23 +453,41 @@ class TeamMember extends AppModel
      */
     public function activate(int $teamMemberId): bool
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init('UserService');
+        /** @var TransactionManager $TransactionManager */
+        $TransactionManager = ClassRegistry::init("TransactionManager");
+        try {
+            $TransactionManager->begin();
 
-        $this->deleteCacheMember($teamMemberId);
-        $this->id = $teamMemberId;
+            /** @var UserService $UserService */
+            $UserService = ClassRegistry::init('UserService');
 
-        // If user's default_team_id is set to null
-        // user do not have teams to show on login.
-        // Setting default_team_id to activated team.
-        $user = $this->getUserById($teamMemberId);
-        $activateUserId = $user['id'];
-        $user = $this->User->getById($activateUserId);
-        if (is_null($user['default_team_id'])) {
-            $UserService->updateDefaultTeam($activateUserId, $this->current_team_id);
+            $this->deleteCacheMember($teamMemberId);
+            $this->id = $teamMemberId;
+
+            // If user's default_team_id is set to null
+            // user do not have teams to show on login.
+            // Setting default_team_id to activated team.
+            $user = $this->getUserById($teamMemberId);
+            $activateUserId = $user['id'];
+            $user = $this->User->getById($activateUserId);
+            if (is_null($user['default_team_id'])) {
+                $UserService->updateDefaultTeam($activateUserId, $this->current_team_id);
+            }
+
+            $result = (bool)$this->saveField('status', self::USER_STATUS_ACTIVE);
+            if (!$result) {
+                throw new RuntimeException('save failed on team_members.status');
+            }
+            $TransactionManager->commit();
+            return $result;
+        } catch (Exception $e) {
+            GoalousLog::error("TeamMember activating failed", [
+                'message' => $e->getMessage(),
+            ]);
+            GoalousLog::error($e->getTraceAsString());
+            $TransactionManager->rollback();
+            return false;
         }
-
-        return (bool)$this->saveField('status', self::USER_STATUS_ACTIVE);
     }
 
     /**
