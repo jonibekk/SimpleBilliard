@@ -259,6 +259,13 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
     });
     $(window).trigger('resize');
+    if(lastWidth > 479){
+      $(".header-icon-search-toggle").css("display","none");
+      $(".header-icon-search").css("display","inline-block");
+    } else {
+      $(".header-icon-search-toggle").css("display","inline-block");
+      $(".header-icon-search").css("display","none");
+    }
 });
 
 
