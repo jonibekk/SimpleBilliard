@@ -219,6 +219,19 @@ $(function () {
         $(".header-icon-zoom-toggle").css("display","inline-block");
       }
     });
+
+    $("#NavSearchInputClear").off("click").on("click", function() {
+      $(this).prev().val('');
+      $(this).prev().focus();
+      $(this).hide();
+      $("#NavSearchResults").empty();
+    });
+    $("#NavSearchInputToggleClear").off("click").on("click", function() {
+      $(this).prev().val('');
+      $(this).prev().focus();
+      $(this).hide();
+      $("#NavSearchResultsToggle").empty();
+    });
 });
 
 

@@ -35,17 +35,17 @@ define(function () {
                 .on('submit', function (e) {
                     e.preventDefault();
                     return false;
-                })
-                // 検索種類切り替え（ユーザー、ゴール、サークル）
-                .find('.nav-search-category-item').on('click', function () {
-                    var $this = $(this);
-                    var category = $this.attr('data-category');
-                    $NavSearchInput.attr('placeholder', config[category].placeholder);
-                    $NavSearchForm.find('.nav-search-category-icon')
-                        .hide()
-                        .filter('[data-category=' + category + ']')
-                        .show();
                 });
+                // // 検索種類切り替え（ユーザー、ゴール、サークル）
+                // .find('.nav-search-category-item').on('click', function () {
+                //     var $this = $(this);
+                //     //var category = $this.attr('data-category');
+                //     //$NavSearchInput.attr('placeholder', config[category].placeholder);
+                //     $NavSearchForm.find('.nav-search-category-icon')
+                //         .hide()
+                //         //.filter('[data-category=' + category + ']')
+                //         .show();
+                // });
 
             $NavSearchInput
                 .attr('placeholder', config.user.placeholder)
@@ -59,6 +59,11 @@ define(function () {
                 .on('keyup', function (e) {
                     // 検索文字列
                     var inputText = $(this).val();
+                    if(inputText.length){
+                        $("#NavSearchInputToggleClear,#NavSearchInputClear").show();
+                    } else {
+                        $("#NavSearchInputToggleClear,#NavSearchInputClear").hide();
+                    }
 
                     // キー連打考慮してすこし遅らせて ajax リクエストする
                     clearTimeout(keyupTimer);
@@ -69,58 +74,118 @@ define(function () {
                             return;
                         }
 
-                        var category = $NavSearchForm.find('.nav-search-category-icon:visible').attr('data-category');
-                        var ajaxCallback = function (res) {
-                            cache[category][inputText] = res;
-
-                            var $container = $('<div>');
-                            $NavSearchResults.empty();
-                            if (res.results) {
-                                if (res.results.length == 0) {
-                                    var $notFoundText = $('<div>')
-                                        .text(cake.message.notice.search_result_zero)
-                                        .addClass('nav-search-result-notfound');
-                                    $container.append($notFoundText);
-                                }
-                                else {
-                                    for (var i = 0; i < res.results.length; i++) {
-                                        var $row = $('<a>')
-                                            .addClass('nav-search-result-item')
-                                            .attr('href', config[category].link_base + res.results[i].id.split('_').pop());
-
-                                        // image
-                                        var $img = $('<img>').attr('src', res.results[i].image);
-                                        $row.append($img);
-
-                                        // text
-                                        var $text = $('<span>').text(res.results[i].text);
-                                        $row.append($text);
-
-                                        $container.append($row);
-                                    }
-                                }
-                                $NavSearchResults.html($container).show();
-
-                                // ポップアップ下の画面をスクロールさせないようにする
-                                $("body").addClass('nav-search-results-open');
-
-                                // ポップアップクローズ用
-                                $(document).one('click', function () {
-                                    $NavSearchResults.hide();
-                                    $("body").removeClass('nav-search-results-open');
-                                });
-                            }
+                        var ajaxCallbackUser = function (res) {
+                            cache['user'][inputText] = res;
+                        };
+                        var ajaxCallbackGoal = function (res) {
+                            cache['goal'][inputText] = res;
+                        };
+                        var ajaxCallbackCircle = function (res) {
+                            cache['circle'][inputText] = res;
                         };
 
-                        if (cache[category][inputText]) {
-                            ajaxCallback(cache[category][inputText]);
+                        $NavSearchResults.empty();
+
+                        if (cache['user'][inputText]) {
+                            var ajaxUser = ajaxCallbackUser(cache['user'][inputText]);
                         }
                         else {
-                            $.get(config[category].url, {
+                            var ajaxUser = $.get(config['user'].url, {
                                 term: inputText,
                                 page_limit: 10
-                            }, ajaxCallback);
+                            }, ajaxCallbackUser);
                         }
+
+                        if (cache['goal'][inputText]) {
+                            var ajaxGoal = ajaxCallbackCircle(cache['goal'][inputText]);
+                        }
+                        else {
+                            var ajaxGoal = $.get(config['goal'].url, {
+                                term: inputText,
+                                page_limit: 10
+                            }, ajaxCallbackGoal);
+                        }
+
+                        if (cache['circle'][inputText]) {
+                            var ajaxCircle = ajaxCallbackCircle(cache['circle'][inputText]);
+                        }
+                        else {
+                            var ajaxCircle = $.get(config['circle'].url, {
+                                term: inputText,
+                                page_limit: 10
+                            }, ajaxCallbackCircle);
+                        }
+
+                        $.when(ajaxUser, ajaxGoal, ajaxCircle).done(function(userResult, goalResult, circleResult){
+                           // a1, a2 and a3 are arguments resolved 
+                           // for the ajax1, ajax2 and ajax3 Ajax requests, respectively.
+
+                           // Each argument is an array with the following structure:
+                           // [ data, statusText, jqXHR ]
+                           if (userResult && userResult[0].results) {
+                                for (var i = 0; i < userResult[0].results.length; i++) {
+                                    var $row = $('<a>')
+                                        .addClass('nav-search-result-item user-select')
+                                        .attr('href', config['user'].link_base + userResult[0].results[i].id.split('_').pop());
+
+                                    // image
+                                    var $img = $('<img>').attr('src', userResult[0].results[i].image);
+                                    $row.append($img);
+
+                                    // text
+                                    var $text = $('<span>').text(userResult[0].results[i].text);
+                                    $row.append($text);
+                                    $row.appendTo($NavSearchResults);
+                                }
+                            }
+                            if (goalResult && goalResult[0].results) {
+                                for (var i = 0; i < goalResult[0].results.length; i++) {
+                                    var $row = $('<a>')
+                                        .addClass('nav-search-result-item goal-select')
+                                        .attr('href', config['goal'].link_base + goalResult[0].results[i].id.split('_').pop());
+
+                                    // image
+                                    var $img = $('<img>').attr('src', goalResult[0].results[i].image);
+                                    $row.append($img);
+
+                                    // text
+                                    var $text = $('<span>').text(goalResult[0].results[i].text);
+                                    $row.append($text);
+                                    $row.appendTo($NavSearchResults);
+                                }
+                            }
+                           if (circleResult && circleResult[0].results) {
+                                for (var i = 0; i < circleResult[0].results.length; i++) {
+                                    var $row = $('<a>')
+                                        .addClass('nav-search-result-item circle-select')
+                                        .attr('href', config['circle'].link_base + circleResult[0].results[i].id.split('_').pop());
+
+                                    // image
+                                    var $img = $('<img>').attr('src', circleResult[0].results[i].image);
+                                    $row.append($img);
+
+                                    // text
+                                    var $text = $('<span>').text(circleResult[0].results[i].text);
+                                    $row.append($text);
+                                    $row.appendTo($NavSearchResults);
+                                }
+                            }
+                            if (!$NavSearchResults.find('a').length) {
+                                var $notFoundText = $('<div>')
+                                    .text(cake.message.notice.search_result_zero)
+                                    .addClass('nav-search-result-notfound');
+                                $notFoundText.appendTo($NavSearchResults);
+                            }
+                            // ポップアップ下の画面をスクロールさせないようにする
+                            $("body").addClass('nav-search-results-open');
+
+                            // ポップアップクローズ用
+                            $NavSearchResults.one('click', function () {
+                                $NavSearchResults.hide();
+                                $("body").removeClass('nav-search-results-open');
+                            });
+                            $NavSearchResults.show();
+                        });
                     }, 150);
                 });
 

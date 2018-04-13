@@ -4,7 +4,7 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div class="header-right-navigations clearfix"
+<div class="header-right-navigations ?> clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
@@ -230,10 +230,13 @@
     <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group" role="search"
           autocomplete="off">
         <div class="input-group">
-            <input type="text"
-                   id="NavSearchInputToggle"
-                   maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                   class="form-control nav-search font_12px disable-change-warning">
+            <span class="deleteicon">
+                <input type="text"
+                       id="NavSearchInputToggle"
+                       maxlength="<?= SELECT2_QUERY_LIMIT ?>"
+                       class="form-control nav-search font_12px disable-change-warning">
+                <i id="NavSearchInputToggleClear" class="fa fa-times search-header-icon"></i>
+            </span>
         </div>
         <div id="NavSearchResultsToggle" class="nav-search-result"></div>
     </form>

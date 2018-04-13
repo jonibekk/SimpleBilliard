@@ -59,6 +59,11 @@ define(function () {
                 .on('keyup', function (e) {
                     // 検索文字列
                     var inputText = $(this).val();
+                    if(inputText.length){
+                        $("#NavSearchInputToggleClear,#NavSearchInputClear").show();
+                    } else {
+                        $("#NavSearchInputToggleClear,#NavSearchInputClear").hide();
+                    }
 
                     // キー連打考慮してすこし遅らせて ajax リクエストする
                     clearTimeout(keyupTimer);
@@ -69,58 +74,118 @@ define(function () {
                             return;
                         }
 
-                        var category = 'user';
-                        var ajaxCallback = function (res) {
-                            cache[category][inputText] = res;
-
-                            var $container = $('<div>');
-                            $NavSearchResultsToggle.empty();
-                            if (res.results) {
-                                if (res.results.length == 0) {
-                                    var $notFoundText = $('<div>')
-                                        .text(cake.message.notice.search_result_zero)
-                                        .addClass('nav-search-result-notfound');
-                                    $container.append($notFoundText);
-                                }
-                                else {
-                                    for (var i = 0; i < res.results.length; i++) {
-                                        var $row = $('<a>')
-                                            .addClass('nav-search-toggle-result-item')
-                                            .attr('href', config[category].link_base + res.results[i].id.split('_').pop());
-
-                                        // image
-                                        var $img = $('<img>').attr('src', res.results[i].image);
-                                        $row.append($img);
-
-                                        // text
-                                        var $text = $('<span>').text(res.results[i].text);
-                                        $row.append($text);
-
-                                        $container.append($row);
-                                    }
-                                }
-                                $NavSearchResultsToggle.html($container).show();
-
-                                // ポップアップ下の画面をスクロールさせないようにする
-                                $("body").addClass('nav-search-results-open');
-
-                                // ポップアップクローズ用
-                                $(document).one('click', function () {
-                                    $NavSearchResultsToggle.hide();
-                                    $("body").removeClass('nav-search-results-open');
-                                });
-                            }
+                        var ajaxCallbackUser = function (res) {
+                            cache['user'][inputText] = res;
+                        };
+                        var ajaxCallbackGoal = function (res) {
+                            cache['goal'][inputText] = res;
+                        };
+                        var ajaxCallbackCircle = function (res) {
+                            cache['circle'][inputText] = res;
                         };
 
-                        if (cache[category][inputText]) {
-                            ajaxCallback(cache[category][inputText]);
+                        $NavSearchResultsToggle.empty();
+
+                        if (cache['user'][inputText]) {
+                            var ajaxUser = ajaxCallbackUser(cache['user'][inputText]);
                         }
                         else {
-                            $.get(config[category].url, {
+                            var ajaxUser = $.get(config['user'].url, {
                                 term: inputText,
                                 page_limit: 10
-                            }, ajaxCallback);
+                            }, ajaxCallbackUser);
                         }
+
+                        if (cache['goal'][inputText]) {
+                            var ajaxGoal = ajaxCallbackCircle(cache['goal'][inputText]);
+                        }
+                        else {
+                            var ajaxGoal = $.get(config['goal'].url, {
+                                term: inputText,
+                                page_limit: 10
+                            }, ajaxCallbackGoal);
+                        }
+
+                        if (cache['circle'][inputText]) {
+                            var ajaxCircle = ajaxCallbackCircle(cache['circle'][inputText]);
+                        }
+                        else {
+                            var ajaxCircle = $.get(config['circle'].url, {
+                                term: inputText,
+                                page_limit: 10
+                            }, ajaxCallbackCircle);
+                        }
+
+                        $.when(ajaxUser, ajaxGoal, ajaxCircle).done(function(userResult, goalResult, circleResult){
+                           // a1, a2 and a3 are arguments resolved 
+                           // for the ajax1, ajax2 and ajax3 Ajax requests, respectively.
+
+                           // Each argument is an array with the following structure:
+                           // [ data, statusText, jqXHR ]
+                           if (userResult && userResult[0].results) {
+                                for (var i = 0; i < userResult[0].results.length; i++) {
+                                    var $row = $('<a>')
+                                        .addClass('nav-search-toggle-result-item user-select')
+                                        .attr('href', config['user'].link_base + userResult[0].results[i].id.split('_').pop());
+
+                                    // image
+                                    var $img = $('<img>').attr('src', userResult[0].results[i].image);
+                                    $row.append($img);
+
+                                    // text
+                                    var $text = $('<span>').text(userResult[0].results[i].text);
+                                    $row.append($text);
+                                    $row.appendTo($NavSearchResultsToggle);
+                                }
+                            }
+                            if (goalResult && goalResult[0].results) {
+                                for (var i = 0; i < goalResult[0].results.length; i++) {
+                                    var $row = $('<a>')
+                                        .addClass('nav-search-toggle-result-item goal-select')
+                                        .attr('href', config['goal'].link_base + goalResult[0].results[i].id.split('_').pop());
+
+                                    // image
+                                    var $img = $('<img>').attr('src', goalResult[0].results[i].image);
+                                    $row.append($img);
+
+                                    // text
+                                    var $text = $('<span>').text(goalResult[0].results[i].text);
+                                    $row.append($text);
+                                    $row.appendTo($NavSearchResultsToggle);
+                                }
+                            }
+                           if (circleResult && circleResult[0].results) {
+                                for (var i = 0; i < circleResult[0].results.length; i++) {
+                                    var $row = $('<a>')
+                                        .addClass('nav-search-toggle-result-item circle-select')
+                                        .attr('href', config['circle'].link_base + circleResult[0].results[i].id.split('_').pop());
+
+                                    // image
+                                    var $img = $('<img>').attr('src', circleResult[0].results[i].image);
+                                    $row.append($img);
+
+                                    // text
+                                    var $text = $('<span>').text(circleResult[0].results[i].text);
+                                    $row.append($text);
+                                    $row.appendTo($NavSearchResultsToggle);
+                                }
+                            }
+                            if (!$NavSearchResultsToggle.find('a').length) {
+                                var $notFoundText = $('<div>')
+                                    .text(cake.message.notice.search_result_zero)
+                                    .addClass('nav-search-result-notfound');
+                                $notFoundText.appendTo($NavSearchResultsToggle);
+                            } 
+                            // ポップアップ下の画面をスクロールさせないようにする
+                            $("body").addClass('nav-search-results-open');
+
+                            // ポップアップクローズ用
+                            $NavSearchResultsToggle.one('click', function () {
+                                $NavSearchResultsToggle.hide();
+                                $("body").removeClass('nav-search-results-open');
+                            });
+                            $NavSearchResultsToggle.show();
+                        });
                     }, 150);
                 });
 

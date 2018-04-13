@@ -203,11 +203,8 @@
 }
 
 .nav-search-button-group {
-    width:45px;
-    flex-basis:45px;
-    &.caret{
-        margin-left:2px;
-    }
+    width:30px;
+    flex-basis:30px;
 }
 
 .nav-search-category-item {
@@ -250,7 +247,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     &:hover, &:focus{
-        background-color: #f8f8f8;
+        opacity: 0.8;
         text-decoration: none;
         color: #9197a3;
     }
@@ -271,7 +268,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     &:hover, &:focus{
-        background-color: #f8f8f8;
+        opacity: 0.8;
         text-decoration: none;
         color: #9197a3;
     }
@@ -719,4 +716,47 @@
     .visible-inline-xxs {
         display: inline-block !important;
     }
+}
+
+.user-select {
+    background-color: lightblue;
+}
+
+.goal-select {
+    background-color: lightgreen;
+}
+
+.circle-select {
+    background-color: lightsalmon;
+}
+
+#NavSearchButton {
+    color: black;
+    opacity: 0.8;
+}
+
+.nav-form-group i.search-header-icon {
+    color: #a1a1a1;
+    font-size: 20px !important;
+    padding-right: 14px;
+}
+
+span.deleteicon {
+    position: relative;
+    width: 100%;
+}
+
+span.deleteicon i {
+    position: absolute;
+    display: none;
+    top: 3px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 3;
+}
+span.deleteicon input {
+    padding-right: 16px;
+    box-sizing: border-box;
 }

@@ -69,39 +69,17 @@
                 <div class="input-group">
                     <div class="input-group-btn nav-search-button-group">
                         <button type="button" id="NavSearchButton"
-                                class="btn nav-search-button dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user header-icons nav-form-icon nav-search-category-icon"
-                               data-category="user"></i>
-                            <i class="fa fa-flag header-icons nav-form-icon nav-search-category-icon none"
-                               data-category="goal"></i>
-                            <i class="fa fa-circle-o header-icons nav-form-icon nav-search-category-icon none"
-                               data-category="circle"></i>
-
-                            <span class="caret"></span>
+                                class="btn nav-search-button" disabled="disabled">
+                            <i class="fa fa-search search-header-icon"></i>
                         </button>
-                        <ul class="dropdown-menu nav-search-form-dropdown" role="menu">
-                            <li><a href="#" style="" class="nav-search-category-item" data-category="user">
-                                    <i class="fa fa-user header-drop-icons"></i>
-                                    <?= __('Members'); ?>
-                                </a>
-                            </li>
-                            <li><a href="#" class="nav-search-category-item" data-category="goal">
-                                    <i class="fa fa-flag header-drop-icons"></i>
-                                    <?= __('Goal'); ?>
-                                </a>
-                            </li>
-                            <li><a href="#" class="nav-search-category-item" data-category="circle">
-                                    <i class="fa fa-circle-o header-drop-icons"></i>
-                                    <?= __('Circle'); ?>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
-                    <input type="text"
-                           id="NavSearchInput"
-                           maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                           class="form-control nav-search font_12px disable-change-warning">
+                    <span class="deleteicon">
+                        <input type="text"
+                               id="NavSearchInput"
+                               maxlength="<?= SELECT2_QUERY_LIMIT ?>"
+                               class="form-control nav-search font_12px disable-change-warning">
+                        <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
+                    </span>
                 </div>
                 <div id="NavSearchResults" class="nav-search-result"></div>
             </form>
