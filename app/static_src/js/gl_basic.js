@@ -227,9 +227,10 @@ $(function () {
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputToggleClear").trigger("click");
       $(".header-search-toggle").removeClass("open");
+      $(".header-search").removeClass("open");
       $(".header-icon-search-toggle").css("display","none");
       $(".header-icon-search").css("display","none");
-      
+
       if($(window).width() > 479){
         $(".header-icon-search-toggle").css("display","none");
         $(".header-icon-search").css("display","inline-block");
