@@ -24,11 +24,15 @@
                 'Home') ?></a>
     <?php endif; ?>
 
-    <div class="header-icon-zoom-toggle">
+    <div class="header-icon-search-toggle header-icon-zoom">
         <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
 
-    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom" id="setup">
+    <div class="header-icon-search header-icon-zoom">
+        <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+    </div>
+
+    <div class="header-setup header-icon-zoom" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
                id="setupIcon"></i>
@@ -40,7 +44,7 @@
         </a>
     </div>
 
-    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
+    <div class="header-dropdown-add header-icon-zoom">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
         </a>
@@ -239,6 +243,21 @@
             </span>
         </div>
         <div id="NavSearchResultsToggle" class="nav-search-result"></div>
+    </form>
+</div>
+<div class="header-search">
+    <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search" autocomplete="off">
+        <div class="input-group">
+            <span class="deleteicon">
+                <input type="text"
+                       id="NavSearchInput"
+                       maxlength="<?= SELECT2_QUERY_LIMIT ?>"
+                       class="form-control nav-search font_12px disable-change-warning"
+                       placeholder='<?= __("Search Members, Goals, Circles") ?>'>
+                <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
+            </span>
+        </div>
+        <div id="NavSearchResults" class="nav-search-result"></div>
     </form>
 </div>
 <div class="header-white-bg"></div>

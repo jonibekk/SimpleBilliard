@@ -42,7 +42,7 @@ define(function () {
                     // down
                     if (e.keyCode == 40) {
                         e.preventDefault();
-                        $NavSearchResultsToggle.find('.nav-search-result-item:first').focus();
+                        $NavSearchResultsToggle.find('.nav-search-toggle-result-item:first').focus();
                     }
                 })
                 .on('keyup', function (e) {
@@ -63,45 +63,20 @@ define(function () {
                             return;
                         }
 
-                        var ajaxCallbackUser = function (res) {
-                            cache['user'][inputText] = res;
-                        };
-                        var ajaxCallbackGoal = function (res) {
-                            cache['goal'][inputText] = res;
-                        };
-                        var ajaxCallbackCircle = function (res) {
-                            cache['circle'][inputText] = res;
-                        };
+                        var ajaxUser = $.get(config['user'].url, {
+                            term: inputText,
+                            page_limit: 10
+                        });
 
-                        if (cache['user'][inputText]) {
-                            var ajaxUser = ajaxCallbackUser(cache['user'][inputText]);
-                        }
-                        else {
-                            var ajaxUser = $.get(config['user'].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallbackUser);
-                        }
+                        var ajaxGoal = $.get(config['goal'].url, {
+                            term: inputText,
+                            page_limit: 10
+                        });
 
-                        if (cache['goal'][inputText]) {
-                            var ajaxGoal = ajaxCallbackCircle(cache['goal'][inputText]);
-                        }
-                        else {
-                            var ajaxGoal = $.get(config['goal'].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallbackGoal);
-                        }
-
-                        if (cache['circle'][inputText]) {
-                            var ajaxCircle = ajaxCallbackCircle(cache['circle'][inputText]);
-                        }
-                        else {
-                            var ajaxCircle = $.get(config['circle'].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallbackCircle);
-                        }
+                        var ajaxCircle = $.get(config['circle'].url, {
+                            term: inputText,
+                            page_limit: 10
+                        });
 
                         $.when(ajaxUser, ajaxGoal, ajaxCircle).done(function(userResult, goalResult, circleResult){
                            // a1, a2 and a3 are arguments resolved 
@@ -193,8 +168,8 @@ define(function () {
 
             // 矢印キーで選択可能にする
             $NavSearchResultsToggle
-                .on('keydown', '.nav-search-result-item', function (e) {
-                    var $selectedItem = $NavSearchResultsToggle.find('.nav-search-result-item:focus');
+                .on('keydown', '.nav-search-toggle-result-item', function (e) {
+                    var $selectedItem = $NavSearchResultsToggle.find('.nav-search-toggle-result-item:focus');
                     if ($selectedItem.size()) {
                         switch (e.keyCode) {
                             // up

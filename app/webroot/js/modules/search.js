@@ -63,45 +63,20 @@ define(function () {
                             return;
                         }
 
-                        var ajaxCallbackUser = function (res) {
-                            cache['user'][inputText] = res;
-                        };
-                        var ajaxCallbackGoal = function (res) {
-                            cache['goal'][inputText] = res;
-                        };
-                        var ajaxCallbackCircle = function (res) {
-                            cache['circle'][inputText] = res;
-                        };
+                        var ajaxUser = $.get(config['user'].url, {
+                            term: inputText,
+                            page_limit: 10
+                        });
 
-                        if (cache['user'][inputText]) {
-                            var ajaxUser = ajaxCallbackUser(cache['user'][inputText]);
-                        }
-                        else {
-                            var ajaxUser = $.get(config['user'].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallbackUser);
-                        }
+                        var ajaxGoal = $.get(config['goal'].url, {
+                            term: inputText,
+                            page_limit: 10
+                        });
 
-                        if (cache['goal'][inputText]) {
-                            var ajaxGoal = ajaxCallbackCircle(cache['goal'][inputText]);
-                        }
-                        else {
-                            var ajaxGoal = $.get(config['goal'].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallbackGoal);
-                        }
-
-                        if (cache['circle'][inputText]) {
-                            var ajaxCircle = ajaxCallbackCircle(cache['circle'][inputText]);
-                        }
-                        else {
-                            var ajaxCircle = $.get(config['circle'].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallbackCircle);
-                        }
+                        var ajaxCircle = $.get(config['circle'].url, {
+                            term: inputText,
+                            page_limit: 10
+                        });
 
                         $.when(ajaxUser, ajaxGoal, ajaxCircle).done(function(userResult, goalResult, circleResult){
                            // a1, a2 and a3 are arguments resolved 

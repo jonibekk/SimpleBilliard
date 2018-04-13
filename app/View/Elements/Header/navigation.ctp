@@ -63,7 +63,7 @@
                 ?>
             </form>
         </li>
-        <li class="header-search-group hidden-xxs">
+        <!-- <li class="header-search-group hidden-xxs">
             <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search"
                   autocomplete="off">
                 <div class="input-group">
@@ -84,7 +84,7 @@
                 </div>
                 <div id="NavSearchResults" class="nav-search-result"></div>
             </form>
-        </li>
+        </li> -->
         <li class="visible-xxs hidden-xs">
             <?= $this->element('dashboard_saved_item') ?>
         </li>
