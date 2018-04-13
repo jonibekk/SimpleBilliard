@@ -234,6 +234,11 @@ $(function () {
       if($(window).width() > 479){
         $(".header-icon-search-toggle").css("display","none");
         $(".header-icon-search").css("display","inline-block");
+        // if($(window).width() < 768) {
+        //   $(".header-toggle-icon").css("display","inline-block");
+        // } else {
+        //   $(".header-toggle-icon").css("display","none");
+        // }
       } else {
         $(".header-icon-search-toggle").css("display","inline-block");
         $(".header-icon-search").css("display","none");
