@@ -84,14 +84,6 @@ define(function () {
                             cache['circle'][inputText] = res;
                         };
 
-                        $NavSearchResults.empty();
-                        if(!$('#notFoundElement').length){
-                            var $notFoundText = $('<div id="notFoundElement">')
-                                .text(cake.message.notice.search_result_zero)
-                                .addClass('nav-search-result-notfound');
-                            $notFoundText.appendTo($NavSearchResults);
-                        }
-
                         if (cache['user'][inputText]) {
                             var ajaxUser = ajaxCallbackUser(cache['user'][inputText]);
                         }
@@ -128,6 +120,15 @@ define(function () {
 
                            // Each argument is an array with the following structure:
                            // [ data, statusText, jqXHR ]
+
+                            $NavSearchResults.empty();
+                            if(!$('#notFoundElement').length){
+                                var $notFoundText = $('<div id="notFoundElement">')
+                                    .text(cake.message.notice.search_result_zero)
+                                    .addClass('nav-search-result-notfound');
+                                $notFoundText.appendTo($NavSearchResults);
+                            }
+
                            if (userResult && userResult[0].results) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < userResult[0].results.length; i++) {
