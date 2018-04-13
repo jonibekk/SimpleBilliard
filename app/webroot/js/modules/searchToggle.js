@@ -120,15 +120,12 @@ define(function () {
 
                            // Each argument is an array with the following structure:
                            // [ data, statusText, jqXHR ]
-                            $NavSearchResultsToggle.empty();
-                            if(!$('#notFoundElement').length){
-                                var $notFoundText = $('<div id="notFoundElement">')
+                            var $notFoundText = $('<div id="notFoundElement">')
                                 .text(cake.message.notice.search_result_zero)
                                 .addClass('nav-search-result-notfound');
-                                $notFoundText.appendTo($NavSearchResultsToggle);
-                            }
-                        
-                           if (userResult && userResult[0].results) {
+                            $NavSearchResultsToggle.empty().append($notFoundText);
+
+                           if (userResult && userResult[0].results && userResult[0].results) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
@@ -145,7 +142,7 @@ define(function () {
                                     $row.appendTo($NavSearchResultsToggle);
                                 }
                             }
-                            if (goalResult && goalResult[0].results) {
+                            if (goalResult && goalResult[0].results && goalResult[0].results) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
@@ -162,7 +159,7 @@ define(function () {
                                     $row.appendTo($NavSearchResultsToggle);
                                 }
                             }
-                           if (circleResult && circleResult[0].results) {
+                           if (circleResult && circleResult[0].results && circleResult[0].results.length) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')

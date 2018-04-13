@@ -120,16 +120,12 @@ define(function () {
 
                            // Each argument is an array with the following structure:
                            // [ data, statusText, jqXHR ]
+                            var $notFoundText = $('<div id="notFoundElement">')
+                                .text(cake.message.notice.search_result_zero)
+                                .addClass('nav-search-result-notfound');
+                            $NavSearchResults.empty().append($notFoundText);
 
-                            $NavSearchResults.empty();
-                            if(!$('#notFoundElement').length){
-                                var $notFoundText = $('<div id="notFoundElement">')
-                                    .text(cake.message.notice.search_result_zero)
-                                    .addClass('nav-search-result-notfound');
-                                $notFoundText.appendTo($NavSearchResults);
-                            }
-
-                           if (userResult && userResult[0].results) {
+                           if (userResult && userResult[0].results && userResult[0].results.length) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
@@ -146,7 +142,7 @@ define(function () {
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
-                            if (goalResult && goalResult[0].results) {
+                            if (goalResult && goalResult[0].results && goalResult[0].results.length) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
@@ -163,7 +159,7 @@ define(function () {
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
-                           if (circleResult && circleResult[0].results) {
+                           if (circleResult && circleResult[0].results && circleResult[0].results.length) {
                                 $('#notFoundElement').remove();
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')
