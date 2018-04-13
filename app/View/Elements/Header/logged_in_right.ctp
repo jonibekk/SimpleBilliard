@@ -205,11 +205,6 @@
                     class="header-nav-function-contents-user-guidelines" ><?=__('User Guide');?></a>
             </li>
             <li class="header-nav-function-contents-list">
-                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
-                    <?= __('How to make a Goal (jp)') ?>
-                </a>
-            </li>
-            <li class="header-nav-function-contents-list">
                 <a href="#" data-toggle="modal" data-target="#modal_tutorial"
                    class="header-nav-function-contents-tutorial">
                     <?= __('Tutorial') ?>
