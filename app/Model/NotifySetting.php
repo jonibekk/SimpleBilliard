@@ -729,11 +729,11 @@ class NotifySetting extends AppModel
             case self::TYPE_FEED_MENTIONED_IN_COMMENT:
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> mentioned to you in a comment. ',
+                        '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
                         $user_text);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> mentioned to you in a comment. ',
+                        '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
                         h($user_text));
                 }
                 break;
