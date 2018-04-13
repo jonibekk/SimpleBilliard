@@ -253,11 +253,11 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE:
                 $this->_setAddedEvaluatorToEvaluatee($team_id, $to_user_list, $user_id);
                 break;
-            case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_GOAL:
-                $this->_setFeedCommentedOnMyGoal($team_id, $user_id, $to_user_list, $postId);
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL:
+                $this->_setFeedCommentedOnGoal($team_id, $user_id, $to_user_list, $postId);
                 break;
-            case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL:
-                $this->_setFeedCommentedOnMyCommentedGoal($team_id, $user_id, $to_user_list, $postId);
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
+                $this->_setFeedCommentedOnCommentedGoal($team_id, $user_id, $to_user_list, $postId);
                 break;
             default:
                 break;
@@ -1015,11 +1015,11 @@ class NotifyBizComponent extends Component
      * @param array $toUserList
      * @param int   $postId
      */
-    private function _setFeedCommentedOnMyGoal(int $teamId, int $commenterUserId, array $toUserList, int $postId)
+    private function _setFeedCommentedOnGoal(int $teamId, int $commenterUserId, array $toUserList, int $postId)
     {
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
-            NotifySetting::TYPE_FEED_COMMENTED_ON_MY_GOAL);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_GOAL;
+            NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL;
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
             'action'     => 'feed',
@@ -1041,15 +1041,15 @@ class NotifyBizComponent extends Component
      * @param array $toUserList
      * @param int   $postId
      */
-    private function _setFeedCommentedOnMyCommentedGoal(
+    private function _setFeedCommentedOnCommentedGoal(
         int $teamId,
         int $commenterUserId,
         array $toUserList,
         int $postId
     ) {
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
-            NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL);
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL;
+            NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL;
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
             'action'     => 'feed',

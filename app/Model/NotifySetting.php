@@ -53,8 +53,8 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
     const TYPE_EVALUATOR_SET_TO_COACH = 41;
-    const TYPE_FEED_COMMENTED_ON_MY_GOAL = 42;
-    const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL = 43;
+    const TYPE_FEED_COMMENTED_ON_GOAL = 42;
+    const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
 
     /**
      * @var array
@@ -361,7 +361,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                => [
+        self::TYPE_EVALUATOR_SET_TO_EVALUATEE       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -369,7 +369,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_COACH                    => [
+        self::TYPE_EVALUATOR_SET_TO_COACH           => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -377,7 +377,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_COMMENTED_ON_MY_GOAL                 => [
+        self::TYPE_FEED_COMMENTED_ON_GOAL           => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -385,7 +385,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL       => [
+        self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -1174,7 +1174,7 @@ class NotifySetting extends AppModel
                         h($coachee_user_name));
                 }
                 break;
-            case self::TYPE_FEED_COMMENTED_ON_MY_GOAL:
+            case self::TYPE_FEED_COMMENTED_ON_GOAL:
 
                 $commenterUser = $this->User->findById($options['commenter_user_id']);
                 $commenterUserDisplayName = $commenterUser['User']['display_username'];
@@ -1189,7 +1189,7 @@ class NotifySetting extends AppModel
                         h($commenterUserDisplayName));
                 }
                 break;
-            case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_GOAL:
+            case self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
 
                 $commenterUser = $this->User->findById($options['commenter_user_id']);
                 $commenterUserDisplayName = $commenterUser['User']['display_username'];
