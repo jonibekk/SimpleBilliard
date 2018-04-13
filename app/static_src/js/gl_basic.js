@@ -170,6 +170,7 @@ $(document).ready(function () {
 
 });
 
+var lastWidth = $(window).width();
 
 $(function () {
     var current_slide_id = 1;
@@ -219,7 +220,6 @@ $(function () {
       hideNav();
     });
 
-    var lastWidth = $(window).width();
     $(window).on('resize load pageshow', function(){
       if($(window).width() !== lastWidth){
         lastWidth = $(window).width();
