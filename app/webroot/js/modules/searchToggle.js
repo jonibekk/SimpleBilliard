@@ -120,13 +120,13 @@ define(function () {
 
                            // Each argument is an array with the following structure:
                            // [ data, statusText, jqXHR ]
-                            var $notFoundText = $('<div id="notFoundElement">')
+                            var $notFoundText = $('<div id="notFoundElementToggle">')
                                 .text(cake.message.notice.search_result_zero)
                                 .addClass('nav-search-result-notfound');
                             $NavSearchResultsToggle.empty().append($notFoundText);
 
-                           if (userResult && userResult[0].results && userResult[0].results) {
-                                $('#notFoundElement').remove();
+                           if (userResult && userResult[0].results && userResult[0].results && userResult[0].results.length) {
+                                $('#notFoundElementToggle').remove();
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-toggle-result-item user-select')
@@ -142,8 +142,8 @@ define(function () {
                                     $row.appendTo($NavSearchResultsToggle);
                                 }
                             }
-                            if (goalResult && goalResult[0].results && goalResult[0].results) {
-                                $('#notFoundElement').remove();
+                            if (goalResult && goalResult[0].results && goalResult[0].results && goalResult[0].results.length) {
+                                $('#notFoundElementToggle').remove();
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-toggle-result-item goal-select')
@@ -159,8 +159,8 @@ define(function () {
                                     $row.appendTo($NavSearchResultsToggle);
                                 }
                             }
-                           if (circleResult && circleResult[0].results && circleResult[0].results.length) {
-                                $('#notFoundElement').remove();
+                           if (circleResult && circleResult[0].results && circleResult[0].results.length && circleResult[0].results.length) {
+                                $('#notFoundElementToggle').remove();
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('nav-search-toggle-result-item circle-select')
