@@ -457,6 +457,9 @@ class TeamMember extends AppModel
         $this->deleteCacheMember($teamMemberId);
         $this->id = $teamMemberId;
 
+        // If user's default_team_id is set to null
+        // user do not have teams to show on login.
+        // Setting default_team_id to activated team.
         $user = $this->getUserById($teamMemberId);
         $activateUserId = $user['id'];
         $user = $this->User->getById($activateUserId);
