@@ -220,14 +220,8 @@ $(function () {
     });
 
     $(window).on('resize load pageshow', function(){
-      $("#NavSearchResults").empty();
-      $("#NavSearchResults").hide();
-      $("#NavSearchResultsToggle").empty();
-      $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputToggleClear").trigger("click");
-      $(".header-search-toggle").removeClass("open");
-      $(".header-search").removeClass("open");
 
       if($(window).width() > 479){
         $(".header-icon-search-toggle").css("display","none");
