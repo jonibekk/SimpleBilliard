@@ -192,7 +192,9 @@
     }
 }
 
-.nav-search-form-group { 
+.nav-search-form-group {
+    padding: 8px;
+    border-radius: 8px; 
     .input-group{
         width:100%;
         display:flex;
@@ -247,7 +249,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     &:hover, &:focus{
-        opacity: 0.8;
+        background-color: #f8f8f8;
         text-decoration: none;
         color: #9197a3;
     }
@@ -268,7 +270,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     &:hover, &:focus{
-        opacity: 0.8;
+        background-color: #f8f8f8;
         text-decoration: none;
         color: #9197a3;
     }
@@ -758,13 +760,19 @@ span.deleteicon input {
 
 #NavSearchResults {
     overflow-y: scroll;
+    overflow-x: hidden;
     width: 320px;
     max-height: 310px;
+    border-radius: 8px;
+    margin-top: 1px;
 }
 
 #NavSearchResultsToggle {
     overflow-y: scroll;
+    overflow-x: hidden;
     max-height: 310px;
+    border-radius: 8px;
+    margin-top: 1px;
 }
 
 #toggleNavigationButton {
