@@ -32,7 +32,7 @@
         <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
 
-    <div class="header-setup header-icon-zoom" id="setup">
+    <div class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
                id="setupIcon"></i>
