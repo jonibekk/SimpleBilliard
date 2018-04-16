@@ -228,7 +228,7 @@ $(function () {
         $("#NavSearchResultsToggle").empty();
         $("#NavSearchResultsToggle").hide();
         $("#NavSearchInputClear").trigger("click");
-        $("#NavSearchInputToggleClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
         $(".header-icon-search-toggle").css("display","none");
@@ -246,17 +246,27 @@ $(function () {
 
     $("#NavSearchInputClear").off("click").on("click", function() {
       $(this).prev().val('');
-      $(this).prev().focus();
+      setTimeout(function(){$(this).prev().focus();},800);
       $(this).hide();
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
     });
-    $("#NavSearchInputToggleClear").off("click").on("click", function() {
+    $("#NavSearchInputClearToggle").off("click").on("click", function() {
       $(this).prev().val('');
-      $(this).prev().focus();
+      setTimeout(function(){$(this).prev().focus();},800);
       $(this).hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
+    });
+    $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("open");
+        $(".header-search").removeClass("open");
     });
     $(window).trigger('resize');
     if(lastWidth > 479){

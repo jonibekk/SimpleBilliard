@@ -49,9 +49,9 @@ define(function () {
                     // 検索文字列
                     var inputText = $(this).val();
                     if(inputText.length){
-                        $("#NavSearchInputToggleClear,#NavSearchInputClear").show();
+                        $("#NavSearchInputClear").show();
                     } else {
-                        $("#NavSearchInputToggleClear,#NavSearchInputClear").hide();
+                        $("#NavSearchInputClear").hide();
                     }
 
                     // キー連打考慮してすこし遅らせて ajax リクエストする
