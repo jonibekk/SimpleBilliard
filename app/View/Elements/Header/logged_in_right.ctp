@@ -4,7 +4,7 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<div id="rightHeaderNavigation" class="header-right-navigations clearfix"
+<div id="rightHeaderNavigation" class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
@@ -221,7 +221,7 @@
                 $this->Html->link(__('Logout'),
                     ['controller' => 'users', 'action' => 'logout'],
                     ['class' => 'header-nav-function-contents-logout']) ?>
-            </li>
+            </li> 
         </ul>
     </div>
 </div>
