@@ -1193,6 +1193,13 @@ msgstr ""
 " があなたにメンションしました。"
 
 msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span>"
+" edited a comment you are mentioned. "
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> "
+" があなたへのメンションを編集しました。"
+
+msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
