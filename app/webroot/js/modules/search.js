@@ -152,11 +152,11 @@ define(function () {
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
-                            
+
                             if($NavSearchResults.length && !$('#notFoundElement').length){
                                 var $endLabel = $('<div>')
                                     .text(cake.word.end_search)
-                                    .addClass('nav-search-result-label');
+                                    .addClass('nav-search-result-end-label');
                                 $NavSearchResults.append($endLabel);
                             }
 

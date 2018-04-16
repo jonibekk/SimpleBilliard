@@ -156,7 +156,7 @@ define(function () {
                             if($NavSearchResultsToggle.length && !$('#notFoundElement').length){
                                 var $endLabel = $('<div>')
                                     .text(cake.word.end_search)
-                                    .addClass('nav-search-result-label').css("font-style", "italic;");
+                                    .addClass('nav-search-result-end-label');
                                 $NavSearchResultsToggle.append($endLabel);
                             }
 
