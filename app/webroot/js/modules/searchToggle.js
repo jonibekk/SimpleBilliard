@@ -153,6 +153,13 @@ define(function () {
                                 }
                             }
 
+                            if($NavSearchResultsToggle.length && !$('#notFoundElement').length){
+                                var $endLabel = $('<div>')
+                                    .text(cake.word.end_search)
+                                    .addClass('nav-search-result-label').css("font-style", "italic;");
+                                $NavSearchResultsToggle.append($endLabel);
+                            }
+
                             // ポップアップ下の画面をスクロールさせないようにする
                             $("body").addClass('nav-search-results-open');
 
@@ -160,6 +167,10 @@ define(function () {
                             $NavSearchResultsToggle.one('click', function () {
                                 $NavSearchResultsToggle.hide();
                                 $("body").removeClass('nav-search-results-open');
+                            });
+                            $(".nav-search-result-label").off("click").on("click", function(e) {
+                                e.preventDefault();
+                                return false;
                             });
                             $NavSearchResultsToggle.show();
                         });

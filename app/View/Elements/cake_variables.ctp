@@ -103,6 +103,7 @@ App::uses('AttachedFile', 'Model');
             members: "<?= __("Members")?>",
             goals: "<?= __("Goals")?>",
             circles: "<?= __("Circles")?>",
+            end_search: "<?= __("No More Results")?>",
             success: "<?=__("Success")?>",
             error: "<?=__("Error")?>",
             cancel: "<?=__("Cancel")?>",

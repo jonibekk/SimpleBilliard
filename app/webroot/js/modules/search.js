@@ -152,6 +152,13 @@ define(function () {
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
+                            
+                            if($NavSearchResults.length && !$('#notFoundElement').length){
+                                var $endLabel = $('<div>')
+                                    .text(cake.word.end_search)
+                                    .addClass('nav-search-result-label');
+                                $NavSearchResults.append($endLabel);
+                            }
 
                             // ポップアップ下の画面をスクロールさせないようにする
                             $("body").addClass('nav-search-results-open');
@@ -160,6 +167,10 @@ define(function () {
                             $NavSearchResults.one('click', function () {
                                 $NavSearchResults.hide();
                                 $("body").removeClass('nav-search-results-open');
+                            });
+                            $(".nav-search-result-label").off("click").on("click", function(e) {
+                                e.preventDefault();
+                                return false;
                             });
                             $NavSearchResults.show();
                         });
