@@ -1,10 +1,10 @@
 <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
-        class="<?= $is_mb_app ? "mb-app" : "" ?> header-toggle-icon js-nav-toggle">
+        class="<?= $is_mb_app ? "mb-app mb-to-front-most" : "" ?> header-toggle-icon js-nav-toggle">
     <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
     <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
 </button>
 <div id="NavbarOffcanvas">
-    <ul class="nav navbar-nav">
+    <ul class="nav navbar-nav <?= $is_mb_app ? "mb-to-front-most" : "" ?>">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
             <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
