@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-06 15:00+0900\n"
+"PO-Revision-Date: 2018-04-16 17:39+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1186,11 +1186,18 @@ msgstr ""
 "\"notify-card-head-target\">%3$s</span>の投稿にコメントしました。"
 
 msgid ""
-"<span class=\"notify-card-head-target\">%1$s</span>"
-" mentioned you in a comment. "
+"<span class=\"notify-card-head-target\">%1$s</span> edited a comment you are "
+"mentioned. "
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span> "
-" があなたにメンションしました。"
+"<span class=\"notify-card-head-target\">%1$s</span> があなたへのメンションを"
+"編集しました。 "
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a "
+"comment. "
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>  があなたにメンションしま"
+"した。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
@@ -1863,21 +1870,6 @@ msgstr "本文か添付ファイルは必須です。"
 
 msgid "Invalid telephone number"
 msgstr "不正な電話番号です。"
-
-#, fuzzy
-#| msgid "Invalid score."
-msgid "Invalid csv format"
-msgstr "定義されていないスコアです。"
-
-#, fuzzy
-#| msgid "This circle does not exist."
-msgid "Circle does not exist"
-msgstr "このサークルは存在しません。"
-
-#, fuzzy
-#| msgid "You don't belong to any circle."
-msgid "Do not belong to Circle"
-msgstr "参加しているサークルはありません。"
 
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
@@ -4351,6 +4343,9 @@ msgstr "週"
 msgid "Day"
 msgstr "日"
 
+msgid "There are no further rankings to show."
+msgstr "これ以下のランキングはありません。"
+
 msgid "Member(Active)"
 msgstr "メンバー（アクティブ）"
 
@@ -4397,9 +4392,6 @@ msgstr "インサイト"
 
 msgid "Rankings"
 msgstr "ランキング"
-
-msgid "There are no further rankings to show."
-msgstr "これ以下のランキングはありません。"
 
 msgid "Usage status of Circles"
 msgstr "サークル利用状況"
@@ -6228,8 +6220,23 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
-msgid "You can mention to no one here."
-msgstr "ここではメンションできません。"
+#, fuzzy
+#~| msgid "Invalid score."
+#~ msgid "Invalid csv format"
+#~ msgstr "定義されていないスコアです。"
+
+#, fuzzy
+#~| msgid "This circle does not exist."
+#~ msgid "Circle does not exist"
+#~ msgstr "このサークルは存在しません。"
+
+#, fuzzy
+#~| msgid "You don't belong to any circle."
+#~ msgid "Do not belong to Circle"
+#~ msgstr "参加しているサークルはありません。"
+
+#~ msgid "You can mention to no one here."
+#~ msgstr "ここではメンションできません。"
 
 #~ msgid "Pinned"
 #~ msgstr "ピン済み"

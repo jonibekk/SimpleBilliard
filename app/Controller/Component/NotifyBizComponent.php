@@ -151,6 +151,10 @@ class NotifyBizComponent extends Component
                 $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
                     $model_id, $sub_model_id, $to_user_list);
                 break;
+            case NotifySetting::TYPE_FEED_MENTIONED_IN_EDITED_COMMENT:
+                $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_EDITED_COMMENT,
+                    $model_id, $sub_model_id, $to_user_list);
+                break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
                 break;
