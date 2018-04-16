@@ -283,14 +283,17 @@ $(function () {
     });
     $("#NavSearchInput,#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
       if(e.keyCode === 13){
-        this.attr('readonly', 'readonly'); // Force keyboard to hide on input field.
-        this.attr('disabled', 'true'); // Force keyboard to hide on textarea field.
-        setTimeout(function() {
-            this.blur();  //actually close the keyboard
-            // Remove readonly attribute after keyboard is hidden.
-            this.removeAttr('readonly');
-            this.removeAttr('disabled');
-        }, 100);
+        // this.attr('readonly', 'readonly'); // Force keyboard to hide on input field.
+        // this.attr('disabled', 'true'); // Force keyboard to hide on textarea field.
+        // setTimeout(function() {
+        //     this.blur();  //actually close the keyboard
+        //     // Remove readonly attribute after keyboard is hidden.
+        //     this.removeAttr('readonly');
+        //     this.removeAttr('disabled');
+        // }, 100);
+        if(document.activeElement) {
+            document.activeElement.blur();
+        } 
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
