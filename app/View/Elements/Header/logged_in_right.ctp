@@ -238,7 +238,7 @@
                 <i id="NavSearchInputClearToggle" class="fa fa-times search-header-icon"></i>
             </span>
             <div id="NavSearchHideToggle" class="topicSearchList-header-cancel-main">
-                <a class="topicSearchList-header-cancel-button"><?= __("Cancel") ?></a>
+                <a class="topicSearchList-header-cancel-button-main"><?= __("Cancel") ?></a>
             </div>
         </div>
         <div id="NavSearchResultsToggle" class="nav-search-result"></div>
@@ -257,7 +257,7 @@
                 <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
             </span>
             <div id="NavSearchHide" class="topicSearchList-header-cancel-main">
-                <a class="topicSearchList-header-cancel-button"><?= __("Cancel") ?></a>
+                <a class="topicSearchList-header-cancel-button-main"><?= __("Cancel") ?></a>
             </div>
         </div>
         <div id="NavSearchResults" class="nav-search-result"></div>
