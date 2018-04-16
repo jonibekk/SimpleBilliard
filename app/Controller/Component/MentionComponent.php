@@ -119,7 +119,9 @@ class MentionComponent extends Component {
                     ));
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
-                    $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+                    if ($replacement) {
+                        $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+                    }
                 }
             }
         }
