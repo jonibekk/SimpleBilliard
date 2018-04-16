@@ -89,66 +89,81 @@ define(function () {
                                 .addClass('nav-search-result-notfound');
                             $NavSearchResults.empty().append($notFoundText);
 
-                           if (userResult && userResult[0].results && userResult[0].results.length) {
-                                $('#notFoundElement').remove();
+                           if (userResult && userResult[0].results && userResult[0].results && userResult[0].results.length) {
+                                $('#notFoundElementToggle').remove();
                                 var $userLabel = $('<div>')
                                     .text(config['user'].label)
                                     .addClass('nav-search-result-label');
                                 $NavSearchResults.append($userLabel);
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
-                                        .addClass('nav-search-result-item user-select')
-                                        .attr('href', config['user'].link_base + userResult[0].results[i].id.split('_').pop());
-
+                                        .addClass('search-list-item-link')
+                                        .attr('href', config['circle'].link_base + userResult[0].results[i].id.split('_').pop());
                                     // image
+                                    var $divImage = $('<div>')
+                                        .addClass('search-list-avatar-item');
                                     var $img = $('<img>').attr('src', userResult[0].results[i].image);
-                                    $row.append($img);
-
+                                    $divImage.append($img);
+                                    $row.append($divImage);
                                     // text
-                                    var $text = $('<span>').text(userResult[0].results[i].text);
-                                    $row.append($text);
+                                    var $divText = $('<div>')
+                                        .addClass('topic-search-list-item-main');
+                                    var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(userResult[0].results[i].text);
+                                    $divText.append($text);
+                                    $row.append($divText);
+
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
-                            if (goalResult && goalResult[0].results && goalResult[0].results.length) {
-                                $('#notFoundElement').remove();
+                            if (goalResult && goalResult[0].results && goalResult[0].results && goalResult[0].results.length) {
+                                $('#notFoundElementToggle').remove();
                                 var $goalLabel = $('<div>')
                                     .text(config['goal'].label)
                                     .addClass('nav-search-result-label');
                                 $NavSearchResults.append($goalLabel);
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
-                                        .addClass('nav-search-result-item goal-select')
-                                        .attr('href', config['goal'].link_base + goalResult[0].results[i].id.split('_').pop());
-
+                                        .addClass('search-list-item-link')
+                                        .attr('href', config['circle'].link_base + goalResult[0].results[i].id.split('_').pop());
                                     // image
+                                    var $divImage = $('<div>')
+                                        .addClass('search-list-avatar-item');
                                     var $img = $('<img>').attr('src', goalResult[0].results[i].image);
-                                    $row.append($img);
-
+                                    $divImage.append($img);
+                                    $row.append($divImage);
                                     // text
-                                    var $text = $('<span>').text(goalResult[0].results[i].text);
-                                    $row.append($text);
+                                    var $divText = $('<div>')
+                                        .addClass('topic-search-list-item-main');
+                                    var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(goalResult[0].results[i].text);
+                                    $divText.append($text);
+                                    $row.append($divText);
+
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
-                           if (circleResult && circleResult[0].results && circleResult[0].results.length) {
-                                $('#notFoundElement').remove();
+                           if (circleResult && circleResult[0].results && circleResult[0].results.length && circleResult[0].results.length) {
+                                $('#notFoundElementToggle').remove();
                                 var $circleLabel = $('<div>')
                                     .text(config['circle'].label)
                                     .addClass('nav-search-result-label');
                                 $NavSearchResults.append($circleLabel);
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')
-                                        .addClass('nav-search-result-item circle-select')
+                                        .addClass('search-list-item-link')
                                         .attr('href', config['circle'].link_base + circleResult[0].results[i].id.split('_').pop());
-
                                     // image
+                                    var $divImage = $('<div>')
+                                        .addClass('search-list-avatar-item');
                                     var $img = $('<img>').attr('src', circleResult[0].results[i].image);
-                                    $row.append($img);
-
+                                    $divImage.append($img);
+                                    $row.append($divImage);
                                     // text
-                                    var $text = $('<span>').text(circleResult[0].results[i].text);
-                                    $row.append($text);
+                                    var $divText = $('<div>')
+                                        .addClass('topic-search-list-item-main');
+                                    var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(circleResult[0].results[i].text);
+                                    $divText.append($text);
+                                    $row.append($divText);
+
                                     $row.appendTo($NavSearchResults);
                                 }
                             }
