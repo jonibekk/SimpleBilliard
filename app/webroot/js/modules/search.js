@@ -90,7 +90,7 @@ define(function () {
                             $NavSearchResults.empty().append($notFoundText);
 
                            if (userResult && userResult[0].results && userResult[0].results && userResult[0].results.length) {
-                                $('#notFoundElementToggle').remove();
+                                $('#notFoundElement').remove();
                                 var $userLabel = $('<div>')
                                     .text(config['user'].label)
                                     .addClass('nav-search-result-label');
@@ -116,7 +116,7 @@ define(function () {
                                 }
                             }
                             if (goalResult && goalResult[0].results && goalResult[0].results && goalResult[0].results.length) {
-                                $('#notFoundElementToggle').remove();
+                                $('#notFoundElement').remove();
                                 var $goalLabel = $('<div>')
                                     .text(config['goal'].label)
                                     .addClass('nav-search-result-label');
@@ -142,7 +142,7 @@ define(function () {
                                 }
                             }
                            if (circleResult && circleResult[0].results && circleResult[0].results.length && circleResult[0].results.length) {
-                                $('#notFoundElementToggle').remove();
+                                $('#notFoundElement').remove();
                                 var $circleLabel = $('<div>')
                                     .text(config['circle'].label)
                                     .addClass('nav-search-result-label');
