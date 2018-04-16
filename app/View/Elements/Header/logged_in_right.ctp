@@ -241,7 +241,7 @@
                 <a class="topicSearchList-header-cancel-button-main"><?= __("Cancel") ?></a>
             </div>
         </div>
-        <div id="NavSearchResultsToggle" class="nav-search-result"></div>
+        <div id="NavSearchResultsToggle" class="nav-search-result redux-infinite-scroll"></div>
     </form>
 </div>
 <div class="header-search">
@@ -260,7 +260,7 @@
                 <a class="topicSearchList-header-cancel-button-main"><?= __("Cancel") ?></a>
             </div>
         </div>
-        <div id="NavSearchResults" class="nav-search-result"></div>
+        <div id="NavSearchResults" class="nav-search-result redux-infinite-scroll"></div>
     </form>
 </div>
 <div class="header-white-bg"></div>

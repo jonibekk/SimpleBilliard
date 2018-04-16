@@ -42,7 +42,7 @@ define(function () {
                     // down
                     if (e.keyCode == 40) {
                         e.preventDefault();
-                        $NavSearchResultsToggle.find('.nav-search-toggle-result-item:first').focus();
+                        $NavSearchResultsToggle.find('.search-list-item-link:first').focus();
                     }
                 })
                 .on('keyup', function (e) {
@@ -97,7 +97,7 @@ define(function () {
                                 $NavSearchResultsToggle.append($userLabel);
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
-                                        .addClass('nav-search-toggle-result-item user-select')
+                                        .addClass('search-list-item-link')
                                         .attr('href', config['user'].link_base + userResult[0].results[i].id.split('_').pop());
 
                                     // image
@@ -118,7 +118,7 @@ define(function () {
                                 $NavSearchResultsToggle.append($goalLabel);
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
-                                        .addClass('nav-search-toggle-result-item goal-select')
+                                        .addClass('search-list-item-link')
                                         .attr('href', config['goal'].link_base + goalResult[0].results[i].id.split('_').pop());
 
                                     // image
@@ -139,12 +139,13 @@ define(function () {
                                 $NavSearchResultsToggle.append($circleLabel);
                                 for (var i = 0; i < circleResult[0].results.length; i++) {
                                     var $row = $('<a>')
-                                        .addClass('nav-search-toggle-result-item circle-select')
+                                        .addClass('search-list-item-link')
                                         .attr('href', config['circle'].link_base + circleResult[0].results[i].id.split('_').pop());
-
+                                    var $div = $('<div>')
+                                        .addClass('search-list-avatar-item');
                                     // image
                                     var $img = $('<img>').attr('src', circleResult[0].results[i].image);
-                                    $row.append($img);
+                                    $div.append($img);
 
                                     // text
                                     var $text = $('<span>').text(circleResult[0].results[i].text);
@@ -153,11 +154,16 @@ define(function () {
                                 }
                             }
 
-                            if($NavSearchResultsToggle.length && !$('#notFoundElement').length){
+                            if(!$('#notFoundElementToggle').length){
                                 var $endLabel = $('<div>')
                                     .text(cake.word.end_search)
                                     .addClass('nav-search-result-end-label');
                                 $NavSearchResultsToggle.append($endLabel);
+                            } else {
+                                var $noResultsLabel = $('<div>')
+                                    .text(cake.word.no_results)
+                                    .addClass('nav-search-result-end-label');
+                                $NavSearchResultsToggle.append($noResultsLabel);
                             }
 
                             // ポップアップ下の画面をスクロールさせないようにする
@@ -168,7 +174,7 @@ define(function () {
                                 $NavSearchResultsToggle.hide();
                                 $("body").removeClass('nav-search-results-open');
                             });
-                            $(".nav-search-result-label").off("click").on("click", function(e) {
+                            $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
                                 e.preventDefault();
                                 return false;
                             });
@@ -179,8 +185,8 @@ define(function () {
 
             // 矢印キーで選択可能にする
             $NavSearchResultsToggle
-                .on('keydown', '.nav-search-toggle-result-item', function (e) {
-                    var $selectedItem = $NavSearchResultsToggle.find('.nav-search-toggle-result-item:focus');
+                .on('keydown', '.search-list-item-link', function (e) {
+                    var $selectedItem = $NavSearchResultsToggle.find('.search-list-item-link:focus');
                     if ($selectedItem.size()) {
                         switch (e.keyCode) {
                             // up

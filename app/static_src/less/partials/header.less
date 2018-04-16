@@ -603,17 +603,15 @@
 .topicSearchList-header-cancel-button-main {
     color: #333;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .topicSearchList-header-cancel-main {
-    margin-left: 10px;
-    width: 70px;
-    display: flex;
+    width: 15%;
+    display: table-cell;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 14px;
 }
 
 #NavSearchIcon,#NavSearchIconToggle {
@@ -623,8 +621,8 @@
     width: 30px;
     display: flex;
     height: 100%;
-    left: 6px;
-    top: -2px;
+    left: 10px;
+    top: 0px;
 }
 
 .searchBoxMain {
@@ -652,7 +650,7 @@
 
 #NavSearchInputToggle {
     display: table-cell;
-    width: 80%;
+    width: 98%;
     background-color: transparent;
     border-radius: 4px;
     box-shadow: none;
@@ -663,17 +661,6 @@
     border: 0;
     line-height: 18px;
     border: 1px solid #ccc;
-}
-
-.topicSearchList-header-cancel-main {
-    margin-left: 10px;
-    width: 20px;
-    display: contents;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 9px;
-    background-color: transparent;
 }
 
 .searchBox-input-main {
@@ -688,4 +675,23 @@
     font-size: 14px;
     border: 0;
     line-height: 18px;
+}
+
+.search-list-item-link {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    padding: 0 0 0 10px;
+    color: #000;
+    text-decoration: none;
+    -webkit-touch-callout: none;
+}
+
+.search-list-item-link .search-list-avatar-item {
+    margin: 2px 0;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
 }

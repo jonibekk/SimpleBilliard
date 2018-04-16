@@ -153,11 +153,16 @@ define(function () {
                                 }
                             }
 
-                            if($NavSearchResults.length && !$('#notFoundElement').length){
+                            if(!$('#notFoundElement').length){
                                 var $endLabel = $('<div>')
                                     .text(cake.word.end_search)
                                     .addClass('nav-search-result-end-label');
                                 $NavSearchResults.append($endLabel);
+                            } else {
+                                var $noResultsLabel = $('<div>')
+                                    .text(cake.word.no_results)
+                                    .addClass('nav-search-result-end-label');
+                                $NavSearchResults.append($noResultsLabel);
                             }
 
                             // ポップアップ下の画面をスクロールさせないようにする
@@ -168,7 +173,7 @@ define(function () {
                                 $NavSearchResults.hide();
                                 $("body").removeClass('nav-search-results-open');
                             });
-                            $(".nav-search-result-label").off("click").on("click", function(e) {
+                            $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
                                 e.preventDefault();
                                 return false;
                             });
