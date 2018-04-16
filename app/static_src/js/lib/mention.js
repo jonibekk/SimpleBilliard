@@ -1,7 +1,7 @@
 var Mention = function(target) {
   this.postId = target.attr('post-id')
   this.hasMention = target.attr('has-mention') == 1
-  if (!hasMention) return;
+  if (!this.hasMention) return;
   this.values = {}
   var self = this
   var bind = function(target) {
