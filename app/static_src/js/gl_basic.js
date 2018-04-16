@@ -268,7 +268,6 @@ $(function () {
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
     });
-    // $("#NavSearchInputClear").on("load")
     $(window).trigger('resize');
     if(lastWidth > 479){
       $(".header-icon-search-toggle").css("display","none");

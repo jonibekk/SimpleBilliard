@@ -233,7 +233,7 @@
                 <input type="text"
                        id="NavSearchInputToggle"
                        maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                       class="searchBox-input-main"
+                       class="searchBox-input-main disable-change-warning"
                        placeholder='<?= __("Search Members, Goals, Circles") ?>'>
                 <i id="NavSearchInputClearToggle" class="fa fa-times search-header-icon"></i>
             </span>
@@ -252,7 +252,7 @@
                 <input type="text"
                        id="NavSearchInput"
                        maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                       class="searchBox-input-main"
+                       class="searchBox-input-main disable-change-warning"
                        placeholder='<?= __("Search Members, Goals, Circles") ?>'>
                 <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
             </span>
