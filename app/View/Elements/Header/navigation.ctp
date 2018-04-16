@@ -1,5 +1,5 @@
 <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
-        class="<?= $is_mb_app ? "mb-app mb-to-front-most" : "" ?> header-toggle-icon js-nav-toggle">
+        class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon js-nav-toggle">
     <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
     <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
 </button>
