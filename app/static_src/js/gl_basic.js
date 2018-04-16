@@ -210,12 +210,14 @@ $(function () {
 
     $(".header-icon-search-toggle").off("click").on("click", function() {
       $(".header-search-toggle").toggleClass("open");
+      $("#NavSearchHideToggle").trigger("click");
       setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       hideNav();
     });
 
     $(".header-icon-search").off("click").on("click", function() {
       $(".header-search").toggleClass("open");
+      $("#NavSearchHide").trigger("click");
       setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
     });
