@@ -40,7 +40,7 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
 //       We should update .container styles to .body-container styles.
 ?>
 <div class="container body-container <?= $containerClass?>">
-    <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
+    <div id="containerSubDiv" class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>

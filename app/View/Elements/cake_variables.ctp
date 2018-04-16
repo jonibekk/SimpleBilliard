@@ -113,6 +113,8 @@ App::uses('AttachedFile', 'Model');
             config: "<?=__("Settings")?>",
             waiting_message: "<?=__("Ironing your data. Please wait...")?>",
             remaining: "<?= __("%d remaining") ?>",
+            view_all: "<?= __("View All") ?>",
+            close: "<?= __("Close") ?>",
         },
         url: {
             a: "<?=$this->Html->url(['controller' => 'users', 'action' => 'ajax_select2_get_users'])?>",

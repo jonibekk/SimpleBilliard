@@ -23,6 +23,11 @@
         </div>
     </div>
       <div class="dashboard-circle-list-footer">
+        <div id="showMoreCirclesToggle" class="clearfix dashboard-circle-list-show-more">
+            <i class="fa fa-chevron-up circle-function circle-show-icon font_brownRed"></i><a href="#" class="font-dimgray show-inline-block"><?=
+                __(
+                    "View All") ?></a>
+        </div>
         <div class="clearfix dashboard-circle-list-seek">
             <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i>
             <a href="#"
