@@ -63,28 +63,6 @@
                 ?>
             </form>
         </li>
-        <!-- <li class="header-search-group hidden-xxs">
-            <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search"
-                  autocomplete="off">
-                <div class="input-group">
-                    <div class="input-group-btn nav-search-button-group">
-                        <button type="button" id="NavSearchButton"
-                                class="btn nav-search-button" disabled="disabled">
-                            <i class="fa fa-search search-header-icon"></i>
-                        </button>
-                    </div>
-                    <span class="deleteicon">
-                        <input type="text"
-                               id="NavSearchInput"
-                               maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                               class="form-control nav-search font_12px disable-change-warning"
-                               placeholder='<?= __("Search Members, Goals, Circles") ?>'>
-                        <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
-                    </span>
-                </div>
-                <div id="NavSearchResults" class="nav-search-result"></div>
-            </form>
-        </li> -->
         <li class="visible-xxs hidden-xs">
             <?= $this->element('dashboard_saved_item') ?>
         </li>

@@ -25,11 +25,11 @@
     <?php endif; ?>
 
     <div class="header-icon-search-toggle header-icon-zoom">
-        <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+        <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
 
     <div class="header-icon-search header-icon-zoom">
-        <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+        <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
 
     <div class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
