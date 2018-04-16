@@ -19,11 +19,13 @@ var Mention = function(target) {
       })
       return replaced
     }
+    // textare.width - image.width - margin
+    var styleStr = 'width:'+(target.width()-42)+'px;';
     target.atwho({
       at: '@',
-      displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
+      displayTpl: '<li data-id="${id}" data-text="${text}"><div style="width:' + target.width() + 'px" class="mention-wrapper">\
         <div class="mention-image" style="background-image:url(${image});"></div>\
-        <div class="mention-text">${text}</div>\
+        <div style="' + styleStr + '" class="mention-text">${text}</div>\
       </div></li>',
       insertTpl: '@${text}',
       searchKey : 'text',
