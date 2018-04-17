@@ -7,9 +7,7 @@ var Mention = function(target) {
   var bind = function(target) {
     if (!target[0]) return
     function normalize(str) {
-      return str
-        .replace(/\(/g, '\\(')
-        .replace(/\)/g, '\\)')
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
     }
     target[0].submitValue = function() {
       var replaced = target.val()
