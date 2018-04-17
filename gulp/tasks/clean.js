@@ -89,10 +89,17 @@ gulp.task('js_prerender:clean', () => {
 })
 
 gulp.task('js_prerender_exif:clean', () => {
-  return gulp.src([config.dest + '/js_prerender_eixf_cat'], { read: false })
+  return gulp.src([config.dest + '/js_prerender_exif_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('js_prerender_exif:clean'))
     .on('end', () => { gutil.log('----------------- js_prerender_exif task finished --------------------------') })
+})
+
+gulp.task('js_prerender_scroll:clean', () => {
+  return gulp.src([config.dest + '/js_prerender_scroll_cat'], { read: false })
+    .pipe(rimraf({ force: true }))
+    .pipe(duration('js_prerender_scroll:clean'))
+    .on('end', () => { gutil.log('----------------- js_prerender_scroll task finished --------------------------') })
 })
 
 gulp.task('angular_app:clean', () => {

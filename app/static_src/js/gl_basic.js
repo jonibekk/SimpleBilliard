@@ -183,6 +183,8 @@ function hideKeyboard(element) {
     }, 100);
 }
 
+var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger;
+
 $(function () {
     var current_slide_id = 1;
 
@@ -308,10 +310,61 @@ $(function () {
       if($("#showMoreCirclesToggle").find('i').hasClass('fa-chevron-down')){
         $(".dashboard-circle-list-body").css("overflow-y","scroll");
         $("#showMoreCirclesToggle").find('a').text(cake.word.close);
+        psCircleList.destroy();
+        psCircleList = new PerfectScrollbar('#circleListBody', {
+          swipePropagation: false,
+          wheelPropagation: false,
+          maxScrollbarLength: 0,
+          suppressScrollX: true,
+          suppressScrollY: false,
+        });
       } else {
         $(".dashboard-circle-list-body").css("overflow-y","hidden");
         $("#showMoreCirclesToggle").find('a').text(cake.word.view_all);
+        document.querySelector('#circleListBody').scrollTop = 0;
+        psCircleList.destroy();
+        psCircleList = new PerfectScrollbar('#circleListBody', {
+          swipePropagation: false,
+          wheelPropagation: false,
+          maxScrollbarLength: 0,
+          suppressScrollX: true,
+          suppressScrollY: true,
+        });
       }
+    });
+    psCircleList = new PerfectScrollbar('#circleListBody', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: true,
+    });
+    psCircleListHamburger = new PerfectScrollbar('#filter-circles-list-hamburger', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: false,
+    });
+    psNavResults = new PerfectScrollbar('#NavSearchForm', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: false,
+    });
+    psNavResultsToggle = new PerfectScrollbar('#NavSearchFormToggle', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: false,
+    });
+    $(window).on("resize", function() {
+      psCircleList.update();
+      psCircleListHamburger.update();
+      psNavResults.update();
+      psNavResultsToggle.update();
     });
     $(window).trigger('resize');
     if(lastWidth > 479){

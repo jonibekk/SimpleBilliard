@@ -90,6 +90,15 @@ const config = {
       path: compiled_assets_dir + '/js'
     }
   },
+  js_prerender_scroll: {
+    src: [
+      node_modules_dir + '/perfect-scrollbar/dist/perfect-scrollbar.js',
+    ],
+    output: {
+      file_name: 'goalous.prerender.scroll',
+      path: compiled_assets_dir + '/js'
+    }
+  },
   js_prerender: {
     src: [
       assets_dir + '/js/lib/global_prerender.js',
