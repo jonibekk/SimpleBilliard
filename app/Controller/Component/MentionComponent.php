@@ -127,6 +127,9 @@ class MentionComponent extends Component {
         }
         return $body;
     }
+    public function getTest(): array {
+        return array();
+    }
     /**
      * get user id list or id list of user/circle which contains $userId.
      *
@@ -136,10 +139,9 @@ class MentionComponent extends Component {
      * @param $includeMe boolean whether the result should include $me or not
      * @param $returnAsBelonging boolean whether the result should be user/circle which contains $me
      */
-    public function getUserList(string $body = null, int $teamId, int $me, $includeMe = false, $returnAsBelonging = false): array {
+    public function getUserList(string $body = null, int $teamId, $me, $includeMe = false, $returnAsBelonging = false): array {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
-        
         foreach ($mentions as $key => $mention) {
             if ($mention['isUser']) {
                 $userId = $mention['id'];
