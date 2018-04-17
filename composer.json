@@ -20,7 +20,8 @@
     "nesbot/carbon": "^1.22",
     "myclabs/php-enum": "^1.5",
     "friendsofcake/cakepdf": "1.0.3",
-    "firebase/php-jwt": "^5.0"
+    "firebase/php-jwt": "^5.0",
+    "ramsey/uuid": "^3.7"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",
