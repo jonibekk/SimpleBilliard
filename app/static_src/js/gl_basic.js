@@ -311,7 +311,7 @@ $(function () {
         $("#showMoreCirclesToggle").find('a').text(cake.word.close);
         psCircleList.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: false,
+          swipePropagation: true,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -322,7 +322,7 @@ $(function () {
         document.querySelector('#circleListBody').scrollTop = 0;
         psCircleList.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: false,
+          swipePropagation: true,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -338,7 +338,7 @@ $(function () {
         $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.close);
         psCircleListHamburger.destroy();
         psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-          swipePropagation: false,
+          swipePropagation: true,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -349,7 +349,7 @@ $(function () {
         document.querySelector('#circleListHamburger').scrollTop = 0;
         psCircleListHamburger.destroy();
         psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-          swipePropagation: false,
+          swipePropagation: true,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -358,42 +358,42 @@ $(function () {
       }
     });
     psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-      swipePropagation: false,
+      swipePropagation: true,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: false,
     });
     psGoalousNavigation = new PerfectScrollbar('#goalousNavigation', {
-      swipePropagation: false,
+      swipePropagation: true,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: false,
     });
     psCircleList = new PerfectScrollbar('#circleListBody', {
-      swipePropagation: false,
+      swipePropagation: true,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: true,
     });
     psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-      swipePropagation: false,
+      swipePropagation: true,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: true,
     });
     psNavResults = new PerfectScrollbar('#NavSearchForm', {
-      swipePropagation: false,
+      swipePropagation: true,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: false,
     });
     psNavResultsToggle = new PerfectScrollbar('#NavSearchFormToggle', {
-      swipePropagation: false,
+      swipePropagation: true,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
