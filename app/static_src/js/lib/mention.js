@@ -23,6 +23,7 @@ var Mention = function(target) {
     var styleStr = 'width:'+(target.width()-42)+'px;';
     target.atwho({
       at: '@',
+      limit: 20,
       displayTpl: '<li data-id="${id}" data-text="${text}"><div style="width:' + target.width() + 'px" class="mention-wrapper">\
         <div class="mention-image" style="background-image:url(${image});"></div>\
         <div style="' + styleStr + '" class="mention-text">${text}</div>\
