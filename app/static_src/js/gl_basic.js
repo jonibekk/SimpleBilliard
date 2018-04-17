@@ -310,7 +310,15 @@ $(function () {
       if($("#showMoreCirclesToggle").find('i').hasClass('fa-chevron-down')){
         $("#showMoreCirclesToggle").find('a').text(cake.word.close);
         psCircleList.destroy();
+        psCircleListHamburger.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
+          swipePropagation: false,
+          wheelPropagation: false,
+          maxScrollbarLength: 0,
+          suppressScrollX: true,
+          suppressScrollY: false,
+        });
+        psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
           swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
@@ -321,7 +329,15 @@ $(function () {
         $("#showMoreCirclesToggle").find('a').text(cake.word.view_all);
         document.querySelector('#circleListBody').scrollTop = 0;
         psCircleList.destroy();
+        psCircleListHamburger.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
+          swipePropagation: false,
+          wheelPropagation: false,
+          maxScrollbarLength: 0,
+          suppressScrollX: true,
+          suppressScrollY: true,
+        });
+        psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
           swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
@@ -337,12 +353,12 @@ $(function () {
       suppressScrollX: true,
       suppressScrollY: true,
     });
-    psCircleListHamburger = new PerfectScrollbar('#filter-circles-list-hamburger', {
+    psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
       swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
-      suppressScrollY: false,
+      suppressScrollY: true,
     });
     psNavResults = new PerfectScrollbar('#NavSearchForm', {
       swipePropagation: false,

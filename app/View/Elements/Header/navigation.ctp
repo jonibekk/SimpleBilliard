@@ -4,7 +4,7 @@
     <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
 </button>
 <div id="NavbarOffcanvas">
-    <ul class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
+    <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
             <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
