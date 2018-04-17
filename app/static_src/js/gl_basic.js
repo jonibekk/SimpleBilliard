@@ -308,7 +308,6 @@ $(function () {
       $("#showMoreCirclesToggle").find('i').toggleClass('fa-chevron-up');
       $("#showMoreCirclesToggle").find('i').toggleClass('fa-chevron-down');
       if($("#showMoreCirclesToggle").find('i').hasClass('fa-chevron-down')){
-        $(".dashboard-circle-list-body").css("overflow-y","scroll");
         $("#showMoreCirclesToggle").find('a').text(cake.word.close);
         psCircleList.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
@@ -319,7 +318,6 @@ $(function () {
           suppressScrollY: false,
         });
       } else {
-        $(".dashboard-circle-list-body").css("overflow-y","hidden");
         $("#showMoreCirclesToggle").find('a').text(cake.word.view_all);
         document.querySelector('#circleListBody').scrollTop = 0;
         psCircleList.destroy();
@@ -360,12 +358,13 @@ $(function () {
       suppressScrollX: true,
       suppressScrollY: false,
     });
-    $(window).on("resize", function() {
+    $(window).on("load resize", function() {
       psCircleList.update();
       psCircleListHamburger.update();
       psNavResults.update();
       psNavResultsToggle.update();
     });
+    $('#circleListBody,#filter-circles-list-hamburger,#NavSearchForm,#NavSearchFormToggle').css("overflow","none");
     $(window).trigger('resize');
     if(lastWidth > 479){
       $(".header-icon-search-toggle").css("display","none");
