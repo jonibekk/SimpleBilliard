@@ -24,14 +24,15 @@
                 'Home') ?></a>
     <?php endif; ?>
 
+    <?php if($is_mb_app): ?>
     <div class="header-icon-search-toggle header-icon-zoom">
         <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
-
+    <?php else: ?>
     <div class="header-icon-search header-icon-zoom">
         <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
-
+    <?php endif; ?>
     <div class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"

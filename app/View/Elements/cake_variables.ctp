@@ -101,7 +101,7 @@ App::uses('AttachedFile', 'Model');
             select_secret_circle: "<?=__("Choose secret circle(s)")?>",
             share_change_disabled: "<?=__("You can't switch in the circle page.")?>",
             members: "<?= __("Members")?>",
-            goals: "<?= __("Goals")?>",
+            goals: "<?= __("Goal")?>",
             circles: "<?= __("Circles")?>",
             end_search: "<?= __("No more results")?>",
             no_results: "<?= __("No results found")?>",
