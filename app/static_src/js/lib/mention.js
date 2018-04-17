@@ -6,7 +6,7 @@ var Mention = function(target) {
   var self = this
   var bind = function(target) {
     if (!target[0]) return
-    $(document).on('blur', '#' + target.attr('id'), function(e) {
+    $(document).on('blur.atwho', '#' + target.attr('id'), function(e) {
       var _this = target.data('atwho')
       var c;
       if (c = _this.controller()) {
