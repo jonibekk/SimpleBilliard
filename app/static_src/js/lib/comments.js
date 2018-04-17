@@ -1005,7 +1005,6 @@ function evTargetToggleClick() {
     $("#" + click_target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).focus();
-    new Mention($('#CommentEditFormBody_' + comment_id))
     $('.dropdown-comment.open').removeClass('open')
 
     return false;
