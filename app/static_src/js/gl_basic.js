@@ -380,7 +380,8 @@ $(function () {
       psNavResults.update();
       psNavResultsToggle.update();
     });
-    $('#circleListBody,#filter-circles-list-hamburger,#NavSearchForm,#NavSearchFormToggle').css("overflow","none");
+    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle').css("overflow","none");
+
     $(window).trigger('resize');
     if(lastWidth > 479){
       $(".header-icon-search-toggle").css("display","none");

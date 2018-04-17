@@ -48,7 +48,7 @@
   }
   .circle-list-footer{
     margin-bottom:2rem;
-    .develop--circle-seek, .develop--circle-make {
+    .develop--circle-seek, .develop--circle-make, .circle-show-icon {
       font-size: 12px;
       line-height: 16px;
     }
@@ -75,7 +75,7 @@
   color: @veryDark;
 }
 
-.dashboard-circle-list-body-wrap,.layout-circle-hamburger {
+.dashboard-circle-list-body-wrap{
   overflow:hidden;
   width: 100%;
   -ms-overflow-style: none;
@@ -87,6 +87,14 @@
   height: 100%;
   overflow-y: hidden;
   width: 100%;
+}
+.layout-circle-hamburger {
+  overflow:hidden;
+  width: 100%;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0 !important }
+  height: ~"calc(100% - 368px)";
 }
 .dashboard-circle-list-see-more {
   font-size: 12px;
@@ -135,6 +143,16 @@
   height: 30px;
   overflow: hidden;
   position: relative;
+}
+@media (min-width: 480px) {
+  .dashboard-circle-list-row-wrap {
+    width: 110% !important;
+  }
+}
+@media (max-width: 479px) {
+  .dashboard-circle-list-row-wrap {
+    width: 99% !important;
+  }
 }
 .dashboard-circle-list-row {
   display: flex;
