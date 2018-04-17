@@ -8,10 +8,10 @@ var Mention = function(target) {
     if (!target[0]) return
     $(document).on('blur.atwho', '#' + target.attr('id'), function(e) {
       var _this = target.data('atwho')
-      var c;
-      if (c = _this.controller()) {
-        c.expectedQueryCBId = null;
-        return c.view.hide(e, c.getOpt("displayTimeout"));
+      var atWhoController;
+      if (atWhoController = _this.controller()) {
+        atWhoController.expectedQueryCBId = null;
+        return atWhoController.view.hide(e, atWhoController.getOpt("displayTimeout"));
       }
     })
     function normalize(str) {
