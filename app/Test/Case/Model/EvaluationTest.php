@@ -1,6 +1,8 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Evaluation', 'Model');
 
+use Goalous\Model\Enum as Enum;
+
 /**
  * Evaluation Test Case
  *
@@ -763,6 +765,7 @@ class EvaluationTest extends GoalousTestCase
     function testGetAddRecordsOfEvaluatee()
     {
         $this->_setDefault();
+        $term_id =  $this->Evaluation->Team->Term->getCurrentTermData()['id'];
         $current_start = $this->Evaluation->Team->Term->getCurrentTermData()['start_date'];
         $current_end = $this->Evaluation->Team->Term->getCurrentTermData()['end_date'];
         $evaluators_save_data = [
@@ -791,7 +794,7 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Goal->saveField('start_date', $current_start);
         $this->Evaluation->Goal->saveField('end_date', $current_end);
 
-        $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, 1, $evaluators, 0);
+        $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, $term_id, $evaluators, 0);
         $this->assertCount(5, $res);
     }
 
@@ -879,17 +882,6 @@ class EvaluationTest extends GoalousTestCase
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->Term->getCurrentTermData(),
             $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
-    }
-
-    function testGetIsEditableCaseTermIsFrozen()
-    {
-        $this->_setDefault();
-        $this->Evaluation->Team->current_team_id = 1;
-        $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->Term->addTermData(Term::TYPE_CURRENT);
-        $termId = $this->Evaluation->Team->Term->getTermId(Term::TYPE_NEXT);
-        $this->Evaluation->Team->Term->changeFreezeStatus($termId);
-        $this->Evaluation->getIsEditable($termId, null);
     }
 
     function testGetAllStatusesForTeamSettings()
@@ -988,6 +980,39 @@ class EvaluationTest extends GoalousTestCase
         $this->assertNotEmpty($res1);
         $res2 = $this->Evaluation->isThisEvaluateType(1, Evaluation::TYPE_FINAL_EVALUATOR);
         $this->assertEmpty($res2);
+    }
+
+    function test_countCompletedByEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->_saveEvaluations();
+        $evaluateeId = 1;
+        $termId = $this->Evaluation->Term->getCurrentTermId();
+        $res = $this->Evaluation->countCompletedByEvaluators($termId, $evaluateeId);
+        $this->assertEquals($res, 0);
+        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE],
+            [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => 2,
+            ]
+        );
+        $res = $this->Evaluation->countCompletedByEvaluators($termId, $evaluateeId);
+        $this->assertEquals($res, 1);
+
+        $this->Evaluation->create();
+        $this->Evaluation->save([
+            'team_id'           => $this->Evaluation->current_team_id,
+            'term_id'           => $termId,
+            'evaluatee_user_id' => $evaluateeId,
+            'evaluator_user_id' => 3,
+            'status'            => Enum\Evaluation\Status::DONE,
+            'goal_id' => null,
+            'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+        ], false);
+        $res = $this->Evaluation->countCompletedByEvaluators($termId, $evaluateeId);
+        $this->assertEquals($res, 2);
     }
 
     function _saveEvaluations()

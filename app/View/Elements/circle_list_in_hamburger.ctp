@@ -12,17 +12,19 @@
  */
 ?>
 <?= $this->App->viewStartComment() ?>
-<p class="circle_heading is-humberger"><?= __("Circles") ?></p>
-<div class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
-    <?php if (!empty($my_circles)): ?>
-        <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'isHamburger' => true]) ?>
+<p class="circle_heading is-humberger"><?= __("Circles") ?>
+    <a href="/circle_pins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Manage") ?></a>
+</p>
+<div id="filter-circles-list-hamburger" class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
+        <ul>
+        <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'defaultCircle' => $defaultCircle, 'isHamburger' => true]) ?>
         <?php if (count($my_circles) > 8): ?>
             <div class="circle-view-all-block">
                 <i class="fa fa-angle-double-down circle-toggle-icon"></i>
                 <a class="pl_5px font_12px font_gray click-circle-trigger on"><?= __("View All") ?></a>
             </div>
         <?php endif; ?>
-    <?php endif; ?>
+        </ul>
     <div class="circle-list-footer">
         <div class="clearfix develop--circle-seek mtb_15px">
             <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i>

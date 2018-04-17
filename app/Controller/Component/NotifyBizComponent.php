@@ -2,6 +2,8 @@
 App::uses('ModelType', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('Post', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'PushService');
 
@@ -123,9 +125,17 @@ class NotifyBizComponent extends Component
      * @param null $to_user_list
      * @param      $user_id
      * @param      $team_id
+     * @param int  $postId
      */
-    function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
-    {
+    function sendNotify(
+        $notify_type,
+        $model_id,
+        $sub_model_id = null,
+        $to_user_list = null,
+        $user_id,
+        $team_id,
+        int $postId = null
+    ) {
         $this->notify_option['from_user_id'] = $user_id;
         $this->notify_option['options']['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);
@@ -237,6 +247,18 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_TRANSCODE_FAILED:
                 $this->_setTranscodeFailed($user_id, $team_id);
                 break;
+            case NotifySetting::TYPE_EVALUATOR_SET_TO_COACH:
+                $this->_setAddedEvaluatorToCoach($team_id, $user_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE:
+                $this->_setAddedEvaluatorToEvaluatee($team_id, $to_user_list, $user_id);
+                break;
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL:
+                $this->_setFeedCommentedOnGoal($team_id, $user_id, $to_user_list, $postId);
+                break;
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
+                $this->_setFeedCommentedOnCommentedGoal($team_id, $user_id, $to_user_list, $postId);
+                break;
             default:
                 break;
         }
@@ -260,9 +282,9 @@ class NotifyBizComponent extends Component
      * Send Pusher
      *
      * @param           $socketId
-     * @param           $share string
+     * @param           $share        string
      * @param int|null  $teamId
-     * @param array      $optionValues optional data to send pusher
+     * @param array     $optionValues optional data to send pusher
      */
     public function push($socketId, $share, $teamId = null, array $optionValues = [])
     {
@@ -309,7 +331,7 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * @param string $socketId
+     * @param string   $socketId
      * @param string[] $share
      *      ['public', 'circle_1', ...]
      * @param int|null $teamId
@@ -938,6 +960,116 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * @param $teamId
+     * @param $userId
+     * @param $coachId
+     */
+    private function _setAddedEvaluatorToEvaluatee($teamId, $userId, $coachId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($userId,
+            NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE;
+        $this->notify_option['url_data'] = [
+            'controller' => 'evaluator_settings',
+            'user_id'    => $userId[0],
+            'action'     => 'detail',
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+        $this->notify_option['options'] = [
+            'coach_user_id' => $coachId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+    }
+
+    /**
+     * @param $teamId
+     * @param $userId
+     * @param $coachId
+     */
+    private function _setAddedEvaluatorToCoach($teamId, $userId, $coachId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($coachId,
+            NotifySetting::TYPE_EVALUATOR_SET_TO_COACH);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATOR_SET_TO_COACH;
+        $this->notify_option['url_data'] = [
+            'controller' => 'evaluator_settings',
+            'user_id'    => $userId,
+            'action'     => 'detail',
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+        $this->notify_option['options'] = [
+            'coachee_user_id' => $userId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $coachId);
+    }
+
+    /**
+     * @param int   $teamId
+     * @param int   $commenterUserId
+     * @param array $toUserList
+     * @param int   $postId
+     */
+    private function _setFeedCommentedOnGoal(int $teamId, int $commenterUserId, array $toUserList, int $postId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+            NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL;
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $postId
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+        $this->notify_option['options'] = [
+            'commenter_user_id' => $commenterUserId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+    }
+
+    /**
+     * @param int   $teamId
+     * @param int   $commenterUserId
+     * @param array $toUserList
+     * @param int   $postId
+     */
+    private function _setFeedCommentedOnCommentedGoal(
+        int $teamId,
+        int $commenterUserId,
+        array $toUserList,
+        int $postId
+    ) {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+            NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL;
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $postId
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $this->notify_option['options'] = [
+            'commenter_user_id'  => $commenterUserId,
+            'post_owner_user_id' => $Post->getById($postId)['user_id']
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+    }
+
+    /**
      * ゴールのリーダーが変更されたときのオプション
      *
      * @param $notify_type
@@ -1163,10 +1295,13 @@ class NotifyBizComponent extends Component
         if (!$this->Team->TeamMember->isActive($evaluation['Evaluation']['evaluator_user_id'])) {
             return;
         }
+
+        $evaluateeUserId = $evaluation['Evaluation']['evaluatee_user_id'];
+
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
             NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
-        $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
+        $evaluatee = $this->Goal->User->getUsersProf($evaluateeUserId);
 
         $url = [
             'controller'       => 'evaluations',
@@ -1176,7 +1311,7 @@ class NotifyBizComponent extends Component
             'team_id'          => $this->NotifySetting->current_team_id
         ];
 
-        $this->notify_option['from_user_id'] = null;
+        $this->notify_option['from_user_id'] = $evaluateeUserId;
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR;
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = null;
@@ -1316,28 +1451,28 @@ class NotifyBizComponent extends Component
     private function _saveNotifications()
     {
         //通知onのユーザを取得
-        $uids = [];
+        $notificationReceiverUserIds = [];
         foreach ($this->notify_settings as $user_id => $val) {
             if ($val['app']) {
-                $uids[] = $user_id;
+                $notificationReceiverUserIds[] = $user_id;
             }
         }
-        if (empty($uids)) {
+        if (empty($notificationReceiverUserIds)) {
             return;
         }
         //to be short text
-        $item = json_decode($this->notify_option['item_name']);
-        foreach ($item as $k => $v) {
-            $item[$k] = mb_strimwidth($v, 0, 40, "...");
+        $notificationBody = json_decode($this->notify_option['item_name']);
+        foreach ($notificationBody as $k => $v) {
+            $notificationBody[$k] = mb_strimwidth($v, 0, 40, "...");
         }
-        $item = json_encode($item);
-        //TODO save to redis.
+        $notificationBody = json_encode($notificationBody);
+
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
-            $uids,
+            $notificationReceiverUserIds,
             $this->notify_option['from_user_id'],
-            $item,
+            $notificationBody,
             $this->notify_option['url_data'],
             microtime(true),
             $this->notify_option['topic_id'] ?? null,
@@ -1347,6 +1482,9 @@ class NotifyBizComponent extends Component
         if ($this->notify_option['notify_type'] == NotifySetting::TYPE_MESSAGE) {
             $this->msgNotifyPush($this->notify_option['from_user_id'], $flag_name, $this->notify_option['topic_id']);
         } else {
+            if ($this->notify_option['force_notify'] ?? false) {
+                $flag_name = 'force_notify';
+            }
             $this->bellPush($this->notify_option['from_user_id'], $flag_name);
         }
         return true;
@@ -1526,17 +1664,24 @@ class NotifyBizComponent extends Component
     /**
      * execコマンドにて通知を行う
      *
-     * @param       $type
-     * @param       $model_id
-     * @param       $sub_model_id
-     * @param array $to_user_list json_encodeしてbase64_encodeする
-     * @param int|null $teamId
-     * @param int|null $userId
-     * @param string|null $baseUrl the base url of notification list url
-     *                             specify if execSendNotify called from externalAPI, batch shell
+     * @param             $type
+     * @param             $model_id
+     * @param             $sub_model_id
+     * @param array       $to_user_list json_encodeしてbase64_encodeする
+     * @param int|null    $teamId
+     * @param int|null    $userId
+     * @param string|null $baseUrl      the base url of notification list url
+     *                                  specify if execSendNotify called from externalAPI, batch shell
      */
-    public function execSendNotify($type, $model_id, $sub_model_id = null, $to_user_list = null, $teamId = null, $userId = null, $baseUrl = null)
-    {
+    public function execSendNotify(
+        $type,
+        $model_id,
+        $sub_model_id = null,
+        $to_user_list = null,
+        $teamId = null,
+        $userId = null,
+        $baseUrl = null
+    ) {
         $set_web_env = "";
         $nohup = "nohup ";
         $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
@@ -1619,6 +1764,7 @@ class NotifyBizComponent extends Component
             $limit,
             $from_date
         );
+
         if (empty($notify_from_redis)) {
             return [];
         }
@@ -1728,29 +1874,6 @@ class NotifyBizComponent extends Component
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
-    }
-
-    /**
-     * set notifications
-     *
-     * @param array|int $to_user_ids
-     * @param int       $type
-     * @param string    $url
-     * @param string    $body
-     *
-     * @return bool
-     */
-    function setNotifications($to_user_ids, $type, $url, $body = null)
-    {
-        $this->GlRedis->setNotifications(
-            $type,
-            $this->NotifySetting->current_team_id,
-            $to_user_ids,
-            $this->NotifySetting->my_uid,
-            $body,
-            $url
-        );
-        return true;
     }
 
     /**

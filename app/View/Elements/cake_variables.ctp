@@ -66,6 +66,7 @@ App::uses('AttachedFile', 'Model');
                 search_result_zero: "<?=__("N/A")?>",
                 leave_secret_circle: "<?=__('After leaving secret circle, you can\'t join again by yourself. Do you really want to leave this secret circle?')?>",
                 confirm_cancel_post: "<?=__('Do you really want to cancel this post?')?>",
+                confirm_evaluation_start: "<?=__('Unable to cancel. Do you really want to start evaluations?')?>",
             },
             info: {
                 a: "<?=__("Copied the post URL to the clipboard.")?>",
@@ -108,7 +109,8 @@ App::uses('AttachedFile', 'Model');
             search_placeholder_circle: "<?=__("Circle Name?")?>",
             leave_circle: "<?=__("Leave circle.")?>",
             config: "<?=__("Settings")?>",
-            waiting_message: "<?=__("Ironing your data. Please wait...")?>"
+            waiting_message: "<?=__("Ironing your data. Please wait...")?>",
+            remaining: "<?= __("%d remaining") ?>",
         },
         url: {
             a: "<?=$this->Html->url(['controller' => 'users', 'action' => 'ajax_select2_get_users'])?>",

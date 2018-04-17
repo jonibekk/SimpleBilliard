@@ -86,24 +86,26 @@ class TermFixture extends CakeTestFixtureEx
      * @var array
      */
     public $records = [
-//        [
-//            'id'         => 1,
-//            'team_id'    => 1,
-//            'start_date' => 10000,
-//            'end_date'   => 19999,
-//            'timezone'   => 9,
-//            'created'    => 1,
-//            'modified'   => 1
-//        ],
-//        [
-//            'id'         => 2,
-//            'team_id'    => 1,
-//            'start_date' => 20000,
-//            'end_date'   => 29999,
-//            'timezone'   => 9,
-//            'created'    => 1,
-//            'modified'   => 1
-//        ],
+        [
+            'id'              => 1,
+            'team_id'         => 1,
+            'start_date'      => 10000,
+            'end_date'        => 19999,
+            'evaluate_status' => true,
+            'del_flg'         => false,
+            'created'         => 1,
+            'modified'        => 1
+        ],
+        [
+            'id'              => 2,
+            'team_id'         => 1,
+            'start_date'      => 20000,
+            'end_date'        => 29999,
+            'evaluate_status' => true,
+            'del_flg'         => false,
+            'created'         => 1,
+            'modified'        => 1
+        ],
     ];
 
 }

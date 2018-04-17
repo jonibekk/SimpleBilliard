@@ -102,6 +102,8 @@ $(function () {
                         height: 96,
                         fitDirection: 'center center'
                     });
+                    //EXIF
+                    exifRotate(this);
                 });
 
                 // var $editCircleForm = $modal_elm.find('#EditCircleForm');
@@ -135,6 +137,12 @@ $(function () {
             }).done(function () {
                 $this.removeClass('double_click');
                 $('body').addClass('modal-open');
+            }).fail(function () {
+                $this.removeClass('double_click')
+                new Noty({
+                    type: 'error',
+                    text: cake.message.notice.d,
+                }).show();
             });
         }
     });
@@ -424,10 +432,9 @@ function evCircleFeed(options) {
 }
 
 function updateNotifyOnHamburger() {
-
-    var $list_elem = $('.js-dashboard-circle-list.is-hamburger');
-    var existUnreadCircle = $list_elem.hasClass('is-unread');
-    if (existUnreadCircle) {
+    var is_visible = $('.circle-list-in-hamburger').css("display") !== "none";
+    var existUnreadCircle = $('.circle-list-in-hamburger').find('.js-dashboard-circle-list').hasClass('is-unread');
+    if (existUnreadCircle && is_visible) {
         $('.js-unread-point-on-hamburger').removeClass('is-read');
     } else {
         $('.js-unread-point-on-hamburger').addClass('is-read');
@@ -575,7 +582,7 @@ var circleListDashboard=document.getElementsByClassName('dashboard-circle-list-b
     bannerExist = document.getElementsByClassName('banner-alert'),
     bannerOffset = 0;
 
-$('.js-dashboard-circle-list.is-hamburger').click(function(){
+$('.circle-list-in-hamburger').find('.js-dashboard-circle-list').click(function(){
     $('.js-nav-toggle').click();
 });
 

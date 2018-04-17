@@ -1,0 +1,196 @@
+/**
+ * サークルリストピンのスタイル
+ */
+
+.pin-circle {
+  display: inline-flex;
+  &:hover, &:active, &:focus {
+    background-color: @slightGray;
+  }
+}
+
+.pin-circle-list {
+  padding: 0px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  border: 0px transparent;
+}
+
+.pin-circle-text{
+  display: inline-block;
+}
+
+.pin-circle-avatar{
+  display: inline;
+  margin-right: 8px;
+  background-color: inherit;
+}
+
+.fa-disabled {
+  opacity: 0.3;
+}
+
+.style-hidden {
+  opacity: 0 !important;
+  cursor: initial !important;
+}
+
+.fa-pull-right {
+  float: right;
+  margin-top: 10px;
+}
+
+.fa-pull-right-less {
+    margin-top: 11px;
+    margin-right: 16px;
+    float: right;
+    position: absolute;
+    right: 64px;
+}
+
+.fa-pull-right-pin-circle-cog {
+    margin-top: 7px;
+    position: absolute;
+    right: 32px;
+    float: right;
+}
+
+#pinned-header,#unpinned-header {
+  margin-bottom: 0px;
+  background-color: @baseGray;
+  background: @baseGray;
+}
+
+.circle-header-label {
+  font-size: 1.2em;
+}
+
+.circle-name-label {
+    margin-top: 6px;
+    font-size: 1.0em;
+    background: @white;
+    display: initial;
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: inherit;
+    color: @veryDark;
+    font-weight: normal;
+}
+
+.a-black-link {
+  color: @black !important;;
+}
+
+#pin-panel {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+}
+
+.pin-circle-front-drag-handler {
+  opacity: 0.5;
+  margin-right: 8px;
+  margin-left: 8px;
+}
+
+.pin-circle-view-panel-body {
+  padding: 0px;
+}
+
+.pin-circle-list-item {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: -1px;
+  background-color: @white;
+  border-bottom: 8px solid @baseGray;
+}
+
+.pin-circle-cog {
+  color: black; 
+}
+
+.pin-circle-panel-heading {
+    padding: 10px 15px;
+    border-bottom: 0px solid transparent;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.pin-circle-panel {
+    margin-bottom: 0px;
+    background-color: @white;
+    border: none;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.pin-circle-body {
+  margin-bottom: -20px;
+}
+
+.dashboard-pin-circle-border {
+  border: 0.5px solid @cGray;
+  color: @cGray;
+  margin-left: 10px;
+}
+
+.pin-circle-edit-color{
+  color: @goalous;
+}
+
+li.pin-circle-list-item > i.fa.fa-thumb-tack,
+li.pin-circle-list-item > i.fa.fa-cog,
+li.pin-circle-list-item > i.fa.fa-align-justify {
+  cursor: pointer;
+}
+
+.circle-sortable-chosen {
+    color: @colorSortableDragged;
+    background-color: @colorSortableBackground;
+}
+
+a.circle-sortable-chosen {
+    color: @colorSortableDragged;
+}
+
+a.circle-sortable-chosen .list-group-item-heading {
+    color: inherit;
+}
+
+a.circle-sortable-chosen:hover, a.circle-sortable-chosen:focus {
+    color: @colorSortableDragged;
+    background-color: @colorSortableHandle;
+}
+
+a.circle-sortable-chosen.active, a.circle-sortable-chosen.active:hover, a.circle-sortable-chosen.active:focus {
+    color: @white;
+    background-color: @colorSortableDragged;
+    border-color: @colorSortableDragged;
+}
+
+.circle-edit-link {
+  font-weight:normal;
+}
+
+div.circle-pin-heading-description{
+  font-size: 0.8em;
+  font-weight: normal;
+  color: @darkGray;
+}
+
+@media (min-width: 641px) {
+  #circles-edit-page {
+      width: 640px;
+      max-width: 640px;
+      min-width: 640px;
+  }
+}
+
+#circle-pin-heading {
+  color: @black;
+  font-size: 1.4em;
+}

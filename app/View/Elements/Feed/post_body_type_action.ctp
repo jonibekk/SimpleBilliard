@@ -200,8 +200,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 <?= __("Like!") ?></a>
             <?php if (!$without_add_comment): ?>
                 <a href="#" class="feeds-post-comment-btn trigger-click"
-                   target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
-                   after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                   target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                 >
                     <i class="fa-comments-o fa"></i>
                     <?= __("Comments") ?>
@@ -301,40 +300,9 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <i class="fa fa-exclamation-circle"></i><span class="message"></span>
     </div>
     <?php if (!$without_add_comment): ?>
-        <div class="col-xxs-12 box-align feed-contents comment-contents">
-            <?=
-            $this->Html->image('pre-load.svg',
-                [
-                    'class'         => 'lazy comment-img',
-                    'data-original' => $this->Upload->uploadUrl($my_prof,
-                        'User.photo',
-                        ['style' => 'medium_large']),
-                ]
-            )
-            ?>
-            <div class="comment-body" id="NewCommentForm_<?= $post['Post']['id'] ?>">
-                <form action="#" id="" method="post" accept-charset="utf-8">
-                    <div class="form-group mlr_-1px">
-                                    <textarea
-                                        class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
-                                        replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
-                                        click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                                        post-id="<?= $post['Post']['id'] ?>"
-                                        tmp-target-height="32"
-                                        ajax-url="<?= $this->Html->url([
-                                            'controller' => 'posts',
-                                            'action'     => 'ajax_get_new_comment_form',
-                                            'post_id'    => $post['Post']['id']
-                                        ]) ?>"
-                                        wrap="soft" rows="1"
-                                        placeholder="<?= __("Comment") ?>"
-                                        cols="30"
-                                        id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
-                                        init-height="15"></textarea>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <?= $this->element('Feed/comment_form', [
+            'post'  => $post
+        ]) ?>
     <?php endif; ?>
 </div>
 <?= $this->App->viewEndComment() ?>

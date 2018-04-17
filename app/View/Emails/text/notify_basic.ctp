@@ -15,8 +15,10 @@
  */
 echo $body_title;
 echo "\n";
-echo __('"%s"', $this->TextEx->replaceUrl($body[0]));
-echo "\n";
+if (0 !== strlen($body[0])) {
+    echo __('"%s"', $this->TextEx->replaceUrl($body[0]));
+    echo "\n";
+}
 echo "\n";
 echo $url;
 echo "\n";

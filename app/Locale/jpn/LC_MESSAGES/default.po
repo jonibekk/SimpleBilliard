@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-27 15:35+0900\n"
+"PO-Revision-Date: 2018-04-12 18:03+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -221,6 +221,12 @@ msgstr "自己評価を確定しました。"
 msgid "Submitted the evaluation by evaluator."
 msgstr "評価者の評価を確定しました。"
 
+msgid ""
+"Evaluation feature is turned off. Please contact the team administrator."
+msgstr ""
+"チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
+"い。"
+
 msgid "Internal Server Error."
 msgstr "サーバーエラー"
 
@@ -394,9 +400,6 @@ msgstr "Japanese"
 
 msgid "English"
 msgstr "English"
-
-msgid "Anyone"
-msgstr "指定なし"
 
 msgid "Please select"
 msgstr "選択してください"
@@ -857,6 +860,24 @@ msgstr "データの検証に失敗しました。"
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
 
+msgid "Parameter is invalid"
+msgstr "パラメータが不正です。"
+
+msgid "Evaluatee cannot be assigned as his/her own evaluator."
+msgstr "評価者に被評価者を設定できません。"
+
+msgid "Evaluator setting cannot be saved."
+msgstr "評価者設定を保存できませんでした。"
+
+msgid "Evaluator has duplicates."
+msgstr "評価者が重複しています。"
+
+msgid "%s %s inactive"
+msgstr ""
+
+msgid "Evaluator setting saved."
+msgstr "評価者設定を保存しました。"
+
 msgid "Failed uploading video"
 msgstr "動画のアップロードに失敗しました"
 
@@ -886,9 +907,6 @@ msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
-
-msgid "Parameter is invalid"
-msgstr "パラメータが不正です。"
 
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
@@ -1343,6 +1361,41 @@ msgstr "あなたのビデオファイルが %s に共有されました。"
 
 msgid "Video processing failed."
 msgstr "ビデオファイルの処理に失敗しました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has assigned your "
+"evaluator(s)."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> があなたの評価者を設定し"
+"ました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has assigned his/her "
+"evaluator(s)."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> が自分の評価者を設定しま"
+"した。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has commented on your "
+"goal."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> があなたのゴールにコメン"
+"トしました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has commented on his/her "
+"Goal."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> が自分のゴールにコメント"
+"しました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has commented on <span "
+"class=\"notify-card-head-target\">%2$s</span>'s Goal."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>のゴールにコメントしました。"
 
 msgid "Facebook"
 msgstr "Facebook"
@@ -1960,6 +2013,22 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
 
+msgid "Manage Circles"
+msgstr "サークル管理"
+
+msgid ""
+"You can pin a circle to the top as a sortable list. *Entire Team* circle "
+"will automatically be your top pin."
+msgstr ""
+"サークルにピンすると上位に表示され、並べ替えることができます。なお、*チーム全"
+"体用の*サークルはデフォルトでピン済みとなり並べ替えられません。"
+
+msgid "PINNED"
+msgstr "ピン済み"
+
+msgid "UNPINNED"
+msgstr "ピンなし"
+
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上%2$d文字以下で入力してください。"
 
@@ -2043,6 +2112,9 @@ msgstr ""
 
 msgid "Do you really want to cancel this post?"
 msgstr "本当にこの投稿をキャンセルしますか？"
+
+msgid "Unable to cancel. Do you really want to start evaluations?"
+msgstr "取り消しができません。よろしいですか？"
 
 msgid "Copied the post URL to the clipboard."
 msgstr "クリップボードに投稿URLをコピーしました。"
@@ -2139,6 +2211,9 @@ msgstr "設定"
 
 msgid "Ironing your data. Please wait..."
 msgstr "データをロード中です。少々お待ちください。"
+
+msgid "%d remaining"
+msgstr "残り %d人"
 
 msgid "Coach"
 msgstr "コーチ"
@@ -3108,6 +3183,9 @@ msgstr "保存済みアイテムを削除しました"
 msgid "Circles"
 msgstr "サークル"
 
+msgid "Manage"
+msgstr "管理"
+
 msgid "View Circles"
 msgstr "サークルを見る"
 
@@ -3361,6 +3439,9 @@ msgstr "未完了の評価者(%s)"
 
 msgid "Pending self-evaluation"
 msgstr "自己評価未評価者"
+
+msgid "No evaluator"
+msgstr "評価者なし"
 
 msgid "Edit Action"
 msgstr "アクションを編集"
@@ -4142,11 +4223,23 @@ msgstr "最終評価者評価 トータル コメント 必須"
 msgid "Begin evaluation"
 msgstr "評価開始"
 
-msgid "You can start evaluation with the current settings."
-msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
+msgid ""
+"You may start evaluations with your team's current settings. Only one term "
+"can be selected for evaluations."
+msgstr ""
+"現在のチームの設定内容で評価を開始することができます。評価は1つの期のみで開始"
+"することができます。"
 
-msgid "Notice - These settings can't be canceled."
-msgstr "この設定は取り消すことができませんので気を付けてください。"
+msgid ""
+"Notice: Team evaluation settings cannot be changed after starting "
+"evaluations."
+msgstr "注意：評価を開始した後、チームの評価設定を変更することはできません。"
+
+msgid "Please select."
+msgstr "選択してください。"
+
+msgid "Previous term"
+msgstr "前期"
 
 msgid "Current term"
 msgstr "今期"
@@ -4154,17 +4247,14 @@ msgstr "今期"
 msgid "You need to active Evaluation settings before starting Evaluation."
 msgstr "評価設定が有効でないため、評価を開始することができません。"
 
-msgid "In evaluation term"
-msgstr "評価期間中です。"
+msgid "Evaluation commenced"
+msgstr "評価の実施中"
 
 msgid "Add definition of evaluation score"
 msgstr "評価スコアの定義を1つ以上追加してください。"
 
-msgid "Start current term evaluations"
-msgstr "今期の評価を開始する"
-
-msgid "Unable to cancel. Do you really want to start evaluations?"
-msgstr "取り消しができません。よろしいですか？"
+msgid "Start evaluations"
+msgstr "評価を開始する"
 
 msgid "Final evaluation"
 msgstr "最終評価"
@@ -4623,14 +4713,14 @@ msgstr "どうぞよろしくお願い申し上げます。"
 msgid "What you want to ask"
 msgstr "お問い合わせ内容"
 
-msgid "Which item you want to ask"
-msgstr "お問い合わせ内容"
+msgid "Your Work Email Address"
+msgstr "仕事のメールアドレス"
 
-msgid "Your company name"
-msgstr "会社名"
+msgid "Phone Number (Optional)"
+msgstr "電話番号(オプション)"
 
-msgid "Sales person you appointed"
-msgstr "ご希望の営業担当者"
+msgid "Company Name (Optional)"
+msgstr "会社名(オプション)"
 
 msgid "Thank you for your application to Goalous paid plan."
 msgstr "Goalousの有料プランへのお申込みありがとうございました。"
@@ -4795,6 +4885,9 @@ msgstr "有料プランへの登録は完了しましたが、ただいま信用
 msgid "Regarding the results of the examination, we have contacted you soon."
 msgstr "審査結果については、追ってご連絡いたします。"
 
+msgid "Evaluator setting"
+msgstr "評価者設定"
+
 msgid "Evaluation is frozen."
 msgstr "評価は凍結されています。"
 
@@ -4845,6 +4938,30 @@ msgstr "アクションを見る"
 
 msgid "Goal Details"
 msgstr "ゴール詳細"
+
+msgid "Evaluator edit"
+msgstr "評価者編集"
+
+msgid "Last updated"
+msgstr "最終更新日時"
+
+msgid "Evaluators"
+msgstr "評価者"
+
+msgid "Insert team member."
+msgstr "チームメンバーを登録してください。"
+
+msgid "Add evaluator"
+msgstr "評価者を追加する"
+
+msgid "Evaluatees overview"
+msgstr "被評価者一覧"
+
+msgid "%d coached member has no evaluators."
+msgstr "%d人のコーチされるメンバーに評価者が設定されていません。"
+
+msgid "Coached member(s)"
+msgstr "コーチするメンバー"
 
 msgid "You haven't created any actions&hellip; yet."
 msgstr "あなたはまだアクションをしていません。"
@@ -5001,84 +5118,32 @@ msgstr "導入のご相談を受け付けています。"
 msgid "Contact us | Goalous"
 msgstr "お問い合わせ | Goalous"
 
-msgid "Contact us about Goalous"
-msgstr "Goalousに関するお問い合わせ"
+msgid "Say <q>Hello</q> to your company&rsquo;s next communication tool"
+msgstr "社員が目標でつながり、未来のコミュニケーションをあなたの組織に。"
 
 msgid ""
-"Goalous is managed by ISAO, a visionary company that brings joy to work "
-"around the world."
+"Through goal oriented communication, you can revolutionize your team&rsquo;s "
+"power! Contact us today, and we&rsquo;ll help you get started along with a "
+"<strong>free trial</strong> of Goalous!"
 msgstr ""
-"Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会社"
-"ISAOが運営しております。"
+"Goalousによって、あなたの組織のチーム力を革命的に上げることができます。コンタ"
+"クトにご入力いただけますと、無料トライアルのご案内をいたします。お気軽にお問"
+"い合わせくださいませ。"
 
-msgid "Feel free to contact us."
-msgstr "なんでも、お気軽にご相談ください。"
+msgid "Contact Us Today"
+msgstr "お問い合わせ"
 
-msgid "Required"
-msgstr "必須"
+msgid ""
+"By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a "
+"href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a "
+"href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
+msgstr ""
+"下の<q>同意して、問い合わせる</q>をクリックすると、<a href='/terms' "
+"target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プラ"
+"イバシーポリシー</a>に同意したことになります。"
 
-msgid "eg. Isao Suzuki"
-msgstr "例）鈴木 いさお"
-
-msgid "eg. example@goalous.com"
-msgstr "例）example@goalous.com（半角英数字）"
-
-msgid "eg. ISAO Corporation"
-msgstr "例）株式会社ISAO"
-
-msgid "Company name, Organization name or Something like that."
-msgstr "会社名・団体名など"
-
-msgid "What is your question about?"
-msgstr "お問い合わせ項目"
-
-msgid "eg. We want to use it. So, we need more explanation in detail."
-msgstr "例）導入を希望しています。詳しく説明に来て欲しいです。"
-
-msgid "Question (3,000 character limit)"
-msgstr "お問い合わせ内容（最大3,000文字）"
-
-msgid "You can request your sales person."
-msgstr "ご希望の営業担当者がいれば、リクエストください。（複数選択可）"
-
-msgid "Keita Yukawa"
-msgstr "湯川啓太"
-
-msgid "Cool like Japanese actor"
-msgstr "唐沢寿明に似てます"
-
-msgid "Kohei Kikuchi"
-msgstr "菊池厚平"
-
-msgid "Owner of Goalous"
-msgstr "Goalousのオーナーです"
-
-msgid "Makoto Yoshioka"
-msgstr "吉岡真人"
-
-msgid "Sales person full of joy"
-msgstr "愛をこめた営業をします"
-
-msgid "Yusuke Ishihara"
-msgstr "石原裕介"
-
-msgid "A DJ since my teens"
-msgstr "DJやってます"
-
-msgid "・"
-msgstr ","
-
-msgid "PrivacyPolicy"
-msgstr "個人情報の取り扱い"
-
-msgid " - Do you agree with them?"
-msgstr "について同意の上、問い合わせする"
-
-msgid "Need to agree to terms and policy."
-msgstr "個人情報保護方針の同意が必要です。"
-
-msgid "Go to confirm"
-msgstr "確認画面へ"
+msgid "I Agree, Contact us"
+msgstr "同意して、問い合わせる"
 
 msgid "It is a confirmation of your inquiry."
 msgstr "お問い合わせ内容の確認です。"
@@ -5091,9 +5156,6 @@ msgstr "お問い合わせ内容確認"
 
 msgid "Click send, after checking your contents."
 msgstr "内容をご確認のうえ、問題なければ送信をクリックしてください。"
-
-msgid "Appointed"
-msgstr "ご希望"
 
 msgid "Sending"
 msgstr "送信中..."
@@ -5110,37 +5172,23 @@ msgstr ""
 msgid "Thank you for contacting us."
 msgstr "お問い合わせありがとうございました"
 
-msgid "Please check our Blog and SNS, if you get interested."
-msgstr ""
-"お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧くだ"
-"さい。"
-
-msgid "IsaB"
-msgstr "IsaB"
-
-msgid "Make your job joyful! ISAO blog"
-msgstr "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
-
-msgid "http://blog.goalous.com/"
+msgid "Goalous Blog"
 msgstr ""
 
-msgid "facebook page"
-msgstr "facebookページ"
+msgid "The story of the team"
+msgstr ""
+
+msgid "Facebook page"
+msgstr ""
 
 msgid "Like us!"
 msgstr "Like us！"
-
-msgid "isao.jp"
-msgstr "isao.jp"
 
 msgid "Twitter"
 msgstr "Twitter"
 
 msgid "Follow now!"
 msgstr "Follow now！"
-
-msgid "@ISAOcorp"
-msgstr "@ISAOcorp"
 
 msgid "Description of the function is here."
 msgstr "機能の説明はこちら。"
@@ -6175,29 +6223,155 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
-msgid "Say <q>Hello</q> to your company&rsquo;s next communication tool"
-msgstr "社員が目標でつながり、未来のコミュニケーションをあなたの組織に。"
+#, fuzzy
+#~| msgid "Invalid score."
+#~ msgid "Invalid csv format"
+#~ msgstr "定義されていないスコアです。"
 
-msgid "Through goal oriented communication, you can revolutionize your team&rsquo;s power! Contact us today, and we&rsquo;ll help you get started along with a <strong>free trial</strong> of Goalous!"
-msgstr "Goalousによって、あなたの組織のチーム力を革命的に上げることができます。コンタクトにご入力いただけますと、無料トライアルのご案内をいたします。お気軽にお問い合わせくださいませ。"
+#, fuzzy
+#~| msgid "This circle does not exist."
+#~ msgid "Circle does not exist"
+#~ msgstr "このサークルは存在しません。"
 
-msgid "Contact Us Today"
-msgstr "お問い合わせ"
+#, fuzzy
+#~| msgid "You don't belong to any circle."
+#~ msgid "Do not belong to Circle"
+#~ msgstr "参加しているサークルはありません。"
 
-msgid "Your Work Email Address"
-msgstr "仕事のメールアドレス"
+#~ msgid "Edit Circles"
+#~ msgstr "サークル編集"
 
-msgid "Phone Number (Optional)"
-msgstr "電話番号(オプション)"
+#~ msgid "Pinned"
+#~ msgstr "ピン済み"
 
-msgid "Company Name (Optional)"
-msgstr "会社名(オプション)"
+#~ msgid "Unpinned"
+#~ msgstr "ピンなし"
 
-msgid "By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
-msgstr "下の<q>同意して、問い合わせる</q>をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
+#~ msgid "You can start evaluation with the current settings."
+#~ msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
 
-msgid "I Agree, Contact us"
-msgstr "同意して、問い合わせる"
+#~ msgid "Notice - These settings can't be canceled."
+#~ msgstr "この設定は取り消すことができませんので気を付けてください。"
+
+#~ msgid "In evaluation term"
+#~ msgstr "評価期間中です。"
+
+#~ msgid "Start current term evaluations"
+#~ msgstr "今期の評価を開始する"
+
+#~ msgid "Anyone"
+#~ msgstr "指定なし"
+
+#~ msgid "Which item you want to ask"
+#~ msgstr "お問い合わせ内容"
+
+#~ msgid "Your company name"
+#~ msgstr "会社名"
+
+#~ msgid "Sales person you appointed"
+#~ msgstr "ご希望の営業担当者"
+
+#~ msgid "Contact us about Goalous"
+#~ msgstr "Goalousに関するお問い合わせ"
+
+#~ msgid ""
+#~ "Goalous is managed by ISAO, a visionary company that brings joy to work "
+#~ "around the world."
+#~ msgstr ""
+#~ "Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会"
+#~ "社ISAOが運営しております。"
+
+#~ msgid "Feel free to contact us."
+#~ msgstr "なんでも、お気軽にご相談ください。"
+
+#~ msgid "Required"
+#~ msgstr "必須"
+
+#~ msgid "eg. Isao Suzuki"
+#~ msgstr "例）鈴木 いさお"
+
+#~ msgid "eg. example@goalous.com"
+#~ msgstr "例）example@goalous.com（半角英数字）"
+
+#~ msgid "eg. ISAO Corporation"
+#~ msgstr "例）株式会社ISAO"
+
+#~ msgid "Company name, Organization name or Something like that."
+#~ msgstr "会社名・団体名など"
+
+#~ msgid "What is your question about?"
+#~ msgstr "お問い合わせ項目"
+
+#~ msgid "eg. We want to use it. So, we need more explanation in detail."
+#~ msgstr "例）導入を希望しています。詳しく説明に来て欲しいです。"
+
+#~ msgid "Question (3,000 character limit)"
+#~ msgstr "お問い合わせ内容（最大3,000文字）"
+
+#~ msgid "You can request your sales person."
+#~ msgstr "ご希望の営業担当者がいれば、リクエストください。（複数選択可）"
+
+#~ msgid "Keita Yukawa"
+#~ msgstr "湯川啓太"
+
+#~ msgid "Cool like Japanese actor"
+#~ msgstr "唐沢寿明に似てます"
+
+#~ msgid "Kohei Kikuchi"
+#~ msgstr "菊池厚平"
+
+#~ msgid "Owner of Goalous"
+#~ msgstr "Goalousのオーナーです"
+
+#~ msgid "Makoto Yoshioka"
+#~ msgstr "吉岡真人"
+
+#~ msgid "Sales person full of joy"
+#~ msgstr "愛をこめた営業をします"
+
+#~ msgid "Yusuke Ishihara"
+#~ msgstr "石原裕介"
+
+#~ msgid "A DJ since my teens"
+#~ msgstr "DJやってます"
+
+#~ msgid "・"
+#~ msgstr ","
+
+#~ msgid "PrivacyPolicy"
+#~ msgstr "個人情報の取り扱い"
+
+#~ msgid " - Do you agree with them?"
+#~ msgstr "について同意の上、問い合わせする"
+
+#~ msgid "Need to agree to terms and policy."
+#~ msgstr "個人情報保護方針の同意が必要です。"
+
+#~ msgid "Go to confirm"
+#~ msgstr "確認画面へ"
+
+#~ msgid "Appointed"
+#~ msgstr "ご希望"
+
+#~ msgid "Please check our Blog and SNS, if you get interested."
+#~ msgstr ""
+#~ "お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧く"
+#~ "ださい。"
+
+#~ msgid "IsaB"
+#~ msgstr "IsaB"
+
+#~ msgid "Make your job joyful! ISAO blog"
+#~ msgstr "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
+
+#~ msgid "facebook page"
+#~ msgstr "facebookページ"
+
+#~ msgid "isao.jp"
+#~ msgstr "isao.jp"
+
+#~ msgid "@ISAOcorp"
+#~ msgstr "@ISAOcorp"
 
 #~ msgid "5 Feb 2016"
 #~ msgstr "2016年2月5日"

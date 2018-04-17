@@ -20,6 +20,12 @@ class PageResourceHelper extends AppHelper
         'evaluations'   => [
             'default' => ['/js/goalous_evaluation.min']
         ],
+        'evaluator_settings'   => [
+            'default' => ['/js/goalous_evaluator_setting.min']
+        ],
+        'circle_pins'   => [
+            'default' => ['/js/goalous_circle_pin.min']
+        ],
         'goals'         => [
             'default'     => ['/js/goalous_goal.min'],
             'index'       => ['/js/react_goal_search_app.min'],
@@ -137,6 +143,9 @@ class PageResourceHelper extends AppHelper
             'invite_confirm'       => ['invite.min']
         ],
         'evaluations'   => [
+            'default' => ['evaluation.min'],
+        ],
+        'evaluator_settings'   => [
             'default' => ['evaluation.min'],
         ],
         'saved_items'   => [

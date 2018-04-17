@@ -419,7 +419,7 @@ class Comment extends AppModel
         return $res;
     }
 
-    function getCommentedUniqueUsersList($post_id, $without_me = true)
+    function getCommentedUniqueUsersList($post_id, $without_me = true, $excludedUsers = [])
     {
         $options = [
             'conditions' => [
@@ -432,6 +432,9 @@ class Comment extends AppModel
         ];
         if ($without_me) {
             $options['conditions']['NOT']['user_id'] = $this->my_uid;
+        }
+        if (!empty($excludedUsers)) {
+            $options['conditions']['NOT']['user_id'] = $excludedUsers;
         }
         $res = $this->find('all', $options);
         /** @noinspection PhpDeprecationInspection */

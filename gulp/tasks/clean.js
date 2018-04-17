@@ -46,11 +46,25 @@ gulp.task('js_evaluation:clean', () => {
         .on('end', () => { gutil.log('----------------- js_evaluation task finished --------------------------') })
 });
 
+gulp.task('js_evaluator_settings:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jseval_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_evaluator_settings:clean'))
+        .on('end', () => { gutil.log('----------------- js_evaluator_setting task finished --------------------------') })
+});
+
 gulp.task('js_payment:clean', () => {
     return gulp.src([config.dest + '/js', config.dest + '/jspayment_cat'], { read: false })
         .pipe(rimraf({ force: true }))
         .pipe(duration('js_payment:clean'))
         .on('end', () => { gutil.log('----------------- js_payment task finished --------------------------') })
+});
+
+gulp.task('js_circle:clean', () => {
+    return gulp.src([config.dest + '/js', config.dest + '/jscircle_cat'], { read: false })
+        .pipe(rimraf({ force: true }))
+        .pipe(duration('js_circle:clean'))
+        .on('end', () => { gutil.log('----------------- js_circle task finished --------------------------') })
 });
 
 gulp.task('js_homepage:clean', () => {
@@ -72,6 +86,13 @@ gulp.task('js_prerender:clean', () => {
     .pipe(rimraf({ force: true }))
     .pipe(duration('js_prerender:clean'))
     .on('end', () => { gutil.log('----------------- js_prerender task finished --------------------------') })
+})
+
+gulp.task('js_prerender_exif:clean', () => {
+  return gulp.src([config.dest + '/js_prerender_eixf_cat'], { read: false })
+    .pipe(rimraf({ force: true }))
+    .pipe(duration('js_prerender_exif:clean'))
+    .on('end', () => { gutil.log('----------------- js_prerender_exif task finished --------------------------') })
 })
 
 gulp.task('angular_app:clean', () => {

@@ -48,7 +48,7 @@
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
-                            <div class="fileinput-preview thumbnail nailthumb-container photo-design"
+                            <div id="preview-edit-team-vision" class="fileinput-preview thumbnail nailthumb-container photo-design"
                                  data-trigger="fileinput"
                                  style="width: 96px; height: 96px; line-height:96px;">
                                 <?=
@@ -70,7 +70,8 @@
                                     'css'          => false,
                                     'wrapInput'    => false,
                                     'errorMessage' => false,
-                                    'required'     => false
+                                    'required'     => false,
+                                    'id'           => 'photo-input-edit-team-vision'
                                 ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
@@ -113,28 +114,4 @@
         </div>
     </div>
 </div>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $('[rel="tooltip"]').tooltip();
-
-        $('#AddTeamVisionForm').bootstrapValidator({
-            live: 'enabled',
-            fields: {
-                "data[TeamVision][photo]": {
-                    validators: {
-                        file: {
-                            extension: 'jpeg,jpg,png,gif',
-                            type: 'image/jpeg,image/png,image/gif',
-                            maxSize: 10485760,   // 10mb
-                            message: "<?=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>"
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
-<?php $this->end() ?>
 <?= $this->App->viewEndComment()?>

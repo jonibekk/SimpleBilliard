@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('Term', 'Model');
 App::uses('AppUtil', 'Util');
 
 /**
@@ -1971,15 +1972,17 @@ class Goal extends AppModel
         return $res;
     }
 
-    function filterThisTermIds($gids)
+    function filterByTermId(int $termId, $gids)
     {
-        $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        $term = $Term->getById($termId);
+
         $options = [
             'conditions' => [
                 'id'          => $gids,
-                'end_date >=' => $start_date,
-                'end_date <=' => $end_date,
+                'end_date >=' => $term['start_date'],
+                'end_date <=' => $term['end_date'],
             ],
             'fields'     => ['id']
         ];
@@ -2067,7 +2070,7 @@ class Goal extends AppModel
         $keyword = trim($keyword);
         $options = [
             'conditions' => [
-                'Goal.name LIKE' => $keyword . '%',
+                'Goal.name LIKE' => '%' . $keyword . '%',
                 'Goal.team_id'   => $this->current_team_id,
             ],
             'limit'      => $limit,

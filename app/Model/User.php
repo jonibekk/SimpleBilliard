@@ -1,6 +1,10 @@
 <?php
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
+App::uses('AppUtil', 'Util');
+
+use Goalous\Model\Enum as Enum;
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -1084,7 +1088,15 @@ class User extends AppModel
         return false;
     }
 
-    public function getUsersByKeyword($keyword, $limit = 10, $notMe = true, array $excludeUserIds = [])
+    /**
+     * @param       $keyword
+     * @param int   $limit
+     * @param bool  $excludeAuthUser If set to true, auth user in php session will be excluded from result.
+     * @param array $excludeUserIds
+     *
+     * @return array|null
+     */
+    public function getUsersByKeyword($keyword, $limit = 10, $excludeAuthUser = true, array $excludeUserIds = [])
     {
         $user_list = $this->TeamMember->getAllMemberUserIdList();
 
@@ -1113,7 +1125,7 @@ class User extends AppModel
                 ]
             ]
         ];
-        if ($notMe && !in_array($this->my_uid, $excludeUserIds)) {
+        if ($excludeAuthUser && !in_array($this->my_uid, $excludeUserIds)) {
             $excludeUserIds[] = $this->my_uid;
         }
         if (count($excludeUserIds) > 0) {
@@ -1171,9 +1183,22 @@ class User extends AppModel
         return $res;
     }
 
-    public function getUsersSelect2($keyword, $limit = 10, $with_group = false)
+    /**
+     * Return the array for called from ajax via Select2 (jQuery based plugin)
+     *
+     * @see https://select2.github.io/select2/ (v 3.5.x)
+     *
+     * @param      $keyword   User typed string in input type=text
+     * @param int  $limit
+     * @param bool $with_group
+     * @param bool $with_self Include authorized user in the result.
+     *
+     * @return array
+     */
+    public function getUsersSelect2($keyword, $limit = 10, $with_group = false, $with_self = false)
     {
-        $users = $this->getUsersByKeyword($keyword, $limit);
+        $exclude_auth_user = !$with_self;
+        $users = $this->getUsersByKeyword($keyword, $limit, $exclude_auth_user);
         $user_res = $this->makeSelect2UserList($users);
 
         // グループを結果に含める場合
@@ -1490,15 +1515,15 @@ class User extends AppModel
         if (strpos($keyword, ' ') !== false || strpos($keyword, '　') !== false) {
             $keyword = str_replace('　', ' ', $keyword);
             $keyword_conditions = [
-                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
-                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
+                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => '%' . $keyword . '%',
+                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => '%' . $keyword . '%',
             ];
         } else {
             $keyword_conditions = [
-                'User.first_name LIKE'            => $keyword . "%",
-                'User.last_name LIKE'             => $keyword . "%",
-                'SearchLocalName.first_name LIKE' => $keyword . "%",
-                'SearchLocalName.last_name LIKE'  => $keyword . "%",
+                'User.first_name LIKE'            => '%' . $keyword . '%',
+                'User.last_name LIKE'             => '%' . $keyword . '%',
+                'SearchLocalName.first_name LIKE' => '%' . $keyword . '%',
+                'SearchLocalName.last_name LIKE'  => '%' . $keyword . '%',
             ];
         }
         return $keyword_conditions;
@@ -1691,6 +1716,7 @@ class User extends AppModel
         ];
 
         $res = $this->find('count', $options);
+
         return $res === count($userIds);
     }
 
@@ -1795,4 +1821,57 @@ class User extends AppModel
         return $res == 1;
     }
 
+    /**
+     * Function for filter user ids based on their activity status in a team
+     *
+     * @param int @teamId
+     *          Team ID of the users
+     * @param array $userIds
+     *          User IDs to be filtered
+     * @param bool  $activeFlag
+     *          Whether the user is active in the team
+     *
+     * @return array | null Array of inactive users
+     */
+    public function filterUsersOnTeamActivity(int $teamId, array $userIds, bool $activeFlag = false): array
+    {
+
+        $options = [
+            'conditions' => [
+                'User.id'            => $userIds,
+                'User.active_flg'    => true,
+                'TeamMember.team_id' => $teamId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id'
+                    ]
+                ]
+            ]
+        ];
+
+        if ($activeFlag) {
+            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::ACTIVE;
+        } else {
+            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::INACTIVE;
+        }
+
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return bool Validation result; true for successful validation
+     */
+    public function validateUserId($userId): bool
+    {
+        return !empty($userId) && AppUtil::isInt($userId) && $userId != 0;
+    }
 }

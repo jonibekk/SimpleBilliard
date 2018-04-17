@@ -84,6 +84,19 @@ gulp.task("js_evaluation:uglify", () => {
         .pipe(duration('js_evaluation:uglify'));
 });
 
+gulp.task("js_evaluator_settings:uglify", () => {
+    let obj = gulp.src(config.dest + "/jseval_cat/" + config.js.output.evaluator_setting_script_name + '.js');
+    if (process.env.NODE_ENV === "production") {
+        obj = obj.pipe(uglify());
+    }
+
+    return obj.pipe(rename({
+        suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.js.output.path))
+    .pipe(duration('js_evaluator_setting:uglify'));
+});
+
 gulp.task("js_payment:uglify", () => {
     let obj = gulp.src(config.dest + "/jspayment_cat/" + config.js.output.payments_script_name + '.js');
     if (process.env.NODE_ENV === "production") {
@@ -95,6 +108,21 @@ gulp.task("js_payment:uglify", () => {
     }))
         .pipe(gulp.dest(config.js.output.path))
         .pipe(duration('js_payment:uglify'));
+});
+
+gulp.task("js_circle:uglify", () => {
+    let obj = gulp.src(config.dest + "/jscircle_cat/" + config.js.output.circle_script_name + '.js');
+    if (process.env.NODE_ENV === "production") {
+        obj = obj.pipe(uglify().on('error', function(e){
+            console.log(e);
+         }));
+    }
+
+    return obj.pipe(rename({
+        suffix: '.min'
+    }))
+        .pipe(gulp.dest(config.js.output.path))
+        .pipe(duration('js_circle:uglify'));
 });
 
 gulp.task("js_homepage:uglify", () => {
@@ -128,6 +156,16 @@ gulp.task("js_prerender:uglify", () => {
     }))
     .pipe(gulp.dest(config.js_prerender.output.path))
     .pipe(duration('js_prerender:uglify'))
+})
+
+gulp.task("js_prerender_exif:uglify", () => {
+  return gulp.src(config.dest + "/js_prerender_exif_cat/" + config.js_prerender_exif.output.file_name + '.js')
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.js_prerender_exif.output.path))
+    .pipe(duration('js_prerender_exif:uglify'))
 })
 
 gulp.task("angular_vendor:uglify", () => {
