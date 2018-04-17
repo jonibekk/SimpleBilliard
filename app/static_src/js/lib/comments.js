@@ -869,7 +869,6 @@ function evTargetToggleClick() {
 
                     // Load OGP for edit field
                     var $editField = $('#CommentEditFormBody_' + comment_id);
-                    new Mention($editField)
                     require(['ogp'], function (ogp) {
                         $('#CommentEditFormBody_' + comment_id).off('keyup.comment-form').on('keyup.comment-form', function (e) {
                             if($('#CommentEditSubmit_' + comment_id).prop('disabled') && $('#CommentEditFormBody_' + comment_id).val() !== $('#CommentOgpBackup_' + comment_id).data('text')){
@@ -948,6 +947,7 @@ function evTargetToggleClick() {
             $('#CommentEdit_' + comment_id).show();
             $('#CommentOgpBox_' + comment_id).hide();
             $('#CommentEditForm_' + comment_id).show();
+            new Mention($('#CommentEditFormBody_' + comment_id))
             $('#CommentOgpBackup_' + comment_id).data('text', $('#CommentEditFormBody_' + comment_id).val());
             var $ogpBox = $('#CommentOgpBox_' + comment_id);
             if ($ogpBox.length) {
@@ -992,6 +992,7 @@ function evTargetToggleClick() {
             }
             evTargetCancelAnyEdit();
         }
+        new Mention($('#CommentEditFormBody_' + comment_id))
     }
     
 
@@ -1004,7 +1005,7 @@ function evTargetToggleClick() {
     $("#" + click_target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).focus();
-
+    new Mention($('#CommentEditFormBody_' + comment_id))
     $('.dropdown-comment.open').removeClass('open')
 
     return false;
