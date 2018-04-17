@@ -330,33 +330,33 @@ $(function () {
         });
       }
     });
-    $("#showMoreCirclesToggleHamburger").off("click").on("click", function(e) {
-      e.preventDefault();
-      $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-up');
-      $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-down');
-      if($("#showMoreCirclesToggleHamburger").find('i').hasClass('fa-chevron-down')){
-        $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.close);
-        psCircleListHamburger.destroy();
-        psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-          swipePropagation: false,
-          wheelPropagation: false,
-          maxScrollbarLength: 0,
-          suppressScrollX: true,
-          suppressScrollY: false,
-        });
-      } else {
-        $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.view_all);
-        document.querySelector('#circleListHamburger').scrollTop = 0;
-        psCircleListHamburger.destroy();
-        psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-          swipePropagation: false,
-          wheelPropagation: false,
-          maxScrollbarLength: 0,
-          suppressScrollX: true,
-          suppressScrollY: true,
-        });
-      }
-    });
+    // $("#showMoreCirclesToggleHamburger").off("click").on("click", function(e) {
+    //   e.preventDefault();
+    //   $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-up');
+    //   $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-down');
+    //   if($("#showMoreCirclesToggleHamburger").find('i').hasClass('fa-chevron-down')){
+    //     $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.close);
+    //     psCircleListHamburger.destroy();
+    //     psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
+    //       swipePropagation: false,
+    //       wheelPropagation: false,
+    //       maxScrollbarLength: 0,
+    //       suppressScrollX: true,
+    //       suppressScrollY: false,
+    //     });
+    //   } else {
+    //     $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.view_all);
+    //     document.querySelector('#circleListHamburger').scrollTop = 0;
+    //     psCircleListHamburger.destroy();
+    //     psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
+    //       swipePropagation: false,
+    //       wheelPropagation: false,
+    //       maxScrollbarLength: 0,
+    //       suppressScrollX: true,
+    //       suppressScrollY: true,
+    //     });
+    //   }
+    // });
     psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
       swipePropagation: false,
       wheelPropagation: false,
@@ -378,13 +378,13 @@ $(function () {
       suppressScrollX: true,
       suppressScrollY: true,
     });
-    psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: true,
-    });
+    // psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
+    //   swipePropagation: false,
+    //   wheelPropagation: false,
+    //   maxScrollbarLength: 0,
+    //   suppressScrollX: true,
+    //   suppressScrollY: true,
+    // });
     psNavResults = new PerfectScrollbar('#NavSearchForm', {
       swipePropagation: false,
       wheelPropagation: false,
@@ -401,12 +401,12 @@ $(function () {
     });
     $(window).on("load resize", function() {
       psCircleList.update();
-      psCircleListHamburger.update();
+      //psCircleListHamburger.update();
       psNavResults.update();
       psNavResultsToggle.update();
     });
-    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle').css("overflow","none");
-    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle').on('touchstart touchend touchup', function(e) {
+    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').css("overflow","none");
+    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
         e.stopPropagation();
     });
     $(window).trigger('resize');
