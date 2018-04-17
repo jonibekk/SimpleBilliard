@@ -24,7 +24,7 @@
     </div>
       <div class="dashboard-circle-list-footer">
         <div id="showMoreCirclesToggle" class="clearfix dashboard-circle-list-show-more">
-            <i class="fa fa-chevron-up circle-function circle-show-icon font_brownRed"></i><a href="#" class="circle-view-all font-dimgray show-inline-block"><?=
+            <i class="fa fa-chevron-up circle-function circle-show-icon font_brownRed"></i><a href="#" class="circle-view-all ffont-dimgray show-inline-block"><?=
                 __(
                     "View All") ?></a>
         </div>

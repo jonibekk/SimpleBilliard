@@ -15,13 +15,13 @@
 <p class="circle_heading is-humberger"><?= __("Circles") ?>
     <a href="/circle_pins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Manage") ?></a>
 </p>
-<div class="layout-sub_padding clearfix layout-circle-hamburger js-dashboard-circle-list-body">
+<div class="layout-sub_padding clearfix <?= $is_mb_app ? "mb-layout-circle-hamburger" : "layout-circle-hamburger" ?> js-dashboard-circle-list-body">
     <ul id="circleListHamburger" class="layout-circle-hamburger-body">
         <?= $this->element('Circle/dashboard_list', ['circles' => $my_circles, 'defaultCircle' => $defaultCircle, 'isHamburger' => true]) ?>
     </ul>
 </div>
 <div class="circle-list-footer">
-    <div id="showMoreCirclesToggle" class="clearfix dashboard-circle-list-show-more mtb_15px pin-circle-edit-color">
+    <div id="showMoreCirclesToggleHamburger" class="clearfix dashboard-circle-list-show-more mtb_15px pin-circle-edit-color">
         <i class="fa fa-chevron-up circle-function circle-show-icon"></i>
         <a href="#" class="circle-view-all font-dimgray show-inline-block"><?=
             __(

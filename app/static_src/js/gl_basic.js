@@ -183,7 +183,7 @@ function hideKeyboard(element) {
     }, 100);
 }
 
-var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger;
+var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation;
 
 $(function () {
     var current_slide_id = 1;
@@ -310,15 +310,7 @@ $(function () {
       if($("#showMoreCirclesToggle").find('i').hasClass('fa-chevron-down')){
         $("#showMoreCirclesToggle").find('a').text(cake.word.close);
         psCircleList.destroy();
-        psCircleListHamburger.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: false,
-          wheelPropagation: false,
-          maxScrollbarLength: 0,
-          suppressScrollX: true,
-          suppressScrollY: false,
-        });
-        psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
           swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
@@ -329,7 +321,6 @@ $(function () {
         $("#showMoreCirclesToggle").find('a').text(cake.word.view_all);
         document.querySelector('#circleListBody').scrollTop = 0;
         psCircleList.destroy();
-        psCircleListHamburger.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
           swipePropagation: false,
           wheelPropagation: false,
@@ -337,6 +328,26 @@ $(function () {
           suppressScrollX: true,
           suppressScrollY: true,
         });
+      }
+    });
+    $("#showMoreCirclesToggleHamburger").off("click").on("click", function(e) {
+      e.preventDefault();
+      $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-up');
+      $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-down');
+      if($("#showMoreCirclesToggleHamburger").find('i').hasClass('fa-chevron-down')){
+        $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.close);
+        psCircleListHamburger.destroy();
+        psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
+          swipePropagation: false,
+          wheelPropagation: false,
+          maxScrollbarLength: 0,
+          suppressScrollX: true,
+          suppressScrollY: false,
+        });
+      } else {
+        $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.view_all);
+        document.querySelector('#circleListHamburger').scrollTop = 0;
+        psCircleListHamburger.destroy();
         psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
           swipePropagation: false,
           wheelPropagation: false,
@@ -345,6 +356,20 @@ $(function () {
           suppressScrollY: true,
         });
       }
+    });
+    psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: false,
+    });
+    psGoalousNavigation = new PerfectScrollbar('#goalousNavigation', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: false,
     });
     psCircleList = new PerfectScrollbar('#circleListBody', {
       swipePropagation: false,

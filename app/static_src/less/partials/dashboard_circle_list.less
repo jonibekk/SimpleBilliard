@@ -67,6 +67,7 @@
   border-radius: 4px;
   max-width: 100%;
   height: 100%;
+  overflow-x: hidden;
 }
 .dashboard-circle-list-header {
   padding: 5px 0;
@@ -86,6 +87,7 @@
 .dashboard-circle-list-body,.layout-circle-hamburger-body {
   height: 100%;
   overflow-y: hidden;
+  overflow-x: hidden;
   width: 100%;
 }
 .layout-circle-hamburger {
@@ -96,6 +98,16 @@
   &::-webkit-scrollbar { width: 0 !important }
   height: ~"calc(100% - 368px)";
 }
+
+.mb-layout-circle-hamburger {
+  overflow:hidden;
+  width: 100%;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0 !important }
+  height: ~"calc(100% - 340px)";
+}
+
 .dashboard-circle-list-see-more {
   font-size: 12px;
   line-height: 16px;
