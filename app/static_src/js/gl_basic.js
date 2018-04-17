@@ -409,6 +409,9 @@ $(function () {
     $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
         e.stopPropagation();
     });
+    $(".dashboard-circle-list-row-wrap").on("click", function(){
+      hideNav();
+    });
     $(window).trigger('resize');
     if(lastWidth > 479){
       $(".header-icon-search-toggle").css("display","none");
