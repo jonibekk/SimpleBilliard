@@ -311,7 +311,7 @@ $(function () {
         $("#showMoreCirclesToggle").find('a').text(cake.word.close);
         psCircleList.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: true,
+          swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -322,7 +322,7 @@ $(function () {
         document.querySelector('#circleListBody').scrollTop = 0;
         psCircleList.destroy();
         psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: true,
+          swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -338,7 +338,7 @@ $(function () {
         $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.close);
         psCircleListHamburger.destroy();
         psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-          swipePropagation: true,
+          swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -349,7 +349,7 @@ $(function () {
         document.querySelector('#circleListHamburger').scrollTop = 0;
         psCircleListHamburger.destroy();
         psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-          swipePropagation: true,
+          swipePropagation: false,
           wheelPropagation: false,
           maxScrollbarLength: 0,
           suppressScrollX: true,
@@ -358,42 +358,42 @@ $(function () {
       }
     });
     psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-      swipePropagation: true,
+      swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: false,
     });
     psGoalousNavigation = new PerfectScrollbar('#goalousNavigation', {
-      swipePropagation: true,
+      swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: false,
     });
     psCircleList = new PerfectScrollbar('#circleListBody', {
-      swipePropagation: true,
+      swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: true,
     });
     psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-      swipePropagation: true,
+      swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: true,
     });
     psNavResults = new PerfectScrollbar('#NavSearchForm', {
-      swipePropagation: true,
+      swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
       suppressScrollY: false,
     });
     psNavResultsToggle = new PerfectScrollbar('#NavSearchFormToggle', {
-      swipePropagation: true,
+      swipePropagation: false,
       wheelPropagation: false,
       maxScrollbarLength: 0,
       suppressScrollX: true,
@@ -406,7 +406,9 @@ $(function () {
       psNavResultsToggle.update();
     });
     $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle').css("overflow","none");
-
+    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle').on('touchstart touchend touchup', function(e) {
+        e.stopPropagation();
+    });
     $(window).trigger('resize');
     if(lastWidth > 479){
       $(".header-icon-search-toggle").css("display","none");
