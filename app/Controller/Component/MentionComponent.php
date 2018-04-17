@@ -136,7 +136,7 @@ class MentionComponent extends Component {
      * @param $includeMe boolean whether the result should include $me or not
      * @param $returnAsBelonging boolean whether the result should be user/circle which contains $me
      */
-    public function getUserList(string $body = null, int $teamId, int $me, $includeMe = false, $returnAsBelonging = false): array {
+    public function getUserList(string $body = null, int $teamId, $me, $includeMe = false, $returnAsBelonging = false): array {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
         
