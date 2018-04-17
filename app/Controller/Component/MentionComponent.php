@@ -139,7 +139,7 @@ class MentionComponent extends Component {
     public function getUserList(string $body = null, int $teamId, $me, $includeMe = false, $returnAsBelonging = false): array {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
-
+        
         foreach ($mentions as $key => $mention) {
             if ($mention['isUser']) {
                 $userId = $mention['id'];
