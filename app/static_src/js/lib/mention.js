@@ -6,6 +6,14 @@ var Mention = function(target) {
   var self = this
   var bind = function(target) {
     if (!target[0]) return
+    $(document).on('blur', '#' + target.attr('id'), function(e) {
+      var _this = target.data('atwho')
+      var c;
+      if (c = _this.controller()) {
+        c.expectedQueryCBId = null;
+        return c.view.hide(e, c.getOpt("displayTimeout"));
+      }
+    })
     function normalize(str) {
       return str
         .replace(/\(/g, '\\(')
