@@ -1,13 +1,14 @@
 <?php
 
-App::uses('JwtException', 'Model/Jwt/Exception');
-App::uses('JwtSignatureException', 'Model/Jwt/Exception');
-App::uses('JwtExpiredException', 'Model/Jwt/Exception');
-
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\SignatureInvalidException;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
+
+App::uses('JwtException', 'Model/Jwt/Exception');
+App::uses('JwtSignatureException', 'Model/Jwt/Exception');
+App::uses('JwtExpiredException', 'Model/Jwt/Exception');
+
 
 /**
  * JWT token class for Goalous API authentication
@@ -25,13 +26,18 @@ use \Firebase\JWT\ExpiredException;
  * // Decoding JWT auth token
  * try {
  *     $jwtAuth = JwtAuthentication::decode($jwtToken);
+ * } catch (JwtSignatureException $exception) {
+ *      // When invalid signature
+ * } catch (JwtExpiredException $exception) {
+ *      // When token is expired
  * } catch (JwtException $exception) {
+ *      // When something other is invalid
  * }
- * $jwtAuth->getTeamId();    // returning teams.id
- * $jwtAuth->getUserId();    // returning users.id
- * $jwtAuth->getJwtId();     // returning JWT token id string
- * $jwtAuth->getExpiredAt(); // returning expire date of GoalousDateTime
- * $jwtAuth->getCreatedAt(); // returning created date of GoalousDateTime
+ * $jwtAuth->getTeamId(); // returning teams.id
+ * $jwtAuth->getUserId(); // returning users.id
+ * $jwtAuth->getJwtId();  // returning JWT token id string
+ * $jwtAuth->expireAt();  // returning expire date of GoalousDateTime
+ * $jwtAuth->createdAt(); // returning created date of GoalousDateTime
  * ```
  *
  * Class JwtAuthentication
