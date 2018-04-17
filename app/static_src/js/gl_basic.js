@@ -364,13 +364,13 @@ $(function () {
       suppressScrollX: true,
       suppressScrollY: false,
     });
-    psGoalousNavigation = new PerfectScrollbar('#goalousNavigation', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: false,
-    });
+    // psGoalousNavigation = new PerfectScrollbar('#goalousNavigation', {
+    //   swipePropagation: false,
+    //   wheelPropagation: false,
+    //   maxScrollbarLength: 0,
+    //   suppressScrollX: true,
+    //   suppressScrollY: false,
+    // });
     psCircleList = new PerfectScrollbar('#circleListBody', {
       swipePropagation: false,
       wheelPropagation: false,
@@ -400,6 +400,7 @@ $(function () {
       suppressScrollY: false,
     });
     $(window).on("load resize", function() {
+      psLeftSideContainer.update();
       psCircleList.update();
       //psCircleListHamburger.update();
       psNavResults.update();
