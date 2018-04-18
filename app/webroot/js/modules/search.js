@@ -98,7 +98,7 @@ define(function () {
                                 for (var i = 0; i < userResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('search-list-item-link')
-                                        .attr('href', config['circle'].link_base + userResult[0].results[i].id.split('_').pop());
+                                        .attr('href', config['user'].link_base + userResult[0].results[i].id.split('_').pop());
                                     // image
                                     var $divImage = $('<div>')
                                         .addClass('search-list-avatar-item');
@@ -124,7 +124,7 @@ define(function () {
                                 for (var i = 0; i < goalResult[0].results.length; i++) {
                                     var $row = $('<a>')
                                         .addClass('search-list-item-link')
-                                        .attr('href', config['circle'].link_base + goalResult[0].results[i].id.split('_').pop());
+                                        .attr('href', config['goal'].link_base + goalResult[0].results[i].id.split('_').pop());
                                     // image
                                     var $divImage = $('<div>')
                                         .addClass('search-list-avatar-item');
