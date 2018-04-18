@@ -98,6 +98,7 @@ $defines = [
     // Used for storage key name sharing AWS ElasticTranscode PipeLine on
     // Local and development env
     'AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR' => null,
+    'JWT_TOKEN_SECRET_KEY_AUTH' => 'jwt_secret_key_auth',
 ];
 
 foreach ($defines as $k => $v) {
