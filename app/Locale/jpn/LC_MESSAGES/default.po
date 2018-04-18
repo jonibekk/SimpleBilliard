@@ -6233,6 +6233,24 @@ msgstr "認定ステータス: %s"
 msgid "You can mention to no one here."
 msgstr "ここではメンションできません。"
 
+#, fuzzy
+#~| msgid "Invalid score."
+#~ msgid "Invalid csv format"
+#~ msgstr "定義されていないスコアです。"
+
+#, fuzzy
+#~| msgid "This circle does not exist."
+#~ msgid "Circle does not exist"
+#~ msgstr "このサークルは存在しません。"
+
+#, fuzzy
+#~| msgid "You don't belong to any circle."
+#~ msgid "Do not belong to Circle"
+#~ msgstr "参加しているサークルはありません。"
+
+#~ msgid "Edit Circles"
+#~ msgstr "サークル編集"
+
 #~ msgid "Pinned"
 #~ msgstr "ピン済み"
 

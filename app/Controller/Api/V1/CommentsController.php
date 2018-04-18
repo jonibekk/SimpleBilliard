@@ -104,6 +104,9 @@ class CommentsController extends ApiController
             case Post::TYPE_CREATE_GOAL:
                 $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
                 break;
+            case Post::TYPE_CREATE_GOAL:
+                $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
+                break;
         }
         // Push comments notifications
         $socketId = Hash::get($this->request->data, 'socket_id');
