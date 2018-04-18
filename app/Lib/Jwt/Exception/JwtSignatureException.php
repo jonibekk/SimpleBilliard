@@ -1,5 +1,5 @@
 <?php
 
-App::uses('JwtException', 'Model/Jwt/Exception');
+App::uses('JwtException', 'Lib/Jwt/Exception');
 
 class JwtSignatureException extends JwtException {}

@@ -1,7 +1,7 @@
 <?php
 
 App::uses('GoalousTestCase', 'Test');
-App::uses('JwtAuthentication', 'Model/Jwt');
+App::uses('JwtAuthentication', 'Lib/Jwt');
 
 /**
  * Class JwtAuthenticationTest

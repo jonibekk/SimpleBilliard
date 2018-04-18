@@ -5,9 +5,9 @@ use \Firebase\JWT\SignatureInvalidException;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
 
-App::uses('JwtException', 'Model/Jwt/Exception');
-App::uses('JwtSignatureException', 'Model/Jwt/Exception');
-App::uses('JwtExpiredException', 'Model/Jwt/Exception');
+App::uses('JwtException', 'Lib/Jwt/Exception');
+App::uses('JwtSignatureException', 'Lib/Jwt/Exception');
+App::uses('JwtExpiredException', 'Lib/Jwt/Exception');
 
 
 /**
