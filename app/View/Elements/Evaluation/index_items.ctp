@@ -16,7 +16,7 @@
                                    'action'           => 'view',
                                    'evaluate_term_id' => $eval_term_id,
                                    'user_id'          => $user['User']['id'],
-                                   'class'            => 'block'
+                                   'class'            => 'block eval-list-wrapper'
     ]) ?>"
        class="font_verydark">
         <div class="eval-list-item col-xxs-12">
@@ -77,10 +77,9 @@
                     </span>
                 <?php endforeach ?>
                 <?php if ($user['status_text']['body'] && !$eval_is_frozen): ?>
-                    <?php $text_class = h($user['status_text']['your_turn']) ? 'font_brownRed' : 'font_verydark' ?>
-                    <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
+                    <p class="font_pink"><?= h($user['status_text']['body']) ?></p>
                 <?php else: ?>
-                    <p class="font_verydark"></p>
+                    <p class="font_pink"></p>
                 <?php endif; ?>
             </div>
             <div class="eval-list-item-right">
