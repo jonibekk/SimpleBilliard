@@ -16,7 +16,7 @@
                                    'action'           => 'view',
                                    'evaluate_term_id' => $eval_term_id,
                                    'user_id'          => $user['User']['id'],
-                                   'class'            => 'block eval-list-wrapper'
+                                   'class'            => 'block'
     ]) ?>"
        class="font_verydark">
         <div class="eval-list-item col-xxs-12">
@@ -77,7 +77,7 @@
                     </span>
                 <?php endforeach ?>
                 <?php if ($user['status_text']['body'] && !$eval_is_frozen): ?>
-                    <?php if($user['status_text']['body'] === __("Please evaluate.")): ?>
+                    <?php if($user['status_text']['body'] === "Please evaluate." || $user['status_text']['body'] === "評価をしてください"): ?>
                         <?php $text_class = !$isEvaluationCount > 0 ? 'font_brownRed' : 'font_verydark' ?>
                         <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
                     <?php else: ?>
