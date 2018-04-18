@@ -50,7 +50,7 @@
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
-            <div class="form-group">
+            <div id="evaluationPage" class="form-group">
                 <?php if (!empty($selfEval)): ?>
                     <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                         <p class="font_bold"><?= __("his/her") ?></p>
