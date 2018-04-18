@@ -92,6 +92,6 @@
             </div>
         </div>
     </a>
-    <hr class="col-xxs-12 no-hr-padding">
+    <hr class="col-xxs-12">
 <?php endforeach; ?>
 <?= $this->App->viewEndComment()?>
