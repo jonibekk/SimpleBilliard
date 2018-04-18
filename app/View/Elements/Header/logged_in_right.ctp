@@ -33,18 +33,21 @@
         <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
     </div>
     <?php endif; ?>
-    <div class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
-        <a href="/setup/top/" class="btn-header-setup">
-            <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
-               id="setupIcon"></i>
-            <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-                <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
-                    <span><?= $setup_rest_count ?></span>
-                </div>
-            <?php endif; ?>
-        </a>
-    </div>
 
+    <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
+        <div class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
+            <a href="/setup/top/" class="btn-header-setup">
+                <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
+                   id="setupIcon"></i>
+                <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
+                    <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                        <span><?= $setup_rest_count ?></span>
+                    </div>
+                <?php endif; ?>
+            </a>
+        </div>
+    <?php endif; ?>
+    
     <div class="header-dropdown-add header-icon-zoom">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
