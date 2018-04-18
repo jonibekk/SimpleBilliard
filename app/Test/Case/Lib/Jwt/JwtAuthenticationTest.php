@@ -69,6 +69,44 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
+     * @expectedException JwtSignatureException
+     * @expectedExceptionMessage Signature verification failed
+     */
+    function test_tokenEditedHeader()
+    {
+        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
+        $correctToken = $jwtToken->token();
+        $separated = explode('.', $correctToken);
+        $jsonStringHeader = base64_decode($separated[0]);// Getting header
+        $headerData = json_decode($jsonStringHeader, true);
+        $headerData['typ'] = 'NOT_JWT';
+        $editedJsonStringHeader = json_encode($headerData);
+        $editedHeader = base64_encode($editedJsonStringHeader);
+        $separated[0] = $editedHeader;
+
+        JwtAuthentication::decode(implode('.', $separated));
+    }
+
+    /**
+     * @expectedException JwtSignatureException
+     * @expectedExceptionMessage Signature verification failed
+     */
+    function test_tokenEditedPayload()
+    {
+        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
+        $correctToken = $jwtToken->token();
+        $separated = explode('.', $correctToken);
+        $jsonStringPayload = base64_decode($separated[1]);// Getting Payload
+        $payload = json_decode($jsonStringPayload, true);
+        $payload[JwtAuthentication::PAYLOAD_NAMESPACE]['user_id'] = ($editedUserId = 2);
+        $editedJsonStringPayload = json_encode($payload);
+        $editedPayload = base64_encode($editedJsonStringPayload);
+        $separated[1] = $editedPayload;
+
+        JwtAuthentication::decode(implode('.', $separated));
+    }
+
+    /**
      * @expectedException JwtExpiredException
      */
     function test_expire()
