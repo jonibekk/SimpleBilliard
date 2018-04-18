@@ -53,7 +53,7 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
     const TYPE_EVALUATOR_SET_TO_COACH = 41;  
-    const TYPE_FEED_MENTIONED_IN_COMMENT = 42;
+    const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
 
     /**
      * @var array
