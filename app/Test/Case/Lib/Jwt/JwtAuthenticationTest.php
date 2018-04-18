@@ -47,6 +47,8 @@ class JwtAuthenticationTest extends GoalousTestCase
 
         $jwtTokenDecoded = JwtAuthentication::decode($token);
 
+        // Asserting "jti" has a UUID format
+        $this->assertTrue(0 < preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $jwtToken->getJwtId()));
         $this->assertSame($jwtToken->getJwtId(), $jwtTokenDecoded->getJwtId());
         $this->assertSame($jwtToken->getTeamId(), $jwtTokenDecoded->getTeamId());
         $this->assertSame($jwtToken->getUserId(), $jwtTokenDecoded->getUserId());
