@@ -16,6 +16,7 @@
                                    'action'           => 'view',
                                    'evaluate_term_id' => $eval_term_id,
                                    'user_id'          => $user['User']['id'],
+                                   'class'            => 'block'
     ]) ?>"
        class="font_verydark eval-hover-effect">
         <div class="eval-list-item col-xxs-12">
@@ -91,6 +92,6 @@
             </div>
         </div>
     </a>
-    <hr class="col-xxs-12">
+    <hr class="col-xxs-12 no-hr-padding">
 <?php endforeach; ?>
 <?= $this->App->viewEndComment()?>
