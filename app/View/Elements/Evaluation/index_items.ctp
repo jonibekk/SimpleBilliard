@@ -16,7 +16,7 @@
                                    'action'           => 'view',
                                    'evaluate_term_id' => $eval_term_id,
                                    'user_id'          => $user['User']['id'],
-                                   'class'            => 'block'
+                                   'class'            => 'block eval-list-wrapper'
     ]) ?>"
        class="font_verydark">
         <div class="eval-list-item col-xxs-12">
