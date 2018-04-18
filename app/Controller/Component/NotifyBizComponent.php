@@ -483,7 +483,7 @@ class NotifyBizComponent extends Component
         $mentionedUsers = $this->Mention->getUserList($body, $team_id, null, true);
         foreach ($mentionedUsers as $user) {
             $index = array_search($user, $user_ids);
-            if ($index) {
+            if ($index !== false) {
                 unset($user_ids[$index]);
             }
         }
@@ -1330,12 +1330,12 @@ class NotifyBizComponent extends Component
         if (empty($commented_user_list)) {
             return;
         }
+        $comment = $this->Post->Comment->read(null, $comment_id);
         $commented_user_list = $this->_fixReceiver($this->Team->current_team_id, $commented_user_list, $comment['Comment']['body']);
         if (!count($commented_user_list)) return;
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commented_user_list,
             $notify_type);
-        $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($commented_user_list);
@@ -1350,7 +1350,6 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $commented_user_list);
     }
-
     /**
      * 自分の投稿、アクション、その他にコメントがあった場合のオプション取得
      *
@@ -1374,12 +1373,12 @@ class NotifyBizComponent extends Component
             return;
         }
         //通知対象者の通知設定確認
+        $comment = $this->Post->Comment->read(null, $comment_id);
         $members = array($post['Post']['user_id']);
         $members = $this->_fixReceiver($this->Team->current_team_id, $members, $comment['Comment']['body']);
         if (!count($members)) return;
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($post['Post']['user_id'],
             $notify_type);
-        $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
         $this->notify_option['notify_type'] = $notify_type;
@@ -1426,7 +1425,7 @@ class NotifyBizComponent extends Component
         ];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            $this->Mention->replaceMention(json_encode([trim($comment['Comment']['body'])])) : null;
+            $this->Mention->replaceMention(json_encode([trim($comment['Comment']['body'])]), [], true) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
