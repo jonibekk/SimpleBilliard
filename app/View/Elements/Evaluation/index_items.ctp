@@ -16,9 +16,8 @@
                                    'action'           => 'view',
                                    'evaluate_term_id' => $eval_term_id,
                                    'user_id'          => $user['User']['id'],
-                                   'class'            => 'block'
     ]) ?>"
-       class="font_verydark">
+       class="font_verydark eval-hover-effect">
         <div class="eval-list-item col-xxs-12">
             <div class="eval-list-item-left">
                 <?=
