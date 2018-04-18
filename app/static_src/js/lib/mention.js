@@ -6,6 +6,14 @@ var Mention = function(target) {
   var self = this
   var bind = function(target) {
     if (!target[0]) return
+    $(document).on('blur.atwho', '#' + target.attr('id'), function(e) {
+      var _this = target.data('atwho')
+      var atWhoController;
+      if (atWhoController = _this.controller()) {
+        atWhoController.expectedQueryCBId = null;
+        return atWhoController.view.hide(e, atWhoController.getOpt("displayTimeout"));
+      }
+    })
     function normalize(str) {
       return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
     }
