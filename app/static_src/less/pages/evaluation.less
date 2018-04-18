@@ -178,7 +178,12 @@
     display: none;
   }
 }
-.eval-list-item {
+
+#evaluationPage a {
+  all: initial;
+  * {
+    all: unset;
+  }
   &:hover, &:focus, &:active {
     background: @hoverRed !important;
   }

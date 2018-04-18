@@ -60,7 +60,7 @@
                     </div>
                     <?= $this->element('Evaluation/index_items',
                         [
-                            'isEvaluationCount' => $incompSelfEvalCnt + $incompEvaluateeEvalCnt,
+                            'incompEvaluateeEvalCnt' => $incompEvaluateeEvalCnt,
                             'evaluatees'     => [$selfEval],
                             'eval_term_id'   => $termId,
                             'eval_is_frozen' => $isFrozen
@@ -76,7 +76,7 @@
                     </div>
                     <?= $this->element('Evaluation/index_items',
                         [
-                            'isEvaluationCount' => $incompSelfEvalCnt + $incompEvaluateeEvalCnt,
+                            'incompEvaluateeEvalCnt' => $incompEvaluateeEvalCnt,
                             'evaluatees'     => $evaluateesEval,
                             'eval_term_id'   => $termId,
                             'eval_is_frozen' => $isFrozen,

@@ -78,7 +78,7 @@
                 <?php endforeach ?>
                 <?php if (!empty($user['status_text']['body']) && !$eval_is_frozen): ?>
                     <?php if(h($user['status_text']['body']) == "Please evaluate." || h($user['status_text']['body']) == "評価をしてください"): ?>
-                        <?php $text_class = !$isEvaluationCount > 0 ? 'font_brownRed' : 'font_verydark' ?>
+                        <?php $text_class = $incompEvaluateeEvalCnt > 0 ? 'font_brownRed' : 'font_verydark' ?>
                         <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
                     <?php else: ?>
                         <p class="font_verydark"><?= h($user['status_text']['body']) ?></p>
