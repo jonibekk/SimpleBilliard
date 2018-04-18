@@ -4,6 +4,8 @@ use \Firebase\JWT\JWT;
 use \Firebase\JWT\SignatureInvalidException;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
+use \Ramsey\Uuid\Uuid;
+
 
 App::uses('JwtException', 'Lib/Jwt/Exception');
 App::uses('JwtSignatureException', 'Lib/Jwt/Exception');
@@ -144,8 +146,7 @@ class JwtAuthentication
     private function buildTokenPayload(): array
     {
         if (is_null($this->jwtId)) {
-            // TODO: change this to uuid4
-            $this->jwtId = 'uuid_'.mt_rand(0, PHP_INT_MAX);
+            $this->jwtId = Uuid::uuid4();
         }
         if (is_null($this->expireAt)) {
             // TODO: move expire period day to config
