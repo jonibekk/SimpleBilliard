@@ -47,6 +47,7 @@ App::uses('JwtExpiredException', 'Lib/Jwt/Exception');
 class JwtAuthentication
 {
     const PAYLOAD_NAMESPACE = 'goalous.com';
+    const JWT_ALGORITHM = 'HS256';
 
     /**
      * Stands for JWT Claim 'exp' (Expiration Time)
@@ -134,9 +135,18 @@ class JwtAuthentication
     {
         return JWT::encode(
             $this->buildTokenPayload(),
-            'token_secret_key',// TODO: move to config
-            'HS256'// TODO: move to config? class static property?
+            JWT_TOKEN_SECRET_KEY_AUTH,
+            static::JWT_ALGORITHM
         );
+    }
+
+    /**
+     * Get token expire period by minute from CakePHP Config
+     * @return int
+     */
+    private function getExpirePeriodMinute(): int
+    {
+        return Configure::read('Session')['timeout'];
     }
 
     /**
@@ -146,11 +156,11 @@ class JwtAuthentication
     private function buildTokenPayload(): array
     {
         if (is_null($this->jwtId)) {
+            // see here for document https://github.com/ramsey/uuid#examples
             $this->jwtId = Uuid::uuid4();
         }
         if (is_null($this->expireAt)) {
-            // TODO: move expire period day to config
-            $this->expireAt = GoalousDateTime::now()->addDays(14);
+            $this->expireAt = GoalousDateTime::now()->addMinutes($this->getExpirePeriodMinute());
         }
         if (is_null($this->createdAt)) {
             $this->createdAt = GoalousDateTime::now();
@@ -182,8 +192,8 @@ class JwtAuthentication
         try {
             $decodedJwt = JWT::decode(
                 $jwtToken,
-                'token_secret_key',// TODO: move to config,
-                ['HS256']// TODO: move to config? class static property?
+                JWT_TOKEN_SECRET_KEY_AUTH,
+                [static::JWT_ALGORITHM]
             );
             $decodedJwtData = (array)$decodedJwt;
         } catch (SignatureInvalidException $e) {
