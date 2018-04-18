@@ -17,7 +17,7 @@ App::uses('JwtExpiredException', 'Lib/Jwt/Exception');
  * @see https://confluence.goalous.com/display/GOAL/API+v2+Authentication#APIv2Authentication-WhatshouldwesetonPayload?
  *
  * ```php
- * App::uses('JwtAuthentication', 'Model/Jwt');
+ * App::uses('JwtAuthentication', 'Lib/Jwt');
  *
  * // Creating new JWT auth token for Goalous
  * $jwtAuth = new JwtAuthentication($userId = 1, $teamId = 1);
