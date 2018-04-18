@@ -4,20 +4,18 @@ use \Firebase\JWT\JWT;
 use \Firebase\JWT\SignatureInvalidException;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
-use \Ramsey\Uuid\Uuid;
-
 
 App::uses('JwtException', 'Lib/Jwt/Exception');
 App::uses('JwtSignatureException', 'Lib/Jwt/Exception');
-App::uses('JwtOutOfTermException', 'Lib/Jwt/Exception');
+App::uses('JwtExpiredException', 'Lib/Jwt/Exception');
 
 
 /**
  * JWT token class for Goalous API authentication
- * @see https://confluence.goalous.com/x/kYTT#APIv2Authentication-WhatshouldwesetonPayload?
+ * @see https://confluence.goalous.com/display/GOAL/API+v2+Authentication#APIv2Authentication-WhatshouldwesetonPayload?
  *
  * ```php
- * App::uses('JwtAuthentication', 'Lib/Jwt');
+ * App::uses('JwtAuthentication', 'Model/Jwt');
  *
  * // Creating new JWT auth token for Goalous
  * $jwtAuth = new JwtAuthentication($userId = 1, $teamId = 1);
@@ -30,7 +28,7 @@ App::uses('JwtOutOfTermException', 'Lib/Jwt/Exception');
  *     $jwtAuth = JwtAuthentication::decode($jwtToken);
  * } catch (JwtSignatureException $exception) {
  *      // When invalid signature
- * } catch (JwtOutOfTermException $exception) {
+ * } catch (JwtExpiredException $exception) {
  *      // When token is expired
  * } catch (JwtException $exception) {
  *      // When something other is invalid
@@ -49,18 +47,6 @@ class JwtAuthentication
     const PAYLOAD_NAMESPACE = 'goalous.com';
 
     /**
-     * We have a 64bit cpu on current environment (2018-04-20)
-     * $ uname -a
-     * Linux goalous-dev-app2 3.13.0-144-generic #193-Ubuntu SMP Thu Mar 15 17:03:53 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-     *
-     * And SHA512 having better performance than SHA256 by comparing command below
-     * $ openssl speed sha256 sha512
-     *
-     * @see https://confluence.goalous.com/x/kYTT#APIv2Authentication-JWTalgorythm
-     */
-    const JWT_ALGORITHM = 'HS512';
-
-    /**
      * Stands for JWT Claim 'exp' (Expiration Time)
      * @var GoalousDateTime
      */
@@ -77,12 +63,6 @@ class JwtAuthentication
      * @var string
      */
     protected $jwtId;
-
-    /**
-     * Environment target of token is issued for
-     * @var string
-     */
-    protected $env;
 
     /**
      * Integer of users.id
@@ -145,18 +125,6 @@ class JwtAuthentication
     }
 
     /**
-     * Set env name to payload
-     * @param string $env
-     *
-     * @return JwtAuthentication
-     */
-    public function withEnvName(string $env): self
-    {
-        $this->env = $env;
-        return $this;
-    }
-
-    /**
      * Build the JWT token for user authentication
      * @return string
      */
@@ -164,18 +132,9 @@ class JwtAuthentication
     {
         return JWT::encode(
             $this->buildTokenPayload(),
-            JWT_TOKEN_SECRET_KEY_AUTH,
-            static::JWT_ALGORITHM
+            'token_secret_key',// TODO: move to config
+            'HS256'// TODO: move to config? class static property?
         );
-    }
-
-    /**
-     * Get token expire period by minute from CakePHP Config
-     * @return int
-     */
-    private function getExpirePeriodMinute(): int
-    {
-        return Configure::read('Session')['timeout'];
     }
 
     /**
@@ -185,24 +144,21 @@ class JwtAuthentication
     private function buildTokenPayload(): array
     {
         if (is_null($this->jwtId)) {
-            // see here for document https://github.com/ramsey/uuid#examples
-            $this->jwtId = Uuid::uuid4();
+            // TODO: change this to uuid4
+            $this->jwtId = 'uuid_'.mt_rand(0, PHP_INT_MAX);
         }
         if (is_null($this->expireAt)) {
-            $this->expireAt = GoalousDateTime::now()->addMinutes($this->getExpirePeriodMinute());
+            // TODO: move expire period day to config
+            $this->expireAt = GoalousDateTime::now()->addDays(14);
         }
         if (is_null($this->createdAt)) {
             $this->createdAt = GoalousDateTime::now();
-        }
-        if (is_null($this->env)) {
-            $this->env = ENV_NAME;
         }
         return [
             'jti' => $this->jwtId,
             'exp' => $this->expireAt->getTimestamp(),
             'iat' => $this->createdAt->getTimestamp(),
-            self::PAYLOAD_NAMESPACE => [
-                'env'     => $this->env,
+            'goalous.com' => [
                 'user_id' => $this->userId,
                 'team_id' => $this->teamId,
             ],
@@ -211,62 +167,56 @@ class JwtAuthentication
 
     /**
      * Decode the JWT token string and return JwtAuthentication instance
-     *
      * @param string $jwtToken
      *
      * @throws JwtException
      * @throws JwtSignatureException
-     * @throws JwtOutOfTermException
+     * @throws JwtExpiredException
+     *
      * @return JwtAuthentication
      */
     public static function decode(string $jwtToken): self
     {
+        $decodedJwtData = [];
         try {
             $decodedJwt = JWT::decode(
                 $jwtToken,
-                JWT_TOKEN_SECRET_KEY_AUTH,
-                [static::JWT_ALGORITHM]
+                'token_secret_key',// TODO: move to config,
+                ['HS256']// TODO: move to config? class static property?
             );
+            $decodedJwtData = (array)$decodedJwt;
         } catch (SignatureInvalidException $e) {
             throw new JwtSignatureException($e->getMessage());
         } catch (BeforeValidException $e) {
-            throw new JwtOutOfTermException($e->getMessage());
+            throw new JwtExpiredException($e->getMessage());
         } catch (ExpiredException $e) {
-            throw new JwtOutOfTermException($e->getMessage());
+            throw new JwtExpiredException($e->getMessage());
         } catch (UnexpectedValueException $e) {
             throw new JwtException($e->getMessage());
         }
 
-        if (!isset($decodedJwt->{static::PAYLOAD_NAMESPACE}->env)) {
-            throw new JwtException('env not found in payload');
-        }
-        $env = $decodedJwt->{static::PAYLOAD_NAMESPACE}->env;
-        if ($env !== ENV_NAME) {
-            throw new JwtException('env has difference between this env and token payload');
-        }
-        if (!isset($decodedJwt->{static::PAYLOAD_NAMESPACE}->user_id)) {
+        if (!isset($decodedJwtData[static::PAYLOAD_NAMESPACE]->user_id)) {
             throw new JwtException('user_id not found in payload');
         }
-        if (!isset($decodedJwt->{static::PAYLOAD_NAMESPACE}->team_id)) {
+        if (!isset($decodedJwtData[static::PAYLOAD_NAMESPACE]->team_id)) {
             throw new JwtException('team_id not found in payload');
         }
-        if (!isset($decodedJwt->exp)) {
+        if (!isset($decodedJwtData['exp'])) {
             throw new JwtException('exp not found in payload');
         }
-        if (!isset($decodedJwt->jti)) {
+        if (!isset($decodedJwtData['jti'])) {
             throw new JwtException('jti not found in payload');
         }
-        if (!isset($decodedJwt->iat)) {
+        if (!isset($decodedJwtData['iat'])) {
             throw new JwtException('iat not found in payload');
         }
-        $userId = $decodedJwt->{static::PAYLOAD_NAMESPACE}->user_id;
-        $teamId = $decodedJwt->{static::PAYLOAD_NAMESPACE}->team_id;
-        $expiredAt = GoalousDateTime::createFromTimestamp($decodedJwt->exp);
-        $createdAt = GoalousDateTime::createFromTimestamp($decodedJwt->iat);
-        $JwtId     = $decodedJwt->jti;
+        $userId = $decodedJwtData[static::PAYLOAD_NAMESPACE]->user_id;
+        $teamId = $decodedJwtData[static::PAYLOAD_NAMESPACE]->team_id;
+        $expiredAt = GoalousDateTime::createFromTimestamp($decodedJwtData['exp']);
+        $createdAt = GoalousDateTime::createFromTimestamp($decodedJwtData['iat']);
+        $JwtId     = $decodedJwtData['jti'];
 
         return (new static($userId, $teamId))
-            ->withEnvName($env)
             ->withCreatedAt($createdAt)
             ->withExpiredAt($expiredAt)
             ->withJwtId($JwtId);
@@ -291,15 +241,6 @@ class JwtAuthentication
     }
 
     /**
-     * return env name this token is used for
-     * @return string
-     */
-    public function getEnvName(): string
-    {
-        return $this->env;
-    }
-
-    /**
      * return JWT token id
      * @return string
      */
@@ -316,16 +257,6 @@ class JwtAuthentication
     {
         return $this->expireAt;
     }
-
-    /**
-     * Return remaining seconds of this token to expires.
-     * @return int
-     */
-    public function expireInSeconds(): int
-    {
-        return $this->expireAt()->diffInSeconds(GoalousDateTime::now());
-    }
-
 
     /**
      * return JWT claim "iat" by GoalousDateTime

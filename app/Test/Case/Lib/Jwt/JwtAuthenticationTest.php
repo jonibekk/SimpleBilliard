@@ -47,28 +47,12 @@ class JwtAuthenticationTest extends GoalousTestCase
 
         $jwtTokenDecoded = JwtAuthentication::decode($token);
 
-        // Asserting "jti" has a UUID format
-        $this->assertTrue(0 < preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $jwtToken->getJwtId()));
         $this->assertSame($jwtToken->getJwtId(), $jwtTokenDecoded->getJwtId());
         $this->assertSame($jwtToken->getTeamId(), $jwtTokenDecoded->getTeamId());
         $this->assertSame($jwtToken->getUserId(), $jwtTokenDecoded->getUserId());
-        $this->assertSame($jwtToken->getEnvName(), $jwtTokenDecoded->getEnvName());
         $this->assertSame($jwtToken->expireAt()->getTimestamp(), $jwtTokenDecoded->expireAt()->getTimestamp());
         $this->assertSame($jwtToken->createdAt()->getTimestamp(), $jwtTokenDecoded->createdAt()->getTimestamp());
         $this->assertSame($jwtTokenDecoded->token(), $token);
-    }
-
-    /**
-     * Testing decoding token created in different env
-     * @expectedException JwtException
-     */
-    function test_envDifferent()
-    {
-        $jwtToken = (new JwtAuthentication($userId = 1, $teamId = 1))
-                ->withEnvName('env_not_exists');
-        $token = $jwtToken->token();
-
-        JwtAuthentication::decode($token);
     }
 
     /**
@@ -85,64 +69,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtSignatureException
-     * @expectedExceptionMessage Signature verification failed
-     */
-    function test_tokenEditedHeader()
-    {
-        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
-        $correctToken = $jwtToken->token();
-        $separated = explode('.', $correctToken);
-        $jsonStringHeader = base64_decode($separated[0]);// Getting header
-        $headerData = json_decode($jsonStringHeader, true);
-        $headerData['typ'] = 'NOT_JWT';
-        $editedJsonStringHeader = json_encode($headerData);
-        $editedHeader = base64_encode($editedJsonStringHeader);
-        $separated[0] = $editedHeader;
-
-        JwtAuthentication::decode(implode('.', $separated));
-    }
-
-    /**
-     * @expectedException JwtSignatureException
-     * @expectedExceptionMessage Signature verification failed
-     */
-    function test_tokenEditedPayload()
-    {
-        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
-        $correctToken = $jwtToken->token();
-        $separated = explode('.', $correctToken);
-        $jsonStringPayload = base64_decode($separated[1]);// Getting Payload
-        $payload = json_decode($jsonStringPayload, true);
-        $payload[JwtAuthentication::PAYLOAD_NAMESPACE]['user_id'] = ($editedUserId = 2);
-        $editedJsonStringPayload = json_encode($payload);
-        $editedPayload = base64_encode($editedJsonStringPayload);
-        $separated[1] = $editedPayload;
-
-        JwtAuthentication::decode(implode('.', $separated));
-    }
-
-    function testExpireInSeconds()
-    {
-        GoalousDateTime::setTestNow();
-
-        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
-        $jwtToken->token();
-
-        $secondsToExpire = $jwtToken->expireInSeconds();
-
-        $sessionExpireInMinute = Configure::read('Session')['timeout'];
-        $this->assertEquals($secondsToExpire,  $sessionExpireInMinute * 60);
-
-        // Set current time on tomorrow
-        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
-
-        $secondsToExpireAtTomorrow = $jwtToken->expireInSeconds();
-        $this->assertEquals($secondsToExpire, $secondsToExpireAtTomorrow + 86400);
-    }
-
-    /**
-     * @expectedException JwtOutOfTermException
+     * @expectedException JwtExpiredException
      */
     function test_expire()
     {
@@ -155,7 +82,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtOutOfTermException
+     * @expectedException JwtExpiredException
      */
     function test_tokenIsNotVerified()
     {
