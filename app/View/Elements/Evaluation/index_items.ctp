@@ -76,7 +76,7 @@
                         <i class="fa fa-user <?= $v['other_evaluator'] ? '' : 'none' ?>" aria-hidden="true"></i><?= $v['name'] ?>
                     </span>
                 <?php endforeach ?>
-                <?php if ($user['status_text']['body'] && !$eval_is_frozen): ?>
+                <?php if (!empty($user['status_text']['body']) && !$eval_is_frozen): ?>
                     <?php if(h($user['status_text']['body']) === "Please evaluate." || h($user['status_text']['body'] === "評価をしてください")): ?>
                         <?php $text_class = !$isEvaluationCount > 0 ? 'font_brownRed' : 'font_verydark' ?>
                         <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
