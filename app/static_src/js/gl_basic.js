@@ -256,8 +256,6 @@ $(function () {
         $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
-        $(".header-icon-search-toggle").css("display","none");
-        $(".header-icon-search").css("display","none");
       }
     });
 

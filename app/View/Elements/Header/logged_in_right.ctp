@@ -16,12 +16,11 @@
             <?=
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
                 ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
-            <span class="header-user-name js-header-link">
-            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
-        </span>
         </a>
-        <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
-                'Home') ?></a>
+    <?php endif; ?>
+
+    <?php if (!$is_mb_app): ?>
+        <span class="header-user-name js-header-link"></span>
     <?php endif; ?>
 
     <?php if($is_mb_app): ?>

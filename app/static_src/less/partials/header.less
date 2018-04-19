@@ -103,21 +103,16 @@
 }
 
 .header-user-name {
-  display: none;
-  @media screen and (min-width: 480px) {
-    display: inline-block;
-  }
-  font-size: 12px;
-  margin: 16px 0;
-  padding: 0 10px;
-  line-height: 18px;
-  border-right: 1px solid #ccc;
-  color: rgb(80, 80, 80);
-  vertical-align: middle;
-  max-width: 64px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 18px;
+    font-size: 18px;
+    line-height: 18px;
+    border-right: 1px solid #ccc;
+    color: #505050;
+    vertical-align: middle;
+    max-width: 64px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 18px;
+    display: inline !important;
 }
 
 .header-dropdown-add {
@@ -266,6 +261,7 @@
   padding: 0 8px;
   display: inline-block;
   vertical-align: top;
+  padding-right: 10px;
   &:hover {
     .header-nav-avatar {
       box-shadow: 0rem .2rem .5rem rgba(17, 17, 17, .3);
