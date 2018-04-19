@@ -11,16 +11,16 @@ App::uses('TeamMember', 'Model');
  * Date: 13/04/2018
  * Time: 16:47
  *
- * @property ApiResponse $ApiResponse
+ * @property .\Model\User  $User
+ * @property LangComponent $LangComponent
  */
 class ApiV2Controller extends Controller
 {
-
-    public $currentUser;
-
-    public $teamId;
-
     private $_jwtToken;
+
+    private $_currentUser;
+
+    private $_currentTeamId;
 
     public function __construct(CakeRequest $request = null, CakeResponse $response = null)
     {
@@ -39,6 +39,8 @@ class ApiV2Controller extends Controller
         } else {
             return $this->returnResponseBadRequest(__('You should be logged in.'));
         }
+
+        return true;
     }
 
     /**
@@ -52,7 +54,17 @@ class ApiV2Controller extends Controller
 
     private function _setAppLanguage()
     {
+        //TODO get user from JWT
+        $user = null;
 
+        if (isset($user) && isset($user['language']) && !$user['auto_language_flg']) {
+            Configure::write('Config.language', $user['language']);
+            $this
+                ->set('is_not_use_local_name', $this->User->isNotUseLocalName($user['language']));
+        } else {
+            $lang = $this->Lang->getLanguage();
+            $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
+        }
 
     }
 
@@ -61,8 +73,8 @@ class ApiV2Controller extends Controller
      */
     private function _disablePHPCache()
     {
-        $this->ApiResponse->addHeaderEntry("Cache-Control: no-store, no-cache, max-age=0");
-        $this->ApiResponse->addHeaderEntry("Pragma: no-cache");
+        header("Cache-Control: no-store, no-cache, max-age=0");
+        header("Pragma: no-cache");
     }
 
     /**
@@ -70,13 +82,13 @@ class ApiV2Controller extends Controller
      */
     protected function isAdmin(): bool
     {
-        if (empty($this->currentUser['id']) || empty ($this->teamId)) {
+        if (empty($this->_currentUser['id']) || empty ($this->teamId)) {
             return false;
         }
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
 
-        return $TeamMember->isActiveAdmin($this->currentUser['id'], $this->teamId);
+        return $TeamMember->isActiveAdmin($this->_currentUser['id'], $this->_currentTeamId);
     }
 
     /**
@@ -93,102 +105,135 @@ class ApiV2Controller extends Controller
     /**
      * Return HTTP CODE 200: Success
      *
-     * @param array|null  $data    Data to be returned to client
-     * @param string|null $message Response message
-     * @param string|null $exception
-     * @param string|null $exceptionTrace
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
     protected function returnResponseSuccess(
         array $data = [],
         string $message = null,
-        string $exception = null,
         string $exceptionTrace = null
     ) {
-        $this->ApiResponse->_createResponse(200, $message, $exception, $exceptionTrace);
+        return $this->_getResponse(200, $data, $message, $exceptionTrace);
     }
 
     /**
      * Return HTTP CODE 400: Bad request
      *
-     * @param array|null  $data    Data to be returned to client
-     * @param string|null $message Response message
-     * @param string|null $exception
-     * @param string|null $exceptionTrace
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
     protected function returnResponseBadRequest(
         array $data = [],
         string $message = null,
-        string $exception = null,
         string $exceptionTrace = null
     ) {
-        $this->ApiResponse->_createResponse(400, $message, $exception, $exceptionTrace);
+        return $this->_getResponse(400, $data, $message, $exceptionTrace);
     }
 
     /**
      * Return HTTP CODE 403: Forbidden
      *
-     * @param array|null  $data    Data to be returned to client
-     * @param string|null $message Response message
-     * @param string|null $exception
-     * @param string|null $exceptionTrace
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
     protected function returnResponseForbidden(
         array $data = [],
         string $message = null,
-        string $exception = null,
         string $exceptionTrace = null
     ) {
-        $this->ApiResponse->_createResponse(403, $message, $exception, $exceptionTrace);
+        return $this->_getResponse(403, $data, $message, $exceptionTrace);
     }
 
     /**
      * Return HTTP CODE 404: Forbidden
      *
-     * @param array|null  $data    Data to be returned to client
-     * @param string|null $message Response message
-     * @param string|null $exception
-     * @param string|null $exceptionTrace
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
     protected function returnResponseNotFound(
         array $data = [],
         string $message = null,
-        string $exception = null,
         string $exceptionTrace = null
     ) {
-        $this->ApiResponse->_createResponse(404, $message, $exception, $exceptionTrace);
+        return $this->_getResponse(404, $data, $message, $exceptionTrace);
     }
 
     /**
      * Return HTTP CODE 409: Forbidden
      *
-     * @param array|null  $data    Data to be returned to client
-     * @param string|null $message Response message
-     * @param string|null $exception
-     * @param string|null $exceptionTrace
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
     protected function returnResponseResourceConflict(
         array $data = [],
         string $message = null,
-        string $exception = null,
         string $exceptionTrace = null
     ) {
-        $this->ApiResponse->_createResponse(409, $message, $exception, $exceptionTrace);
+        return $this->_getResponse(409, $data, $message, $exceptionTrace);
     }
 
     /**
      * Return HTTP CODE 500: Forbidden
      *
-     * @param array|null  $data    Data to be returned to client
-     * @param string|null $message Response message
-     * @param string|null $exception
-     * @param string|null $exceptionTrace
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
     protected function returnResponseInternalServerError(
         array $data = [],
         string $message = null,
-        string $exception = null,
         string $exceptionTrace = null
     ) {
-        $this->ApiResponse->_createResponse(500, $message, $exception, $exceptionTrace);
+        return $this->_getResponse(500, $data, $message, $exceptionTrace);
+    }
+
+    /**
+     * Create CakeResponse object to be returned to the client
+     *
+     * @param integer           $httpStatusCode HTTP status code of the response
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
+     */
+    private function _getResponse(
+        int $httpStatusCode,
+        $data = null,
+        string $message = null,
+        string $exceptionTrace = null
+    ) {
+        $ret = [];
+        if ($data !== null) {
+            $ret['data'] = $data;
+        }
+        if ($message !== null) {
+            $ret['message'] = $message;
+        }
+        if ($exceptionTrace !== null) {
+            $ret['exception_trace'] = $exceptionTrace;
+        }
+        $this->response->type('json');
+        $this->response->body(json_encode($ret));
+        $this->response->statusCode($httpStatusCode);
+
+        return $this->response;
     }
 }
