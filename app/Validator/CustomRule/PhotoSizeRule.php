@@ -14,7 +14,7 @@ class PhotoSizeRule extends AbstractRule
 {
     public function validate($input)
     {
-        // TODO: Implement validate() method.
+
     }
 
 }

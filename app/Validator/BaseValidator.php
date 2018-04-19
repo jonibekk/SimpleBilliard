@@ -47,11 +47,17 @@ abstract class BaseValidator
         $this->photoBaseValidation;
     }
 
-    public abstract function validateModel($model): bool;
+    public abstract function validateModel(Model $model): bool;
 
-    protected function _createValidation($attributeName, $validation)
+    /**
+     * @param $attributeName
+     * @param $validation
+     *
+     * @return mixed
+     */
+    protected function _createValidation($attributeName, Respect\Validation\Validator $validation)
     {
-        return validator::attribute($attributeName)->$validation->setName($attributeName);
+        return  $validation->attribute($attributeName)->setName($attributeName);
     }
 
 }
