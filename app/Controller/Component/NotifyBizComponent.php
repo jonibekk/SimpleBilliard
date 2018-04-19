@@ -1434,7 +1434,7 @@ class NotifyBizComponent extends Component
             $this->notify_option['item_name'] = 'Updates for Customer Satisfaction';
         }else {
             $itemName = '';
-            $(!empty($share_circle_list)) {
+            if (!empty($share_circle_list)) {
                 $circleCount = count($share_circle_list);
                 $circleName = $this->Post->PostShareCircle->findById($share_circle[0])['Circle']['name'];
                 $itemName . ($circleCount > 1 ? sprintf(__('%1$s and %2$s circle(s)'), $circleName, $circleCount) : $circleName);
