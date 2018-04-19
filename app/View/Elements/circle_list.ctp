@@ -14,6 +14,9 @@
 <div class="dashboard-circle-list layout-sub_padding clearfix">
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading"><?= __("Circles") ?>
+          <a href="#" class="font-dimgray" data-toggle="modal" data-target="#modal_add_circle">
+            <i class="fa fa-plus-circle circle-function circle-make-icon font_brownRed"></i>  
+          </a>                                                                   
           <a href="/circle_pins/index" class="pull-right pin-circle-edit-color circle-edit-link"><?= __("Manage") ?></a>
         </p>
     </div>
@@ -23,8 +26,8 @@
         </div>
     </div>
       <div class="dashboard-circle-list-footer">
-        <div id="showMoreCirclesToggle" class="clearfix dashboard-circle-list-show-more">
-            <i class="fa fa-chevron-up circle-function circle-show-icon font_brownRed"></i><a href="#" class="circle-view-all ffont-dimgray show-inline-block"><?=
+        <div id="showMoreCircles" class="clearfix dashboard-circle-list-show-more">
+            <i class="fa fa-chevron-up circle-function circle-show-icon font_brownRed"></i><a href="#" class="circle-view-all font-dimgray show-inline-block"><?=
                 __(
                     "View All") ?></a>
         </div>

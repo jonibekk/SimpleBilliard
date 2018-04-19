@@ -24,17 +24,17 @@
     <?php endif; ?>
 
     <?php if($is_mb_app): ?>
-    <div class="header-icon-search-toggle header-icon-zoom">
+    <li class="header-icon-search-toggle header-icon-zoom">
         <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
-    </div>
+    </li>
     <?php else: ?>
-    <div class="header-icon-search header-icon-zoom">
+    <li class="header-icon-search header-icon-zoom">
         <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
-    </div>
+    </li>
     <?php endif; ?>
 
     <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-        <div class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
+        <li class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
             <a href="/setup/top/" class="btn-header-setup">
                 <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
                    id="setupIcon"></i>
@@ -44,10 +44,10 @@
                     </div>
                 <?php endif; ?>
             </a>
-        </div>
+        </li>
     <?php endif; ?>
     
-    <div class="header-dropdown-add header-icon-zoom">
+    <li class="header-dropdown-add header-icon-zoom">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
         </a>
@@ -79,8 +79,8 @@
                 </a>
             </li>
         </ul>
-    </div>
-    <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
+    </li>
+    <li class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
 
@@ -99,8 +99,8 @@
                 </ul>
             </div>
         </div>
-    </div>
-    <div id="HeaderDropdownNotify"
+    </li>
+    <li id="HeaderDropdownNotify"
          class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
@@ -142,8 +142,8 @@
                 </div>
             </a>
         </div>
-    </div>
-    <div
+    </li>
+    <li
         class="header-dropdown-functions header-icon-zoom header-function">
         <a href="#"
            class="btn-function-header"
@@ -226,45 +226,6 @@
                     ['class' => 'header-nav-function-contents-logout']) ?>
             </li> 
         </ul>
-    </div>
+    </li>
 </div>
-<div class="header-search-toggle">
-    <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group panel panel-default" role="search" autocomplete="off">
-        <div class="searchBoxMain">
-            <span class="deleteicon">
-                <i id="NavSearchIconToggle" class="fa fa-search search-header-icon"></i>
-                <input type="text"
-                       id="NavSearchInputToggle"
-                       maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                       class="searchBox-input-main disable-change-warning"
-                       placeholder='<?= __("Search Members, Goals, Circles") ?>'>
-                <i id="NavSearchInputClearToggle" class="fa fa-times search-header-icon"></i>
-            </span>
-            <div id="NavSearchHideToggle" class="topicSearchList-header-cancel-main">
-                <a class="topicSearchList-header-cancel-button-main"><?= __("Cancel") ?></a>
-            </div>
-        </div>
-        <div id="NavSearchResultsToggle" class="nav-search-result redux-infinite-scroll"></div>
-    </form>
-</div>
-<div class="header-search">
-    <form id="NavSearchForm" class="nav-form-group nav-search-form-group panel panel-default" role="search" autocomplete="off">
-        <div class="searchBoxMain">
-            <span class="deleteicon">
-                <i id="NavSearchIcon" class="fa fa-search search-header-icon"></i>
-                <input type="text"
-                       id="NavSearchInput"
-                       maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                       class="searchBox-input-main disable-change-warning"
-                       placeholder='<?= __("Search Members, Goals, Circles") ?>'>
-                <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
-            </span>
-            <div id="NavSearchHide" class="topicSearchList-header-cancel-main">
-                <a class="topicSearchList-header-cancel-button-main"><?= __("Cancel") ?></a>
-            </div>
-        </div>
-        <div id="NavSearchResults" class="nav-search-result redux-infinite-scroll"></div>
-    </form>
-</div>
-<div class="header-white-bg"></div>
 <?= $this->App->viewEndComment() ?>

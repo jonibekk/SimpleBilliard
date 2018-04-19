@@ -170,6 +170,7 @@ $(document).ready(function () {
 
 });
 
+var lastHeight = $(window).height();
 var lastWidth = $(window).width();
 
 function hideKeyboard(element) {
@@ -183,8 +184,8 @@ function hideKeyboard(element) {
     }, 100);
 }
 
-var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation;
-
+var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount;
+var invisibleCircles = 0;
 $(function () {
     var current_slide_id = 1;
 
@@ -206,6 +207,44 @@ $(function () {
         changeTutorialContent(next_id);
     });
 
+    appear({
+      init: function init(){
+        //console.log('dom is ready');
+        circleCount = $("#circleListBody").find(".dashboard-circle-list-row-wrap").length;
+        invisibleCircles = circleCount;
+        console.log("total:"+circleCount);
+      },
+      elements: function elements(){
+        // work with all elements with the class "track" 
+        return $("#circleListBody").find(".dashboard-circle-list-row-wrap").get();
+      },
+      appear: function appear(el){
+        invisibleCircles--;
+        // console.log("invisible:" + invisibleCircles);
+        $(el).css("display","flex");
+        console.log('visible', el);
+        if(invisibleCircles === 0){
+          $("#showMoreCircles").hide();
+          $(".dashboard-circle-list-footer").css("margin-top","22px");
+          console.log("All visible");
+        } else {
+          $("#showMoreCircles").css("display","block");
+          $(".dashboard-circle-list-footer").css("margin-top","0px");
+        }
+      },
+      disappear: function disappear(el){
+        invisibleCircles++;
+        // console.log("invisible:" + invisibleCircles);
+        $(el).hide();
+        console.log('no longer visible', el);
+        $("#showMoreCircles").css("display","block");
+        $(".dashboard-circle-list-footer").css("margin-top","0px");
+      },
+      bounds: 0,
+      reappear: false,
+
+    });
+
     function changeTutorialContent(content_id) {
         // 各要素をカレントステータスに設定
         $('.tutorial-box' + content_id).show();
@@ -219,6 +258,11 @@ $(function () {
         $('.tutorial-body').children('div').hide();
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
+    }
+
+    function adjustRightHeaderPosition() {
+       var marginWidth = ($(window).width() - $(".body-container").width()) / 2;
+       $("#rightHeaderNavigation").css("right",marginWidth + "px");
     }
 
     $(".header-icon-search-toggle").off("click").on("click", function() {
@@ -256,6 +300,7 @@ $(function () {
         $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
+        adjustRightHeaderPosition();
       }
     });
 
@@ -293,31 +338,21 @@ $(function () {
     $("#toggleNavigationButton").on("click", function() {
       $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
     });
-    $("#showMoreCirclesToggle").off("click").on("click", function(e) {
+    $("#showMoreCircles").off("click").on("click", function(e) {
       e.preventDefault();
-      $("#showMoreCirclesToggle").find('i').toggleClass('fa-chevron-up');
-      $("#showMoreCirclesToggle").find('i').toggleClass('fa-chevron-down');
-      if($("#showMoreCirclesToggle").find('i').hasClass('fa-chevron-down')){
-        $("#showMoreCirclesToggle").find('a').text(cake.word.close);
-        psCircleList.destroy();
-        psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: false,
-          wheelPropagation: false,
-          maxScrollbarLength: 0,
-          suppressScrollX: true,
-          suppressScrollY: false,
-        });
+      // $("#showMoreCircles").find('i').toggleClass('fa-chevron-up');
+      // $("#showMoreCircles").find('i').toggleClass('fa-chevron-down');
+      if($("#circleListBody").hasClass("clearfix")){
+        // $("#showMoreCircles").find('a').text(cake.word.close);
+        $("#circleListBody").removeClass("clearfix");
+        $(".dashboard-circle-list-body-wrap").css("max-height","calc(100% - 396px)");
+        $("#showMoreCircles").hide();
+        // $("#circleListBody").css("overflow-y", "hidden");
+        // $("#showMoreCirclesToggle").hide();
       } else {
-        $("#showMoreCirclesToggle").find('a').text(cake.word.view_all);
-        document.querySelector('#circleListBody').scrollTop = 0;
-        psCircleList.destroy();
-        psCircleList = new PerfectScrollbar('#circleListBody', {
-          swipePropagation: false,
-          wheelPropagation: false,
-          maxScrollbarLength: 0,
-          suppressScrollX: true,
-          suppressScrollY: true,
-        });
+        // $("#showMoreCircles").find('a').text(cake.word.view_all);
+        $("#circleListBody").addClass("clearfix");
+        $(".dashboard-circle-list-body-wrap").css("max-height","100%");
       }
     });
     // $("#showMoreCirclesToggleHamburger").off("click").on("click", function(e) {
@@ -361,13 +396,13 @@ $(function () {
     //   suppressScrollX: true,
     //   suppressScrollY: false,
     // });
-    psCircleList = new PerfectScrollbar('#circleListBody', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: true,
-    });
+    // psCircleList = new PerfectScrollbar('#circleListBody', {
+    //   swipePropagation: false,
+    //   wheelPropagation: false,
+    //   maxScrollbarLength: 0,
+    //   suppressScrollX: true,
+    //   suppressScrollY: false,
+    // });
     // psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
     //   swipePropagation: false,
     //   wheelPropagation: false,
@@ -391,7 +426,7 @@ $(function () {
     });
     $(window).on("load resize", function() {
       psLeftSideContainer.update();
-      psCircleList.update();
+      // psCircleList.update();
       //psCircleListHamburger.update();
       psNavResults.update();
       psNavResultsToggle.update();
@@ -404,6 +439,7 @@ $(function () {
       hideNav();
     });
     $(window).trigger('resize');
+    adjustRightHeaderPosition();
 });
 
 

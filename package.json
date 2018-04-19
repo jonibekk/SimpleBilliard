@@ -8,6 +8,7 @@
     "angular-translate": "2.7.2",
     "angular-ui-bootstrap": "0.13.0",
     "angular-ui-router": "0.2.15",
+    "appear": "^1.0.1",
     "autosize": "git+https://github.com/IsaoCorp/autosize.git",
     "axios": "^0.15.3",
     "bootstrap": "^3.3.7",

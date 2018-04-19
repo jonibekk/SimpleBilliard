@@ -390,6 +390,7 @@ function toggleNav() {
       menuNotify.classList.remove('is-open');
       navIcon.classList.remove('fa-arrow-right');
       navIcon.classList.add('fa-navicon');
+      $("#NavbarOffcanvas").css("background-color","#fff");
     } else {
       document.body.classList.add('modal-open');
       header.classList.add('mod-openNav');
@@ -397,6 +398,7 @@ function toggleNav() {
       menuNotify.classList.add('is-open');
       navIcon.classList.add('fa-arrow-right');
       navIcon.classList.remove('fa-navicon');
+      $("#NavbarOffcanvas").css("background-color","#f5f5f5");
     }
   }
 }
