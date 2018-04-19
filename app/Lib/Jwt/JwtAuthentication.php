@@ -169,7 +169,7 @@ class JwtAuthentication
             'jti' => $this->jwtId,
             'exp' => $this->expireAt->getTimestamp(),
             'iat' => $this->createdAt->getTimestamp(),
-            'goalous.com' => [
+            self::PAYLOAD_NAMESPACE => [
                 'user_id' => $this->userId,
                 'team_id' => $this->teamId,
             ],
