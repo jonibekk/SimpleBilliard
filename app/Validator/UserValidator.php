@@ -1,5 +1,7 @@
 <?php
 
+require('BaseValidator.php');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -114,17 +116,20 @@ class UserValidator extends BaseValidator
 
         $this->defaultTeamIdValidation = $this->_createValidation('default_team_id', $this->teamIdBaseValidation);
 
-        $this->agreeTosValidation = null;
+        //TODO
+        $this->agreeTosValidation = validator::alwaysValid();
 
         $this->delFlagValidation = $this->_createValidation('del_flg', validator::notEmpty()->boolType());
 
         $this->oldPasswordValidation = $this->_createValidation('old_password', validator::notEmpty()->length(8, null));
 
+        //TODO
         $this->photoValidation = null;
 
         $this->hometownValidation = $this->_createValidation('hometown', validator::when(validator::notEmpty(),
             validator::stringType()->length(null, 128)));
 
+        //TODO
         $this->coverPhotoValidation = null;
 
         $this->commentValidation = $this->_createValidation('comment', validator::notEmpty()->length(null, 2000));
@@ -142,10 +147,17 @@ class UserValidator extends BaseValidator
 
         $this->passwordValidation = $this->_createValidation('password', $this->_getPasswordValidation());
 
-        $this->passwordConfirmValidation = $this->_createValidation('password_confirm', null);
+        $this->passwordConfirmValidation = $this->_createValidation('password_confirm', validator::alwaysValid());
     }
 
-    public function validateModel($userModel): bool
+    private function _getPasswordValidation()
+    {
+        return validator::notEmpty()
+                        ->regex('/^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i')
+                        ->length(8, 50);
+    }
+
+    public function validateModel(Model $userModel): bool
     {
         try {
             $ret = validator::AllOf(
@@ -158,8 +170,8 @@ class UserValidator extends BaseValidator
                 $this->updateEmailFlagValidation, $this->languageValidation,
                 $this->timezoneValidation, $this->defaultTeamIdValidation,
                 $this->agreeTosValidation, $this->delFlagValidation,
-                $this->oldPasswordValidation, $this->photoValidation,
-                $this->hometownValidation, $this->coverPhotoValidation,
+                $this->oldPasswordValidation, $this->hometownValidation,
+//                $this->photoValidation, $this->coverPhotoValidation,
                 $this->commentValidation, $this->phoneNumberValidation,
                 $this->setupCompleteFlagValidation)->assert($userModel);
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
@@ -169,7 +181,7 @@ class UserValidator extends BaseValidator
         return $ret ?? false;
     }
 
-    public function validatePassword($userModel): bool
+    public function validatePassword(Model $userModel): bool
     {
         try {
             $ret = validator::AllOf(
@@ -186,18 +198,6 @@ class UserValidator extends BaseValidator
     private function _getAgreeTosValidation()
     {
 
-    }
-
-    private function _getPasswordRequestValidation()
-    {
-
-    }
-
-    private function _getPasswordValidation()
-    {
-        return validator::notEmpty()
-                        ->regex('/^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i')
-                        ->length(8, 50);
     }
 
     private function _getPasswordConfirmValidation()

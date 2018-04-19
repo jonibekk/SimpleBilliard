@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
+App::uses('UserValidator', 'Validator');
 
 /**
  * User Test Case
@@ -1253,5 +1254,17 @@ class UserTest extends GoalousTestCase
     function test_findNotBelongToTeamByEmail()
     {
         // TODO.Payment:add unit tests
+    }
+
+    public function test_NewValidationMethod_success()
+    {
+        /** @var User $user */
+        $user = ClassRegistry::init('User');
+
+        $sampleUser = $user->getById(1);
+
+        $userValidator = new UserValidator;
+
+        $this->assertTrue($userValidator->validateModel($user));
     }
 }
