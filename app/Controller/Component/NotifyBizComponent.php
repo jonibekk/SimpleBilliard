@@ -151,10 +151,6 @@ class NotifyBizComponent extends Component
                 $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
                     $model_id, $sub_model_id, $to_user_list);
                 break;
-            case NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION:
-                $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION,
-                    $model_id, $sub_model_id, $to_user_list);
-                break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
                 break;
@@ -1416,7 +1412,6 @@ class NotifyBizComponent extends Component
             $comment = $this->Post->Comment->read(null, $comment_id);
         }
 
-        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($to_user_ids);
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
@@ -1425,21 +1420,21 @@ class NotifyBizComponent extends Component
         ];
         $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
         $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
-        
         $this->notify_option['model_id'] = $post_id;
-        // $this->notify_option['item_name'] = !empty($comment) ?
-        //     $this->Mention->replaceMention(json_encode([trim($comment['Comment']['body'])]), [], true) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
-        if (!empty($post['Post']['action_result_id']) || !empty($post['Post']['key_result_id'])) {
-            $this->notify_option['item_name'] = 'Updates for Customer Satisfaction';
+        if (!empty($post['Post']['key_result_id'])) {
+            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
+            $keyResult = $this->Post->KeyResult->findById($post['Post']['key_result_id']);
+            $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
         }else {
+            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT;
             $itemName = '';
             if (!empty($share_circle_list)) {
                 $circleCount = count($share_circle_list);
-                $circleName = $this->Post->PostShareCircle->findById($share_circle[0])['Circle']['name'];
-                $itemName . ($circleCount > 1 ? sprintf(__('%1$s and %2$s circle(s)'), $circleName, $circleCount) : $circleName);
+                $circleName = $this->Post->PostShareCircle->Circle->findById(array_values($share_circle_list)[0])['Circle']['name'];
+                $itemName .= ($circleCount > 1 ? sprintf(__('%1$s and %2$s circle(s)'), $circleName, $circleCount) : $circleName);
             }
-            $this->notify_option['item_name'] = $itemName;
+            $this->notify_option['item_name'] = json_encode([$itemName]);
         }
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
