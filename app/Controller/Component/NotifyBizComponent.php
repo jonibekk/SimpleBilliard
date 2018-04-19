@@ -1422,7 +1422,12 @@ class NotifyBizComponent extends Component
         $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
-        if (!empty($post['Post']['key_result_id'])) {
+        if (!empty($post['Post']['action_result_id'])) {
+            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
+            $actionResult = $this->Post->ActionResult->findById($post['Post']['action_result_id']);
+            $keyResult = $this->Post->KeyResult->findById($actionResult['ActionResult']['key_result_id']);
+            $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
+        }else if (!empty($post['Post']['key_result_id'])) {
             $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
             $keyResult = $this->Post->KeyResult->findById($post['Post']['key_result_id']);
             $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
