@@ -1430,7 +1430,7 @@ class NotifyBizComponent extends Component
         // $this->notify_option['item_name'] = !empty($comment) ?
         //     $this->Mention->replaceMention(json_encode([trim($comment['Comment']['body'])]), [], true) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
-        if (!empty($post['Post']['action_result_id'])) || !empty($post['Post']['key_result_id']))) {
+        if (!empty($post['Post']['action_result_id']) || !empty($post['Post']['key_result_id'])) {
             $this->notify_option['item_name'] = 'Updates for Customer Satisfaction';
         }else {
             $itemName = '';
