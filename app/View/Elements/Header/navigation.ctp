@@ -1,8 +1,13 @@
-<button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
-        class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon js-nav-toggle">
-    <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
-    <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
-</button>
+<div class="button-wrapper">
+    <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
+            class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon js-nav-toggle">
+        <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
+        <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
+    </button>
+</div>
+<div class="visible-xxs visible-xs hidden-sm hidden-md hidden-lg">
+    <?= $this->element('Header/logged_in_right'); ?>
+</div>
 <div id="NavbarOffcanvas">
     <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
@@ -69,10 +74,8 @@
         <li class="circle-list-in-hamburger visible-xxs hidden-xs">
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
-    </ul>
-    <ul>
-        <li>
+        <div class="hidden-xxs hidden-xs visible-sm visible-md visible-lg">
             <?= $this->element('Header/logged_in_right'); ?>
-        </li>
+        </div>
     </ul>
 </div>

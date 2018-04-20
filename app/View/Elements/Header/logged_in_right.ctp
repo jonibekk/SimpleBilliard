@@ -3,7 +3,7 @@
  * @var $is_mb_app
  */
 ?>
-<div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
+<div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?>"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
@@ -15,12 +15,21 @@
             <?=
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
                 ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
-            <span class="header-user-name js-header-link">
-            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
-        </span>
         </a>
-        <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
-                'Home') ?></a>
+    <?php endif; ?>
+
+    <?php if (!$is_mb_app): ?>
+        <span class="header-user-name js-header-link"></span>
+    <?php endif; ?>
+
+    <?php if($is_mb_app): ?>
+        <div class="header-icon-search-toggle header-icon-zoom">
+            <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+        </div>
+    <?php else: ?>
+        <div class="header-icon-search header-icon-zoom">
+            <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+        </div>
     <?php endif; ?>
 
     <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
@@ -195,11 +204,6 @@
             <li class="header-nav-function-contents-list">
                 <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=17c2lbrWEuqQYvOlVSb3Sn1dyFatXq2XD' : 'https://drive.google.com/open?id=1HZBsB3EdS1dciMLY3RXuc1FYHU1uuW73'; ?>
                     class="header-nav-function-contents-user-guidelines" ><?=__('User Guide');?></a>
-            </li>
-            <li class="header-nav-function-contents-list">
-                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
-                    <?= __('How to make a Goal (jp)') ?>
-                </a>
             </li>
             <li class="header-nav-function-contents-list">
                 <a href="#" data-toggle="modal" data-target="#modal_tutorial"
