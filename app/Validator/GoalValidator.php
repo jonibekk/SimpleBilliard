@@ -35,7 +35,7 @@ class GoalValidator extends BaseValidator
 
     private $termTypeValidation = null;
 
-    public function validateModel($goalModel): bool
+    public function validate($goalModel): bool
     {
         // TODO: Implement validateModel() method.
     }

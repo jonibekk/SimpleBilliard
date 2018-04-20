@@ -21,7 +21,7 @@ class UserValidator extends BaseValidator
 
     private $genderTypeValidation = null;
 
-    private $birthDateValidation = null;
+    private $birthDayValidation = null;
 
     private $hideYearFlagValidation = null;
 
@@ -82,52 +82,53 @@ class UserValidator extends BaseValidator
         $this->lastNameValidation = $this->_createValidation('last_name', $this->nameBaseValidation);
 
         $this->genderTypeValidation = $this->_createValidation('gender_type',
-            validator::when(validator::notEmpty(), validator::stringType()));
+            validator::intVal()->between(1, 2), false);
 
-        $this->birthDateValidation = $this->_createValidation('birth_day',
-            validator::when(validator::notEmpty(), validator::date('Y-m-d')));
+        $this->birthDayValidation = $this->_createValidation('birth_day',
+            validator::date('Y-m-d'), false);
 
         $this->hideYearFlagValidation = $this->_createValidation('hide_year_flg',
-            validator::when(validator::notEmpty(), validator::boolType()));
+            validator::boolVal(), false);
 
-        $this->adminFlagValidation = $this->_createValidation('admin_flg', validator::notEmpty()->boolType());
+        $this->adminFlagValidation = $this->_createValidation('admin_flg', validator::notEmpty()->boolVal());
 
-        $this->noPassFlagValidation = $this->_createValidation('no_pass_flg', validator::notEmpty()->boolType());
+        $this->noPassFlagValidation = $this->_createValidation('no_pass_flg', validator::notEmpty()->boolVal());
 
-        $this->activeFlagValidation = $this->_createValidation('active_flg', validator::notEmpty()->boolType());
+        $this->activeFlagValidation = $this->_createValidation('active_flg', validator::notEmpty()->boolVal());
 
         $this->autoTimezoneFlagValidation = $this->_createValidation('auto_timezone_flg',
-            validator::when(validator::notEmpty(), validator::boolType()));
+            validator::boolVal(), false);
 
         $this->autoLanguageFlagValidation = $this->_createValidation('auto_language_flg',
-            validator::when(validator::notEmpty(), validator::boolType()));
+            validator::boolVal(), false);
 
         $this->romanizeFlagValidation = $this->_createValidation('romanize_flg',
-            validator::when(validator::notEmpty(), validator::boolType()));
+            validator::boolVal(), false);
 
         $this->updateEmailFlagValidation = $this->_createValidation('update_email_flg',
-            validator::when(validator::notEmpty(), validator::boolType()));
+            validator::boolVal(), false);
 
         $this->languageValidation = $this->_createValidation('language',
-            validator::when(validator::notEmpty(), validator::stringType()));
+            validator::stringType(), false);
 
         $this->timezoneValidation = $this->_createValidation('timezone',
-            validator::when(validator::notEmpty(), validator::intType()));
+            validator::numeric(), false);
 
         $this->defaultTeamIdValidation = $this->_createValidation('default_team_id', $this->teamIdBaseValidation);
 
         //TODO
         $this->agreeTosValidation = validator::alwaysValid();
 
-        $this->delFlagValidation = $this->_createValidation('del_flg', validator::notEmpty()->boolType());
+        $this->delFlagValidation = $this->_createValidation('del_flg', validator::boolVal());
 
-        $this->oldPasswordValidation = $this->_createValidation('old_password', validator::notEmpty()->length(8, null));
+        $this->oldPasswordValidation = $this->_createValidation('old_password',
+            validator::notEmpty()->length(8, null), false);
 
         //TODO
         $this->photoValidation = null;
 
-        $this->hometownValidation = $this->_createValidation('hometown', validator::when(validator::notEmpty(),
-            validator::stringType()->length(null, 128)));
+        $this->hometownValidation = $this->_createValidation('hometown',
+            validator::stringType()->length(null, 128), false);
 
         //TODO
         $this->coverPhotoValidation = null;
@@ -137,7 +138,7 @@ class UserValidator extends BaseValidator
         $this->phoneNumberValidation = $this->_createValidation('phone_no', validator::notEmpty()->length(null, 20));
 
         $this->setupCompleteFlagValidation = $this->_createValidation('setup_complete_flg',
-            validator::when(validator::notEmpty(), validator::boolType()));
+            validator::boolVal(), false);
 
         $this->passwordRequest1Validation = $this->_createValidation('password_request',
             $this->_getPasswordValidation());
@@ -150,6 +151,9 @@ class UserValidator extends BaseValidator
         $this->passwordConfirmValidation = $this->_createValidation('password_confirm', validator::alwaysValid());
     }
 
+    /**
+     * @return validator Password validation
+     */
     private function _getPasswordValidation()
     {
         return validator::notEmpty()
@@ -157,13 +161,18 @@ class UserValidator extends BaseValidator
                         ->length(8, 50);
     }
 
-    public function validateModel(Model $userModel): bool
+    /**
+     * @param array $array
+     *
+     * @return array|bool
+     */
+    public function validate($array)
     {
         try {
             $ret = validator::AllOf(
                 $this->teamIdValidation, $this->firstNameValidation,
                 $this->lastNameValidation, $this->genderTypeValidation,
-                $this->birthDateValidation, $this->hideYearFlagValidation,
+                $this->birthDayValidation, $this->hideYearFlagValidation,
                 $this->adminFlagValidation, $this->noPassFlagValidation,
                 $this->activeFlagValidation, $this->autoTimezoneFlagValidation,
                 $this->autoLanguageFlagValidation, $this->romanizeFlagValidation,
@@ -173,21 +182,21 @@ class UserValidator extends BaseValidator
                 $this->oldPasswordValidation, $this->hometownValidation,
 //                $this->photoValidation, $this->coverPhotoValidation,
                 $this->commentValidation, $this->phoneNumberValidation,
-                $this->setupCompleteFlagValidation)->assert($userModel);
+                $this->setupCompleteFlagValidation)->assert($array);
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
-            return $exception->getFullMessage();
+            return $exception->getMessages();
         }
 
-        return $ret ?? false;
+        return true;
     }
 
-    public function validatePassword(Model $userModel): bool
+    public function validatePassword(array $array)
     {
         try {
             $ret = validator::AllOf(
                 $this->passwordRequest1Validation, $this->passwordRequest2Validation,
                 $this->passwordValidation, $this->passwordConfirmValidation
-            )->assert($userModel);
+            )->assert($array);
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
             return $exception->getFullMessage();
         }
