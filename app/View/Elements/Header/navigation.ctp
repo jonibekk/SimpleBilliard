@@ -70,4 +70,9 @@
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
     </ul>
+    <ul>
+        <li>
+            <?= $this->element('Header/logged_in_right'); ?>
+        </li>
+    </ul>
 </div>

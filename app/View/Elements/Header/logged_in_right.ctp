@@ -1,10 +1,9 @@
-<?php
+<?php  
 /**
  * @var $is_mb_app
  */
 ?>
-<?= $this->App->viewStartComment() ?>
-<div id="rightHeaderNavigation" class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
+<div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
      xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
@@ -16,40 +15,31 @@
             <?=
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
                 ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
+            <span class="header-user-name js-header-link">
+            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
+        </span>
         </a>
-    <?php endif; ?>
-
-    <?php if (!$is_mb_app): ?>
-        <span class="header-user-name js-header-link"></span>
-    <?php endif; ?>
-
-    <?php if($is_mb_app): ?>
-    <li class="header-icon-search-toggle header-icon-zoom">
-        <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
-    </li>
-    <?php else: ?>
-    <li class="header-icon-search header-icon-zoom">
-        <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
-    </li>
+        <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
+                'Home') ?></a>
     <?php endif; ?>
 
     <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-        <li class="header-setup header-icon-zoom  <?= $is_mb_app ? "hide" : null ?>" id="setup">
-            <a href="/setup/top/" class="btn-header-setup">
-                <i class="fa fa-book header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"
-                   id="setupIcon"></i>
-                <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-                    <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
-                        <span><?= $setup_rest_count ?></span>
-                    </div>
-                <?php endif; ?>
-            </a>
-        </li>
+    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom" id="setup">
+        <a href="/setup/top/" class="btn-header-setup">
+            <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
+               id="setupIcon"></i>
+            <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
+                <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                    <span><?= $setup_rest_count ?></span>
+                </div>
+            <?php endif; ?>
+        </a>
+    </div>
     <?php endif; ?>
-    
-    <li class="header-dropdown-add header-icon-zoom">
+
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
-            <i class="fa fa-plus-circle header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+            <i class="fa fa-plus-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
@@ -79,8 +69,8 @@
                 </a>
             </li>
         </ul>
-    </li>
-    <li class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
+    </div>
+    <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
 
@@ -99,8 +89,8 @@
                 </ul>
             </div>
         </div>
-    </li>
-    <li id="HeaderDropdownNotify"
+    </div>
+    <div id="HeaderDropdownNotify"
          class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
@@ -142,14 +132,13 @@
                 </div>
             </a>
         </div>
-    </li>
-    <li
-        class="header-dropdown-functions header-icon-zoom header-function">
+    </div>
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
         <a href="#"
            class="btn-function-header"
            data-toggle="dropdown"
            id="header-cog-dropdown">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons header-drop-icons js-header-link"></i>
+            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span>
@@ -208,6 +197,11 @@
                     class="header-nav-function-contents-user-guidelines" ><?=__('User Guide');?></a>
             </li>
             <li class="header-nav-function-contents-list">
+                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
+                    <?= __('How to make a Goal (jp)') ?>
+                </a>
+            </li>
+            <li class="header-nav-function-contents-list">
                 <a href="#" data-toggle="modal" data-target="#modal_tutorial"
                    class="header-nav-function-contents-tutorial">
                     <?= __('Tutorial') ?>
@@ -224,8 +218,8 @@
                 $this->Html->link(__('Logout'),
                     ['controller' => 'users', 'action' => 'logout'],
                     ['class' => 'header-nav-function-contents-logout']) ?>
-            </li> 
+            </li>
         </ul>
-    </li>
+    </div>
 </div>
-<?= $this->App->viewEndComment() ?>
+<div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>

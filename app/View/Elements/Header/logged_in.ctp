@@ -32,7 +32,6 @@
                 <?= $this->element('Header/back_btn') ?>
             <?php } else { ?>
                 <?= $this->element('Header/navigation'); ?>
-                <?= $this->element('Header/logged_in_right'); ?>
                 <?= $this->element('Header/search'); ?>
             <?php } ?>
         </div>

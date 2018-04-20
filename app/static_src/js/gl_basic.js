@@ -296,7 +296,6 @@ $(function () {
           lastHeight = $(window).height();
           $(".left-side-container").css("overflow-y", "hidden");
           var setHeight = visibleCircles * 30 - 99;
-          $(".dashboard-circle-list-body-wrap").css("height", setHeight + "px");
           $("#circleListBody").css("height", setHeight + "px");
           circleList.trigger();
           if(visibleCircles === circleCount){
@@ -353,9 +352,9 @@ $(function () {
       
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
       $(".left-side-container").css("overflow-y", "scroll");
-      var setHeight = 30 * circleCount - $("#circleListFooter").height() + 1;
+      var setHeight = 30 * circleCount + 1;
       $("#circleListBody").css("height", setHeight + "px");
-      $("#jsLeftSideContainer").css("height", $(window).height() + "px");
+      $("#jsLeftSideContainer").css("height", ($(window).height() - $("#circleListFooter").height())+ "px");
       $(".dashboard-circle-list-seek").css("margin-top", "0px");
       $(".dashboard-circle-list-make").css("margin-top", "0px");
     });
@@ -395,7 +394,7 @@ $(function () {
     });
     $(window).trigger('resize');
     adjustRightHeaderPosition();
-    var setHeight = visibleCircles * 30 - 99;
+    var setHeight = circleCount * 30 + 1;
     $("#circleListBody").css("height", setHeight + "px");
 });
 
