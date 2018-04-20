@@ -24,8 +24,9 @@ class ApiV2Controller extends Controller
 
     public function __construct(CakeRequest $request = null, CakeResponse $response = null)
     {
-        //TODO get token
         parent::__construct($request, $response);
+
+        //TODO get token
     }
 
     public function beforeFilter()
@@ -49,20 +50,19 @@ class ApiV2Controller extends Controller
     private function _initializeTeamStatus()
     {
         $teamStatus = TeamStatus::getCurrentTeam();
-        $teamStatus->initializeByTeamId($this->teamId);
+        $teamStatus->initializeByTeamId($this->_currentTeamId);
     }
 
     private function _setAppLanguage()
     {
-        //TODO get user from JWT
-        $user = null;
+        $user = $this->_currentUser;
 
-        if (isset($user) && isset($user['language']) && !$user['auto_language_flg']) {
+        if (isset($user) && isset($user['language']) && !boolval($user['auto_language_flg'])) {
             Configure::write('Config.language', $user['language']);
             $this
                 ->set('is_not_use_local_name', $this->User->isNotUseLocalName($user['language']));
         } else {
-            $lang = $this->Lang->getLanguage();
+            $lang = $this->LangComponent->getLanguage();
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
         }
 
