@@ -282,7 +282,6 @@ $(function () {
       if($(window).height() !== lastHeight){
         lastHeight = $(window).height();
         if(lastLeftContainerHeight !== lastHeight && psLeftSideContainer) {
-          console.log("not equal");
           psLeftSideContainer.destroy();
           $(".dashboard-circle-list-body-wrap").removeClass("clearfix");
           $("#jsLeftSideContainer").css("height","100%");
@@ -294,7 +293,6 @@ $(function () {
             counter++;
           }
           if(counter > 0){
-            console.log("some invisibleCircles");
             isUnset = false;
           }
           visibleCircles = circleCount - counter;
@@ -355,13 +353,10 @@ $(function () {
       isUnset = true;
       $(".dashboard-circle-list-body-wrap").addClass("clearfix");
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
-      // $("#jsLeftSideContainer").css("overflow-y", "scroll");
       var setHeight = 30 * circleCount + 1;
       $("#circleListBody").css("height", setHeight + "px");
       lastLeftContainerHeight = ($(window).height() - $("#circleListFooter").height());
       $("#jsLeftSideContainer").css("height", lastLeftContainerHeight + "px");
-      // $(".dashboard-circle-list-seek").css("margin-top", "0px");
-      // $(".dashboard-circle-list-make").css("margin-top", "0px");
        psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
         swipePropagation: false,
         wheelPropagation: false,
@@ -385,12 +380,9 @@ $(function () {
       suppressScrollY: false,
     });
     $(window).on("load resize", function() {
-      // psLeftSideContainer.update();
-      // psCircleList.update();
       psNavResults.update();
       psNavResultsToggle.update();
     });
-    // $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').css("overflow","none");
     $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
         e.stopPropagation();
     });
@@ -398,8 +390,6 @@ $(function () {
       hideNav();
     });
     $(window).trigger('resize');
-    // var setHeight = visibleCircles * 30 -1 -$("#circleListFooter").height();
-    // $("#circleListBody").css("height", setHeight + "px");
 });
 
 
