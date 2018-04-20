@@ -3,6 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
 App::uses('UserValidator', 'Validator');
 
+
 /**
  * User Test Case
  *
@@ -1262,9 +1263,17 @@ class UserTest extends GoalousTestCase
         $user = ClassRegistry::init('User');
 
         $sampleUser = $user->getById(1);
+        $sampleUser['team_id'] = 1;
+        $sampleUser['default_team_id'] = 1;
+        $sampleUser['phone_no'] = '01234567890';
 
         $userValidator = new UserValidator;
 
-        $this->assertTrue($userValidator->validateModel($user));
+        $this->assertNotInternalType('array', $userValidator->validate($sampleUser));
+
+        $sampleUser['first_name'] = '129yrb8y))*&)@&$)';
+
+        $this->assertInternalType('array', $userValidator->validate($sampleUser));
+
     }
 }
