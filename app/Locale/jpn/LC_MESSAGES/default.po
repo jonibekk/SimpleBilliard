@@ -1189,8 +1189,8 @@ msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a "
 "comment. "
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントし
-ました。"
+"<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしまし
+"た。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
