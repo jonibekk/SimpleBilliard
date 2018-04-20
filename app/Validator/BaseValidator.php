@@ -35,11 +35,13 @@ abstract class BaseValidator
      */
     protected $photoBaseValidation;
 
+    public $errorMessage = null;
+
     protected function __construct()
     {
         $this->userIdBaseValidation = validator::notEmpty()->intType();
 
-        $this->teamIdBaseValidation = validator::when(validator::notEmpty(), validator::intType());
+        $this->teamIdBaseValidation = validator::optional(validator::intType());
 
         $this->nameBaseValidation = validator::notEmpty()->alnum('\'')->length(null, 128);
 
@@ -47,17 +49,26 @@ abstract class BaseValidator
         $this->photoBaseValidation;
     }
 
-    public abstract function validateModel(Model $model): bool;
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    public abstract function validate($array);
 
     /**
-     * @param $attributeName
+     * @param $keyName
      * @param $validation
+     * @param $mandatory
      *
      * @return mixed
      */
-    protected function _createValidation($attributeName, Respect\Validation\Validator $validation)
-    {
-        return  $validation->attribute($attributeName)->setName($attributeName);
+    protected function _createValidation(
+        $keyName,
+        Respect\Validation\Validator $validation,
+        bool $mandatory = true
+    ) {
+        return validator::key($keyName, $validation, $mandatory)->setName($keyName);
     }
 
 }
