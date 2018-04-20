@@ -170,8 +170,8 @@ $(document).ready(function () {
 
 });
 
-var lastHeight = $(window).height();
-var lastWidth = $(window).width();
+var lastHeight;
+var lastWidth;
 
 function hideKeyboard(element) {
     element.attr('readonly', 'readonly'); // Force keyboard to hide on input field.
@@ -184,8 +184,8 @@ function hideKeyboard(element) {
     }, 100);
 }
 
-var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount;
-var invisibleCircles = 0;
+var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset;
+
 $(function () {
     var current_slide_id = 1;
 
@@ -207,11 +207,12 @@ $(function () {
         changeTutorialContent(next_id);
     });
 
-    appear({
+    var circleList = appear({
       init: function init(){
-        //console.log('dom is ready');
+        isUnset = false;
         circleCount = $("#circleListBody").find(".dashboard-circle-list-row-wrap").length;
         invisibleCircles = circleCount;
+        visibleCircles = circleCount - invisibleCircles;
         console.log("total:"+circleCount);
       },
       elements: function elements(){
@@ -220,25 +221,23 @@ $(function () {
       },
       appear: function appear(el){
         invisibleCircles--;
-        // console.log("invisible:" + invisibleCircles);
         $(el).css("display","flex");
         console.log('visible', el);
         if(invisibleCircles === 0){
-          $("#showMoreCircles").hide();
-          $(".dashboard-circle-list-footer").css("margin-top","22px");
+          $("#showMoreCircles").css("display","none");
           console.log("All visible");
         } else {
           $("#showMoreCircles").css("display","block");
-          $(".dashboard-circle-list-footer").css("margin-top","0px");
         }
+        visibleCircles = circleCount - invisibleCircles;
       },
       disappear: function disappear(el){
+        isUnset = false;
         invisibleCircles++;
-        // console.log("invisible:" + invisibleCircles);
         $(el).hide();
         console.log('no longer visible', el);
         $("#showMoreCircles").css("display","block");
-        $(".dashboard-circle-list-footer").css("margin-top","0px");
+        visibleCircles = circleCount - invisibleCircles;
       },
       bounds: 0,
       reappear: false,
@@ -302,6 +301,20 @@ $(function () {
         $(".header-search").removeClass("open");
         adjustRightHeaderPosition();
       }
+      if($(window).height() !== lastHeight){
+        if(!isUnset) {
+          lastHeight = $(window).height();
+          $(".dashboard-circle-list-footer").css("position", "absolute");
+          $(".left-side-container").css("overflow-y", "hidden");
+          var setHeight = visibleCircles * 30 + 1 -72 + 8 + 8 - 20;
+          $(".dashboard-circle-list-body-wrap").css("height", setHeight + "px");
+          $("#circleListBody").css("height", setHeight + "px");
+          $("#jsLeftSideContainer").css("height", "100%");
+          $(".dashboard-circle-list-seek").css("margin-top", "14px");
+          $(".dashboard-circle-list-make").css("margin-top", "38px");
+          circleList.trigger();
+        }
+      }
     });
 
     $("#NavSearchInputClear").off("click").on("click", function() {
@@ -340,75 +353,25 @@ $(function () {
     });
     $("#showMoreCircles").off("click").on("click", function(e) {
       e.preventDefault();
-      // $("#showMoreCircles").find('i').toggleClass('fa-chevron-up');
-      // $("#showMoreCircles").find('i').toggleClass('fa-chevron-down');
-      if($("#circleListBody").hasClass("clearfix")){
-        // $("#showMoreCircles").find('a').text(cake.word.close);
-        $("#circleListBody").removeClass("clearfix");
-        $(".dashboard-circle-list-body-wrap").css("max-height","calc(100% - 396px)");
-        $("#showMoreCircles").hide();
-        // $("#circleListBody").css("overflow-y", "hidden");
-        // $("#showMoreCirclesToggle").hide();
-      } else {
-        // $("#showMoreCircles").find('a').text(cake.word.view_all);
-        $("#circleListBody").addClass("clearfix");
-        $(".dashboard-circle-list-body-wrap").css("max-height","100%");
-      }
+      $(this).hide();
+      $(".dashboard-circle-list-body-wrap").toggleClass("clearfix");
+      isUnset = true;
+      var setHeight = 30 * circleCount + 1;
+      $(".dashboard-circle-list-body-wrap").css("height", "min-content");
+      $("#circleListBody").css("height", "min-content");
+      $(".dashboard-circle-list-footer").css("position", "relative");
+      $(".left-side-container").css("overflow-y", "scroll");
+      var leftHeight = $(window).height() + 100;
+      $("#jsLeftSideContainer").css("height", leftHeight + "px");
+      $(".dashboard-circle-list-seek").css("margin-top", "0px");
+      $(".dashboard-circle-list-make").css("margin-top", "0px");
     });
-    // $("#showMoreCirclesToggleHamburger").off("click").on("click", function(e) {
-    //   e.preventDefault();
-    //   $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-up');
-    //   $("#showMoreCirclesToggleHamburger").find('i').toggleClass('fa-chevron-down');
-    //   if($("#showMoreCirclesToggleHamburger").find('i').hasClass('fa-chevron-down')){
-    //     $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.close);
-    //     psCircleListHamburger.destroy();
-    //     psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-    //       swipePropagation: false,
-    //       wheelPropagation: false,
-    //       maxScrollbarLength: 0,
-    //       suppressScrollX: true,
-    //       suppressScrollY: false,
-    //     });
-    //   } else {
-    //     $("#showMoreCirclesToggleHamburger").find('a').text(cake.word.view_all);
-    //     document.querySelector('#circleListHamburger').scrollTop = 0;
-    //     psCircleListHamburger.destroy();
-    //     psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-    //       swipePropagation: false,
-    //       wheelPropagation: false,
-    //       maxScrollbarLength: 0,
-    //       suppressScrollX: true,
-    //       suppressScrollY: true,
-    //     });
-    //   }
-    // });
-    psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: false,
-    });
-    // psGoalousNavigation = new PerfectScrollbar('#goalousNavigation', {
+    // psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
     //   swipePropagation: false,
     //   wheelPropagation: false,
     //   maxScrollbarLength: 0,
     //   suppressScrollX: true,
     //   suppressScrollY: false,
-    // });
-    // psCircleList = new PerfectScrollbar('#circleListBody', {
-    //   swipePropagation: false,
-    //   wheelPropagation: false,
-    //   maxScrollbarLength: 0,
-    //   suppressScrollX: true,
-    //   suppressScrollY: false,
-    // });
-    // psCircleListHamburger = new PerfectScrollbar('#circleListHamburger', {
-    //   swipePropagation: false,
-    //   wheelPropagation: false,
-    //   maxScrollbarLength: 0,
-    //   suppressScrollX: true,
-    //   suppressScrollY: true,
     // });
     psNavResults = new PerfectScrollbar('#NavSearchForm', {
       swipePropagation: false,
@@ -425,13 +388,12 @@ $(function () {
       suppressScrollY: false,
     });
     $(window).on("load resize", function() {
-      psLeftSideContainer.update();
+      // psLeftSideContainer.update();
       // psCircleList.update();
-      //psCircleListHamburger.update();
       psNavResults.update();
       psNavResultsToggle.update();
     });
-    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').css("overflow","none");
+    // $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').css("overflow","none");
     $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
         e.stopPropagation();
     });
