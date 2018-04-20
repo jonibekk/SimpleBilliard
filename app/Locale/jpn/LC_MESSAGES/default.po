@@ -1189,7 +1189,7 @@ msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a "
 "comment. "
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしまし
+"<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしまし"
 "た。"
 
 msgid ""
