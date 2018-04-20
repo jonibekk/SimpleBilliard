@@ -5,8 +5,11 @@
         <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
     </button>
 </div>
-<div class="visible-xxs visible-xs hidden-sm hidden-md hidden-lg">
-    <?= $this->element('Header/logged_in_right'); ?>
+<div class="floatcontainer">
+    <div class="<?= $is_mb_app ? "smaller-header-right-navigations-mb-app" : "smaller-header-right-navigations" ?> visible-xxs visible-xs hidden-sm hidden-md hidden-lg clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>
+    </div>
+    <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
 </div>
 <div id="NavbarOffcanvas">
     <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
@@ -74,8 +77,11 @@
         <li class="circle-list-in-hamburger visible-xxs hidden-xs">
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
-        <div class="hidden-xxs hidden-xs visible-sm visible-md visible-lg">
-            <?= $this->element('Header/logged_in_right'); ?>
+        <div class="floatcontainer">
+            <div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> hidden-xxs hidden-xs visible-sm visible-md visible-lg clearfix" xmlns="http://www.w3.org/1999/html">
+                <?= $this->element('Header/logged_in_right'); ?>
+            </div>
+            <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
         </div>
     </ul>
 </div>

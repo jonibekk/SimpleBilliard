@@ -299,9 +299,19 @@
 
 .header-right-navigations {
     position: fixed;
-    z-index: 3;
-    right: 0;
+    z-index: 100;
     top: 0;
+    vertical-align: top;
+    margin: 0 0 0 auto;
+    font-size: 0;
+    height: 45px;
+}
+
+.smaller-header-right-navigations {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    right: 0;
     vertical-align: top;
     margin: 0 0 0 auto;
     font-size: 0;
@@ -310,6 +320,14 @@
 
 .header-right-navigations-mb-app {
   .header-right-navigations();
+  > div {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+.smaller-header-right-navigations-mb-app {
+  .smaller-header-right-navigations();
   > div {
     margin-left: 10px;
     margin-right: 10px;

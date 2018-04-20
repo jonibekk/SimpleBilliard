@@ -3,8 +3,6 @@
  * @var $is_mb_app
  */
 ?>
-<div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?>"
-     xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url([
@@ -225,5 +223,3 @@
             </li>
         </ul>
     </div>
-</div>
-<div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>

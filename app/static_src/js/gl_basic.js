@@ -181,9 +181,12 @@ function hideKeyboard(element) {
     }, 100);
 }
 
-var lastWidth,lastHeight,psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset;
+var lastWidth,lastHeight,lastCircleHeight,psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset;
 isUnset = false;
+var footerNotVisible = false;
+
 $(function () {
+    circleCount = $("#circleListBody").find(".dashboard-circle-list-row-wrap").length;
     var current_slide_id = 1;
 
     // インジケータークリック時
@@ -204,32 +207,45 @@ $(function () {
         changeTutorialContent(next_id);
     });
 
-    var circleList = appear({
-      init: function init(){
+    function isCompletelyInViewport(elm, threshold, mode) {
+      threshold = threshold || 0;
+      mode = mode || 'visible';
+
+      var rect = elm.getBoundingClientRect();
+      var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+      var above = rect.bottom - threshold < 0;
+      var below = rect.top - viewHeight + threshold >= 0;
+
+      return mode === 'above' ? above : (mode === 'below' ? below : !above && !below);
+    }
+
+    function isInViewport (element) {
+      var elementTop = $(element).offset().top;
+      var elementBottom = elementTop + $(element).outerHeight();
+      var viewportTop = $(window).scrollTop();
+      var viewportBottom = viewportTop + $(window).height();
+      return elementBottom > viewportTop && elementTop < viewportBottom;
+    }
+
+    function updateCircleCount() {
+      var elements = $("#circleListBody").find(".dashboard-circle-list-row-wrap");
+      var counter = 0;
+      for(var i = 0; i < elements.length; i++){
+        if(!isInViewport(elements[i])) {
+          counter++;
+        }
+        if(counter > 0){
+          isUnset = false;
+        }
+        visibleCircles = circleCount - counter;
+      }
+      if(!isInViewport($("#circleListFooter").find(".dashboard-circle-list-make"))){
+        footerNotVisible = true;
         isUnset = false;
-        circleCount = $("#circleListBody").find(".dashboard-circle-list-row-wrap").length;
-        invisibleCircles = circleCount;
-        visibleCircles = circleCount - invisibleCircles;
-        console.log("total:"+circleCount);
-      },
-      elements: function elements(){
-        // work with all elements with the class "track" 
-        return $("#circleListBody").find(".dashboard-circle-list-row-wrap").get();
-      },
-      appear: function appear(el){
-        invisibleCircles--;
-        visibleCircles = circleCount - invisibleCircles;
-      },
-      disappear: function disappear(el){
-        isUnset = false;
-        invisibleCircles++;
-        visibleCircles = circleCount - invisibleCircles;
-      },
-      bounds: 0,
-      reappear: true,
-      deltaSpeed: 50,
-      deltaTimeout: 50,
-    });
+      } else {
+        footerNotVisible = false;
+      }
+    }
 
     function changeTutorialContent(content_id) {
         // 各要素をカレントステータスに設定
@@ -283,23 +299,22 @@ $(function () {
         $(".header-search").removeClass("open");
       }
       if($(window).height() !== lastHeight){
+        updateCircleCount();
         if(!isUnset) {
-          lastHeight = $(window).height();
-          $(".left-side-container").css("overflow-y", "hidden");
-          var setHeight = visibleCircles * 30 - 99;
-          $("#circleListBody").css("height", setHeight + "px");
-          circleList.trigger();
-          if(visibleCircles === circleCount){
-            $("#circleListBody").find(".dashboard-circle-list-row-wrap").css("display","flex");
-            $("#showMoreCircles").css("display","none");
-            console.log("All visible");
-          } else {
+          if(visibleCircles !== circleCount || footerNotVisible){
             $("#showMoreCircles").css("display","block");
+            $(".left-side-container").css("overflow-y", "hidden");
+            var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height() - 14;
+            $("#circleListBody").css("height", setHeight + "px");
+          } else {
+            $("#showMoreCircles").css("display","none");
+            var setHeight = visibleCircles * 30  + 1;
+            $("#circleListBody").css("height", setHeight + "px");
           }
         }
+        lastHeight = $(window).height();
       }
     });
-
     $("#NavSearchInputClear").off("click").on("click", function() {
       setTimeout(function(){$("#NavSearchInput").focus();},100);
       $(this).prev().val('');
@@ -337,10 +352,8 @@ $(function () {
     $("#showMoreCircles").off("click").on("click", function(e) {
       e.preventDefault();
       $(this).hide();
-      $("#circleListBody").find(".dashboard-circle-list-row-wrap").css("display","flex");
-      $(".dashboard-circle-list-body-wrap").toggleClass("clearfix");
       isUnset = true;
-      
+      $(".dashboard-circle-list-body-wrap").addClass("clearfix");
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
       $(".left-side-container").css("overflow-y", "scroll");
       var setHeight = 30 * circleCount + 1;
@@ -384,8 +397,8 @@ $(function () {
       hideNav();
     });
     $(window).trigger('resize');
-    var setHeight = circleCount * 30 + 1;
-    $("#circleListBody").css("height", setHeight + "px");
+    // var setHeight = visibleCircles * 30 -1 -$("#circleListFooter").height();
+    // $("#circleListBody").css("height", setHeight + "px");
 });
 
 
