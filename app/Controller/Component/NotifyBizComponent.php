@@ -1342,7 +1342,7 @@ class NotifyBizComponent extends Component
         ];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([trim($comment['Comment']['body'])]) : null;
+            json_encode([$this->Mention->replaceMention(trim($comment['Comment']['body']), [], true)]) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $commented_user_list);
     }
@@ -1387,7 +1387,7 @@ class NotifyBizComponent extends Component
         ];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
-            json_encode([trim($comment['Comment']['body'])]) : null;
+            json_encode([$this->Mention->replaceMention(trim($comment['Comment']['body']), [], true)]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $post['Post']['user_id']);
     }
