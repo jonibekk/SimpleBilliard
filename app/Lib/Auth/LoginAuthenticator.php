@@ -3,7 +3,7 @@
 App::uses('LoginAuthentication', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('AuthenticationException', 'Lib/Auth/Exception');
-App::uses('AuthenticationExpiredException', 'Lib/Auth/Exception');
+App::uses('AuthenticationOutOfTermException', 'Lib/Auth/Exception');
 App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
 
 /**
@@ -19,8 +19,8 @@ App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
  *     //   1. Verify the JWT token
  *     //   2. Check JWT token in Redis
  *     //   3. Return user authentication info
- *     $loginAuthentication = LoginAuthenticator::auth($authorizationBearer);
- * } catch (AuthenticationExpiredException $e) {
+ *     $loginAuthentication = LoginAuthenticator::verify($authorizationBearer);
+ * } catch (AuthenticationOutOfTermException $e) {
  *     // If token has expired
  * } catch (AuthenticationNotManagedException $e) {
  *     // If token has not managed in Redis
@@ -42,7 +42,7 @@ App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
  * //   2. Save JWT token into Redis
  * //     @see https://confluence.goalous.com/display/GOAL/API+v2+Authentication#APIv2Authentication-RediskeyofJWTtoken
  * //   3. Return user authentication info
- * $loginAuthentication = LoginAuthenticator::authorize($userId, $teamId);
+ * $loginAuthentication = LoginAuthenticator::publish($userId, $teamId);
  *
  * // Creating login token succeed
  * $loginAuthentication->getUserId(); // return users.id
@@ -55,45 +55,47 @@ App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
 class LoginAuthenticator
 {
     /**
+     * Verify the access token
+     *
      * @param string $authorizationBearer
      *
      * @throws AuthenticationException           Any reason of failed verifying token
      * @throws AuthenticationNotManagedException Will throw this if token is not saved in Redis
-     * @throws AuthenticationExpiredException    Will throw this if token is expired
-     *
+     * @throws AuthenticationOutOfTermException  Will throw this if token is expired or before enabled
      * @return LoginAuthentication
      */
-    public static function auth(string $authorizationBearer): LoginAuthentication {
+    public static function verify(string $authorizationBearer): LoginAuthentication {
         try {
             $jwtAuth = JwtAuthentication::decode($authorizationBearer);
             $token = $jwtAuth->token();
             if ($ifTokenIsNotInRedis = false) {
                 // TODO: Check $token in Redis
+                // Write process after flexible Redis write/read class is created
                 throw new AuthenticationNotManagedException();
             }
             return new LoginAuthentication($jwtAuth);
         } catch (JwtSignatureException $exception) {
-            // When invalid signature :TODO
-            throw new AuthenticationException();
-        } catch (JwtExpiredException $exception) {
-            // When token is expired :TODO
-            throw new AuthenticationExpiredException();
+            throw new AuthenticationException($exception->getMessage());
+        } catch (JwtOutOfTermException $exception) {
+            throw new AuthenticationOutOfTermException($exception->getMessage());
         } catch (JwtException $exception) {
-            // When something other is invalid :TODO
-            throw new AuthenticationException();
+            throw new AuthenticationException($exception->getMessage());
         }
     }
 
     /**
+     * Create new authentication token
+     *
      * @param int $userId
      * @param int $teamId
      *
      * @return LoginAuthentication
      */
-    public static function authorize(int $userId, int $teamId): LoginAuthentication {
+    public static function publish(int $userId, int $teamId): LoginAuthentication {
         $jwtAuthentication = new JwtAuthentication($userId, $teamId);
         $newToken = $jwtAuthentication->token();
         // TODO: save $newToken into Redis
+        // Write process after flexible Redis write/read class is created
         return new LoginAuthentication(new JwtAuthentication($userId, $teamId));
     }
 }
