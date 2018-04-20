@@ -181,9 +181,10 @@ function hideKeyboard(element) {
     }, 100);
 }
 
-var lastWidth,lastHeight,lastCircleHeight,psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset;
+var lastWidth,lastHeight,lastCircleHeight,psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset,lastLeftContainerHeight;
 isUnset = false;
 var footerNotVisible = false;
+var showMoreNotVisible = false;
 
 $(function () {
     circleCount = $("#circleListBody").find(".dashboard-circle-list-row-wrap").length;
@@ -225,26 +226,6 @@ $(function () {
       var viewportTop = $(window).scrollTop();
       var viewportBottom = viewportTop + $(window).height();
       return elementBottom > viewportTop && elementTop < viewportBottom;
-    }
-
-    function updateCircleCount() {
-      var elements = $("#circleListBody").find(".dashboard-circle-list-row-wrap");
-      var counter = 0;
-      for(var i = 0; i < elements.length; i++){
-        if(!isInViewport(elements[i])) {
-          counter++;
-        }
-        if(counter > 0){
-          isUnset = false;
-        }
-        visibleCircles = circleCount - counter;
-      }
-      if(!isInViewport($("#circleListFooter").find(".dashboard-circle-list-make"))){
-        footerNotVisible = true;
-        isUnset = false;
-      } else {
-        footerNotVisible = false;
-      }
     }
 
     function changeTutorialContent(content_id) {
@@ -299,9 +280,29 @@ $(function () {
         $(".header-search").removeClass("open");
       }
       if($(window).height() !== lastHeight){
-        updateCircleCount();
+        lastHeight = $(window).height();
+        if(lastLeftContainerHeight !== lastHeight && psLeftSideContainer) {
+          console.log("not equal");
+          psLeftSideContainer.destroy();
+          $(".dashboard-circle-list-body-wrap").removeClass("clearfix");
+          $("#jsLeftSideContainer").css("height","100%");
+        }
+        var elements = $("#circleListBody").find(".dashboard-circle-list-row-wrap");
+        var counter = 0;
+        for(var i = 0; i < elements.length; i++){
+          if(!isInViewport(elements[i])) {
+            counter++;
+          }
+          if(counter > 0){
+            console.log("some invisibleCircles");
+            isUnset = false;
+          }
+          visibleCircles = circleCount - counter;
+        }
         if(!isUnset) {
-          if(visibleCircles !== circleCount || footerNotVisible){
+          footerNotVisible = !isInViewport($("#circleListFooter").find(".dashboard-circle-list-make"));
+          showMoreNotVisible = !isInViewport($("#showMoreCircles"));
+          if(visibleCircles !== circleCount) {
             $("#showMoreCircles").css("display","block");
             $(".left-side-container").css("overflow-y", "hidden");
             var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height() - 14;
@@ -312,7 +313,6 @@ $(function () {
             $("#circleListBody").css("height", setHeight + "px");
           }
         }
-        lastHeight = $(window).height();
       }
     });
     $("#NavSearchInputClear").off("click").on("click", function() {
@@ -355,20 +355,21 @@ $(function () {
       isUnset = true;
       $(".dashboard-circle-list-body-wrap").addClass("clearfix");
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
-      $(".left-side-container").css("overflow-y", "scroll");
+      // $("#jsLeftSideContainer").css("overflow-y", "scroll");
       var setHeight = 30 * circleCount + 1;
       $("#circleListBody").css("height", setHeight + "px");
-      $("#jsLeftSideContainer").css("height", ($(window).height() - $("#circleListFooter").height())+ "px");
-      $(".dashboard-circle-list-seek").css("margin-top", "0px");
-      $(".dashboard-circle-list-make").css("margin-top", "0px");
+      lastLeftContainerHeight = ($(window).height() - $("#circleListFooter").height());
+      $("#jsLeftSideContainer").css("height", lastLeftContainerHeight + "px");
+      // $(".dashboard-circle-list-seek").css("margin-top", "0px");
+      // $(".dashboard-circle-list-make").css("margin-top", "0px");
+       psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
+        swipePropagation: false,
+        wheelPropagation: false,
+        maxScrollbarLength: 0,
+        suppressScrollX: true,
+        suppressScrollY: false,
+      });
     });
-    // psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-    //   swipePropagation: false,
-    //   wheelPropagation: false,
-    //   maxScrollbarLength: 0,
-    //   suppressScrollX: true,
-    //   suppressScrollY: false,
-    // });
     psNavResults = new PerfectScrollbar('#NavSearchForm', {
       swipePropagation: false,
       wheelPropagation: false,
