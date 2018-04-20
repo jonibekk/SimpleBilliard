@@ -58,6 +58,19 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
+     * Testing decoding token created in different env
+     * @expectedException JwtException
+     */
+    function test_envDifferent()
+    {
+        $jwtToken = (new JwtAuthentication($userId = 1, $teamId = 1))
+                ->withEnvName('env_not_exists');
+        $token = $jwtToken->token();
+
+        JwtAuthentication::decode($token);
+    }
+
+    /**
      * @expectedException JwtSignatureException
      * @expectedExceptionMessage Signature verification failed
      */
@@ -109,7 +122,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtExpiredException
+     * @expectedException JwtOutOfTermException
      */
     function test_expire()
     {
@@ -122,7 +135,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtExpiredException
+     * @expectedException JwtOutOfTermException
      */
     function test_tokenIsNotVerified()
     {
