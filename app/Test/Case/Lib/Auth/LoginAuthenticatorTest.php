@@ -2,6 +2,7 @@
 
 App::uses('GoalousTestCase', 'Test');
 App::uses('LoginAuthenticator', 'Lib/Auth');
+App::uses('JwtAuthentication', 'Lib/Jwt');
 
 /**
  * Class JwtAuthenticationTest
@@ -38,23 +39,66 @@ class LoginAuthenticatorTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException AuthenticationNotManagedException
      */
-    function test_aaa()
+//    function testExceptionThrowsNotManaged()
+//    {
+//        // TODO: write test if new Redis class is created
+//        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
+//        $validTokenButNotInRedis = $jwtToken->token();
+//
+//        LoginAuthenticator::verify($validTokenButNotInRedis);
+//    }
+
+    /**
+     * @expectedException AuthenticationOutOfTermException
+     */
+    function testExceptionThrowsOnExpiredToken()
     {
-        // TODO:
-        LoginAuthenticator::auth('NOT_A_VALID_TOKEN');
+        $lastMonth = GoalousDateTime::now()->subMonth(1);
+        GoalousDateTime::setTestNow($lastMonth);
+
+        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
+        LoginAuthenticator::verify($loginAuthentication->token());
     }
 
+    /**
+     * @expectedException AuthenticationOutOfTermException
+     */
+    function testExceptionThrowsOnIssueBeforeStart()
+    {
+        $lastMonth = GoalousDateTime::now()->addDays(1);
+        GoalousDateTime::setTestNow($lastMonth);
+
+        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
+        LoginAuthenticator::verify($loginAuthentication->token());
+    }
+
+    /**
+     * @expectedException AuthenticationException
+     */
+    function testExceptionThrowsFailedSignification()
+    {
+        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
+        LoginAuthenticator::verify($loginAuthentication->token()."A");
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    function testExceptionThrowsOnInvalidToken()
+    {
+        LoginAuthenticator::verify('NOT_A_VALID_TOKEN');
+    }
 
     function testAuthorizeAndVerifyLogin()
     {
-        $loginAuthentication = LoginAuthenticator::authorize($userId = 1, $teamId = 2);
+        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
 
         $this->assertEquals($userId, $loginAuthentication->getUserId());
         $this->assertEquals($teamId, $loginAuthentication->getTeamId());
 
-        $loginAgainAuthentication = LoginAuthenticator::auth($loginAuthentication->token());
+        $loginAgainAuthentication = LoginAuthenticator::verify($loginAuthentication->token());
 
         $this->assertSame($loginAuthentication->getUserId(), $loginAgainAuthentication->getUserId());
         $this->assertSame($loginAuthentication->getTeamId(), $loginAgainAuthentication->getTeamId());
