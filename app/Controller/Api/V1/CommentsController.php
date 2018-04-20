@@ -140,7 +140,7 @@ class CommentsController extends ApiController
         $comments = array($ApiCommentService->get($id));
 
         $notifyUsers = $this->Mention->getUserList(Hash::get($comments[0], 'Comment.body'), $this->current_team_id, $this->my_uid);
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_EDITED_COMMENT, Hash::get($comments[0], 'Comment.post_id'), $id, $notifyUsers);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, Hash::get($comments[0], 'Comment.post_id'), $id, $notifyUsers);
         $this->set(compact('comments'));
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';

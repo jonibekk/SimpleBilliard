@@ -54,7 +54,7 @@ class NotifySetting extends AppModel
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
     const TYPE_EVALUATOR_SET_TO_COACH = 41;  
     const TYPE_FEED_MENTIONED_IN_COMMENT = 42;
-    const TYPE_FEED_MENTIONED_IN_EDITED_COMMENT = 43;
+    const TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION = 43;
 
     /**
      * @var array
@@ -106,15 +106,15 @@ class NotifySetting extends AppModel
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in_comment',
-            'icon_class'      => 'fa-comment-o',
+            'icon_class'      => 'fa-circle-o',
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_MENTIONED_IN_EDITED_COMMENT                 => [
+        self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in_comment',
-            'icon_class'      => 'fa-comment-o',
+            'icon_class'      => 'fa-key',
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
@@ -735,18 +735,8 @@ class NotifySetting extends AppModel
                         h($target_user_name));
                 }
                 break;
-            case self::TYPE_FEED_MENTIONED_IN_EDITED_COMMENT:
-                if ($is_plain_mode) {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> edited a comment you are mentioned. ',
-                        $user_text);
-                } else {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> edited a comment you are mentioned. ',
-                        h($user_text));
-                }
-                break;
             case self::TYPE_FEED_MENTIONED_IN_COMMENT:
+            case self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION:
                 if ($is_plain_mode) {
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
