@@ -185,7 +185,7 @@ function hideKeyboard(element) {
 }
 
 var psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset;
-
+isUnset = false;
 $(function () {
     var current_slide_id = 1;
 
@@ -221,27 +221,17 @@ $(function () {
       },
       appear: function appear(el){
         invisibleCircles--;
-        $(el).css("display","flex");
-        console.log('visible', el);
-        if(invisibleCircles === 0){
-          $("#showMoreCircles").css("display","none");
-          console.log("All visible");
-        } else {
-          $("#showMoreCircles").css("display","block");
-        }
         visibleCircles = circleCount - invisibleCircles;
       },
       disappear: function disappear(el){
         isUnset = false;
         invisibleCircles++;
-        $(el).hide();
-        console.log('no longer visible', el);
-        $("#showMoreCircles").css("display","block");
         visibleCircles = circleCount - invisibleCircles;
       },
       bounds: 0,
-      reappear: false,
-
+      reappear: true,
+      deltaSpeed: 50,
+      deltaTimeout: 50,
     });
 
     function changeTutorialContent(content_id) {
@@ -304,15 +294,18 @@ $(function () {
       if($(window).height() !== lastHeight){
         if(!isUnset) {
           lastHeight = $(window).height();
-          $(".dashboard-circle-list-footer").css("position", "absolute");
           $(".left-side-container").css("overflow-y", "hidden");
-          var setHeight = visibleCircles * 30 + 1 -72 + 8 + 8 - 20;
+          var setHeight = visibleCircles * 30 - 99;
           $(".dashboard-circle-list-body-wrap").css("height", setHeight + "px");
           $("#circleListBody").css("height", setHeight + "px");
-          $("#jsLeftSideContainer").css("height", "100%");
-          $(".dashboard-circle-list-seek").css("margin-top", "14px");
-          $(".dashboard-circle-list-make").css("margin-top", "38px");
           circleList.trigger();
+          if(visibleCircles === circleCount){
+            $("#circleListBody").find(".dashboard-circle-list-row-wrap").css("display","flex");
+            $("#showMoreCircles").css("display","none");
+            console.log("All visible");
+          } else {
+            $("#showMoreCircles").css("display","block");
+          }
         }
       }
     });
@@ -354,15 +347,15 @@ $(function () {
     $("#showMoreCircles").off("click").on("click", function(e) {
       e.preventDefault();
       $(this).hide();
+      $("#circleListBody").find(".dashboard-circle-list-row-wrap").css("display","flex");
       $(".dashboard-circle-list-body-wrap").toggleClass("clearfix");
       isUnset = true;
-      var setHeight = 30 * circleCount + 1;
+      
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
-      $("#circleListBody").css("height", "min-content");
-      $(".dashboard-circle-list-footer").css("position", "relative");
       $(".left-side-container").css("overflow-y", "scroll");
-      var leftHeight = $(window).height() + 100;
-      $("#jsLeftSideContainer").css("height", leftHeight + "px");
+      var setHeight = 30 * circleCount - $("#circleListFooter").height() + 1;
+      $("#circleListBody").css("height", setHeight + "px");
+      $("#jsLeftSideContainer").css("height", $(window).height() + "px");
       $(".dashboard-circle-list-seek").css("margin-top", "0px");
       $(".dashboard-circle-list-make").css("margin-top", "0px");
     });
@@ -402,6 +395,8 @@ $(function () {
     });
     $(window).trigger('resize');
     adjustRightHeaderPosition();
+    var setHeight = visibleCircles * 30 - 99;
+    $("#circleListBody").css("height", setHeight + "px");
 });
 
 

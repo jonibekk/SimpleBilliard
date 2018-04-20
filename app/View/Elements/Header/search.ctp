@@ -1,3 +1,4 @@
+<?= $this->App->viewStartComment() ?>
 <div class="header-search-toggle">
     <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group panel panel-default" role="search" autocomplete="off">
         <div class="searchBoxMain">
@@ -37,3 +38,4 @@
     </form>
 </div>
 <div class="header-white-bg"></div>
+<?= $this->App->viewEndComment() ?>
