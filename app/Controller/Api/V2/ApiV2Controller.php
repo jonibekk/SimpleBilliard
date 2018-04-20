@@ -45,6 +45,36 @@ class ApiV2Controller extends Controller
     }
 
     /**
+     * Set HTTP header to disable PHP caching function
+     */
+    private function _disablePHPCache()
+    {
+        $this->setHeader("Cache-Control: no-store, no-cache, max-age=0");
+        $this->setHeader("Pragma: no-cache");
+    }
+
+    /**
+     * Set HTTP header for response
+     *
+     * @param string $value
+     */
+    public function setHeader($value)
+    {
+        header($value);
+    }
+
+    /**
+     * Perform user authentication using JWT Token method
+     *
+     * @return bool TRUE = user successfully authenticated
+     */
+    private function _authenticateUser(): bool
+    {
+        //TODO set user & team ID
+        return true;
+    }
+
+    /**
      * Initialize current team's status based on current user's team ID
      */
     private function _initializeTeamStatus()
@@ -69,12 +99,53 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Set HTTP header to disable PHP caching function
+     * Return HTTP CODE 400: Bad request
+     *
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
      */
-    private function _disablePHPCache()
-    {
-        header("Cache-Control: no-store, no-cache, max-age=0");
-        header("Pragma: no-cache");
+    protected function returnResponseBadRequest(
+        array $data = [],
+        string $message = null,
+        string $exceptionTrace = null
+    ) {
+        return $this->_getResponse(400, $data, $message, $exceptionTrace);
+    }
+
+    /**
+     * Create CakeResponse object to be returned to the client
+     *
+     * @param integer           $httpStatusCode HTTP status code of the response
+     * @param array|string|null $data           Data do be returned to the client
+     * @param string|null       $message        Additional message to be sent
+     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
+     */
+    private function _getResponse(
+        int $httpStatusCode,
+        $data = null,
+        string $message = null,
+        string $exceptionTrace = null
+    ) {
+        $ret = [];
+        if ($data !== null) {
+            $ret['data'] = $data;
+        }
+        if ($message !== null) {
+            $ret['message'] = $message;
+        }
+        if ($exceptionTrace !== null) {
+            $ret['exception_trace'] = $exceptionTrace;
+        }
+        $this->response->type('json');
+        $this->response->body(json_encode($ret));
+        $this->response->statusCode($httpStatusCode);
+
+        return $this->response;
     }
 
     /**
@@ -92,17 +163,6 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Perform user authentication using JWT Token method
-     *
-     * @return bool TRUE = user successfully authenticated
-     */
-    private function _authenticateUser(): bool
-    {
-        //TODO set user & team ID
-        return true;
-    }
-
-    /**
      * Return HTTP CODE 200: Success
      *
      * @param array|string|null $data           Data do be returned to the client
@@ -117,23 +177,6 @@ class ApiV2Controller extends Controller
         string $exceptionTrace = null
     ) {
         return $this->_getResponse(200, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Return HTTP CODE 400: Bad request
-     *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseBadRequest(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(400, $data, $message, $exceptionTrace);
     }
 
     /**
@@ -202,38 +245,5 @@ class ApiV2Controller extends Controller
         string $exceptionTrace = null
     ) {
         return $this->_getResponse(500, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Create CakeResponse object to be returned to the client
-     *
-     * @param integer           $httpStatusCode HTTP status code of the response
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    private function _getResponse(
-        int $httpStatusCode,
-        $data = null,
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        $ret = [];
-        if ($data !== null) {
-            $ret['data'] = $data;
-        }
-        if ($message !== null) {
-            $ret['message'] = $message;
-        }
-        if ($exceptionTrace !== null) {
-            $ret['exception_trace'] = $exceptionTrace;
-        }
-        $this->response->type('json');
-        $this->response->body(json_encode($ret));
-        $this->response->statusCode($httpStatusCode);
-
-        return $this->response;
     }
 }
