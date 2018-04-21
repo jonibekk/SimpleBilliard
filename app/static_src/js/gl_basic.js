@@ -221,11 +221,14 @@ $(function () {
     }
 
     function isInViewport (element) {
-      var elementTop = $(element).offset().top;
-      var elementBottom = elementTop + $(element).outerHeight();
-      var viewportTop = $(window).scrollTop();
-      var viewportBottom = viewportTop + $(window).height();
-      return elementBottom > viewportTop && elementTop < viewportBottom;
+      if($(element).length){
+        var elementTop = $(element).offset().top;
+        var elementBottom = elementTop + $(element).outerHeight();
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+      }
+      return true;
     }
 
     function updateSearchPosition(){
@@ -270,7 +273,16 @@ $(function () {
       setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
     });
-
+    $(".header-icon-zoom").not(".header-icon-search-toggle,.header-icon-search").off("click").on("click", function() {
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("open");
+        $(".header-search").removeClass("open");
+    });
     $(window).on('resize load pageshow', function(){
       if($(window).width() !== lastWidth){
         lastWidth = $(window).width();

@@ -841,27 +841,35 @@ span.deleteicon input {
     float: left;
 }
 
-.header-dropdown-add.open ul{
-    position: absolute !important;
-    z-index: 100 !important;
-    display: inline-block !important;
-    background-color: #ffffff !important;
-    border: 1px solid #cccccc !important;
-    border: 1px solid rgba(0, 0, 0, 0.15) !important;
-    border-radius: 4px !important;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
-    background-clip: padding-box !important;
+.visible-xxs-inline-block,
+.visible-xs-inline-block,
+.visible-sm-inline-block,
+.visible-md-inline-block,
+.visible-lg-inline-block {
+  display: none !important;
 }
-.header-dropdown-functions.open ul{
-    position: absolute !important;
-    z-index: 100 !important;
+@media (max-width: 479px) {
+  .visible-xxs-inline-block {
     display: inline-block !important;
-    background-color: #ffffff !important;
-    border: 1px solid #cccccc !important;
-    border: 1px solid rgba(0, 0, 0, 0.15) !important;
-    border-radius: 4px !important;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
-    background-clip: padding-box !important;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .visible-xs-inline-block {
+    display: inline-block !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .visible-sm-inline-block {
+    display: inline-block !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .visible-md-inline-block {
+    display: inline-block !important;
+  }
+}
+@media (min-width: 1200px) {
+  .visible-lg-inline-block {
+    display: inline-block !important;
+  }
 }

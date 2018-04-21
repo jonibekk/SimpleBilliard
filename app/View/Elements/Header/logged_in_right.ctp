@@ -25,8 +25,15 @@
             <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
         </div>
     <?php else: ?>
-        <div class="header-icon-search header-icon-zoom">
-            <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+        <div class="hidden-xxs visible-xs-inline-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block">
+            <div class="header-icon-search header-icon-zoom">
+                <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+            </div>
+        </div>
+        <div class="visible-xxs-inline-block hidden-xs hidden-sm hidden-md hidden-lg">
+            <div class="header-icon-search-toggle header-icon-zoom">
+                <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+            </div>
         </div>
     <?php endif; ?>
 
