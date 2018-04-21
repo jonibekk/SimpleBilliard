@@ -228,6 +228,10 @@ $(function () {
       return elementBottom > viewportTop && elementTop < viewportBottom;
     }
 
+    function updateSearchPosition(){
+      $("#NavSearchForm").css("right", (($("#goalousNavigation").width() - $("#navigationWrapper").width() - $(".header-right-navigations").width()) / 2) + "px");
+    }
+
     function changeTutorialContent(content_id) {
         // 各要素をカレントステータスに設定
         $('.tutorial-box' + content_id).show();
@@ -278,6 +282,7 @@ $(function () {
         $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
+        updateSearchPosition();
       }
       if($(window).height() !== lastHeight){
         lastHeight = $(window).height();
