@@ -77,11 +77,11 @@
         <li class="circle-list-in-hamburger visible-xxs hidden-xs">
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
-        <div class="floatcontainer">
-            <div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> hidden-xxs hidden-xs visible-sm visible-md visible-lg clearfix" xmlns="http://www.w3.org/1999/html">
-                <?= $this->element('Header/logged_in_right'); ?>
-            </div>
-            <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
-        </div>
     </ul>
+    <div class="float-left-container">
+        <div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> hidden-xxs hidden-xs visible-sm visible-md visible-lg clearfix" xmlns="http://www.w3.org/1999/html">
+            <?= $this->element('Header/logged_in_right'); ?>
+        </div>
+        <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
+    </div>
 </div>
