@@ -273,7 +273,7 @@ $(function () {
       setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
     });
-    $(".header-icon-zoom").not(".header-icon-search-toggle,.header-icon-search").off("click").on("click", function() {
+    $(".header-dropdown-add,.header-dropdown-functions").off("click").on("click", function() {
         $("#NavSearchResults").empty();
         $("#NavSearchResults").hide();
         $("#NavSearchResultsToggle").empty();
