@@ -3,7 +3,6 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
-App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
 
 /**
  * Class JwtAuthenticationTest
@@ -26,9 +25,6 @@ class AccessAuthenticatorTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
-
-        $client = new AccessTokenClient();
-        $client->del(new AccessTokenKey('*', '*', '*'));
     }
 
     /**
@@ -42,75 +38,17 @@ class AccessAuthenticatorTest extends GoalousTestCase
         GoalousDateTime::setTestNow();
     }
 
-    function testCheckTokenStoredInRedis()
-    {
-        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
-
-        $client = new AccessTokenClient();
-        $this->assertCount(1, $client->keys(new AccessTokenKey('*', '*', '*')));
-
-        // add three more token to users.id = 2 to several teams.id
-        for ($teamId = 1; $teamId < 4; $teamId++) {
-            AccessAuthenticator::publish($userId = 2, $teamId);
-        }
-
-        $this->assertCount(4, $client->keys(new AccessTokenKey('*', '*', '*')));
-        $this->assertCount(1, $client->keys(new AccessTokenKey(1, '*', '*')));
-        $this->assertCount(3, $client->keys(new AccessTokenKey(2, '*', '*')));
-
-        for ($teamId = 1; $teamId < 4; $teamId++) {
-            $this->assertCount(1, $client->keys(new AccessTokenKey(2, $teamId, '*')));
-        }
-    }
-
-    function testTtlLeftInRedis()
-    {
-        GoalousDateTime::setTestNow(GoalousDateTime::now());
-        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
-        $validTokenButNotInRedis = $authorizedAccessInfo->token();
-        $jwtAuth = $authorizedAccessInfo->getJwtAuthentication();
-
-        $client = new AccessTokenClient();
-        $key = new AccessTokenKey(
-            $authorizedAccessInfo->getUserId(),
-            $authorizedAccessInfo->getTeamId(),
-            $jwtAuth->getJwtId()
-        );
-
-        // Calling from \Redis class, ttl will not use in code currently
-        $ttl = $client->getRedis()->ttl($key->get());
-        $this->assertTrue(is_int($ttl));
-    }
-
     /**
      * @expectedException AuthenticationNotManagedException
      */
-    function testExceptionThrowsNotManaged()
-    {
-        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
-        $validTokenButNotInRedis = $authorizedAccessInfo->token();
-        $jwtAuth = $authorizedAccessInfo->getJwtAuthentication();
-
-        // This verify() will not throw any error
-        try {
-            AccessAuthenticator::verify($validTokenButNotInRedis);
-            $this->assertTrue(true);
-        } catch (Throwable $e) {
-            $this->assertTrue(false);
-        }
-
-        // Deleting the registered token in the Redis
-        $client = new AccessTokenClient();
-        $deletedCount = $client->del(new AccessTokenKey(
-            $authorizedAccessInfo->getUserId(),
-            $authorizedAccessInfo->getTeamId(),
-            $jwtAuth->getJwtId()
-        ));
-        $this->assertEquals(1, $deletedCount);
-
-        // verify will throw exception
-        AccessAuthenticator::verify($validTokenButNotInRedis);
-    }
+//    function testExceptionThrowsNotManaged()
+//    {
+//        // TODO: write test if new Redis class is created
+//        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
+//        $validTokenButNotInRedis = $jwtToken->token();
+//
+//        AccessAuthenticator::verify($validTokenButNotInRedis);
+//    }
 
     /**
      * @expectedException AuthenticationOutOfTermException
@@ -164,26 +102,10 @@ class AccessAuthenticatorTest extends GoalousTestCase
 
         $this->assertSame($authorizedAccessInfo->getUserId(), $authorizedAccessInfo2->getUserId());
         $this->assertSame($authorizedAccessInfo->getTeamId(), $authorizedAccessInfo2->getTeamId());
-        $this->assertSame($authorizedAccessInfo->getEnvName(), $authorizedAccessInfo2->getEnvName());
         $this->assertSame($authorizedAccessInfo->token(), $authorizedAccessInfo2->token());
-
         $this->assertSame(
             $authorizedAccessInfo->getJwtAuthentication()->getJwtId(),
             $authorizedAccessInfo2->getJwtAuthentication()->getJwtId()
         );
-    }
-
-    function testTokenShouldNotChangeWhenCurrentDateChanged()
-    {
-        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
-        $token = $authorizedAccessInfo->token();
-        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
-        $this->assertSame($token, $authorizedAccessInfo->token());
-
-        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
-        $this->assertSame($token, $authorizedAccessInfo->token());
-
-        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
-        $this->assertSame($token, $authorizedAccessInfo->token());
     }
 }

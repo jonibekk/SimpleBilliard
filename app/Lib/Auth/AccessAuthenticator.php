@@ -5,7 +5,6 @@ App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('AuthenticationException', 'Lib/Auth/Exception');
 App::uses('AuthenticationOutOfTermException', 'Lib/Auth/Exception');
 App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
-App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
 
 /**
  * Class AccessAuthenticator
@@ -20,7 +19,7 @@ App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
  *     //   1. Verify the JWT token
  *     //   2. Check JWT token in Redis
  *     //   3. Return user authentication info
- *     $authorizedAccessInfo = AccessAuthenticator::verify($authorizationBearer);
+ *     $loginAuthentication = AccessAuthenticator::verify($authorizationBearer);
  * } catch (AuthenticationOutOfTermException $e) {
  *     // If token has expired
  * } catch (AuthenticationNotManagedException $e) {
@@ -29,9 +28,9 @@ App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
  *     // If failed on verify authorization bearer token
  * }
  * // Login verify succeed
- * $authorizedAccessInfo->getUserId(); // return users.id
- * $authorizedAccessInfo->getTeamId(); // return teams.id
- * $authorizedAccessInfo->token();     // return token string
+ * $loginAuthentication->getUserId(); // return users.id
+ * $loginAuthentication->getTeamId(); // return teams.id
+ * $loginAuthentication->token();     // return token string
  * ```
  *
  * ```php
@@ -41,12 +40,12 @@ App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
  * //   2. Save JWT token into Redis
  * //     @see https://confluence.goalous.com/display/GOAL/API+v2+Authentication#APIv2Authentication-RediskeyofJWTtoken
  * //   3. Return user authentication info
- * $authorizedAccessInfo = AccessAuthenticator::publish($userId, $teamId);
+ * $loginAuthentication = AccessAuthenticator::publish($userId, $teamId);
  *
  * // Creating login token succeed
- * $authorizedAccessInfo->getUserId(); // return users.id
- * $authorizedAccessInfo->getTeamId(); // return teams.id
- * $authorizedAccessInfo->token();     // return token string
+ * $loginAuthentication->getUserId(); // return users.id
+ * $loginAuthentication->getTeamId(); // return teams.id
+ * $loginAuthentication->token();     // return token string
  * ```
  */
 class AccessAuthenticator
@@ -64,15 +63,12 @@ class AccessAuthenticator
     public static function verify(string $authorizationBearer): AuthorizedAccessInfo {
         try {
             $jwtAuth = JwtAuthentication::decode($authorizationBearer);
-
-            // Check in the cache key is exist or not
-            $cacheClient = new AccessTokenClient();
-            $cacheKey = new AccessTokenKey($jwtAuth->getUserId(), $jwtAuth->getTeamId(), $jwtAuth->getJwtId());
-            $cachedAuthorizedData = $cacheClient->read($cacheKey);
-            if (is_null($cachedAuthorizedData)) {
+            $token = $jwtAuth->token();
+            if ($ifTokenIsNotInRedis = false) {
+                // TODO: Check $token in Redis
+                // Write process after flexible Redis write/read class is created
                 throw new AuthenticationNotManagedException();
             }
-
             return new AuthorizedAccessInfo($jwtAuth);
         } catch (JwtSignatureException $exception) {
             throw new AuthenticationException($exception->getMessage());
@@ -89,24 +85,13 @@ class AccessAuthenticator
      * @param int $userId
      * @param int $teamId
      *
-     * @throws AuthenticationException
-     *
      * @return AuthorizedAccessInfo
      */
     public static function publish(int $userId, int $teamId): AuthorizedAccessInfo {
-        $jwtAuth = new JwtAuthentication($userId, $teamId);
-
-        // build token information
-        $jwtAuth->token();
-
-        // Store token into cache
-        $cacheClient = new AccessTokenClient();
-        $cacheKey = new AccessTokenKey($jwtAuth->getUserId(), $jwtAuth->getTeamId(), $jwtAuth->getJwtId());
-        $cachedAuthorizedData = (new AccessTokenData())->withTimeToLive($jwtAuth->expireInSeconds());
-        if (!$cacheClient->write($cacheKey, $cachedAuthorizedData)) {
-            throw new AuthenticationException('failed to cache token');
-        }
-
-        return new AuthorizedAccessInfo($jwtAuth);
+        $jwtAuthentication = new JwtAuthentication($userId, $teamId);
+        $newToken = $jwtAuthentication->token();
+        // TODO: save $newToken into Redis
+        // Write process after flexible Redis write/read class is created
+        return new AuthorizedAccessInfo(new JwtAuthentication($userId, $teamId));
     }
 }
