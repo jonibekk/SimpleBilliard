@@ -7,7 +7,7 @@
                 <input type="text"
                        id="NavSearchInputToggle"
                        maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                       class="searchBox-input-main disable-change-warning"
+                       class="searchBox-input-main disable-change-warning <?= $is_mb_app ? "mb-hide-keyboard-on-enter" : "" ?>"
                        placeholder='<?= __("Search Members, Goals, Circles") ?>'>
                 <i id="NavSearchInputClearToggle" class="fa fa-times search-header-icon"></i>
             </span>

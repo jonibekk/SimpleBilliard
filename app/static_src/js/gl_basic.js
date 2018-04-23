@@ -263,8 +263,6 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      $(".header-icon-search-toggle").css("color","#505050");
-      $(".header-icon-search-toggle").css("transform","scale(1.0)");
       setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       hideNav();
     });
@@ -278,8 +276,6 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      $(".header-icon-search").css("color","#505050");
-      $(".header-icon-search").css("transform","scale(1.0)");
       setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
     });
@@ -354,13 +350,13 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    // $("#NavSearchInput,#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
-    //   if(e.keyCode === 13){
-    //     if(document.activeElement) {
-    //         document.activeElement.blur();
-    //     } 
-    //   }
-    // });
+    $(".mb-hide-keyboard-on-enter").off("keyup").on("keyup", function(e) {
+      if(e.keyCode === 13){
+        if(document.activeElement) {
+            document.activeElement.blur();
+        } 
+      }
+    });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
         $("#NavSearchResults").empty();
         $("#NavSearchResults").hide();
