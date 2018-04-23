@@ -19,7 +19,7 @@ App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
  *     //   1. Verify the JWT token
  *     //   2. Check JWT token in Redis
  *     //   3. Return user authentication info
- *     $loginAuthentication = AccessAuthenticator::verify($authorizationBearer);
+ *     $authorizedAccessInfo = AccessAuthenticator::verify($authorizationBearer);
  * } catch (AuthenticationOutOfTermException $e) {
  *     // If token has expired
  * } catch (AuthenticationNotManagedException $e) {
@@ -28,9 +28,9 @@ App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
  *     // If failed on verify authorization bearer token
  * }
  * // Login verify succeed
- * $loginAuthentication->getUserId(); // return users.id
- * $loginAuthentication->getTeamId(); // return teams.id
- * $loginAuthentication->token();     // return token string
+ * $authorizedAccessInfo->getUserId(); // return users.id
+ * $authorizedAccessInfo->getTeamId(); // return teams.id
+ * $authorizedAccessInfo->token();     // return token string
  * ```
  *
  * ```php
@@ -40,12 +40,12 @@ App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
  * //   2. Save JWT token into Redis
  * //     @see https://confluence.goalous.com/display/GOAL/API+v2+Authentication#APIv2Authentication-RediskeyofJWTtoken
  * //   3. Return user authentication info
- * $loginAuthentication = AccessAuthenticator::publish($userId, $teamId);
+ * $authorizedAccessInfo = AccessAuthenticator::publish($userId, $teamId);
  *
  * // Creating login token succeed
- * $loginAuthentication->getUserId(); // return users.id
- * $loginAuthentication->getTeamId(); // return teams.id
- * $loginAuthentication->token();     // return token string
+ * $authorizedAccessInfo->getUserId(); // return users.id
+ * $authorizedAccessInfo->getTeamId(); // return teams.id
+ * $authorizedAccessInfo->token();     // return token string
  * ```
  */
 class AccessAuthenticator
