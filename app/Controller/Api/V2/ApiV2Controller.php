@@ -99,29 +99,12 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Return HTTP CODE 400: Bad request
-     *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseBadRequest(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(400, $data, $message, $exceptionTrace);
-    }
-
-    /**
      * Create CakeResponse object to be returned to the client
      *
-     * @param integer           $httpStatusCode HTTP status code of the response
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     * @param integer     $httpStatusCode HTTP status code of the response
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
      *
      * @return CakeResponse
      */
@@ -165,9 +148,9 @@ class ApiV2Controller extends Controller
     /**
      * Return HTTP CODE 200: Success
      *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
      *
      * @return CakeResponse
      */
@@ -180,11 +163,28 @@ class ApiV2Controller extends Controller
     }
 
     /**
+     * Return HTTP CODE 400: Bad request
+     *
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
+     *
+     * @return CakeResponse
+     */
+    protected function returnResponseBadRequest(
+        array $data = [],
+        string $message = null,
+        string $exceptionTrace = null
+    ) {
+        return $this->_getResponse(400, $data, $message, $exceptionTrace);
+    }
+
+    /**
      * Return HTTP CODE 403: Forbidden
      *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
      *
      * @return CakeResponse
      */
@@ -197,11 +197,11 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Return HTTP CODE 404: Forbidden
+     * Return HTTP CODE 404: Not found
      *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
      *
      * @return CakeResponse
      */
@@ -214,11 +214,11 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Return HTTP CODE 409: Forbidden
+     * Return HTTP CODE 409: Resource conflict
      *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
      *
      * @return CakeResponse
      */
@@ -231,11 +231,11 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Return HTTP CODE 500: Forbidden
+     * Return HTTP CODE 500: Internal server error
      *
-     * @param array|string|null $data           Data do be returned to the client
-     * @param string|null       $message        Additional message to be sent
-     * @param string|null       $exceptionTrace Any trace if an exception occurs
+     * @param array|null  $data           Data do be returned to the client
+     * @param string|null $message        Additional message to be sent
+     * @param string|null $exceptionTrace Any trace if an exception occurs
      *
      * @return CakeResponse
      */
