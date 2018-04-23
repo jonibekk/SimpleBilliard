@@ -64,4 +64,26 @@ class UserService extends AppService
 
         return $newUsers;
     }
+
+    /**
+     * Update default_team_id of specified users.id
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function updateDefaultTeam(int $userId, int $teamId): bool
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $User->id = $userId;
+        if ($User->save([
+            'id' => $userId,
+            'default_team_id' => $teamId,
+        ])) {
+            return true;
+        }
+        return false;
+    }
 }
