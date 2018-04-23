@@ -32,7 +32,6 @@ class ApiV2Controller extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->_disablePHPCache();
 
         if ($this->_authenticateUser()) {
             $this->_initializeTeamStatus();
@@ -127,6 +126,7 @@ class ApiV2Controller extends Controller
         $this->response->type('json');
         $this->response->body(json_encode($ret));
         $this->response->statusCode($httpStatusCode);
+        $this->_disablePHPCache();
 
         return $this->response;
     }
