@@ -132,20 +132,6 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Check whether user is an admin in current team
-     */
-    protected function isAdmin(): bool
-    {
-        if (empty($this->_currentUser['id']) || empty ($this->teamId)) {
-            return false;
-        }
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
-        return $TeamMember->isActiveAdmin($this->_currentUser['id'], $this->_currentTeamId);
-    }
-
-    /**
      * Return HTTP CODE 200: Success
      *
      * @param array|null  $data           Data do be returned to the client
