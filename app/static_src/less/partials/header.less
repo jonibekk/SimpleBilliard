@@ -286,15 +286,16 @@
   }
 }
 
-.header-icon-search,
-.header-icon-search-toggle {
-  cursor: pointer;
+.header-icon-zoom .header-icons {
+  transform: scale(1);
+  transition: transform .3s, color .3s;
 }
 
-.header-icon-search .fa-search.header-icons.header-icon-zoom:hover,
-.header-icon-search-toggle .fa-search.header-icons.header-icon-zoom:hover {
-  transform: scale(1.2);
-  color: @goalous;
+.header-icon-zoom a:hover {
+  .header-icons {
+    transform: scale(1.2);
+    color: @goalous;
+  }
 }
 
 .header-right-navigations {

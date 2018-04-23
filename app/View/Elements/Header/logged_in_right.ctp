@@ -22,17 +22,23 @@
 
     <?php if($is_mb_app): ?>
         <div class="header-icon-search-toggle header-icon-zoom">
-            <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+            <a href="#">
+                <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+            </a>
         </div>
     <?php else: ?>
         <div class="hidden-xxs visible-xs-inline-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block">
             <div class="header-icon-search header-icon-zoom">
-                <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                <a href="#">
+                    <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                </a>
             </div>
         </div>
         <div class="visible-xxs-inline-block hidden-xs hidden-sm hidden-md hidden-lg">
             <div class="header-icon-search-toggle header-icon-zoom">
-                <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                <a href="#">
+                    <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                </a>
             </div>
         </div>
     <?php endif; ?>
