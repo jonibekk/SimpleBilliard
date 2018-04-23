@@ -1383,6 +1383,27 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span> が自分の評価者を設定しま"
 "した。"
 
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has commented on your "
+"goal."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> があなたのゴールにコメン"
+"トしました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has commented on his/her "
+"Goal."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> が自分のゴールにコメント"
+"しました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has commented on <span "
+"class=\"notify-card-head-target\">%2$s</span>'s Goal."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>のゴールにコメントしました。"
+
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -1999,13 +2020,9 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
 
-msgid "Edit Circles"
-msgstr "サークル編集"
+msgid "Manage Circles"
+msgstr "サークル管理"
 
-#, fuzzy
-#| msgid ""
-#| "You can pin a circle to the top as a sortable list. \"All Team\" will "
-#| "automatically be your top pin."
 msgid ""
 "You can pin a circle to the top as a sortable list. *Entire Team* circle "
 "will automatically be your top pin."
@@ -3173,8 +3190,8 @@ msgstr "保存済みアイテムを削除しました"
 msgid "Circles"
 msgstr "サークル"
 
-msgid "Edit"
-msgstr "編集"
+msgid "Manage"
+msgstr "管理"
 
 msgid "View Circles"
 msgstr "サークルを見る"
@@ -3612,6 +3629,9 @@ msgstr "KRを削除する"
 
 msgid "Do you really want to delete this Key Result?"
 msgstr "本当にこのKRを削除しますか？"
+
+msgid "Edit"
+msgstr "編集"
 
 msgid "Post an action"
 msgstr "アクションを追加する"
@@ -6230,6 +6250,9 @@ msgstr "認定ステータス: %s"
 
 #~ msgid "You can mention to no one here."
 #~ msgstr "ここではメンションできません。"
+
+#~ msgid "Edit Circles"
+#~ msgstr "サークル編集"
 
 #~ msgid "Pinned"
 #~ msgstr "ピン済み"

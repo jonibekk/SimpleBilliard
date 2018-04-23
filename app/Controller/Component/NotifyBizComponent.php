@@ -3,6 +3,7 @@ App::uses('ModelType', 'Model');
 App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('Post', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'PushService');
 
@@ -125,9 +126,17 @@ class NotifyBizComponent extends Component
      * @param null $to_user_list
      * @param      $user_id
      * @param      $team_id
+     * @param int  $postId
      */
-    function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
-    {
+    function sendNotify(
+        $notify_type,
+        $model_id,
+        $sub_model_id = null,
+        $to_user_list = null,
+        $user_id,
+        $team_id,
+        int $postId = null
+    ) {
         $this->notify_option['from_user_id'] = $user_id;
         $this->notify_option['options']['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);
@@ -248,6 +257,12 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_EVALUATOR_SET_TO_EVALUATEE:
                 $this->_setAddedEvaluatorToEvaluatee($team_id, $to_user_list, $user_id);
+                break;
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL:
+                $this->_setFeedCommentedOnGoal($team_id, $user_id, $to_user_list, $postId);
+                break;
+            case NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
+                $this->_setFeedCommentedOnCommentedGoal($team_id, $user_id, $to_user_list, $postId);
                 break;
             default:
                 break;
@@ -1007,6 +1022,66 @@ class NotifyBizComponent extends Component
         ];
         $this->NotifySetting->current_team_id = $teamId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $coachId);
+    }
+
+    /**
+     * @param int   $teamId
+     * @param int   $commenterUserId
+     * @param array $toUserList
+     * @param int   $postId
+     */
+    private function _setFeedCommentedOnGoal(int $teamId, int $commenterUserId, array $toUserList, int $postId)
+    {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+            NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL;
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $postId
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+        $this->notify_option['options'] = [
+            'commenter_user_id' => $commenterUserId,
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+    }
+
+    /**
+     * @param int   $teamId
+     * @param int   $commenterUserId
+     * @param array $toUserList
+     * @param int   $postId
+     */
+    private function _setFeedCommentedOnCommentedGoal(
+        int $teamId,
+        int $commenterUserId,
+        array $toUserList,
+        int $postId
+    ) {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+            NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL;
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $postId
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $this->notify_option['options'] = [
+            'commenter_user_id'  => $commenterUserId,
+            'post_owner_user_id' => $Post->getById($postId)['user_id']
+        ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
     }
 
     /**

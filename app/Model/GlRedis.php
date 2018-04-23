@@ -736,6 +736,7 @@ class GlRedis extends AppModel
             }
             if (!key_exists('id', $v)) {
                 GoalousLog::error('Empty notification content:', $v);
+                unset($pipe_res[$k]);
                 continue;
             }
             $score = $notify_list[$v['id']];
@@ -807,7 +808,7 @@ class GlRedis extends AppModel
                 ['limit' => [1, $limit], 'withscores' => true]);
         }
         if (empty($notify_list)) {
-            return $notify_list;
+            return [];
         }
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
@@ -816,8 +817,13 @@ class GlRedis extends AppModel
         }
         $pipe_res = $pipe->exec();
         foreach ($pipe_res as $k => $v) {
-            if (!key_exists('id', $v)) {
+            if (empty($v)) {
+                GoalousLog::error('Empty notification content:', $pipe_res);
+                unset($pipe_res[$k]);
+                continue;
+            } elseif (!key_exists('id', $v)) {
                 GoalousLog::error('Empty notification content:', $v);
+                unset($pipe_res[$k]);
                 continue;
             }
             $score = $notify_list[$v['id']];
@@ -829,16 +835,17 @@ class GlRedis extends AppModel
 
             }
         }
-        return $pipe_res;
+        return array_values($pipe_res);
     }
 
     /**
-     * @param      $user_id
-     * @param null $ip_address
+     * @param    int|string    $userId
+     * @param    $ipAddress
      *
      * @return bool|string
+     * @throws Exception
      */
-    function makeDeviceHash($user_id, $ip_address = null)
+    function makeDeviceHash($userId, $ipAddress = null)
     {
         $browscap = new \BrowscapPHP\Browscap();
         $browser_info = $browscap->getBrowser(CakeRequest::header('User-Agent'));
@@ -850,7 +857,7 @@ class GlRedis extends AppModel
         if (empty($platform) === true || empty($browser) === true) {
             return false;
         }
-        return Security::hash($platform . $browser . $user_id . $ip_address, 'sha1', true);
+        return Security::hash($platform . $browser . $userId . $ipAddress, 'sha1', true);
     }
 
     /**

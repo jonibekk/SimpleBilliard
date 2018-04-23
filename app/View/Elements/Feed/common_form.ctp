@@ -124,8 +124,11 @@ $hasPostResources = !empty($this->request->data['PostResources']);
                     <?php $this->Form->unlockField('Post.site_info_url') ?>
                     <?= $this->Form->hidden('redirect_url', ['id' => 'PostRedirectUrl']) ?>
                     <?php $this->Form->unlockField('Post.redirect_url') ?>
-
-                    <div id="PostOgpSiteInfo" class="post-ogp-site-info"></div>
+                    <?php if($is_edit_mode): ?>
+                        <div id="PostOgpSiteInfo" class="edit-post-ogp-site-info"></div>
+                    <?php else: ?>
+                        <div id="PostOgpSiteInfo" class="post-ogp-site-info"></div>
+                    <?php endif; ?>
                     <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>
                 </div>
 

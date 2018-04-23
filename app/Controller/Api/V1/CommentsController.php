@@ -1,6 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
+App::uses('Comment', 'Model');
 
 /**
  * Class ActionsController
@@ -100,6 +101,9 @@ class CommentsController extends ApiController
                     $postId, $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
+            case Post::TYPE_CREATE_GOAL:
+                $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
+                break;
         }
         // Push comments notifications
         $socketId = Hash::get($this->request->data, 'socket_id');
@@ -194,5 +198,31 @@ class CommentsController extends ApiController
             'post_id'           => $postId
         ];
         $this->NotifyBiz->commentPush($socketId, $data);
+    }
+
+    /**
+     * @param int   $commenterUserId ID of user who made the comment
+     * @param array $postData        Post object where the comment belongs to
+     */
+    private function _notifyUserOfGoalComment(int $commenterUserId, array $postData)
+    {
+        $postId = $postData['Post']['id'];
+        $postOwnerUserId = $postData['Post']['user_id'];
+
+        //If commenter is not post owner, send notification to owner
+        if ($commenterUserId !== $postOwnerUserId) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL, null, null,
+                [$postOwnerUserId], $commenterUserId, $postData['Post']['team_id'], $postId);
+        }
+        $excludedUserList = array($postOwnerUserId, $commenterUserId);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        $notificationReceiverUserList = $Comment->getCommentedUniqueUsersList($postId, false, $excludedUserList);
+
+        if (!empty($notificationReceiverUserList)) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL, null, null,
+                $notificationReceiverUserList, $commenterUserId, $postData['Post']['team_id'], $postId);
+        }
     }
 }

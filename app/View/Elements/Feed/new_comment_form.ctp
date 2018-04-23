@@ -47,7 +47,6 @@ $this->Form->input('body', [
 <?= $this->Form->hidden('site_info_url', ['id' => "CommentSiteInfoUrl_{$post_id}"]) ?>
 <?php $this->Form->unlockField('Comment.site_info_url') ?>
 
-<div id="<?= $prefix ?>CommentOgpSiteInfo_<?= $post_id ?>" class="comment-ogp-site-info"></div>
 <div id="<?= $prefix ?>CommentUploadFilePreview_<?= $post_id ?>" class="comment-upload-file-preview"></div>
 <?php $this->Form->unlockField('file_id') ?>
 

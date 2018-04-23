@@ -53,8 +53,10 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
     const TYPE_EVALUATOR_SET_TO_COACH = 41;  
-    const TYPE_FEED_MENTIONED_IN_COMMENT = 42;
-    const TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION = 43;
+    const TYPE_FEED_COMMENTED_ON_GOAL = 42;
+    const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
+    const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
+    const TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION = 45;
 
     /**
      * @var array
@@ -377,7 +379,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                  => [
+        self::TYPE_EVALUATOR_SET_TO_EVALUATEE       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -385,7 +387,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_COACH                    => [
+        self::TYPE_EVALUATOR_SET_TO_COACH           => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -393,6 +395,22 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
+        self::TYPE_FEED_COMMENTED_ON_GOAL           => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+            'force_notify'    => true,
+        ]
     ];
 
     static public $TYPE_GROUP = [
@@ -521,12 +539,12 @@ class NotifySetting extends AppModel
             'email'  => in_array('all', self::$TYPE[$type]['groups']),
             'mobile' => in_array('all', self::$TYPE[$type]['groups']),
         ];
-        $options = array(
-            'conditions' => array(
+        $options = [
+            'conditions' => [
                 'user_id' => $user_ids,
                 'NOT'     => ['user_id' => $this->my_uid]
-            )
-        );
+            ]
+        ];
         $result = $this->find('all', $options);
         $res_data = [];
         $field_prefix = self::$TYPE[$type]['field_prefix'];
@@ -1184,6 +1202,53 @@ class NotifySetting extends AppModel
                     $title = __(
                         '<span class="notify-card-head-target">%1$s</span> has assigned his/her evaluator(s).',
                         h($coachee_user_name));
+                }
+                break;
+            case self::TYPE_FEED_COMMENTED_ON_GOAL:
+
+                $commenterUser = $this->User->findById($options['commenter_user_id']);
+                $commenterUserDisplayName = $commenterUser['User']['display_username'];
+
+                if ($is_plain_mode) {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has commented on your goal.',
+                        $commenterUserDisplayName);
+                } else {
+                    $title = __(
+                        '<span class="notify-card-head-target">%1$s</span> has commented on your goal.',
+                        h($commenterUserDisplayName));
+                }
+                break;
+            case self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
+
+                $commenterUser = $this->User->findById($options['commenter_user_id']);
+                $commenterUserDisplayName = $commenterUser['User']['display_username'];
+
+                $postOwnerUser = $this->User->findById($options['post_owner_user_id']);
+                $postOwnerUserName = $postOwnerUser['User']['display_username'];;
+
+                if ($commenterUser['User']['id'] === $postOwnerUser['User']['id']) {
+                    if ($is_plain_mode) {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on his/her Goal.',
+                            $postOwnerUserName);
+                    } else {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on his/her Goal.',
+                            h($postOwnerUserName));
+                    }
+                } else {
+                    if ($is_plain_mode) {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on <span class="notify-card-head-target">%2$s</span>\'s Goal.',
+                            $commenterUserDisplayName,
+                            $postOwnerUserName);
+                    } else {
+                        $title = __(
+                            '<span class="notify-card-head-target">%1$s</span> has commented on <span class="notify-card-head-target">%2$s</span>\'s Goal.',
+                            h($commenterUserDisplayName),
+                            h($postOwnerUserName));
+                    }
                 }
                 break;
         }

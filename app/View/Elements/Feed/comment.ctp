@@ -134,9 +134,6 @@
                 </div>
             <?php endif; ?>
             <?php if (!empty($comment['id'])): ?>
-            <div id="CommentOgpClose_<?= $comment['id'] ?>" class="font_lightgray comment-ogp-close">
-                <i class="fa fa-times fa-2x js-ogp-close"></i>
-            </div>
             <?php endif; ?>
             <?php if ($comment['site_info']): ?>
                 <?php $site_info = json_decode($comment['site_info'], true) ?>
