@@ -108,4 +108,18 @@ class AccessAuthenticatorTest extends GoalousTestCase
             $authorizedAccessInfo2->getJwtAuthentication()->getJwtId()
         );
     }
+
+    function testTokenShouldNotChangeWhenCurrentDateChanged()
+    {
+        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
+        $token = $authorizedAccessInfo->token();
+        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
+        $this->assertSame($token, $authorizedAccessInfo->token());
+
+        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
+        $this->assertSame($token, $authorizedAccessInfo->token());
+
+        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
+        $this->assertSame($token, $authorizedAccessInfo->token());
+    }
 }
