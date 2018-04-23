@@ -1,13 +1,13 @@
 <?php
 
 App::uses('GoalousTestCase', 'Test');
-App::uses('LoginAuthenticator', 'Lib/Auth');
+App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 
 /**
  * Class JwtAuthenticationTest
  */
-class LoginAuthenticatorTest extends GoalousTestCase
+class AccessAuthenticatorTest extends GoalousTestCase
 {
     /**
      * Fixtures
@@ -47,7 +47,7 @@ class LoginAuthenticatorTest extends GoalousTestCase
 //        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
 //        $validTokenButNotInRedis = $jwtToken->token();
 //
-//        LoginAuthenticator::verify($validTokenButNotInRedis);
+//        AccessAuthenticator::verify($validTokenButNotInRedis);
 //    }
 
     /**
@@ -58,8 +58,8 @@ class LoginAuthenticatorTest extends GoalousTestCase
         $lastMonth = GoalousDateTime::now()->subMonth(1);
         GoalousDateTime::setTestNow($lastMonth);
 
-        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
-        LoginAuthenticator::verify($loginAuthentication->token());
+        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
+        AccessAuthenticator::verify($authorizedAccessInfo->token());
     }
 
     /**
@@ -70,8 +70,8 @@ class LoginAuthenticatorTest extends GoalousTestCase
         $lastMonth = GoalousDateTime::now()->addDays(1);
         GoalousDateTime::setTestNow($lastMonth);
 
-        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
-        LoginAuthenticator::verify($loginAuthentication->token());
+        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
+        AccessAuthenticator::verify($authorizedAccessInfo->token());
     }
 
     /**
@@ -79,8 +79,8 @@ class LoginAuthenticatorTest extends GoalousTestCase
      */
     function testExceptionThrowsFailedSignification()
     {
-        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
-        LoginAuthenticator::verify($loginAuthentication->token()."A");
+        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
+        AccessAuthenticator::verify($authorizedAccessInfo->token()."A");
     }
 
     /**
@@ -88,24 +88,24 @@ class LoginAuthenticatorTest extends GoalousTestCase
      */
     function testExceptionThrowsOnInvalidToken()
     {
-        LoginAuthenticator::verify('NOT_A_VALID_TOKEN');
+        AccessAuthenticator::verify('NOT_A_VALID_TOKEN');
     }
 
     function testAuthorizeAndVerifyLogin()
     {
-        $loginAuthentication = LoginAuthenticator::publish($userId = 1, $teamId = 2);
+        $authorizedAccessInfo = AccessAuthenticator::publish($userId = 1, $teamId = 2);
 
-        $this->assertEquals($userId, $loginAuthentication->getUserId());
-        $this->assertEquals($teamId, $loginAuthentication->getTeamId());
+        $this->assertEquals($userId, $authorizedAccessInfo->getUserId());
+        $this->assertEquals($teamId, $authorizedAccessInfo->getTeamId());
 
-        $loginAgainAuthentication = LoginAuthenticator::verify($loginAuthentication->token());
+        $authorizedAccessInfo2 = AccessAuthenticator::verify($authorizedAccessInfo->token());
 
-        $this->assertSame($loginAuthentication->getUserId(), $loginAgainAuthentication->getUserId());
-        $this->assertSame($loginAuthentication->getTeamId(), $loginAgainAuthentication->getTeamId());
-        $this->assertSame($loginAuthentication->token(), $loginAgainAuthentication->token());
+        $this->assertSame($authorizedAccessInfo->getUserId(), $authorizedAccessInfo2->getUserId());
+        $this->assertSame($authorizedAccessInfo->getTeamId(), $authorizedAccessInfo2->getTeamId());
+        $this->assertSame($authorizedAccessInfo->token(), $authorizedAccessInfo2->token());
         $this->assertSame(
-            $loginAuthentication->getJwtAuthentication()->getJwtId(),
-            $loginAgainAuthentication->getJwtAuthentication()->getJwtId()
+            $authorizedAccessInfo->getJwtAuthentication()->getJwtId(),
+            $authorizedAccessInfo2->getJwtAuthentication()->getJwtId()
         );
     }
 }
