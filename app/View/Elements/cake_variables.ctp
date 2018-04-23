@@ -103,7 +103,7 @@ App::uses('AttachedFile', 'Model');
             members: "<?= __("Members")?>",
             goals: "<?= __("Goal")?>",
             circles: "<?= __("Circles")?>",
-            end_search: "<?= __("No more results")?>",
+            end_search: "<?= __("There is no more data.")?>",
             no_results: "<?= __("No results found")?>",
             success: "<?=__("Success")?>",
             error: "<?=__("Error")?>",
