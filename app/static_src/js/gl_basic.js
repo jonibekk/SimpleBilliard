@@ -391,13 +391,13 @@ $(function () {
       });
     }
     $("#NavSearchInputToggle").off("keyup touchend").on("keyup touchend", function(e) {
-      if(!cake.is_mb_app || !cake.is_mb_browser){
+      if(!cake.is_mb_app && !cake.is_mb_browser){
         return;
       }
       var position = $('#NavSearchInputToggle').get(0).selectionStart - 1;
       var key = this.value.charCodeAt(position);
       if(key == 32 || key == 10) {
-        hideVirtualKeyboard()
+        hideVirtualKeyboard();
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
