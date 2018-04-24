@@ -978,6 +978,7 @@ class PostsController extends AppController
             $PostDraftService = ClassRegistry::init('PostDraftService');
             $circleId = Hash::get($this->request->params, 'circle_id');
             if (isset($circleId) && AppUtil::isInt($circleId)) {
+                $this->User->CircleMember->updateUnreadCount($circleId);
                 $this->set('post_drafts', $PostDraftService->getPostDraftForFeed(
                     $this->Auth->user('id'),
                     TeamStatus::getCurrentTeam()->getTeamId(),
