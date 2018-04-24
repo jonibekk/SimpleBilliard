@@ -363,16 +363,14 @@ $(function () {
         suppressScrollY: false,
       });
     }
-    $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
-      // if(cake.is_mb_app !== "true" && cake.is_mb_browser !== "true"){
-      //   return;
-      // }
+    $("#NavSearchInputToggle,#NavSearchInput").off("keyup").on("keyup", function(e) {
+      if(cake.is_mb_app !== "true" && cake.is_mb_browser !== "true"){
+        return;
+      }
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
-        $(this).blur();
-        hideKeyboardElement($(this).get(0));
-        // hideVirtualKeyboard();
-        // hideKeyboardElement();
+        hideKeyboardElement($("#NavSearchInputToggle").get(0));
+        hideKeyboardElement($("#NavSearchInput").get(0));
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
