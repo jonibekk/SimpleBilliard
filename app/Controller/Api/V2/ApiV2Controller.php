@@ -200,14 +200,14 @@ class ApiV2Controller extends Controller
      */
     private function _setAppLanguage()
     {
-
         if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
             Configure::write('Config.language', $this->_currentUser['language']);
             $this
-                ->set('is_not_use_local_name', $this->_currentUser->isNotUseLocalName($this->_currentUser['language']));
+                ->set('is_not_use_local_name',
+                    (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
         } else {
             $lang = $this->LangComponent->getLanguage();
-            $this->set('is_not_use_local_name', $this->_currentUser->isNotUseLocalName($lang));
+            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
         }
 
     }
