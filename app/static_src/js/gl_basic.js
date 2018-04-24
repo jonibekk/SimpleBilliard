@@ -353,8 +353,7 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-// console.log(cake.is_mb_app);
-    if(cake.is_mb_app) {
+    if(cake.is_mb_app === "true" || cake.is_mb_browser === "true") {
        psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
         swipePropagation: false,
         wheelPropagation: false,
@@ -364,10 +363,14 @@ $(function () {
       });
     }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
+      // if(cake.is_mb_app !== "true" && cake.is_mb_browser !== "true"){
+      //   return;
+      // }
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
-        hideVirtualKeyboard();
-        hideKeyboardElement();
+        $(this).blur();
+        // hideVirtualKeyboard();
+        // hideKeyboardElement();
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
