@@ -46,7 +46,17 @@ class Group extends AppModel
         'GroupVision',
     ];
 
-    function findAllList($team_id)
+    function findIdsHavingMembers($teamId) {
+        return $this->MemberGroup->find('list', array(
+            'fields' => array('group_id'),
+            'conditions' => [
+                'team_id' => $teamId,
+            ],
+            'group' => 'group_id having COUNT(group_id) > 0'
+        ));
+    }
+
+    function findAllList($team_id, bool $requiresUser = false)
     {
         $options = [
             'fields'     => ['id', 'name'],
@@ -54,6 +64,9 @@ class Group extends AppModel
                 'team_id' => $team_id,
             ],
         ];
+        if ($requiresUser) {
+            $options['conditions']['id'] = $this->findIdsHavingMembers($team_id);
+        }
         $res = $this->find('list', $options);
         return $res;
     }
@@ -147,13 +160,16 @@ class Group extends AppModel
      *
      * @return array
      */
-    function getAllList(bool $isActive = true): array
+    function getAllList(bool $isActive = true, bool $requiresUser = false): array
     {
         $options = [
             'conditions' => [
                 'active_flg' => $isActive,
             ]
         ];
+        if ($requiresUser) {
+            $options['conditions']['id'] = $this->findIdsHavingMembers($this->current_team_id);
+        }
         $res = $this->find('list', $options);
         return (array)$res;
     }

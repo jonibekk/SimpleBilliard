@@ -812,7 +812,7 @@ class UserTest extends GoalousTestCase
         $res = $this->User->getUsersByKeyword("first");
         $this->assertNotEmpty($res);
         $res = $this->User->getUsersByKeyword("irstname");
-        $this->assertNotEmpty($res);
+        $this->assertEmpty($res);
         $res = $this->User->getUsersByKeyword("");
         $this->assertEmpty($res);
     }
@@ -830,7 +830,7 @@ class UserTest extends GoalousTestCase
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("first", 10, true, 9999999);
         $this->assertNotEmpty($res);
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("irstname", 10, true, 9999999);
-        $this->assertNotEmpty($res);
+        $this->assertEmpty($res);
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("", 10, true, 9999999);
         $this->assertEmpty($res);
     }
