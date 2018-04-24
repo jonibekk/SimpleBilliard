@@ -19,6 +19,7 @@ $(function () {
 });
 
 var bypassActionKrConfirmModal = false;
+var isKrSelected = false;
 
 function onChangedKrValue(oldValue,newValue) {
     bypassActionKrConfirmModal = oldValue !== newValue ? true : false;
@@ -62,7 +63,7 @@ var Page = {
         });
         // 進捗を更新するKR選択
         $(this.el).on("click", ".js-select-kr", function () {
-            self.selectKr(this)
+            self.selectKr(this);
         });
         // KR進捗の入力フォーカスした際に外側の行のクリックイベントが反応しないようにする
         $(this.conf.kr_progress).on("click", "input", function (e) {
@@ -92,6 +93,9 @@ var Page = {
         this.action_resize();
     },
     submit: function (form) {
+        if($("#CommonActionName").length && !$.trim($("#CommonActionName").val()).length) {
+            return;
+        }
         if(!bypassActionKrConfirmModal){
             $('#actionConfirmationModal').modal('show');
             return false;
@@ -174,6 +178,14 @@ var Page = {
         });
     },
     selectGoal: function (el) {
+        var $kr_progress = $($(this.el).find(this.conf.kr_progress));
+        var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
+        $("#CommonActionSubmit").prop("disabled", false);
+        if(activeKr.length) {
+
+            return;
+        }
+
         $(el).closest(".has-success").removeClass("has-success");
         var goal_id = $(el).val();
 
@@ -199,16 +211,11 @@ var Page = {
         });
     },
     selectKr: function (el) {
-        var selected = $(el).data("selected");
-        if (selected) {
-            // this.deselectKrProgressInActionForm($(el));
-        } else {
-            // KRの選択
-            var $kr_progress = $($(this.el).find(this.conf.kr_progress));
-            var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
-            this.deselectKrProgressInActionForm($(activeKr));
-            this.selectKrProgressInActionForm($(el));
-        }
+        // KRの選択
+        var $kr_progress = $($(this.el).find(this.conf.kr_progress));
+        var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
+        this.deselectKrProgressInActionForm($(activeKr));
+        this.selectKrProgressInActionForm($(el));
     },
     selectKrProgressInActionForm: function ($el) {
         var activeClass = "is-active";
@@ -222,7 +229,6 @@ var Page = {
         $(check_circle).append('<i class="fa fa-check action-kr-progress-edit-item-check-circle-inner"></i>');
         $el.find("input").prop("disabled", false);
         $el.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", false);
-        $el.data("selected", 1);
     },
     deselectKrProgressInActionForm: function ($el) {
         var activeClass = "is-active";
@@ -234,7 +240,6 @@ var Page = {
         $(check_circle).removeClass(activeClass).empty();
         $el.find("input").prop("disabled", true);
         $el.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
-        $el.data("selected", 0);
     }
 };
 

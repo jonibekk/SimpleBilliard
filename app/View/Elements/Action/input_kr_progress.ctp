@@ -2,7 +2,7 @@
 $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
 ?>
 <?php foreach ($krs as $i => $kr): ?>
-    <li class="action-kr-progress-edit-item js-select-kr" data-kr-id="<?= $kr['id'] ?>">
+    <li class="action-kr-progress-edit-item js-select-kr" data-kr-id="<?= $kr['id'] ?>""
         <div class="action-kr-progress-edit-item-box">
             <div class="action-kr-progress-edit-item-box-left">
                 <span class="action-kr-progress-edit-item-check-circle"></span>
@@ -34,11 +34,12 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                         }
                     ?>
                     <input type="text"
+                           id="newValue_<?= $i ?>"
                            name="<?= $inputName ?>"
                            class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
                            value="<?= $kr['current_value'] ?>"
                            placeholder="<?= $kr['current_value'] ?>"
-                           onkeyup="onChangedKrValue(<?= $kr['current_value'] ?>, document.querySelector('.action-kr-progress-edit-textbox').value)"
+                           onkeyup="onChangedKrValue(<?= $kr['current_value'] ?>, document.getElementById('newValue_<?= $i ?>').value)"
                            disabled
                     >／<?= $kr['target_value'] ?>
                 </div>
