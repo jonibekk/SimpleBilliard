@@ -39,10 +39,42 @@ define(function () {
 
             $NavSearchInput
                 .on('keydown', function (e) {
-                    // down
-                    if (e.keyCode == 40) {
-                        e.preventDefault();
-                        $NavSearchResults.find('.nav-search-result-item:first').focus();
+                    var $selectedItem = $NavSearchResults.find('.nav-search-result-item');
+                    if ($selectedItem.length) {
+                        var code = e.keyCode || e.which;
+                        var current = $selectedItem.first();
+                        switch (code) {
+                            // up
+                            case 38:
+                                e.preventDefault();
+                                if(current.prev() && $current.prev().length) {
+                                    current = current.prev();
+                                    current.get(0).scrollIntoView();
+                                    current.focus();
+                                    console.log(current.get(0));
+                                }
+                                break;
+
+                            // down
+                            case 40:
+                                e.preventDefault();
+                                if(current.next() && current.next().length) {
+                                    current = current.next();
+                                    current.get(0).scrollIntoView();
+                                    current.focus();
+                                    console.log(current.get(0));
+                                }                                
+                                break;
+
+                            // Enter
+                            case 13:
+                                e.preventDefault();
+                                if(current){
+                                    console.log(current.get(0));
+                                    current.trigger("click");
+                                }
+                                break;
+                        }
                     }
                 })
                 .on('keyup', function (e) {
@@ -197,35 +229,36 @@ define(function () {
                     // }, 150);
                 });
 
-            // 矢印キーで選択可能にする
-            $NavSearchResults
-                .on('keydown', '.nav-search-result-item', function (e) {
-                    var $selectedItem = $NavSearchResults.find('.nav-search-result-item:focus');
-                    if ($selectedItem.size()) {
-                        var code = e.keyCode || e.which;
-                        var current = $selectedItem.first();
-                        switch (code) {
-                            // up
-                            case 38:
-                                e.preventDefault();
-                                $selectedItem.prev().focus();
-                                current = $selectedItem.prev();
-                                break;
+            // // 矢印キーで選択可能にする
+            // $NavSearchResults
+            //     .on('keydown', '.nav-search-result-item', function (e) {
+            //         var $selectedItem = $NavSearchResults.find('.nav-search-result-item:focus');
+            //         if ($selectedItem.size()) {
+            //             var code = e.keyCode || e.which;
+            //             var current = $selectedItem.first();
+            //             switch (code) {
+            //                 // up
+            //                 case 38:
+            //                     e.preventDefault();
+            //                     $selectedItem.prev().focus();
+            //                     current = $selectedItem.prev();
+            //                     break;
 
-                            // down
-                            case 40:
-                                e.preventDefault();
-                                $selectedItem.next().focus();
-                                current = $selectedItem.next();
-                                break;
+            //                 // down
+            //                 case 40:
+            //                     e.preventDefault();
+            //                     $selectedItem.next().focus();
+            //                     current = $selectedItem.next();
+            //                     break;
 
-                            // Enter
-                            case 13:
-                                current.trigger("click");
-                                break;
-                        }
-                    }
-                });
+            //                 // Enter
+            //                 case 13:
+            //                     e.preventDefault();
+            //                     current.trigger("click");
+            //                     break;
+            //             }
+            //         }
+            //     });
         }
     };
 
