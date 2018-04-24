@@ -243,9 +243,27 @@ abstract class BaseApiController extends Controller
     }
 
     /**
+     * Get JWT token from request
+     *
+     * @param CakeRequest $request
+     */
+    private function _fetchJwtToken(CakeRequest $request)
+    {
+        $authHeader = $request->header('authorization');
+        if (empty($authHeader)) {
+            return;
+        }
+
+        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
+
+        $this->_jwtToken = $jwt[0] ?? '';
+    }
+
+    /**
      * Initialize current team's status based on current user's team ID
      */
-    private function _initializeTeamStatus()
+    private
+    function _initializeTeamStatus()
     {
         $this->_teamStatus = TeamStatus::getCurrentTeam();
         $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
@@ -256,7 +274,8 @@ abstract class BaseApiController extends Controller
      *
      * @return bool True if user is restricted from using the service
      */
-    private function _isRestrictedFromUsingService(): bool
+    private
+    function _isRestrictedFromUsingService(): bool
     {
         return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
@@ -269,7 +288,8 @@ abstract class BaseApiController extends Controller
      *
      * @return bool
      */
-    private function _checkIgnoreRestriction(CakeRequest $request)
+    private
+    function _checkIgnoreRestriction(CakeRequest $request)
     {
         $commentArray = $this->_parseEndpointDocument($request);
 
@@ -286,7 +306,8 @@ abstract class BaseApiController extends Controller
      *
      * @return bool True if user is restricted to read only
      */
-    private function _isRestrictedToReadOnly(): bool
+    private
+    function _isRestrictedToReadOnly(): bool
     {
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
@@ -297,7 +318,8 @@ abstract class BaseApiController extends Controller
     /**
      * Set the app language for current user
      */
-    private function _setAppLanguage()
+    private
+    function _setAppLanguage()
     {
         if (isset($this->_currentUserId) && isset($this->_currentUserId['language']) && !boolval($this->_currentUserId['auto_language_flg'])) {
             Configure::write('Config.language', $this->_currentUserId['language']);
@@ -316,7 +338,8 @@ abstract class BaseApiController extends Controller
      *
      * @return mixed
      */
-    public function invokeAction(
+    public
+    function invokeAction(
         CakeRequest $request
     ) {
         if ($this->_stopInvokeFlag) {
