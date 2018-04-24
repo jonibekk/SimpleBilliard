@@ -1457,10 +1457,11 @@ class UsersController extends AppController
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
 
-        if ($this->Team->TeamMember->isActive($userId) == false) {
-            // inactive user or not exists
-            return false;
-        }
+        // Make inactive users action visible
+        // if ($this->Team->TeamMember->isActive($userId) == false) {
+        //     // inactive user or not exists
+        //     return false;
+        // }
         if (!in_array($pageType, ['list', 'image'])) {
             // $pageType is wrong
             return false;

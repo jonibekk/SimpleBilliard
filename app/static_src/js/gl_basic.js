@@ -431,6 +431,13 @@ $(function () {
       hideNav();
     });
     $(window).trigger('resize');
+    $(".switch-action-anchor").off("click").on("click", function(e) {
+      e.preventDefault();
+      return false;
+    });
+    $("#ActionFileAttachButton").off("click").on("click", function(e) {
+      e.preventDefault();
+    });
 });
 
 

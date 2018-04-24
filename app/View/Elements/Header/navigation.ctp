@@ -99,4 +99,3 @@
         <div class="header-white-bg mod-mb-app"></div>
     <?php endif; ?>
 </div>
-<?php var_dump($isMobileBrowser); ?>
