@@ -4316,7 +4316,6 @@ class PaymentServiceTest extends GoalousTestCase
 
         // target invoice history exist, but order_status is WAITING(not NG).
 
-
         $saveHistories = [
             [
                 'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
