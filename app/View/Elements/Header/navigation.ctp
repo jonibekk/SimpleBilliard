@@ -1,13 +1,11 @@
 <div class="minimum-wrapper">
     <div class="visible-xxs-flex hidden-xs hidden-sm hidden-md hidden-lg">
-        <div class="visible-xxs hidden-xs hidden-sm hidden-md hidden-lg clearfix" xmlns="http://www.w3.org/1999/html">
-            <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
-                    class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon-minimum js-nav-toggle">
-                <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
-                <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
-            </button>
-            <?= $this->element('Header/logged_in_right'); ?>
-        </div>
+        <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
+                class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon-minimum js-nav-toggle">
+            <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
+            <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
+        </button>
+        <?= $this->element('Header/logged_in_right'); ?>
         <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>z
     </div>
 </div>
@@ -26,7 +24,6 @@
         </div>
     </div>
 </div>
-<div class="nav-spacer"></div>
 <div id="NavbarOffcanvas">
     <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
@@ -102,5 +99,4 @@
         <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
         </div>
     </div>
-    <div class="nav-spacer"></div>
 </div>

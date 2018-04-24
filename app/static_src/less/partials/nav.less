@@ -488,6 +488,12 @@
 .navbar-nav {
     margin-top:50px;
     padding: 0 15px;
+    @media @xsmall{
+        background-color: transparent;
+        width: 100%;
+        padding: 6px;
+        max-width: 266px;
+    }
     @media @small{
         background-color:transparent;
         width:47%;
@@ -499,18 +505,18 @@
     }
     @media @medium{
         background-color: transparent;
-        width: 40%;
+        width: 44%;
         padding: 0;
-        max-width: 380px;
+        max-width: 398px;
         .header-search-group{
             float:right;
         }
     }
     @media @large{
-        background-color:transparent;
-        width:65%;
-        padding:0;
-        max-width:689px;
+        background-color: transparent;
+        width: 68%;
+        padding: 0;
+        max-width: 664px;
         .header-search-group{
             float:right;
         }
@@ -602,8 +608,15 @@
     .mod-openNav &{
         transform:translateX(0px);
     }
+    @media @xsmall{
+        max-width: 268px;
+        width: 100%;
+        padding: 0 8px;
+        overflow-y: hidden;
+    }
     @media @small{
         max-width: 200px;
+        padding: 0 8px;
     }
     @media @medium{
         max-width: 100%;
