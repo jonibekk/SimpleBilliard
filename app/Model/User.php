@@ -630,13 +630,13 @@ class User extends AppModel
     /**
      * ローカル名を利用しないか判定
      *
-     * @param $lung
+     * @param $lang
      *
      * @return bool
      */
-    public function isNotUseLocalName($lung)
+    public function isNotUseLocalName($lang)
     {
-        return in_array($lung, $this->langCodeOfNotLocalName);
+        return in_array($lang, $this->langCodeOfNotLocalName);
     }
 
     /**
