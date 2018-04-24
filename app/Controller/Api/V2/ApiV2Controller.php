@@ -20,7 +20,7 @@ class ApiV2Controller extends Controller
     /** @var string */
     private $_jwtToken;
 
-    /** @var User */
+    /** @var .\Model\User */
     private $_currentUser;
 
     /** @var int */
@@ -83,14 +83,14 @@ class ApiV2Controller extends Controller
     {
         parent::__construct($request, $response);
 
-        //TODO get token
+        $this->_fetchJwtToken($request);
     }
 
     public function beforeFilter()
     {
         parent::beforeFilter();
 
-        if (!$this->_authenticateUser()) {
+        if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
             return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
                 ->setMessage(__('You should be logged in.'));
         }
@@ -122,9 +122,27 @@ class ApiV2Controller extends Controller
     }
 
     /**
+     * Get JWT token from request
+     *
+     * @param CakeRequest $request
+     */
+    private function _fetchJwtToken(CakeRequest $request)
+    {
+        $authHeader = $request->header('authorization');
+        if (empty($authHeader)) {
+            return;
+        }
+
+        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
+
+        $this->_jwtToken = $jwt[0] ?? '';
+    }
+
+    /**
      * Initialize current team's status based on current user's team ID
      */
-    private function _initializeTeamStatus()
+    private
+    function _initializeTeamStatus()
     {
         $this->_teamStatus = TeamStatus::getCurrentTeam();
         $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
@@ -135,7 +153,8 @@ class ApiV2Controller extends Controller
      *
      * @return bool True if user is restricted from using the service
      */
-    private function _isRestrictedFromUsingService(): bool
+    private
+    function _isRestrictedFromUsingService(): bool
     {
         if ($this->_isRequestExcludedFromRestriction()) {
             return false;
@@ -149,7 +168,8 @@ class ApiV2Controller extends Controller
      *
      * @return bool True if request is in list of requests ignoring restriction
      */
-    private function _isRequestExcludedFromRestriction(): bool
+    private
+    function _isRequestExcludedFromRestriction(): bool
     {
         foreach ($this->_excludedRequestArray as $ignoreParam) {
             // filter requested param with $ignoreParam
@@ -166,7 +186,8 @@ class ApiV2Controller extends Controller
      *
      * @return bool True if user is restricted to read only
      */
-    private function _isRestrictedToReadOnly(): bool
+    private
+    function _isRestrictedToReadOnly(): bool
     {
         if ($this->_isRequestExcludedFromRestriction()) {
             return false;
@@ -181,7 +202,8 @@ class ApiV2Controller extends Controller
     /**
      * Set the app language for current user
      */
-    private function _setAppLanguage()
+    private
+    function _setAppLanguage()
     {
         $user = $this->_currentUser;
 
@@ -202,8 +224,10 @@ class ApiV2Controller extends Controller
      *
      * @return mixed
      */
-    public function invokeAction(CakeRequest $request)
-    {
+    public
+    function invokeAction(
+        CakeRequest $request
+    ) {
         if ($this->_stopInvokeFlag) {
             return false;
         }
