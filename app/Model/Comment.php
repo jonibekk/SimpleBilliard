@@ -5,10 +5,6 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
-App::import('Model','User');
-App::import('Model','Circle');
-App::import('Model', 'HavingMentionTrait');
-
 /**
  * Comment Model
  *
@@ -22,10 +18,6 @@ App::import('Model', 'HavingMentionTrait');
  */
 class Comment extends AppModel
 {
-
-    use HavingMentionTrait;
-    public $bodyProperty = 'body';
-
     public $uses = [
         'AttachedFile'
     ];

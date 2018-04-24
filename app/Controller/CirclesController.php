@@ -13,9 +13,7 @@ class CirclesController extends AppController
     public $uses = [
         'Circle'
     ];
-    public $components = [
-        'Mention'
-    ];
+
     /**
      * beforeFilter callback
      *
@@ -137,9 +135,6 @@ class CirclesController extends AppController
         $res = ['results' => []];
         if (isset($query['term']) && $query['term'] && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && $query['page_limit']) {
             $res = $this->Circle->getAccessibleCirclesSelect2($query['term'], $query['page_limit']);
-        }
-        if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
-            $res['results'] = $this->Mention::filterAsMentionableCircle($query['in_post_id'], $res['results']);
         }
         return $this->_ajaxGetResponse($res);
     }
