@@ -6,7 +6,7 @@
     </button>
 </div>
 <div class="medium-container hidden-xxs visible-xs-flex visible-sm-flex hidden-md hidden-lg"">
-    <div id="<?= $is_mb_app || $isMobileBrowser ? "rightNavigationWrapperMobile" : "rightNavigationWrapper"?>" class="clearfix" xmlns="http://www.w3.org/1999/html">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
         <?= $this->element('Header/logged_in_right'); ?>
     </div>
     <?php if($is_mb_app_ios_high_header): ?>
@@ -14,7 +14,7 @@
     <?php endif; ?>
 </div>
 <div class="minimum-container visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
-    <div id="<?= $is_mb_app || $isMobileBrowser ? "rightNavigationWrapperMobile" : "rightNavigationWrapper"?>" class="clearfix" xmlns="http://www.w3.org/1999/html">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
         <?= $this->element('Header/logged_in_right'); ?>  
     </div>
     <?php if($is_mb_app_ios_high_header): ?>

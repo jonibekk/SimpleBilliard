@@ -354,19 +354,19 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    if(cake.is_mb_app === "true" || cake.is_mb_browser === "true") {
-       psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-        swipePropagation: false,
-        wheelPropagation: false,
-        maxScrollbarLength: 0,
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-    }
-    $("#NavSearchInputToggle,#NavSearchInput").off("keyup").on("keyup", function(e) {
-      if(cake.is_mb_app !== "true" && cake.is_mb_browser !== "true"){
-        return;
-      }
+    // if(cake.is_mb_app === "true" || cake.is_mb_browser === "true") {
+    //    psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
+    //     swipePropagation: false,
+    //     wheelPropagation: false,
+    //     maxScrollbarLength: 0,
+    //     suppressScrollX: true,
+    //     suppressScrollY: false,
+    //   });
+    // }
+    $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
+      // if(cake.is_mb_app !== "true" && cake.is_mb_browser !== "true"){
+      //   return;
+      // }
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
         hideKeyboardElement($("#NavSearchInputToggle").get(0));
