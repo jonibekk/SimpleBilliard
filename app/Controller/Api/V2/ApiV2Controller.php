@@ -93,7 +93,7 @@ class ApiV2Controller extends Controller
      */
     private function _fetchJwtToken(CakeRequest $request)
     {
-        $authHeader = $request->header('authorization');
+        $authHeader = $request->header('Authorization');
         if (empty($authHeader)) {
             return;
         }
@@ -109,19 +109,19 @@ class ApiV2Controller extends Controller
 
         if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
             return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                ->setMessage(__('You should be logged in.'));
+                ->setMessage(__('You should be logged in.'))->getResponse();
         }
         $this->_initializeTeamStatus();
 
         if ($this->_isRestrictedFromUsingService()) {
             $this->_stopInvokeFlag = true;
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->setMessage(__("You cannot use service on the team."));
+                ->setMessage(__("You cannot use service on the team."))->getResponse();
         }
         if ($this->_isRestrictedToReadOnly()) {
             $this->_stopInvokeFlag = true;
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->setMessage(__("You may only read your team’s pages."));
+                ->setMessage(__("You may only read your team’s pages."))->getResponse();
         }
 
         $this->_setAppLanguage();
