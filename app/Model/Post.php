@@ -501,8 +501,12 @@ class Post extends AppModel
             }
             // 読み込む投稿の更新時間が指定されている場合
             if ($post_time_before) {
-                $order_col = key($post_options['order']);
-                $post_options['conditions']["$order_col <="] = $post_time_before;
+                  // [Hotfix]https://jira.goalous.com/browse/GL-6888
+                  // This condition conflicts `Post.created BETWEEN {$start} and {$end}, so the bug that past posts cant' get has been occurred.
+                  // In addition, $past_time_before value is not appropriate
+                  // We shouldn't use this condition.
+//                $order_col = key($post_options['order']);
+//                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
             $post_list = $this->find('list', $post_options);
         }
