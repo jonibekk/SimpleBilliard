@@ -369,8 +369,10 @@ $(function () {
       // }
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
-        hideKeyboardElement($("#NavSearchInputToggle").get(0));
-        hideKeyboardElement($("#NavSearchInput").get(0));
+        $("#NavSearchInputToggle").blur();
+        $("#NavSearchInput").blur();
+        $("#NavSearchInputToggle").focusout();
+        $("#NavSearchInput").focusout();
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
