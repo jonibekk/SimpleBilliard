@@ -170,8 +170,7 @@ $(document).ready(function () {
 
 });
 
-function hideKeyboardElement() {
-    var element = $("#NavSearchInputToggle").get(0);
+function hideKeyboardElement(element) {
     element.attr('readonly', 'readonly'); // Force keyboard to hide on input field.
     element.attr('disabled', 'true'); // Force keyboard to hide on textarea field.
     setTimeout(function() {
@@ -340,14 +339,16 @@ $(function () {
       }
     });
     $("#NavSearchInputClear").off("click").on("click", function() {
-      setTimeout(function(){$("#NavSearchInput").focus();},100);
+      // setTimeout(function(){$("#NavSearchInput").focus();},100);
+      $("#NavSearchInput").focus();
       $(this).prev().val('');
       $(this).hide();
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
     });
     $("#NavSearchInputClearToggle").off("click").on("click", function() {
-      setTimeout(function(){$("#NavSearchInputToggle").focus();},100);
+      // setTimeout(function(){$("#NavSearchInputToggle").focus();},100);
+      $("#NavSearchInputToggle").focus();
       $(this).prev().val('');
       $(this).hide();
       $("#NavSearchResultsToggle").empty();
@@ -369,6 +370,7 @@ $(function () {
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
         $(this).blur();
+        hideKeyboardElement($(this).get(0));
         // hideVirtualKeyboard();
         // hideKeyboardElement();
       }
