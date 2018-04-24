@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-23 16:33+0900\n"
+"PO-Revision-Date: 2018-04-24 14:40+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2194,8 +2194,8 @@ msgstr "ゴール"
 msgid "Circles"
 msgstr "サークル"
 
-msgid "No more results"
-msgstr ""
+msgid "There is no more data."
+msgstr "これ以上のデータがありません。"
 
 msgid "No results found"
 msgstr "一致する結果はありませんでした"
@@ -3239,9 +3239,6 @@ msgstr "協業のお問い合わせ"
 msgid "Action list"
 msgstr "アクションリスト"
 
-msgid "There is no more data."
-msgstr "これ以上のデータがありません。"
-
 msgid "More..."
 msgstr "もっと読む ▼"
 
@@ -3815,7 +3812,7 @@ msgid "Team"
 msgstr "チーム"
 
 msgid "Search Members, Goals, Circles"
-msgstr "メンバー、ゴール、サークルを検索"
+msgstr "メンバー,ゴール,サークルを検索"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
