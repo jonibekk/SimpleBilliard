@@ -44,11 +44,44 @@
   background-color: @white;
   height: 50px;
   line-height: 50px;
-  position: absolute:
+  position: absolute;
   left: 0;
-  width: 53px;
-  max-width: 53px;
-  min-width: 53px;
+  i {
+    transform: rotate(0deg);
+    transition: transform .3s;
+    .mod-openNav & {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+.mixin-header-toggle-icon-minimum () {
+  visibility: visible;
+  display: inline-block;
+  border: none;
+  margin: 0;
+  &:hover,
+  &:focus,
+  &:target {
+    outline: none;
+  }
+  @media screen and (min-width: 321px) {
+    display: none;
+  }
+}
+
+.header-toggle-icon-minimum {
+  .mixin-header-toggle-icon-minimum();
+  visibility: visible;
+  display: inline-block;
+  border: none;
+  margin: 0;
+  background-color: #fff;
+  line-height: 50px;
+  position: absolute !important;
+  top: 0;
+  left: 4px;
+  height: 36px;
   i {
     transform: rotate(0deg);
     transition: transform .3s;
@@ -255,13 +288,16 @@
 
 .header-user-avatar {
   list-style: none;
+  flex: 1;
   line-height: 50px;
   height: 50px;
   margin: 0;
-  padding: 0 8px;
   display: inline-block;
-  vertical-align: top;
-  padding-right: 10px;
+  z-index: 3;
+  position: relative;
+  align-content: center;
+  justify-content: center;
+  width: 36px;
   &:hover {
     .header-nav-avatar {
       box-shadow: 0rem .2rem .5rem rgba(17, 17, 17, .3);
@@ -274,15 +310,21 @@
   }
 }
 
-.header-icon-zoom .header-icons {
-  transform: scale(1);
-  transition: transform .3s, color .3s;
-}
-
-.header-icon-zoom a:hover {
+.header-icon-zoom { 
+  flex: 1;
+  z-index: 3;
+  align-content: center;
+  justify-content: center;
+  width: 36px;
   .header-icons {
-    transform: scale(1.2);
-    color: @goalous;
+    transform: scale(1);
+    transition: transform .3s, color .3s;
+  }
+  a:hover {
+    .header-icons {
+      transform: scale(1.2);
+      color: @goalous;
+    }
   }
 }
 
@@ -306,6 +348,7 @@
 }
 
 .header-right-navigations {
+    width: 303px;
     position: fixed;
     z-index: 100;
     top: 0;
@@ -479,14 +522,6 @@
     padding: 8px;
     border-radius: 8px;
     height: 54px;
-}
-
-.header-icon-search-toggle {
-  display: inline-block;
-}
-
-.header-icon-search {
-  display: inline-block;
 }
 
 .header-setup {
@@ -766,4 +801,20 @@ header-nav-add.open ul {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175) !important;
     background-clip: padding-box !important;
+}
+
+.navigationWrapper{
+  top: 0;
+  position: absolute;
+  display: flex;
+}
+
+#rightNavigationWrapper {
+  display: flex;
+  flex: 1;
+  float: right;
+}
+
+.right-navigation-wrap {
+  /*display: none;*/
 }

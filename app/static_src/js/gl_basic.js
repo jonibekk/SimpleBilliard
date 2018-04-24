@@ -233,7 +233,7 @@ $(function () {
 
     function updateSearchPosition(){
       if(lastWidth >= 768){
-        $("#NavSearchForm").css("right", (($("#goalousNavigation").width() - $("#navigationWrapper").width() - $(".header-right-navigations").width()) / 2) + "px");
+        $("#NavSearchForm").css("right", (($(window).width() - $(".nav-container").width()) / 2) + "px");
       } else if (lastWidth >= 480) {
         $("#NavSearchForm").css("right", "0px");
       }
@@ -350,7 +350,10 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    $(".mb-hide-keyboard-on-enter").off("keyup").on("keyup", function(e) {
+    $("#NavSearchInput,#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
+      if(!cake.is_mb_app || !cake.is_mb_browser){
+        return;
+      }
       if(e.keyCode === 13){
         if(document.activeElement) {
             document.activeElement.blur();
