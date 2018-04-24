@@ -72,6 +72,20 @@ class ApiResponse extends CakeResponse
     }
 
     /**
+     * Set HTTP header for response
+     *
+     * @param string $value
+     *
+     * @return CakeResponse
+     */
+    public function setHeader($value)
+    {
+        header($value);
+
+        return $this;
+    }
+
+    /**
      * Create the response to be returned to the client
      *
      * @return CakeResponse
@@ -85,13 +99,4 @@ class ApiResponse extends CakeResponse
         return $this;
     }
 
-    /**
-     * Set HTTP header for response
-     *
-     * @param string $value
-     */
-    public function setHeader($value)
-    {
-        header($value);
-    }
 }
