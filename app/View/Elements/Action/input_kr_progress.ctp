@@ -29,12 +29,16 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                         // To distinguish input min/max attribute
                         // Related: https://jira.goalous.com/browse/GL-6453
                         $isIncreaseProgress = bccomp($kr['target_value'], $kr['current_value'], 3) == 1;
+                        if(!$isIncreaseProgress){
+                          $allKrProgressChange = false;
+                        }
                     ?>
                     <input type="text"
                            name="<?= $inputName ?>"
                            class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
                            value="<?= $kr['current_value'] ?>"
                            placeholder="<?= $kr['current_value'] ?>"
+                           onkeyup="onChangedKrValue(<?= $kr['current_value'] ?>, document.querySelector('.action-kr-progress-edit-textbox').value)"
                            disabled
                     >／<?= $kr['target_value'] ?>
                 </div>
@@ -43,3 +47,4 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
         </div>
     </li>
 <?php endforeach; ?>
+

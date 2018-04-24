@@ -18,6 +18,20 @@ $(function () {
     $(document).on("click", ".click-this-remove", evRemoveThis);
 });
 
+var bypassActionKrConfirmModal = false;
+
+function onChangedKrValue(oldValue,newValue) {
+    bypassActionKrConfirmModal = oldValue !== newValue ? true : false;
+}
+
+function submitKrAction() {
+    $("#CommonActionDisplayForm").submit();
+}
+
+function forceSubmitKrAction(){
+    bypassActionKrConfirmModal = true;
+    $("#CommonActionDisplayForm").submit();
+}
 
 // TODO:画像アップロード処理は依存が強すぎてgl_basic.jsに残したままなので、本ファイルに移行する
 var Page = {
@@ -78,6 +92,10 @@ var Page = {
         this.action_resize();
     },
     submit: function (form) {
+        if(!bypassActionKrConfirmModal){
+            $('#actionConfirmationModal').modal('show');
+            return false;
+        }
         var self = this;
 
         // 多重サブミット対策
