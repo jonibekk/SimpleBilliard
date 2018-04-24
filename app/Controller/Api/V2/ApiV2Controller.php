@@ -86,6 +86,23 @@ class ApiV2Controller extends Controller
         $this->_fetchJwtToken($request);
     }
 
+    /**
+     * Get JWT token from request
+     *
+     * @param CakeRequest $request
+     */
+    private function _fetchJwtToken(CakeRequest $request)
+    {
+        $authHeader = $request->header('authorization');
+        if (empty($authHeader)) {
+            return;
+        }
+
+        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
+
+        $this->_jwtToken = $jwt[0] ?? '';
+    }
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -122,27 +139,9 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Get JWT token from request
-     *
-     * @param CakeRequest $request
-     */
-    private function _fetchJwtToken(CakeRequest $request)
-    {
-        $authHeader = $request->header('authorization');
-        if (empty($authHeader)) {
-            return;
-        }
-
-        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
-
-        $this->_jwtToken = $jwt[0] ?? '';
-    }
-
-    /**
      * Initialize current team's status based on current user's team ID
      */
-    private
-    function _initializeTeamStatus()
+    private function _initializeTeamStatus()
     {
         $this->_teamStatus = TeamStatus::getCurrentTeam();
         $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
@@ -153,8 +152,7 @@ class ApiV2Controller extends Controller
      *
      * @return bool True if user is restricted from using the service
      */
-    private
-    function _isRestrictedFromUsingService(): bool
+    private function _isRestrictedFromUsingService(): bool
     {
         if ($this->_isRequestExcludedFromRestriction()) {
             return false;
@@ -168,8 +166,7 @@ class ApiV2Controller extends Controller
      *
      * @return bool True if request is in list of requests ignoring restriction
      */
-    private
-    function _isRequestExcludedFromRestriction(): bool
+    private function _isRequestExcludedFromRestriction(): bool
     {
         foreach ($this->_excludedRequestArray as $ignoreParam) {
             // filter requested param with $ignoreParam
@@ -186,8 +183,7 @@ class ApiV2Controller extends Controller
      *
      * @return bool True if user is restricted to read only
      */
-    private
-    function _isRestrictedToReadOnly(): bool
+    private function _isRestrictedToReadOnly(): bool
     {
         if ($this->_isRequestExcludedFromRestriction()) {
             return false;
@@ -202,18 +198,16 @@ class ApiV2Controller extends Controller
     /**
      * Set the app language for current user
      */
-    private
-    function _setAppLanguage()
+    private function _setAppLanguage()
     {
-        $user = $this->_currentUser;
 
-        if (isset($user) && isset($user['language']) && !boolval($user['auto_language_flg'])) {
-            Configure::write('Config.language', $user['language']);
+        if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
+            Configure::write('Config.language', $this->_currentUser['language']);
             $this
-                ->set('is_not_use_local_name', $this->User->isNotUseLocalName($user['language']));
+                ->set('is_not_use_local_name', $this->_currentUser->isNotUseLocalName($this->_currentUser['language']));
         } else {
             $lang = $this->LangComponent->getLanguage();
-            $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
+            $this->set('is_not_use_local_name', $this->_currentUser->isNotUseLocalName($lang));
         }
 
     }
@@ -224,8 +218,7 @@ class ApiV2Controller extends Controller
      *
      * @return mixed
      */
-    public
-    function invokeAction(
+    public function invokeAction(
         CakeRequest $request
     ) {
         if ($this->_stopInvokeFlag) {
