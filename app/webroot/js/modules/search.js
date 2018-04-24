@@ -52,11 +52,12 @@ define(function () {
                                 e.preventDefault();
                                 if(currentIndex > 1) {
                                     currentIndex--;
-                                    if(currentIndex < $selectedItems.length){
+                                    if(currentIndex >= 1 && currentIndex < $selectedItems.length) {
                                         current = $selectedItems[currentIndex];
                                         current.scrollIntoView();
+                                    } else {
+                                        currentIndex++;
                                     }
-                                    console.log(currentIndex);
                                 }
                                 break;
                             // down
@@ -64,18 +65,18 @@ define(function () {
                                 e.preventDefault();
                                 if(currentIndex < $selectedItems.length) {
                                     currentIndex++;
-                                    if(currentIndex >= 1){
+                                    if(currentIndex >= 1 && currentIndex < $selectedItems.length) {
                                         current = $selectedItems[currentIndex];
                                         current.scrollIntoView();
+                                    } else {
+                                        currentIndex--;
                                     }
-                                    console.log(currentIndex);
                                 }                                
                                 break;
                             //Enter
                             case 13:
                                 e.preventDefault();
                                 if(current){
-                                    console.log(current);
                                     window.location = current.href;
                                 }
                                 break;

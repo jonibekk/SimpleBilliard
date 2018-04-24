@@ -170,7 +170,8 @@ $(document).ready(function () {
 
 });
 
-function hideKeyboard(element) {
+function hideKeyboardElement() {
+    var element = $("#NavSearchInputToggle").get(0);
     element.attr('readonly', 'readonly'); // Force keyboard to hide on input field.
     element.attr('disabled', 'true'); // Force keyboard to hide on textarea field.
     setTimeout(function() {
@@ -263,7 +264,8 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      // setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      $("#NavSearchInputToggle").focus();
       hideNav();
     });
 
@@ -276,7 +278,8 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      setTimeout(function(){$("#NavSearchInput").focus();},650);
+      // setTimeout(function(){$("#NavSearchInput").focus();},650);
+      $("#NavSearchInput").focus();
       hideNav();
     });
     $(".header-dropdown-add,.header-dropdown-functions").off("click").on("click", function() {
@@ -350,10 +353,6 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    var hideKeyboard = function() {
-        document.activeElement.blur();
-        $("input").blur();
-    };
     if(cake.is_mb_app || cake.is_mb_browser) {
        psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
         swipePropagation: false,
@@ -369,7 +368,8 @@ $(function () {
       }
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
-        hideKeyboard();
+        hideVirtualKeyboard();
+        hideKeyboardElement();
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {

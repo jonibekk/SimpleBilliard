@@ -59,7 +59,7 @@ const config = {
       assets_dir + '/js/lib/comments.js',
       assets_dir + '/js/lib/circle.js',
       assets_dir + '/js/lib/cookie.js',
-      // node_modules_dir + '/hide-virtual-keyboard/dist/hide-virtual-keyboard.js',
+      node_modules_dir + '/hide-virtual-keyboard/dist/hide-virtual-keyboard.js',
       assets_dir + '/js/gl_basic.js'
     ],
     output: {
