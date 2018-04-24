@@ -221,7 +221,7 @@ define(function () {
         }
         // 今期、前期の場合
         // 期、月 グラフを有効にする
-        else {
+        else if (dateRange.indexOf('term') != -1) {
             $buttonGroup.find('label[data-value=term], label[data-value=month]').removeAttr('disabled');
             graphType = 'term';
         }
@@ -277,66 +277,12 @@ define(function () {
     var setupCircle = function () {
         $formInputs.on('change', createCallback(cake.url.insight_circle, 'InsightCircleResult'));
     };
+
     /////////////////////////////////////////////////////
     // ランキング セットアップ
     /////////////////////////////////////////////////////
     var setupRanking = function () {
         $formInputs.on('change', createCallback(cake.url.insight_ranking, 'InsightRankingResult'));
-        var loading = false
-        $(window).scroll(function () {
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-                if (!loading) {
-                    loading = true;
-                    if (network_reachable) {
-                        var $RankingMoreReadLink = $('#RankingMoreReadLink');
-                        if ($RankingMoreReadLink.is(':visible')) {
-                            $RankingMoreReadLink.trigger('click')
-                        }
-                    } else {
-                        loading = false;
-                        return false;
-                    }
-                }
-            }
-        });
-        $(document).on("click", ".click-ranking-read-more", function() {
-        
-            var $obj = $(this);
-            var get_url = $obj.attr('get-url');
-            $obj.attr('disabled', 'disabled');
-            var $loader_html = $('<i id="__ranking_loader" class="fa fa-refresh fa-spin"></i>');
-            $.ajax({
-                type: 'GET',
-                url: get_url,
-                async: true,
-                dataType: 'json',
-                success: function (data) {
-                    if (!$.isEmptyObject(data.html)) {
-                        var $posts = $(data.html)
-                        var rows = $($posts.get(2)).find('.insight-ranking-table-row')
-                        var newLoader = $($posts.get(4)).find('a')
-                        $("#ranking-table").append(rows);
-                        showMore($posts);
-                        $loader_html.remove();
-                        $obj.text(cake.message.info.e);
-                        $obj.attr('get-url', newLoader.attr('get-url'))
-                        if (rows.length) {
-                            $obj.removeAttr('disabled');
-                            $("#ShowMoreNoData").hide();
-                        }else {
-                            $("#ShowMoreNoData").show();
-                            $obj.css("display", "none");
-                        }
-                    }
-                    loading = false;
-                },
-                error: function () {
-                    loading = false;
-                    
-                },
-            });
-            return false;
-        });
     };
 
     var reload = function () {

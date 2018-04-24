@@ -30,7 +30,6 @@ use Goalous\Model\Enum as Enum;
 class PagesController extends AppController
 {
     public $uses = ['TermsOfService'];
-    public $components = ['Mention'];
 
     public function beforeFilter()
     {

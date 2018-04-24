@@ -125,7 +125,7 @@ class MemberGroup extends AppModel
         if ($isOnlyMyGroup) {
             $group_list = $this->getMyGroupList();
         } else {
-            $group_list = $this->Group->getAllList(true, true);
+            $group_list = $this->Group->getAllList();
         }
         $group_ids = array_keys($group_list);
         $group_visions = $this->Group->GroupVision->getGroupVisionsByGroupIds($group_ids, true);
