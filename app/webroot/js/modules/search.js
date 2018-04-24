@@ -2,6 +2,7 @@ define(function () {
     // ヘッダーの検索ボックス処理
     var headerSearch = {
         setup: function () {
+            var current, currentIndex;
             var $NavSearchForm = $('#NavSearchForm');
             var $NavSearchInput = $('#NavSearchInput');
             var $NavSearchResults = $('#NavSearchResults');
@@ -30,48 +31,52 @@ define(function () {
                 }
             };
 
-            $NavSearchForm
-                // Enter 押しても submit させないようにする
-                .on('submit', function (e) {
-                    e.preventDefault();
-                    return false;
-                });
+            // $NavSearchForm
+            //     // Enter 押しても submit させないようにする
+            //     .on('submit', function (e) {
+            //         e.preventDefault();
+            //         return false;
+            //     });
 
             $NavSearchInput
                 .on('keydown', function (e) {
-                    var $selectedItem = $NavSearchResults.find('.nav-search-result-item');
-                    if ($selectedItem.length) {
+                    var $selectedItems = $('.search-list-item-link');
+                    if ($selectedItems.length) {
                         var code = e.keyCode || e.which;
-                        var current = $selectedItem.first();
+                        if(!currentIndex) {
+                            currentIndex = $selectedItems.first().index();
+                        }
                         switch (code) {
                             // up
                             case 38:
                                 e.preventDefault();
-                                if(current.prev() && $current.prev().length) {
-                                    current = current.prev();
-                                    current.get(0).scrollIntoView();
-                                    current.focus();
-                                    console.log(current.get(0));
+                                if(currentIndex > 1) {
+                                    currentIndex--;
+                                    if(currentIndex < $selectedItems.length){
+                                        current = $selectedItems[currentIndex];
+                                        current.scrollIntoView();
+                                    }
+                                    console.log(currentIndex);
                                 }
                                 break;
-
                             // down
                             case 40:
                                 e.preventDefault();
-                                if(current.next() && current.next().length) {
-                                    current = current.next();
-                                    current.get(0).scrollIntoView();
-                                    current.focus();
-                                    console.log(current.get(0));
+                                if(currentIndex < $selectedItems.length) {
+                                    currentIndex++;
+                                    if(currentIndex >= 1){
+                                        current = $selectedItems[currentIndex];
+                                        current.scrollIntoView();
+                                    }
+                                    console.log(currentIndex);
                                 }                                
                                 break;
-
-                            // Enter
+                            //Enter
                             case 13:
                                 e.preventDefault();
                                 if(current){
-                                    console.log(current.get(0));
-                                    current.trigger("click");
+                                    console.log(current);
+                                    window.location = current.href;
                                 }
                                 break;
                         }
@@ -229,36 +234,44 @@ define(function () {
                     // }, 150);
                 });
 
-            // // 矢印キーで選択可能にする
-            // $NavSearchResults
-            //     .on('keydown', '.nav-search-result-item', function (e) {
-            //         var $selectedItem = $NavSearchResults.find('.nav-search-result-item:focus');
-            //         if ($selectedItem.size()) {
-            //             var code = e.keyCode || e.which;
-            //             var current = $selectedItem.first();
-            //             switch (code) {
-            //                 // up
-            //                 case 38:
-            //                     e.preventDefault();
-            //                     $selectedItem.prev().focus();
-            //                     current = $selectedItem.prev();
-            //                     break;
-
-            //                 // down
-            //                 case 40:
-            //                     e.preventDefault();
-            //                     $selectedItem.next().focus();
-            //                     current = $selectedItem.next();
-            //                     break;
-
-            //                 // Enter
-            //                 case 13:
-            //                     e.preventDefault();
-            //                     current.trigger("click");
-            //                     break;
-            //             }
-            //         }
-            //     });
+            // 矢印キーで選択可能にする
+            $NavSearchResults
+                .on('keydown', '.nav-search-result-item', function (e) {
+                    var $selectedItems = $('.search-list-item-link');
+                    if ($selectedItems.length) {
+                        var code = e.keyCode || e.which;
+                        if(!currentIndex) {
+                            currentIndex = $selectedItems.first().index();
+                        }
+                        switch (code) {
+                            // up
+                            case 38:
+                                e.preventDefault();
+                                if(currentIndex > 1) {
+                                    currentIndex--;
+                                    if(currentIndex >= 1){
+                                        current = $selectedItems[currentIndex];
+                                        $(current).css("background-color")
+                                        current.scrollIntoView();
+                                    }
+                                    console.log(currentIndex);
+                                }
+                                break;
+                            // down
+                            case 40:
+                                e.preventDefault();
+                                if(currentIndex < $selectedItems.length) {
+                                    currentIndex++;
+                                    if(currentIndex < $selectedItems.length){
+                                        current = $selectedItems[currentIndex];
+                                        current.scrollIntoView();
+                                    }
+                                    console.log(currentIndex);
+                                }                                
+                                break;
+                        }
+                    }
+                });
         }
     };
 
