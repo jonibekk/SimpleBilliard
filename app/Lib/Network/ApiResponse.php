@@ -39,7 +39,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function addData($data): ApiResponse
+    public function setData($data): ApiResponse
     {
         $this->_responseBody['data'] = $data;
         return $this;
@@ -52,7 +52,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function addMessage($message): ApiResponse
+    public function setMessage($message): ApiResponse
     {
         $this->_responseBody['message'] = $message;
         return $this;
@@ -65,7 +65,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function addExceptionTrace($exceptionTrace): ApiResponse
+    public function setExceptionTrace($exceptionTrace): ApiResponse
     {
         $this->_responseBody['exception_trace'] = $exceptionTrace;
         return $this;
