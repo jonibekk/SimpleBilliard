@@ -350,37 +350,10 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    // function hideKeyboard() {
-    //   //this set timeout needed for case when hideKeyborad
-    //   //is called inside of 'onfocus' event handler
-    //   setTimeout(function() {
-
-    //     //creating temp field
-    //     var field = document.createElement('input');
-    //     field.setAttribute('type', 'text');
-    //     //hiding temp field from peoples eyes
-    //     //-webkit-user-modify is nessesary for Android 4.x
-    //     field.setAttribute('style', 'position:absolute; top: 0px; opacity: 0; -webkit-user-modify: read-write-plaintext-only; left:0px;');
-    //     document.body.appendChild(field);
-
-    //     //adding onfocus event handler for out temp field
-    //     field.onfocus = function(){
-    //       //this timeout of 200ms is nessasary for Android 2.3.x
-    //       setTimeout(function() {
-
-    //         field.setAttribute('style', 'display:none;');
-    //         setTimeout(function() {
-    //           document.body.removeChild(field);
-    //           document.body.focus();
-    //         }, 14);
-
-    //       }, 200);
-    //     };
-    //     //focusing it
-    //     field.focus();
-
-    //   }, 50);
-    // }
+    var hideKeyboard = function() {
+        document.activeElement.blur();
+        $("input").blur();
+    };
     if(cake.is_mb_app || cake.is_mb_browser) {
        psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
         swipePropagation: false,
@@ -390,14 +363,13 @@ $(function () {
         suppressScrollY: false,
       });
     }
-    $("#NavSearchInputToggle").off("keyup touchend").on("keyup touchend", function(e) {
+    $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
       if(!cake.is_mb_app && !cake.is_mb_browser){
         return;
       }
-      var position = $('#NavSearchInputToggle').get(0).selectionStart - 1;
-      var key = this.value.charCodeAt(position);
-      if(key == 32 || key == 10) {
-        hideVirtualKeyboard();
+      var code = e.keyCode || e.which;
+      if(code == 13) { //Enter keycode
+        hideKeyboard();
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {

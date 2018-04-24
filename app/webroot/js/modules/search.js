@@ -202,17 +202,26 @@ define(function () {
                 .on('keydown', '.nav-search-result-item', function (e) {
                     var $selectedItem = $NavSearchResults.find('.nav-search-result-item:focus');
                     if ($selectedItem.size()) {
-                        switch (e.keyCode) {
+                        var code = e.keyCode || e.which;
+                        var current = $selectedItem.first();
+                        switch (code) {
                             // up
                             case 38:
                                 e.preventDefault();
                                 $selectedItem.prev().focus();
+                                current = $selectedItem.prev();
                                 break;
 
                             // down
                             case 40:
                                 e.preventDefault();
                                 $selectedItem.next().focus();
+                                current = $selectedItem.next();
+                                break;
+
+                            // Enter
+                            case 13:
+                                current.trigger("click");
                                 break;
                         }
                     }
