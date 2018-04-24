@@ -92,19 +92,19 @@ class ApiV2Controller extends Controller
 
         if (!$this->_authenticateUser()) {
             return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                ->addMessage(__('You should be logged in.'));
+                ->setMessage(__('You should be logged in.'));
         }
         $this->_initializeTeamStatus();
 
         if ($this->_isRestrictedFromUsingService()) {
             $this->_stopInvokeFlag = true;
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->addMessage(__("You cannot use service on the team."));
+                ->setMessage(__("You cannot use service on the team."));
         }
         if ($this->_isRestrictedToReadOnly()) {
             $this->_stopInvokeFlag = true;
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->addMessage(__("You may only read your team’s pages."));
+                ->setMessage(__("You may only read your team’s pages."));
         }
 
         $this->_setAppLanguage();
