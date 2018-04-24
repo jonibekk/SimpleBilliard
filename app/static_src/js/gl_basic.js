@@ -381,6 +381,15 @@ $(function () {
 
     //   }, 50);
     // }
+    if(cake.is_mb_app || cake.is_mb_browser) {
+       psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
+        swipePropagation: false,
+        wheelPropagation: false,
+        maxScrollbarLength: 0,
+        suppressScrollX: true,
+        suppressScrollY: false,
+      });
+    }
     $("#NavSearchInputToggle").off("keyup touchend").on("keyup touchend", function(e) {
       if(!cake.is_mb_app || !cake.is_mb_browser){
         return;
