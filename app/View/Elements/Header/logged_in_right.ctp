@@ -16,7 +16,7 @@
         </a>
     <?php endif; ?>
 
-    <?php if($is_mb_app || $isMobileBrowser): ?>
+    <?php if($is_mb_app): ?>
         <div class="header-icon-search-toggle header-icon-zoom">
             <a href="#">
                 <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>

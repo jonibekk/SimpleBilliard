@@ -353,7 +353,8 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    if(cake.is_mb_app || cake.is_mb_browser) {
+// console.log(cake.is_mb_app);
+    if(cake.is_mb_app) {
        psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
         swipePropagation: false,
         wheelPropagation: false,
@@ -363,9 +364,6 @@ $(function () {
       });
     }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
-      if(!cake.is_mb_app && !cake.is_mb_browser){
-        return;
-      }
       var code = e.keyCode || e.which;
       if(code == 13) { //Enter keycode
         hideVirtualKeyboard();

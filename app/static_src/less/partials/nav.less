@@ -485,6 +485,24 @@
     }
 }
 
+.button-container {
+    @media @xsmall{
+        background-color: transparent;
+        width: 30%;
+        padding: 0;
+        max-width: 60px;
+        min-width: 60px;
+        position: relative;
+    }
+    @media @small{
+        background-color: transparent;
+        width: 30%;
+        padding: 0;
+        max-width: 197px;
+        min-width: 197px;
+        position: relative;
+    }
+}
 .navbar-nav {
     margin-top:50px;
     padding: 0 15px;
@@ -496,27 +514,28 @@
     }
     @media @small{
         background-color:transparent;
-        width:47%;
-        padding:0;
-        max-width:434px;
+        width: 87%;
+        padding: 0;
+        max-width: 474px;
+        min-width: 329px;
         .header-search-group{
             float:right;
         }
     }
     @media @medium{
         background-color: transparent;
-        width: 44%;
+        width: 87%;
         padding: 0;
-        max-width: 398px;
+        max-width: 737px;
         .header-search-group{
             float:right;
         }
     }
     @media @large{
         background-color: transparent;
-        width: 68%;
+        width: 100%;
         padding: 0;
-        max-width: 664px;
+        min-width: 664px;
         .header-search-group{
             float:right;
         }
@@ -875,20 +894,22 @@ span.deleteicon input {
 }
 
 .minimum-container {
-    width: 320px;
-    position: fixed !important;
+    width: 260px;
+    position: relative !important;
     top: 0;
     right: 0;
 }
 .medium-container {
-    margin-left: ~"calc(100% - 320px)";
-    position: relative;
-    flex: 1;
+    width: 260px;
+    float: right;
+    top: 0;
+    margin-right: 16px;
 }
 .large-container {
-    width: 320px;
-    position: fixed !important;
+    width: 260px;
+    position: relative !important;
     top: 0;
+    right: 16px;
 }
 .nav-spacer {
     width: 8px;
@@ -905,10 +926,11 @@ span.deleteicon input {
 .visible-lg-flex {
     flex: 1;
     display: none !important; 
-    /*justify-content: center;*/
+    justify-content: center;
     align-items: center;
     position: relative;
     z-index: 3;
+    top: 0;
 }
 @media (max-width: 479px) {
   .visible-xxs-flex {

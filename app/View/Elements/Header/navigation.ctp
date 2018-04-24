@@ -1,28 +1,23 @@
-<div class="minimum-wrapper">
-    <div class="visible-xxs-flex hidden-xs hidden-sm hidden-md hidden-lg">
-        <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
-                class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon-minimum js-nav-toggle">
-            <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
-            <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
-        </button>
-        <?= $this->element('Header/logged_in_right'); ?>
-        <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>z
-    </div>
-</div>
-<div class="hidden-xxs visible-xs-flex visible-sm-flex hidden-md-flex hidden-lg-flex"">
+<div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
             class="<?= $is_mb_app ? "mb-app" : "" ?> mb-to-front-almost header-toggle-icon js-nav-toggle">
         <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
         <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
     </button>
-    <div class="medium-container">
-    <div class="hidden-xxs visible-xs-flex visible-sm-flex hidden-md hidden-lg"">
-            <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
-                <?= $this->element('Header/logged_in_right'); ?>
-                <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
-            </div>
-        </div>
+</div>
+<div class="medium-container hidden-xxs visible-xs-flex visible-sm-flex hidden-md hidden-lg"">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>
+        <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
     </div>
+    <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
+</div>
+<div class="minimum-container visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>
+        <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
+    </div>
+    <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
 </div>
 <div id="NavbarOffcanvas">
     <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
@@ -96,7 +91,7 @@
             <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
                 <?= $this->element('Header/logged_in_right'); ?>
             </div>
-        <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
+            <div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
         </div>
     </div>
 </div>
