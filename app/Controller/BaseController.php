@@ -41,7 +41,7 @@ class BaseController extends Controller
             'csrfExpires' => '+24 hour'
         ],
         'Auth'     => [
-            'flash'        => [
+            'flash' => [
                 'element' => 'alert',
                 'key'     => 'auth',
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
@@ -390,10 +390,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY) {
-            return true;
-        }
-        return false;
+        return $TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 
     /**
@@ -410,10 +407,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->isCannotUseService()) {
-            return true;
-        }
-        return false;
+        return $TeamService->isCannotUseService();
     }
 
     /**
