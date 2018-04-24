@@ -390,7 +390,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        return $TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+        return boolval($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY);
     }
 
     /**
@@ -407,7 +407,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        return $TeamService->isCannotUseService();
+        return boolval($TeamService->isCannotUseService());
     }
 
     /**
