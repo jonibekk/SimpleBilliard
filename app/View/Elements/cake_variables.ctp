@@ -728,6 +728,7 @@ App::uses('AttachedFile', 'Model');
         common_form_type: "<?= isset($common_form_type) ? $common_form_type : null?>",
         request_params: <?=json_encode($this->request->params)?>,
         is_mb_app: "<?= $is_mb_app ?>",
+        is_mb_browser: "<?= $is_mb_browser ?>",
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
         is_mb_app_ios_high_header: "<?= $is_mb_app_ios_high_header ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
