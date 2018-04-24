@@ -1516,6 +1516,7 @@ class NotifyBizComponent extends Component
             }
             $this->notify_option['item_name'] = json_encode([$itemName]);
         }
+        $this->notify_option['force_notify'] = true;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
     
