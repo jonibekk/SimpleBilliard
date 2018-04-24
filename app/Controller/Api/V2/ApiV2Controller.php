@@ -1,8 +1,9 @@
 <?php
 
-App::uses('ApiResponse', '/Lib/Network');
-App::uses('User', 'Model');
+App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
+App::uses('TeamStatus', 'Model');
+App::uses('User', 'Model');
 
 /**
  * Parent controller for API v2
@@ -16,11 +17,67 @@ App::uses('TeamMember', 'Model');
  */
 class ApiV2Controller extends Controller
 {
+    /** @var string */
     private $_jwtToken;
 
+    /** @var User */
     private $_currentUser;
 
+    /** @var int */
     private $_currentTeamId;
+
+    /** @var TeamStatus */
+    private $_teamStatus;
+
+    /** @var bool */
+    private $_stopInvokeFlag = false;
+
+    /**
+     * This list for excluding from prohibited request
+     * If only controller name is specified, including all actions
+     * If you would like to specify several action, refer to the following:
+     * [
+     * 'controller' => 'users', 'action'     => 'settings',
+     * ],
+     * [
+     * 'controller' => 'users', 'action'     => 'view_goals',
+     * ],
+     *
+     * @var array
+     */
+    private $_excludedRequestArray = [
+        [
+            'controller' => 'payments',
+        ],
+        [
+            'controller' => 'teams',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'logout',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'accept_invite',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'settings',
+        ],
+        [
+            'controller' => 'terms',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'privacy_policy',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'terms',
+        ],
+    ];
 
     public function __construct(CakeRequest $request = null, CakeResponse $response = null)
     {
@@ -33,33 +90,24 @@ class ApiV2Controller extends Controller
     {
         parent::beforeFilter();
 
-        if ($this->_authenticateUser()) {
-            $this->_initializeTeamStatus();
-            $this->_setAppLanguage();
-        } else {
-            return $this->returnResponseBadRequest(__('You should be logged in.'));
+        if (!$this->_authenticateUser()) {
+            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
+                ->addMessage(__('You should be logged in.'));
+        }
+        $this->_initializeTeamStatus();
+
+        if ($this->_isRestrictedFromUsingService()) {
+            $this->_stopInvokeFlag = true;
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                ->addMessage(__("You cannot use service on the team."));
+        }
+        if ($this->_isRestrictedToReadOnly()) {
+            $this->_stopInvokeFlag = true;
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                ->addMessage(__("You may only read your team’s pages."));
         }
 
-        return true;
-    }
-
-    /**
-     * Set HTTP header to disable PHP caching function
-     */
-    private function _disablePHPCache()
-    {
-        $this->setHeader("Cache-Control: no-store, no-cache, max-age=0");
-        $this->setHeader("Pragma: no-cache");
-    }
-
-    /**
-     * Set HTTP header for response
-     *
-     * @param string $value
-     */
-    public function setHeader($value)
-    {
-        header($value);
+        $this->_setAppLanguage();
     }
 
     /**
@@ -78,10 +126,61 @@ class ApiV2Controller extends Controller
      */
     private function _initializeTeamStatus()
     {
-        $teamStatus = TeamStatus::getCurrentTeam();
-        $teamStatus->initializeByTeamId($this->_currentTeamId);
+        $this->_teamStatus = TeamStatus::getCurrentTeam();
+        $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
     }
 
+    /**
+     * Check if user is restricted from using service
+     *
+     * @return bool True if user is restricted from using the service
+     */
+    private function _isRestrictedFromUsingService(): bool
+    {
+        if ($this->_isRequestExcludedFromRestriction()) {
+            return false;
+        }
+
+        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
+    }
+
+    /**
+     * Check whether current request is excluded from any restriction
+     *
+     * @return bool True if request is in list of requests ignoring restriction
+     */
+    private function _isRequestExcludedFromRestriction(): bool
+    {
+        foreach ($this->_excludedRequestArray as $ignoreParam) {
+            // filter requested param with $ignoreParam
+            $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
+            if ($intersectedParams == $ignoreParam) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check whether user is restricted to read only
+     *
+     * @return bool True if user is restricted to read only
+     */
+    private function _isRestrictedToReadOnly(): bool
+    {
+        if ($this->_isRequestExcludedFromRestriction()) {
+            return false;
+        }
+        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
+            return false;
+        }
+
+        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+    }
+
+    /**
+     * Set the app language for current user
+     */
     private function _setAppLanguage()
     {
         $user = $this->_currentUser;
@@ -97,139 +196,17 @@ class ApiV2Controller extends Controller
 
     }
 
-    /**
-     * Create CakeResponse object to be returned to the client
+    /** Override parent's method
      *
-     * @param integer     $httpStatusCode HTTP status code of the response
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
+     * @param CakeRequest $request
      *
-     * @return CakeResponse
+     * @return mixed
      */
-    private function _getResponse(
-        int $httpStatusCode,
-        $data = null,
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        $ret = [];
-        if ($data !== null) {
-            $ret['data'] = $data;
+    public function invokeAction(CakeRequest $request)
+    {
+        if ($this->_stopInvokeFlag) {
+            return false;
         }
-        if ($message !== null) {
-            $ret['message'] = $message;
-        }
-        if ($exceptionTrace !== null) {
-            $ret['exception_trace'] = $exceptionTrace;
-        }
-        $this->response->type('json');
-        $this->response->body(json_encode($ret));
-        $this->response->statusCode($httpStatusCode);
-        $this->_disablePHPCache();
-
-        return $this->response;
-    }
-
-    /**
-     * Return HTTP CODE 200: Success
-     *
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseSuccess(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(200, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Return HTTP CODE 400: Bad request
-     *
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseBadRequest(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(400, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Return HTTP CODE 403: Forbidden
-     *
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseForbidden(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(403, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Return HTTP CODE 404: Not found
-     *
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseNotFound(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(404, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Return HTTP CODE 409: Resource conflict
-     *
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseResourceConflict(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(409, $data, $message, $exceptionTrace);
-    }
-
-    /**
-     * Return HTTP CODE 500: Internal server error
-     *
-     * @param array|null  $data           Data do be returned to the client
-     * @param string|null $message        Additional message to be sent
-     * @param string|null $exceptionTrace Any trace if an exception occurs
-     *
-     * @return CakeResponse
-     */
-    protected function returnResponseInternalServerError(
-        array $data = [],
-        string $message = null,
-        string $exceptionTrace = null
-    ) {
-        return $this->_getResponse(500, $data, $message, $exceptionTrace);
+        return parent::invokeAction($request);
     }
 }
