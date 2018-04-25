@@ -181,11 +181,13 @@ class Team extends AppModel
      * @var array
      */
     public $hasMany = [
+        'Badge',
         'Circle',
         'CommentLike',
         'CommentMention',
         'CommentRead',
         'Comment',
+        'GivenBadge',
         'Group',
         'Invite',
         'JobCategory',

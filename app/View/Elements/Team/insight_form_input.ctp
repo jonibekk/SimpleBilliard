@@ -62,15 +62,6 @@ if (empty($this->request->query['date_range'])) {
         ];
 
     }
-    if (!empty($date_ranges['past_terms'])) {
-        foreach ($date_ranges['past_terms'] as $term) {
-            $dateRangeOptions += [
-                $term['id'] => sprintf(" %s - %s",
-                    str_replace('-', '/', $term['start']),
-                    str_replace('-', '/', $term['end'])),
-            ];
-        }
-    }
     echo $this->Form->input('date_range', [
         'id'        => 'InsightInputDateRange',
         'type'      => 'select',
