@@ -37,55 +37,110 @@ class ApiResponse extends CakeResponse
     /**
      * Add data to response body
      *
-     * @param array|string $data Data to be sent to the client
+     * @param array|string $data       Data to be sent to the client
+     * @param bool         $appendFlag Append input to existing data
      *
      * @return ApiResponse
      */
-    public function setData($data): ApiResponse
+    public function setData($data, bool $appendFlag = false): ApiResponse
     {
-        $this->_responseBody['data'] = $data;
+        if (empty($data)) {
+            return $this;
+        }
+        if ($appendFlag) {
+            if (is_array($data)) {
+                if (is_int(array_keys($data)[0])) {
+                    $this->_responseBody['data'] = array_merge($this->_responseBody['data'],
+                        $data);
+                } else {
+                    foreach ($data as $key => $value) {
+                        $this->_responseBody['data'][] = [$key => $value];
+                    }
+                }
+            } elseif (is_string($data)) {
+                $this->_responseBody['data'][] = $data;
+            }
+        } else {
+            $this->_responseBody['data'] = $data;
+        }
         return $this;
     }
 
     /**
      * Add message to the response body
      *
-     * @param string $message Additional message
+     * @param string $message    Additional message
+     * @param bool   $appendFlag Append input to existing data
      *
      * @return ApiResponse
      */
-    public function setMessage($message): ApiResponse
+    public function setMessage($message, bool $appendFlag = false): ApiResponse
     {
-        $this->_responseBody['message'] = $message;
+        if (empty($message)) {
+            return $this;
+        }
+        if ($appendFlag) {
+            $this->_responseBody['message'] .= $message . '\n';
+        } else {
+            $this->_responseBody['message'] = $message;
+        }
         return $this;
     }
 
     /**
      * Add exception trace to the response body
      *
-     * @param $exceptionTrace Exception trace for any errors in the server
+     * @param array|string $exceptionTrace Exception trace for any errors in the server
+     * @param bool         $appendFlag     Append input to existing data
      *
      * @return ApiResponse
      */
-    public function setExceptionTrace($exceptionTrace): ApiResponse
+    public function setExceptionTrace($exceptionTrace, bool $appendFlag = false): ApiResponse
     {
-        $this->_responseBody['exception_trace'] = $exceptionTrace;
+        if (empty($exceptionTrace)) {
+            return $this;
+        }
+        if ($appendFlag) {
+            if (is_array($exceptionTrace)) {
+                if (is_int(array_keys($exceptionTrace)[0])) {
+                    $this->_responseBody['exception_trace'] = array_merge($this->_responseBody['exception_trace'],
+                        $exceptionTrace);
+                } else {
+                    foreach ($exceptionTrace as $key => $value) {
+                        $this->_responseBody['exception_trace'][] = [$key => $value];
+                    }
+                }
+            } elseif (is_string($exceptionTrace)) {
+                $this->_responseBody['exception_trace'][] = $exceptionTrace;
+            }
+        } else {
+            $this->_responseBody['exception_trace'] = $exceptionTrace;
+        }
+
         return $this;
     }
 
     /**
-     * Set HTTP header for response
+     * Add HTTP header for response
      *
-     * @param string|array $value
+     * @param array|string $value
+     * @param bool         $appendFlag Append input to existing data
      *
-     * @return CakeResponse
+     * @return ApiResponse
      */
-    public function setHeader($value)
+    public function setHeader($value, bool $appendFlag = false): ApiResponse
     {
-        if (is_array($value)) {
-            $this->_responseHeader = array_merge($this->_responseHeader, $value);
+        if (empty($value)) {
+            return $this;
+        }
+        if ($appendFlag) {
+            if (is_array($value)) {
+                $this->_responseHeader = array_merge($this->_responseHeader, $value);
+            } else {
+                $this->_responseHeader[] = $value;
+            }
         } else {
-            $this->_responseHeader[] = $value;
+            $this->_responseHeader = $value;
         }
 
         return $this;
