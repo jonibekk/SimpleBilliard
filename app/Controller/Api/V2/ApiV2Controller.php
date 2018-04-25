@@ -45,7 +45,7 @@ class ApiV2Controller extends Controller
      *
      * @var array
      */
-    private $_excludedRequestArray = [
+    private $_excludedRequest = [
         [
             'controller' => 'payments',
         ],
@@ -168,7 +168,7 @@ class ApiV2Controller extends Controller
      */
     private function _isRequestExcludedFromRestriction(): bool
     {
-        foreach ($this->_excludedRequestArray as $ignoreParam) {
+        foreach ($this->_excludedRequest as $ignoreParam) {
             // filter requested param with $ignoreParam
             $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
             if ($intersectedParams == $ignoreParam) {
