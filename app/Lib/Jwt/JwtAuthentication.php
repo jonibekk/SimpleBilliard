@@ -291,6 +291,15 @@ class JwtAuthentication
     }
 
     /**
+     * return env name this token is used for
+     * @return string
+     */
+    public function getEnvName(): string
+    {
+        return $this->env;
+    }
+
+    /**
      * return JWT token id
      * @return string
      */
