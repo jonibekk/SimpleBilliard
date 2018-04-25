@@ -1270,10 +1270,18 @@ class UserTest extends GoalousTestCase
         $userValidator = new UserValidator;
 
         $this->assertNotInternalType('array', $userValidator->validate($sampleUser));
+    }
 
+    public function test_NewValidationMethod_failure(){
+        /** @var User $user */
+        $user = ClassRegistry::init('User');
+
+        $sampleUser = $user->getById(1);
+        
         $sampleUser['first_name'] = '129yrb8y))*&)@&$)';
 
-        $this->assertInternalType('array', $userValidator->validate($sampleUser));
+        $userValidator = new UserValidator;
 
+        $this->assertInternalType('array', $userValidator->validate($sampleUser));
     }
 }
