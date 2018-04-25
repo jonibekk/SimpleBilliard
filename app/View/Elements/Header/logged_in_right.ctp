@@ -17,7 +17,7 @@
     <?php endif; ?>
 
     <?php if($is_mb_app || $isMobileBrowser): ?>
-        <div class="mb-header-icon-search-toggle header-icon-zoom">
+        <div class="header-icon-search-toggle header-icon-zoom <?= $is_mb_app || $isMobileBrowser ? 'zoom-icon-adjust' : '' ?>">
             <a href="#">
                 <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
             </a>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="visible-xxxs-flex visible-xxs-flex hidden-xs hidden-sm hidden-md hidden-lg">
-            <div class="header-icon-search-toggle header-icon-zoom">
+            <div class="header-icon-search-toggle header-icon-zoom <?= $is_mb_app || $isMobileBrowser ? 'zoom-icon-adjust' : '' ?>">
                 <a href="#">
                     <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
                 </a>
