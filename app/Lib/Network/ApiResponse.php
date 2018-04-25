@@ -190,18 +190,26 @@ class ApiResponse extends CakeResponse
     }
 
     /**
-     * Set HTTP header for response
+     * Add HTTP header for response
      *
-     * @param string|array $value
+     * @param array|string $value
+     * @param bool         $appendFlag Append input to existing data
      *
-     * @return CakeResponse
+     * @return ApiResponse
      */
-    public function setHeader($value)
+    public function setHeader($value, bool $appendFlag = false): ApiResponse
     {
-        if (is_array($value)) {
-            $this->_responseHeader = array_merge($this->_responseHeader, $value);
+        if (empty($value)) {
+            return $this;
+        }
+        if ($appendFlag) {
+            if (is_array($value)) {
+                $this->_responseHeader = array_merge($this->_responseHeader, $value);
+            } else {
+                $this->_responseHeader[] = $value;
+            }
         } else {
-            $this->_responseHeader[] = $value;
+            $this->_responseHeader = $value;
         }
 
         return $this;
