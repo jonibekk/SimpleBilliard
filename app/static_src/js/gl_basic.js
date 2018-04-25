@@ -181,7 +181,7 @@ function hideKeyboardElement(element) {
     }, 100);
 }
 
-var lastWidth,lastHeight,lastCircleHeight,psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset,lastLeftContainerHeight;
+var lastWidth,lastHeight,lastCircleHeight,psNavResults,psNavResultsToggle,psCircleList,psCircleListHamburger,psLeftSideContainer,psGgoalousNavigationoalousNavigation,circleCount,invisibleCircles,visibleCircles,isUnset,lastLeftContainerHeight,psNavbarOffCanvas;
 isUnset = false;
 var footerNotVisible = false;
 var showMoreNotVisible = false;
@@ -422,9 +422,17 @@ $(function () {
       suppressScrollX: true,
       suppressScrollY: false,
     });
+     psNavbarOffCanvas = new PerfectScrollbar('#NavbarOffcanvas', {
+      swipePropagation: false,
+      wheelPropagation: false,
+      maxScrollbarLength: 0,
+      suppressScrollX: true,
+      suppressScrollY: false,
+    });
     $(window).on("load resize", function() {
       psNavResults.update();
       psNavResultsToggle.update();
+      psNavbarOffCanvas.update();
     });
     $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
         e.stopPropagation();
