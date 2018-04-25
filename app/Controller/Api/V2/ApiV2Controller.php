@@ -209,7 +209,6 @@ class ApiV2Controller extends Controller
             $lang = $this->LangComponent->getLanguage();
             $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
         }
-
     }
 
     /** Override parent's method

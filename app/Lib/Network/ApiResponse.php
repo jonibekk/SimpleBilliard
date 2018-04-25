@@ -26,6 +26,8 @@ class ApiResponse extends CakeResponse
 
     private $_responseBody = array();
 
+    private $_responseHeader = array();
+
     public function __construct(int $httpCode)
     {
         parent::__construct();
@@ -74,13 +76,17 @@ class ApiResponse extends CakeResponse
     /**
      * Set HTTP header for response
      *
-     * @param string $value
+     * @param string|array $value
      *
      * @return CakeResponse
      */
     public function setHeader($value)
     {
-        header($value);
+        if (is_array($value)) {
+            $this->_responseHeader = array_merge($this->_responseHeader, $value);
+        } else {
+            $this->_responseHeader[] = $value;
+        }
 
         return $this;
     }
@@ -93,6 +99,7 @@ class ApiResponse extends CakeResponse
     public function getResponse(): CakeResponse
     {
         $this->type('json');
+        $this->header($this->_responseHeader);
         $this->body(json_encode($this->_responseBody));
         $this->disableCache();
 
