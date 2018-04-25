@@ -208,7 +208,7 @@ class ApiResponse extends CakeResponse
         }
         if (is_array($value)) {
             $this->_responseHeader = array_merge($this->_responseHeader, $value);
-        } else {
+        } elseif (is_string($value)) {
             $this->_responseHeader[] = $value;
         }
 
