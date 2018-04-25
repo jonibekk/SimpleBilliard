@@ -302,7 +302,9 @@ $(function () {
         $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
-        updateSearchPosition();
+        if(lastWidth > 479){
+          updateSearchPosition();
+        }
       }
       if($(window).height() !== lastHeight){
         lastHeight = $(window).height();

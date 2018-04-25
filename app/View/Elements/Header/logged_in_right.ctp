@@ -17,23 +17,23 @@
     <?php endif; ?>
 
     <?php if($is_mb_app || $isMobileBrowser): ?>
-        <div class="<?= $is_mb_app ? "mb-header-icon-search-toggle header-icon-search-toggle" : "header-icon-search-toggle"?> header-icon-zoom">
+        <div class="mb-header-icon-search-toggle header-icon-zoom">
             <a href="#">
-                <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
             </a>
         </div>
     <?php else: ?>
         <div class="hidden-xxxs hidden-xxs visible-xs-flex visible-sm-flex visible-md-flex visible-lg-flex">
             <div class="header-icon-search header-icon-zoom">
                 <a href="#">
-                    <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                    <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
                 </a>
             </div>
         </div>
         <div class="visible-xxxs-flex visible-xxs-flex hidden-xs hidden-sm hidden-md hidden-lg">
-            <div class="<?= $is_mb_app ? "mb-header-icon-search-toggle header-icon-search-toggle" : "header-icon-search-toggle"?> header-icon-zoom">
+            <div class="header-icon-search-toggle header-icon-zoom">
                 <a href="#">
-                    <i class="fa fa-search header-icons header-icon-zoom header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                    <i class="fa fa-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
                 </a>
             </div>
         </div>
