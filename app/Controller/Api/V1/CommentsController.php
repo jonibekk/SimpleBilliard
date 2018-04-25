@@ -104,9 +104,6 @@ class CommentsController extends ApiController
             case Post::TYPE_CREATE_GOAL:
                 $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
                 break;
-            case Post::TYPE_CREATE_GOAL:
-                $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
-                break;
         }
         // Push comments notifications
         $socketId = Hash::get($this->request->data, 'socket_id');
@@ -145,6 +142,9 @@ class CommentsController extends ApiController
 
         // Get the newest comment object and return it as its html rendered block
         $comments = array($ApiCommentService->get($id));
+
+        $notifyUsers = $this->Mention->getUserList(Hash::get($comments[0], 'Comment.body'), $this->current_team_id, $this->my_uid);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, Hash::get($comments[0], 'Comment.post_id'), $id, $notifyUsers);
         $this->set(compact('comments'));
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';

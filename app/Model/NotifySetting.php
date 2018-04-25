@@ -52,10 +52,11 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
-    const TYPE_EVALUATOR_SET_TO_COACH = 41;
+    const TYPE_EVALUATOR_SET_TO_COACH = 41;  
     const TYPE_FEED_COMMENTED_ON_GOAL = 42;
     const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
     const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
+    const TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION = 45;
 
     /**
      * @var array
@@ -106,8 +107,16 @@ class NotifySetting extends AppModel
         self::TYPE_FEED_MENTIONED_IN_COMMENT                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
-            'field_prefix'    => 'feed_mentioned_in_comment',
-            'icon_class'      => 'fa-comment-o',
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-circle-o',
+            'groups'          => ['all'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION       => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-key',
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
@@ -745,16 +754,15 @@ class NotifySetting extends AppModel
                 }
                 break;
             case self::TYPE_FEED_MENTIONED_IN_COMMENT:
+            case self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION:
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in a comment. ',
-                        $user_text,
-                        ($count_num > 0) ? __("and %s others", $count_num) : null);
+                        '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
+                        $user_text);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s%2$s</span> mentioned to you in a comment. ',
-                        h($user_text),
-                        ($count_num > 0) ? h(__("and %s others", $count_num)) : null);
+                        '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
+                        h($user_text));
                 }
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:

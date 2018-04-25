@@ -1,14 +1,21 @@
 var Mention = function(target) {
   this.postId = target.attr('post-id')
   this.hasMention = target.attr('has-mention') == 1
+  if (!this.hasMention) return;
   this.values = {}
   var self = this
   var bind = function(target) {
     if (!target[0]) return
+    $(document).on('blur.atwho', '#' + target.attr('id'), function(e) {
+      var _this = target.data('atwho')
+      var atWhoController;
+      if (atWhoController = _this.controller()) {
+        atWhoController.expectedQueryCBId = null;
+        return atWhoController.view.hide(e, atWhoController.getOpt("displayTimeout"));
+      }
+    })
     function normalize(str) {
-      return str
-        .replace(/\(/g, '\\(')
-        .replace(/\)/g, '\\)')
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
     }
     target[0].submitValue = function() {
       var replaced = target.val()
@@ -18,64 +25,47 @@ var Mention = function(target) {
       })
       return replaced
     }
-    if (self.hasMention) {
-      target.atwho({
-        at: '@',
-        displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
-          <div class="mention-image" style="background-image:url(${image});"></div>\
-          <div class="mention-text">${text}</div>\
-        </div></li>',
-        insertTpl: '@${text}',
-        searchKey : 'text',
-        suspendOnComposing: false,
-        // data: [{text:'A'}]
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            if (!query) callback([])
-            var params = {
-              term: query,
-              page_limit: '20',
-              in_post_id: self.postId
-            }
-            var results = []
-            $.ajax({
-              url: cake.url.a,
+    // textare.width - image.width - margin
+    var styleStr = 'width:'+(target.width()-42)+'px;';
+    target.atwho({
+      at: '@',
+      limit: 20,
+      displayTpl: '<li data-id="${id}" data-text="${text}"><div style="width:' + target.width() + 'px" class="mention-wrapper">\
+        <div class="mention-image" style="background-image:url(${image});"></div>\
+        <div style="' + styleStr + '" class="mention-text">${text}</div>\
+      </div></li>',
+      insertTpl: '@${text}',
+      searchKey : 'text',
+      suspendOnComposing: true,
+      // data: [{text:'A'}]
+      callbacks: {
+        remoteFilter: function(query, callback) {
+          if (!query) callback([])
+          var params = {
+            term: query,
+            page_limit: '20',
+            in_post_id: self.postId
+          }
+          var results = []
+          $.ajax({
+            url: cake.url.a,
+            data: params
+          }).then(function(res) {
+            results = results.concat(res.results)
+            return $.ajax({
+              url: cake.url.select2_circles,
               data: params
-            }).then(function(res) {
-              results = results.concat(res.results)
-              return $.ajax({
-                url: cake.url.select2_circles,
-                data: params
-              })
-            }).then(function(res) {
-              results = results.concat(res.results)
-              callback(results)
             })
-          }
+          }).then(function(res) {
+            results = results.concat(res.results)
+            callback(results)
+          })
         }
-      })
-      target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
-        self.values[$li.data('text')] = $li.data('id')
-      })
-    }else {
-      var data = [{id:0,text:'dame'}]
-      target.atwho({
-        at: '@',
-        displayTpl: '<li data-id="${id}" data-text="${text}"><div class="mention-wrapper">\
-          <div class="mention-text">${text}</div>\
-        </div></li>',
-        insertTpl: '@${text}',
-        data: data,
-        callbacks: {
-          filter: function(query, data, searchKey) {
-            return [{id:0,text:__('You can mention to no one here.')}]
-          },
-          beforeInsert: function() {
-            return ''
-          }
-        }
-      })
-    }
+      }
+    })
+    target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
+      self.values[$li.data('text')] = $li.data('id')
+    })
   }
   bind(target)
   var convert = function(text) {

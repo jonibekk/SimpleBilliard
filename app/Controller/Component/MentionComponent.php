@@ -62,12 +62,12 @@ class MentionComponent extends Component {
      * @param $mentions array[string] mentions should be replaced
      * @return string 
      */
-    public function replaceMention(string $text = null, array $mentions): string {
+    public function replaceMention(string $text = null, array $mentions = [], $plain = false): string {
         $result = $text;
         foreach ($mentions as $mention) {
-            $result = preg_replace(self::getMentionReg($mention.':(.*?)', 'm'), '<b><i class="mention to-me">@${1}</i></b>', $result);
+            $result = preg_replace(self::getMentionReg($mention.':(.*?)', 'm'), !$plain ? '<b><i class="mention to-me">@${1}</i></b>' : '@${1}', $result);
         }
-        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'), '<b><i class="mention">@${1}</i></b>', $result);
+        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'), !$plain ? '<b><i class="mention">@${1}</i></b>' : '@${1}', $result);
         return $result;
     }
     /**
@@ -109,7 +109,7 @@ class MentionComponent extends Component {
                     if (!count($checked)) {
                         continue;
                     }
-                    $model = ClassRegistry::init('Circle');
+                    $model = ClassRegistry::init('PlainCircle');
                 }
                 if (!is_null($model)) {
                     // ExtContainableBehavior set del_flg false by default
@@ -119,11 +119,12 @@ class MentionComponent extends Component {
                     ));
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
-                    $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+                    if ($replacement) {
+                        $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+                    }
                 }
             }
         }
-        self::getPostWithShared($accessControlledId);
         return $body;
     }
     /**
@@ -135,7 +136,7 @@ class MentionComponent extends Component {
      * @param $includeMe boolean whether the result should include $me or not
      * @param $returnAsBelonging boolean whether the result should be user/circle which contains $me
      */
-    public function getUserList(string $body = null, int $teamId, int $me, $includeMe = false, $returnAsBelonging = false): array {
+    public function getUserList(string $body = null, int $teamId, $me, $includeMe = false, $returnAsBelonging = false): array {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
         
@@ -150,8 +151,8 @@ class MentionComponent extends Component {
         }
         if (!empty($notifyCircles)) {
             foreach ($notifyCircles as $circleId) {
-                $CircleMember = ClassRegistry::init('CircleMember');
-                $circleMembers = $CircleMember->getMembers($circleId, true);
+                $CircleMember = ClassRegistry::init('PlainCircle');
+                $circleMembers = $CircleMember->getMembers($circleId);
                 foreach ($circleMembers as $member) {
                     $userId = $member['CircleMember']['user_id'];
                     if ($returnAsBelonging && $userId != $me) continue;
@@ -165,34 +166,59 @@ class MentionComponent extends Component {
     }
     static private function getPostWithShared(int $postId) : array {
         $postModel = ClassRegistry::init('PlainPost');
-        $post = $postModel->find('first', [
-            'conditions' => ['id' => $postId],
-            'contain'    => [
-                'PostShareUser' => [],
-                'PostShareCircle' => [],
-                // 'PostShareCircle.Circle' => []
+        $shareCircles = $postModel->find('all', [
+            'conditions' => ['PlainPost.id' => $postId],
+            'joins'      => [
+                [
+                    'table' => 'post_share_circles',
+                    'alias' => 'PostShareCircle',
+                    'foreignKey' => false,
+                    'conditions'=> [
+                        'PlainPost.id = PostShareCircle.post_id',
+                    ]
+                ],
+            ],
+            'fields'    => [
+                'PostShareCircle.circle_id'
             ]
         ]);
-        return $post;
+        $shareUsers = $postModel->find('all', [
+            'conditions' => ['PlainPost.id' => $postId],
+            'joins'      => [
+                [
+                    'table' => 'post_share_users',
+                    'alias' => 'PostShareUser',
+                    'foreignKey' => false,
+                    'conditions'=> [
+                        'PlainPost.id = PostShareUser.post_id',
+                    ]
+                ],
+            ],
+            'fields'    => [
+                'PostShareUser.user_id'
+            ]
+        ]);
+        return ['PostShareCircles' => $shareCircles, 'PostShareUsers' => $shareUsers];
     }
     static public function filterAsMentionableUser(int $postId, array $list = []) {
-        $post = self::getPostWithShared($postId, $list);
+        $post = self::getPostWithShared($postId);
         $filterMembers = [];
-        foreach($post['PostShareCircle'] as $circle) {
-            $circleModel = ClassRegistry::init('Circle');
-            $circleData = $circleModel->findById($circle['circle_id']);
-            $isPublic = $circleData['Circle']['public_flg'];
+        foreach($post['PostShareCircles'] as $circle) {
+            $circleModel = ClassRegistry::init('PlainCircle');
+            $circleId = $circle['PostShareCircle']['circle_id'];
+            $circleData = $circleModel->findById($circleId);
+            $isPublic = $circleData['PlainCircle']['public_flg'];
             if (!$isPublic) {
-                $circleMemberModel = ClassRegistry::init('CircleMember');
-                $members = $circleMemberModel->find('list', [
-                    'fields' => ['user_id'],
-                    'conditions' => ['circle_id' => $circle['circle_id']]
-                ]);
-                $filterMembers = array_merge($filterMembers, array_values($members));
+                $circleMembers = $circleModel->getMembers($circleId);
+                $members = array();
+                foreach($circleMembers as $circleMember) {
+                    $members[] = $circleMember['CircleMember']['user_id'];
+                }
+                $filterMembers = array_merge($filterMembers, $members);
             }
         }
-        foreach($post['PostShareUser'] as $user) {
-            $filterMembers = $user['user_id'];
+        foreach($post['PostShareUsers'] as $user) {
+            $filterMembers = $user['PostShareUser']['user_id'];
         }
         $filterMembers = array_unique($filterMembers);
         if (count($filterMembers) == 0) return $list;
@@ -202,21 +228,22 @@ class MentionComponent extends Component {
         return array_values($result);
     }
     static public function filterAsMentionableCircle(int $postId, array $list = []) {
-        $post = self::getPostWithShared($postId, $list);
+        $post = self::getPostWithShared($postId);
         $publicCircles = [];
         $secretCircles = [];
-        foreach($post['PostShareCircle'] as $circle) {
-            $circleModel = ClassRegistry::init('Circle');
-            $circleData = $circleModel->findById($circle['circle_id']);
-            $isPublic = $circleData['Circle']['public_flg'];
+        foreach($post['PostShareCircles'] as $circle) {
+            $circleModel = ClassRegistry::init('PlainCircle');
+            $circleId = $circle['PostShareCircle']['circle_id'];
+            $circleData = $circleModel->findById($circleId);
+            $isPublic = $circleData['PlainCircle']['public_flg'];
             if ($isPublic) {
-                $publicCircles[] = $circle['circle_id'];
+                $publicCircles[] = $circleId;
             }else {
-                $secretCircles[] = $circle['circle_id'];
+                $secretCircles[] = $circleId;
             }
         }
         if (count($publicCircles) > 0) {
-            $circleModel = ClassRegistry::init('Circle');
+            $circleModel = ClassRegistry::init('PlainCircle');
             $ids = array_map(function($l) {
                 return str_replace(self::$CIRCLE_ID_PREFIX.self::$ID_DELIMITER, '', $l['id']);                
             }, $list);
