@@ -37,7 +37,7 @@ abstract class ApiV2Controller extends Controller
      *
      * @var bool
      */
-    private $_omitAuthenticationFlag = false;
+    private $_skipAuthenticationFlag = false;
 
     /**
      * ApiV2Controller constructor.
@@ -308,5 +308,15 @@ abstract class ApiV2Controller extends Controller
     public function getUser()
     {
         return $this->_currentUser;
+    }
+
+    /**
+     * Set controller to skip authentication
+     *
+     * @param bool $skipFlag True = skip authentication
+     */
+    public function skipAuthentication(bool $skipFlag = false)
+    {
+        $this->_skipAuthenticationFlag = $skipFlag;
     }
 }
