@@ -61,22 +61,23 @@ class ApiResponse extends CakeResponse
         if (empty($data)) {
             return $this;
         }
-        if ($appendFlag) {
-            if (is_array($data)) {
-                if (is_int(array_keys($data)[0])) {
-                    $this->_responseBody['data'] = array_merge($this->_responseBody['data'],
-                        $data);
-                } else {
-                    foreach ($data as $key => $value) {
-                        $this->_responseBody['data'][] = [$key => $value];
-                    }
-                }
-            } elseif (is_string($data)) {
-                $this->_responseBody['data'][] = $data;
-            }
-        } else {
+        if (!$appendFlag) {
             $this->_responseBody['data'] = $data;
+            return $this;
         }
+        if (is_array($data)) {
+            if (is_int(array_keys($data)[0])) {
+                $this->_responseBody['data'] = array_merge($this->_responseBody['data'],
+                    $data);
+            } else {
+                foreach ($data as $key => $value) {
+                    $this->_responseBody['data'][] = [$key => $value];
+                }
+            }
+        } elseif (is_string($data)) {
+            $this->_responseBody['data'][] = $data;
+        }
+
         return $this;
     }
 
@@ -114,21 +115,21 @@ class ApiResponse extends CakeResponse
         if (empty($exceptionTrace)) {
             return $this;
         }
-        if ($appendFlag) {
-            if (is_array($exceptionTrace)) {
-                if (is_int(array_keys($exceptionTrace)[0])) {
-                    $this->_responseBody['exception_trace'] = array_merge($this->_responseBody['exception_trace'],
-                        $exceptionTrace);
-                } else {
-                    foreach ($exceptionTrace as $key => $value) {
-                        $this->_responseBody['exception_trace'][] = [$key => $value];
-                    }
-                }
-            } elseif (is_string($exceptionTrace)) {
-                $this->_responseBody['exception_trace'][] = $exceptionTrace;
-            }
-        } else {
+        if (!$appendFlag) {
             $this->_responseBody['exception_trace'] = $exceptionTrace;
+            return $this;
+        }
+        if (is_array($exceptionTrace)) {
+            if (is_int(array_keys($exceptionTrace)[0])) {
+                $this->_responseBody['exception_trace'] = array_merge($this->_responseBody['exception_trace'],
+                    $exceptionTrace);
+            } else {
+                foreach ($exceptionTrace as $key => $value) {
+                    $this->_responseBody['exception_trace'][] = [$key => $value];
+                }
+            }
+        } elseif (is_string($exceptionTrace)) {
+            $this->_responseBody['exception_trace'][] = $exceptionTrace;
         }
 
         return $this;
@@ -147,14 +148,14 @@ class ApiResponse extends CakeResponse
         if (empty($value)) {
             return $this;
         }
-        if ($appendFlag) {
-            if (is_array($value)) {
-                $this->_responseHeader = array_merge($this->_responseHeader, $value);
-            } else {
-                $this->_responseHeader[] = $value;
-            }
-        } else {
+        if (!$appendFlag) {
             $this->_responseHeader = $value;
+            return $this;
+        }
+        if (is_array($value)) {
+            $this->_responseHeader = array_merge($this->_responseHeader, $value);
+        } else {
+            $this->_responseHeader[] = $value;
         }
 
         return $this;
