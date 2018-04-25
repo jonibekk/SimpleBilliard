@@ -192,13 +192,17 @@ class ApiResponse extends CakeResponse
     /**
      * Set HTTP header for response
      *
-     * @param string $value
+     * @param string|array $value
      *
      * @return CakeResponse
      */
     public function setHeader($value)
     {
-        header($value);
+        if (is_array($value)) {
+            $this->_responseHeader = array_merge($this->_responseHeader, $value);
+        } else {
+            $this->_responseHeader[] = $value;
+        }
 
         return $this;
     }
