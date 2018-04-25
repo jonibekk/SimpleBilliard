@@ -102,7 +102,9 @@ class AccessAuthenticatorTest extends GoalousTestCase
 
         $this->assertSame($authorizedAccessInfo->getUserId(), $authorizedAccessInfo2->getUserId());
         $this->assertSame($authorizedAccessInfo->getTeamId(), $authorizedAccessInfo2->getTeamId());
+        $this->assertSame($authorizedAccessInfo->getEnvName(), $authorizedAccessInfo2->getEnvName());
         $this->assertSame($authorizedAccessInfo->token(), $authorizedAccessInfo2->token());
+
         $this->assertSame(
             $authorizedAccessInfo->getJwtAuthentication()->getJwtId(),
             $authorizedAccessInfo2->getJwtAuthentication()->getJwtId()
