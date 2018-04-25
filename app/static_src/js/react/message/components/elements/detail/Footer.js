@@ -53,6 +53,7 @@ class Footer extends React.Component {
   }
 
   sendMessage(e) {
+    if (this.props.save_message_status === SaveMessageStatus.SAVING) return;
     if (this.props.body || this.props.uploaded_file_ids.length > 0) {
       this.props.dispatch(
         detail.sendMessage()
