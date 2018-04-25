@@ -33,6 +33,13 @@ class ApiV2Controller extends Controller
     private $_stopInvokeFlag = false;
 
     /**
+     * Whether this page doesn't need authentication
+     *
+     * @var bool
+     */
+    private $_omitAuthenticationFlag = false;
+
+    /**
      * This list for excluding from prohibited request
      * If only controller name is specified, including all actions
      * If you would like to specify several action, refer to the following:
@@ -79,10 +86,18 @@ class ApiV2Controller extends Controller
         ],
     ];
 
-    public function __construct(CakeRequest $request = null, CakeResponse $response = null)
-    {
-        parent::__construct($request, $response);
+    /**
+     * ApiV2Controller constructor.
+     *
+     * @param CakeRequest|null  $request
+     * @param CakeResponse|null $response
+     */
+    public function __construct(
+        CakeRequest $request = null,
+        CakeResponse $response = null
 
+    ) {
+        parent::__construct($request, $response);
         $this->_fetchJwtToken($request);
     }
 
@@ -97,31 +112,42 @@ class ApiV2Controller extends Controller
         if (empty($authHeader)) {
             return;
         }
-
         list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
 
         $this->_jwtToken = $jwt[0] ?? '';
     }
 
-    public function beforeFilter()
+    /**
+     * @param bool $omitAuthenticationFlag Whether authentication is not required by this controller
+     *
+     * @return CakeResponse|void Return CakeResponse if there is an error
+     */
+    public function beforeFilter(bool $omitAuthenticationFlag = false)
     {
         parent::beforeFilter();
 
-        if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
-            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                ->setMessage(__('You should be logged in.'))->getResponse();
-        }
-        $this->_initializeTeamStatus();
+        $this->_omitAuthenticationFlag = $omitAuthenticationFlag;
+        
+        if (!$this->_omitAuthenticationFlag) {
+            if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
+                    ->setMessage(__('You should be logged in.'))->getResponse();
+            }
+            $this->_initializeTeamStatus();
 
-        if ($this->_isRestrictedFromUsingService()) {
-            $this->_stopInvokeFlag = true;
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->setMessage(__("You cannot use service on the team."))->getResponse();
-        }
-        if ($this->_isRestrictedToReadOnly()) {
-            $this->_stopInvokeFlag = true;
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->setMessage(__("You may only read your team’s pages."))->getResponse();
+            if ($this->_isRestrictedFromUsingService()) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->setMessage(__("You cannot use service on the team."))->getResponse();
+            }
+            if ($this->_isRestrictedToReadOnly()) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->setMessage(__("You may only read your team’s pages."))->getResponse();
+            }
         }
 
         $this->_setAppLanguage();
