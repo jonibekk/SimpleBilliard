@@ -52,6 +52,7 @@ class JwtAuthenticationTest extends GoalousTestCase
         $this->assertSame($jwtToken->getJwtId(), $jwtTokenDecoded->getJwtId());
         $this->assertSame($jwtToken->getTeamId(), $jwtTokenDecoded->getTeamId());
         $this->assertSame($jwtToken->getUserId(), $jwtTokenDecoded->getUserId());
+        $this->assertSame($jwtToken->getEnvName(), $jwtTokenDecoded->getEnvName());
         $this->assertSame($jwtToken->expireAt()->getTimestamp(), $jwtTokenDecoded->expireAt()->getTimestamp());
         $this->assertSame($jwtToken->createdAt()->getTimestamp(), $jwtTokenDecoded->createdAt()->getTimestamp());
         $this->assertSame($jwtTokenDecoded->token(), $token);
