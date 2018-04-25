@@ -35,6 +35,20 @@ class ApiResponse extends CakeResponse
     }
 
     /**
+     * Set response's HTTP code
+     *
+     * @param int $httpCode
+     *
+     * @return ApiResponse
+     */
+    public function setHttpCode(int $httpCode): ApiResponse
+    {
+        $this->statusCode($httpCode);
+
+        return $this;
+    }
+
+    /**
      * Add data to response body
      *
      * @param array|string $data       Data to be sent to the client
