@@ -202,14 +202,14 @@ class ApiResponse extends CakeResponse
         if (empty($value)) {
             return $this;
         }
-        if ($appendFlag) {
-            if (is_array($value)) {
-                $this->_responseHeader = array_merge($this->_responseHeader, $value);
-            } else {
-                $this->_responseHeader[] = $value;
-            }
-        } else {
+        if (!$appendFlag) {
             $this->_responseHeader = $value;
+            return $this;
+        }
+        if (is_array($value)) {
+            $this->_responseHeader = array_merge($this->_responseHeader, $value);
+        } else {
+            $this->_responseHeader[] = $value;
         }
 
         return $this;
