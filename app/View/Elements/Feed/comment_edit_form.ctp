@@ -41,6 +41,8 @@ $this->Form->create('Comment', [
         'class'                        => 'form-control tiny-form-text font_12px edit-form comment-edit-form',
         'target_show_id'               => $id_prefix . "CommentEdit_{$comment['id']}",
         'target-id'                    => $id_prefix . "CommentEditSubmit_{$comment['id']}",
+        'has-mention'                  => true,
+        'post-id'                      => $comment['post_id'],
         'value'                        => $comment['body'],
         'data-bv-stringlength'         => 'true',
         'data-bv-stringlength-max'     => 5000,

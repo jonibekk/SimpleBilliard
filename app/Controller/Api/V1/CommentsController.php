@@ -8,6 +8,7 @@ App::uses('Comment', 'Model');
  */
 class CommentsController extends ApiController
 {
+    public $components = ['Mention'];
     /**
      * @param $id
      * Get Comment data on JSON format
@@ -78,19 +79,27 @@ class CommentsController extends ApiController
         $post = $Post->findById($postId);
         $type = Hash::get($post, 'Post.type');
 
+        $notifyUsers = $this->Mention->getUserList(Hash::get($this->request->data, 'Comment.body'), $this->current_team_id, $this->my_uid);
+
         switch ($type) {
             case Post::TYPE_NORMAL:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $postId, $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
             case Post::TYPE_ACTION:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
                     $postId,
                     $comment->id);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                     $postId, $comment->id);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $comment->id, $notifyUsers);
                 break;
             case Post::TYPE_CREATE_GOAL:
                 $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
@@ -133,6 +142,9 @@ class CommentsController extends ApiController
 
         // Get the newest comment object and return it as its html rendered block
         $comments = array($ApiCommentService->get($id));
+
+        $notifyUsers = $this->Mention->getUserList(Hash::get($comments[0], 'Comment.body'), $this->current_team_id, $this->my_uid);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, Hash::get($comments[0], 'Comment.post_id'), $id, $notifyUsers);
         $this->set(compact('comments'));
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';

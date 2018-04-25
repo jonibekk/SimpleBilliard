@@ -21,9 +21,9 @@ $(function () {
     bindCtrlEnterAction('.comment-form', function (e) {
         $(this).find('.comment-submit-button').trigger('click');
     });
-    $(".comment-post-form,.comment-form").off("focus").off("blur").on("focus", function() {
+    $(".comment-post-form,.comment-form").off("focus.comment-form").off("blur.comment-form").on("focus.comment-form", function() {
         $("#jsGoTop").hide();
-    }).on("blur", function() {
+    }).on("blur.comment-form", function() {
         $("#jsGoTop").show();
     });
     $(".comment-ogp-close").remove();
@@ -67,6 +67,7 @@ function toggleCommentForm() {
     if ($commentButtons.is(':visible')) {
         return;
     }
+    new Mention($txtArea)
 
     $(".comment-post-form,.comment-form").off("focus").off("blur").on("focus", function() {
         $("#jsGoTop").hide();
@@ -78,7 +79,7 @@ function toggleCommentForm() {
 
     // reset textarea
     $txtArea.val("");
-
+  
     // Register the form for submit
     $commentForm.off('submit').on('submit', function (e) {
         $('#CommentOgpClose_' + post_id).remove();
@@ -145,7 +146,7 @@ function toggleCommentForm() {
 
     // OGP preview and get procedure
     require(['ogp'], function (ogp) {
-        $('#CommentFormBody_' + post_id).off('keyup').on('keyup', function (e) {
+        $('#CommentFormBody_' + post_id).off('keyup.comment-form').on('keyup.comment-form', function (e) {
             if ($('#CommentOgpSiteInfo_' + post_id).html() !== '') {
                 return false;
             }
@@ -306,7 +307,8 @@ function addComment(e) {
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
     var formData = new FormData(e.target);
-
+    var textarea = $(e.target).find('textarea')
+    formData.append('data[Comment][body]', textarea[0].submitValue())
     // Add content of ogp box if visible
     var comment_id = submit_id.split('_')[1];
     var $ogp_box = $('#CommentOgpSiteInfo_' + comment_id);
@@ -618,6 +620,8 @@ function evCommendEditSubmit(e) {
         formData.OGP = ogpData;
     }
 
+    formData['data[Comment][body]'] = $('textarea#CommentEditFormBody_'+commentId)[0].submitValue()
+
     $.ajax({
         type: 'PUT',
         url: "/api/v1/comments/" + commentId,
@@ -867,8 +871,9 @@ function evTargetToggleClick() {
                     $btnClose.insertBefore($ogp);
 
                     // Load OGP for edit field
+                    var $editField = $('#CommentEditFormBody_' + comment_id);
                     require(['ogp'], function (ogp) {
-                        $('#CommentEditFormBody_' + comment_id).off('keyup').on('keyup', function (e) {
+                        $('#CommentEditFormBody_' + comment_id).off('keyup.comment-form').on('keyup.comment-form', function (e) {
                             if($('#CommentEditSubmit_' + comment_id).prop('disabled') && $('#CommentEditFormBody_' + comment_id).val() !== $('#CommentOgpBackup_' + comment_id).data('text')){
                                 $('#CommentEditSubmit_' + comment_id).prop('disabled', false);
                             }
@@ -954,6 +959,7 @@ function evTargetToggleClick() {
             $('#CommentEdit_' + comment_id).show();
             $('#CommentOgpBox_' + comment_id).hide();
             $('#CommentEditForm_' + comment_id).show();
+            new Mention($('#CommentEditFormBody_' + comment_id))
             $('#CommentOgpBackup_' + comment_id).data('text', $('#CommentEditFormBody_' + comment_id).val());
             var $newOgp = $('CommentOgpEditBox_' + comment_id);
             var $btnClose = $('<div id="CommentOgpClose_' +  comment_id + '" class="font_lightgray comment-ogp-close"><i class="fa fa-times fa-2x js-ogp-close"></i></div>');
@@ -1001,6 +1007,7 @@ function evTargetToggleClick() {
             }
             evTargetCancelAnyEdit();
         }
+        new Mention($('#CommentEditFormBody_' + comment_id))
     }
     
 
@@ -1013,7 +1020,6 @@ function evTargetToggleClick() {
     $("#" + click_target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + click_target_id).focus();
-
     $('.dropdown-comment.open').removeClass('open')
 
     return false;
