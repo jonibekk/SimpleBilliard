@@ -209,12 +209,12 @@ class MentionComponent extends Component {
             $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['PlainCircle']['public_flg'];
             if (!$isPublic) {
-                $circleMemberModel = ClassRegistry::init('CircleMember');
-                $members = $circleMemberModel->find('list', [
-                    'fields' => ['user_id'],
-                    'conditions' => ['circle_id' => $circleId]
-                ]);
-                $filterMembers = array_merge($filterMembers, array_values($members));
+                $circleMembers = $circleModel->getMembers($circleId);
+                $members = array();
+                foreach($circleMembers as $circleMember) {
+                    $members[] = $circleMember['CircleMember']['id'];
+                }
+                $filterMembers = array_merge($filterMembers, $members);
             }
         }
         foreach($post['PostShareUsers'] as $user) {
