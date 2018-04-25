@@ -87,8 +87,12 @@
                 </div>
             </div>
             <div
+                <?php $mentions = $this->Mention->getMyMentions($comment['body'], $my_id, $my_team_id) ?>
                 class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
-                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= nl2br($this->TextEx->autoLink($comment['body'])) ?></div>
+                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= 
+                    $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($comment['body'])), $mentions)
+                ?>
+                </div>
 
             <?php
             /**

@@ -19,7 +19,7 @@
         'post_comment_ranking'   => ['img' => 'fa-user', 'text' => 'fa-quote-left', 'count' => 'fa-comment-o'],
     ];
     ?>
-    <table class="table mt_18px">
+    <table class="table mt_18px" id="ranking-table">
         <tr class="insight-table-header insight-ranking-table-header">
             <th>#</th>
             <th><i class="fa <?= h($icon[$type]['img']) ?>"></i></th>
@@ -62,5 +62,27 @@
             </tr>
         <?php endforeach ?>
     </table>
+    <div class="panel panel-default feed-read-more" id="RankingMoreRead">
+        <div class="panel-body panel-read-more-body">
+            <span class="none" id="ShowMoreNoData"><?= __("There are no further rankings to show.") ?></span>
+            <a href="#" class="click-ranking-read-more"
+               no-data-text-id="ShowMoreNoData"
+               get-url="<?=
+               $this->Html->url([
+                   'controller'     => 'teams',
+                   'action'         => 'ajax_get_insight_ranking',
+                   '?' => [
+                       'date_range'     => $date_range,
+                       'group'          => $group,
+                       'type'           => $type,
+                       'timezone'       => $timezone,
+                       'last_rank'      => $last_rank
+                    ]
+               ]) ?>"
+               id="RankingMoreReadLink"
+            >
+                <?= __("More...") ?> </a>
+        </div>
+    </div>
     <?= $this->App->viewEndComment()?>
 <?php endif ?>
