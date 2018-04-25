@@ -5,7 +5,7 @@ App::import('User', 'Model');
  * PlainUser Model
  *
  * This class should be used for a specific situation
- * when there is no way to get data WITHOUT any associations.
+ * when there is no way to get data WITHOUT any associations in a Cake standard ways.
  * because there could be a problem with CakePHP itself or ExtContainableBehavior.
  */
 class PlainUser extends AppModel
