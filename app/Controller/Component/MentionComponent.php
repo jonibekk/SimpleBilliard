@@ -151,8 +151,8 @@ class MentionComponent extends Component {
         }
         if (!empty($notifyCircles)) {
             foreach ($notifyCircles as $circleId) {
-                $CircleMember = ClassRegistry::init('CircleMember');
-                $circleMembers = $CircleMember->getMembers($circleId, true);
+                $CircleMember = ClassRegistry::init('PlainCircle');
+                $circleMembers = $CircleMember->getMembers($circleId);
                 foreach ($circleMembers as $member) {
                     $userId = $member['CircleMember']['user_id'];
                     if ($returnAsBelonging && $userId != $me) continue;
@@ -209,12 +209,12 @@ class MentionComponent extends Component {
             $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['PlainCircle']['public_flg'];
             if (!$isPublic) {
-                $circleMemberModel = ClassRegistry::init('CircleMember');
-                $members = $circleMemberModel->find('list', [
-                    'fields' => ['user_id'],
-                    'conditions' => ['circle_id' => $circleId]
-                ]);
-                $filterMembers = array_merge($filterMembers, array_values($members));
+                $circleMembers = $circleModel->getMembers($circleId);
+                $members = array();
+                foreach($circleMembers as $circleMember) {
+                    $members[] = $circleMember['CircleMember']['user_id'];
+                }
+                $filterMembers = array_merge($filterMembers, $members);
             }
         }
         foreach($post['PostShareUsers'] as $user) {
