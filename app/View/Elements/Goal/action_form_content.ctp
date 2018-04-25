@@ -179,7 +179,7 @@
     <?php endif; ?>
 </div>
 <div id="actionConfirmationModal" class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-action-dialog" role="document">
     <div class="modal-content modal-action-content">
       <div class="modal-header modal-action-header text-center">
         <h5 class="modal-title modal-action-title"><?=  __("Posting the Action") ?></h5>
@@ -188,8 +188,8 @@
         <p><?=  __("You are about to post this action without progress. Do you wish to continue?") ?></p>
       </div>
       <div class="modal-footer modal-action-footer">
-        <button type="button" class="btn btn-secondary modal-cancel-button" data-dismiss="modal"><?=  __("Cancel") ?></button>
-        <button type="button" class="btn btn-primary modal-submit-button" onclick="forceSubmitKrAction()"><?=  __("Post the Action") ?></button>
+        <button type="button" class="btn btn-secondary modal-action-cancel-button" data-dismiss="modal"><?=  __("Cancel") ?></button>
+        <button type="button" class="btn btn-primary modal-action-submit-button" onclick="forceSubmitKrAction()"><?=  __("Post the Action") ?></button>
       </div>
     </div>
   </div>

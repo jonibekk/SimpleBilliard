@@ -99,34 +99,46 @@
 }
 
 .modal-action-header {
-
+    text-align: center;
 }
 
 .modal-action-footer {
     background-color: white;
     border-top: 0px solid transparent;
+    text-align: center;
 }
 
-.modal-action-cancel {
+.modal-action-cancel-button {
     border-radius: 0;
     border-color: black;
     font-weight: bold;
     float: left;
-    width: 40%;
+    width: 42%;
 }
 
-/*modal-cancel-button-wrapper:hover,
-modal-cancel-button-wrapper:focus,
-modal-cancel-button-wrapper:active {
-  text-decoration: none;
-  background-color: buttonface;
-  color: "#6d6e71";
-}*/
+.modal-action-submit-button {
+    border-radius: 0;
+    border-color: black;
+    font-weight: bold;
+    float: right;
+    width: 54%;
+}
+
+.modal-action-footer button:hover,
+.modal-action-footer button:focus,
+.modal-action-footer button:active {
+    text-decoration: initial;
+    background-color: initial;
+    color: initial;
+}
 
 .modal-action-content {
     border-radius: 0;
-    width: 67%;
-    position: absolute;
-    margin-left: 18%;
-    margin-top: 27%;
+    max-width: 320px
+}
+
+.modal-action-dialog {
+    max-width: max-content;
+    max-height: max-content;
+    margin-top: 33.33%;
 }
