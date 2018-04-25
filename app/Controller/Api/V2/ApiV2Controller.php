@@ -225,4 +225,20 @@ class ApiV2Controller extends Controller
         }
         return parent::invokeAction($request);
     }
+
+    /**
+     * @return int Current user's current team ID
+     */
+    public function getTeamId(): int
+    {
+        return $this->_currentTeamId;
+    }
+
+    /**
+     * @return mixed Current user's User object
+     */
+    public function getUser()
+    {
+        return $this->_currentUser;
+    }
 }
