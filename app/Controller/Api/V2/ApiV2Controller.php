@@ -37,7 +37,7 @@ class ApiV2Controller extends Controller
      *
      * @var bool
      */
-    private $_omitAuthenticationFlag = false;
+    private $_skipAuthenticationFlag = false;
 
     /**
      * This list for excluding from prohibited request
@@ -118,17 +118,13 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * @param bool $omitAuthenticationFlag Whether authentication is not required by this controller
-     *
-     * @return CakeResponse|void Return CakeResponse if there is an error
+     * @return CakeResponse|void
      */
-    public function beforeFilter(bool $omitAuthenticationFlag = false)
+    public function beforeFilter()
     {
         parent::beforeFilter();
 
-        $this->_omitAuthenticationFlag = $omitAuthenticationFlag;
-        
-        if (!$this->_omitAuthenticationFlag) {
+        if (!$this->_skipAuthenticationFlag) {
             if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
@@ -266,5 +262,15 @@ class ApiV2Controller extends Controller
     public function getUser()
     {
         return $this->_currentUser;
+    }
+
+    /**
+     * Set controller to skip authentication
+     *
+     * @param bool $skipFlag True = skip authentication
+     */
+    public function skipAuthentication(bool $skipFlag = false)
+    {
+        $this->_skipAuthenticationFlag = $skipFlag;
     }
 }
