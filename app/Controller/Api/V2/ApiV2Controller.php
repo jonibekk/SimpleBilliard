@@ -105,8 +105,8 @@ class ApiV2Controller extends Controller
 
     ) {
         parent::__construct($request, $response);
-        self::_fetchJwtToken($request);
-        self::_parseEndpointDocument($request);
+        $this->_fetchJwtToken($request);
+        $this->_parseEndpointDocument($request);
     }
 
     /**
@@ -132,21 +132,24 @@ class ApiV2Controller extends Controller
     {
         parent::beforeFilter();
 
+        //Skip authentication if the endpoint set the option
         if (!$this->_skipAuthenticationFlag) {
-            if (empty($this->_jwtToken) || !self::_authenticateUser()) {
+            if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
                     ->setMessage(__('You should be logged in.'))->getResponse();
             }
-            self::_initializeTeamStatus();
+            $this->_initializeTeamStatus();
 
-            if (self::_isRestrictedFromUsingService() && !$this->_ignoreRestrictionFlag) {
+            //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
+            if ($this->_isRestrictedFromUsingService() && !$this->_ignoreRestrictionFlag) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
                     ->setMessage(__("You cannot use service on the team."))->getResponse();
             }
-            if (self::_isRestrictedToReadOnly() && !$this->_ignoreRestrictionFlag) {
+            //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
+            if ($this->_isRestrictedToReadOnly() && !$this->_ignoreRestrictionFlag) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
@@ -154,7 +157,7 @@ class ApiV2Controller extends Controller
             }
         }
 
-        self::_setAppLanguage();
+        $this->_setAppLanguage();
     }
 
     /**
@@ -184,7 +187,7 @@ class ApiV2Controller extends Controller
      */
     private function _isRestrictedFromUsingService(): bool
     {
-        if (self::_isRequestExcludedFromRestriction()) {
+        if ($this->_isRequestExcludedFromRestriction()) {
             return false;
         }
 
@@ -215,7 +218,7 @@ class ApiV2Controller extends Controller
      */
     private function _isRestrictedToReadOnly(): bool
     {
-        if (self::_isRequestExcludedFromRestriction()) {
+        if ($this->_isRequestExcludedFromRestriction()) {
             return false;
         }
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
@@ -237,7 +240,7 @@ class ApiV2Controller extends Controller
                     (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
         } else {
             $lang = $this->LangComponent->getLanguage();
-            self::set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
+            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
         }
     }
 
@@ -313,8 +316,8 @@ class ApiV2Controller extends Controller
         $commentArray = explode('*', substr($methodDocument, 3, -2));
 
         foreach ($commentArray as $commentLine) {
-            self::_checkIgnoreRestriction($commentLine);
-            self::_checkSkipAuthentication($commentLine);
+            $this->_checkIgnoreRestriction($commentLine);
+            $this->_checkSkipAuthentication($commentLine);
         }
     }
 
