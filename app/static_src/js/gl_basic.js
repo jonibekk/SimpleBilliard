@@ -356,25 +356,24 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    // if(cake.is_mb_app === "true" || cake.is_mb_browser === "true") {
-    //    psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-    //     swipePropagation: false,
-    //     wheelPropagation: false,
-    //     maxScrollbarLength: 0,
-    //     suppressScrollX: true,
-    //     suppressScrollY: false,
-    //   });
-    // }
+    if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
+       psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
+        swipePropagation: false,
+        wheelPropagation: false,
+        maxScrollbarLength: 0,
+        suppressScrollX: true,
+        suppressScrollY: false,
+      });
+    }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
-      // if(cake.is_mb_app !== "true" && cake.is_mb_browser !== "true"){
-      //   return;
-      // }
-      var code = e.keyCode || e.which;
-      if(code == 13) { //Enter keycode
-        $("#NavSearchInputToggle").blur();
-        $("#NavSearchInput").blur();
-        $("#NavSearchInputToggle").focusout();
-        $("#NavSearchInput").focusout();
+      if(cake.is_mb_app === "1"){
+        var code = e.keyCode || e.which;
+        if(code == 13) {
+          $("#NavSearchInputToggle").blur();
+          $("#NavSearchInputToggle").focusout();
+        }
+      } else {
+        console.log("not mobile");
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
