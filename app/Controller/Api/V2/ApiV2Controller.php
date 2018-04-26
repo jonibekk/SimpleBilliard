@@ -33,67 +33,6 @@ class ApiV2Controller extends Controller
     private $_stopInvokeFlag = false;
 
     /**
-     * Whether this method ignores service usage status restriction
-     *
-     * @var bool
-     */
-    private $_ignoreRestrictionFlag = false;
-
-    /**
-     * Whether this method doesn't need authentication
-     *
-     * @var bool
-     */
-    private $_skipAuthenticationFlag = false;
-
-    /**
-     * This list for excluding from prohibited request
-     * If only controller name is specified, including all actions
-     * If you would like to specify several action, refer to the following:
-     * [
-     * 'controller' => 'users', 'action'     => 'settings',
-     * ],
-     * [
-     * 'controller' => 'users', 'action'     => 'view_goals',
-     * ],
-     *
-     * @var array
-     */
-    private $_excludedRequest = [
-        [
-            'controller' => 'payments',
-        ],
-        [
-            'controller' => 'teams',
-        ],
-        [
-            'controller' => 'users',
-            'action'     => 'logout',
-        ],
-        [
-            'controller' => 'users',
-            'action'     => 'accept_invite',
-        ],
-        [
-            'controller' => 'users',
-            'action'     => 'settings',
-        ],
-        [
-            'controller' => 'terms',
-        ],
-        [
-            'controller' => 'pages',
-            'action'     => 'display',
-            'pagename'   => 'privacy_policy',
-        ],
-        [
-            'controller' => 'pages',
-            'action'     => 'display',
-            'pagename'   => 'terms',
-        ],
-    ];
-
-    /**
      * ApiV2Controller constructor.
      *
      * @param CakeRequest|null  $request
@@ -106,7 +45,6 @@ class ApiV2Controller extends Controller
     ) {
         parent::__construct($request, $response);
         $this->_fetchJwtToken($request);
-        $this->_parseEndpointDocument($request);
     }
 
     /**
@@ -133,7 +71,7 @@ class ApiV2Controller extends Controller
         parent::beforeFilter();
 
         //Skip authentication if the endpoint set the option
-        if (!$this->_skipAuthenticationFlag) {
+        if (!$this->_checkSkipAuthentication($this->request)) {
             if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
@@ -142,14 +80,14 @@ class ApiV2Controller extends Controller
             $this->_initializeTeamStatus();
 
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
-            if ($this->_isRestrictedFromUsingService() && !$this->_ignoreRestrictionFlag) {
+            if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
                     ->setMessage(__("You cannot use service on the team."))->getResponse();
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
-            if ($this->_isRestrictedToReadOnly() && !$this->_ignoreRestrictionFlag) {
+            if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
@@ -187,28 +125,7 @@ class ApiV2Controller extends Controller
      */
     private function _isRestrictedFromUsingService(): bool
     {
-        if ($this->_isRequestExcludedFromRestriction()) {
-            return false;
-        }
-
         return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
-    }
-
-    /**
-     * Check whether current request is excluded from any restriction
-     *
-     * @return bool True if request is in list of requests ignoring restriction
-     */
-    private function _isRequestExcludedFromRestriction(): bool
-    {
-        foreach ($this->_excludedRequest as $ignoreParam) {
-            // filter requested param with $ignoreParam
-            $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
-            if ($intersectedParams == $ignoreParam) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -218,13 +135,9 @@ class ApiV2Controller extends Controller
      */
     private function _isRestrictedToReadOnly(): bool
     {
-        if ($this->_isRequestExcludedFromRestriction()) {
-            return false;
-        }
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
-
         return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 
@@ -279,15 +192,17 @@ class ApiV2Controller extends Controller
      * Parse endpoint methods' documents, and retrieve special options
      *
      * @param CakeRequest $request
+     *
+     * @return array
      */
-    private function _parseEndpointDocument(CakeRequest $request)
+    private function _parseEndpointDocument(CakeRequest $request): array
     {
         $controllerName = $request->params['controller'] ?? '';
         $actionName = $request->params['action'] ?? '';
         $apiVersion = $request->params['apiVersion'] ?? '';
 
         if (empty($controllerName) || empty($actionName)) {
-            return;
+            return [];
         }
 
         //TODO Make it works with path. Currently only works with classname, which might cause mix up with classes of same name under different folder
@@ -308,44 +223,65 @@ class ApiV2Controller extends Controller
         }
 
         if (empty($class)) {
-            return;
+            return [];
         }
 
-        $methodDocument = $class->getMethod($actionName)->getDocComment() ?? '';
+        $methodDocument = $class->getMethod($actionName)->getDocComment();
+
+        if (empty($methodDocument)) {
+            return [];
+        }
 
         $commentArray = explode('*', substr($methodDocument, 3, -2));
 
-        foreach ($commentArray as $commentLine) {
-            $this->_checkIgnoreRestriction($commentLine);
-            $this->_checkSkipAuthentication($commentLine);
+        $resultArray = [];
+
+        foreach ($commentArray as $value) {
+            if (!empty($value) && substr(trim($value), 0, 1) == "@") {
+                $resultArray[] = trim($value);
+            }
         }
+
+        return $resultArray;
     }
 
     /**
      * Check whether the method skip authentication method
      * To use: @skipAuthentication
      *
-     * @param string $param
+     * @param CakeRequest $request
+     *
+     * @return bool
      */
-    private function _checkSkipAuthentication(string $param)
+    private function _checkSkipAuthentication(CakeRequest $request)
     {
-        if ('@skipAuthentication' == trim($param)) {
-            $this->_skipAuthenticationFlag = true;
+        $commentArray = $this->_parseEndpointDocument($request);
 
+        foreach ($commentArray as $commentLine) {
+            if ('@skipAuthentication' == trim($commentLine)) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
      * Check whether the method ignore service usage restriction
      * To use: @ignoreRestriction
      *
-     * @param string $param
+     * @param CakeRequest $request
+     *
+     * @return bool
      */
-    private function _checkIgnoreRestriction(string $param)
+    private function _checkIgnoreRestriction(CakeRequest $request)
     {
-        if ('@ignoreRestriction' == trim($param)) {
-            $this->_ignoreRestrictionFlag = true;
-        }
+        $commentArray = $this->_parseEndpointDocument($request);
 
+        foreach ($commentArray as $commentLine) {
+            if ('@skipAuthentication' == trim($commentLine)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
