@@ -1,4 +1,5 @@
 <?php
+App::uses('RedisKeyValue', 'Lib/Cache/Redis');
 App::uses('SampleRedisData', 'Lib/Cache/Redis/Sample');
 App::uses('SampleRedisKey', 'Lib/Cache/Redis/Sample');
 App::uses('BaseRedisClient', 'Lib/Cache/Redis');
