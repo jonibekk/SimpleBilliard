@@ -6,38 +6,36 @@
  * Time: 9:57
  */
 
+use Respect\Validation\Validator as validator;
+
 class GoalValidator extends BaseValidator
 {
-
-    private $goalNameValidation = null;
-
-    private $goalDescriptionValidation = null;
-
-    private $evaluateFlagValidation = null;
-
-    private $goalStatusValidation = null;
-
-    private $goalPriorityValdiation = null;
-
-    private $delFlagValidation = null;
-
-    private $photoBaseValidation = null;
-
-    private $goalCategoryIdValidation = null;
-
-    private $startDateValidation = null;
-
-    private $endDateValidation = null;
-
-    private $startValueValidation = null;
-
-    private $targetValueValidation = null;
-
-    private $termTypeValidation = null;
-
-    public function validate($goalModel): bool
+    public function __construct()
     {
-        // TODO: Implement validateModel() method.
+        $this->rules = $this->getDefaultValidationRule();
     }
+
+    public function getDefaultValidationRule(): array
+    {
+        $defaultRule = [
+            'user_id'          => [validator::intType()],
+            'team_id'          => [validator::intType()],
+            'goal_name'        => [validator::stringType()->length(null, 200)],
+            'goal_description' => [validator::stringType()->length(null, 2000), "optional"],
+            'evaluate_flg'     => [validator::boolType()],
+            'status'           => [validator::intType()],
+            'priority'         => [validator::intType()],
+            'del_flg'          => [validator::boolType()],
+            'goal_category_id' => [validator::intType()],
+            'start_date'       => [CommonValidator::dateValidation()],
+            'end_date'         => [CommonValidator::dateValidation()],
+            'start_value'      => [validator::intType()->length(null, 15)],
+            'target_value'     => [validator::intType()->length(null, 15)]
+        ];
+
+        return $defaultRule;
+    }
+
+    public function get
 
 }
