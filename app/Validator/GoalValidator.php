@@ -1,4 +1,7 @@
 <?php
+require('BaseValidator.php');
+require('CommonValidator.php');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -35,7 +38,5 @@ class GoalValidator extends BaseValidator
 
         return $defaultRule;
     }
-
-    public function get
 
 }
