@@ -33,7 +33,7 @@ abstract class BaseValidator
 
         $validatorArray = $this->generateValidationArray($this->rules, is_array($input));
 
-        return validator::allOf($validatorArray)->assert($input);
+        return validator::allOf($validatorArray)->assert($input) ?? false;
     }
 
     abstract public function getDefaultValidationRule(): array;
@@ -94,8 +94,11 @@ abstract class BaseValidator
         $returnValue = array();
 
         foreach ($input as $key => $value) {
-            $returnValue[] = ($isInputArray) ? $this->createValidationForArray($key, $value[0], !isset($value[1])) :
-                $this->createValidationForObject($key, $value[0], !isset($value[1]));
+
+            $mandatoryFlag = !(isset($value[1]) ? $value[1] == "optional" : false);
+
+            $returnValue[] = ($isInputArray) ? $this->createValidationForArray($key, $value[0], $mandatoryFlag) :
+                $this->createValidationForObject($key, $value[0], $mandatoryFlag);
         }
 
         return $returnValue;

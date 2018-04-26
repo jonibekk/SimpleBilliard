@@ -2,7 +2,6 @@
 App::uses('User', 'Model');
 App::uses('UserValidator', 'Validator');
 
-
 /**
  * User Test Case
  *
@@ -1268,19 +1267,27 @@ class UserTest extends GoalousTestCase
 
         $userValidator = new UserValidator;
 
-        $this->assertNotInternalType('array', $userValidator->validate($sampleUser));
+        try {
+            $this->assertTrue($userValidator->validate($sampleUser));
+        } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
+        }
+
     }
 
-    public function test_NewValidationMethod_failure(){
+    public function test_NewValidationMethod_failure()
+    {
         /** @var User $user */
         $user = ClassRegistry::init('User');
 
         $sampleUser = $user->getById(1);
-        
+
         $sampleUser['first_name'] = '129yrb8y))*&)@&$)';
 
         $userValidator = new UserValidator;
 
-        $this->assertInternalType('array', $userValidator->validate($sampleUser));
+        try {
+            $this->assertFalse($userValidator->validate($sampleUser));
+        } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
+        }
     }
 }
