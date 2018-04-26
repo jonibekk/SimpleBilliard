@@ -320,13 +320,13 @@ class ApiV2Controller extends Controller
 
     /**
      * Check whether the method skip authentication method
-     * To use: #skipAuthentication
+     * To use: @skipAuthentication
      *
      * @param string $param
      */
     private function _checkSkipAuthentication(string $param)
     {
-        if ('#skipAuthentication' == trim($param)) {
+        if ('@skipAuthentication' == trim($param)) {
             $this->_skipAuthenticationFlag = true;
 
         }
@@ -334,13 +334,13 @@ class ApiV2Controller extends Controller
 
     /**
      * Check whether the method ignore service usage restriction
-     * To use: #ignoreRestriction
+     * To use: @ignoreRestriction
      *
      * @param string $param
      */
     private function _checkIgnoreRestriction(string $param)
     {
-        if ('#ignoreRestriction' == trim($param)) {
+        if ('@ignoreRestriction' == trim($param)) {
             $this->_ignoreRestrictionFlag = true;
         }
 
