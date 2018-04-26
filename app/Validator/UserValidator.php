@@ -75,80 +75,80 @@ class UserValidator extends BaseValidator
     {
         parent::__construct();
 
-        $this->teamIdValidation = $this->_createValidation('team_id', $this->teamIdBaseValidation);
+        $this->teamIdValidation = $this->createValidationForArray('team_id', $this->teamIdBaseValidation);
 
-        $this->firstNameValidation = $this->_createValidation('first_name', $this->nameBaseValidation);
+        $this->firstNameValidation = $this->createValidationForArray('first_name', $this->nameBaseValidation);
 
-        $this->lastNameValidation = $this->_createValidation('last_name', $this->nameBaseValidation);
+        $this->lastNameValidation = $this->createValidationForArray('last_name', $this->nameBaseValidation);
 
-        $this->genderTypeValidation = $this->_createValidation('gender_type',
+        $this->genderTypeValidation = $this->createValidationForArray('gender_type',
             validator::intVal()->between(1, 2), false);
 
-        $this->birthDayValidation = $this->_createValidation('birth_day',
+        $this->birthDayValidation = $this->createValidationForArray('birth_day',
             validator::date('Y-m-d'), false);
 
-        $this->hideYearFlagValidation = $this->_createValidation('hide_year_flg',
+        $this->hideYearFlagValidation = $this->createValidationForArray('hide_year_flg',
             validator::boolVal(), false);
 
-        $this->adminFlagValidation = $this->_createValidation('admin_flg', validator::notEmpty()->boolVal());
+        $this->adminFlagValidation = $this->createValidationForArray('admin_flg', validator::notEmpty()->boolVal());
 
-        $this->noPassFlagValidation = $this->_createValidation('no_pass_flg', validator::notEmpty()->boolVal());
+        $this->noPassFlagValidation = $this->createValidationForArray('no_pass_flg', validator::notEmpty()->boolVal());
 
-        $this->activeFlagValidation = $this->_createValidation('active_flg', validator::notEmpty()->boolVal());
+        $this->activeFlagValidation = $this->createValidationForArray('active_flg', validator::notEmpty()->boolVal());
 
-        $this->autoTimezoneFlagValidation = $this->_createValidation('auto_timezone_flg',
+        $this->autoTimezoneFlagValidation = $this->createValidationForArray('auto_timezone_flg',
             validator::boolVal(), false);
 
-        $this->autoLanguageFlagValidation = $this->_createValidation('auto_language_flg',
+        $this->autoLanguageFlagValidation = $this->createValidationForArray('auto_language_flg',
             validator::boolVal(), false);
 
-        $this->romanizeFlagValidation = $this->_createValidation('romanize_flg',
+        $this->romanizeFlagValidation = $this->createValidationForArray('romanize_flg',
             validator::boolVal(), false);
 
-        $this->updateEmailFlagValidation = $this->_createValidation('update_email_flg',
+        $this->updateEmailFlagValidation = $this->createValidationForArray('update_email_flg',
             validator::boolVal(), false);
 
-        $this->languageValidation = $this->_createValidation('language',
+        $this->languageValidation = $this->createValidationForArray('language',
             validator::stringType(), false);
 
-        $this->timezoneValidation = $this->_createValidation('timezone',
+        $this->timezoneValidation = $this->createValidationForArray('timezone',
             validator::numeric(), false);
 
-        $this->defaultTeamIdValidation = $this->_createValidation('default_team_id', $this->teamIdBaseValidation);
+        $this->defaultTeamIdValidation = $this->createValidationForArray('default_team_id', $this->teamIdBaseValidation);
 
         //TODO
         $this->agreeTosValidation = validator::alwaysValid();
 
-        $this->delFlagValidation = $this->_createValidation('del_flg', validator::boolVal());
+        $this->delFlagValidation = $this->createValidationForArray('del_flg', validator::boolVal());
 
-        $this->oldPasswordValidation = $this->_createValidation('old_password',
+        $this->oldPasswordValidation = $this->createValidationForArray('old_password',
             validator::notEmpty()->length(8, null), false);
 
         //TODO
         $this->photoValidation = null;
 
-        $this->hometownValidation = $this->_createValidation('hometown',
+        $this->hometownValidation = $this->createValidationForArray('hometown',
             validator::stringType()->length(null, 128), false);
 
         //TODO
         $this->coverPhotoValidation = null;
 
-        $this->commentValidation = $this->_createValidation('comment', validator::notEmpty()->length(null, 2000));
+        $this->commentValidation = $this->createValidationForArray('comment', validator::notEmpty()->length(null, 2000));
 
-        $this->phoneNumberValidation = $this->_createValidation('phone_no', validator::notEmpty()->length(null, 20));
+        $this->phoneNumberValidation = $this->createValidationForArray('phone_no', validator::notEmpty()->length(null, 20));
 
-        $this->setupCompleteFlagValidation = $this->_createValidation('setup_complete_flg',
+        $this->setupCompleteFlagValidation = $this->createValidationForArray('setup_complete_flg',
             validator::boolVal(), false);
 
-        $this->passwordRequest1Validation = $this->_createValidation('password_request',
+        $this->passwordRequest1Validation = $this->createValidationForArray('password_request',
             $this->_getPasswordValidation());
 
-        $this->passwordRequest2Validation = $this->_createValidation('password_request2',
+        $this->passwordRequest2Validation = $this->createValidationForArray('password_request2',
             $this->_getPasswordValidation());
 
-        $this->passwordValidation = $this->_createValidation('password', $this->_getPasswordValidation());
+        $this->passwordValidation = $this->createValidationForArray('password', $this->_getPasswordValidation());
 
-        $this->passwordConfirmValidation = $this->_createValidation('password_confirm', validator::alwaysValid());
+        $this->passwordConfirmValidation = $this->createValidationForArray('password_confirm', validator::alwaysValid());
     }
 
     /**
@@ -169,7 +169,7 @@ class UserValidator extends BaseValidator
     public function validate($array)
     {
         try {
-            $ret = validator::AllOf(
+            $ret = validator::AllOf([
                 $this->teamIdValidation, $this->firstNameValidation,
                 $this->lastNameValidation, $this->genderTypeValidation,
                 $this->birthDayValidation, $this->hideYearFlagValidation,
@@ -182,7 +182,7 @@ class UserValidator extends BaseValidator
                 $this->oldPasswordValidation, $this->hometownValidation,
 //                $this->photoValidation, $this->coverPhotoValidation,
                 $this->commentValidation, $this->phoneNumberValidation,
-                $this->setupCompleteFlagValidation)->assert($array);
+                $this->setupCompleteFlagValidation])->assert($array);
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
             return $exception->getMessages();
         }

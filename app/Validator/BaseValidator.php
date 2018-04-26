@@ -12,58 +12,61 @@ use Respect\Validation\Validator as validator;
 abstract class BaseValidator
 {
     /**
-     * @var validator Validation for user ID.
-     * Accepts non-null integer type
+     * Set of default rule for any validator
+     *
+     * @var array
      */
-    protected $userIdBaseValidation;
+    protected $rules = array();
 
     /**
-     * @var validator Validation for team ID.
-     * Accepts integer type if not null
+     * @param array|stdClass $input       Item to be validated
+     * @param array          $customRules Custom rules that would replace existing rules. Can be set to allow null variable
+     *                                    [$key => [$customRule, "optional"]]
+     * @param bool           $replaceFlag Replace existing rules with new one. By default it will merge existing with new ones
+     *
+     * @return bool         Whether validation passed or not
+     * @throws \Respect\Validation\Exceptions\NestedValidationException
      */
-    protected $teamIdBaseValidation;
-
-    /**
-     * @var validator Generic validation to check name
-     * Accepts alphanumeric & may only contain apostrophe (')
-     */
-    protected $nameBaseValidation;
-
-    /**
-     * @var validator Generic validation to check photo
-     * Accepts image of pre-determined types with size below 10MB
-     */
-    protected $photoBaseValidation;
-
-    public $errorMessage = null;
-
-    protected function __construct()
+    public final function validate($input, $customRules = array(), bool $replaceFlag = false)
     {
-        $this->userIdBaseValidation = validator::notEmpty()->intType();
+        $this->rules = ($replaceFlag) ? $customRules : array_merge($this->rules, $customRules);
 
-        $this->teamIdBaseValidation = validator::optional(validator::intType());
+        $validatorArray = $this->generateValidationArray($this->rules, is_array($input));
 
-        $this->nameBaseValidation = validator::notEmpty()->alnum('\'')->length(null, 128);
+        return validator::allOf($validatorArray)->assert($input);
+    }
 
-        //TODO
-        $this->photoBaseValidation;
+    abstract public function getDefaultValidationRule(): array;
+
+    /**
+     * Add new rules
+     * [$key => [$customRule, "optional"]]
+     *
+     * @param $array
+     */
+    public function addRule($array)
+    {
+        $this->rules = array_merge($this->rules, $array);
     }
 
     /**
-     * @param array $array
+     * Remove a rule based on key
      *
-     * @return array
+     * @param $key
      */
-    public abstract function validate($array);
+    public function removeRule($key)
+    {
+        unset($this->rules[$key]);
+    }
 
     /**
      * @param $keyName
      * @param $validation
      * @param $mandatory
      *
-     * @return mixed
+     * @return Respect\Validation\Validator
      */
-    protected function _createValidation(
+    protected function createValidationForArray(
         $keyName,
         Respect\Validation\Validator $validation,
         bool $mandatory = true
@@ -71,4 +74,30 @@ abstract class BaseValidator
         return validator::key($keyName, $validation, $mandatory)->setName($keyName);
     }
 
+    /**
+     * @param $keyName
+     * @param $validation
+     * @param $mandatory
+     *
+     * @return Respect\Validation\Validator
+     */
+    protected function createValidationForObject(
+        $keyName,
+        Respect\Validation\Validator $validation,
+        bool $mandatory = true
+    ) {
+        return validator::attribute($keyName, $validation, $mandatory)->setName($keyName);
+    }
+
+    protected function generateValidationArray(array $input, bool $isInputArray): array
+    {
+        $returnValue = array();
+
+        foreach ($input as $key => $value) {
+            $returnValue[] = ($isInputArray) ? $this->createValidationForArray($key, $value[0], !isset($value[1])) :
+                $this->createValidationForObject($key, $value[0], !isset($value[1]));
+        }
+
+        return $returnValue;
+    }
 }
