@@ -15,7 +15,7 @@ App::uses('User', 'Model');
  * @property .\Model\User  $User
  * @property LangComponent $LangComponent
  */
-abstract class ApiV2Controller extends Controller
+class ApiV2Controller extends Controller
 {
     /** @var string */
     private $_jwtToken;
@@ -33,11 +33,65 @@ abstract class ApiV2Controller extends Controller
     private $_stopInvokeFlag = false;
 
     /**
-     * Whether this page doesn't need authentication
+     * Whether this method ignores service usage status restriction
+     *
+     * @var bool
+     */
+    private $_ignoreRestrictionFlag = false;
+
+    /**
+     * Whether this method doesn't need authentication
      *
      * @var bool
      */
     private $_skipAuthenticationFlag = false;
+
+    /**
+     * This list for excluding from prohibited request
+     * If only controller name is specified, including all actions
+     * If you would like to specify several action, refer to the following:
+     * [
+     * 'controller' => 'users', 'action'     => 'settings',
+     * ],
+     * [
+     * 'controller' => 'users', 'action'     => 'view_goals',
+     * ],
+     *
+     * @var array
+     */
+    private $_excludedRequest = [
+        [
+            'controller' => 'payments',
+        ],
+        [
+            'controller' => 'teams',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'logout',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'accept_invite',
+        ],
+        [
+            'controller' => 'users',
+            'action'     => 'settings',
+        ],
+        [
+            'controller' => 'terms',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'privacy_policy',
+        ],
+        [
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'terms',
+        ],
+    ];
 
     /**
      * ApiV2Controller constructor.
@@ -51,7 +105,8 @@ abstract class ApiV2Controller extends Controller
 
     ) {
         parent::__construct($request, $response);
-        $this->_fetchJwtToken($request);
+        self::_fetchJwtToken($request);
+        self::_parseEndpointDocument($request);
     }
 
     /**
@@ -77,104 +132,29 @@ abstract class ApiV2Controller extends Controller
     {
         parent::beforeFilter();
 
-        //Skip authentication if the endpoint set the option
-        if (!$this->_checkSkipAuthentication($this->request)) {
-            if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
+        if (!$this->_skipAuthenticationFlag) {
+            if (empty($this->_jwtToken) || !self::_authenticateUser()) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->withMessage(__('You should be logged in.'))->getResponse();
+                    ->setMessage(__('You should be logged in.'))->getResponse();
             }
-            $this->_initializeTeamStatus();
+            self::_initializeTeamStatus();
 
-        //Check if user is restricted from using the service. Always skipped if endpoint ignores restrictionif ($this->_isRestrictedFromUsingService()&& !$this->_checkIgnoreRestriction($this->request)) {
-            $this->_stopInvokeFlag = true;/** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpInconsistentReturnPointsInspection */return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->withMessage(__("You cannot use service on the team."))->getResponse();
-        }
-        //Check if user is restricted to read only. Always skipped if endpoint ignores restrictionif ($this->_isRestrictedToReadOnly()&& !$this->_checkIgnoreRestriction($this->request)) {
-            $this->_stopInvokeFlag = true;/** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpInconsistentReturnPointsInspection */return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->withMessage(__("You may only read your team’s pages."))->getResponse();}
-        }
-
-        $this->_setAppLanguage();
-    }
-
-    /**
-     * Check whether the method skip authentication method
-     * To use: @skipAuthentication
-     *
-     * @param CakeRequest $request
-     *
-     * @return bool
-     */
-    private function _checkSkipAuthentication(CakeRequest $request)
-    {
-        $commentArray = $this->_parseEndpointDocument($request);
-
-        foreach ($commentArray as $commentLine) {
-            if ('@skipAuthentication' == trim($commentLine)) {
-                return true;
+            if (self::_isRestrictedFromUsingService() && !$this->_ignoreRestrictionFlag) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->setMessage(__("You cannot use service on the team."))->getResponse();
             }
-        }
-        return false;
-    }
-
-    /**
-     * Parse endpoint methods' documents, and retrieve special options
-     *
-     * @param CakeRequest $request
-     *
-     * @return array
-     */
-    private function _parseEndpointDocument(CakeRequest $request): array
-    {
-        $controllerName = $request->params['controller'] ?? '';
-        $actionName = $request->params['action'] ?? '';
-        $apiVersion = $request->params['apiVersion'] ?? '';
-
-        if (empty($controllerName) || empty($actionName)) {
-            return [];
-        }
-
-        //TODO Make it works with path. Currently only works with classname, which might cause mix up with classes of same name under different folder
-
-        $classPath = '';
-//        $classPath = '\\vagrant\\app\\Controller';
-
-//        if (!empty($apiVersion)) {
-//            $classPath .= '\\Api\\' . ucfirst($apiVersion) . '\\';
-//        }
-        $classPath .= ucfirst($controllerName) . "Controller";
-
-        try {
-            $class = new ReflectionClass($classPath);
-
-        } catch (ReflectionException $exception) {
-            GoalousLog::info("Reflection exception :" . $exception->getMessage());
-        }
-
-        if (empty($class)) {
-            return [];
-        }
-
-        $methodDocument = $class->getMethod($actionName)->getDocComment();
-
-        if (empty($methodDocument)) {
-            return [];
-        }
-
-        $commentArray = explode('*', substr($methodDocument, 3, -2));
-
-        $resultArray = [];
-
-        foreach ($commentArray as $value) {
-            if (!empty($value) && substr(trim($value), 0, 1) == "@") {
-                $resultArray[] = trim($value);
+            if (self::_isRestrictedToReadOnly() && !$this->_ignoreRestrictionFlag) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->setMessage(__("You may only read your team’s pages."))->getResponse();
             }
         }
 
-        return $resultArray;
+        self::_setAppLanguage();
     }
 
     /**
@@ -189,27 +169,9 @@ abstract class ApiV2Controller extends Controller
     }
 
     /**
-     * Get JWT token from request
-     *
-     * @param CakeRequest $request
-     */
-    private function _fetchJwtToken(CakeRequest $request)
-    {
-        $authHeader = $request->header('authorization');
-        if (empty($authHeader)) {
-            return;
-        }
-
-        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
-
-        $this->_jwtToken = $jwt[0] ?? '';
-    }
-
-    /**
      * Initialize current team's status based on current user's team ID
      */
-    private
-    function _initializeTeamStatus()
+    private function _initializeTeamStatus()
     {
         $this->_teamStatus = TeamStatus::getCurrentTeam();
         $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
@@ -220,27 +182,26 @@ abstract class ApiV2Controller extends Controller
      *
      * @return bool True if user is restricted from using the service
      */
-    private
-    function _isRestrictedFromUsingService(): bool
+    private function _isRestrictedFromUsingService(): bool
     {
+        if (self::_isRequestExcludedFromRestriction()) {
+            return false;
+        }
+
         return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
 
     /**
-     * Check whether the method ignore service usage restriction
-     * To use: @ignoreRestriction
+     * Check whether current request is excluded from any restriction
      *
-     * @param CakeRequest $request
-     *
-     * @return bool
+     * @return bool True if request is in list of requests ignoring restriction
      */
-    private
-    function _checkIgnoreRestriction(CakeRequest $request)
+    private function _isRequestExcludedFromRestriction(): bool
     {
-        $commentArray = $this->_parseEndpointDocument($request);
-
-        foreach ($commentArray as $commentLine) {
-            if ('@skipAuthentication' == trim($commentLine)) {
+        foreach ($this->_excludedRequest as $ignoreParam) {
+            // filter requested param with $ignoreParam
+            $intersectedParams = array_intersect_key($this->request->params, $ignoreParam);
+            if ($intersectedParams == $ignoreParam) {
                 return true;
             }
         }
@@ -252,20 +213,22 @@ abstract class ApiV2Controller extends Controller
      *
      * @return bool True if user is restricted to read only
      */
-    private
-    function _isRestrictedToReadOnly(): bool
+    private function _isRestrictedToReadOnly(): bool
     {
+        if (self::_isRequestExcludedFromRestriction()) {
+            return false;
+        }
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
+
         return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 
     /**
      * Set the app language for current user
      */
-    private
-    function _setAppLanguage()
+    private function _setAppLanguage()
     {
         if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
             Configure::write('Config.language', $this->_currentUser['language']);
@@ -274,7 +237,7 @@ abstract class ApiV2Controller extends Controller
                     (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
         } else {
             $lang = $this->LangComponent->getLanguage();
-            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
+            self::set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
         }
     }
 
@@ -284,8 +247,7 @@ abstract class ApiV2Controller extends Controller
      *
      * @return mixed
      */
-    public
-    function invokeAction(
+    public function invokeAction(
         CakeRequest $request
     ) {
         if ($this->_stopInvokeFlag) {
@@ -311,12 +273,76 @@ abstract class ApiV2Controller extends Controller
     }
 
     /**
-     * Set controller to skip authentication
+     * Parse endpoint methods' documents, and retrieve special options
      *
-     * @param bool $skipFlag True = skip authentication
+     * @param CakeRequest $request
      */
-    public function skipAuthentication(bool $skipFlag = false)
+    private function _parseEndpointDocument(CakeRequest $request)
     {
-        $this->_skipAuthenticationFlag = $skipFlag;
+        $controllerName = $request->params['controller'] ?? '';
+        $actionName = $request->params['action'] ?? '';
+        $apiVersion = $request->params['apiVersion'] ?? '';
+
+        if (empty($controllerName) || empty($actionName)) {
+            return;
+        }
+
+        //TODO Make it works with path. Currently only works with classname, which might cause mix up with classes of same name under different folder
+
+        $classPath = '';
+//        $classPath = '\\vagrant\\app\\Controller';
+
+//        if (!empty($apiVersion)) {
+//            $classPath .= '\\Api\\' . ucfirst($apiVersion) . '\\';
+//        }
+        $classPath .= ucfirst($controllerName) . "Controller";
+
+        try {
+            $class = new ReflectionClass($classPath);
+
+        } catch (ReflectionException $exception) {
+            GoalousLog::info("Reflection exception :" . $exception->getMessage());
+        }
+
+        if (empty($class)) {
+            return;
+        }
+
+        $methodDocument = $class->getMethod($actionName)->getDocComment() ?? '';
+
+        $commentArray = explode('*', substr($methodDocument, 3, -2));
+
+        foreach ($commentArray as $commentLine) {
+            self::_checkIgnoreRestriction($commentLine);
+            self::_checkSkipAuthentication($commentLine);
+        }
+    }
+
+    /**
+     * Check whether the method skip authentication method
+     * To use: #skipAuthentication
+     *
+     * @param string $param
+     */
+    private function _checkSkipAuthentication(string $param)
+    {
+        if ('#skipAuthentication' == trim($param)) {
+            $this->_skipAuthenticationFlag = true;
+
+        }
+    }
+
+    /**
+     * Check whether the method ignore service usage restriction
+     * To use: #ignoreRestriction
+     *
+     * @param string $param
+     */
+    private function _checkIgnoreRestriction(string $param)
+    {
+        if ('#ignoreRestriction' == trim($param)) {
+            $this->_ignoreRestrictionFlag = true;
+        }
+
     }
 }
