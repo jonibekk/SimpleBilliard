@@ -357,7 +357,7 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
     });
     if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
-       psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
+       psLeftSideContainer = new PerfectScrollbar('#navigationWrapper', {
         swipePropagation: false,
         wheelPropagation: false,
         maxScrollbarLength: 0,
@@ -366,14 +366,13 @@ $(function () {
       });
     }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
-      if(cake.is_mb_app === "1"){
-        var code = e.keyCode || e.which;
-        if(code == 13) {
-          $("#NavSearchInputToggle").blur();
-          $("#NavSearchInputToggle").focusout();
-        }
-      } else {
-        console.log("not mobile");
+      if(cake.is_mb_app !== "1" || cake.is_mb_browser !== "1"){
+        return false;
+      }
+      var code = e.keyCode || e.which;
+      if(code == 13) {
+        $("#NavSearchInputToggle").blur();
+        $("#NavSearchInputToggle").focusout();
       }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
