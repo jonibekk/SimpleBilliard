@@ -136,7 +136,7 @@ $(document).ready(function () {
 
     function select2Format(state) {
         if (!state.id) return state.text; // optgroup
-        return "<img src='" + state.image + "' width='16' height='16' />" + state.text;
+        return "<img src='" + state.image + "' width='16' height='16' /> " + state.text;
     }
 
     (function () {
