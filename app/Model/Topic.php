@@ -343,6 +343,7 @@ class Topic extends AppModel
                 'Topic.id' => $topicId
             ],
             'fields'     => [
+                'User.id',
                 'User.first_name',
                 'User.last_name',
                 'LocalName.first_name',
@@ -388,7 +389,14 @@ class Topic extends AppModel
         ];
 
         $res = $this->find('all', $options);
-        $res = AppUtil::flattenUnique($res);
+        $filtered = [];
+        foreach($res as &$user) {
+            if ($user['User']['id'] != $this->my_uid) {
+                unset($user['User']['id']);
+                $filtered[] = $user;
+            }
+        }
+        $res = AppUtil::flattenUnique($filtered);
         $keywords = "\n" . implode("\n", $res);
         return $keywords;
     }
