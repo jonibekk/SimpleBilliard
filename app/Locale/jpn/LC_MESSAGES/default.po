@@ -6216,6 +6216,9 @@ msgstr "認証アプリを使用できない場合は"
 msgid "Here"
 msgstr "こちら"
 
+msgid "Go To Top"
+msgstr "トップへ戻る"
+
 msgid "Enter a Recovery Code"
 msgstr "リカバリーコードを入力する"
 

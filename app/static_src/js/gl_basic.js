@@ -206,6 +206,25 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
+
+    var $topBtn = $('#jsGoTop');
+    $(window).scroll(function(){
+      if($(window).scrollTop() > 30){
+        if(!$topBtn.hasClass('active')){
+          $topBtn.addClass('active');
+        }
+      }else{
+        $topBtn.removeClass('active');
+      }
+    });
+    $topBtn.hover(function(){
+      $('#jsGoTopText').stop().animate({ 'right': '14px' }, 360);
+    },function(){
+      $('#jsGoTopText').stop().animate({ 'right': '-140px' }, 800);
+    });
+    $topBtn.click(function(){
+      $('body,html').stop().animate({ scrollTop: 0 }, 500, 'swing');
+    });
 });
 
 

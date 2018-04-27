@@ -144,10 +144,6 @@ const config = {
       path: compiled_assets_dir + '/js'
     }
   },
-  coffee: {
-    src: [assets_dir + '/coffee/**/*.coffee'],
-    watch_files: [assets_dir + '/coffee/**/*.coffee']
-  },
   angular_app: {
     src: [
       assets_dir + '/js/angular/app/**/*.js',
