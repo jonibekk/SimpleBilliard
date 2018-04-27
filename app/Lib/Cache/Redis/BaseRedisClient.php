@@ -2,6 +2,14 @@
 
 App::uses('ConnectionManager', 'Model');
 
+/**
+ * Class BaseRedisClient
+ *
+ * WARNING:
+ *     Redis key name will automatically added the env name
+ *     see __construct() in the app/Config/database.php
+ *     redis['prefix'] is the part of it
+ */
 abstract class BaseRedisClient
 {
     /**
