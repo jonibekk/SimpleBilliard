@@ -15,7 +15,7 @@ App::uses('User', 'Model');
  * @property .\Model\User  $User
  * @property LangComponent $LangComponent
  */
-class ApiV2Controller extends Controller
+abstract class ApiV2Controller extends Controller
 {
     /** @var string */
     private $_jwtToken;
@@ -64,6 +64,13 @@ class ApiV2Controller extends Controller
     }
 
     /**
+     * Abstract method for validating parameter.
+     *
+     * @return bool True if data is valid
+     */
+    abstract public function validateParameter(): bool;
+
+    /**
      * @return CakeResponse|void
      */
     public function beforeFilter()
@@ -99,93 +106,23 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Perform user authentication using JWT Token method
-     *
-     * @return bool TRUE = user successfully authenticated
-     */
-    private function _authenticateUser(): bool
-    {
-        //TODO set user & team ID
-        return true;
-    }
-
-    /**
-     * Initialize current team's status based on current user's team ID
-     */
-    private function _initializeTeamStatus()
-    {
-        $this->_teamStatus = TeamStatus::getCurrentTeam();
-        $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
-    }
-
-    /**
-     * Check if user is restricted from using service
-     *
-     * @return bool True if user is restricted from using the service
-     */
-    private function _isRestrictedFromUsingService(): bool
-    {
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
-    }
-
-    /**
-     * Check whether user is restricted to read only
-     *
-     * @return bool True if user is restricted to read only
-     */
-    private function _isRestrictedToReadOnly(): bool
-    {
-        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
-            return false;
-        }
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
-    }
-
-    /**
-     * Set the app language for current user
-     */
-    private function _setAppLanguage()
-    {
-        if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
-            Configure::write('Config.language', $this->_currentUser['language']);
-            $this
-                ->set('is_not_use_local_name',
-                    (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
-        } else {
-            $lang = $this->LangComponent->getLanguage();
-            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
-        }
-    }
-
-    /** Override parent's method
+     * Check whether the method skip authentication method
+     * To use: @skipAuthentication
      *
      * @param CakeRequest $request
      *
-     * @return mixed
+     * @return bool
      */
-    public function invokeAction(
-        CakeRequest $request
-    ) {
-        if ($this->_stopInvokeFlag) {
-            return false;
+    private function _checkSkipAuthentication(CakeRequest $request)
+    {
+        $commentArray = $this->_parseEndpointDocument($request);
+
+        foreach ($commentArray as $commentLine) {
+            if ('@skipAuthentication' == trim($commentLine)) {
+                return true;
+            }
         }
-        return parent::invokeAction($request);
-    }
-
-    /**
-     * @return int Current user's current team ID
-     */
-    public function getTeamId(): int
-    {
-        return $this->_currentTeamId;
-    }
-
-    /**
-     * @return mixed Current user's User object
-     */
-    public function getUser()
-    {
-        return $this->_currentUser;
+        return false;
     }
 
     /**
@@ -246,23 +183,33 @@ class ApiV2Controller extends Controller
     }
 
     /**
-     * Check whether the method skip authentication method
-     * To use: @skipAuthentication
+     * Perform user authentication using JWT Token method
      *
-     * @param CakeRequest $request
-     *
-     * @return bool
+     * @return bool TRUE = user successfully authenticated
      */
-    private function _checkSkipAuthentication(CakeRequest $request)
+    private function _authenticateUser(): bool
     {
-        $commentArray = $this->_parseEndpointDocument($request);
+        //TODO set user & team ID
+        return true;
+    }
 
-        foreach ($commentArray as $commentLine) {
-            if ('@skipAuthentication' == trim($commentLine)) {
-                return true;
-            }
-        }
-        return false;
+    /**
+     * Initialize current team's status based on current user's team ID
+     */
+    private function _initializeTeamStatus()
+    {
+        $this->_teamStatus = TeamStatus::getCurrentTeam();
+        $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
+    }
+
+    /**
+     * Check if user is restricted from using service
+     *
+     * @return bool True if user is restricted from using the service
+     */
+    private function _isRestrictedFromUsingService(): bool
+    {
+        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
 
     /**
@@ -283,5 +230,65 @@ class ApiV2Controller extends Controller
             }
         }
         return false;
+    }
+
+    /**
+     * Check whether user is restricted to read only
+     *
+     * @return bool True if user is restricted to read only
+     */
+    private function _isRestrictedToReadOnly(): bool
+    {
+        if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
+            return false;
+        }
+        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+    }
+
+    /**
+     * Set the app language for current user
+     */
+    private function _setAppLanguage()
+    {
+        if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
+            Configure::write('Config.language', $this->_currentUser['language']);
+            $this
+                ->set('is_not_use_local_name',
+                    (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
+        } else {
+            $lang = $this->LangComponent->getLanguage();
+            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
+        }
+    }
+
+    /** Override parent's method
+     *
+     * @param CakeRequest $request
+     *
+     * @return mixed
+     */
+    public function invokeAction(
+        CakeRequest $request
+    ) {
+        if ($this->_stopInvokeFlag) {
+            return false;
+        }
+        return parent::invokeAction($request);
+    }
+
+    /**
+     * @return int Current user's current team ID
+     */
+    public function getTeamId(): int
+    {
+        return $this->_currentTeamId;
+    }
+
+    /**
+     * @return mixed Current user's User object
+     */
+    public function getUser()
+    {
+        return $this->_currentUser;
     }
 }
