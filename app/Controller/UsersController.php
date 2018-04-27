@@ -744,9 +744,11 @@ class UsersController extends AppController
                 $values = $this->User->NotifySetting->getSettingValues($notify_target, $type_group);
                 $same = true;
                 foreach ($values as $k => $v) {
-                    if ($this->request->data['NotifySetting'][$k] !== $v) {
-                        $same = false;
-                        break;
+                    if (isset($this->request->data['NotifySetting'][$k])) {
+                        if ($this->request->data['NotifySetting'][$k] !== $v) {
+                            $same = false;
+                            break;
+                        }                        
                     }
                 }
                 if ($same) {
