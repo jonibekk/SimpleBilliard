@@ -98,25 +98,29 @@ class UserValidatorTest extends GoalousTestCase
 
             $userValidator = new UserValidator;
 
-            $this->assertTrue($userValidator->validate($sampleUser, $newRule));
+            $userValidator->addRule($newRule);
+            $this->assertTrue($userValidator->validate($sampleUser));
 
             $sampleUser['test_1'] = 'a';
-
             $newRule = [
                 "test_1" => [validator::stringType()],
-                "test_2" => [validator::numeric()]
             ];
+            $userValidator->addRule($newRule);
+            $this->assertTrue($userValidator->validate($sampleUser));
 
-            $this->assertTrue($userValidator->validate($sampleUser, $newRule));
+            $sampleUser['test_1'] = '';
+            $newRule = [
+                "test_1" => [validator::stringType(), "optional"],
+            ];
+            $userValidator->addRule($newRule);
+            $this->assertTrue($userValidator->validate($sampleUser));
 
             unset($sampleUser['test_2']);
-
             $newRule = [
-                "test_1" => [validator::stringType()],
                 "test_2" => [validator::numeric(), "optional"]
             ];
-
-            $this->assertTrue($userValidator->validate($sampleUser, $newRule));
+            $userValidator->addRule($newRule);
+            $this->assertTrue($userValidator->validate($sampleUser));
 
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
         }
@@ -142,12 +146,12 @@ class UserValidatorTest extends GoalousTestCase
             ];
 
             $userValidator = new UserValidator;
+            $userValidator->addRule($newRule);
+            $this->assertFalse($userValidator->validate($sampleUser));
 
-            $this->assertFalse($userValidator->validate($sampleUser, $newRule));
-
-            unset($sampleUser['test_1']);
-
-            $this->assertFalse($userValidator->validate($sampleUser, $newRule));
+            $sampleUser['test_1'] = 'asdasd';
+            unset($sampleUser['test_2']);
+            $this->assertFalse($userValidator->validate($sampleUser));
 
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
         }
