@@ -140,6 +140,7 @@ if (cake.require_banner_notification && isClosedAlert(cake.data.team_id) === fal
 function instertSpaceTop(height){
   var $header = $('#header'),
       $jsLeftSideContainer = $('#jsLeftSideContainer'),
+      $jsRightSideContainer = $('#jsRightSideContainer'),
       $body = $('body'),
       $spFeedAltSub = $('#SpFeedAltSub'),
       $sidebarSetting = $('#SidebarSetting'),
@@ -148,7 +149,6 @@ function instertSpaceTop(height){
   $header.css('max-height', parseInt($header.css('max-height')) + height + 'px');
   $header.css('padding-top', parseInt($header.css('padding-top')) + height + 'px');
   $jsLeftSideContainer.css('top', parseInt($jsLeftSideContainer.css('top')) + height + 'px');
-  $jsRightSideContainer = $('#jsRightSideContainer');
   $jsRightSideContainer.css('top', parseInt($jsRightSideContainer.css('top')) + height + 'px');
   $body.css('padding-top', parseInt($body.css('padding-top')) + height + 'px');
   $spFeedAltSub.css('top', parseInt($spFeedAltSub.css('top')) + height + 'px');
