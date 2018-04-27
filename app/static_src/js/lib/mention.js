@@ -65,7 +65,6 @@ var Mention = function(target) {
     })
     target.on('inserted.atwho', function(atwhoEvent, $li, browserEvent) {
       self.values[$li.data('text')] = $li.data('id')
-      autosize.update(target[0]);
     })
   }
   bind(target)
