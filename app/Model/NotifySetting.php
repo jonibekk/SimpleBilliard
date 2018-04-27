@@ -107,18 +107,16 @@ class NotifySetting extends AppModel
         self::TYPE_FEED_MENTIONED_IN_COMMENT                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
-            'field_prefix'    => '',
+            'field_prefix'    => 'feed_mentioned_in',
             'icon_class'      => 'fa-circle-o',
-            'groups'          => ['all'],
-            'force_notify'    => true,
+            'groups'          => ['all']
         ],
         self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
-            'field_prefix'    => '',
+            'field_prefix'    => 'feed_mentioned_in',
             'icon_class'      => 'fa-key',
-            'groups'          => ['all'],
-            'force_notify'    => true,
+            'groups'          => ['all']
         ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
             'mail_template'   => "notify_basic",
