@@ -13,11 +13,6 @@ use Respect\Validation\Validator as validator;
 
 class UserValidator extends BaseValidator
 {
-    public function __construct()
-    {
-        $this->rules = $this->getDefaultValidationRule();
-    }
-
     public function getDefaultValidationRule(): array
     {
         $defaultRule = [
@@ -43,8 +38,8 @@ class UserValidator extends BaseValidator
             'comment'            => [validator::length(null, 2000)],
             'phone_no'           => [validator::length(null, 20)],
             'setup_complete_flg' => [validator::boolType(), "optional"],
-
         ];
+
         return $defaultRule;
     }
 
