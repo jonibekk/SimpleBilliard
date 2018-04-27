@@ -21,21 +21,16 @@ abstract class BaseValidator
     /**
      * Validate object.
      *
-     * @param array|stdClass $input       Item to be validated
-     * @param array          $customRules Custom rules that would replace existing rules. Can be set to allow null variable
-     *                                    [$key => [$customRule, "optional"]]
-     * @param bool           $replaceFlag Clear existing rules and replace with new ones. By default it will merge existing with new ones
+     * @param array|stdClass $input Item to be validated
      *
      * @return bool         Whether validation passed or not
      * @throws \Respect\Validation\Exceptions\NestedValidationException
      */
-    public final function validate($input, $customRules = array(), bool $replaceFlag = false)
+    public final function validate($input)
     {
         if (empty($this->rules)) {
-            $this->getDefaultValidationRule();
+            $this->resetValidationRules();
         }
-
-        $this->rules = ($replaceFlag) ? $customRules : array_merge($this->rules, $customRules);
 
         $validatorArray = $this->generateValidationArray($this->rules, is_array($input));
 
@@ -43,17 +38,11 @@ abstract class BaseValidator
     }
 
     /**
-     * Validate object with default rules
-     *
-     * @param array|stdClass $input Item to be validated
-     *
-     * @return bool         Whether validation passed or not
-     * @throws \Respect\Validation\Exceptions\NestedValidationException
+     * Reset rules to default one
      */
-    public final function validateWithDefaultRules($input)
+    public final function resetValidationRules()
     {
         $this->rules = $this->getDefaultValidationRule();
-        return $this->validate($input);
     }
 
     /**
@@ -62,24 +51,27 @@ abstract class BaseValidator
     abstract public function getDefaultValidationRule(): array;
 
     /**
-     * Add new rules
-     * [$key => [$customRule, "optional"]]
+     * Convert rule array to be able to validate object
      *
-     * @param $array
+     * @param array $input        Array of rules
+     * @param bool  $isInputArray Whether the validated object is an array
+     *
+     * @return array Array of validators
      */
-    public function addRule($array)
+    protected function generateValidationArray(array $input, bool $isInputArray): array
     {
-        $this->rules = array_merge($this->rules, $array);
-    }
+        $returnValue = array();
 
-    /**
-     * Remove a rule based on key
-     *
-     * @param $key
-     */
-    public function removeRule($key)
-    {
-        unset($this->rules[$key]);
+        foreach ($input as $key => $value) {
+
+            //If optional flag is present, set mandatory to false
+            $mandatoryFlag = !(isset($value[1]) ? $value[1] == "optional" : false);
+
+            $returnValue[] = ($isInputArray) ? $this->createValidationForArray($key, $value[0], $mandatoryFlag) :
+                $this->createValidationForClass($key, $value[0], $mandatoryFlag);
+        }
+
+        return $returnValue;
     }
 
     /**
@@ -117,26 +109,44 @@ abstract class BaseValidator
     }
 
     /**
-     * Convert rule array to be able to validate object
+     * Validate object with default rules
      *
-     * @param array $input        Array of rules
-     * @param bool  $isInputArray Whether the validated object is an array
+     * @param array|stdClass $input Item to be validated
      *
-     * @return array Array of validators
+     * @return bool         Whether validation passed or not
+     * @throws \Respect\Validation\Exceptions\NestedValidationException
      */
-    protected function generateValidationArray(array $input, bool $isInputArray): array
+    public final function validateWithDefaultRules($input)
     {
-        $returnValue = array();
+        $validatorArray = $this->generateValidationArray($this->getDefaultValidationRule(), is_array($input));
 
-        foreach ($input as $key => $value) {
+        return validator::allOf($validatorArray)->assert($input) ?? false;
+    }
 
-            //If optional flag is present, set mandatory to false
-            $mandatoryFlag = !(isset($value[1]) ? $value[1] == "optional" : false);
-
-            $returnValue[] = ($isInputArray) ? $this->createValidationForArray($key, $value[0], $mandatoryFlag) :
-                $this->createValidationForClass($key, $value[0], $mandatoryFlag);
+    /**
+     * Add new rules
+     * [$key => [$customRule, "optional"]]
+     *
+     * @param array $rules                Custom rules that would replace / append existing rules.
+     *                                    [$key => [$customRule, "optional"]]
+     * @param bool  $replaceFlag          Clear existing rules and replace with new ones. By default it will merge existing with new ones
+     */
+    public function addRule($rules, $replaceFlag = false)
+    {
+        if (empty($this->rules)) {
+            $this->resetValidationRules();
         }
 
-        return $returnValue;
+        $this->rules = ($replaceFlag) ? $rules : array_merge($this->rules, $rules);
+    }
+
+    /**
+     * Remove a rule based on key
+     *
+     * @param $key
+     */
+    public function removeRule($key)
+    {
+        unset($this->rules[$key]);
     }
 }
