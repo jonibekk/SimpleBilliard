@@ -32,7 +32,7 @@ $this->Form->create([
             <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px font_18px">
                 <p class="font_bold"><?= __('Evaluatee') ?></p>
             </div>
-            <div class="col-xxs-12 mb_8px">
+            <div class="col-xxs-12 mb_8px evaluatee-summary">
                 <?=
                 $this->Upload->uploadImage($userEvaluatee, 'User.photo', ['style' => 'medium'],
                     [
@@ -41,8 +41,9 @@ $this->Form->create([
                         'alt'    => 'icon',
                         'class'  => 'pull-left img-circle mtb_3px'
                     ]) ?>
-                <p class="font_bold"><?= h($userEvaluatee['User']['display_username']) ?></p>
-                <span class="font_bold">
+                <div class="evaluatee-summary-names">
+                    <p class="font_bold"><?= h($userEvaluatee['User']['display_username']) ?></p>
+                    <span class="font_bold">
                         <?php if (!is_null($userEvaluateeCoach)): ?>
                             <?= __('Coach') ?>: <?=
                             $this->Upload->uploadImage($userEvaluateeCoach, 'User.photo', ['style' => 'medium'],
@@ -56,6 +57,7 @@ $this->Form->create([
                             <?= __('Coach') ?>: <i class="fa fa-user" aria-hidden="true"></i> -
                         <?php endif ?>
                     </span>
+                </div>
             </div>
             <div for="#" class="col col-xxs-12 eval-index-panel-title font_verydark p_4px">
                 <p class="font_bold font_18px"><?= __('Evaluators') ?></p>
@@ -86,7 +88,7 @@ $this->Form->create([
                 </div>
                 <div class="col-xxs-1 eval-list-item-parts vertical-center text-align_c">
                     <a href="#" class="font_lightGray-gray">
-                        <i class="btn_remove fa fa-times-circle fa-2x"></i>
+                        <i class="btn_remove fa fa-times-circle fa-2x"/>
                     </a>
                 </div>
             </li>
