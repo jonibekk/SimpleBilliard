@@ -13,11 +13,6 @@ use Respect\Validation\Validator as validator;
 
 class GoalValidator extends BaseValidator
 {
-    public function __construct()
-    {
-        $this->rules = $this->getDefaultValidationRule();
-    }
-
     public function getDefaultValidationRule(): array
     {
         $defaultRule = [

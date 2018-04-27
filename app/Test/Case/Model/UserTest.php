@@ -1,6 +1,6 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
-App::uses('UserValidator', 'Validator');
 
 /**
  * User Test Case
@@ -1253,41 +1253,5 @@ class UserTest extends GoalousTestCase
     function test_findNotBelongToTeamByEmail()
     {
         // TODO.Payment:add unit tests
-    }
-
-    public function test_NewValidationMethod_success()
-    {
-        /** @var User $user */
-        $user = ClassRegistry::init('User');
-
-        $sampleUser = $user->getById(1);
-        $sampleUser['team_id'] = 1;
-        $sampleUser['default_team_id'] = 1;
-        $sampleUser['phone_no'] = '01234567890';
-
-        $userValidator = new UserValidator;
-
-        try {
-            $this->assertTrue($userValidator->validate($sampleUser));
-        } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
-        }
-
-    }
-
-    public function test_NewValidationMethod_failure()
-    {
-        /** @var User $user */
-        $user = ClassRegistry::init('User');
-
-        $sampleUser = $user->getById(1);
-
-        $sampleUser['first_name'] = '129yrb8y))*&)@&$)';
-
-        $userValidator = new UserValidator;
-
-        try {
-            $this->assertFalse($userValidator->validate($sampleUser));
-        } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
-        }
     }
 }
