@@ -1,6 +1,6 @@
 <?php
-App::uses('BaseValidator', 'Validator');
-App::uses('CommonValidator', 'Validator');
+require(__DIR__ . '/../BaseValidator.php');
+require(__DIR__ . '/../CommonValidator.php');
 
 /**
  * Created by PhpStorm.
@@ -52,18 +52,6 @@ class UserValidator extends BaseValidator
         ];
 
         return $passwordRule;
-    }
-
-    /**
-     * Create password validator
-     *
-     * @return UserValidator
-     */
-    public static function createPasswordValidator(): self
-    {
-        $self = new self();
-        $self->addRule($self->getPasswordValidationRule(), true);
-        return $self;
     }
 
 }
