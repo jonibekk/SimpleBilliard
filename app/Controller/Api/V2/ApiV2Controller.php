@@ -64,13 +64,6 @@ abstract class ApiV2Controller extends Controller
     }
 
     /**
-     * Abstract method for validating parameter.
-     *
-     * @return bool True if data is valid
-     */
-    abstract public function validateParameter(): bool;
-
-    /**
      * @return CakeResponse|void
      */
     public function beforeFilter()
