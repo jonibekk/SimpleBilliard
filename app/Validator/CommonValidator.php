@@ -11,11 +11,17 @@ use Respect\Validation\Validator as validator;
 class CommonValidator
 {
 
+    /**
+     * @return Respect\Validation\Validator
+     */
     public final static function nameValidation()
     {
         return validator::alnum('\'')->length(null, 128);
     }
 
+    /**
+     * @return Respect\Validation\Validator
+     */
     public final static function passwordValidation()
     {
         return validator::notEmpty()
@@ -23,6 +29,9 @@ class CommonValidator
                         ->length(8, 50);
     }
 
+    /**
+     * @return Respect\Validation\Validator
+     */
     public final static function dateValidation()
     {
         return validator::date('Y-m-d');
