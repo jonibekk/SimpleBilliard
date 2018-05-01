@@ -1,6 +1,6 @@
 <?php
-require('BaseValidator.php');
-require('CommonValidator.php');
+require(__DIR__ . '/../BaseValidator.php');
+require(__DIR__ . '/../CommonValidator.php');
 
 /**
  * Created by PhpStorm.

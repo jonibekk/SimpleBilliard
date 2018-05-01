@@ -6,7 +6,7 @@
  * Time: 11:13
  */
 
-namespace Custom\Validation\Rule;
+namespace Validator\CustomRule;
 
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\AbstractRule;
@@ -19,9 +19,14 @@ class Unique extends AbstractRule
             throw new ComponentException('Input must be an array');
         }
 
-        foreach (array_values(array_count_values($input)) as $count) {
-            if ($count > 1) {
+        $count = array();
+
+        foreach ($input as $value) {
+
+            if (isset($count[$value])) {
                 return false;
+            } else {
+                $count[$value] = 1;
             }
         }
 
