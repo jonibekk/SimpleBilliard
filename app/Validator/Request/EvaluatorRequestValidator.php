@@ -1,6 +1,7 @@
 <?php
 require(__DIR__ . '/../BaseValidator.php');
 require(__DIR__ . '/../CommonValidator.php');
+include(__DIR__ . '/../Rule/Unique.php');
 
 /**
  * Created by PhpStorm.
@@ -15,26 +16,19 @@ class EvaluatorRequestValidator extends BaseValidator
 {
     const MAX_NUMBER_OF_EVALUATORS = 7;
 
-    private $_evaluateeId;
-
-    public function __construct(int $evaluateeId)
-    {
-        $this->_evaluateeId = $evaluateeId;
-    }
-
     public function getDefaultValidationRule(): array
     {
         return [];
     }
 
-    public function getPostValidationRule(): array
+    public function getPostValidationRule($evaluateeId): array
     {
-        validator::with('Validator\\CustomRule');
+        validator::with('\\Validator\\Rule');
 
         $defaultRules = [
             'evaluatee_user_id'  => [validator::intType()],
             'evaluator_user_ids' => [
-                validator::not(validator::contains($this->_evaluateeId))
+                validator::not(validator::contains($evaluateeId))
                          ->length(null, self::MAX_NUMBER_OF_EVALUATORS)
                          ->each(validator::intType())
                          ->unique()

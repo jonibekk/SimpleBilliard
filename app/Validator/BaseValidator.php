@@ -32,6 +32,11 @@ abstract class BaseValidator
             $this->resetValidationRules();
         }
 
+        //If no default rules are set, return false
+        if (empty($this->rules)) {
+            return false;
+        }
+
         $validatorArray = $this->generateValidationArray($this->rules, is_array($input));
 
         return validator::allOf($validatorArray)->assert($input) ?? false;

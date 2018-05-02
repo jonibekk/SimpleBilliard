@@ -6,7 +6,7 @@
  * Time: 11:13
  */
 
-namespace Validator\CustomRule;
+namespace Validator\Rule;
 
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\AbstractRule;
