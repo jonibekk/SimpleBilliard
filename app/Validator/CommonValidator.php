@@ -1,6 +1,4 @@
 <?php
-require('BaseValidator.php');
-require('CommonValidator.php');
 
 /**
  * Created by PhpStorm.

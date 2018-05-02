@@ -1,7 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
-App::uses('UserValidator', 'Validator');
+App::uses('UserValidator', 'Validator/Model');
 
 /**
  * Created by PhpStorm.
