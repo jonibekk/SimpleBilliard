@@ -8,6 +8,30 @@ class AccessTokenData
     private $userAgent;
 
     /**
+     * @var int
+     */
+    private $timeToLive;
+
+    /**
+     * @return int
+     */
+    public function getTimeToLive(): int
+    {
+        return $this->timeToLive;
+    }
+
+    /**
+     * @param int $timeToLive
+     *
+     * @return $this
+     */
+    public function withTimeToLive(int $timeToLive)
+    {
+        $this->timeToLive = $timeToLive;
+        return $this;
+    }
+
+    /**
      * @param string $userAgent
      *
      * @return $this
