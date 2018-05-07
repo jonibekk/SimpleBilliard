@@ -5,6 +5,7 @@ App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('AuthenticationException', 'Lib/Auth/Exception');
 App::uses('AuthenticationOutOfTermException', 'Lib/Auth/Exception');
 App::uses('AuthenticationNotManagedException', 'Lib/Auth/Exception');
+App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
 
 /**
  * Class AccessAuthenticator
@@ -63,12 +64,15 @@ class AccessAuthenticator
     public static function verify(string $authorizationBearer): AuthorizedAccessInfo {
         try {
             $jwtAuth = JwtAuthentication::decode($authorizationBearer);
-            $token = $jwtAuth->token();
-            if ($ifTokenIsNotInRedis = false) {
-                // TODO: Check $token in Redis
-                // Write process after flexible Redis write/read class is created
+
+            // Check in the cache key is exist or not
+            $cacheClient = new AccessTokenClient();
+            $cacheKey = new AccessTokenKey($jwtAuth->getUserId(), $jwtAuth->getTeamId(), $jwtAuth->getJwtId());
+            $cachedAuthorizedData = $cacheClient->read($cacheKey);
+            if (is_null($cachedAuthorizedData)) {
                 throw new AuthenticationNotManagedException();
             }
+
             return new AuthorizedAccessInfo($jwtAuth);
         } catch (JwtSignatureException $exception) {
             throw new AuthenticationException($exception->getMessage());
@@ -85,13 +89,24 @@ class AccessAuthenticator
      * @param int $userId
      * @param int $teamId
      *
+     * @throws AuthenticationException
+     *
      * @return AuthorizedAccessInfo
      */
     public static function publish(int $userId, int $teamId): AuthorizedAccessInfo {
-        $jwtAuthentication = new JwtAuthentication($userId, $teamId);
-        $newToken = $jwtAuthentication->token();
-        // TODO: save $newToken into Redis
-        // Write process after flexible Redis write/read class is created
-        return new AuthorizedAccessInfo(new JwtAuthentication($userId, $teamId));
+        $jwtAuth = new JwtAuthentication($userId, $teamId);
+
+        // build token information
+        $jwtAuth->token();
+
+        // Store token into cache
+        $cacheClient = new AccessTokenClient();
+        $cacheKey = new AccessTokenKey($jwtAuth->getUserId(), $jwtAuth->getTeamId(), $jwtAuth->getJwtId());
+        $cachedAuthorizedData = (new AccessTokenData())->withTimeToLive($jwtAuth->expireInSeconds());
+        if (!$cacheClient->write($cacheKey, $cachedAuthorizedData)) {
+            throw new AuthenticationException('failed to cache token');
+        }
+
+        return new AuthorizedAccessInfo($jwtAuth);
     }
 }
