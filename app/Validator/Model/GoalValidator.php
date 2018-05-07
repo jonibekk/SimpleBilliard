@@ -1,6 +1,6 @@
 <?php
-require(__DIR__ . '/../BaseValidator.php');
-require(__DIR__ . '/../CommonValidator.php');
+App::uses('BaseValidator', 'Validator');
+App::uses('CommonValidator', 'Validator');
 
 /**
  * Created by PhpStorm.
