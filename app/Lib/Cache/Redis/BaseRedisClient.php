@@ -22,7 +22,7 @@ abstract class BaseRedisClient
     /**
      * @return Redis
      */
-    protected function getRedis(): RedisSource
+    public function getRedis(): RedisSource
     {
         if (is_null(self::$redis)) {
             self::$redis = $this->getRedisConnection();
