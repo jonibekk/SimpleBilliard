@@ -1,6 +1,6 @@
 <?php
-require(__DIR__ . '/../BaseValidator.php');
-require(__DIR__ . '/../CommonValidator.php');
+App::uses('BaseValidator', 'Validator');
+App::uses('CommonValidator', 'Validator');
 include(__DIR__ . '/../Rule/Unique.php');
 
 /**
