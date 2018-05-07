@@ -31,9 +31,10 @@ class AccessTokenClient extends BaseRedisClient implements InterfaceRedisClient
      */
     public function write(AccessTokenKey $key, AccessTokenData $data): bool
     {
-        return $this->getRedis()->set($key->get(), msgpack_pack([
+        $cacheValue = msgpack_pack([
             'user_agent' => $data->getUserAgent(),
-        ]));
+        ]);
+        return $this->getRedis()->set($key->get(), $cacheValue, $data->getTimeToLive());
     }
 
     /**
