@@ -318,6 +318,16 @@ class JwtAuthentication
     }
 
     /**
+     * Return remaining seconds of this token to expires.
+     * @return int
+     */
+    public function expireInSeconds(): int
+    {
+        return $this->expireAt()->diffInSeconds(GoalousDateTime::now());
+    }
+
+
+    /**
      * return JWT claim "iat" by GoalousDateTime
      * @return GoalousDateTime
      */
