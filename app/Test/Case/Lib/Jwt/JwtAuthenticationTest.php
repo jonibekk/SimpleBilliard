@@ -122,6 +122,25 @@ class JwtAuthenticationTest extends GoalousTestCase
         JwtAuthentication::decode(implode('.', $separated));
     }
 
+    function testExpireInSeconds()
+    {
+        GoalousDateTime::setTestNow();
+
+        $jwtToken = new JwtAuthentication($userId = 1, $teamId = 1);
+        $jwtToken->token();
+
+        $secondsToExpire = $jwtToken->expireInSeconds();
+
+        $sessionExpireInMinute = Configure::read('Session')['timeout'];
+        $this->assertEquals($secondsToExpire,  $sessionExpireInMinute * 60);
+
+        // Set current time on tomorrow
+        GoalousDateTime::setTestNow(GoalousDateTime::now()->addDay(1));
+
+        $secondsToExpireAtTomorrow = $jwtToken->expireInSeconds();
+        $this->assertEquals($secondsToExpire, $secondsToExpireAtTomorrow + 86400);
+    }
+
     /**
      * @expectedException JwtOutOfTermException
      */
