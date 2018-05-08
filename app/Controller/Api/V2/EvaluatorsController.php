@@ -6,9 +6,7 @@ App::uses('TeamMember', 'Model');
 
 /**
  * Created by PhpStorm.
- *
  * Example of controller extending ApiV2Controller
- *
  * User: Stephen Raharja
  * Date: 08/03/2018
  * Time: 10:57
@@ -34,12 +32,11 @@ class EvaluatorsController extends ApiV2Controller
      */
     public function post()
     {
-        try {
-            $this->_validatePost();
-        } catch (Exception $exception) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage($exception->getMessage())
-                                                                       ->setExceptionTrace($exception->getTrace())
-                                                                       ->getResponse();
+        //Validate data. If return errors, return them to REST consumer
+        $errorReturn = $this->_validatePost();
+
+        if (!empty($errorReturn)) {
+            return $errorReturn;
         }
 
         $userId = $this->getUser()['id'];
@@ -107,10 +104,11 @@ class EvaluatorsController extends ApiV2Controller
     }
 
     /**
-     * @return bool
-     * @throws Exception
+     * Validate parameters prior to data manipulations
+     *
+     * @return  CakeResponse Return nothing if no error in validation
      */
-    private function _validatePost(): bool
+    private function _validatePost(): CakeResponse
     {
 
         $data = $this->request['data'];
@@ -128,7 +126,8 @@ class EvaluatorsController extends ApiV2Controller
         $ExperimentService = ClassRegistry::init("ExperimentService");
 
         if (!$ExperimentService->isDefined(Experiment::NAME_ENABLE_EVALUATION_FEATURE)) {
-            throw new Exception('Team has no evaluation feature');
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage('Team has no evaluation feature')
+                                                                       ->getResponse();
         }
 
         $teamId = $this->getTeamId();
@@ -138,19 +137,18 @@ class EvaluatorsController extends ApiV2Controller
 
         //Check if user has authority to set evaluators
         if ($userId != $evaluateeUserId && $userId != $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId)) {
-            throw new Exception(__('You have no permission.'));
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage(__('You have no permission.'))
+                                                                       ->getResponse();
         }
 
         $inactiveUsersList = $this->User->filterUsersOnTeamActivity($teamId, $evaluatorUserIds, false);
 
         if (count($inactiveUsersList) > 0) {
             $connectorString = (count($inactiveUsersList) > 1) ? ' are ' : ' is ';
-            throw new Exception(__('%s %s inactive',
-                implode(", ", Hash::extract($inactiveUsersList, '{n}.User.display_username')), $connectorString));
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage(__('%s %s inactive',
+                implode(", ", Hash::extract($inactiveUsersList, '{n}.User.display_username')), $connectorString))
+                                                                       ->getResponse();
         }
-
-        //TODO return result
-
     }
 
 }
