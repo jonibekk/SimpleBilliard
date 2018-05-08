@@ -21,6 +21,16 @@
         <div class="header-white-bg mod-mb-app"></div>
     <?php endif; ?>
 </div>
+<div class="right-navigation-wrap">
+    <div class="large-container hidden-xxs hidden-xs hidden-sm visible-md-flex visible-lg-flex">
+        <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+            <?= $this->element('Header/logged_in_right'); ?>
+        </div>
+    </div>
+</div>
+<?php if($is_mb_app_ios_high_header): ?>
+    <div class="header-white-bg mod-mb-app"></div>
+<?php endif; ?>
 <div id="NavbarOffcanvas">
     <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
@@ -88,14 +98,4 @@
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
     </ul>
-    <div class="right-navigation-wrap">
-        <div class="large-container hidden-xxs hidden-xs hidden-sm visible-md-flex visible-lg-flex">
-            <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
-                <?= $this->element('Header/logged_in_right'); ?>
-            </div>
-        </div>
-    </div>
-    <?php if($is_mb_app_ios_high_header): ?>
-        <div class="header-white-bg mod-mb-app"></div>
-    <?php endif; ?>
 </div>
