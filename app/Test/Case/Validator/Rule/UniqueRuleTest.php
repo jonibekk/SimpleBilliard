@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-include(__DIR__ . '/../../../../Validator/Rule/Unique.php');
+require_once(__DIR__ . '/../../../../Validator/Rule/Unique.php');
 
 /**
  * Created by PhpStorm.

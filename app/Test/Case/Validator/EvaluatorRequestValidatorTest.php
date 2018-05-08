@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('EvaluatorRequestValidator', 'Validator/Request');
+App::uses('EvaluatorRequestValidator', 'Validator/Request/Api/V2');
 
 /**
  * Created by PhpStorm.
@@ -22,9 +22,7 @@ class EvaluatorRequestValidatorTest extends GoalousTestCase
         try {
             $evaluatorRequestValidator = new EvaluatorRequestValidator();
 
-            $evaluatorRequestValidator->addRule($evaluatorRequestValidator->getPostValidationRule($evaluateeUserId));
-
-            $this->assertTrue($evaluatorRequestValidator->validate($data));
+            $this->assertTrue($evaluatorRequestValidator->validatePost($evaluateeUserId, $data));
 
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
         }
@@ -44,13 +42,11 @@ class EvaluatorRequestValidatorTest extends GoalousTestCase
         try {
             $evaluatorRequestValidator = new EvaluatorRequestValidator();
 
-            $evaluatorRequestValidator->addRule($evaluatorRequestValidator->getPostValidationRule($evaluateeUserId));
-
-            $this->assertFalse($evaluatorRequestValidator->validate($data));
+            $this->assertFalse($evaluatorRequestValidator->validatePost($evaluateeUserId, $data));
 
             $data['evaluator_user_ids'] = [2, 2, 3, 4];
 
-            $this->assertFalse($evaluatorRequestValidator->validate($data));
+            $this->assertFalse($evaluatorRequestValidator->validatePost($evaluateeUserId, $data));
 
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
         }
