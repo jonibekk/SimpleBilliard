@@ -4406,9 +4406,6 @@ msgstr "インサイト"
 msgid "Rankings"
 msgstr "ランキング"
 
-msgid "There are no further rankings to show."
-msgstr "これ以下のランキングはありません。"
-
 msgid "Usage status of Circles"
 msgstr "サークル利用状況"
 
@@ -6235,13 +6232,6 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
- "参加しているサークルはありません。"
-
-#~ msgid "Edit Circles"
-#~ msgstr "サークル編集"
-
-msgid "You can mention to no one here."
-msgstr "ここではメンションできません。"
 
 #, fuzzy
 #~| msgid "Invalid score."
