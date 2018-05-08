@@ -1487,7 +1487,6 @@ class NotifyBizComponent extends Component
             $comment = $this->Post->Comment->read(null, $comment_id);
         }
 
-        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($to_user_ids);
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
