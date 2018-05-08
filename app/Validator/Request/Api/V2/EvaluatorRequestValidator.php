@@ -1,7 +1,7 @@
 <?php
 App::uses('BaseValidator', 'Validator');
 App::uses('CommonValidator', 'Validator');
-include(__DIR__ . '/../Rule/Unique.php');
+require_once(__DIR__ . '/../../../Rule/Unique.php');
 
 /**
  * Created by PhpStorm.
@@ -36,6 +36,22 @@ class EvaluatorRequestValidator extends BaseValidator
         ];
 
         return $defaultRules;
+    }
+
+    /**
+     * Validate array using the post validation rules
+     *
+     * @param $evaluateeId
+     * @param $data array to be validated
+     *
+     * @return bool True if validation passes
+     */
+    public function validatePost($evaluateeId, $data): bool
+    {
+        $this->addRule($this->getPostValidationRule($evaluateeId), true);
+        $return = $this->validate($data);
+        $this->resetValidationRules();
+        return $return;
     }
 
 }
