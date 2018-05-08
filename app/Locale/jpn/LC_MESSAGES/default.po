@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-24 14:40+0900\n"
+"PO-Revision-Date: 2018-04-18 15:12+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1186,6 +1186,13 @@ msgstr ""
 "\"notify-card-head-target\">%3$s</span>の投稿にコメントしました。"
 
 msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a "
+"comment. "
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしまし"
+"た。"
+
+msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
@@ -2188,23 +2195,20 @@ msgstr "秘密サークルを指定しよう"
 msgid "You can't switch in the circle page."
 msgstr "サークルページでは切り替えられません"
 
-msgid "Goal"
-msgstr "ゴール"
-
-msgid "Circles"
-msgstr "サークル"
-
-msgid "There is no more data."
-msgstr "これ以上のデータがありません。"
-
-msgid "No results found"
-msgstr "一致する結果はありませんでした"
-
 msgid "Cancel"
 msgstr "キャンセル"
 
 msgid "Delete"
 msgstr "削除する"
+
+msgid "Name?"
+msgstr "名前を入力"
+
+msgid "Goal Name?"
+msgstr "ゴール名を入力"
+
+msgid "Circle Name?"
+msgstr "サークル名を入力"
 
 msgid "Leave circle."
 msgstr "サークルを脱退する"
@@ -2217,9 +2221,6 @@ msgstr "データをロード中です。少々お待ちください。"
 
 msgid "%d remaining"
 msgstr "残り %d人"
-
-msgid "View All"
-msgstr "すべて表示"
 
 msgid "Coach"
 msgstr "コーチ"
@@ -2853,6 +2854,9 @@ msgstr "トピック名を入力"
 msgid "Update"
 msgstr "更新"
 
+msgid "No results found"
+msgstr "一致する結果はありませんでした"
+
 msgid "Leave this topic"
 msgstr "トピックを抜ける"
 
@@ -3183,11 +3187,17 @@ msgstr "アイテムを保存しました"
 msgid "Item removed"
 msgstr "保存済みアイテムを削除しました"
 
+msgid "Circles"
+msgstr "サークル"
+
 msgid "Manage"
 msgstr "管理"
 
 msgid "View Circles"
 msgstr "サークルを見る"
+
+msgid "View All"
+msgstr "すべて表示"
 
 msgid "Saved"
 msgstr "保存済み"
@@ -3238,6 +3248,9 @@ msgstr "協業のお問い合わせ"
 
 msgid "Action list"
 msgstr "アクションリスト"
+
+msgid "There is no more data."
+msgstr "これ以上のデータがありません。"
 
 msgid "More..."
 msgstr "もっと読む ▼"
@@ -3554,6 +3567,9 @@ msgstr "本当にこの投稿を削除しますか？"
 msgid "Circle"
 msgstr "サークル"
 
+msgid "Goal"
+msgstr "ゴール"
+
 msgid "Team Vision"
 msgstr "チームビジョン"
 
@@ -3766,6 +3782,9 @@ msgstr "ログイン"
 msgid "Create New Team"
 msgstr "新しいチームをつくる"
 
+msgid "Home"
+msgstr "ホーム"
+
 msgid "Create a team"
 msgstr "チームを作成"
 
@@ -3796,6 +3815,9 @@ msgstr "ゴール認定"
 msgid "User Guide"
 msgstr "ユーザー利用ガイド"
 
+msgid "How to make a Goal (jp)"
+msgstr "ゴール作成方法"
+
 msgid "Tutorial"
 msgstr "チュートリアル"
 
@@ -3805,14 +3827,8 @@ msgstr "サポート"
 msgid "Logout"
 msgstr "ログアウト"
 
-msgid "Home"
-msgstr "ホーム"
-
 msgid "Team"
 msgstr "チーム"
-
-msgid "Search Members, Goals, Circles"
-msgstr "メンバー,ゴール,サークルを検索"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
@@ -4339,6 +4355,9 @@ msgstr "週"
 
 msgid "Day"
 msgstr "日"
+
+msgid "There are no further rankings to show."
+msgstr "これ以下のランキングはありません。"
 
 msgid "Member(Active)"
 msgstr "メンバー（アクティブ）"
@@ -6214,18 +6233,6 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
-#~ msgid "Name?"
-#~ msgstr "名前を入力"
-
-#~ msgid "Goal Name?"
-#~ msgstr "ゴール名を入力"
-
-#~ msgid "Circle Name?"
-#~ msgstr "サークル名を入力"
-
-#~ msgid "How to make a Goal (jp)"
-#~ msgstr "ゴール作成方法"
-
 #, fuzzy
 #~| msgid "Invalid score."
 #~ msgid "Invalid csv format"
@@ -6240,6 +6247,9 @@ msgstr "認定ステータス: %s"
 #~| msgid "You don't belong to any circle."
 #~ msgid "Do not belong to Circle"
 #~ msgstr "参加しているサークルはありません。"
+
+#~ msgid "You can mention to no one here."
+#~ msgstr "ここではメンションできません。"
 
 #~ msgid "Edit Circles"
 #~ msgstr "サークル編集"
