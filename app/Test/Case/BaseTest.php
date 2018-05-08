@@ -17,7 +17,8 @@ class BaseTest extends PHPUnit_Framework_TestSuite
             APP_TEST_CASES . DS . 'Service',
             APP_TEST_CASES . DS . 'Service' . DS . 'Payment2',
             APP_TEST_CASES . DS . 'Service' . DS . 'Api',
-            APP_TEST_CASES . DS . 'Validator'
+            APP_TEST_CASES . DS . 'Validator',
+            APP_TEST_CASES . DS . 'Validator' . DS . 'Rule',
         ],
     ];
 }
