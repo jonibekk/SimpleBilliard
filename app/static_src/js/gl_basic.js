@@ -263,8 +263,11 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      // setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
-      $("#NavSearchInputToggle").focus();
+      if(cake.is_mb_app !== "1" && cake.is_mb_browser !== "1") {
+        setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      } else {
+        $("#NavSearchInputToggle").focus();
+      }
       hideNav();
     });
 
@@ -277,8 +280,11 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      // setTimeout(function(){$("#NavSearchInput").focus();},650);
-      $("#NavSearchInput").focus();
+      if(cake.is_mb_app !== "1" && cake.is_mb_browser !== "1") {
+        setTimeout(function(){$("#NavSearchInput").focus();},650);
+      } else {
+        $("#NavSearchInput").focus();
+      }
       hideNav();
     });
     $(".header-dropdown-add,.header-dropdown-functions").off("click").on("click", function() {
