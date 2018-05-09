@@ -41,8 +41,8 @@ class EvaluatorRequestValidator extends BaseValidator
     /**
      * Validate array using the post validation rules
      *
-     * @param $evaluateeId
-     * @param $data array to be validated
+     * @param int   $evaluateeId
+     * @param array $data array to be validated
      *
      * @return bool True if validation passes
      */
@@ -52,6 +52,20 @@ class EvaluatorRequestValidator extends BaseValidator
         $return = $this->validate($data);
         $this->resetValidationRules();
         return $return;
+    }
+
+    /**
+     * Create validator for post action in evaluator request
+     *
+     * @param int $evaluateeId
+     *
+     * @return EvaluatorRequestValidator
+     */
+    public static function createPostValidator(int $evaluateeId): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostValidationRule($evaluateeId), true);
+        return $self;
     }
 
 }
