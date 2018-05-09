@@ -2,7 +2,7 @@
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
             class="mb-to-front-almost header-toggle-icon js-nav-toggle">
         <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
-        <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
+        <i class="fa fa-navicon fa-adjust-hamburger toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
     </button>
 </div>
 <div class="medium-container hidden-xxs visible-xs-flex visible-sm-flex hidden-md hidden-lg"">
@@ -51,7 +51,7 @@
             <a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                 <div class="ta-sm_c">
-                    <i class="fa fa-flag js-header-link header-icon nav-xxs-icon header-icons"></i>
+                    <i class="fa fa-flag fa-smaller js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                     <p class="font_11px header_icon-text hidden-xs js-header-link">
                         <?= __("Goal") ?>
@@ -64,7 +64,7 @@
             <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'index']) ?>">
                 <div class="ta-sm_c">
-                    <i class="fa fa-users js-header-link header-icon nav-xxs-icon header-icons"></i>
+                    <i class="fa fa-users  fa-smallerjs-header-link header-icon nav-xxs-icon header-icons"></i>
                     <p class="font_11px header_icon-text hidden-xs js-header-link">
                         <?= __("Team") ?>
                     </p>
