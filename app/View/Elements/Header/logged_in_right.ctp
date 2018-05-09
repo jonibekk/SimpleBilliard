@@ -14,6 +14,7 @@
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
                 ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
         </a>
+        <div class="avatar-border"></div>
     <?php endif; ?>
 
     <?php if($is_mb_app || $isMobileBrowser): ?>
