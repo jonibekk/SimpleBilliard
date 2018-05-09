@@ -88,7 +88,7 @@ $this->Form->create([
                 </div>
                 <div class="col-xxs-1 eval-list-item-parts vertical-center text-align_c">
                     <a href="#" class="font_lightGray-gray">
-                        <i class="btn_remove fa fa-times-circle fa-2x"/>
+                        <i class="btn_remove fa fa-times-circle fa-2x"></i>
                     </a>
                 </div>
             </li>
