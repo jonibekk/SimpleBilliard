@@ -1476,6 +1476,7 @@ class NotifyBizComponent extends Component
      */
     private function _setFeedMentionedOption($notify_type, $post_id, $comment_id, $to_user_ids)
     {
+        if (empty($to_user_ids)) return;
         $post = $this->Post->findById($post_id);
         if (empty($post)) {
             return;
