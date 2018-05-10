@@ -1476,6 +1476,7 @@ class NotifyBizComponent extends Component
      */
     private function _setFeedMentionedOption($notify_type, $post_id, $comment_id, $to_user_ids)
     {
+        if (empty($to_user_ids)) return;
         $post = $this->Post->findById($post_id);
         if (empty($post)) {
             return;
@@ -1487,7 +1488,6 @@ class NotifyBizComponent extends Component
             $comment = $this->Post->Comment->read(null, $comment_id);
         }
 
-        $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($to_user_ids);
         $this->notify_option['url_data'] = [
             'controller' => 'posts',

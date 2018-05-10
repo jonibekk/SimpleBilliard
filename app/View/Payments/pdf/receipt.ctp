@@ -17,7 +17,11 @@
             ?>
         </figure>
         <?php if ($history['PaymentSetting']['is_card']): ?>
+            <?php if ($history['ChargeHistory']['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS): ?>
             <h2 class="receipt-status"><?= __("PAID") ?></h2>
+            <?php else: ?>
+            <h2 class="receipt-status receipt-status-failure"><?= __("FAILURE") ?></h2>
+            <?php endif; ?>
         <?php endif; ?>
     </header>
     <div class="invoice-overview">
