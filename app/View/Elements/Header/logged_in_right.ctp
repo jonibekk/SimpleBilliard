@@ -12,7 +12,7 @@
            ]) ?>">
             <?=
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
-                ['width' => '20', 'height' => '20', 'alt' => 'icon', 'class' => 'header-dropdown-avatar header-icon-zoom']) ?>
+                ['width' => '20', 'height' => '20', 'alt' => 'icon', 'class' => 'header-nav-avatar header-dropdown-avatar header-icon-zoom']) ?>
         </a>
     <?php endif; ?>
 
