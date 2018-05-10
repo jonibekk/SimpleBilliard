@@ -20,9 +20,9 @@ class EvaluatorRequestValidatorTest extends GoalousTestCase
         ];
 
         try {
-            $evaluatorRequestValidator = new EvaluatorRequestValidator();
+            $evaluatorRequestValidator = EvaluatorRequestValidator::createPostValidator($evaluateeUserId);
 
-            $this->assertTrue($evaluatorRequestValidator->validatePost($evaluateeUserId, $data));
+            $this->assertTrue($evaluatorRequestValidator->validate($data));
 
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
         }
@@ -40,13 +40,13 @@ class EvaluatorRequestValidatorTest extends GoalousTestCase
         ];
 
         try {
-            $evaluatorRequestValidator = new EvaluatorRequestValidator();
+            $evaluatorRequestValidator = EvaluatorRequestValidator::createPostValidator($evaluateeUserId);
 
-            $this->assertFalse($evaluatorRequestValidator->validatePost($evaluateeUserId, $data));
+            $this->assertFalse($evaluatorRequestValidator->validate($data));
 
             $data['evaluator_user_ids'] = [2, 2, 3, 4];
 
-            $this->assertFalse($evaluatorRequestValidator->validatePost($evaluateeUserId, $data));
+            $this->assertFalse($evaluatorRequestValidator->validate($data));
 
         } catch (\Respect\Validation\Exceptions\NestedValidationException $exception) {
         }
