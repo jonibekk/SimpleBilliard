@@ -745,14 +745,18 @@
     color: #000;
     text-decoration: none;
     -webkit-touch-callout: none;
+    &:hover, &:focus, &:active, &:visited {
+      background-color: #fff0f1;
+      color: initial;
+      text-decoration: initial;
+    }
 }
 
 .search-list-item-link .search-list-avatar-item {
-    margin: 2px 0;
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    margin-left: 4px;
+    padding: 4px;
 }
 
 .search-list-item-link .search-list-avatar-item img{
@@ -765,7 +769,6 @@
 }
 
 .topic-search-list-item-main {
-    height: 44px;
     flex: 1;
     min-width: 0;
     margin-left: 10px;
@@ -783,6 +786,7 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    margin-top: 6px;
 }
 
 header-nav-add.open ul {
