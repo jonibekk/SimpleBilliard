@@ -3,6 +3,7 @@
  * @var $is_mb_app
  */
 ?>
+<?php $is_mb_app = true; ?>
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url([
@@ -43,8 +44,11 @@
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
                id="setupIcon"></i>
+               <div class="<?= $is_mb_app ? "mb-header-badge-shift" : "" ?> btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                    <span>T</span>
+                </div>
             <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-                <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                <div class="btn btn-xs bell-notify-box notify-setup-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>" id="setupNum">
                     <span><?= $setup_rest_count ?></span>
                 </div>
             <?php endif; ?>
@@ -153,13 +157,13 @@
            data-toggle="dropdown"
            id="header-cog-dropdown">
             <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
-            <div class="btn btn-xs notify-function-numbers">
+            <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
              <span>
                8
              </span>
             </div>
             <?php if ($all_alert_cnt > 0): ?>
-                <div class="btn btn-xs notify-function-numbers">
+                <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
                  <span>
                    <?= $all_alert_cnt ?>
                  </span>

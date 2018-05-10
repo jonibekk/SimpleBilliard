@@ -1,7 +1,8 @@
+<?php $is_mb_app = true; ?>
 <div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
             class="mb-to-front-almost header-toggle-icon js-nav-toggle">
-        <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
+        <div class="hamburger-unread-point js-unread-point-on-hamburger is-read <?= $is_mb_app ? "mb-hambuger-badge-shift" : "" ?>"></div>
         <i class="fa fa-navicon fa-adjust-hamburger toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
     </button>
 </div>
@@ -13,7 +14,7 @@
         <div class="header-white-bg mod-mb-app"></div>
     <?php endif; ?>
 </div>
-<div class="minimum-container visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
+<div class="<?= $is_mb_app ? 'mb-minimum-container' : 'minimum-container' ?> visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
     <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
         <?= $this->element('Header/logged_in_right'); ?>  
     </div>
