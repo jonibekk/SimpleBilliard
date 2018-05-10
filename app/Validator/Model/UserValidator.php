@@ -54,4 +54,16 @@ class UserValidator extends BaseValidator
         return $passwordRule;
     }
 
+    /**
+     * Create password validator
+     *
+     * @return UserValidator
+     */
+    public static function createPasswordValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPasswordValidationRule(), true);
+        return $self;
+    }
+
 }
