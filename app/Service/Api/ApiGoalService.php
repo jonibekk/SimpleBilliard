@@ -1,11 +1,12 @@
 <?php
 App::import('Service/Api', 'ApiService');
+App::import('Service/Api', 'ApiPagingInterface');
 App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Class AppService
  */
-class ApiGoalService extends ApiService
+class ApiGoalService extends ApiService implements ApiPagingInterface
 {
     // ゴール検索デフォルト取得件数
     const GOAL_SEARCH_DEFAULT_LIMIT = 10;
@@ -296,4 +297,30 @@ class ApiGoalService extends ApiService
 
         return $ret;
     }
+
+    public function readData($currentId, $limit, $direction): array
+    {
+        // TODO: Implement readData() method.
+    }
+
+    public function beforeRead()
+    {
+        // TODO: Implement beforeRead() method.
+    }
+
+    public function afterRead()
+    {
+        // TODO: Implement afterRead() method.
+    }
+
+    public function setPagingParameters(array $parameters)
+    {
+        // TODO: Implement setPagingParameters() method.
+    }
+
+    public function getPagingParameters(): array
+    {
+        // TODO: Implement getPagingParameters() method.
+    }
+
 }

@@ -82,6 +82,29 @@ class GoalsController extends ApiController
         return $this->_getResponsePagingSuccess($searchResult);
     }
 
+    public function new_search()
+    {
+
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+
+        /** @var RequestPaging $RequestPaging */
+        $RequestPaging = ClassRegistry::init("RequestPaging");
+
+        //Get search parameters, cursor, limit, direction
+
+        //Or create class-specific methods
+        $ApiGoalService->setPagingParameters([1, 2, 3]);
+
+        $cursor = '';
+        $limit = 0;
+        $direction = '';
+
+        $result = $RequestPaging->searchWithPaging($ApiGoalService, $cursor, $limit, $direction);
+
+        //Process result and return back to client
+    }
+
     /**
      * ゴール検索の共通処理
      * ゴール初期データと検索用API両方で利用する
