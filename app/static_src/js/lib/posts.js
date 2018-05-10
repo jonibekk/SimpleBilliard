@@ -254,6 +254,7 @@ function appendPostOgpInfo(data) {
         e.stopPropagation();
         $siteInfoUrl.val('');
         $siteInfo.empty();
+        $(this).remove();
       }))
     // makes additional room for the delete button
     .find('.site-info').css({
