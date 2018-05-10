@@ -336,7 +336,7 @@ $(function () {
           if(visibleCircles !== circleCount) {
             $("#showMoreCircles").css("display","block");
             $(".left-side-container").css("overflow-y", "hidden");
-            var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height() - 14;
+            var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height();// - 14;
             $("#circleListBody").css("height", setHeight + "px");
           } else {
             $("#showMoreCircles").css("display","none");
