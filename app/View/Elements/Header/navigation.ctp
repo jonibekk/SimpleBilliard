@@ -1,4 +1,3 @@
-<?php $is_mb_app = true; ?>
 <div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
             class="mb-to-front-almost header-toggle-icon js-nav-toggle">
