@@ -246,7 +246,7 @@ function appendPostOgpInfo(data) {
   $siteInfo
     // show delete button
     .prepend($('<a>').attr('href', '#')
-      .addClass('font_lightgray')
+      .addClass('font_lightgray ogp-close')
       .addClass(addClass)
       .append('<i class="fa fa-times fa-2x js-ogp-close"></i>')
       .on('click', function (e) {
