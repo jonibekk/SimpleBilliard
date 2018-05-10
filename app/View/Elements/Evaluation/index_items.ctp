@@ -10,23 +10,25 @@
  * @var                    $eval_is_frozen
  */
 ?>
-<?= $this->App->viewStartComment()?>
+<?= $this->App->viewStartComment() ?>
 <?php foreach ($evaluatees as $user): ?>
-    <a href="<?= $this->Html->url(['controller'       => 'evaluations',
-                                   'action'           => 'view',
-                                   'evaluate_term_id' => $eval_term_id,
-                                   'user_id'          => $user['User']['id'],
-                                   'class'            => 'block'
+    <a href="<?= $this->Html->url([
+        'controller'       => 'evaluations',
+        'action'           => 'view',
+        'evaluate_term_id' => $eval_term_id,
+        'user_id'          => $user['User']['id'],
+        'class'            => 'block'
     ]) ?>"
        class="font_verydark eval-hover-effect">
         <div class="eval-list-item col-xxs-12">
             <div class="eval-list-item-left">
                 <?=
                 $this->Upload->uploadImage($user, 'User.photo', ['style' => 'medium'],
-                    ['width'  => '48px',
-                     'height' => '48px',
-                     'alt'    => 'icon',
-                     'class'  => 'pull-left img-circle mtb_3px'
+                    [
+                        'width'  => '48px',
+                        'height' => '48px',
+                        'alt'    => 'icon',
+                        'class'  => 'pull-left img-circle mtb_3px'
                     ]) ?>
             </div>
             <div class="eval-list-item-center">
@@ -34,46 +36,47 @@
                 <?php foreach ($user['flow'] as $k => $v): ?>
                     <?php if ($k !== 0): ?>
 
-                        <?php if (!$isFixedEvaluationOrder && $v['evaluate_type'] == Evaluation::TYPE_EVALUATOR && $k > 1):?>
+                        <?php if (!$isFixedEvaluationOrder && $v['evaluate_type'] == Evaluation::TYPE_EVALUATOR && $k > 1): ?>
                             ・
-                        <?php else:?>
+                        <?php else: ?>
                             &nbsp;<i class="fa fa-long-arrow-right font_lightgray"></i>&nbsp;
-                        <?php endif;?>
+                        <?php endif; ?>
 
                     <?php endif ?>
                     <?php
-                        $fontWeightCls = 'font_lightgray';
-                        if ($isFixedEvaluationOrder) {
-                            $fontWeightCls =  $v['this_turn'] ? 'font_bold' : 'font_lightgray';
+                    $fontWeightCls = 'font_lightgray';
+                    if ($isFixedEvaluationOrder) {
+                        $fontWeightCls = $v['this_turn'] ? 'font_bold' : 'font_lightgray';
+                    } else {
+                        if ($eval_is_frozen) {
+                            if ((int)$v['evaluate_type'] === Evaluation::TYPE_FINAL_EVALUATOR && (int)$v['status'] !== Goalous\Model\Enum\Evaluation\Status::DONE) {
+                                $fontWeightCls = 'font_bold';
+                            }
                         } else {
-                            if ($eval_is_frozen) {
-                                if ((int)$v['evaluate_type'] === Evaluation::TYPE_FINAL_EVALUATOR && (int)$v['status'] !== Goalous\Model\Enum\Evaluation\Status::DONE) {
-                                    $fontWeightCls = 'font_bold';
-                                }
-                            } else {
-                                switch ($v['evaluate_type']) {
-                                    case Evaluation::TYPE_ONESELF:
-                                        if ($user['eval_stage'] == EvaluationService::STAGE_SELF_EVAL) {
-                                            $fontWeightCls = 'font_bold';
-                                        }
-                                        break;
-                                    case Evaluation::TYPE_EVALUATOR:
-                                        if ($user['eval_stage'] == EvaluationService::STAGE_EVALUATOR_EVAL) {
-                                            $fontWeightCls = 'font_bold';
-                                        }
-                                        break;
-                                    case Evaluation::TYPE_FINAL_EVALUATOR:
-                                        if ($user['eval_stage'] == EvaluationService::STAGE_FINAL_EVALUATOR_EVAL) {
-                                            $fontWeightCls = 'font_bold';
-                                        }
-                                        break;
+                            switch ($v['evaluate_type']) {
+                                case Evaluation::TYPE_ONESELF:
+                                    if ($user['eval_stage'] == EvaluationService::STAGE_SELF_EVAL) {
+                                        $fontWeightCls = 'font_bold';
+                                    }
+                                    break;
+                                case Evaluation::TYPE_EVALUATOR:
+                                    if ($user['eval_stage'] == EvaluationService::STAGE_EVALUATOR_EVAL) {
+                                        $fontWeightCls = 'font_bold';
+                                    }
+                                    break;
+                                case Evaluation::TYPE_FINAL_EVALUATOR:
+                                    if ($user['eval_stage'] == EvaluationService::STAGE_FINAL_EVALUATOR_EVAL) {
+                                        $fontWeightCls = 'font_bold';
+                                    }
+                                    break;
 
-                                }
                             }
                         }
+                    }
                     ?>
                     <span class="<?= $fontWeightCls ?>">
-                        <i class="fa fa-user <?= $v['other_evaluator'] ? '' : 'none' ?>" aria-hidden="true"></i><?= $v['name'] ?>
+                        <i class="fa fa-user <?= $v['other_evaluator'] ? '' : 'none' ?>"
+                           aria-hidden="true"></i><?= $v['name'] ?>
                     </span>
                 <?php endforeach ?>
                 <?php if (!empty($user['status_text']['body']) && !$eval_is_frozen): ?>
@@ -94,4 +97,4 @@
     </a>
     <hr class="col-xxs-12">
 <?php endforeach; ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewEndComment() ?>

@@ -379,7 +379,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_EVALUATEE       => [
+        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                  => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -636,7 +636,7 @@ class NotifySetting extends AppModel
 
         // getting goalName.
         $goalName = null;
-        if (Hash::get($options, 'goal_id')) {
+        if (!empty($options) && isset($options['goal_id'])) {
             $goal = $this->User->Goal->findById($options['goal_id']);
             $goalName = Hash::get($goal, 'Goal.name');
         }

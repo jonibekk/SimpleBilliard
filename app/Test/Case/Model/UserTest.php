@@ -817,6 +817,31 @@ class UserTest extends GoalousTestCase
         $this->assertEmpty($res);
     }
 
+    public function test_getUsersByKeywordWithExclusion_success()
+    {
+        $excludedUserIdList = [10, 11];
+        $excludedUserIdList2 = [2, 3];
+
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+
+        $result = $this->User->getUsersByKeyword("first", 20, false);
+        $this->assertCount(5, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, false, $excludedUserIdList);
+        $this->assertCount(5, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, true);
+        $this->assertCount(4, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, false, $excludedUserIdList2);
+        $this->assertCount(3, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, true, $excludedUserIdList2);
+        $this->assertCount(2, $result);
+    }
+
     function testGetNewUsersByKeywordNotSharedOnPost()
     {
         $this->User->my_uid = 1;
@@ -998,7 +1023,7 @@ class UserTest extends GoalousTestCase
         $this->User->LocalName->current_team_id = 1;
 
         $usersWithOutSelf = $this->User->getUsersSelect2('first', 10, true);
-        $usersWithSelf    = $this->User->getUsersSelect2('first', 10, true, true);
+        $usersWithSelf = $this->User->getUsersSelect2('first', 10, true, true);
         $this->assertTrue(count($usersWithOutSelf['results']) !== $this->count($usersWithSelf['results']));
 
         $isContainingUserId = function (string $userId, array $resultSelect2) {

@@ -889,8 +889,9 @@ class UsersController extends AppController
         $res = ['results' => []];
         if (isset($query['term']) && !empty($query['term']) && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $with_group = boolval($query['with_group'] ?? false);
-            $with_self  = boolval($query['with_self'] ?? false);
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
+            $with_self = boolval($query['with_self'] ?? false);
+            $excludedUsers = array_values($query['excluded_users'] ?? []);
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self, $excludedUsers);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
             $res['results'] = $this->Mention::filterAsMentionableUser($query['in_post_id'], $res['results']);
