@@ -44,17 +44,21 @@ define(function () {
                     if ($selectedItems.length) {
                         var code = e.keyCode || e.which;
                         if(!currentIndex) {
-                            currentIndex = $selectedItems.first().index();
+                            currentIndex = $selectedItems.first().index() - 1;
                         }
                         switch (code) {
                             // up
                             case 38:
                                 e.preventDefault();
-                                if(currentIndex > 1) {
+                                if(currentIndex > 0) {
                                     currentIndex--;
-                                    if(currentIndex >= 1 && currentIndex < $selectedItems.length) {
+                                    if(currentIndex >= 0 && currentIndex < $selectedItems.length) {
+                                        if(currentIndex < $selectedItems.length - 1) {
+                                            $selectedItems[currentIndex + 1].style.backgroundColor = "#fff";
+                                        }
                                         current = $selectedItems[currentIndex];
                                         current.scrollIntoView();
+                                        current.style.backgroundColor = "#fff0f1";
                                     } else {
                                         currentIndex++;
                                     }
@@ -65,8 +69,12 @@ define(function () {
                                 e.preventDefault();
                                 if(currentIndex < $selectedItems.length) {
                                     currentIndex++;
-                                    if(currentIndex >= 1 && currentIndex < $selectedItems.length) {
+                                    if(currentIndex >= 0 && currentIndex < $selectedItems.length) {
+                                        if(currentIndex >= 1) {
+                                            $selectedItems[currentIndex - 1].style.backgroundColor = "#fff";
+                                        }
                                         current = $selectedItems[currentIndex];
+                                        current.style.backgroundColor = "#fff0f1";
                                         current.scrollIntoView();
                                     } else {
                                         currentIndex--;
@@ -235,44 +243,44 @@ define(function () {
                     // }, 150);
                 });
 
-            // 矢印キーで選択可能にする
-            $NavSearchResults
-                .on('keydown', '.nav-search-result-item', function (e) {
-                    var $selectedItems = $('.search-list-item-link');
-                    if ($selectedItems.length) {
-                        var code = e.keyCode || e.which;
-                        if(!currentIndex) {
-                            currentIndex = $selectedItems.first().index();
-                        }
-                        switch (code) {
-                            // up
-                            case 38:
-                                e.preventDefault();
-                                if(currentIndex > 1) {
-                                    currentIndex--;
-                                    if(currentIndex >= 1){
-                                        current = $selectedItems[currentIndex];
-                                        $(current).css("background-color")
-                                        current.scrollIntoView();
-                                    }
-                                    console.log(currentIndex);
-                                }
-                                break;
-                            // down
-                            case 40:
-                                e.preventDefault();
-                                if(currentIndex < $selectedItems.length) {
-                                    currentIndex++;
-                                    if(currentIndex < $selectedItems.length){
-                                        current = $selectedItems[currentIndex];
-                                        current.scrollIntoView();
-                                    }
-                                    console.log(currentIndex);
-                                }                                
-                                break;
-                        }
-                    }
-                });
+            // // 矢印キーで選択可能にする
+            // $NavSearchResults
+            //     .on('keydown', '.nav-search-result-item', function (e) {
+            //         var $selectedItems = $('.search-list-item-link');
+            //         if ($selectedItems.length) {
+            //             var code = e.keyCode || e.which;
+            //             if(!currentIndex) {
+            //                 currentIndex = $selectedItems.first().index();
+            //             }
+            //             switch (code) {
+            //                 // up
+            //                 case 38:
+            //                     e.preventDefault();
+            //                     if(currentIndex > 1) {
+            //                         currentIndex--;
+            //                         if(currentIndex >= 1){
+            //                             current = $selectedItems[currentIndex];
+            //                             $(current).css("background-color")
+            //                             current.scrollIntoView();
+            //                         }
+            //                         console.log(currentIndex);
+            //                     }
+            //                     break;
+            //                 // down
+            //                 case 40:
+            //                     e.preventDefault();
+            //                     if(currentIndex < $selectedItems.length) {
+            //                         currentIndex++;
+            //                         if(currentIndex < $selectedItems.length){
+            //                             current = $selectedItems[currentIndex];
+            //                             current.scrollIntoView();
+            //                         }
+            //                         console.log(currentIndex);
+            //                     }                                
+            //                     break;
+            //             }
+            //         }
+            //     });
         }
     };
 

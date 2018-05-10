@@ -2,6 +2,7 @@ define(function () {
     // ヘッダーの検索ボックス処理
     var headerSearchToggle = {
         setup: function () {
+            var current, currentIndex;
             var $NavSearchFormToggle = $('#NavSearchFormToggle');
             var $NavSearchInputToggle = $('#NavSearchInputToggle');
             var $NavSearchResultsToggle = $('#NavSearchResultsToggle');
@@ -39,10 +40,55 @@ define(function () {
 
             $NavSearchInputToggle
                 .on('keydown', function (e) {
-                    // down
-                    if (e.keyCode == 40) {
-                        e.preventDefault();
-                        $NavSearchResultsToggle.find('.search-list-item-link:first').focus();
+                    var $selectedItems = $('.search-list-item-link');
+                    if ($selectedItems.length) {
+                        var code = e.keyCode || e.which;
+                        if(!currentIndex) {
+                            currentIndex = $selectedItems.first().index() - 1;
+                        }
+                        switch (code) {
+                            // up
+                            case 38:
+                                e.preventDefault();
+                                if(currentIndex > 0) {
+                                    currentIndex--;
+                                    if(currentIndex >= 0 && currentIndex < $selectedItems.length) {
+                                        if(currentIndex < $selectedItems.length - 1) {
+                                            $selectedItems[currentIndex + 1].style.backgroundColor = "#fff";
+                                        }
+                                        current = $selectedItems[currentIndex];
+                                        current.scrollIntoView();
+                                        current.style.backgroundColor = "#fff0f1";
+                                    } else {
+                                        currentIndex++;
+                                    }
+                                }
+                                break;
+                            // down
+                            case 40:
+                                e.preventDefault();
+                                if(currentIndex < $selectedItems.length) {
+                                    currentIndex++;
+                                    if(currentIndex >= 0 && currentIndex < $selectedItems.length) {
+                                        if(currentIndex >= 1) {
+                                            $selectedItems[currentIndex - 1].style.backgroundColor = "#fff";
+                                        }
+                                        current = $selectedItems[currentIndex];
+                                        current.style.backgroundColor = "#fff0f1";
+                                        current.scrollIntoView();
+                                    } else {
+                                        currentIndex--;
+                                    }
+                                }                                
+                                break;
+                            //Enter
+                            case 13:
+                                e.preventDefault();
+                                if(current){
+                                    window.location = current.href;
+                                }
+                                break;
+                        }
                     }
                 })
                 .on('keyup', function (e) {
@@ -197,26 +243,26 @@ define(function () {
                     // }, 150);
                 });
 
-            // 矢印キーで選択可能にする
-            $NavSearchResultsToggle
-                .on('keydown', '.search-list-item-link', function (e) {
-                    var $selectedItem = $NavSearchResultsToggle.find('.search-list-item-link:focus');
-                    if ($selectedItem.size()) {
-                        switch (e.keyCode) {
-                            // up
-                            case 38:
-                                e.preventDefault();
-                                $selectedItem.prev().focus();
-                                break;
+            // // 矢印キーで選択可能にする
+            // $NavSearchResultsToggle
+            //     .on('keydown', '.search-list-item-link', function (e) {
+            //         var $selectedItem = $NavSearchResultsToggle.find('.search-list-item-link:focus');
+            //         if ($selectedItem.size()) {
+            //             switch (e.keyCode) {
+            //                 // up
+            //                 case 38:
+            //                     e.preventDefault();
+            //                     $selectedItem.prev().focus();
+            //                     break;
 
-                            // down
-                            case 40:
-                                e.preventDefault();
-                                $selectedItem.next().focus();
-                                break;
-                        }
-                    }
-                });
+            //                 // down
+            //                 case 40:
+            //                     e.preventDefault();
+            //                     $selectedItem.next().focus();
+            //                     break;
+            //             }
+            //         }
+            //     });
         }
     };
 
