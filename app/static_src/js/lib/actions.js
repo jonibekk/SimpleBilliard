@@ -22,7 +22,7 @@ var bypassActionKrConfirmModal = false;
 var isKrSelected = false;
 
 function onChangedKrValue(oldValue,newValue) {
-    bypassActionKrConfirmModal = oldValue !== newValue ? true : false;
+    bypassActionKrConfirmModal = (oldValue == newValue) ? false : true;
 }
 
 function submitKrAction() {
