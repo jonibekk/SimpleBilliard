@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.7\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -3196,6 +3196,9 @@ msgstr "管理"
 msgid "View Circles"
 msgstr "サークルを見る"
 
+msgid "Go To Top"
+msgstr "トップへ戻る"
+
 msgid "Saved"
 msgstr "保存済み"
 
@@ -5929,6 +5932,9 @@ msgstr "Jane Doe"
 
 msgid "PAID"
 msgstr "支払済"
+
+msgid "FAILURE"
+msgstr "支払い失敗"
 
 msgid "Billing ID"
 msgstr "請求ID"
