@@ -445,7 +445,7 @@ $(function () {
       hideNav();
     });
     $(window).trigger('resize');
-    $(".switch-action-anchor").off("click").on("click", function(e) {
+    $(".no-anchor").off("click").on("click", function(e) {
       e.preventDefault();
       return false;
     });
