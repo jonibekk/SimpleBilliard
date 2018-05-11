@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-11 10:41+0900\n"
+"PO-Revision-Date: 2018-05-11 15:24+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.6\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -3190,14 +3190,17 @@ msgstr "アイテムを保存しました"
 msgid "Item removed"
 msgstr "保存済みアイテムを削除しました"
 
+msgid "Discover more circles"
+msgstr "サークルを見つける"
+
+msgid "Reorder circles"
+msgstr "サークルを並び替える"
+
 msgid "Manage"
 msgstr "管理"
 
 msgid "View Circles"
 msgstr "サークルを見る"
-
-msgid "Go To Top"
-msgstr "トップへ戻る"
 
 msgid "Saved"
 msgstr "保存済み"
@@ -6238,6 +6241,9 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Go To Top"
+#~ msgstr "トップへ戻る"
 
 #~ msgid "Name?"
 #~ msgstr "名前を入力"

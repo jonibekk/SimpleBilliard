@@ -331,9 +331,6 @@ $(function () {
         }
         if(!isUnset) {
           footerNotVisible = !isInViewport($("#circleListFooter").find(".dashboard-circle-list-make"));
-          if(isInViewport($("#showMoreCircles"))){
-            $(".dashboard-circle-list-make").css("padding-bottom","32px");
-          }
           if(visibleCircles !== circleCount) {
             $("#showMoreCircles").css("display","block");
             $(".left-side-container").css("overflow-y", "hidden");
@@ -398,7 +395,6 @@ $(function () {
     $("#showMoreCircles").off("click").on("click", function(e) {
       e.preventDefault();
       $(this).hide();
-      $(".dashboard-circle-list-make").css("padding-bottom","16px");
       isUnset = true;
       $(".dashboard-circle-list-body-wrap").addClass("clearfix");
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
