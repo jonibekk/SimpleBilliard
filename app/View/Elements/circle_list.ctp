@@ -37,7 +37,7 @@
                       ><?= __("Discover more circles") ?></a>
                   </li>
                   <li class="profile-user-dropdown-menu-item">
-                      <a href="/circle_pins/index" class="pin-circle-edit-color circle-edit-link js-close-dropdown""><?= __("Reorder circles") ?></a>
+                      <a href="/circle_pins/index" class="pin-circle-edit-color circle-edit-link"><?= __("Reorder circles") ?></a>
                   </li>
               </ul>
           </div>                                  
