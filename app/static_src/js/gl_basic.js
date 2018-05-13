@@ -262,7 +262,7 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      if(cake.is_mb_app !== "1" && cake.is_mb_browser !== "1") {
+      if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
         setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       } else {
         $("#NavSearchInputToggle").focus();
@@ -279,7 +279,7 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      if(cake.is_mb_app !== "1" && cake.is_mb_browser !== "1") {
+      if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
         setTimeout(function(){$("#NavSearchInput").focus();},650);
       } else {
         $("#NavSearchInput").focus();
