@@ -2,6 +2,8 @@ define(function () {
     // ヘッダーの検索ボックス処理
     var headerSearchToggle = {
         setup: function () {
+            var lastHitCount = 1;
+            var lastTerm;
             var current, currentIndex;
             var $NavSearchFormToggle = $('#NavSearchFormToggle');
             var $NavSearchInputToggle = $('#NavSearchInputToggle');
@@ -15,20 +17,20 @@ define(function () {
 
             var config = {
                 user: {
-                    url: cake.url.a,
                     link_base: cake.url.user_page,
                     label: cake.word.members
                 },
                 goal: {
-                    url: cake.url.select2_goals,
                     link_base: cake.url.goal_page,
                     label: cake.word.goals
                 },
                 circle: {
-                    url: cake.url.select2_circles,
                     link_base: cake.url.circle_page,
                     label: cake.word.circles
-                }
+                },
+                general: {
+                    url: cake.url.select_search,
+                },
             };
 
             $NavSearchFormToggle
@@ -94,152 +96,167 @@ define(function () {
                 .on('keyup', function (e) {
                     // 検索文字列
                     var inputText = $(this).val();
+
                     if(inputText.length){
                         $("#NavSearchInputClearToggle").show();
                     } else {
                         $("#NavSearchInputClearToggle").hide();
                     }
 
+                    if(lastTerm === inputText && inputText.length){
+                        return;
+                    }
+
+                    lastTerm = inputText;
+
+                     // When there is no last search result return unless backspace/delete pressed
+                    if(inputText.length && lastHitCount < 1 && !(e.keyCode === 8 || e.keyCode === 46)) {
+                        return;
+                    }
+
                     // キー連打考慮してすこし遅らせて ajax リクエストする
                     // clearTimeout(keyupTimer);
                     // keyupTimer = setTimeout(function () {
-                        // 入力テキストが空
-                        if (inputText.length == 0) {
-                            $NavSearchResultsToggle.hide();
-                            return;
+                    // 入力テキストが空
+                    if (inputText.length == 0) {
+                        $NavSearchResultsToggle.hide();
+                        return;
+                    }
+
+                    currentIndex = 0;
+
+                    var ajaxResults = $.get(config['general'].url, {
+                        term: inputText,
+                        page_limit: 20
+                    });
+
+                    $.when(ajaxResults).done(function(allResults){
+                       // a1, a2 and a3 are arguments resolved 
+                       // for the ajax1, ajax2 and ajax3 Ajax requests, respectively.
+
+                       // Each argument is an array with the following structure:
+                       // [ data, statusText, jqXHR ]
+                        var $notFoundText = $('<div id="notFoundElementToggle">')
+                            .text(cake.message.notice.search_result_zero)
+                            .addClass('nav-search-result-notfound');
+                        $NavSearchResultsToggle.empty().append($notFoundText);
+
+                        userResult = [];
+                        goalResult = [];
+                        circleResult = [];
+                        if(allResults){
+                            userResult = allResults.results_users.results;
+                            goalResult = allResults.results_goals.results;
+                            circleResult = allResults.results_circles.results;
                         }
 
-                        var ajaxUser = $.get(config['user'].url, {
-                            term: inputText,
-                            page_limit: 10
-                        });
+                        lastHitCount = userResult.length + goalResult.length + circleResult.length;
 
-                        var ajaxGoal = $.get(config['goal'].url, {
-                            term: inputText,
-                            page_limit: 10
-                        });
+                       if (userResult && userResult.length) {
+                            $('#notFoundElementToggle').remove();
+                            var $userLabel = $('<div>')
+                                .text(config['user'].label)
+                                .addClass('nav-search-result-label');
+                            $NavSearchResultsToggle.append($userLabel);
+                            for (var i = 0; i < userResult.length; i++) {
+                                var $row = $('<a>')
+                                    .addClass('search-list-item-link')
+                                    .attr('href', config['user'].link_base + userResult[i].id.split('_').pop());
+                                // image
+                                var $divImage = $('<div>')
+                                    .addClass('search-list-avatar-item');
+                                var $img = $('<img>').attr('src', userResult[i].image);
+                                $divImage.append($img);
+                                $row.append($divImage);
+                                // text
+                                var $divText = $('<div>')
+                                    .addClass('topic-search-list-item-main');
+                                var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(userResult[i].text);
+                                $divText.append($text);
+                                $row.append($divText);
 
-                        var ajaxCircle = $.get(config['circle'].url, {
-                            term: inputText,
-                            page_limit: 10
-                        });
-
-                        $.when(ajaxUser, ajaxGoal, ajaxCircle).done(function(userResult, goalResult, circleResult){
-                           // a1, a2 and a3 are arguments resolved 
-                           // for the ajax1, ajax2 and ajax3 Ajax requests, respectively.
-
-                           // Each argument is an array with the following structure:
-                           // [ data, statusText, jqXHR ]
-                            var $notFoundText = $('<div id="notFoundElementToggle">')
-                                .text(cake.message.notice.search_result_zero)
-                                .addClass('nav-search-result-notfound');
-                            $NavSearchResultsToggle.empty().append($notFoundText);
-
-                           if (userResult && userResult[0].results && userResult[0].results && userResult[0].results.length) {
-                                $('#notFoundElementToggle').remove();
-                                var $userLabel = $('<div>')
-                                    .text(config['user'].label)
-                                    .addClass('nav-search-result-label');
-                                $NavSearchResultsToggle.append($userLabel);
-                                for (var i = 0; i < userResult[0].results.length; i++) {
-                                    var $row = $('<a>')
-                                        .addClass('search-list-item-link')
-                                        .attr('href', config['user'].link_base + userResult[0].results[i].id.split('_').pop());
-                                    // image
-                                    var $divImage = $('<div>')
-                                        .addClass('search-list-avatar-item');
-                                    var $img = $('<img>').attr('src', userResult[0].results[i].image);
-                                    $divImage.append($img);
-                                    $row.append($divImage);
-                                    // text
-                                    var $divText = $('<div>')
-                                        .addClass('topic-search-list-item-main');
-                                    var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(userResult[0].results[i].text);
-                                    $divText.append($text);
-                                    $row.append($divText);
-
-                                    $row.appendTo($NavSearchResultsToggle);
-                                }
+                                $row.appendTo($NavSearchResultsToggle);
                             }
-                            if (goalResult && goalResult[0].results && goalResult[0].results && goalResult[0].results.length) {
-                                $('#notFoundElementToggle').remove();
-                                var $goalLabel = $('<div>')
-                                    .text(config['goal'].label)
-                                    .addClass('nav-search-result-label');
-                                $NavSearchResultsToggle.append($goalLabel);
-                                for (var i = 0; i < goalResult[0].results.length; i++) {
-                                    var $row = $('<a>')
-                                        .addClass('search-list-item-link')
-                                        .attr('href', config['goal'].link_base + goalResult[0].results[i].id.split('_').pop());
-                                    // image
-                                    var $divImage = $('<div>')
-                                        .addClass('search-list-avatar-item');
-                                    var $img = $('<img>').attr('src', goalResult[0].results[i].image);
-                                    $divImage.append($img);
-                                    $row.append($divImage);
-                                    // text
-                                    var $divText = $('<div>')
-                                        .addClass('topic-search-list-item-main');
-                                    var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(goalResult[0].results[i].text);
-                                    $divText.append($text);
-                                    $row.append($divText);
+                        }
+                        if (goalResult && goalResult.length) {
+                            $('#notFoundElementToggle').remove();
+                            var $goalLabel = $('<div>')
+                                .text(config['goal'].label)
+                                .addClass('nav-search-result-label');
+                            $NavSearchResultsToggle.append($goalLabel);
+                            for (var i = 0; i < goalResult.length; i++) {
+                                var $row = $('<a>')
+                                    .addClass('search-list-item-link')
+                                    .attr('href', config['goal'].link_base + goalResult[i].id.split('_').pop());
+                                // image
+                                var $divImage = $('<div>')
+                                    .addClass('search-list-avatar-item');
+                                var $img = $('<img>').attr('src', goalResult[i].image);
+                                $divImage.append($img);
+                                $row.append($divImage);
+                                // text
+                                var $divText = $('<div>')
+                                    .addClass('topic-search-list-item-main');
+                                var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(goalResult[i].text);
+                                $divText.append($text);
+                                $row.append($divText);
 
-                                    $row.appendTo($NavSearchResultsToggle);
-                                }
+                                $row.appendTo($NavSearchResultsToggle);
                             }
-                           if (circleResult && circleResult[0].results && circleResult[0].results.length && circleResult[0].results.length) {
-                                $('#notFoundElementToggle').remove();
-                                var $circleLabel = $('<div>')
-                                    .text(config['circle'].label)
-                                    .addClass('nav-search-result-label');
-                                $NavSearchResultsToggle.append($circleLabel);
-                                for (var i = 0; i < circleResult[0].results.length; i++) {
-                                    var $row = $('<a>')
-                                        .addClass('search-list-item-link')
-                                        .attr('href', config['circle'].link_base + circleResult[0].results[i].id.split('_').pop());
-                                    // image
-                                    var $divImage = $('<div>')
-                                        .addClass('search-list-avatar-item');
-                                    var $img = $('<img>').attr('src', circleResult[0].results[i].image);
-                                    $divImage.append($img);
-                                    $row.append($divImage);
-                                    // text
-                                    var $divText = $('<div>')
-                                        .addClass('topic-search-list-item-main');
-                                    var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(circleResult[0].results[i].text);
-                                    $divText.append($text);
-                                    $row.append($divText);
+                        }
+                       if (circleResult && circleResult.length) {
+                            $('#notFoundElementToggle').remove();
+                            var $circleLabel = $('<div>')
+                                .text(config['circle'].label)
+                                .addClass('nav-search-result-label');
+                            $NavSearchResultsToggle.append($circleLabel);
+                            for (var i = 0; i < circleResult.length; i++) {
+                                var $row = $('<a>')
+                                    .addClass('search-list-item-link')
+                                    .attr('href', config['circle'].link_base + circleResult[i].id.split('_').pop());
+                                // image
+                                var $divImage = $('<div>')
+                                    .addClass('search-list-avatar-item');
+                                var $img = $('<img>').attr('src', circleResult[i].image);
+                                $divImage.append($img);
+                                $row.append($divImage);
+                                // text
+                                var $divText = $('<div>')
+                                    .addClass('topic-search-list-item-main');
+                                var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(circleResult[i].text);
+                                $divText.append($text);
+                                $row.append($divText);
 
-                                    $row.appendTo($NavSearchResultsToggle);
-                                }
+                                $row.appendTo($NavSearchResultsToggle);
                             }
+                        }
 
-                            if(!$('#notFoundElementToggle').length){
-                                var $endLabel = $('<div>')
-                                    .text(cake.word.end_search)
-                                    .addClass('nav-search-result-end-label');
-                                $NavSearchResultsToggle.append($endLabel);
-                            } else {
-                                var $noResultsLabel = $('<div>')
-                                    .text(cake.word.no_results)
-                                    .addClass('nav-search-result-end-label');
-                                $NavSearchResultsToggle.append($noResultsLabel);
-                            }
+                        if(!$('#notFoundElementToggle').length){
+                            var $endLabel = $('<div>')
+                                .text(cake.word.end_search)
+                                .addClass('nav-search-result-end-label');
+                            $NavSearchResultsToggle.append($endLabel);
+                        } else {
+                            var $noResultsLabel = $('<div>')
+                                .text(cake.word.no_results)
+                                .addClass('nav-search-result-end-label');
+                            $NavSearchResultsToggle.append($noResultsLabel);
+                        }
 
-                            // ポップアップ下の画面をスクロールさせないようにする
-                            $("body").addClass('nav-search-results-open');
+                        // ポップアップ下の画面をスクロールさせないようにする
+                        $("body").addClass('nav-search-results-open');
 
-                            // ポップアップクローズ用
-                            $NavSearchResultsToggle.one('click', function () {
-                                $NavSearchResultsToggle.hide();
-                                $("body").removeClass('nav-search-results-open');
-                            });
-                            $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
-                                e.preventDefault();
-                                return false;
-                            });
-                            $NavSearchResultsToggle.show();
+                        // ポップアップクローズ用
+                        $NavSearchResultsToggle.one('click', function () {
+                            $NavSearchResultsToggle.hide();
+                            $("body").removeClass('nav-search-results-open');
                         });
+                        $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
+                            e.preventDefault();
+                            return false;
+                        });
+                        $NavSearchResultsToggle.show();
+                    });
                     // }, 150);
                 });
 

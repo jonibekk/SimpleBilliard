@@ -172,6 +172,7 @@ App::uses('AttachedFile', 'Model');
                 'controller' => 'users',
                 'action'     => 'ajax_select2_get_circles_users'
             ])?>",
+            select_search: "<?=$this->Html->url(['controller' => 'searchs', 'action' => 'ajax_get_search_results'])?>",
             select2_goals: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_select2_goals'])?>",
             select2_circles: "<?=$this->Html->url(['controller' => 'circles', 'action' => 'ajax_select2_circles'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
