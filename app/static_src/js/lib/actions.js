@@ -3,6 +3,10 @@
  */
 
 "use strict";
+
+var bypassActionKrConfirmModal = false;
+var isKrSelected = false;
+
 $(function () {
     // TODO: temporary fix for releasing
     //       should change js to less to manage action iamges size
@@ -16,22 +20,22 @@ $(function () {
 
     $(document).on("click", ".target-show", evTargetShow);
     $(document).on("click", ".click-this-remove", evRemoveThis);
+
+    $("#forceSubmitAction").off("click").on("click", function(e) {
+        e.preventDefault();
+        bypassActionKrConfirmModal = true;
+        $("#CommonActionDisplayForm").submit();
+    });
 });
 
-var bypassActionKrConfirmModal = false;
-var isKrSelected = false;
-
-function onChangedKrValue(oldValue,newValue) {
-    bypassActionKrConfirmModal = (oldValue == newValue) ? false : true;
-}
-
-function submitKrAction() {
-    $("#CommonActionDisplayForm").submit();
-}
-
-function forceSubmitKrAction(){
-    bypassActionKrConfirmModal = true;
-    $("#CommonActionDisplayForm").submit();
+function doKrValueCheck(){
+    console.log("old:" + $("#CommonActionDisplayForm").find(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").attr("originalValue"));
+    console.log("new:" + $("#CommonActionDisplayForm").find(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val());
+    if($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").attr("originalValue") == $(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val()) {      
+        $('#actionConfirmationModal').modal('show');
+        return false;
+    }
+    return true;
 }
 
 // TODO:画像アップロード処理は依存が強すぎてgl_basic.jsに残したままなので、本ファイルに移行する
@@ -96,11 +100,10 @@ var Page = {
     submit: function (form) {
         if($("#CommonActionName").length && !$.trim($("#CommonActionName").val()).length) {
             return;
+        } else if (!bypassActionKrConfirmModal && !doKrValueCheck()) {
+            return;
         }
-        if(!bypassActionKrConfirmModal){
-            $('#actionConfirmationModal').modal('show');
-            return false;
-        }
+
         var self = this;
 
         // 多重サブミット対策

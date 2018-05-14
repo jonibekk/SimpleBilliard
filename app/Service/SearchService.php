@@ -1,17 +1,14 @@
 <?php
-App::uses('AppModel', 'Model');
+App::import('Service', 'AppService');
+App::uses('User', 'Model');
+App::uses('Goal', 'Model');
 App::uses('Circle', 'Model');
 
 /**
  * CirclePin Model
  */
-class Search extends AppModel
+class SearchService extends AppService
 {
-    public function __construct($id = false, $table = null, $ds = null)
-    {
-        parent::__construct($id, $table, $ds);
-    }
-
     public function searchByKeword($keyword, $limit = 20, $with_self = false) {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -57,7 +54,7 @@ class Search extends AppModel
     /**
      * Search 用のゴールリスト配列を返す
      *
-     * @param array $users
+     * @param array $goals
      *
      * @return array
      */
@@ -79,11 +76,11 @@ class Search extends AppModel
     /**
      * Search 用のサークルリスト配列を返す
      *
-     * @param array $users
+     * @param array $circles
      *
      * @return array
      */
-    public function makeCirclesList(array $circles)
+    private function makeCirclesList(array $circles)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());

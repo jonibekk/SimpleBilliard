@@ -585,20 +585,3 @@ var circleListDashboard=document.getElementsByClassName('dashboard-circle-list-b
 $('.circle-list-in-hamburger').find('.js-dashboard-circle-list').click(function(){
     $('.js-nav-toggle').click();
 });
-
-// function circleListHeight(){
-//     if(bannerExist[0]!=undefined){
-//         bannerOffset = bannerExist[0].clientHeight;
-//     }
-//     var scrollPos = document.body.scrollTop;
-//     if(window.innerWidth < 992 && scrollPos==0){
-//         circleListDashboard.style.height = (window.innerHeight-(375+bannerOffset))+'px';
-//     }else{
-//         circleListDashboard.style.height = (window.innerHeight-(378+bannerOffset))+'px';
-//     }
-// }
-
-// if(circleListDashboard){
-//     // window.onload=function(){circleListHeight()};
-//     // document.body.onresize=function(){circleListHeight()};
-// }

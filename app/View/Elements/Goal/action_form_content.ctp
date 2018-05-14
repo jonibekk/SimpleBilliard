@@ -189,7 +189,7 @@
       </div>
       <div class="modal-footer modal-action-footer">
         <button type="button" class="btn btn-secondary modal-action-cancel-button" data-dismiss="modal"><?=  __("Cancel") ?></button>
-        <button type="button" class="btn btn-primary modal-action-submit-button" onclick="forceSubmitKrAction()"><?=  __("Post") ?></button>
+        <button type="button" class="btn btn-primary modal-action-submit-button" id="forceSubmitAction"><?= __("Post") ?></button>
       </div>
     </div>
   </div>

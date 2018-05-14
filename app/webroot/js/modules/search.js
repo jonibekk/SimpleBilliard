@@ -127,7 +127,7 @@ define(function () {
 
                     var ajaxResults = $.get(config['general'].url, {
                         term: inputText,
-                        page_limit: 20
+                        page_limit: 10
                     });
 
                     $.when(ajaxResults).done(function(allResults){
@@ -259,45 +259,6 @@ define(function () {
                     });
                     // }, 150);
                 });
-
-            // // 矢印キーで選択可能にする
-            // $NavSearchResults
-            //     .on('keydown', '.nav-search-result-item', function (e) {
-            //         var $selectedItems = $('.search-list-item-link');
-            //         if ($selectedItems.length) {
-            //             var code = e.keyCode || e.which;
-            //             if(!currentIndex) {
-            //                 currentIndex = $selectedItems.first().index();
-            //             }
-            //             switch (code) {
-            //                 // up
-            //                 case 38:
-            //                     e.preventDefault();
-            //                     if(currentIndex > 1) {
-            //                         currentIndex--;
-            //                         if(currentIndex >= 1){
-            //                             current = $selectedItems[currentIndex];
-            //                             $(current).css("background-color")
-            //                             current.scrollIntoView();
-            //                         }
-            //                         console.log(currentIndex);
-            //                     }
-            //                     break;
-            //                 // down
-            //                 case 40:
-            //                     e.preventDefault();
-            //                     if(currentIndex < $selectedItems.length) {
-            //                         currentIndex++;
-            //                         if(currentIndex < $selectedItems.length){
-            //                             current = $selectedItems[currentIndex];
-            //                             current.scrollIntoView();
-            //                         }
-            //                         console.log(currentIndex);
-            //                     }                                
-            //                     break;
-            //             }
-            //         }
-            //     });
         }
     };
 

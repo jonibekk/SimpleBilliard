@@ -127,7 +127,7 @@ define(function () {
 
                     var ajaxResults = $.get(config['general'].url, {
                         term: inputText,
-                        page_limit: 20
+                        page_limit: 10
                     });
 
                     $.when(ajaxResults).done(function(allResults){
@@ -259,27 +259,6 @@ define(function () {
                     });
                     // }, 150);
                 });
-
-            // // 矢印キーで選択可能にする
-            // $NavSearchResultsToggle
-            //     .on('keydown', '.search-list-item-link', function (e) {
-            //         var $selectedItem = $NavSearchResultsToggle.find('.search-list-item-link:focus');
-            //         if ($selectedItem.size()) {
-            //             switch (e.keyCode) {
-            //                 // up
-            //                 case 38:
-            //                     e.preventDefault();
-            //                     $selectedItem.prev().focus();
-            //                     break;
-
-            //                 // down
-            //                 case 40:
-            //                     e.preventDefault();
-            //                     $selectedItem.next().focus();
-            //                     break;
-            //             }
-            //         }
-            //     });
         }
     };
 

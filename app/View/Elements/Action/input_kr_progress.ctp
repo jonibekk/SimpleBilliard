@@ -34,12 +34,11 @@ $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
                         }
                     ?>
                     <input type="text"
-                           id="newValue_<?= $i ?>"
                            name="<?= $inputName ?>"
                            class="action-kr-progress-edit-textbox form-control mlr_4px disable-change-warning"
                            value="<?= $kr['current_value'] ?>"
+                           originalValue="<?= $kr['current_value'] ?>"
                            placeholder="<?= $kr['current_value'] ?>"
-                           onkeyup="onChangedKrValue(<?= $kr['current_value'] ?>, document.getElementById('newValue_<?= $i ?>').value)"
                            disabled
                     >／<?= $kr['target_value'] ?>
                 </div>
