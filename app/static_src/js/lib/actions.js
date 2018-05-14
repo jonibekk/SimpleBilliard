@@ -6,6 +6,7 @@
 
 var bypassActionKrConfirmModal = false;
 var isKrSelected = false;
+var previousGoalId;
 
 $(function () {
     // TODO: temporary fix for releasing
@@ -184,10 +185,11 @@ var Page = {
         var $kr_progress = $($(this.el).find(this.conf.kr_progress));
         var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
         $("#CommonActionSubmit").prop("disabled", false);
-        if(activeKr.length) {
-
+        if(previousGoalId === $(el).val() && activeKr.length) {
             return;
         }
+
+        previousGoalId = $(el).val();
 
         $(el).closest(".has-success").removeClass("has-success");
         var goal_id = $(el).val();
