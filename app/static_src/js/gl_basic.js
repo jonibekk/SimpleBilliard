@@ -358,7 +358,7 @@ $(function () {
     $("#NavSearchInputClear").off("click").on("click", function() {
       // setTimeout(function(){$("#NavSearchInput").focus();},100);
       $("#NavSearchInput").focus();
-      $(this).prev().val('');
+      $(this).prev().prev().val('');
       $(this).hide();
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
@@ -366,7 +366,7 @@ $(function () {
     $("#NavSearchInputClearToggle").off("click").on("click", function() {
       // setTimeout(function(){$("#NavSearchInputToggle").focus();},100);
       $("#NavSearchInputToggle").focus();
-      $(this).prev().val('');
+      $(this).prev().prev().val('');
       $(this).hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();

@@ -3,12 +3,12 @@
     <form id="NavSearchFormToggle" class="nav-form-group nav-search-form-group panel panel-default" role="search" autocomplete="off">
         <div class="searchBoxMain">
             <span class="deleteicon">
-                <i id="NavSearchIconToggle" class="fa fa-search search-header-icon"></i>
                 <input type="text"
                        id="NavSearchInputToggle"
                        maxlength="<?= SELECT2_QUERY_LIMIT ?>"
                        class="searchBox-input-main disable-change-warning"
                        placeholder='<?= __("Search Members, Goals, Circles") ?>'>
+                <i id="NavSearchIconToggle" class="fa fa-search search-header-icon"></i>
                 <i id="NavSearchInputClearToggle" class="fa fa-times search-header-icon"></i>
             </span>
             <div id="NavSearchHideToggle" class="topicSearchList-header-cancel-main">
@@ -22,12 +22,12 @@
     <form id="NavSearchForm" class="nav-form-group nav-search-form-group panel panel-default" role="search" autocomplete="off">
         <div class="searchBoxMain">
             <span class="deleteicon">
-                <i id="NavSearchIcon" class="fa fa-search search-header-icon"></i>
                 <input type="text"
                        id="NavSearchInput"
                        maxlength="<?= SELECT2_QUERY_LIMIT ?>"
                        class="searchBox-input-main disable-change-warning"
                        placeholder='<?= __("Search Members, Goals, Circles") ?>'>
+                <i id="NavSearchIcon" class="fa fa-search search-header-icon"></i>
                 <i id="NavSearchInputClear" class="fa fa-times search-header-icon"></i>
             </span>
             <div id="NavSearchHide" class="topicSearchList-header-cancel-main">

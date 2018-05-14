@@ -670,12 +670,13 @@
 .topicSearchList-header-cancel-main {
     display: table-cell;
     vertical-align: middle;
+    width: 55px;
 }
 
 #NavSearchIcon,#NavSearchIconToggle {
     width: 30px;
     height: 100%;
-    left: 10px;
+    float: left;
     vertical-align: middle;
     display: table-cell;
 }
@@ -696,11 +697,20 @@
     box-shadow: none;
     transition: none;
     outline: 0;
-    padding: 8px 8px 8px 30px;
     font-size: 14px;
-    border: 0;
     line-height: 18px;
     border: 1px solid #ccc;
+    padding-left: 26px;
+    padding-right: 0;
+}
+
+#NavSearchInputClear {
+  width: unset;
+  left: -14px;
+}
+
+#NavSearchInputClearToggle {
+  
 }
 
 #NavSearchInputToggle {
