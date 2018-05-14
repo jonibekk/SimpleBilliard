@@ -262,10 +262,11 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
-        setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      var timeout = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      if($.trim($("#NavSearchInputToggle").val()).length){
+        clearTimeout(timeout);
       } else {
-        $("#NavSearchInputToggle").focus();
+        timeout = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       }
       hideNav();
     });
@@ -279,10 +280,11 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
-        setTimeout(function(){$("#NavSearchInput").focus();},650);
+      var timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      if($.trim($("#NavSearchInput").val()).length){
+        clearTimeout(timeout);
       } else {
-        $("#NavSearchInput").focus();
+        timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
       }
       hideNav();
     });
