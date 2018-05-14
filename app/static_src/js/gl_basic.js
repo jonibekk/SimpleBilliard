@@ -297,7 +297,7 @@ $(function () {
       }
     });
 
-    $(".header-dropdown-add,.header-dropdown-functions").off("click").on("click", function() {
+    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify").off("click").on("click", function() {
         $("#NavSearchResults").empty();
         $("#NavSearchResults").hide();
         $("#NavSearchResultsToggle").empty();
