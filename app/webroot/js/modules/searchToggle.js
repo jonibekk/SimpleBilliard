@@ -123,7 +123,7 @@ define(function () {
                         return;
                     }
 
-                    currentIndex = 0;
+                    currentIndex = null;
 
                     var ajaxResults = $.get(config['general'].url, {
                         term: inputText,
