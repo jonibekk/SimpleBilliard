@@ -188,7 +188,7 @@ $(function () {
     var current_slide_id = 1;
     var isUnset = false;
     var footerNotVisible = false;
-    
+
     // インジケータークリック時
     $(document).on('click', '.setup-tutorial-indicator', function () {
         resetDisplayStatus();
@@ -474,9 +474,6 @@ $(function () {
     });
     $("#ActionFileAttachButton").off("click").on("click", function(e) {
       e.preventDefault();
-    });
-    $(".action-kr-progress-edit-textbox").on("keyup", function(e) {
-      //onChangedKrValue
     });
 });
 
