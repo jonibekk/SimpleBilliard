@@ -253,6 +253,7 @@ $(function () {
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
 
+    var timeoutToggle;
     $(".header-icon-search-toggle").off("click").on("click", function(e) {
       e.preventDefault();
       $(".header-search-toggle").toggleClass("open");
@@ -262,15 +263,19 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      var timeout = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
-      if($.trim($("#NavSearchInputToggle").val()).length){
-        clearTimeout(timeout);
-      } else {
-        timeout = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
-      }
+      timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       hideNav();
     });
 
+    $("#NavSearchInputToggle").on("keyup", function(){
+      if($.trim($("#NavSearchInputToggle").val()).length){
+        clearTimeout(timeoutToggle);
+      } else {
+        timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      }
+    });
+
+    var timeout;
     $(".header-icon-search").off("click").on("click", function(e) {
       e.preventDefault();
       $(".header-search").toggleClass("open");
@@ -280,14 +285,18 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
       $("#NavSearchInputClear").trigger("click");
       $("#NavSearchInputClearToggle").trigger("click");
-      var timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      hideNav();
+    });
+
+    $("#NavSearchInput").on("keyup", function(){
       if($.trim($("#NavSearchInput").val()).length){
         clearTimeout(timeout);
       } else {
         timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
       }
-      hideNav();
     });
+
     $(".header-dropdown-add,.header-dropdown-functions").off("click").on("click", function() {
         $("#NavSearchResults").empty();
         $("#NavSearchResults").hide();
