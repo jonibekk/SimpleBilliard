@@ -29,7 +29,8 @@ $(function () {
 });
 
 function doKrValueCheck(){
-    if($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").prop("originalValue") == $(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val()) {      
+    if($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").attr("originalValue") == 
+        $(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val()) {      
         $('#actionConfirmationModal').modal('show');
         return false;
     }
