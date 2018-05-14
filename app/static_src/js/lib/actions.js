@@ -233,7 +233,6 @@ var Page = {
         $(check_circle).addClass(activeClass);
         $(check_circle).append('<i class="fa fa-check action-kr-progress-edit-item-check-circle-inner"></i>');
         $el.find("input").prop("disabled", false);
-        $el.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", false);
     },
     deselectKrProgressInActionForm: function ($el) {
         var activeClass = "is-active";
@@ -244,7 +243,6 @@ var Page = {
         var check_circle = $el.find(".action-kr-progress-edit-item-check-circle");
         $(check_circle).removeClass(activeClass).empty();
         $el.find("input").prop("disabled", true);
-        $el.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
     }
 };
 
