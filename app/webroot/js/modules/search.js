@@ -45,8 +45,8 @@ define(function () {
                     var $selectedItems = $('.search-list-item-link');
                     if ($selectedItems.length) {
                         var code = e.keyCode || e.which;
-                        if(!currentIndex) {
-                            currentIndex = $selectedItems.first().index() - 1;
+                        if(currentIndex == null) {
+                            currentIndex = - 1;
                         }
                         switch (code) {
                             // up
