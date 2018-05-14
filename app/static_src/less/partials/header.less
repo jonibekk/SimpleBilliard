@@ -709,9 +709,16 @@
   left: -14px;
 }
 
-input[type=text]::-ms-clear {
-    display: none;
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  input[type=text]::-ms-clear {
+      display: none;
+  }
+  #NavSearchInputClear {
+    width: initial;
+    left: 0px;
+  }
 }
+
 
 #NavSearchInputToggle {
     display: table-cell;
