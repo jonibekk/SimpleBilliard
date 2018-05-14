@@ -227,7 +227,7 @@ function updateListBox() {
   $.ajax({
     type: 'GET',
     url: url,
-    async: true,
+    cache: false,
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
@@ -254,7 +254,7 @@ function updateNotifyCnt() {
   $.ajax({
     type: 'GET',
     url: url,
-    async: true,
+    cache: false,
     success: function (res) {
       if (res.error) {
         //location.reload();
