@@ -372,13 +372,15 @@ $(function () {
       $("#NavSearchResultsToggle").hide();
     });
     if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
-       psLeftSideContainer = new PerfectScrollbar('#navigationWrapper', {
-        swipePropagation: false,
-        wheelPropagation: false,
-        maxScrollbarLength: 0,
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
+      if($("#navigationWrapper").length){
+         psLeftSideContainer = new PerfectScrollbar('#navigationWrapper', {
+          swipePropagation: false,
+          wheelPropagation: false,
+          maxScrollbarLength: 0,
+          suppressScrollX: true,
+          suppressScrollY: false,
+        });
+       }
     }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
       if(cake.is_mb_app !== "1" || cake.is_mb_browser !== "1"){
@@ -409,7 +411,7 @@ $(function () {
       isUnset = true;
       $(".dashboard-circle-list-body-wrap").addClass("clearfix");
       $(".dashboard-circle-list-body-wrap").css("height", "min-content");
-      var setHeight = 30 * circleCount + 1;
+      var setHeight = 15 * $(".dashboard-circle-list-row-wrap").length + 61;
       $("#circleListBody").css("height", setHeight + "px");
       lastLeftContainerHeight = ($(window).height() - $("#circleListFooter").height());
       $("#jsLeftSideContainer").css("height", lastLeftContainerHeight + "px");
@@ -421,31 +423,43 @@ $(function () {
         suppressScrollY: false,
       });
     });
-    psNavResults = new PerfectScrollbar('#NavSearchForm', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: false,
-    });
-    psNavResultsToggle = new PerfectScrollbar('#NavSearchFormToggle', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: false,
-    });
-     psNavbarOffCanvas = new PerfectScrollbar('#NavbarOffcanvas', {
-      swipePropagation: false,
-      wheelPropagation: false,
-      maxScrollbarLength: 0,
-      suppressScrollX: true,
-      suppressScrollY: false,
-    });
+    if($("#NavSearchForm").length){
+      psNavResults = new PerfectScrollbar('#NavSearchForm', {
+        swipePropagation: false,
+        wheelPropagation: false,
+        maxScrollbarLength: 0,
+        suppressScrollX: true,
+        suppressScrollY: false,
+      });
+    }
+    if($("#NavSearchFormToggle").length){
+      psNavResultsToggle = new PerfectScrollbar('#NavSearchFormToggle', {
+        swipePropagation: false,
+        wheelPropagation: false,
+        maxScrollbarLength: 0,
+        suppressScrollX: true,
+        suppressScrollY: false,
+      });
+    }
+    if($("#NavbarOffcanvas").length){
+       psNavbarOffCanvas = new PerfectScrollbar('#NavbarOffcanvas', {
+        swipePropagation: false,
+        wheelPropagation: false,
+        maxScrollbarLength: 0,
+        suppressScrollX: true,
+        suppressScrollY: false,
+      });
+     }
     $(window).on("load resize", function() {
-      psNavResults.update();
-      psNavResultsToggle.update();
-      psNavbarOffCanvas.update();
+      if(psNavResults){
+        psNavResults.update();
+      }
+      if(psNavResultsToggle){
+        psNavResultsToggle.update();
+      }
+      if(psNavbarOffCanvas){
+        psNavbarOffCanvas.update();
+      }
     });
     $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
         e.stopPropagation();
