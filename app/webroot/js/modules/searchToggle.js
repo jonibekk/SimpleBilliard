@@ -4,7 +4,8 @@ define(function () {
         setup: function () {
             var lastHitCount = 1;
             var lastTerm;
-            var current, currentIndex;
+            var current;
+            var currentIndex = -1;
             var $NavSearchFormToggle = $('#NavSearchFormToggle');
             var $NavSearchInputToggle = $('#NavSearchInputToggle');
             var $NavSearchResultsToggle = $('#NavSearchResultsToggle');
@@ -45,9 +46,6 @@ define(function () {
                     var $selectedItems = $('.search-list-item-link');
                     if ($selectedItems.length) {
                         var code = e.keyCode || e.which;
-                        if(currentIndex == null) {
-                            currentIndex =  - 1;
-                        }
                         switch (code) {
                             // up
                             case 38:
@@ -123,7 +121,8 @@ define(function () {
                         return;
                     }
 
-                    currentIndex = null;
+                    current = null;
+                    currentIndex = -1;
 
                     var ajaxResults = $.get(config['general'].url, {
                         term: inputText,
