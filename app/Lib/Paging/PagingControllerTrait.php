@@ -1,5 +1,4 @@
 <?php
-App::uses('RequestPaging', 'Lib/Paging');
 
 /**
  * Created by PhpStorm.
@@ -44,9 +43,10 @@ trait PagingControllerTrait
         $processedCursor = RequestPaging::decodeCursor($cursor);
 
         return [
-            'conditions' => $processedCursor['conditions'],
-            'pivot'      => $processedCursor['pivot'],
-            'order'      => $processedCursor['order'],
+            'conditions' => Hash::get($processedCursor, 'conditions'),
+            'pivot' => Hash::get($processedCursor, 'pivot'),
+            'order' => Hash::get($processedCursor, 'order'),
+
             $direction
         ];
     }
@@ -76,15 +76,12 @@ trait PagingControllerTrait
         $parameters = $this->getPagingConditionFromCursor($request, $direction) ??
             $this->getPagingConditionFromRequest($request, $direction);
 
-        $requestPaging = new RequestPaging();
-
-        return $requestPaging->getWithPaging(
-            $pagingService,
+        return $pagingService->getDataWithPaging(
             am($parameters['conditions'], $this->getResourceIdForCondition()),
-            $parameters['pivot'],
+            Hash::get($parameters, 'pivot'),
             $limit,
-            $parameters['order'],
-            $parameters['direction'],
+            Hash::get($parameters, 'order'),
+            Hash::get($parameters, 'direction'),
             $extendFlags);
     }
 }

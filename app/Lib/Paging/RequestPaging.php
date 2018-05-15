@@ -1,5 +1,4 @@
 <?php
-App::import('Lib/Paging', 'PagingServiceTrait');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -14,66 +13,6 @@ class RequestPaging
     const PAGE_ORDER_DESC = 'desc';
     const PAGE_DIR_NEXT = 'next';
     const PAGE_DIR_PREV = 'prev';
-
-    /**
-     * @param PagingServiceTrait $pagingService
-     * @param array              $conditions
-     * @param mixed              $pivotValue
-     * @param int                $limit
-     * @param string             $order
-     * @param string             $direction
-     * @param array              $extendFlags
-     *
-     * @return array
-     */
-    public function getWithPaging(
-        $pagingService,
-        $conditions = [],
-        $pivotValue = null,
-        $limit = self::DEFAULT_PAGE_LIMIT,
-        $order = self::PAGE_ORDER_DESC,
-        $direction = self::PAGE_DIR_NEXT,
-        $extendFlags = []
-    ) {
-
-        $finalResult = [
-            'data'   => [],
-            'paging' => [
-                'next' => '',
-                'prev' => ''
-            ],
-            'count'  => 0
-        ];
-
-        $pagingService->beforeRead();
-
-        $finalResult['count'] = $pagingService->countData($conditions);
-
-        $queryResult = $pagingService->readData($conditions, $pivotValue, $limit + 1, $order, $direction);
-
-        //If there is further result
-        if (count($queryResult) > $limit) {
-            array_pop($queryResult);
-
-            //Get the last element pivot value
-            $newPivotValue = $pagingService->getPivotValue($queryResult);
-
-            if ($direction == self::PAGE_DIR_NEXT || $direction == self::PAGE_DIR_PREV) {
-                $queryResult['paging'][$direction] = self::createPageCursor($newPivotValue, $order, $conditions,
-                    $direction);
-            }
-        }
-
-        if (!empty($extendFlags) && !empty($queryResult)) {
-            $pagingService->extendPagingResult($queryResult, $extendFlags);
-        }
-
-        $pagingService->afterRead();
-
-        $finalResult['data'] = $queryResult;
-
-        return $finalResult;
-    }
 
     /**
      * Create next cursor for API requests
