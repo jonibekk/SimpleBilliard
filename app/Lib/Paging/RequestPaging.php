@@ -8,91 +8,95 @@
 
 class RequestPaging
 {
+    const DEFAULT_PAGE_LIMIT = 20;
+    const PAGE_ORDER_ASC = 'asc';
+    const PAGE_ORDER_DESC = 'desc';
+    const PAGE_DIR_NEXT = 'next';
+    const PAGE_DIR_PREV = 'prev';
+
     /**
      * @param ApiPagingInterface $apiService
-     * @param                    $cursor
-     * @param                    $limit
-     * @param                    $direction
+     * @param array              $conditions
+     * @param mixed              $pivotValue
+     * @param int                $limit
+     * @param string             $order
+     * @param string             $direction
+     * @param array              $extendFlags
      *
      * @return array
      */
-    public function searchWithPaging(&$apiService, $cursor, $limit, $direction)
-    {
-        $conditions = [];
-        $currentId = null;
+    public function getWithPaging(
+        $apiService,
+        $conditions = [],
+        $pivotValue = null,
+        $limit = self::DEFAULT_PAGE_LIMIT,
+        $order = self::PAGE_ORDER_DESC,
+        $direction = self::PAGE_DIR_NEXT,
+        $extendFlags = []
+    ) {
 
-        if (isset($cursor)) {
-            $cursor = self::decodeCursor($cursor);
-
-            //Process cursor
-            $conditions = $cursor['conditions'];
-            $currentId = $cursor['start'];
-
-            $apiService->setPagingParameters($cursor['conditions']);
-        }
+        $finalResult = [
+            'data'   => [],
+            'paging' => [
+                'next' => '',
+                'prev' => ''
+            ],
+            'count'  => 0
+        ];
 
         $apiService->beforeRead();
-        $apiService->readData($currentId, $limit, $direction);
+
+        $finalResult['count'] = $apiService->countData($conditions);
+
+        $queryResult = $apiService->readData($conditions, $pivotValue, $limit + 1, $order, $direction);
+
+        //If there is further result
+        if (count($queryResult) > $limit) {
+            array_pop($queryResult);
+
+            //Get the last element pivot value
+            $newPivotValue = $apiService->getPivotValue($queryResult);
+
+            if ($direction == self::PAGE_DIR_NEXT || $direction == self::PAGE_DIR_PREV) {
+                $queryResult['paging'][$direction] = self::createPageCursor($newPivotValue, $order, $conditions,
+                    $direction);
+            }
+        }
+
+        if (!empty($extendFlags) && !empty($queryResult)) {
+            $apiService->extendPagingResult($queryResult, $extendFlags);
+        }
+
         $apiService->afterRead();
 
-        //Create paging
+        $finalResult['data'] = $queryResult;
 
-        return ['data', 'paging', 'count'];
+        return $finalResult;
     }
 
     /**
      * Create next cursor for API requests
      *
-     * @param array $conditions Conditions for the search, e.g. SQL query
-     * @param int   $startId    Table ID of start point of the page. Will NOT include this ID
-     * @param int   $limit      Number of records for the page
+     * @param mixed  $pivotValue Table ID of start point of the page. Will NOT include this value
+     * @param string $order      Order of the query sorting
+     * @param string $direction  Direction of the query sorting
+     * @param array  $conditions Conditions for the search, e.g. SQL query
      *
      * @return string Encoded next paging cursor
      */
-    public static function createNextPageCursor(
-        array $conditions = null,
-        int $startId = null,
-        int $limit = null
+    public static function createPageCursor(
+        $pivotValue,
+        $conditions = null,
+        $order = self::PAGE_ORDER_DESC,
+        $direction = self::PAGE_DIR_NEXT
     ): string {
         $array = array();
 
+        $array['pivot'] = $pivotValue;
+        $array['order'] = $order;
+        $array['direction'] = $direction;
         if (!empty($conditions)) {
             $array['conditions'] = $conditions;
-        }
-        if (!empty($startId)) {
-            $array['start'] = $startId;
-        }
-        if (!empty($limit)) {
-            $array['limit'] = $limit;
-        }
-
-        return base64_encode(json_encode($array));
-    }
-
-    /**
-     * Create previous  cursor for API requests
-     *
-     * @param array $conditions Conditions for the search, e.g. SQL query
-     * @param int   $endId      Table ID of end point of the page. Will NOT include this ID
-     * @param int   $limit      Number of records for the page
-     *
-     * @return string Encoded next paging cursor
-     */
-    public static function createPrevPageCursor(
-        array $conditions = null,
-        int $endId = null,
-        int $limit = null
-    ): string {
-        $array = array();
-
-        if (!empty($conditions)) {
-            $array['conditions'] = $conditions;
-        }
-        if (!empty($endId)) {
-            $array['end'] = $endId;
-        }
-        if (!empty($limit)) {
-            $array['limit'] = $limit;
         }
 
         return base64_encode(json_encode($array));

@@ -11,13 +11,24 @@ interface ApiPagingInterface
     /**
      * Method for reading data from DB, based on the parameters
      *
-     * @param int    $currentId Starting ID for the search
-     * @param int    $limit     Number of records to be read
-     * @param string $direction Direction of query
+     * @param array  $conditions Conditions for paging query
+     * @param mixed  $pivotValue Starting ID for the search
+     * @param int    $limit      Number of records to be read
+     * @param string $order      Order of query
+     * @param string $direction  Direction of query
      *
      * @return array Query result
      */
-    public function readData($currentId, $limit, $direction): array;
+    public function readData($conditions, $pivotValue, $limit, $order, $direction): array;
+
+    /**
+     * Count the number of data matching conditions provided
+     *
+     * @param array $conditions
+     *
+     * @return int
+     */
+    public function countData($conditions): int;
 
     /**
      * Method to be called before reading data from db
@@ -30,16 +41,22 @@ interface ApiPagingInterface
     public function afterRead();
 
     /**
-     * Set db query parameters into private variables
+     * Extend result arrays with additional contents
      *
-     * @param array $parameters
+     * @param array $resultArray Content to be extended
+     * @param array $flags       Extension flags
+     *
+     * @return mixed
      */
-    public function setPagingParameters(array $parameters);
+    public function extendPagingResult(&$resultArray, $flags);
 
     /**
-     * Read private query parameters and return them as multi-dimensional array
+     * Get pivot value to define beginning point of next page
      *
-     * @return array
+     * @param array $resultElement The array of result array's last element
+     *
+     * @return mixed
      */
-    public function getPagingParameters(): array;
+    public function getPivotValue($resultElement);
+
 }

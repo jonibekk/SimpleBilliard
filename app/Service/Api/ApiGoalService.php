@@ -11,6 +11,8 @@ class ApiGoalService extends ApiService implements ApiPagingInterface
     // ゴール検索デフォルト取得件数
     const GOAL_SEARCH_DEFAULT_LIMIT = 10;
 
+    public function setTopicPaging(int $topicId){}
+
     /**
      * ゴール検索
      *
@@ -298,9 +300,14 @@ class ApiGoalService extends ApiService implements ApiPagingInterface
         return $ret;
     }
 
-    public function readData($currentId, $limit, $direction): array
+    public function readData($conditions, $pivotValue, $limit, $order, $direction): array
     {
         // TODO: Implement readData() method.
+    }
+
+    public function countData($conditions): int
+    {
+        // TODO: Implement countData() method.
     }
 
     public function beforeRead()
@@ -313,14 +320,14 @@ class ApiGoalService extends ApiService implements ApiPagingInterface
         // TODO: Implement afterRead() method.
     }
 
-    public function setPagingParameters(array $parameters)
+    public function extendPagingResult(&$resultArray, $flags)
     {
-        // TODO: Implement setPagingParameters() method.
+        // TODO: Implement extendPagingResult() method.
     }
 
-    public function getPagingParameters(): array
+    public function getPivotValue(&$resultArray)
     {
-        // TODO: Implement getPagingParameters() method.
+        // TODO: Implement getPivotValue() method.
     }
 
 }
