@@ -132,19 +132,11 @@ function initTitle() {
 }
 
 /**
- * Return Jquery object for Notification icon on the header
- * @returns {jQuery|HTMLElement}
- */
-function getBellBoxSelector() {
-  return $(".bellNum");
-}
-
-/**
  * Return count of notifications displayed on notification icon
  * @returns {Number}
  */
 function getNotifyCnt() {
-  var $bellBox = getBellBoxSelector();
+  var $bellBox = $(".bellNum").first();
   return parseInt($bellBox.children('span').html(), 10);
 }
 
@@ -152,9 +144,11 @@ function getNotifyCnt() {
  * Initialize notification icon count to 0
  */
 function initBellNum() {
-  var $bellBox = getBellBoxSelector();
-  $bellBox.css("opacity", 0);
-  $bellBox.children('span').html("0");
+  var $bellBoxs = $(".bellNum");
+  $bellBoxs.css("opacity", 0);
+  for (var i = 0; i < $bellBoxs.length; i++) {
+    $($bellBoxs[i]).children("span").html("0");
+  }
 }
 
 /**
@@ -282,8 +276,9 @@ function updateMessageNotifyCnt() {
         //location.reload();
         return;
       }
-      setNotifyCntToMessageAndTitle(res);
+
       if (res != 0) {
+        setNotifyCntToMessageAndTitle(res);  
       }
     },
     error: function () {
@@ -293,7 +288,7 @@ function updateMessageNotifyCnt() {
 }
 
 function setNotifyCntToBellAndTitle(cnt) {
-  var $bellBox = getBellBoxSelector();
+  var $bellBox = $(".bellNum").first();
   var existingBellCnt = parseInt($bellBox.children('span').html());
 
   if (cnt == 0) {
@@ -320,7 +315,6 @@ function setNotifyCntToMessageAndTitle(cnt) {
   var cnt = parseInt(cnt);
   var $bellBox = getMessageBoxSelector();
   var existingBellCnt = parseInt($bellBox.children('span').html());
-console.log("TODO setNotifyCntToMessageAndTitle");
   if (cnt != 0) {
     // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
     $('.click-header-message').next().addClass('dropdown-menu');
