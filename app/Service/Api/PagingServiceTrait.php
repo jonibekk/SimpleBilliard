@@ -6,7 +6,7 @@
  * Time: 12:11
  */
 
-interface ApiPagingInterface
+trait PagingServiceTrait
 {
     /**
      * Method for reading data from DB, based on the parameters
@@ -19,7 +19,7 @@ interface ApiPagingInterface
      *
      * @return array Query result
      */
-    public function readData($conditions, $pivotValue, $limit, $order, $direction): array;
+    abstract public function readData($conditions, $pivotValue, $limit, $order, $direction): array;
 
     /**
      * Count the number of data matching conditions provided
@@ -28,35 +28,51 @@ interface ApiPagingInterface
      *
      * @return int
      */
-    public function countData($conditions): int;
+    abstract public function countData($conditions): int;
 
     /**
-     * Method to be called before reading data from db
+     * Method to be called before reading data from db.
+     * Override to use
      */
-    public function beforeRead();
+    public function beforeRead()
+    {
+        return true;
+    }
 
     /**
      * Method to be called after reading data from db
+     * Override to use
      */
-    public function afterRead();
+    public function afterRead()
+    {
+        return true;
+    }
 
     /**
      * Extend result arrays with additional contents
+     * Override to use
      *
      * @param array $resultArray Content to be extended
      * @param array $flags       Extension flags
      *
-     * @return mixed
+     * @return array
      */
-    public function extendPagingResult(&$resultArray, $flags);
+    public function extendPagingResult(&$resultArray, $flags = [])
+    {
+        return $resultArray;
+    }
 
     /**
      * Get pivot value to define beginning point of next page
+     * Default to using id
      *
-     * @param array $resultElement The array of result array's last element
+     * @param array $lastElement The array of result array's last element
      *
      * @return mixed
      */
-    public function getPivotValue($resultElement);
+    public function getPivotValue($lastElement)
+    {
+        return $lastElement['id'];
+    }
 
 }

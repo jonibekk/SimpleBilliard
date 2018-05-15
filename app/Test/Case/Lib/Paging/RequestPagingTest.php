@@ -21,7 +21,7 @@ class RequestPagingTest extends GoalousTestCase
         $order = 'asc';
         $direction = 'next';
 
-        $encodedString = RequestPaging::createPageCursor($conditions, $pivotValue, $order, $direction);
+        $encodedString = RequestPaging::createPageCursor($pivotValue, $conditions, $order, $direction);
 
         $decodedArray = RequestPaging::decodeCursor($encodedString);
 

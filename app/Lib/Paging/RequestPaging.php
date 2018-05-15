@@ -15,7 +15,7 @@ class RequestPaging
     const PAGE_DIR_PREV = 'prev';
 
     /**
-     * @param ApiPagingInterface $apiService
+     * @param PagingServiceTrait $pagingService
      * @param array              $conditions
      * @param mixed              $pivotValue
      * @param int                $limit
@@ -26,7 +26,7 @@ class RequestPaging
      * @return array
      */
     public function getWithPaging(
-        $apiService,
+        $pagingService,
         $conditions = [],
         $pivotValue = null,
         $limit = self::DEFAULT_PAGE_LIMIT,
@@ -44,18 +44,18 @@ class RequestPaging
             'count'  => 0
         ];
 
-        $apiService->beforeRead();
+        $pagingService->beforeRead();
 
-        $finalResult['count'] = $apiService->countData($conditions);
+        $finalResult['count'] = $pagingService->countData($conditions);
 
-        $queryResult = $apiService->readData($conditions, $pivotValue, $limit + 1, $order, $direction);
+        $queryResult = $pagingService->readData($conditions, $pivotValue, $limit + 1, $order, $direction);
 
         //If there is further result
         if (count($queryResult) > $limit) {
             array_pop($queryResult);
 
             //Get the last element pivot value
-            $newPivotValue = $apiService->getPivotValue($queryResult);
+            $newPivotValue = $pagingService->getPivotValue($queryResult);
 
             if ($direction == self::PAGE_DIR_NEXT || $direction == self::PAGE_DIR_PREV) {
                 $queryResult['paging'][$direction] = self::createPageCursor($newPivotValue, $order, $conditions,
@@ -64,10 +64,10 @@ class RequestPaging
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
-            $apiService->extendPagingResult($queryResult, $extendFlags);
+            $pagingService->extendPagingResult($queryResult, $extendFlags);
         }
 
-        $apiService->afterRead();
+        $pagingService->afterRead();
 
         $finalResult['data'] = $queryResult;
 

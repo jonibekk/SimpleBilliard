@@ -6,12 +6,12 @@ App::uses('TimeExHelper', 'View/Helper');
 /**
  * Class AppService
  */
-class ApiGoalService extends ApiService implements ApiPagingInterface
+class ApiGoalService extends ApiService
 {
+    use ApiPagingInterface;
+
     // ゴール検索デフォルト取得件数
     const GOAL_SEARCH_DEFAULT_LIMIT = 10;
-
-    public function setTopicPaging(int $topicId){}
 
     /**
      * ゴール検索
@@ -309,25 +309,4 @@ class ApiGoalService extends ApiService implements ApiPagingInterface
     {
         // TODO: Implement countData() method.
     }
-
-    public function beforeRead()
-    {
-        // TODO: Implement beforeRead() method.
-    }
-
-    public function afterRead()
-    {
-        // TODO: Implement afterRead() method.
-    }
-
-    public function extendPagingResult(&$resultArray, $flags)
-    {
-        // TODO: Implement extendPagingResult() method.
-    }
-
-    public function getPivotValue(&$resultArray)
-    {
-        // TODO: Implement getPivotValue() method.
-    }
-
 }
