@@ -347,16 +347,21 @@ $(function () {
           if(visibleCircles !== circleCount) {
             $("#showMoreCircles").css("display","block");
             $(".left-side-container").css("overflow-y", "hidden");
-            var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height();// - 14;
-            $("#circleListBody").css("height", setHeight + "px");
+            var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height();
+            setHeights(setHeight);
           } else {
             $("#showMoreCircles").css("display","none");
             var setHeight = visibleCircles * 30  + 1;
-            $("#circleListBody").css("height", setHeight + "px");
+            setHeights(setHeight);
           }
         }
       }
     });
+    function setHeights(height){
+      $("#circleListBody").css("height", height + "px");
+      $(".dashboard-circle-list-body-wrap").css("height", height + "px");
+      $(".dashboard-circle-list layout-sub_padding").css("height", height + "px");
+    }
     $("#NavSearchInputClear").off("click").on("click", function() {
       // setTimeout(function(){$("#NavSearchInput").focus();},100);
       $("#NavSearchInput").focus();
@@ -411,9 +416,9 @@ $(function () {
       e.preventDefault();
       $(this).hide();
       isUnset = true;
-      $(".dashboard-circle-list-body-wrap").addClass("clearfix");
-      $(".dashboard-circle-list-body-wrap").css("height", "min-content");
       var setHeight = 15 * $(".dashboard-circle-list-row-wrap").length + 61;
+      $(".dashboard-circle-list-body-wrap").addClass("clearfix");
+      $(".dashboard-circle-list-body-wrap").css("height", setHeight + "px");
       $("#circleListBody").css("height", setHeight + "px");
       lastLeftContainerHeight = ($(window).height() - $("#circleListFooter").height());
       $("#jsLeftSideContainer").css("height", lastLeftContainerHeight + "px");
