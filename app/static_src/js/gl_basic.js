@@ -477,12 +477,6 @@ $(function () {
     $("#ActionFileAttachButton").off("click").on("click", function(e) {
       e.preventDefault();
     });
-    //for android debugging
-    window.onerror = function(message, url, lineNumber) {
-      console.log(lineNumber+":" + url+"|"+message);
-      //save error and send to server for example.
-      return true;
-    };  
 });
 // Avoid `console` errors in browsers that lack a console.
 (function() {
