@@ -354,7 +354,8 @@ $(function () {
             $("#showMoreCircles").css("display","none");
             var setHeight = visibleCircles * 30  + 1;
             $("#circleListBody").css("height", setHeight + "px");
-            $(".dashboard-circle-list-body-wrap").css("height", "calc(100vh - 234px)");
+            var dashHeight = $(window).height() - $(".dashboard-circle-list-body-wrap").offset().top;
+            $(".dashboard-circle-list-body-wrap").css("height", dashHeight + "px");
           }
         }
       }
