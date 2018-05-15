@@ -5,7 +5,7 @@
 
 $(function () {
   // Click at Message Icon
-  $(document).on("click", "#click-header-message", function (e) {
+  $(document).on("click", ".click-header-message", function (e) {
     // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
     if (getMessageNotifyCnt() == 0) {
       evMessageList(null);
@@ -18,8 +18,9 @@ $(function () {
 
   // Click at notifications icon
   var click_cnt = 0;
-  $(document).on("click", "#click-header-bell", function () {
+  $(document).on("click", ".btn-notify-header", function () {
     click_cnt++;
+
     var isExistNewNotify = ifNewNotify();
     initBellNum();
     initTitle();
@@ -38,7 +39,7 @@ $(function () {
     }
   });
   $(document).on("click", ".call-notifications", evNotifications);
-  $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
+  $(document).on('click', '.mark_all_read,.mark_all_read_txt', function (e) {
     e.preventDefault();
     $.ajax({
       type: 'GET',
@@ -63,14 +64,14 @@ $(function () {
 
   // ヘッダーのお知らせ一覧ポップアップのオートローディング
   var prevScrollTop = 0;
-  $('#bell-dropdown').scroll(function () {
+  $('.bell-dropdown').scroll(function () {
     var $this = $(this);
     var currentScrollTop = $this.scrollTop();
 
     if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
       if (!autoload_more) {
         autoload_more = true;
-        $('#NotifyDropDownReadMore').trigger('click');
+        $('.NotifyDropDownReadMore').trigger('click');
       }
     }
     prevScrollTop = currentScrollTop;
@@ -135,7 +136,7 @@ function initTitle() {
  * @returns {jQuery|HTMLElement}
  */
 function getBellBoxSelector() {
-  return $("#bellNum");
+  return $(".bellNum");
 }
 
 /**
@@ -161,7 +162,7 @@ function initBellNum() {
  * @returns {jQuery|HTMLElement}
  */
 function getMessageBoxSelector() {
-  return $("#messageNum");
+  return $(".messageNum");
 }
 
 /**
@@ -183,9 +184,9 @@ function initMessageNum() {
 }
 
 function updateMessageListBox() {
-  var $messageDropdown = $("#message-dropdown");
+  var $messageDropdown = $(".message-dropdown");
   $messageDropdown.empty();
-  var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+  var $loader_html = $('<li class="notification-refresh text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
   //ローダー表示
   $messageDropdown.append($loader_html);
   var url = cake.url.ag;
@@ -196,7 +197,7 @@ function updateMessageListBox() {
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
-      $loader_html.remove();
+      $(".notification-refresh").remove();
       $messageDropdown.append($notifyItems);
       //画像をレイジーロード
       imageLazyOn();
@@ -218,9 +219,9 @@ function evMessageList(options) {
 }
 
 function updateListBox() {
-  var $bellDropdown = $("#bell-dropdown");
+  var $bellDropdown = $(".bell-dropdown");
   $bellDropdown.empty();
-  var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+  var $loader_html = $('<li class="notification-refresh text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
   //ローダー表示
   $bellDropdown.append($loader_html);
   var url = cake.url.g;
@@ -231,7 +232,7 @@ function updateListBox() {
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
-      $loader_html.remove();
+      $(".notification-refresh").remove();
       $bellDropdown.append($notifyItems);
       //画像をレイジーロード
       imageLazyOn();
@@ -319,14 +320,14 @@ function setNotifyCntToMessageAndTitle(cnt) {
   var cnt = parseInt(cnt);
   var $bellBox = getMessageBoxSelector();
   var existingBellCnt = parseInt($bellBox.children('span').html());
-
+console.log("TODO setNotifyCntToMessageAndTitle");
   if (cnt != 0) {
     // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-    $('#click-header-message').next().addClass('dropdown-menu');
+    $('.click-header-message').next().addClass('dropdown-menu');
   }
   else {
     // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-    $('#click-header-message').next().removeClass('dropdown-menu');
+    $('.click-header-message').next().removeClass('dropdown-menu');
   }
 
   // set notify number

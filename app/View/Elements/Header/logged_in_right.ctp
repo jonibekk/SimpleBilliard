@@ -1,3 +1,4 @@
+<?= $this->App->viewStartComment()?>
 <?php  
 /**
  * @var $is_mb_app
@@ -87,17 +88,17 @@
         </ul>
     </div>
     <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
+        <a class="click-header-message btn-message-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o fa-adjust-plane js-header-link header-icons"></i>
 
-            <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
+            <div class="btn btn-xs bell-notify-box notify-bell-numbers messageNum" style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
 
         <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
             <div class="header-nav-message-contents-scrolling">
-                <ul class="header-nav-message-contents" id="message-dropdown" role="menu">
+                <ul class="header-nav-message-contents message-dropdown" role="menu">
                     <li class="notify-card-empty" id="messageNotifyCardEmpty">
                         <i class="fa fa-smile-o font_33px mr_8px"></i><span
                             class="notify-empty-text"><?= __('No new message') ?></span>
@@ -108,11 +109,11 @@
     </div>
     <div id="HeaderDropdownNotify"
          class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
+        <a class="click-header-bell btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o fa-adjust-bell header-drop-icons js-header-link header-icons"></i>
 
-            <div class="btn btn-xs bell-notify-box notify-bell-numbers"
-                 id="bellNum" style="opacity: 0;">
+            <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
+                 style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
@@ -120,10 +121,10 @@
         <div class="dropdown-menu header-nav-notify-contents-wrap">
             <div class="header-nav-notify-contents-scrolling">
                 <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
-                    <i class="fa fa-check" id="mark_all_read"></i>
-                    <span id="mark_all_read_txt"><?= __('Mark All as Read') ?></span>
+                    <i class="fa fa-check" class="mark_all_read"></i>
+                    <span class="mark_all_read_txt"><?= __('Mark All as Read') ?></span>
                 </div>
-                <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
+                <ul class="header-nav-notify-contents notify-dropdown-cards bell-dropdown" role="menu"
                     style="overflow-y:scroll">
                     <li class="notify-card-empty" id="notifyCardEmpty">
                         <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
@@ -131,8 +132,8 @@
                     </li>
                 </ul>
             </div>
-            <a id="NotifyDropDownReadMore" href="#"
-               class="btn btn-link font_bold click-notify-read-more-dropdown"
+            <a href="#"
+               class="NotifyDropDownReadMore btn btn-link font_bold click-notify-read-more-dropdown"
                style="display:none;"
                get-url="<?= $this->Html->url([
                    'controller' => 'notifications',
@@ -232,3 +233,4 @@
             </li>
         </ul>
     </div>
+<?= $this->App->viewEndComment()?>

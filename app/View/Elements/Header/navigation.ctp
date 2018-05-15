@@ -1,3 +1,4 @@
+<?= $this->App->viewStartComment()?>
 <div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
             class="mb-to-front-almost header-toggle-icon js-nav-toggle">
@@ -21,11 +22,9 @@
         <div class="header-white-bg mod-mb-app"></div>
     <?php endif; ?>
 </div>
-<div class="right-navigation-wrap">
-    <div class="large-container hidden-xxs hidden-xs hidden-sm visible-md-flex visible-lg-flex">
-        <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
-            <?= $this->element('Header/logged_in_right'); ?>
-        </div>
+<div class="large-container hidden-xxs hidden-xs hidden-sm visible-md-flex visible-lg-flex">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>
     </div>
 </div>
 <?php if($is_mb_app_ios_high_header): ?>
@@ -99,3 +98,4 @@
         </li>
     </ul>
 </div>
+<?= $this->App->viewEndComment()?>
