@@ -1813,16 +1813,16 @@ class PaymentService extends AppService
             $PaymentSetting->begin();
 
             // Save Payment Settings
-            if (!$PaymentSetting->save($data, false)) {
+            $newPaymentSetting = $PaymentSetting->save($data, false);
+            if (empty($newPaymentSetting)) {
                 throw new Exception(sprintf("Fail to update payment settings. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
-            $paymentSettingId = $PaymentSetting->getLastInsertID();
 
             // Save snapshot
             /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
             $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
-            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+            $PaymentSettingChangeLog->saveSnapshot($newPaymentSetting['PaymentSetting']['id'], $userId);
 
             $PaymentSetting->commit();
         } catch (Exception $e) {
