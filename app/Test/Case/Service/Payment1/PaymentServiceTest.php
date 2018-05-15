@@ -2659,7 +2659,6 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $updateData = [
-            'team_id'                        => $teamId + 1, // no existing team
             'type'                           => Enum\PaymentSetting\Type::INVOICE,
             'company_name'                   => 'ISAO2',
             'company_post_code'              => '111111',
@@ -2674,6 +2673,9 @@ class PaymentServiceTest extends GoalousTestCase
             'contact_person_last_name'       => 'Stark',
             'contact_person_last_name_kana'  => 'スターク',
         ];
+
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $paymentSettingsUpdateBefore = $this->PaymentSettingChangeLog->findByPaymentSettingId($paySetting['id']);
 
         // Update payment data
         $userId = $this->createActiveUser($teamId);
@@ -2698,6 +2700,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($data['contact_person_last_name'], 'Stark');
         $this->assertEquals($data['contact_person_last_name_kana'], null);
 
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $paymentSettingsUpdateAfter = $this->PaymentSettingChangeLog->findByPaymentSettingId($paySetting['id']);
+        $this->assertTrue(count($paymentSettingsUpdateBefore) < count($paymentSettingsUpdateAfter));
     }
 
     public function test_updatePayerInfo_invoice()
