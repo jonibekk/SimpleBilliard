@@ -55,7 +55,7 @@
     <?php endif; ?>
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
-        <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
+        <a href="#" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu "
@@ -88,7 +88,7 @@
         </ul>
     </div>
     <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a class="click-header-message btn-message-header" data-toggle="dropdown" href="#">
+        <a class="click-header-message btn-message-header" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o fa-adjust-plane js-header-link header-icons"></i>
 
             <div class="btn btn-xs bell-notify-box notify-bell-numbers messageNum" style="opacity: 0;">
@@ -109,7 +109,7 @@
     </div>
     <div id="HeaderDropdownNotify"
          class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a class="click-header-bell btn-notify-header" data-toggle="dropdown" href="#">
+        <a class="click-header-bell btn-notify-header" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o fa-adjust-bell header-drop-icons js-header-link header-icons"></i>
 
             <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
