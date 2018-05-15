@@ -43,7 +43,7 @@ $(function () {
     $.ajax({
       type: 'GET',
       url: cake.url.an,
-      async: true,
+      cache: false,
       success: function () {
         $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
       }
@@ -192,7 +192,7 @@ function updateMessageListBox() {
   $.ajax({
     type: 'GET',
     url: url,
-    async: true,
+    cache: false,
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
@@ -275,7 +275,7 @@ function updateMessageNotifyCnt() {
   $.ajax({
     type: 'GET',
     url: url,
-    async: true,
+    cache: false,
     success: function (res) {
       if (res.error) {
         //location.reload();
