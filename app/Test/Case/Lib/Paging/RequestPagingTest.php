@@ -17,34 +17,17 @@ class RequestPagingTest extends GoalousTestCase
             'team_id' => 2
         ];
 
-        $startId = 10;
-        $limit = 5;
+        $pivotValue = 100;
+        $order = 'asc';
+        $direction = 'next';
 
-        $encodedString = RequestPaging::createNextPageCursor($conditions, $startId, $limit);
-
-        $decodedArray = RequestPaging::decodeCursor($encodedString);
-
-        $this->assertEquals($startId, $decodedArray['start']);
-        $this->assertEquals($limit, $decodedArray['limit']);
-        $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
-    }
-
-    public function test_PrevPaging_success()
-    {
-        $conditions = [
-            'name'    => 'test',
-            'team_id' => 2
-        ];
-
-        $endId = 10;
-        $limit = 5;
-
-        $encodedString = RequestPaging::createPrevPageCursor($conditions, $endId, $limit);
+        $encodedString = RequestPaging::createPageCursor($conditions, $pivotValue, $order, $direction);
 
         $decodedArray = RequestPaging::decodeCursor($encodedString);
 
-        $this->assertEquals($endId, $decodedArray['end']);
-        $this->assertEquals($limit, $decodedArray['limit']);
+        $this->assertEquals($pivotValue, $decodedArray['pivot']);
+        $this->assertEquals($order, $decodedArray['order']);
+        $this->assertEquals($direction, $decodedArray['direction']);
         $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
     }
 }
