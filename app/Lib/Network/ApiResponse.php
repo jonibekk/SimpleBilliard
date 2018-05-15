@@ -10,9 +10,9 @@
  * Class ApiResponse Wrapper of CakeResponse class
  * Use method chaining to add content into the response.
  * Usage sample:
- *  return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->addData('this')->getResponse();
- *  return (new ApiResponse(ApiResponse::RESPONSE_RESOURCE_CONFLICT))->addMessage('conflict')
- *      ->addExceptionTrace(array())->getResponse();
+ *  return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData('this')->returnResponse();
+ *  return (new ApiResponse(ApiResponse::RESPONSE_RESOURCE_CONFLICT))->withMessage('conflict')
+ *      ->withExceptionTrace(array())->returnResponse();
  */
 class ApiResponse extends CakeResponse
 {
@@ -56,7 +56,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function setData($data, bool $appendFlag = false): ApiResponse
+    public function withData($data, bool $appendFlag = false): ApiResponse
     {
         if (empty($data)) {
             return $this;
@@ -89,7 +89,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function setMessage($message, bool $appendFlag = false): ApiResponse
+    public function withMessage($message, bool $appendFlag = false): ApiResponse
     {
         if (empty($message) || !is_string($message)) {
             return $this;
@@ -110,7 +110,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function setExceptionTrace($exceptionTrace, bool $appendFlag = false): ApiResponse
+    public function withExceptionTrace($exceptionTrace, bool $appendFlag = false): ApiResponse
     {
         if (empty($exceptionTrace)) {
             return $this;
@@ -143,7 +143,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function setHeader($value, bool $appendFlag = false): ApiResponse
+    public function withHeader($value, bool $appendFlag = false): ApiResponse
     {
         if (empty($value)) {
             return $this;
@@ -162,11 +162,39 @@ class ApiResponse extends CakeResponse
     }
 
     /**
+     * Set cursors for paging function
+     *
+     * @param array $paging
+     *
+     * @return ApiResponse
+     */
+    public function setPaging(array $paging): ApiResponse
+    {
+        $this->_responseBody['paging'] = $paging;
+
+        return $this;
+    }
+
+    /**
+     * Set count number of data matching given condition
+     *
+     * @param int $count
+     *
+     * @return ApiResponse
+     */
+    public function setCount(int $count): ApiResponse
+    {
+        $this->_responseBody['count'] = $count;
+
+        return $this;
+    }
+
+    /**
      * Create the response to be returned to the client
      *
      * @return CakeResponse
      */
-    public function getResponse(): CakeResponse
+    public function returnResponse(): CakeResponse
     {
         $this->type('json');
         $this->header($this->_responseHeader);
