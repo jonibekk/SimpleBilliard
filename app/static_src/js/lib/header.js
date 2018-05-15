@@ -399,16 +399,18 @@ function toggleNav() {
 }
 
 function hideNav() {
-  var header = document.getElementsByClassName("header")[0],
-  layerBlack = document.getElementById('layerBlack'),
-  menuNotify = document.getElementsByClassName("js-unread-point-on-hamburger")[0],
-  navIcon = header.getElementsByClassName('toggle-icon')[0];
-  document.body.classList.remove('modal-open');
-  header.classList.remove('mod-openNav');
-  layerBlack.classList.remove('mod-openNav');
-  menuNotify.classList.remove('is-open');
-  navIcon.classList.remove('fa-arrow-right');
-  navIcon.classList.add('fa-navicon');
+  if(cake.is_mb_app !== "1" && cake.is_mb_browser !== "1") {
+    var header = document.getElementsByClassName("header")[0],
+    layerBlack = document.getElementById('layerBlack'),
+    menuNotify = document.getElementsByClassName("js-unread-point-on-hamburger")[0],
+    navIcon = header.getElementsByClassName('toggle-icon')[0];
+    document.body.classList.remove('modal-open');
+    header.classList.remove('mod-openNav');
+    layerBlack.classList.remove('mod-openNav');
+    menuNotify.classList.remove('is-open');
+    navIcon.classList.remove('fa-arrow-right');
+    navIcon.classList.add('fa-navicon');
+  }
 }
 
 /**
