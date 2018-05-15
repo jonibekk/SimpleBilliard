@@ -93,7 +93,7 @@ const config = {
   },
   js_prerender_scroll: {
     src: [
-      node_modules_dir + '/perfect-scrollbar/dist/perfect-scrollbar.js',
+      node_modules_dir + '/jquery.nicescroll/dist/jquery.nicescroll.js',
     ],
     output: {
       file_name: 'goalous.prerender.scroll',
