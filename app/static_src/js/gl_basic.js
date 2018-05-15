@@ -359,8 +359,8 @@ $(function () {
     });
     function setHeights(height){
       $("#circleListBody").css("height", height + "px");
-      $(".dashboard-circle-list-body-wrap").css("height", height + "px");
-      $(".dashboard-circle-list layout-sub_padding").css("height", height + "px");
+      $(".dashboard-circle-list-body-wrap").css("height", "calc(100vh - 60px);");
+      // $(".dashboard-circle-list layout-sub_padding").css("height", height + "px");
     }
     $("#NavSearchInputClear").off("click").on("click", function() {
       // setTimeout(function(){$("#NavSearchInput").focus();},100);
