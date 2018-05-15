@@ -14,10 +14,11 @@ trait PagingControllerTrait
      * Get paging conditions from request
      *
      * @param CakeRequest $request
+     * @param string      $direction
      *
      * @return array
      */
-    abstract protected function getPagingConditionFromRequest(CakeRequest $request): array;
+    abstract protected function getPagingConditionFromRequest(CakeRequest $request, string $direction): array;
 
     /**
      * Based on model's DB query condition
@@ -28,19 +29,14 @@ trait PagingControllerTrait
      * Process paging parameters from passed cursor
      *
      * @param CakeRequest $request
+     * @param string      $direction
      *
      * @return array
      */
-    private function getPagingConditionFromCursor(CakeRequest $request)
+    private function getPagingConditionFromCursor(CakeRequest $request, string $direction)
     {
-        $direction = '';
-        if (isset($request['paging'][RequestPaging::PAGE_DIR_NEXT])) {
-            $direction = RequestPaging::PAGE_DIR_NEXT;
-            $cursor = $request['paging'][RequestPaging::PAGE_DIR_NEXT];
-        } elseif (isset($request['paging'][RequestPaging::PAGE_DIR_PREV])) {
-            $direction = RequestPaging::PAGE_DIR_PREV;
-            $cursor = $request['paging'][RequestPaging::PAGE_DIR_PREV];
-        }
+        $cursor = $request['paging']['direction'];
+
         if (empty($cursor)) {
             return [];
         }
@@ -51,7 +47,7 @@ trait PagingControllerTrait
             'conditions' => $processedCursor['conditions'],
             'pivot'      => $processedCursor['pivot'],
             'order'      => $processedCursor['order'],
-            'direction'  => $direction
+            $direction
         ];
     }
 
@@ -61,17 +57,24 @@ trait PagingControllerTrait
      * @param CakeRequest        $request
      * @param PagingServiceTrait $pagingService
      * @param int                $limit
+     * @param string             $direction
      * @param array              $extendFlags Data extension flags
      *
      * @return array
      */
-    protected function readData(CakeRequest $request, PagingServiceTrait $pagingService, int $limit, array $extendFlags)
-    {
+    protected function readData(
+        CakeRequest $request,
+        PagingServiceTrait $pagingService,
+        int $limit,
+        string $direction,
+        array $extendFlags
+    ) {
         if (empty($pagingService) || empty ($request)) {
             return [];
         }
 
-        $parameters = $this->getPagingConditionFromCursor($request) ?? $this->getPagingConditionFromRequest($request);
+        $parameters = $this->getPagingConditionFromCursor($request, $direction) ??
+            $this->getPagingConditionFromRequest($request, $direction);
 
         $requestPaging = new RequestPaging();
 

@@ -1,4 +1,5 @@
 <?php
+App::import('Lib/Paging', 'PagingServiceTrait');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
