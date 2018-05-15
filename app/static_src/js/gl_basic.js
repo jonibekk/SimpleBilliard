@@ -327,7 +327,7 @@ $(function () {
       if($(window).height() !== lastHeight){
         lastHeight = $(window).height();
         if(lastLeftContainerHeight !== lastHeight && psLeftSideContainer) {
-          // psLeftSideContainer.destroy();
+          $("#navigationWrapper").niceScroll().remove();
           $(".dashboard-circle-list-body-wrap").removeClass("clearfix");
           $("#jsLeftSideContainer").css("height","100%");
         }
@@ -348,20 +348,17 @@ $(function () {
             $("#showMoreCircles").css("display","block");
             $(".left-side-container").css("overflow-y", "hidden");
             var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height();
-            setHeights(setHeight);
+            $("#circleListBody").css("height", setHeight + "px");
+            $(".dashboard-circle-list-body-wrap").css("height", "100%");
           } else {
             $("#showMoreCircles").css("display","none");
             var setHeight = visibleCircles * 30  + 1;
-            setHeights(setHeight);
+            $("#circleListBody").css("height", setHeight + "px");
+            $(".dashboard-circle-list-body-wrap").css("height", "calc(100vh - 234px)");
           }
         }
       }
     });
-    function setHeights(height){
-      $("#circleListBody").css("height", height + "px");
-      $(".dashboard-circle-list-body-wrap").css("height", "calc(100vh - 60px);");
-      // $(".dashboard-circle-list layout-sub_padding").css("height", height + "px");
-    }
     $("#NavSearchInputClear").off("click").on("click", function() {
       // setTimeout(function(){$("#NavSearchInput").focus();},100);
       $("#NavSearchInput").focus();
@@ -437,9 +434,9 @@ $(function () {
             enableobserver: true, // enable DOM changing observer, it tries to resize/hide/show when parent or content div had changed
             scrollbarid: false, // set a custom ID for nicescroll bars 
         });
-        $('#navigationWrapper').scroll(function(e) {
-           e.stopPropagation();
-        });
+        // $('#navigationWrapper').scroll(function(e) {
+        //    e.stopPropagation();
+        // });
        }
     }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
@@ -588,9 +585,9 @@ $(function () {
             enableobserver: true, // enable DOM changing observer, it tries to resize/hide/show when parent or content div had changed
             scrollbarid: false, // set a custom ID for nicescroll bars 
         });
-        $('#NavbarOffcanvas').scroll(function(e) {
-           e.stopPropagation();
-        });
+        // $('#NavbarOffcanvas').scroll(function(e) {
+        //    e.stopPropagation();
+        // });
      }
     $(window).on("load resize", function() {
       if(psNavbarOffCanvas){
