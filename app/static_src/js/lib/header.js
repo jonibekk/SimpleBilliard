@@ -152,19 +152,11 @@ function initBellNum() {
 }
 
 /**
- * Return Jquery Object for Message icon on the header
- * @returns {jQuery|HTMLElement}
- */
-function getMessageBoxSelector() {
-  return $(".messageNum");
-}
-
-/**
  * Return Count of messages displayed on messages icons
  * @returns {Number}
  */
 function getMessageNotifyCnt() {
-  var $box = getMessageBoxSelector();
+  var $box = $(".messageNum").first();
   return parseInt($box.children('span').html(), 10);
 }
 
@@ -172,7 +164,7 @@ function getMessageNotifyCnt() {
  * Initialize Message icon count to 0
  */
 function initMessageNum() {
-  var $box = getMessageBoxSelector();
+  var $box = $(".messageNum");
   $box.css("opacity", 0);
   $box.children('span').html("0");
 }
@@ -313,34 +305,40 @@ function setNotifyCntToBellAndTitle(cnt) {
 
 function setNotifyCntToMessageAndTitle(cnt) {
   var cnt = parseInt(cnt);
-  var $bellBox = getMessageBoxSelector();
-  var existingBellCnt = parseInt($bellBox.children('span').html());
-  if (cnt != 0) {
-    // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-    $('.click-header-message').next().addClass('dropdown-menu');
-  }
-  else {
-    // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-    $('.click-header-message').next().removeClass('dropdown-menu');
-  }
+  console.log(cnt);
+  var $bellBoxs = $(".messageNum");
+  for(var i = 0; i < $bellBoxs.length; i++) {
+    var $bellBox = $($bellBoxs[i]);
+    var existingBellCnt = parseInt($bellBox.children('span').html());
+    if (cnt != 0) {
+      // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+      $('.click-header-message').next().addClass('dropdown-menu');
+      $('.click-header-message').next().removeClass('none');
+    }
+    else {
+      // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+      $('.click-header-message').next().removeClass('dropdown-menu');
+      $('.click-header-message').next().addClass('none');
+    }
 
-  // set notify number
-  if (cnt == 0) {
-    $bellBox.children('span').html(cnt);
-    $bellBox.children('sup').addClass('none');
-  } else if (cnt <= 20) {
-    $bellBox.children('span').html(cnt);
-    $bellBox.children('sup').addClass('none');
-  } else {
-    $bellBox.children('span').html(20);
-    $bellBox.children('sup').removeClass('none');
-  }
-  updateTitleCount();
+    // set notify number
+    if (cnt == 0) {
+      $bellBox.children('span').html(cnt);
+      $bellBox.children('sup').addClass('none');
+    } else if (cnt <= 20) {
+      $bellBox.children('span').html(cnt);
+      $bellBox.children('sup').addClass('none');
+    } else {
+      $bellBox.children('span').html(20);
+      $bellBox.children('sup').removeClass('none');
+    }
+    updateTitleCount();
 
-  if (existingBellCnt == 0 && cnt >= 1) {
-    displaySelectorFluffy($bellBox);
-  } else if (cnt == 0) {
-    $bellBox.css("opacity", 0);
+    if (existingBellCnt == 0 && cnt >= 1) {
+      displaySelectorFluffy($bellBox);
+    } else if (cnt == 0) {
+      $bellBox.css("opacity", 0);
+    }
   }
   return;
 }

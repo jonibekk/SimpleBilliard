@@ -170,24 +170,10 @@ $(document).ready(function () {
 
 });
 
-function hideKeyboardElement(element) {
-    element.attr('readonly', 'readonly'); // Force keyboard to hide on input field.
-    element.attr('disabled', 'true'); // Force keyboard to hide on textarea field.
-    setTimeout(function() {
-        element.blur();  //actually close the keyboard
-        // Remove readonly attribute after keyboard is hidden.
-        element.removeAttr('readonly');
-        element.removeAttr('disabled');
-    }, 100);
-}
 
 $(function () {
-    var lastWidth,lastHeight,psNavResults,psNavResultsToggle,psLeftSideContainer,lastLeftContainerHeight,psNavbarOffCanvas;
-    var visibleCircles = 0;
-    var circleCount = $("#circleListBody").find(".dashboard-circle-list-row-wrap").length;
+    var lastWidth,lastHeight;
     var current_slide_id = 1;
-    var isUnset = false;
-    var footerNotVisible = false;
 
     // インジケータークリック時
     $(document).on('click', '.setup-tutorial-indicator', function () {
@@ -206,29 +192,6 @@ $(function () {
         var next_id = String(Number(current_slide_id) + 1);
         changeTutorialContent(next_id);
     });
-
-    function isCompletelyInViewport(elm, threshold, mode) {
-      threshold = threshold || 0;
-      mode = mode || 'visible';
-
-      var rect = elm.getBoundingClientRect();
-      var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
-      var above = rect.bottom - threshold < 0;
-      var below = rect.top - viewHeight + threshold >= 0;
-
-      return mode === 'above' ? above : (mode === 'below' ? below : !above && !below);
-    }
-
-    function isInViewport (element) {
-      if($(element).length){
-        var elementTop = $(element).offset().top;
-        var elementBottom = elementTop + $(element).outerHeight();
-        var viewportTop = $(window).scrollTop();
-        var viewportBottom = viewportTop + $(window).height();
-        return elementBottom > viewportTop && elementTop < viewportBottom;
-      }
-      return true;
-    }
 
     function updateSearchPosition(){
       if(lastWidth >= 768){
@@ -297,7 +260,7 @@ $(function () {
       }
     });
 
-    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify").on("click", function(e) {
+    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify,.header-dropdown-message").on("click", function(e) {
         $(".dropdown-menu").not($(this).find(".dropdown-menu")).hide();
         $(this).find(".dropdown-menu").toggle();
         $("#NavSearchResults").empty();
@@ -322,38 +285,6 @@ $(function () {
         $(".header-search").removeClass("open");
         if(lastWidth > 479){
           updateSearchPosition();
-        }
-      }
-      if($(window).height() !== lastHeight){
-        lastHeight = $(window).height();
-        if(lastLeftContainerHeight !== lastHeight && psLeftSideContainer) {
-          psLeftSideContainer.destroy();
-          $(".dashboard-circle-list-body-wrap").removeClass("clearfix");
-          $("#jsLeftSideContainer").css("height","100%");
-        }
-        var elements = $("#circleListBody").find(".dashboard-circle-list-row-wrap");
-        var counter = 0;
-        for(var i = 0; i < elements.length; i++){
-          if(!isInViewport(elements[i])) {
-            counter++;
-          }
-          if(counter > 0){
-            isUnset = false;
-          }
-          visibleCircles = circleCount - counter;
-        }
-        if(!isUnset) {
-          footerNotVisible = !isInViewport($("#circleListFooter").find(".dashboard-circle-list-make"));
-          if(visibleCircles !== circleCount) {
-            $("#showMoreCircles").css("display","block");
-            $(".left-side-container").css("overflow-y", "hidden");
-            var setHeight = visibleCircles * 30  + 1 - $("#circleListFooter").height();// - 14;
-            $("#circleListBody").css("height", setHeight + "px");
-          } else {
-            $("#showMoreCircles").css("display","none");
-            var setHeight = visibleCircles * 30  + 1;
-            $("#circleListBody").css("height", setHeight + "px");
-          }
         }
       }
     });
@@ -407,24 +338,6 @@ $(function () {
     $("#toggleNavigationButton").on("click", function() {
       $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
     });
-    $("#showMoreCircles").off("click").on("click", function(e) {
-      e.preventDefault();
-      $(this).hide();
-      isUnset = true;
-      $(".dashboard-circle-list-body-wrap").addClass("clearfix");
-      $(".dashboard-circle-list-body-wrap").css("height", "min-content");
-      var setHeight = 15 * $(".dashboard-circle-list-row-wrap").length + 61;
-      $("#circleListBody").css("height", setHeight + "px");
-      lastLeftContainerHeight = ($(window).height() - $("#circleListFooter").height());
-      $("#jsLeftSideContainer").css("height", lastLeftContainerHeight + "px");
-       psLeftSideContainer = new PerfectScrollbar('#jsLeftSideContainer', {
-        swipePropagation: false,
-        wheelPropagation: false,
-        maxScrollbarLength: 0,
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-    });
     if($("#NavSearchForm").length){
       psNavResults = new PerfectScrollbar('#NavSearchForm', {
         swipePropagation: false,
@@ -443,32 +356,6 @@ $(function () {
         suppressScrollY: false,
       });
     }
-    if($("#NavbarOffcanvas").length){
-       psNavbarOffCanvas = new PerfectScrollbar('#NavbarOffcanvas', {
-        swipePropagation: false,
-        wheelPropagation: false,
-        maxScrollbarLength: 0,
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-     }
-    $(window).on("load resize", function() {
-      if(psNavResults){
-        psNavResults.update();
-      }
-      if(psNavResultsToggle){
-        psNavResultsToggle.update();
-      }
-      if(psNavbarOffCanvas){
-        psNavbarOffCanvas.update();
-      }
-    });
-    $('#circleListBody,#circleListHamburger,#NavSearchForm,#NavSearchFormToggle,#jsLeftSideContainer,#goalousNavigation').on('touchstart touchend touchup', function(e) {
-        e.stopPropagation();
-    });
-    $(".dashboard-circle-list-row-wrap").on("click", function(){
-      hideNav();
-    });
     $(window).trigger('resize');
     $(".no-anchor").off("click").on("click", function(e) {
       e.preventDefault();

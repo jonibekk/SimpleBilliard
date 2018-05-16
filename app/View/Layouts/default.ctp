@@ -48,7 +48,6 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
                 <?= $this->element('dashboard_saved_item') ?>
                 <?= $this->element('circle_list') ?>
             </div>
-            <?= $this->element('circle_list_footer') ?>
         </div>
         <?php endif; ?>
     </div>

@@ -41,12 +41,11 @@
     <?php endif; ?>
 
     <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom" id="setup">
+    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom">
         <a href="/setup/top/" class="btn-header-setup">
-            <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
-               id="setupIcon"></i>
+            <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-                <div class="btn btn-xs bell-notify-box notify-setup-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>" id="setupNum">
+                <div class="btn btn-xs bell-notify-box notify-setup-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
                     <span><?= $setup_rest_count ?></span>
                 </div>
             <?php endif; ?>
@@ -55,7 +54,7 @@
     <?php endif; ?>
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
-        <a href="#" id="download" class="btn-addition-header">
+        <a href="#" class="btn-addition-header">
             <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu "
@@ -99,7 +98,7 @@
         <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
             <div class="header-nav-message-contents-scrolling">
                 <ul class="header-nav-message-contents message-dropdown" role="menu">
-                    <li class="notify-card-empty" id="messageNotifyCardEmpty">
+                    <li class="notify-card-empty">
                         <i class="fa fa-smile-o font_33px mr_8px"></i><span
                             class="notify-empty-text"><?= __('No new message') ?></span>
                     </li>
@@ -107,8 +106,7 @@
             </div>
         </div>
     </div>
-    <div id="HeaderDropdownNotify"
-         class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
+    <div class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
         <a class="click-header-bell btn-notify-header" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o fa-adjust-bell header-drop-icons js-header-link header-icons"></i>
 
@@ -126,7 +124,7 @@
                 </div>
                 <ul class="header-nav-notify-contents notify-dropdown-cards bell-dropdown" role="menu"
                     style="overflow-y:scroll">
-                    <li class="notify-card-empty" id="notifyCardEmpty">
+                    <li class="notify-card-empty">
                         <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
                             class="notify-empty-text"><?= __('No new notification') ?></span>
                     </li>
@@ -153,8 +151,7 @@
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
         <a href="#"
            class="btn-function-header"
-           data-toggle="dropdown"
-           id="header-cog-dropdown">
+           data-toggle="dropdown">
             <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
@@ -220,7 +217,7 @@
                 </a>
             </li>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
-                <li class="header-nav-function-contents-list" id="IntercomLink">
+                <li class="header-nav-function-contents-list">
                     <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
                        class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
                 </li>
