@@ -280,26 +280,30 @@ function updateMessageNotifyCnt() {
 }
 
 function setNotifyCntToBellAndTitle(cnt) {
-  var $bellBox = $(".bellNum").first();
-  var existingBellCnt = parseInt($bellBox.children('span').html());
+  var $bellBoxs = $(".bellNum");
+  var existingBellCnt = parseInt($bellBoxs.first().children('span').html());
 
   if (cnt == 0) {
     return;
   }
 
-  // set notify number
-  if (parseInt(cnt) <= 20) {
-    $bellBox.children('span').html(cnt);
-    $bellBox.children('sup').addClass('none');
-  } else {
-    $bellBox.children('span').html(20);
-    $bellBox.children('sup').removeClass('none');
-  }
-  updateTitleCount();
+  for(var i = 0; i < $bellBoxs.length; i++){
+    $bellBox = $($bellBoxs[i]);
+    // set notify number
+    if (parseInt(cnt) <= 20) {
+      $bellBox.children('span').html(cnt);
+      $bellBox.children('sup').addClass('none');
+    } else {
+      $bellBox.children('span').html(20);
+      $bellBox.children('sup').removeClass('none');
+    }
+    updateTitleCount();
 
-  if (existingBellCnt == 0) {
-    displaySelectorFluffy($bellBox);
+    if (existingBellCnt == 0) {
+      displaySelectorFluffy($bellBox);
+    }
   }
+  
   return;
 }
 
