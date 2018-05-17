@@ -4,6 +4,7 @@
  * @var $is_mb_app
  */
 ?>
+<?php $is_mb_app = true; ?>
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url([
@@ -57,7 +58,7 @@
         <a href="#" class="btn-addition-header">
             <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
-        <ul class="header-nav-add-contents dropdown-menu "
+        <ul class="header-nav-add-contents <?= $is_mb_app ? "mb-header-arrow-shift-add" : "" ?> dropdown-menu "
             aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
@@ -150,8 +151,7 @@
     </div>
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
         <a href="#"
-           class="btn-function-header"
-           data-toggle="dropdown">
+           class="btn-function-header">
             <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
@@ -161,7 +161,7 @@
                 </div>
             <?php endif; ?>
         </a>
-        <ul class="header-nav-function-contents dropdown-menu" role="menu"
+        <ul class="header-nav-function-contents <?= $is_mb_app ? "mb-header-arrow-shift-function" : "" ?> dropdown-menu" role="menu"
             aria-labelledby="dropdownMenu1">
             <li class="header-nav-function-contents-list">
                 <?= $this->Html->link(__('User Setting'),

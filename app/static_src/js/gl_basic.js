@@ -262,7 +262,7 @@ $(function () {
       }
     });
 
-    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify,.header-dropdown-message").on("click", function(e) {
+    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify,.header-dropdown-message,.mb-app-header-dropdown-add,.mb-app-header-dropdown-functions").on("click", function(e) {
         $(".dropdown-menu").not($(this).find(".dropdown-menu")).hide();
         $(this).find(".dropdown-menu").toggle();
         $("#NavSearchResults").empty();
@@ -314,17 +314,6 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    if(cake.is_mb_app === "1" || cake.is_mb_browser === "1") {
-      if($("#navigationWrapper").length){
-         psLeftSideContainer = new PerfectScrollbar('#navigationWrapper', {
-          swipePropagation: false,
-          wheelPropagation: false,
-          maxScrollbarLength: 0,
-          suppressScrollX: true,
-          suppressScrollY: false,
-        });
-       }
-    }
     $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
       if(cake.is_mb_app !== "1" || cake.is_mb_browser !== "1"){
         return false;
@@ -348,24 +337,6 @@ $(function () {
     $("#toggleNavigationButton").on("click", function() {
       $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
     });
-    if($("#NavSearchForm").length){
-      psNavResults = new PerfectScrollbar('#NavSearchForm', {
-        swipePropagation: false,
-        wheelPropagation: false,
-        maxScrollbarLength: 0,
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-    }
-    if($("#NavSearchFormToggle").length){
-      psNavResultsToggle = new PerfectScrollbar('#NavSearchFormToggle', {
-        swipePropagation: false,
-        wheelPropagation: false,
-        maxScrollbarLength: 0,
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-    }
     $(window).trigger('resize');
     $(".no-anchor").off("click").on("click", function(e) {
       e.preventDefault();
