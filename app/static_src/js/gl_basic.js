@@ -219,6 +219,7 @@ $(function () {
     var timeoutToggle;
     $(".header-icon-search-toggle").off("click").on("click", function(e) {
       e.preventDefault();
+      $(".dropdown-menu").hide();
       $(".header-search-toggle").toggleClass("open");
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
@@ -241,6 +242,7 @@ $(function () {
     var timeout;
     $(".header-icon-search").off("click").on("click", function(e) {
       e.preventDefault();
+      $(".dropdown-menu").hide();
       $(".header-search").toggleClass("open");
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
