@@ -50,6 +50,24 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
     if (!$posts): ?>
         <?= $this->element("Feed/post_not_found") ?>
     <?php endif ?>
+<?php
+// マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"users/view_actions/user_id") !== false): ?>
+    <a href="<?= $this->Html->url(
+           [
+               'controller' => 'users',
+               'action'     => 'view_actions',
+               'user_id'    =>  $this->Session->read('Auth.User.id'),
+               'page_type'  => 'image',
+           ]); ?>"
+       class="btn-back btn-back-actions">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
+    <?php
+    // 削除された投稿へのリクエストの場合
+    if (!$posts): ?>
+        <?= $this->element("Feed/post_not_found") ?>
+    <?php endif ?>
 <?php endif ?>
 <div id="app-view-elements-feed-posts">
     <?= $this->element("Feed/posts") ?>
@@ -105,5 +123,19 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
        class="btn-back btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
+<?php
+// マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"users/view_actions/user_id") !== false): ?>
+    <a href="<?= $this->Html->url(
+           [
+               'controller' => 'users',
+               'action'     => 'view_actions',
+               'user_id'    =>  $this->Session->read('Auth.User.id'),
+               'page_type'  => 'image',
+           ]); ?>"
+       class="btn-back btn-back-actions">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
 <?php endif ?>
+
 <?= $this->App->viewEndComment() ?>
