@@ -305,7 +305,6 @@ function setNotifyCntToBellAndTitle(cnt) {
 
 function setNotifyCntToMessageAndTitle(cnt) {
   var cnt = parseInt(cnt);
-  console.log(cnt);
   var $bellBoxs = $(".messageNum");
   for(var i = 0; i < $bellBoxs.length; i++) {
     var $bellBox = $($bellBoxs[i]);
