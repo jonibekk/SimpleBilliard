@@ -4,7 +4,6 @@
  * @var $is_mb_app
  */
 ?>
-<?php $is_mb_app = true; ?>
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url([
