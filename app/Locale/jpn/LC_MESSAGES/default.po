@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-11 15:24+0900\n"
+"PO-Revision-Date: 2018-05-17 17:55+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3190,12 +3190,6 @@ msgstr "アイテムを保存しました"
 msgid "Item removed"
 msgstr "保存済みアイテムを削除しました"
 
-msgid "Discover more circles"
-msgstr "サークルを見つける"
-
-msgid "Reorder circles"
-msgstr "サークルを並び替える"
-
 msgid "Manage"
 msgstr "管理"
 
@@ -3834,7 +3828,7 @@ msgid "Team"
 msgstr "チーム"
 
 msgid "Search Members, Goals, Circles"
-msgstr ""
+msgstr "メンバー,ゴール,サークルを検索"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
@@ -6241,3 +6235,9 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#~ msgid "Discover more circles"
+#~ msgstr "サークルを見つける"
+
+#~ msgid "Reorder circles"
+#~ msgstr "サークルを並び替える"
