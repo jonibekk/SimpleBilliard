@@ -289,6 +289,14 @@ $(function () {
           updateSearchPosition();
         }
       }
+      if($(window).height() !== lastHeight){
+        var extra = 0;
+        if($(".banner-alert").css("display") === "block"){
+          extra = 80;
+        }
+        extra += 380;
+        $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px)")
+      }
     });
     $("#NavSearchInputClear").off("click").on("click", function() {
       // setTimeout(function(){$("#NavSearchInput").focus();},100);
