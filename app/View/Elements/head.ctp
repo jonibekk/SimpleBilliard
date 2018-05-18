@@ -35,7 +35,6 @@
     echo $this->Html->css('common.min', array('media' => 'screen'));
     echo $this->PageResource->outputPageCss();
     echo $this->Html->script('/js/goalous.prerender.exif.min');
-    echo $this->Html->script('/js/goalous.prerender.scroll.min');
     echo $this->Html->script('/js/goalous.prerender.min');
     ?>
 

@@ -168,16 +168,6 @@ gulp.task("js_prerender_exif:uglify", () => {
     .pipe(duration('js_prerender_exif:uglify'))
 })
 
-gulp.task("js_prerender_scroll:uglify", () => {
-  return gulp.src(config.dest + "/js_prerender_scroll_cat/" + config.js_prerender_scroll.output.file_name + '.js')
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(config.js_prerender_scroll.output.path))
-    .pipe(duration('js_prerender_scroll:uglify'))
-})
-
 gulp.task("angular_vendor:uglify", () => {
   return gulp.src(config.dest + "/angular_vendor_cat/" + config.angular_vendor.output.file_name + '.js')
     .pipe(uglify())

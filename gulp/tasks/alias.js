@@ -36,7 +36,6 @@ gulp.task('js', done => {
       'js_app',
       'js_vendor',
       'js_prerender_exif',
-      'js_prerender_scroll',
       'js_prerender',
       'js_payment',
       'js_circle',
@@ -165,16 +164,6 @@ gulp.task('js_prerender_exif', done => {
     'js_prerender_exif:concat',
     'js_prerender_exif:uglify',
     'js_prerender_exif:clean',
-    done
-  )
-})
-
-// js prerender scroll
-gulp.task('js_prerender_scroll', done => {
-  return runSequence(
-    'js_prerender_scroll:concat',
-    'js_prerender_scroll:uglify',
-    'js_prerender_scroll:clean',
     done
   )
 })
