@@ -206,6 +206,11 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
+
+    $(".btn-back-actions,.btn-back-goals").off("click").on("click", function(e) {
+      e.preventDefault();
+      window.history.back();
+    });
 });
 
 
