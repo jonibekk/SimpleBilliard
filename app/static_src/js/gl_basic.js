@@ -294,6 +294,12 @@ $(function () {
         if($(".banner-alert").css("display") === "block"){
           extra = 80;
         }
+        if(cake.is_mb_app === "1") {
+          extra += 10;
+        } 
+        if(cake.is_mb_browser === "1"){
+          extra += 10;
+        }
         extra += 380;
         $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px)")
       }
