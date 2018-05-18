@@ -52,7 +52,7 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
     <?php endif ?>
 <?php
 // マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"users/view_actions/user_id") !== false): ?>
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/view_actions/") !== false): ?>
     <a href="<?= $this->Html->url(
            [
                'controller' => 'users',
