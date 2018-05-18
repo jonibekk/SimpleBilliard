@@ -45,33 +45,30 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
        class="btn-back btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
-    <?php
-    // 削除された投稿へのリクエストの場合
-    if (!$posts): ?>
-        <?= $this->element("Feed/post_not_found") ?>
-    <?php endif ?>
 <?php
 // マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/view_actions/") !== false): ?>
-    <a href="<?= $this->Html->url(
-           [
-               'controller' => 'users',
-               'action'     => 'view_actions',
-               'user_id'    =>  $this->Session->read('Auth.User.id'),
-               'page_type'  => 'image',
-           ]); ?>"
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/users/view_actions/") !== false): ?>
+    <a href="#"
        class="btn-back btn-back-actions">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
-    <?php
+<?php
+// ゴール -> アクション単体ページ と遷移してきた場合は、ゴールのアクション一覧に戻るボタンを表示する
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/goals/view_actions/") !== false): ?>
+    <a href="#"
+       class="btn-back btn-back-goals">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
+<?php endif ?>
+<?php
     // 削除された投稿へのリクエストの場合
     if (!$posts): ?>
         <?= $this->element("Feed/post_not_found") ?>
-    <?php endif ?>
+<?php else: ?>
+    <div id="app-view-elements-feed-posts">
+        <?= $this->element("Feed/posts") ?>
+    </div>
 <?php endif ?>
-<div id="app-view-elements-feed-posts">
-    <?= $this->element("Feed/posts") ?>
-</div>
 <?php
 $next_page_num = 2;
 $month_index = 0;
@@ -125,15 +122,16 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
     </a>
 <?php
 // マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/view_actions/") !== false): ?>
-    <a href="<?= $this->Html->url(
-           [
-               'controller' => 'users',
-               'action'     => 'view_actions',
-               'user_id'    =>  $this->Session->read('Auth.User.id'),
-               'page_type'  => 'image',
-           ]); ?>"
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/users/view_actions/") !== false): ?>
+    <a href="#"
        class="btn-back btn-back-actions">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
+<?php
+// ゴール -> アクション単体ページ と遷移してきた場合は、ゴールのアクション一覧に戻るボタンを表示する
+elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/goals/view_actions/") !== false): ?>
+    <a href="#"
+       class="btn-back btn-back-goals">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php endif ?>
