@@ -1,12 +1,12 @@
 <?php
-class Y extends CakeMigration {
+class AddColumnForStripeRecharge extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'y';
+	public $description = 'add_column_for_stripe_recharge';
 
 /**
  * Actions to be performed
@@ -17,13 +17,13 @@ class Y extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'charge_histories' => array(
-					'stripe_payment_code_reorder' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. when reordering stripe charge', 'charset' => 'utf8mb4', 'after' => 'stripe_payment_code'),
+					'reorder_stripe_payment_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. when reordering stripe charge', 'charset' => 'utf8mb4', 'after' => 'stripe_payment_code'),
 				),
 			),
 		),
 		'down' => array(
 			'drop_field' => array(
-				'charge_histories' => array('stripe_payment_code_reorder'),
+				'charge_histories' => array('reorder_stripe_payment_code'),
 			),
 		),
 	);

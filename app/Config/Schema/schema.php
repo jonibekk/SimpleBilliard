@@ -196,7 +196,7 @@ class AppSchema extends CakeSchema {
 		'result_type' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'Result type(0: Success, 1,2,3...: Failuer each type)'),
 		'max_charge_users' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'チャージした結果のmax支払い人数'),
 		'stripe_payment_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. if invoice, it will be null', 'charset' => 'utf8mb4'),
-		'stripe_payment_code_reorder' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. when reordering stripe charge', 'charset' => 'utf8mb4'),
+		'reorder_stripe_payment_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. when reordering stripe charge', 'charset' => 'utf8mb4'),
 		'campaign_team_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'campaign_team.id'),
 		'price_plan_purchase_team_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'price_plan_purchase_teams.id'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
