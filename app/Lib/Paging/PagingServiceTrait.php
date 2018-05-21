@@ -9,21 +9,15 @@
 trait PagingServiceTrait
 {
     /**
-     * @param array  $conditions
-     * @param mixed  $pivotValue
-     * @param int    $limit
-     * @param string $order
-     * @param string $direction
-     * @param array  $extendFlags
+     * @param PagingCursor $pagingCursor
+     * @param int          $limit
+     * @param array        $extendFlags
      *
      * @return array
      */
     public function getDataWithPaging(
-        $conditions = [],
-        $pivotValue = null,
-        $limit = RequestPaging::DEFAULT_PAGE_LIMIT,
-        $order = RequestPaging::PAGE_ORDER_DESC,
-        $direction = RequestPaging::PAGE_DIR_NEXT,
+        $pagingCursor,
+        $limit = PagingCursor::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     ) {
 
@@ -38,22 +32,30 @@ trait PagingServiceTrait
 
         $this->beforeRead();
 
-        $finalResult['count'] = $this->countData($conditions);
+        $finalResult['count'] = $this->countData($pagingCursor->getConditions());
 
-        $queryResult = $this->readData($conditions, $pivotValue, $limit + 1, $order, $direction);
+        $queryResult = $this->readData($pagingCursor, $limit + 1);
 
         //If there is further result
         if (count($queryResult) > $limit) {
             array_pop($queryResult);
 
-            //Get the last element pivot value
-            $newPivotValue = $this->getPivotValue($queryResult);
+            //Get start & end pointer values
+            $endPointerValue = $this->getEndPointerValue($queryResult[--$limit]);
 
-            if ($direction == RequestPaging::PAGE_DIR_NEXT || $direction == RequestPaging::PAGE_DIR_PREV) {
-                $queryResult['paging'][$direction] = RequestPaging::createPageCursor($newPivotValue, $order,
-                    $conditions,
-                    $direction);
-            }
+            $pagingCursor->setPointer($endPointerValue);
+
+            $finalResult['paging']['next'] = PagingCursor::createPageCursor($pagingCursor->returnCursor());
+        }
+
+        //If there is previous result
+        //Non-empty pointers means not the first page
+        if (count($queryResult) > 0 && !empty($pointerValues)) {
+            $startPointerValue = $this->getStartPointerValue($queryResult[0]);
+
+            $pagingCursor->setPointer($startPointerValue);
+
+            $finalResult['paging']['prev'] = PagingCursor::createPageCursor($pagingCursor->returnCursor());
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
@@ -70,15 +72,12 @@ trait PagingServiceTrait
     /**
      * Method for reading data from DB, based on the parameters
      *
-     * @param array  $conditions Conditions for paging query
-     * @param mixed  $pivotValue Starting ID for the search
-     * @param int    $limit      Number of records to be read
-     * @param string $order      Order of query
-     * @param string $direction  Direction of query
+     * @param PagingCursor $pagingCursor Conditions for paging query
+     * @param int          $limit        Number of records to be read
      *
      * @return array Query result
      */
-    abstract protected function readData($conditions, $pivotValue, $limit, $order, $direction): array;
+    abstract protected function readData($pagingCursor, $limit): array;
 
     /**
      * Count the number of data matching conditions provided
@@ -122,16 +121,29 @@ trait PagingServiceTrait
     }
 
     /**
-     * Get pivot value to define beginning point of next page
+     * Get pointer value to define end point of previous page
+     * Default to using id
+     *
+     * @param array $firstElement The array of result array's last element
+     *
+     * @return array
+     */
+    protected function getStartPointerValue($firstElement)
+    {
+        return ['id', ">", $firstElement['id']];
+    }
+
+    /**
+     * Get pointer value to define beginning point of next page
      * Default to using id
      *
      * @param array $lastElement The array of result array's last element
      *
-     * @return mixed
+     * @return array
      */
-    protected function getPivotValue($lastElement)
+    protected function getEndPointerValue($lastElement)
     {
-        return $lastElement['id'];
+        return ['id', "<", $lastElement['id']];
     }
 
 }

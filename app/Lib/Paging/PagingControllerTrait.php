@@ -13,11 +13,10 @@ trait PagingControllerTrait
      * Get paging conditions from request
      *
      * @param CakeRequest $request
-     * @param string      $direction
      *
-     * @return array
+     * @return PagingCursor
      */
-    abstract protected function getPagingConditionFromRequest(CakeRequest $request, string $direction): array;
+    abstract protected function getPagingConditionFromRequest(CakeRequest $request): PagingCursor;
 
     /**
      * Based on model's DB query condition
@@ -28,27 +27,18 @@ trait PagingControllerTrait
      * Process paging parameters from passed cursor
      *
      * @param CakeRequest $request
-     * @param string      $direction
      *
-     * @return array
+     * @return PagingCursor
      */
-    private function getPagingConditionFromCursor(CakeRequest $request, string $direction)
+    private function getPagingConditionFromCursor(CakeRequest $request)
     {
-        $cursor = $request['paging']['direction'];
+        $cursor = $request->query['cursor'];
 
         if (empty($cursor)) {
-            return [];
+            return new PagingCursor();
         }
 
-        $processedCursor = RequestPaging::decodeCursor($cursor);
-
-        return [
-            'conditions' => Hash::get($processedCursor, 'conditions'),
-            'pivot' => Hash::get($processedCursor, 'pivot'),
-            'order' => Hash::get($processedCursor, 'order'),
-
-            $direction
-        ];
+        return PagingCursor::decodeCursorToObject($cursor);
     }
 
     /**
@@ -57,7 +47,7 @@ trait PagingControllerTrait
      * @param CakeRequest        $request
      * @param PagingServiceTrait $pagingService
      * @param int                $limit
-     * @param string             $direction
+     * @param bool               $skipCursor  Skip using cursor, force using request as paging parameters
      * @param array              $extendFlags Data extension flags
      *
      * @return array
@@ -66,22 +56,26 @@ trait PagingControllerTrait
         CakeRequest $request,
         PagingServiceTrait $pagingService,
         int $limit,
-        string $direction,
+        bool $skipCursor = false,
         array $extendFlags
     ) {
         if (empty($pagingService) || empty ($request)) {
             return [];
         }
 
-        $parameters = $this->getPagingConditionFromCursor($request, $direction) ??
-            $this->getPagingConditionFromRequest($request, $direction);
+        $pagingCursor = $this->getPagingConditionFromCursor($request);
+
+        //If skipping using cursor, or cursor is empty, replace it with parameters from request
+        if ($skipCursor || $pagingCursor->isEmpty()) {
+            $pagingCursor = $this->getPagingConditionFromRequest($request);
+        }
+
+        //Merge existing condition with resource ID embedded in URL
+        $pagingCursor->addCondition($this->getResourceIdForCondition());
 
         return $pagingService->getDataWithPaging(
-            am($parameters['conditions'], $this->getResourceIdForCondition()),
-            Hash::get($parameters, 'pivot'),
+            $pagingCursor,
             $limit,
-            Hash::get($parameters, 'order'),
-            Hash::get($parameters, 'direction'),
             $extendFlags);
     }
 }

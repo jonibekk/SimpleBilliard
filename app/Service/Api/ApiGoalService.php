@@ -300,13 +300,14 @@ class ApiGoalService extends ApiService
         return $ret;
     }
 
-    public function readData($conditions, $pivotValue, $limit, $order, $direction): array
+    protected function readData($pagingCursor, $limit): array
     {
         // TODO: Implement readData() method.
     }
 
-    public function countData($conditions): int
+    protected function countData($conditions): int
     {
         // TODO: Implement countData() method.
     }
+
 }

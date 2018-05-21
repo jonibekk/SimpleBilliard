@@ -16,6 +16,8 @@ App::uses('TeamMember', 'Model');
  */
 class EvaluatorsController extends ApiV2Controller
 {
+    use PagingControllerTrait;
+
     public $components = [
         'Notification',
     ];
@@ -102,6 +104,18 @@ class EvaluatorsController extends ApiV2Controller
             (array)$userId, $coachId,
             $teamId);
     }
+
+    protected function getPagingConditionFromRequest(CakeRequest $request): PagingCursor
+    {
+        // TODO: Implement getPagingConditionFromRequest() method.
+    }
+
+    protected function getResourceIdForCondition(): array
+    {
+        // TODO: Implement getResourceIdForCondition() method.
+    }
+
+
 
     /**
      * Validate parameters prior to data manipulations
