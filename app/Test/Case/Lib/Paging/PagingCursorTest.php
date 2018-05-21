@@ -20,12 +20,12 @@ class PagingCursorTest extends GoalousTestCase
         $pointer = ['count', '>', 100];
         $order = ['count', 'asc'];
 
-        $encodedString = PagingCursor::createPageCursor($pointer, $conditions, $order);
+        $encodedString = PagingCursor::createPageCursor($conditions, $pointer, $order);
 
         $decodedArray = PagingCursor::decodeCursorToArray($encodedString);
 
+        $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
         $this->assertEquals($pointer, $decodedArray['pointer']);
         $this->assertEquals($order, $decodedArray['order']);
-        $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
     }
 }
