@@ -57,7 +57,7 @@
         <a href="#" class="btn-addition-header">
             <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
-        <ul class="header-nav-add-contents dropdown-menu "
+        <ul class="<?= $is_mb_app ? "mb-header-nav-add-contents" : "header-nav-add-contents" ?> dropdown-menu "
             aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
@@ -160,7 +160,7 @@
                 </div>
             <?php endif; ?>
         </a>
-        <ul class="header-nav-function-contents dropdown-menu" role="menu"
+        <ul class="<?= $is_mb_app ? "mb-header-nav-function-contents" : "header-nav-function-contents" ?> dropdown-menu" role="menu"
             aria-labelledby="dropdownMenu1">
             <li class="header-nav-function-contents-list">
                 <?= $this->Html->link(__('User Setting'),
