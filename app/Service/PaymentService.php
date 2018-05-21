@@ -806,7 +806,7 @@ class PaymentService extends AppService
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
 
-                // If this charging is reordering, set
+                // If this charging is reordering, set reorder_charge_history_id to the new record
                 if ($chargeType->equals(Enum\ChargeHistory\ChargeType::RECHARGE())) {
                     $updateHistory['reorder_charge_history_id'] = $chargeInfo['reorder_charge_history_id'];
                 }
