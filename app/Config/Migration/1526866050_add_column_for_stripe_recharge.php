@@ -17,7 +17,7 @@ class AddColumnForStripeRecharge extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'charge_histories' => array(
-					'reorder_charge_history_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'charge_histories.id that is target to be reordered', 'after' => 'stripe_payment_code'),
+					'reorder_charge_history_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'charge_histories.id that is target to be reordered', 'after' => 'stripe_payment_code'),
 				),
 			),
 		),
