@@ -805,6 +805,11 @@ class PaymentService extends AppService
             if ($chargeRes['success']) {
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
+
+                // If this charging is reordering, set
+                if ($chargeType->equals(Enum\ChargeHistory\ChargeType::RECHARGE())) {
+                    $updateHistory['reorder_charge_history_id'] = $chargeInfo['reorder_charge_history_id'];
+                }
             } else {
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
             }
@@ -831,6 +836,41 @@ class PaymentService extends AppService
     }
 
     /**
+     * Reordering specified charge history
+     *
+     * @param array $targetChargeHistory
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function reorderCreditCardCharge(array $targetChargeHistory): array
+    {
+        $targetChargeHistoryId = $targetChargeHistory['id'];
+        $teamId = $targetChargeHistory['team_id'];
+        $opeUserId = $targetChargeHistory['user_id'];
+        $usersCount = $targetChargeHistory['charge_users'];
+        $timeStampChargeTime = GoalousDateTime::now()->getTimestamp();
+
+        $subTotalCharge = $targetChargeHistory['total_amount'];
+        $tax            = $targetChargeHistory['tax'];
+        $chargeInfo = [
+            'sub_total_charge'            => $subTotalCharge,
+            'tax'                         => $tax,
+            'total_charge'                => $subTotalCharge + $tax,
+            'reorder_charge_history_id'   => $targetChargeHistoryId,
+        ];
+
+        return $this->applyCreditCardCharge(
+            $teamId,
+            Enum\ChargeHistory\ChargeType::RECHARGE(),
+            $usersCount,
+            $opeUserId,
+            $timeStampChargeTime,
+            $chargeInfo
+            );
+    }
+
+    /**
      * Get charge max user cnt by charge type
      *
      * @param int                           $teamId
@@ -845,6 +885,9 @@ class PaymentService extends AppService
         int $usersCount
     ) {
         if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            return $usersCount;
+        }
+        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::RECHARGE) {
             return $usersCount;
         }
 
