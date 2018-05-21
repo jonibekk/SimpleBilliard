@@ -35,7 +35,7 @@
             ]) ?>"
             class="modal-ajax-get-public-circles"
         >
-            <?= __("View Circles") ?>
+            <?= __("Discover more circles") ?>
         </a>
     </div>
     <div class="clearfix develop--circle-make">
