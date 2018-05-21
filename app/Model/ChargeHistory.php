@@ -8,11 +8,15 @@ use Goalous\Model\Enum as Enum;
  */
 class ChargeHistory extends AppModel
 {
-    // TODO.Payment: Change to enum and remove defined these
+    /**
+     * @deprecated use \Goalous\Model\Enum\ChargeHistory\PaymentType
+     */
     const PAYMENT_TYPE_INVOICE = 0;
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
-    // TODO.Payment: Change to enum and remove defined these
+    /**
+     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     */
     const CHARGE_TYPE_MONTHLY = 0;
     const CHARGE_TYPE_ADD_USER = 1;
     const CHARGE_TYPE_ACTIVATE_USER = 2;

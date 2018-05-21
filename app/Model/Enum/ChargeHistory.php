@@ -29,3 +29,13 @@ class ResultType extends Enum
     const SUCCESS = 1;
     const FAIL = 2;
 }
+
+/**
+ * @method static static INVOICE()
+ * @method static static CREDIT_CARD()
+ */
+class PaymentType extends Enum
+{
+    const INVOICE = 0;
+    const CREDIT_CARD = 1;
+}
