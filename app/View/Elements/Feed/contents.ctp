@@ -21,6 +21,19 @@
 <?= $this->element('Feed/feed_share_range_filter',
     compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
+$displayBackButtonNotifications = false;
+$displayBackButtonUsers = false;
+$displayBackButtonGoals = false;
+if(isset($this->request->params['post_id'])) {
+  if(isset($this->request->params['named']['notify_id'])) {
+    $displayBackButtonNotifications = true;
+  }
+  if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"/users/view_actions/") !== false) {
+    $displayBackButtonUsers = true;
+  } elseif (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"/goals/view_actions/") !== false) {
+    $displayBackButtonGoals = true;
+  }
+}
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
     if (isset($user_status)) {
@@ -40,21 +53,21 @@ if (!isset($this->request->params['post_id'])) {
 <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
 <?php
 // 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
-if (isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id'])): ?>
+if ($displayBackButtonNotifications): ?>
     <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications']) ?>"
        class="btn-back btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php
 // マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/users/view_actions/") !== false): ?>
+elseif ($displayBackButtonUsers): ?>
     <a href="#"
        class="btn-back btn-back-actions">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php
 // ゴール -> アクション単体ページ と遷移してきた場合は、ゴールのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/goals/view_actions/") !== false): ?>
+elseif ($displayBackButtonGoals): ?>
     <a href="#"
        class="btn-back btn-back-goals">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
@@ -115,21 +128,21 @@ $firstPostTime = $this->Post->getFirstPostTime($posts, $currentCircle, $currentT
 </div>
 <?php
 // 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
-if (isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id'])): ?>
+if ($displayBackButtonNotifications): ?>
     <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications']) ?>"
        class="btn-back btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php
 // マイページ -> アクション単体ページ と遷移してきた場合は、プロファイルのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/users/view_actions/") !== false): ?>
+elseif ($displayBackButtonUsers): ?>
     <a href="#"
        class="btn-back btn-back-actions">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php
 // ゴール -> アクション単体ページ と遷移してきた場合は、ゴールのアクション一覧に戻るボタンを表示する
-elseif (isset($this->request->params['post_id']) && strpos($_SERVER['HTTP_REFERER'],"/goals/view_actions/") !== false): ?>
+elseif ($displayBackButtonGoals): ?>
     <a href="#"
        class="btn-back btn-back-goals">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
