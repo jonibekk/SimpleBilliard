@@ -1,6 +1,7 @@
 <?php
 App::import('Service/Api', 'ApiService');
 App::import('Lib/Paging', 'PagingServiceTrait');
+App::import('Lib/Paging', 'PagingServiceInterface');
 App::uses('TimeExHelper', 'View/Helper');
 
 /**

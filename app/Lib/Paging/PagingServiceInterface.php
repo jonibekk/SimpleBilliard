@@ -9,6 +9,8 @@
 interface PagingServiceInterface
 {
     /**
+     * Implement method using PagingServiceTrait
+     *
      * @param PagingCursor $pagingCursor
      * @param int          $limit
      * @param array        $extendFlags

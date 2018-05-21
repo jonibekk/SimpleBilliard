@@ -8,15 +8,12 @@
  */
 trait PagingControllerTrait
 {
-
     /**
      * Get paging conditions from request
      *
-     * @param CakeRequest $request
-     *
      * @return PagingCursor
      */
-    abstract protected function getPagingConditionFromRequest(CakeRequest $request): PagingCursor;
+    abstract protected function getPagingConditionFromRequest(): PagingCursor;
 
     /**
      * Based on model's DB query condition
@@ -42,25 +39,17 @@ trait PagingControllerTrait
     }
 
     /**
-     * Method for reading data from db using paging
+     * Method for getting paging parameters from request
      *
-     * @param CakeRequest            $request
-     * @param PagingServiceInterface $pagingService
-     * @param int                    $limit
-     * @param bool                   $skipCursor  Skip using cursor, force using request as paging parameters
-     * @param array                  $extendFlags Data extension flags
+     * @param CakeRequest $request
+     * @param bool        $skipCursor Force to get parameters from request, instead of given cursor
      *
-     * @return array
+     * @return PagingCursor
      */
-    protected function readData(
-        CakeRequest $request,
-        PagingServiceInterface $pagingService,
-        int $limit,
-        bool $skipCursor = false,
-        array $extendFlags
-    ) {
-        if (empty($pagingService) || empty ($request)) {
-            return [];
+    protected function getPagingParameters(CakeRequest $request, bool $skipCursor)
+    {
+        if (empty ($request)) {
+            return new PagingCursor();
         }
 
         $pagingCursor = $this->getPagingConditionFromCursor($request);
@@ -73,9 +62,6 @@ trait PagingControllerTrait
         //Merge existing condition with resource ID embedded in URL
         $pagingCursor->addCondition($this->getResourceIdForCondition());
 
-        return $pagingService->getDataWithPaging(
-            $pagingCursor,
-            $limit,
-            $extendFlags);
+        return $pagingCursor;
     }
 }
