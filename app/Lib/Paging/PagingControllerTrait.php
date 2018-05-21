@@ -44,17 +44,17 @@ trait PagingControllerTrait
     /**
      * Method for reading data from db using paging
      *
-     * @param CakeRequest        $request
-     * @param PagingServiceTrait $pagingService
-     * @param int                $limit
-     * @param bool               $skipCursor  Skip using cursor, force using request as paging parameters
-     * @param array              $extendFlags Data extension flags
+     * @param CakeRequest            $request
+     * @param PagingServiceInterface $pagingService
+     * @param int                    $limit
+     * @param bool                   $skipCursor  Skip using cursor, force using request as paging parameters
+     * @param array                  $extendFlags Data extension flags
      *
      * @return array
      */
     protected function readData(
         CakeRequest $request,
-        PagingServiceTrait $pagingService,
+        PagingServiceInterface $pagingService,
         int $limit,
         bool $skipCursor = false,
         array $extendFlags

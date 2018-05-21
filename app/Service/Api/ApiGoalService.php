@@ -6,7 +6,7 @@ App::uses('TimeExHelper', 'View/Helper');
 /**
  * Class AppService
  */
-class ApiGoalService extends ApiService
+class ApiGoalService extends ApiService implements PagingServiceInterface
 {
     use PagingServiceTrait;
 

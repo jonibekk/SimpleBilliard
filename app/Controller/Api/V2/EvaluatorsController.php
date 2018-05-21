@@ -66,7 +66,7 @@ class EvaluatorsController extends ApiV2Controller
         $this->Notification->outSuccess(__("Evaluator setting saved."));
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))
-            ->returnResponse();
+            ->getResponse();
 
     }
 
@@ -141,7 +141,7 @@ class EvaluatorsController extends ApiV2Controller
 
         if (!$ExperimentService->isDefined(Experiment::NAME_ENABLE_EVALUATION_FEATURE)) {
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage('Team has no evaluation feature')
-                                                                       ->returnResponse();
+                                                                       ->getResponse();
         }
 
         $teamId = $this->getTeamId();
@@ -152,7 +152,7 @@ class EvaluatorsController extends ApiV2Controller
         //Check if user has authority to set evaluators
         if ($userId != $evaluateeUserId && $userId != $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId)) {
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__('You have no permission.'))
-                                                                       ->returnResponse();
+                                                                       ->getResponse();
         }
 
         $inactiveUsersList = $this->User->filterUsersOnTeamActivity($teamId, $evaluatorUserIds, false);
@@ -161,7 +161,7 @@ class EvaluatorsController extends ApiV2Controller
             $connectorString = (count($inactiveUsersList) > 1) ? ' are ' : ' is ';
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__('%s %s inactive',
                 implode(", ", Hash::extract($inactiveUsersList, '{n}.User.display_username')), $connectorString))
-                                                                       ->returnResponse();
+                                                                       ->getResponse();
         }
     }
 

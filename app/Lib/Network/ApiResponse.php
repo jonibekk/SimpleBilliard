@@ -10,9 +10,9 @@
  * Class ApiResponse Wrapper of CakeResponse class
  * Use method chaining to add content into the response.
  * Usage sample:
- *  return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData('this')->returnResponse();
+ *  return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData('this')->getResponse();
  *  return (new ApiResponse(ApiResponse::RESPONSE_RESOURCE_CONFLICT))->withMessage('conflict')
- *      ->withExceptionTrace(array())->returnResponse();
+ *      ->withExceptionTrace(array())->getResponse();
  */
 class ApiResponse extends CakeResponse
 {
@@ -194,7 +194,7 @@ class ApiResponse extends CakeResponse
      *
      * @return CakeResponse
      */
-    public function returnResponse(): CakeResponse
+    public function getResponse(): CakeResponse
     {
         $this->type('json');
         $this->header($this->_responseHeader);

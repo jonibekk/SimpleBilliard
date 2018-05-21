@@ -207,7 +207,7 @@ class PagingCursor
      */
     public static function decodeCursorToObject(string $cursor)
     {
-        $values = json_decode(base64_decode($cursor), true);
+        $values = self::decodeCursorToArray($cursor);
 
         $self = new self($values['conditions'], $values['pointer'], $values['order']);
 
