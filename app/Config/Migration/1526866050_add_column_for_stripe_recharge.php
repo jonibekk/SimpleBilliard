@@ -17,13 +17,13 @@ class AddColumnForStripeRecharge extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'charge_histories' => array(
-					'reorder_stripe_payment_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'stripe payment id. when reordering stripe charge', 'charset' => 'utf8mb4', 'after' => 'stripe_payment_code'),
+					'reorder_charge_history_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'charge_histories.id that is target to be reordered', 'after' => 'stripe_payment_code'),
 				),
 			),
 		),
 		'down' => array(
 			'drop_field' => array(
-				'charge_histories' => array('reorder_stripe_payment_code'),
+				'charge_histories' => array('reorder_charge_history_id'),
 			),
 		),
 	);
