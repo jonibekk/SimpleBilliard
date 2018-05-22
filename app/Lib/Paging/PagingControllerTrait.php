@@ -46,7 +46,7 @@ trait PagingControllerTrait
      *
      * @return PagingCursor
      */
-    protected function getPagingParameters(CakeRequest $request, bool $skipCursor)
+    protected function getPagingParameters(CakeRequest $request, bool $skipCursor = false)
     {
         if (empty ($request)) {
             return new PagingCursor();
