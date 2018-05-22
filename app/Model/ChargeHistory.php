@@ -9,7 +9,7 @@ use Goalous\Model\Enum as Enum;
 class ChargeHistory extends AppModel
 {
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\PaymentType
+     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
      */
     const PAYMENT_TYPE_INVOICE = 0;
     const PAYMENT_TYPE_CREDIT_CARD = 1;

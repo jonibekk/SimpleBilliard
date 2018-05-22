@@ -72,8 +72,8 @@ class ReorderCreditCardShell extends AppShell
                 $this->logError(sprintf('Target `%s` not found', static::OPTION_NAME_CHARGE_HISTORY_ID));
                 return;
             }
-            $paymentType = new Enum\ChargeHistory\PaymentType(intval($chargeHistory['payment_type']));
-            if (!$paymentType->equals(Enum\ChargeHistory\PaymentType::CREDIT_CARD())) {
+            $paymentType = new Enum\PaymentSetting\Type(intval($chargeHistory['payment_type']));
+            if (!$paymentType->equals(Enum\PaymentSetting\Type::CREDIT_CARD())) {
                 $this->logError(sprintf('Target `%s` is not payed by credit card %s', static::OPTION_NAME_CHARGE_HISTORY_ID, AppUtil::jsonOneLine($chargeHistory)));
                 return;
             }
