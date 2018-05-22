@@ -662,6 +662,7 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
         // assert failed history is saved
         $this->assertEquals(Enum\ChargeHistory\ResultType::FAIL, $hist['ChargeHistory']['result_type']);
+        $this->assertNotEmpty($hist['ChargeHistory']['stripe_payment_code']);
         $this->CreditCardService->deleteCustomer($customer["customer_id"]);
     }
 
