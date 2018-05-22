@@ -273,6 +273,7 @@ $(function () {
         $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
+        hideNav();
     });
     $(window).on('resize load pageshow', function(){
       if($(window).width() !== lastWidth){
