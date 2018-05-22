@@ -1484,6 +1484,9 @@ class NotifyBizComponent extends Component
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
             $notify_type);
+        foreach($to_user_ids as $toUserId) {
+            $this->notify_settings[$toUserId]['app'] = true;
+        }
         if (!is_null($comment_id)) {
             $comment = $this->Post->Comment->read(null, $comment_id);
         }
