@@ -812,6 +812,7 @@ class PaymentService extends AppService
                 }
             } else {
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
+                $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
             }
 
             // Update Charge history
