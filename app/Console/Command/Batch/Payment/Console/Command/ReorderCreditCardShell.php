@@ -72,6 +72,7 @@ class ReorderCreditCardShell extends AppShell
                 $this->logError(sprintf('Target `%s` not found', static::OPTION_NAME_CHARGE_HISTORY_ID));
                 return;
             }
+            $teamId = $chargeHistory['team_id'];
             $paymentType = new Enum\PaymentSetting\Type(intval($chargeHistory['payment_type']));
             if (!$paymentType->equals(Enum\PaymentSetting\Type::CREDIT_CARD())) {
                 $this->logError(sprintf('Target `%s` is not payed by credit card %s', static::OPTION_NAME_CHARGE_HISTORY_ID, AppUtil::jsonOneLine($chargeHistory)));
@@ -92,38 +93,62 @@ class ReorderCreditCardShell extends AppShell
             $PaymentService = ClassRegistry::init('PaymentService');
             $stripeResult = $PaymentService->reorderCreditCardCharge($chargeHistory);
 
-            $this->hr();
-            if ($stripeResult['status'] === 'succeeded') {
-                $this->logInfo('Succeeded');
-                $newChargeHistoryId = $stripeResult['paymentData']['metadata']['history_id'];
-                $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
-                $teamId = $newChargeHistory['team_id'];
-                $this->logInfo(var_export($newChargeHistory, true));
+            $isSucceeded = ($stripeResult['status'] === Enum\Stripe\StripeStatus::SUCCEEDED);
 
-                // Send notification email
-                /** @var TeamMember $TeamMember */
-                $TeamMember = ClassRegistry::init('TeamMember');
-                $adminList = $TeamMember->findAdminList($teamId);
-                if (!empty($adminList)) {
-                    // sending emails to each admins.
-                    $this->logInfo(sprintf('Sending email to %d users', count($adminList)));
-                    foreach ($adminList as $toUid) {
-                        $this->GlEmail->sendMailRecharge($toUid, $teamId);
-                    }
-                } else {
-                    $this->logError("This team have no admin: $teamId");
-                }
-            } else {
-                $this->logError('Failed');
-                $this->logError(sprintf('Stripe order failed %s', AppUtil::jsonOneLine([
-                    'stripeResult' => $stripeResult,
-                ])));
+            $this->logResult($isSucceeded, $stripeResult);
+
+            if ($isSucceeded) {
+                $this->sendMailRechargeToAdmins($teamId);
             }
         } catch (Exception $e) {
-            $this->logError(sprintf("Caught error on reordering by Stripe: %s", AppUtil::jsonOneLine([
+            $this->logEmergency(sprintf("Caught error on reordering by Stripe: %s", AppUtil::jsonOneLine([
                 'message' => $e->getMessage(),
             ])));
-            $this->logError($e->getTraceAsString());
+            $this->logEmergency($e->getTraceAsString());
+        }
+    }
+
+    /**
+     * Output result to log
+     *
+     * @param bool  $isSucceeded
+     * @param array $stripeResult
+     */
+    public function logResult(bool $isSucceeded, array $stripeResult)
+    {
+        $this->hr();
+        if ($isSucceeded) {
+            $this->logInfo('Succeeded');
+            $newChargeHistoryId = $stripeResult['paymentData']['metadata']['history_id'];
+            $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
+            $this->logInfo(var_export($newChargeHistory, true));
+        } else {
+            $this->logError('Failed');
+            $this->logError(sprintf('Stripe order failed %s', AppUtil::jsonOneLine([
+                'stripeResult' => $stripeResult,
+            ])));
+        }
+    }
+
+    /**
+     * Send reorder complete email to target teams.id admins
+     *
+     * @param int $teamId
+     */
+    public function sendMailRechargeToAdmins(int $teamId)
+    {
+        // Send notification email
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $adminList = $TeamMember->findAdminList($teamId);
+        if (!empty($adminList)) {
+            // sending emails to each admins.
+            $this->logInfo(sprintf('Sending email to %d users', count($adminList)));
+            foreach ($adminList as $toUid) {
+                $this->GlEmail->sendMailRecharge($toUid, $teamId);
+            }
+        } else {
+            $this->logError("This team have no admin: $teamId");
         }
     }
 }
