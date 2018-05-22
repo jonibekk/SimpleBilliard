@@ -10,14 +10,24 @@ use Goalous\Model\Enum as Enum;
 /**
  * class ReorderCreditCardShell
  *
- * # Usage
+ * @see
+ *     This sentence below is a things we want to achieve in future.
+ *     This batch is reordering Stripe charge by manually.
+ *     We want to automate reorder in future,
+ *     when team's credit card is updated
+ *     or team that latest payment is failed keep retrying reorder.
  *
+ *     このShellは再請求を手動実行する物です.
+ *     しかし, 将来的には以下のタイミング等で再請求を自動化したい.
+ *     - チームのカード情報が更新された
+ *     - 最新の決済が失敗しているチームに対して一定間隔で決済を行い続ける
+ *
+ * # Usage
  * ```
  * ./Console/cake Payment.reorder_credit_card --reorderChargeHistoryId=<charge_histories.id>
  * # e.g.
  * ./Console/cake Payment.reorder_credit_card --reorderChargeHistoryId=1
  * ```
- *
  * @property GlEmailComponent $GlEmail
  * @property ChargeHistory $ChargeHistory
  * @property TeamMember       $TeamMember
