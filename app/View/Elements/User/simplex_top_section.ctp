@@ -79,7 +79,7 @@
                     <i class="fa fa-pencil mr_5px"></i><span><?= __('Edit Profile') ?></span>
                 </a>
             <?php else: ?>
-                <?php if ($user['User']['active_flg'] && $user['TeamMember']['status'] !=2 ): ?>
+                <?php if ($user['User']['active_flg'] && $user['TeamMember']['status'] != Goalous\Model\Enum\TeamMember\Status::INACTIVE ): ?>
                     <a href="/topics/create?user_id=<?= $user['User']['id'] ?>" class="btn-pink-radius">
                         <i class="fa fa-paper-plane-o mr_5px"></i><span><?= __('Message') ?></span>
                     </a>
