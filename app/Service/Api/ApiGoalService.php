@@ -1,12 +1,16 @@
 <?php
 App::import('Service/Api', 'ApiService');
+App::import('Lib/Paging', 'PagingServiceTrait');
+App::import('Lib/Paging', 'PagingServiceInterface');
 App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Class AppService
  */
-class ApiGoalService extends ApiService
+class ApiGoalService extends ApiService implements PagingServiceInterface
 {
+    use PagingServiceTrait;
+
     // ゴール検索デフォルト取得件数
     const GOAL_SEARCH_DEFAULT_LIMIT = 10;
 
@@ -296,4 +300,15 @@ class ApiGoalService extends ApiService
 
         return $ret;
     }
+
+    protected function readData($pagingCursor, $limit): array
+    {
+        // TODO: Implement readData() method.
+    }
+
+    protected function countData($conditions): int
+    {
+        // TODO: Implement countData() method.
+    }
+
 }

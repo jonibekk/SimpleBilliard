@@ -10,8 +10,6 @@ App::import('Service', 'TermService');
 App::import('Service', 'TermService');
 App::import('Service', 'ExperimentService');
 
-use Goalous\Model\Enum as Enum;
-
 /**
  * Users Controller
  *
@@ -891,7 +889,8 @@ class UsersController extends AppController
             $with_group = boolval($query['with_group'] ?? false);
             $with_self = boolval($query['with_self'] ?? false);
             $excludedUsers = array_values($query['excluded_users'] ?? []);
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self, $excludedUsers);
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self,
+                $excludedUsers);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
             $res['results'] = $this->Mention::filterAsMentionableUser($query['in_post_id'], $res['results']);
@@ -1558,6 +1557,7 @@ class UsersController extends AppController
          * @var SubscribeEmail $SubscribeEmail
          */
         $SubscribeEmail = ClassRegistry::init('SubscribeEmail');
+
         if (!$SubscribeEmail->save($this->request->data)) {
             $this->Notification->outError($SubscribeEmail->validationErrors['email'][0]);
             return $this->redirect($this->referer());

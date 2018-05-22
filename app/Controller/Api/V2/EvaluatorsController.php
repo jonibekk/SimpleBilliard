@@ -16,6 +16,8 @@ App::uses('TeamMember', 'Model');
  */
 class EvaluatorsController extends ApiV2Controller
 {
+    use PagingControllerTrait;
+
     public $components = [
         'Notification',
     ];
@@ -103,6 +105,18 @@ class EvaluatorsController extends ApiV2Controller
             $teamId);
     }
 
+    protected function getPagingConditionFromRequest(CakeRequest $request): PagingCursor
+    {
+        // TODO: Implement getPagingConditionFromRequest() method.
+    }
+
+    protected function getResourceIdForCondition(): array
+    {
+        // TODO: Implement getResourceIdForCondition() method.
+    }
+
+
+
     /**
      * Validate parameters prior to data manipulations
      *
@@ -126,7 +140,7 @@ class EvaluatorsController extends ApiV2Controller
         $ExperimentService = ClassRegistry::init("ExperimentService");
 
         if (!$ExperimentService->isDefined(Experiment::NAME_ENABLE_EVALUATION_FEATURE)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage('Team has no evaluation feature')
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage('Team has no evaluation feature')
                                                                        ->getResponse();
         }
 
@@ -137,7 +151,7 @@ class EvaluatorsController extends ApiV2Controller
 
         //Check if user has authority to set evaluators
         if ($userId != $evaluateeUserId && $userId != $TeamMember->getCoachUserIdByMemberUserId($evaluateeUserId)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage(__('You have no permission.'))
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__('You have no permission.'))
                                                                        ->getResponse();
         }
 
@@ -145,7 +159,7 @@ class EvaluatorsController extends ApiV2Controller
 
         if (count($inactiveUsersList) > 0) {
             $connectorString = (count($inactiveUsersList) > 1) ? ' are ' : ' is ';
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage(__('%s %s inactive',
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__('%s %s inactive',
                 implode(", ", Hash::extract($inactiveUsersList, '{n}.User.display_username')), $connectorString))
                                                                        ->getResponse();
         }
