@@ -177,7 +177,7 @@
                         ['class' => 'header-nav-function-contents-evaluation'])
                     ?>
                     <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
-                        <span class="header-nav-function-eval-count">14</span>
+                        <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
                     <?php endif; ?>
                 </li>
             <?php endif; ?>
