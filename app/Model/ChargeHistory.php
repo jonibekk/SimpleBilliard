@@ -415,6 +415,7 @@ class ChargeHistory extends AppModel
                 'ChargeHistory.charge_users',
                 'ChargeHistory.charge_type',
                 'ChargeHistory.result_type',
+                'ChargeHistory.reorder_charge_history_id',
                 'Team.name',
                 'PaymentSetting.company_country',
                 'PaymentSetting.company_name',
