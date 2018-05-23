@@ -28,3 +28,10 @@ https://jira.goalous.com/browse/GL-****
 - [ ] If a variable was renamed, ensure no error in all instances after refactoring 
 - [ ] If a method and/or its arguments were renamed, ensure no error in all instances after refactoring
 - [ ] DB migration files are combined to one if the PR include the file of that type 
+
+## Checklist after merged 
+- [ ] Delete branch if the branch is unnecessary
+- [ ] Do [these procedures](https://confluence.goalous.com/x/KgEQAQ) defintely for release version management if you merged to `master` or `master-isao branch`
+
+## Important pages related PR
+https://confluence.goalous.com/x/SQEQAQ
