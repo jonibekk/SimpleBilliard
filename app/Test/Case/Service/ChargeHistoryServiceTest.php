@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'ChargeHistoryService');
 App::import('DateTime', 'GoalousDateTime');
 
@@ -13,6 +14,8 @@ use Goalous\Model\Enum as Enum;
  */
 class ChargeHistoryServiceTest extends GoalousTestCase
 {
+    use AtobaraiResponseTraits;
+
     /**
      * Fixtures
      *
@@ -413,6 +416,14 @@ class ChargeHistoryServiceTest extends GoalousTestCase
                 'charge_datetime'  => strtotime('2018-02-28')
             ]
         );
+
+        // mocking credit invoice as succeed
+        $returningOrderId = 'AK12345678';
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', @$returningOrderId, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
         $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
         $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
         $arrayForReceipt = $this->ChargeHistoryService->getReceipt($lastInsertedChargeHistoryId);
