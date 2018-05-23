@@ -16,7 +16,7 @@ class PagingCursor
      * DB query ordering
      *
      * @var array
-     *      [$column_name, ASC/DESC]
+     *      [$column_name => ASC/DESC]
      */
     private $order;
 
@@ -67,7 +67,7 @@ class PagingCursor
      */
     public function addOrder($key, $order = self::PAGE_ORDER_DESC)
     {
-        $this->order[] = [$key, $order];
+        $this->order[] = [$key => $order];
     }
 
     /**
@@ -120,6 +120,22 @@ class PagingCursor
     public function getPointers()
     {
         return $this->pointerValues;
+    }
+
+    /**
+     * Get all stored pointers in CakePHP SQL query condition format
+     *
+     * @return array
+     */
+    public function getPointersAsQueryOption()
+    {
+        $result = array();
+
+        foreach ($this->pointerValues as $row) {
+            $result[] = [$row[0] . ' ' . $row[1] => $row[2]];
+        }
+
+        return $result;
     }
 
     /**

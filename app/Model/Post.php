@@ -501,10 +501,10 @@ class Post extends AppModel
             }
             // 読み込む投稿の更新時間が指定されている場合
             if ($post_time_before) {
-                  // [Hotfix]https://jira.goalous.com/browse/GL-6888
-                  // This condition conflicts `Post.created BETWEEN {$start} and {$end}, so the bug that past posts cant' get has been occurred.
-                  // In addition, $past_time_before value is not appropriate
-                  // We shouldn't use this condition.
+                // [Hotfix]https://jira.goalous.com/browse/GL-6888
+                // This condition conflicts `Post.created BETWEEN {$start} and {$end}, so the bug that past posts cant' get has been occurred.
+                // In addition, $past_time_before value is not appropriate
+                // We shouldn't use this condition.
 //                $order_col = key($post_options['order']);
 //                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
@@ -758,7 +758,7 @@ class Post extends AppModel
      * @param array     $params
      *                 'user_id' : 指定すると投稿者で絞る
      *
-     * @return array|null
+     * @return string|null
      */
     public function getSubQueryFilterPostIdShareWithMe(DboSource $db, $start, $end, array $params = [])
     {
@@ -986,7 +986,7 @@ class Post extends AppModel
      * @param array     $params
      *                 'user_id' : 指定すると投稿者IDで絞る
      *
-     * @return array|null
+     * @return string|null
      */
     public function getSubQueryFilterAccessibleCirclePostList(DboSource $db, $start, $end, array $params = [])
     {

@@ -15,7 +15,7 @@ trait PagingServiceTrait
      *
      * @return array
      */
-    public function getDataWithPaging(
+    public final function getDataWithPaging(
         $pagingCursor,
         $limit = PagingCursor::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
@@ -40,10 +40,8 @@ trait PagingServiceTrait
         if (count($queryResult) > $limit) {
             array_pop($queryResult);
 
-            //Get start & end pointer values
-            $endPointerValue = $this->getEndPointerValue($queryResult[--$limit]);
-
-            $pagingCursor->setPointer($endPointerValue);
+            //Set end pointer values
+            $pagingCursor->setPointer($this->getEndPointerValue($queryResult[--$limit]));
 
             $finalResult['paging']['next'] = PagingCursor::createPageCursor($pagingCursor->returnCursor());
         }
@@ -51,9 +49,9 @@ trait PagingServiceTrait
         //If there is previous result
         //Non-empty pointers means not the first page
         if (count($queryResult) > 0 && !empty($pointerValues)) {
-            $startPointerValue = $this->getStartPointerValue($queryResult[0]);
 
-            $pagingCursor->setPointer($startPointerValue);
+            //Set start pointer value
+            $pagingCursor->setPointer($this->getStartPointerValue($queryResult[0]));
 
             $finalResult['paging']['prev'] = PagingCursor::createPageCursor($pagingCursor->returnCursor());
         }
