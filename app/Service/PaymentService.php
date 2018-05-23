@@ -854,10 +854,14 @@ class PaymentService extends AppService
 
         $subTotalCharge = $targetChargeHistory['total_amount'];
         $tax            = $targetChargeHistory['tax'];
+
+        // TODO: Currently several codes are using bcmath with magic number.
+        // We have to replace this.
+        $totalCharge    = bcadd($subTotalCharge, $tax, 2);
         $chargeInfo = [
             'sub_total_charge'            => $subTotalCharge,
             'tax'                         => $tax,
-            'total_charge'                => $subTotalCharge + $tax,
+            'total_charge'                => $totalCharge,
             'reorder_charge_history_id'   => $targetChargeHistoryId,
         ];
 
