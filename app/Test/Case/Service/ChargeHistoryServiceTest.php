@@ -8,6 +8,7 @@ use Goalous\Model\Enum as Enum;
 /**
  * Class ChargeHistoryService
  *
+ * @property PaymentService          $PaymentService
  * @property ChargeHistoryService $ChargeHistoryService
  */
 class ChargeHistoryServiceTest extends GoalousTestCase
@@ -27,6 +28,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         'app.team_member',
         'app.price_plan_purchase_team',
         'app.campaign_team',
+        'app.invoice_history',
+        'app.invoice_histories_charge_history',
     ];
 
     /**
@@ -39,6 +42,7 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         parent::setUp();
         $this->ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
         $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $this->PaymentService = ClassRegistry::init('PaymentService');
         $this->ChargeHistory = ClassRegistry::init('ChargeHistory');
         $this->CreditCard = ClassRegistry::init('CreditCard');
     }
@@ -384,5 +388,55 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->assertEquals($res['total_amount'], 12000);
         $this->assertEquals($res['tax'], 960);
         $this->assertEquals($res['charge_datetime'], GoalousDateTime::now()->getTimestamp());
+    }
+
+    public function test_processForReceiptRechargeInvoice()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createInvoicePaidTeam($team, $paySetting);
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => GoalousDateTime::now()->getTimestamp(),
+                'system_order_code' => "test1",
+                'order_status'      => Enum\Invoice\CreditStatus::NG
+            ],
+            [
+                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'amount_per_user'  => 1980,
+                'total_amount'     => 3960,
+                'tax'              => 310,
+                'charge_users'     => 2,
+                'max_charge_users' => 2,
+                'charge_datetime'  => strtotime('2018-02-28')
+            ]
+        );
+        $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $arrayForReceipt = $this->ChargeHistoryService->getReceipt($lastInsertedChargeHistoryId);
+        $this->assertEquals($chargeHistoryId, $arrayForReceipt["ChargeHistory"]["recharge_history_ids"][0]);
+    }
+
+    public function test_processForReceiptRechargeCreditCard()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paySetting);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type'    => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'total_amount'    => 2000,
+            'tax'             => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type'     => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_users'    => 20
+        ]);
+        $this->PaymentService->reorderCreditCardCharge($this->ChargeHistory->getById($historyId));
+        $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $arrayForReceipt = $this->ChargeHistoryService->getReceipt($lastInsertedChargeHistoryId);
+        $this->assertEquals($historyId, $arrayForReceipt["ChargeHistory"]["recharge_history_ids"][0]);
     }
 }
