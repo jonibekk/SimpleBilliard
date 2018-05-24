@@ -14,7 +14,7 @@
         <div class="header-white-bg mod-mb-app"></div>
     <?php endif; ?>
 </div>
-<div class="<?= $is_mb_app ? 'mb-minimum-container' : 'minimum-container' ?> visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
+<div class="<?= $is_mb_app ? (isset($setup_rest_count) && $setup_rest_count >= 1 ? 'mb-minimum-container' : 'mb-minimum-container2') : 'minimum-container' ?> visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
     <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
         <?= $this->element('Header/logged_in_right'); ?>  
     </div>
