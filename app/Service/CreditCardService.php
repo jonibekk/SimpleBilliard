@@ -370,10 +370,15 @@ class CreditCardService extends AppService
              *
              * @see https://stripe.com/docs/api#error_handling
              */
+            $jsonBody = $e->getJsonBody();
+            // $jsonBody['error']['charge'] containing stripe charge id when failed
+            $paymentId = $jsonBody['error']['charge'] ?? '';
             $result["isApiRequestSucceed"] = true;
             $result["success"] = false;
             $result["error"] = true;
             $result["message"] = $e->getMessage();
+            $result["paymentId"] = $paymentId;
+
             CakeLog::notice(sprintf("[%s]%s  data:%s",
                 __METHOD__,
                 $e->getMessage(),

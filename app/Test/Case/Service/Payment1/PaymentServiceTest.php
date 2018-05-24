@@ -662,6 +662,7 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
         // assert failed history is saved
         $this->assertEquals(Enum\ChargeHistory\ResultType::FAIL, $hist['ChargeHistory']['result_type']);
+        $this->assertNotEmpty($hist['ChargeHistory']['stripe_payment_code']);
         $this->CreditCardService->deleteCustomer($customer["customer_id"]);
     }
 
@@ -2659,7 +2660,6 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $updateData = [
-            'team_id'                        => $teamId + 1, // no existing team
             'type'                           => Enum\PaymentSetting\Type::INVOICE,
             'company_name'                   => 'ISAO2',
             'company_post_code'              => '111111',
@@ -2674,6 +2674,9 @@ class PaymentServiceTest extends GoalousTestCase
             'contact_person_last_name'       => 'Stark',
             'contact_person_last_name_kana'  => 'スターク',
         ];
+
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $paymentSettingsUpdateBefore = $this->PaymentSettingChangeLog->findByPaymentSettingId($paySetting['id']);
 
         // Update payment data
         $userId = $this->createActiveUser($teamId);
@@ -2698,6 +2701,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($data['contact_person_last_name'], 'Stark');
         $this->assertEquals($data['contact_person_last_name_kana'], null);
 
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $paymentSettingsUpdateAfter = $this->PaymentSettingChangeLog->findByPaymentSettingId($paySetting['id']);
+        $this->assertTrue(count($paymentSettingsUpdateBefore) < count($paymentSettingsUpdateAfter));
     }
 
     public function test_updatePayerInfo_invoice()
@@ -2946,6 +2952,9 @@ class PaymentServiceTest extends GoalousTestCase
             3);
         $this->assertEquals($res, 3);
 
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::RECHARGE(), 3);
+        $this->assertEquals($res, 3);
+
     }
 
     public function test_getChargeMaxUserCnt_existChargeHistory()
@@ -2986,6 +2995,9 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             20);
         $this->assertEquals($res, 25);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::RECHARGE(), 3);
+        $this->assertEquals($res, 3);
 
     }
 
@@ -4473,6 +4485,31 @@ class PaymentServiceTest extends GoalousTestCase
             'invoice_history_id' => $newInvoiceHistoryId,
         ]);
         $this->assertNotEmpty($matchingHistories);
+    }
+
+    function test_reorderCreditCardCharge()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paySetting);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type'    => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'total_amount'    => 2000,
+            'tax'             => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type'     => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_users'    => 20
+        ]);
+        $this->PaymentService->reorderCreditCardCharge($this->ChargeHistory->getById($historyId));
+        $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $reorderedChargeHistory = $this->ChargeHistory->getById($lastInsertedChargeHistoryId);
+
+        $this->assertEquals(2000, $reorderedChargeHistory['total_amount']);
+        $this->assertEquals(20, $reorderedChargeHistory['tax']);
+        $this->assertEquals(Enum\ChargeHistory\ChargeType::RECHARGE, $reorderedChargeHistory['charge_type']);
+        $this->assertEquals($historyId, $reorderedChargeHistory['reorder_charge_history_id']);
     }
 
     /**

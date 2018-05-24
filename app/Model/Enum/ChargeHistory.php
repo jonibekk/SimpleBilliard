@@ -8,6 +8,7 @@ use MyCLabs\Enum\Enum;
  * @method static static USER_INCREMENT_FEE()
  * @method static static USER_ACTIVATION_FEE()
  * @method static static UPGRADE_PLAN_DIFF()
+ * @method static static RECHARGE()
  */
 class ChargeType extends Enum
 {

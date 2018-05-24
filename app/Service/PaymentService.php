@@ -805,8 +805,14 @@ class PaymentService extends AppService
             if ($chargeRes['success']) {
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
+
+                // If this charging is reordering, set reorder_charge_history_id to the new record
+                if ($chargeType->equals(Enum\ChargeHistory\ChargeType::RECHARGE())) {
+                    $updateHistory['reorder_charge_history_id'] = $chargeInfo['reorder_charge_history_id'];
+                }
             } else {
                 $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
+                $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
             }
 
             // Update Charge history
@@ -831,6 +837,45 @@ class PaymentService extends AppService
     }
 
     /**
+     * Reordering specified charge history
+     *
+     * @param array $targetChargeHistory
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function reorderCreditCardCharge(array $targetChargeHistory): array
+    {
+        $targetChargeHistoryId = $targetChargeHistory['id'];
+        $teamId = $targetChargeHistory['team_id'];
+        $opeUserId = $targetChargeHistory['user_id'];
+        $usersCount = $targetChargeHistory['charge_users'];
+        $timeStampChargeTime = GoalousDateTime::now()->getTimestamp();
+
+        $subTotalCharge = $targetChargeHistory['total_amount'];
+        $tax            = $targetChargeHistory['tax'];
+
+        // TODO: Currently several codes are using bcmath with magic number.
+        // We have to replace this.
+        $totalCharge    = bcadd($subTotalCharge, $tax, 2);
+        $chargeInfo = [
+            'sub_total_charge'            => $subTotalCharge,
+            'tax'                         => $tax,
+            'total_charge'                => $totalCharge,
+            'reorder_charge_history_id'   => $targetChargeHistoryId,
+        ];
+
+        return $this->applyCreditCardCharge(
+            $teamId,
+            Enum\ChargeHistory\ChargeType::RECHARGE(),
+            $usersCount,
+            $opeUserId,
+            $timeStampChargeTime,
+            $chargeInfo
+            );
+    }
+
+    /**
      * Get charge max user cnt by charge type
      *
      * @param int                           $teamId
@@ -845,6 +890,9 @@ class PaymentService extends AppService
         int $usersCount
     ) {
         if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            return $usersCount;
+        }
+        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::RECHARGE) {
             return $usersCount;
         }
 
@@ -1813,16 +1861,16 @@ class PaymentService extends AppService
             $PaymentSetting->begin();
 
             // Save Payment Settings
-            if (!$PaymentSetting->save($data, false)) {
+            $updatedPaymentSetting = $PaymentSetting->save($data, false);
+            if (false === $updatedPaymentSetting) {
                 throw new Exception(sprintf("Fail to update payment settings. data: %s",
                     AppUtil::varExportOneLine($data)));
             }
-            $paymentSettingId = $PaymentSetting->getLastInsertID();
 
             // Save snapshot
             /** @var PaymentSettingChangeLog $PaymentSettingChangeLog */
             $PaymentSettingChangeLog = ClassRegistry::init('PaymentSettingChangeLog');
-            $PaymentSettingChangeLog->saveSnapshot($paymentSettingId, $userId);
+            $PaymentSettingChangeLog->saveSnapshot($updatedPaymentSetting['PaymentSetting']['id'], $userId);
 
             $PaymentSetting->commit();
         } catch (Exception $e) {
