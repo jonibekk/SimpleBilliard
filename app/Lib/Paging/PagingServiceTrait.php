@@ -9,6 +9,8 @@
 trait PagingServiceTrait
 {
     /**
+     * Implement interface PagingServiceInterface, should this trait used in a class
+     *
      * @param PagingCursor $pagingCursor
      * @param int          $limit
      * @param array        $extendFlags
@@ -128,7 +130,7 @@ trait PagingServiceTrait
      */
     protected function getStartPointerValue($firstElement)
     {
-        return ['id', ">", $firstElement['id']];
+        return ['id', "<", $firstElement['id']];
     }
 
     /**
@@ -141,7 +143,7 @@ trait PagingServiceTrait
      */
     protected function getEndPointerValue($lastElement)
     {
-        return ['id', "<", $lastElement['id']];
+        return ['id', ">", $lastElement['id']];
     }
 
 }

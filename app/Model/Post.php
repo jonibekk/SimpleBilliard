@@ -831,7 +831,7 @@ class Post extends AppModel
      * @param            $end
      * @param array      $post_types
      *
-     * @return array
+     * @return string
      */
     public function getSubQueryFilterRelatedGoalPost(DboSource $db, $start, $end, $post_types)
     {
@@ -1504,7 +1504,8 @@ class Post extends AppModel
         if ($endTimestamp) {
             $options['conditions']["$date_col <="] = $endTimestamp;
         }
-        $res = $this->find('count', $options);
+        $res = (int) $this->find('count', $options);
+
         return $res;
     }
 
