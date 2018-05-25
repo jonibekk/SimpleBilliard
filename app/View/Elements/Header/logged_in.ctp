@@ -23,7 +23,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <header class="header">
-    <div id="goalousNavigation" class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app_ios_high_header ? "mb-app-nav" : null ?>"
+    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app_ios_high_header ? "mb-app-nav" : null ?>"
          id="header" >
         <div class="nav-container header-container">
             <?php
@@ -32,7 +32,7 @@
                 <?= $this->element('Header/back_btn') ?>
             <?php } else { ?>
                 <?= $this->element('Header/navigation'); ?>
-                <?= $this->element('Header/search'); ?>
+                <?= $this->element('Header/logged_in_right'); ?>
             <?php } ?>
         </div>
     </div>

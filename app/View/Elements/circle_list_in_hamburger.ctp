@@ -25,26 +25,25 @@
             </div>
         <?php endif; ?>
         </ul>
-        <div class="circle-list-footer-hamburger">
-    <div class="clearfix develop--circle-seek mtb_15px">
-        <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i>
-        <a href="#" 
-            data-url="<?= $this->Html->url([
-                'controller' => 'circles',
-                'action' => 'ajax_get_public_circles_modal'
-            ]) ?>"
-            class="modal-ajax-get-public-circles"
-        >
-            <?= __("Discover more circles") ?>
-        </a>
-    </div>
-    <div class="clearfix develop--circle-make">
-        <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i>
-        <a href="#" data-toggle="modal" data-target="#modal_add_circle">
-            <?= __("Create a circle") ?>
-        </a>
+    <div class="circle-list-footer">
+        <div class="clearfix develop--circle-seek mtb_15px">
+            <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i>
+            <a href="#" 
+                data-url="<?= $this->Html->url([
+                    'controller' => 'circles',
+                    'action' => 'ajax_get_public_circles_modal'
+                ]) ?>"
+                class="modal-ajax-get-public-circles"
+            >
+                <?= __("View Circles") ?>
+            </a>
+        </div>
+        <div class="clearfix develop--circle-make">
+            <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i>
+            <a href="#" data-toggle="modal" data-target="#modal_add_circle">
+                <?= __("Create a circle") ?>
+            </a>
+        </div>
     </div>
 </div>
-</div>
-
 <?= $this->App->viewEndComment() ?>

@@ -246,7 +246,7 @@ function appendPostOgpInfo(data) {
   $siteInfo
     // show delete button
     .prepend($('<a>').attr('href', '#')
-      .addClass('font_lightgray ogp-close')
+      .addClass('font_lightgray')
       .addClass(addClass)
       .append('<i class="fa fa-times fa-2x js-ogp-close"></i>')
       .on('click', function (e) {
@@ -254,7 +254,6 @@ function appendPostOgpInfo(data) {
         e.stopPropagation();
         $siteInfoUrl.val('');
         $siteInfo.empty();
-        $(this).remove();
       }))
     // makes additional room for the delete button
     .find('.site-info').css({
