@@ -16,7 +16,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="noitify-mark-allread-wrap">
-            <i class="fa fa-check btn-link notify-mark-allread mark_all_read" style='color:#d2d4d5'></i>
+            <i class="fa fa-check btn-link notify-mark-allread" id="mark_all_read" style='color:#d2d4d5'></i>
         </div>
         <?= __("Your Notifications") ?>
     </div>

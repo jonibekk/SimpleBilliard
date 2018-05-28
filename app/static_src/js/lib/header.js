@@ -5,7 +5,7 @@
 
 $(function () {
   // Click at Message Icon
-  $(document).on("click", ".click-header-message", function (e) {
+  $(document).on("click", "#click-header-message", function (e) {
     // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
     if (getMessageNotifyCnt() == 0) {
       evMessageList(null);
@@ -18,9 +18,8 @@ $(function () {
 
   // Click at notifications icon
   var click_cnt = 0;
-  $(document).on("click", ".btn-notify-header", function () {
+  $(document).on("click", "#click-header-bell", function () {
     click_cnt++;
-
     var isExistNewNotify = ifNewNotify();
     initBellNum();
     initTitle();
@@ -39,12 +38,12 @@ $(function () {
     }
   });
   $(document).on("click", ".call-notifications", evNotifications);
-  $(document).on('click', '.mark_all_read,.mark_all_read_txt', function (e) {
+  $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
     e.preventDefault();
     $.ajax({
       type: 'GET',
       url: cake.url.an,
-      cache: false,
+      async: true,
       success: function () {
         $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
       }
@@ -64,14 +63,14 @@ $(function () {
 
   // ヘッダーのお知らせ一覧ポップアップのオートローディング
   var prevScrollTop = 0;
-  $('.bell-dropdown').scroll(function () {
+  $('#bell-dropdown').scroll(function () {
     var $this = $(this);
     var currentScrollTop = $this.scrollTop();
 
     if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
       if (!autoload_more) {
         autoload_more = true;
-        $('.NotifyDropDownReadMore').trigger('click');
+        $('#NotifyDropDownReadMore').trigger('click');
       }
     }
     prevScrollTop = currentScrollTop;
@@ -97,10 +96,6 @@ $(function () {
   // ヘッダーの検索フォームの処理
   require(['search'], function (search) {
     search.headerSearch.setup();
-  });
-
-  require(['searchToggle'], function (searchToggle) {
-    searchToggle.headerSearchToggle.setup();
   });
 
   // close banner
@@ -132,11 +127,19 @@ function initTitle() {
 }
 
 /**
+ * Return Jquery object for Notification icon on the header
+ * @returns {jQuery|HTMLElement}
+ */
+function getBellBoxSelector() {
+  return $("#bellNum");
+}
+
+/**
  * Return count of notifications displayed on notification icon
  * @returns {Number}
  */
 function getNotifyCnt() {
-  var $bellBox = $(".bellNum").first();
+  var $bellBox = getBellBoxSelector();
   return parseInt($bellBox.children('span').html(), 10);
 }
 
@@ -144,11 +147,17 @@ function getNotifyCnt() {
  * Initialize notification icon count to 0
  */
 function initBellNum() {
-  var $bellBoxs = $(".bellNum");
-  $bellBoxs.css("opacity", 0);
-  for (var i = 0; i < $bellBoxs.length; i++) {
-    $($bellBoxs[i]).children("span").html("0");
-  }
+  var $bellBox = getBellBoxSelector();
+  $bellBox.css("opacity", 0);
+  $bellBox.children('span').html("0");
+}
+
+/**
+ * Return Jquery Object for Message icon on the header
+ * @returns {jQuery|HTMLElement}
+ */
+function getMessageBoxSelector() {
+  return $("#messageNum");
 }
 
 /**
@@ -156,7 +165,7 @@ function initBellNum() {
  * @returns {Number}
  */
 function getMessageNotifyCnt() {
-  var $box = $(".messageNum").first();
+  var $box = getMessageBoxSelector();
   return parseInt($box.children('span').html(), 10);
 }
 
@@ -164,26 +173,26 @@ function getMessageNotifyCnt() {
  * Initialize Message icon count to 0
  */
 function initMessageNum() {
-  var $box = $(".messageNum");
+  var $box = getMessageBoxSelector();
   $box.css("opacity", 0);
   $box.children('span').html("0");
 }
 
 function updateMessageListBox() {
-  var $messageDropdown = $(".message-dropdown");
+  var $messageDropdown = $("#message-dropdown");
   $messageDropdown.empty();
-  var $loader_html = $('<li class="notification-refresh text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+  var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
   //ローダー表示
   $messageDropdown.append($loader_html);
   var url = cake.url.ag;
   $.ajax({
     type: 'GET',
     url: url,
-    cache: false,
+    async: true,
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
-      $(".notification-refresh").remove();
+      $loader_html.remove();
       $messageDropdown.append($notifyItems);
       //画像をレイジーロード
       imageLazyOn();
@@ -205,20 +214,20 @@ function evMessageList(options) {
 }
 
 function updateListBox() {
-  var $bellDropdown = $(".bell-dropdown");
+  var $bellDropdown = $("#bell-dropdown");
   $bellDropdown.empty();
-  var $loader_html = $('<li class="notification-refresh text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+  var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
   //ローダー表示
   $bellDropdown.append($loader_html);
   var url = cake.url.g;
   $.ajax({
     type: 'GET',
     url: url,
-    cache: false,
+    async: true,
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
-      $(".notification-refresh").remove();
+      $loader_html.remove();
       $bellDropdown.append($notifyItems);
       //画像をレイジーロード
       imageLazyOn();
@@ -241,7 +250,7 @@ function updateNotifyCnt() {
   $.ajax({
     type: 'GET',
     url: url,
-    cache: false,
+    async: true,
     success: function (res) {
       if (res.error) {
         //location.reload();
@@ -262,15 +271,14 @@ function updateMessageNotifyCnt() {
   $.ajax({
     type: 'GET',
     url: url,
-    cache: false,
+    async: true,
     success: function (res) {
       if (res.error) {
         //location.reload();
         return;
       }
-
+      setNotifyCntToMessageAndTitle(res);
       if (res != 0) {
-        setNotifyCntToMessageAndTitle(res);  
       }
     },
     error: function () {
@@ -280,68 +288,60 @@ function updateMessageNotifyCnt() {
 }
 
 function setNotifyCntToBellAndTitle(cnt) {
-  var $bellBoxs = $(".bellNum");
-  var existingBellCnt = parseInt($bellBoxs.first().children('span').html());
+  var $bellBox = getBellBoxSelector();
+  var existingBellCnt = parseInt($bellBox.children('span').html());
 
   if (cnt == 0) {
     return;
   }
 
-  for(var i = 0; i < $bellBoxs.length; i++){
-    $bellBox = $($bellBoxs[i]);
-    // set notify number
-    if (parseInt(cnt) <= 20) {
-      $bellBox.children('span').html(cnt);
-      $bellBox.children('sup').addClass('none');
-    } else {
-      $bellBox.children('span').html(20);
-      $bellBox.children('sup').removeClass('none');
-    }
-    updateTitleCount();
-
-    if (existingBellCnt == 0) {
-      displaySelectorFluffy($bellBox);
-    }
+  // set notify number
+  if (parseInt(cnt) <= 20) {
+    $bellBox.children('span').html(cnt);
+    $bellBox.children('sup').addClass('none');
+  } else {
+    $bellBox.children('span').html(20);
+    $bellBox.children('sup').removeClass('none');
   }
-  
+  updateTitleCount();
+
+  if (existingBellCnt == 0) {
+    displaySelectorFluffy($bellBox);
+  }
   return;
 }
 
 function setNotifyCntToMessageAndTitle(cnt) {
   var cnt = parseInt(cnt);
-  var $bellBoxs = $(".messageNum");
-  for(var i = 0; i < $bellBoxs.length; i++) {
-    var $bellBox = $($bellBoxs[i]);
-    var existingBellCnt = parseInt($bellBox.children('span').html());
-    if (cnt != 0) {
-      // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-      $('.click-header-message').next().addClass('dropdown-menu');
-      $('.click-header-message').next().removeClass('none');
-    }
-    else {
-      // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
-      $('.click-header-message').next().removeClass('dropdown-menu');
-      $('.click-header-message').next().addClass('none');
-    }
+  var $bellBox = getMessageBoxSelector();
+  var existingBellCnt = parseInt($bellBox.children('span').html());
 
-    // set notify number
-    if (cnt == 0) {
-      $bellBox.children('span').html(cnt);
-      $bellBox.children('sup').addClass('none');
-    } else if (cnt <= 20) {
-      $bellBox.children('span').html(cnt);
-      $bellBox.children('sup').addClass('none');
-    } else {
-      $bellBox.children('span').html(20);
-      $bellBox.children('sup').removeClass('none');
-    }
-    updateTitleCount();
+  if (cnt != 0) {
+    // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+    $('#click-header-message').next().addClass('dropdown-menu');
+  }
+  else {
+    // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+    $('#click-header-message').next().removeClass('dropdown-menu');
+  }
 
-    if (existingBellCnt == 0 && cnt >= 1) {
-      displaySelectorFluffy($bellBox);
-    } else if (cnt == 0) {
-      $bellBox.css("opacity", 0);
-    }
+  // set notify number
+  if (cnt == 0) {
+    $bellBox.children('span').html(cnt);
+    $bellBox.children('sup').addClass('none');
+  } else if (cnt <= 20) {
+    $bellBox.children('span').html(cnt);
+    $bellBox.children('sup').addClass('none');
+  } else {
+    $bellBox.children('span').html(20);
+    $bellBox.children('sup').removeClass('none');
+  }
+  updateTitleCount();
+
+  if (existingBellCnt == 0 && cnt >= 1) {
+    displaySelectorFluffy($bellBox);
+  } else if (cnt == 0) {
+    $bellBox.css("opacity", 0);
   }
   return;
 }
@@ -386,7 +386,6 @@ function toggleNav() {
       menuNotify.classList.remove('is-open');
       navIcon.classList.remove('fa-arrow-right');
       navIcon.classList.add('fa-navicon');
-      $("#NavbarOffcanvas").css("background-color","#fff");
     } else {
       document.body.classList.add('modal-open');
       header.classList.add('mod-openNav');
@@ -394,23 +393,7 @@ function toggleNav() {
       menuNotify.classList.add('is-open');
       navIcon.classList.add('fa-arrow-right');
       navIcon.classList.remove('fa-navicon');
-      $("#NavbarOffcanvas").css("background-color","#f5f5f5");
     }
-  }
-}
-
-function hideNav() {
-  if(cake.is_mb_app !== "1" && cake.is_mb_browser !== "1") {
-    var header = document.getElementsByClassName("header")[0],
-    layerBlack = document.getElementById('layerBlack'),
-    menuNotify = document.getElementsByClassName("js-unread-point-on-hamburger")[0],
-    navIcon = header.getElementsByClassName('toggle-icon')[0];
-    document.body.classList.remove('modal-open');
-    header.classList.remove('mod-openNav');
-    layerBlack.classList.remove('mod-openNav');
-    menuNotify.classList.remove('is-open');
-    navIcon.classList.remove('fa-arrow-right');
-    navIcon.classList.add('fa-navicon');
   }
 }
 

@@ -10,8 +10,8 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
             <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
                 <li class="switch-action">
                     <a href="#ActionForm" role="tab" data-toggle="tab"
-                       class="switch-action-anchor click-target-focus no-anchor"
-                       target-id="CommonActionName" disabled="disabled"><i
+                       class="switch-action-anchor click-target-focus"
+                       target-id="CommonActionName"><i
                             class="fa fa-check-circle"></i><?= __("Action") ?></a><span class="switch-arrow"></span>
                 </li>
             </ul>
