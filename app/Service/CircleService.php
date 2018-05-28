@@ -476,4 +476,111 @@ class CircleService extends AppService
         Cache::delete($CircleMember->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $userId), 'user_data');
     }
 
+    /**
+     * Get condition for posts shared to an user in joined circles
+     *
+     * @param DboSource $db
+     * @param int       $userId
+     * @param int       $teamId
+     * @param array     $userCircleList
+     * @param null      $shareType
+     *
+     * @return string
+     */
+    public function getUserCirclePostCondition(
+        DboSource $db,
+        int $userId,
+        int $teamId,
+        $userCircleList = [],
+        $shareType = null
+    ) {
+        if (empty($userCircleList)) {
+            $CircleMember = new CircleMember();
+            $userCircleList = $CircleMember->getUserCircleList($userId, $teamId, true);
+        }
+
+        $query = [
+            'table'      => $db->fullTableName(new PostShareCircle()),
+            'alias'      => 'PostShareCircle',
+            'conditions' => [
+                'PostShareCircle.circle_id' => $userCircleList,
+                'PostShareCircle.team_id'   => $teamId,
+            ],
+        ];
+        if (isset($shareType)) {
+            $query['conditions']['PostShareCircle.share_type'] = $shareType;
+        }
+
+        $Circle = new Circle();
+
+        if (count($userCircleList) == 1 && $Circle->isTeamAllCircle($userCircleList[0])) {
+            $query['conditions']['NOT'] = [
+                'type' => [
+                    Post::TYPE_ACTION,
+                    Post::TYPE_CREATE_GOAL,
+                    Post::TYPE_GOAL_COMPLETE,
+                    Post::TYPE_KR_COMPLETE
+                ]
+            ];
+
+        }
+        $res = $db->buildStatement($query, new Post());
+
+        return $res;
+    }
+
+    /**
+     * Get list of posts that are visible to the user
+     *
+     * @param DboSource $db
+     * @param           $start
+     * @param           $end
+     * @param array     $params
+     *                 'author_id' : Filter posts with user ID of the author
+     *
+     * @return string|null
+     */
+    public function getUserAccessibleCirclePostCondition(
+        DboSource $db,
+        int $userId,
+        int $teamId,
+        array $params = []
+    ) {
+        $CircleMember = new CircleMember();
+
+        $userCircleList = $CircleMember->getUserCircleList($userId, $teamId);
+        $query = [
+            'table'      => $db->fullTableName(new PostShareCircle()),
+            'alias'      => 'PostShareCircle',
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName(new Circle()),
+                    'alias'      => 'Circle',
+                    'conditions' => '`PostShareCircle`.`circle_id`=`Circle`.`id`',
+                ],
+            ],
+            'conditions' => [
+                'OR'                      => [
+                    'PostShareCircle.circle_id' => $userCircleList,
+                    'Circle.public_flg'         => true
+                ],
+                'PostShareCircle.team_id' => $teamId,
+            ],
+        ];
+
+        if (isset($params['author_id'])) {
+            $query['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => $db->fullTableName(new Post()),
+                'alias'      => 'Post',
+                'conditions' => '`PostShareCircle`.`post_id`=`Post`.`id`',
+            ];
+            $query['conditions']['Post.user_id'] = $params['author_id'] ?? null;
+        }
+
+        $res = $db->buildStatement($query, new Post());
+
+        return $res;
+    }
 }

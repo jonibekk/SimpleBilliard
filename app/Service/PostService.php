@@ -58,7 +58,7 @@ class PostService extends AppService
             // changing post_resources.post_id = null to posts.id
             if (false === $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id'])) {
                 GoalousLog::error($errorMessage = 'failed updating post_resources.post_id', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -69,7 +69,7 @@ class PostService extends AppService
             $postDraft['post_id'] = $post['id'];
             if (false === $PostDraft->save($postDraft)) {
                 GoalousLog::error($errorMessage = 'failed saving post_draft', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -113,7 +113,7 @@ class PostService extends AppService
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error('failed adding post data', [
-                'message' => $e->getMessage(),
+                'message'  => $e->getMessage(),
                 'users.id' => $userId,
                 'teams.id' => $teamId,
             ]);
@@ -134,7 +134,6 @@ class PostService extends AppService
      *
      * @return array Always return inserted post data array if succeed
      *      otherwise throwing exception
-     *
      * @throws \InvalidArgumentException
      *      If passed data is invalid or not enough, throws InvalidArgumentException
      * @throws \RuntimeException
@@ -375,5 +374,53 @@ class PostService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get query condition for posts made by an user
+     *
+     * @param int $userId User ID of the posts author
+     *
+     * @return array
+     */
+    public function getUserPostListCondition(int $userId)
+    {
+        return ['Post.user_id' => $userId];
+    }
+
+    /**
+     * Get condition for posts shared to this user
+     *
+     * @param DboSource $db
+     * @param int       $userId User to whom posts are shared to
+     * @param int       $teamId
+     * @param array     $params
+     *                          'author_id' : If specified, filter posts to this author
+     *
+     * @return string|null
+     */
+    public function getSharedPostCondition(DboSource $db, int $userId, int $teamId, array $params = [])
+    {
+        // パラメータデフォルト
+        $params = array_merge(['user_id' => null], $params);
+        $query = [
+            'table'      => $db->fullTableName(new PostShareUser()),
+            'alias'      => 'PostShareUser',
+            'conditions' => [
+                'PostShareUser.user_id' => $userId,
+                'PostShareUser.team_id' => $teamId
+            ],
+        ];
+        if (isset($params['user_id'])) {
+            $query['conditions']['Post.user_id'] = $params['author_id'];
+            $query['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => $db->fullTableName($this),
+                'alias'      => 'Post',
+                'conditions' => '`PostShareUser`.`post_id`=`Post`.`id`',
+            ];
+        }
+        $res = $db->buildStatement($query, new Post());
+        return $res;
     }
 }

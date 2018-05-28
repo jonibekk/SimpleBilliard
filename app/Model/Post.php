@@ -749,6 +749,7 @@ class Post extends AppModel
         return ['Post.user_id' => $this->my_uid];
     }
 
+
     /**
      * 自分に共有された投稿のID一覧を返す
      *
@@ -786,6 +787,7 @@ class Post extends AppModel
         $res = $db->buildStatement($query, $this);
         return $res;
     }
+
 
     public function getSubQueryFilterMyCirclePostId(
         DboSource $db,
@@ -1504,7 +1506,7 @@ class Post extends AppModel
         if ($endTimestamp) {
             $options['conditions']["$date_col <="] = $endTimestamp;
         }
-        $res = (int) $this->find('count', $options);
+        $res = (int)$this->find('count', $options);
 
         return $res;
     }

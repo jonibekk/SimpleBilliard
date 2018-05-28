@@ -5,8 +5,8 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
-App::import('Model','User');
-App::import('Model','Circle');
+App::import('Model', 'User');
+App::import('Model', 'Circle');
 App::import('Model', 'HavingMentionTrait');
 
 /**
@@ -257,6 +257,54 @@ class Comment extends AppModel
             ]
         ];
         return $this->find('count', $options);
+    }
+
+    /**
+     * Get comments based on cursor
+     *
+     * @param PagingCursor $pagingCursor
+     * @param int          $limit
+     *
+     * @return array|null
+     */
+    public function getPostCommentsByCursor(PagingCursor $pagingCursor, int $limit)
+    {
+        $options = [
+            'conditions' => [
+                'Comment.post_id' =>  $pagingCursor->getConditions() ?? null,
+            ],
+            'order'      => [
+                'Comment.id' => 'desc'
+            ],
+            'contain'    => [
+                'User'          => [
+                    'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->my_uid,
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
+                ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
+            ],
+            'limit'      => $limit ?? 10
+        ];
+
+        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption() ?? null;
+
+        if (!empty($pagingCursor->getOrders())) {
+            $options['order'] = $pagingCursor->getOrders();
+        }
+
+        return $this->find('all', $options);
     }
 
     /**
@@ -525,7 +573,7 @@ class Comment extends AppModel
             $options['conditions']["Post.type"] = $params['post_type'];
             $options['contain'][] = 'Post';
         }
-        return $this->find('count', $options);
+        return (int)$this->find('count', $options);
     }
 
     /**

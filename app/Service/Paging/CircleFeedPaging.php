@@ -31,25 +31,29 @@ class CircleFeedPaging implements PagingServiceInterface
      * Get SQL query for IDs of posts visible to the user using default parameters
      *
      * @param array $conditions Any other required conditions
+     *                          'user_id' => Currently logged in user ID
+     *                          'team_id' => ID of team where the user belongs
      *
      * @return array
      */
     private function getDefaultSharedPosts($conditions = [])
     {
         $Post = new Post();
+        $PostService = new PostService();
+        $CircleService = new CircleService();
 
-        $Post->my_uid = $conditions['current_user_id'];
+        $Post->my_uid = $conditions['user_id'];
 
         /**
          * @var DboSource $db
          */
         $db = $Post->getDataSource();
 
-        $queryCondition['OR'][] = $Post->getConditionGetMyPostList();
+        $queryCondition['OR'][] = $PostService->getUserPostListCondition($conditions['user_id']);
         $queryCondition['OR'][] = $this->createDbExpression($db,
-            $Post->getSubQueryFilterPostIdShareWithMe($db, $conditions['start'], $conditions['end']));
+            $PostService->getSharedPostCondition($db, $conditions['user_id'], $conditions['team_id']));
         $queryCondition['OR'][] = $this->createDbExpression($db,
-            $Post->getSubQueryFilterMyCirclePostId($db, $conditions['start'], $conditions['end']));
+            $CircleService->getUserCirclePostCondition($db, $conditions['user_id'], $conditions['team_id']));
 
         return $queryCondition;
     }
@@ -58,12 +62,17 @@ class CircleFeedPaging implements PagingServiceInterface
      * Get query condition for posts visible to the user
      *
      * @param array $conditions
+     *                         'author_id' => Author of posts
+     *                         'user_id' => Currently logged in user ID
+     *                         'circle_id' => ID of circle where the posts are filtered in
+     *                         'team_id' => ID of team where the user belongs
      *
      * @return array
      */
     private function getSharedPosts($conditions = [])
     {
         $Post = new Post();
+        $CircleService = new CircleService();
 
         /**
          * @var DboSource $db
@@ -75,30 +84,32 @@ class CircleFeedPaging implements PagingServiceInterface
             $CircleMember = new CircleMember();
 
             //Check if circle belongs to current team & user has access to the circle
-            $CircleMember->my_uid = $conditions['current_user_id'];
+            $CircleMember->my_uid = $conditions['user_id'];
             if (!$Circle->isBelongCurrentTeam($conditions['circle_id'], $conditions['team_id'])
-                || ($Circle->isSecret($conditions['circle_id']) && !$CircleMember->isBelong($conditions['circle_id']))) {
+                || ($Circle->isSecret($conditions['circle_id'])
+                    && !$CircleMember->isBelong($conditions['circle_id'], $conditions['user_id']))) {
                 throw new RuntimeException(__("The circle dosen't exist or you don't have permission."));
             }
 
             $queryConditions['OR'][] = $this->createDbExpression($db,
-                $Post->getSubQueryFilterMyCirclePostId($db, $conditions['start'],
-                    $conditions['end'],
+                $CircleService->getUserCirclePostCondition($db, $conditions['user_id'], $conditions['team_id'],
                     $conditions['circle_id'],
                     PostShareCircle::SHARE_TYPE_SHARED));
 
-        } elseif (isset($conditions['user_id'])) {
+        } elseif (isset($conditions['author_id'])) {
+
+            $PostService = new PostService();
 
             $queryConditions['OR'][] = $this->createDbExpression($db,
-                $Post->getSubQueryFilterPostIdShareWithMe($db, $conditions['start'], $conditions['end'],
-                    ['user_id' => $conditions['user_id']]));
+                $PostService->getSharedPostCondition($db, $conditions['start'], $conditions['end'],
+                    ['author_id' => $conditions['author_id']]));
 
             $queryConditions['OR'][] = $this->createDbExpression($db,
-                $Post->getSubQueryFilterAccessibleCirclePostList($db, $conditions['start'], $conditions['end'],
-                    ['user_id' => $conditions['user_id']]));
+                $CircleService->getUserAccessibleCirclePostCondition($db, $conditions['start'], $conditions['end'],
+                    ['author_id' => $conditions['author_id']]));
 
-            if ($conditions['OR']['current_user_id'] == $conditions['user_id']) {
-                $Post->my_uid = $conditions['user_id'];
+            if ($conditions['OR']['user_id'] == $conditions['author_id']) {
+                $Post->my_uid = $conditions['author_id'];
                 $queryConditions['OR'][] = $Post->getConditionGetMyPostList();
             }
 
@@ -118,17 +129,11 @@ class CircleFeedPaging implements PagingServiceInterface
             'order'      => $pagingCursor->getOrders()
         ];
 
-        $options['conditions'][] = $pagingCursor->getPointersAsQueryOption();
         $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
+        $options['conditions']['AND'] = $pagingCursor->getPointersAsQueryOption();
 
         $Post = new Post();
         $result = $Post->find('all', $options);
-
-        $this->setCommentRead($result);
-
-        $this->setCommentUnreadCount($result);
-
-        $this->getPostResource($result);
 
         return $result;
     }
@@ -142,28 +147,27 @@ class CircleFeedPaging implements PagingServiceInterface
 
     protected function extendPagingResult(&$resultArray, $flags = [])
     {
-        foreach ($resultArray as $feed) {
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_USER_FLAG, $flags)) {
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_USER_FLAG, $flags)) {
 
-            }
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_MY_POST_LIKE_FLAG, $flags)) {
-
-            }
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_CIRCLE_FLAG, $flags)) {
-
-            }
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_COMMENT_FLAG, $flags)) {
-
-            }
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_CIRCLE_FLAG, $flags)) {
-
-            }
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_USER_FLAG, $flags)) {
-
-            }
-            if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_FILE_FLAG, $flags)) {
-
-            }
         }
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_MY_POST_LIKE_FLAG, $flags)) {
+
+        }
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_CIRCLE_FLAG, $flags)) {
+
+        }
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_COMMENT_FLAG, $flags)) {
+
+        }
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_CIRCLE_FLAG, $flags)) {
+
+        }
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_USER_FLAG, $flags)) {
+
+        }
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_FILE_FLAG, $flags)) {
+
+        }
+
     }
 }
