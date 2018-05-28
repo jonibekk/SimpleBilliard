@@ -17,7 +17,12 @@
   margin-right: 6px;
 }
 
+.circle-list-footer-hamburger {
+  margin-bottom: 32px;
+}
+
 .circle-list-in-hamburger{
+  height: 100%;
   position:static !important;
   margin-top:1rem;
   .circle-layout {
@@ -32,6 +37,8 @@
   }
   .circle-list-footer{
     margin-bottom:2rem;
+    bottom: -16px;
+    position: fixed;
     .develop--circle-seek, .develop--circle-make {
       font-size: 12px;
       line-height: 16px;
@@ -68,6 +75,7 @@
 .dashboard-circle-list-body {
   overflow-y: scroll;
   width: 100%;
+  height: ~"calc(100vh - 380px)";
 }
 .dashboard-circle-list-seek {
   font-size: 12px;
@@ -95,6 +103,7 @@
   width: 25px;
   height: 16px;
   margin: 0 0 0 2px;
+  margin-left: 2px;
 }
 .dashboard-circle-count-box {
   width: 100%;
@@ -234,4 +243,8 @@
   #dashboard-pinned, #dashboard-unpinned, #dashboard-defaultpin {
     width: 94%;
   }
+}
+
+.js-dashboard-circle-list-body {
+  height: 100%;
 }

@@ -1,11 +1,9 @@
-<?php
+<?= $this->App->viewStartComment()?>
+<?php  
 /**
  * @var $is_mb_app
  */
 ?>
-<?= $this->App->viewStartComment() ?>
-<div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
-     xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url([
@@ -15,13 +13,8 @@
            ]) ?>">
             <?=
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
-                ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
-            <span class="header-user-name js-header-link">
-            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
-        </span>
+                ['width' => '22', 'height' => '22', 'alt' => 'icon', 'class' => 'header-nav-avatar header-dropdown-avatar header-icon-zoom']) ?>
         </a>
-        <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
-                'Home') ?></a>
     <?php endif; ?>
 
     <?php if($is_mb_app || $isMobileBrowser): ?>
@@ -47,12 +40,12 @@
         </div>
     <?php endif; ?>
 
+
     <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom">
         <a href="/setup/top/" class="btn-header-setup">
-            <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
-               id="setupIcon"></i>
+            <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-                <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                <div class="btn btn-xs bell-notify-box notify-setup-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
                     <span><?= $setup_rest_count ?></span>
                 </div>
             <?php endif; ?>
@@ -60,10 +53,10 @@
     </div>
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
-        <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
-            <i class="fa fa-plus-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+        <a href="#" class="btn-addition-header">
+            <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
-        <ul class="header-nav-add-contents dropdown-menu "
+        <ul class="<?= $is_mb_app ? "mb-header-nav-add-contents" : "header-nav-add-contents" ?> dropdown-menu "
             aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
@@ -93,18 +86,18 @@
         </ul>
     </div>
     <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
-            <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
+        <a class="click-header-message btn-message-header" href="#">
+            <i class="header-dropdown-icon-message fa fa-paper-plane-o fa-adjust-plane js-header-link header-icons"></i>
 
-            <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
+            <div class="btn btn-xs bell-notify-box notify-bell-numbers messageNum" style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
 
         <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
             <div class="header-nav-message-contents-scrolling">
-                <ul class="header-nav-message-contents" id="message-dropdown" role="menu">
-                    <li class="notify-card-empty" id="messageNotifyCardEmpty">
+                <ul class="header-nav-message-contents message-dropdown" role="menu">
+                    <li class="notify-card-empty">
                         <i class="fa fa-smile-o font_33px mr_8px"></i><span
                             class="notify-empty-text"><?= __('No new message') ?></span>
                     </li>
@@ -112,13 +105,12 @@
             </div>
         </div>
     </div>
-    <div id="HeaderDropdownNotify"
-         class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
-            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
+    <div class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
+        <a class="click-header-bell btn-notify-header" href="#">
+            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o fa-adjust-bell header-drop-icons js-header-link header-icons"></i>
 
-            <div class="btn btn-xs bell-notify-box notify-bell-numbers"
-                 id="bellNum" style="opacity: 0;">
+            <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
+                 style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
@@ -126,19 +118,19 @@
         <div class="dropdown-menu header-nav-notify-contents-wrap">
             <div class="header-nav-notify-contents-scrolling">
                 <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
-                    <i class="fa fa-check" id="mark_all_read"></i>
-                    <span id="mark_all_read_txt"><?= __('Mark All as Read') ?></span>
+                    <i class="fa fa-check" class="mark_all_read"></i>
+                    <span class="mark_all_read_txt"><?= __('Mark All as Read') ?></span>
                 </div>
-                <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
+                <ul class="header-nav-notify-contents notify-dropdown-cards bell-dropdown" role="menu"
                     style="overflow-y:scroll">
-                    <li class="notify-card-empty" id="notifyCardEmpty">
+                    <li class="notify-card-empty">
                         <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
                             class="notify-empty-text"><?= __('No new notification') ?></span>
                     </li>
                 </ul>
             </div>
-            <a id="NotifyDropDownReadMore" href="#"
-               class="btn btn-link font_bold click-notify-read-more-dropdown"
+            <a href="#"
+               class="NotifyDropDownReadMore btn btn-link font_bold click-notify-read-more-dropdown"
                style="display:none;"
                get-url="<?= $this->Html->url([
                    'controller' => 'notifications',
@@ -155,22 +147,19 @@
             </a>
         </div>
     </div>
-    <div
-        class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
         <a href="#"
-           class="btn-function-header"
-           data-toggle="dropdown"
-           id="header-cog-dropdown">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+           class="btn-function-header">
+            <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if ($all_alert_cnt > 0): ?>
-                <div class="btn btn-xs notify-function-numbers">
+                <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
                  <span>
                    <?= $all_alert_cnt ?>
                  </span>
                 </div>
             <?php endif; ?>
         </a>
-        <ul class="header-nav-function-contents dropdown-menu" role="menu"
+        <ul class="<?= $is_mb_app ? "mb-header-nav-function-contents" : "header-nav-function-contents" ?> dropdown-menu" role="menu"
             aria-labelledby="dropdownMenu1">
             <li class="header-nav-function-contents-list">
                 <?= $this->Html->link(__('User Setting'),
@@ -220,18 +209,13 @@
                     class="header-nav-function-contents-user-guidelines" ><?=__('User Guide');?></a>
             </li>
             <li class="header-nav-function-contents-list">
-                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
-                    <?= __('How to make a Goal (jp)') ?>
-                </a>
-            </li>
-            <li class="header-nav-function-contents-list">
                 <a href="#" data-toggle="modal" data-target="#modal_tutorial"
                    class="header-nav-function-contents-tutorial">
                     <?= __('Tutorial') ?>
                 </a>
             </li>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
-                <li class="header-nav-function-contents-list" id="IntercomLink">
+                <li class="header-nav-function-contents-list">
                     <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
                        class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
                 </li>
@@ -244,6 +228,4 @@
             </li>
         </ul>
     </div>
-</div>
-<div class="header-white-bg <?= $is_mb_app_ios_high_header ? "mod-mb-app" : "" ?>"></div>
-<?= $this->App->viewEndComment() ?>
+<?= $this->App->viewEndComment()?>

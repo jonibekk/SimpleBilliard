@@ -31,7 +31,7 @@
     <div class="header-white-bg mod-mb-app"></div>
 <?php endif; ?>
 <div id="NavbarOffcanvas">
-    <ul class="nav navbar-nav">
+    <ul id="navigationWrapper" class="nav navbar-nav <?= $is_mb_app ? "mb-to-back-most" : "" ?>">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
             <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
@@ -50,7 +50,7 @@
             <a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                 <div class="ta-sm_c">
-                    <i class="fa fa-flag js-header-link header-icon nav-xxs-icon header-icons"></i>
+                    <i class="fa fa-flag fa-smaller js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                     <p class="font_11px header_icon-text hidden-xs js-header-link">
                         <?= __("Goal") ?>
@@ -63,7 +63,7 @@
             <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'index']) ?>">
                 <div class="ta-sm_c">
-                    <i class="fa fa-users js-header-link header-icon nav-xxs-icon header-icons"></i>
+                    <i class="fa fa-users  fa-smallerjs-header-link header-icon nav-xxs-icon header-icons"></i>
                     <p class="font_11px header_icon-text hidden-xs js-header-link">
                         <?= __("Team") ?>
                     </p>
@@ -90,54 +90,12 @@
                 ?>
             </form>
         </li>
-        <li class="header-search-group">
-            <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search"
-                  autocomplete="off">
-                <div class="input-group">
-                    <div class="input-group-btn nav-search-button-group">
-                        <button type="button" id="NavSearchButton"
-                                class="btn nav-search-button dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user header-icons nav-form-icon nav-search-category-icon"
-                               data-category="user"></i>
-                            <i class="fa fa-flag header-icons nav-form-icon nav-search-category-icon none"
-                               data-category="goal"></i>
-                            <i class="fa fa-circle-o header-icons nav-form-icon nav-search-category-icon none"
-                               data-category="circle"></i>
-
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu nav-search-form-dropdown" role="menu">
-                            <li><a href="#" style="" class="nav-search-category-item" data-category="user">
-                                    <i class="fa fa-user header-drop-icons"></i>
-                                    <?= __('Members'); ?>
-                                </a>
-                            </li>
-                            <li><a href="#" class="nav-search-category-item" data-category="goal">
-                                    <i class="fa fa-flag header-drop-icons"></i>
-                                    <?= __('Goal'); ?>
-                                </a>
-                            </li>
-                            <li><a href="#" class="nav-search-category-item" data-category="circle">
-                                    <i class="fa fa-circle-o header-drop-icons"></i>
-                                    <?= __('Circle'); ?>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <input type="text"
-                           id="NavSearchInput"
-                           maxlength="<?= SELECT2_QUERY_LIMIT ?>"
-                           class="form-control nav-search font_12px disable-change-warning">
-                </div>
-                <div id="NavSearchResults" class="nav-search-result"></div>
-            </form>
-        </li>
-        <li class="visible-xxs hidden-xs">
+        <li class="visible-xxxs visible-xxs hidden-xs">
             <?= $this->element('dashboard_saved_item') ?>
         </li>
-        <li class="circle-list-in-hamburger visible-xxs hidden-xs">
+        <li class="circle-list-in-hamburger visible-xxxs visible-xxs hidden-xs">
             <?= $this->element('circle_list_in_hamburger') ?>
         </li>
     </ul>
 </div>
+<?= $this->App->viewEndComment()?>
