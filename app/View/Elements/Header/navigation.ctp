@@ -1,8 +1,35 @@
-<button type="button" action="" onclick="toggleNav()"
-        class="<?= $is_mb_app ? "mb-app" : "" ?> header-toggle-icon js-nav-toggle">
-    <div class="hamburger-unread-point js-unread-point-on-hamburger is-read"></div>
-    <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
-</button>
+<?= $this->App->viewStartComment()?>
+<div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
+    <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
+            class="mb-to-front-almost header-toggle-icon js-nav-toggle">
+        <div class="hamburger-unread-point js-unread-point-on-hamburger is-read <?= $is_mb_app ? "mb-hambuger-badge-shift" : "" ?>"></div>
+        <i class="fa fa-navicon fa-adjust-hamburger toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
+    </button>
+</div>
+<div class="medium-container hidden-xxs visible-xs-flex visible-sm-flex hidden-md hidden-lg"">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>
+    </div>
+    <?php if($is_mb_app_ios_high_header): ?>
+        <div class="header-white-bg mod-mb-app"></div>
+    <?php endif; ?>
+</div>
+<div class="<?= $is_mb_app ? 'mb-minimum-container' : 'minimum-container' ?> visible-xxs-flex hidden-xs hidden-sm- hidden-md hidden-lg"">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>  
+    </div>
+    <?php if($is_mb_app_ios_high_header): ?>
+        <div class="header-white-bg mod-mb-app"></div>
+    <?php endif; ?>
+</div>
+<div class="large-container hidden-xxs hidden-xs hidden-sm visible-md-flex visible-lg-flex">
+    <div id="rightNavigationWrapper" class="clearfix" xmlns="http://www.w3.org/1999/html">
+        <?= $this->element('Header/logged_in_right'); ?>
+    </div>
+</div>
+<?php if($is_mb_app_ios_high_header): ?>
+    <div class="header-white-bg mod-mb-app"></div>
+<?php endif; ?>
 <div id="NavbarOffcanvas">
     <ul class="nav navbar-nav">
         <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
