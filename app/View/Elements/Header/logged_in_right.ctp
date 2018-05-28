@@ -40,7 +40,6 @@
         </div>
     <?php endif; ?>
 
-    <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
     <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
@@ -51,7 +50,6 @@
             <?php endif; ?>
         </a>
     </div>
-    <?php endif; ?>
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
         <a href="#" class="btn-addition-header">
