@@ -24,6 +24,9 @@ class Comment extends AppModel
 {
 
     use HavingMentionTrait;
+
+    const MAX_COMMENT_LIMIT = 3;
+
     public $bodyProperty = 'body';
 
     public $uses = [
@@ -262,16 +265,23 @@ class Comment extends AppModel
     /**
      * Get comments based on cursor
      *
-     * @param PagingCursor $pagingCursor
+     * @param PagingCursor $pagingCursor Cursor for getting comments. Require:
+     *                                   'post_id'
      * @param int          $limit
      *
      * @return array|null
      */
-    public function getPostCommentsByCursor(PagingCursor $pagingCursor, int $limit)
+    public function getPostCommentsByCursor(PagingCursor $pagingCursor, int $limit = self::MAX_COMMENT_LIMIT)
     {
+        $cursorConditions = $pagingCursor->getConditions();
+
+        if (empty($cursorConditions['post_id'])) {
+            return [];
+        }
+
         $options = [
             'conditions' => [
-                'Comment.post_id' =>  $pagingCursor->getConditions() ?? null,
+                'Comment.post_id' => $cursorConditions['post_id'],
             ],
             'order'      => [
                 'Comment.id' => 'desc'
@@ -282,8 +292,8 @@ class Comment extends AppModel
                 ],
                 'MyCommentLike' => [
                     'conditions' => [
-                        'MyCommentLike.user_id' => $this->my_uid,
-                        'MyCommentLike.team_id' => $this->current_team_id,
+                        'MyCommentLike.user_id' => $cursorConditions['user_id'],
+                        'MyCommentLike.team_id' => $cursorConditions['team_id'],
                     ]
                 ],
                 'CommentFile'   => [
@@ -295,7 +305,7 @@ class Comment extends AppModel
                     ]
                 ]
             ],
-            'limit'      => $limit ?? 10
+            'limit'      => $limit
         ];
 
         $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption() ?? null;

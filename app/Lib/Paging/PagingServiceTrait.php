@@ -59,7 +59,7 @@ trait PagingServiceTrait
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $extendFlags);
+            $this->extendPagingResult($queryResult, $pagingCursor->getConditions(), $extendFlags);
         }
 
         $this->afterRead();
@@ -111,11 +111,12 @@ trait PagingServiceTrait
      * Override to use
      *
      * @param array $resultArray Content to be extended
+     * @param array $conditions  Conditions used for getting the result
      * @param array $flags       Extension flags
      *
      * @return array
      */
-    protected function extendPagingResult(&$resultArray, $flags = [])
+    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
     {
         return $resultArray;
     }

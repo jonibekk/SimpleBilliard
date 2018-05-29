@@ -20,7 +20,7 @@ class CircleFeedPaging implements PagingServiceInterface
 
     const EXTEND_ALL_FLAG = -1;
     const EXTEND_USER_FLAG = 0;
-    const EXTEND_MY_POST_LIKE_FLAG = 1;
+    const EXTEND_POST_LIKE_FLAG = 1;
     const EXTEND_CIRCLE_FLAG = 2;
     const EXTEND_COMMENT_FLAG = 3;
     const EXTEND_POST_SHARE_CIRCLE_FLAG = 4;
@@ -101,11 +101,12 @@ class CircleFeedPaging implements PagingServiceInterface
             $PostService = new PostService();
 
             $queryConditions['OR'][] = $this->createDbExpression($db,
-                $PostService->getSharedPostCondition($db, $conditions['start'], $conditions['end'],
+                $PostService->getSharedPostCondition($db, $conditions['user_id'], $conditions['team_id'],
                     ['author_id' => $conditions['author_id']]));
 
             $queryConditions['OR'][] = $this->createDbExpression($db,
-                $CircleService->getUserAccessibleCirclePostCondition($db, $conditions['start'], $conditions['end'],
+                $CircleService->getUserAccessibleCirclePostCondition($db, $conditions['user_id'],
+                    $conditions['team_id'],
                     ['author_id' => $conditions['author_id']]));
 
             if ($conditions['OR']['user_id'] == $conditions['author_id']) {
@@ -125,12 +126,13 @@ class CircleFeedPaging implements PagingServiceInterface
     {
         $options = [
             'conditions' => $this->getSharedPosts($pagingCursor->getConditions()),
+            'fields'     => 'Post.id',
             'limit'      => $limit,
             'order'      => $pagingCursor->getOrders()
         ];
 
         $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
-        $options['conditions']['AND'] = $pagingCursor->getPointersAsQueryOption();
+        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
 
         $Post = new Post();
         $result = $Post->find('all', $options);
@@ -142,32 +144,95 @@ class CircleFeedPaging implements PagingServiceInterface
     {
         $post = new Post();
 
-        return $post->find('count', $conditions)[0];
+        return (int)$post->find('count', $conditions);
     }
 
-    protected function extendPagingResult(&$resultArray, $flags = [])
+    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
     {
+        //Create query
+        $queryCondition = [
+            'conditions' => [
+                'Post.id' => $resultArray
+            ],
+            'table'      => 'posts',
+            'alias'      => 'Post',
+            'order'      => [
+                'Post.id' => 'desc'
+            ],
+        ];
+
+        //Add joins to query
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_USER_FLAG, $flags)) {
+            $User = new User();
 
+            $queryCondition['conditions']['Post.user_id'] = $conditions['author_id'];
+
+            $queryCondition['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'users',
+                'alias'      => 'User',
+                'fields'     => $User->profileFields,
+                'conditions' => [
+                    'Post.user_id' => 'User.id'
+                ]
+            ];
         }
-        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_MY_POST_LIKE_FLAG, $flags)) {
-
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_LIKE_FLAG, $flags)) {
+            $condition = [
+                'MyPostLike' => [
+                    'conditions' => [
+                        'MyPostLike.user_id' => $this->my_uid,
+                        'MyPostLike.team_id' => $this->current_team_id,
+                    ],
+                ],
+            ];
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_CIRCLE_FLAG, $flags)) {
 
+            $queryCondition['conditions']['Post.circle_id'] = $conditions['circle_id'];
+
+            $queryCondition['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'circles',
+                'alias'      => 'Circle',
+                'conditions' => [
+                    'Post.circle_id' => 'Circle.id'
+                ]
+            ];
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_COMMENT_FLAG, $flags)) {
-
+            $condition = ['Comment'];
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_CIRCLE_FLAG, $flags)) {
 
+            $queryCondition['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'post_share_circles',
+                'alias'      => 'PostShareCircle',
+                'conditions' => [
+                    'Post.id' => 'PostShareCircle.post_id'
+                ]
+            ];
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_USER_FLAG, $flags)) {
-
+            $condition = ['PostShareUser'];
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_FILE_FLAG, $flags)) {
+            $condition = [
+                'PostFile' => [
+                    'order'        => ['PostFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
+            ];
 
         }
 
+        //Fetch data
+        $Model = new Model();
+        $resultArray = $Model->find('all', $queryCondition);
     }
 }
