@@ -8,13 +8,26 @@ use Goalous\Model\Enum as Enum;
  */
 class ChargeHistory extends AppModel
 {
-    // TODO.Payment: Change to enum and remove defined these
+    /**
+     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
+     */
     const PAYMENT_TYPE_INVOICE = 0;
+    /**
+     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
+     */
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
-    // TODO.Payment: Change to enum and remove defined these
+    /**
+     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     */
     const CHARGE_TYPE_MONTHLY = 0;
+    /**
+     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     */
     const CHARGE_TYPE_ADD_USER = 1;
+    /**
+     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     */
     const CHARGE_TYPE_ACTIVATE_USER = 2;
 
     /* Validation rules
@@ -401,6 +414,8 @@ class ChargeHistory extends AppModel
                 'ChargeHistory.payment_type',
                 'ChargeHistory.charge_users',
                 'ChargeHistory.charge_type',
+                'ChargeHistory.result_type',
+                'ChargeHistory.reorder_charge_history_id',
                 'Team.name',
                 'PaymentSetting.company_country',
                 'PaymentSetting.company_name',

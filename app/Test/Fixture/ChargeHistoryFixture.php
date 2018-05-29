@@ -113,6 +113,13 @@ class ChargeHistoryFixture extends CakeTestFixtureEx
             'comment' => 'stripe payment id. if invoice, it will be null',
             'charset' => 'utf8mb4'
         ),
+        'reorder_charge_history_id'   => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'Reordered charge_histories.id'
+        ),
         'campaign_team_id'            => array(
             'type'     => 'biginteger',
             'null'     => true,

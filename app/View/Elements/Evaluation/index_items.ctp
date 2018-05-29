@@ -18,7 +18,7 @@
                                    'user_id'          => $user['User']['id'],
                                    'class'            => 'block'
     ]) ?>"
-       class="font_verydark">
+       class="font_verydark eval-hover-effect">
         <div class="eval-list-item col-xxs-12">
             <div class="eval-list-item-left">
                 <?=
@@ -76,9 +76,13 @@
                         <i class="fa fa-user <?= $v['other_evaluator'] ? '' : 'none' ?>" aria-hidden="true"></i><?= $v['name'] ?>
                     </span>
                 <?php endforeach ?>
-                <?php if ($user['status_text']['body'] && !$eval_is_frozen): ?>
-                    <?php $text_class = h($user['status_text']['your_turn']) ? 'font_brownRed' : 'font_verydark' ?>
-                    <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
+                <?php if (!empty($user['status_text']['body']) && !$eval_is_frozen): ?>
+                    <?php if(h($user['status_text']['body']) == "Please evaluate." || h($user['status_text']['body']) == "評価をしてください" || h($user['status_text']['body']) == "Please evaluate yourself." || h($user['status_text']['body']) == "自己評価をしてください"): ?>
+                        <?php $text_class = $incompEvaluateeEvalCnt > 0 ? 'font_brownRed' : 'font_verydark' ?>
+                        <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
+                    <?php else: ?>
+                        <p class="font_verydark"><?= h($user['status_text']['body']) ?></p>
+                    <?php endif; ?>
                 <?php else: ?>
                     <p class="font_verydark"></p>
                 <?php endif; ?>

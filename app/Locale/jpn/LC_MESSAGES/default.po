@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-12 18:03+0900\n"
+"PO-Revision-Date: 2018-05-10 16:13+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.7\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -957,6 +957,9 @@ msgstr "注意"
 msgid "Sent file(s)."
 msgstr "ファイルを送信しました。"
 
+msgid "%1$s and %2$s circle(s)"
+msgstr "%1$s他%2$sサークル"
+
 msgid "Device Information not exists"
 msgstr "デバイス情報が見つかりません。"
 
@@ -1184,6 +1187,13 @@ msgid ""
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class="
 "\"notify-card-head-target\">%3$s</span>の投稿にコメントしました。"
+
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a "
+"comment. "
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしまし"
+"た。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
@@ -1435,9 +1445,6 @@ msgstr "%1$sと他%2$s人、%3$s他%4$sサークルに共有"
 
 msgid "%1$s and %2$s others"
 msgstr "%1$sと他%2$s人"
-
-msgid "%1$s and %2$s circle(s)"
-msgstr "%1$s他%2$sサークル"
 
 msgid "%1$s and %2$s"
 msgstr "%1$sと%2$s"
@@ -3192,6 +3199,9 @@ msgstr "サークルを見る"
 msgid "View All"
 msgstr "すべて表示"
 
+msgid "Go To Top"
+msgstr "トップへ戻る"
+
 msgid "Saved"
 msgstr "保存済み"
 
@@ -4348,6 +4358,9 @@ msgstr "週"
 
 msgid "Day"
 msgstr "日"
+
+msgid "There are no further rankings to show."
+msgstr "これ以下のランキングはありません。"
 
 msgid "Member(Active)"
 msgstr "メンバー（アクティブ）"
@@ -5920,6 +5933,9 @@ msgstr "Jane Doe"
 msgid "PAID"
 msgstr "支払済"
 
+msgid "FAILURE"
+msgstr "支払い失敗"
+
 msgid "Billing ID"
 msgstr "請求ID"
 
@@ -6222,167 +6238,3 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
-
-#, fuzzy
-#~| msgid "Invalid score."
-#~ msgid "Invalid csv format"
-#~ msgstr "定義されていないスコアです。"
-
-#, fuzzy
-#~| msgid "This circle does not exist."
-#~ msgid "Circle does not exist"
-#~ msgstr "このサークルは存在しません。"
-
-#, fuzzy
-#~| msgid "You don't belong to any circle."
-#~ msgid "Do not belong to Circle"
-#~ msgstr "参加しているサークルはありません。"
-
-#~ msgid "Edit Circles"
-#~ msgstr "サークル編集"
-
-#~ msgid "Pinned"
-#~ msgstr "ピン済み"
-
-#~ msgid "Unpinned"
-#~ msgstr "ピンなし"
-
-#~ msgid "You can start evaluation with the current settings."
-#~ msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
-
-#~ msgid "Notice - These settings can't be canceled."
-#~ msgstr "この設定は取り消すことができませんので気を付けてください。"
-
-#~ msgid "In evaluation term"
-#~ msgstr "評価期間中です。"
-
-#~ msgid "Start current term evaluations"
-#~ msgstr "今期の評価を開始する"
-
-#~ msgid "Anyone"
-#~ msgstr "指定なし"
-
-#~ msgid "Which item you want to ask"
-#~ msgstr "お問い合わせ内容"
-
-#~ msgid "Your company name"
-#~ msgstr "会社名"
-
-#~ msgid "Sales person you appointed"
-#~ msgstr "ご希望の営業担当者"
-
-#~ msgid "Contact us about Goalous"
-#~ msgstr "Goalousに関するお問い合わせ"
-
-#~ msgid ""
-#~ "Goalous is managed by ISAO, a visionary company that brings joy to work "
-#~ "around the world."
-#~ msgstr ""
-#~ "Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会"
-#~ "社ISAOが運営しております。"
-
-#~ msgid "Feel free to contact us."
-#~ msgstr "なんでも、お気軽にご相談ください。"
-
-#~ msgid "Required"
-#~ msgstr "必須"
-
-#~ msgid "eg. Isao Suzuki"
-#~ msgstr "例）鈴木 いさお"
-
-#~ msgid "eg. example@goalous.com"
-#~ msgstr "例）example@goalous.com（半角英数字）"
-
-#~ msgid "eg. ISAO Corporation"
-#~ msgstr "例）株式会社ISAO"
-
-#~ msgid "Company name, Organization name or Something like that."
-#~ msgstr "会社名・団体名など"
-
-#~ msgid "What is your question about?"
-#~ msgstr "お問い合わせ項目"
-
-#~ msgid "eg. We want to use it. So, we need more explanation in detail."
-#~ msgstr "例）導入を希望しています。詳しく説明に来て欲しいです。"
-
-#~ msgid "Question (3,000 character limit)"
-#~ msgstr "お問い合わせ内容（最大3,000文字）"
-
-#~ msgid "You can request your sales person."
-#~ msgstr "ご希望の営業担当者がいれば、リクエストください。（複数選択可）"
-
-#~ msgid "Keita Yukawa"
-#~ msgstr "湯川啓太"
-
-#~ msgid "Cool like Japanese actor"
-#~ msgstr "唐沢寿明に似てます"
-
-#~ msgid "Kohei Kikuchi"
-#~ msgstr "菊池厚平"
-
-#~ msgid "Owner of Goalous"
-#~ msgstr "Goalousのオーナーです"
-
-#~ msgid "Makoto Yoshioka"
-#~ msgstr "吉岡真人"
-
-#~ msgid "Sales person full of joy"
-#~ msgstr "愛をこめた営業をします"
-
-#~ msgid "Yusuke Ishihara"
-#~ msgstr "石原裕介"
-
-#~ msgid "A DJ since my teens"
-#~ msgstr "DJやってます"
-
-#~ msgid "・"
-#~ msgstr ","
-
-#~ msgid "PrivacyPolicy"
-#~ msgstr "個人情報の取り扱い"
-
-#~ msgid " - Do you agree with them?"
-#~ msgstr "について同意の上、問い合わせする"
-
-#~ msgid "Need to agree to terms and policy."
-#~ msgstr "個人情報保護方針の同意が必要です。"
-
-#~ msgid "Go to confirm"
-#~ msgstr "確認画面へ"
-
-#~ msgid "Appointed"
-#~ msgstr "ご希望"
-
-#~ msgid "Please check our Blog and SNS, if you get interested."
-#~ msgstr ""
-#~ "お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧く"
-#~ "ださい。"
-
-#~ msgid "IsaB"
-#~ msgstr "IsaB"
-
-#~ msgid "Make your job joyful! ISAO blog"
-#~ msgstr "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
-
-#~ msgid "facebook page"
-#~ msgstr "facebookページ"
-
-#~ msgid "isao.jp"
-#~ msgstr "isao.jp"
-
-#~ msgid "@ISAOcorp"
-#~ msgstr "@ISAOcorp"
-
-#~ msgid "5 Feb 2016"
-#~ msgstr "2016年2月5日"
-
-#~ msgid "Goalous was featured in a magazine - Gekkan Jinji Management Feb. -"
-#~ msgstr "月刊人事マネジメント2016年2月号に掲載されました"
-
-#~ msgid "4 Feb 2016"
-#~ msgstr "2016年2月4日"
-
-#~ msgid ""
-#~ "Goalous was featured in a web publication - Hito to shigoto no kenkyujo "
-#~ "by Idem -"
-#~ msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"

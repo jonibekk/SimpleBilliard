@@ -54,6 +54,7 @@ const config = {
       assets_dir + '/js/lib/notify.js',
       assets_dir + '/js/lib/header.js',
       assets_dir + '/js/lib/select2.js',
+      assets_dir + '/js/lib/mention.js',
       assets_dir + '/js/lib/feed.js',
       assets_dir + '/js/lib/posts.js',
       assets_dir + '/js/lib/comments.js',
@@ -111,6 +112,8 @@ const config = {
       node_modules_dir + '/sortablejs/Sortable.min.js',
       node_modules_dir + '/dropzone/dist/min/dropzone.min.js',
       node_modules_dir + '/jquery-lazy/jquery.lazy.js',
+      node_modules_dir + '/jquery.caret/dist/jquery.caret.min.js',
+      node_modules_dir + '/at.js/dist/js/jquery.atwho.min.js',
       node_modules_dir + '/raven-js/dist/raven.js',
       node_modules_dir + '/bootstrap/dist/js/bootstrap.min.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
@@ -205,6 +208,8 @@ const config = {
       assets_dir + '/css/bootstrap-ext-col.css',
       assets_dir + '/css/customRadioCheck.css',
       assets_dir + '/css/video-js.css',
+
+      node_modules_dir + '/at.js/dist/css/jquery.atwho.min.css',
 
       // Collapsed design latest node_modules css
       assets_dir + '/css/select2.css',

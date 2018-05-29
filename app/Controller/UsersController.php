@@ -31,6 +31,7 @@ class UsersController extends AppController
     ];
     public $components = [
         'TwoFa',
+        'Mention'
     ];
 
     public function beforeFilter()
@@ -743,9 +744,11 @@ class UsersController extends AppController
                 $values = $this->User->NotifySetting->getSettingValues($notify_target, $type_group);
                 $same = true;
                 foreach ($values as $k => $v) {
-                    if ($this->request->data['NotifySetting'][$k] !== $v) {
-                        $same = false;
-                        break;
+                    if (isset($this->request->data['NotifySetting'][$k])) {
+                        if ($this->request->data['NotifySetting'][$k] !== $v) {
+                            $same = false;
+                            break;
+                        }                        
                     }
                 }
                 if ($same) {
@@ -890,6 +893,9 @@ class UsersController extends AppController
             $with_group = boolval($query['with_group'] ?? false);
             $with_self  = boolval($query['with_self'] ?? false);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
+        }
+        if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
+            $res['results'] = $this->Mention::filterAsMentionableUser($query['in_post_id'], $res['results']);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -1457,10 +1463,6 @@ class UsersController extends AppController
         /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
 
-        if ($this->Team->TeamMember->isActive($userId) == false) {
-            // inactive user or not exists
-            return false;
-        }
         if (!in_array($pageType, ['list', 'image'])) {
             // $pageType is wrong
             return false;
