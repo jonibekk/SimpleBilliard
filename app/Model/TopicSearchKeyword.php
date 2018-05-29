@@ -54,6 +54,7 @@ class TopicSearchKeyword extends AppModel
 
         if (!empty($entry) && $entry['TopicSearchKeyword']['id'] > 0) {
 
+            $data['modified'] = REQUEST_TIMESTAMP;
             $res = $this->updateAll($data, ['topic_id' => $topicId]);
 
         } else {
