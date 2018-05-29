@@ -319,7 +319,7 @@ class TopicService extends AppService
 
             // update last message sent
             $updateLastMessageSent = $TopicMember->updateLastMessageSentDate($topicId, $creatorUserId);
-            if($updateLastMessageSent === false){
+            if ($updateLastMessageSent === false) {
                 $errorMsg = sprintf("Failed to update last message sent. topicId:%s, creatorUserId:%s, validationErrors:%s",
                     $topicId,
                     $creatorUserId,
@@ -361,7 +361,7 @@ class TopicService extends AppService
         return $ret;
     }
 
-    /*
+    /**
      * Add members to the topic.
      * - Add topic_members.
      * - Add message as add members.
@@ -381,6 +381,10 @@ class TopicService extends AppService
         $MessageService = ClassRegistry::init('MessageService');
         /** @var Message $Message */
         $Message = ClassRegistry::init("Message");
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
 
         $TopicMember->begin();
 
@@ -407,7 +411,6 @@ class TopicService extends AppService
                     )
                 );
             }
-
             // Push event using pusher
             $MessageService->execPushMessageEvent($topicId, $socketId);
 
@@ -418,6 +421,27 @@ class TopicService extends AppService
             return false;
         }
         $TopicMember->commit();
+
+        $TopicSearchKeyword->begin();
+        
+        try {
+            // create topic search record
+            $keywords = $Topic->fetchSearchKeywords($topicId);
+            if (!$TopicSearchKeyword->add($topicId, $keywords)) {
+                $errorMsg = sprintf("Failed to add search topic record. topicId:%s",
+                    $topicId
+                );
+                throw new Exception($errorMsg);
+            }
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $TopicMember->rollback();
+            return false;
+        }
+
+        $TopicSearchKeyword->commit();
+
         return true;
     }
 

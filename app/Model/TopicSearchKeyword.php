@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 
 /**
  * TopicSearchKeyword Model
-
  */
 class TopicSearchKeyword extends AppModel
 {
@@ -68,6 +67,7 @@ class TopicSearchKeyword extends AppModel
      *  - For Reducing query cost
      *
      * @param  int $userId
+     *
      * @return bool
      */
     function updateByUserId($userId): bool
