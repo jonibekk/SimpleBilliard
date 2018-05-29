@@ -353,7 +353,8 @@ class Topic extends AppModel
                     'table'      => 'topic_members',
                     'alias'      => 'TopicMember',
                     'conditions' => [
-                        'Topic.id = TopicMember.topic_id'
+                        'Topic.id = TopicMember.topic_id',
+                        'TopicMember.del_flg' => false,
                     ],
                 ],
                 [
@@ -363,6 +364,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'TopicMember.user_id = User.id',
                         'User.active_flg' => true,
+                        'User.del_flg' => false,
                     ],
                 ],
                 [
