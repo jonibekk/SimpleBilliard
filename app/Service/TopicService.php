@@ -235,6 +235,8 @@ class TopicService extends AppService
         }
         $TopicMember->commit();
 
+        $this->updateTopicKeyword($topicId);
+
         return true;
     }
 
@@ -319,7 +321,7 @@ class TopicService extends AppService
 
             // update last message sent
             $updateLastMessageSent = $TopicMember->updateLastMessageSentDate($topicId, $creatorUserId);
-            if($updateLastMessageSent === false){
+            if ($updateLastMessageSent === false) {
                 $errorMsg = sprintf("Failed to update last message sent. topicId:%s, creatorUserId:%s, validationErrors:%s",
                     $topicId,
                     $creatorUserId,
@@ -339,14 +341,7 @@ class TopicService extends AppService
                 throw new Exception($errorMsg);
             }
 
-            // create topic search record
-            $keywords = $Topic->fetchSearchKeywords($topicId);
-            if (!$TopicSearchKeyword->add($topicId, $keywords)) {
-                $errorMsg = sprintf("Failed to add search topic record. topicId:%s",
-                    $topicId
-                );
-                throw new Exception($errorMsg);
-            }
+            $this->updateTopicKeyword($topicId);
 
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
@@ -361,7 +356,7 @@ class TopicService extends AppService
         return $ret;
     }
 
-    /*
+    /**
      * Add members to the topic.
      * - Add topic_members.
      * - Add message as add members.
@@ -381,7 +376,6 @@ class TopicService extends AppService
         $MessageService = ClassRegistry::init('MessageService');
         /** @var Message $Message */
         $Message = ClassRegistry::init("Message");
-
         $TopicMember->begin();
 
         try {
@@ -407,7 +401,6 @@ class TopicService extends AppService
                     )
                 );
             }
-
             // Push event using pusher
             $MessageService->execPushMessageEvent($topicId, $socketId);
 
@@ -418,6 +411,9 @@ class TopicService extends AppService
             return false;
         }
         $TopicMember->commit();
+
+        $this->updateTopicKeyword($topicId);
+
         return true;
     }
 
@@ -439,4 +435,38 @@ class TopicService extends AppService
         return true;
     }
 
+    /**
+     * Update topic keywords of a message topic
+     *
+     * @param int $topicId
+     */
+    private function updateTopicKeyword(int $topicId)
+    {
+
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init("TopicMember");
+        /** @var TopicSearchKeyword $TopicSearchKeyword */
+        $TopicSearchKeyword = ClassRegistry::init('TopicSearchKeyword');
+
+        $TopicSearchKeyword->begin();
+
+        try {
+
+            if (!$TopicSearchKeyword->add($topicId, $Topic->fetchSearchKeywords($topicId))) {
+                $errorMsg = sprintf("Failed to add search topic record. topicId:%s",
+                    $topicId
+                );
+                throw new Exception($errorMsg);
+            }
+
+        } catch (Exception $e) {
+            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+            $this->log($e->getTraceAsString());
+            $TopicMember->rollback();
+        }
+
+        $TopicSearchKeyword->commit();
+    }
 }
