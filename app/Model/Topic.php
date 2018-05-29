@@ -39,9 +39,9 @@ class Topic extends AppModel
         'del_flg' => [
             'boolean' => ['rule' => ['boolean'],],
         ],
-        'title' => [
-            'maxLength'    => ['rule' => ['maxLength', 128]],
-            'notBlank'     => ['rule' => 'notBlank'],
+        'title'   => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notBlank'  => ['rule' => 'notBlank'],
         ],
     ];
 
@@ -51,7 +51,7 @@ class Topic extends AppModel
      * @var array
      */
     public $belongsTo = [
-        'CreatorUser' => [
+        'CreatorUser'   => [
             'className'  => 'User',
             'foreignKey' => 'creator_user_id',
         ],
@@ -80,8 +80,6 @@ class Topic extends AppModel
     public $hasOne = [
         'TopicSearchKeyword'
     ];
-
-
 
     /* number of displaying user photo in topic list page */
     const MAX_DISPLAYING_USER_PHOTO = 4;
@@ -137,7 +135,7 @@ class Topic extends AppModel
                     ]
                 ],
                 'TopicMember'   => [
-                    'fields' => [
+                    'fields'     => [
                         'TopicMember.id',
                         'TopicMember.user_id',
                         'TopicMember.topic_id',
@@ -146,12 +144,12 @@ class Topic extends AppModel
                     'conditions' => [
                         'user_id' => $activeTeamMembersList
                     ],
-                    'User'   => [
+                    'User'       => [
                         'fields' => $this->TopicMember->User->profileFields,
                         // 10: realistic upper limit for displaying title connecting user name.
                         'limit'  => 10
                     ],
-                    'order'  => [
+                    'order'      => [
                         'TopicMember.last_message_sent DESC',
                         'TopicMember.id DESC',
                     ]
@@ -199,7 +197,7 @@ class Topic extends AppModel
     /**
      * get a topic with latest message
      *
-     * @param  int    $topicId [description]
+     * @param  int $topicId [description]
      *
      * @return array
      */
@@ -332,7 +330,7 @@ class Topic extends AppModel
     /**
      * fetch search topic keywords
      *
-     * @param  int    $topicId
+     * @param  int $topicId
      *
      * @return string
      */
@@ -390,11 +388,9 @@ class Topic extends AppModel
 
         $res = $this->find('all', $options);
         $filtered = [];
-        foreach($res as &$user) {
-            if ($user['User']['id'] != $this->my_uid) {
-                unset($user['User']['id']);
-                $filtered[] = $user;
-            }
+        foreach ($res as &$user) {
+            unset($user['User']['id']);
+            $filtered[] = $user;
         }
         $res = AppUtil::flattenUnique($filtered);
         $keywords = "\n" . implode("\n", $res);
