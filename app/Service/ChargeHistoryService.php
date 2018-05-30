@@ -122,20 +122,27 @@ class ChargeHistoryService extends AppService
                 $history['ChargeHistory']['is_monthly'] = true;
                 break;
             case Enum\ChargeHistory\ChargeType::RECHARGE:
-                $reorderTargetInvoiceHistory = $InvoiceHistory->getByChargeHistoryId($history['ChargeHistory']['id']);
-                if (empty($reorderTargetInvoiceHistory)) {
-                    GoalousLog::emergency(
-                        sprintf("Reorder target of invoice history doesn't exist. history_id:%s",
-                            $history['ChargeHistory']['id'])
-                    );
-                    break;
-                }
-                $reorderTargetOrderCode = Hash::get($reorderTargetInvoiceHistory,
-                    'InvoiceHistory.reorder_target_code');
-                $reorderChargeHistories = $ChargeHistory->findByInvoiceOrderCode($teamId, $reorderTargetOrderCode);
+                $paymentType = new Enum\PaymentSetting\Type(intval($history['ChargeHistory']['payment_type']));
+                switch ($paymentType->getValue()) {
+                    case Enum\PaymentSetting\Type::CREDIT_CARD:
+                        $history['ChargeHistory']['recharge_history_ids'] = [$history['ChargeHistory']['reorder_charge_history_id']];
+                        break;
+                    case Enum\PaymentSetting\Type::INVOICE:
+                        $reorderTargetInvoiceHistory = $InvoiceHistory->getByChargeHistoryId($history['ChargeHistory']['id']);
+                        if (empty($reorderTargetInvoiceHistory)) {
+                            GoalousLog::emergency(
+                                sprintf("Reorder target of invoice history doesn't exist. history_id:%s",
+                                    $history['ChargeHistory']['id'])
+                            );
+                            break;
+                        }
+                        $reorderTargetOrderCode = Hash::get($reorderTargetInvoiceHistory,
+                            'InvoiceHistory.reorder_target_code');
+                        $reorderChargeHistories = $ChargeHistory->findByInvoiceOrderCode($teamId, $reorderTargetOrderCode);
 
-                $history['ChargeHistory']['recharge_history_ids'] = Hash::extract($reorderChargeHistories, '{n}.id');
-                break;
+                        $history['ChargeHistory']['recharge_history_ids'] = Hash::extract($reorderChargeHistories, '{n}.id');
+                        break;
+                }
         }
         return $history;
     }

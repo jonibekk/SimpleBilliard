@@ -225,6 +225,10 @@ $(function () {
     $topBtn.click(function(){
       $('body,html').stop().animate({ scrollTop: 0 }, 500, 'swing');
     });
+    $(".btn-back-actions,.btn-back-goals").off("click").on("click", function(e) {
+      e.preventDefault();
+      window.history.back();
+    });
 });
 
 
