@@ -23,8 +23,8 @@ abstract class BaseApiController extends Controller
     /** @var string */
     private $_jwtToken;
 
-    /** @var .\Model\User */
-    private $_currentUser;
+    /** @var int */
+    private $_currentUserId;
 
     /** @var int */
     private $_currentTeamId;
@@ -75,11 +75,27 @@ abstract class BaseApiController extends Controller
 
         //Skip authentication if the endpoint set the option
         if (!$this->_checkSkipAuthentication($this->request)) {
-            if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
+
+            if (empty($this->_jwtToken)) {
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
+                    ->setMessage(__('Missing token.'))->getResponse();
+            }
+
+            try {
+                $userAuthentication = $this->_authenticateUser();
+            } catch (Exception $e) {
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
+                    ->setMessage($e->getMessage())->setExceptionTrace($e->getTrace())->getResponse();
+            }
+
+            if (!$userAuthentication) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
                     ->withMessage(__('You should be logged in.'))->getResponse();
             }
+
             $this->_initializeTeamStatus();
 
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
@@ -209,10 +225,20 @@ abstract class BaseApiController extends Controller
      * Perform user authentication using JWT Token method
      *
      * @return bool TRUE = user successfully authenticated
+     * @throws Exception
      */
     private function _authenticateUser(): bool
     {
-        //TODO set user & team ID
+        $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
+
+        if (empty($jwtAuth->getUserId())) {
+            return false;
+        }
+
+        $this->_currentUserId = $jwtAuth->getUserId();
+
+        $this->_currentTeamId = $jwtAuth->getTeamId();
+
         return true;
     }
 
@@ -248,7 +274,7 @@ abstract class BaseApiController extends Controller
         $commentArray = $this->_parseEndpointDocument($request);
 
         foreach ($commentArray as $commentLine) {
-            if ('@skipAuthentication' == trim($commentLine)) {
+            if ('@ignoreRestriction' == trim($commentLine)) {
                 return true;
             }
         }
@@ -273,11 +299,11 @@ abstract class BaseApiController extends Controller
      */
     private function _setAppLanguage()
     {
-        if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
-            Configure::write('Config.language', $this->_currentUser['language']);
+        if (isset($this->_currentUserId) && isset($this->_currentUserId['language']) && !boolval($this->_currentUserId['auto_language_flg'])) {
+            Configure::write('Config.language', $this->_currentUserId['language']);
             $this
                 ->set('is_not_use_local_name',
-                    (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
+                    (new User())->isNotUseLocalName($this->_currentUserId['language']) ?? false);
         } else {
             $lang = $this->LangComponent->getLanguage();
             $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
@@ -308,10 +334,10 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * @return mixed Current user's User object
+     * @return int Current user's ID
      */
-    protected function getUser()
+    protected function getUserId()
     {
-        return $this->_currentUser;
+        return $this->_currentUserId;
     }
 }
