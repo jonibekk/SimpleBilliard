@@ -33,6 +33,7 @@ export default class CreditCard extends Base {
     // Custom styling can be passed to options when creating an Element.
     // Check: https://stripe.com/docs/stripe.js#elements-create
     let card = elements.create('card', {
+      hidePostalCode: true,
       style: {
         base: {
           iconColor: '#808080',
