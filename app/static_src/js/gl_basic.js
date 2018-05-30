@@ -315,7 +315,7 @@ $(function () {
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
     });
-    $("#NavSearchInputToggle").off("keyup").on("keyup", function(e) {
+    $("#NavSearchInputToggle").on("keyup", function(e) {
       if(cake.is_mb_app !== "1" || cake.is_mb_browser !== "1"){
         return false;
       }

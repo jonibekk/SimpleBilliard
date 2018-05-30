@@ -3,7 +3,6 @@ define(function () {
     var headerSearch = {
         setup: function () {
             var lastHitCount = 1;
-            var lastTerm;
             var current;
             var currentIndex = -1;
             var $NavSearchForm = $('#NavSearchForm');
@@ -92,6 +91,11 @@ define(function () {
                     }
                 })
                 .on('keyup', function (e) {
+                    var code = e.keyCode || e.which;
+                    if(code === 38 || code === 40 || code === 13){
+                        return;
+                    }
+
                     // 検索文字列
                     var inputText = $(this).val();
 
@@ -101,14 +105,8 @@ define(function () {
                         $("#NavSearchInputClear").hide();
                     }
 
-                    if(lastTerm === inputText && inputText.length){
-                        return;
-                    }
-
-                    lastTerm = inputText;
-
                      // When there is no last search result return unless backspace/delete pressed
-                    if(inputText.length && lastHitCount < 1 && !(e.keyCode === 8 || e.keyCode === 46)) {
+                    if(lastHitCount < 1 && !(e.keyCode === 8 || e.keyCode === 46)) {
                         return;
                     }
 
@@ -242,13 +240,9 @@ define(function () {
                             $NavSearchResults.append($noResultsLabel);
                         }
 
-                        // ポップアップ下の画面をスクロールさせないようにする
-                        $("body").addClass('nav-search-results-open');
-
                         // ポップアップクローズ用
                         $NavSearchResults.one('click', function () {
                             $NavSearchResults.hide();
-                            $("body").removeClass('nav-search-results-open');
                         });
                         $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
                             e.preventDefault();
