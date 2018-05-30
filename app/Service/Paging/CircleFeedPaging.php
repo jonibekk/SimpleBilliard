@@ -176,6 +176,13 @@ class CircleFeedPaging implements PagingServiceInterface
                     'Post.user_id' => 'User.id'
                 ]
             ];
+
+            //Get all user IDs
+            //Filter unique
+            //Get all users
+            //Other processes
+            //Add User object to user IDs
+            //
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_LIKE_FLAG, $flags)) {
             $condition = [
@@ -234,5 +241,11 @@ class CircleFeedPaging implements PagingServiceInterface
         //Fetch data
         $Model = new Model();
         $resultArray = $Model->find('all', $queryCondition);
+
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_COMMENT_FLAG, $flags)) {
+//Set read status
+            //Count unread
+            //....
+        }
     }
 }

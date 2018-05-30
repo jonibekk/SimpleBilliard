@@ -30,5 +30,9 @@ class CommentPaging implements PagingServiceInterface
         return $Comment->getCount($conditions);
     }
 
+    //TODO
+    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
+    {
+    }
 
 }
