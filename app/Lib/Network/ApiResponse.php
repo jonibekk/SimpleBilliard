@@ -136,7 +136,7 @@ class ApiResponse extends CakeResponse
      *
      * @return ApiResponse
      */
-    public function setBody($data, bool $appendFlag = false): ApiResponse
+    public function withBody($data, bool $appendFlag = false): ApiResponse
     {
         if (empty($data)) {
             return $this;

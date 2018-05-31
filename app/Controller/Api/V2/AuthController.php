@@ -35,17 +35,17 @@ class AuthController extends ApiV2Controller
         try {
             $jwt = $Auth->authenticateUser($requestData['username'], $requestData['password']);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->setMessage($e->getMessage())
-                                                                                 ->setExceptionTrace($e->getTrace())
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage($e->getMessage())
+                                                                                 ->withExceptionTrace($e->getTrace())
                                                                                  ->getResponse();
         }
 
         if (empty($jwt)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage("Username & password doesn't match")
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage("Username & password doesn't match")
                                                                        ->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->setBody(['jwt' => $jwt->token()])->getResponse();
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody(['jwt' => $jwt->token()])->getResponse();
 
     }
 
@@ -57,7 +57,7 @@ class AuthController extends ApiV2Controller
     private function validateLogin()
     {
         if (!$this->request->is('post')) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage("Unsupported HTTP method")
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage("Unsupported HTTP method")
                                                                        ->getResponse();
         }
 
@@ -66,8 +66,8 @@ class AuthController extends ApiV2Controller
         try {
             $validator->validate($this->request->data);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->setMessage($e->getMessage())
-                                                                       ->setExceptionTrace($e->getTrace())
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage($e->getMessage())
+                                                                       ->withExceptionTrace($e->getTrace())
                                                                        ->getResponse();
         }
 
