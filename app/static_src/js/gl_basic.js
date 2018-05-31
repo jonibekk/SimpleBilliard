@@ -300,7 +300,6 @@ $(function () {
       }
     });
     $("#NavSearchInputClear").off("click").on("click", function() {
-      // setTimeout(function(){$("#NavSearchInput").focus();},100);
       $("#NavSearchInput").focus();
       $(this).prev().prev().val('');
       $(this).hide();
@@ -308,22 +307,11 @@ $(function () {
       $("#NavSearchResults").hide();
     });
     $("#NavSearchInputClearToggle").off("click").on("click", function() {
-      // setTimeout(function(){$("#NavSearchInputToggle").focus();},100);
       $("#NavSearchInputToggle").focus();
       $(this).prev().prev().val('');
       $(this).hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
-    });
-    $("#NavSearchInputToggle").on("keyup", function(e) {
-      if(cake.is_mb_app !== "1" || cake.is_mb_browser !== "1"){
-        return false;
-      }
-      var code = e.keyCode || e.which;
-      if(code == 13) {
-        $("#NavSearchInputToggle").blur();
-        $("#NavSearchInputToggle").focusout();
-      }
     });
     $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
         $("#NavSearchResults").empty();

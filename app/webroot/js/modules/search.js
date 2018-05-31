@@ -95,6 +95,12 @@ define(function () {
                     if(code === 38 || code === 40 || code === 13){
                         return;
                     }
+                    if(cake.is_mb_app === "1" || cake.is_mb_browser === "1"){
+                        if(code == 13) {
+                            $("#NavSearchInput").blur();
+                            $("#NavSearchInput").focusout();
+                        }
+                    }     
 
                     // 検索文字列
                     var inputText = $(this).val();
