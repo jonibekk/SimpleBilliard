@@ -98,15 +98,22 @@ abstract class BaseApiController extends Controller
 
             $this->_initializeTeamStatus();
 
-        //Check if user is restricted from using the service. Always skipped if endpoint ignores restrictionif ($this->_isRestrictedFromUsingService()&& !$this->_checkIgnoreRestriction($this->request)) {
-            $this->_stopInvokeFlag = true;/** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpInconsistentReturnPointsInspection */return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->withMessage(__("You cannot use service on the team."))->getResponse();
-        }
-        //Check if user is restricted to read only. Always skipped if endpoint ignores restrictionif ($this->_isRestrictedToReadOnly()&& !$this->_checkIgnoreRestriction($this->request)) {
-            $this->_stopInvokeFlag = true;/** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpInconsistentReturnPointsInspection */return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->withMessage(__("You may only read your team’s pages."))->getResponse();}
+            //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
+            if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->withMessage(__("You cannot use service on the team."))->getResponse();
+            }
+            //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
+            if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->withMessage(__("You may only read your team’s pages."))->getResponse();
+            }
         }
 
         $this->_setAppLanguage();
@@ -238,23 +245,6 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get JWT token from request
-     *
-     * @param CakeRequest $request
-     */
-    private function _fetchJwtToken(CakeRequest $request)
-    {
-        $authHeader = $request->header('authorization');
-        if (empty($authHeader)) {
-            return;
-        }
-
-        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
-
-        $this->_jwtToken = $jwt[0] ?? '';
-    }
-
-    /**
      * Initialize current team's status based on current user's team ID
      */
     private
@@ -284,8 +274,9 @@ abstract class BaseApiController extends Controller
      * @return bool
      */
     private
-    function _checkIgnoreRestriction(CakeRequest $request)
-    {
+    function _checkIgnoreRestriction(
+        CakeRequest $request
+    ) {
         $commentArray = $this->_parseEndpointDocument($request);
 
         foreach ($commentArray as $commentLine) {
@@ -316,11 +307,12 @@ abstract class BaseApiController extends Controller
     private
     function _setAppLanguage()
     {
-        if (isset($this->_currentUserId) && isset($this->_currentUserId['language']) && !boolval($this->_currentUserId['auto_language_flg'])) {
-            Configure::write('Config.language', $this->_currentUserId['language']);
-            $this
-                ->set('is_not_use_local_name',
-                    (new User())->isNotUseLocalName($this->_currentUserId['language']) ?? false);
+        $User = new User();
+        $currentUser = $User->findById($this->_currentUserId);
+
+        if (isset($this->_currentUserId) && isset($currentUser['language']) && !boolval($currentUser['auto_language_flg'])) {
+            Configure::write('Config.language', $currentUser['language']);
+            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($currentUser['language']) ?? false);
         } else {
             $lang = $this->LangComponent->getLanguage();
             $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
@@ -333,10 +325,8 @@ abstract class BaseApiController extends Controller
      *
      * @return mixed
      */
-    public
-    function invokeAction(
-        CakeRequest $request
-    ) {
+    public function invokeAction(CakeRequest $request)
+    {
         if ($this->_stopInvokeFlag) {
             return false;
         }
