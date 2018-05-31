@@ -79,7 +79,7 @@ abstract class BaseApiController extends Controller
             if (empty($this->_jwtToken)) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->setMessage(__('Missing token.'))->getResponse();
+                    ->withMessage(__('Missing token.'))->getResponse();
             }
 
             try {
@@ -87,7 +87,7 @@ abstract class BaseApiController extends Controller
             } catch (Exception $e) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->setMessage($e->getMessage())->setExceptionTrace($e->getTrace())->getResponse();
+                    ->withMessage($e->getMessage())->setExceptionTrace($e->getTrace())->getResponse();
             }
 
             if (!$userAuthentication) {
