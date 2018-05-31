@@ -1,12 +1,12 @@
 define(function () {
     // ヘッダーの検索ボックス処理
-    var headerSearch = {
+    var headerSearchToggle = {
         setup: function () {
             var current;
             var currentIndex = -1;
-            var $NavSearchForm = $('#NavSearchForm');
-            var $NavSearchInput = $('#NavSearchInput');
-            var $NavSearchResults = $('#NavSearchResults');
+            var $NavSearchFormToggle = $('#NavSearchFormToggle');
+            var $NavSearchInputToggle = $('#NavSearchInputToggle');
+            var $NavSearchResultsToggle = $('#NavSearchResultsToggle');
             var keyupTimer = null;
             var cache = {
                 user: {},
@@ -32,14 +32,14 @@ define(function () {
                 },
             };
 
-            $NavSearchForm
+            $NavSearchFormToggle
                 // Enter 押しても submit させないようにする
                 .on('submit', function (e) {
                     e.preventDefault();
                     return false;
                 });
 
-            $NavSearchInput
+            $NavSearchInputToggle
                 .on('keydown', function (e) {
                     var $selectedItems = $('.search-list-item-link');
                     if ($selectedItems.length) {
@@ -80,11 +80,11 @@ define(function () {
                                 }                                
                                 break;
                             //Enter
-                            case 13:
+                            case 13:                    
                                 e.preventDefault();
                                 if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
-                                    $("#NavSearchInput").blur();
-                                    $("#NavSearchInput").focusout();
+                                    $("#NavSearchInputToggle").blur();
+                                    $("#NavSearchInputToggle").focusout();
                                 } 
                                 if(current){
                                     window.location = current.href;
@@ -97,15 +97,15 @@ define(function () {
                     var code = e.keyCode || e.which;
                     if(code === 38 || code === 40 || code === 13){
                         return;
-                    }   
+                    }
 
                     // 検索文字列
                     var inputText = $(this).val();
-
+ 
                     if(inputText.length){
-                        $("#NavSearchInputClear").show();
+                        $("#NavSearchInputClearToggle").show();
                     } else {
-                        $("#NavSearchInputClear").hide();
+                        $("#NavSearchInputClearToggle").hide();
                     }
 
                     // キー連打考慮してすこし遅らせて ajax リクエストする
@@ -113,7 +113,7 @@ define(function () {
                     // keyupTimer = setTimeout(function () {
                     // 入力テキストが空
                     if (inputText.length == 0) {
-                        $NavSearchResults.hide();
+                        $NavSearchResultsToggle.hide();
                         return;
                     }
 
@@ -131,10 +131,10 @@ define(function () {
 
                        // Each argument is an array with the following structure:
                        // [ data, statusText, jqXHR ]
-                        var $notFoundText = $('<div id="notFoundElement">')
+                        var $notFoundText = $('<div id="notFoundElementToggle">')
                             .text(cake.message.notice.search_result_zero)
                             .addClass('nav-search-result-notfound');
-                        $NavSearchResults.empty().append($notFoundText);
+                        $NavSearchResultsToggle.empty().append($notFoundText);
 
                         userResult = [];
                         goalResult = [];
@@ -145,12 +145,12 @@ define(function () {
                             circleResult = allResults.results_circles.results;
                         }
 
-                        if (userResult && userResult.length) {
-                            $('#notFoundElement').remove();
+                       if (userResult && userResult.length) {
+                            $('#notFoundElementToggle').remove();
                             var $userLabel = $('<div>')
                                 .text(config['user'].label)
                                 .addClass('nav-search-result-label');
-                            $NavSearchResults.append($userLabel);
+                            $NavSearchResultsToggle.append($userLabel);
                             for (var i = 0; i < userResult.length; i++) {
                                 var $row = $('<a>')
                                     .addClass('search-list-item-link')
@@ -168,15 +168,15 @@ define(function () {
                                 $divText.append($text);
                                 $row.append($divText);
 
-                                $row.appendTo($NavSearchResults);
+                                $row.appendTo($NavSearchResultsToggle);
                             }
                         }
                         if (goalResult && goalResult.length) {
-                            $('#notFoundElement').remove();
+                            $('#notFoundElementToggle').remove();
                             var $goalLabel = $('<div>')
                                 .text(config['goal'].label)
                                 .addClass('nav-search-result-label');
-                            $NavSearchResults.append($goalLabel);
+                            $NavSearchResultsToggle.append($goalLabel);
                             for (var i = 0; i < goalResult.length; i++) {
                                 var $row = $('<a>')
                                     .addClass('search-list-item-link')
@@ -194,15 +194,15 @@ define(function () {
                                 $divText.append($text);
                                 $row.append($divText);
 
-                                $row.appendTo($NavSearchResults);
+                                $row.appendTo($NavSearchResultsToggle);
                             }
                         }
                        if (circleResult && circleResult.length) {
-                            $('#notFoundElement').remove();
+                            $('#notFoundElementToggle').remove();
                             var $circleLabel = $('<div>')
                                 .text(config['circle'].label)
                                 .addClass('nav-search-result-label');
-                            $NavSearchResults.append($circleLabel);
+                            $NavSearchResultsToggle.append($circleLabel);
                             for (var i = 0; i < circleResult.length; i++) {
                                 var $row = $('<a>')
                                     .addClass('search-list-item-link')
@@ -220,31 +220,31 @@ define(function () {
                                 $divText.append($text);
                                 $row.append($divText);
 
-                                $row.appendTo($NavSearchResults);
+                                $row.appendTo($NavSearchResultsToggle);
                             }
                         }
 
-                        if(!$('#notFoundElement').length){
+                        if(!$('#notFoundElementToggle').length){
                             var $endLabel = $('<div>')
                                 .text(cake.word.end_search)
                                 .addClass('nav-search-result-end-label');
-                            $NavSearchResults.append($endLabel);
+                            $NavSearchResultsToggle.append($endLabel);
                         } else {
                             var $noResultsLabel = $('<div>')
                                 .text(cake.word.no_results)
                                 .addClass('nav-search-result-end-label');
-                            $NavSearchResults.append($noResultsLabel);
+                            $NavSearchResultsToggle.append($noResultsLabel);
                         }
 
                         // ポップアップクローズ用
-                        $NavSearchResults.one('click', function () {
-                            $NavSearchResults.hide();
+                        $NavSearchResultsToggle.one('click', function () {
+                            $NavSearchResultsToggle.hide();
                         });
                         $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
                             e.preventDefault();
                             return false;
                         });
-                        $NavSearchResults.show();
+                        $NavSearchResultsToggle.show();
                     });
                     // }, 150);
                 });
@@ -252,6 +252,6 @@ define(function () {
     };
 
     return {
-        headerSearch: headerSearch
+        headerSearchToggle: headerSearchToggle
     };
 });

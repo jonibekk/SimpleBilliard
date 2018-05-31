@@ -297,7 +297,7 @@ function evCircleFeed(options) {
     }
     // メインカラム内の要素をリセット
     // FIXME:本来は「$("#app-view-elements-feed-posts").empty();」のようにメインカラム.フィード親要素をemptyにすれば良いだけだがHTMLの作り上そうなっていないので、上記のような処理をせざるをえない。
-    $(".panel.panel-default").not(".feed-read-more, .global-form, .dashboard-krs, .js_progress_graph").remove();
+    $(".panel.panel-default").not(".nav-search-form-group, .feed-read-more, .global-form, .dashboard-krs, .js_progress_graph").remove();
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
     if (!opt.recursive) {
@@ -585,20 +585,3 @@ var circleListDashboard=document.getElementsByClassName('dashboard-circle-list-b
 $('.circle-list-in-hamburger').find('.js-dashboard-circle-list').click(function(){
     $('.js-nav-toggle').click();
 });
-
-function circleListHeight(){
-    if(bannerExist[0]!=undefined){
-        bannerOffset = bannerExist[0].clientHeight;
-    }
-    var scrollPos = document.body.scrollTop;
-    if(window.innerWidth < 992 && scrollPos==0){
-        circleListDashboard.style.height = (window.innerHeight-(375+bannerOffset))+'px';
-    }else{
-        circleListDashboard.style.height = (window.innerHeight-(378+bannerOffset))+'px';
-    }
-}
-
-if(circleListDashboard){
-    window.onload=function(){circleListHeight()};
-    document.body.onresize=function(){circleListHeight()};
-}
