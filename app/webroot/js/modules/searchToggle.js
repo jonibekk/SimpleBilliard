@@ -95,7 +95,7 @@ define(function () {
                     if(code === 38 || code === 40 || code === 13){
                         return;
                     }
-                    if(cake.is_mb_app === "1" || cake.is_mb_browser === "1"){
+                    if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
                         if(code == 13) {
                             $("#NavSearchInputToggle").blur();
                             $("#NavSearchInputToggle").focusout();
