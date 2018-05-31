@@ -102,15 +102,22 @@ abstract class BaseApiController extends Controller
 
             $this->_initializeTeamStatus();
 
-        //Check if user is restricted from using the service. Always skipped if endpoint ignores restrictionif ($this->_isRestrictedFromUsingService()&& !$this->_checkIgnoreRestriction($this->request)) {
-            $this->_stopInvokeFlag = true;/** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpInconsistentReturnPointsInspection */return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->withMessage(__("You cannot use service on the team."))->getResponse();
-        }
-        //Check if user is restricted to read only. Always skipped if endpoint ignores restrictionif ($this->_isRestrictedToReadOnly()&& !$this->_checkIgnoreRestriction($this->request)) {
-            $this->_stopInvokeFlag = true;/** @noinspection PhpInconsistentReturnPointsInspection */
-            /** @noinspection PhpInconsistentReturnPointsInspection */return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                ->withMessage(__("You may only read your team’s pages."))->getResponse();}
+            //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
+            if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->withMessage(__("You cannot use service on the team."))->getResponse();
+            }
+            //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
+            if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
+                $this->_stopInvokeFlag = true;
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
+                    ->withMessage(__("You may only read your team’s pages."))->getResponse();
+            }
         }
 
         $this->_setAppLanguage();
@@ -320,8 +327,7 @@ abstract class BaseApiController extends Controller
      *
      * @return mixed
      */
-    public
-    function invokeAction(CakeRequest $request)
+    public function invokeAction(CakeRequest $request)
     {
         if ($this->_stopInvokeFlag) {
             return false;
