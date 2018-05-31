@@ -2,7 +2,6 @@ define(function () {
     // ヘッダーの検索ボックス処理
     var headerSearch = {
         setup: function () {
-            var lastHitCount = 1;
             var current;
             var currentIndex = -1;
             var $NavSearchForm = $('#NavSearchForm');
@@ -109,11 +108,6 @@ define(function () {
                         $("#NavSearchInputClear").hide();
                     }
 
-                     // When there is no last search result return unless backspace/delete pressed
-                    if(lastHitCount < 1 && !(e.keyCode === 8 || e.keyCode === 46)) {
-                        return;
-                    }
-
                     // キー連打考慮してすこし遅らせて ajax リクエストする
                     // clearTimeout(keyupTimer);
                     // keyupTimer = setTimeout(function () {
@@ -150,8 +144,6 @@ define(function () {
                             goalResult = allResults.results_goals.results;
                             circleResult = allResults.results_circles.results;
                         }
-
-                        lastHitCount = userResult.length + goalResult.length + circleResult.length;
 
                         if (userResult && userResult.length) {
                             $('#notFoundElement').remove();
