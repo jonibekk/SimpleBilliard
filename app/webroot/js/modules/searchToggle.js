@@ -36,10 +36,6 @@ define(function () {
             $NavSearchFormToggle
                 // Enter 押しても submit させないようにする
                 .on('submit', function (e) {
-                    if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
-                        $("#NavSearchInputToggle").blur();
-                        $("#NavSearchInputToggle").focusout();
-                    } 
                     e.preventDefault();
                     return false;
                 });
@@ -85,8 +81,12 @@ define(function () {
                                 }                                
                                 break;
                             //Enter
-                            case 13:
+                            case 13:                    
                                 e.preventDefault();
+                                if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
+                                    $("#NavSearchInputToggle").blur();
+                                    $("#NavSearchInputToggle").focusout();
+                                } 
                                 if(current){
                                     window.location = current.href;
                                 }

@@ -36,10 +36,6 @@ define(function () {
             $NavSearchForm
                 // Enter 押しても submit させないようにする
                 .on('submit', function (e) {
-                    if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
-                        $("#NavSearchInput").blur();
-                        $("#NavSearchInput").focusout();
-                    } 
                     e.preventDefault();
                     return false;
                 });
@@ -87,6 +83,10 @@ define(function () {
                             //Enter
                             case 13:
                                 e.preventDefault();
+                                if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
+                                    $("#NavSearchInput").blur();
+                                    $("#NavSearchInput").focusout();
+                                } 
                                 if(current){
                                     window.location = current.href;
                                 }
