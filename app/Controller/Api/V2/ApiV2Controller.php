@@ -75,7 +75,7 @@ abstract class ApiV2Controller extends Controller
             if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->setMessage(__('You should be logged in.'))->getResponse();
+                    ->withMessage(__('You should be logged in.'))->getResponse();
             }
             $this->_initializeTeamStatus();
 
@@ -84,18 +84,32 @@ abstract class ApiV2Controller extends Controller
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                    ->setMessage(__("You cannot use service on the team."))->getResponse();
+                    ->withMessage(__("You cannot use service on the team."))->getResponse();
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                    ->setMessage(__("You may only read your team’s pages."))->getResponse();
+                    ->withMessage(__("You may only read your team’s pages."))->getResponse();
             }
         }
 
         $this->_setAppLanguage();
+    }
+
+    /**
+     * Only allow a given request method
+     *
+     * @param string $method Method name
+     *
+     * @return CakeResponse
+     */
+    protected function allowMethod(string $method)
+    {
+        if ($this->request->method() != $method) {
+            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
+        }
     }
 
     /**
