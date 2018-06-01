@@ -2,6 +2,7 @@
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Util');
 App::uses('AccessAuthenticator', 'Lib/Auth');
+App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('User', 'Model');
 App::import('Service', 'AppService');
