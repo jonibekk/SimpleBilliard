@@ -338,6 +338,9 @@ $(function () {
       e.preventDefault();
       window.history.back();
     });
+    $(".modal").on("hide.bs.modal", function() {
+      $(".select2-display-none").css("display","none");
+    });
 });
 // Avoid `console` errors in browsers that lack a console.
 (function() {
