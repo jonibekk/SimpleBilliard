@@ -2,6 +2,7 @@
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Util');
 App::uses('Email', 'Model');
+App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 
 /**
@@ -39,19 +40,11 @@ class AuthService
                 'Email.email'   => $username,
                 'Email.del_flg' => false
             ],
-            //            'table'      => 'emails',
-            //            'alias'      => 'Email',
-            'fields'     => 'user_id'
-            //            'joins'      => [
-            //                'type'       => 'LEFT',
-            //                'table'      => 'users',
-            //                'alias'      => 'User',
-            //                'conditions' => 'Email.user_id = User.id'
-            //            ]
+            'fields'     => 'id'
         ];
 
-        $userId = (int)$Email->find('first', $findUserConditions);
-        $user = $User->getById($userId);
+        $emailId = (int)$Email->find('first', $findUserConditions);
+        $user = $User->find('first', ['conditions' => ['primary_email_id' => $emailId]])['User'];
 
         if (empty ($user)) {
             return null;

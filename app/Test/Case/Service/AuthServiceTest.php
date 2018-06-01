@@ -55,7 +55,6 @@ class AuthServiceTest extends GoalousTestCase
         }
 
         $this->assertEquals(1, $jwt->getTeamId());
-        $this->assertEmpty($password);
     }
 
     public function test_authentication_failed()
@@ -68,7 +67,7 @@ class AuthServiceTest extends GoalousTestCase
         $AuthService = new AuthService();
 
         try {
-            $jwt = $AuthService->authenticateUser($emailAddress, $password);
+            $AuthService->authenticateUser($emailAddress, $password);
         } catch (Exception $e) {
             $this->assertNotEmpty($e);
         }
@@ -128,6 +127,7 @@ class AuthServiceTest extends GoalousTestCase
             $User->save($newUser, ['validate' => false]);
             $Email->save($newEmail, ['validate' => false]);
         } catch (Exception $e) {
+            $this->fail();
         }
     }
 }
