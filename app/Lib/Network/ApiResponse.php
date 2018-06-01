@@ -49,6 +49,18 @@ class ApiResponse extends CakeResponse
     }
 
     /**
+     * Method encapsulation for returning exception
+     *
+     * @param Exception $e
+     *
+     * @return ApiResponse
+     */
+    public function withException(Exception $e)
+    {
+        return $this->withMessage($e->getMessage())->withExceptionTrace($e->getTrace());
+    }
+
+    /**
      * Add data to response body
      *
      * @param array|string $data       Data to be sent to the client
@@ -185,32 +197,6 @@ class ApiResponse extends CakeResponse
     public function setCount(int $count): ApiResponse
     {
         $this->_responseBody['count'] = $count;
-
-        return $this;
-    }
-
-    /**
-     * Add HTTP header for response
-     *
-     * @param array|string $value
-     * @param bool         $appendFlag Append input to existing data
-     *
-     * @return ApiResponse
-     */
-    public function setHeader($value, bool $appendFlag = false): ApiResponse
-    {
-        if (empty($value)) {
-            return $this;
-        }
-        if (!$appendFlag) {
-            $this->_responseHeader = $value;
-            return $this;
-        }
-        if (is_array($value)) {
-            $this->_responseHeader = array_merge($this->_responseHeader, $value);
-        } elseif (is_string($value)) {
-            $this->_responseHeader[] = $value;
-        }
 
         return $this;
     }
