@@ -62,6 +62,26 @@ class AuthService extends AppService
     }
 
     /**
+     * Remove user's JWT from Redis cache during logout
+     *
+     * @param string $token JWT token of the user
+     *
+     * @throws Exception
+     */
+    public function invalidateUser(string $token)
+    {
+        $jwt = JwtAuthentication::decode($token);
+
+        if (empty($jwt)) {
+            throw new AuthenticationException();
+        }
+
+        $jwtClient = new AccessTokenClient();
+        $jwtKey = new AccessTokenKey($jwt->getUserId(), $jwt->getTeamId(), $jwt->getJwtId());
+        $jwtClient->del($jwtKey);
+    }
+
+    /**
      * Is password Sha1?
      * Old password (SHA1) if 40 bytes.
      *

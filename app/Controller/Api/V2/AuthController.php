@@ -46,13 +46,38 @@ class AuthController extends ApiV2Controller
         }
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody(['jwt' => $jwt->token()])->getResponse();
+    }
 
+    /**
+     * Logout endpoint for user. Ignore restriction
+     *
+     * @ignoreRestriction
+     */
+    public function logout()
+    {
+        $return = $this->validateLogout();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $Auth = new AuthService();
+
+        try {
+            $Auth->invalidateUser($this->getUserToken());
+        } catch (Exception $e) {
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage($e->getMessage())
+                                                                                 ->withExceptionTrace($e->getTrace())
+                                                                                 ->getResponse();
+        }
+
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage('User logged out')->getResponse();
     }
 
     /**
      * Validate all parameters before being manipulated by respective endpoint
      *
-     * @return CakeResponse Return a response if validation failed
+     * @return CakeResponse|null Return a response if validation failed
      */
     private function validateLogin()
     {
@@ -71,6 +96,22 @@ class AuthController extends ApiV2Controller
                                                                        ->getResponse();
         }
 
+        return null;
+    }
+
+    /**
+     * Validate all parameters before passed to endpoint
+     *
+     * @return CakeResponse|null Return a response if validation failed
+     */
+    private function validateLogout()
+    {
+        if (!$this->request->is('post')) {
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage("Unsupported HTTP method")
+                                                                       ->getResponse();
+        }
+
+        return null;
     }
 
 }

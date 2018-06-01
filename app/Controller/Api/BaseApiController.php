@@ -362,4 +362,12 @@ abstract class BaseApiController extends Controller
         $decodedJson = json_decode($body, true);
         return is_array($decodedJson) ? $decodedJson : [];
     }
+
+    /**
+     * @return string Current user's JWT token
+     */
+    public function getUserToken()
+    {
+        return $this->_jwtToken;
+    }
 }
