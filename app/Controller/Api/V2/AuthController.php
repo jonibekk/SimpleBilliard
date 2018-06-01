@@ -35,13 +35,12 @@ class AuthController extends ApiV2Controller
         try {
             $jwt = $Auth->authenticateUser($requestData['username'], $requestData['password']);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage($e->getMessage())
-                                                                                 ->withExceptionTrace($e->getTrace())
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
                                                                                  ->getResponse();
         }
 
         if (empty($jwt)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage("Username & password doesn't match")
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__("Error. Try to login again."))
                                                                        ->getResponse();
         }
 
@@ -56,9 +55,10 @@ class AuthController extends ApiV2Controller
      */
     private function validateLogin()
     {
-        if (!$this->request->is('post')) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage("Unsupported HTTP method")
-                                                                       ->getResponse();
+        $res = $this->allowMethod('post');
+
+        if (!empty($res)) {
+            return $res;
         }
 
         $validator = AuthRequestValidator::createLoginValidator();
@@ -66,11 +66,9 @@ class AuthController extends ApiV2Controller
         try {
             $validator->validate($this->request->data);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage($e->getMessage())
-                                                                       ->withExceptionTrace($e->getTrace())
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
                                                                        ->getResponse();
         }
-
     }
 
 }
