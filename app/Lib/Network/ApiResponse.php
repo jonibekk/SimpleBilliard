@@ -51,13 +51,15 @@ class ApiResponse extends CakeResponse
     /**
      * Method encapsulation for returning exception
      *
-     * @param Exception $e
+     * @param Exception $exception
      *
      * @return ApiResponse
      */
-    public function withException(Exception $e)
+    public function withException(Exception $exception)
     {
-        return $this->withMessage($e->getMessage())->withExceptionTrace($e->getTrace());
+        $message = $exception->getMessage();
+        $trace = $exception->getTrace();
+        return $this->withMessage($message)->withExceptionTrace($trace);
     }
 
     /**
