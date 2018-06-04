@@ -271,8 +271,15 @@ $(function () {
         $("#NavSearchInputClearToggle").trigger("click");
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
-        $(".dropdown-menu").not($(this).find(".dropdown-menu")).toggleClass("open");
+        $(this).find(".dropdown-menu").toggleClass("open");
         hideNav();
+    });
+    $(".header-icon-zoom").on("click", function() {
+      $(".force-open").removeClass("force-open");
+      $(this).find(".dropdown-menu").toggleClass("force-open");
+    });
+    $(document).on("click", function() {
+      $(".force-open").removeClass("force-open");
     });
     $(window).on('resize load pageshow', function(){
       if($(window).width() !== lastWidth){
