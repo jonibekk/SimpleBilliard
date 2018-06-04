@@ -10,6 +10,17 @@ App::uses('CircleMemberService', 'Service');
  */
 class CircleMemberServiceTest extends GoalousTestCase
 {
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.circle',
+        'app.user',
+        'app.circle_member'
+    ];
+
     public function test_fetchCircles_success()
     {
         $circleMemberService = new CircleMemberService();
