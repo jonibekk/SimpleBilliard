@@ -53,7 +53,7 @@ class AuthController extends ApiV2Controller
      *
      * @ignoreRestriction
      */
-    public function logout()
+    public function post_logout()
     {
         $return = $this->validateLogout();
 
