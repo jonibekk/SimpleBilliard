@@ -3,6 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'AuthService');
 App::uses('User', 'Model');
 App::uses('Email', 'Model');
+App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 /**
  * Created by PhpStorm.
@@ -12,36 +13,23 @@ App::uses('Email', 'Model');
  */
 class AuthServiceTest extends GoalousTestCase
 {
+
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
     public $fixtures = [
         'app.email',
         'app.team',
         'app.user'
     ];
 
-    /**
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-        GoalousDateTime::setTestNow();
-    }
-
     public function test_authentication_success()
     {
         $this->insertNewUser();
 
-        $emailAddress = "to_aaa@email.com";
+        $emailAddress = "auth_test@email.com";
         $password = '12345678';
 
         $AuthService = new AuthService();
@@ -54,6 +42,10 @@ class AuthServiceTest extends GoalousTestCase
             $this->fail();
         }
 
+        if (empty($jwt)) {
+            $this->fail();
+        }
+
         $this->assertEquals(1, $jwt->getTeamId());
     }
 
@@ -61,22 +53,26 @@ class AuthServiceTest extends GoalousTestCase
     {
         $this->insertNewUser();
 
-        $emailAddress = 'to_aaa@email.com';
-        $password = '12345678';
+        $emailAddress = 'auth_test@email.com';
+        $password = '123';
 
         $AuthService = new AuthService();
 
         try {
-            $AuthService->authenticateUser($emailAddress, $password);
+            $jwt = $AuthService->authenticateUser($emailAddress, $password);
         } catch (Exception $e) {
             $this->assertNotEmpty($e);
         }
+
+        $this->assertEmpty($jwt);
     }
 
     private function insertNewUser()
     {
         $User = new User();
         $Email = new Email();
+
+        $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
 
         $newUser['User'] = [
             'id'                 => '101',
@@ -88,7 +84,7 @@ class AuthServiceTest extends GoalousTestCase
             'hide_year_flg'      => 1,
             'hometown'           => 'Lorem ipsum dolor sit amet',
             'comment'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'password'           => '4d7b8198a8560d4002201aa1ef75a6f537c45f5c',
+            'password'           => $passwordHasher->hash('12345678'),
             'password_token'     => '',
             'password_modified'  => '2014-05-22 02:28:04',
             'no_pass_flg'        => 1,
@@ -113,7 +109,7 @@ class AuthServiceTest extends GoalousTestCase
         $newEmail = [
             'id'                  => '50',
             'user_id'             => '101',
-            'email'               => 'to_aaa@email.com',
+            'email'               => 'auth_test@email.com',
             'email_verified'      => 1,
             'email_token'         => 'Lorem ipsum dolor sit amet',
             'email_token_expires' => 1400725683,

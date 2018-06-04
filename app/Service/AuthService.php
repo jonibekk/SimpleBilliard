@@ -72,7 +72,6 @@ class AuthService
                 throw new Exception("Unable to save SHA256 password");
             }
         } elseif (!$this->passwordHasher->check($password, $storedHashedPassword)) {
-            // Normal case
             return null;
         }
 
@@ -96,17 +95,17 @@ class AuthService
     /**
      * SHA1 password verification
      *
-     * @param string $inputPlanePassword
+     * @param string $inputPlainPassword
      * @param string $storedHashedPassword
      *
      * @return bool
      */
     private function _verifySha1Password(
-        string $inputPlanePassword,
+        string $inputPlainPassword,
         string $storedHashedPassword
     ): bool {
         $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
-        $inputHashedPassword = $passwordHasher->hash($inputPlanePassword);
+        $inputHashedPassword = $passwordHasher->hash($inputPlainPassword);
         if ($inputHashedPassword === $storedHashedPassword) {
             return true;
         }
@@ -117,16 +116,16 @@ class AuthService
      * Save new password as SHA256
      *
      * @param array  $userData
-     * @param string $planePassword
+     * @param string $plainPassword
      *
      * @return bool
      */
     private function _savePasswordAsSha256(
         array $userData,
-        string $planePassword
+        string $plainPassword
     ): bool {
         $User = new User();
-        $newHashedPassword = $this->passwordHasher->hash($planePassword);
+        $newHashedPassword = $this->passwordHasher->hash($plainPassword);
         printf($newHashedPassword);
 
         try {
@@ -135,7 +134,7 @@ class AuthService
                 'password' => $newHashedPassword,
             ], false);
         } catch (Exception $e) {
-            CakeLog::emergency(sprintf("Failed to save SHA256 password. errorMsg: %s, userData: %s, Trace: %s",
+            GoalousLog::emergency(sprintf("Failed to save SHA256 password. errorMsg: %s, userData: %s, Trace: %s",
                 $e->getMessage(),
                 AppUtil::jsonOneLine($userData),
                 AppUtil::jsonOneLine(Debugger::trace())

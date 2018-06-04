@@ -20,7 +20,7 @@ class AuthController extends ApiV2Controller
      * @ignoreRestriction
      * @skipAuthentication
      */
-    public function login()
+    public function post_login()
     {
         $return = $this->validateLogin();
 
