@@ -18,7 +18,8 @@ class CircleMemberServiceTest extends GoalousTestCase
     public $fixtures = [
         'app.circle',
         'app.user',
-        'app.circle_member'
+        'app.circle_member',
+        'app.team'
     ];
 
     public function test_fetchCircles_success()
@@ -26,8 +27,6 @@ class CircleMemberServiceTest extends GoalousTestCase
         $circleMemberService = new CircleMemberService();
 
         $result1 = $circleMemberService->getUserCircles(1, 1);
-
-        var_dump($result1);
 
         $this->assertNotEmpty($result1);
     }

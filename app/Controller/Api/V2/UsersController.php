@@ -15,7 +15,7 @@ class UsersController extends ApiV2Controller
      *
      * @return CakeResponse
      */
-    public function circles(int $userId)
+    public function get_circles(int $userId)
     {
         $res = $this->validateCircles();
 
