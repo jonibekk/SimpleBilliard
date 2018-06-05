@@ -3,6 +3,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Util');
 App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
+App::import('Service', 'AppService');
 
 /**
  * Class for handling authentication
@@ -11,12 +12,13 @@ App::uses('JwtAuthentication', 'Lib/Jwt');
  * Date: 2018/05/31
  * Time: 9:34
  */
-class AuthService
+class AuthService extends AppService
 {
     private $passwordHasher;
 
     public function __construct()
     {
+        parent::__construct();
         $this->passwordHasher = new SimplePasswordHasher(['hashType' => 'sha256']);
     }
 

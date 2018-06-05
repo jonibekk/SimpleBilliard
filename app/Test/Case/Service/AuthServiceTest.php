@@ -32,7 +32,8 @@ class AuthServiceTest extends GoalousTestCase
         $emailAddress = "auth_test@email.com";
         $password = '12345678';
 
-        $AuthService = new AuthService();
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
 
         try {
             $jwt = $AuthService->authenticateUser($emailAddress, $password);
@@ -56,7 +57,8 @@ class AuthServiceTest extends GoalousTestCase
         $emailAddress = 'auth_test@email.com';
         $password = '123';
 
-        $AuthService = new AuthService();
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
 
         try {
             $jwt = $AuthService->authenticateUser($emailAddress, $password);
