@@ -31,7 +31,8 @@ class AuthService
      */
     public function authenticateUser(string $username, string $password)
     {
-        $User = new User();
+        /** @var .\Model\User $User */
+        $User = ClassRegistry::init("User");
 
         $condition = [
             'fields' => [
