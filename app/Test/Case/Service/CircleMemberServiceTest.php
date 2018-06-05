@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('CircleMemberService', 'Service');
+App::import('Service', 'CircleMemberService');
 
 /**
  * Created by PhpStorm.
@@ -24,9 +24,10 @@ class CircleMemberServiceTest extends GoalousTestCase
 
     public function test_fetchCircles_success()
     {
-        $circleMemberService = new CircleMemberService();
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result1 = $circleMemberService->getUserCircles(1, 1);
+        $result1 = $CircleMemberService->getUserCircles(1, 1);
 
         $this->assertNotEmpty($result1);
     }
