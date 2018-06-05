@@ -32,6 +32,12 @@ abstract class BaseApiController extends Controller
     /** @var bool */
     private $_stopInvokeFlag = false;
 
+    /** @var array Available API versions */
+    private $_existingApiVersions = [2];
+
+    /** @var int Latest API version */
+    private $_latestApiVersion;
+
     /**
      * ApiV2Controller constructor.
      *
@@ -45,6 +51,8 @@ abstract class BaseApiController extends Controller
     ) {
         parent::__construct($request, $response);
         $this->_fetchJwtToken($request);
+
+        $this->_latestApiVersion = max($this->_existingApiVersions);
     }
 
     /**
@@ -110,6 +118,18 @@ abstract class BaseApiController extends Controller
         if ($this->request->method() != $method) {
             return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
         }
+    }
+
+    /**
+     * Get requested API Version
+     *
+     * @return int
+     */
+    protected function getApiVersion()
+    {
+        $requestedVersion = (int)$this->request::header('X-API-Version');
+
+        return contains($requestedVersion, $this->_existingApiVersions) ? $requestedVersion : $this->_latestApiVersion;
     }
 
     /**
@@ -286,7 +306,7 @@ abstract class BaseApiController extends Controller
     /**
      * @return int Current user's current team ID
      */
-    public function getTeamId(): int
+    protected function getTeamId(): int
     {
         return $this->_currentTeamId;
     }
@@ -294,7 +314,7 @@ abstract class BaseApiController extends Controller
     /**
      * @return mixed Current user's User object
      */
-    public function getUser()
+    protected function getUser()
     {
         return $this->_currentUser;
     }

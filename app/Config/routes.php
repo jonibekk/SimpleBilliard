@@ -89,8 +89,8 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
     );
 } elseif (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
     /**
-     * REST
-     * actionなし
+     * REST Endpoints with version in header 'X-API-Version'
+     * No action
      */
     Router::connect('/api/:controller',
         ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET']);
@@ -107,8 +107,8 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
         ['id' => '[0-9]+', 'pass' => ['id']]);
 
     /**
-     * REST
-     * actionあり
+     * REST Endpoints with version in header 'X-API-Version'
+     * With action
      */
     Router::connect('/api/:controller/:action',
         ['prefix' => 'get', '[method]' => 'GET']);

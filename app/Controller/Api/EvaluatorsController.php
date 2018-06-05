@@ -6,7 +6,8 @@ App::uses('TeamMember', 'Model');
 
 /**
  * Created by PhpStorm.
- * Example of controller extending ApiV2Controller
+ * Example of controller using new design
+ *
  * User: Stephen Raharja
  * Date: 08/03/2018
  * Time: 10:57
@@ -16,6 +17,7 @@ App::uses('TeamMember', 'Model');
  */
 class EvaluatorsController extends BaseApiController
 {
+    //If any of the endpoint requiring paging
     use PagingControllerTrait;
 
     public $components = [
@@ -34,9 +36,7 @@ class EvaluatorsController extends BaseApiController
      */
     public function post()
     {
-        $version = $this->request::header('X-API-Version');
-
-        switch ($version) {
+        switch ($this->getApiVersion()) {
             case '2':
                 return $this->post_v2();
                 break;
