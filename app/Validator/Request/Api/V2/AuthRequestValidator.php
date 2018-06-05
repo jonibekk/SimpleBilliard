@@ -18,7 +18,7 @@ class AuthRequestValidator extends BaseValidator
     public function getLoginValidationRule(): array
     {
         $rules = [
-            'username' => [validator::stringType()::alpha()::noWhitespace()],
+            'username' => [validator::email()],
             'password' => [validator::stringType()::alpha()]
         ];
 

@@ -127,7 +127,6 @@ class AuthService
     ): bool {
         $User = new User();
         $newHashedPassword = $this->passwordHasher->hash($plainPassword);
-        printf($newHashedPassword);
 
         try {
             $User->save([

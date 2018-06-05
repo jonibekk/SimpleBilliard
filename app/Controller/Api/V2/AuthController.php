@@ -30,10 +30,11 @@ class AuthController extends ApiV2Controller
 
         $requestData = $this->request->data;
 
-        $Auth = new AuthService();
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init("AuthService");
 
         try {
-            $jwt = $Auth->authenticateUser($requestData['username'], $requestData['password']);
+            $jwt = $AuthService->authenticateUser($requestData['username'], $requestData['password']);
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
                                                                                  ->getResponse();
