@@ -18,7 +18,7 @@
     <?php endif; ?>
 
     <?php if($is_mb_app || $isMobileBrowser): ?>
-        <div class="header-icon-search-toggle header-icon-zoom <?= $is_mb_app || $isMobileBrowser ? 'search-icon-adjust' : '' ?>">
+        <div class="header-icon-search-toggle header-icon-zoom dropdown-toggle <?= $is_mb_app || $isMobileBrowser ? 'search-icon-adjust' : '' ?>">
             <a href="#">
                 <i class="fa fa-search fa-adjust-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
             </a>
@@ -41,6 +41,7 @@
     <?php endif; ?>
 
 
+    <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
     <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
@@ -51,13 +52,13 @@
             <?php endif; ?>
         </a>
     </div>
+    <?php endif; ?>
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
-        <a href="#" class="btn-addition-header">
+        <a id="download" href="#" class="btn-addition-header" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
-        <ul class="<?= $is_mb_app ? "mb-header-nav-add-contents" : "header-nav-add-contents" ?> dropdown-menu "
-            aria-labelledby="download">
+        <ul class="<?= $is_mb_app ? "mb-header-nav-add-contents" : "header-nav-add-contents" ?> dropdown-menu " aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
                     <a class="header-nav-add-contents-anchor"
@@ -86,7 +87,7 @@
         </ul>
     </div>
     <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a class="click-header-message btn-message-header" href="#">
+        <a class="click-header-message btn-message-header" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o fa-adjust-plane js-header-link header-icons"></i>
 
             <div class="btn btn-xs bell-notify-box notify-bell-numbers messageNum" style="opacity: 0;">
@@ -106,7 +107,7 @@
         </div>
     </div>
     <div class="header-dropdown-notify has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
-        <a class="click-header-bell btn-notify-header" href="#">
+        <a class="click-header-bell btn-notify-header" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o fa-adjust-bell header-drop-icons js-header-link header-icons"></i>
 
             <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
@@ -149,7 +150,7 @@
     </div>
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
         <a href="#"
-           class="btn-function-header">
+           class="btn-function-header" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
