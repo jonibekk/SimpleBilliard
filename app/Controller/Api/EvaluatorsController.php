@@ -1,5 +1,5 @@
 <?php
-App::uses('ApiController', 'Controller/Api');
+App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'ExperimentService');
 App::import('Service', "EvaluatorService");
 App::uses('TeamMember', 'Model');
@@ -14,7 +14,7 @@ App::uses('TeamMember', 'Model');
  * @property NotifyBizComponent    $NotifyBiz
  * @property NotificationComponent Notification
  */
-class EvaluatorsController extends ApiV2Controller
+class EvaluatorsController extends BaseApiController
 {
     use PagingControllerTrait;
 
@@ -33,6 +33,19 @@ class EvaluatorsController extends ApiV2Controller
      *
      */
     public function post()
+    {
+        $version = $this->request::header('X-API-Version');
+
+        switch ($version) {
+            case '2':
+                return $this->post_v2();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private function post_v2()
     {
         //Validate data. If return errors, return them to REST consumer
         $errorReturn = $this->_validatePost();
@@ -67,7 +80,6 @@ class EvaluatorsController extends ApiV2Controller
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))
             ->getResponse();
-
     }
 
     /**

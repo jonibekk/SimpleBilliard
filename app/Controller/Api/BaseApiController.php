@@ -15,7 +15,7 @@ App::uses('User', 'Model');
  * @property .\Model\User  $User
  * @property LangComponent $LangComponent
  */
-abstract class ApiV2Controller extends Controller
+abstract class BaseApiController extends Controller
 {
     /** @var string */
     private $_jwtToken;
