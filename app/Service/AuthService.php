@@ -89,9 +89,8 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _isSha1(
-        string $hashedPassword
-    ): bool {
+    private function _isSha1(string $hashedPassword): bool
+    {
         return strlen($hashedPassword) == 40;
     }
 
@@ -103,10 +102,8 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _verifySha1Password(
-        string $inputPlainPassword,
-        string $storedHashedPassword
-    ): bool {
+    private function _verifySha1Password(string $inputPlainPassword, string $storedHashedPassword): bool
+    {
         $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
         $inputHashedPassword = $passwordHasher->hash($inputPlainPassword);
         if ($inputHashedPassword === $storedHashedPassword) {
@@ -123,10 +120,8 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _savePasswordAsSha256(
-        array $userData,
-        string $plainPassword
-    ): bool {
+    private function _savePasswordAsSha256(array $userData, string $plainPassword): bool
+    {
         $User = new User();
         $newHashedPassword = $this->passwordHasher->hash($plainPassword);
 
