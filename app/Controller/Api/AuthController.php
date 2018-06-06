@@ -1,4 +1,5 @@
 <?php
+App::uses('BaseApiController', 'Controller/Api');
 App::uses('AuthService', 'Service');
 
 /**
