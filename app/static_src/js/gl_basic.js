@@ -172,6 +172,7 @@ $(document).ready(function () {
 
 
 $(function () {
+    var lastWidth,lastHeight;
     var current_slide_id = 1;
 
     // インジケータークリック時
@@ -192,6 +193,14 @@ $(function () {
         changeTutorialContent(next_id);
     });
 
+    function updateSearchPosition(){
+      if(lastWidth >= 768){
+        $("#NavSearchForm").css("right", (($(window).width() - $(".nav-container").width()) / 2) + "px");
+      } else if (lastWidth >= 480) {
+        $("#NavSearchForm").css("right", "0px");
+      }
+    }
+
     function changeTutorialContent(content_id) {
         // 各要素をカレントステータスに設定
         $('.tutorial-box' + content_id).show();
@@ -207,30 +216,160 @@ $(function () {
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
 
-    var $topBtn = $('#jsGoTop');
-    $(window).scroll(function(){
-      if($(window).scrollTop() > 30){
-        if(!$topBtn.hasClass('active')){
-          $topBtn.addClass('active');
-        }
-      }else{
-        $topBtn.removeClass('active');
+    var timeoutToggle;
+    $(".header-icon-search-toggle").off("click").on("click", function(e) {
+      e.preventDefault();
+      $(".dropdown-menu").hide();
+      $(".header-search-toggle").toggleClass("open");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").trigger("click");
+      $("#NavSearchInputClearToggle").trigger("click");
+      timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      hideNav();
+    });
+
+    $("#NavSearchInputToggle").on("keyup", function(){
+      if($.trim($("#NavSearchInputToggle").val()).length){
+        clearTimeout(timeoutToggle);
+      } else {
+        timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       }
     });
-    $topBtn.hover(function(){
-      $('#jsGoTopText').stop().animate({ 'right': '14px' }, 360);
-    },function(){
-      $('#jsGoTopText').stop().animate({ 'right': '-140px' }, 800);
+
+    var timeout;
+    $(".header-icon-search").off("click").on("click", function(e) {
+      e.preventDefault();
+      $(".dropdown-menu").hide();
+      $(".header-search").toggleClass("open");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").trigger("click");
+      $("#NavSearchInputClearToggle").trigger("click");
+      timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      hideNav();
     });
-    $topBtn.click(function(){
-      $('body,html').stop().animate({ scrollTop: 0 }, 500, 'swing');
+
+    $("#NavSearchInput").on("keyup", function(){
+      if($.trim($("#NavSearchInput").val()).length){
+        clearTimeout(timeout);
+      } else {
+        timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      }
+    });
+    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify,.header-dropdown-message,.mb-app-header-dropdown-add,.mb-app-header-dropdown-functions").on("click", function(e) {
+        $(".open").removeClass("open");
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("open");
+        $(".header-search").removeClass("open");
+        $(this).find(".dropdown-menu").toggleClass("open");
+        hideNav();
+    });
+    $(".header-icon-zoom").on("click", function() {
+      $(".force-open").removeClass("force-open");
+      $(this).find(".dropdown-menu").toggleClass("force-open");
+    });
+    $(document).on("click", function() {
+      $(".force-open").removeClass("force-open");
+    });
+    $(window).on('resize load pageshow', function(){
+      if($(window).width() !== lastWidth){
+        lastWidth = $(window).width();
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("open");
+        $(".header-search").removeClass("open");
+        if(lastWidth > 479){
+          updateSearchPosition();
+        }
+      }
+      if($(window).height() !== lastHeight){
+        var extra = 0;
+        if($(".banner-alert").css("display") === "block"){
+          extra = 80;
+        }
+        extra += 380;
+        $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px)")
+      }
+    });
+    $("#NavSearchInputClear").off("click").on("click", function() {
+      $("#NavSearchInput").focus();
+      $(this).prev().prev().val('');
+      $(this).hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+    });
+    $("#NavSearchInputClearToggle").off("click").on("click", function() {
+      $("#NavSearchInputToggle").focus();
+      $(this).prev().prev().val('');
+      $(this).hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+    });
+    $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("open");
+        $(".header-search").removeClass("open");
+    });
+    $("#toggleNavigationButton").on("click", function() {
+      $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
+    });
+    $(window).trigger('resize');
+    $(".no-anchor").off("click").on("click", function(e) {
+      e.preventDefault();
+      return false;
+    });
+    $("#ActionFileAttachButton").off("click").on("click", function(e) {
+      e.preventDefault();
     });
     $(".btn-back-actions,.btn-back-goals").off("click").on("click", function(e) {
       e.preventDefault();
       window.history.back();
     });
+    $(".modal").on("hide.bs.modal", function() {
+      $(".select2-display-none").css("display","none");
+    });
 });
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
 
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());
 
 function evTargetRemove() {
   attrUndefinedCheck(this, 'target-selector');
