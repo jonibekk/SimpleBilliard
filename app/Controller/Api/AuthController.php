@@ -1,6 +1,6 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
-App::uses('AuthService', 'Service');
+App::import('Service', 'AuthService');
 
 /**
  * Created by PhpStorm.
@@ -23,7 +23,7 @@ class AuthController extends BaseApiController
      */
     public function post_login()
     {
-        switch ($this->getApiVersion()){
+        switch ($this->getApiVersion()) {
             case 2:
                 return $this->post_login_v2();
                 break;
@@ -38,7 +38,8 @@ class AuthController extends BaseApiController
      *
      * @return CakeResponse
      */
-    private function post_login_v2(){
+    private function post_login_v2()
+    {
 
         $return = $this->validateLogin();
 
