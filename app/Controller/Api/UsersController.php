@@ -6,7 +6,7 @@
  * Time: 15:07
  */
 
-class UsersController extends ApiV2Controller
+class UsersController extends BaseApiController
 {
     /**
      * Get list of circles that an user is joined in
@@ -17,6 +17,26 @@ class UsersController extends ApiV2Controller
      */
     public function get_circles(int $userId)
     {
+        switch ($this->getApiVersion()) {
+            case 2:
+                return $this->get_circles_v2($userId);
+                break;
+            default:
+                return $this->get_circles_v2($userId);
+                break;
+        }
+    }
+
+    /**
+     * API V2 endpoint for getting list of circles that an user is joined in
+     *
+     * @param int $userId
+     *
+     * @return CakeResponse
+     */
+    private function get_circles_v2(int $userId)
+    {
+
         $res = $this->validateCircles();
 
         if (!empty($res)) {
