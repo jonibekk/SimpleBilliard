@@ -20,6 +20,7 @@ $(function () {
 
     // 投稿フォーム submit 時
     $(document).on('submit', '#PostDisplayForm', function (e) {
+        $(".ogp-close").remove();
         return checkUploadFileExpire('PostDisplayForm');
     });
 

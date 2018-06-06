@@ -1547,8 +1547,14 @@ ul.input-images > li {
 }
 
 .switch-post:hover a,
-.switch-action:hover a{
-    color: @darkBlack;
+.switch-action:hover a,
+.switch-post:focus a,
+.switch-action:focus a,
+.switch-post:active a,
+.switch-action:active a, {
+    color: initial;
+    text-decoration: unset;
+    cursor: unset;
 }
 
 /*/タブで切り替え*/
@@ -3063,4 +3069,23 @@ Temporary Properties - YOU MUST FIX
     i.fa {
         color: @white;
     }
+}
+
+.action-kr-progress-edit-item-box-left {
+  display: table-cell !important;
+}
+
+.action-kr-progress-edit-item-box-right {
+  display: table-cell !important;
+}
+
+.switch-action a {
+  text-decoration: none;
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited,
+  &:focus {
+    text-decoration: none;
+  }
 }

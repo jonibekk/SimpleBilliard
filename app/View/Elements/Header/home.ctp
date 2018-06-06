@@ -40,7 +40,7 @@ $backBtn = isset($_GET['backBtn']);
                     </button><!-- //navbar-collapse -->
                 </div><!-- //navbar-header -->
                 <div id="navbar-collapse" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
+                    <ul id="navigationWrapperHome" class="nav navbar-nav">
                         <li class="nav-item" id="h-nav-features">
                             <?= $this->Html->link(__('Features'), [
                                 'controller' => 'pages',
