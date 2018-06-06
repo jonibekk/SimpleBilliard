@@ -39,6 +39,18 @@ trait PagingControllerTrait
     }
 
     /**
+     * Get the limit of paging
+     *
+     * @param CakeRequest $request
+     *
+     * @return int
+     */
+    protected function getPagingLimit(CakeRequest $request)
+    {
+        return $request['limit'] ?? PagingCursor::DEFAULT_PAGE_LIMIT;
+    }
+
+    /**
      * Method for getting paging parameters from request
      *
      * @param CakeRequest $request

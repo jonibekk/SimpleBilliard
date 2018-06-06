@@ -8,21 +8,6 @@
 
 trait FeedPagingTrait
 {
-    public function setCommentRead(&$postArray)
-    {
-
-    }
-
-    public function setCommentUnreadCount(&$postArray)
-    {
-
-    }
-
-    public function getPostResource(&$postArray)
-    {
-
-    }
-
     protected final function createDbExpression(DboSource $db, string $statement)
     {
         return $db->expression('Post.id IN (' . $statement . ')');

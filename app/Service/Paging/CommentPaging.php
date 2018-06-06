@@ -6,6 +6,7 @@
  * Time: 13:56
  */
 
+//TODO
 class CommentPaging implements PagingServiceInterface
 {
     use PagingServiceTrait;
@@ -30,7 +31,6 @@ class CommentPaging implements PagingServiceInterface
         return $Comment->getCount($conditions);
     }
 
-    //TODO
     protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
     {
     }

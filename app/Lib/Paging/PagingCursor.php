@@ -16,7 +16,7 @@ class PagingCursor
      * DB query ordering
      *
      * @var array
-     *      [$column_name => ASC/DESC]
+     *      ['$column_name' => 'ASC/DESC']
      */
     private $order;
 
