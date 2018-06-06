@@ -1,11 +1,13 @@
 <?php
+App::uses('BaseApiController', 'Controller/Api');
+App::import('Service', 'CircleMemberService');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/06/04
  * Time: 15:07
  */
-
 class UsersController extends BaseApiController
 {
     /**
@@ -45,9 +47,10 @@ class UsersController extends BaseApiController
 
         $isPublic = $this->request->query('is_public');
 
-        $circleMemberService = new CircleMemberService();
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $circleData = $circleMemberService->getUserCircles($userId, $this->getTeamId(), $isPublic);
+        $circleData = $CircleMemberService->getUserCircles($userId, $this->getTeamId(), $isPublic);
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($circleData)->getResponse();
     }
