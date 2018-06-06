@@ -852,9 +852,10 @@ header-nav-add.open ul {
   overflow: hidden;
   height: 98%;
 }
-
-.circle-list-in-hamburger {
-  overflow-y: scroll;
+@media (max-width: 479px) {
+    #navigationWrapper {
+      overflow-y: visible;
+    }
 }
 
 #rightNavigationWrapper {
