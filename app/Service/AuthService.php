@@ -3,6 +3,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Util');
 App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
+App::uses('User', 'Model');
 App::import('Service', 'AppService');
 
 /**
@@ -34,30 +35,9 @@ class AuthService extends AppService
     public function authenticateUser(string $username, string $password)
     {
         /** @var .\Model\User $User */
-        $User = ClassRegistry::init("User");
+        $User = ClassRegistry::init('User');
 
-        $condition = [
-            'fields' => [
-                'User.id',
-                'User.password',
-                'User.default_team_id'
-            ],
-            'joins'  =>
-                [
-                    [
-                        'type'       => 'LEFT',
-                        'table'      => 'emails',
-                        'alias'      => 'Email',
-                        'conditions' => [
-                            'Email.id'      => 'User.primary_email_id',
-                            'Email.email'   => $username,
-                            'Email.del_flg' => false
-                        ]
-                    ]
-                ]
-        ];
-
-        $user = $User->find('first', $condition)['User'];
+        $user = $User->findUserByEmail($username)['User'];
 
         if (empty ($user)) {
             return null;
