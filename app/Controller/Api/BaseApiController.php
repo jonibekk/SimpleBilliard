@@ -33,10 +33,7 @@ abstract class BaseApiController extends Controller
     private $_stopInvokeFlag = false;
 
     /** @var array Available API versions */
-    private $_existingApiVersions = [2];
-
-    /** @var int Latest API version */
-    private $_latestApiVersion;
+    const AVAILABLE_API_VERSIONS = [2];
 
     /**
      * ApiV2Controller constructor.
@@ -51,8 +48,6 @@ abstract class BaseApiController extends Controller
     ) {
         parent::__construct($request, $response);
         $this->_fetchJwtToken($request);
-
-        $this->_latestApiVersion = max($this->_existingApiVersions);
     }
 
     /**
@@ -121,7 +116,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * Get requested API Version
+     * Get requested API Version. If not given / not valid, will return latest version
      *
      * @return int
      */
@@ -129,7 +124,18 @@ abstract class BaseApiController extends Controller
     {
         $requestedVersion = (int)$this->request::header('X-API-Version');
 
-        return contains($requestedVersion, $this->_existingApiVersions) ? $requestedVersion : $this->_latestApiVersion;
+        return contains($requestedVersion, self::AVAILABLE_API_VERSIONS) ?
+            $requestedVersion : $this->getLatestApiVersion();
+    }
+
+    /**
+     * Get latest API Version
+     *
+     * @return int
+     */
+    protected function getLatestApiVersion()
+    {
+        return max(self::AVAILABLE_API_VERSIONS);
     }
 
     /**
