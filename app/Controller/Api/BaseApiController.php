@@ -55,9 +55,11 @@ abstract class BaseApiController extends Controller
     private function _fetchJwtToken(CakeRequest $request)
     {
         $authHeader = $request->header('Authorization');
+
         if (empty($authHeader)) {
             return;
         }
+
         list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
 
         $this->_jwtToken = $jwt[0] ?? '';

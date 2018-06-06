@@ -7,11 +7,11 @@ App::uses('AuthService', 'Service');
  * Date: 2018/05/30
  * Time: 11:35
  */
-class AuthController extends ApiV2Controller
+class AuthController extends BaseApiController
 {
     public function beforeFilter()
     {
-        return parent::beforeFilter();
+        parent::beforeFilter();
     }
 
     /**
@@ -22,6 +22,23 @@ class AuthController extends ApiV2Controller
      */
     public function post_login()
     {
+        switch ($this->getApiVersion()){
+            case 2:
+                return $this->post_login_v2();
+                break;
+            default:
+                return $this->post_login_v2();
+                break;
+        }
+    }
+
+    /**
+     * API v2 login endpoint for user
+     *
+     * @return CakeResponse
+     */
+    private function post_login_v2(){
+
         $return = $this->validateLogin();
 
         if (!empty($return)) {
@@ -40,13 +57,14 @@ class AuthController extends ApiV2Controller
                                                                                  ->getResponse();
         }
 
+        //If no matching username / password is found
         if (empty($jwt)) {
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__("Error. Try to login again."))
                                                                        ->getResponse();
         }
 
+        //On successful login, return the JWT token to the user
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody(['jwt' => $jwt->token()])->getResponse();
-
     }
 
     /**
