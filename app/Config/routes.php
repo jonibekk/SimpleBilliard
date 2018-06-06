@@ -33,7 +33,7 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
  * ただし、Methodを限定する事。
  */
 if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
-    $apiVersions = 'v1|v2|';
+    $apiVersions = 'v1';
     /**
      * REST
      * actionなし
@@ -87,6 +87,45 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
         ['prefix' => 'delete', '[method]' => 'DELETE'],
         ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
     );
+} elseif (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
+    /**
+     * REST Endpoints with version in header 'X-API-Version'
+     * No action
+     */
+    Router::connect('/api/:controller',
+        ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/:controller/:id',
+        ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller',
+        ['action' => 'post', '[method]' => 'POST']);
+    Router::connect('/api/:controller/:id',
+        ['action' => 'put', '[method]' => 'PUT'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:id',
+        ['action' => 'delete', '[method]' => 'DELETE'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+
+    /**
+     * REST Endpoints with version in header 'X-API-Version'
+     * With action
+     */
+    Router::connect('/api/:controller/:action',
+        ['prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:action',
+        ['prefix' => 'post', '[method]' => 'POST']);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'put', '[method]' => 'PUT'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
 }
 
 /**

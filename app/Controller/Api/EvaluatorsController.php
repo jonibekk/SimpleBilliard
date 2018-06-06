@@ -1,12 +1,13 @@
 <?php
-App::uses('ApiController', 'Controller/Api');
+App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'ExperimentService');
 App::import('Service', "EvaluatorService");
 App::uses('TeamMember', 'Model');
 
 /**
  * Created by PhpStorm.
- * Example of controller extending ApiV2Controller
+ * Example of controller using new design
+ *
  * User: Stephen Raharja
  * Date: 08/03/2018
  * Time: 10:57
@@ -14,8 +15,9 @@ App::uses('TeamMember', 'Model');
  * @property NotifyBizComponent    $NotifyBiz
  * @property NotificationComponent Notification
  */
-class EvaluatorsController extends ApiV2Controller
+class EvaluatorsController extends BaseApiController
 {
+    //If any of the endpoint requiring paging
     use PagingControllerTrait;
 
     public $components = [
@@ -33,6 +35,17 @@ class EvaluatorsController extends ApiV2Controller
      *
      */
     public function post()
+    {
+        switch ($this->getApiVersion()) {
+            case '2':
+                return $this->post_v2();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private function post_v2()
     {
         //Validate data. If return errors, return them to REST consumer
         $errorReturn = $this->_validatePost();
@@ -67,7 +80,6 @@ class EvaluatorsController extends ApiV2Controller
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))
             ->getResponse();
-
     }
 
     /**

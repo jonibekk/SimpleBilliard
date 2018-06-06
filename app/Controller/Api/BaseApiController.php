@@ -15,7 +15,7 @@ App::uses('User', 'Model');
  * @property .\Model\User  $User
  * @property LangComponent $LangComponent
  */
-abstract class ApiV2Controller extends Controller
+abstract class BaseApiController extends Controller
 {
     /** @var string */
     private $_jwtToken;
@@ -31,6 +31,9 @@ abstract class ApiV2Controller extends Controller
 
     /** @var bool */
     private $_stopInvokeFlag = false;
+
+    /** @var array Available API versions */
+    const AVAILABLE_API_VERSIONS = [2];
 
     /**
      * ApiV2Controller constructor.
@@ -110,6 +113,29 @@ abstract class ApiV2Controller extends Controller
         if ($this->request->method() != $method) {
             return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
         }
+    }
+
+    /**
+     * Get requested API Version. If not given / not valid, will return latest version
+     *
+     * @return int
+     */
+    protected function getApiVersion()
+    {
+        $requestedVersion = (int)$this->request::header('X-API-Version');
+
+        return contains($requestedVersion, self::AVAILABLE_API_VERSIONS) ?
+            $requestedVersion : $this->getLatestApiVersion();
+    }
+
+    /**
+     * Get latest API Version
+     *
+     * @return int
+     */
+    protected function getLatestApiVersion()
+    {
+        return max(self::AVAILABLE_API_VERSIONS);
     }
 
     /**
@@ -286,7 +312,7 @@ abstract class ApiV2Controller extends Controller
     /**
      * @return int Current user's current team ID
      */
-    public function getTeamId(): int
+    protected function getTeamId(): int
     {
         return $this->_currentTeamId;
     }
@@ -294,7 +320,7 @@ abstract class ApiV2Controller extends Controller
     /**
      * @return mixed Current user's User object
      */
-    public function getUser()
+    protected function getUser()
     {
         return $this->_currentUser;
     }
