@@ -1,7 +1,7 @@
 <?php
 App::uses('XmlAtobaraiResponse', 'AtobaraiCom');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * register ClassRegistry

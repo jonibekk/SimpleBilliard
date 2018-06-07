@@ -8,7 +8,7 @@ App::uses('AwsEtsTranscodeOutput', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('AwsEtsTranscodeOutputFileNameDefinition', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('AwsEtsTranscodeOutputPlaylist', 'Model/Video/Transcode/AwsEtsStructure');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class AwsEtsTranscodeJob implements TranscodeOutput
 {

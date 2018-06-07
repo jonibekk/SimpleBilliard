@@ -2,7 +2,7 @@
 App::uses('ApiController', 'Controller/Api');
 App::import("Service", "PushService");
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class DevicesController extends  ApiController
 {

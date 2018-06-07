@@ -5,7 +5,7 @@ App::uses('View', 'View');
 App::uses('TransactionManager', 'Model');
 App::import('Service', 'UserService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * TeamMember Model

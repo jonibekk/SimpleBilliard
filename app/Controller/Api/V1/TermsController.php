@@ -3,7 +3,7 @@ App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'EvaluationService');
 App::import('Service', 'EvaluationSetting');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class TermsController

@@ -2,8 +2,7 @@
 App::import('Service', 'AppService');
 App::uses('Device', 'Model');
 
-use Goalous\Model\Enum as Enum;
-use Goalous\Model\Enum\Devices\DeviceType;
+use Goalous\Enum as Enum;
 
 /**
  * Send Push Notifications thought service providers,
@@ -37,7 +36,7 @@ class PushService extends AppService
         $iosTokens = [];
 
         foreach ($deviceTokens as $token) {
-            if ($token['os_type'] == DeviceType::ANDROID) {
+            if ($token['os_type'] == Enum\Devices\DeviceType::ANDROID) {
                 $androidTokens[] = $token['device_token'];
             } else {
                 $iosTokens[] = $token['device_token'];

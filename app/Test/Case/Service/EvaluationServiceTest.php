@@ -14,7 +14,7 @@ App::uses('TestEvaluationTrait', 'Test/Trait');
 App::uses('TestGoalTrait', 'Test/Trait');
 App::import('Service', 'ExperimentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * EvaluationServiceTest Class

@@ -13,7 +13,7 @@ App::import('Service', 'PostResourceService');
 App::import('Service', 'PostDraftService');
 App::import('Service', 'VideoStreamService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class SnsNotificationController

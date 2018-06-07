@@ -3,7 +3,7 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * creating credit card payment about passed parameters

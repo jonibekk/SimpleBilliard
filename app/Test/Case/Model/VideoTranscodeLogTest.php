@@ -2,7 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('VideoTranscodeLog', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * VideoTranscodeLogTest Test Case

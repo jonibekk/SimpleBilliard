@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('Invoice', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * PaymentSetting Model

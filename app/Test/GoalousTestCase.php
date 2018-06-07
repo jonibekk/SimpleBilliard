@@ -31,7 +31,7 @@ App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Experiment', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * CakeTestCase class

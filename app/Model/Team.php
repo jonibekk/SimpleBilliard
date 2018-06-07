@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Team Model

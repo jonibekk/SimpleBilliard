@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostDraft

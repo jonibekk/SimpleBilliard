@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 App::import('Service', 'EvaluationService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Evaluation Model

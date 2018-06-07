@@ -1,7 +1,7 @@
 <?php
 App::uses('AwsEtsForVideoSourceTrait', 'Model/Video/Transcode/AwsEtsStructure');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class AwsEtsTranscodeOutputPlaylist
 {

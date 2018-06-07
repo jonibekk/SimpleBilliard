@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'InvitationService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * InvitationServiceTest Class

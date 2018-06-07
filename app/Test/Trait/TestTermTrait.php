@@ -1,7 +1,7 @@
 <?php
 App::uses('Term', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 trait TestTermTrait
 {

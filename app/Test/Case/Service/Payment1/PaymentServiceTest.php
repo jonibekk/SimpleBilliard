@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 // TODO.Payment: there are these things
 // ・Create test_validateCreate_validateError_** method related lack of company info and contact person

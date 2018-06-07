@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('AppUtil', 'Util');
 App::uses('TeamStatus', 'Lib/Status');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * TeamStatusTest Test Case

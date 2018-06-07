@@ -1,6 +1,6 @@
 <?php
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * <source>タグ内に利用する値の出力

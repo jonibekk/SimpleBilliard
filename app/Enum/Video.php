@@ -1,6 +1,6 @@
 <?php
 
-namespace Goalous\Model\Enum\Video;
+namespace Goalous\Enum\Video;
 
 use MyCLabs\Enum\Enum;
 

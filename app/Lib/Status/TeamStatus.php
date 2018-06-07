@@ -3,7 +3,7 @@ App::import('Service', 'TeamService');
 App::import('Service', 'CampaignService');
 App::uses('Experiment', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class TeamStatus {
 

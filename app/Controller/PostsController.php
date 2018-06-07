@@ -8,7 +8,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Posts Controller

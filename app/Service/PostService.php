@@ -11,7 +11,7 @@ App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostService

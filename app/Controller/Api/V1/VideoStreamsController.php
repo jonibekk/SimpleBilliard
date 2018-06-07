@@ -7,7 +7,7 @@ App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 App::uses('VideoStorageClient', 'Model/Video');
 App::uses('TeamStatus', 'Lib/Status');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * @property VideoStream $VideoStream

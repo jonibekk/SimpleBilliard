@@ -1,7 +1,7 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Evaluation', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Evaluation Test Case

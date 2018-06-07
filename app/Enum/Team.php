@@ -1,5 +1,5 @@
 <?php
-namespace Goalous\Model\Enum\Team;
+namespace Goalous\Enum\Team;
 
 use MyCLabs\Enum\Enum;
 

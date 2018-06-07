@@ -3,7 +3,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class TranscodeOutputVersionManagerTest

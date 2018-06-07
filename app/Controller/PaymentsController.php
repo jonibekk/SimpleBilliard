@@ -4,7 +4,7 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'CampaignService');
 App::uses('PaymentSetting', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PaymentsController

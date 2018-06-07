@@ -4,7 +4,7 @@ App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'ChargeHistoryService');
 App::import('DateTime', 'GoalousDateTime');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class ChargeHistoryService

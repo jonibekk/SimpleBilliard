@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * ChargeHistory Model
@@ -9,24 +9,24 @@ use Goalous\Model\Enum as Enum;
 class ChargeHistory extends AppModel
 {
     /**
-     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
+     * @deprecated use \Goalous\Enum\PaymentSetting\Type
      */
     const PAYMENT_TYPE_INVOICE = 0;
     /**
-     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
+     * @deprecated use \Goalous\Enum\PaymentSetting\Type
      */
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     * @deprecated use \Goalous\Enum\ChargeHistory\ChargeType
      */
     const CHARGE_TYPE_MONTHLY = 0;
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     * @deprecated use \Goalous\Enum\ChargeHistory\ChargeType
      */
     const CHARGE_TYPE_ADD_USER = 1;
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     * @deprecated use \Goalous\Enum\ChargeHistory\ChargeType
      */
     const CHARGE_TYPE_ACTIVATE_USER = 2;
 

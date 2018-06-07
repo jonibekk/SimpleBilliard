@@ -15,7 +15,7 @@ App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 App::uses('TeamStatus', 'Lib/Status');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostDraftServiceTest

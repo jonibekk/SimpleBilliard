@@ -7,7 +7,7 @@ App::uses('Folder', 'Utility');
 App::uses('AppShell', 'Console/Command');
 App::uses('MonthlyCreditCardChargeShell', 'Console/Command/Batch/Payment/Console/Command');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class MonthlyCreditCardChargeShellTest

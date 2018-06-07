@@ -13,7 +13,7 @@ App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 App::uses('AwsEtsTranscodeInput', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('VideoTranscodeLog', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class VideoStreamService

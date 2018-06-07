@@ -4,7 +4,7 @@ App::uses('VideoStream', 'Model');
 App::uses('Video', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * VideoStreamTest Test Case

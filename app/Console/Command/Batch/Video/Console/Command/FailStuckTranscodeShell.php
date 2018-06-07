@@ -2,7 +2,7 @@
 App::uses('VideoStream', 'Model');
 App::uses('VideoTranscodeLog', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * This batch shell is for video posting

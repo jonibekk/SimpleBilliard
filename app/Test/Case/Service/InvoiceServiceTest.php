@@ -4,7 +4,7 @@ App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'InvoiceService');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PaymentServiceTest

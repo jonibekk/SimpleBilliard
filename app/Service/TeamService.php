@@ -3,7 +3,7 @@ App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class TeamService

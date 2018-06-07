@@ -5,7 +5,7 @@ App::import('Service', 'PaymentService');
 App::uses('ChargeHistory', 'Model');
 App::import('View', 'Helper/TimeExHelper');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class ChargeHistoryService

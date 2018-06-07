@@ -3,7 +3,7 @@
 App::import('Service', 'AppService');
 App::uses('PostResource', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostResourceService

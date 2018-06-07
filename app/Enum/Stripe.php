@@ -1,5 +1,5 @@
 <?php
-namespace Goalous\Model\Enum\Stripe;
+namespace Goalous\Enum\Stripe;
 
 use MyCLabs\Enum\Enum;
 

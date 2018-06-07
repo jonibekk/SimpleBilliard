@@ -8,7 +8,7 @@ App::import('Model/Video/Transcode', 'TranscodeOutputVersionDefinition');
 App::import('Lib/Aws', 'AwsClientFactory');
 
 use Aws\Exception\AwsException;
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class AwsTranscodeJobClient
 {

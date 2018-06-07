@@ -3,7 +3,7 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /** @noinspection PhpUndefinedClassInspection */
 

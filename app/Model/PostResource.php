@@ -4,7 +4,7 @@ App::uses('AppModel', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostResource

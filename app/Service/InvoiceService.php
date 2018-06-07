@@ -8,7 +8,7 @@ App::uses('Invoice', 'Model');
 App::uses('Team', 'Model');
 App::uses('GlRedis', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class InvoiceService

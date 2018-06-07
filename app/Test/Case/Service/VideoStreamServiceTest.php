@@ -8,7 +8,7 @@ App::import('Service', 'VideoStreamService');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class VideoStreamServiceTest extends GoalousTestCase
 {

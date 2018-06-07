@@ -140,18 +140,19 @@ Configure::write('CakePdf', array(
 // AdditionalExceptions
 require APP . "Lib/Error/Exceptions.php";
 
-
 // Autoload model constants
 spl_autoload_register(function ($class) {
     // Get filePath path by namespace
-    // e.g. 「Goalous\Model\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
-    if (!preg_match("/Model\\\\Enum\\\\[A-Za-z]+/", $class, $match)) {
+    // e.g. 「Goalous\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
+    if (!preg_match("/Enum\\\\[A-Za-z]+/", $class, $match)) {
         return;
     }
+
     $filePath = APP . DS . str_replace('\\', DS, $match[0]) . '.php';
     if (file_exists($filePath)) {
-        return include $filePath;
+        return include_once $filePath;
     }
+    var_dump($filePath);
 });
 
 /**

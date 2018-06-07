@@ -1,7 +1,7 @@
 <?php
 App::uses('TranscodeProgressData', 'Model/Video/Stream');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Handling about notification json from AWS SNS

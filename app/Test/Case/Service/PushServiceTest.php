@@ -2,8 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PushService');
 
-use Goalous\Model\Enum as Enum;
-use Goalous\Model\Enum\Devices\DeviceType;
+use Goalous\Enum as Enum;
 
 /**
  * Class PushServiceTest

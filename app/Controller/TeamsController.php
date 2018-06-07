@@ -10,7 +10,7 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'CampaignService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Teams Controller

@@ -3,7 +3,7 @@
 App::uses('VideoStream', 'Model');
 App::import('Lib/Aws', 'AwsClientFactory');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * local environment can not receive push(HTTPS POST) from AWS SNS

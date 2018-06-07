@@ -1,7 +1,7 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('ChargeHistory', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * ChargeHistory Test Case

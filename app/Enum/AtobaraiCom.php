@@ -1,16 +1,18 @@
 <?php
-namespace Goalous\Model\Enum\Invoice;
+namespace Goalous\Enum\AtobaraiCom;
 
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static static WAITING()
+ * @method static static IN_JUDGE()
  * @method static static OK()
  * @method static static NG()
+ * @method static static CANCELED()
+ * @method static static ORDER_NOT_FOUND()
  */
-class CreditStatus extends Enum
+class Credit extends Enum
 {
-    const WAITING         = 0;
+    const IN_JUDGE        = 0;
     const OK              = 1;
     const NG              = 2;
     const CANCELED        = 3;

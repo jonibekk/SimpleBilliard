@@ -15,7 +15,7 @@ App::import('Service', 'CampaignService');
 App::import('Service', 'PostDraftService');
 App::import('Model', 'PostDraft');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Static content controller

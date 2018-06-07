@@ -7,7 +7,7 @@ App::uses('XmlAtobaraiResponse', 'AtobaraiCom');
 App::import('Service', 'InvoiceService');
 App::import('Service', 'TeamService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class InquireInvoiceCreditStatusShell

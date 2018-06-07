@@ -1,6 +1,6 @@
 <?php
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * the atobarai.com test api response is fixed values (only to be succeed)

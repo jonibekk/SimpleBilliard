@@ -6,7 +6,7 @@ App::import('Service', 'InvitationService');
 App::import('Service', 'PaymentService');
 App::import('Service', 'CampaignService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class InvitationsController

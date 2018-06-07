@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <?php if ((int)$setting['type'] === Goalous\Model\Enum\PaymentSetting\Type::INVOICE): ?>
+                <?php if ((int)$setting['type'] === Goalous\Enum\PaymentSetting\Type::INVOICE): ?>
                     <div class="form-group">
                         <div class="flex">
                             <div class="flex-extend mr_8px">

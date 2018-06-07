@@ -7,7 +7,7 @@ App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::import('Service', 'ExperimentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class EvaluationService extends AppService
 {

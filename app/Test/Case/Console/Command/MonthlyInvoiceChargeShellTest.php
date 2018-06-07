@@ -9,7 +9,7 @@ App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::uses('MonthlyInvoiceChargeShell', 'Console/Command/Batch/Payment/Console/Command');
 App::uses('GoalousDateTime', 'DateTime');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class MonthlyInvoiceChargeShellTest

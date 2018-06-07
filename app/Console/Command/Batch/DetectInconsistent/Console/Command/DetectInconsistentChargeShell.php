@@ -2,7 +2,7 @@
 App::import('Service', 'PaymentService');
 App::uses('AppUtil', 'Util');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * DetectInconsistentChargeShell

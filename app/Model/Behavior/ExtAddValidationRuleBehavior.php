@@ -1,7 +1,7 @@
 <?php
 App::uses('AddValidationRuleBehavior', 'Cakeplus.Model/Behavior');
 
-use Goalous\Model\Enum;
+use Goalous\Enum;
 
 /**
  * Created by PhpStorm.

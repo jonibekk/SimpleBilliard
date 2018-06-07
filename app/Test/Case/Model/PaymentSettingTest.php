@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * PaymentSetting Test Case

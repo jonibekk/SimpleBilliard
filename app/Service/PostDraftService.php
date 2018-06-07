@@ -4,7 +4,7 @@ App::uses('PostDraft', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('Post', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostDraftService
@@ -66,7 +66,7 @@ class PostDraftService extends AppService
             // has transcode failed video
             $hasTranscodeFailed = false;
             foreach ($postDraft['post_resources'] as $resource) {
-                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+                $transcodeStatus = new Goalous\Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
                 if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
                     $hasTranscodeFailed = true;
                     break;

@@ -14,7 +14,7 @@
 ?>
 <?= $this->App->viewStartComment() ?>
 <section
-    class="panel payment subscription-status <?= $serviceUseStatus == Goalous\Model\Enum\Team\ServiceUseStatus::PAID ? 'has-subnav' : ''; ?>">
+    class="panel payment subscription-status <?= $serviceUseStatus == Goalous\Enum\Team\ServiceUseStatus::PAID ? 'has-subnav' : ''; ?>">
     <?= $this->element('Payment/method_select') ?>
     <div class="panel-container">
         <h3><?= __("Team Summary") ?></h3>
