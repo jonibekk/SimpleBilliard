@@ -36,6 +36,8 @@ trait PagingServiceTrait
 
         $finalResult['count'] = $this->countData($pagingCursor->getConditions());
 
+        $pointerValues = $pagingCursor->getPointers();
+
         $queryResult = $this->readData($pagingCursor, $limit + 1);
 
         //If there is further result
