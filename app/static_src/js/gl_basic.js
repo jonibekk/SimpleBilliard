@@ -347,6 +347,25 @@ $(function () {
     $(".modal").on("hide.bs.modal", function() {
       $(".select2-display-none").css("display","none");
     });
+    window.onerror = function (msg, url, lineNo, columnNo, error) {
+    var string = msg.toLowerCase();
+    var substring = "script error";
+    if (string.indexOf(substring) > -1){
+        alert('Script Error: See Browser Console for Detail');
+    } else {
+        var message = [
+            'Message: ' + msg,
+            'URL: ' + url,
+            'Line: ' + lineNo,
+            'Column: ' + columnNo,
+            'Error object: ' + JSON.stringify(error)
+        ].join(' - ');
+
+        alert(message);
+    }
+
+    return false;
+};
 });
 // Avoid `console` errors in browsers that lack a console.
 (function() {
