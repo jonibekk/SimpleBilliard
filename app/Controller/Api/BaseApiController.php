@@ -35,9 +35,6 @@ abstract class BaseApiController extends Controller
     /** @var bool */
     private $_stopInvokeFlag = false;
 
-    /** @var array Available API versions */
-    const AVAILABLE_API_VERSIONS = [ApiVer::API_VERSION_2];
-
     /**
      * ApiV2Controller constructor.
      *
@@ -127,18 +124,8 @@ abstract class BaseApiController extends Controller
     {
         $requestedVersion = (int)$this->request::header('X-API-Version');
 
-        return contains($requestedVersion, self::AVAILABLE_API_VERSIONS) ?
-            $requestedVersion : $this->getLatestApiVersion();
-    }
-
-    /**
-     * Get latest API Version
-     *
-     * @return int
-     */
-    protected function getLatestApiVersion()
-    {
-        return max(self::AVAILABLE_API_VERSIONS);
+        return contains($requestedVersion, ApiVer::AVAILABLE_API_VERSIONS) ?
+            $requestedVersion : ApiVer::getLatestApiVersion();
     }
 
     /**
