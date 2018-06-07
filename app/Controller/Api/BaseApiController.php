@@ -15,6 +15,9 @@ App::uses('User', 'Model');
  * @property .\Model\User  $User
  * @property LangComponent $LangComponent
  */
+
+use Goalous\Model\Enum\ApiVersion\ApiVersion as ApiVer;
+
 abstract class BaseApiController extends Controller
 {
     /** @var string */
@@ -33,7 +36,7 @@ abstract class BaseApiController extends Controller
     private $_stopInvokeFlag = false;
 
     /** @var array Available API versions */
-    const AVAILABLE_API_VERSIONS = [2];
+    const AVAILABLE_API_VERSIONS = [ApiVer::API_VERSION_2];
 
     /**
      * ApiV2Controller constructor.
