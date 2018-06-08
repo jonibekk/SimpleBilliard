@@ -4,6 +4,7 @@ App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
 App::uses('TeamStatus', 'Model');
 App::uses('User', 'Model');
+App::uses('LangComponent', 'Controller/Component');
 
 /**
  * Parent controller for API v2
@@ -48,6 +49,9 @@ abstract class BaseApiController extends Controller
     ) {
         parent::__construct($request, $response);
         $this->_fetchJwtToken($request);
+
+        $components = new ComponentCollection();
+        $this->LangComponent = new LangComponent($components);
     }
 
     /**
