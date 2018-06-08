@@ -10,6 +10,7 @@ use \Ramsey\Uuid\Uuid;
 App::uses('JwtException', 'Lib/Jwt/Exception');
 App::uses('JwtSignatureException', 'Lib/Jwt/Exception');
 App::uses('JwtOutOfTermException', 'Lib/Jwt/Exception');
+App::uses('GoalousDateTime', 'DateTime');
 
 
 /**
