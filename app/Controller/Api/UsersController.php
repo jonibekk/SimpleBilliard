@@ -8,6 +8,9 @@ App::import('Service', 'CircleMemberService');
  * Date: 2018/06/04
  * Time: 15:07
  */
+
+use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
+
 class UsersController extends BaseApiController
 {
     /**
@@ -20,7 +23,7 @@ class UsersController extends BaseApiController
     public function get_circles(int $userId)
     {
         switch ($this->getApiVersion()) {
-            case 2:
+            case ApiVer::VER_2:
                 return $this->get_circles_v2($userId);
                 break;
             default:
