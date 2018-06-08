@@ -45,7 +45,7 @@ class AuthController extends BaseApiController
     public function post_logout()
     {
         switch ($this->getApiVersion()) {
-            case 2:
+            case Apiver::VER_2:
                 return $this->post_logout_v2();
                 break;
             default:
@@ -108,8 +108,7 @@ class AuthController extends BaseApiController
         try {
             $Auth->invalidateUser($this->getUserToken());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage($e->getMessage())
-                                                                                 ->withExceptionTrace($e->getTrace())
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
                                                                                  ->getResponse();
         }
 
@@ -138,6 +137,8 @@ class AuthController extends BaseApiController
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
                                                                        ->getResponse();
         }
+
+        return null;
     }
 
     /**
