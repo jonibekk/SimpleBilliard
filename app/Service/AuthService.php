@@ -36,13 +36,11 @@ class AuthService extends AppService
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');
 
-        $queriedUser = $User->findUserByEmail($username);
+        $user = $User->findUserByEmail($username);
 
-        if (empty ($queriedUser)) {
+        if (empty ($user)) {
             return null;
         }
-
-        $user = Hash::get($queriedUser, 'User');
 
         $storedHashedPassword = $user['password'];
 

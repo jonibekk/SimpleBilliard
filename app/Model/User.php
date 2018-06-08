@@ -1908,6 +1908,6 @@ class User extends AppModel
 
         $user = $this->find('first', $condition);
 
-        return $user;
+        return Hash::get($user, 'User');
     }
 }
