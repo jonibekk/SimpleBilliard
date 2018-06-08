@@ -96,6 +96,39 @@ class ApiResponse extends CakeResponse
     }
 
     /**
+     * Add data to response body
+     *
+     * @param array|string $data       Data to be sent to the client
+     * @param bool         $appendFlag Append input to existing data
+     *
+     * @return ApiResponse
+     */
+    public function withBody($data, bool $appendFlag = false): ApiResponse
+    {
+        if (empty($data)) {
+            return $this;
+        }
+        if (!$appendFlag) {
+            $this->_responseBody = $data;
+            return $this;
+        }
+        if (is_array($data)) {
+            if (is_int(array_keys($data)[0])) {
+                $this->_responseBody = array_merge($this->_responseBody,
+                    $data);
+            } else {
+                foreach ($data as $key => $value) {
+                    $this->_responseBody[] = [$key => $value];
+                }
+            }
+        } elseif (is_string($data)) {
+            $this->_responseBody[] = $data;
+        }
+
+        return $this;
+    }
+
+    /**
      * Add message to the response body
      *
      * @param string $message    Additional message
@@ -127,6 +160,9 @@ class ApiResponse extends CakeResponse
     public function withExceptionTrace($exceptionTrace, bool $appendFlag = false): ApiResponse
     {
         if (empty($exceptionTrace)) {
+            return $this;
+        }
+        if (ENV_NAME !== "dev") {
             return $this;
         }
         if (!$appendFlag) {

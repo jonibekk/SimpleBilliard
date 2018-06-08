@@ -1872,4 +1872,42 @@ class User extends AppModel
     {
         return !empty($userId) && AppUtil::isInt($userId) && $userId != 0;
     }
+
+    /**
+     * Get user object from user's primary email address
+     *
+     * @param string $email
+     *
+     * @return array
+     */
+    public function findUserByEmail(string $email): array
+    {
+        $condition = [
+            'conditions' => [
+                'User.del_flg' => false
+            ],
+            'fields'     => [
+                'User.id',
+                'User.password',
+                'User.default_team_id'
+            ],
+            'joins'      =>
+                [
+                    [
+                        'type'       => 'LEFT',
+                        'table'      => 'emails',
+                        'alias'      => 'Email',
+                        'conditions' => [
+                            'Email.id'      => 'User.primary_email_id',
+                            'Email.email'   => $email,
+                            'Email.del_flg' => false
+                        ]
+                    ]
+                ]
+        ];
+
+        $user = $this->find('first', $condition);
+
+        return Hash::get($user, 'User');
+    }
 }

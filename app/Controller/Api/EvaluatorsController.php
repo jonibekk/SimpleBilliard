@@ -54,7 +54,7 @@ class EvaluatorsController extends BaseApiController
             return $errorReturn;
         }
 
-        $userId = $this->getUser()['id'];
+        $userId = $this->getUserId();
         $teamId = $this->getTeamId();
         $evaluateeUserId = Hash::get($this->request->data, 'evaluatee_user_id');
         $evaluatorUserIds = Hash::get($this->request->data, 'evaluator_user_ids');
@@ -141,7 +141,7 @@ class EvaluatorsController extends BaseApiController
 
         //TODO validate $data
 
-        $userId = $this->getUser()['id'];
+        $userId = $this->getUserId();
         $evaluateeUserId = Hash::get($this->request->data, 'evaluatee_user_id');
         $evaluatorUserIds = Hash::get($this->request->data, 'evaluator_user_ids');
 

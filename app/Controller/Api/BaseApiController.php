@@ -24,8 +24,8 @@ abstract class BaseApiController extends Controller
     /** @var string */
     private $_jwtToken;
 
-    /** @var .\Model\User */
-    private $_currentUser;
+    /** @var int */
+    private $_currentUserId;
 
     /** @var int */
     private $_currentTeamId;
@@ -42,11 +42,8 @@ abstract class BaseApiController extends Controller
      * @param CakeRequest|null  $request
      * @param CakeResponse|null $response
      */
-    public function __construct(
-        CakeRequest $request = null,
-        CakeResponse $response = null
-
-    ) {
+    public function __construct(CakeRequest $request = null, CakeResponse $response = null)
+    {
         parent::__construct($request, $response);
         $this->_fetchJwtToken($request);
 
@@ -63,9 +60,11 @@ abstract class BaseApiController extends Controller
     private function _fetchJwtToken(CakeRequest $request)
     {
         $authHeader = $request->header('Authorization');
+
         if (empty($authHeader)) {
             return;
         }
+
         list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
 
         $this->_jwtToken = $jwt[0] ?? '';
@@ -80,11 +79,27 @@ abstract class BaseApiController extends Controller
 
         //Skip authentication if the endpoint set the option
         if (!$this->_checkSkipAuthentication($this->request)) {
-            if (empty($this->_jwtToken) || !$this->_authenticateUser()) {
+
+            if (empty($this->_jwtToken)) {
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
+                    ->withMessage(__('Missing token.'))->getResponse();
+            }
+
+            try {
+                $userAuthentication = $this->_authenticateUser();
+            } catch (Exception $e) {
+                /** @noinspection PhpInconsistentReturnPointsInspection */
+                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
+                    ->withMessage($e->getMessage())->withExceptionTrace($e->getTrace())->getResponse();
+            }
+
+            if (!$userAuthentication) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
                     ->withMessage(__('You should be logged in.'))->getResponse();
             }
+
             $this->_initializeTeamStatus();
 
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
@@ -164,20 +179,13 @@ abstract class BaseApiController extends Controller
     {
         $controllerName = $request->params['controller'] ?? '';
         $actionName = $request->params['action'] ?? '';
-        $apiVersion = $request->params['apiVersion'] ?? '';
 
-        if (empty($controllerName) || empty($actionName)) {
+        if (empty($controllerName) && empty($actionName)) {
             return [];
         }
 
-        //TODO Make it works with path. Currently only works with classname, which might cause mix up with classes of same name under different folder
-
         $classPath = '';
-//        $classPath = '\\vagrant\\app\\Controller';
 
-//        if (!empty($apiVersion)) {
-//            $classPath .= '\\Api\\' . ucfirst($apiVersion) . '\\';
-//        }
         $classPath .= ucfirst($controllerName) . "Controller";
 
         try {
@@ -217,7 +225,20 @@ abstract class BaseApiController extends Controller
      */
     private function _authenticateUser(): bool
     {
-        //TODO set user & team ID
+        try {
+            $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
+        } catch (AuthenticationException $e) {
+            return false;
+        }
+
+        if (empty($jwtAuth->getUserId())) {
+            return false;
+        }
+
+        $this->_currentUserId = $jwtAuth->getUserId();
+
+        $this->_currentTeamId = $jwtAuth->getTeamId();
+
         return true;
     }
 
@@ -248,12 +269,13 @@ abstract class BaseApiController extends Controller
      *
      * @return bool
      */
-    private function _checkIgnoreRestriction(CakeRequest $request)
-    {
+    private function _checkIgnoreRestriction(
+        CakeRequest $request
+    ) {
         $commentArray = $this->_parseEndpointDocument($request);
 
         foreach ($commentArray as $commentLine) {
-            if ('@skipAuthentication' == trim($commentLine)) {
+            if ('@ignoreRestriction' == trim($commentLine)) {
                 return true;
             }
         }
@@ -278,11 +300,14 @@ abstract class BaseApiController extends Controller
      */
     private function _setAppLanguage()
     {
-        if (isset($this->_currentUser) && isset($this->_currentUser['language']) && !boolval($this->_currentUser['auto_language_flg'])) {
-            Configure::write('Config.language', $this->_currentUser['language']);
-            $this
-                ->set('is_not_use_local_name',
-                    (new User())->isNotUseLocalName($this->_currentUser['language']) ?? false);
+        /** @var .\Model\User $User */
+        $User = ClassRegistry::init('User');
+        if (isset($this->_currentUserId)) {
+            $currentUser = $User->findById($this->_currentUserId)['User'];
+        }
+        if (isset($this->_currentUserId) && isset($currentUser['language']) && !boolval($currentUser['auto_language_flg'])) {
+            Configure::write('Config.language', $currentUser['language']);
+            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($currentUser['language']) ?? false);
         } else {
             $lang = $this->LangComponent->getLanguage();
             $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
@@ -295,9 +320,8 @@ abstract class BaseApiController extends Controller
      *
      * @return mixed
      */
-    public function invokeAction(
-        CakeRequest $request
-    ) {
+    public function invokeAction(CakeRequest $request)
+    {
         if ($this->_stopInvokeFlag) {
             return false;
         }
@@ -313,10 +337,10 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * @return mixed Current user's User object
+     * @return int Current user's ID
      */
-    protected function getUser()
+    protected function getUserId()
     {
-        return $this->_currentUser;
+        return $this->_currentUserId;
     }
 }

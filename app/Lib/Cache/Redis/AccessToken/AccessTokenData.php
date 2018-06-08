@@ -3,6 +3,8 @@
 class AccessTokenData
 {
     /**
+     *
+     *
      * @var string
      */
     private $userAgent;
