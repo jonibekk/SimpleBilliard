@@ -2,7 +2,7 @@
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Team Test Case
@@ -362,7 +362,7 @@ class TeamTest extends GoalousTestCase
     {
         $teamId = 1;
         $fields = [
-            'service_use_status' => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status' => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017-01-01',
             'service_use_state_end_date' => '2017-01-16',
         ];
@@ -372,7 +372,7 @@ class TeamTest extends GoalousTestCase
         $this->assertTrue($res);
         $team = $this->Team->getById($teamId, array_keys($fields));
         $this->assertEquals($team, [
-            'service_use_status' => Enum\Team\ServiceUseStatus::PAID,
+            'service_use_status' => Enum\Model\Team\ServiceUseStatus::PAID,
             'service_use_state_start_date' => $startDate,
             'service_use_state_end_date' => null,
         ]);
@@ -392,12 +392,12 @@ class TeamTest extends GoalousTestCase
         $endTs = strtotime("2017-03-01 23:59:59");
         // Not paid plan team
         // Free trial
-        $this->createTeam(["service_use_status" => Enum\Team\ServiceUseStatus::FREE_TRIAL]);
+        $this->createTeam(["service_use_status" => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL]);
         $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
         $this->assertEmpty($res);
 
         // Read only
-        $this->createTeam(["service_use_status" => Enum\Team\ServiceUseStatus::READ_ONLY]);
+        $this->createTeam(["service_use_status" => Enum\Model\Team\ServiceUseStatus::READ_ONLY]);
         $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
         $this->assertEmpty($res);
 
@@ -412,15 +412,15 @@ class TeamTest extends GoalousTestCase
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByUserCnt($teamId, $usersCount);
         $historyData = [
             'team_id'          => $teamId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $usersCount,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'  => strtotime("2017-01-01 00:00:00"),
-            'result_type'      => Enum\ChargeHistory\ResultType::FAIL,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::FAIL,
             'max_charge_users' => $usersCount
         ];
         $this->ChargeHistory->create();
@@ -457,7 +457,7 @@ class TeamTest extends GoalousTestCase
 
         // Charge fail 3 count but not continuously
         $this->ChargeHistory->id = $historyId2;
-        $this->ChargeHistory->save(['result_type'      => Enum\ChargeHistory\ResultType::SUCCESS], false);
+        $this->ChargeHistory->save(['result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS], false);
         $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
         $this->assertEmpty($res);
     }

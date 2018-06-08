@@ -4,7 +4,7 @@ App::uses('KeyResult', 'Model');
 App::uses('GoalMember', 'Model');
 App::import('Service', 'GoalService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 trait TestGoalTrait
 {

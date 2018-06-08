@@ -1,14 +1,14 @@
 <?php
 App::uses('AwsEtsForVideoSourceTrait', 'Model/Video/Transcode/AwsEtsStructure');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class AwsEtsTranscodeOutputPlaylist
 {
     use AwsEtsForVideoSourceTrait;
 
     /**
-     * @var Enum\Video\VideoSourceType
+     * @var Enum\Model\Video\VideoSourceType
      */
     private $videoSourceType;
 
@@ -21,12 +21,12 @@ class AwsEtsTranscodeOutputPlaylist
     /**
      * AwsEtsTranscodeOutputPlaylist constructor.
      *
-     * @param Enum\Video\VideoSourceType $videoSourceType
+     * @param Enum\Model\Video\VideoSourceType $videoSourceType
      * @param string                     $format
      * @param string                     $name
      * @param AwsEtsTranscodeOutput[]             $outputKeys
      */
-    public function __construct(Enum\Video\VideoSourceType $videoSourceType, string $format, string $name, array $outputKeys)
+    public function __construct(Enum\Model\Video\VideoSourceType $videoSourceType, string $format, string $name, array $outputKeys)
     {
         $this->videoSourceType = $videoSourceType;
         $this->format = $format;

@@ -21,7 +21,7 @@ App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Application Controller
@@ -787,7 +787,7 @@ class AppController extends BaseController
                     'conditions' => array(
                         'user_id' => $id,
                         'team_id' => $this->Session->read('current_team_id'),
-                        'status'  => Enum\TeamMember\Status::ACTIVE,
+                        'status'  => Enum\Model\TeamMember\Status::ACTIVE,
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);

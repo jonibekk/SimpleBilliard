@@ -6,7 +6,7 @@ App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * The shell for moving team status to read only
@@ -49,7 +49,7 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
                 ])));
                 exit();
             }
-            if ((int)$team['service_use_status'] != Enum\Team\ServiceUseStatus::PAID) {
+            if ((int)$team['service_use_status'] != Enum\Model\Team\ServiceUseStatus::PAID) {
                 $this->logError(sprintf("Team's service use status by argument `force_update_team_id` doesn't equal to paid plan. %s", AppUtil::jsonOneLine([
                     'force_update_team_id' => $forceUpdateTeamId,
                 ])));
@@ -128,7 +128,7 @@ class MoveReadOnlyIfCcChargeFailsShell extends AppShell
             // Update team's service use status
             $res = $TeamService->updateServiceUseStatus(
                 $teamId,
-                Enum\Team\ServiceUseStatus::READ_ONLY,
+                Enum\Model\Team\ServiceUseStatus::READ_ONLY,
                 $currentDateTimeOfTeamTimeZone->format('Y-m-d')
             );
             if (!$res) {

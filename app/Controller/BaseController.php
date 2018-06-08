@@ -5,7 +5,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Application level Controller

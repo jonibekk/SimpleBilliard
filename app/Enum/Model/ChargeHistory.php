@@ -1,5 +1,5 @@
 <?php
-namespace Goalous\Model\Enum\ChargeHistory;
+namespace Goalous\Enum\Model\ChargeHistory;
 
 use MyCLabs\Enum\Enum;
 

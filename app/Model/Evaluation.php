@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 App::import('Service', 'EvaluationService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Evaluation Model
@@ -855,7 +855,7 @@ class Evaluation extends AppModel
         // Count increase if login user can evaluate
         $count = 0;
         foreach ($evaluations as $eval) {
-            if ($eval['status'] == Enum\Evaluation\Status::DONE) {
+            if ($eval['status'] == Enum\Model\Evaluation\Status::DONE) {
                 continue;
             }
             $evalStage = $EvaluationService->getEvalStageIfNotFixedEvalOrder($eval['term_id'],
@@ -1167,7 +1167,7 @@ class Evaluation extends AppModel
                 'term_id'           => $termId,
                 'evaluatee_user_id' => $evaluateeId,
                 'evaluate_type'     => self::TYPE_EVALUATOR,
-                'status !='         => Enum\Evaluation\Status::DONE,
+                'status !='         => Enum\Model\Evaluation\Status::DONE,
                 'goal_id'           => null
             ],
         ];
@@ -1191,7 +1191,7 @@ class Evaluation extends AppModel
                 'term_id'           => $termId,
                 'evaluatee_user_id' => $evaluateeId,
                 'evaluate_type'     => self::TYPE_FINAL_EVALUATOR,
-                'status !='         => Enum\Evaluation\Status::DONE,
+                'status !='         => Enum\Model\Evaluation\Status::DONE,
                 'goal_id'           => null
             ],
         ];
@@ -1371,7 +1371,7 @@ class Evaluation extends AppModel
                 'evaluatee_user_id' => $evaluateeId,
                 'evaluate_type'     => self::TYPE_EVALUATOR,
                 'goal_id'           => null,
-                'status'            => Enum\Evaluation\Status::DONE
+                'status'            => Enum\Model\Evaluation\Status::DONE
             ],
         ];
 

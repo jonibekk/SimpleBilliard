@@ -1,5 +1,5 @@
 <?php
-namespace Goalous\Model\Enum\PaymentSetting;
+namespace Goalous\Enum\Model\PaymentSetting;
 
 use MyCLabs\Enum\Enum;
 

@@ -49,7 +49,7 @@
                         $fontWeightCls = $v['this_turn'] ? 'font_bold' : 'font_lightgray';
                     } else {
                         if ($eval_is_frozen) {
-                            if ((int)$v['evaluate_type'] === Evaluation::TYPE_FINAL_EVALUATOR && (int)$v['status'] !== Goalous\Model\Enum\Evaluation\Status::DONE) {
+                            if ((int)$v['evaluate_type'] === Evaluation::TYPE_FINAL_EVALUATOR && (int)$v['status'] !== Goalous\Enum\Model\Evaluation\Status::DONE) {
                                 $fontWeightCls = 'font_bold';
                             }
                         } else {

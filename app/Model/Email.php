@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Email Model
@@ -285,7 +285,7 @@ class Email extends AppModel
             'alias'      => 'TeamMember',
             'conditions' => [
                 'TeamMember.user_id = User.id',
-                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+                'TeamMember.status !=' => Enum\Model\TeamMember\Status::INACTIVE
             ],
         ], $this);
         $options['conditions'][] = $db->expression("NOT EXISTS (" . $subQuery . ")");
