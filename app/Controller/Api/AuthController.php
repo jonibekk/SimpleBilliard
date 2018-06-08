@@ -8,6 +8,9 @@ App::import('Service', 'AuthService');
  * Date: 2018/05/30
  * Time: 11:35
  */
+
+use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
+
 class AuthController extends BaseApiController
 {
     public function beforeFilter()
@@ -24,7 +27,7 @@ class AuthController extends BaseApiController
     public function post_login()
     {
         switch ($this->getApiVersion()) {
-            case 2:
+            case ApiVer::VER_2:
                 return $this->post_login_v2();
                 break;
             default:
