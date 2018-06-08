@@ -52,6 +52,7 @@ abstract class BaseApiController extends Controller
 
         $components = new ComponentCollection();
         $this->LangComponent = new LangComponent($components);
+        $this->LangComponent->initialize();
     }
 
     /**
