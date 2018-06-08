@@ -173,26 +173,11 @@ abstract class BaseApiController extends Controller
     private function _parseEndpointDocument(CakeRequest $request): array
     {
         $controllerName = $request->params['controller'] ?? '';
+        $actionName = $request->params['action'] ?? '';
 
-        if (empty($controllerName)) {
+        if (empty($controllerName) && empty($actionName)) {
             return [];
         }
-
-        $actionName = $request->params['action'] ?? '';
-        $methodName = $request->method();
-
-        //TODO need further testing
-        if (empty($actionName) && $methodName === 'get') {
-            {
-                if (empty($request->params['named'])) {
-                    $actionName = "list";
-                } else {
-                    $actionName = "detail";
-                }
-            }
-        }
-
-        $actionName .= $methodName . "_";
 
         $classPath = '';
 
@@ -312,8 +297,9 @@ abstract class BaseApiController extends Controller
     {
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');
-        $currentUser = $User->findById($this->_currentUserId)['User'];
-
+        if (isset($this->_currentUserId)) {
+            $currentUser = $User->findById($this->_currentUserId)['User'];
+        }
         if (isset($this->_currentUserId) && isset($currentUser['language']) && !boolval($currentUser['auto_language_flg'])) {
             Configure::write('Config.language', $currentUser['language']);
             $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($currentUser['language']) ?? false);

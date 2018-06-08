@@ -162,7 +162,7 @@ class ApiResponse extends CakeResponse
         if (empty($exceptionTrace)) {
             return $this;
         }
-        if (ENV !== "dev") {
+        if (ENV_NAME !== "dev") {
             return $this;
         }
         if (!$appendFlag) {
