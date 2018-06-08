@@ -30,7 +30,6 @@ class AuthService extends AppService
      * @param string $password
      *
      * @return JwtAuthentication Authentication token of the user. Will return null on failed login
-     * @throws Exception
      */
     public function authenticateUser(string $username, string $password)
     {
@@ -54,7 +53,7 @@ class AuthService extends AppService
                 return null;
             }
             if (!$this->_savePasswordAsSha256($user, $password)) {
-                throw new Exception("Unable to save SHA256 password");
+                return null;
             }
         } elseif (!$this->passwordHasher->check($password, $storedHashedPassword)) {
             return null;

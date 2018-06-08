@@ -86,7 +86,7 @@ abstract class BaseApiController extends Controller
             } catch (Exception $e) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
                 return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->withMessage($e->getMessage())->setExceptionTrace($e->getTrace())->getResponse();
+                    ->withMessage($e->getMessage())->withExceptionTrace($e->getTrace())->getResponse();
             }
 
             if (!$userAuthentication) {
@@ -173,21 +173,29 @@ abstract class BaseApiController extends Controller
     private function _parseEndpointDocument(CakeRequest $request): array
     {
         $controllerName = $request->params['controller'] ?? '';
-        $actionName = $request->params['action'] ?? '';
-        $apiVersion = $request->params['apiVersion'] ?? '';
 
-        if (empty($controllerName) || empty($actionName)) {
+        if (empty($controllerName)) {
             return [];
         }
 
-        //TODO Make it works with path. Currently only works with classname, which might cause mix up with classes of same name under different folder
+        $actionName = $request->params['action'] ?? '';
+        $methodName = $request->method();
+
+        //TODO need further testing
+        if (empty($actionName) && $methodName === 'get') {
+            {
+                if (empty($request->params['named'])) {
+                    $actionName = "list";
+                } else {
+                    $actionName = "detail";
+                }
+            }
+        }
+
+        $actionName .= $methodName . "_";
 
         $classPath = '';
-//        $classPath = '\\vagrant\\app\\Controller';
 
-//        if (!empty($apiVersion)) {
-//            $classPath .= '\\Api\\' . ucfirst($apiVersion) . '\\';
-//        }
         $classPath .= ucfirst($controllerName) . "Controller";
 
         try {
@@ -224,11 +232,14 @@ abstract class BaseApiController extends Controller
      * Perform user authentication using JWT Token method
      *
      * @return bool TRUE = user successfully authenticated
-     * @throws Exception
      */
     private function _authenticateUser(): bool
     {
-        $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
+        try {
+            $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
+        } catch (AuthenticationException $e) {
+            return false;
+        }
 
         if (empty($jwtAuth->getUserId())) {
             return false;
