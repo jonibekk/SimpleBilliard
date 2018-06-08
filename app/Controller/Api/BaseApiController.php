@@ -16,7 +16,7 @@ App::uses('User', 'Model');
  * @property LangComponent $LangComponent
  */
 
-use Goalous\Model\Enum\ApiVersion\ApiVersion as ApiVer;
+use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
 
 abstract class BaseApiController extends Controller
 {

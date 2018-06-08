@@ -1,6 +1,6 @@
 <?php
 
-namespace Goalous\Model\Enum\ApiVersion;
+namespace Goalous\Enum\ApiVersion;
 
 use MyCLabs\Enum\Enum;
 
