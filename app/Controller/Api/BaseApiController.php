@@ -15,6 +15,9 @@ App::uses('User', 'Model');
  * @property .\Model\User  $User
  * @property LangComponent $LangComponent
  */
+
+use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
+
 abstract class BaseApiController extends Controller
 {
     /** @var string */
@@ -31,9 +34,6 @@ abstract class BaseApiController extends Controller
 
     /** @var bool */
     private $_stopInvokeFlag = false;
-
-    /** @var array Available API versions */
-    const AVAILABLE_API_VERSIONS = [2];
 
     /**
      * ApiV2Controller constructor.
@@ -124,18 +124,8 @@ abstract class BaseApiController extends Controller
     {
         $requestedVersion = (int)$this->request::header('X-API-Version');
 
-        return contains($requestedVersion, self::AVAILABLE_API_VERSIONS) ?
-            $requestedVersion : $this->getLatestApiVersion();
-    }
-
-    /**
-     * Get latest API Version
-     *
-     * @return int
-     */
-    protected function getLatestApiVersion()
-    {
-        return max(self::AVAILABLE_API_VERSIONS);
+        return ApiVer::isAvailable($requestedVersion) ?
+            $requestedVersion : ApiVer::getLatestApiVersion();
     }
 
     /**
