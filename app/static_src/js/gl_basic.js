@@ -263,9 +263,9 @@ $(function () {
     });
     $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify,.header-dropdown-message,.mb-app-header-dropdown-add,.mb-app-header-dropdown-functions").on("click", function(e) {
         $(".open").not($(this)).removeClass("open");
-        $(".force-open").not($(this)).removeClass("force-open");
+        $(".force-open").removeClass("force-open");
         $(this).find(".dropdown-menu").toggleClass("open");
-        $(this).find(".dropdown-menu").toggleClass("force-open");
+        $(this).find(".dropdown-menu").addClass("force-open");
         $("#NavSearchResults").empty();
         $("#NavSearchResults").hide();
         $("#NavSearchResultsToggle").empty();
