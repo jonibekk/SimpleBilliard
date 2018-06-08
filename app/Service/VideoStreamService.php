@@ -39,13 +39,13 @@ class VideoStreamService extends AppService
 
         $db = $VideoStream->getDataSource();
 
-        $currentVideoStreamStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
-        if ($progressState->equals(Enum\Video\VideoTranscodeProgress::PROGRESS())) {
+        $currentVideoStreamStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
+        if ($progressState->equals(Enum\Model\Video\VideoTranscodeProgress::PROGRESS())) {
             // if transcode is started
-            if (!$currentVideoStreamStatus->equals(Enum\Video\VideoTranscodeStatus::QUEUED())) {
+            if (!$currentVideoStreamStatus->equals(Enum\Model\Video\VideoTranscodeStatus::QUEUED())) {
                 throw new RuntimeException("video_streams.id({$videoStreamId}) is not queued");
             }
-            $status = Enum\Video\VideoTranscodeStatus::TRANSCODING;
+            $status = Enum\Model\Video\VideoTranscodeStatus::TRANSCODING;
 
             // DO NOT USE $Model->save() method
             // USE updateAll() for updating video_streams data
@@ -56,7 +56,7 @@ class VideoStreamService extends AppService
                 'VideoStream.id' => $videoStreamId,
             ]);
 
-            $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
+            $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
                 'progress_state'        => $progressState->getValue(),
                 'transcode_status_from' => $currentVideoStreamStatus->getValue(),
                 'transcode_status_to'   => $status,
@@ -64,9 +64,9 @@ class VideoStreamService extends AppService
             ]);
 
             return $VideoStream->getById($videoStreamId);
-        } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::ERROR())) {
+        } else if ($progressState->equals(Enum\Model\Video\VideoTranscodeProgress::ERROR())) {
             // if transcode is error
-            $status = Enum\Video\VideoTranscodeStatus::ERROR;
+            $status = Enum\Model\Video\VideoTranscodeStatus::ERROR;
 
             // DO NOT USE $Model->save() method
             // USE updateAll() for updating video_streams data
@@ -77,7 +77,7 @@ class VideoStreamService extends AppService
                 'VideoStream.id' => $videoStreamId,
             ]);
 
-            $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::ERROR(), [
+            $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::ERROR(), [
                 'progress_state'        => $progressState->getValue(),
                 'transcode_status_from' => $currentVideoStreamStatus->getValue(),
                 'transcode_status_to'   => $status,
@@ -86,18 +86,18 @@ class VideoStreamService extends AppService
             ]);
 
             return $VideoStream->getById($videoStreamId);
-        } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::WARNING())) {
+        } else if ($progressState->equals(Enum\Model\Video\VideoTranscodeProgress::WARNING())) {
             // if transcode notifies warning
-            $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::WARNING(), [
+            $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::WARNING(), [
                 'progress_state'   => $progressState->getValue(),
                 'transcode_status' => $currentVideoStreamStatus->getValue(),
                 'reason'           => $transcodeProgressData->getWarning(),
                 'job_id'           => $transcodeProgressData->getJobId(),
             ]);
             return $VideoStream->getById($videoStreamId);
-        } else if ($progressState->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())) {
+        } else if ($progressState->equals(Enum\Model\Video\VideoTranscodeProgress::COMPLETE())) {
             // if transcode is completed
-            $status = Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
+            $status = Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE;
 
             $values = [
                 'progress_state'        => $progressState->getValue(),
@@ -109,10 +109,10 @@ class VideoStreamService extends AppService
             // if we missed the "PROGRESSING" notification, our video_stream.transcode_status is QUEUED
             // but this has no problem when we receive "COMPLETE" notification
             if (!in_array($currentVideoStreamStatus->getValue(), [
-                Enum\Video\VideoTranscodeStatus::TRANSCODING,
-                Enum\Video\VideoTranscodeStatus::QUEUED,
+                Enum\Model\Video\VideoTranscodeStatus::TRANSCODING,
+                Enum\Model\Video\VideoTranscodeStatus::QUEUED,
             ])) {
-                $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::ERROR(), am([
+                $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::ERROR(), am([
                     'reason' => 'transcoding is not started but notified complete',
                 ], $values));
                 throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
@@ -130,7 +130,7 @@ class VideoStreamService extends AppService
                 'VideoStream.id' => $videoStreamId,
             ]);
 
-            $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), $values);
+            $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), $values);
             return $VideoStream->getById($videoStreamId);
         }
         throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
@@ -252,15 +252,15 @@ class VideoStreamService extends AppService
             'duration'         => null,
             'aspect_ratio'     => null,
             'storage_path'     => null,
-            'transcode_status' => Enum\Video\VideoTranscodeStatus::UPLOADING,
+            'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::UPLOADING,
             'output_version'   => $transcodeOutputVersion->getValue(),
         ]);
         $videoStream = $VideoStream->save();
         $videoStream = reset($videoStream);
         $videoStreamId = $videoStream['id'];
 
-        $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
-            'transcode_status' => Enum\Video\VideoTranscodeStatus::UPLOADING,
+        $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
+            'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::UPLOADING,
             'user_id'          => $userId,
             'team_id'          => $teamId,
         ]);
@@ -287,11 +287,11 @@ class VideoStreamService extends AppService
         $video['resource_path'] = $resourcePath;
         $Video->save($video);
 
-        $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
+        $videoStream['transcode_status'] = Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE;
         $VideoStream->save($videoStream);
 
-        $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
-            'transcode_status' => Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
+        $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
+            'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
             'resource_path'    => $resourcePath,
         ]);
 
@@ -327,18 +327,18 @@ class VideoStreamService extends AppService
         }
 
         // Queued complete
-        $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::QUEUED;
+        $videoStream['transcode_status'] = Enum\Model\Video\VideoTranscodeStatus::QUEUED;
         $VideoStream->save($videoStream);
 
-        $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
-            'transcode_status' => Enum\Video\VideoTranscodeStatus::QUEUED,
+        $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::STATUS_PROGRESSED(), [
+            'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::QUEUED,
             'job_id'           => $createJobResult->getJobId(),
         ]);
 
         return $videoStream;
     }
 
-    private function logTranscodeEvent(int $videoStreamId, Enum\Video\VideoTranscodeLogType $message, array $values)
+    private function logTranscodeEvent(int $videoStreamId, Enum\Model\Video\VideoTranscodeLogType $message, array $values)
     {
         /** @var VideoTranscodeLog $VideoTranscodeLog */
         $VideoTranscodeLog = ClassRegistry::init('VideoTranscodeLog');
@@ -360,11 +360,11 @@ class VideoStreamService extends AppService
 
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");
-        $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::ERROR;
+        $videoStream['transcode_status'] = Enum\Model\Video\VideoTranscodeStatus::ERROR;
         $VideoStream->save($videoStream);
         $VideoStream->softDelete($videoStreamId, false);
 
-        $this->logTranscodeEvent($videoStreamId, Enum\Video\VideoTranscodeLogType::ERROR(), [
+        $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::ERROR(), [
             'reason' => $errorMessage,
         ]);
     }

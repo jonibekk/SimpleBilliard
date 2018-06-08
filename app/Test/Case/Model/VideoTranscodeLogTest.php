@@ -49,13 +49,13 @@ class VideoTranscodeLogTest extends GoalousTestCase
     {
         $videoStreamId_1 = 1;
         $videoStreamId_2 = 2;
-        $this->VideoTranscodeLog->add($videoStreamId_1, Enum\Video\VideoTranscodeLogType::JOB_REGISTERED(), [
+        $this->VideoTranscodeLog->add($videoStreamId_1, Enum\Model\Video\VideoTranscodeLogType::JOB_REGISTERED(), [
             'a' => 1,
         ]);
-        $this->VideoTranscodeLog->add($videoStreamId_1, Enum\Video\VideoTranscodeLogType::ERROR(), [
+        $this->VideoTranscodeLog->add($videoStreamId_1, Enum\Model\Video\VideoTranscodeLogType::ERROR(), [
             'a' => '2',
         ]);
-        $this->VideoTranscodeLog->add($videoStreamId_2, Enum\Video\VideoTranscodeLogType::WARNING(), [
+        $this->VideoTranscodeLog->add($videoStreamId_2, Enum\Model\Video\VideoTranscodeLogType::WARNING(), [
         ]);
 
         $logVideoStreamId_1 = $this->VideoTranscodeLog->find('all', [
@@ -65,13 +65,13 @@ class VideoTranscodeLogTest extends GoalousTestCase
         ]);
         $this->assertSame(2, count($logVideoStreamId_1));
         $this->assertSame([
-            'message' => Enum\Video\VideoTranscodeLogType::JOB_REGISTERED,
+            'message' => Enum\Model\Video\VideoTranscodeLogType::JOB_REGISTERED,
             'values'  => [
                 'a' => 1,
             ],
         ], json_decode($logVideoStreamId_1[0]['VideoTranscodeLog']['log'], true));
         $this->assertSame([
-            'message' => Enum\Video\VideoTranscodeLogType::ERROR,
+            'message' => Enum\Model\Video\VideoTranscodeLogType::ERROR,
             'values'  => [
                 'a' => '2',
             ],
@@ -84,7 +84,7 @@ class VideoTranscodeLogTest extends GoalousTestCase
         ]);
         $this->assertSame(1, count($logVideoStreamId_2));
         $this->assertSame([
-            'message' => Enum\Video\VideoTranscodeLogType::WARNING,
+            'message' => Enum\Model\Video\VideoTranscodeLogType::WARNING,
             'values'  => [],
         ], json_decode($logVideoStreamId_2[0]['VideoTranscodeLog']['log'], true));
 

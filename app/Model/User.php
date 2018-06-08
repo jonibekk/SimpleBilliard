@@ -1853,9 +1853,9 @@ class User extends AppModel
         ];
 
         if ($activeFlag) {
-            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::ACTIVE;
+            $options['conditions']['TeamMember.status'] = Enum\Model\TeamMember\Status::ACTIVE;
         } else {
-            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::INACTIVE;
+            $options['conditions']['TeamMember.status'] = Enum\Model\TeamMember\Status::INACTIVE;
         }
 
         $res = $this->find('all', $options);

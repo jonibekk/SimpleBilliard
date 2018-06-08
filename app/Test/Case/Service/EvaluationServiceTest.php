@@ -413,7 +413,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $teamMember['team_id'] = $teamId;
         $teamMember['evaluation_enable_flg'] = true;
         $teamMember['coach_user_id'] = $coachUserId;
-        $teamMember['status'] = Enum\TeamMember\Status::ACTIVE;
+        $teamMember['status'] = Enum\Model\TeamMember\Status::ACTIVE;
 
         $this->TeamMember->save($teamMember);
 
@@ -523,7 +523,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluator can't edit evaluation
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DRAFT], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DRAFT], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $userId
@@ -536,7 +536,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluator can edit evaluation
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $userId
@@ -551,7 +551,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluatee can't edit evaluation after one evaluator evaluated
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $evaluatorId1
@@ -565,7 +565,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
         $this->assertFalse($res);
 
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $evaluatorId2
@@ -581,7 +581,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         $this->Term->clear();
         $this->Term->id = $termId;
-        $this->Term->save(['evaluate_status' => Enum\Term\EvaluateStatus::FROZEN], false);
+        $this->Term->save(['evaluate_status' => Enum\Model\Term\EvaluateStatus::FROZEN], false);
         $res = $this->EvaluationService->isEditable($termId, $userId, $userId);
         $this->assertFalse($res);
         $res = $this->EvaluationService->isEditable($termId, $userId, $evaluatorId1);
@@ -628,7 +628,7 @@ class EvaluationServiceTest extends GoalousTestCase
     {
         $teamId = 5;
         $this->_setDefault($teamId);
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $this->EvaluationService->startEvaluation($teamId, $term['id']);
     }
@@ -646,7 +646,7 @@ class EvaluationServiceTest extends GoalousTestCase
             'enable_flg' => true,
         ]);
         $this->_setDefault($teamId);
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $this->EvaluationService->startEvaluation($teamId, $term['id']);
     }
@@ -658,7 +658,7 @@ class EvaluationServiceTest extends GoalousTestCase
     {
         $this->_setDefault();
         $teamId = 1;
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $result = $this->EvaluationService->startEvaluation($teamId, $term['id']);
@@ -690,7 +690,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertEquals(0, $countNotNull);
 
         $term = $this->Term->getById($termId);
-        $this->assertEquals($term['evaluate_status'], Enum\Term\EvaluateStatus::IN_PROGRESS);
+        $this->assertEquals($term['evaluate_status'], Enum\Model\Term\EvaluateStatus::IN_PROGRESS);
     }
 
     /**
@@ -702,7 +702,7 @@ class EvaluationServiceTest extends GoalousTestCase
     {
         $this->_setDefault();
         $teamId = 1;
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
 
@@ -719,7 +719,7 @@ class EvaluationServiceTest extends GoalousTestCase
     {
         $this->_setDefault();
         $teamId = 1;
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
 
         // This Goal will be target of evaluate (evaluation term)
@@ -788,7 +788,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         $this->_setDefault();
         $teamId = 1;
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
 
@@ -817,7 +817,7 @@ class EvaluationServiceTest extends GoalousTestCase
 
         $this->_setDefault();
         $teamId = 1;
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
 
         $countEvaluationsBeforeStart = $Evaluation->find('count');
@@ -846,7 +846,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $Experiment->deleteAll([
             'team_id' => $teamId,
         ]);
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $this->EvaluationService->startEvaluation($teamId, $term['id']);
@@ -868,7 +868,7 @@ class EvaluationServiceTest extends GoalousTestCase
             'team_id' => $teamId,
         ]);
 
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $this->EvaluationService->startEvaluation($teamId, $term['id']);
@@ -899,7 +899,7 @@ class EvaluationServiceTest extends GoalousTestCase
         ], [
             'team_id' => $teamId,
         ]);
-        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Term\EvaluateStatus::NOT_STARTED());
+        $term = $this->createTerm($teamId, new GoalousDateTime('first day of this month'), $termMonth = 3, Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         $termId = $term['id'];
         $evaluator = $this->createEvaluator($teamId, $evaluateeUserId = 1, $evaluatorUserId = 3, $index = 0);
         $this->EvaluationService->startEvaluation($teamId, $term['id']);

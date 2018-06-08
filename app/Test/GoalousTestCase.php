@@ -713,9 +713,9 @@ class GoalousTestCase extends CakeTestCase
         $savePaymentSetting = array_merge(
             [
                 'team_id'          => $teamId,
-                'type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 1,
-                'currency'         => Enum\PaymentSetting\Currency::JPY,
+                'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
                 'company_country'  => 'JP',
             ],
@@ -765,9 +765,9 @@ class GoalousTestCase extends CakeTestCase
         $savePaymentSetting = array_merge(
             [
                 'team_id'          => $teamId,
-                'type'             => Enum\PaymentSetting\Type::INVOICE,
+                'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
                 'payment_base_day' => 1,
-                'currency'         => Enum\PaymentSetting\Currency::JPY,
+                'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => 1980,
                 'company_country'  => 'JP',
             ],
@@ -888,7 +888,7 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'     => $teamId,
                 'currency'    => PaymentSetting::CURRENCY_TYPE_JPY,
-                'result_type' => Enum\ChargeHistory\ResultType::SUCCESS,
+                'result_type' => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             ],
             $chargeHistory
         );
@@ -1086,7 +1086,7 @@ class GoalousTestCase extends CakeTestCase
         ], $team);
         $paymentSetting = am([
             'company_country' => 'JP',
-            'currency' => Enum\PaymentSetting\Currency::JPY,
+            'currency' => Enum\Model\PaymentSetting\Currency::JPY,
             'amount_per_user' => 0,
         ], $paymentSetting);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);

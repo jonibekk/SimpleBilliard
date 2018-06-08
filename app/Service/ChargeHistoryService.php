@@ -29,7 +29,7 @@ class ChargeHistoryService extends AppService
             return false;
         }
         $typePaymentSetting = intval($teamPaymentSetting['PaymentSetting']['type']);
-        if ($typePaymentSetting !== Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if ($typePaymentSetting !== Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             // if team paying type is not creditcard
             return false;
         }
@@ -42,7 +42,7 @@ class ChargeHistoryService extends AppService
         }
 
         $resultTypeChargeHistory = intval($chargeHistory['result_type']);
-        return $resultTypeChargeHistory === Enum\ChargeHistory\ResultType::FAIL;
+        return $resultTypeChargeHistory === Enum\Model\ChargeHistory\ResultType::FAIL;
     }
 
     /**
@@ -93,7 +93,7 @@ class ChargeHistoryService extends AppService
         $history['PaymentSetting']['is_card'] = false;
         $history['ChargeHistory']['is_monthly'] = false;
 
-        if ($history['ChargeHistory']['payment_type'] == Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if ($history['ChargeHistory']['payment_type'] == Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             /** @var CreditCardService $CreditCardService */
             $CreditCardService = ClassRegistry::init('CreditCardService');
 
@@ -105,7 +105,7 @@ class ChargeHistoryService extends AppService
 
         $teamId = $history['ChargeHistory']['team_id'];
         switch ((int)$history['ChargeHistory']['charge_type']) {
-            case Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
+            case Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE:
                 $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
                 $prevBaseDate = $PaymentService->getPreviousBaseDate($teamId, $nextBaseDate);
                 $prevBaseDate = $TimeEx->formatYearDayI18nFromDate($prevBaseDate);
@@ -115,19 +115,19 @@ class ChargeHistoryService extends AppService
                 $history['ChargeHistory']['is_monthly'] = true;
 
                 break;
-            case Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
+            case Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
                 $nextBaseDate = $PaymentService->getNextBaseDate($teamId, $history['ChargeHistory']['charge_datetime']);
                 $endBaseDate = $TimeEx->formatYearDayI18nFromDate(AppUtil::dateYesterday($nextBaseDate));
                 $history['ChargeHistory']['term'] = "$localChargeDate - $endBaseDate";
                 $history['ChargeHistory']['is_monthly'] = true;
                 break;
-            case Enum\ChargeHistory\ChargeType::RECHARGE:
-                $paymentType = new Enum\PaymentSetting\Type(intval($history['ChargeHistory']['payment_type']));
+            case Enum\Model\ChargeHistory\ChargeType::RECHARGE:
+                $paymentType = new Enum\Model\PaymentSetting\Type(intval($history['ChargeHistory']['payment_type']));
                 switch ($paymentType->getValue()) {
-                    case Enum\PaymentSetting\Type::CREDIT_CARD:
+                    case Enum\Model\PaymentSetting\Type::CREDIT_CARD:
                         $history['ChargeHistory']['recharge_history_ids'] = [$history['ChargeHistory']['reorder_charge_history_id']];
                         break;
-                    case Enum\PaymentSetting\Type::INVOICE:
+                    case Enum\Model\PaymentSetting\Type::INVOICE:
                         $reorderTargetInvoiceHistory = $InvoiceHistory->getByChargeHistoryId($history['ChargeHistory']['id']);
                         if (empty($reorderTargetInvoiceHistory)) {
                             GoalousLog::emergency(
@@ -185,15 +185,15 @@ class ChargeHistoryService extends AppService
         // 履歴保存
         $historyData = [
             'team_id'                     => $teamId,
-            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::RECHARGE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::RECHARGE,
             'amount_per_user'             => !empty($pricePlanPurchaseId) ? 0 : PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'                => $subTotal,
             'tax'                         => $tax,
             'charge_users'                => 0,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'             => $time,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => 0,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId,

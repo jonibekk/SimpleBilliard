@@ -186,7 +186,7 @@ class PostDraftServiceTest extends GoalousTestCase
     {
         $userId = 1;
         $teamId = 1;
-        list($video, $videoStream) = $this->createVideoSet($userId, $teamId, 'hash_string', Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($video, $videoStream) = $this->createVideoSet($userId, $teamId, 'hash_string', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
         list($postDraft, $postResource) = $this->createPostDraftWithVideoStreamResource($userId, $teamId, $videoStream, 'post_body_string');
 
         $this->assertTrue($this->PostDraftService->isPreparedToPost($postDraft['id']));
@@ -196,7 +196,7 @@ class PostDraftServiceTest extends GoalousTestCase
     {
         $userId = 1;
         $teamId = 1;
-        list($video, $videoStream) = $this->createVideoSet($userId, $teamId, 'hash_string', Enum\Video\VideoTranscodeStatus::TRANSCODING());
+        list($video, $videoStream) = $this->createVideoSet($userId, $teamId, 'hash_string', Enum\Model\Video\VideoTranscodeStatus::TRANSCODING());
         list($postDraft, $postResource) = $this->createPostDraftWithVideoStreamResource($userId, $teamId, $videoStream, 'post_body_string');
 
         $this->assertFalse($this->PostDraftService->isPreparedToPost($postDraft['id']));

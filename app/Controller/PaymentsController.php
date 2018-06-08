@@ -54,7 +54,7 @@ class PaymentsController extends AppController
             $Lang = new LangHelper(new View());
             $userCountryCode = $Lang->getUserCountryCode();
             $amountPerUser = $PaymentService->getAmountPerUserBeforePayment($teamId, $userCountryCode);
-            $currencyType = $userCountryCode == 'JP' ? Enum\PaymentSetting\Currency::JPY : Enum\PaymentSetting\Currency::USD;
+            $currencyType = $userCountryCode == 'JP' ? Enum\Model\PaymentSetting\Currency::JPY : Enum\Model\PaymentSetting\Currency::USD;
             $subTotal = $PaymentService->formatCharge($amountPerUser * $chargeMemberCount, $currencyType);
             $amountPerUser = $PaymentService->formatCharge($amountPerUser, $currencyType);
         } else {
@@ -108,7 +108,7 @@ class PaymentsController extends AppController
         $paymentType = $PaymentService->getPaymentType($this->current_team_id);
 
         // Credit Card payment
-        if ($paymentType == Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if ($paymentType == Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             return $this->_creditCard();
         }
 

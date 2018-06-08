@@ -238,7 +238,7 @@ class PostService extends AppService
                 // need to determine what type of resource is passed from arguments
                 // (maybe should wrap by class, not simple array)
                 // same as in PostDraftService::createPostDraftWithResources()
-                'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
+                'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM()->getValue(),
                 'resource_id'   => $postResource['id'],
             ], [
                 'atomic' => false

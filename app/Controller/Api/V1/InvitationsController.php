@@ -136,7 +136,7 @@ class InvitationsController extends ApiController
             // All days between before payment base date and next payment base date
             $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
             // Calc total charge
-            $currency = new Enum\PaymentSetting\Currency((int)$paySetting['currency']);
+            $currency = new Enum\Model\PaymentSetting\Currency((int)$paySetting['currency']);
             $totalCharge = $PaymentService->formatTotalChargeByAddUsers($teamId, $chargeUserCnt, $currency,
                 $useDaysByNext, $allUseDays);
 

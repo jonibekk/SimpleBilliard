@@ -1,6 +1,6 @@
 <?php
 
-namespace Goalous\Enum\Post;
+namespace Goalous\Enum\Model\Post;
 
 use MyCLabs\Enum\Enum;
 

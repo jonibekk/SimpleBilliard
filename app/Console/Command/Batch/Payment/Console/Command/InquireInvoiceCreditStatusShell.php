@@ -110,7 +110,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
     public function main()
     {
         // Get the waiting for approval invoices
-        $orders = $this->InvoiceHistory->getByOrderStatus(Enum\Invoice\CreditStatus::WAITING);
+        $orders = $this->InvoiceHistory->getByOrderStatus(Enum\Model\Invoice\CreditStatus::WAITING);
 
         $count = 1;
         $this->logInfo('Number of invoice orders is: ' . count($orders));
@@ -200,16 +200,16 @@ class InquireInvoiceCreditStatusShell extends AppShell
         }
 
         // Waiting for credit check, do nothing
-        if ($orderStatus == Enum\Invoice\CreditStatus::WAITING) {
+        if ($orderStatus == Enum\Model\Invoice\CreditStatus::WAITING) {
             // Nothing to do right now.
             return false;
         }
 
         // Check for valid order status
         if (!in_array($orderStatus, [
-            Enum\Invoice\CreditStatus::NG,
-            Enum\Invoice\CreditStatus::OK,
-            Enum\Invoice\CreditStatus::CANCELED,
+            Enum\Model\Invoice\CreditStatus::NG,
+            Enum\Model\Invoice\CreditStatus::OK,
+            Enum\Model\Invoice\CreditStatus::CANCELED,
         ])) {
             $this->logError("Invalid order status: " . AppUtil::jsonOneLine($inquireResult));
             $this->logError(sprintf('Invalid order status: %s', AppUtil::jsonOneLine($inquireResult)));
@@ -221,9 +221,9 @@ class InquireInvoiceCreditStatusShell extends AppShell
         $invoice = $this->Invoice->getByTeamId($teamId);
 
         // Credit accepted
-        if ($orderStatus == Enum\Invoice\CreditStatus::OK) {
+        if ($orderStatus == Enum\Model\Invoice\CreditStatus::OK) {
             // Invoice status is waiting, means it is the first time
-            if (Hash::get($invoice, 'credit_status') == Enum\Invoice\CreditStatus::WAITING) {
+            if (Hash::get($invoice, 'credit_status') == Enum\Model\Invoice\CreditStatus::WAITING) {
                 // Send notification email
                 $this->_sendCreditStatusNotification($teamId, $orderStatus);
 
@@ -239,7 +239,7 @@ class InquireInvoiceCreditStatusShell extends AppShell
         }
 
         // Credit denied
-        if ($orderStatus == Enum\Invoice\CreditStatus::NG) {
+        if ($orderStatus == Enum\Model\Invoice\CreditStatus::NG) {
             // Get timezone
             $timezone = $this->TeamService->getTeamTimezone($teamId);
             if ($timezone === null) {
@@ -252,21 +252,21 @@ class InquireInvoiceCreditStatusShell extends AppShell
 
             // Update credit status for invoices tables
             $creditOkInPast = $this->InvoiceHistory->checkCreditOkInPast($teamId, $invoiceHistory['created']);
-            $updateCreditStatus = $creditOkInPast ? Enum\Invoice\CreditStatus::OK : $orderStatus;
+            $updateCreditStatus = $creditOkInPast ? Enum\Model\Invoice\CreditStatus::OK : $orderStatus;
             $this->InvoiceService->updateCreditStatus($invoiceHistory['id'], $updateCreditStatus, $orderStatus);
 
             // Not move Read-Only status if credit has been OK even once in past orders
             if (!$creditOkInPast) {
                 // Set service to read only
                 $currentDateTimeOfTeamTimeZone = GoalousDateTime::now()->setTimeZoneByHour($timezone);
-                $this->TeamService->updateServiceUseStatus($teamId, Enum\Team\ServiceUseStatus::READ_ONLY, $currentDateTimeOfTeamTimeZone->format('Y-m-d'));
+                $this->TeamService->updateServiceUseStatus($teamId, Enum\Model\Team\ServiceUseStatus::READ_ONLY, $currentDateTimeOfTeamTimeZone->format('Y-m-d'));
             }
 
             return true;
         }
 
         // Credit canceled
-        if ($orderStatus == Enum\Invoice\CreditStatus::CANCELED) {
+        if ($orderStatus == Enum\Model\Invoice\CreditStatus::CANCELED) {
             // Get timezone
             $timezone = $this->TeamService->getTeamTimezone($teamId);
             if ($timezone === null) {

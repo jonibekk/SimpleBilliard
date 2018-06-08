@@ -53,12 +53,12 @@ class VideoStreamTest extends GoalousTestCase
         $teamId = 1;
         $videos = [];
         $videoStreams = [];
-        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '1'), Enum\Video\VideoTranscodeStatus::QUEUED());
-        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '2'), Enum\Video\VideoTranscodeStatus::TRANSCODING());
-        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '3'), Enum\Video\VideoTranscodeStatus::ERROR());
-        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '4'), Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
-        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '5'), Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE());
-        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '6'), Enum\Video\VideoTranscodeStatus::UPLOADING());
+        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '1'), Enum\Model\Video\VideoTranscodeStatus::QUEUED());
+        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '2'), Enum\Model\Video\VideoTranscodeStatus::TRANSCODING());
+        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '3'), Enum\Model\Video\VideoTranscodeStatus::ERROR());
+        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '4'), Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '5'), Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE());
+        list($videos[], $videoStreams[]) = $this->createVideoSet($userId, $teamId, hash('sha256', '6'), Enum\Model\Video\VideoTranscodeStatus::UPLOADING());
 
         $this->assertEquals(
             [],
@@ -71,10 +71,10 @@ class VideoStreamTest extends GoalousTestCase
 
         foreach ($fetchedVideoStreams as $fetchedVideoStream) {
             $this->assertTrue(in_array($fetchedVideoStream['transcode_status'], [
-                Enum\Video\VideoTranscodeStatus::QUEUED,
-                Enum\Video\VideoTranscodeStatus::TRANSCODING,
-                Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
-                Enum\Video\VideoTranscodeStatus::UPLOADING,
+                Enum\Model\Video\VideoTranscodeStatus::QUEUED,
+                Enum\Model\Video\VideoTranscodeStatus::TRANSCODING,
+                Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
+                Enum\Model\Video\VideoTranscodeStatus::UPLOADING,
             ]));
         }
     }

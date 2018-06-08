@@ -10,7 +10,7 @@ use Goalous\Enum as Enum;
  */
 class PostResourceService extends AppService
 {
-    public function createPostResource(int $postDraftId, Enum\Post\PostResourceType $postResourceType, int $resourceId)
+    public function createPostResource(int $postDraftId, Enum\Model\Post\PostResourceType $postResourceType, int $resourceId)
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init("PostResource");

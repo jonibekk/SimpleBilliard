@@ -86,21 +86,21 @@ class MonthlyCreditCardChargeShellTest extends GoalousTestCase
         $paymentSetting = $this->PaymentService->get($teamId);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
-            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+            Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
         $expected = [
             'id'                          => 1,
             'team_id'                     => $teamId,
             'user_id'                     => null,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'             => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'                => $chargeInfo['sub_total_charge'],
             'tax'                         => $chargeInfo['tax'],
             'charge_users'                => $usersCount,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => $usersCount,
             'campaign_team_id'            => null,
             'price_plan_purchase_team_id' => null
@@ -129,21 +129,21 @@ class MonthlyCreditCardChargeShellTest extends GoalousTestCase
         $paymentSetting = $this->PaymentService->get($teamId);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
-            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+            Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
         $expected = [
             'id'                          => 1,
             'team_id'                     => $teamId,
             'user_id'                     => null,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'             => 0,
             'total_amount'                => $chargeInfo['sub_total_charge'],
             'tax'                         => $chargeInfo['tax'],
             'charge_users'                => $usersCount,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => $usersCount,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId

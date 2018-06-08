@@ -87,9 +87,9 @@ class DetectInconsistentChargeShell extends AppShell
         $atobaraiChargeCheckHistories = [];
         foreach ($checkPassedHistories as $history) {
             // Set data for checking amount registered external services(stripe and atobarai.com
-            if ($history['payment_type'] == Enum\PaymentSetting\Type::CREDIT_CARD) {
+            if ($history['payment_type'] == Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
                 $stripeChargeCheckHistories[] = $history;
-            } elseif ($history['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            } elseif ($history['charge_type'] == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
                 $atobaraiChargeCheckHistories[] = $history;
             }
         }
@@ -177,7 +177,7 @@ class DetectInconsistentChargeShell extends AppShell
                 $history['amount_per_user'] * $history['charge_users']);
 
             $taxCompareRes = bccomp($history['total_amount'], $subTotal, 2);
-            if ((int)$history['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            if ((int)$history['charge_type'] == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
                 if ($taxCompareRes !== 0) {
                     $errors[self::INCONSISTENT_TYPE_AMOUNT_SUB_TOTAL][] = [
                         'history_id'        => $history['id'],
@@ -206,7 +206,7 @@ class DetectInconsistentChargeShell extends AppShell
             $tax = $PaymentService->calcTax($paySetting['company_country'], $subTotal);
 
             $taxCompareRes = bccomp($history['tax'], $tax, 2);
-            if ((int)$history['charge_type'] == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+            if ((int)$history['charge_type'] == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
                 if ($taxCompareRes !== 0) {
                     $errors[self::INCONSISTENT_TYPE_AMOUNT_TAX][] = [
                         'history_id'  => $history['id'],
@@ -296,7 +296,7 @@ class DetectInconsistentChargeShell extends AppShell
             }
 
             $totalAmount = bcadd($history['total_amount'], $history['tax'], 2);
-            if ($history['currency'] == Enum\PaymentSetting\Currency::USD) {
+            if ($history['currency'] == Enum\Model\PaymentSetting\Currency::USD) {
                 $totalAmount = $totalAmount * 100;
             }
             if (bccomp($totalAmount, $stripeCharge->amount, 2) !== 0) {

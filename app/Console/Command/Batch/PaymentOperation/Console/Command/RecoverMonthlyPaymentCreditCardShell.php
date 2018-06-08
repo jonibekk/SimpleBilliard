@@ -144,7 +144,7 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         try {
             $this->PaymentService->applyCreditCardCharge(
                 $team['id'],
-                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $amountChargeUsers,
                 null,
                 $targetDateTime->getTimestamp()

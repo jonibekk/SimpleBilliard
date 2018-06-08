@@ -1,5 +1,5 @@
 <?php
-namespace Goalous\Enum\Evaluation;
+namespace Goalous\Enum\Model\Evaluation;
 
 use MyCLabs\Enum\Enum;
 

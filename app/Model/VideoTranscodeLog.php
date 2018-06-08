@@ -13,10 +13,10 @@ class VideoTranscodeLog extends AppModel
      * Insert new record to video_transcode_logs
      *
      * @param int                              $videoStreamId
-     * @param Enum\Video\VideoTranscodeLogType $message
+     * @param Enum\Model\Video\VideoTranscodeLogType $message
      * @param array                            $values
      */
-    public function add(int $videoStreamId, Enum\Video\VideoTranscodeLogType $message, array $values = [])
+    public function add(int $videoStreamId, Enum\Model\Video\VideoTranscodeLogType $message, array $values = [])
     {
         $this->create();
         $this->save([

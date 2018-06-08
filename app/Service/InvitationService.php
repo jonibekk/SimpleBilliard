@@ -226,7 +226,7 @@ class InvitationService extends AppService
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
                     $teamId,
-                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                     $chargeUserCnt,
                     $fromUserId
                 );

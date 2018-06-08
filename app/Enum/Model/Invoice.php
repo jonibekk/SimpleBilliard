@@ -1,5 +1,5 @@
 <?php
-namespace Goalous\Enum\Invoice;
+namespace Goalous\Enum\Model\Invoice;
 
 use MyCLabs\Enum\Enum;
 

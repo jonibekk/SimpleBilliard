@@ -787,7 +787,7 @@ class AppController extends BaseController
                     'conditions' => array(
                         'user_id' => $id,
                         'team_id' => $this->Session->read('current_team_id'),
-                        'status'  => Enum\TeamMember\Status::ACTIVE,
+                        'status'  => Enum\Model\TeamMember\Status::ACTIVE,
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);

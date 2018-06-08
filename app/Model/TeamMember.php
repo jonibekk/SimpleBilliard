@@ -2225,7 +2225,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
-                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+                'TeamMember.status !=' => Enum\Model\TeamMember\Status::INACTIVE
             ],
         ];
         $res = $this->find('all', $options);

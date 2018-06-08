@@ -41,19 +41,19 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
 
     function test_videoSource_v1()
     {
-        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Video\TranscodeOutputVersion::V1());
+        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Model\Video\TranscodeOutputVersion::V1());
 
         $baseUrl = 'https://s3.aws.com/stream/';
         $videoSources = $transcodeOutput->getVideoSources($baseUrl);
         $this->assertTrue(
-            $videoSources[0]->getType()->equals(Enum\Video\VideoSourceType::VIDEO_WEBM())
+            $videoSources[0]->getType()->equals(Enum\Model\Video\VideoSourceType::VIDEO_WEBM())
         );
         $this->assertEquals(
             $baseUrl . 'webm_500k/video.webm',
             $videoSources[0]->getSource()
         );
         $this->assertTrue(
-            $videoSources[1]->getType()->equals(Enum\Video\VideoSourceType::PLAYLIST_M3U8_HLS())
+            $videoSources[1]->getType()->equals(Enum\Model\Video\VideoSourceType::PLAYLIST_M3U8_HLS())
         );
         $this->assertEquals(
             $baseUrl . 'playlist.m3u8',
@@ -63,7 +63,7 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
 
     function test_jobParameter_v1()
     {
-        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Video\TranscodeOutputVersion::V1());
+        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion(Enum\Model\Video\TranscodeOutputVersion::V1());
 
         $key = 'key';
         $pipelineId = 'pipeline-id';
@@ -123,7 +123,7 @@ class TranscodeOutputVersionDefinitionTest extends GoalousTestCase
             'UserMetadata'    => [
                 'videos.id'                => '1',
                 'video_streams.id'         => '2',
-                'transcode_output_version' => strval(Enum\Video\TranscodeOutputVersion::V1),
+                'transcode_output_version' => strval(Enum\Model\Video\TranscodeOutputVersion::V1),
             ],
         ];
 

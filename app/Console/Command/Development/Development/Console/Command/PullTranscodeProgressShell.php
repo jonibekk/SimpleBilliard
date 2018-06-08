@@ -26,8 +26,8 @@ class PullTranscodeProgressShell extends AppShell
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init('VideoStream');
         $videoStreamsToCheckStatus = $VideoStream->getByTranscodeStatus([
-            Enum\Video\VideoTranscodeStatus::TRANSCODING,
-            Enum\Video\VideoTranscodeStatus::QUEUED,
+            Enum\Model\Video\VideoTranscodeStatus::TRANSCODING,
+            Enum\Model\Video\VideoTranscodeStatus::QUEUED,
         ]);
 
         $videoStreamIds = Hash::extract($videoStreamsToCheckStatus, '{n}.id');

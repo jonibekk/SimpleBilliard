@@ -102,20 +102,20 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
         $paymentSetting = $this->PaymentService->get($teamId);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
-            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+            Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
         $this->assertTrue($res['charge_datetime'] <= time());
         $expected = [
             'id'                          => 1,
             'team_id'                     => $teamId,
             'user_id'                     => null,
-            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'             => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'                => $chargeInfo['sub_total_charge'],
             'tax'                         => $chargeInfo['tax'],
             'charge_users'                => $usersCount,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => $usersCount,
             'campaign_team_id'            => null,
             'price_plan_purchase_team_id' => null
@@ -129,7 +129,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $invoice = $Invoice->getByTeamId($teamId);
         $this->assertNotEmpty($invoice);
         $this->assertEquals($paymentSettingId, $invoice['payment_setting_id']);
-        $this->assertEquals(Enum\Invoice\CreditStatus::OK, $invoice['credit_status']);
+        $this->assertEquals(Enum\Model\Invoice\CreditStatus::OK, $invoice['credit_status']);
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
@@ -149,21 +149,21 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $this->createActiveUsers($teamId, $usersCount);
 
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
-            Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $paymentSetting);
+            Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $paymentSetting);
         $maxChargeUserCnt = $this->PaymentService->getChargeMaxUserCnt($teamId,
-            Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 5);
+            Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), 5);
 
         $historyData = [
             'team_id'          => $teamId,
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'amount_per_user'  => $paymentSetting['amount_per_user'],
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $usersCount,
             'currency'         => $paymentSetting['currency'],
             'charge_datetime'  => strtotime($testNow),
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $maxChargeUserCnt
         ];
         $this->addChargeHistory($teamId, $historyData);
@@ -186,7 +186,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $invoice = $Invoice->getByTeamId($teamId);
         $this->assertNotEmpty($invoice);
         $this->assertEquals($paymentSettingId, $invoice['payment_setting_id']);
-        $this->assertEquals(Enum\Invoice\CreditStatus::OK, $invoice['credit_status']);
+        $this->assertEquals(Enum\Model\Invoice\CreditStatus::OK, $invoice['credit_status']);
 
         // Check invoice history was created
         $invoiceHistories = $InvoiceHistory->getByOrderDate($teamId, $testNow);
@@ -223,20 +223,20 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $paymentSetting = $this->PaymentService->get($teamId);
         $pricePlanPurchase = $this->CampaignService->getPricePlanPurchaseTeam($teamId);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
-            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+            Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
         $this->assertTrue($res['charge_datetime'] <= time());
         $expected = [
             'id'                          => 1,
             'team_id'                     => $teamId,
             'user_id'                     => null,
-            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'             => 0,
             'total_amount'                => $chargeInfo['sub_total_charge'],
             'tax'                         => $chargeInfo['tax'],
             'charge_users'                => $usersCount,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => $usersCount,
             'campaign_team_id'            => $pricePlanPurchase['CampaignTeam']['id'],
             'price_plan_purchase_team_id' => $pricePlanPurchaseId
@@ -250,7 +250,7 @@ class MonthlyInvoiceChargeShellTest extends GoalousTestCase
         $invoice = $Invoice->getByTeamId($teamId);
         $this->assertNotEmpty($invoice);
         $this->assertEquals($paymentSetting['id'], $invoice['payment_setting_id']);
-        $this->assertEquals(Enum\Invoice\CreditStatus::OK, $invoice['credit_status']);
+        $this->assertEquals(Enum\Model\Invoice\CreditStatus::OK, $invoice['credit_status']);
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');

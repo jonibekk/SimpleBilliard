@@ -306,7 +306,7 @@ class PaymentSetting extends AppModel
      *
      * @return array
      */
-    public function findMonthlyChargeTeams(Enum\PaymentSetting\Type $paymentType): array
+    public function findMonthlyChargeTeams(Enum\Model\PaymentSetting\Type $paymentType): array
     {
         $options = [
             'fields'     => [
@@ -332,7 +332,7 @@ class PaymentSetting extends AppModel
                 ],
             ]
         ];
-        if ($paymentType->getValue() == Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if ($paymentType->getValue() == Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             $options['joins'][] = [
                 'type'       => 'INNER',
                 'table'      => 'credit_cards',

@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment() ?>
-<?php if ($serviceUseStatus == Goalous\Enum\Team\ServiceUseStatus::PAID): ?>
+<?php if ($serviceUseStatus == Goalous\Enum\Model\Team\ServiceUseStatus::PAID): ?>
 <div class="sub-navigation">
     <h4 class="sub-nav-headline"><?= __("Billing") ?></h4>
         <ul>

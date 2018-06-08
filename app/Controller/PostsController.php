@@ -139,17 +139,17 @@ class PostsController extends AppController
 
             $user = $this->User->getById($this->Auth->user('id'));
             $teamId = $this->current_team_id;
-            $transcodeStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
+            $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
             $logDataArray = [
                 'video_streams.id' => $videoStream['id'],
                 'transcode_status' => sprintf('%s:%s', $transcodeStatus->getValue(), $transcodeStatus->getKey()),
             ];
             switch ($transcodeStatus->getValue()) {
-                case Enum\Video\VideoTranscodeStatus::UPLOADING:
-                case Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
-                case Enum\Video\VideoTranscodeStatus::QUEUED:
-                case Enum\Video\VideoTranscodeStatus::TRANSCODING:
-                case Enum\Video\VideoTranscodeStatus::ERROR:
+                case Enum\Model\Video\VideoTranscodeStatus::UPLOADING:
+                case Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
+                case Enum\Model\Video\VideoTranscodeStatus::QUEUED:
+                case Enum\Model\Video\VideoTranscodeStatus::TRANSCODING:
+                case Enum\Model\Video\VideoTranscodeStatus::ERROR:
                     // create draft post
                     GoalousLog::info("video post creating draft post", $logDataArray);
                     /** @var PostDraftService $PostDraftService */
@@ -170,7 +170,7 @@ class PostsController extends AppController
                         return false;
                     }
                     return true;
-                case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
+                case Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
                     GoalousLog::info("video post creating draft post", $logDataArray);
                     $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId, [$videoStream]);
                     // 保存に失敗

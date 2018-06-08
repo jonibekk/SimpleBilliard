@@ -71,7 +71,7 @@ class InvoiceService extends AppService
             $itemIndex = 0;
             if (!empty($targetChargeHistories)) {
                 foreach ($targetChargeHistories as $history) {
-                    if ((int)$history['charge_type'] === Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+                    if ((int)$history['charge_type'] === Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
 
                         $itemName = $this->getMonthlyFeeItemName($teamId, $history['charge_datetime']);
                     } else {

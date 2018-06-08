@@ -74,7 +74,7 @@ class ChargeHistoryTest extends GoalousTestCase
 
         // order status: WAITING
         $saveHistory = [
-            'payment_type' => Enum\PaymentSetting\Type::INVOICE
+            'payment_type' => Enum\Model\PaymentSetting\Type::INVOICE
         ];
         list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
             [
@@ -88,13 +88,13 @@ class ChargeHistoryTest extends GoalousTestCase
 
         // order status: OK
         $saveHistory = [
-            'payment_type' => Enum\PaymentSetting\Type::INVOICE
+            'payment_type' => Enum\Model\PaymentSetting\Type::INVOICE
         ];
         list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
             [
                 'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
                 'system_order_code' => "test",
-                'order_status' => Enum\Invoice\CreditStatus::OK
+                'order_status' => Enum\Model\Invoice\CreditStatus::OK
             ],
             $saveHistory
         );
@@ -104,13 +104,13 @@ class ChargeHistoryTest extends GoalousTestCase
 
         // invoiceH:chargeH = 1:1
         $saveHistory = [
-            'payment_type' => Enum\PaymentSetting\Type::INVOICE
+            'payment_type' => Enum\Model\PaymentSetting\Type::INVOICE
         ];
         list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
             [
                 'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
                 'system_order_code' => "test",
-                'order_status' => Enum\Invoice\CreditStatus::NG
+                'order_status' => Enum\Model\Invoice\CreditStatus::NG
             ],
             $saveHistory
         );
@@ -128,7 +128,7 @@ class ChargeHistoryTest extends GoalousTestCase
             [
                 'order_datetime'    => AppUtil::getEndTimestampByTimezone('2016-12-01', 9),
                 'system_order_code' => "test",
-                'order_status' => Enum\Invoice\CreditStatus::NG
+                'order_status' => Enum\Model\Invoice\CreditStatus::NG
             ],
             $saveHistories
 
@@ -157,15 +157,15 @@ class ChargeHistoryTest extends GoalousTestCase
             'id'                  => 1,
             'team_id'             => 1,
             'user_id'             => 1,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'        => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'     => 1980,
             'total_amount'        => 1980,
             'tax'                 => 0,
             'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'currency'            => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'     => 1500000000,
-            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'         => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'    => 1,
             'stripe_payment_code' => '',
             'del_flg'             => 0,
@@ -178,15 +178,15 @@ class ChargeHistoryTest extends GoalousTestCase
             'id'                  => 2,
             'team_id'             => 2,
             'user_id'             => 2,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'        => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'     => 1980,
             'total_amount'        => 1980,
             'tax'                 => 0,
             'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'currency'            => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'     => 1500000001,
-            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'         => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'    => 1,
             'stripe_payment_code' => '',
             'del_flg'             => 1,
@@ -198,15 +198,15 @@ class ChargeHistoryTest extends GoalousTestCase
             'id'                  => 3,
             'team_id'             => 2,
             'user_id'             => 2,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'        => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'     => 1980,
             'total_amount'        => 1980,
             'tax'                 => 0,
             'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'currency'            => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'     => 1500000001,
-            'result_type'         => Enum\ChargeHistory\ResultType::FAIL,
+            'result_type'         => Enum\Model\ChargeHistory\ResultType::FAIL,
             'max_charge_users'    => 1,
             'stripe_payment_code' => '',
             'del_flg'             => 0,

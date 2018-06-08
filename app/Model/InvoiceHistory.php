@@ -157,7 +157,7 @@ class InvoiceHistory extends AppModel
         $options = [
             'conditions' => [
                 'team_id' => $teamId,
-                'order_status' => Enum\Invoice\CreditStatus::OK,
+                'order_status' => Enum\Model\Invoice\CreditStatus::OK,
                 'created <' => $timestamp
             ],
         ];

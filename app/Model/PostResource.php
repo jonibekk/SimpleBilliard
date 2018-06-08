@@ -86,9 +86,9 @@ class PostResource extends AppModel
         //      ]
         // ]
         foreach ($postResources as $postResource) {
-            $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
+            $resourceType = new Enum\Model\Post\PostResourceType(intval($postResource['resource_type']));
 
-            $hashKeyResource = sprintf('%s.%s', Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
+            $hashKeyResource = sprintf('%s.%s', Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
             if (Hash::check($resources, $hashKeyResource)) {
                 continue;
             }
@@ -98,19 +98,19 @@ class PostResource extends AppModel
             // written in switch case
             // more resource_type will defined in future
             switch ($resourceType->getValue()) {
-                case Enum\Post\PostResourceType::VIDEO_STREAM:
+                case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
                     $resourceVideoStream = $VideoStream->getById($postResource['resource_id']);
                     if (empty($resourceVideoStream)) {
                         break;
                     }
                     $videoStoragePath = $resourceVideoStream['storage_path'];
                     $urlBaseStorage = sprintf('%s/%s/%s', S3_BASE_URL, AWS_S3_BUCKET_VIDEO_TRANSCODED, $videoStoragePath);
-                    $transcoderOutputVersion = new Enum\Video\TranscodeOutputVersion(intval($resourceVideoStream['output_version']));
+                    $transcoderOutputVersion = new Enum\Model\Video\TranscodeOutputVersion(intval($resourceVideoStream['output_version']));
                     $transcodeOutput = TranscodeOutputVersionDefinition::getVersion($transcoderOutputVersion);
 
                     $resourceVideoStream['video_sources'] = $transcodeOutput->getVideoSources($urlBaseStorage);
                     $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
-                    $resourceVideoStream['post_resource_type'] = Enum\Post\PostResourceType::VIDEO_STREAM();
+                    $resourceVideoStream['post_resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM();
                     $resources = Hash::insert($resources, $hashKeyResource, $resourceVideoStream);
             }
         }
@@ -128,13 +128,13 @@ class PostResource extends AppModel
         // ]
         foreach ($postResources as $postResource) {
             $hashKeyResource = '';
-            $resourceType = new Enum\Post\PostResourceType(intval($postResource['resource_type']));
+            $resourceType = new Enum\Model\Post\PostResourceType(intval($postResource['resource_type']));
             if ($this->shouldIgnoreResource($resourceType, $checkTeamStatus)) {
                 continue;
             }
             switch ($resourceType->getValue()) {
-                case Enum\Post\PostResourceType::VIDEO_STREAM:
-                    $hashKeyResource = sprintf('%s.%s', Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
+                case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
+                    $hashKeyResource = sprintf('%s.%s', Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
                     break;
                 default:
                     GoalousLog::error('resource type not found for post resource', [
@@ -151,15 +151,15 @@ class PostResource extends AppModel
     /**
      * Return bool if team is not need to see target resource
      *
-     * @param Enum\Post\PostResourceType $postResourceType
+     * @param Enum\Model\Post\PostResourceType $postResourceType
      * @param bool                       $checkTeamStatus
      *
      * @return bool
      */
-    private function shouldIgnoreResource(Enum\Post\PostResourceType $postResourceType, bool $checkTeamStatus): bool
+    private function shouldIgnoreResource(Enum\Model\Post\PostResourceType $postResourceType, bool $checkTeamStatus): bool
     {
         switch ($postResourceType->getValue()) {
-            case Enum\Post\PostResourceType::VIDEO_STREAM:
+            case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
                 if ($checkTeamStatus && !TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
                     // If team can't play the video
                     return true;
@@ -183,12 +183,12 @@ class PostResource extends AppModel
      *  getPostDraftIdByResourceTypeAndResourceId(PostResourceType::VIDEO_STREAM(), 123)
      *      means finding the post_drafts.id that have relation to 'video_streams.id = 123'
      *
-     * @param Enum\Post\PostResourceType $resourceType
+     * @param Enum\Model\Post\PostResourceType $resourceType
      * @param int                        $resourceId
      *
      * @return int|null
      */
-    function getPostDraftIdByResourceTypeAndResourceId(Enum\Post\PostResourceType $resourceType, int $resourceId)/*: ?int */
+    function getPostDraftIdByResourceTypeAndResourceId(Enum\Model\Post\PostResourceType $resourceType, int $resourceId)/*: ?int */
     {
         $options = [
             'fields'     => [

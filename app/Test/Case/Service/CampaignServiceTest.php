@@ -241,7 +241,7 @@ class CampaignServiceTest extends GoalousTestCase
         $this->CampaignTeam->clear();
         $this->CampaignTeam->id = $campaignTeamId;
         $this->CampaignTeam->save(['price_plan_group_id' => $pricePlanGroupId], false);
-        $tax = $this->PaymentService->formatCharge(0, Enum\PaymentSetting\Currency::USD);
+        $tax = $this->PaymentService->formatCharge(0, Enum\Model\PaymentSetting\Currency::USD);
         $expected = [
             [
                 'id'               => '6',
@@ -562,7 +562,7 @@ class CampaignServiceTest extends GoalousTestCase
     {
         $opeUserId = 1;
         $currentPricePlanCode = '1-1';
-        $currencyType = Enum\PaymentSetting\Currency::JPY;
+        $currencyType = Enum\Model\PaymentSetting\Currency::JPY;
         $paymentSetting = [
             'payment_base_day' => 20,
             'company_country'  => 'JP',
@@ -581,18 +581,18 @@ class CampaignServiceTest extends GoalousTestCase
         $baseExpected = [
             'team_id'                     => $teamId,
             'user_id'                     => $opeUserId,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
             'amount_per_user'             => 0,
             'charge_users'                => 0,
             'currency'                    => $currencyType,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
         ];
 
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
-            $teamId, Enum\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
+            $teamId, Enum\Model\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
         );
         $expected = am($baseExpected, [
             'total_amount' => $chargeInfo['sub_total_charge'],
@@ -606,7 +606,7 @@ class CampaignServiceTest extends GoalousTestCase
     {
         $opeUserId = 1;
         $currentPricePlanCode = '2-2';
-        $currencyType = Enum\PaymentSetting\Currency::USD;
+        $currencyType = Enum\Model\PaymentSetting\Currency::USD;
         $paymentSetting = [
             'payment_base_day' => 10,
             'company_country'  => 'US',
@@ -625,18 +625,18 @@ class CampaignServiceTest extends GoalousTestCase
         $baseExpected = [
             'team_id'                     => $teamId,
             'user_id'                     => $opeUserId,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
             'amount_per_user'             => 0,
             'charge_users'                => 0,
             'currency'                    => $currencyType,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
         ];
 
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
-            $teamId, Enum\PaymentSetting\Currency::USD(), $upgradePricePlanCode, $currentPricePlanCode
+            $teamId, Enum\Model\PaymentSetting\Currency::USD(), $upgradePricePlanCode, $currentPricePlanCode
         );
         $expected = am($baseExpected, [
             'total_amount' => $chargeInfo['sub_total_charge'],
@@ -650,7 +650,7 @@ class CampaignServiceTest extends GoalousTestCase
     {
         $opeUserId = 1;
         $currentPricePlanCode = '1-3';
-        $currencyType = Enum\PaymentSetting\Currency::JPY;
+        $currencyType = Enum\Model\PaymentSetting\Currency::JPY;
         $paymentSetting = [
             'payment_base_day' => 12,
         ];
@@ -667,18 +667,18 @@ class CampaignServiceTest extends GoalousTestCase
         $baseExpected = [
             'team_id'                     => $teamId,
             'user_id'                     => $opeUserId,
-            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
             'amount_per_user'             => 0,
             'charge_users'                => 0,
             'currency'                    => $currencyType,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $upgradedPlanPurchased['id'],
         ];
 
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
-            $teamId, Enum\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
+            $teamId, Enum\Model\PaymentSetting\Currency::JPY(), $upgradePricePlanCode, $currentPricePlanCode
         );
         $expected = am($baseExpected, [
             'total_amount' => $chargeInfo['sub_total_charge'],
@@ -697,7 +697,7 @@ class CampaignServiceTest extends GoalousTestCase
             'id'          => 1,
             'code'        => '1-1',
             'price'       => 50000,
-            'currency'    => Enum\PaymentSetting\Currency::JPY,
+            'currency'    => Enum\Model\PaymentSetting\Currency::JPY,
             'group_id'    => $pricePlanGroupId,
             'max_members' => 50,
         ]);
@@ -705,7 +705,7 @@ class CampaignServiceTest extends GoalousTestCase
             'id'          => 5,
             'code'        => '1-5',
             'price'       => 250000,
-            'currency'    => Enum\PaymentSetting\Currency::JPY,
+            'currency'    => Enum\Model\PaymentSetting\Currency::JPY,
             'group_id'    => $pricePlanGroupId,
             'max_members' => 500,
         ]);
@@ -735,7 +735,7 @@ class CampaignServiceTest extends GoalousTestCase
             'id'          => 6,
             'code'        => '2-1',
             'price'       => 500,
-            'currency'    => Enum\PaymentSetting\Currency::USD,
+            'currency'    => Enum\Model\PaymentSetting\Currency::USD,
             'group_id'    => $pricePlanGroupId,
             'max_members' => 50,
         ]);
@@ -743,7 +743,7 @@ class CampaignServiceTest extends GoalousTestCase
             'id'          => 10,
             'code'        => '2-5',
             'price'       => 2500,
-            'currency'    => Enum\PaymentSetting\Currency::USD,
+            'currency'    => Enum\Model\PaymentSetting\Currency::USD,
             'group_id'    => $pricePlanGroupId,
             'max_members' => 500,
         ]);

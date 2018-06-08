@@ -23,11 +23,11 @@ trait TestVideoTrait
      * @param int                             $userId
      * @param int                             $teamId
      * @param string                          $hash
-     * @param Enum\Video\VideoTranscodeStatus $status
+     * @param Enum\Model\Video\VideoTranscodeStatus $status
      *
      * @return array list($video, $videoStream)
      */
-    protected function createVideoSet(int $userId, int $teamId, string $hash, Enum\Video\VideoTranscodeStatus $status): array
+    protected function createVideoSet(int $userId, int $teamId, string $hash, Enum\Model\Video\VideoTranscodeStatus $status): array
     {
         $this->Video->create();
         $video = $this->Video->save([
@@ -41,7 +41,7 @@ trait TestVideoTrait
             'file_name'     => "video.mp4",
             'resource_path' => "uploads/{$userId}/{$teamId}/{$hash}/original",
         ]);
-        $isTranscodeCompleted = $status->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        $isTranscodeCompleted = $status->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
 
         $this->VideoStream->create();
         $videoStream = $this->VideoStream->save([
@@ -49,7 +49,7 @@ trait TestVideoTrait
             'duration'             => $isTranscodeCompleted ? 60 : null,
             'aspect_ratio'         => $isTranscodeCompleted ? (640 / 360) : null,
             'storage_path'         => $isTranscodeCompleted ? "streams/{$userId}/{$teamId}/{$hash}/" : null,
-            'output_version'       => Enum\Video\TranscodeOutputVersion::V1,
+            'output_version'       => Enum\Model\Video\TranscodeOutputVersion::V1,
             'transcode_status'     => $status->getValue(),
         ]);
         return [reset($video), reset($videoStream)];

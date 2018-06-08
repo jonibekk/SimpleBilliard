@@ -105,7 +105,7 @@ class MonthlyCreditCardChargeShell extends AppShell
                 // Charge
                 $chargeRes = $PaymentService->applyCreditCardCharge(
                     $teamId,
-                    Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                    Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                     $chargeMemberCount
                 );
                 if ($chargeRes['error']) {

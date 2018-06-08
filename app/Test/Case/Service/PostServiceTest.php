@@ -373,7 +373,7 @@ class PostServiceTest extends GoalousTestCase
         $userId = 1;
         $teamId = 1;
 
-        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a', Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
 
         $postData = [
             'Post' => [
@@ -389,7 +389,7 @@ class PostServiceTest extends GoalousTestCase
 
         $postId = $post['id'];
         $postResource = $this->PostResource->findByPostId($postId);
-        $this->assertEquals(Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['PostResource']['resource_type']);
+        $this->assertEquals(Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['PostResource']['resource_type']);
     }
 
     function test_addNormal_with_resource_video_with_AttachFile()
@@ -403,7 +403,7 @@ class PostServiceTest extends GoalousTestCase
         $userId = 1;
         $teamId = 1;
 
-        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a', Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
 
         $postData = [
             'Post' => [
@@ -420,7 +420,7 @@ class PostServiceTest extends GoalousTestCase
 
         $postId = $post['id'];
         $postResource = $this->PostResource->findByPostId($postId);
-        $this->assertEquals(Enum\Post\PostResourceType::VIDEO_STREAM, $postResource['PostResource']['resource_type']);
+        $this->assertEquals(Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['PostResource']['resource_type']);
     }
 
     /**

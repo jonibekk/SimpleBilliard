@@ -45,7 +45,7 @@ class TeamMemberService extends AppService
             if ($Team->isPaidPlan($teamId)) {
                 $PaymentService->charge(
                     $teamId,
-                    Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                    Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                     1,
                     $opeUserId
                 );

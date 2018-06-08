@@ -991,7 +991,7 @@ class EvaluationTest extends GoalousTestCase
         $termId = $this->Evaluation->Term->getCurrentTermId();
         $res = $this->Evaluation->countCompletedByEvaluators($termId, $evaluateeId);
         $this->assertEquals($res, 0);
-        $this->Evaluation->updateAll(['status' => Enum\Evaluation\Status::DONE],
+        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE],
             [
                 'term_id'           => $termId,
                 'evaluatee_user_id' => $evaluateeId,
@@ -1007,7 +1007,7 @@ class EvaluationTest extends GoalousTestCase
             'term_id'           => $termId,
             'evaluatee_user_id' => $evaluateeId,
             'evaluator_user_id' => 3,
-            'status'            => Enum\Evaluation\Status::DONE,
+            'status'            => Enum\Model\EvaluationStatus::DONE,
             'goal_id' => null,
             'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
         ], false);

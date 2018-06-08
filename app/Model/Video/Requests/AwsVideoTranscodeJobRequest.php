@@ -38,7 +38,7 @@ class AwsVideoTranscodeJobRequest
     protected $awsEtsPipeLineId;
 
     /**
-     * @var Enum\Video\TranscodeOutputVersion
+     * @var Enum\Model\Video\TranscodeOutputVersion
      */
     protected $transcodeOutputVersion;
 
@@ -98,7 +98,7 @@ class AwsVideoTranscodeJobRequest
         $this->userMetaData = $userMetaData;
     }
 
-    public function __construct(string $outputKeyPrefix, string $awsEtsPipeLineId, Enum\Video\TranscodeOutputVersion $transcodeOutputVersion)
+    public function __construct(string $outputKeyPrefix, string $awsEtsPipeLineId, Enum\Model\Video\TranscodeOutputVersion $transcodeOutputVersion)
     {
         $this->outputKeyPrefix = $outputKeyPrefix;
         $this->awsEtsPipeLineId = $awsEtsPipeLineId;
@@ -114,19 +114,19 @@ class AwsVideoTranscodeJobRequest
     }
 
     /**
-     * @return Enum\Video\TranscodeOutputVersion
+     * @return Enum\Model\Video\TranscodeOutputVersion
      */
-    public function getTranscodeOutputVersion(): Enum\Video\TranscodeOutputVersion
+    public function getTranscodeOutputVersion(): Enum\Model\Video\TranscodeOutputVersion
     {
         return $this->transcodeOutputVersion;
     }
 
     /**
      * returning transcoder type
-     * @return Enum\Video\Transcoder
+     * @return Enum\Model\Video\Transcoder
      */
-    public function getTranscoder(): Enum\Video\Transcoder
+    public function getTranscoder(): Enum\Model\Video\Transcoder
     {
-        return Enum\Video\Transcoder::AWS_ETS();
+        return Enum\Model\Video\Transcoder::AWS_ETS();
     }
 }

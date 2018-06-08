@@ -220,13 +220,13 @@ class VideoStreamsController extends ApiController
         //  https://developer.mozilla.org/ja/docs/XMLHttpRequest/responseURL
         //  https://github.com/videojs/videojs-contrib-hls/pull/912#discussion_r164196518
         //  https://github.com/IsaoCorp/goalous/pull/6640
-        if ($type === Enum\Video\VideoSourceType::PLAYLIST_M3U8_HLS
+        if ($type === Enum\Model\Video\VideoSourceType::PLAYLIST_M3U8_HLS
             && !$this->isBrowserSupportManifestRedirects()) {
             $this->redirect(sprintf('/api/v1/video_streams/%d/manifest?path=playlist.m3u8', $id));
         }
 
         $videoStoragePath = $videoStream['storage_path'];
-        $outputVersion = new Enum\Video\TranscodeOutputVersion(intval($videoStream['output_version']));
+        $outputVersion = new Enum\Model\Video\TranscodeOutputVersion(intval($videoStream['output_version']));
         $transcodeOutputVersionDefinition = TranscodeOutputVersionDefinition::getVersion($outputVersion);
         foreach ($transcodeOutputVersionDefinition->getVideoSources($videoStoragePath) as $videoSource) {
             if ($videoSource->getType()->getValue() === $type) {

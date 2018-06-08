@@ -69,10 +69,10 @@ class FailStuckTranscodeShell extends AppShell
                     GoalousDateTime::createFromTimestamp($videoStream['modified'])
                 ),
             ]);
-            $VideoTranscodeLog->add($videoStreamId, Enum\Video\VideoTranscodeLogType::JUDGED_STUCK(), [
+            $VideoTranscodeLog->add($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::JUDGED_STUCK(), [
                 'transcode_status' => $currentTranscodeStatus,
             ]);
-            $videoStream['transcode_status'] = Enum\Video\VideoTranscodeStatus::ERROR();
+            $videoStream['transcode_status'] = Enum\Model\Video\VideoTranscodeStatus::ERROR();
 
             if (false === $VideoStream->save($videoStream)) {
                 GoalousLog::error('save failed on stuck video stream', [

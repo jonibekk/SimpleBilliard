@@ -30,7 +30,7 @@ class TeamStatusTest extends GoalousTestCase
     function test_paid()
     {
         $teamStatus = TeamStatus::getCurrentTeam();
-        $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::PAID());
+        $teamStatus->setServiceUseStatus(Enum\Model\Team\ServiceUseStatus::PAID());
         $teamStatus->setIsTeamCampaign(true);
 
         $this->assertFalse($teamStatus->isTeamPlanRegular());
@@ -42,7 +42,7 @@ class TeamStatusTest extends GoalousTestCase
     function test_regular()
     {
         $teamStatus = TeamStatus::getCurrentTeam();
-        $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::FREE_TRIAL());
+        $teamStatus->setServiceUseStatus(Enum\Model\Team\ServiceUseStatus::FREE_TRIAL());
         $teamStatus->setIsTeamCampaign(false);
 
         $this->assertTrue($teamStatus->isTeamPlanRegular());
@@ -54,7 +54,7 @@ class TeamStatusTest extends GoalousTestCase
     function test_regular_disable_video_post()
     {
         $teamStatus = TeamStatus::getCurrentTeam();
-        $teamStatus->setServiceUseStatus(Enum\Team\ServiceUseStatus::FREE_TRIAL());
+        $teamStatus->setServiceUseStatus(Enum\Model\Team\ServiceUseStatus::FREE_TRIAL());
         $teamStatus->setIsTeamCampaign(false);
 
         $this->assertTrue($teamStatus->isTeamPlanRegular());
@@ -219,6 +219,6 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus = TeamStatus::getCurrentTeam();
         $teamStatus->initializeByTeamId($teamId);
 
-        $this->assertSame(Enum\Video\TranscodeOutputVersion::V1, $teamStatus->getTranscodeOutputVersion()->getValue());
+        $this->assertSame(Enum\Model\Video\TranscodeOutputVersion::V1, $teamStatus->getTranscodeOutputVersion()->getValue());
     }
 }

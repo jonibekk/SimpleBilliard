@@ -185,7 +185,7 @@ class InvitationServiceTest extends GoalousTestCase
     function test_invite_basic()
     {
         $teamId = $this->createTeam([
-            'service_use_status' => Enum\Team\ServiceUseStatus::FREE_TRIAL
+            'service_use_status' => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL
         ]);
         $email = 'test1@company.com';
         $res = $this->InvitationService->invite($teamId, 1, [$email]);
@@ -205,10 +205,10 @@ class InvitationServiceTest extends GoalousTestCase
 
         $teamMember = Hash::get($this->TeamMember->getByUserId($user['id'], $teamId), 'TeamMember');
         $this->assertNotEmpty($res);
-        $this->assertEquals($teamMember['status'], Enum\TeamMember\Status::INVITED);
+        $this->assertEquals($teamMember['status'], Enum\Model\TeamMember\Status::INVITED);
 
         $teamId = $this->createTeam([
-            'service_use_status' => Enum\Team\ServiceUseStatus::FREE_TRIAL
+            'service_use_status' => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL
         ]);
 
         $res = $this->InvitationService->invite($teamId, 1, [$email]);
@@ -220,7 +220,7 @@ class InvitationServiceTest extends GoalousTestCase
 
         $teamMember = Hash::get($this->TeamMember->getByUserId($user['id'], $teamId), 'TeamMember');
         $this->assertNotEmpty($res);
-        $this->assertEquals($teamMember['status'], Enum\TeamMember\Status::INVITED);
+        $this->assertEquals($teamMember['status'], Enum\Model\TeamMember\Status::INVITED);
 
         $emails = [
             'test2@company.com',
@@ -242,7 +242,7 @@ class InvitationServiceTest extends GoalousTestCase
     {
         // Assert single user
         $teamId = $this->createTeam([
-            'service_use_status' => Enum\Team\ServiceUseStatus::PAID
+            'service_use_status' => Enum\Model\Team\ServiceUseStatus::PAID
         ]);
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
