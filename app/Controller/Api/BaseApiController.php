@@ -124,7 +124,7 @@ abstract class BaseApiController extends Controller
     {
         $requestedVersion = (int)$this->request::header('X-API-Version');
 
-        return contains($requestedVersion, ApiVer::AVAILABLE_API_VERSIONS) ?
+        return ApiVer::isAvailable($requestedVersion) ?
             $requestedVersion : ApiVer::getLatestApiVersion();
     }
 

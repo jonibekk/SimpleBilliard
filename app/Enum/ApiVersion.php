@@ -18,10 +18,10 @@ use MyCLabs\Enum\Enum;
  */
 class ApiVersion extends Enum
 {
-    const API_VERSION_2 = 2;
+    const VER_2 = 2;
 
     /** @var array Available API versions */
-    const AVAILABLE_API_VERSIONS = [self::API_VERSION_2];
+    const AVAILABLE_API_VERSIONS = [ApiVersion::VER_2];
 
     /**
      * Get the latest API version
@@ -30,6 +30,18 @@ class ApiVersion extends Enum
      */
     public static function getLatestApiVersion()
     {
-        return max(self::AVAILABLE_API_VERSIONS);
+        return max(ApiVersion::AVAILABLE_API_VERSIONS);
+    }
+
+    /**
+     * Check whether the version is available
+     *
+     * @param int $apiVersion
+     *
+     * @return bool
+     */
+    public static function isAvailable(int $apiVersion): bool
+    {
+        return in_array($apiVersion, ApiVersion::AVAILABLE_API_VERSIONS);
     }
 }
