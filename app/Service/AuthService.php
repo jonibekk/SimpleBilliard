@@ -29,7 +29,7 @@ class AuthService extends AppService
      * @param string $username
      * @param string $password
      *
-     * @return JwtAuthentication
+     * @return JwtAuthentication Authentication token of the user. Will return null on failed login
      * @throws Exception
      */
     public function authenticateUser(string $username, string $password)
@@ -37,11 +37,13 @@ class AuthService extends AppService
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');
 
-        $user = $User->findUserByEmail($username)['User'];
+        $queriedUser = $User->findUserByEmail($username);
 
-        if (empty ($user)) {
+        if (empty ($queriedUser)) {
             return null;
         }
+
+        $user = Hash::get($queriedUser, 'User');
 
         $storedHashedPassword = $user['password'];
 
