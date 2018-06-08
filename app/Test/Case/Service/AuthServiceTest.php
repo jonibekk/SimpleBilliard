@@ -61,7 +61,7 @@ class AuthServiceTest extends GoalousTestCase
         $AuthService = ClassRegistry::init('AuthService');
 
         try {
-            $AuthService->authenticateUser($emailAddress, $password);
+            $jwt = $AuthService->authenticateUser($emailAddress, $password);
         } catch (Exception $e) {
             $this->assertNotEmpty($e);
         }
