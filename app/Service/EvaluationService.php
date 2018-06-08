@@ -108,7 +108,7 @@ class EvaluationService extends AppService
                     break;
                 case self::STAGE_EVALUATOR_EVAL:
                     if ($myEval['evaluate_type'] == Evaluation::TYPE_EVALUATOR
-                        && $myEval['status'] != Enum\Model\EvaluationStatus::DONE) {
+                        && $myEval['status'] != Enum\Model\Evaluation\Status::DONE) {
                         $status_text['body'] = __("Please evaluate.");
                     } else {
                         $status_text['body'] = __("Waiting for the evaluation by %s.", __("Evaluator"));
@@ -154,7 +154,7 @@ class EvaluationService extends AppService
         }
 
         $selfEval = $Evaluation->getUnique($evaluateeId, $evaluateeId, $termId, Evaluation::TYPE_ONESELF);
-        if ((int)$selfEval['status'] !== Enum\Model\EvaluationStatus::DONE) {
+        if ((int)$selfEval['status'] !== Enum\Model\Evaluation\Status::DONE) {
             $this->cachedEvalStages[$key] = self::STAGE_SELF_EVAL;
             return self::STAGE_SELF_EVAL;
         }
@@ -353,7 +353,7 @@ class EvaluationService extends AppService
                 return $Evaluation->countCompletedByEvaluators($evaluateTermId, $evaluateeId) == 0;
             } else {
                 $selfEvaluation = $Evaluation->getUnique($evaluateeId, $evaluateeId, $evaluateTermId);
-                if ((int)Hash::get($selfEvaluation, 'status') === Enum\Model\EvaluationStatus::DONE) {
+                if ((int)Hash::get($selfEvaluation, 'status') === Enum\Model\Evaluation\Status::DONE) {
                     return true;
                 }
                 return false;

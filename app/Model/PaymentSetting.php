@@ -56,7 +56,7 @@ class PaymentSetting extends AppModel
             'inEnumList' => [
                 'rule' => [
                     'inEnumList',
-                    "PaymentSetting\Type"
+                    "Goalous\Enum\Model\PaymentSetting\Type"
                 ],
             ],
             'notBlank'   => [

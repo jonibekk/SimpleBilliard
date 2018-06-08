@@ -48,7 +48,7 @@ class TeamMember extends AppModel
             'inEnumList'      => [
                 'rule' => [
                     'inEnumList',
-                    "TeamMember\Status"
+                    "Goalous\Enum\Model\TeamMember\Status"
                 ],
             ],
             'isVerifiedEmail' => [

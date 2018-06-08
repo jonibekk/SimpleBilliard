@@ -523,7 +523,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluator can't edit evaluation
-        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DRAFT], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\Evaluation\Status::DRAFT], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $userId
@@ -536,7 +536,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluator can edit evaluation
-        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\Evaluation\Status::DONE], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $userId
@@ -551,7 +551,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $this->assertFalse($res);
 
         // Evaluatee can't edit evaluation after one evaluator evaluated
-        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\Evaluation\Status::DONE], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $evaluatorId1
@@ -565,7 +565,7 @@ class EvaluationServiceTest extends GoalousTestCase
         $res = $this->EvaluationService->isEditable($termId, $userId, $finalEvaluatorId);
         $this->assertFalse($res);
 
-        $this->Evaluation->updateAll(['status' => Enum\Model\EvaluationStatus::DONE], [
+        $this->Evaluation->updateAll(['status' => Enum\Model\Evaluation\Status::DONE], [
             'term_id'           => $termId,
             'evaluatee_user_id' => $userId,
             'evaluator_user_id' => $evaluatorId2
