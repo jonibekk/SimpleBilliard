@@ -228,6 +228,9 @@ $(function () {
         $(this).find(".dropdown-menu").toggle();
         $(".header-search-toggle").removeClass("open");
         $(".header-search").removeClass("open");
+        $(this).find(".message-dropdown").toggleClass("force-close");
+        $(this).find(".bell-dropdown").toggleClass("force-close");
+        $(this).find(".dropdown-menu").toggleClass("force-close");
     });
     var timeoutToggle;
     $(".header-icon-search-toggle").off("click").on("click", function(e) {
@@ -272,7 +275,20 @@ $(function () {
       timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
     });
-
+    $(window).on("click", function() {
+      if(!$(".message-dropdown").hasClass("force-close")){
+        $(".message-dropdown").addClass("force-close");
+      }
+      if(!$(".bell-dropdown").hasClass("force-close")){
+        $(".bell-dropdown").addClass("force-close");
+      }
+      if(!$(".dropdown-menu").hasClass("force-close")){
+        $(".dropdown-menu").addClass("force-close");
+      }
+      $(".dropdown-menu").css("display","none");
+      $(".bell-dropdown").css("display","none");
+      $(".message-dropdown").css("display","none");
+    });
     $("#NavSearchInput").on("keyup", function(){
       if($.trim($("#NavSearchInput").val()).length){
         clearTimeout(timeout);
