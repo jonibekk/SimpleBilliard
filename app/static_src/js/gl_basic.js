@@ -215,39 +215,47 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
+    var isHeaderClick = false;
+    var isSearchClick = false;
     $(".header-icon-zoom").off("click").on("click", function(e) {
-        $("#NavSearchResults").empty();
-        $("#NavSearchResults").hide();
-        $("#NavSearchResultsToggle").empty();
-        $("#NavSearchResultsToggle").hide();
-        $("#NavSearchInputClear").trigger("click");
-        $("#NavSearchInputClearToggle").trigger("click");
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
-        hideNav();
-        $(this).find(".dropdown-menu").toggle();
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
-        $(this).find(".message-dropdown").toggleClass("force-close");
-        $(this).find(".bell-dropdown").toggleClass("force-close");
-        $(this).find(".dropdown-menu").toggleClass("force-close");
-    });
-    var timeoutToggle;
-    $(".header-icon-search-toggle").off("click").on("click", function(e) {
-      e.preventDefault();
-      var nodes = $(this).find(".dropdown-menu");
-      for(var i = 0; i < nodes.length; i++){
-        $(nodes[i]).css("display","none");
-      }
-      $(".header-search-toggle").toggleClass("open");
+      $(this).toggleClass("open");
+      $(".header-icon-zoom").not($(this)).removeClass("open");
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
-      $("#NavSearchInputClear").trigger("click");
-      $("#NavSearchInputClearToggle").trigger("click");
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $(".header-search-toggle").removeClass("shown");
+      $(".header-search").removeClass("shown");
+      hideNav();
+      isHeaderClick = true;
+    });
+    var timeoutToggle;
+    $(".header-icon-search-toggle").off("click").on("click", function(e) {
+      e.preventDefault();
+      $(".header-search-toggle").toggleClass("shown");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
       timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       hideNav();
+      isSearchClick = true;
     });
 
     $("#NavSearchInputToggle").on("keyup", function(){
@@ -261,33 +269,36 @@ $(function () {
     var timeout;
     $(".header-icon-search").off("click").on("click", function(e) {
       e.preventDefault();
-      var nodes = $(this).find(".dropdown-menu");
-      for(var i = 0; i < nodes.length; i++){
-        $(nodes[i]).css("display","none");
-      }
-      $(".header-search").toggleClass("open");
+      $(".header-search").toggleClass("shown");
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
-      $("#NavSearchInputClear").trigger("click");
-      $("#NavSearchInputClearToggle").trigger("click");
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
       timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
+      isSearchClick = true;
     });
-    $(window).on("click", function() {
-      if(!$(".message-dropdown").hasClass("force-close")){
-        $(".message-dropdown").addClass("force-close");
+    $(document).on("click", function(e){
+      if(!isHeaderClick){
+        $(".open").removeClass("open");
       }
-      if(!$(".bell-dropdown").hasClass("force-close")){
-        $(".bell-dropdown").addClass("force-close");
+      if(!isSearchClick) {
+        $(".header-search").removeClass("shown");
+        $(".header-search-toggle").removeClass("shown");
       }
-      if(!$(".dropdown-menu").hasClass("force-close")){
-        $(".dropdown-menu").addClass("force-close");
-      }
-      $(".dropdown-menu").css("display","none");
-      $(".bell-dropdown").css("display","none");
-      $(".message-dropdown").css("display","none");
+      isSearchClick = false;
+      isHeaderClick = false;
+    });
+    $(".dropdown-menu").on("click", function(e){
+      e.stopPropagation();
     });
     $("#NavSearchInput").on("keyup", function(){
       if($.trim($("#NavSearchInput").val()).length){
@@ -305,8 +316,8 @@ $(function () {
         $("#NavSearchResultsToggle").hide();
         $("#NavSearchInputClear").trigger("click");
         $("#NavSearchInputClearToggle").trigger("click");
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
+        $(".header-search-toggle").removeClass("shown");
+        $(".header-search").removeClass("shown");
         if(lastWidth > 479){
           updateSearchPosition();
         }
@@ -341,8 +352,8 @@ $(function () {
         $("#NavSearchResultsToggle").hide();
         $("#NavSearchInputClear").trigger("click");
         $("#NavSearchInputClearToggle").trigger("click");
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
+        $(".header-search-toggle").removeClass("shown");
+        $(".header-search").removeClass("shown");
     });
     $("#toggleNavigationButton").on("click", function() {
       $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
