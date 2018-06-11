@@ -215,20 +215,47 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
-
-    var timeoutToggle;
-    $(".header-icon-search-toggle").off("click").on("click", function(e) {
-      e.preventDefault();
-      $(".dropdown-menu").hide();
-      $(".header-search-toggle").toggleClass("open");
+    var isHeaderClick = false;
+    var isSearchClick = false;
+    $(".header-icon-zoom").off("click").on("click", function(e) {
+      $(this).toggleClass("open");
+      $(".header-icon-zoom").not($(this)).removeClass("open");
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
-      $("#NavSearchInputClear").trigger("click");
-      $("#NavSearchInputClearToggle").trigger("click");
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $(".header-search-toggle").removeClass("shown");
+      $(".header-search").removeClass("shown");
+      hideNav();
+      isHeaderClick = true;
+    });
+    var timeoutToggle;
+    $(".header-icon-search-toggle").off("click").on("click", function(e) {
+      e.preventDefault();
+      $(".header-search-toggle").toggleClass("shown");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
       timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
       hideNav();
+      isSearchClick = true;
     });
 
     $("#NavSearchInputToggle").on("keyup", function(){
@@ -239,47 +266,50 @@ $(function () {
       }
     });
 
+    $("#NavSearchForm,#NavSearchFormToggle").on("click", function(){
+      isSearchClick = true;
+    });
+
     var timeout;
     $(".header-icon-search").off("click").on("click", function(e) {
       e.preventDefault();
-      $(".dropdown-menu").hide();
-      $(".header-search").toggleClass("open");
+      $(".header-search").toggleClass("shown");
       $("#NavSearchResults").empty();
       $("#NavSearchResults").hide();
       $("#NavSearchResultsToggle").empty();
       $("#NavSearchResultsToggle").hide();
-      $("#NavSearchInputClear").trigger("click");
-      $("#NavSearchInputClearToggle").trigger("click");
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
       timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
       hideNav();
+      isSearchClick = true;
     });
-
+    $(document).on("click", function(e){
+      if(!isHeaderClick){
+        $(".open").removeClass("open");
+      }
+      if(!isSearchClick) {
+        $(".header-search").removeClass("shown");
+        $(".header-search-toggle").removeClass("shown");
+      }
+      isSearchClick = false;
+      isHeaderClick = false;
+    });
+    // $(".dropdown-menu").on("click", function(e){
+    //   e.stopPropagation();
+    // });
     $("#NavSearchInput").on("keyup", function(){
       if($.trim($("#NavSearchInput").val()).length){
         clearTimeout(timeout);
       } else {
         timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
       }
-    });
-    $(".header-dropdown-add,.header-dropdown-functions,.header-dropdown-notify,.header-dropdown-message,.mb-app-header-dropdown-add,.mb-app-header-dropdown-functions").on("click", function(e) {
-        $(".open").removeClass("open");
-        $("#NavSearchResults").empty();
-        $("#NavSearchResults").hide();
-        $("#NavSearchResultsToggle").empty();
-        $("#NavSearchResultsToggle").hide();
-        $("#NavSearchInputClear").trigger("click");
-        $("#NavSearchInputClearToggle").trigger("click");
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
-        $(this).find(".dropdown-menu").toggleClass("open");
-        hideNav();
-    });
-    $(".header-icon-zoom").on("click", function() {
-      $(".force-open").removeClass("force-open");
-      $(this).find(".dropdown-menu").toggleClass("force-open");
-    });
-    $(document).on("click", function() {
-      $(".force-open").removeClass("force-open");
     });
     $(window).on('resize load pageshow', function(){
       if($(window).width() !== lastWidth){
@@ -290,8 +320,8 @@ $(function () {
         $("#NavSearchResultsToggle").hide();
         $("#NavSearchInputClear").trigger("click");
         $("#NavSearchInputClearToggle").trigger("click");
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
+        $(".header-search-toggle").removeClass("shown");
+        $(".header-search").removeClass("shown");
         if(lastWidth > 479){
           updateSearchPosition();
         }
@@ -326,8 +356,8 @@ $(function () {
         $("#NavSearchResultsToggle").hide();
         $("#NavSearchInputClear").trigger("click");
         $("#NavSearchInputClearToggle").trigger("click");
-        $(".header-search-toggle").removeClass("open");
-        $(".header-search").removeClass("open");
+        $(".header-search-toggle").removeClass("shown");
+        $(".header-search").removeClass("shown");
     });
     $("#toggleNavigationButton").on("click", function() {
       $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
