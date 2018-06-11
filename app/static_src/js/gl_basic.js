@@ -266,7 +266,7 @@ $(function () {
       }
     });
 
-    $("#NavSearchInput,#NavSearchInputToggle").on("click", function(){
+    $("#NavSearchForm,#NavSearchFormToggle").on("click", function(){
       isSearchClick = true;
     });
 
