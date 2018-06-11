@@ -67,8 +67,9 @@ class AuthService extends AppService
      * @param string $token JWT token of the user
      *
      * @throws Exception
+     * @return bool True on successful logout
      */
-    public function invalidateUser(string $token)
+    public function invalidateUser(string $token): bool
     {
         $jwt = JwtAuthentication::decode($token);
 
@@ -79,6 +80,8 @@ class AuthService extends AppService
         $jwtClient = new AccessTokenClient();
         $jwtKey = new AccessTokenKey($jwt->getUserId(), $jwt->getTeamId(), $jwt->getJwtId());
         $jwtClient->del($jwtKey);
+
+        return true;
     }
 
     /**

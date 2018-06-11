@@ -112,7 +112,7 @@ class AuthController extends BaseApiController
                                                                                  ->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage('User logged out')->getResponse();
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
     }
 
     /**
@@ -148,9 +148,10 @@ class AuthController extends BaseApiController
      */
     private function validateLogout()
     {
-        if (!$this->request->is('post')) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage("Unsupported HTTP method")
-                                                                       ->getResponse();
+        $res = $this->allowMethod('post');
+
+        if (!empty($res)) {
+            return $res;
         }
 
         return null;

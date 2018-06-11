@@ -2,6 +2,7 @@
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
+App::uses('Email', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -1879,32 +1880,32 @@ class User extends AppModel
      *
      * @param string $email
      *
-     * @return array
+     * @return array|null
      */
-    public function findUserByEmail(string $email): array
+    public function findUserByEmail(string $email)
     {
         $condition = [
             'conditions' => [
-                'User.del_flg' => false
+                'User.del_flg'    => false,
+                'User.active_flg' => true,
             ],
             'fields'     => [
                 'User.id',
                 'User.password',
                 'User.default_team_id'
             ],
-            'joins'      =>
+            'joins'      => [
                 [
-                    [
-                        'type'       => 'LEFT',
-                        'table'      => 'emails',
-                        'alias'      => 'Email',
-                        'conditions' => [
-                            'Email.id'      => 'User.primary_email_id',
-                            'Email.email'   => $email,
-                            'Email.del_flg' => false
-                        ]
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'User.primary_email_id = Email.id',
+                        'Email.del_flg' => false,
+                        'Email.email'   => $email,
                     ]
                 ]
+            ]
         ];
 
         $user = $this->find('first', $condition);

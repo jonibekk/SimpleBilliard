@@ -247,8 +247,7 @@ abstract class BaseApiController extends Controller
     /**
      * Initialize current team's status based on current user's team ID
      */
-    private
-    function _initializeTeamStatus()
+    private function _initializeTeamStatus()
     {
         $this->_teamStatus = TeamStatus::getCurrentTeam();
         $this->_teamStatus->initializeByTeamId($this->_currentTeamId);
@@ -259,8 +258,7 @@ abstract class BaseApiController extends Controller
      *
      * @return bool True if user is restricted from using the service
      */
-    private
-    function _isRestrictedFromUsingService(): bool
+    private function _isRestrictedFromUsingService(): bool
     {
         return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
@@ -273,8 +271,7 @@ abstract class BaseApiController extends Controller
      *
      * @return bool
      */
-    private
-    function _checkIgnoreRestriction(
+    private function _checkIgnoreRestriction(
         CakeRequest $request
     ) {
         $commentArray = $this->_parseEndpointDocument($request);
@@ -292,8 +289,7 @@ abstract class BaseApiController extends Controller
      *
      * @return bool True if user is restricted to read only
      */
-    private
-    function _isRestrictedToReadOnly(): bool
+    private function _isRestrictedToReadOnly(): bool
     {
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
@@ -304,8 +300,7 @@ abstract class BaseApiController extends Controller
     /**
      * Set the app language for current user
      */
-    private
-    function _setAppLanguage()
+    private function _setAppLanguage()
     {
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');

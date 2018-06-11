@@ -50,7 +50,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertEquals(1, $jwt->getTeamId());
     }
 
-    public function test_authentication_failed()
+    public function test_authWrongPassword_failed()
     {
         $this->insertNewUser();
 
@@ -67,6 +67,114 @@ class AuthServiceTest extends GoalousTestCase
         }
 
         $this->assertEmpty($jwt);
+    }
+
+    public function test_authWrongUsername_failed()
+    {
+        $this->insertNewUser();
+
+        $emailAddress = 'auth_missing@email.com';
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        try {
+            $jwt = $AuthService->authenticateUser($emailAddress, $password);
+        } catch (Exception $e) {
+            $this->assertNotEmpty($e);
+        }
+
+        $this->assertEmpty($jwt);
+    }
+
+    public function test_authEmptyUsername_failed()
+    {
+        $this->insertNewUser();
+
+        $emailAddress = '';
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        try {
+            $jwt = $AuthService->authenticateUser($emailAddress, $password);
+        } catch (Exception $e) {
+            $this->assertNotEmpty($e);
+        }
+
+        $this->assertEmpty($jwt);
+    }
+
+    public function test_authEmptyPassword_failed()
+    {
+        $this->insertNewUser();
+
+        $emailAddress = 'auth_testt@email.com';
+        $password = '';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        try {
+            $jwt = $AuthService->authenticateUser($emailAddress, $password);
+        } catch (Exception $e) {
+            $this->assertNotEmpty($e);
+        }
+
+        $this->assertEmpty($jwt);
+    }
+
+    public function test_invalidate_success()
+    {
+
+        $this->insertNewUser();
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        try {
+            $jwt = $AuthService->authenticateUser($emailAddress, $password);
+        } catch (Exception $e) {
+            printf($e->getMessage());
+            printf($e->getTraceAsString());
+            $this->fail();
+        }
+
+        if (empty($jwt)) {
+            $this->fail();
+        }
+
+        try {
+
+            $res = $AuthService->invalidateUser($jwt->token());
+
+        } catch (Exception $e) {
+            printf($e->getMessage());
+            printf($e->getTraceAsString());
+            $this->fail();
+        }
+
+        $this->assertTrue($res);
+
+    }
+
+    public function test_invalidateMissingToken_failed()
+    {
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        try {
+            $AuthService->invalidateUser('failed');
+        } catch (Exception $e) {
+            printf($e->getMessage());
+            printf($e->getTraceAsString());
+            $this->assertNotEmpty($e);
+        }
     }
 
     private function insertNewUser()
@@ -91,7 +199,7 @@ class AuthServiceTest extends GoalousTestCase
             'password_modified'  => '2014-05-22 02:28:04',
             'no_pass_flg'        => 1,
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
-            'primary_email_id'   => '50',
+            'primary_email_id'   => 50,
             'active_flg'         => 1,
             'last_login'         => '2014-05-22 02:28:04',
             'admin_flg'          => 1,
@@ -109,7 +217,7 @@ class AuthServiceTest extends GoalousTestCase
             'modified'           => '2014-05-22 02:28:04'
         ];
         $newEmail = [
-            'id'                  => '50',
+            'id'                  => 50,
             'user_id'             => '101',
             'email'               => 'auth_test@email.com',
             'email_verified'      => 1,
