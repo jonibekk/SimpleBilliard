@@ -301,9 +301,9 @@ $(function () {
       isSearchClick = false;
       isHeaderClick = false;
     });
-    $(".dropdown-menu").on("click", function(e){
-      e.stopPropagation();
-    });
+    // $(".dropdown-menu").on("click", function(e){
+    //   e.stopPropagation();
+    // });
     $("#NavSearchInput").on("keyup", function(){
       if($.trim($("#NavSearchInput").val()).length){
         clearTimeout(timeout);
