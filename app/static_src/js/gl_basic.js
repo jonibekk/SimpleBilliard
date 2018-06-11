@@ -266,6 +266,10 @@ $(function () {
       }
     });
 
+    $("#NavSearchInput,#NavSearchInputToggle").on("click", function(){
+      isSearchClick = true;
+    });
+
     var timeout;
     $(".header-icon-search").off("click").on("click", function(e) {
       e.preventDefault();
