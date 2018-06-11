@@ -1,6 +1,7 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
+App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 
 /**
  * Created by PhpStorm.
