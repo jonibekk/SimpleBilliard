@@ -6,7 +6,6 @@
  * Time: 11:39
  */
 App::uses('BaseValidator', 'Validator');
-App::uses('User', 'Model');
 
 use Respect\Validation\Validator as validator;
 
@@ -21,7 +20,9 @@ class AuthRequestValidator extends BaseValidator
     {
         $rules = [
             'username' => [validator::email()],
-            'password' => [validator::stringType()::regex(User::USER_PASSWORD_REGEX)]
+            // Stay here simple string check.
+            // Do the regex validation on the register validation.
+            'password' => [validator::stringType()]
         ];
 
         return $rules;

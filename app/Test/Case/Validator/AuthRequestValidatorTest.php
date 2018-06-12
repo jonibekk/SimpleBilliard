@@ -49,28 +49,29 @@ class AuthRequestValidatorTest extends GoalousTestCase
         yield ['', $defaultUserPassword];
         yield ['not_email_string', $defaultUserPassword];
 
+        // TODO: Move this password regex test to the User Registration Request Test
         // Failing password
-        yield [$defaultUserEmail, null];
-        yield [$defaultUserEmail, ''];
-        yield [$defaultUserEmail, self::CHARS_09];
-        yield [$defaultUserEmail, self::CHARS_az];
-        yield [$defaultUserEmail, self::CHARS_AZ];
-        yield [$defaultUserEmail, self::CHARS_az . self::CHARS_AZ];
-        yield [$defaultUserEmail, self::CHARS_PASSWORD_PERMIT_SYMBOL];
-        yield [$defaultUserEmail, self::CHARS_09 . self::CHARS_PASSWORD_PERMIT_SYMBOL];
-        yield [$defaultUserEmail, self::CHARS_az . self::CHARS_PASSWORD_PERMIT_SYMBOL];
-        yield [$defaultUserEmail, self::CHARS_AZ . self::CHARS_PASSWORD_PERMIT_SYMBOL];
-        yield [$defaultUserEmail, self::CHARS_az . self::CHARS_AZ . self::CHARS_PASSWORD_PERMIT_SYMBOL];
-        yield [$defaultUserEmail, $defaultUserPassword . '~']; // added not permitted symbol
-        yield [$defaultUserEmail, "\n" . $defaultUserPassword . "\n"];
-
-        $escapeSequences = [" ", "\0", "\a", "\b", "\t", "\n", "\v", "\f", "\r", "\e"];
-        foreach ($escapeSequences as $es) {
-            yield [$defaultUserEmail, $es . $defaultUserPassword];
-            yield [$defaultUserEmail, $defaultUserPassword . $es];
-            yield [$defaultUserEmail, $es . $defaultUserPassword . $es];
-            yield [$defaultUserEmail, $es . $defaultUserPassword . $es . $defaultUserPassword . $es];
-        }
+//        yield [$defaultUserEmail, null];
+//        yield [$defaultUserEmail, ''];
+//        yield [$defaultUserEmail, self::CHARS_09];
+//        yield [$defaultUserEmail, self::CHARS_az];
+//        yield [$defaultUserEmail, self::CHARS_AZ];
+//        yield [$defaultUserEmail, self::CHARS_az . self::CHARS_AZ];
+//        yield [$defaultUserEmail, self::CHARS_PASSWORD_PERMIT_SYMBOL];
+//        yield [$defaultUserEmail, self::CHARS_09 . self::CHARS_PASSWORD_PERMIT_SYMBOL];
+//        yield [$defaultUserEmail, self::CHARS_az . self::CHARS_PASSWORD_PERMIT_SYMBOL];
+//        yield [$defaultUserEmail, self::CHARS_AZ . self::CHARS_PASSWORD_PERMIT_SYMBOL];
+//        yield [$defaultUserEmail, self::CHARS_az . self::CHARS_AZ . self::CHARS_PASSWORD_PERMIT_SYMBOL];
+//        yield [$defaultUserEmail, $defaultUserPassword . '~']; // added not permitted symbol
+//        yield [$defaultUserEmail, "\n" . $defaultUserPassword . "\n"];
+//
+//        $escapeSequences = [" ", "\0", "\a", "\b", "\t", "\n", "\v", "\f", "\r", "\e"];
+//        foreach ($escapeSequences as $es) {
+//            yield [$defaultUserEmail, $es . $defaultUserPassword];
+//            yield [$defaultUserEmail, $defaultUserPassword . $es];
+//            yield [$defaultUserEmail, $es . $defaultUserPassword . $es];
+//            yield [$defaultUserEmail, $es . $defaultUserPassword . $es . $defaultUserPassword . $es];
+//        }
     }
 
     /**
