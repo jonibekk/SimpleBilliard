@@ -11,21 +11,22 @@ abstract class DataExtender
     /**
      * Method for extending a object array
      *
-     * @param  array      $data             The array to be extended
-     * @param string|null $path             Hash::Extract() Path to the ID
-     * @param string|null $extensionKeyName Key name for the extended data. Insert if necessary
+     * @param  array      $data       The array to be extended
+     * @param string|null $path       Hash::Extract() Path to the ID
+     * @param string|null $extKeyName Key name for the extended data. Insert if necessary
      *
      * @return array Extended data
      */
-    public final function extend(array $data, string $path, string $extensionKeyName = 'id'): array
+    public final function extend(array $data, string $path, string $extKeyName = 'id'): array
     {
-        $idArray = Hash::extract($data, $path);
+        $keys = Hash::extract($data, $path);
 
-        if (!empty($idArray)) {
-            $dataExtension = $this->fetchData($idArray);
-            return $this->connectData($data, $path, $dataExtension, $extensionKeyName);
+        if (!empty($keys)) {
+            $dataExtension = $this->fetchData($keys);
+            //Since extract path is split with '.' , tokenize string by it and get the last element
+            $parentKey = end(explode('.', $path))[0];
+            return $this->connectData($data, $parentKey, $dataExtension, $extKeyName);
         }
-
         return $data;
     }
 
@@ -53,7 +54,7 @@ abstract class DataExtender
         string $parentKeyName,
         array $extData,
         string $extDataKey
-    ):array {
+    ): array {
         foreach ($parentData as $parentElement) {
             foreach ($extData as $extension) {
                 //Since extension data will have its own Model name as key, we use extract

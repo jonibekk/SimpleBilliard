@@ -28,7 +28,7 @@ class UserDataExtender extends DataExtender
 
         if (count($fetchedData) != count($uniqueKeys)) {
             GoalousLog::error("Missing data for data extension: " . implode(',',
-                    array_diff($uniqueKeys, Hash::extract($fetchedData, 'id'))));
+                    array_diff($uniqueKeys, Hash::extract($fetchedData, '{n}.User.id'))));
         }
 
         return $fetchedData;

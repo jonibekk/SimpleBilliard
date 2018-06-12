@@ -22,7 +22,7 @@ abstract class BasePagingService implements PagingServiceInterface
         $pagingCursor,
         $limit = PagingCursor::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
-    ) {
+    ): array {
 
         $finalResult = [
             'data'   => [],
