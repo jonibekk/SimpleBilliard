@@ -26,7 +26,7 @@ abstract class DataExtender
     }
 
     /**
-     * Fet the data extension from their respective models
+     * Fetch the data extension from their respective models
      *
      * @param array $idArray
      *
@@ -50,6 +50,8 @@ abstract class DataExtender
     ) {
         foreach ($parentData as $parentElement) {
             foreach ($extensionData as $extension) {
+                //Since extension data will have its own Model name as key, we use extract
+                //E.g. ['User'][...]
                 if (Hash::get($parentElement, $parentKeyName) ===
                     Hash::extract($extension, "{s}." . $extensionKeyName)) {
                     $parentData[] = $extension;

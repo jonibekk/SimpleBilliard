@@ -12,7 +12,7 @@ class UserDataExtender extends DataExtender
 {
     protected function fetchData(array $idArray): array
     {
-        /** @var  .\app\Model\User $User */
+        /** @var  .\Model\User $User */
         $User = ClassRegistry::init("User");
 
         $uniqueId = array_unique($idArray);
