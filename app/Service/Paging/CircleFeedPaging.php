@@ -180,7 +180,7 @@ class CircleFeedPaging implements PagingServiceInterface
        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_USER_FLAG, $flags)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $UserDataExtender->extend($resultArray);
+            $resultArray = $UserDataExtender->extend($resultArray, "{n}.Post.user_id");
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_LIKE_FLAG, $flags)) {
         }

@@ -10,24 +10,25 @@ App::uses('DataExtender', 'Lib/DataExtension');
  */
 class UserDataExtender extends DataExtender
 {
-    protected function fetchData(array $idArray): array
+    protected function fetchData(array $keys): array
     {
-        /** @var  .\Model\User $User */
+        /** @var User $User */
         $User = ClassRegistry::init("User");
 
-        $uniqueId = array_unique($idArray);
+        $uniqueKeys = array_unique($keys);
 
         $conditions = [
             'conditions' => [
-                'id' => $uniqueId
+                'id' => $uniqueKeys
             ],
             'fields'     => $User->profileFields
         ];
 
-        $fetchedData = $User->find('list', $conditions);
+        $fetchedData = $User->find('all', $conditions);
 
-        if (count($fetchedData) != count($uniqueId)) {
-            GoalousLog::error("Missing data for data extension");
+        if (count($fetchedData) != count($uniqueKeys)) {
+            GoalousLog::error("Missing data for data extension: " . implode(',',
+                    array_diff($uniqueKeys, Hash::extract($fetchedData, 'id'))));
         }
 
         return $fetchedData;
