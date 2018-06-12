@@ -23,8 +23,11 @@ abstract class DataExtender
 
         if (!empty($keys)) {
             $dataExtension = $this->fetchData($keys);
+
             //Since extract path is split with '.' , tokenize string by it and get the last element
-            $parentKey = end(explode('.', $path))[0];
+            $tokens = explode('.', $path);
+            $parentKey = end($tokens);
+
             return $this->connectData($data, $parentKey, $dataExtension, $extKeyName);
         }
         return $data;
@@ -49,24 +52,38 @@ abstract class DataExtender
      *
      * @return array Connected original data with extension data
      */
-    protected final function connectData(
+    protected function connectData(
         array $parentData,
         string $parentKeyName,
         array $extData,
         string $extDataKey
     ): array {
-        foreach ($parentData as $parentElement) {
+        for ($index = 0; $index < count($parentData); $index++) {
             foreach ($extData as $extension) {
                 //Since extension data will have its own Model name as key, we use extract
                 //E.g. ['User'][...]
-                if (Hash::get($parentElement, $parentKeyName) ===
-                    Hash::extract($extension, "{s}." . $extDataKey)) {
-                    $parentData[] = $extension;
+                if (Hash::get($parentData[$index], $parentKeyName) ==
+                    Hash::extract($extension, "{s}." . $extDataKey)[0]) {
+                    $parentData[$index] = array_merge($parentData[$index], array_change_key_case($extension));
                     break;
                 }
             }
         }
 
         return $parentData;
+    }
+
+    /**
+     * Remove null keys and return unique ones
+     *
+     * @param $array
+     *
+     * @return array
+     */
+    protected final function filterKeys($array)
+    {
+        return array_unique(array_filter($array, function ($value) {
+            return !empty($value);
+        }));;
     }
 }

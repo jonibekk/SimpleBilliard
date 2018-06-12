@@ -9,7 +9,7 @@ App::uses('Comment', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::import('Lib/DataExtension', 'UserDataExtender');
+App::import('Lib/DataExtender', 'UserDataExtender');
 
 /**
  * Methods assume that parameters have been validated in Controller layer
@@ -194,8 +194,6 @@ class CircleFeedPaging implements PagingServiceInterface
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_FILE_FLAG, $flags)) {
 
-        }
-        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_COMMENT_FLAG, $flags)) {
         }
     }
 }

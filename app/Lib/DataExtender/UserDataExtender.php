@@ -1,6 +1,6 @@
 <?php
 App::uses("User", "Model");
-App::uses('DataExtender', 'Lib/DataExtension');
+App::uses('DataExtender', 'Lib/DataExtender');
 
 /**
  * Created by PhpStorm.
@@ -15,7 +15,7 @@ class UserDataExtender extends DataExtender
         /** @var User $User */
         $User = ClassRegistry::init("User");
 
-        $uniqueKeys = array_unique($keys);
+        $uniqueKeys = $this->filterKeys($keys);
 
         $conditions = [
             'conditions' => [
@@ -27,7 +27,7 @@ class UserDataExtender extends DataExtender
         $fetchedData = $User->find('all', $conditions);
 
         if (count($fetchedData) != count($uniqueKeys)) {
-            GoalousLog::error("Missing data for data extension: " . implode(',',
+            GoalousLog::error("Missing data for data extension. User ID: " . implode(',',
                     array_diff($uniqueKeys, Hash::extract($fetchedData, '{n}.User.id'))));
         }
 
