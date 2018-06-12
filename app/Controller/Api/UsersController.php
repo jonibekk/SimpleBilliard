@@ -61,13 +61,11 @@ class UsersController extends BaseApiController
     /**
      * Parameter validation for circles()
      *
-     * @param int $userId
-     *
      * @return CakeResponse
      */
     private function validateCircles(): CakeResponse
     {
-        $res = $this->allowMethod('get');
+        $res = $this->allowMethod('GET');
 
         if (!empty($res)) {
             return $res;
