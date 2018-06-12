@@ -56,6 +56,8 @@ class AuthController extends BaseApiController
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init("AuthService");
 
+        $requestData = (array)$this->request->input('json_decode');
+
         try {
             $jwt = $AuthService->authenticateUser($requestData['username'], $requestData['password']);
         } catch (Exception $e) {
@@ -90,7 +92,7 @@ class AuthController extends BaseApiController
         $validator = AuthRequestValidator::createLoginValidator();
 
         try {
-            $validator->validate($this->request->data);
+            $validator->validate((array)$this->request->input('json_decode'));
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
                                                                        ->getResponse();
