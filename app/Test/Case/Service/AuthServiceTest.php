@@ -129,7 +129,7 @@ class AuthServiceTest extends GoalousTestCase
 
     }
 
-    public function test_invalidateMissingToken_failed()
+    public function test_invalidateInvalidToken_failed()
     {
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
