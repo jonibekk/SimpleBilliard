@@ -137,7 +137,7 @@ class CircleFeedPaging implements PagingServiceInterface
         $Post = new Post();
         $result = $Post->find('all', $options);
 
-        return $result;
+        return Hash::extract($result, '{n}.Post');
     }
 
     protected function countData($conditions): int
