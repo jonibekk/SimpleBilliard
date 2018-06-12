@@ -61,7 +61,7 @@ class FeedsController extends BaseApiController
         $PagingCursor = new PagingCursor();
 
         //Put current user's ID
-        $condition['user_id'] = $this->getUser();
+        $condition['user_id'] = $this->getUserId();
 
         $PagingCursor->addCondition($condition);
         $PagingCursor->addOrder('id', 'asc');
@@ -77,7 +77,7 @@ class FeedsController extends BaseApiController
     /**
      * Request & parameters validation before data manipulation
      *
-     * @return CakeResponse
+     * @return CakeResponse | null
      */
     private function validateGetCircleFeed()
     {
@@ -86,5 +86,7 @@ class FeedsController extends BaseApiController
         if (!empty($res)) {
             return $res;
         }
+
+        return null;
     }
 }
