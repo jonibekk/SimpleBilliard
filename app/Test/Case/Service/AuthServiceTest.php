@@ -27,25 +27,7 @@ class AuthServiceTest extends GoalousTestCase
 
     public function test_authentication_success()
     {
-        $this->insertNewUser();
-
-        $emailAddress = "auth_test@email.com";
-        $password = '12345678';
-
-        /** @var AuthService $AuthService */
-        $AuthService = ClassRegistry::init('AuthService');
-
-        try {
-            $jwt = $AuthService->authenticateUser($emailAddress, $password);
-        } catch (Exception $e) {
-            printf($e->getMessage());
-            printf($e->getTraceAsString());
-            $this->fail();
-        }
-
-        if (empty($jwt)) {
-            $this->fail();
-        }
+        $jwt = $this->insertAndAuthenticateUser();
 
         $this->assertEquals(1, $jwt->getTeamId());
     }
@@ -128,6 +110,43 @@ class AuthServiceTest extends GoalousTestCase
 
     public function test_invalidate_success()
     {
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $jwt = $this->insertAndAuthenticateUser();
+
+        try {
+
+            $res = $AuthService->invalidateUser($jwt->token());
+
+        } catch (Exception $e) {
+            printf($e->getMessage());
+            printf($e->getTraceAsString());
+            $this->fail();
+        }
+
+        $this->assertTrue($res);
+
+    }
+
+    public function test_invalidateMissingToken_failed()
+    {
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $this->insertAndAuthenticateUser();
+
+        try {
+            $AuthService->invalidateUser('failed');
+        } catch (Exception $e) {
+            printf($e->getMessage());
+            printf($e->getTraceAsString());
+            $this->assertNotEmpty($e);
+        }
+    }
+
+    private function insertAndAuthenticateUser()
+    {
 
         $this->insertNewUser();
 
@@ -149,32 +168,7 @@ class AuthServiceTest extends GoalousTestCase
             $this->fail();
         }
 
-        try {
-
-            $res = $AuthService->invalidateUser($jwt->token());
-
-        } catch (Exception $e) {
-            printf($e->getMessage());
-            printf($e->getTraceAsString());
-            $this->fail();
-        }
-
-        $this->assertTrue($res);
-
-    }
-
-    public function test_invalidateMissingToken_failed()
-    {
-        /** @var AuthService $AuthService */
-        $AuthService = ClassRegistry::init('AuthService');
-
-        try {
-            $AuthService->invalidateUser('failed');
-        } catch (Exception $e) {
-            printf($e->getMessage());
-            printf($e->getTraceAsString());
-            $this->assertNotEmpty($e);
-        }
+        return $jwt;
     }
 
     private function insertNewUser()
