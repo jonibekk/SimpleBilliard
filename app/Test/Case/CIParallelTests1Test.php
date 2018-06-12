@@ -35,7 +35,7 @@ class CIParallelTests1 extends BaseTest
         $suite = new CakeTestSuite('Travis CI Parallel1 Test');
         $testDirectories = static::$testDirectories[__CLASS__];
         foreach ($testDirectories as $dir) {
-            $suite->addTestDirectory($dir);
+            $suite->addTestDirectoryRecursive($dir);
         }
         return $suite;
     }
