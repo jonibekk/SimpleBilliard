@@ -27,7 +27,7 @@ App::uses('ChargeHistory', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'PaymentService');
-App::import('Lib/Cache/Redis', 'BaseRedisClient');
+App::uses('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Experiment', 'Model');
