@@ -8,36 +8,16 @@ App::uses('CircleFeedPaging', 'Services/Paging');
  * Date: 2018/06/06
  * Time: 13:07
  */
-
-use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
-
 class FeedsController extends BaseApiController
 {
     use PagingControllerTrait;
 
     /**
-     * Get list of circle feeds
+     * API endpoint for getting list of circle feeds
      *
      * @return CakeResponse
      */
     public function get_circle_feed()
-    {
-        switch ($this->getApiVersion()) {
-            case ApiVer::VER_2:
-                return $this->get_circle_feed_v2();
-                break;
-            default:
-                return $this->get_circle_feed_v2();
-                break;
-        }
-    }
-
-    /**
-     * API V2 endpoint for getting list of circle feeds
-     *
-     * @return CakeResponse
-     */
-    public function get_circle_feed_v2()
     {
         $res = $this->validateGetCircleFeed();
 
@@ -81,7 +61,7 @@ class FeedsController extends BaseApiController
      */
     private function validateGetCircleFeed()
     {
-        $res = $this->allowMethod('get');
+        $res = $this->allowMethod('GET');
 
         if (!empty($res)) {
             return $res;
