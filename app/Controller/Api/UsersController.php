@@ -8,9 +8,6 @@ App::import('Service', 'CircleMemberService');
  * Date: 2018/06/04
  * Time: 15:07
  */
-
-use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
-
 class UsersController extends BaseApiController
 {
     /**
@@ -21,25 +18,6 @@ class UsersController extends BaseApiController
      * @return CakeResponse
      */
     public function get_circles(int $userId)
-    {
-        switch ($this->getApiVersion()) {
-            case ApiVer::VER_2:
-                return $this->get_circles_v2($userId);
-                break;
-            default:
-                return $this->get_circles_v2($userId);
-                break;
-        }
-    }
-
-    /**
-     * API V2 endpoint for getting list of circles that an user is joined in
-     *
-     * @param int $userId
-     *
-     * @return CakeResponse
-     */
-    private function get_circles_v2(int $userId)
     {
 
         $res = $this->validateCircles();
