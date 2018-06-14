@@ -30,11 +30,18 @@ $(function () {
 });
 
 function doKrValueCheck(){
-    if($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").attr("originalValue") == 
-        $(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val()) {      
+    if($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").length){
+       if ($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").attr("originalValue") == 
+        $(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val()) {
         $('#actionConfirmationModal').modal('show');
         return false;
-    }
+       } 
+    } else if($(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").length){
+       if ($(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").bootstrapSwitch("state") !== true) {
+        $('#actionConfirmationModal').modal('show');
+        return false;
+       } 
+    } 
     return true;
 }
 
@@ -202,7 +209,7 @@ var Page = {
             var $kr_progress = $($(self.el).find(self.conf.kr_progress));
             if (data.html) {
                 $kr_progress.empty().append(data.html);
-                $kr_progress.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
+                $kr_progress.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", false);
                 //key_result_idがcakeのurlパラメータに存在し、かつkrのlistに含まれる場合は対象KRを先頭に移動
                 var pre_selected_kr_id = cake.request_params.named.key_result_id;
                 var $pre_selected_kr = $kr_progress.find(".js-select-kr[data-kr-id='" + pre_selected_kr_id + "']");
