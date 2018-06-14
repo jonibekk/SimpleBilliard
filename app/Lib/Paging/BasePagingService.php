@@ -33,6 +33,11 @@ abstract class BasePagingService implements PagingServiceInterface
             'count'  => 0
         ];
 
+        //If only 1 flag is given, make it an array
+        if (!is_array($extendFlags)) {
+            $extendFlags = [$extendFlags];
+        }
+
         $this->beforeRead();
 
         $finalResult['count'] = $this->countData($pagingCursor->getConditions());

@@ -345,22 +345,6 @@ class CircleMember extends AppModel
         return (bool)$this->find('first', $options);
     }
 
-    function isBelong($circleId, $userId = null)
-    {
-        if (!$userId) {
-            $userId = $this->my_uid;
-        }
-        $options = [
-            'conditions' => [
-                'user_id'   => $userId,
-                'circle_id' => $circleId,
-                'team_id'   => $this->current_team_id,
-            ]
-        ];
-        $res = $this->find('first', $options);
-        return $res;
-    }
-
     function incrementUnreadCount($circle_list, $without_me = true, $team_id = null)
     {
         if (empty($circle_list)) {
@@ -422,6 +406,22 @@ class CircleMember extends AppModel
         ];
         $this->create();
         return (bool)$this->save($options);
+    }
+
+    function isBelong($circleId, $userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->my_uid;
+        }
+        $options = [
+            'conditions' => [
+                'user_id'   => $userId,
+                'circle_id' => $circleId,
+                'team_id'   => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
     }
 
     /**

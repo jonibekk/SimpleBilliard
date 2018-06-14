@@ -58,18 +58,18 @@ abstract class DataExtender
         array $extData,
         string $extDataKey
     ): array {
-        for ($index = 0; $index < count($parentData); $index++) {
+        foreach ($parentData as &$parentElement) {
             foreach ($extData as $extension) {
                 //Since extension data will have its own Model name as key, we use extract
                 //E.g. ['User'][...]
-                if (Hash::get($parentData[$index], $parentKeyName) ==
+                if (Hash::get($parentElement, $parentKeyName) ==
                     Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-                    $parentData[$index] = array_merge($parentData[$index], array_change_key_case($extension));
+                    $parentElement = array_merge($parentElement, array_change_key_case($extension));
                     break;
                 }
+
             }
         }
-
         return $parentData;
     }
 

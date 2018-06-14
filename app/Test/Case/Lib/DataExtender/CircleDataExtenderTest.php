@@ -9,7 +9,6 @@ App::uses('GoalousTestCase', 'Test');
  * Date: 2018/06/14
  * Time: 12:08
  */
-
 class CircleDataExtenderTest extends GoalousTestCase
 {
     /**
@@ -28,7 +27,7 @@ class CircleDataExtenderTest extends GoalousTestCase
     public function test_extendCircleData_success()
     {
         $Post = new Post();
-        $posts = Hash::extract($Post->find('all'), '{n}.Post');
+        $posts = Hash::extract($Post->find('all', ['conditions' => ['circle_id is not null']]), '{n}.Post');
 
         $CircleDataExtender = new CircleDataExtender();
         $extended = $CircleDataExtender->extend($posts, '{n}.circle_id');

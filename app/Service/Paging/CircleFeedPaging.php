@@ -2,6 +2,9 @@
 App::import('Service/Paging', 'FeedPagingTrait');
 App::import('Lib/Paging', 'PagingServiceInterface');
 App::import('Lib/Paging', 'PagingServiceTrait');
+App::import('Lib/DataExtender', 'UserDataExtender');
+App::import('Lib/DataExtender', 'CircleDataExtender');
+App::import('Service/Paging', 'CommentPaging');
 App::import('Service', 'CircleService');
 App::import('Service', 'PostService');
 App::uses('PagingCursor', 'Lib/Paging');
@@ -9,7 +12,6 @@ App::uses('Comment', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::import('Lib/DataExtender', 'UserDataExtender');
 
 /**
  * Methods assume that parameters have been validated in Controller layer
@@ -175,25 +177,50 @@ class CircleFeedPaging implements PagingServiceInterface
         return (int)$Post->find('count', $options);
     }
 
-    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
-    {
-       if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_USER_FLAG, $flags)) {
+    protected
+    function extendPagingResult(
+        &$resultArray,
+        $conditions,
+        $flags = []
+    ) {
+        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_USER_FLAG, $flags)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.Post.user_id");
-        }
-        if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_LIKE_FLAG, $flags)) {
+            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_CIRCLE_FLAG, $flags)) {
+            /** @var CircleDataExtender $CircleDataExtender */
+            $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
+            $resultArray = $CircleDataExtender->extend($resultArray, "{n}.circle_id");
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_COMMENT_FLAG, $flags)) {
+            /** @var CommentPaging $CommentPaging */
+            $CommentPaging = ClassRegistry::init('CommentPaging');
+
+            foreach ($resultArray as &$result) {
+                $conditions = [
+                    'post_id' => Hash::extract($result, 'Post.id')
+                ];
+                $order = [
+                    'id' => 'asc'
+                ];
+
+                $cursor = new PagingCursor($conditions, [], $order);
+
+                $comments = $CommentPaging->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
+                    CommentPaging::EXTEND_ALL_FLAG);
+
+                $result['comments'] = $comments;
+            }
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_CIRCLE_FLAG, $flags)) {
+            //Postponed
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_SHARE_USER_FLAG, $flags)) {
+            //Postponed
         }
         if (in_array(self::EXTEND_ALL_FLAG, $flags) || in_array(self::EXTEND_POST_FILE_FLAG, $flags)) {
-
+            //Postponed
         }
     }
 }
