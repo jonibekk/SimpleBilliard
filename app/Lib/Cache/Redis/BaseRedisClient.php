@@ -49,4 +49,9 @@ abstract class BaseRedisClient
         }
         return $key;
     }
+
+    public static function setRedisConnection(string $connectionName)
+    {
+        self::$CONFIG_NAME = $connectionName;
+    }
 }

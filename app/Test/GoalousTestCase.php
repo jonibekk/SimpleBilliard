@@ -27,6 +27,7 @@ App::uses('ChargeHistory', 'Model');
 App::uses('GlRedis', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'PaymentService');
+App::import('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Experiment', 'Model');
@@ -97,6 +98,7 @@ class GoalousTestCase extends CakeTestCase
         $this->GoalService = ClassRegistry::init('GoalService');
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->GlRedis->changeDbSource('redis_test');
+        BaseRedisClient::setRedisConnection('redis_test');
         $this->CreditCardService = ClassRegistry::init('CreditCardService');
 
         $this->currentDateTime = GoalousDateTime::now()->format('Y-m-d H:i:s');
