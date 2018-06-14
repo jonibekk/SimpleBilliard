@@ -9,57 +9,20 @@ App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/05/30
  * Time: 11:35
  */
-
-use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
-
 class AuthController extends BaseApiController
 {
     public function beforeFilter()
     {
         parent::beforeFilter();
     }
-
+    
     /**
      * Login endpoint for user. Ignore restriction and authentication
      *
      * @ignoreRestriction
      * @skipAuthentication
      */
-    public function post_login()
-    {
-        switch ($this->getApiVersion()) {
-            case ApiVer::VER_2:
-                return $this->post_login_v2();
-                break;
-            default:
-                return $this->post_login_v2();
-                break;
-        }
-    }
-
-    /**
-     * Logout endpoint for user. Ignore restriction
-     *
-     * @ignoreRestriction
-     */
-    public function post_logout()
-    {
-        switch ($this->getApiVersion()) {
-            case Apiver::VER_2:
-                return $this->post_logout_v2();
-                break;
-            default:
-                return $this->post_logout_v2();
-                break;
-        }
-    }
-
-    /**
-     * API v2 login endpoint for user
-     *
-     * @return CakeResponse
-     */
-    private function post_login_v2()
+    private function post_login()
     {
         $return = $this->validateLogin();
 
@@ -92,9 +55,11 @@ class AuthController extends BaseApiController
     }
 
     /**
-     * API V2 logout endpoint for user. Ignore restriction
+     * Logout endpoint for user. Ignore restriction
+     *
+     * @ignoreRestriction
      */
-    private function post_logout_v2()
+    private function post_logout()
     {
 
         $return = $this->validateLogout();
