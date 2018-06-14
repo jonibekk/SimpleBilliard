@@ -37,7 +37,7 @@ function doKrValueCheck(){
         return false;
        } 
     } else if($(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").length){
-       if ($(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").bootstrapSwitch("state") !== true) {
+       if (!$(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").bootstrapSwitch("state")) {
         $('#actionConfirmationModal').modal('show');
         return false;
        } 
