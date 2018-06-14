@@ -30,18 +30,20 @@ $(function () {
 });
 
 function doKrValueCheck(){
-    if($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").length){
-       if ($(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").attr("originalValue") == 
-        $(".action-kr-progress-edit-item.is-active").find(".action-kr-progress-edit-textbox").val()) {
-        $('#actionConfirmationModal').modal('show');
-        return false;
+    var $kr = $(".action-kr-progress-edit-item.is-active");
+    if ($kr.data('kr-value-unit') === 2) {
+        // Complete/Incomplete 
+        if (!$kr.find(".js-kr-progress-check-complete").bootstrapSwitch("state")) {
+            $('#actionConfirmationModal').modal('show');
+            return false;
+        }
+    } else {
+        // Other
+        if ($kr.find(".action-kr-progress-edit-textbox").attr("originalValue") == $kr.find(".action-kr-progress-edit-textbox").val()) {
+            $('#actionConfirmationModal').modal('show');
+            return false;
        } 
-    } else if($(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").length){
-       if (!$(".action-kr-progress-edit-item.is-active").find(".js-kr-progress-check-complete").bootstrapSwitch("state")) {
-        $('#actionConfirmationModal').modal('show');
-        return false;
-       } 
-    } 
+    }
     return true;
 }
 
