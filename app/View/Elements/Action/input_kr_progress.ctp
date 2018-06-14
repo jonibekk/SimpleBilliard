@@ -2,7 +2,7 @@
 $units = Hash::combine(Configure::read("label.units"), '{n}.id', '{n}.unit');
 ?>
 <?php foreach ($krs as $i => $kr): ?>
-    <li class="action-kr-progress-edit-item js-select-kr" data-kr-id="<?= $kr['id'] ?>">
+    <li class="action-kr-progress-edit-item js-select-kr" data-kr-id="<?= $kr['id'] ?>" data-kr-value-unit="<?= $kr['value_unit']?>">
         <div class="action-kr-progress-edit-item-box">
             <div class="action-kr-progress-edit-item-box-left">
                 <span class="action-kr-progress-edit-item-check-circle"></span>
