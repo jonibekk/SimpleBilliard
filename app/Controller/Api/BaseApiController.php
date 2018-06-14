@@ -343,4 +343,16 @@ abstract class BaseApiController extends Controller
     {
         return $this->_currentUserId;
     }
+
+    /**
+     * Get requested Json Body value
+     *
+     * @return array
+     */
+    protected function getRequestJsonBody(): array
+    {
+        $body = $this->request->input();
+        $decodedJson = json_decode($body, true);
+        return is_array($decodedJson) ? $decodedJson : [];
+    }
 }
