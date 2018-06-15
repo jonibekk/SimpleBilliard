@@ -22,7 +22,7 @@ class AuthController extends BaseApiController
      * @ignoreRestriction
      * @skipAuthentication
      */
-    private function post_login()
+    public function post_login()
     {
         $return = $this->validateLogin();
 
@@ -59,7 +59,7 @@ class AuthController extends BaseApiController
      *
      * @ignoreRestriction
      */
-    private function post_logout()
+    public function post_logout()
     {
 
         $return = $this->validateLogout();
@@ -71,7 +71,7 @@ class AuthController extends BaseApiController
         $Auth = new AuthService();
 
         try {
-            $Auth->invalidateUser($this->getUserToken());
+            $Auth->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
                                                                                  ->getResponse();

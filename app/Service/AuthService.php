@@ -2,7 +2,6 @@
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Util');
 App::uses('AccessAuthenticator', 'Lib/Auth');
-App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('User', 'Model');
 App::import('Service', 'AppService');
@@ -64,19 +63,13 @@ class AuthService extends AppService
     /**
      * Remove user's JWT from Redis cache during logout
      *
-     * @param string $token JWT token of the user
+     * @param JwtAuthentication $jwt JWT Auth of the user
      *
      * @throws Exception
      * @return bool True on successful logout
      */
-    public function invalidateUser(string $token): bool
+    public function invalidateUser(JwtAuthentication $jwt): bool
     {
-        $jwt = JwtAuthentication::decode($token);
-
-        if (empty($jwt)) {
-            throw new AuthenticationException();
-        }
-
         $jwtClient = new AccessTokenClient();
         $jwtKey = new AccessTokenKey($jwt->getUserId(), $jwt->getTeamId(), $jwt->getJwtId());
         $jwtClient->del($jwtKey);

@@ -1,5 +1,4 @@
 <?php
-
 App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
 App::uses('TeamStatus', 'Model');
@@ -35,6 +34,9 @@ abstract class BaseApiController extends Controller
 
     /** @var bool */
     private $_stopInvokeFlag = false;
+
+    /** @var JwtAuthentication */
+    private $_jwtAuth;
 
     /**
      * ApiV2Controller constructor.
@@ -239,6 +241,8 @@ abstract class BaseApiController extends Controller
 
         $this->_currentTeamId = $jwtAuth->getTeamId();
 
+        $this->_jwtAuth = $jwtAuth->getJwtAuthentication();
+
         return true;
     }
 
@@ -362,5 +366,13 @@ abstract class BaseApiController extends Controller
     public function getUserToken()
     {
         return $this->_jwtToken;
+    }
+
+    /**
+     * @return JwtAuthentication Current user's JWT Auth
+     */
+    public function getJwtAuth()
+    {
+        return $this->_jwtAuth;
     }
 }
