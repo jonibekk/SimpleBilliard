@@ -132,8 +132,12 @@ var Page = {
 
         var form_data = $(form).serializeArray();
         var switch_el = $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
-        if (switch_el.length > 0 && !switch_el.prop('checked')) {
-            form_data.push({name: "data[ActionResult][key_result_current_value]", value: 0});
+        if (switch_el.length) {
+            var progress = 0;
+            if(switch_el.bootstrapSwitch("state")) {
+                progress = 1;
+            }
+            form_data.push({name: "data[ActionResult][key_result_current_value]", value: progress});
         }
 
         $.ajax({
