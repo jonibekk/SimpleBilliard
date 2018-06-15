@@ -61,7 +61,7 @@ class FeedsController extends BaseApiController
      */
     private function validateGetCircleFeed()
     {
-        $res = $this->allowMethod('GET');
+        $res = $this->allowMethod("GET");
 
         if (!empty($res)) {
             return $res;

@@ -92,37 +92,6 @@ class PostService extends AppService
     }
 
     /**
-     * Adding new normal post with transaction
-     *
-     * @param array $postData
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $postResources
-     *
-     * @return array|bool If success, returns posts data array, if failed, returning false
-     */
-    function addNormalWithTransaction(array $postData, int $userId, int $teamId, array $postResources = [])
-    {
-        try {
-            $this->TransactionManager->begin();
-            $post = $this->addNormal(
-                $postData, $userId, $teamId, $postResources
-            );
-            $this->TransactionManager->commit();
-            return $post;
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            GoalousLog::error('failed adding post data', [
-                'message'  => $e->getMessage(),
-                'users.id' => $userId,
-                'teams.id' => $teamId,
-            ]);
-            GoalousLog::error($e->getTraceAsString());
-        }
-        return false;
-    }
-
-    /**
      * Adding new normal post
      * Be careful, no transaction in this method
      * You should write try-catch and transaction yourself outside of this function
@@ -322,6 +291,37 @@ class PostService extends AppService
     }
 
     /**
+     * Adding new normal post with transaction
+     *
+     * @param array $postData
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $postResources
+     *
+     * @return array|bool If success, returns posts data array, if failed, returning false
+     */
+    function addNormalWithTransaction(array $postData, int $userId, int $teamId, array $postResources = [])
+    {
+        try {
+            $this->TransactionManager->begin();
+            $post = $this->addNormal(
+                $postData, $userId, $teamId, $postResources
+            );
+            $this->TransactionManager->commit();
+            return $post;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('failed adding post data', [
+                'message'  => $e->getMessage(),
+                'users.id' => $userId,
+                'teams.id' => $teamId,
+            ]);
+            GoalousLog::error($e->getTraceAsString());
+        }
+        return false;
+    }
+
+    /**
      * Save favorite post
      *
      * @param int $postId
@@ -401,9 +401,15 @@ class PostService extends AppService
      */
     public function getSharedPostCondition(DboSource $db, int $userId, int $teamId, array $params = [])
     {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
         // パラメータデフォルト
         $params = array_merge(['user_id' => null], $params);
         $query = [
+            'fields'     => [
+                'id'
+            ],
             'table'      => $db->fullTableName(new PostShareUser()),
             'alias'      => 'PostShareUser',
             'conditions' => [
@@ -414,13 +420,16 @@ class PostService extends AppService
         if (isset($params['user_id'])) {
             $query['conditions']['Post.user_id'] = $params['author_id'];
             $query['joins'][] = [
+                'fields'     => [
+                    'id'
+                ],
                 'type'       => 'LEFT',
-                'table'      => $db->fullTableName($this),
+                'table'      => $db->fullTableName($Post),
                 'alias'      => 'Post',
                 'conditions' => '`PostShareUser`.`post_id`=`Post`.`id`',
             ];
         }
-        $res = $db->buildStatement($query, new Post());
+        $res = $db->buildStatement($query, $Post);
         return $res;
     }
 }

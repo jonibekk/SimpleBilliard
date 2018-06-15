@@ -2,6 +2,10 @@
 App::import('Service/Paging', 'FeedPagingTrait');
 App::import('Lib/Paging', 'PagingServiceInterface');
 App::import('Lib/Paging', 'PagingServiceTrait');
+App::import('Service', 'CircleService');
+App::import('Service', 'PostService');
+App::uses('PagingCursor', 'Lib/Paging');
+App::uses('Comment', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
@@ -20,42 +24,32 @@ class CircleFeedPaging implements PagingServiceInterface
 
     const EXTEND_ALL_FLAG = -1;
     const EXTEND_USER_FLAG = 0;
-    const EXTEND_POST_LIKE_FLAG = 1;
-    const EXTEND_CIRCLE_FLAG = 2;
-    const EXTEND_COMMENT_FLAG = 3;
-    const EXTEND_POST_SHARE_CIRCLE_FLAG = 4;
-    const EXTEND_POST_SHARE_USER_FLAG = 5;
-    const EXTEND_POST_FILE_FLAG = 6;
+    const EXTEND_CIRCLE_FLAG = 1;
+    const EXTEND_COMMENT_FLAG = 2;
+    const EXTEND_POST_SHARE_CIRCLE_FLAG = 3;
+    const EXTEND_POST_SHARE_USER_FLAG = 4;
+    const EXTEND_POST_FILE_FLAG = 5;
 
-    /**
-     * Get SQL query for IDs of posts visible to the user using default parameters
-     *
-     * @param array $conditions Any other required conditions
-     *                          'user_id' => Currently logged in user ID
-     *                          'team_id' => ID of team where the user belongs
-     *
-     * @return array
-     */
-    private function getDefaultSharedPosts($conditions = [])
+    const DEFAULT_COMMENT_COUNT = 3;
+
+    protected function readData(PagingCursor $pagingCursor, $limit): array
     {
-        $Post = new Post();
-        $PostService = new PostService();
-        $CircleService = new CircleService();
+        $options = [
+            'conditions' => $this->getSharedPosts($pagingCursor->getConditions()),
+            'limit'      => $limit,
+            'order'      => $pagingCursor->getOrders()
+        ];
 
-        $Post->my_uid = $conditions['user_id'];
+        $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
+        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
 
-        /**
-         * @var DboSource $db
-         */
-        $db = $Post->getDataSource();
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
 
-        $queryCondition['OR'][] = $PostService->getUserPostListCondition($conditions['user_id']);
-        $queryCondition['OR'][] = $this->createDbExpression($db,
-            $PostService->getSharedPostCondition($db, $conditions['user_id'], $conditions['team_id']));
-        $queryCondition['OR'][] = $this->createDbExpression($db,
-            $CircleService->getUserCirclePostCondition($db, $conditions['user_id'], $conditions['team_id']));
+        $result = $Post->find('all', $options);
 
-        return $queryCondition;
+        //Remove 'Post' from array
+        return Hash::extract($result, '{n}.Post');
     }
 
     /**
@@ -71,8 +65,11 @@ class CircleFeedPaging implements PagingServiceInterface
      */
     private function getSharedPosts($conditions = [])
     {
-        $Post = new Post();
-        $CircleService = new CircleService();
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init('CircleService');
 
         /**
          * @var DboSource $db
@@ -80,8 +77,12 @@ class CircleFeedPaging implements PagingServiceInterface
         $db = $Post->getDataSource();
 
         if (isset($conditions['circle_id'])) {
-            $Circle = new Circle();
-            $CircleMember = new CircleMember();
+
+            /** @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
 
             //Check if circle belongs to current team & user has access to the circle
             $CircleMember->my_uid = $conditions['user_id'];
@@ -98,7 +99,8 @@ class CircleFeedPaging implements PagingServiceInterface
 
         } elseif (isset($conditions['author_id'])) {
 
-            $PostService = new PostService();
+            /** @var PostService $PostService */
+            $PostService = ClassRegistry::init('PostService');
 
             $queryConditions['OR'][] = $this->createDbExpression($db,
                 $PostService->getSharedPostCondition($db, $conditions['user_id'], $conditions['team_id'],
@@ -122,33 +124,58 @@ class CircleFeedPaging implements PagingServiceInterface
         return $queryConditions;
     }
 
-    protected function readData(PagingCursor $pagingCursor, $limit): array
+    /**
+     * Get SQL query for IDs of posts visible to the user using default parameters
+     *
+     * @param array $conditions Any other required conditions
+     *                          'user_id' => Currently logged in user ID
+     *                          'team_id' => ID of team where the user belongs
+     *
+     * @return array
+     */
+    private function getDefaultSharedPosts($conditions = [])
     {
-        $options = [
-            'conditions' => $this->getSharedPosts($pagingCursor->getConditions()),
-            'fields'     => 'Post.id',
-            'limit'      => $limit,
-            'order'      => $pagingCursor->getOrders()
-        ];
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
 
-        $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
-        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
 
-        $Post = new Post();
-        $result = $Post->find('all', $options);
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init('CircleService');
 
-        return Hash::extract($result, '{n}.Post');
+        $Post->my_uid = $conditions['user_id'];
+
+        /**
+         * @var DboSource $db
+         */
+        $db = $Post->getDataSource();
+
+        $queryCondition['OR'][] = $PostService->getUserPostListCondition($conditions['user_id']);
+        $queryCondition['OR'][] = $this->createDbExpression($db,
+            $PostService->getSharedPostCondition($db, $conditions['user_id'], $conditions['team_id']));
+        $queryCondition['OR'][] = $this->createDbExpression($db,
+            $CircleService->getUserCirclePostCondition($db, $conditions['user_id'], $conditions['team_id']));
+
+        return $queryCondition;
     }
 
     protected function countData($conditions): int
     {
-        $post = new Post();
+        $options = [
+            'conditions' => $this->getSharedPosts($conditions),
+        ];
 
-        return (int)$post->find('count', $conditions);
+        $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        return (int)$Post->find('count', $options);
     }
 
     protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
     {
-       //TODO
+        //TODO
     }
 }

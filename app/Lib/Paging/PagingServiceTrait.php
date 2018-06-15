@@ -45,9 +45,9 @@ trait PagingServiceTrait
             array_pop($queryResult);
 
             //Set end pointer values
-            $pagingCursor->setPointer($this->getEndPointerValue($queryResult[--$limit]));
+            $pagingCursor->addPointerArray($this->getEndPointerValue($queryResult[--$limit]));
 
-            $finalResult['paging']['next'] = PagingCursor::createPageCursor($pagingCursor->returnCursor());
+            $finalResult['paging']['next'] = $pagingCursor->returnCursor();
         }
 
         //If there is previous result
@@ -57,7 +57,7 @@ trait PagingServiceTrait
             //Set start pointer value
             $pagingCursor->setPointer($this->getStartPointerValue($queryResult[0]));
 
-            $finalResult['paging']['prev'] = PagingCursor::createPageCursor($pagingCursor->returnCursor());
+            $finalResult['paging']['prev'] = $pagingCursor->returnCursor();
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
@@ -69,6 +69,50 @@ trait PagingServiceTrait
         $finalResult['data'] = $queryResult;
 
         return $finalResult;
+    }
+
+    /**
+     * Method to be called before reading data from db.
+     * Override to use
+     */
+    protected function beforeRead()
+    {
+        return true;
+    }
+
+    /**
+     * Get pointer value to define beginning point of next page
+     * Default to using id
+     *
+     * @param array $lastElement The array of result array's last element
+     *
+     * @return array
+     */
+    protected function getEndPointerValue($lastElement)
+    {
+        return ['id', ">", $lastElement['id']];
+    }
+
+    /**
+     * Get pointer value to define end point of previous page
+     * Default to using id
+     *
+     * @param array $firstElement The array of result array's last element
+     *
+     * @return array
+     */
+    protected function getStartPointerValue($firstElement)
+    {
+        return ['id', "<", $firstElement['id']];
+    }
+
+    /**
+     * Method to be called after reading data from db
+     * Override to use
+     */
+    protected function afterRead()
+    {
+        return true;
     }
 
     /**
@@ -91,24 +135,6 @@ trait PagingServiceTrait
     abstract protected function countData($conditions): int;
 
     /**
-     * Method to be called before reading data from db.
-     * Override to use
-     */
-    protected function beforeRead()
-    {
-        return true;
-    }
-
-    /**
-     * Method to be called after reading data from db
-     * Override to use
-     */
-    protected function afterRead()
-    {
-        return true;
-    }
-
-    /**
      * Extend result arrays with additional contents
      * Override to use
      *
@@ -121,32 +147,6 @@ trait PagingServiceTrait
     protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
     {
         return $resultArray;
-    }
-
-    /**
-     * Get pointer value to define end point of previous page
-     * Default to using id
-     *
-     * @param array $firstElement The array of result array's last element
-     *
-     * @return array
-     */
-    protected function getStartPointerValue($firstElement)
-    {
-        return ['id', "<", $firstElement['id']];
-    }
-
-    /**
-     * Get pointer value to define beginning point of next page
-     * Default to using id
-     *
-     * @param array $lastElement The array of result array's last element
-     *
-     * @return array
-     */
-    protected function getEndPointerValue($lastElement)
-    {
-        return ['id', ">", $lastElement['id']];
     }
 
 }

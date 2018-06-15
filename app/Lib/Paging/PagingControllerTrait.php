@@ -21,24 +21,6 @@ trait PagingControllerTrait
     abstract protected function getResourceIdForCondition(): array;
 
     /**
-     * Process paging parameters from passed cursor
-     *
-     * @param CakeRequest $request
-     *
-     * @return PagingCursor
-     */
-    private function getPagingConditionFromCursor(CakeRequest $request)
-    {
-        $cursor = $request->query['cursor'];
-
-        if (empty($cursor)) {
-            return new PagingCursor();
-        }
-
-        return PagingCursor::decodeCursorToObject($cursor);
-    }
-
-    /**
      * Get the limit of paging
      *
      * @param CakeRequest $request
@@ -75,5 +57,23 @@ trait PagingControllerTrait
         $pagingCursor->addCondition($this->getResourceIdForCondition());
 
         return $pagingCursor;
+    }
+
+    /**
+     * Process paging parameters from passed cursor
+     *
+     * @param CakeRequest $request
+     *
+     * @return PagingCursor
+     */
+    private function getPagingConditionFromCursor(CakeRequest $request)
+    {
+        $cursor = $request->query['cursor'];
+
+        if (empty($cursor)) {
+            return new PagingCursor();
+        }
+
+        return PagingCursor::decodeCursorToObject($cursor);
     }
 }
