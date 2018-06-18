@@ -1896,7 +1896,7 @@ class User extends AppModel
             'joins'      =>
                 [
                     [
-                        'type'       => 'LEFT',
+                        'type'       => 'INNER',
                         'table'      => 'emails',
                         'alias'      => 'Email',
                         'conditions' => [
