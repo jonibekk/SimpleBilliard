@@ -10,14 +10,14 @@ class AccessTokenData
     private $userAgent;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $timeToLive;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getTimeToLive(): int
+    public function getTimeToLive()
     {
         return $this->timeToLive;
     }

@@ -49,4 +49,15 @@ abstract class BaseRedisClient
         }
         return $key;
     }
+
+    /**
+     * Change redis config used by Cakephp2
+     * Especially use for testing
+     *
+     * @param string $connectionName
+     */
+    public static function setRedisConnection(string $connectionName)
+    {
+        self::$CONFIG_NAME = $connectionName;
+    }
 }
