@@ -1885,7 +1885,8 @@ class User extends AppModel
     {
         $condition = [
             'conditions' => [
-                'User.del_flg' => false
+                'User.del_flg' => false,
+                'Email.email'   => $email,
             ],
             'fields'     => [
                 'User.id',
@@ -1899,9 +1900,7 @@ class User extends AppModel
                         'table'      => 'emails',
                         'alias'      => 'Email',
                         'conditions' => [
-                            'Email.id'      => 'User.primary_email_id',
-                            'Email.email'   => $email,
-                            'Email.del_flg' => false
+                            'Email.id = User.primary_email_id',
                         ]
                     ]
                 ]
