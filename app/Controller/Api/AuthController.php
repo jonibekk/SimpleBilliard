@@ -119,6 +119,10 @@ class AuthController extends BaseApiController
             return $res;
         }
 
+        if (!$this->hasAuth()) {
+            return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
+        }
+
         return null;
     }
 

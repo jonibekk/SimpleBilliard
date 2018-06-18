@@ -318,6 +318,14 @@ abstract class BaseApiController extends Controller
         }
     }
 
+    /**
+     * Check whether JWT Auth has been set
+     */
+    protected function hasAuth()
+    {
+        return isset($this->_jwtAuth);
+    }
+
     /** Override parent's method
      *
      * @param CakeRequest $request
