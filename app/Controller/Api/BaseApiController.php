@@ -1,9 +1,10 @@
 <?php
 App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
-App::uses('TeamStatus', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
+App::import('Lib/Status', 'TeamStatus');
+App::import('Lib/Auth', 'AccessAuthenticator');
 
 /**
  * Parent controller for API v2
@@ -67,7 +68,7 @@ abstract class BaseApiController extends Controller
             return;
         }
 
-        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
+        $jwt = sscanf($authHeader, 'Bearer %s');
 
         $this->_jwtToken = $jwt[0] ?? '';
     }
