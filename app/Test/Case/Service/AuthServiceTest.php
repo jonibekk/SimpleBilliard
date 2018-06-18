@@ -117,7 +117,7 @@ class AuthServiceTest extends GoalousTestCase
 
         try {
 
-            $res = $AuthService->invalidateUser($jwt->token());
+            $res = $AuthService->invalidateUser($jwt);
 
         } catch (Exception $e) {
             printf($e->getMessage());
@@ -136,8 +136,11 @@ class AuthServiceTest extends GoalousTestCase
 
         $this->insertAndAuthenticateUser();
 
+        $failJwt = new JwtAuthentication(0,0);
+        $failJwt->withJwtId('failed');
+
         try {
-            $AuthService->invalidateUser('failed');
+            $AuthService->invalidateUser($failJwt);
         } catch (Exception $e) {
             printf($e->getMessage());
             printf($e->getTraceAsString());

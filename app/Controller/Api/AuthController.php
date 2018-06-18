@@ -71,9 +71,14 @@ class AuthController extends BaseApiController
         $Auth = new AuthService();
 
         try {
-            $Auth->invalidateUser($this->getJwtAuth());
+            $res = $Auth->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
+                                                                                 ->getResponse();
+        }
+
+        if (!$res){
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to logout"))
                                                                                  ->getResponse();
         }
 

@@ -71,7 +71,16 @@ class AuthService extends AppService
     public function invalidateUser(JwtAuthentication $jwt): bool
     {
         $jwtClient = new AccessTokenClient();
-        $jwtKey = new AccessTokenKey($jwt->getUserId(), $jwt->getTeamId(), $jwt->getJwtId());
+
+        $userId = $jwt->getUserId();
+        $teamId = $jwt->getTeamId();
+        $jwtId = $jwt->getJwtId() ?? '';
+
+        if (empty($userId) || empty($teamId) || empty($jwtId)){
+            return false;
+        }
+
+        $jwtKey = new AccessTokenKey($userId, $teamId, $jwtId);
         $jwtClient->del($jwtKey);
 
         return true;
