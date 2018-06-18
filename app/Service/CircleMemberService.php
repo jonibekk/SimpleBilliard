@@ -45,7 +45,7 @@ class CircleMemberService extends AppService
             ]
         ];
 
-        return $Circle->find('all', $conditions);
+        return Hash::extract($Circle->find('all', $conditions), "{n}.Circle");
     }
 
 }

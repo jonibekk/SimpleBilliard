@@ -62,6 +62,7 @@ class AccessAuthenticator
      * @return AuthorizedAccessInfo
      */
     public static function verify(string $authorizationBearer): AuthorizedAccessInfo {
+
         try {
             $jwtAuth = JwtAuthentication::decode($authorizationBearer);
 

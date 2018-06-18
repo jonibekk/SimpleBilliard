@@ -26,12 +26,10 @@ class UsersController extends BaseApiController
             return $res;
         }
 
-        $isPublic = $this->request->query('is_public');
-
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $circleData = $CircleMemberService->getUserCircles($userId, $this->getTeamId(), $isPublic);
+        $circleData = $CircleMemberService->getUserCircles($userId, $this->getTeamId());
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($circleData)->getResponse();
     }
@@ -39,15 +37,17 @@ class UsersController extends BaseApiController
     /**
      * Parameter validation for circles()
      *
-     * @return CakeResponse
+     * @return CakeResponse | null
      */
-    private function validateCircles(): CakeResponse
+    private function validateCircles()
     {
         $res = $this->allowMethod('GET');
 
         if (!empty($res)) {
             return $res;
         }
+
+        return null;
     }
 
 }
