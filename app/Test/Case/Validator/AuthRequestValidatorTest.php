@@ -34,7 +34,7 @@ class AuthRequestValidatorTest extends GoalousTestCase
     {
         $authRequestValidator = AuthRequestValidator::createLoginValidator();
         $this->assertTrue($authRequestValidator->validate([
-            'username' => $username,
+            'email' => $username,
             'password' => $password
         ]));
     }
@@ -85,7 +85,7 @@ class AuthRequestValidatorTest extends GoalousTestCase
     {
         $authRequestValidator = AuthRequestValidator::createLoginValidator();
         $authRequestValidator->validate([
-            'username' => $username,
+            'email' => $username,
             'password' => $password
         ]);
 
