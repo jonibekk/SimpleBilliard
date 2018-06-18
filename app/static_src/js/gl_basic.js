@@ -759,41 +759,48 @@ function getModalFormFromUrl(e) {
   } else {
     $.get(url, function (data) {
       $modal_elm.append(data);
-      $modal_elm.find('form').bootstrapValidator({
-        live: 'enabled',
-        fields: {
-          "data[KeyResult][start_date]": {
-            validators: {
-              callback: {
-                message: cake.message.notice.e,
-                callback: function (value, validator) {
-                  var m = new moment(value, 'YYYY/MM/DD', true);
-                  return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
+
+      // Disable bootstrapValidator because of freeze bug
+      // https://jira.goalous.com/browse/GL-7070
+      var $form = $modal_elm.find('form');
+      if ($form.attr('id') != "AddGoalFormKeyResult") {
+        $form.bootstrapValidator({
+          live: 'enabled',
+          fields: {
+            "data[KeyResult][start_date]": {
+              validators: {
+                callback: {
+                  message: cake.message.notice.e,
+                  callback: function (value, validator) {
+                    var m = new moment(value, 'YYYY/MM/DD', true);
+                    return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
+                  }
+                },
+                date: {
+                  format: 'YYYY/MM/DD',
+                  message: cake.message.validate.date_format
                 }
-              },
-              date: {
-                format: 'YYYY/MM/DD',
-                message: cake.message.validate.date_format
               }
-            }
-          },
-          "data[KeyResult][end_date]": {
-            validators: {
-              callback: {
-                message: cake.message.notice.f,
-                callback: function (value, validator) {
-                  var m = new moment(value, 'YYYY/MM/DD', true);
-                  return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
+            },
+            "data[KeyResult][end_date]": {
+              validators: {
+                callback: {
+                  message: cake.message.notice.f,
+                  callback: function (value, validator) {
+                    var m = new moment(value, 'YYYY/MM/DD', true);
+                    return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
+                  }
+                },
+                date: {
+                  format: 'YYYY/MM/DD',
+                  message: cake.message.validate.date_format
                 }
-              },
-              date: {
-                format: 'YYYY/MM/DD',
-                message: cake.message.validate.date_format
               }
             }
           }
-        }
-      });
+        });
+      }
+      
       $modal_elm.modal();
       $('body').addClass('modal-open');
     });
