@@ -232,4 +232,101 @@ class PostLike extends AppModel
         }
         return $ranking;
     }
+
+    /**
+     * Add a like to a post
+     *
+     * @param int $postId Target post's ID
+     * @param int $userId User ID who added the like
+     * @param int $teamId The team ID where this happens
+     *
+     * @throws Exception
+     * @return bool True for successful addition
+     */
+    public function addPostLike(int $postId, int $userId, int $teamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId
+            ]
+        ];
+
+        //Check whether like is already exist from the user
+        if (empty($this->find('first', $condition))) {
+            try {
+                $this->create();
+                $newData = [
+                    'post_id' => $postId,
+                    'user_id' => $userId,
+                    'team_id' => $teamId
+                ];
+                $this->save($newData);
+            } catch (Exception $e) {
+                throw $e;
+            }
+            $this->updateLikeCount($postId);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a like from a post
+     *
+     * @param int $postId Target post's ID
+     * @param int $userId User ID who removed the like
+     * @param int $teamId The team ID where this happens
+     *
+     * @return bool True for successful removal
+     */
+    public function deletePostLike(int $postId, int $userId, int $teamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId
+            ]
+        ];
+
+        $existing = $this->find('first', $condition);
+
+        if (empty($existing)) {
+            return false;
+        }
+
+        $this->delete($existing['PostLike']['id']);
+        $this->updateLikeCount($postId);
+
+        return true;
+
+    }
+
+    /**
+     * Update the count like in a post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function updateLikeCount(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId
+            ]
+        ];
+
+        $count = (int)$this->find('count', $condition);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $Post->updateAll(['Post.post_like_count' => $count], ['Post.id' => $postId]);
+
+        return $count;
+    }
 }

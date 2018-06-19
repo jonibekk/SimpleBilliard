@@ -228,4 +228,42 @@ class PostLikeTest extends GoalousTestCase
         $this->PostLike->my_uid = 1;
         $this->PostLike->current_team_id = 1;
     }
+
+    public function test_addLike_success()
+    {
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+        $postId = 2;
+
+        $initialCount = $PostLike->updateLikeCount($postId);
+
+        $PostLike->addPostLike($postId, 1, 1);
+        $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
+
+        $PostLike->addPostLike($postId, 2, 1);
+        $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
+
+        $PostLike->addPostLike($postId, 1, 1);
+        $this->assertEquals($initialCount, $PostLike->updateLikeCount($postId));
+
+    }
+
+    public function test_deleteLike_success()
+    {
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+        $postId = 3;
+
+        $initialCount = $PostLike->updateLikeCount($postId);
+
+        $PostLike->addPostLike($postId, 1, 1);
+        $PostLike->addPostLike($postId, 2, 1);
+
+        $PostLike->deletePostLike($postId, 1, 1);
+        $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
+
+        $PostLike->deletePostLike($postId, 1, 1);
+        $this->assertEquals($initialCount, $PostLike->updateLikeCount($postId));
+
+    }
 }
