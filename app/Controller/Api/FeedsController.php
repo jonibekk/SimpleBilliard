@@ -1,6 +1,8 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
-App::uses('CircleFeedPaging', 'Services/Paging');
+App::import('Service/Paging', 'CircleFeedPaging');
+App::uses('PagingControllerTrait', 'Lib/Paging');
+App::uses('PagingCursor', 'Lib/Paging');
 
 /**
  * Created by PhpStorm.
@@ -42,6 +44,7 @@ class FeedsController extends BaseApiController
 
         //Put current user's ID
         $condition['user_id'] = $this->getUserId();
+        $condition['team_id'] = $this->getTeamId();
 
         $PagingCursor->addCondition($condition);
         $PagingCursor->addOrder('id', 'asc');

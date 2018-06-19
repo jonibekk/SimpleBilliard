@@ -18,7 +18,7 @@ class PagingCursor
      * @var array
      *      ['$column_name'] => 'ASC/DESC'
      */
-    private $order;
+    private $order = [];
 
     /**
      * Array of pointer for next / prev paging
@@ -26,14 +26,14 @@ class PagingCursor
      * @var array
      *      [$column_name] => [$math_operator, $value]
      */
-    private $pointerValues;
+    private $pointerValues = [];
 
     /**
      * DB query parameters, follow DB query structure
      *
      * @var array
      */
-    private $conditions;
+    private $conditions = [];
 
     /**
      * PagingCursor constructor.
@@ -174,7 +174,7 @@ class PagingCursor
      */
     public function addCondition($conditions)
     {
-        $this->conditions[] = $conditions;
+        $this->conditions = array_merge($this->conditions, $conditions);
     }
 
     /**
