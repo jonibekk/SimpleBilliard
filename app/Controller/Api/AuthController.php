@@ -27,38 +27,18 @@ class AuthController extends BaseApiController
      */
     public function post_login()
     {
-        switch ($this->getApiVersion()) {
-            case ApiVer::VER_2:
-                return $this->post_login_v2();
-                break;
-            default:
-                return $this->post_login_v2();
-                break;
-        }
-    }
-
-    /**
-     * API v2 login endpoint for user
-     *
-     * @return CakeResponse
-     */
-    private function post_login_v2()
-    {
         $return = $this->validateLogin();
 
         if (!empty($return)) {
             return $return;
         }
-
-
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init("AuthService");
-
 
         $requestData = $this->getRequestJsonBody();
 
         try {
-            $jwt = $AuthService->authenticateUser($requestData['username'], $requestData['password']);
+            $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
                                                                                  ->getResponse();
