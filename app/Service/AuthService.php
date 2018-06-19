@@ -61,6 +61,32 @@ class AuthService extends AppService
     }
 
     /**
+     * Remove user's JWT from Redis cache during logout
+     *
+     * @param JwtAuthentication $jwt JWT Auth of the user
+     *
+     * @throws Exception
+     * @return bool True on successful logout
+     */
+    public function invalidateUser(JwtAuthentication $jwt): bool
+    {
+        $jwtClient = new AccessTokenClient();
+
+        $userId = $jwt->getUserId();
+        $teamId = $jwt->getTeamId();
+        $jwtId = $jwt->getJwtId() ?? '';
+
+        if (empty($userId) || empty($teamId) || empty($jwtId)){
+            return false;
+        }
+
+        $jwtKey = new AccessTokenKey($userId, $teamId, $jwtId);
+        $jwtClient->del($jwtKey);
+
+        return true;
+    }
+
+    /**
      * Is password Sha1?
      * Old password (SHA1) if 40 bytes.
      *
@@ -68,9 +94,8 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _isSha1(
-        string $hashedPassword
-    ): bool {
+    private function _isSha1(string $hashedPassword): bool
+    {
         return strlen($hashedPassword) == 40;
     }
 
@@ -82,10 +107,8 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _verifySha1Password(
-        string $inputPlainPassword,
-        string $storedHashedPassword
-    ): bool {
+    private function _verifySha1Password(string $inputPlainPassword, string $storedHashedPassword): bool
+    {
         $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
         $inputHashedPassword = $passwordHasher->hash($inputPlainPassword);
         if ($inputHashedPassword === $storedHashedPassword) {
@@ -102,10 +125,8 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _savePasswordAsSha256(
-        array $userData,
-        string $plainPassword
-    ): bool {
+    private function _savePasswordAsSha256(array $userData, string $plainPassword): bool
+    {
         $User = new User();
         $newHashedPassword = $this->passwordHasher->hash($plainPassword);
 

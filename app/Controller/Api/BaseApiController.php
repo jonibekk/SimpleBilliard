@@ -1,10 +1,10 @@
 <?php
-
 App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
-App::uses('TeamStatus', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
+App::import('Lib/Status', 'TeamStatus');
+App::import('Lib/Auth', 'AccessAuthenticator');
 
 /**
  * Parent controller for API v2
@@ -36,6 +36,9 @@ abstract class BaseApiController extends Controller
     /** @var bool */
     private $_stopInvokeFlag = false;
 
+    /** @var JwtAuthentication */
+    private $_jwtAuth;
+
     /**
      * ApiV2Controller constructor.
      *
@@ -65,7 +68,7 @@ abstract class BaseApiController extends Controller
             return;
         }
 
-        list($jwt) = sscanf($authHeader->toString(), 'Authorization: Bearer %s');
+        $jwt = sscanf($authHeader, 'Bearer %s');
 
         $this->_jwtToken = $jwt[0] ?? '';
     }
@@ -239,6 +242,8 @@ abstract class BaseApiController extends Controller
 
         $this->_currentTeamId = $jwtAuth->getTeamId();
 
+        $this->_jwtAuth = $jwtAuth->getJwtAuthentication();
+
         return true;
     }
 
@@ -314,6 +319,14 @@ abstract class BaseApiController extends Controller
         }
     }
 
+    /**
+     * Check whether JWT Auth has been set
+     */
+    protected function hasAuth()
+    {
+        return isset($this->_jwtAuth);
+    }
+
     /** Override parent's method
      *
      * @param CakeRequest $request
@@ -354,5 +367,21 @@ abstract class BaseApiController extends Controller
         $body = $this->request->input();
         $decodedJson = json_decode($body, true);
         return is_array($decodedJson) ? $decodedJson : [];
+    }
+
+    /**
+     * @return string Current user's JWT token
+     */
+    public function getUserToken()
+    {
+        return $this->_jwtToken;
+    }
+
+    /**
+     * @return JwtAuthentication Current user's JWT Auth
+     */
+    public function getJwtAuth()
+    {
+        return $this->_jwtAuth;
     }
 }

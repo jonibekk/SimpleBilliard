@@ -9,16 +9,13 @@ App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/05/30
  * Time: 11:35
  */
-
-use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
-
 class AuthController extends BaseApiController
 {
     public function beforeFilter()
     {
         parent::beforeFilter();
     }
-
+    
     /**
      * Login endpoint for user. Ignore restriction and authentication
      *
@@ -55,6 +52,37 @@ class AuthController extends BaseApiController
     }
 
     /**
+     * Logout endpoint for user. Ignore restriction
+     *
+     * @ignoreRestriction
+     */
+    public function post_logout()
+    {
+
+        $return = $this->validateLogout();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $Auth = new AuthService();
+
+        try {
+            $res = $Auth->invalidateUser($this->getJwtAuth());
+        } catch (Exception $e) {
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
+                                                                                 ->getResponse();
+        }
+
+        if (!$res){
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to logout"))
+                                                                                 ->getResponse();
+        }
+
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
+    }
+
+    /**
      * Validate all parameters before being manipulated by respective endpoint
      *
      * @return CakeResponse Return a response if validation failed
@@ -76,6 +104,28 @@ class AuthController extends BaseApiController
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
                                                                        ->getResponse();
         }
+
+        return null;
+    }
+
+    /**
+     * Validate all parameters before passed to endpoint
+     *
+     * @return CakeResponse|null Return a response if validation failed
+     */
+    private function validateLogout()
+    {
+        $res = $this->allowMethod('POST');
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        if (!$this->hasAuth()) {
+            return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
+        }
+
+        return null;
     }
 
 }

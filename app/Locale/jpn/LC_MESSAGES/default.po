@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-10 16:13+0900\n"
+"PO-Revision-Date: 2018-06-18 13:53+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -857,6 +857,18 @@ msgstr ""
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
+msgid "Failed to logout"
+msgstr "ログアウトに失敗しました。"
+
+msgid "Missing token."
+msgstr ""
+
+msgid "Evaluator setting saved."
+msgstr "評価者設定を保存しました。"
+
+msgid "%s %s inactive"
+msgstr ""
+
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
 
@@ -871,12 +883,6 @@ msgstr "評価者設定を保存できませんでした。"
 
 msgid "Evaluator has duplicates."
 msgstr "評価者が重複しています。"
-
-msgid "%s %s inactive"
-msgstr ""
-
-msgid "Evaluator setting saved."
-msgstr "評価者設定を保存しました。"
 
 msgid "Failed uploading video"
 msgstr "動画のアップロードに失敗しました"
@@ -6218,9 +6224,6 @@ msgstr "認証アプリを使用できない場合は"
 
 msgid "Here"
 msgstr "こちら"
-
-msgid "Go To Top"
-msgstr "トップへ戻る"
 
 msgid "Enter a Recovery Code"
 msgstr "リカバリーコードを入力する"
