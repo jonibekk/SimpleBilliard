@@ -10,7 +10,7 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/06/18
  * Time: 15:00
  */
-class PostController extends BaseApiController
+class PostsController extends BaseApiController
 {
 
     /**
