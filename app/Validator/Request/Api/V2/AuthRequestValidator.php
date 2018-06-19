@@ -19,7 +19,7 @@ class AuthRequestValidator extends BaseValidator
     public function getLoginValidationRule(): array
     {
         $rules = [
-            'username' => [validator::email()],
+            'email' => [validator::email()],
             // Stay here simple string check.
             // Do the regex validation on the register validation.
             'password' => [validator::stringType()]
