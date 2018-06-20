@@ -34,7 +34,7 @@ class CirclesController extends BaseApiController
             $data = $CirclePostPagingService->getDataWithPaging(
                 $pagingCursor,
                 $this->getPagingLimit($this->request),
-                CirclePostPagingService::EXTEND_ALL);
+                $this->getExtensionOptions($this->request) ?? CirclePostPagingService::EXTEND_ALL);
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();
@@ -68,9 +68,8 @@ class CirclesController extends BaseApiController
         $CircleMember = ClassRegistry::init('CircleMember');
 
         //Check if circle belongs to current team & user has access to the circle
-        if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId())
-            || ($Circle->isSecret($circleId)
-                && !$CircleMember->isBelong($circleId, $this->getUserId()))) {
+        if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) ||
+            ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId()))) {
             return (new ApiResponse(ApiResponse::RESPONSE_FORBIDDEN))->withMessage(__("The circle dosen't exist or you don't have permission."))
                                                                      ->getResponse();
         }

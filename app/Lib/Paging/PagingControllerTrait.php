@@ -24,7 +24,19 @@ trait PagingControllerTrait
      */
     protected function getPagingLimit(CakeRequest $request)
     {
-        return $request['limit'] ?? PagingCursor::DEFAULT_PAGE_LIMIT;
+        return $request->query('limit') ?? PagingCursor::DEFAULT_PAGE_LIMIT;
+    }
+
+    /**
+     * Get extension options for paging
+     *
+     * @param CakeRequest $request
+     *
+     * @return array
+     */
+    protected function getExtensionOptions(CakeRequest $request): array
+    {
+        return $request->query('extoption') ?? [];
     }
 
     /**

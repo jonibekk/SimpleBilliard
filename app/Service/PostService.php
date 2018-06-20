@@ -387,49 +387,4 @@ class PostService extends AppService
     {
         return ['Post.user_id' => $userId];
     }
-
-    /**
-     * Get condition for posts shared to this user
-     *
-     * @param DboSource $db
-     * @param int       $userId User to whom posts are shared to
-     * @param int       $teamId
-     * @param array     $params
-     *                          'author_id' : If specified, filter posts to this author
-     *
-     * @return string|null
-     */
-    public function getSharedPostCondition(DboSource $db, int $userId, int $teamId, array $params = [])
-    {
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-
-        // パラメータデフォルト
-        $params = array_merge(['user_id' => null], $params);
-        $query = [
-            'fields'     => [
-                'id'
-            ],
-            'table'      => $db->fullTableName(new PostShareUser()),
-            'alias'      => 'PostShareUser',
-            'conditions' => [
-                'PostShareUser.user_id' => $userId,
-                'PostShareUser.team_id' => $teamId
-            ],
-        ];
-        if (isset($params['user_id'])) {
-            $query['conditions']['Post.user_id'] = $params['author_id'];
-            $query['joins'][] = [
-                'fields'     => [
-                    'id'
-                ],
-                'type'       => 'LEFT',
-                'table'      => $db->fullTableName($Post),
-                'alias'      => 'Post',
-                'conditions' => '`PostShareUser`.`post_id`=`Post`.`id`',
-            ];
-        }
-        $res = $db->buildStatement($query, $Post);
-        return $res;
-    }
 }
