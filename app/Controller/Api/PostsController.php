@@ -1,7 +1,6 @@
 <?php
 App::import('Service', 'POstService');
 App::uses('Post', 'Model');
-App::uses('TeamMember', 'Model');
 App::uses('BaseApiController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
@@ -116,15 +115,11 @@ class PostsController extends BaseApiController
      */
     private function validatePut(int $postId)
     {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
-        //Check whether user is the owner of the post, or admin of the team
-        if (!$Post->isPostOwned($postId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
-                $this->getTeamId())) {
+        //Check whether user is the owner of the post
+        if (!$Post->isPostOwned($postId, $this->getUserId())) {
             return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
         }
 
