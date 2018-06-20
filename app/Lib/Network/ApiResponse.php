@@ -22,6 +22,7 @@ class ApiResponse extends CakeResponse
     const RESPONSE_FORBIDDEN = 403;
     const RESPONSE_NOT_FOUND = 404;
     const RESPONSE_RESOURCE_CONFLICT = 409;
+    const RESPONSE_GONE = 410;
     const RESPONSE_INTERNAL_SERVER_ERROR = 500;
 
     private $_responseBody = array();

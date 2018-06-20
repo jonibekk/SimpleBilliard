@@ -16,11 +16,6 @@ trait PagingControllerTrait
     abstract protected function getPagingConditionFromRequest(): PagingCursor;
 
     /**
-     * Based on model's DB query condition
-     */
-    abstract protected function getResourceIdForCondition(): array;
-
-    /**
      * Get the limit of paging
      *
      * @param CakeRequest $request
@@ -53,9 +48,6 @@ trait PagingControllerTrait
             $pagingCursor = $this->getPagingConditionFromRequest($request);
         }
 
-        //Merge existing condition with resource ID embedded in URL
-        $pagingCursor->addCondition($this->getResourceIdForCondition());
-
         return $pagingCursor;
     }
 
@@ -68,7 +60,7 @@ trait PagingControllerTrait
      */
     private function getPagingConditionFromCursor(CakeRequest $request)
     {
-        $cursor = $request->query['cursor'];
+        $cursor = Hash::get($request->query, 'cursor');
 
         if (empty($cursor)) {
             return new PagingCursor();

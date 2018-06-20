@@ -1,15 +1,15 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('CircleFeedPagingService', 'Service/Paging');
+App::import('Service/Paging', 'CirclePostPagingService');
 App::uses('PagingCursor', 'Lib/Paging');
 
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
- * Date: 2018/06/14
- * Time: 16:27
+ * Date: 2018/06/20
+ * Time: 11:24
  */
-class CircleFeedPagingTest extends GoalousTestCase
+class CirclePostPagingTest extends GoalousTestCase
 {
     public $fixtures = [
         'app.team',
@@ -26,26 +26,26 @@ class CircleFeedPagingTest extends GoalousTestCase
         'app.experiment',
     ];
 
-    public function test_getCircleFeed_success()
+    public function test_getCirclePost_success()
     {
-        /** @var CircleFeedPagingService $CircleFeedPaging */
-        $CircleFeedPaging = new CircleFeedPagingService();
+        /** @var CirclePostPagingService $CirclePostPagingService */
+        $CirclePostPagingService = new CirclePostPagingService();
 
-        $cursor = new PagingCursor(['user_id' => 1, 'team_id' => 1]);
+        $cursor = new PagingCursor(['circle_id' => 1]);
 
-        $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1);
 
         $this->assertCount(1, $result['data']);
         $this->assertNotEmpty($result['paging']['next']);
         $this->assertNotEmpty($result['count']);
     }
 
-    public function test_getCircleFeedWithCursor_success()
+    public function test_getCirclePostWithCursor_success()
     {
-        /** @var CircleFeedPagingService $CircleFeedPaging */
-        $CircleFeedPaging = new CircleFeedPagingService();
+        /** @var CirclePostPagingService $CircleFeedPaging */
+        $CircleFeedPaging = new CirclePostPagingService();
 
-        $cursor = new PagingCursor(['user_id' => 1, 'team_id' => 1]);
+        $cursor = new PagingCursor(['circle_id' => 1]);
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
 
@@ -57,4 +57,5 @@ class CircleFeedPagingTest extends GoalousTestCase
         $this->assertNotEmpty($secondResult['paging']['next']);
         $this->assertNotEmpty($secondResult['count']);
     }
+
 }

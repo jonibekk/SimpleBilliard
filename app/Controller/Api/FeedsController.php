@@ -1,6 +1,6 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
-App::import('Service/Paging', 'CircleFeedPaging');
+App::import('Service/Paging', 'CircleFeedPagingService');
 App::uses('PagingControllerTrait', 'Lib/Paging');
 App::uses('PagingCursor', 'Lib/Paging');
 
@@ -21,21 +21,23 @@ class FeedsController extends BaseApiController
      */
     public function get_circle_feed()
     {
+        return (new ApiResponse(ApiResponse::RESPONSE_GONE))->getResponse();
+
         $res = $this->validateGetCircleFeed();
 
         if (!empty($res)) {
             return $res;
         }
 
-        /** @var CircleFeedPaging $CircleFeedPaging */
-        $CircleFeedPaging = ClassRegistry::init('CircleFeedPaging');
+        /** @var CircleFeedPagingService $CircleFeedPaging */
+        $CircleFeedPaging = ClassRegistry::init('CircleFeedPagingService');
 
         $data = $CircleFeedPaging->getDataWithPaging(
             $this->getPagingParameters($this->request),
             $this->getPagingLimit($this->request),
-            CircleFeedPaging::EXTEND_ALL_FLAG);
+            CircleFeedPagingService::EXTEND_ALL);
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data)->getResponse();
+//        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody($data)->getResponse();
     }
 
     protected function getPagingConditionFromRequest(): PagingCursor
@@ -52,11 +54,6 @@ class FeedsController extends BaseApiController
         return $PagingCursor;
     }
 
-    protected function getResourceIdForCondition(): array
-    {
-        return [];
-    }
-
     /**
      * Request & parameters validation before data manipulation
      *
@@ -64,12 +61,6 @@ class FeedsController extends BaseApiController
      */
     private function validateGetCircleFeed()
     {
-        $res = $this->allowMethod("GET");
-
-        if (!empty($res)) {
-            return $res;
-        }
-
         return null;
     }
 }

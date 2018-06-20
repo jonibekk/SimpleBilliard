@@ -123,7 +123,7 @@ trait PagingServiceTrait
      *
      * @return array Query result
      */
-    abstract protected function readData($pagingCursor, $limit): array;
+    abstract protected function readData(PagingCUrsor $pagingCursor, int $limit): array;
 
     /**
      * Count the number of data matching conditions provided
@@ -144,7 +144,7 @@ trait PagingServiceTrait
      *
      * @return array
      */
-    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
+    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
     {
         return $resultArray;
     }

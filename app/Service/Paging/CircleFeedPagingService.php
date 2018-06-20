@@ -17,22 +17,22 @@ App::uses('Post', 'Model');
  * Date: 2018/05/23
  * Time: 11:38
  */
-class CircleFeedPaging implements PagingServiceInterface
+class CircleFeedPagingService implements PagingServiceInterface
 {
     use PagingServiceTrait;
     use FeedPagingTrait;
 
-    const EXTEND_ALL_FLAG = -1;
-    const EXTEND_USER_FLAG = 0;
-    const EXTEND_CIRCLE_FLAG = 1;
-    const EXTEND_COMMENT_FLAG = 2;
-    const EXTEND_POST_SHARE_CIRCLE_FLAG = 3;
-    const EXTEND_POST_SHARE_USER_FLAG = 4;
-    const EXTEND_POST_FILE_FLAG = 5;
+    const EXTEND_ALL = "ext:circle_feed:all";
+    const EXTEND_USER = "ext:circle_feed:user";
+    const EXTEND_CIRCLE = "ext:circle_feed:circle";
+    const EXTEND_COMMENT = "ext:circle_feed:comment";
+    const EXTEND_POST_SHARE_CIRCLE = "ext:circle_feed:share_circle";
+    const EXTEND_POST_SHARE_USER = "ext:circle_feed:share_user";
+    const EXTEND_POST_FILE = "ext:circle_feed:file";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
-    protected function readData(PagingCursor $pagingCursor, $limit): array
+    protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
         $options = [
             'conditions' => $this->getSharedPosts($pagingCursor->getConditions()),
@@ -40,7 +40,7 @@ class CircleFeedPaging implements PagingServiceInterface
             'order'      => $pagingCursor->getOrders()
         ];
 
-        $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
+        $options['conditions']['Post.type'] = [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE];
         $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
 
         /** @var Post $Post */
@@ -85,7 +85,6 @@ class CircleFeedPaging implements PagingServiceInterface
             $CircleMember = ClassRegistry::init('CircleMember');
 
             //Check if circle belongs to current team & user has access to the circle
-            $CircleMember->my_uid = $conditions['user_id'];
             if (!$Circle->isBelongCurrentTeam($conditions['circle_id'], $conditions['team_id'])
                 || ($Circle->isSecret($conditions['circle_id'])
                     && !$CircleMember->isBelong($conditions['circle_id'], $conditions['user_id']))) {
@@ -166,7 +165,7 @@ class CircleFeedPaging implements PagingServiceInterface
             'conditions' => $this->getSharedPosts($conditions),
         ];
 
-        $options['conditions']['Post.type'] = Post::TYPE_NORMAL;
+        $options['conditions']['Post.type'] = [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE];
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -174,8 +173,8 @@ class CircleFeedPaging implements PagingServiceInterface
         return (int)$Post->find('count', $options);
     }
 
-    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
+    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
     {
-        //TODO
+        //Implemented in GL-7028
     }
 }
