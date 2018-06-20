@@ -179,4 +179,41 @@ class CommentLikeTest extends GoalousTestCase
         $this->CommentLike->my_uid = 1;
         $this->CommentLike->current_team_id = 1;
     }
+
+    public function test_addCommentLike_success()
+    {
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init("CommentLike");
+        $commentId = 1;
+
+        $initialCount = $CommentLike->updateCommentLikeCount(1);
+
+        $CommentLike->addCommentLike($commentId, 1, 1);
+        $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
+
+        $CommentLike->addCommentLike($commentId, 2, 1);
+        $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
+
+        $CommentLike->addCommentLike($commentId, 1, 1);
+        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
+    }
+
+    public function test_removeCommentLike_success()
+    {
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init("CommentLike");
+        $commentId = 1;
+
+        $initialCount = $CommentLike->updateCommentLikeCount(1);
+
+        $CommentLike->addCommentLike($commentId, 1, 1);
+        $CommentLike->addCommentLike($commentId, 2, 1);
+
+        $CommentLike->removeCommentLike($commentId, 1, 1);
+        $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
+
+        $CommentLike->removeCommentLike($commentId, 1, 1);
+        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
+
+    }
 }

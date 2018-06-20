@@ -114,37 +114,42 @@ class CommentFixture extends CakeTestFixtureEx
             'comment' => 'サイト情報',
             'charset' => 'utf8mb4'
         ),
-        'site_photo_file_name' => array('type'    => 'string',
-                                        'null'    => true,
-                                        'default' => null,
-                                        'collate' => 'utf8mb4_general_ci',
-                                        'comment' => 'サイト画像',
-                                        'charset' => 'utf8mb4'
+        'site_photo_file_name' => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'サイト画像',
+            'charset' => 'utf8mb4'
         ),
-        'del_flg'              => array('type'    => 'boolean',
-                                        'null'    => false,
-                                        'default' => '0',
-                                        'key'     => 'index',
-                                        'comment' => '削除フラグ'
+        'del_flg'              => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => '削除フラグ'
         ),
-        'deleted'              => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'comment'  => '投稿を削除した日付時刻'
+        'deleted'              => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '投稿を削除した日付時刻'
         ),
-        'created'              => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'key'      => 'index',
-                                        'comment'  => '投稿を追加した日付時刻'
+        'created'              => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '投稿を追加した日付時刻'
         ),
-        'modified'             => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'comment'  => '投稿を更新した日付時刻'
+        'modified'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '投稿を更新した日付時刻'
         ),
         'indexes'              => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),

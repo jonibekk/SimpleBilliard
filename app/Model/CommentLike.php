@@ -166,4 +166,95 @@ class CommentLike extends AppModel
         }
         return $this->find('list', $options);
     }
+
+    /**
+     * Add a like to a comment
+     *
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @throws Exception
+     * @return bool True on successful addition
+     */
+    public function addCommentLike(int $commentId, int $userId, int $teamId): bool
+    {
+        $newData = [
+            'comment_id' => $commentId,
+            'user_id'    => $userId,
+            'team_id'    => $teamId
+        ];
+
+        $condition['conditions'] = $newData;
+
+        if (empty($this->find('first', $condition))) {
+            try {
+                $this->create();
+                $this->save($newData);
+            } catch (Exception $e) {
+                throw $e;
+            }
+            $this->updateCommentLikeCount($commentId);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove like from a comment
+     *
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool True on successful removal
+     */
+    public function removeCommentLike(int $commentId, int $userId, int $teamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId,
+                'user_id'    => $userId,
+                'team_id'    => $teamId
+            ]
+        ];
+
+        $existing = $this->find('first', $condition);
+
+        if (empty($existing)) {
+            return false;
+        }
+
+        $this->delete($existing['CommentLike']['id']);
+        $this->updateCommentLikeCount($commentId);
+
+        return true;
+
+    }
+
+    /**
+     * Update the count like in a comment
+     *
+     * @param int $commentId
+     *
+     * @return int Updated like count
+     */
+    public function updateCommentLikeCount(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId
+            ]
+        ];
+
+        $count = (int)$this->find('count', $condition);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $Comment->updateAll(['Comment.comment_like_count' => $count], ['Comment.id' => $commentId]);
+
+        return $count;
+    }
 }
