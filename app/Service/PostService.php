@@ -58,7 +58,7 @@ class PostService extends AppService
             // changing post_resources.post_id = null to posts.id
             if (false === $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id'])) {
                 GoalousLog::error($errorMessage = 'failed updating post_resources.post_id', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -69,7 +69,7 @@ class PostService extends AppService
             $postDraft['post_id'] = $post['id'];
             if (false === $PostDraft->save($postDraft)) {
                 GoalousLog::error($errorMessage = 'failed saving post_draft', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -113,7 +113,7 @@ class PostService extends AppService
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error('failed adding post data', [
-                'message' => $e->getMessage(),
+                'message'  => $e->getMessage(),
                 'users.id' => $userId,
                 'teams.id' => $teamId,
             ]);
@@ -134,7 +134,6 @@ class PostService extends AppService
      *
      * @return array Always return inserted post data array if succeed
      *      otherwise throwing exception
-     *
      * @throws \InvalidArgumentException
      *      If passed data is invalid or not enough, throws InvalidArgumentException
      * @throws \RuntimeException
@@ -375,5 +374,82 @@ class PostService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * Method to save a circle post
+     *
+     * @param array $postBody
+     *                   ["body" => '',
+     *                   "type" => ''
+     *                   ]
+     * @param int   $circleId
+     * @param int   $userId
+     * @param int   $teamId
+     *
+     * @return int Post ID of saved post
+     */
+    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): int
+    {
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if (empty($postBody['body'])) {
+            GoalousLog::error('Error on adding post: Invalid argument', [
+                'users.id'  => $userId,
+                'circle.id' => $circleId,
+                'teams.id'  => $teamId,
+                'postData'  => $postBody,
+            ]);
+            throw new InvalidArgumentException('Error on adding post: Invalid argument');
+        }
+
+        $Post->create();
+
+        $postBody['user_id'] = $userId;
+        $postBody['team_id'] = $teamId;
+        if ($postBody['type'] === Post::TYPE_CREATE_CIRCLE) {
+            $postBody['circle_id'] = $circleId;
+        } elseif (empty($postBody['type'])) {
+            $postBody['type'] = Post::TYPE_NORMAL;
+        }
+        $savedPost = $Post->save($postBody);
+
+        if (empty ($savedPost)) {
+            GoalousLog::error('Error on adding post: failed post save', [
+                'users.id'  => $userId,
+                'circle.id' => $circleId,
+                'teams.id'  => $teamId,
+                'postData'  => $postBody,
+            ]);
+            throw new RuntimeException('Error on adding post: failed post save');
+        }
+
+        $postId = $savedPost['Post']['id'];
+
+        // Save share circles
+        if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
+            GoalousLog::error($errorMessage = 'failed saving post share circles', [
+                'posts.id'    => $postId,
+                'circles.ids' => $postId,
+                'teams.id'    => $teamId,
+            ]);
+            throw new RuntimeException('Error on adding post: ' . $errorMessage);
+        }
+        // Update unread post numbers if specified sharing circle
+        if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
+            GoalousLog::error($errorMessage = 'failed increment unread count', [
+                'circles.ids' => $postId,
+                'teams.id'    => $teamId,
+            ]);
+            throw new RuntimeException('Error on adding post: ' . $errorMessage);
+        }
+
+        return $postId;
     }
 }

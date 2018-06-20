@@ -2,6 +2,7 @@
 App::import('Service', 'POstService');
 App::uses('Post', 'Model');
 App::uses('BaseApiController', 'Controller/Api');
+App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 
 /**
@@ -29,10 +30,13 @@ class PostsController extends BaseApiController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $post['Post'] = $this->getRequestJsonBody();
+        $post= $this->getRequestJsonBody();
+
+        $circleId =$post['circle_id'];
+        unset($post['circle_id']);
 
         try {
-            $res = $PostService->addNormalWithTransaction($post, $this->getUserId(), $this->getTeamId());
+            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();
         }
