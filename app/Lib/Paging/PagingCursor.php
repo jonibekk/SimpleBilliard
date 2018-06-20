@@ -44,9 +44,9 @@ class PagingCursor
      * @param array $order         Order of the query sorting
      */
     public function __construct(
-        $conditions = [],
-        $pointerValues = [],
-        $order = []
+        array $conditions = [],
+        array $pointerValues = [],
+        array $order = []
     ) {
         if (!empty($conditions)) {
             $this->conditions = $conditions;
@@ -70,9 +70,9 @@ class PagingCursor
      * @return string Encoded next paging cursor
      */
     public static function createPageCursor(
-        $conditions = [],
-        $pointerValues = [],
-        $order = []
+        array $conditions = [],
+        array $pointerValues = [],
+        array $order = []
     ): string {
         $array = array();
 
@@ -123,7 +123,7 @@ class PagingCursor
      * @param string $key
      * @param string $order
      */
-    public function addOrder($key, $order = self::PAGE_ORDER_DESC)
+    public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC)
     {
         $this->order[$key] = $order;
     }
@@ -152,7 +152,7 @@ class PagingCursor
      * @param string $operator
      * @param mixed  $value
      */
-    public function addPointer($key, $operator = '<', $value)
+    public function addPointer(string $key, string $operator = '<', $value)
     {
         $this->pointerValues[$key] = [$operator, $value];
     }
@@ -162,7 +162,7 @@ class PagingCursor
      *
      * @param array $pointer New pointer
      */
-    public function setPointer($pointer)
+    public function setPointer(array $pointer)
     {
         $this->pointerValues = $pointer;
     }
@@ -172,7 +172,7 @@ class PagingCursor
      *
      * @param array $conditions
      */
-    public function addCondition($conditions)
+    public function addCondition(array $conditions)
     {
         $this->conditions = array_merge($this->conditions, $conditions);
     }

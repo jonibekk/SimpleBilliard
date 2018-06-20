@@ -110,16 +110,7 @@ class CircleMember extends AppModel
             $options['conditions']['show_for_all_feed_flg'] = $checkHideStatus;
         }
 
-        $cacheKeyName = $this->getCacheKey(($checkHideStatus) ? CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE : CACHE_KEY_CHANNEL_CIRCLES_ALL,
-            true);
-
-        $model = $this;
-
-        $res = Cache::remember($cacheKeyName,
-            function () use ($model, $options) {
-                return $this->find('list', $options);
-            }, 'user_data');
-        return $res;
+        return $this->find('list', $options);
     }
 
     /**
@@ -129,8 +120,7 @@ class CircleMember extends AppModel
      *
      * @return array|null
      */
-    public
-    function getMyCircle(
+    public function getMyCircle(
         $params = []
     ) {
         ClassRegistry::init('Circle');
@@ -194,8 +184,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public
-    function getMemberList(
+    public function getMemberList(
         $circle_id,
         $with_admin = false,
         $with_me = true
@@ -225,8 +214,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public
-    function getAdminMemberList(
+    public function getAdminMemberList(
         $circle_id,
         $with_me = false
     ) {
@@ -247,8 +235,7 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public
-    function getMembers(
+    public function getMembers(
         $circle_id,
         $with_admin = false,
         $order = 'CircleMember.modified',
@@ -277,8 +264,7 @@ class CircleMember extends AppModel
         return $users;
     }
 
-    public
-    function getCircleInitMemberSelect2(
+    public function getCircleInitMemberSelect2(
         $circle_id,
         $with_admin = false
     ) {
@@ -297,8 +283,7 @@ class CircleMember extends AppModel
      *
      * @return array
      */
-    public
-    function getNonCircleMemberSelect2(
+    public function getNonCircleMemberSelect2(
         $circle_id,
         $keyword,
         $limit = 10,
