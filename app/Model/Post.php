@@ -501,10 +501,10 @@ class Post extends AppModel
             }
             // 読み込む投稿の更新時間が指定されている場合
             if ($post_time_before) {
-                  // [Hotfix]https://jira.goalous.com/browse/GL-6888
-                  // This condition conflicts `Post.created BETWEEN {$start} and {$end}, so the bug that past posts cant' get has been occurred.
-                  // In addition, $past_time_before value is not appropriate
-                  // We shouldn't use this condition.
+                // [Hotfix]https://jira.goalous.com/browse/GL-6888
+                // This condition conflicts `Post.created BETWEEN {$start} and {$end}, so the bug that past posts cant' get has been occurred.
+                // In addition, $past_time_before value is not appropriate
+                // We shouldn't use this condition.
 //                $order_col = key($post_options['order']);
 //                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
@@ -895,6 +895,29 @@ class Post extends AppModel
                 'id'      => $post_id,
                 'team_id' => $this->current_team_id,
                 'user_id' => $this->my_uid,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check whether the post is owned by the user
+     *
+     * @param int $postId
+     * @param int $userId
+     *
+     * @return bool True if owned
+     */
+    public function isPostOwned(int $postId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $postId,
+                'user_id' => $userId,
             ]
         ];
         $res = $this->find('list', $options);
@@ -1851,5 +1874,24 @@ class Post extends AppModel
         $this->data[$this->alias]['created'] = $currentTimeStamp;
 
         return $this->data;
+    }
+
+    /**
+     * Edit a post body
+     *
+     * @param string $newBody
+     * @param int    $postId
+     *
+     * @return bool True on successful edit
+     */
+    public function editPost(string $newBody, int $postId): bool
+    {
+        $newData = [
+            'body'     => '"'.$newBody.'"',
+            'modified' => REQUEST_TIMESTAMP
+        ];
+
+        return $this->updateAll($newData, ['id' => $postId]);
+
     }
 }

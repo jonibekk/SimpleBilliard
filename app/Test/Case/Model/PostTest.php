@@ -23,7 +23,7 @@ class PostTest extends GoalousTestCase
         'app.key_result',
         'app.post',
         'app.user',
-        'app.group',        
+        'app.group',
         'app.team',
         'app.invite',
         'app.post_mention',
@@ -995,6 +995,20 @@ class PostTest extends GoalousTestCase
         );
         $res = $this->Post->getByActionResultId($this->Post->ActionResult->getLastInsertID());
         $this->assertNotEmpty($res);
+    }
+
+    public function test_editPost_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $newBody = 'EDITED';
+
+        $Post->editPost($newBody, 1);
+
+        $res = $Post->getById(1);
+
+        $this->assertEquals($newBody, $res['body']);
     }
 
     function _setDefault()

@@ -21,6 +21,14 @@ class PostRequestValidator extends BaseValidator
         return $rules;
     }
 
+    public function getPostEditValidationRule(): array
+    {
+        $rules = [
+            "body" => [validator::notEmpty()::max(10000)],
+        ];
+        return $rules;
+    }
+
     public function getCirclePostValidationRule(): array
     {
         $rules = [
@@ -34,6 +42,13 @@ class PostRequestValidator extends BaseValidator
     {
         $self = new self();
         $self->addRule($self->getDefaultValidationRule());
+        return $self;
+    }
+
+    public static function createPostEditValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostEditValidationRule());
         return $self;
     }
 
