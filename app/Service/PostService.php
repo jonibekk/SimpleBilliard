@@ -413,11 +413,13 @@ class PostService extends AppService
 
         $postBody['user_id'] = $userId;
         $postBody['team_id'] = $teamId;
-        if ($postBody['type'] === Post::TYPE_CREATE_CIRCLE) {
+
+        if ($postBody['type'] == Post::TYPE_CREATE_CIRCLE) {
             $postBody['circle_id'] = $circleId;
         } elseif (empty($postBody['type'])) {
             $postBody['type'] = Post::TYPE_NORMAL;
         }
+
         $savedPost = $Post->save($postBody);
 
         if (empty ($savedPost)) {

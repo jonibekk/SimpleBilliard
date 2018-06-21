@@ -1,5 +1,7 @@
 <?php
+
 App::import('Service', 'POstService');
+App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BaseApiController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
@@ -42,7 +44,7 @@ class PostsController extends BaseApiController
         }
 
         //If post saving failed, $res will be false
-        if (is_bool($res) && !$res) {
+        if ($res === false) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to post."))
                                                                                  ->getResponse();
         }
@@ -55,22 +57,31 @@ class PostsController extends BaseApiController
      */
     private function validatePost()
     {
-        $body = $this->getRequestJsonBody();
+        $requestBody = $this->getRequestJsonBody();
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $circleId = Hash::get($requestBody, 'circle_id');
+
+        if (!$CircleMember->isJoined($circleId, $this->getUserId())) {
+            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->withMessage(__("The circle dosen't exist or you don't have permission."))
+                                                                        ->getResponse();
+        }
 
         try {
+            PostRequestValidator::createDefaultPostValidator()->validate($requestBody);
 
-            PostRequestValidator::createDefaultPostValidator()->validate($body);
-
-            switch ($body['type']) {
+            switch ($requestBody['type']) {
                 case Post::TYPE_NORMAL:
-                    PostRequestValidator::createCirclePostValidator()->validate($body);
+                    PostRequestValidator::createCirclePostValidator()->validate($requestBody);
                     break;
             }
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
                                                                        ->getResponse();
         }
-        
+
         return null;
     }
 }
