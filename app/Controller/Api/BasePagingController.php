@@ -36,7 +36,7 @@ abstract class  BasePagingController extends BaseApiController
         $stringOption = $this->request->query('extoption');
 
         $res = explode(',', $stringOption);
-        
+
         return $res ?? [];
     }
 
