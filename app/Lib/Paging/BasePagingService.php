@@ -1,4 +1,5 @@
 <?php
+App::import('Lib/Paging', 'PagingServiceInterface');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -6,7 +7,7 @@
  * Time: 12:11
  */
 
-trait PagingServiceTrait
+abstract class BasePagingService implements PagingServiceInterface
 {
     /**
      * Implement interface PagingServiceInterface, should this trait used in a class
@@ -140,11 +141,11 @@ trait PagingServiceTrait
      *
      * @param array $resultArray Content to be extended
      * @param array $conditions  Conditions used for getting the result
-     * @param array $flags       Extension flags
+     * @param array $options     Extension options
      *
      * @return array
      */
-    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
+    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
         return $resultArray;
     }

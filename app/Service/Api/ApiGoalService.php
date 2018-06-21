@@ -1,6 +1,6 @@
 <?php
 App::import('Service/Api', 'ApiService');
-App::import('Lib/Paging', 'PagingServiceTrait');
+App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingServiceInterface');
 App::uses('TimeExHelper', 'View/Helper');
 
@@ -9,7 +9,7 @@ App::uses('TimeExHelper', 'View/Helper');
  */
 class ApiGoalService extends ApiService implements PagingServiceInterface
 {
-    use PagingServiceTrait;
+    use BasePagingService;
 
     // ゴール検索デフォルト取得件数
     const GOAL_SEARCH_DEFAULT_LIMIT = 10;

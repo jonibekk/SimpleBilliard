@@ -9,7 +9,7 @@
 //TODO
 class CommentPaging implements PagingServiceInterface
 {
-    use PagingServiceTrait;
+    use BasePagingService;
 
     /**
      * @param PagingCursor $pagingCursor
@@ -31,7 +31,7 @@ class CommentPaging implements PagingServiceInterface
         return $Comment->getCount($conditions);
     }
 
-    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
+    protected function extendPagingResult(&$resultArray, &$conditions, $options = [])
     {
     }
 

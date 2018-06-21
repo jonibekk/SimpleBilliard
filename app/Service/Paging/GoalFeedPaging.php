@@ -8,7 +8,7 @@
 
 class GoalFeedPaging implements PagingServiceInterface
 {
-    use PagingServiceTrait;
+    use BasePagingService;
     use FeedPagingTrait;
 
     const EXTEND_ALL = "ext:goal_post:all";
@@ -29,27 +29,27 @@ class GoalFeedPaging implements PagingServiceInterface
         // TODO: Implement countData() method.
     }
 
-    protected function extendPagingResult(&$resultArray, &$conditions, $flags = [])
+    protected function extendPagingResult(&$resultArray, &$conditions, $options = [])
     {
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_USER, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
 
         }
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_POST_LIKE, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_LIKE, $options)) {
 
         }
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_COMMENT, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENT, $options)) {
 
         }
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_POST_FILE, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_FILE, $options)) {
 
         }
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_GOAL, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_GOAL, $options)) {
 
         }
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_KR, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_KR, $options)) {
 
         }
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_ACTION_RESULT, $flags)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_ACTION_RESULT, $options)) {
 
         }
     }

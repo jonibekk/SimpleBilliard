@@ -1,7 +1,6 @@
 <?php
-App::uses('BaseApiController', 'Controller/Api');
+App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CirclePostPagingService');
-App::uses('PagingControllerTrait', 'Lib/Paging');
 App::uses('PagingCursor', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
@@ -12,10 +11,8 @@ App::uses('Circle', 'Model');
  * Date: 2018/06/20
  * Time: 9:41
  */
-class CirclesController extends BaseApiController
+class CirclesController extends BasePagingController
 {
-    use PagingControllerTrait;
-
     public function get_posts(int $circleId)
     {
         $error = $this->validateGetCirclePost($circleId);
@@ -27,14 +24,14 @@ class CirclesController extends BaseApiController
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = ClassRegistry::init('CirclePostPagingService');
 
-        $pagingCursor = $this->getPagingParameters($this->request);
+        $pagingCursor = $this->getPagingParameters();
         $pagingCursor->addCondition(['circle_id' => $circleId]);
 
         try {
             $data = $CirclePostPagingService->getDataWithPaging(
                 $pagingCursor,
-                $this->getPagingLimit($this->request),
-                $this->getExtensionOptions($this->request) ?? CirclePostPagingService::EXTEND_ALL);
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?? CirclePostPagingService::EXTEND_ALL);
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();

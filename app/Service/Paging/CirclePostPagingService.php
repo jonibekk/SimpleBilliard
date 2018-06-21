@@ -1,6 +1,5 @@
 <?php
-App::import('Lib/Paging', 'PagingServiceInterface');
-App::import('Lib/Paging', 'PagingServiceTrait');
+App::import('Lib/Paging', 'BasePagingService');
 App::uses('PagingCursor', 'Lib/Paging');
 App::uses('Post', 'Model');
 
@@ -10,10 +9,8 @@ App::uses('Post', 'Model');
  * Date: 2018/06/20
  * Time: 9:39
  */
-class CirclePostPagingService implements PagingServiceInterface
+class CirclePostPagingService extends BasePagingService
 {
-    use PagingServiceTrait;
-
     const EXTEND_ALL = "ext:circle_post:all";
     const EXTEND_USER = "ext:circle_post:user";
     const EXTEND_CIRCLE = "ext:circle_post:circle";
@@ -21,6 +18,7 @@ class CirclePostPagingService implements PagingServiceInterface
     const EXTEND_POST_SHARE_CIRCLE = "ext:circle_post:share_circle";
     const EXTEND_POST_SHARE_USER = "ext:circle_post:share_user";
     const EXTEND_POST_FILE = "ext:circle_post:file";
+
     const DEFAULT_COMMENT_COUNT = 3;
 
     protected function readData(PagingCursor $pagingCursor, int $limit): array
@@ -50,7 +48,7 @@ class CirclePostPagingService implements PagingServiceInterface
         return (int)$Post->find('count', $options);
     }
 
-    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
+    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
         //TODO Will implement in GL-7028
     }
@@ -65,6 +63,11 @@ class CirclePostPagingService implements PagingServiceInterface
     private function createSearchCondition(array $conditions): array
     {
         $circleId = Hash::get($conditions, 'circle_id');
+
+        if (empty($circleId)) {
+            GoalousLog::error("Missing circle ID for post paging", $conditions);
+            throw new RuntimeException("Missing circle ID");
+        }
 
         $options = [
             'conditions' => [
