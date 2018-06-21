@@ -30,10 +30,10 @@ class PostsController extends BaseApiController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $post= $this->getRequestJsonBody();
+        $post['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $post['type'] = Hash::get($this->getRequestJsonBody(), 'type');
 
-        $circleId =$post['circle_id'];
-        unset($post['circle_id']);
+        $circleId = Hash::get($this->getRequestJsonBody(), 'circle_id');
 
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId());
@@ -55,12 +55,6 @@ class PostsController extends BaseApiController
      */
     private function validatePost()
     {
-        $error = $this->allowMethod('POST');
-
-        if (!empty($error)) {
-            return $error;
-        }
-
         $body = $this->getRequestJsonBody();
 
         try {
@@ -76,6 +70,7 @@ class PostsController extends BaseApiController
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
                                                                        ->getResponse();
         }
+        
         return null;
     }
 }
