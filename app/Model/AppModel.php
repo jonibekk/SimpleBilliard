@@ -13,6 +13,9 @@ App::uses('Sanitize', 'Utility');
  * @method findByEmail($email)
  * @method findByName($name)
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class AppModel extends Model
 {
 
@@ -68,6 +71,33 @@ class AppModel extends Model
     public $support_lang_codes = [
         'jpn',
     ];
+
+    /**
+     * Flag whether data type conversion will be done
+     *
+     * @var bool
+     */
+    private $conversionFlag = false;
+
+    /**
+     * Default conversion table
+     *
+     * @var array
+     */
+    private $defaultConversionTable = [
+        'id'       => DataType::INT_TYPE,
+        'created'  => DataType::INT_TYPE,
+        'modified' => DataType::INT_TYPE,
+        'deleted'  => DataType::INT_TYPE,
+        'del_flg'  => DataType::BOOL_TYPE
+    ];
+
+    /**
+     * Conversion table for model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [];
 
     public $model_key_map = [
         'key_result_id'    => 'KeyResult',
@@ -659,6 +689,60 @@ class AppModel extends Model
         ], $condition);
 
         return !empty($ret);
+    }
+
+    public function beforeFind($query)
+    {
+        if (Hash::get($query, 'conversion')) {
+            $this->conversionFlag = true;
+        }
+
+        return parent::beforeFind($query);
+    }
+
+    public function afterFind($results, $primary = false)
+    {
+        if ($this->conversionFlag) {
+            $results = $this->convertType($results);
+        }
+
+        return parent::afterFind($results, $primary);
+    }
+
+    /**
+     * Convert data from string to configured ones
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function convertType(array $data): array
+    {
+        $conversionTable = array_merge($this->defaultConversionTable, $this->modelConversionTable);
+
+        $this->traverseArray($data, $conversionTable);
+
+        return $data;
+    }
+
+    private function traverseArray(array &$data, array $conversionTable)
+    {
+        foreach ($data as $key => &$value) {
+
+            if (is_numeric($key) || is_array($value)) {
+                $this->traverseArray($value, $conversionTable);
+            }
+            if (key_exists($key, $conversionTable)) {
+                switch ($conversionTable[$key]) {
+                    case (DataType::INT_TYPE):
+                        $data[$key] = intval($value);
+                        break;
+                    case (DataType::BOOL_TYPE):
+                        $data[$key] = boolval($value);
+                        break;
+                }
+            }
+        }
     }
 
 }

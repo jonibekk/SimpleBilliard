@@ -120,12 +120,12 @@ class AuthService extends AppService
     /**
      * Save new password as SHA256
      *
-     * @param array  $userData
+     * @param UserEntity  $userData
      * @param string $plainPassword
      *
      * @return bool
      */
-    private function _savePasswordAsSha256(array $userData, string $plainPassword): bool
+    private function _savePasswordAsSha256(UserEntity $userData, string $plainPassword): bool
     {
         $User = new User();
         $newHashedPassword = $this->passwordHasher->hash($plainPassword);
