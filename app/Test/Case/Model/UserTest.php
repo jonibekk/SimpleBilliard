@@ -573,7 +573,7 @@ class UserTest extends GoalousTestCase
         $postData['User']['email'] = "test@aaaaaaa.com";
         $this->User->addEmail($postData, $uid);
         $res = $this->User->changePrimaryEmail($uid, $this->User->getLastInsertID());
-        $this->assertArrayHasKey('User', $res, "[正常]通常使うメアドの変更");
+        $this->assertNotEmpty($res['id'], "[正常]通常使うメアドの変更");
     }
 
     function testPasswordCheckSuccess()

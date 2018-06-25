@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e9cb764aa111e796e57d975c4242cb2",
+    "content-hash": "83e65a7d71ca4bec296162c67a4efef0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -420,16 +420,16 @@
         },
         {
             "name": "composer/installers",
-            "version": "v1.2.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "d78064c68299743e0161004f2de3a0204e33b804"
+                "reference": "049797d727261bf27f2690430d935067710049c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/d78064c68299743e0161004f2de3a0204e33b804",
-                "reference": "d78064c68299743e0161004f2de3a0204e33b804",
+                "url": "https://api.github.com/repos/composer/installers/zipball/049797d727261bf27f2690430d935067710049c2",
+                "reference": "049797d727261bf27f2690430d935067710049c2",
                 "shasum": ""
             },
             "require": {
@@ -441,7 +441,7 @@
             },
             "require-dev": {
                 "composer/composer": "1.0.*@dev",
-                "phpunit/phpunit": "4.1.*"
+                "phpunit/phpunit": "^4.8.36"
             },
             "type": "composer-plugin",
             "extra": {
@@ -471,12 +471,17 @@
             "keywords": [
                 "Craft",
                 "Dolibarr",
+                "Eliasis",
                 "Hurad",
                 "ImageCMS",
+                "Kanboard",
+                "Lan Management System",
                 "MODX Evo",
                 "Mautic",
+                "Maya",
                 "OXID",
                 "Plentymarkets",
+                "Porto",
                 "RadPHP",
                 "SMF",
                 "Thelia",
@@ -494,28 +499,36 @@
                 "croogo",
                 "dokuwiki",
                 "drupal",
+                "eZ Platform",
                 "elgg",
                 "expressionengine",
                 "fuelphp",
                 "grav",
                 "installer",
+                "itop",
                 "joomla",
                 "kohana",
                 "laravel",
+                "lavalite",
                 "lithium",
                 "magento",
+                "majima",
                 "mako",
                 "mediawiki",
                 "modulework",
+                "modx",
                 "moodle",
+                "osclass",
                 "phpbb",
                 "piwik",
                 "ppi",
                 "puppet",
+                "pxcms",
                 "reindex",
                 "roundcube",
                 "shopware",
                 "silverstripe",
+                "sydes",
                 "symfony",
                 "typo3",
                 "wordpress",
@@ -523,7 +536,7 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2016-08-13T20:53:52+00:00"
+            "time": "2017-12-29T09:13:20+00:00"
         },
         {
             "name": "dereuromark/cakephp-url-cache",
@@ -952,17 +965,17 @@
             "time": "2014-03-19T01:33:27+00:00"
         },
         {
-            "name": "josegonzalez/cakephp-entity",
+            "name": "isaocorp/cakephp-entity",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/josegonzalez/cakephp-entity.git",
-                "reference": "3399358cb8a81828b6ed6899a722cf7f2bf64395"
+                "url": "https://github.com/IsaoCorp/cakephp-entity.git",
+                "reference": "21a02a5d6f22866309dbc45cc7db0eb188e070e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/josegonzalez/cakephp-entity/zipball/3399358cb8a81828b6ed6899a722cf7f2bf64395",
-                "reference": "3399358cb8a81828b6ed6899a722cf7f2bf64395",
+                "url": "https://api.github.com/repos/IsaoCorp/cakephp-entity/zipball/21a02a5d6f22866309dbc45cc7db0eb188e070e3",
+                "reference": "21a02a5d6f22866309dbc45cc7db0eb188e070e3",
                 "shasum": ""
             },
             "require": {
@@ -973,25 +986,23 @@
             "extra": {
                 "installer-name": "Entity"
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "Yosuke Basuke Suzuki",
-                    "homepage": "http://basuke.com/",
-                    "role": "Author"
+                    "name": "ISAO Corp",
+                    "homepage": "http://www.isao.co.jp",
+                    "role": "Maintainer"
                 },
                 {
-                    "name": "Jose Diaz-Gonzalez",
-                    "email": "email@josediazgonzalez.com",
-                    "homepage": "http://josediazgonzalez.com",
-                    "role": "Maintainer"
+                    "name": "Yosuke Basuke Suzuki",
+                    "role": "Author",
+                    "homepage": "http://basuke.com/"
                 }
             ],
             "description": "Use model objects/classes instead of arrays in your CakePHP application",
-            "homepage": "https://github.com/josegonzalez/cakephp-entity",
+            "homepage": "https://github.com/isaocorp/cakephp-entity",
             "keywords": [
                 "cakephp",
                 "entity",
@@ -1000,7 +1011,11 @@
                 "objects",
                 "orm"
             ],
-            "time": "2015-07-06 19:28:00"
+            "support": {
+                "source": "https://github.com/isaocorp/cakephp-entity",
+                "issues": "https://github.com/isaocorp/cakephp-entity/issues"
+            },
+            "time": "2018-06-25 07:28:18"
         },
         {
             "name": "kaz29/cake_slack",
@@ -5045,7 +5060,7 @@
     "stability-flags": {
         "kaz29/cake_slack": 20,
         "browscap/browscap-php": 20,
-        "josegonzalez/cakephp-entity": 20
+        "isaocorp/cakephp-entity": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
