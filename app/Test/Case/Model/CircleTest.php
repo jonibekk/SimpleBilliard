@@ -363,4 +363,16 @@ class CircleTest extends GoalousTestCase
         $this->assertFalse($this->Circle->belongToTeam(2, $circleId));
     }
 
+    public function test_getLatestPost_success()
+    {
+        $circleId = 1;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $res = $Circle->find('first', $circleId);
+
+        $this->assertNotEmpty($res['Circle']['latest_post']);
+    }
+
 }
