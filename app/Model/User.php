@@ -324,6 +324,26 @@ class User extends Table
     ];
 
     /**
+     * User fields to be returned on user login
+     *
+     * @var array
+     */
+    public $loginUserFields = [
+        'id',
+        'photo_file_name',
+        'cover_photo_file_name',
+        'admin_flg',
+        'default_team_id',
+        'timezone',
+        'language',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'auto_language_flg',
+        'romanize_flg',
+    ];
+
+    /**
      * belongsTo associations
      *
      * @var array
@@ -451,6 +471,12 @@ class User extends Table
                 function (&$entity, &$model) {
                     $entity = $this->setUsername($entity);
                 });
+
+        $this->dataIter($results,
+            function (&$data, &$model) {
+
+            });
+
 
         $results = parent::afterFind($results, $primary);
 
@@ -1929,5 +1955,48 @@ class User extends Table
         $user = $this->find('first', $condition);
 
         return $user;
+    }
+
+    /**
+     * Get user with fields for login response
+     *
+     * @param int $userId
+     *
+     * @return mixed
+     */
+    public function getUserForLoginResponse(int $userId)
+    {
+        $conditions = [
+            'conditions' => [
+                'id' => $userId
+            ],
+            'fields'     => $this->loginUserFields,
+            'entity'     => true,
+            'conversion' => true
+        ];
+
+        return $this->find('first', $conditions);
+    }
+
+    /**
+     * Get photo file names from the user data array, and turn them into URLs
+     *
+     * @param array $data
+     */
+    private function attachImageUrl(array &$data)
+    {
+//TODO GL-7111
+        $coverFileName = Hash::get($data, 'cover_photo_file_name');
+        $photoFileName = Hash::get($data, 'photo_file_name');
+
+        if (isset($coverFileName)) {
+            $data['cover_img_url'] = '';
+            unset($data['cover_photo_file_name']);
+        }
+
+        if (isset($photoFileName)) {
+            $data['photo_img_url'] = '';
+            unset($data['photo_file_name']);
+        }
     }
 }

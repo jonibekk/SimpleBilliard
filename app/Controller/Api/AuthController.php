@@ -2,6 +2,7 @@
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
+App::uses('User', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -15,7 +16,7 @@ class AuthController extends BaseApiController
     {
         parent::beforeFilter();
     }
-    
+
     /**
      * Login endpoint for user. Ignore restriction and authentication
      *
@@ -47,8 +48,18 @@ class AuthController extends BaseApiController
                                                                        ->getResponse();
         }
 
+        $authHeader = [
+            'Authorization' => 'Bearer ' . $jwt->token()
+        ];
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $data = $User->getUserForLoginResponse($jwt->getUserId());
+
         //On successful login, return the JWT token to the user
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody(['jwt' => $jwt->token()])->getResponse();
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data->toArray())
+                                                               ->withHeader($authHeader, true)->getResponse();
     }
 
     /**
@@ -74,7 +85,7 @@ class AuthController extends BaseApiController
                                                                                  ->getResponse();
         }
 
-        if (!$res){
+        if (!$res) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to logout"))
                                                                                  ->getResponse();
         }
