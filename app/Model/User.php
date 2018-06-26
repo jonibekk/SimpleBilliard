@@ -474,7 +474,7 @@ class User extends Table
 
         $this->dataIter($results,
             function (&$data, &$model) {
-
+                $data = $this->attachImageUrl($data);
             });
 
 
@@ -1982,8 +1982,10 @@ class User extends Table
      * Get photo file names from the user data array, and turn them into URLs
      *
      * @param array $data
+     *
+     * @return array
      */
-    private function attachImageUrl(array &$data)
+    private function attachImageUrl(array $data): array
     {
 //TODO GL-7111
         $coverFileName = Hash::get($data, 'cover_photo_file_name');
@@ -1998,5 +2000,7 @@ class User extends Table
             $data['photo_img_url'] = '';
             unset($data['photo_file_name']);
         }
+
+        return $data;
     }
 }
