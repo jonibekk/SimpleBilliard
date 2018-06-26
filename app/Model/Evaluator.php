@@ -95,7 +95,7 @@ class Evaluator extends AppModel
                 'evaluator_user_id'
             ]
         ];
-        $res = $this->Team->Evaluator->find('list', $options);
+        $res = $this->find('list', $options);
 
         return $res;
     }

@@ -22,7 +22,8 @@
     "friendsofcake/cakepdf": "1.0.3",
     "respect/validation": "^1.1",
     "firebase/php-jwt": "^5.0",
-    "ramsey/uuid": "^3.7"
+    "ramsey/uuid": "^3.7",
+    "isaocorp/cakephp-entity": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",
@@ -31,10 +32,14 @@
   "config": {
     "vendor-dir": "Vendor/"
   },
-  "repositories": {
-    "packagist": {
+  "repositories": [
+   {
       "type": "composer",
       "url": "https://packagist.jp"
+    },
+    {
+      "type":"vcs",
+      "url": "https://github.com/isaocorp/cakephp-entity"
     }
-  }
+  ]
 }

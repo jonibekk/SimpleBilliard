@@ -3,8 +3,11 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('Email', 'Model');
+App::uses('Table', 'Entity.ORM');
+App::uses('UserEntity', 'Model/Entity');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\DataType\DataType as DataType;
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -36,7 +39,7 @@ use Goalous\Enum as Enum;
  * @property Device         $Device
  * @property TermsOfService $TermsOfService
  */
-class User extends AppModel
+class User extends Table
 {
     /**
      * 性別タイプ
@@ -139,6 +142,15 @@ class User extends AppModel
      * @var array
      */
     protected $uids = [];
+
+    /**
+     * Type conversion table for User model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [
+        'default_team_id' => DataType::INT
+    ];
 
     /**
      * Validation rules
@@ -402,7 +414,7 @@ class User extends AppModel
      * @param array $results Result data
      * @param mixed $primary Primary query
      *
-     * @return array
+     * @return mixed
      */
     public function afterFind($results, $primary = false)
     {
@@ -439,6 +451,9 @@ class User extends AppModel
                 function (&$entity, &$model) {
                     $entity = $this->setUsername($entity);
                 });
+
+        $results = parent::afterFind($results, $primary);
+
         return $results;
     }
 
@@ -1880,7 +1895,7 @@ class User extends AppModel
      *
      * @param string $email
      *
-     * @return array|null
+     * @return UserEntity
      */
     public function findUserByEmail(string $email)
     {
@@ -1908,8 +1923,11 @@ class User extends AppModel
             ]
         ];
 
+        $condition['entity'] = true;
+        $condition['conversion'] = true;
+
         $user = $this->find('first', $condition);
 
-        return Hash::get($user, 'User');
+        return $user;
     }
 }
