@@ -9,6 +9,7 @@ App::uses('PostResource', 'Model');
 App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
 App::import('Service', 'PostService');
+App::uses('Table', 'Entity.ORM');
 
 /**
  * Post Model
@@ -32,7 +33,10 @@ App::import('Service', 'PostService');
  * @property PostSharedLog   $PostSharedLog
  * @property SavedPost       $SavedPost
  */
-class Post extends AppModel
+
+use Goalous\Enum\DataType\DataType as DataType;
+
+class Post extends Table
 {
     /**
      * post type
@@ -213,6 +217,19 @@ class Post extends AppModel
         ],
         'PostFile',
         'SavedPost',
+    ];
+
+    public $modelConversionTable = [
+        'user_id'          => DataType::INT,
+        'team_id'          => DataType::INT,
+        'comment_count'    => DataType::INT,
+        'post_like_count'  => DataType::INT,
+        'post_read_count'  => DataType::INT,
+        'important_flg'    => DataType::BOOL,
+        'goal_id'          => DataType::INT,
+        'circle_id'        => DataType::INT,
+        'action_result_id' => DataType::INT,
+        'key_result_id'    => DataType::INT
     ];
 
     function __construct($id = false, $table = null, $ds = null)

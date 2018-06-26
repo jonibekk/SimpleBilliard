@@ -28,6 +28,7 @@ class CirclePostPagingService extends BasePagingService
         $options['limit'] = $limit;
         $options['order'] = $pagingCursor->getOrders();
         $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
+        $options['conversion'] = true;
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
