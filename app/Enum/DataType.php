@@ -9,9 +9,11 @@ use MyCLabs\Enum\Enum;
  * User: StephenRaharja
  * Date: 2018/06/22
  * Time: 13:22
+ *
+ * @package Goalous\Enum\DataType
  */
 class DataType extends Enum
 {
-    const INT_TYPE = "int";
-    const BOOL_TYPE = "bool";
+    const INT = "int";
+    const BOOL = "bool";
 }

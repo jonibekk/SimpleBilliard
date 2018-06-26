@@ -149,7 +149,7 @@ class User extends Table
      * @var array
      */
     protected $modelConversionTable = [
-        'default_team_id' => DataType::INT_TYPE
+        'default_team_id' => DataType::INT
     ];
 
     /**

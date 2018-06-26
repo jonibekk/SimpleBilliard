@@ -14,7 +14,7 @@ use MyCLabs\Enum\Enum;
 /**
  * Class ApiVersion
  *
- * @package Goalous\Model\Enum\ApiVersion
+ * @package Goalous\Enum\ApiVersion
  */
 class ApiVersion extends Enum
 {

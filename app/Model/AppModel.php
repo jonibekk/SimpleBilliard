@@ -85,11 +85,11 @@ class AppModel extends Model
      * @var array
      */
     private $defaultConversionTable = [
-        'id'       => DataType::INT_TYPE,
-        'created'  => DataType::INT_TYPE,
-        'modified' => DataType::INT_TYPE,
-        'deleted'  => DataType::INT_TYPE,
-        'del_flg'  => DataType::BOOL_TYPE
+        'id'       => DataType::INT,
+        'created'  => DataType::INT,
+        'modified' => DataType::INT,
+        'deleted'  => DataType::INT,
+        'del_flg'  => DataType::BOOL
     ];
 
     /**
@@ -725,6 +725,12 @@ class AppModel extends Model
         return $data;
     }
 
+    /**
+     * Recursively traverse an array and convert their data types from string to configured one
+     *
+     * @param array $data
+     * @param array $conversionTable
+     */
     private function traverseArray(array &$data, array $conversionTable)
     {
         foreach ($data as $key => &$value) {
@@ -734,10 +740,10 @@ class AppModel extends Model
             }
             if (key_exists($key, $conversionTable)) {
                 switch ($conversionTable[$key]) {
-                    case (DataType::INT_TYPE):
+                    case (DataType::INT):
                         $data[$key] = intval($value);
                         break;
-                    case (DataType::BOOL_TYPE):
+                    case (DataType::BOOL):
                         $data[$key] = boolval($value);
                         break;
                 }
