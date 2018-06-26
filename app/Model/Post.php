@@ -1,5 +1,4 @@
 <?php
-App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
@@ -1274,7 +1273,7 @@ class Post extends Table
         $results = [];
 
         // 投稿データ保存
-        $results[] = $this->save($data);
+        $results[] = $this->save($data)->toArray();
         //post_share_users,post_share_circlesの更新
         $results[] = $this->PostShareUser->updateAll(['PostShareUser.modified' => REQUEST_TIMESTAMP],
             ['PostShareUser.post_id' => $data['Post']['id']]);
@@ -1386,7 +1385,7 @@ class Post extends Table
                 $data['key_result_id'] = $model_id;
                 break;
         }
-        $res = $this->save($data);
+        $res = $this->save($data)->toArray();
         if ($res) {
             if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
                 return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
@@ -1482,7 +1481,7 @@ class Post extends Table
             'type'      => self::TYPE_CREATE_CIRCLE,
             'circle_id' => $circle_id,
         ];
-        $res = $this->save($data);
+        $res = $this->save($data)->toArray();
         if ($team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
             $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
         }
