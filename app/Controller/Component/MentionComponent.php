@@ -251,6 +251,8 @@ class MentionComponent extends Component
             $circleId = $circle['PostShareCircle']['circle_id'];
             $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['PlainCircle']['public_flg'];
+            // in public circle comments, we can show everyone.
+            // so no need to filter by anything
             if ($isPublic) return $list;
             $circleMembers = $circleModel->getMembers($circleId);
             $members = array();
