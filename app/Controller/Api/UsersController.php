@@ -41,12 +41,6 @@ class UsersController extends BaseApiController
      */
     private function validateCircles()
     {
-        $res = $this->allowMethod('GET');
-
-        if (!empty($res)) {
-            return $res;
-        }
-
         return null;
     }
 

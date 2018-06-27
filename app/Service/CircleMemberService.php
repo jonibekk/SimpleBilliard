@@ -16,11 +16,11 @@ class CircleMemberService extends AppService
      *
      * @param int  $userId
      * @param int  $teamId
-     * @param bool $isPublic Whether the circle is public or not
+     * @param bool $publicOnlyFlag Whether the circle is public or not
      *
      * @return array Array of circle models
      */
-    public function getUserCircles(int $userId, int $teamId, bool $isPublic = true): array
+    public function getUserCircles(int $userId, int $teamId, bool $publicOnlyFlag = true): array
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -28,12 +28,11 @@ class CircleMemberService extends AppService
         $conditions = [
             'conditions' => [
                 'Circle.team_id'    => $teamId,
-                'Circle.public_flg' => $isPublic,
                 'Circle.del_flg'    => false
             ],
             'joins'      => [
                 [
-                    'type'       => 'LEFT',
+                    'type'       => 'INNER',
                     'table'      => 'circle_members',
                     'alias'      => 'CircleMember',
                     'conditions' => [
@@ -44,6 +43,10 @@ class CircleMemberService extends AppService
                 ]
             ]
         ];
+
+        if ($publicOnlyFlag) {
+            $conditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
+        }
 
         return Hash::extract($Circle->find('all', $conditions), "{n}.Circle");
     }
