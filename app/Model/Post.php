@@ -6,8 +6,8 @@ App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
-App::uses('Table', 'Entity.ORM');
-App::uses('PostEntity', 'Model/Entity');
+App::import('Entity.ORM', 'Table');
+App::import('Model/Entity', 'PostEntity');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
 
