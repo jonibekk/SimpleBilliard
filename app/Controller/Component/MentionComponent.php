@@ -251,14 +251,13 @@ class MentionComponent extends Component
             $circleId = $circle['PostShareCircle']['circle_id'];
             $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['PlainCircle']['public_flg'];
-            if (!$isPublic) {
-                $circleMembers = $circleModel->getMembers($circleId);
-                $members = array();
-                foreach ($circleMembers as $circleMember) {
-                    $members[] = $circleMember['CircleMember']['user_id'];
-                }
-                $filterMembers = array_merge($filterMembers, $members);
+            if ($isPublic) return $list;
+            $circleMembers = $circleModel->getMembers($circleId);
+            $members = array();
+            foreach ($circleMembers as $circleMember) {
+                $members[] = $circleMember['CircleMember']['user_id'];
             }
+            $filterMembers = array_merge($filterMembers, $members);
         }
         foreach ($post['PostShareUsers'] as $user) {
             $filterMembers[] = $user['PostShareUser']['user_id'];
