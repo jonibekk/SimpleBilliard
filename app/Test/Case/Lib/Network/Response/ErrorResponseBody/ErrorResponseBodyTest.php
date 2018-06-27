@@ -11,10 +11,10 @@ class ErrorResponseBodyTest extends GoalousTestCase
 {
     function test_withMultipleError()
     {
-        $e = new ErrorResponseBody();
-        $e->setMessage(__METHOD__);
-        $e->addError(new ErrorTypeGlobal($messageTypeGlobal = __METHOD__.__LINE__));
-        $e->addError(new ErrorTypeValidation($fieldName = 'field_name', $messageTypeValidation = __METHOD__.__LINE__));
+        $errorResponseBody = new ErrorResponseBody();
+        $errorResponseBody->setMessage(__METHOD__);
+        $errorResponseBody->addError(new ErrorTypeGlobal($messageTypeGlobal = __METHOD__.__LINE__));
+        $errorResponseBody->addError(new ErrorTypeValidation($fieldName = 'field_name', $messageTypeValidation = __METHOD__.__LINE__));
 
         $this->assertSame([
             'message' => __METHOD__,
@@ -29,14 +29,14 @@ class ErrorResponseBodyTest extends GoalousTestCase
                     'message' => $messageTypeValidation,
                 ],
             ],
-        ], $e->getBody());
+        ], $errorResponseBody->getBody());
     }
 
     function test_messageFromFirstError()
     {
-        $e = new ErrorResponseBody();
-        $e->addError(new ErrorTypeGlobal($messageTypeGlobal1 = __METHOD__.__LINE__));
-        $e->addError(new ErrorTypeGlobal($messageTypeGlobal2 = __METHOD__.__LINE__));
+        $errorResponseBody = new ErrorResponseBody();
+        $errorResponseBody->addError(new ErrorTypeGlobal($messageTypeGlobal1 = __METHOD__.__LINE__));
+        $errorResponseBody->addError(new ErrorTypeGlobal($messageTypeGlobal2 = __METHOD__.__LINE__));
 
         $this->assertSame([
             'message' => $messageTypeGlobal1,
@@ -50,18 +50,18 @@ class ErrorResponseBodyTest extends GoalousTestCase
                     'message' => $messageTypeGlobal2,
                 ],
             ],
-        ], $e->getBody());
+        ], $errorResponseBody->getBody());
     }
 
     function test_onlyMessage()
     {
-        $e = new ErrorResponseBody();
-        $e->setMessage(__METHOD__);
+        $errorResponseBody = new ErrorResponseBody();
+        $errorResponseBody->setMessage(__METHOD__);
 
         $this->assertSame([
             'message' => __METHOD__,
             'errors' => [],
-        ], $e->getBody());
+        ], $errorResponseBody->getBody());
     }
 
     function test_addErrorsFromValidation()
