@@ -5,10 +5,11 @@ App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostResource', 'Model');
-App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
-App::import('Service', 'PostService');
 App::uses('Table', 'Entity.ORM');
+App::uses('PostEntity', 'Model/Entity');
+App::import('Service', 'PostResourceService');
+App::import('Service', 'PostService');
 
 /**
  * Post Model
