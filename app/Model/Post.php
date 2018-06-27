@@ -6,7 +6,6 @@ App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
-App::import('Entity.ORM', 'Table');
 App::import('Model/Entity', 'PostEntity');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
@@ -36,7 +35,7 @@ App::import('Service', 'PostService');
 
 use Goalous\Enum\DataType\DataType as DataType;
 
-class Post extends Table
+class Post extends AppModel
 {
     /**
      * post type
@@ -1274,7 +1273,7 @@ class Post extends Table
         $results = [];
 
         // 投稿データ保存
-        $results[] = $this->save($data)->toArray();
+        $results[] = $this->save($data);
         //post_share_users,post_share_circlesの更新
         $results[] = $this->PostShareUser->updateAll(['PostShareUser.modified' => REQUEST_TIMESTAMP],
             ['PostShareUser.post_id' => $data['Post']['id']]);
@@ -1386,7 +1385,7 @@ class Post extends Table
                 $data['key_result_id'] = $model_id;
                 break;
         }
-        $res = $this->save($data)->toArray();
+        $res = $this->save($data);
         if ($res) {
             if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
                 return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
@@ -1482,7 +1481,7 @@ class Post extends Table
             'type'      => self::TYPE_CREATE_CIRCLE,
             'circle_id' => $circle_id,
         ];
-        $res = $this->save($data)->toArray();
+        $res = $this->save($data);
         if ($team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
             $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
         }

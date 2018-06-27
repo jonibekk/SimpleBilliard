@@ -177,7 +177,6 @@ class PostService extends AppService
         $post = $Post->save($postData, [
             'atomic' => false,
         ]);
-        $post = $post->toArray();
         if (empty($post)) {
             GoalousLog::error('Error on adding post: failed post save', [
                 'users.id' => $userId,
