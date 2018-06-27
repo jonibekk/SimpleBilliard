@@ -37,8 +37,7 @@ class AuthController extends BaseApiController
         try {
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
-                                                                                 ->getResponse();
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
         }
 
         //If no matching username / password is found
@@ -70,8 +69,7 @@ class AuthController extends BaseApiController
         try {
             $res = $Auth->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
-                                                                                 ->getResponse();
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
         }
 
         if (!$res){
@@ -101,8 +99,7 @@ class AuthController extends BaseApiController
         try {
             $validator->validate($this->getRequestJsonBody());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
-                                                                       ->getResponse();
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->getResponse();
         }
 
         return null;
