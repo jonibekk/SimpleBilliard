@@ -9,6 +9,9 @@ App::import('Service', 'CirclePinService');
  * @property Team   $Team
  * @property User   $User
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class CircleMember extends AppModel
 {
 
@@ -18,7 +21,7 @@ class CircleMember extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'     => [
+        'user_id'               => [
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
@@ -52,6 +55,15 @@ class CircleMember extends AppModel
         ],
         'Team',
         'User',
+    ];
+
+    public $modelConversionTable = [
+        'circle_id'             => DataType::INT,
+        'team_id'               => DataType::INT,
+        'user_id'               => DataType::INT,
+        'team_flg'              => DataType::BOOL,
+        'unread_count'          => DataType::INT,
+        'show_for_all_feed_flg' => DataType::BOOL
     ];
 
     public function getMyCircleList($check_hide_status = null)
@@ -361,8 +373,13 @@ class CircleMember extends AppModel
      *
      * @return mixed
      */
-    function join(int $circleId, int $userId, bool $showForAllFeedFlg = true, bool $getNotificationFlg = true, bool $isAdmin = false): bool
-    {
+    function join(
+        int $circleId,
+        int $userId,
+        bool $showForAllFeedFlg = true,
+        bool $getNotificationFlg = true,
+        bool $isAdmin = false
+    ): bool {
         if (!empty($this->isBelong($circleId, $userId))) {
             return false;
         }
@@ -391,7 +408,7 @@ class CircleMember extends AppModel
      *
      * @return bool
      */
-    function remove(int $circleId, int $userId) :bool
+    function remove(int $circleId, int $userId): bool
     {
         $conditions = [
             'CircleMember.circle_id' => $circleId,
@@ -644,12 +661,36 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id'   => $this->current_team_id,
                 'user_id'   => $userId,
                 'circle_id' => $circleId
             ],
+            'fields'     => [
+                'id'
+            ]
         ];
 
-        return (bool)$this->find('first', $options);
+        return (bool)$this->find('first', $options) ?? false;
+    }
+
+    /**
+     * Get circle member information of an user in a circle
+     *
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return array
+     */
+    public function getCircleMember(int $circleId, int $userId): array
+    {
+
+        $options = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId
+            ],
+            'conversion' => true
+        ];
+
+        return Hash::get($this->find('first', $options), 'CircleMember') ?? [];
     }
 }
