@@ -176,10 +176,17 @@ class PagingCursor
      * Add new condition
      *
      * @param array $conditions
+     * @param bool  $overwrite If same key exist, whether to overwrite or not
      */
-    public function addCondition(array $conditions)
+    public function addCondition(array $conditions, bool $overwrite = false)
     {
-        $this->conditions = array_merge($this->conditions, $conditions);
+        if ($overwrite) {
+            $this->conditions = array_merge($this->conditions, $conditions);
+        } else {
+            if (!array_key_exists(key($conditions), $this->conditions)) {
+                $this->conditions = array_merge($this->conditions, $conditions);
+            }
+        }
     }
 
     /**

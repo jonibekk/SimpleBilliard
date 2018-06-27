@@ -1,6 +1,6 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
-App::import('Service', 'CircleMemberService');
+App::import('Service', 'CircleListPagingService');
 
 /**
  * Created by PhpStorm.
@@ -8,7 +8,7 @@ App::import('Service', 'CircleMemberService');
  * Date: 2018/06/04
  * Time: 15:07
  */
-class UsersController extends BaseApiController
+class UsersController extends BasePagingController
 {
     /**
      * Get list of circles that an user is joined in
@@ -26,12 +26,24 @@ class UsersController extends BaseApiController
             return $res;
         }
 
-        /** @var CircleMemberService $CircleMemberService */
-        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+        $pagingCursor = $this->getPagingParameters();
+        $pagingCursor->addCondition(['user_id' => $userId]);
+        $pagingCursor->addCondition(['team_id' => $this->getTeamId()]);
+        $pagingCursor->addCondition(['joined' => $this->request->query('joined') ?? true]);
 
-        $circleData = $CircleMemberService->getUserCircles($userId, $this->getTeamId());
+        /** @var CircleListPagingService $CircleListPagingService */
+        $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
+
+        $circleData = $CircleListPagingService->getDataWithPaging($pagingCursor, $this->getPagingLimit());
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($circleData)->getResponse();
+    }
+
+    protected function getPagingConditionFromRequest(): PagingCursor
+    {
+        $pagingCursor = new PagingCursor();
+        $pagingCursor->addOrder('latest_post_created');
+        return $pagingCursor;
     }
 
     /**

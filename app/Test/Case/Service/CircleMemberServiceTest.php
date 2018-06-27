@@ -19,7 +19,8 @@ class CircleMemberServiceTest extends GoalousTestCase
         'app.circle',
         'app.user',
         'app.circle_member',
-        'app.team'
+        'app.team',
+        'app.post_share_circle'
     ];
 
     public function test_fetchCircles_success()

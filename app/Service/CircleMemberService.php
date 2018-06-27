@@ -27,8 +27,8 @@ class CircleMemberService extends AppService
 
         $conditions = [
             'conditions' => [
-                'Circle.team_id'    => $teamId,
-                'Circle.del_flg'    => false
+                'Circle.team_id' => $teamId,
+                'Circle.del_flg' => false
             ],
             'joins'      => [
                 [
@@ -36,7 +36,7 @@ class CircleMemberService extends AppService
                     'table'      => 'circle_members',
                     'alias'      => 'CircleMember',
                     'conditions' => [
-                        'Circle.id'            => 'CircleMember.circle_id',
+                        'Circle.id = CircleMember.circle_id',
                         'CircleMember.user_id' => $userId,
                         'CircleMember.del_flg' => false
                     ]
