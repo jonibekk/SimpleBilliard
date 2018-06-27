@@ -199,7 +199,7 @@ class PostServiceTest extends GoalousTestCase
         $postData = [
             'Post' => [
                 'body'    => 'test',
-                'share'   => 'public',
+                'share'   => 'public'
             ],
         ];
         $post = $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
@@ -207,10 +207,13 @@ class PostServiceTest extends GoalousTestCase
 
         $postId = $post['id'];
 
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
         // assert shared to public circle
-        $sharedCircleAll = $this->PostShareCircle->find('all', [
+        $sharedCircleAll = $PostShareCircle->find('all', [
             'conditions' => [
-                'PostShareCircle.post_id' => $postId,
+                'post_id' => $postId,
             ]
         ]);
         $this->assertCount(1, $sharedCircleAll);

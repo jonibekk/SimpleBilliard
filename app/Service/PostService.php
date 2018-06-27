@@ -177,6 +177,7 @@ class PostService extends AppService
         $post = $Post->save($postData, [
             'atomic' => false,
         ]);
+        $post = $post->toArray();
         if (empty($post)) {
             GoalousLog::error('Error on adding post: failed post save', [
                 'users.id' => $userId,
@@ -185,7 +186,6 @@ class PostService extends AppService
             ]);
             throw new RuntimeException('Error on adding post: failed post save');
         }
-
         $postId = $post['Post']['id'];
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
