@@ -111,10 +111,15 @@ class PagingCursor
      * @param string $cursor
      *
      * @return array
+     * @throws RuntimeException
      */
     public static function decodeCursorToArray(string $cursor): array
     {
-        return json_decode(base64_decode($cursor), true);
+        $decodedString = base64_decode($cursor);
+        if ($decodedString === false) {
+            throw new RuntimeException("Failed in parsing cursor");
+        }
+        return json_decode($decodedString, true);
     }
 
     /**

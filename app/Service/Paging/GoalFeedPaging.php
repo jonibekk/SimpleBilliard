@@ -1,15 +1,15 @@
 <?php
+App::import('Lib/Paging', 'BasePagingService');
+App::uses('PagingCursor', 'Lib/Paging');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/23
  * Time: 17:05
  */
-
-class GoalFeedPaging implements PagingServiceInterface
+class GoalFeedPaging extends BasePagingService
 {
-    use BasePagingService;
-    use FeedPagingTrait;
 
     const EXTEND_ALL = "ext:goal_post:all";
     const EXTEND_USER = "ext:goal_post:user";
@@ -19,7 +19,7 @@ class GoalFeedPaging implements PagingServiceInterface
     const EXTEND_KR = "ext:goal_post:kr";
     const EXTEND_ACTION_RESULT = "ext:goal_post:action_result";
 
-    protected function readData($pagingCursor, $limit): array
+    protected function readData(PagingCUrsor $pagingCursor, int $limit): array
     {
         // TODO: Implement readData() method.
     }

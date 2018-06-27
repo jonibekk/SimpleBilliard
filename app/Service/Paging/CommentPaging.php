@@ -1,4 +1,6 @@
 <?php
+App::import('Lib/Paging', 'BasePagingService');
+App::uses('PagingCursor', 'Lib/Paging');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -7,9 +9,8 @@
  */
 
 //TODO
-class CommentPaging implements PagingServiceInterface
+class CommentPaging extends BasePagingService
 {
-    use BasePagingService;
 
     /**
      * @param PagingCursor $pagingCursor
