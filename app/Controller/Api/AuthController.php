@@ -55,10 +55,10 @@ class AuthController extends BaseApiController
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
-        $data = $User->getUserForLoginResponse($jwt->getUserId());
+        $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray()['User'];
 
         //On successful login, return the JWT token to the user
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data->toArray())
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data)
                                                                ->withHeader($authHeader, true)->getResponse();
     }
 
