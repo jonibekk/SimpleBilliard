@@ -58,7 +58,7 @@ class PostService extends AppService
             // changing post_resources.post_id = null to posts.id
             if (false === $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id'])) {
                 GoalousLog::error($errorMessage = 'failed updating post_resources.post_id', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -69,7 +69,7 @@ class PostService extends AppService
             $postDraft['post_id'] = $post['id'];
             if (false === $PostDraft->save($postDraft)) {
                 GoalousLog::error($errorMessage = 'failed saving post_draft', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -92,37 +92,6 @@ class PostService extends AppService
     }
 
     /**
-     * Adding new normal post with transaction
-     *
-     * @param array $postData
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $postResources
-     *
-     * @return array|bool If success, returns posts data array, if failed, returning false
-     */
-    function addNormalWithTransaction(array $postData, int $userId, int $teamId, array $postResources = [])
-    {
-        try {
-            $this->TransactionManager->begin();
-            $post = $this->addNormal(
-                $postData, $userId, $teamId, $postResources
-            );
-            $this->TransactionManager->commit();
-            return $post;
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            GoalousLog::error('failed adding post data', [
-                'message' => $e->getMessage(),
-                'users.id' => $userId,
-                'teams.id' => $teamId,
-            ]);
-            GoalousLog::error($e->getTraceAsString());
-        }
-        return false;
-    }
-
-    /**
      * Adding new normal post
      * Be careful, no transaction in this method
      * You should write try-catch and transaction yourself outside of this function
@@ -134,7 +103,6 @@ class PostService extends AppService
      *
      * @return array Always return inserted post data array if succeed
      *      otherwise throwing exception
-     *
      * @throws \InvalidArgumentException
      *      If passed data is invalid or not enough, throws InvalidArgumentException
      * @throws \RuntimeException
@@ -217,7 +185,6 @@ class PostService extends AppService
             ]);
             throw new RuntimeException('Error on adding post: failed post save');
         }
-
         $postId = $post['Post']['id'];
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
@@ -323,6 +290,37 @@ class PostService extends AppService
     }
 
     /**
+     * Adding new normal post with transaction
+     *
+     * @param array $postData
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $postResources
+     *
+     * @return array|bool If success, returns posts data array, if failed, returning false
+     */
+    function addNormalWithTransaction(array $postData, int $userId, int $teamId, array $postResources = [])
+    {
+        try {
+            $this->TransactionManager->begin();
+            $post = $this->addNormal(
+                $postData, $userId, $teamId, $postResources
+            );
+            $this->TransactionManager->commit();
+            return $post;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('failed adding post data', [
+                'message'  => $e->getMessage(),
+                'users.id' => $userId,
+                'teams.id' => $teamId,
+            ]);
+            GoalousLog::error($e->getTraceAsString());
+        }
+        return false;
+    }
+
+    /**
      * Save favorite post
      *
      * @param int $postId
@@ -375,5 +373,17 @@ class PostService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get query condition for posts made by an user
+     *
+     * @param int $userId User ID of the posts author
+     *
+     * @return array
+     */
+    public function getUserPostListCondition(int $userId)
+    {
+        return ['Post.user_id' => $userId];
     }
 }

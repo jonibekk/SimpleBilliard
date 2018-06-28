@@ -23,7 +23,7 @@ class PostTest extends GoalousTestCase
         'app.key_result',
         'app.post',
         'app.user',
-        'app.group',        
+        'app.group',
         'app.team',
         'app.invite',
         'app.post_mention',
@@ -763,7 +763,6 @@ class PostTest extends GoalousTestCase
         $this->assertFalse($res);
         $row = $this->Post->findById(1);
         $this->assertNotEquals($row['Post']['body'], $data['Post']['body']);
-
     }
 
     function testGetPostById()
