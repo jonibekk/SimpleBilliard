@@ -47,7 +47,7 @@ class CircleListPagingService extends BasePagingService
 
         if (empty($userId) || empty($teamId)) {
             GoalousLog::error("Missing parameter for circle list paging", $conditions);
-            throw new RuntimeException("Missing param");
+            throw new RuntimeException("Missing parameter for circle list paging");
         }
 
         $conditions = [

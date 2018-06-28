@@ -24,7 +24,11 @@ class CirclesController extends BasePagingController
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = ClassRegistry::init('CirclePostPagingService');
 
-        $pagingCursor = $this->getPagingParameters();
+        try {
+            $pagingCursor = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+        }
         $pagingCursor->addResource('circle_id', $circleId);
 
         try {

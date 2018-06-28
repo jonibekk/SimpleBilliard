@@ -79,8 +79,9 @@ abstract class  BasePagingController extends BaseApiController
         try {
             $pagingCursor = PagingCursor::decodeCursorToObject($cursor);
         } catch (RuntimeException $r) {
+            throw $r;
+        } catch (Exception $e){
             $pagingCursor = new PagingCursor();
-            GoalousLog::notice($r->getMessage(), $r->getTrace());
         }
         return $pagingCursor;
     }

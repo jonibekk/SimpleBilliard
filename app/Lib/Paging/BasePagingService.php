@@ -35,7 +35,7 @@ abstract class BasePagingService implements PagingServiceInterface
 
         $this->beforeRead();
 
-        $finalResult['count'] = $this->countData($pagingCursor->getConditions());
+        $finalResult['count'] = $this->countData($pagingCursor->getConditions(true));
 
         $pointerValues = $pagingCursor->getPointers();
 

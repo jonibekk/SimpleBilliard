@@ -103,13 +103,17 @@ class PagingCursor
      *
      * @param string $cursor
      *
+     * @throws RuntimeException When failed parsing cursor
      * @return PagingCursor
      */
     public static function decodeCursorToObject(string $cursor)
     {
-        $values = self::decodeCursorToArray($cursor);
-
-        $self = new self($values['conditions'], $values['pointer'], $values['order']);
+        try {
+            $values = self::decodeCursorToArray($cursor);
+            $self = new self($values['conditions'], $values['pointer'], $values['order']);
+        } catch (RuntimeException $e) {
+            throw $e;
+        }
 
         return $self;
     }
@@ -125,10 +129,14 @@ class PagingCursor
     public static function decodeCursorToArray(string $cursor): array
     {
         $decodedString = base64_decode($cursor);
-        if ($decodedString === false) {
-            throw new RuntimeException("Failed in parsing cursor");
+        if ($decodedString === false || empty($decodedString)) {
+            throw new RuntimeException("Failed in parsing cursor from base64 encoding");
         }
-        return json_decode($decodedString, true);
+        $jsonDecodedString = json_decode($decodedString, true);
+        if ($jsonDecodedString === false || empty($jsonDecodedString)) {
+            throw new RuntimeException("Failed in parsing cursor from json");
+        }
+        return $jsonDecodedString;
     }
 
     /**
@@ -253,7 +261,7 @@ class PagingCursor
      */
     public function getConditions(bool $includeResourceId = false)
     {
-        return ($includeResourceId)? array_merge($this->conditions, $this->resourceId) : $this->conditions;
+        return ($includeResourceId) ? array_merge($this->conditions, $this->resourceId) : $this->conditions;
     }
 
     /**
