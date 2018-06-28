@@ -1,6 +1,6 @@
 <?php
 App::uses("User", "Model");
-App::uses('DataExtender', 'Lib/DataExtender');
+App::import('Lib/DataExtender', 'DataExtender');
 
 /**
  * Created by PhpStorm.

@@ -1,6 +1,6 @@
 <?php
 App::uses("Circle", "Model");
-App::uses('DataExtender', 'Lib/DataExtender');
+App::import('Lib/DataExtender', 'DataExtender');
 
 /**
  * Created by PhpStorm.
