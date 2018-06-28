@@ -84,6 +84,6 @@ abstract class DataExtender
     {
         return array_unique(array_filter($array, function ($value) {
             return !empty($value);
-        }));;
+        }));
     }
 }
