@@ -3,8 +3,8 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('Email', 'Model');
-App::uses('Table', 'Entity.ORM');
-App::uses('UserEntity', 'Model/Entity');
+App::import('Entity.ORM', 'Table');
+App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\DataType\DataType as DataType;

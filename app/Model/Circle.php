@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
+
 /**
  * Circle Model
  *
@@ -128,7 +129,7 @@ class Circle extends AppModel
     /**
      * Create new circle
      *
-     * @param array   $data
+     * @param array $data
      *
      * @return bool
      */
@@ -426,6 +427,13 @@ class Circle extends AppModel
         return $this->find('first', $options);
     }
 
+    /**
+     * Check whether this circle is the team's default one
+     *
+     * @param int $circle_id
+     *
+     * @return bool
+     */
     function isTeamAllCircle($circle_id)
     {
         $options = [
@@ -444,6 +452,7 @@ class Circle extends AppModel
     /**
      * returning teams circles exists
      * pass $teamId if this method is called from external API, or batch shell
+     *
      * @param int $teamId
      *
      * @return array|null
@@ -469,6 +478,7 @@ class Circle extends AppModel
 
     /**
      * Return team's all circles.id
+     *
      * @param int|null $teamId
      *
      * @return string|null circle.id by string

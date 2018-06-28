@@ -263,7 +263,7 @@ abstract class BaseApiController extends Controller
      */
     private function _isRestrictedFromUsingService(): bool
     {
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
+        return $this->_teamStatus->getServiceUseStatus()->getValue() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
 
     /**
@@ -297,7 +297,7 @@ abstract class BaseApiController extends Controller
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+        return $this->_teamStatus->getServiceUseStatus()->getValue() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 
     /**
