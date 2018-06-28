@@ -31,7 +31,7 @@
                    'action'     => 'ajax_get_public_circles_modal'
                ]) ?>"
                class="modal-ajax-get-public-circles font-dimgray"
-            ><?= __("View Circles") ?></a>
+            ><?= __("Discover more circles") ?></a>
         </div>
         <div class="clearfix dashboard-circle-list-make">
             <i class="fa fa-plus-circle circle-function circle-make-icon font_brownRed"></i><a href="#"

@@ -172,6 +172,7 @@ $(document).ready(function () {
 
 
 $(function () {
+    var lastWidth,lastHeight;
     var current_slide_id = 1;
 
     // インジケータークリック時
@@ -192,6 +193,14 @@ $(function () {
         changeTutorialContent(next_id);
     });
 
+    function updateSearchPosition(){
+      if(lastWidth >= 768){
+        $("#NavSearchForm").css("right", (($(window).width() - $(".nav-container").width()) / 2) + "px");
+      } else if (lastWidth >= 480) {
+        $("#NavSearchForm").css("right", "0px");
+      }
+    }
+
     function changeTutorialContent(content_id) {
         // 各要素をカレントステータスに設定
         $('.tutorial-box' + content_id).show();
@@ -206,13 +215,191 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
+    var isHeaderClick = false;
+    var isSearchClick = false;
+    $(".header-icon-zoom").off("click").on("click", function(e) {
+      $(this).toggleClass("open");
+      $(".header-icon-zoom").not($(this)).removeClass("open");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $(".header-search-toggle").removeClass("shown");
+      $(".header-search").removeClass("shown");
+      hideNav();
+      isHeaderClick = true;
+    });
+    var timeoutToggle;
+    $(".header-icon-search-toggle").off("click").on("click", function(e) {
+      e.preventDefault();
+      $(".header-search-toggle").toggleClass("shown");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      hideNav();
+      isSearchClick = true;
+    });
 
+    $("#NavSearchInputToggle").on("keyup", function(){
+      if($.trim($("#NavSearchInputToggle").val()).length){
+        clearTimeout(timeoutToggle);
+      } else {
+        timeoutToggle = setTimeout(function(){$("#NavSearchInputToggle").focus();},650);
+      }
+    });
+
+    $("#NavSearchForm,#NavSearchFormToggle").on("click", function(){
+      isSearchClick = true;
+    });
+
+    var timeout;
+    $(".header-icon-search").off("click").on("click", function(e) {
+      e.preventDefault();
+      $(".header-search").toggleClass("shown");
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      $("#NavSearchInputClear").prev().prev().val('');
+      $("#NavSearchInputClear").hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+      $("#NavSearchInputClearToggle").prev().prev().val('');
+      $("#NavSearchInputClearToggle").hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+      timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      hideNav();
+      isSearchClick = true;
+    });
+    $(document).on("click", function(e){
+      if(!isHeaderClick){
+        $(".open").removeClass("open");
+      }
+      if(!isSearchClick) {
+        $(".header-search").removeClass("shown");
+        $(".header-search-toggle").removeClass("shown");
+      }
+      isSearchClick = false;
+      isHeaderClick = false;
+    });
+    // $(".dropdown-menu").on("click", function(e){
+    //   e.stopPropagation();
+    // });
+    $("#NavSearchInput").on("keyup", function(){
+      if($.trim($("#NavSearchInput").val()).length){
+        clearTimeout(timeout);
+      } else {
+        timeout = setTimeout(function(){$("#NavSearchInput").focus();},650);
+      }
+    });
+    $(window).on('resize load pageshow', function(){
+      if($(window).width() !== lastWidth){
+        lastWidth = $(window).width();
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("shown");
+        $(".header-search").removeClass("shown");
+        if(lastWidth > 479){
+          updateSearchPosition();
+        }
+      }
+      if($(window).height() !== lastHeight){
+        var extra = 0;
+        if($(".banner-alert").css("display") === "block"){
+          extra = 80;
+        }
+        extra += 380;
+        $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px)")
+      }
+    });
+    $("#NavSearchInputClear").off("click").on("click", function() {
+      $("#NavSearchInput").focus();
+      $(this).prev().prev().val('');
+      $(this).hide();
+      $("#NavSearchResults").empty();
+      $("#NavSearchResults").hide();
+    });
+    $("#NavSearchInputClearToggle").off("click").on("click", function() {
+      $("#NavSearchInputToggle").focus();
+      $(this).prev().prev().val('');
+      $(this).hide();
+      $("#NavSearchResultsToggle").empty();
+      $("#NavSearchResultsToggle").hide();
+    });
+    $("#NavSearchHide,#NavSearchHideToggle").off("click").on("click", function() {
+        $("#NavSearchResults").empty();
+        $("#NavSearchResults").hide();
+        $("#NavSearchResultsToggle").empty();
+        $("#NavSearchResultsToggle").hide();
+        $("#NavSearchInputClear").trigger("click");
+        $("#NavSearchInputClearToggle").trigger("click");
+        $(".header-search-toggle").removeClass("shown");
+        $(".header-search").removeClass("shown");
+    });
+    $("#toggleNavigationButton").on("click", function() {
+      $("#NavSearchHide,#NavSearchHideToggle").trigger("click");
+    });
+    $(window).trigger('resize');
+    $(".no-anchor").off("click").on("click", function(e) {
+      e.preventDefault();
+      return false;
+    });
+    $("#ActionFileAttachButton").off("click").on("click", function(e) {
+      e.preventDefault();
+    });
     $(".btn-back-actions,.btn-back-goals").off("click").on("click", function(e) {
       e.preventDefault();
       window.history.back();
     });
+    $(".modal").on("hide.bs.modal", function() {
+      $(".select2-display-none").css("display","none");
+    });
 });
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
 
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());
 
 function evTargetRemove() {
   attrUndefinedCheck(this, 'target-selector');
