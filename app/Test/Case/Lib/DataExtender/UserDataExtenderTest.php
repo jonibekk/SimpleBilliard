@@ -1,6 +1,6 @@
 <?php
 App::uses('Post', 'Model');
-App::import('Lib/DataExtender','UserDataExtender');
+App::import('Lib/DataExtender', 'UserDataExtender');
 App::uses('GoalousTestCase', 'Test');
 
 /**
@@ -26,13 +26,13 @@ class UserDataExtenderTest extends GoalousTestCase
 
     public function test_extendUserData_success()
     {
-        $Post = new Post();
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
         $posts = Hash::extract($Post->find('all', ['conditions' => ['user_id' => '1']]), '{n}.Post');
-
+        $this->assertNotEmpty($posts);
         /** @var UserDataExtender $UserDataExtender */
         $UserDataExtender = ClassRegistry::init('UserDataExtender');
         $extended = $UserDataExtender->extend($posts, '{n}.user_id');
-
         $this->assertNotEmpty(Hash::extract($extended, '{n}.user'));
     }
 }

@@ -26,13 +26,13 @@ class CircleDataExtenderTest extends GoalousTestCase
 
     public function test_extendCircleData_success()
     {
-        $Post = new Post();
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
         $posts = Hash::extract($Post->find('all', ['conditions' => ['circle_id is not null']]), '{n}.Post');
-
+        $this->assertNotEmpty($posts);
         /** @var CircleDataExtender $CircleDataExtender */
         $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
         $extended = $CircleDataExtender->extend($posts, '{n}.circle_id');
-
         $this->assertNotEmpty(Hash::extract($extended, '{n}.circle'));
     }
 }
