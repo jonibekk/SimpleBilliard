@@ -52,11 +52,8 @@ abstract class  BasePagingController extends BaseApiController
         if (empty ($this->request)) {
             return new PagingCursor();
         }
-        try {
-            $pagingCursor = $this->getPagingConditionFromCursor();
-        } catch (RuntimeException $r) {
-            GoalousLog::warning($r->getMessage(), $r->getTrace());
-        } 
+        $pagingCursor = $this->getPagingConditionFromCursor();
+
         //If skipping using cursor, or cursor is empty, replace it with parameters from request
         if ($skipCursor || $pagingCursor->isEmpty()) {
             $pagingCursor = $this->getPagingConditionFromRequest();
@@ -77,7 +74,12 @@ abstract class  BasePagingController extends BaseApiController
         if (empty($cursor)) {
             return new PagingCursor();
         }
-
-        return PagingCursor::decodeCursorToObject($cursor);
+        try {
+            $pagingCursor = PagingCursor::decodeCursorToObject($cursor);
+        } catch (RuntimeException $r) {
+            $pagingCursor = new PagingCursor();
+            GoalousLog::notice($r->getMessage(), $r->getTrace());
+        }
+        return $pagingCursor;
     }
 }
