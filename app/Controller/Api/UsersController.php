@@ -27,7 +27,7 @@ class UsersController extends BasePagingController
         }
 
         $pagingCursor = $this->getPagingParameters();
-        $pagingCursor->addCondition(['user_id' => $userId]);
+        $pagingCursor->addResource('user_id', $userId);
         $pagingCursor->addCondition(['team_id' => $this->getTeamId()]);
         $pagingCursor->addCondition(['joined' => $this->request->query('joined') ?? true]);
 

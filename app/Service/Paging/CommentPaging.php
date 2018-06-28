@@ -18,21 +18,21 @@ class CommentPaging extends BasePagingService
      *
      * @return array
      */
-    protected function readData($pagingCursor, $limit): array
+    protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
         $Comment = new Comment();
 
         return $Comment->getPostCommentsByCursor($pagingCursor, $limit);
     }
 
-    protected function countData($conditions): int
+    protected function countData(array $conditions): int
     {
         $Comment = new Comment();
 
         return $Comment->getCount($conditions);
     }
 
-    protected function extendPagingResult(&$resultArray, &$conditions, $options = [])
+    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
     }
 

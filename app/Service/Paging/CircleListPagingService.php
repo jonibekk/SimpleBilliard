@@ -1,6 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::import('Lib/Paging', 'PagingCursor');
 App::uses('Circle', 'Model');
 
 /**
@@ -13,7 +13,7 @@ class CircleListPagingService extends BasePagingService
 {
     protected function readData(PagingCUrsor $pagingCursor, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingCursor->getConditions());
+        $options = $this->createSearchCondition($pagingCursor->getConditions(true));
 
         $options['limit'] = $limit;
         $options['order'] = $pagingCursor->getOrders();
@@ -61,7 +61,7 @@ class CircleListPagingService extends BasePagingService
                     'table'      => 'circle_members',
                     'alias'      => 'CircleMember',
                     'conditions' => [
-                        'Circle.id' . ($joinedFlag) ? '=' : '!=' . 'CircleMember.circle_id',
+                        "Circle.id " . (($joinedFlag) ? " = " : " != ") . " CircleMember.circle_id",
                         'CircleMember.user_id' => $userId,
                         'CircleMember.del_flg' => false
                     ]

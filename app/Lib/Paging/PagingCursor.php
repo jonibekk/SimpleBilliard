@@ -9,6 +9,8 @@
 class PagingCursor
 {
     const DEFAULT_PAGE_LIMIT = 20;
+    const MAX_PAGE_LIMIT = 100;
+
     const PAGE_ORDER_ASC = 'asc';
     const PAGE_ORDER_DESC = 'desc';
 
@@ -34,6 +36,13 @@ class PagingCursor
      * @var array
      */
     private $conditions = [];
+
+    /**
+     * Add resource ID from the URL. Will not be included in cursor
+     *
+     * @var array
+     */
+    private $resourceId = [];
 
     /**
      * PagingCursor constructor.
@@ -238,11 +247,24 @@ class PagingCursor
     /**
      * Get all stored conditions
      *
+     * @param bool $includeResourceId Whether should include resource ID
+     *
      * @return array
      */
-    public function getConditions()
+    public function getConditions(bool $includeResourceId = false)
     {
-        return $this->conditions;
+        return ($includeResourceId)? array_merge($this->conditions, $this->resourceId) : $this->conditions;
+    }
+
+    /**
+     * Add a resource ID to the cursor. Will always overwrite existing one
+     *
+     * @param string $key
+     * @param int    $id
+     */
+    public function addResource(string $key, int $id)
+    {
+        $this->resourceId = [$key => $id];
     }
 
     /**

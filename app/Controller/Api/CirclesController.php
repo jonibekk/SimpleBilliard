@@ -25,7 +25,7 @@ class CirclesController extends BasePagingController
         $CirclePostPagingService = ClassRegistry::init('CirclePostPagingService');
 
         $pagingCursor = $this->getPagingParameters();
-        $pagingCursor->addCondition(['circle_id' => $circleId]);
+        $pagingCursor->addResource('circle_id', $circleId);
 
         try {
             $data = $CirclePostPagingService->getDataWithPaging(

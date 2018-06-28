@@ -561,40 +561,4 @@ class Circle extends AppModel
 
         return (bool)$this->find('first', $options);
     }
-
-    public function afterFind($results, $primary = false)
-    {
-        if ($primary) {
-            $results = $this->appendLatestPostTime($results);
-        }
-
-        return parent::afterFind($results, $primary);
-    }
-
-    /**
-     * Append 'latest_post', UNIX timestamp of latest post in that circle
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function appendLatestPostTime(array $data): array
-    {
-        /** @var PostShareCircle $PostShareCircle */
-        $PostShareCircle = ClassRegistry::init('PostShareCircle');
-
-        $condition = [
-            'fields' => 'created',
-            'order'  => 'created desc'
-        ];
-
-        foreach ($data as &$circle) {
-            $condition['conditions'] = ['circle_id' => Hash::extract($circle, '{s}.id')];
-            $latestPost = Hash::extract($PostShareCircle->find('first', $condition), '{s}.created');
-            $circle['Circle']['latest_post'] = $latestPost;
-        }
-
-        return $data;
-    }
-
 }

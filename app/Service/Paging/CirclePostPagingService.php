@@ -23,7 +23,7 @@ class CirclePostPagingService extends BasePagingService
 
     protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingCursor->getConditions());
+        $options = $this->createSearchCondition($pagingCursor->getConditions(true));
 
         $options['limit'] = $limit;
         $options['order'] = $pagingCursor->getOrders();
