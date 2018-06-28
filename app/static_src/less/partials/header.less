@@ -333,6 +333,7 @@
     transition: transform .3s, color .3s;
   }
   a:hover {
+    cursor: pointer !important;
     .header-icons {
       transform: scale(1.2);
       color: @goalous;
@@ -346,6 +347,7 @@
 }
 
 .header-icon-zoom a:hover {
+  cursor: pointer !important;
   .header-icons {
     transform: scale(1.2);
     color: @goalous;
@@ -466,7 +468,7 @@
   transition: opacity 0.3s linear, visibility 0.4s linear, height 0.3s linear;
 }
 
-.header-search-toggle.open {
+.header-search-toggle.shown {
   visibility: visible;
   opacity: 1;
   list-style: none;
@@ -497,7 +499,7 @@
   transition: opacity 0.3s linear, visibility 0.4s linear, height 0.3s linear;
 }
 
-.header-search.open {
+.header-search.shown {
   visibility: visible;
   opacity: 1;
   list-style: none;
@@ -849,9 +851,15 @@ header-nav-add.open ul {
 }
 
 #navigationWrapper {
-  overflow-y: scroll;
+  overflow: hidden;
   height: 98%;
 }
+@media (max-width: 479px) {
+    #navigationWrapper {
+      overflow-y: visible;
+    }
+}
+
 #rightNavigationWrapper {
   display: flex;
   flex: 1;
@@ -861,6 +869,10 @@ header-nav-add.open ul {
 
 .force-open{
   display: block !important;
+}
+
+.force-close{
+  display: none !important;
 }
 
 .right-navigation-wrap {
