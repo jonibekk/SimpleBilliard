@@ -18,15 +18,3 @@ class ChargeType extends Enum
     const UPGRADE_PLAN_DIFF = 3;
     const RECHARGE = 4;
 }
-
-/**
- * @method static static ERROR()
- * @method static static SUCCESS()
- * @method static static FAIL()
- */
-class ResultType extends Enum
-{
-    const ERROR = 0;
-    const SUCCESS = 1;
-    const FAIL = 2;
-}
