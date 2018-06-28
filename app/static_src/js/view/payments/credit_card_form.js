@@ -12,6 +12,7 @@ if (document.enterCCInfo) {
     // Custom styling can be passed to options when creating an Element.
     // Check: https://stripe.com/docs/stripe.js#elements-create
     var card = elements.create('card', {
+        hidePostalCode: true,
         style: {
             base: {
                 iconColor: '#808080',
