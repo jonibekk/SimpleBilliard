@@ -1,6 +1,8 @@
 <?php
 App::uses('AbstractErrorType', 'Lib/Network/Response/ErrorResponseBody');
 
+use Goalous\Enum as Enum;
+
 class ErrorTypeValidation extends AbstractErrorType
 {
     /**
@@ -17,7 +19,7 @@ class ErrorTypeValidation extends AbstractErrorType
     public function toArray():array
     {
         return [
-            'type' => 'validation',
+            'type' => Enum\Network\Response\ErrorType::VALIDATION,
             'field' => $this->field,
             'message' => $this->getMessage(),
         ];

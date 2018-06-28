@@ -3,6 +3,8 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('ErrorResponse', 'Lib/Network/Response');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 
+use Goalous\Enum as Enum;
+
 /**
  * Class ErrorResponseTest
  */
@@ -54,7 +56,7 @@ class ErrorResponseTest extends GoalousTestCase
                 'message' => __METHOD__,
                 'errors' => [
                     [
-                        'type' => 'global',
+                        'type' => Enum\Network\Response\ErrorType::GLOBAL,
                         'message' => __METHOD__
                     ]
                 ]
@@ -75,11 +77,11 @@ class ErrorResponseTest extends GoalousTestCase
                 'message' => $errorMessage1,
                 'errors' => [
                     [
-                        'type' => 'global',
+                        'type' => Enum\Network\Response\ErrorType::GLOBAL,
                         'message' => $errorMessage1,
                     ],
                     [
-                        'type' => 'global',
+                        'type' => Enum\Network\Response\ErrorType::GLOBAL,
                         'message' => $errorMessage2,
                     ],
                 ]
@@ -101,11 +103,11 @@ class ErrorResponseTest extends GoalousTestCase
                 'message' => __METHOD__,
                 'errors' => [
                     [
-                        'type' => 'global',
+                        'type' => Enum\Network\Response\ErrorType::GLOBAL,
                         'message' => $errorMessage1,
                     ],
                     [
-                        'type' => 'global',
+                        'type' => Enum\Network\Response\ErrorType::GLOBAL,
                         'message' => $errorMessage2,
                     ],
                 ]
@@ -137,12 +139,12 @@ class ErrorResponseTest extends GoalousTestCase
                 'message' => __METHOD__,
                 'errors' => [
                     [
-                        'type' => 'validation',
+                        'type' => Enum\Network\Response\ErrorType::VALIDATION,
                         'field' => 'email',
                         'message' => 'email must be valid email',
                     ],
                     [
-                        'type' => 'validation',
+                        'type' => Enum\Network\Response\ErrorType::VALIDATION,
                         'field' => 'password',
                         'message' => 'Key password must be present',
                     ],

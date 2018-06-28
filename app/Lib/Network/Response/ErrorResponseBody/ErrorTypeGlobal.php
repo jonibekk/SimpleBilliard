@@ -1,6 +1,8 @@
 <?php
 App::uses('AbstractErrorType', 'Lib/Network/Response/ErrorResponseBody');
 
+use Goalous\Enum as Enum;
+
 class ErrorTypeGlobal extends AbstractErrorType
 {
 
@@ -12,7 +14,7 @@ class ErrorTypeGlobal extends AbstractErrorType
     public function toArray():array
     {
         return [
-            'type' => 'global',
+            'type' => Enum\Network\Response\ErrorType::GLOBAL,
             'message' => $this->getMessage(),
         ];
     }
