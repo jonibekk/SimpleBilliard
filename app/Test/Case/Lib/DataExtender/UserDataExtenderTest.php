@@ -1,6 +1,6 @@
 <?php
 App::uses('Post', 'Model');
-App::uses('UserDataExtender', 'Lib/DataExtender');
+App::import('Lib/DataExtender','UserDataExtender');
 App::uses('GoalousTestCase', 'Test');
 
 /**

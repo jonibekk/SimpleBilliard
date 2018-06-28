@@ -1,6 +1,6 @@
 <?php
 App::uses('Post', 'Model');
-App::uses('CircleDataExtender', 'Lib/DataExtender');
+App::import('Lib/DataExtender','CircleDataExtender');
 App::uses('GoalousTestCase', 'Test');
 
 /**
