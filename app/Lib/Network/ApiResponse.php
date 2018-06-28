@@ -83,4 +83,23 @@ class ApiResponse extends BaseApiResponse
         return $this;
     }
 
+    /**
+     * Use or replace to app/Lib/Network/Response/ErrorResponse if having error/exception
+     * @deprecated
+     * @return $this
+     */
+    public function withExceptionTrace($exceptionTrace, bool $appendFlag = false): self
+    {
+        return $this;
+    }
+
+    /**
+     * Use or replace to app/Lib/Network/Response/ErrorResponse if having error/exception
+     * @deprecated
+     * @return $this
+     */
+    public function withException(Exception $exception): self
+    {
+        return $this;
+    }
 }
