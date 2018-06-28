@@ -18,10 +18,7 @@ abstract class AbstractErrorType
      *
      * @return array
      */
-    public function toArray(): array
-    {
-        throw new RuntimeException('need to implement function toArray()');
-    }
+    abstract public function toArray(): array;
 
     /**
      * @return string
