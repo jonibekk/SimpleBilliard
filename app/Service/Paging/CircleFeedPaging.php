@@ -208,7 +208,7 @@ class CircleFeedPaging implements PagingServiceInterface
                 $cursor = new PagingCursor($conditions, [], $order);
 
                 $comments = $CommentPaging->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
-                    CommentPaging::EXTEND_ALL_FLAG);
+                    CommentPaging::EXTEND_ALL);
 
                 $result['comments'] = $comments;
             }

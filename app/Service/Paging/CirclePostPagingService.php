@@ -1,6 +1,14 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
+App::import('Lib/DataExtender', 'UserDataExtender');
+App::import('Lib/DataExtender', 'CircleDataExtender');
+App::import('Service/Paging', 'CommentPaging');
+App::import('Service', 'CircleService');
+App::import('Service', 'PostService');
 App::uses('PagingCursor', 'Lib/Paging');
+App::uses('Comment', 'Model');
+App::uses('Circle', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 
 /**
@@ -51,7 +59,46 @@ class CirclePostPagingService extends BasePagingService
 
     protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
-        //TODO Will implement in GL-7028
+
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
+            /** @var UserDataExtender $UserDataExtender */
+            $UserDataExtender = ClassRegistry::init('UserDataExtender');
+            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
+        }
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_CIRCLE, $options)) {
+            /** @var CircleDataExtender $CircleDataExtender */
+            $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
+            $resultArray = $CircleDataExtender->extend($resultArray, "{n}.circle_id");
+        }
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENT, $options)) {
+            /** @var CommentPaging $CommentPaging */
+            $CommentPaging = ClassRegistry::init('CommentPaging');
+
+            foreach ($resultArray as &$result) {
+                $conditions = [
+                    'post_id' => Hash::extract($result, 'Post.id')
+                ];
+                $order = [
+                    'id' => 'asc'
+                ];
+
+                $cursor = new PagingCursor($conditions, [], $order);
+
+                $comments = $CommentPaging->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
+                    CommentPaging::EXTEND_ALL);
+
+                $result['comments'] = $comments;
+            }
+        }
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_SHARE_CIRCLE, $options)) {
+            //Postponed
+        }
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_SHARE_USER, $options)) {
+            //Postponed
+        }
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_FILE, $options)) {
+            //Postponed
+        }
     }
 
     /**
@@ -77,7 +124,7 @@ class CirclePostPagingService extends BasePagingService
             ],
             'join'       => [
                 [
-                    'type'       => 'inner',
+                    'type'       => 'INNER',
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',
                     'conditions' => [

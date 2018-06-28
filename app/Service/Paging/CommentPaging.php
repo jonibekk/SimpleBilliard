@@ -1,6 +1,5 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::uses('PagingCursor', 'Lib/Paging');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -12,13 +11,16 @@ App::uses('PagingCursor', 'Lib/Paging');
 class CommentPaging extends BasePagingService
 {
 
+    const EXTEND_ALL = "ext:comment:all";
+    const EXTEND_USER = "ext:comment:user";
+
     /**
      * @param PagingCursor $pagingCursor
      * @param int          $limit
      *
      * @return array
      */
-    protected function readData($pagingCursor, $limit): array
+    protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
         $Comment = new Comment();
 
@@ -32,8 +34,13 @@ class CommentPaging extends BasePagingService
         return $Comment->getCount($conditions);
     }
 
-    protected function extendPagingResult(&$resultArray, &$conditions, $options = [])
+    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
     {
+        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_USER, $flags)) {
+            /** @var UserDataExtender $UserDataExtender */
+            $UserDataExtender = ClassRegistry::init('UserDataExtender');
+            $resultArray = $UserDataExtender->extend($resultArray, "{n}.Comment.user_id");
+        }
     }
 
 }

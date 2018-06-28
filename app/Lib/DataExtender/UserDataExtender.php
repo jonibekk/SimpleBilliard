@@ -19,8 +19,10 @@ class UserDataExtender extends DataExtender
 
         $conditions = [
             'conditions' => [
-                'id' => $uniqueKeys
+                'User.id' => $uniqueKeys
             ],
+            'table'      => 'users',
+            'alias'      => 'User',
             'fields'     => $User->profileFields
         ];
 

@@ -58,4 +58,16 @@ class CirclePostPagingTest extends GoalousTestCase
         $this->assertNotEmpty($secondResult['count']);
     }
 
+    public function test_getCirclePostWithExtension_success()
+    {
+        /** @var CirclePostPagingService $CirclePostPagingService */
+        $CirclePostPagingService = new CirclePostPagingService();
+        $cursor = new PagingCursor(['user_id' => 1, 'team_id' => 1,'circle_id' => 1]);
+        $cursor->addCondition(['circle_id' => 1]);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_ALL);
+        $this->assertCount(1, $result['data']);
+        $this->assertNotEmpty($result['data'][0]['user']);
+        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['count']);
+    }
 }
