@@ -14,6 +14,8 @@ use MyCLabs\Enum\Enum;
 /**
  * Class ApiVersion
  *
+ * @method static static VER_2()
+ *
  * @package Goalous\Enum\ApiVersion
  */
 class ApiVersion extends Enum
