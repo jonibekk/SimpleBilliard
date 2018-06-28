@@ -1,6 +1,6 @@
 <?php
 App::uses('Post', 'Model');
-App::import('Lib/DataExtender','CircleDataExtender');
+App::import('Lib/DataExtender', 'CircleDataExtender');
 App::uses('GoalousTestCase', 'Test');
 
 /**
@@ -29,7 +29,8 @@ class CircleDataExtenderTest extends GoalousTestCase
         $Post = new Post();
         $posts = Hash::extract($Post->find('all', ['conditions' => ['circle_id is not null']]), '{n}.Post');
 
-        $CircleDataExtender = new CircleDataExtender();
+        /** @var CircleDataExtender $CircleDataExtender */
+        $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
         $extended = $CircleDataExtender->extend($posts, '{n}.circle_id');
 
         $this->assertNotEmpty(Hash::extract($extended, '{n}.circle'));

@@ -29,7 +29,8 @@ class UserDataExtenderTest extends GoalousTestCase
         $Post = new Post();
         $posts = Hash::extract($Post->find('all', ['conditions' => ['user_id' => '1']]), '{n}.Post');
 
-        $UserDataExtender = new UserDataExtender();
+        /** @var UserDataExtender $UserDataExtender */
+        $UserDataExtender = ClassRegistry::init('UserDataExtender');
         $extended = $UserDataExtender->extend($posts, '{n}.user_id');
 
         $this->assertNotEmpty(Hash::extract($extended, '{n}.user'));
