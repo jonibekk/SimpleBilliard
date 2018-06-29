@@ -2,7 +2,7 @@
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/DataExtender', 'CircleDataExtender');
-App::import('Service/Paging', 'CommentPaging');
+App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'CircleService');
 App::import('Service', 'PostService');
 App::uses('PagingCursor', 'Lib/Paging');
@@ -71,8 +71,8 @@ class CirclePostPagingService extends BasePagingService
             $resultArray = $CircleDataExtender->extend($resultArray, "{n}.circle_id");
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENT, $options)) {
-            /** @var CommentPaging $CommentPaging */
-            $CommentPaging = ClassRegistry::init('CommentPaging');
+            /** @var CommentPagingService $CommentPagingService */
+            $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
             foreach ($resultArray as &$result) {
                 $conditions = [
@@ -84,8 +84,8 @@ class CirclePostPagingService extends BasePagingService
 
                 $cursor = new PagingCursor($conditions, [], $order);
 
-                $comments = $CommentPaging->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
-                    CommentPaging::EXTEND_ALL);
+                $comments = $CommentPagingService->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
+                    CommentPagingService::EXTEND_ALL);
 
                 $result['comments'] = $comments;
             }

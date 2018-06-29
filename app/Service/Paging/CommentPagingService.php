@@ -7,8 +7,7 @@ App::import('Lib/Paging', 'BasePagingService');
  * Time: 13:56
  */
 
-//TODO
-class CommentPaging extends BasePagingService
+class CommentPagingService extends BasePagingService
 {
 
     const EXTEND_ALL = "ext:comment:all";
