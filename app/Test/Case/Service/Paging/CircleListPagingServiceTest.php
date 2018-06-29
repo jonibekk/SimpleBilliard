@@ -52,4 +52,21 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $this->assertNotEmpty($result['paging']['next']);
         $this->assertNotEmpty($result['count']);
     }
+
+    public function test_getCircleListWithMemberInfoExtension_success()
+    {
+        /** @var CircleListPagingService $CircleListPagingService */
+        $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
+
+        $cursor = new PagingCursor(['team_id' => 1, 'user_id' => 1]);
+        $cursor->addOrder('latest_post_created');
+
+        $result = $CircleListPagingService->getDataWithPaging($cursor, 1,
+            [CircleListPagingService::EXTEND_MEMBER_INFO]);
+
+        $data = $result['data'][0];
+        
+        $this->assertInternalType('int', $data['unread_count']);
+        $this->assertInternalType('bool', $data['admin_flg']);
+    }
 }

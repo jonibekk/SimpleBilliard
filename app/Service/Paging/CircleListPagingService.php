@@ -117,7 +117,8 @@ class CircleListPagingService extends BasePagingService
                     'fields'     => [
                         'unread_count',
                         'admin_flg'
-                    ]
+                    ],
+                    'conversion' => true
                 ];
                 $result = $CircleMember->find('first', $options);
                 $memberInfo = Hash::get($result, 'CircleMember');
