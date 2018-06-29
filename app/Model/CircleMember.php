@@ -100,14 +100,41 @@ class CircleMember extends AppModel
     }
 
     /**
+     * Get list of circle that a given user joined to in a team
+     *
+     * @param int  $userId
+     * @param int  $teamId
+     * @param bool $checkHideStatus Whether circle's hidden status is checked or not
+     *
+     * @return array List of circle IDs
+     */
+    public function getUserCircleList(int $userId, int $teamId, bool $checkHideStatus = false)
+    {
+        $options = [
+            'conditions' => [
+                'user_id' => $userId,
+                'team_id' => $teamId
+            ],
+            'fields'     => ['circle_id'],
+        ];
+
+        if ($checkHideStatus) {
+            $options['conditions']['show_for_all_feed_flg'] = $checkHideStatus;
+        }
+
+        return $this->find('list', $options);
+    }
+
+    /**
      * 自分が所属しているサークルを返す
      *
      * @param array $params
      *
      * @return array|null
      */
-    public function getMyCircle($params = [])
-    {
+    public function getMyCircle(
+        $params = []
+    ) {
         ClassRegistry::init('Circle');
         $is_default = false;
         if (empty($params)) {
@@ -169,8 +196,11 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMemberList($circle_id, $with_admin = false, $with_me = true)
-    {
+    public function getMemberList(
+        $circle_id,
+        $with_admin = false,
+        $with_me = true
+    ) {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -196,8 +226,10 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getAdminMemberList($circle_id, $with_me = false)
-    {
+    public function getAdminMemberList(
+        $circle_id,
+        $with_me = false
+    ) {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -244,8 +276,10 @@ class CircleMember extends AppModel
         return $users;
     }
 
-    public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
-    {
+    public function getCircleInitMemberSelect2(
+        $circle_id,
+        $with_admin = false
+    ) {
         $users = $this->getMembers($circle_id, $with_admin);
         $user_res = $this->User->makeSelect2UserList($users);
         return ['results' => $user_res];
@@ -261,8 +295,12 @@ class CircleMember extends AppModel
      *
      * @return array
      */
-    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10, $with_group = false)
-    {
+    public function getNonCircleMemberSelect2(
+        $circle_id,
+        $keyword,
+        $limit = 10,
+        $with_group = false
+    ) {
         $member_list = $this->getMemberList($circle_id, true);
 
         $keyword = trim($keyword);

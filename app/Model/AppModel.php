@@ -735,10 +735,7 @@ class AppModel extends Model
     {
         foreach ($data as $key => &$value) {
 
-            if (is_numeric($key) || is_array($value)) {
-                $this->traverseArray($value, $conversionTable);
-            }
-            if (key_exists($key, $conversionTable)) {
+            if (is_string($value) && key_exists($key, $conversionTable)) {
                 switch ($conversionTable[$key]) {
                     case (DataType::INT):
                         $data[$key] = intval($value);
@@ -747,6 +744,9 @@ class AppModel extends Model
                         $data[$key] = boolval($value);
                         break;
                 }
+            }
+            if (is_numeric($key) || is_array($value)) {
+                $this->traverseArray($value, $conversionTable);
             }
         }
     }

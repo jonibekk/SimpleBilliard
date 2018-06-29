@@ -147,20 +147,6 @@ Configure::write('CakePdf', array(
 // AdditionalExceptions
 require APP . "Lib/Error/Exceptions.php";
 
-// Autoload model constants
-spl_autoload_register(function ($class) {
-    // Get filePath path by namespace
-    // e.g. 「Goalous\Enum\Model\PaymentSetting\Currency」→「~/app/Enum\Model\PaymentSetting.php」
-    if (!(preg_match("/Enum\\\\Model\\\\[A-Za-z]+/", $class, $match) ||
-        preg_match("/Enum\\\\[A-Za-z]+/", $class, $match))) {
-        return;
-    }
-    $filePath = APP . DS . str_replace('\\', DS, $match[0]) . '.php';
-    if (file_exists($filePath)) {
-        return include $filePath;
-    }
-});
-
 /**
  * Goalous独自定数
  */
