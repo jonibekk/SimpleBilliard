@@ -190,7 +190,7 @@ class CommentLike extends AppModel
         if (empty($this->find('first', $condition))) {
             try {
                 $this->create();
-                $this->save($newData);
+                $this->save($newData, false);
             } catch (Exception $e) {
                 throw $e;
             }
