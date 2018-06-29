@@ -2,6 +2,7 @@
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
+App::uses('User', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -15,7 +16,7 @@ class AuthController extends BaseApiController
     {
         parent::beforeFilter();
     }
-    
+
     /**
      * Login endpoint for user. Ignore restriction and authentication
      *
@@ -37,8 +38,7 @@ class AuthController extends BaseApiController
         try {
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
-                                                                                 ->getResponse();
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
         }
 
         //If no matching username / password is found
@@ -47,8 +47,18 @@ class AuthController extends BaseApiController
                                                                        ->getResponse();
         }
 
+        $authHeader = [
+            'Authorization' => 'Bearer ' . $jwt->token()
+        ];
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray()['User'];
+
         //On successful login, return the JWT token to the user
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody(['jwt' => $jwt->token()])->getResponse();
+        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data)
+                                                               ->withHeader($authHeader, true)->getResponse();
     }
 
     /**
@@ -70,11 +80,10 @@ class AuthController extends BaseApiController
         try {
             $res = $Auth->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
-                                                                                 ->getResponse();
+            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
         }
 
-        if (!$res){
+        if (!$res) {
             return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to logout"))
                                                                                  ->getResponse();
         }
@@ -101,8 +110,7 @@ class AuthController extends BaseApiController
         try {
             $validator->validate($this->getRequestJsonBody());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
-                                                                       ->getResponse();
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->getResponse();
         }
 
         return null;

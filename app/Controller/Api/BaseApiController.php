@@ -231,10 +231,11 @@ abstract class BaseApiController extends Controller
         try {
             $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
         } catch (AuthenticationException $e) {
+            GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
             return false;
         }
 
-        if (empty($jwtAuth->getUserId())) {
+        if (empty($jwtAuth->getUserId() || empty ($jwtAuth->getTeamId()))) {
             return false;
         }
 
@@ -263,7 +264,7 @@ abstract class BaseApiController extends Controller
      */
     private function _isRestrictedFromUsingService(): bool
     {
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
+        return $this->_teamStatus->getServiceUseStatus()->getValue() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
 
     /**
@@ -297,7 +298,7 @@ abstract class BaseApiController extends Controller
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+        return $this->_teamStatus->getServiceUseStatus()->getValue() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 
     /**

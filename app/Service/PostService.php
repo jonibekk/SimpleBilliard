@@ -92,6 +92,7 @@ class PostService extends AppService
     }
 
     /**
+     * <<<<<<< HEAD
      * Adding new normal post with transaction
      *
      * @param array $postData
@@ -123,6 +124,8 @@ class PostService extends AppService
     }
 
     /**
+     * =======
+     * >>>>>>> a4857190481dd5948568003fc5a4605ab59538d9
      * Adding new normal post
      * Be careful, no transaction in this method
      * You should write try-catch and transaction yourself outside of this function
@@ -216,7 +219,6 @@ class PostService extends AppService
             ]);
             throw new RuntimeException('Error on adding post: failed post save');
         }
-
         $postId = $post['Post']['id'];
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
@@ -453,13 +455,25 @@ class PostService extends AppService
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
-            $this->TransactionManager->begin();
+            $this->TransactionManager->commit();
 
         } catch (Exception $e) {
-            $this->TransactionManager->commit();
+            $this->TransactionManager->rollback();
             throw $e;
         }
 
         return $postId;
+    }
+
+    /**
+     * Get query condition for posts made by an user
+     *
+     * @param int $userId User ID of the posts author
+     *
+     * @return array
+     */
+    public function getUserPostListCondition(int $userId)
+    {
+        return ['Post.user_id' => $userId];
     }
 }

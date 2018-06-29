@@ -124,7 +124,7 @@ class PostsController extends AppController
 
         $countVideoStreamIds =
             isset($this->request->data['video_stream_id']) && is_array($this->request->data['video_stream_id'])
-            ? count($this->request->data['video_stream_id']) : 0;
+                ? count($this->request->data['video_stream_id']) : 0;
         if (1 < $countVideoStreamIds) {
             $this->Notification->outError(__('You can only post one video file.'));
             return false;
@@ -172,7 +172,8 @@ class PostsController extends AppController
                     return true;
                 case Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
                     GoalousLog::info("video post creating draft post", $logDataArray);
-                    $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId, [$videoStream]);
+                    $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId,
+                        [$videoStream]);
                     // 保存に失敗
                     if (false === $successSavedPost) {
                         // バリデーションエラーのケース
@@ -455,6 +456,7 @@ class PostsController extends AppController
         }
         $posts = $this->Post->get($pageNum, POST_FEED_PAGE_ITEMS_NUMBER, $postRange['start'], $postRange['end'],
             $this->request->params);
+
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -983,7 +985,7 @@ class PostsController extends AppController
                     $this->Auth->user('id'),
                     TeamStatus::getCurrentTeam()->getTeamId(),
                     [$circleId]
-                    )
+                )
                 );
             }
         } catch (RuntimeException $e) {

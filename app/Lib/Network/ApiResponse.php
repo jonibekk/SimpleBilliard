@@ -1,22 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/04/24
- * Time: 10:05
- */
+App::uses('BaseApiResponse', 'Lib/Network/Response');
 
 /**
  * Class ApiResponse Wrapper of CakeResponse class
  * Use method chaining to add content into the response.
  * Usage sample:
  *  return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData('this')->getResponse();
- *  return (new ApiResponse(ApiResponse::RESPONSE_RESOURCE_CONFLICT))->withMessage('conflict')
- *      ->withExceptionTrace(array())->getResponse();
  */
-class ApiResponse extends CakeResponse
+class ApiResponse extends BaseApiResponse
 {
     const RESPONSE_SUCCESS = 200;
+
+    /**
+     * @deprecated
+     */
     const RESPONSE_BAD_REQUEST = 400;
     const RESPONSE_UNAUTHORIZED = 401;
     const RESPONSE_FORBIDDEN = 403;
@@ -24,42 +21,13 @@ class ApiResponse extends CakeResponse
     const RESPONSE_RESOURCE_CONFLICT = 409;
     const RESPONSE_INTERNAL_SERVER_ERROR = 500;
 
-    private $_responseBody = array();
-
-    private $_responseHeader = array();
-
-    public function __construct(int $httpCode)
-    {
-        parent::__construct();
-        $this->statusCode($httpCode);
-    }
-
     /**
-     * Set response's HTTP code
-     *
-     * @param int $httpCode
-     *
-     * @return ApiResponse
+     * Create response 200
+     * @return self
      */
-    public function setHttpCode(int $httpCode): ApiResponse
+    public static function ok(): self
     {
-        $this->statusCode($httpCode);
-
-        return $this;
-    }
-
-    /**
-     * Method encapsulation for returning exception
-     *
-     * @param Exception $exception
-     *
-     * @return ApiResponse
-     */
-    public function withException(Exception $exception)
-    {
-        $message = $exception->getMessage();
-        $trace = $exception->getTrace();
-        return $this->withMessage($message)->withExceptionTrace($trace);
+        return new self(self::RESPONSE_SUCCESS);
     }
 
     /**
@@ -96,122 +64,6 @@ class ApiResponse extends CakeResponse
     }
 
     /**
-     * Add data to response body
-     *
-     * @param array|string $data       Data to be sent to the client
-     * @param bool         $appendFlag Append input to existing data
-     *
-     * @return ApiResponse
-     */
-    public function withBody($data, bool $appendFlag = false): ApiResponse
-    {
-        if (empty($data)) {
-            return $this;
-        }
-        if (!$appendFlag) {
-            $this->_responseBody = $data;
-            return $this;
-        }
-        if (is_array($data)) {
-            if (is_int(array_keys($data)[0])) {
-                $this->_responseBody = array_merge($this->_responseBody,
-                    $data);
-            } else {
-                foreach ($data as $key => $value) {
-                    $this->_responseBody[] = [$key => $value];
-                }
-            }
-        } elseif (is_string($data)) {
-            $this->_responseBody[] = $data;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add message to the response body
-     *
-     * @param string $message    Additional message
-     * @param bool   $appendFlag Append input to existing data
-     *
-     * @return ApiResponse
-     */
-    public function withMessage($message, bool $appendFlag = false): ApiResponse
-    {
-        if (empty($message) || !is_string($message)) {
-            return $this;
-        }
-        if ($appendFlag) {
-            $this->_responseBody['message'] .= $message . '\n';
-        } else {
-            $this->_responseBody['message'] = $message;
-        }
-        return $this;
-    }
-
-    /**
-     * Add exception trace to the response body
-     *
-     * @param array|string $exceptionTrace Exception trace for any errors in the server
-     * @param bool         $appendFlag     Append input to existing data
-     *
-     * @return ApiResponse
-     */
-    public function withExceptionTrace($exceptionTrace, bool $appendFlag = false): ApiResponse
-    {
-        if (empty($exceptionTrace)) {
-            return $this;
-        }
-        if (ENV_NAME !== "dev") {
-            return $this;
-        }
-        if (!$appendFlag) {
-            $this->_responseBody['exception_trace'] = $exceptionTrace;
-            return $this;
-        }
-        if (is_array($exceptionTrace)) {
-            if (is_int(array_keys($exceptionTrace)[0])) {
-                $this->_responseBody['exception_trace'] = array_merge($this->_responseBody['exception_trace'],
-                    $exceptionTrace);
-            } else {
-                foreach ($exceptionTrace as $key => $value) {
-                    $this->_responseBody['exception_trace'][] = [$key => $value];
-                }
-            }
-        } elseif (is_string($exceptionTrace)) {
-            $this->_responseBody['exception_trace'][] = $exceptionTrace;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add HTTP header for response
-     *
-     * @param array|string $value
-     * @param bool         $appendFlag Append input to existing data
-     *
-     * @return ApiResponse
-     */
-    public function withHeader($value, bool $appendFlag = false): ApiResponse
-    {
-        if (empty($value)) {
-            return $this;
-        }
-        if (!$appendFlag) {
-            $this->_responseHeader = $value;
-            return $this;
-        }
-        if (is_array($value)) {
-            $this->_responseHeader = array_merge($this->_responseHeader, $value);
-        } elseif (is_string($value)) {
-            $this->_responseHeader[] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
      * Set cursors for paging function
      *
      * @param array $paging
@@ -240,18 +92,22 @@ class ApiResponse extends CakeResponse
     }
 
     /**
-     * Create the response to be returned to the client
-     *
-     * @return CakeResponse
+     * Use or replace to app/Lib/Network/Response/ErrorResponse if having error/exception
+     * @deprecated
+     * @return $this
      */
-    public function getResponse(): CakeResponse
+    public function withExceptionTrace($exceptionTrace, bool $appendFlag = false): self
     {
-        $this->type('json');
-        $this->header($this->_responseHeader);
-        $this->body(json_encode($this->_responseBody));
-        $this->disableCache();
-
         return $this;
     }
 
+    /**
+     * Use or replace to app/Lib/Network/Response/ErrorResponse if having error/exception
+     * @deprecated
+     * @return $this
+     */
+    public function withException(Exception $exception): self
+    {
+        return $this;
+    }
 }
