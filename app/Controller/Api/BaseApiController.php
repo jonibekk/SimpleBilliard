@@ -3,6 +3,7 @@ App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
+App::uses('ErrorResponse', 'Lib/Network/Response');
 App::import('Lib/Status', 'TeamStatus');
 App::import('Lib/Auth', 'AccessAuthenticator');
 
@@ -149,6 +150,33 @@ abstract class BaseApiController extends Controller
 
         return ApiVer::isAvailable($requestedVersion) ?
             $requestedVersion : ApiVer::getLatestApiVersion();
+    }
+
+    /**
+     * Common use of most validation of API access.
+     *
+     * @param BaseValidator $validator
+     *
+     * @return null|BaseApiResponse
+     */
+    protected function generateResponseIfValidationFailed(BaseValidator $validator, array $requestedJsonBody)
+    {
+        try {
+            $validator->validate($requestedJsonBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->withMessage('validation failed')
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class' => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
     }
 
     /**

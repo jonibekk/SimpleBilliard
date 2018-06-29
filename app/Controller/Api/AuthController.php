@@ -98,15 +98,10 @@ class AuthController extends BaseApiController
      */
     private function validateLogin()
     {
-        $validator = AuthRequestValidator::createLoginValidator();
-
-        try {
-            $validator->validate($this->getRequestJsonBody());
-        } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->getResponse();
-        }
-
-        return null;
+        return $this->generateResponseIfValidationFailed(
+            AuthRequestValidator::createLoginValidator(),
+            $this->getRequestJsonBody()
+        );
     }
 
     /**
