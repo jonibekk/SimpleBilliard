@@ -11,7 +11,7 @@ App::uses('Circle', 'Model');
  */
 class CircleListPagingService extends BasePagingService
 {
-    protected function readData(PagingCUrsor $pagingCursor, int $limit): array
+    protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
         $options = $this->createSearchCondition($pagingCursor->getConditions(true));
 
