@@ -3,6 +3,8 @@ App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
+App::uses('AuthFailedException', 'Service/AuthServiceException');
+App::uses('AuthMismatchException', 'Service/AuthServiceException');
 
 /**
  * Created by PhpStorm.
@@ -30,35 +32,36 @@ class AuthController extends BaseApiController
         if (!empty($return)) {
             return $return;
         }
-        /** @var AuthService $AuthService */
-        $AuthService = ClassRegistry::init("AuthService");
 
         $requestData = $this->getRequestJsonBody();
 
+        // TODO: do the translation
+
         try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
-        } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
+        } catch (AuthMismatchException $e) {
+            return ErrorResponse::badRequest()
+                ->withError(new ErrorTypeGlobal('password and email did not match'))
+                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency('user failed to login', [
+                'message' => $e->getMessage(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->getResponse();
         }
-
-        //If no matching username / password is found
-        if (empty($jwt)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__("Error. Try to login again."))
-                                                                       ->getResponse();
-        }
-
-        $authHeader = [
-            'Authorization' => 'Bearer ' . $jwt->token()
-        ];
 
         /** @var User $User */
         $User = ClassRegistry::init('User');
-
         $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray()['User'];
 
         //On successful login, return the JWT token to the user
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data)
-                                                               ->withHeader($authHeader, true)->getResponse();
+        return ApiResponse::ok()
+            ->withData($data)
+            ->withHeader(['Authorization' => 'Bearer ' . $jwt->token()], true)
+            ->getResponse();
     }
 
     /**
