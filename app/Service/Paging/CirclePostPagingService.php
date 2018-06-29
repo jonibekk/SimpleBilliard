@@ -35,7 +35,7 @@ class CirclePostPagingService extends BasePagingService
 
     protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingCursor->getConditions());
+        $options = $this->createSearchCondition($pagingCursor->getConditions(true));
 
         $options['limit'] = $limit;
         $options['order'] = $pagingCursor->getOrders();
@@ -51,7 +51,7 @@ class CirclePostPagingService extends BasePagingService
         return Hash::extract($result, '{n}.Post');
     }
 
-    protected function countData($conditions): int
+    protected function countData(array $conditions): int
     {
         $options = $this->createSearchCondition($conditions);
 
@@ -148,6 +148,16 @@ class CirclePostPagingService extends BasePagingService
         ];
 
         return $options;
+    }
+
+    protected function getEndPointerValue($lastElement)
+    {
+        return ['id', "<", $lastElement['id']];
+    }
+
+    protected function getStartPointerValue($firstElement)
+    {
+        return ['id', ">", $firstElement['id']];
     }
 
 }

@@ -9,6 +9,8 @@
 class PagingCursor
 {
     const DEFAULT_PAGE_LIMIT = 20;
+    const MAX_PAGE_LIMIT = 100;
+
     const PAGE_ORDER_ASC = 'asc';
     const PAGE_ORDER_DESC = 'desc';
 
@@ -34,6 +36,13 @@ class PagingCursor
      * @var array
      */
     private $conditions = [];
+
+    /**
+     * Add resource ID from the URL. Will not be included in cursor
+     *
+     * @var array
+     */
+    private $resourceId = [];
 
     /**
      * PagingCursor constructor.
@@ -94,13 +103,17 @@ class PagingCursor
      *
      * @param string $cursor
      *
+     * @throws RuntimeException When failed parsing cursor
      * @return PagingCursor
      */
     public static function decodeCursorToObject(string $cursor)
     {
-        $values = self::decodeCursorToArray($cursor);
-
-        $self = new self($values['conditions'], $values['pointer'], $values['order']);
+        try {
+            $values = self::decodeCursorToArray($cursor);
+            $self = new self($values['conditions'], $values['pointer'], $values['order']);
+        } catch (RuntimeException $e) {
+            throw $e;
+        }
 
         return $self;
     }
@@ -116,10 +129,14 @@ class PagingCursor
     public static function decodeCursorToArray(string $cursor): array
     {
         $decodedString = base64_decode($cursor);
-        if ($decodedString === false) {
-            throw new RuntimeException("Failed in parsing cursor");
+        if ($decodedString === false || empty($decodedString)) {
+            throw new RuntimeException("Failed in parsing cursor from base64 encoding");
         }
-        return json_decode($decodedString, true);
+        $jsonDecodedString = json_decode($decodedString, true);
+        if ($jsonDecodedString === false || empty($jsonDecodedString)) {
+            throw new RuntimeException("Failed in parsing cursor from json");
+        }
+        return $jsonDecodedString;
     }
 
     /**
@@ -176,10 +193,17 @@ class PagingCursor
      * Add new condition
      *
      * @param array $conditions
+     * @param bool  $overwrite If same key exist, whether to overwrite or not
      */
-    public function addCondition(array $conditions)
+    public function addCondition(array $conditions, bool $overwrite = false)
     {
-        $this->conditions = array_merge($this->conditions, $conditions);
+        if ($overwrite) {
+            $this->conditions = array_merge($this->conditions, $conditions);
+        } else {
+            if (!array_key_exists(key($conditions), $this->conditions)) {
+                $this->conditions = array_merge($this->conditions, $conditions);
+            }
+        }
     }
 
     /**
@@ -231,11 +255,24 @@ class PagingCursor
     /**
      * Get all stored conditions
      *
+     * @param bool $includeResourceId Whether should include resource ID
+     *
      * @return array
      */
-    public function getConditions()
+    public function getConditions(bool $includeResourceId = false)
     {
-        return $this->conditions;
+        return ($includeResourceId) ? array_merge($this->conditions, $this->resourceId) : $this->conditions;
+    }
+
+    /**
+     * Add a resource ID to the cursor. Will always overwrite existing one
+     *
+     * @param string $key
+     * @param int    $id
+     */
+    public function addResource(string $key, int $id)
+    {
+        $this->resourceId = [$key => $id];
     }
 
     /**

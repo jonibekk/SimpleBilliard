@@ -32,6 +32,11 @@
   "config": {
     "vendor-dir": "Vendor/"
   },
+  "autoload": {
+    "psr-4": {
+      "Goalous\\Enum\\": "app/Enum"
+    }
+  },
   "repositories": [
    {
       "type": "composer",

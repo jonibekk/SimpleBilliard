@@ -17,13 +17,15 @@ abstract class  BasePagingController extends BaseApiController
     abstract protected function getPagingConditionFromRequest(): PagingCursor;
 
     /**
-     * Get the limit of paging
+     * Get the limit of paging. If limit not given or above maximum amount, use default page limit
      *
      * @return int
      */
     protected function getPagingLimit()
     {
-        return $this->request->query('limit') ?? PagingCursor::DEFAULT_PAGE_LIMIT;
+        $limit = $this->request->query('limit');
+
+        return ($limit > PagingCursor::MAX_PAGE_LIMIT || empty($limit)) ? PagingCursor::DEFAULT_PAGE_LIMIT : $limit;
     }
 
     /**
@@ -77,8 +79,9 @@ abstract class  BasePagingController extends BaseApiController
         try {
             $pagingCursor = PagingCursor::decodeCursorToObject($cursor);
         } catch (RuntimeException $r) {
+            throw $r;
+        } catch (Exception $e){
             $pagingCursor = new PagingCursor();
-            GoalousLog::notice($r->getMessage(), $r->getTrace());
         }
         return $pagingCursor;
     }

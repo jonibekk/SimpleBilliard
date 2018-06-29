@@ -24,9 +24,13 @@ class CirclesController extends BasePagingController
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = ClassRegistry::init('CirclePostPagingService');
 
-        $pagingCursor = $this->getPagingParameters();
-        $pagingCursor->add(['circle_id' => $circleId]);
-        $pagingCursor->addCondition(['user_id' => $this->getUserId()]);
+        try {
+            $pagingCursor = $this->getPagingParameters();
+            $pagingCursor->addResource('circle_id', $circleId);
+            $pagingCursor->addCondition(['user_id' => $this->getUserId()]);
+        } catch (Exception $e) {
+            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+        }
 
         try {
             $data = $CirclePostPagingService->getDataWithPaging(
@@ -43,7 +47,9 @@ class CirclesController extends BasePagingController
 
     protected function getPagingConditionFromRequest(): PagingCursor
     {
-        return new PagingCursor();
+        $pagingCursor = new PagingCursor();
+        $pagingCursor->addOrder('id');
+        return $pagingCursor;
     }
 
     /**

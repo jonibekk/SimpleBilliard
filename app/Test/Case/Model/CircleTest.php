@@ -362,5 +362,4 @@ class CircleTest extends GoalousTestCase
         $this->assertTrue($this->Circle->belongToTeam(1, $circleId));
         $this->assertFalse($this->Circle->belongToTeam(2, $circleId));
     }
-
 }
