@@ -21,6 +21,14 @@ class ApiResponse extends BaseApiResponse
     const RESPONSE_RESOURCE_CONFLICT = 409;
     const RESPONSE_INTERNAL_SERVER_ERROR = 500;
 
+    /**
+     * Create response 200
+     * @return self
+     */
+    public static function ok(): self
+    {
+        return new self(self::RESPONSE_SUCCESS);
+    }
 
     /**
      * Add data to response body

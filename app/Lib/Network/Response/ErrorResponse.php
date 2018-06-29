@@ -13,6 +13,70 @@ class ErrorResponse extends BaseApiResponse
     const RESPONSE_INTERNAL_SERVER_ERROR = 500;
 
     /**
+     * @param int $httpStatusCode
+     * @return self
+     */
+    private static function createResponse(int $httpStatusCode): self
+    {
+        return new self($httpStatusCode);
+    }
+
+    /**
+     * Create response 400
+     * @return self
+     */
+    public static function badRequest(): self
+    {
+        return self::createResponse(self::RESPONSE_BAD_REQUEST);
+    }
+
+    /**
+     * Create response 401
+     * @return self
+     */
+    public static function unauthorized(): self
+    {
+        return self::createResponse(self::RESPONSE_UNAUTHORIZED);
+    }
+
+    /**
+     * Create response 403
+     * @return self
+     */
+    public static function forbidden(): self
+    {
+        return self::createResponse(self::RESPONSE_FORBIDDEN);
+    }
+
+    /**
+     * Create response 404
+     * @return self
+     */
+    public static function notFound(): self
+    {
+        return self::createResponse(self::RESPONSE_NOT_FOUND);
+    }
+
+    /**
+     * Create response 409
+     * @return self
+     */
+    public static function resourceConflict(): self
+    {
+        return self::createResponse(self::RESPONSE_RESOURCE_CONFLICT);
+    }
+
+    /**
+     * Create response 500
+     * @return self
+     */
+    public static function internalServerError(): self
+    {
+        return self::createResponse(self::RESPONSE_INTERNAL_SERVER_ERROR);
+    }
+
+
+    /**
      * @var AbstractErrorType[]
      */
     private $errors = [];

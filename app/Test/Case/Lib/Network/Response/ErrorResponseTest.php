@@ -10,6 +10,16 @@ use Goalous\Enum as Enum;
  */
 class ErrorResponseTest extends GoalousTestCase
 {
+    function test_eachStatus()
+    {
+        $this->assertSame(400, ErrorResponse::badRequest()->getResponse()->statusCode());
+        $this->assertSame(401, ErrorResponse::unauthorized()->getResponse()->statusCode());
+        $this->assertSame(403, ErrorResponse::forbidden()->getResponse()->statusCode());
+        $this->assertSame(404, ErrorResponse::notFound()->getResponse()->statusCode());
+        $this->assertSame(409, ErrorResponse::resourceConflict()->getResponse()->statusCode());
+        $this->assertSame(500, ErrorResponse::internalServerError()->getResponse()->statusCode());
+    }
+
     function test_simpleError()
     {
         $response = (new ErrorResponse(ErrorResponse::RESPONSE_BAD_REQUEST))

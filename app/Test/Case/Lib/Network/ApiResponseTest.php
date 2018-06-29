@@ -7,6 +7,21 @@ App::uses('ApiResponse', 'Lib/Network');
  */
 class ApiResponseTest extends GoalousTestCase
 {
+    function test_ok()
+    {
+        $response = ApiResponse::ok()->getResponse();
+
+        $this->assertSame(
+            ApiResponse::RESPONSE_SUCCESS,
+            $response->statusCode()
+        );
+
+        $this->assertSame(
+            json_encode([]),
+            $response->body()
+        );
+    }
+
     function test_simpleBody()
     {
         $bodyValue = [
