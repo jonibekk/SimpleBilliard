@@ -13,7 +13,7 @@ App::uses('CircleMember', 'Model');
 class CircleListPagingService extends BasePagingService
 {
     const EXTEND_ALL = 'ext:circle:all';
-    const EXTEND_UNREAD_COUNT = 'ext:circle:unread';
+    const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
 
     protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
@@ -102,7 +102,7 @@ class CircleListPagingService extends BasePagingService
 
     protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_UNREAD_COUNT, $options)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_MEMBER_INFO, $options)) {
             /** @var CircleMember $CircleMember */
             $CircleMember = ClassRegistry::init('CircleMember');
 
@@ -115,13 +115,14 @@ class CircleListPagingService extends BasePagingService
                         'user_id'   => $userId
                     ],
                     'fields'     => [
-                        'unread_count'
+                        'unread_count',
+                        'admin_flg'
                     ]
                 ];
                 $result = $CircleMember->find('first', $options);
-                $unreadCount = Hash::extract($result, "{s}.{s}")[0];
+                $memberInfo = Hash::get($result, 'CircleMember');
 
-                $circle['unread_count'] = $unreadCount;
+                $circle = array_merge($circle, $memberInfo);
             }
         }
     }
