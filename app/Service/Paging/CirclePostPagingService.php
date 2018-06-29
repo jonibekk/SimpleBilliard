@@ -2,6 +2,8 @@
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/DataExtender', 'CircleDataExtender');
+App::import('Lib/DataExtender', 'PostLikeDataExtender');
+App::import('Lib/DataExtender', 'PostSavedDataExtender');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'CircleService');
 App::import('Service', 'PostService');
@@ -26,6 +28,8 @@ class CirclePostPagingService extends BasePagingService
     const EXTEND_POST_SHARE_CIRCLE = "ext:circle_post:share_circle";
     const EXTEND_POST_SHARE_USER = "ext:circle_post:share_user";
     const EXTEND_POST_FILE = "ext:circle_post:file";
+    const EXTEND_LIKE = "ext:circle_post:like";
+    const EXTEND_SAVED = "ext:circle_post:saved";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
@@ -59,7 +63,6 @@ class CirclePostPagingService extends BasePagingService
 
     protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
-
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
@@ -90,11 +93,19 @@ class CirclePostPagingService extends BasePagingService
                 $result['comments'] = $comments;
             }
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_SHARE_CIRCLE, $options)) {
-            //Postponed
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
+            $userId = $conditions['user_id'];
+            /** @var PostLikeDataExtender $PostLikeDataExtender */
+            $PostLikeDataExtender = ClassRegistry::init('PostLikeDataExtender');
+            $PostLikeDataExtender->setUserId($userId);
+            $resultArray = $PostLikeDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_SHARE_USER, $options)) {
-            //Postponed
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
+            $userId = $conditions['user_id'];
+            /** @var PostSavedDataExtender $PostSavedDataExtender */
+            $PostSavedDataExtender = ClassRegistry::init('PostSavedDataExtender');
+            $PostSavedDataExtender->setUserId($userId);
+            $resultArray = $PostSavedDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_FILE, $options)) {
             //Postponed
