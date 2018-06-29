@@ -1,7 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CircleListPagingService');
-App::import('Lib/Paging', 'PagingCursor');
+App::import('Lib/Paging', 'PagingRequest');
 
 /**
  * Created by PhpStorm.
@@ -25,9 +25,12 @@ class CircleListPagingServiceTest extends GoalousTestCase
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $cursor = new PagingCursor(['team_id' => 1, 'user_id' => 1]);
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->addResource('current_user_id', 1);
+        $pagingRequest->addOrder('latest_post_created');
 
-        $result = $CircleListPagingService->getDataWithPaging($cursor, 2);
+        $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 2);
 
         $this->assertCount(2, $result['data']);
         $this->assertNotEmpty($result['paging']['next']);
@@ -39,14 +42,18 @@ class CircleListPagingServiceTest extends GoalousTestCase
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $cursor = new PagingCursor(['team_id' => 1, 'user_id' => 1]);
-        $cursor->addOrder('latest_post_created');
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->addResource('current_user_id', 1);
+        $pagingRequest->addOrder('latest_post_created');
 
-        $result = $CircleListPagingService->getDataWithPaging($cursor, 1);
+        $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
-        $pagingCursor = PagingCursor::decodeCursorToObject($result['paging']['next']);
+        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
+        $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->addResource('current_user_id', 1);
 
-        $result = $CircleListPagingService->getDataWithPaging($pagingCursor, 1);
+        $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
         $this->assertCount(1, $result['data']);
         $this->assertNotEmpty($result['paging']['next']);
@@ -58,7 +65,7 @@ class CircleListPagingServiceTest extends GoalousTestCase
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $cursor = new PagingCursor(['team_id' => 1, 'user_id' => 1]);
+        $cursor = new PagingRequest(['current_team_id' => 1, 'current_user_id' => 1]);
         $cursor->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($cursor, 1,

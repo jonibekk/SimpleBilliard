@@ -6,7 +6,7 @@
  * Time: 17:20
  */
 
-class PagingCursor
+class PagingRequest
 {
     const DEFAULT_PAGE_LIMIT = 20;
     const MAX_PAGE_LIMIT = 100;
@@ -31,6 +31,13 @@ class PagingCursor
     private $pointerValues = [];
 
     /**
+     * Array for search query from UR
+     *
+     * @var array
+     */
+    private $queries = [];
+
+    /**
      * DB query parameters, follow DB query structure
      *
      * @var array
@@ -45,7 +52,7 @@ class PagingCursor
     private $resourceId = [];
 
     /**
-     * PagingCursor constructor.
+     * PagingRequest constructor.
      *
      * @param array $conditions    Conditions for the search, e.g. SQL query
      * @param array $pointerValues Pointer to mark start / end point of search
@@ -104,7 +111,7 @@ class PagingCursor
      * @param string $cursor
      *
      * @throws RuntimeException When failed parsing cursor
-     * @return PagingCursor
+     * @return PagingRequest
      */
     public static function decodeCursorToObject(string $cursor)
     {
@@ -272,7 +279,7 @@ class PagingCursor
      */
     public function addResource(string $key, int $id)
     {
-        $this->resourceId = [$key => $id];
+        $this->resourceId[$key] = $id;
     }
 
     /**
@@ -297,5 +304,56 @@ class PagingCursor
     public function isEmpty(): bool
     {
         return empty($this->order) && empty($this->conditions) && empty($this->pointerValues);
+    }
+
+    /**
+     * Get saved URL queries
+     *
+     * @param null $keys
+     *
+     * @return array
+     */
+    public function getQuery($keys = null): array
+    {
+        if (empty($keys)) {
+            return $this->queries;
+        }
+        if (is_string($keys)) {
+            return Hash::get($this->queries, $keys);
+        }
+        if (is_array($keys)) {
+            $result = [];
+            foreach ($keys as $key) {
+                $result[$key] = Hash::get($this->queries, $key);
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Insert URL queries
+     *
+     * @param array $query
+     */
+    public function addQueries(array $query)
+    {
+        $this->queries = array_merge($this->queries, $query);
+    }
+
+    public function addQueriesToCondition($keys = null)
+    {
+        if (empty($keys)) {
+            return;
+        }
+        if (is_string($keys) && key_exists($keys, $this->queries)) {
+            $this->conditions[$keys] = Hash::get($this->queries, $keys);
+        }
+        if (is_array($keys)) {
+            foreach ($keys as $key) {
+                if (key_exists($key, $this->queries)) {
+                    $this->conditions[$key] = Hash::get($this->queries, $key);
+                }
+            }
+        }
     }
 }

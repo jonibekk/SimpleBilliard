@@ -1,7 +1,7 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
-App::import('Lib/Paging', 'PagingCursor');
+App::import('Lib/Paging', 'PagingRequest');
 
 /**
  * Created by PhpStorm.
@@ -20,35 +20,30 @@ class UsersController extends BasePagingController
      */
     public function get_circles(int $userId)
     {
-
-        $res = $this->validateCircles();
+        GoalousLog::warning("M". $this->request->params['id']);
 
         if (!empty($res)) {
             return $res;
         }
         try {
-            $pagingCursor = $this->getPagingParameters();
+            $pagingRequest = $this->getPagingParameters();
         } catch (Exception $e) {
             return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
         }
 
-        $pagingCursor->addResource('user_id', $userId);
-        $pagingCursor->addCondition(['team_id' => $this->getTeamId()]);
-        $pagingCursor->addCondition(['joined' => boolval($this->request->query('joined')) ?? true]);
-
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $circleData = $CircleListPagingService->getDataWithPaging($pagingCursor, $this->getPagingLimit());
+        $circleData = $CircleListPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit());
 
         return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody($circleData)->getResponse();
     }
 
-    protected function getPagingConditionFromRequest(): PagingCursor
+    protected function getPagingConditionFromRequest(): PagingRequest
     {
-        $pagingCursor = new PagingCursor();
-        $pagingCursor->addOrder('latest_post_created');
-        return $pagingCursor;
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->addOrder('latest_post_created');
+        return $pagingRequest;
     }
 
     /**

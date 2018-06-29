@@ -1,6 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 
 /**
  * Created by PhpStorm.
@@ -19,7 +19,7 @@ class GoalFeedPaging extends BasePagingService
     const EXTEND_KR = "ext:goal_post:kr";
     const EXTEND_ACTION_RESULT = "ext:goal_post:action_result";
 
-    protected function readData(PagingCUrsor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         // TODO: Implement readData() method.
     }

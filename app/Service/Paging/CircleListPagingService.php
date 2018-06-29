@@ -1,6 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::import('Lib/Paging', 'PagingCursor');
+App::import('Lib/Paging', 'PagingRequest');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 
@@ -15,13 +15,14 @@ class CircleListPagingService extends BasePagingService
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
 
-    protected function readData(PagingCursor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingCursor->getConditions(true));
+        $pagingRequest->addQueriesToCondition(['joined', 'public_only']);
+        $options = $this->createSearchCondition($pagingRequest->getConditions(true));
 
         $options['limit'] = $limit;
-        $options['order'] = $pagingCursor->getOrders();
-        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
+        $options['order'] = $pagingRequest->getOrders();
+        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
         $options['conversion'] = true;
 
         /** @var Circle $Circle */
@@ -32,22 +33,13 @@ class CircleListPagingService extends BasePagingService
         return Hash::extract($result, '{n}.Circle');
     }
 
-    protected function countData(array $conditions): int
-    {
-        $options = $this->createSearchCondition($conditions);
-
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
-
-        return (int)$Circle->find('count', $options);
-    }
-
     private function createSearchCondition(array $conditions)
     {
-        $userId = Hash::get($conditions, 'user_id');
-        $teamId = Hash::get($conditions, 'team_id');
-        $publicOnlyFlag = Hash::get($conditions, 'public_only') ?? true;
-        $joinedFlag = Hash::get($conditions, 'joined') ?? true;
+        //Get user ID from given resource ID. If not exist, use current user's ID
+        $userId = Hash::get($conditions, 'res_id') ?? Hash::get($conditions, 'current_user_id');
+        $teamId = Hash::get($conditions, 'current_team_id');
+        $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
+        $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
 
         if (empty($userId) || empty($teamId)) {
             GoalousLog::error("Missing parameter for circle list paging", $conditions);
@@ -90,6 +82,16 @@ class CircleListPagingService extends BasePagingService
         return $conditions;
     }
 
+    protected function countData(array $conditions): int
+    {
+        $options = $this->createSearchCondition($conditions);
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        return (int)$Circle->find('count', $options);
+    }
+
     protected function getEndPointerValue($lastElement)
     {
         return ['latest_post_created', "<", $lastElement['latest_post_created']];
@@ -106,7 +108,7 @@ class CircleListPagingService extends BasePagingService
             /** @var CircleMember $CircleMember */
             $CircleMember = ClassRegistry::init('CircleMember');
 
-            $userId = Hash::get($conditions, 'user_id');
+            $userId = Hash::get($conditions, 'res_id') ?? Hash::get($conditions, 'current_user_id');
 
             foreach ($resultArray as &$circle) {
                 $options = [
@@ -126,6 +128,12 @@ class CircleListPagingService extends BasePagingService
                 $circle = array_merge($circle, $memberInfo);
             }
         }
+    }
+
+    protected function addDefaultValues(PagingRequest $pagingRequest)
+    {
+        $pagingRequest->addOrder('latest_post_created');
+        return $pagingRequest;
     }
 
 }

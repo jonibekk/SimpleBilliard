@@ -1,6 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Post', 'Model');
 
 /**
@@ -21,13 +21,13 @@ class CirclePostPagingService extends BasePagingService
 
     const DEFAULT_COMMENT_COUNT = 3;
 
-    protected function readData(PagingCursor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingCursor->getConditions(true));
+        $options = $this->createSearchCondition($pagingRequest->getConditions(true));
 
         $options['limit'] = $limit;
-        $options['order'] = $pagingCursor->getOrders();
-        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
+        $options['order'] = $pagingRequest->getOrders();
+        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
         $options['conversion'] = true;
 
         /** @var Post $Post */
@@ -39,21 +39,6 @@ class CirclePostPagingService extends BasePagingService
         return Hash::extract($result, '{n}.Post');
     }
 
-    protected function countData(array $conditions): int
-    {
-        $options = $this->createSearchCondition($conditions);
-
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-
-        return (int)$Post->find('count', $options);
-    }
-
-    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
-    {
-        //TODO Will implement in GL-7028
-    }
-
     /**
      * Create the SQL query for getting the circle posts
      *
@@ -63,7 +48,7 @@ class CirclePostPagingService extends BasePagingService
      */
     private function createSearchCondition(array $conditions): array
     {
-        $circleId = Hash::get($conditions, 'circle_id');
+        $circleId = Hash::get($conditions, 'res_id');
 
         if (empty($circleId)) {
             GoalousLog::error("Missing circle ID for post paging", $conditions);
@@ -90,6 +75,21 @@ class CirclePostPagingService extends BasePagingService
         ];
 
         return $options;
+    }
+
+    protected function countData(array $conditions): int
+    {
+        $options = $this->createSearchCondition($conditions);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        return (int)$Post->find('count', $options);
+    }
+
+    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
+    {
+        //TODO Will implement in GL-7028
     }
 
     protected function getEndPointerValue($lastElement)

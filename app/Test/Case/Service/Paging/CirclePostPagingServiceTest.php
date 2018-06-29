@@ -1,7 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CirclePostPagingService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 
 /**
  * Created by PhpStorm.
@@ -31,7 +31,8 @@ class CirclePostPagingTest extends GoalousTestCase
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
 
-        $cursor = new PagingCursor(['circle_id' => 1]);
+        $cursor = new PagingRequest();
+        $cursor->addResource('res_id', 1);
 
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1);
 
@@ -45,13 +46,15 @@ class CirclePostPagingTest extends GoalousTestCase
         /** @var CirclePostPagingService $CircleFeedPaging */
         $CircleFeedPaging = new CirclePostPagingService();
 
-        $cursor = new PagingCursor(['circle_id' => 1]);
+        $cursor = new PagingRequest();
+        $cursor->addResource('res_id', 1);
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
 
-        $pagingCursor = PagingCursor::decodeCursorToObject($result['paging']['next']);
+        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
+        $pagingRequest->addResource('res_id', 1);
 
-        $secondResult = $CircleFeedPaging->getDataWithPaging($pagingCursor, 2);
+        $secondResult = $CircleFeedPaging->getDataWithPaging($pagingRequest, 2);
 
         $this->assertCount(2, $secondResult['data']);
         $this->assertNotEmpty($secondResult['paging']['next']);

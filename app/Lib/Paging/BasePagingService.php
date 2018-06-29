@@ -1,30 +1,30 @@
 <?php
 App::import('Lib/Paging', 'PagingServiceInterface');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/10
  * Time: 12:11
  */
-
 abstract class BasePagingService implements PagingServiceInterface
 {
     /**
      * Implement interface PagingServiceInterface, should this trait used in a class
      *
-     * @param PagingCursor $pagingCursor
-     * @param int          $limit
-     * @param array        $extendFlags
+     * @param PagingRequest $pagingRequest
+     * @param int           $limit
+     * @param array         $extendFlags
      *
      * @return array
      */
     public final function getDataWithPaging(
-        $pagingCursor,
-        $limit = PagingCursor::DEFAULT_PAGE_LIMIT,
+        $pagingRequest,
+        $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     ) {
 
-        if (!is_array($extendFlags)){
+        if (!is_array($extendFlags)) {
             $extendFlags = [$extendFlags];
         }
 
@@ -38,21 +38,21 @@ abstract class BasePagingService implements PagingServiceInterface
         ];
 
         $this->beforeRead();
+        $pagingRequest = $this->addDefaultValues($pagingRequest);
+        $finalResult['count'] = $this->countData($pagingRequest->getConditions(true));
 
-        $finalResult['count'] = $this->countData($pagingCursor->getConditions(true));
+        $pointerValues = $pagingRequest->getPointers();
 
-        $pointerValues = $pagingCursor->getPointers();
-
-        $queryResult = $this->readData($pagingCursor, $limit + 1);
+        $queryResult = $this->readData($pagingRequest, $limit + 1);
 
         //If there is further result
         if (count($queryResult) > $limit) {
             array_pop($queryResult);
 
             //Set end pointer values
-            $pagingCursor->addPointerArray($this->getEndPointerValue($queryResult[--$limit]));
+            $pagingRequest->addPointerArray($this->getEndPointerValue($queryResult[--$limit]));
 
-            $finalResult['paging']['next'] = $pagingCursor->returnCursor();
+            $finalResult['paging']['next'] = $pagingRequest->returnCursor();
         }
 
         //If there is previous result
@@ -60,13 +60,13 @@ abstract class BasePagingService implements PagingServiceInterface
         if (count($queryResult) > 0 && !empty($pointerValues)) {
 
             //Set start pointer value
-            $pagingCursor->setPointer($this->getStartPointerValue($queryResult[0]));
+            $pagingRequest->setPointer($this->getStartPointerValue($queryResult[0]));
 
-            $finalResult['paging']['prev'] = $pagingCursor->returnCursor();
+            $finalResult['paging']['prev'] = $pagingRequest->returnCursor();
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $pagingCursor->getConditions(), $extendFlags);
+            $this->extendPagingResult($queryResult, $pagingRequest->getConditions(), $extendFlags);
         }
 
         $this->afterRead();
@@ -123,12 +123,12 @@ abstract class BasePagingService implements PagingServiceInterface
     /**
      * Method for reading data from DB, based on the parameters
      *
-     * @param PagingCursor $pagingCursor Conditions for paging query
-     * @param int          $limit        Number of records to be read
+     * @param PagingRequest $pagingRequest Conditions for paging query
+     * @param int           $limit         Number of records to be read
      *
      * @return array Query result
      */
-    abstract protected function readData(PagingCUrsor $pagingCursor, int $limit): array;
+    abstract protected function readData(PagingRequest $pagingRequest, int $limit): array;
 
     /**
      * Count the number of data matching conditions provided
@@ -152,6 +152,19 @@ abstract class BasePagingService implements PagingServiceInterface
     protected function extendPagingResult(&$resultArray, $conditions, $options = [])
     {
         return $resultArray;
+    }
+
+    /**
+     * Attach additional values to PagingRequest before usage
+     *
+     * @param PagingRequest $pagingRequest
+     *
+     * @return PagingRequest
+     */
+    protected function addDefaultValues(PagingRequest $pagingRequest)
+    {
+        $pagingRequest->addOrder('id');
+        return $pagingRequest;
     }
 
 }

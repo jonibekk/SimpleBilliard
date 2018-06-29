@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 
 /**
  * Created by PhpStorm.
@@ -8,7 +8,7 @@ App::uses('PagingCursor', 'Lib/Paging');
  * Date: 2018/05/09
  * Time: 17:38
  */
-class PagingCursorTest extends GoalousTestCase
+class PagingRequestTest extends GoalousTestCase
 {
     public function test_NextPaging_success()
     {
@@ -20,9 +20,9 @@ class PagingCursorTest extends GoalousTestCase
         $pointer = ['count', '>', 100];
         $order = ['count', 'asc'];
 
-        $encodedString = PagingCursor::createPageCursor($conditions, $pointer, $order);
+        $encodedString = PagingRequest::createPageCursor($conditions, $pointer, $order);
 
-        $decodedArray = PagingCursor::decodeCursorToArray($encodedString);
+        $decodedArray = PagingRequest::decodeCursorToArray($encodedString);
 
         $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
         $this->assertEquals($pointer, $decodedArray['pointer']);
