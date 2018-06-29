@@ -98,13 +98,6 @@ class AuthController extends BaseApiController
      */
     private function validateLogin()
     {
-        // TODO: Better create method of allowMethodPost, allowMethodGet, ...
-        $res = $this->allowMethod('POST');
-
-        if (!empty($res)) {
-            return $res;
-        }
-
         $validator = AuthRequestValidator::createLoginValidator();
 
         try {
