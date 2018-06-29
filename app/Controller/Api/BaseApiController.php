@@ -231,10 +231,11 @@ abstract class BaseApiController extends Controller
         try {
             $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
         } catch (AuthenticationException $e) {
+            GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
             return false;
         }
 
-        if (empty($jwtAuth->getUserId())) {
+        if (empty($jwtAuth->getUserId() || empty ($jwtAuth->getTeamId()))) {
             return false;
         }
 

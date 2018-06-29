@@ -9,6 +9,9 @@ App::uses('UploadHelper', 'View/Helper');
  * @property CircleMember    $CircleMember
  * @property PostShareCircle $PostShareCircle
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class Circle extends AppModel
 {
     /**
@@ -106,6 +109,14 @@ class Circle extends AppModel
      */
     public $belongsTo = [
         'Team'
+    ];
+
+    public $modelConversionTable = [
+        'team_id'             => DataType::INT,
+        'public_flg'          => DataType::BOOL,
+        'team_all_flg'        => DataType::BOOL,
+        'circle_member_count' => DataType::INT,
+        'latest_post_created' => DataType::INT
     ];
 
     /**
@@ -561,5 +572,4 @@ class Circle extends AppModel
 
         return (bool)$this->find('first', $options);
     }
-
 }

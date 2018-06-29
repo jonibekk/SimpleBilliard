@@ -66,30 +66,40 @@ class CircleFixture extends CakeTestFixtureEx
             'default' => '0',
             'comment' => 'チーム全体フラグ(各チームに必須で１つ存在する)'
         ),
-        'circle_member_count' => array('type'     => 'integer',
-                                       'null'     => false,
-                                       'default'  => '0',
-                                       'unsigned' => true,
-                                       'comment'  => 'メンバー数'
+        'circle_member_count' => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => true,
+            'comment'  => 'メンバー数'
         ),
         'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
-        'deleted'             => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => '部署を削除した日付時刻'
+        'deleted'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '部署を削除した日付時刻'
         ),
-        'created'             => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => '部署を追加した日付時刻'
+        'created'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '部署を追加した日付時刻'
         ),
-        'modified'            => array('type'     => 'integer',
-                                       'null'     => true,
-                                       'default'  => null,
-                                       'unsigned' => true,
-                                       'comment'  => '部署を更新した日付時刻'
+        'modified'            => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '部署を更新した日付時刻'
+        ),
+        'latest_post_created' => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true
         ),
         'indexes'             => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
@@ -117,7 +127,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 0,
             'deleted'             => null,
             'created'             => 1,
-            'modified'            => 1
+            'modified'            => 1,
+            'latest_post_created' => 100
         ),
         array(
             'id'                  => 2,
@@ -131,7 +142,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 0,
             'deleted'             => null,
             'created'             => 1000,
-            'modified'            => 1000
+            'modified'            => 1000,
+            'latest_post_created' => 101
         ),
         array(
             'id'                  => 3,
@@ -145,7 +157,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 0,
             'deleted'             => null,
             'created'             => 1,
-            'modified'            => 1
+            'modified'            => 1,
+            'latest_post_created' => 102
         ),
         array(
             'id'                  => 4,
@@ -159,7 +172,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 0,
             'deleted'             => null,
             'created'             => 1,
-            'modified'            => 1
+            'modified'            => 1,
+            'latest_post_created' => 103
         ),
         array(
             'id'                  => 5,
@@ -173,7 +187,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 0,
             'deleted'             => null,
             'created'             => 1,
-            'modified'            => 1
+            'modified'            => 1,
+            'latest_post_created' => 104
         ),
         array(
             'id'                  => 6,
@@ -187,7 +202,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 0,
             'deleted'             => null,
             'created'             => 1,
-            'modified'            => 1
+            'modified'            => 1,
+            'latest_post_created' => 105
         ),
         array(
             'id'                  => '7',
@@ -201,7 +217,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 3,
             'created'             => 3,
-            'modified'            => 3
+            'modified'            => 3,
+            'latest_post_created' => 106
         ),
         array(
             'id'                  => '8',
@@ -215,7 +232,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 4,
             'created'             => 4,
-            'modified'            => 4
+            'modified'            => 4,
+            'latest_post_created' => 107
         ),
         array(
             'id'                  => '9',
@@ -229,7 +247,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 5,
             'created'             => 5,
-            'modified'            => 5
+            'modified'            => 5,
+            'latest_post_created' => 108
         ),
         array(
             'id'                  => '10',
@@ -243,7 +262,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 6,
             'created'             => 6,
-            'modified'            => 6
+            'modified'            => 6,
+            'latest_post_created' => 109
         ),
         array(
             'id'                  => '11',
@@ -257,7 +277,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 7,
             'created'             => 7,
-            'modified'            => 7
+            'modified'            => 7,
+            'latest_post_created' => 110
         ),
         array(
             'id'                  => '12',
@@ -271,7 +292,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 8,
             'created'             => 8,
-            'modified'            => 8
+            'modified'            => 8,
+            'latest_post_created' => 111
         ),
         array(
             'id'                  => '13',
@@ -285,7 +307,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 9,
             'created'             => 9,
-            'modified'            => 9
+            'modified'            => 9,
+            'latest_post_created' => 112
         ),
         array(
             'id'                  => '14',
@@ -299,7 +322,8 @@ class CircleFixture extends CakeTestFixtureEx
             'del_flg'             => 1,
             'deleted'             => 10,
             'created'             => 10,
-            'modified'            => 10
+            'modified'            => 10,
+            'latest_post_created' => 113
         ),
     );
 }
