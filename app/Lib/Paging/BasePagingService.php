@@ -1,12 +1,12 @@
 <?php
 App::import('Lib/Paging', 'PagingServiceInterface');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/10
  * Time: 12:11
  */
-
 abstract class BasePagingService implements PagingServiceInterface
 {
     /**
@@ -129,7 +129,7 @@ abstract class BasePagingService implements PagingServiceInterface
      *
      * @return array Query result
      */
-    abstract protected function readData(PagingCUrsor $pagingCursor, int $limit): array;
+    abstract protected function readData(PagingCursor $pagingCursor, int $limit): array;
 
     /**
      * Count the number of data matching conditions provided
