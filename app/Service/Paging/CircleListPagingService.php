@@ -2,6 +2,7 @@
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingCursor');
 App::uses('Circle', 'Model');
+App::uses('CircleMember', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -11,6 +12,9 @@ App::uses('Circle', 'Model');
  */
 class CircleListPagingService extends BasePagingService
 {
+    const EXTEND_ALL = 'ext:circle:all';
+    const EXTEND_UNREAD_COUNT = 'ext:circle:unread';
+
     protected function readData(PagingCursor $pagingCursor, int $limit): array
     {
         $options = $this->createSearchCondition($pagingCursor->getConditions(true));
@@ -42,7 +46,7 @@ class CircleListPagingService extends BasePagingService
     {
         $userId = Hash::get($conditions, 'user_id');
         $teamId = Hash::get($conditions, 'team_id');
-        $publicOnlyFlag = Hash::get($conditions, 'public_only_flg') ?? true;
+        $publicOnlyFlag = Hash::get($conditions, 'public_only') ?? true;
         $joinedFlag = Hash::get($conditions, 'joined') ?? true;
 
         if (empty($userId) || empty($teamId)) {
@@ -55,19 +59,30 @@ class CircleListPagingService extends BasePagingService
                 'Circle.team_id' => $teamId,
                 'Circle.del_flg' => false
             ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'circle_members',
-                    'alias'      => 'CircleMember',
-                    'conditions' => [
-                        "Circle.id " . (($joinedFlag) ? " = " : " != ") . " CircleMember.circle_id",
-                        'CircleMember.user_id' => $userId,
-                        'CircleMember.del_flg' => false
-                    ]
-                ]
-            ]
+            'conversion' => true
         ];
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $db = $Circle->getDataSource();
+
+        $subQuery = $db->buildStatement([
+            'conditions' => [
+                'CircleMember.user_id' => $userId,
+                'CircleMember.del_flg' => false
+            ],
+            'fields'     => [
+                'CircleMember.circle_id'
+            ],
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember'
+        ], $Circle);
+        $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
+
+        $subQueryExpression = $db->expression($subQuery);
+        $conditions['conditions'][] = $subQueryExpression;
+
         if ($publicOnlyFlag) {
             $conditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
         }
@@ -83,6 +98,32 @@ class CircleListPagingService extends BasePagingService
     protected function getStartPointerValue($firstElement)
     {
         return ['latest_post_created', ">", $firstElement['latest_post_created']];
+    }
+
+    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
+    {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_UNREAD_COUNT, $options)) {
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
+
+            $userId = Hash::get($conditions, 'user_id');
+
+            foreach ($resultArray as &$circle) {
+                $options = [
+                    'conditions' => [
+                        'circle_id' => $circle['id'],
+                        'user_id'   => $userId
+                    ],
+                    'fields'     => [
+                        'unread_count'
+                    ]
+                ];
+                $result = $CircleMember->find('first', $options);
+                $unreadCount = Hash::extract($result, "{s}.{s}")[0];
+
+                $circle['unread_count'] = $unreadCount;
+            }
+        }
     }
 
 }
