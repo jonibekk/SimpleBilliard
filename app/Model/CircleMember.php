@@ -687,7 +687,6 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id'   => $this->current_team_id,
                 'user_id'   => $userId,
                 'circle_id' => $circleId
             ],
