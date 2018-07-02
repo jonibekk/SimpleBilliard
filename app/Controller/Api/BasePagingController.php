@@ -18,7 +18,13 @@ abstract class  BasePagingController extends BaseApiController
     {
         $limit = $this->request->query('limit');
 
-        return ($limit > PagingRequest::MAX_PAGE_LIMIT || empty($limit)) ? PagingRequest::DEFAULT_PAGE_LIMIT : $limit;
+        if ($limit > PagingRequest::MAX_PAGE_LIMIT) { //If larger than max limit, return max
+            return PagingRequest::MAX_PAGE_LIMIT;
+        } elseif (empty($limit)) { //If not given, use default
+            return PagingRequest::DEFAULT_PAGE_LIMIT;
+        } else {
+            return $limit;
+        }
     }
 
     /**
