@@ -101,10 +101,27 @@ class AuthController extends BaseApiController
      */
     private function validateLogin()
     {
-        return $this->generateResponseIfValidationFailed(
-            AuthRequestValidator::createLoginValidator(),
-            $this->getRequestJsonBody()
-        );
+        $requestedBody = $this->getRequestJsonBody();
+        $validator = AuthRequestValidator::createLoginValidator();
+
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
+        try {
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class' => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
     }
 
     /**
