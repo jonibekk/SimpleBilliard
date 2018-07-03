@@ -40,14 +40,13 @@ class PostSavedDataExtender extends DataExtender
                 'user_id' => $this->userId
             ],
             'fields'     => [
-                'id',
                 'post_id'
             ]
         ];
 
         $result = $SavedPost->find('all', $options);
 
-        return $result;
+        return Hash::extract($result, "{n}.{s}.post_id");;
     }
 
     protected function connectData(
@@ -56,25 +55,13 @@ class PostSavedDataExtender extends DataExtender
         array $extData,
         string $extDataKey
     ): array {
-
-        foreach ($parentData as &$parentElement) {
-            /** @var bool $found */
-            $found = false;
-            foreach ($extData as $extension) {
-                //Since extension data will have its own Model name as key, we use extract
-                //E.g. ['User'][...]
-                if (Hash::get($parentElement, $parentKeyName) ==
-                    Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-                    $parentElement['is_saved'] = true;
-                    $found = true;
-                    break;
-                }
+        foreach ($parentData as $key => &$parentElement) {
+            if (!is_int($key)) {
+                $parentData['is_saved'] = in_array(Hash::get($parentData, $parentKeyName), $extData);
+                return $parentData;
             }
-            if (!$found) {
-                $parentElement['is_saved'] = false;
-            }
+            $parentElement['is_saved'] = in_array(Hash::get($parentElement, $parentKeyName), $extData);
         }
-
         return $parentData;
     }
 

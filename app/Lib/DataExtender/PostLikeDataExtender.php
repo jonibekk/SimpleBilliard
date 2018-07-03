@@ -40,7 +40,6 @@ class PostLikeDataExtender extends DataExtender
                 'user_id' => $this->userId
             ],
             'fields'     => [
-                'id',
                 'post_id'
             ],
 
@@ -48,7 +47,7 @@ class PostLikeDataExtender extends DataExtender
 
         $result = $PostLike->find('all', $likeOptions);
 
-        return $result;
+        return Hash::extract($result, "{n}.{s}.post_id");
     }
 
     protected function connectData(
@@ -57,24 +56,13 @@ class PostLikeDataExtender extends DataExtender
         array $extData,
         string $extDataKey
     ): array {
-        foreach ($parentData as &$parentElement) {
-            /** @var bool $found */
-            $found = false;
-            foreach ($extData as $extension) {
-                //Since extension data will have its own Model name as key, we use extract
-                //E.g. ['User'][...]
-                if (Hash::get($parentElement, $parentKeyName) ==
-                    Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-                    $parentElement['is_liked'] = true;
-                    $found = true;
-                    break;
-                }
+        foreach ($parentData as $key => &$parentElement) {
+            if (!is_int($key)){
+                $parentData['is_liked'] = in_array(Hash::get($parentData, $parentKeyName), $extData);
+                return $parentData;
             }
-            if (!$found) {
-                $parentElement['is_liked'] = false;
-            }
+            $parentElement['is_liked'] = in_array(Hash::get($parentElement, $parentKeyName), $extData);
         }
-
         return $parentData;
     }
 
