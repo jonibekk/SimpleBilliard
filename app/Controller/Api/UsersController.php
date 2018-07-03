@@ -2,6 +2,8 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Lib/Paging', 'PagingCursor');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
 
 /**
  * Created by PhpStorm.
@@ -29,7 +31,7 @@ class UsersController extends BasePagingController
         try {
             $pagingCursor = $this->getPagingParameters();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
         $pagingCursor->addResource('user_id', $userId);
@@ -41,7 +43,7 @@ class UsersController extends BasePagingController
 
         $circleData = $CircleListPagingService->getDataWithPaging($pagingCursor, $this->getPagingLimit());
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody($circleData)->getResponse();
+        return ApiResponse::ok()->withBody($circleData)->getResponse();
     }
 
     protected function getPagingConditionFromRequest(): PagingCursor

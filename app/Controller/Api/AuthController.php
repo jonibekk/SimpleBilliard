@@ -131,12 +131,6 @@ class AuthController extends BaseApiController
      */
     private function validateLogout()
     {
-        $res = $this->allowMethod('POST');
-
-        if (!empty($res)) {
-            return $res;
-        }
-
         if (!$this->hasAuth()) {
             return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
         }
