@@ -3,8 +3,8 @@ App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
-App::uses('AuthFailedException', 'Service/AuthServiceException');
-App::uses('AuthMismatchException', 'Service/AuthServiceException');
+
+use Goalous\Exception as Exception;
 
 /**
  * Created by PhpStorm.
@@ -41,7 +41,7 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
-        } catch (AuthMismatchException $e) {
+        } catch (Exception\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withError(new ErrorTypeGlobal(__('password and email did not match')))
                 ->getResponse();
