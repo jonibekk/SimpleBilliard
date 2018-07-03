@@ -40,16 +40,16 @@ class PostsController extends BaseApiController
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
         //If post saving failed, $res will be false
         if ($res === false) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to post."))
+            return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))
                                                                                  ->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->getResponse();
+        return ApiResponse::ok()->getResponse();
     }
 
     /**
@@ -65,7 +65,7 @@ class PostsController extends BaseApiController
         $circleId = Hash::get($requestBody, 'circle_id');
 
         if (!$CircleMember->isJoined($circleId, $this->getUserId())) {
-            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->withMessage(__("The circle dosen't exist or you don't have permission."))
+            return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
                                                                         ->getResponse();
         }
 
@@ -78,8 +78,7 @@ class PostsController extends BaseApiController
                     break;
             }
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
-                                                                       ->getResponse();
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
         return null;
