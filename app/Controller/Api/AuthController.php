@@ -43,7 +43,7 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (AuthMismatchException $e) {
             return ErrorResponse::badRequest()
-                ->withError(new ErrorTypeGlobal('password and email did not match'))
+                ->withError(new ErrorTypeGlobal(__('password and email did not match')))
                 ->getResponse();
         } catch (\Throwable $e) {
             GoalousLog::emergency('user failed to login', [
