@@ -3,6 +3,7 @@ App::uses('ApiResponse', 'Lib/Network');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
+App::uses('ErrorResponse', 'Lib/Network/Response');
 App::import('Lib/Status', 'TeamStatus');
 App::import('Lib/Auth', 'AccessAuthenticator');
 
@@ -339,7 +340,20 @@ abstract class BaseApiController extends Controller
         if ($this->_stopInvokeFlag) {
             return false;
         }
-        return parent::invokeAction($request);
+        try {
+            return parent::invokeAction($request);
+        } catch (\Throwable $throwable) {
+            GoalousLog::error('Caught an throwable that could not catch anywhere.', [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => $throwable->getTraceAsString(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->withMessage('internal server error')
+                ->withException($throwable)
+                ->getResponse();
+        }
     }
 
     /**
