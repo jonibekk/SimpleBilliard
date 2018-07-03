@@ -154,24 +154,28 @@ abstract class BaseApiController extends Controller
 
     /**
      * Common use of most validation of API access.
+     * This method will logging validating value if caught unexpected exception.
+     * Do not use this method if validating value is containing credential value.
      *
      * @param BaseValidator $validator
+     * @param array $validateValue
      *
      * @return null|BaseApiResponse
      */
-    protected function generateResponseIfValidationFailed(BaseValidator $validator, array $requestedJsonBody)
+    protected function generateResponseIfValidationFailed(BaseValidator $validator, array $validateValue)
     {
         try {
-            $validator->validate($requestedJsonBody);
+            $validator->validate($validateValue);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)
-                ->withMessage('validation failed')
+                ->withMessage(__('validation failed'))
                 ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class' => get_class($e),
                 'message' => $e,
+                'values' => $validateValue,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
         }
