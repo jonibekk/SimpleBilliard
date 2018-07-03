@@ -33,7 +33,7 @@ class AuthServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException AuthMismatchException
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
      */
     public function test_authWrongPassword_failed()
     {
@@ -50,7 +50,7 @@ class AuthServiceTest extends GoalousTestCase
 
 
     /**
-     * @expectedException AuthMismatchException
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
      */
     public function test_authWrongUsername_failed()
     {
@@ -66,7 +66,7 @@ class AuthServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException AuthMismatchException
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
      */
     public function test_authEmptyUsername_failed()
     {
@@ -83,7 +83,7 @@ class AuthServiceTest extends GoalousTestCase
 
 
     /**
-     * @expectedException AuthMismatchException
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
      */
     public function test_authEmptyPassword_failed()
     {
