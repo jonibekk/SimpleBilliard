@@ -160,7 +160,7 @@ class ErrorResponse extends BaseApiResponse
         ])) {
             return $this;
         }
-        $message = sprintf('%s on %s line %s code %s', $throwable->getMessage(), $throwable->getFile(), $throwable->getLine(), $throwable->getCode());
+        $message = sprintf('%s: %s on %s line %s code %s', get_class($throwable), $throwable->getMessage(), $throwable->getFile(), $throwable->getLine(), $throwable->getCode());
         $trace = explode(PHP_EOL, $throwable->getTraceAsString());
         return $this
             ->withError(new ErrorTypeGlobal($message))
