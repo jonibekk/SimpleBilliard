@@ -1,5 +1,5 @@
 <?php
-App::uses('BaseApiResponse', 'Lib/Network/Response');
+App::import('Lib/Network/Response', 'BaseApiResponse');
 
 /**
  * Class ApiResponse Wrapper of CakeResponse class
@@ -23,6 +23,7 @@ class ApiResponse extends BaseApiResponse
 
     /**
      * Create response 200
+     *
      * @return self
      */
     public static function ok(): self
@@ -93,6 +94,7 @@ class ApiResponse extends BaseApiResponse
 
     /**
      * Use or replace to app/Lib/Network/Response/ErrorResponse if having error/exception
+     *
      * @deprecated
      * @return $this
      */
@@ -103,6 +105,7 @@ class ApiResponse extends BaseApiResponse
 
     /**
      * Use or replace to app/Lib/Network/Response/ErrorResponse if having error/exception
+     *
      * @deprecated
      * @return $this
      */

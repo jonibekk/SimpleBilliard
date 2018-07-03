@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::uses('ApiResponse', 'Lib/Network');
+App::uses('ApiResponse', 'Lib/Network/Response');
 
 /**
  * Class ApiResponseTest
