@@ -121,12 +121,9 @@ class ErrorResponse extends BaseApiResponse
      *
      * @return $this
      */
-    public function withExceptionTrace($exceptionTrace, bool $appendFlag = false): self
+    private function withExceptionTrace($exceptionTrace, bool $appendFlag = false): self
     {
         if (empty($exceptionTrace)) {
-            return $this;
-        }
-        if (ENV_NAME !== "dev") {
             return $this;
         }
         if (!$appendFlag) {
@@ -152,15 +149,22 @@ class ErrorResponse extends BaseApiResponse
     /**
      * Method encapsulation for returning exception
      *
-     * @param Exception $exception
+     * @param Throwable $throwable
      *
      * @return $this
      */
-    public function withException(Exception $exception)
+    public function withException(Throwable $throwable)
     {
-        $message = $exception->getMessage();
-        $trace = $exception->getTrace();
-        return $this->withMessage($message)->withExceptionTrace($trace);
+        if (!in_array(ENV_NAME, [
+            'local', 'dev'
+        ])) {
+            return $this;
+        }
+        $message = sprintf('%s: %s on %s line %s code %s', get_class($throwable), $throwable->getMessage(), $throwable->getFile(), $throwable->getLine(), $throwable->getCode());
+        $trace = explode(PHP_EOL, $throwable->getTraceAsString());
+        return $this
+            ->withError(new ErrorTypeGlobal($message))
+            ->withExceptionTrace($trace);
     }
 
     /**
@@ -179,12 +183,13 @@ class ErrorResponse extends BaseApiResponse
      */
     private function getBody(): array
     {
-        return [
+        $exceptionTrace = !empty($this->_responseBody['exception_trace']) ? ['trace' => $this->_responseBody['exception_trace']] : [];
+        return array_merge([
             'message' => $this->getMainMessage(),
             'errors' => array_map(function(AbstractErrorType $error) {
                 return $error->toArray();
             }, $this->errors),
-        ];
+        ], $exceptionTrace);
     }
 
     /**

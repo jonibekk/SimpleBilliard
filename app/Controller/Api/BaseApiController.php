@@ -371,7 +371,20 @@ abstract class BaseApiController extends Controller
         if ($this->_stopInvokeFlag) {
             return false;
         }
-        return parent::invokeAction($request);
+        try {
+            return parent::invokeAction($request);
+        } catch (\Throwable $throwable) {
+            GoalousLog::error('Caught an throwable that could not catch anywhere.', [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => $throwable->getTraceAsString(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->withMessage('internal server error')
+                ->withException($throwable)
+                ->getResponse();
+        }
     }
 
     /**
