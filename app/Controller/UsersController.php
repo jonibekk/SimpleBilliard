@@ -746,7 +746,7 @@ class UsersController extends AppController
                         if ($this->request->data['NotifySetting'][$k] !== $v) {
                             $same = false;
                             break;
-                        }                        
+                        }
                     }
                 }
                 if ($same) {

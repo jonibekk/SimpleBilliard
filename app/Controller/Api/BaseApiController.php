@@ -1,8 +1,10 @@
 <?php
-App::uses('ApiResponse', 'Lib/Network');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
+App::uses('ErrorResponse', 'Lib/Network/Response');
 App::import('Lib/Status', 'TeamStatus');
 App::import('Lib/Auth', 'AccessAuthenticator');
 
@@ -85,22 +87,19 @@ abstract class BaseApiController extends Controller
 
             if (empty($this->_jwtToken)) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
-                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->withMessage(__('Missing token.'))->getResponse();
+                return ErrorResponse::unauthorized()->withMessage(__('Missing token.'))->getResponse();
             }
 
             try {
                 $userAuthentication = $this->_authenticateUser();
             } catch (Exception $e) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
-                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->withMessage($e->getMessage())->withExceptionTrace($e->getTrace())->getResponse();
+                return ErrorResponse::internalServerError()->withException($e)->getResponse();
             }
 
             if (!$userAuthentication) {
                 /** @noinspection PhpInconsistentReturnPointsInspection */
-                return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))
-                    ->withMessage(__('You should be logged in.'))->getResponse();
+                return ErrorResponse::unauthorized()->withMessage(__('You should be logged in.'))->getResponse();
             }
 
             $this->_initializeTeamStatus();
@@ -109,46 +108,19 @@ abstract class BaseApiController extends Controller
             if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
-                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                    ->withMessage(__("You cannot use service on the team."))->getResponse();
+                return ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
+                                    ->getResponse();
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 /** @noinspection PhpInconsistentReturnPointsInspection */
-                return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))
-                    ->withMessage(__("You may only read your team’s pages."))->getResponse();
+                return ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
+                                    ->getResponse();
             }
         }
 
         $this->_setAppLanguage();
-    }
-
-    /**
-     * Only allow a given request method
-     *
-     * @param string $method Method name
-     *
-     * @return CakeResponse
-     */
-    protected function allowMethod(string $method)
-    {
-        if ($this->request->method() != $method) {
-            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
-        }
-    }
-
-    /**
-     * Get requested API Version. If not given / not valid, will return latest version
-     *
-     * @return int
-     */
-    protected function getApiVersion()
-    {
-        $requestedVersion = (int)$this->request::header('X-API-Version');
-
-        return ApiVer::isAvailable($requestedVersion) ?
-            $requestedVersion : ApiVer::getLatestApiVersion();
     }
 
     /**
@@ -231,10 +203,11 @@ abstract class BaseApiController extends Controller
         try {
             $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
         } catch (AuthenticationException $e) {
+            GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
             return false;
         }
 
-        if (empty($jwtAuth->getUserId())) {
+        if (empty($jwtAuth->getUserId() || empty ($jwtAuth->getTeamId()))) {
             return false;
         }
 
@@ -263,7 +236,7 @@ abstract class BaseApiController extends Controller
      */
     private function _isRestrictedFromUsingService(): bool
     {
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_CANNOT_USE;
+        return $this->_teamStatus->getServiceUseStatus()->getValue() == Team::SERVICE_USE_STATUS_CANNOT_USE;
     }
 
     /**
@@ -297,7 +270,7 @@ abstract class BaseApiController extends Controller
         if (!$this->request->is(['post', 'put', 'delete', 'patch'])) {
             return false;
         }
-        return $this->_teamStatus->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY;
+        return $this->_teamStatus->getServiceUseStatus()->getValue() == Team::SERVICE_USE_STATUS_READ_ONLY;
     }
 
     /**
@@ -319,14 +292,6 @@ abstract class BaseApiController extends Controller
         }
     }
 
-    /**
-     * Check whether JWT Auth has been set
-     */
-    protected function hasAuth()
-    {
-        return isset($this->_jwtAuth);
-    }
-
     /** Override parent's method
      *
      * @param CakeRequest $request
@@ -338,7 +303,57 @@ abstract class BaseApiController extends Controller
         if ($this->_stopInvokeFlag) {
             return false;
         }
-        return parent::invokeAction($request);
+        try {
+            return parent::invokeAction($request);
+        } catch (\Throwable $throwable) {
+            GoalousLog::error('Caught an throwable that could not catch anywhere.', [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => $throwable->getTraceAsString(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->withMessage('internal server error')
+                ->withException($throwable)
+                ->getResponse();
+        }
+    }
+
+    /**
+     * @return string Current user's JWT token
+     */
+    public function getUserToken()
+    {
+        return $this->_jwtToken;
+    }
+
+    /**
+     * @return JwtAuthentication Current user's JWT Auth
+     */
+    public function getJwtAuth()
+    {
+        return $this->_jwtAuth;
+    }
+
+    /**
+     * Get requested API Version. If not given / not valid, will return latest version
+     *
+     * @return int
+     */
+    protected function getApiVersion()
+    {
+        $requestedVersion = (int)$this->request::header('X-API-Version');
+
+        return ApiVer::isAvailable($requestedVersion) ?
+            $requestedVersion : ApiVer::getLatestApiVersion();
+    }
+
+    /**
+     * Check whether JWT Auth has been set
+     */
+    protected function hasAuth()
+    {
+        return isset($this->_jwtAuth);
     }
 
     /**
@@ -367,21 +382,5 @@ abstract class BaseApiController extends Controller
         $body = $this->request->input();
         $decodedJson = json_decode($body, true);
         return is_array($decodedJson) ? $decodedJson : [];
-    }
-
-    /**
-     * @return string Current user's JWT token
-     */
-    public function getUserToken()
-    {
-        return $this->_jwtToken;
-    }
-
-    /**
-     * @return JwtAuthentication Current user's JWT Auth
-     */
-    public function getJwtAuth()
-    {
-        return $this->_jwtAuth;
     }
 }

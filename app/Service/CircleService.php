@@ -88,6 +88,118 @@ class CircleService extends AppService
     }
 
     /**
+     * Validate add member to circle
+     *
+     * @param  int  $circleId
+     * @param int   $myUserId
+     * @param array $memberUserIds
+     * @param bool  $isCreate
+     *
+     * @return true|string
+     */
+    function validateAddMembers(int $circleId, int $myUserId, array $memberUserIds, bool $isCreate = false)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        // check circle belong to team
+        if (!$Circle->belongToTeam($Circle->current_team_id, $circleId)) {
+            return __("Failed to add circle member(s.)");
+        }
+
+        // check exec user is admin
+        // if create mode, not exist circle_member record, then pass this check
+        if (!$isCreate && !$CircleMember->isAdmin($myUserId, $circleId)) {
+            return __("It's only a circle administrator that can change circle settings.");
+        }
+
+        // can't add to team all circle
+        $beforeCircle = $Circle->getById($circleId);
+        if ($beforeCircle['team_all_flg']) {
+            return __("You can't change members of the all team circle.");
+        }
+
+        // check numeric
+        if (!Hash::numeric($memberUserIds)) {
+            return __("Failed to add circle member(s.)");
+        }
+
+        // check duplicate
+        if (count($memberUserIds) !== count(array_unique($memberUserIds))) {
+            return __("Failed to add circle member(s.)");
+        }
+
+        // check users active
+        if (!$User->isActiveUsers($memberUserIds)) {
+            return __("Failed to add circle member(s.)");
+        }
+
+        // Check can join member
+        $usersExist = $CircleMember->find('count',
+            ['conditions' => ['user_id' => $memberUserIds, 'circle_id' => $circleId]]);
+        if ($usersExist > 0) {
+            return __("Failed to add circle member(s.)");
+        }
+
+        return true;
+    }
+
+    /**
+     * build join circle member data
+     * - define experiment mode or not
+     * - if exist this cache, use cache
+     *
+     * @param  int     $circleId
+     * @param  int     $userId
+     * @param  boolean $isAdmin
+     *
+     * @return array
+     */
+    function buildJoinData(int $circleId, int $userId, bool $isAdmin = false): array
+    {
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if ($this->isExperimentMode === null) {
+            $isExperimentMode = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON);
+            $this->isExperimentMode = $isExperimentMode;
+        }
+
+        $showForAllFeedFlg = $this->isExperimentMode ? true : false;
+
+        $saveData = [
+            'circle_id'             => $circleId,
+            'team_id'               => $CircleMember->current_team_id,
+            'user_id'               => $userId,
+            'admin_flg'             => $isAdmin,
+            'show_for_all_feed_flg' => $showForAllFeedFlg,
+            'get_notification_flg'  => true,
+        ];
+        return $saveData;
+    }
+
+    /**
+     * Delete user's circles cache
+     *
+     * @param int $userId
+     */
+    function deleteUserCirclesCache(int $userId)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        Cache::delete($CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $userId), 'user_data');
+        Cache::delete($CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $userId), 'user_data');
+        Cache::delete($CircleMember->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $userId), 'user_data');
+    }
+
+    /**
      * Validate create circle
      *
      * @param  array $circle
@@ -147,6 +259,35 @@ class CircleService extends AppService
 
         // Delete circles cache
         $this->deleteUserCirclesCache($userId);
+
+        return true;
+    }
+
+    /**
+     * Validate join
+     *
+     * @param int $teamId
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    function validateJoin(int $teamId, int $circleId, int $userId): bool
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        // Check joining circle is in team
+        if (!$Circle->belongToTeam($teamId, $circleId)) {
+            return false;
+        }
+
+        // Check already joined
+        if ($CircleMember->isJoined($circleId, $userId)) {
+            return false;
+        }
 
         return true;
     }
@@ -320,132 +461,6 @@ class CircleService extends AppService
     }
 
     /**
-     * Validate add member to circle
-     *
-     * @param  int  $circleId
-     * @param int   $myUserId
-     * @param array $memberUserIds
-     * @param bool  $isCreate
-     *
-     * @return true|string
-     */
-    function validateAddMembers(int $circleId, int $myUserId, array $memberUserIds, bool $isCreate = false)
-    {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        // check circle belong to team
-        if (!$Circle->belongToTeam($Circle->current_team_id, $circleId)) {
-            return __("Failed to add circle member(s.)");
-        }
-
-        // check exec user is admin
-        // if create mode, not exist circle_member record, then pass this check
-        if (!$isCreate && !$CircleMember->isAdmin($myUserId, $circleId)) {
-            return __("It's only a circle administrator that can change circle settings.");
-        }
-
-        // can't add to team all circle
-        $beforeCircle = $Circle->getById($circleId);
-        if ($beforeCircle['team_all_flg']) {
-            return __("You can't change members of the all team circle.");
-        }
-
-        // check numeric
-        if (!Hash::numeric($memberUserIds)) {
-            return __("Failed to add circle member(s.)");
-        }
-
-        // check duplicate
-        if (count($memberUserIds) !== count(array_unique($memberUserIds))) {
-            return __("Failed to add circle member(s.)");
-        }
-
-        // check users active
-        if (!$User->isActiveUsers($memberUserIds)) {
-            return __("Failed to add circle member(s.)");
-        }
-
-        // Check can join member
-        $usersExist = $CircleMember->find('count',
-            ['conditions' => ['user_id' => $memberUserIds, 'circle_id' => $circleId]]);
-        if ($usersExist > 0) {
-            return __("Failed to add circle member(s.)");
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate join
-     *
-     * @param int $teamId
-     * @param int $circleId
-     * @param int $userId
-     *
-     * @return bool
-     */
-    function validateJoin(int $teamId, int $circleId, int $userId): bool
-    {
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        // Check joining circle is in team
-        if (!$Circle->belongToTeam($teamId, $circleId)) {
-            return false;
-        }
-
-        // Check already joined
-        if ($CircleMember->isJoined($circleId, $userId)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * build join circle member data
-     * - define experiment mode or not
-     * - if exist this cache, use cache
-     *
-     * @param  int     $circleId
-     * @param  int     $userId
-     * @param  boolean $isAdmin
-     *
-     * @return array
-     */
-    function buildJoinData(int $circleId, int $userId, bool $isAdmin = false): array
-    {
-        /** @var ExperimentService $ExperimentService */
-        $ExperimentService = ClassRegistry::init('ExperimentService');
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        if ($this->isExperimentMode === null) {
-            $isExperimentMode = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON);
-            $this->isExperimentMode = $isExperimentMode;
-        }
-
-        $showForAllFeedFlg = $this->isExperimentMode ? true : false;
-
-        $saveData = [
-            'circle_id'             => $circleId,
-            'team_id'               => $CircleMember->current_team_id,
-            'user_id'               => $userId,
-            'admin_flg'             => $isAdmin,
-            'show_for_all_feed_flg' => $showForAllFeedFlg,
-            'get_notification_flg'  => true,
-        ];
-        return $saveData;
-    }
-
-    /**
      * extract user ids from select2 string
      *
      * @param string $userListStr
@@ -459,21 +474,6 @@ class CircleService extends AppService
             $memberUserId = str_replace('user_', '', $member);
             return $memberUserId;
         });
-    }
-
-    /**
-     * Delete user's circles cache
-     *
-     * @param int $userId
-     */
-    function deleteUserCirclesCache(int $userId)
-    {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        Cache::delete($CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $userId), 'user_data');
-        Cache::delete($CircleMember->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $userId), 'user_data');
-        Cache::delete($CircleMember->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $userId), 'user_data');
     }
 
 }

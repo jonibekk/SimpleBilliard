@@ -3,8 +3,11 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('Email', 'Model');
+App::import('Entity.ORM', 'Table');
+App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\DataType\DataType as DataType;
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -36,7 +39,7 @@ use Goalous\Enum as Enum;
  * @property Device         $Device
  * @property TermsOfService $TermsOfService
  */
-class User extends AppModel
+class User extends Table
 {
     /**
      * 性別タイプ
@@ -139,6 +142,15 @@ class User extends AppModel
      * @var array
      */
     protected $uids = [];
+
+    /**
+     * Type conversion table for User model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [
+        'default_team_id' => DataType::INT
+    ];
 
     /**
      * Validation rules
@@ -312,6 +324,26 @@ class User extends AppModel
     ];
 
     /**
+     * User fields to be returned on user login
+     *
+     * @var array
+     */
+    public $loginUserFields = [
+        'id',
+        'photo_file_name',
+        'cover_photo_file_name',
+        'admin_flg',
+        'default_team_id',
+        'timezone',
+        'language',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'auto_language_flg',
+        'romanize_flg',
+    ];
+
+    /**
      * belongsTo associations
      *
      * @var array
@@ -402,7 +434,7 @@ class User extends AppModel
      * @param array $results Result data
      * @param mixed $primary Primary query
      *
-     * @return array
+     * @return mixed
      */
     public function afterFind($results, $primary = false)
     {
@@ -439,6 +471,15 @@ class User extends AppModel
                 function (&$entity, &$model) {
                     $entity = $this->setUsername($entity);
                 });
+
+        $this->dataIter($results,
+            function (&$data, &$model) {
+                $data = $this->attachImageUrl($data);
+            });
+
+
+        $results = parent::afterFind($results, $primary);
+
         return $results;
     }
 
@@ -1880,7 +1921,7 @@ class User extends AppModel
      *
      * @param string $email
      *
-     * @return array|null
+     * @return UserEntity
      */
     public function findUserByEmail(string $email)
     {
@@ -1908,8 +1949,58 @@ class User extends AppModel
             ]
         ];
 
+        $condition['entity'] = true;
+        $condition['conversion'] = true;
+
         $user = $this->find('first', $condition);
 
-        return Hash::get($user, 'User');
+        return $user;
+    }
+
+    /**
+     * Get user with fields for login response
+     *
+     * @param int $userId
+     *
+     * @return mixed
+     */
+    public function getUserForLoginResponse(int $userId)
+    {
+        $conditions = [
+            'conditions' => [
+                'id' => $userId
+            ],
+            'fields'     => $this->loginUserFields,
+            'entity'     => true,
+            'conversion' => true
+        ];
+
+        return $this->find('first', $conditions);
+    }
+
+    /**
+     * Get photo file names from the user data array, and turn them into URLs
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function attachImageUrl(array $data): array
+    {
+//TODO GL-7111
+        $coverFileName = Hash::get($data, 'cover_photo_file_name');
+        $photoFileName = Hash::get($data, 'photo_file_name');
+
+        if (isset($coverFileName)) {
+            $data['cover_img_url'] = '';
+            unset($data['cover_photo_file_name']);
+        }
+
+        if (isset($photoFileName)) {
+            $data['photo_img_url'] = '';
+            unset($data['photo_file_name']);
+        }
+
+        return $data;
     }
 }

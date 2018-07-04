@@ -5,8 +5,8 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
-App::import('Model','User');
-App::import('Model','Circle');
+App::import('Model', 'User');
+App::import('Model', 'Circle');
 App::import('Model', 'HavingMentionTrait');
 
 /**
@@ -24,6 +24,9 @@ class Comment extends AppModel
 {
 
     use HavingMentionTrait;
+
+    const MAX_COMMENT_LIMIT = 3;
+
     public $bodyProperty = 'body';
 
     public $uses = [
@@ -257,6 +260,61 @@ class Comment extends AppModel
             ]
         ];
         return $this->find('count', $options);
+    }
+
+    /**
+     * Get comments based on cursor
+     *
+     * @param PagingCursor $pagingCursor Cursor for getting comments. Require:
+     *                                   'post_id'
+     * @param int          $limit
+     *
+     * @return array|null
+     */
+    public function getPostCommentsByCursor(PagingCursor $pagingCursor, int $limit = self::MAX_COMMENT_LIMIT)
+    {
+        $cursorConditions = $pagingCursor->getConditions();
+
+        if (empty($cursorConditions['post_id'])) {
+            return [];
+        }
+
+        $options = [
+            'conditions' => [
+                'Comment.post_id' => $cursorConditions['post_id'],
+            ],
+            'order'      => [
+                'Comment.id' => 'desc'
+            ],
+            'contain'    => [
+                'User'          => [
+                    'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $cursorConditions['user_id'],
+                        'MyCommentLike.team_id' => $cursorConditions['team_id'],
+                    ]
+                ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
+            ],
+            'limit'      => $limit
+        ];
+
+        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption() ?? null;
+
+        if (!empty($pagingCursor->getOrders())) {
+            $options['order'] = $pagingCursor->getOrders();
+        }
+
+        return $this->find('all', $options);
     }
 
     /**
@@ -525,7 +583,7 @@ class Comment extends AppModel
             $options['conditions']["Post.type"] = $params['post_type'];
             $options['contain'][] = 'Post';
         }
-        return $this->find('count', $options);
+        return (int)$this->find('count', $options);
     }
 
     /**
