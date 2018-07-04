@@ -1,5 +1,7 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('Evaluator', 'Model');
+App::import('Model/Object', 'EvaluatorObject');
 
 /**
  * Evaluator Test Case
@@ -19,17 +21,6 @@ class EvaluatorTest extends GoalousTestCase
     );
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->Evaluator = ClassRegistry::init('Evaluator');
-    }
-
-    /**
      * tearDown method
      *
      * @return void
@@ -41,9 +32,22 @@ class EvaluatorTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    public function testDummy()
+    public function test_getObject_success()
     {
+        /** @var Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
 
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ],
+            'conversion' => true,
+            'object'     => true
+        ];
+
+        $result = $Evaluator->find('first', $conditions);
+        
+        $this->assertTrue($result instanceof EvaluatorObject);
     }
 
 }

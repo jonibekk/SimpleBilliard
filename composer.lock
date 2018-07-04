@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "83e65a7d71ca4bec296162c67a4efef0",
+    "content-hash": "e900bb3323614053968cf77fadb6a8ed",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -963,59 +963,6 @@
                 "validation"
             ],
             "time": "2014-03-19T01:33:27+00:00"
-        },
-        {
-            "name": "isaocorp/cakephp-entity",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/IsaoCorp/cakephp-entity.git",
-                "reference": "21a02a5d6f22866309dbc45cc7db0eb188e070e3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/IsaoCorp/cakephp-entity/zipball/21a02a5d6f22866309dbc45cc7db0eb188e070e3",
-                "reference": "21a02a5d6f22866309dbc45cc7db0eb188e070e3",
-                "shasum": ""
-            },
-            "require": {
-                "composer/installers": "*",
-                "php": ">=5.4"
-            },
-            "type": "cakephp-plugin",
-            "extra": {
-                "installer-name": "Entity"
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "ISAO Corp",
-                    "homepage": "http://www.isao.co.jp",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "Yosuke Basuke Suzuki",
-                    "role": "Author",
-                    "homepage": "http://basuke.com/"
-                }
-            ],
-            "description": "Use model objects/classes instead of arrays in your CakePHP application",
-            "homepage": "https://github.com/isaocorp/cakephp-entity",
-            "keywords": [
-                "cakephp",
-                "entity",
-                "model",
-                "models",
-                "objects",
-                "orm"
-            ],
-            "support": {
-                "source": "https://github.com/isaocorp/cakephp-entity",
-                "issues": "https://github.com/isaocorp/cakephp-entity/issues"
-            },
-            "time": "2018-06-25 07:28:18"
         },
         {
             "name": "kaz29/cake_slack",
@@ -5059,8 +5006,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "kaz29/cake_slack": 20,
-        "browscap/browscap-php": 20,
-        "isaocorp/cakephp-entity": 20
+        "browscap/browscap-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

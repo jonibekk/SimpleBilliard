@@ -693,8 +693,11 @@ class AppModel extends Model
 
     public function beforeFind($query)
     {
-        if (Hash::get($query, 'conversion')) {
+        if (Hash::get($query, 'conversion', false)) {
             $this->conversionFlag = true;
+        }
+        if (Hash::get($query, 'object', false)) {
+            $this->objectFlag = true;
         }
 
         return parent::beforeFind($query);
@@ -704,6 +707,9 @@ class AppModel extends Model
     {
         if ($this->conversionFlag) {
             $results = $this->convertType($results);
+        }
+        if ($this->objectFlag) {
+            $results = $this->convertObject($results);
         }
 
         return parent::afterFind($results, $primary);
@@ -751,4 +757,51 @@ class AppModel extends Model
         }
     }
 
+    protected $objectFlag = false;
+
+    /** @var BaseObject */
+    private $encapsulatorObject;
+
+    /**
+     * @param array $data
+     *
+     * @return array | BaseObject
+     */
+    protected function convertObject(array $data)
+    {
+        if (empty($this->encapsulatorObject)) {
+            $this->initializeEncapsulator();
+        }
+        if (empty($data)) {
+            return null;
+        }
+        if (!is_int(array_keys($data)[0])) {
+            return new $this->encapsulatorObject($data);
+        }
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[] = new $this->encapsulatorObject($value);
+        }
+        return $result;
+    }
+
+    protected function setEncapsulator(string $className)
+    {
+        $this->initializeEncapsulator($className);
+    }
+
+    protected function initializeEncapsulator(string $className = null)
+    {
+        if (empty($className)) {
+            $className = get_class($this) . 'Object';
+        }
+
+        $object = new $className;
+
+        if (!($object instanceof BaseObject)) {
+            throw new RuntimeException();
+        }
+
+        $this->encapsulatorObject = $object;
+    }
 }

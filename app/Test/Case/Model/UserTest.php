@@ -2,6 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
 App::uses('UserEntity', 'Model/Entity');
+App::import('Model/Object', 'UserObject');
 
 /**
  * User Test Case
@@ -1292,8 +1293,25 @@ class UserTest extends GoalousTestCase
         $this->assertInternalType('int', $res["User"]['id']);
         $this->assertInternalType('int', $res["User"]['created']);
         $this->assertInternalType('int', $res["User"]['modified']);
+    }
 
 
+    public function test_getObject_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ],
+            'conversion' => true,
+            'object'     => true
+        ];
+
+        $result = $User->find('first', $conditions);
+
+        $this->assertTrue($result[0] instanceof UserObject);
     }
 
 }
