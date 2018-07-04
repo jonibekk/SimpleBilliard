@@ -5,6 +5,7 @@ App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('User', 'Model');
 App::import('Service', 'AppService');
+App::import('Model/Entity', 'UserEntity');
 
 /**
  * Class for handling authentication
@@ -76,7 +77,7 @@ class AuthService extends AppService
         $teamId = $jwt->getTeamId();
         $jwtId = $jwt->getJwtId() ?? '';
 
-        if (empty($userId) || empty($teamId) || empty($jwtId)){
+        if (empty($userId) || empty($teamId) || empty($jwtId)) {
             return false;
         }
 
@@ -120,8 +121,8 @@ class AuthService extends AppService
     /**
      * Save new password as SHA256
      *
-     * @param UserEntity  $userData
-     * @param string $plainPassword
+     * @param UserEntity $userData
+     * @param string     $plainPassword
      *
      * @return bool
      */

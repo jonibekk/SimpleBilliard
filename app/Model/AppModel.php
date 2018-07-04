@@ -77,7 +77,31 @@ class AppModel extends Model
      *
      * @var bool
      */
-    private $conversionFlag = false;
+    private $findConversionFlag = false;
+
+    /**
+     * Flag whether data returned by find() will be converted to Entity
+     *
+     * @var bool
+     */
+    protected $findEntityFlag = false;
+
+    /**
+     * Flag whether data returned by save() will be converted to Entity
+     *
+     * @var bool
+     */
+    protected $saveEntityFlag = false;
+
+    /**
+     * Flag whether data returned by save() will be converted to each Type
+     *
+     * @var bool
+     */
+    protected $saveConversionFlag = false;
+
+    /** @var BaseEntity */
+    private $entityWrapper;
 
     /**
      * Default conversion table
@@ -694,10 +718,10 @@ class AppModel extends Model
     public function beforeFind($query)
     {
         if (Hash::get($query, 'conversion', false)) {
-            $this->conversionFlag = true;
+            $this->findConversionFlag = true;
         }
-        if (Hash::get($query, 'object', false)) {
-            $this->objectFlag = true;
+        if (Hash::get($query, 'entity', false)) {
+            $this->findEntityFlag = true;
         }
 
         return parent::beforeFind($query);
@@ -705,14 +729,36 @@ class AppModel extends Model
 
     public function afterFind($results, $primary = false)
     {
-        if ($this->conversionFlag) {
+        if ($this->findConversionFlag) {
             $results = $this->convertType($results);
         }
-        if ($this->objectFlag) {
-            $results = $this->convertObject($results);
+        if ($this->findEntityFlag) {
+            $results = $this->convertEntity($results);
         }
 
         return parent::afterFind($results, $primary);
+    }
+
+    public function save($data = null, $validate = true, $fieldList = array())
+    {
+        if (Hash::get($data, 'conversion', false)) {
+            $this->saveConversionFlag = true;
+            unset($data['conversion']);
+        }
+        if (Hash::get($data, 'entity', false)) {
+            $this->saveEntityFlag = true;
+            unset($data['entity']);
+        }
+
+        $result = parent::save($data, $validate, $fieldList);
+
+        if ($this->saveConversionFlag) {
+            $result = $this->convertType($result);
+        }
+        if ($this->saveEntityFlag) {
+            $result = $this->convertEntity($result);
+        }
+        return $result;
     }
 
     /**
@@ -757,30 +803,25 @@ class AppModel extends Model
         }
     }
 
-    protected $objectFlag = false;
-
-    /** @var BaseObject */
-    private $encapsulatorObject;
-
     /**
      * @param array $data
      *
-     * @return array | BaseObject
+     * @return array | BaseEntity
      */
-    protected function convertObject(array $data)
+    protected function convertEntity(array $data)
     {
-        if (empty($this->encapsulatorObject)) {
+        if (empty($this->entityWrapper)) {
             $this->initializeEncapsulator();
         }
         if (empty($data)) {
             return null;
         }
         if (!is_int(array_keys($data)[0])) {
-            return new $this->encapsulatorObject($data);
+            return new $this->entityWrapper($data);
         }
         $result = [];
         foreach ($data as $key => $value) {
-            $result[] = new $this->encapsulatorObject($value);
+            $result[] = new $this->entityWrapper($value);
         }
         return $result;
     }
@@ -793,15 +834,15 @@ class AppModel extends Model
     protected function initializeEncapsulator(string $className = null)
     {
         if (empty($className)) {
-            $className = get_class($this) . 'Object';
+            $className = get_class($this) . 'Entity';
         }
 
         $object = new $className;
 
-        if (!($object instanceof BaseObject)) {
+        if (!($object instanceof BaseEntity)) {
             throw new RuntimeException();
         }
 
-        $this->encapsulatorObject = $object;
+        $this->entityWrapper = $object;
     }
 }

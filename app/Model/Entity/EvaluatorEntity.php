@@ -1,5 +1,5 @@
 <?php
-App::import('Model/Object', 'BaseObject');
+App::import('Model/Entity', 'BaseEntity');
 
 /**
  * Created by PhpStorm.
@@ -7,10 +7,11 @@ App::import('Model/Object', 'BaseObject');
  * Date: 2018/07/04
  * Time: 13:32
  */
-class EvaluatorObject extends BaseObject
+class EvaluatorEntity extends BaseEntity
 {
     protected function initializeDefaults()
     {
+
         parent::initializeDefaults();
     }
 

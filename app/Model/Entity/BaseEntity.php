@@ -6,7 +6,7 @@
  * Time: 13:32
  */
 
-abstract class BaseObject implements ArrayAccess
+abstract class BaseEntity implements ArrayAccess
 {
     /**
      * Original Model name where the object is made from

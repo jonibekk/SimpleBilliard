@@ -1,8 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
-App::uses('UserEntity', 'Model/Entity');
-App::import('Model/Object', 'UserObject');
+App::import('Model/Entity', 'UserEntity');
 
 /**
  * User Test Case
@@ -1257,25 +1256,6 @@ class UserTest extends GoalousTestCase
         // TODO.Payment:add unit tests
     }
 
-    public function test_entityOutput_success()
-    {
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        $conditions = [
-            'conditions' => [
-                'id' => 1
-            ],
-            'entity'=>true
-        ];
-
-        $res = $User->find('first', $conditions);
-
-        $this->assertTrue($res instanceof UserEntity);
-        $this->assertNotEmpty($res['id']);
-        $this->assertNotEmpty($res['password']);
-    }
-
     public function test_typeConversion_success()
     {
         /** @var User $User */
@@ -1295,8 +1275,7 @@ class UserTest extends GoalousTestCase
         $this->assertInternalType('int', $res["User"]['modified']);
     }
 
-
-    public function test_getObject_success()
+    public function test_getEntityFromFind_success()
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -1306,12 +1285,11 @@ class UserTest extends GoalousTestCase
                 'id' => 1
             ],
             'conversion' => true,
-            'object'     => true
+            'entity'     => true
         ];
 
         $result = $User->find('first', $conditions);
 
-        $this->assertTrue($result[0] instanceof UserObject);
+        $this->assertTrue($result instanceof UserEntity);
     }
-
 }
