@@ -20,6 +20,7 @@ App::import('Lib/Auth', 'AccessAuthenticator');
  */
 
 use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
+use Goalous\Exception as GlException;
 
 abstract class BaseApiController extends Controller
 {
@@ -247,7 +248,7 @@ abstract class BaseApiController extends Controller
     {
         try {
             $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
-        } catch (AuthenticationException $e) {
+        } catch (GlException\Auth\AuthFailedException $e) {
             GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
             return false;
         }

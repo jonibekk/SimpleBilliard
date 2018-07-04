@@ -20,11 +20,11 @@ use Goalous\Exception as GlException;
  *     //   2. Check JWT token in Redis
  *     //   3. Return user authentication info
  *     $authorizedAccessInfo = AccessAuthenticator::verify($authorizationBearer);
- * } catch (AuthenticationOutOfTermException $e) {
+ * } catch (\Goalous\Exception\Auth\AuthOutOfTermException $e) {
  *     // If token has expired
- * } catch (AuthenticationNotManagedException $e) {
+ * } catch (\Goalous\Exception\Auth\AuthNotManagedException $e) {
  *     // If token has not managed in Redis
- * } catch (AuthenticationException $e) {
+ * } catch (\Goalous\Exception\Auth\AuthFailedException $e) {
  *     // If failed on verify authorization bearer token
  * }
  * // Login verify succeed
