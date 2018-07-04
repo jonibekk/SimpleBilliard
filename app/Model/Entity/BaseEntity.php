@@ -56,7 +56,7 @@ abstract class BaseEntity implements ArrayAccess
      */
     public function setProperty($data, $value = null)
     {
-        if (count(array_keys($data)) == 1 && key($data) == $this->modelName) {
+        if (count($data) == 1 && key($data) == $this->modelName) {
             $this->appendData($this->properties, $data[$this->modelName], $value);
         } else {
             $this->appendData($this->properties, $data, $value);
@@ -139,7 +139,7 @@ abstract class BaseEntity implements ArrayAccess
      *
      * @return array
      */
-    public function toArray(bool $includeModelName = false)
+    public function toArray(bool $includeModelName = false): array
     {
         if ($includeModelName) {
             $result[$this->modelName] = $this->properties;
