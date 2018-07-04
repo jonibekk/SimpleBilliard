@@ -717,11 +717,13 @@ class AppModel extends Model
 
     public function beforeFind($query)
     {
-        if (Hash::get($query, 'conversion', false)) {
-            $this->findConversionFlag = true;
-        }
-        if (Hash::get($query, 'entity', false)) {
-            $this->findEntityFlag = true;
+        if (!empty($query) && is_array($query)) {
+            if (Hash::get($query, 'conversion', false)) {
+                $this->findConversionFlag = true;
+            }
+            if (Hash::get($query, 'entity', false)) {
+                $this->findEntityFlag = true;
+            }
         }
 
         return parent::beforeFind($query);
@@ -741,13 +743,15 @@ class AppModel extends Model
 
     public function save($data = null, $validate = true, $fieldList = array())
     {
-        if (Hash::get($data, 'conversion', false)) {
-            $this->saveConversionFlag = true;
-            unset($data['conversion']);
-        }
-        if (Hash::get($data, 'entity', false)) {
-            $this->saveEntityFlag = true;
-            unset($data['entity']);
+        if (!empty($data) && is_array($data)) {
+            if (Hash::get($data, 'conversion', false)) {
+                $this->saveConversionFlag = true;
+                unset($data['conversion']);
+            }
+            if (Hash::get($data, 'entity', false)) {
+                $this->saveEntityFlag = true;
+                unset($data['entity']);
+            }
         }
 
         $result = parent::save($data, $validate, $fieldList);
