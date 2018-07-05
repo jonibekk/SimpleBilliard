@@ -6,7 +6,7 @@
  * Time: 13:32
  */
 
-abstract class BaseEntity implements ArrayAccess, Iterator
+abstract class BaseEntity implements ArrayAccess, IteratorAggregate
 {
     /**
      * Original Model name where the object is made from
@@ -149,29 +149,9 @@ abstract class BaseEntity implements ArrayAccess, Iterator
         }
     }
 
-    public function current()
+    public function getIterator()
     {
-        return current($this->properties);
-    }
-
-    public function next()
-    {
-        return next($this->properties);
-    }
-
-    public function key()
-    {
-        return key($this->properties);
-    }
-
-    public function valid()
-    {
-        return key($this->properties) !== null;
-    }
-
-    public function rewind()
-    {
-        return reset($this->properties);
+        return new ArrayIterator($this->properties);
     }
 
 }
