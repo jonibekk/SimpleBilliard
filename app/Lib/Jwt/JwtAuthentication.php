@@ -231,7 +231,9 @@ class JwtAuthentication
             throw new GlException\Auth\Jwt\JwtOutOfTermException($e->getMessage());
         } catch (ExpiredException $e) {
             throw new GlException\Auth\Jwt\JwtOutOfTermException($e->getMessage());
-        } catch (UnexpectedValueException $e) {
+        } catch (\DomainException $e) {
+            throw new GlException\Auth\Jwt\JwtSignatureException($e->getMessage());
+        } catch (\Throwable $e) {
             throw new GlException\Auth\Jwt\JwtException($e->getMessage());
         }
 

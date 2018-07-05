@@ -42,6 +42,9 @@ abstract class BaseApiController extends Controller
     /** @var JwtAuthentication */
     private $_jwtAuth;
 
+    /** @var ErrorResponse */
+    private $_beforeFilterResponse;
+
     /**
      * ApiV2Controller constructor.
      *
@@ -77,7 +80,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * @return CakeResponse|void
+     * @return void
      */
     public function beforeFilter()
     {
@@ -87,20 +90,20 @@ abstract class BaseApiController extends Controller
         if (!$this->_checkSkipAuthentication($this->request)) {
 
             if (empty($this->_jwtToken)) {
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::unauthorized()->withMessage(__('Missing token.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Missing token.'))->getResponse();
+                return;
             }
 
             try {
                 $userAuthentication = $this->_authenticateUser();
             } catch (Exception $e) {
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::internalServerError()->withException($e)->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::internalServerError()->withException($e)->getResponse();
+                return;
             }
 
             if (!$userAuthentication) {
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::unauthorized()->withMessage(__('You should be logged in.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('You should be logged in.'))->getResponse();
+                return;
             }
 
             $this->_initializeTeamStatus();
@@ -108,16 +111,16 @@ abstract class BaseApiController extends Controller
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
+                $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
                                     ->getResponse();
+                return;
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
+                $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
                                     ->getResponse();
+                return;
             }
         }
 
@@ -348,6 +351,9 @@ abstract class BaseApiController extends Controller
     {
         if ($this->_stopInvokeFlag) {
             return false;
+        }
+        if ($this->_beforeFilterResponse instanceof ErrorResponse) {
+            return $this->_beforeFilterResponse;
         }
         try {
             return parent::invokeAction($request);
