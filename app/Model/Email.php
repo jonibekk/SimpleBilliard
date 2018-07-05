@@ -15,7 +15,6 @@ class Email extends AppModel
      * Validation rules
      *
      * @var array
-     * @var array
      */
     public $validate = [
         'user_id'        => [

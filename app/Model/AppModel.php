@@ -71,6 +71,41 @@ class AppModel extends Model
     public $support_lang_codes = [
         'jpn',
     ];
+
+    /**
+     * Entity class to encapsulate a query result
+     * 
+     * @var BaseEntity
+     */
+    private $entityWrapperClass;
+
+    /**
+     * List of functions that will be executed on resulting array
+     *
+     * @var array
+     */
+    private $postProcessFunctions = [];
+    
+    /**
+     * Default conversion table
+     *
+     * @var array
+     */
+    private $defaultConversionTable = [
+        'id'       => DataType::INT,
+        'created'  => DataType::INT,
+        'modified' => DataType::INT,
+        'deleted'  => DataType::INT,
+        'del_flg'  => DataType::BOOL
+    ];
+
+    /**
+     * Conversion table for model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [];
+
     public $model_key_map = [
         'key_result_id'    => 'KeyResult',
         'action_result_id' => 'ActionResult',
@@ -84,36 +119,6 @@ class AppModel extends Model
         'user_id'          => 'User',
         'team_vision_id'   => 'TeamVision',
         'group_vision_id'  => 'GroupVision',
-    ];
-    /**
-     * Conversion table for model
-     *
-     * @var array
-     */
-    protected $modelConversionTable = [];
-    /**
-     * Entity class to encapsulate a query result
-     *
-     * @var BaseEntity
-     */
-    private $entityWrapper;
-    /**
-     * List of functions that will be executed on resulting array
-     *
-     * @var array
-     */
-    private $postProcessFunctions = [];
-    /**
-     * Default conversion table
-     *
-     * @var array
-     */
-    private $defaultConversionTable = [
-        'id'       => DataType::INT,
-        'created'  => DataType::INT,
-        'modified' => DataType::INT,
-        'deleted'  => DataType::INT,
-        'del_flg'  => DataType::BOOL
     ];
 
     /**
@@ -321,18 +326,6 @@ class AppModel extends Model
     }
 
     /**
-     * ユーザIDとチームIDをセット
-     *
-     * @param null $uid
-     * @param null $team_id
-     */
-    public function setUidAndTeamId($uid = null, $team_id = null)
-    {
-        $this->setUid($uid);
-        $this->setTeamId($team_id);
-    }
-
-    /**
      * ユーザIDをセット
      *
      * @param null $uid
@@ -358,6 +351,18 @@ class AppModel extends Model
         } else {
             $this->team_id = $team_id;
         }
+    }
+
+    /**
+     * ユーザIDとチームIDをセット
+     *
+     * @param null $uid
+     * @param null $team_id
+     */
+    public function setUidAndTeamId($uid = null, $team_id = null)
+    {
+        $this->setUid($uid);
+        $this->setTeamId($team_id);
     }
 
     /**
@@ -693,9 +698,10 @@ class AppModel extends Model
         return !empty($ret);
     }
 
+
     /**
-     * Override save() function. Do post-processing     *
-     *
+     * Override save() function. Do post-processing     * 
+     * 
      * @param null  $data
      * @param bool  $validate
      * @param array $fieldList
@@ -715,26 +721,8 @@ class AppModel extends Model
     }
 
     /**
-     * Execute all registered function on result array after find() or save()
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function postProcess(array $data): array
-    {
-        foreach ($this->postProcessFunctions as $callable) {
-            if (!is_callable($callable)) {
-                throw new RuntimeException(__("Inserted element is not a callable"));
-            }
-            $data = $callable($data);
-        }
-        return $data;
-    }
-
-    /**
      * Override afterFind(). Will process find() result
-     *
+     * 
      * @param mixed $results
      * @param bool  $primary
      *
@@ -752,13 +740,31 @@ class AppModel extends Model
     }
 
     /**
-     * Add entity conversion process to post process
+     * Execute all registered function on result array after find() or save()
+     * 
+     * @param array $data
      *
+     * @return array
+     */
+    private function postProcess(array $data): array
+    {
+        foreach ($this->postProcessFunctions as $callable) {
+            if (!is_callable($callable)) {
+                throw new RuntimeException(__("Inserted element is not a callable"));
+            }
+            $data = $callable($data);
+        }
+        return $data;
+    }
+
+    /**
+     * Add entity conversion process to post process
+     * 
      * @return AppModel
      */
     public function convertEntity(): self
     {
-        $this->postProcessFunctions['entity'] = function (array $data) {
+        $this->postProcessFunctions[] = function (array $data) {
             return $this->changeEntity($data);
         };
 
@@ -766,56 +772,13 @@ class AppModel extends Model
     }
 
     /**
-     * @param array $data
-     *
-     * @return array | BaseEntity
-     */
-    protected function changeEntity(array $data)
-    {
-        if (empty($this->entityWrapper)) {
-            $this->initializeEntityClass();
-        }
-        if (empty($data)) {
-            return null;
-        }
-        if (!is_int(array_keys($data)[0])) {
-            return new $this->entityWrapper($data);
-        }
-        $result = [];
-        foreach ($data as $key => $value) {
-            $result[] = new $this->entityWrapper($value);
-        }
-        return $result;
-    }
-
-    /**
-     * Initialize the entity wrapper class. By default, it will use {Model}+'Entity' as classname
-     *
-     * @param string|null $className
-     */
-    protected function initializeEntityClass(string $className = null)
-    {
-        if (empty($className)) {
-            $className = get_class($this) . 'Entity';
-        }
-
-        $object = new $className;
-
-        if (!($object instanceof BaseEntity)) {
-            throw new RuntimeException(__("Entity class does not exist :" . $className));
-        }
-
-        $this->entityWrapper = $object;
-    }
-
-    /**
      * Add type conversion process to post process
-     *
+     * 
      * @return AppModel
      */
     public function convertType(): self
     {
-        $this->postProcessFunctions['type'] = function (array $data): array {
+        $this->postProcessFunctions[] = function (array $data): array {
             return $this->changeType($data);
         };
 
@@ -842,7 +805,7 @@ class AppModel extends Model
      * Recursively traverse an array and convert their data types from string to configured one
      *
      * @param array | BaseEntity $data
-     * @param array              $conversionTable
+     * @param array $conversionTable
      */
     private function traverseArray(&$data, array $conversionTable)
     {
@@ -865,13 +828,59 @@ class AppModel extends Model
     }
 
     /**
-     * Manually set the classname of the entity wrapper class
+     * Convert an array to its respective Entity wrapper class
+     *
+     * @param array $data
+     *
+     * @return array | BaseEntity
+     */
+    protected function changeEntity(array $data)
+    {
+        if (empty($this->entityWrapperClass)) {
+            $this->initializeEntityClass();
+        }
+        if (empty($data)) {
+            return null;
+        }
+        if (!is_int(array_keys($data)[0])) {
+            return new $this->entityWrapperClass($data);
+        }
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[] = new $this->entityWrapperClass($value);
+        }
+        return $result;
+    }
+
+    /**
+     * Manually set the entity wrapper class name
      *
      * @param string $className
      */
     protected function setEntityClass(string $className)
     {
         $this->initializeEntityClass($className);
+    }
+
+    /**
+     * Initialize the wrapper class name. By default will use the Model's name + 'Entity'
+     * e.g. User -> UserEntity
+     *
+     * @param string|null $className
+     */
+    protected function initializeEntityClass(string $className = null)
+    {
+        if (empty($className)) {
+            $className = get_class($this) . 'Entity';
+        }
+
+        $object = new $className;
+
+        if (!($object instanceof BaseEntity)) {
+            throw new RuntimeException(__("Entity class does not exist :" . $className));
+        }
+
+        $this->entityWrapperClass = $object;
     }
 
 }
