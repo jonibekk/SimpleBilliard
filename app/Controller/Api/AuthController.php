@@ -43,25 +43,22 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
-                ->withError(new ErrorTypeGlobal(__('password and email did not match')))
-                ->getResponse();
+                                ->withError(new ErrorTypeGlobal(__('password and email did not match')))
+                                ->getResponse();
         } catch (\Throwable $e) {
             GoalousLog::emergency('user failed to login', [
                 'message' => $e->getMessage(),
             ]);
             return ErrorResponse::internalServerError()
-                ->getResponse();
+                                ->getResponse();
         }
 
         /** @var User $User */
         $User = ClassRegistry::init('User');
         $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray();
+        $data['token'] = $jwt->token();
 
-        //On successful login, return the JWT token to the user
-        return ApiResponse::ok()
-            ->withData($data)
-            ->withHeader(['Authorization' => 'Bearer ' . $jwt->token()], true)
-            ->getResponse();
+        return ApiResponse::ok()->withData($data)->getResponse();
     }
 
     /**
@@ -110,12 +107,12 @@ class AuthController extends BaseApiController
             $validator->validate($requestedBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                ->addErrorsFromValidationException($e)
-                ->withMessage(__('validation failed'))
-                ->getResponse();
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
-                'class' => get_class($e),
+                'class'   => get_class($e),
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
