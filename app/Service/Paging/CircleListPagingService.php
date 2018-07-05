@@ -109,7 +109,7 @@ class CircleListPagingService extends BasePagingService
             $CircleMember = ClassRegistry::init('CircleMember');
 
             $userId = Hash::get($conditions, 'res_id') ?? Hash::get($conditions, 'current_user_id');
-            
+
             if (empty($userId)) {
                 GoalousLog::error("Missing User ID for data extension");
                 throw new RuntimeException("Missing User ID for data extension");

@@ -14,16 +14,16 @@ class CommentPagingService extends BasePagingService
     const EXTEND_USER = "ext:comment:user";
 
     /**
-     * @param PagingCursor $pagingCursor
-     * @param int          $limit
+     * @param PagingRequest $pagingRequest
+     * @param int           $limit
      *
      * @return array
      */
-    protected function readData(PagingCursor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         $Comment = new Comment();
 
-        return $Comment->getPostCommentsByCursor($pagingCursor, $limit);
+        return $Comment->getPostCommentsByCursor($pagingRequest, $limit);
     }
 
     protected function countData(array $conditions): int
