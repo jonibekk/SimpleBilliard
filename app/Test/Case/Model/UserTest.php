@@ -1256,7 +1256,7 @@ class UserTest extends GoalousTestCase
         // TODO.Payment:add unit tests
     }
 
-    public function test_typeConversion_success()
+    public function test_typeConversionFromFind_success()
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -1264,18 +1264,17 @@ class UserTest extends GoalousTestCase
         $conditions = [
             'conditions' => [
                 'id' => 1
-            ],
-            'conversion' => true
+            ]
         ];
 
-        $res = $User->find('first', $conditions);
+        $res = $User->convertType()->find('first', $conditions);
 
         $this->assertInternalType('int', $res["User"]['id']);
         $this->assertInternalType('int', $res["User"]['created']);
         $this->assertInternalType('int', $res["User"]['modified']);
     }
 
-    public function test_getEntityFromFind_success()
+    public function test_getSingleEntityFromFind_success()
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -1283,13 +1282,29 @@ class UserTest extends GoalousTestCase
         $conditions = [
             'conditions' => [
                 'id' => 1
-            ],
-            'conversion' => true,
-            'entity'     => true
+            ]
         ];
 
-        $result = $User->find('first', $conditions);
+        $result = $User->convertEntity()->find('first', $conditions);
 
         $this->assertTrue($result instanceof UserEntity);
+    }
+
+    public function test_getManyEntityFromFind_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'del_flg' => false
+            ]
+        ];
+
+        $result = $User->convertEntity()->find('all', $conditions);
+
+        foreach ($result as $element) {
+            $this->assertTrue($element instanceof UserEntity);
+        }
     }
 }

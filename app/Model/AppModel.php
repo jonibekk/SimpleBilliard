@@ -71,58 +71,6 @@ class AppModel extends Model
     public $support_lang_codes = [
         'jpn',
     ];
-
-    /**
-     * Flag whether data type conversion will be done
-     *
-     * @var bool
-     */
-    private $findConversionFlag = false;
-
-    /**
-     * Flag whether data returned by find() will be converted to Entity
-     *
-     * @var bool
-     */
-    protected $findEntityFlag = false;
-
-    /**
-     * Flag whether data returned by save() will be converted to Entity
-     *
-     * @var bool
-     */
-    protected $saveEntityFlag = false;
-
-    /**
-     * Flag whether data returned by save() will be converted to each Type
-     *
-     * @var bool
-     */
-    protected $saveConversionFlag = false;
-
-    /** @var BaseEntity */
-    private $entityWrapper;
-
-    /**
-     * Default conversion table
-     *
-     * @var array
-     */
-    private $defaultConversionTable = [
-        'id'       => DataType::INT,
-        'created'  => DataType::INT,
-        'modified' => DataType::INT,
-        'deleted'  => DataType::INT,
-        'del_flg'  => DataType::BOOL
-    ];
-
-    /**
-     * Conversion table for model
-     *
-     * @var array
-     */
-    protected $modelConversionTable = [];
-
     public $model_key_map = [
         'key_result_id'    => 'KeyResult',
         'action_result_id' => 'ActionResult',
@@ -136,6 +84,36 @@ class AppModel extends Model
         'user_id'          => 'User',
         'team_vision_id'   => 'TeamVision',
         'group_vision_id'  => 'GroupVision',
+    ];
+    /**
+     * Conversion table for model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [];
+    /**
+     * Entity class to encapsulate a query result
+     *
+     * @var BaseEntity
+     */
+    private $entityWrapper;
+    /**
+     * List of functions that will be executed on resulting array
+     *
+     * @var array
+     */
+    private $postProcessFunctions = [];
+    /**
+     * Default conversion table
+     *
+     * @var array
+     */
+    private $defaultConversionTable = [
+        'id'       => DataType::INT,
+        'created'  => DataType::INT,
+        'modified' => DataType::INT,
+        'deleted'  => DataType::INT,
+        'del_flg'  => DataType::BOOL
     ];
 
     /**
@@ -343,6 +321,18 @@ class AppModel extends Model
     }
 
     /**
+     * ユーザIDとチームIDをセット
+     *
+     * @param null $uid
+     * @param null $team_id
+     */
+    public function setUidAndTeamId($uid = null, $team_id = null)
+    {
+        $this->setUid($uid);
+        $this->setTeamId($team_id);
+    }
+
+    /**
      * ユーザIDをセット
      *
      * @param null $uid
@@ -368,18 +358,6 @@ class AppModel extends Model
         } else {
             $this->team_id = $team_id;
         }
-    }
-
-    /**
-     * ユーザIDとチームIDをセット
-     *
-     * @param null $uid
-     * @param null $team_id
-     */
-    public function setUidAndTeamId($uid = null, $team_id = null)
-    {
-        $this->setUid($uid);
-        $this->setTeamId($team_id);
     }
 
     /**
@@ -715,54 +693,133 @@ class AppModel extends Model
         return !empty($ret);
     }
 
-    public function beforeFind($query)
-    {
-        if (!empty($query) && is_array($query)) {
-            if (Hash::get($query, 'conversion', false)) {
-                $this->findConversionFlag = true;
-            }
-            if (Hash::get($query, 'entity', false)) {
-                $this->findEntityFlag = true;
-            }
-        }
-
-        return parent::beforeFind($query);
-    }
-
-    public function afterFind($results, $primary = false)
-    {
-        if ($this->findConversionFlag) {
-            $results = $this->convertType($results);
-        }
-        if ($this->findEntityFlag) {
-            $results = $this->convertEntity($results);
-        }
-
-        return parent::afterFind($results, $primary);
-    }
-
+    /**
+     * Override save() function. Do post-processing     *
+     *
+     * @param null  $data
+     * @param bool  $validate
+     * @param array $fieldList
+     *
+     * @return array|mixed
+     * @throws Exception
+     */
     public function save($data = null, $validate = true, $fieldList = array())
     {
-        if (!empty($data) && is_array($data)) {
-            if (Hash::get($data, 'conversion', false)) {
-                $this->saveConversionFlag = true;
-                unset($data['conversion']);
-            }
-            if (Hash::get($data, 'entity', false)) {
-                $this->saveEntityFlag = true;
-                unset($data['entity']);
-            }
-        }
-
         $result = parent::save($data, $validate, $fieldList);
 
-        if ($this->saveConversionFlag) {
-            $result = $this->convertType($result);
+        if (is_array($result)) {
+            $result = $this->postProcess($result);
         }
-        if ($this->saveEntityFlag) {
-            $result = $this->convertEntity($result);
+
+        return $result;
+    }
+
+    /**
+     * Execute all registered function on result array after find() or save()
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function postProcess(array $data): array
+    {
+        foreach ($this->postProcessFunctions as $callable) {
+            if (!is_callable($callable)) {
+                throw new RuntimeException(__("Inserted element is not a callable"));
+            }
+            $data = $callable($data);
+        }
+        return $data;
+    }
+
+    /**
+     * Override afterFind(). Will process find() result
+     *
+     * @param mixed $results
+     * @param bool  $primary
+     *
+     * @return array|mixed
+     */
+    public function afterFind($results, $primary = false)
+    {
+        $result = parent::afterFind($results, $primary);
+
+        if (is_array($result) && $primary) {
+            $result = $this->postProcess($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Add entity conversion process to post process
+     *
+     * @return AppModel
+     */
+    public function convertEntity(): self
+    {
+        $this->postProcessFunctions['entity'] = function (array $data) {
+            return $this->changeEntity($data);
+        };
+
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array | BaseEntity
+     */
+    protected function changeEntity(array $data)
+    {
+        if (empty($this->entityWrapper)) {
+            $this->initializeEntityClass();
+        }
+        if (empty($data)) {
+            return null;
+        }
+        if (!is_int(array_keys($data)[0])) {
+            return new $this->entityWrapper($data);
+        }
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[] = new $this->entityWrapper($value);
         }
         return $result;
+    }
+
+    /**
+     * Initialize the entity wrapper class. By default, it will use {Model}+'Entity' as classname
+     *
+     * @param string|null $className
+     */
+    protected function initializeEntityClass(string $className = null)
+    {
+        if (empty($className)) {
+            $className = get_class($this) . 'Entity';
+        }
+
+        $object = new $className;
+
+        if (!($object instanceof BaseEntity)) {
+            throw new RuntimeException(__("Entity class does not exist :" . $className));
+        }
+
+        $this->entityWrapper = $object;
+    }
+
+    /**
+     * Add type conversion process to post process
+     *
+     * @return AppModel
+     */
+    public function convertType(): self
+    {
+        $this->postProcessFunctions['type'] = function (array $data): array {
+            return $this->changeType($data);
+        };
+
+        return $this;
     }
 
     /**
@@ -772,7 +829,7 @@ class AppModel extends Model
      *
      * @return array
      */
-    private function convertType(array $data): array
+    protected function changeType(array $data): array
     {
         $conversionTable = array_merge($this->defaultConversionTable, $this->modelConversionTable);
 
@@ -784,10 +841,10 @@ class AppModel extends Model
     /**
      * Recursively traverse an array and convert their data types from string to configured one
      *
-     * @param array $data
-     * @param array $conversionTable
+     * @param array | BaseEntity $data
+     * @param array              $conversionTable
      */
-    private function traverseArray(array &$data, array $conversionTable)
+    private function traverseArray(&$data, array $conversionTable)
     {
         foreach ($data as $key => &$value) {
 
@@ -808,45 +865,13 @@ class AppModel extends Model
     }
 
     /**
-     * @param array $data
+     * Manually set the classname of the entity wrapper class
      *
-     * @return array | BaseEntity
+     * @param string $className
      */
-    protected function convertEntity(array $data)
+    protected function setEntityClass(string $className)
     {
-        if (empty($this->entityWrapper)) {
-            $this->initializeEncapsulator();
-        }
-        if (empty($data)) {
-            return null;
-        }
-        if (!is_int(array_keys($data)[0])) {
-            return new $this->entityWrapper($data);
-        }
-        $result = [];
-        foreach ($data as $key => $value) {
-            $result[] = new $this->entityWrapper($value);
-        }
-        return $result;
+        $this->initializeEntityClass($className);
     }
 
-    protected function setEncapsulator(string $className)
-    {
-        $this->initializeEncapsulator($className);
-    }
-
-    protected function initializeEncapsulator(string $className = null)
-    {
-        if (empty($className)) {
-            $className = get_class($this) . 'Entity';
-        }
-
-        $object = new $className;
-
-        if (!($object instanceof BaseEntity)) {
-            throw new RuntimeException();
-        }
-
-        $this->entityWrapper = $object;
-    }
 }

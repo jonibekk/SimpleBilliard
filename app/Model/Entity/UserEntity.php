@@ -11,7 +11,6 @@ class UserEntity extends BaseEntity
 {
     protected function initializeDefaults()
     {
-
         parent::initializeDefaults();
     }
 }

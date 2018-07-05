@@ -1947,10 +1947,8 @@ class User extends AppModel
             ]
         ];
 
-        $condition['entity'] = true;
-        $condition['conversion'] = true;
-
-        $user = $this->find('first', $condition);
+        /** @var UserEntity $user */
+        $user = $this->convertType()->convertEntity()->find('first', $condition);
 
         return $user;
     }

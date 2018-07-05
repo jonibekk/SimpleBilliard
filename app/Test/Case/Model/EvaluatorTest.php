@@ -40,12 +40,10 @@ class EvaluatorTest extends GoalousTestCase
         $conditions = [
             'conditions' => [
                 'id' => 1
-            ],
-            'conversion' => true,
-            'entity'     => true
+            ]
         ];
 
-        $result = $Evaluator->find('first', $conditions);
+        $result = $Evaluator->convertType()->convertEntity()->find('first', $conditions);
 
         $this->assertTrue($result instanceof EvaluatorEntity);
     }
@@ -59,12 +57,10 @@ class EvaluatorTest extends GoalousTestCase
             'evaluatee_user_id' => 1,
             'evaluator_user_id' => 2,
             'team_id' => 1,
-            'index_num' => 10,
-            'entity' => true,
-            'conversion' => true
+            'index_num' => 10
         ];
 
-        $result = $Evaluator->save($data);
+        $result = $Evaluator->convertType()->convertEntity()->save($data);
 
         $this->assertTrue($result instanceof EvaluatorEntity);
     }
