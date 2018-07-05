@@ -744,9 +744,9 @@ class AppModel extends Model
      * 
      * @param array $data
      *
-     * @return array
+     * @return array | BaseEntity
      */
-    private function postProcess(array $data): array
+    private function postProcess(array $data)
     {
         foreach ($this->postProcessFunctions as $callable) {
             if (!is_callable($callable)) {
