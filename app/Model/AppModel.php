@@ -753,6 +753,8 @@ class AppModel extends Model
             }
             $data = $callable($data);
         }
+        //Reset functions after each processing
+        $this->postProcessFunctions = [];
         return $data;
     }
 

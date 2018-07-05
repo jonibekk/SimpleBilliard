@@ -1339,4 +1339,31 @@ class UserTest extends GoalousTestCase
         $this->assertTrue($result instanceof UserEntity);
         $this->assertInternalType('int', $result['id']);
     }
+
+    public function test_multipleFindAfterEntity_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $result = $User->find('first', $conditions);
+        $this->assertTrue(is_array($result));
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
 }
