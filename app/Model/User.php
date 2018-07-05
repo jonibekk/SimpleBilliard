@@ -1948,7 +1948,7 @@ class User extends AppModel
         ];
 
         /** @var UserEntity $user */
-        $user = $this->convertType()->convertEntity()->find('first', $condition);
+        $user = $this->useType()->useEntity()->find('first', $condition);
 
         return $user;
     }

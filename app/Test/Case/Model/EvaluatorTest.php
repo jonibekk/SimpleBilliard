@@ -43,7 +43,7 @@ class EvaluatorTest extends GoalousTestCase
             ]
         ];
 
-        $result = $Evaluator->convertType()->convertEntity()->find('first', $conditions);
+        $result = $Evaluator->useType()->useEntity()->find('first', $conditions);
 
         $this->assertTrue($result instanceof EvaluatorEntity);
     }
@@ -60,7 +60,7 @@ class EvaluatorTest extends GoalousTestCase
             'index_num' => 10
         ];
 
-        $result = $Evaluator->convertType()->convertEntity()->save($data);
+        $result = $Evaluator->useType()->useEntity()->save($data);
 
         $this->assertTrue($result instanceof EvaluatorEntity);
     }

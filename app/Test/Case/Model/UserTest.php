@@ -1267,7 +1267,7 @@ class UserTest extends GoalousTestCase
             ]
         ];
 
-        $res = $User->convertType()->find('first', $conditions);
+        $res = $User->useType()->find('first', $conditions);
 
         $this->assertInternalType('int', $res["User"]['id']);
         $this->assertInternalType('int', $res["User"]['created']);
@@ -1285,7 +1285,7 @@ class UserTest extends GoalousTestCase
             ]
         ];
 
-        $result = $User->convertEntity()->find('first', $conditions);
+        $result = $User->useEntity()->find('first', $conditions);
 
         $this->assertTrue($result instanceof UserEntity);
     }
@@ -1301,7 +1301,7 @@ class UserTest extends GoalousTestCase
             ]
         ];
 
-        $result = $User->convertEntity()->find('all', $conditions);
+        $result = $User->useEntity()->find('all', $conditions);
 
         foreach ($result as $element) {
             $this->assertTrue($element instanceof UserEntity);

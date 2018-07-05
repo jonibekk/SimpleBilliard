@@ -74,7 +74,7 @@ class AppModel extends Model
 
     /**
      * Entity class to encapsulate a query result
-     * 
+     *
      * @var BaseEntity
      */
     private $entityWrapperClass;
@@ -85,7 +85,7 @@ class AppModel extends Model
      * @var array
      */
     private $postProcessFunctions = [];
-    
+
     /**
      * Default conversion table
      *
@@ -698,10 +698,9 @@ class AppModel extends Model
         return !empty($ret);
     }
 
-
     /**
-     * Override save() function. Do post-processing     * 
-     * 
+     * Override save() function. Do post-processing
+     *
      * @param null  $data
      * @param bool  $validate
      * @param array $fieldList
@@ -722,7 +721,7 @@ class AppModel extends Model
 
     /**
      * Override afterFind(). Will process find() result
-     * 
+     *
      * @param mixed $results
      * @param bool  $primary
      *
@@ -741,7 +740,7 @@ class AppModel extends Model
 
     /**
      * Execute all registered function on result array after find() or save()
-     * 
+     *
      * @param array $data
      *
      * @return array | BaseEntity
@@ -750,7 +749,7 @@ class AppModel extends Model
     {
         foreach ($this->postProcessFunctions as $callable) {
             if (!is_callable($callable)) {
-                throw new RuntimeException(__("Inserted element is not a callable"));
+                throw new RuntimeException("Inserted element is not a callable");
             }
             $data = $callable($data);
         }
@@ -759,13 +758,13 @@ class AppModel extends Model
 
     /**
      * Add entity conversion process to post process
-     * 
+     *
      * @return AppModel
      */
-    public function convertEntity(): self
+    public function useEntity(): self
     {
-        $this->postProcessFunctions[] = function (array $data) {
-            return $this->changeEntity($data);
+        $this->postProcessFunctions['entity'] = function (array $data) {
+            return $this->convertEntity($data);
         };
 
         return $this;
@@ -773,13 +772,13 @@ class AppModel extends Model
 
     /**
      * Add type conversion process to post process
-     * 
+     *
      * @return AppModel
      */
-    public function convertType(): self
+    public function useType(): self
     {
-        $this->postProcessFunctions[] = function (array $data): array {
-            return $this->changeType($data);
+        $this->postProcessFunctions['type'] = function (array $data): array {
+            return $this->convertType($data);
         };
 
         return $this;
@@ -792,7 +791,7 @@ class AppModel extends Model
      *
      * @return array
      */
-    protected function changeType(array $data): array
+    protected function convertType(array $data): array
     {
         $conversionTable = array_merge($this->defaultConversionTable, $this->modelConversionTable);
 
@@ -805,7 +804,7 @@ class AppModel extends Model
      * Recursively traverse an array and convert their data types from string to configured one
      *
      * @param array | BaseEntity $data
-     * @param array $conversionTable
+     * @param array              $conversionTable
      */
     private function traverseArray(&$data, array $conversionTable)
     {
@@ -830,14 +829,15 @@ class AppModel extends Model
     /**
      * Convert an array to its respective Entity wrapper class
      *
-     * @param array $data
+     * @param array  $data
+     * @param string $className Entity wrapper class name
      *
      * @return array | BaseEntity
      */
-    protected function changeEntity(array $data)
+    protected function convertEntity(array $data, string $className = null)
     {
         if (empty($this->entityWrapperClass)) {
-            $this->initializeEntityClass();
+            $this->initializeEntityClass($className);
         }
         if (empty($data)) {
             return null;
@@ -850,16 +850,6 @@ class AppModel extends Model
             $result[] = new $this->entityWrapperClass($value);
         }
         return $result;
-    }
-
-    /**
-     * Manually set the entity wrapper class name
-     *
-     * @param string $className
-     */
-    protected function setEntityClass(string $className)
-    {
-        $this->initializeEntityClass($className);
     }
 
     /**
@@ -877,7 +867,7 @@ class AppModel extends Model
         $object = new $className;
 
         if (!($object instanceof BaseEntity)) {
-            throw new RuntimeException(__("Entity class does not exist :" . $className));
+            throw new RuntimeException("Entity class does not exist :" . $className);
         }
 
         $this->entityWrapperClass = $object;
