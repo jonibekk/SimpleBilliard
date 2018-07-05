@@ -39,14 +39,15 @@ class PostsController extends BaseApiController
 
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId());
+        } catch (InvalidArgumentException $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
         //If post saving failed, $res will be false
         if ($res === false) {
-            return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))
-                                                                                 ->getResponse();
+            return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
         }
 
         return ApiResponse::ok()->getResponse();
@@ -64,9 +65,9 @@ class PostsController extends BaseApiController
 
         $circleId = Hash::get($requestBody, 'circle_id');
 
-        if (!$CircleMember->isJoined($circleId, $this->getUserId())) {
+        if (!empty($circleId) && !$CircleMember->isJoined($circleId, $this->getUserId())) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
-                                                                        ->getResponse();
+                                ->getResponse();
         }
 
         try {
