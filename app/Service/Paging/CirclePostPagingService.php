@@ -8,7 +8,7 @@ App::import('Lib/DataExtender', 'PostSavedDataExtender');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'CircleService');
 App::import('Service', 'PostService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
@@ -86,7 +86,7 @@ class CirclePostPagingService extends BasePagingService
                     'id' => 'asc'
                 ];
 
-                $cursor = new PagingCursor($commentSearchCondition, [], $order);
+                $cursor = new PagingRequest($commentSearchCondition, [], $order);
 
                 $comments = $CommentPagingService->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
                     CommentPagingService::EXTEND_ALL);

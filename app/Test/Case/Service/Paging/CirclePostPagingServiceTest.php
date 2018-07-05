@@ -67,7 +67,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'circle_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_USER);
 
         $this->assertCount(1, $result['data']);
@@ -81,21 +81,24 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'circle_id' => 1]);
-        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_CIRCLE);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 10, CirclePostPagingService::EXTEND_CIRCLE);
 
-        $this->assertCount(1, $result['data']);
+        $this->assertCount(10, $result['data']);
 
-        $postData = $result['data'][0];
-
-        $this->assertNotEmpty($postData['circle']);
+        //Loop since not all post has circle_id
+        foreach ($result['data'] as $post){
+            if (!empty($post['circle_id'])){
+                $this->assertNotEmpty($post['circle']);
+            }
+        }
     }
 
     public function test_getCirclePostWithCommentsExtension_success()
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'circle_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_COMMENT);
 
         $this->assertCount(1, $result['data']);
@@ -109,7 +112,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'circle_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_LIKE);
 
         $this->assertCount(1, $result['data']);
@@ -122,7 +125,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'circle_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_SAVED);
 
         $this->assertCount(1, $result['data']);
