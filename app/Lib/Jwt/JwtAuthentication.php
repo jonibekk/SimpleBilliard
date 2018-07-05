@@ -5,11 +5,8 @@ use \Firebase\JWT\SignatureInvalidException;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\ExpiredException;
 use \Ramsey\Uuid\Uuid;
+use Goalous\Exception as GlException;
 
-
-App::uses('JwtException', 'Lib/Jwt/Exception');
-App::uses('JwtSignatureException', 'Lib/Jwt/Exception');
-App::uses('JwtOutOfTermException', 'Lib/Jwt/Exception');
 App::uses('GoalousDateTime', 'DateTime');
 
 
@@ -29,11 +26,11 @@ App::uses('GoalousDateTime', 'DateTime');
  * // Decoding JWT auth token
  * try {
  *     $jwtAuth = JwtAuthentication::decode($jwtToken);
- * } catch (JwtSignatureException $exception) {
+ * } catch (\Goalous\Exception\JwtSignatureException $exception) {
  *      // When invalid signature
- * } catch (JwtOutOfTermException $exception) {
+ * } catch (\Goalous\Exception\JwtOutOfTermException $exception) {
  *      // When token is expired
- * } catch (JwtException $exception) {
+ * } catch (\Goalous\Exception\JwtException $exception) {
  *      // When something other is invalid
  * }
  * $jwtAuth->getTeamId(); // returning teams.id
@@ -215,9 +212,9 @@ class JwtAuthentication
      *
      * @param string $jwtToken
      *
-     * @throws JwtException
-     * @throws JwtSignatureException
-     * @throws JwtOutOfTermException
+     * @throws GlException\Auth\Jwt\JwtException
+     * @throws GlException\Auth\Jwt\JwtSignatureException
+     * @throws GlException\Auth\Jwt\JwtOutOfTermException
      * @return JwtAuthentication
      */
     public static function decode(string $jwtToken): self
@@ -229,36 +226,36 @@ class JwtAuthentication
                 [static::JWT_ALGORITHM]
             );
         } catch (SignatureInvalidException $e) {
-            throw new JwtSignatureException($e->getMessage());
+            throw new GlException\Auth\Jwt\JwtSignatureException($e->getMessage());
         } catch (BeforeValidException $e) {
-            throw new JwtOutOfTermException($e->getMessage());
+            throw new GlException\Auth\Jwt\JwtOutOfTermException($e->getMessage());
         } catch (ExpiredException $e) {
-            throw new JwtOutOfTermException($e->getMessage());
+            throw new GlException\Auth\Jwt\JwtOutOfTermException($e->getMessage());
         } catch (UnexpectedValueException $e) {
-            throw new JwtException($e->getMessage());
+            throw new GlException\Auth\Jwt\JwtException($e->getMessage());
         }
 
         if (!isset($decodedJwt->{static::PAYLOAD_NAMESPACE}->env)) {
-            throw new JwtException('env not found in payload');
+            throw new GlException\Auth\Jwt\JwtException('env not found in payload');
         }
         $env = $decodedJwt->{static::PAYLOAD_NAMESPACE}->env;
         if ($env !== ENV_NAME) {
-            throw new JwtException('env has difference between this env and token payload');
+            throw new GlException\Auth\Jwt\JwtException('env has difference between this env and token payload');
         }
         if (!isset($decodedJwt->{static::PAYLOAD_NAMESPACE}->user_id)) {
-            throw new JwtException('user_id not found in payload');
+            throw new GlException\Auth\Jwt\JwtException('user_id not found in payload');
         }
         if (!isset($decodedJwt->{static::PAYLOAD_NAMESPACE}->team_id)) {
-            throw new JwtException('team_id not found in payload');
+            throw new GlException\Auth\Jwt\JwtException('team_id not found in payload');
         }
         if (!isset($decodedJwt->exp)) {
-            throw new JwtException('exp not found in payload');
+            throw new GlException\Auth\Jwt\JwtException('exp not found in payload');
         }
         if (!isset($decodedJwt->jti)) {
-            throw new JwtException('jti not found in payload');
+            throw new GlException\Auth\Jwt\JwtException('jti not found in payload');
         }
         if (!isset($decodedJwt->iat)) {
-            throw new JwtException('iat not found in payload');
+            throw new GlException\Auth\Jwt\JwtException('iat not found in payload');
         }
         $userId = $decodedJwt->{static::PAYLOAD_NAMESPACE}->user_id;
         $teamId = $decodedJwt->{static::PAYLOAD_NAMESPACE}->team_id;

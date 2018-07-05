@@ -60,7 +60,7 @@ class JwtAuthenticationTest extends GoalousTestCase
 
     /**
      * Testing decoding token created in different env
-     * @expectedException JwtException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtException
      */
     function test_envDifferent()
     {
@@ -72,7 +72,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtSignatureException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtSignatureException
      * @expectedExceptionMessage Signature verification failed
      */
     function test_invalidSignature()
@@ -85,7 +85,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtSignatureException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtSignatureException
      * @expectedExceptionMessage Signature verification failed
      */
     function test_tokenEditedHeader()
@@ -104,7 +104,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtSignatureException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtSignatureException
      * @expectedExceptionMessage Signature verification failed
      */
     function test_tokenEditedPayload()
@@ -142,7 +142,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtOutOfTermException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtOutOfTermException
      */
     function test_expire()
     {
@@ -155,7 +155,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtOutOfTermException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtOutOfTermException
      */
     function test_tokenIsNotVerified()
     {
@@ -168,7 +168,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException JwtException
+     * @expectedException \Goalous\Exception\Auth\Jwt\JwtException
      */
     function test_decodingNotToken()
     {
