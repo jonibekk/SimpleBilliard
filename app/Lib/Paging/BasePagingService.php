@@ -22,7 +22,7 @@ abstract class BasePagingService implements PagingServiceInterface
         $pagingRequest,
         $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
-    ) {
+    ): array {
 
         if (!is_array($extendFlags)) {
             $extendFlags = [$extendFlags];
@@ -36,6 +36,11 @@ abstract class BasePagingService implements PagingServiceInterface
             ],
             'count'  => 0
         ];
+
+        //If only 1 flag is given, make it an array
+        if (!is_array($extendFlags)) {
+            $extendFlags = [$extendFlags];
+        }
 
         $this->beforeRead();
         $pagingRequest = $this->addDefaultValues($pagingRequest);

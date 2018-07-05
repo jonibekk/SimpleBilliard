@@ -197,36 +197,6 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMemberList(
-        $circle_id,
-        $with_admin = false,
-        $with_me = true
-    ) {
-        $primary_backup = $this->primaryKey;
-        $this->primaryKey = 'user_id';
-        $options = [
-            'conditions' => [
-                'circle_id' => $circle_id,
-                'admin_flg' => false,
-            ],
-            'fields'     => ['user_id']
-        ];
-        if ($with_admin) {
-            unset($options['conditions']['admin_flg']);
-        }
-        if (!$with_me) {
-            $options['conditions']['NOT']['user_id'] = $this->my_uid;
-        }
-        $res = $this->find('list', $options);
-
-        // fetching active members list
-        $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
-        // only active circle members list
-        $res = array_intersect($active_user_ids, $res);
-        $this->primaryKey = $primary_backup;
-        return $res;
-    }
-
     public function getAdminMemberList(
         $circle_id,
         $with_me = false
@@ -246,6 +216,15 @@ class CircleMember extends AppModel
         $res = $this->find('list', $options);
         $this->primaryKey = $primary_backup;
         return $res;
+    }
+
+    public function getCircleInitMemberSelect2(
+        $circle_id,
+        $with_admin = false
+    ) {
+        $users = $this->getMembers($circle_id, $with_admin);
+        $user_res = $this->User->makeSelect2UserList($users);
+        return ['results' => $user_res];
     }
 
     public function getMembers(
@@ -275,15 +254,6 @@ class CircleMember extends AppModel
         }
         $users = $this->find('all', $options);
         return $users;
-    }
-
-    public function getCircleInitMemberSelect2(
-        $circle_id,
-        $with_admin = false
-    ) {
-        $users = $this->getMembers($circle_id, $with_admin);
-        $user_res = $this->User->makeSelect2UserList($users);
-        return ['results' => $user_res];
     }
 
     /**
@@ -346,6 +316,36 @@ class CircleMember extends AppModel
         return ['results' => $user_res];
     }
 
+    public function getMemberList(
+        $circle_id,
+        $with_admin = false,
+        $with_me = true
+    ) {
+        $primary_backup = $this->primaryKey;
+        $this->primaryKey = 'user_id';
+        $options = [
+            'conditions' => [
+                'circle_id' => $circle_id,
+                'admin_flg' => false,
+            ],
+            'fields'     => ['user_id']
+        ];
+        if ($with_admin) {
+            unset($options['conditions']['admin_flg']);
+        }
+        if (!$with_me) {
+            $options['conditions']['NOT']['user_id'] = $this->my_uid;
+        }
+        $res = $this->find('list', $options);
+
+        // fetching active members list
+        $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
+        // only active circle members list
+        $res = array_intersect($active_user_ids, $res);
+        $this->primaryKey = $primary_backup;
+        return $res;
+    }
+
     function isAdmin($user_id, $circle_id): bool
     {
         $options = [
@@ -356,22 +356,6 @@ class CircleMember extends AppModel
             ]
         ];
         return (bool)$this->find('first', $options);
-    }
-
-    function isBelong($circleId, $userId = null)
-    {
-        if (!$userId) {
-            $userId = $this->my_uid;
-        }
-        $options = [
-            'conditions' => [
-                'user_id'   => $userId,
-                'circle_id' => $circleId,
-                'team_id'   => $this->current_team_id,
-            ]
-        ];
-        $res = $this->find('first', $options);
-        return $res;
     }
 
     function incrementUnreadCount($circle_list, $without_me = true, $team_id = null)
@@ -435,6 +419,22 @@ class CircleMember extends AppModel
         ];
         $this->create();
         return (bool)$this->save($options);
+    }
+
+    function isBelong($circleId, $userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->my_uid;
+        }
+        $options = [
+            'conditions' => [
+                'user_id'   => $userId,
+                'circle_id' => $circleId,
+                'team_id'   => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
     }
 
     /**

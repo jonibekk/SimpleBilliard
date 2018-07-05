@@ -119,6 +119,16 @@ class PostLikeFixture extends CakeTestFixtureEx
             'created'  => 3,
             'modified' => 3
         ),
+        array(
+            'id'       => '4',
+            'post_id'  => '11',
+            'user_id'  => '1',
+            'team_id'  => '1',
+            'del_flg'  => 0,
+            'deleted'  => 0,
+            'created'  => 3,
+            'modified' => 3
+        ),
     );
 
 }

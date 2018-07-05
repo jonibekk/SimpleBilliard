@@ -3,8 +3,6 @@ App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('Email', 'Model');
-App::import('Entity.ORM', 'Table');
-App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\DataType\DataType as DataType;
@@ -39,7 +37,7 @@ use Goalous\Enum\DataType\DataType as DataType;
  * @property Device         $Device
  * @property TermsOfService $TermsOfService
  */
-class User extends Table
+class User extends AppModel
 {
     /**
      * 性別タイプ
@@ -1949,10 +1947,8 @@ class User extends Table
             ]
         ];
 
-        $condition['entity'] = true;
-        $condition['conversion'] = true;
-
-        $user = $this->find('first', $condition);
+        /** @var UserEntity $user */
+        $user = $this->useType()->useEntity()->find('first', $condition);
 
         return $user;
     }
@@ -1962,7 +1958,7 @@ class User extends Table
      *
      * @param int $userId
      *
-     * @return mixed
+     * @return UserEntity
      */
     public function getUserForLoginResponse(int $userId)
     {
@@ -1971,11 +1967,12 @@ class User extends Table
                 'id' => $userId
             ],
             'fields'     => $this->loginUserFields,
-            'entity'     => true,
-            'conversion' => true
         ];
 
-        return $this->find('first', $conditions);
+       /** @var UserEntity $res */
+        $res =  $this->useType()->useEntity()->find('first', $conditions);
+
+        return $res;
     }
 
     /**

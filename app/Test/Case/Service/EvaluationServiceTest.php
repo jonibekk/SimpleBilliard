@@ -420,7 +420,7 @@ class EvaluationServiceTest extends GoalousTestCase
         // no evaluatee test
         $ret = $this->EvaluationService->getEvaluateesFromCoachUserId($termId, $coachUserId);
 
-        $this->assertCount(2, $ret);
+        $this->assertCount(3, $ret);
         $userHasFlow = $ret[0];
         $this->assertCount(2, $userHasFlow['flow']);
     }

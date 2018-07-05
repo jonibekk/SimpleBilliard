@@ -1,13 +1,16 @@
 <?php
-App::uses('Entity', 'Entity.ORM');
+App::import('Model/Entity', 'BaseEntity');
 
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
- * Date: 2018/06/22
- * Time: 10:35
+ * Date: 2018/07/04
+ * Time: 15:52
  */
-class UserEntity extends Entity
+class UserEntity extends BaseEntity
 {
-
+    protected function initializeDefaults()
+    {
+        parent::initializeDefaults();
+    }
 }
