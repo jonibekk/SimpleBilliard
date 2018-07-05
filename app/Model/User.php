@@ -1958,7 +1958,7 @@ class User extends AppModel
      *
      * @param int $userId
      *
-     * @return mixed
+     * @return UserEntity
      */
     public function getUserForLoginResponse(int $userId)
     {
@@ -1967,11 +1967,12 @@ class User extends AppModel
                 'id' => $userId
             ],
             'fields'     => $this->loginUserFields,
-            'entity'     => true,
-            'conversion' => true
         ];
 
-        return $this->find('first', $conditions);
+       /** @var UserEntity $res */
+        $res =  $this->useType()->useEntity()->find('first', $conditions);
+
+        return $res;
     }
 
     /**
