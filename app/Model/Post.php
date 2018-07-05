@@ -1521,7 +1521,6 @@ class Post extends AppModel
             $options['conditions']["$date_col <="] = $endTimestamp;
         }
         $res = (int)$this->find('count', $options);
-
         return $res;
     }
 
