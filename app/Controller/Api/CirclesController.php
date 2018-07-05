@@ -28,10 +28,11 @@ class CirclesController extends BasePagingController
 
         try {
             $pagingCursor = $this->getPagingParameters();
+            $pagingCursor->addResource('circle_id', $circleId);
+            $pagingCursor->addCondition(['user_id' => $this->getUserId()]);
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
-        $pagingCursor->addResource('circle_id', $circleId);
 
         try {
             $data = $CirclePostPagingService->getDataWithPaging(

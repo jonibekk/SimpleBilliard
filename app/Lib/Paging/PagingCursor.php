@@ -246,7 +246,7 @@ class PagingCursor
 
         if (!empty ($this->pointerValues)) {
             foreach ($this->pointerValues as $key => $row) {
-                $result[] = [$key . ' ' . $row[0] => $row[1]];
+                $result[] = "$key  $row[0]  $row[1]";
             }
         }
         return $result;
