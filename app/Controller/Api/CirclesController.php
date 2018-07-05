@@ -73,11 +73,4 @@ class CirclesController extends BasePagingController
 
         return null;
     }
-
-    protected function getPagingConditionFromRequest(): PagingCursor
-    {
-        $pagingCursor = new PagingCursor();
-        $pagingCursor->addOrder('id');
-        return $pagingCursor;
-    }
 }

@@ -48,13 +48,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         /** @var CirclePostPagingService $CircleFeedPaging */
         $CircleFeedPaging = new CirclePostPagingService();
 
-<<<<<<< HEAD
         $cursor = new PagingRequest();
         $cursor->addResource('res_id', 1);
-=======
-        $cursor = new PagingCursor(['circle_id' => 1]);
-        $cursor->addOrder('id');
->>>>>>> 8ef6a0936a3886773190fe255c387322bbd09aa6
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
 

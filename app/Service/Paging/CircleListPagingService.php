@@ -109,6 +109,11 @@ class CircleListPagingService extends BasePagingService
             $CircleMember = ClassRegistry::init('CircleMember');
 
             $userId = Hash::get($conditions, 'res_id') ?? Hash::get($conditions, 'current_user_id');
+            
+            if (empty($userId)) {
+                GoalousLog::error("Missing User ID for data extension");
+                throw new RuntimeException("Missing User ID for data extension");
+            }
 
             foreach ($resultArray as &$circle) {
                 $options = [
@@ -120,9 +125,8 @@ class CircleListPagingService extends BasePagingService
                         'unread_count',
                         'admin_flg'
                     ],
-                    'conversion' => true
                 ];
-                $result = $CircleMember->find('first', $options);
+                $result = $CircleMember->useType()->find('first', $options);
                 $memberInfo = Hash::get($result, 'CircleMember');
 
                 $circle = array_merge($circle, $memberInfo);

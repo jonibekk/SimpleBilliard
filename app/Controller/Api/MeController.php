@@ -29,7 +29,7 @@ class MeController extends BasePagingController
         try {
             $pagingRequest = $this->getPagingParameters();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
         /** @var CircleListPagingService $CircleListPagingService */
@@ -37,7 +37,7 @@ class MeController extends BasePagingController
 
         $circleData = $CircleListPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(), [CircleListPagingService::EXTEND_MEMBER_INFO]);
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody($circleData)->getResponse();
+        return ApiResponse::ok()->withBody($circleData)->getResponse();
     }
 
     /**

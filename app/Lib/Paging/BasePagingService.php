@@ -71,7 +71,7 @@ abstract class BasePagingService implements PagingServiceInterface
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $pagingRequest->getConditions(), $extendFlags);
+            $this->extendPagingResult($queryResult, $pagingRequest->getConditions(true), $extendFlags);
         }
 
         $this->afterRead();
