@@ -1,5 +1,7 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::uses('PagingCursor', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
@@ -26,10 +28,11 @@ class CirclesController extends BasePagingController
 
         try {
             $pagingCursor = $this->getPagingParameters();
+            $pagingCursor->addResource('circle_id', $circleId);
+            $pagingCursor->addCondition(['user_id' => $this->getUserId()]);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
-        $pagingCursor->addResource('circle_id', $circleId);
 
         try {
             $data = $CirclePostPagingService->getDataWithPaging(
@@ -38,17 +41,10 @@ class CirclesController extends BasePagingController
                 $this->getExtensionOptions() ?? CirclePostPagingService::EXTEND_ALL);
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody($data)->getResponse();
-    }
-
-    protected function getPagingConditionFromRequest(): PagingCursor
-    {
-        $pagingCursor = new PagingCursor();
-        $pagingCursor->addOrder('id');
-        return $pagingCursor;
+        return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
     /**
@@ -61,7 +57,7 @@ class CirclesController extends BasePagingController
     private function validateGetCirclePost(int $circleId)
     {
         if (!is_int($circleId)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->getResponse();
+            return ErrorResponse::badRequest()->getResponse();
         }
 
         /** @var Circle $Circle */
@@ -73,10 +69,17 @@ class CirclesController extends BasePagingController
         //Check if circle belongs to current team & user has access to the circle
         if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) ||
             ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId()))) {
-            return (new ApiResponse(ApiResponse::RESPONSE_FORBIDDEN))->withMessage(__("The circle dosen't exist or you don't have permission."))
-                                                                     ->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
+                                ->getResponse();
         }
 
         return null;
+    }
+
+    protected function getPagingConditionFromRequest(): PagingCursor
+    {
+        $pagingCursor = new PagingCursor();
+        $pagingCursor->addOrder('id');
+        return $pagingCursor;
     }
 }

@@ -4,9 +4,9 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
+App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
-App::import('Model/Entity', 'PostEntity');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
 
@@ -1521,7 +1521,6 @@ class Post extends AppModel
             $options['conditions']["$date_col <="] = $endTimestamp;
         }
         $res = (int)$this->find('count', $options);
-
         return $res;
     }
 

@@ -1,5 +1,7 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('Evaluator', 'Model');
+App::import('Model/Entity', 'EvaluatorEntity');
 
 /**
  * Evaluator Test Case
@@ -19,17 +21,6 @@ class EvaluatorTest extends GoalousTestCase
     );
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->Evaluator = ClassRegistry::init('Evaluator');
-    }
-
-    /**
      * tearDown method
      *
      * @return void
@@ -41,9 +32,36 @@ class EvaluatorTest extends GoalousTestCase
         parent::tearDown();
     }
 
-    public function testDummy()
+    public function test_getEntityFromFind_success()
     {
+        /** @var Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
 
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $Evaluator->useType()->useEntity()->find('first', $conditions);
+
+        $this->assertTrue($result instanceof EvaluatorEntity);
     }
 
+    public function test_getEntityFromSave_success()
+    {
+        /** @var Evaluator $Evaluator */
+        $Evaluator = ClassRegistry::init('Evaluator');
+
+        $data = [
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 2,
+            'team_id' => 1,
+            'index_num' => 10
+        ];
+
+        $result = $Evaluator->useType()->useEntity()->save($data);
+
+        $this->assertTrue($result instanceof EvaluatorEntity);
+    }
 }
