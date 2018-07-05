@@ -1307,4 +1307,36 @@ class UserTest extends GoalousTestCase
             $this->assertTrue($element instanceof UserEntity);
         }
     }
+
+    public function test_useTypeThenEntity_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
+
+    public function test_useEntityThenType_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useEntity()->useType()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
 }

@@ -6,7 +6,7 @@
  * Time: 13:32
  */
 
-abstract class BaseEntity implements ArrayAccess
+abstract class BaseEntity implements ArrayAccess, Iterator
 {
     /**
      * Original Model name where the object is made from
@@ -148,4 +148,30 @@ abstract class BaseEntity implements ArrayAccess
             return $this->properties;
         }
     }
+
+    public function current()
+    {
+        return current($this->properties);
+    }
+
+    public function next()
+    {
+        return next($this->properties);
+    }
+
+    public function key()
+    {
+        return key($this->properties);
+    }
+
+    public function valid()
+    {
+        return key($this->properties) !== null;
+    }
+
+    public function rewind()
+    {
+        return reset($this->properties);
+    }
+
 }

@@ -808,8 +808,7 @@ class AppModel extends Model
      */
     private function traverseArray(&$data, array $conversionTable)
     {
-        foreach ($data as $key => &$value) {
-
+        foreach ($data as $key => $value) {
             if (is_string($value) && key_exists($key, $conversionTable)) {
                 switch ($conversionTable[$key]) {
                     case (DataType::INT):
@@ -821,7 +820,7 @@ class AppModel extends Model
                 }
             }
             if (is_numeric($key) || is_array($value)) {
-                $this->traverseArray($value, $conversionTable);
+                $this->traverseArray($data[$key], $conversionTable);
             }
         }
     }
