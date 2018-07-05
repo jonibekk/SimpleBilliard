@@ -4,6 +4,8 @@ App::import('Service', 'AuthService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
 
+use Goalous\Exception as GlException;
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -30,31 +32,33 @@ class AuthController extends BaseApiController
         if (!empty($return)) {
             return $return;
         }
-        /** @var AuthService $AuthService */
-        $AuthService = ClassRegistry::init("AuthService");
 
         $requestData = $this->getRequestJsonBody();
 
-        try {
-            $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
-        } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
-        }
+        // TODO: do the translation
 
-        //If no matching username / password is found
-        if (empty($jwt)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__("Error. Try to login again."))
-                                                                       ->getResponse();
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
+            $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
+        } catch (GlException\Auth\AuthMismatchException $e) {
+            return ErrorResponse::badRequest()
+                                ->withError(new ErrorTypeGlobal(__('password and email did not match')))
+                                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency('user failed to login', [
+                'message' => $e->getMessage(),
+            ]);
+            return ErrorResponse::internalServerError()
+                                ->getResponse();
         }
 
         /** @var User $User */
         $User = ClassRegistry::init('User');
-
         $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray()['User'];
         $data['jwt'] = $jwt->token();
 
-        //On successful login, return the JWT token to the user
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withData($data)->getResponse();
+        return ApiResponse::ok()->withData($data)->getResponse();
     }
 
     /**
@@ -94,12 +98,24 @@ class AuthController extends BaseApiController
      */
     private function validateLogin()
     {
+        $requestedBody = $this->getRequestJsonBody();
         $validator = AuthRequestValidator::createLoginValidator();
 
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
         try {
-            $validator->validate($this->getRequestJsonBody());
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->getResponse();
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
         }
 
         return null;

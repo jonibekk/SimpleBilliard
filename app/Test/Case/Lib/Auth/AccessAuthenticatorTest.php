@@ -83,7 +83,7 @@ class AccessAuthenticatorTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException AuthenticationNotManagedException
+     * @expectedException \Goalous\Exception\Auth\AuthNotManagedException
      */
     function testExceptionThrowsNotManaged()
     {
@@ -113,7 +113,7 @@ class AccessAuthenticatorTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException AuthenticationOutOfTermException
+     * @expectedException \Goalous\Exception\Auth\AuthOutOfTermException
      */
     function testExceptionThrowsOnExpiredToken()
     {
@@ -125,7 +125,7 @@ class AccessAuthenticatorTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException AuthenticationOutOfTermException
+     * @expectedException \Goalous\Exception\Auth\AuthOutOfTermException
      */
     function testExceptionThrowsOnIssueBeforeStart()
     {
@@ -137,7 +137,7 @@ class AccessAuthenticatorTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException AuthenticationException
+     * @expectedException \Goalous\Exception\Auth\AuthFailedException
      */
     function testExceptionThrowsFailedSignification()
     {

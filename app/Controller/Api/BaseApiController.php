@@ -20,6 +20,7 @@ App::import('Lib/Auth', 'AccessAuthenticator');
  */
 
 use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
+use Goalous\Exception as GlException;
 
 abstract class BaseApiController extends Controller
 {
@@ -40,6 +41,9 @@ abstract class BaseApiController extends Controller
 
     /** @var JwtAuthentication */
     private $_jwtAuth;
+
+    /** @var ErrorResponse */
+    private $_beforeFilterResponse;
 
     /**
      * ApiV2Controller constructor.
@@ -76,7 +80,7 @@ abstract class BaseApiController extends Controller
     }
 
     /**
-     * @return CakeResponse|void
+     * @return void
      */
     public function beforeFilter()
     {
@@ -86,20 +90,20 @@ abstract class BaseApiController extends Controller
         if (!$this->_checkSkipAuthentication($this->request)) {
 
             if (empty($this->_jwtToken)) {
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::unauthorized()->withMessage(__('Missing token.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Missing token.'))->getResponse();
+                return;
             }
 
             try {
                 $userAuthentication = $this->_authenticateUser();
             } catch (Exception $e) {
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::internalServerError()->withException($e)->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::internalServerError()->withException($e)->getResponse();
+                return;
             }
 
             if (!$userAuthentication) {
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::unauthorized()->withMessage(__('You should be logged in.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('You should be logged in.'))->getResponse();
+                return;
             }
 
             $this->_initializeTeamStatus();
@@ -107,20 +111,65 @@ abstract class BaseApiController extends Controller
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
+                $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
                                     ->getResponse();
+                return;
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
-                /** @noinspection PhpInconsistentReturnPointsInspection */
-                return ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
+                $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
                                     ->getResponse();
+                return;
             }
         }
 
         $this->_setAppLanguage();
+    }
+
+    /**
+     * Only allow a given request method
+     *
+     * @param string $method Method name
+     *
+     * @return CakeResponse
+     */
+    protected function allowMethod(string $method)
+    {
+        if ($this->request->method() != $method) {
+            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
+        }
+    }
+
+    /**
+     * Common use of most validation of API access.
+     * This method will logging validating value if caught unexpected exception.
+     * Do not use this method if validating value is containing credential value.
+     *
+     * @param BaseValidator $validator
+     * @param array $validateValue
+     *
+     * @return null|BaseApiResponse
+     */
+    protected function generateResponseIfValidationFailed(BaseValidator $validator, array $validateValue)
+    {
+        try {
+            $validator->validate($validateValue);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class' => get_class($e),
+                'message' => $e,
+                'values' => $validateValue,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
     }
 
     /**
@@ -202,7 +251,7 @@ abstract class BaseApiController extends Controller
     {
         try {
             $jwtAuth = AccessAuthenticator::verify($this->_jwtToken);
-        } catch (AuthenticationException $e) {
+        } catch (GlException\Auth\AuthFailedException $e) {
             GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
             return false;
         }
@@ -302,6 +351,9 @@ abstract class BaseApiController extends Controller
     {
         if ($this->_stopInvokeFlag) {
             return false;
+        }
+        if ($this->_beforeFilterResponse instanceof ErrorResponse) {
+            return $this->_beforeFilterResponse;
         }
         try {
             return parent::invokeAction($request);
