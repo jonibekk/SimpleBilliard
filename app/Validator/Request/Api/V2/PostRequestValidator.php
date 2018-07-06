@@ -1,0 +1,47 @@
+<?php
+App::uses('BaseValidator', 'Validator');
+
+/**
+ * Created by PhpStorm.
+ * User: StephenRaharja
+ * Date: 2018/06/18
+ * Time: 15:44
+ */
+
+use Respect\Validation\Validator as validator;
+
+class PostRequestValidator extends BaseValidator
+{
+    public function getDefaultValidationRule(): array
+    {
+        $rules = [
+            "body" => [validator::notEmpty()::max(10000)],
+            "type" => [validator::intType()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
+        ];
+        return $rules;
+    }
+
+    public function getCirclePostValidationRule(): array
+    {
+        $rules = [
+            "circle_id" => [validator::intType()]
+        ];
+
+        return $rules;
+    }
+
+    public static function createDefaultPostValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getDefaultValidationRule());
+        return $self;
+    }
+
+    public static function createCirclePostValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getCirclePostValidationRule());
+        return $self;
+    }
+
+}

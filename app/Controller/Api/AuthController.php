@@ -68,27 +68,27 @@ class AuthController extends BaseApiController
      */
     public function post_logout()
     {
-
-        $return = $this->validateLogout();
-
-        if (!empty($return)) {
-            return $return;
-        }
-
-        $Auth = new AuthService();
+        /** @var AuthService $AuthService */
+        $AuthService = new AuthService();
 
         try {
-            $res = $Auth->invalidateUser($this->getJwtAuth());
+            $res = $AuthService->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->getResponse();
+            GoalousLog::error('failed to logout', [
+                'user.id' => $this->getUserId(),
+                'team.id' => $this->getTeamId(),
+                'jwt_id' => $this->getJwtAuth()->getJwtId(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->getResponse();
         }
 
         if (!$res) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to logout"))
-                                                                                 ->getResponse();
+            return ErrorResponse::internalServerError()
+                ->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
+        return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
     }
 
     /**
@@ -116,20 +116,6 @@ class AuthController extends BaseApiController
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * Validate all parameters before passed to endpoint
-     *
-     * @return CakeResponse|null Return a response if validation failed
-     */
-    private function validateLogout()
-    {
-        if (!$this->hasAuth()) {
-            return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
         }
 
         return null;
