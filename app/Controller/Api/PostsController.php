@@ -46,7 +46,7 @@ class PostsController extends BaseApiController
         }
 
         //If post saving failed, $res will be false
-        if ($res === false) {
+        if (empty($res)) {
             return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
         }
 

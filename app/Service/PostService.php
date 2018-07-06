@@ -10,6 +10,7 @@ App::uses('Circle', 'Model');
 App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
+App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
 
@@ -92,7 +93,6 @@ class PostService extends AppService
     }
 
     /**
-     * <<<<<<< HEAD
      * Adding new normal post with transaction
      *
      * @param array $postData
@@ -124,8 +124,6 @@ class PostService extends AppService
     }
 
     /**
-     * =======
-     * >>>>>>> a4857190481dd5948568003fc5a4605ab59538d9
      * Adding new normal post
      * Be careful, no transaction in this method
      * You should write try-catch and transaction yourself outside of this function
@@ -389,10 +387,10 @@ class PostService extends AppService
      * @param int   $userId
      * @param int   $teamId
      *
-     * @return int Post ID of saved post
+     * @return PostEntity Entity of saved post
      * @throws Exception
      */
-    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): int
+    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): PostEntity
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -424,7 +422,8 @@ class PostService extends AppService
                 $postBody['type'] = Post::TYPE_NORMAL;
             }
 
-            $savedPost = $Post->save($postBody);
+            /** @var PostEntity $savedPost */
+            $savedPost = $Post->useType()->useEntity()->save($postBody, false);
 
             if (empty ($savedPost)) {
                 GoalousLog::error('Error on adding post: failed post save', [
@@ -436,7 +435,7 @@ class PostService extends AppService
                 throw new RuntimeException('Error on adding post: failed post save');
             }
 
-            $postId = $savedPost['Post']['id'];
+            $postId = $savedPost['id'];
 
             // Save share circles
             if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
@@ -462,7 +461,7 @@ class PostService extends AppService
             throw $e;
         }
 
-        return $postId;
+        return $savedPost;
     }
 
     /**
