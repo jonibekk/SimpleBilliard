@@ -23,7 +23,7 @@ that’s all
 
 Enactment Date: October 01, 2004    
 
-Last Revision Date : October 01, 2007   
+Last Revision Date : July 06, 2018   
 
 ISAO Corporation Representative Director　Keiji Nakamura 
 
@@ -39,7 +39,9 @@ Matters based on Personal Information Protection Law and JIS [The individual who
 
 We deal with the following information strictly as personal information.
 
-1. Your personal information (name, email address, phone number, profile image, information that can identify a specific individual such as profile information, payment information)
+1. Your personal information
+Personal Information: name, email address, phone number, profile image, information that can identify a specific individual such as profile information, payment information, Information collected from terminals such as individual identification number, positional information, IP address, Information acquired from a cookie, Information acquired for an advertisement tracking, etc.
+
 Purpose of use: In order to implement and properly manage the contents of the contract
 
 2. Personal information of business partners (information that can identify specific individuals such as business card information)
@@ -48,6 +50,28 @@ Purpose of use: In order to properly manage the contract contents between suppli
 3. Personal information (name, email address, telephone number) of the person who received our inquiries
 Purpose of use: For improving our attitude towards customer service etc. To accurately grasp the inquiry and the contents of the inquiry and handle it
 * For the above purpose of use, those which are stated as "to properly manage contract contents" include "use at the time before entering contract" and "use after contract end".
+
+----
+
+#### Personal information transmission and storage location
+
+In this service, collected personal information is sent and stored in a server managed safely by us. These servers are also located outside of Iceland, Liechtenstein, Norway, and the EU Member States.
+
+----
+
+#### Third party behavior analysis system
+
+In this service, statistical usage information using third-party company’s cookies, web beacon and other mechanisms are obtained in order to understand the
+
+user’s usage circumstances. Some of those cookies, Web beacons, and others that directly acquire information by a third-party company are also included. Information gathered there will not be provided or disclosed to us, but will be managed according to the privacy policy stipulated by third party companies.
+
+----
+
+#### Use of services by children
+
+This service is not intended for children under 16 years of age. Children under the age limit, please do not use this service. Also, please do not provide personal information to us.
+
+For parents who know that their child provided personal information to this service, please contact the personal information consultation desk.
 
 ----
 
@@ -125,6 +149,8 @@ CS Tower 7th Floor, 5-20-8 Asakusabashi, Taito-ku, Tokyo 111-0053, Japan
 Ltd. ISAO personal information consultation 
 
 Mail: contact@goalous.com
+
+For parents who know that their child provided personal information to this service, please contact the personal information consultation desk.
 
 ----
 
