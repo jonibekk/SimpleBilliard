@@ -78,8 +78,17 @@ class PostsController extends BaseApiController
                     PostRequestValidator::createCirclePostValidator()->validate($requestBody);
                     break;
             }
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::badRequest()->withException($e)->getResponse();
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
         }
 
         return null;
