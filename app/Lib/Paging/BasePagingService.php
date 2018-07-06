@@ -24,10 +24,6 @@ abstract class BasePagingService implements PagingServiceInterface
         $extendFlags = []
     ): array {
 
-        if (!is_array($extendFlags)) {
-            $extendFlags = [$extendFlags];
-        }
-
         $finalResult = [
             'data'   => [],
             'paging' => [

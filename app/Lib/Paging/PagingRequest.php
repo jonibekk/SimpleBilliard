@@ -31,7 +31,7 @@ class PagingRequest
     private $pointerValues = [];
 
     /**
-     * Array for search query from UR
+     * Array for search query from URL
      *
      * @var array
      */
@@ -135,6 +135,9 @@ class PagingRequest
      */
     public static function decodeCursorToArray(string $cursor): array
     {
+        if (empty($cursor)) {
+            throw new InvalidArgumentException("Cursor can't be empty");
+        }
         $decodedString = base64_decode($cursor);
         if ($decodedString === false || empty($decodedString)) {
             throw new RuntimeException("Failed in parsing cursor from base64 encoding");
@@ -289,11 +292,12 @@ class PagingRequest
      */
     public function returnCursor()
     {
-        return base64_encode(json_encode([
-            'conditions' => $this->conditions,
-            'pointer'    => $this->pointerValues,
-            'order'      => $this->order
-        ]));
+        return ($this->isEmpty()) ? "" :
+            base64_encode(json_encode([
+                'conditions' => $this->conditions,
+                'pointer'    => $this->pointerValues,
+                'order'      => $this->order
+            ]));
     }
 
     /**

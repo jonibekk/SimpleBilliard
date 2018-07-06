@@ -22,7 +22,7 @@ class UsersController extends BasePagingController
      */
     public function get_circles(int $userId)
     {
-        GoalousLog::warning("M". $this->request->params['id']);
+        $res = $this->validateCircles();
 
         if (!empty($res)) {
             return $res;
@@ -36,7 +36,8 @@ class UsersController extends BasePagingController
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $circleData = $CircleListPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit());
+        $circleData = $CircleListPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
+            $this->getExtensionOptions());
 
         return ApiResponse::ok()->withBody($circleData)->getResponse();
     }
@@ -57,5 +58,4 @@ class UsersController extends BasePagingController
     {
         return null;
     }
-
 }

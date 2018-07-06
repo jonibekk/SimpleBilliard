@@ -36,7 +36,7 @@ class CirclesController extends BasePagingController
             $data = $CirclePostPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(),
-                $this->getExtensionOptions() ?? CirclePostPagingService::EXTEND_ALL);
+                $this->getExtensionOptions() ?? $this->getDefaultPostExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
@@ -72,5 +72,19 @@ class CirclesController extends BasePagingController
         }
 
         return null;
+    }
+
+    /**
+     * Defaut extension options for getting circle post
+     *
+     * @return array
+     */
+    private function getDefaultPostExtension()
+    {
+        return [
+            CirclePostPagingService::EXTEND_CIRCLE,
+            CirclePostPagingService::EXTEND_LIKE,
+            CirclePostPagingService::EXTEND_SAVED
+        ];
     }
 }
