@@ -36,7 +36,7 @@ class CirclePostPagingService extends BasePagingService
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingRequest->getConditions(true));
+        $options = $this->createSearchCondition($pagingRequest);
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
@@ -52,9 +52,9 @@ class CirclePostPagingService extends BasePagingService
         return Hash::extract($result, '{n}.Post');
     }
 
-    protected function countData(array $conditions): int
+    protected function countData(PagingRequest $request): int
     {
-        $options = $this->createSearchCondition($conditions);
+        $options = $this->createSearchCondition($request);
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -116,22 +116,30 @@ class CirclePostPagingService extends BasePagingService
     /**
      * Create the SQL query for getting the circle posts
      *
-     * @param array $conditions
+     * @param PagingRequest $request
      *
      * @return array
      */
-    private function createSearchCondition(array $conditions): array
+    private function createSearchCondition(PagingRequest $request): array
     {
-        $circleId = Hash::get($conditions, 'res_id');
+        $conditions = $request->getConditions(true);
+
+        $circleId = $request->getResourceId();
+        $teamId = $request->getCurrentTeamId();
 
         if (empty($circleId)) {
             GoalousLog::error("Missing circle ID for post paging", $conditions);
-            throw new RuntimeException("Missing circle ID");
+            throw new InvalidArgumentException("Missing circle ID");
+        }
+        if (empty($teamId)) {
+            GoalousLog::error("Missing team ID for post paging", $conditions);
+            throw new InvalidArgumentException("Missing team ID");
         }
 
         $options = [
             'conditions' => [
                 'Post.del_flg' => false,
+                'Post.team_id' => $teamId,
                 'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE]
             ],
             'join'       => [

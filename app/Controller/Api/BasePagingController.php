@@ -20,11 +20,11 @@ abstract class  BasePagingController extends BaseApiController
 
         if (empty($limit)) { //If not given, use default
             return PagingRequest::DEFAULT_PAGE_LIMIT;
-        } else if ($limit > PagingRequest::MAX_PAGE_LIMIT) { //If larger than max limit, return max
-            return PagingRequest::MAX_PAGE_LIMIT;
-        } else {
-            return $limit;
         }
+        if ($limit > PagingRequest::MAX_PAGE_LIMIT) { //If larger than max limit, return max
+            return PagingRequest::MAX_PAGE_LIMIT;
+        }
+        return $limit;
     }
 
     /**
@@ -76,9 +76,7 @@ abstract class  BasePagingController extends BaseApiController
             $pagingRequest = new PagingRequest();
         }
 
-        if (!empty($this->request->params['id'])) {
-            $pagingRequest->addResource('res_id', $this->request->params['id']);
-        }
+        $pagingRequest->setCakeRequest($this->request);
 
         $pagingRequest->addResource('current_user_id', $this->getUserId());
         $pagingRequest->addResource('current_team_id', $this->getTeamId());

@@ -49,7 +49,14 @@ class PagingRequest
      *
      * @var array
      */
-    private $resourceId = [];
+    private $resources = [];
+
+    /**
+     * Request object
+     *
+     * @var CakeRequest
+     */
+    private $request;
 
     /**
      * PagingRequest constructor.
@@ -271,7 +278,7 @@ class PagingRequest
      */
     public function getConditions(bool $includeResourceId = false)
     {
-        return ($includeResourceId) ? array_merge($this->conditions, $this->resourceId) : $this->conditions;
+        return ($includeResourceId) ? array_merge($this->conditions, $this->resources) : $this->conditions;
     }
 
     /**
@@ -282,7 +289,7 @@ class PagingRequest
      */
     public function addResource(string $key, int $id)
     {
-        $this->resourceId[$key] = $id;
+        $this->resources[$key] = $id;
     }
 
     /**
@@ -320,7 +327,7 @@ class PagingRequest
     public function getQuery($keys = null): array
     {
         if (empty($keys)) {
-            return $this->queries;
+            return [];
         }
         if (is_string($keys)) {
             return Hash::get($this->queries, $keys);
@@ -330,6 +337,7 @@ class PagingRequest
             foreach ($keys as $key) {
                 $result[$key] = Hash::get($this->queries, $key);
             }
+            return $result;
         }
         return [];
     }
@@ -338,12 +346,22 @@ class PagingRequest
      * Insert URL queries
      *
      * @param array $query
+     * @param bool  $overwriteFlag Overwrite elements with same key name
      */
-    public function addQueries(array $query)
+    public function addQueries(array $query, bool $overwriteFlag = false)
     {
-        $this->queries = array_merge($this->queries, $query);
+        if ($overwriteFlag) {
+            $this->queries = array_merge($this->queries, $query);
+        } else {
+            $this->queries += $query;
+        }
     }
 
+    /**
+     * Add saved queries into condition, which will be included in cursor
+     *
+     * @param null $keys
+     */
     public function addQueriesToCondition($keys = null)
     {
         if (empty($keys)) {
@@ -359,5 +377,63 @@ class PagingRequest
                 }
             }
         }
+    }
+
+    /**
+     * Set CakeRequest data to PagingRequest
+     *
+     * @param CakeRequest $request
+     */
+    public function setCakeRequest(CakeRequest $request)
+    {
+        if (empty($request)) {
+            throw new InvalidArgumentException("Request can't be empty");
+        }
+        $this->request = $request;
+    }
+
+    /**
+     * Get stored CakeRequest data
+     *
+     * @return CakeRequest
+     */
+    public function getCakeRequest(): CakeRequest
+    {
+        return $this->request ?? null;
+    }
+
+    /**
+     * Get resource ID in the URL
+     *
+     * @return int Return positive number on success, 0 if not exist
+     */
+    public function getResourceId(): int
+    {
+        if (!empty($this->request->params['id'])) {
+            return $this->request->params['id'];
+        }
+        //If resource ID not included in request, will try to get from resources.
+        //If not exist, return -1
+        return Hash::get($this->resources, 'res_id', 0);
+    }
+
+    /**
+     * Get logged in user's ID.
+     *
+     * @return int Return 0 if not exist
+     */
+    public function getCurrentUserId(): int
+    {
+        return Hash::get($this->resources, 'current_user_id', 0);
+    }
+
+    /**
+     * Get logged in user's current team ID
+     *
+     * @return int Return 0 if not exist
+     */
+    public function getCurrentTeamId(): int
+    {
+        return Hash::get($this->resources, 'current_team_id', 0);
     }
 }

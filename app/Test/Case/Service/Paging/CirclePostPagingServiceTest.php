@@ -67,7 +67,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1]);
+        $cursor->addResource('res_id', 1);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_USER);
 
         $this->assertCount(1, $result['data']);
@@ -81,7 +82,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1]);
+        $cursor->addResource('res_id', 1);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 10, CirclePostPagingService::EXTEND_CIRCLE);
 
         $this->assertCount(10, $result['data']);
@@ -98,7 +100,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1]);
+        $cursor->addResource('res_id', 1);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_COMMENT);
 
         $this->assertCount(1, $result['data']);
@@ -112,7 +115,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1]);
+        $cursor->addResource('res_id', 1);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_LIKE);
 
         $this->assertCount(1, $result['data']);
@@ -125,7 +129,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
     {
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
-        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1, 'res_id' => 1]);
+        $cursor = new PagingRequest(['user_id' => 1, 'team_id' => 1]);
+        $cursor->addResource('res_id', 1);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_SAVED);
 
         $this->assertCount(1, $result['data']);

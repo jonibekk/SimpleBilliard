@@ -18,7 +18,7 @@ class CircleListPagingService extends BasePagingService
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         $pagingRequest->addQueriesToCondition(['joined', 'public_only']);
-        $options = $this->createSearchCondition($pagingRequest->getConditions(true));
+        $options = $this->createSearchCondition($pagingRequest);
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
@@ -33,11 +33,13 @@ class CircleListPagingService extends BasePagingService
         return Hash::extract($result, '{n}.Circle');
     }
 
-    private function createSearchCondition(array $conditions)
+    private function createSearchCondition(PagingRequest $pagingRequest)
     {
+        $conditions = $pagingRequest->getConditions(true);
+
         //Get user ID from given resource ID. If not exist, use current user's ID
-        $userId = Hash::get($conditions, 'res_id') ?? Hash::get($conditions, 'current_user_id');
-        $teamId = Hash::get($conditions, 'current_team_id');
+        $userId = $pagingRequest->getResourceId() ?? $pagingRequest->getCurrentUserId();
+        $teamId = $pagingRequest->getCurrentTeamId();
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
         $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
 
@@ -82,9 +84,9 @@ class CircleListPagingService extends BasePagingService
         return $conditions;
     }
 
-    protected function countData(array $conditions): int
+    protected function countData(PagingRequest $request): int
     {
-        $options = $this->createSearchCondition($conditions);
+        $options = $this->createSearchCondition($request);
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -112,7 +114,7 @@ class CircleListPagingService extends BasePagingService
 
             if (empty($userId)) {
                 GoalousLog::error("Missing User ID for data extension");
-                throw new RuntimeException("Missing User ID for data extension");
+                throw new InvalidArgumentException("Missing User ID for data extension");
             }
 
             foreach ($resultArray as &$circle) {

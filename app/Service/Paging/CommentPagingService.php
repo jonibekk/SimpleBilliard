@@ -1,12 +1,12 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/28
  * Time: 13:56
  */
-
 class CommentPagingService extends BasePagingService
 {
 
@@ -26,11 +26,11 @@ class CommentPagingService extends BasePagingService
         return $Comment->getPostCommentsByCursor($pagingRequest, $limit);
     }
 
-    protected function countData(array $conditions): int
+    protected function countData(PagingRequest $request): int
     {
         $Comment = new Comment();
 
-        return $Comment->getCount($conditions);
+        return $Comment->getCount($request->getConditions());
     }
 
     protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
