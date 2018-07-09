@@ -52,13 +52,6 @@ class PagingRequest
     private $resources = [];
 
     /**
-     * Request object
-     *
-     * @var CakeRequest
-     */
-    private $request;
-
-    /**
      * PagingRequest constructor.
      *
      * @param array $conditions    Conditions for the search, e.g. SQL query
@@ -380,39 +373,12 @@ class PagingRequest
     }
 
     /**
-     * Set CakeRequest data to PagingRequest
-     *
-     * @param CakeRequest $request
-     */
-    public function setCakeRequest(CakeRequest $request)
-    {
-        if (empty($request)) {
-            throw new InvalidArgumentException("Request can't be empty");
-        }
-        $this->request = $request;
-    }
-
-    /**
-     * Get stored CakeRequest data
-     *
-     * @return CakeRequest
-     */
-    public function getCakeRequest(): CakeRequest
-    {
-        return $this->request ?? null;
-    }
-
-    /**
      * Get resource ID in the URL
      *
      * @return int Return positive number on success, 0 if not exist
      */
     public function getResourceId(): int
     {
-        if (!empty($this->request->params['id'])) {
-            return $this->request->params['id'];
-        }
-        //If resource ID not included in request, will try to get from resources.
         //If not exist, return -1
         return Hash::get($this->resources, 'res_id', 0);
     }

@@ -80,19 +80,21 @@ abstract class  BasePagingController extends BaseApiController
             $pagingRequest = new PagingRequest();
         }
 
-        $pagingRequest->setCakeRequest($this->request);
-
+        //Add resource ID
+        if (!empty($this->request->params['id'])) {
+            $pagingRequest->addResource('res_id', $this->request->params['id']);
+        }
         $pagingRequest->addResource('current_user_id', $this->getUserId());
         $pagingRequest->addResource('current_team_id', $this->getTeamId());
 
-        $queries = array_filter($this->request->query, function ($arrayKey) {
-            if ($arrayKey == "limit") {
+        $queries = array_filter($this->request->query, function ($queryKey) {
+            if ($queryKey == "limit") {
                 return false;
             }
-            if ($arrayKey == "extoption") {
+            if ($queryKey == "extoption") {
                 return false;
             }
-            if ($arrayKey == "cursor") {
+            if ($queryKey == "cursor") {
                 return false;
             }
             return true;
