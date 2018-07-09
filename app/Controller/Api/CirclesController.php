@@ -36,7 +36,7 @@ class CirclesController extends BasePagingController
             $data = $CirclePostPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(),
-                $this->getExtensionOptions() ?? $this->getDefaultPostExtension());
+                $this->getExtensionOptions() ?: $this->getDefaultPostExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return ErrorResponse::internalServerError()->withException($e)->getResponse();

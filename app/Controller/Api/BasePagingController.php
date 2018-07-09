@@ -34,11 +34,15 @@ abstract class  BasePagingController extends BaseApiController
      */
     protected function getExtensionOptions(): array
     {
-        $stringOption = $this->request->query('extoption') ?? "";
+        $stringOption = $this->request->query('extoption');
 
-        $res = explode(',', $stringOption);
+        $options = explode(',', $stringOption);
 
-        return $res ?? [];
+        if (empty($options[0])) {
+            return [];
+        }
+
+        return $options;
     }
 
     /**

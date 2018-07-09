@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
+App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 
@@ -111,32 +112,20 @@ class CircleListPagingService extends BasePagingService
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_MEMBER_INFO, $options)) {
-            /** @var CircleMember $CircleMember */
-            $CircleMember = ClassRegistry::init('CircleMember');
 
-            $userId = $request->getResourceId();
+            $userId = $request->getResourceId() ?: $request->getCurrentUserId();
+
+            /** @var CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
+            $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
 
             if (empty($userId)) {
                 GoalousLog::error("Missing User ID for data extension");
                 throw new InvalidArgumentException("Missing User ID for data extension");
             }
 
-            foreach ($resultArray as &$circle) {
-                $options = [
-                    'conditions' => [
-                        'circle_id' => $circle['id'],
-                        'user_id'   => $userId
-                    ],
-                    'fields'     => [
-                        'unread_count',
-                        'admin_flg'
-                    ],
-                ];
-                $result = $CircleMember->useType()->find('first', $options);
-                $memberInfo = Hash::get($result, 'CircleMember');
+            $CircleMemberInfoDataExtender->setUserId($userId);
+            $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
 
-                $circle = array_merge($circle, $memberInfo);
-            }
         }
     }
 
