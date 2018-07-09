@@ -54,6 +54,7 @@ class CircleMemberInfoDataExtender extends DataExtender
         array $extData,
         string $extDataKey
     ): array {
+
         foreach ($parentData as $key => &$parentElement) {
             foreach ($extData as $extElement) {
                 if (!is_int($key)) {
