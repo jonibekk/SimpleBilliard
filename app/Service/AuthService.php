@@ -5,6 +5,9 @@ App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('User', 'Model');
 App::import('Service', 'AppService');
+App::import('Model/Entity', 'UserEntity');
+
+use Goalous\Exception as GlException;
 
 /**
  * Class for handling authentication
@@ -26,20 +29,24 @@ class AuthService extends AppService
     /**
      * Authenticate given email address with given password.
      *
-     * @param string $username
+     * @param string $email
      * @param string $password
+     *
+     * @throws GlException\Auth\AuthMismatchException When user's email+password does not match
+     * @throws GlException\Auth\AuthFailedException Any reason failed authorize(including internal server error)
      *
      * @return JwtAuthentication Authentication token of the user. Will return null on failed login
      */
-    public function authenticateUser(string $username, string $password)
+    public function authenticateUser(string $email, string $password)
     {
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');
 
-        $user = $User->findUserByEmail($username);
+        $user = $User->findUserByEmail($email);
 
-        if (empty ($user)) {
-            return null;
+        if (empty($user)) {
+            // email is not registered
+            throw new GlException\Auth\AuthMismatchException('password and email does not match');
         }
 
         $storedHashedPassword = $user['password'];
@@ -48,16 +55,20 @@ class AuthService extends AppService
             // SHA1 passwords are stored before payment release.
             // Ols passwords will be changed to sha256 when user change password
             if (!$this->_verifySha1Password($password, $storedHashedPassword)) {
-                return null;
+                throw new GlException\Auth\AuthMismatchException('password and email does not match');
             }
             if (!$this->_savePasswordAsSha256($user, $password)) {
-                return null;
+                throw new GlException\Auth\AuthFailedException('failed to save sha256');
             }
         } elseif (!$this->passwordHasher->check($password, $storedHashedPassword)) {
-            return null;
+            throw new GlException\Auth\AuthMismatchException('password and email does not match');
         }
 
-        return AccessAuthenticator::publish($user['id'], $user['default_team_id'])->getJwtAuthentication();
+        try {
+            return AccessAuthenticator::publish($user['id'], $user['default_team_id'])->getJwtAuthentication();
+        } catch (\Throwable $e) {
+            throw new GlException\Auth\AuthFailedException($e->getMessage());
+        }
     }
 
     /**
@@ -76,7 +87,7 @@ class AuthService extends AppService
         $teamId = $jwt->getTeamId();
         $jwtId = $jwt->getJwtId() ?? '';
 
-        if (empty($userId) || empty($teamId) || empty($jwtId)){
+        if (empty($userId) || empty($teamId) || empty($jwtId)) {
             return false;
         }
 
@@ -120,8 +131,8 @@ class AuthService extends AppService
     /**
      * Save new password as SHA256
      *
-     * @param UserEntity  $userData
-     * @param string $plainPassword
+     * @param UserEntity $userData
+     * @param string     $plainPassword
      *
      * @return bool
      */

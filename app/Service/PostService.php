@@ -10,6 +10,7 @@ App::uses('Circle', 'Model');
 App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
+App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
 
@@ -85,6 +86,37 @@ class PostService extends AppService
             $this->TransactionManager->rollback();
             GoalousLog::error('failed adding post data from draft', [
                 'message' => $e->getMessage(),
+            ]);
+            GoalousLog::error($e->getTraceAsString());
+        }
+        return false;
+    }
+
+    /**
+     * Adding new normal post with transaction
+     *
+     * @param array $postData
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $postResources
+     *
+     * @return array|bool If success, returns posts data array, if failed, returning false
+     */
+    function addNormalWithTransaction(array $postData, int $userId, int $teamId, array $postResources = [])
+    {
+        try {
+            $this->TransactionManager->begin();
+            $post = $this->addNormal(
+                $postData, $userId, $teamId, $postResources
+            );
+            $this->TransactionManager->commit();
+            return $post;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('failed adding post data', [
+                'message'  => $e->getMessage(),
+                'users.id' => $userId,
+                'teams.id' => $teamId,
             ]);
             GoalousLog::error($e->getTraceAsString());
         }
@@ -290,37 +322,6 @@ class PostService extends AppService
     }
 
     /**
-     * Adding new normal post with transaction
-     *
-     * @param array $postData
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $postResources
-     *
-     * @return array|bool If success, returns posts data array, if failed, returning false
-     */
-    function addNormalWithTransaction(array $postData, int $userId, int $teamId, array $postResources = [])
-    {
-        try {
-            $this->TransactionManager->begin();
-            $post = $this->addNormal(
-                $postData, $userId, $teamId, $postResources
-            );
-            $this->TransactionManager->commit();
-            return $post;
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            GoalousLog::error('failed adding post data', [
-                'message'  => $e->getMessage(),
-                'users.id' => $userId,
-                'teams.id' => $teamId,
-            ]);
-            GoalousLog::error($e->getTraceAsString());
-        }
-        return false;
-    }
-
-    /**
      * Save favorite post
      *
      * @param int $postId
@@ -373,6 +374,94 @@ class PostService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * Method to save a circle post
+     *
+     * @param array $postBody
+     *                   ["body" => '',
+     *                   "type" => ''
+     *                   ]
+     * @param int   $circleId
+     * @param int   $userId
+     * @param int   $teamId
+     *
+     * @return PostEntity Entity of saved post
+     * @throws Exception
+     */
+    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): PostEntity
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if (empty($postBody['body'])) {
+            GoalousLog::error('Error on adding post: Invalid argument', [
+                'users.id'  => $userId,
+                'circle.id' => $circleId,
+                'teams.id'  => $teamId,
+                'postData'  => $postBody,
+            ]);
+            throw new InvalidArgumentException('Error on adding post: Invalid argument');
+        }
+
+        try {
+            $this->TransactionManager->begin();
+            $Post->create();
+
+            $postBody['user_id'] = $userId;
+            $postBody['team_id'] = $teamId;
+
+            if ($postBody['type'] == Post::TYPE_CREATE_CIRCLE) {
+                $postBody['circle_id'] = $circleId;
+            } elseif (empty($postBody['type'])) {
+                $postBody['type'] = Post::TYPE_NORMAL;
+            }
+
+            /** @var PostEntity $savedPost */
+            $savedPost = $Post->useType()->useEntity()->save($postBody, false);
+
+            if (empty ($savedPost)) {
+                GoalousLog::error('Error on adding post: failed post save', [
+                    'users.id'  => $userId,
+                    'circle.id' => $circleId,
+                    'teams.id'  => $teamId,
+                    'postData'  => $postBody,
+                ]);
+                throw new RuntimeException('Error on adding post: failed post save');
+            }
+
+            $postId = $savedPost['id'];
+
+            // Save share circles
+            if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
+                GoalousLog::error($errorMessage = 'failed saving post share circles', [
+                    'posts.id'    => $postId,
+                    'circles.ids' => $postId,
+                    'teams.id'    => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            // Update unread post numbers if specified sharing circle
+            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
+                GoalousLog::error($errorMessage = 'failed increment unread count', [
+                    'circles.ids' => $postId,
+                    'teams.id'    => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            $this->TransactionManager->commit();
+
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+
+        return $savedPost;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
-App::uses('UserEntity', 'Model/Entity');
+App::import('Model/Entity', 'UserEntity');
 
 /**
  * User Test Case
@@ -574,7 +574,7 @@ class UserTest extends GoalousTestCase
         $postData['User']['email'] = "test@aaaaaaa.com";
         $this->User->addEmail($postData, $uid);
         $res = $this->User->changePrimaryEmail($uid, $this->User->getLastInsertID());
-        $this->assertNotEmpty($res['id'], "[正常]通常使うメアドの変更");
+        $this->assertNotEmpty($res['User']['id'], "[正常]通常使うメアドの変更");
     }
 
     function testPasswordCheckSuccess()
@@ -1256,7 +1256,7 @@ class UserTest extends GoalousTestCase
         // TODO.Payment:add unit tests
     }
 
-    public function test_entityOutput_success()
+    public function test_typeConversionFromFind_success()
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -1264,36 +1264,106 @@ class UserTest extends GoalousTestCase
         $conditions = [
             'conditions' => [
                 'id' => 1
-            ],
-            'entity'=>true
+            ]
         ];
 
-        $res = $User->find('first', $conditions);
-
-        $this->assertTrue($res instanceof UserEntity);
-        $this->assertNotEmpty($res['id']);
-        $this->assertNotEmpty($res['password']);
-    }
-
-    public function test_typeConversion_success()
-    {
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        $conditions = [
-            'conditions' => [
-                'id' => 1
-            ],
-            'conversion' => true
-        ];
-
-        $res = $User->find('first', $conditions);
+        $res = $User->useType()->find('first', $conditions);
 
         $this->assertInternalType('int', $res["User"]['id']);
         $this->assertInternalType('int', $res["User"]['created']);
         $this->assertInternalType('int', $res["User"]['modified']);
-
-
     }
 
+    public function test_getSingleEntityFromFind_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useEntity()->find('first', $conditions);
+
+        $this->assertTrue($result instanceof UserEntity);
+    }
+
+    public function test_getManyEntityFromFind_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'del_flg' => false
+            ]
+        ];
+
+        $result = $User->useEntity()->find('all', $conditions);
+
+        foreach ($result as $element) {
+            $this->assertTrue($element instanceof UserEntity);
+        }
+    }
+
+    public function test_useTypeThenEntity_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
+
+    public function test_useEntityThenType_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useEntity()->useType()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
+
+    public function test_multipleFindAfterEntity_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $result = $User->find('first', $conditions);
+        $this->assertTrue(is_array($result));
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
 }
