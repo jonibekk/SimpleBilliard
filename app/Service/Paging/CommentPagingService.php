@@ -21,16 +21,28 @@ class CommentPagingService extends BasePagingService
      */
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-        $Comment = new Comment();
+        $options = $this->createSearchCondition($pagingRequest);
 
-        return $Comment->getPostCommentsByCursor($pagingRequest, $limit);
+        $options['limit'] = $limit;
+        $options['order'] = $pagingRequest->getOrders();
+        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $result = $Comment->useType()->find('all', $options);
+
+        return Hash::extract($result, "{n}.Comment");
     }
 
     protected function countData(PagingRequest $request): int
     {
-        $Comment = new Comment();
+        $options = $this->createSearchCondition($request);
 
-        return $Comment->getCount($request->getConditions());
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        return (int)$Comment->find('count', $options);
     }
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $conditions, array $flags = [])
@@ -40,6 +52,30 @@ class CommentPagingService extends BasePagingService
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
             $resultArray = $UserDataExtender->extend($resultArray, "{n}.Comment.user_id");
         }
+    }
+
+    private function createSearchCondition(PagingRequest $request): array
+    {
+        $postId = $request->getResourceId();
+
+        if (empty($postId)) {
+            GoalousLog::error("Missing post ID for getting comments");
+            throw new InvalidArgumentException("Missing post ID for getting comments");
+        }
+
+        $options = [
+            'conditions' => [
+                'Comment.post_id' => $postId,
+            ],
+        ];
+
+        return $options;
+    }
+
+    protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
+    {
+        $pagingRequest->addOrder("id", PagingRequest::PAGE_ORDER_ASC);
+        return $pagingRequest;
     }
 
 }
