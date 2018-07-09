@@ -38,7 +38,7 @@ class CircleListPagingService extends BasePagingService
         $conditions = $pagingRequest->getConditions(true);
 
         //Get user ID from given resource ID. If not exist, use current user's ID
-        $userId = $pagingRequest->getResourceId();
+        $userId = $pagingRequest->getResourceId() ?? $pagingRequest->getCurrentUserId();
         $teamId = $pagingRequest->getCurrentTeamId();
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
         $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
