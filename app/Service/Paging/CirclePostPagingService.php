@@ -62,7 +62,7 @@ class CirclePostPagingService extends BasePagingService
         return (int)$Post->find('count', $options);
     }
 
-    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
             /** @var UserDataExtender $UserDataExtender */
@@ -95,14 +95,22 @@ class CirclePostPagingService extends BasePagingService
             }
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
-            $userId = $conditions['user_id'];
+            $userId = $request->getCurrentUserId();
+            if (empty($userId)){
+                GoalousLog::error("Missing resource ID for extending like in Post");
+                throw new InvalidArgumentException("Missing resource ID for extending like in Post");
+            }
             /** @var PostLikeDataExtender $PostLikeDataExtender */
             $PostLikeDataExtender = ClassRegistry::init('PostLikeDataExtender');
             $PostLikeDataExtender->setUserId($userId);
             $resultArray = $PostLikeDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
-            $userId = $conditions['user_id'];
+            $userId = $request->getCurrentUserId();
+            if (empty($userId)){
+                GoalousLog::error("Missing resource ID for extending saved in Post");
+                throw new InvalidArgumentException("Missing resource ID for extending saved in Post");
+            }
             /** @var PostSavedDataExtender $PostSavedDataExtender */
             $PostSavedDataExtender = ClassRegistry::init('PostSavedDataExtender');
             $PostSavedDataExtender->setUserId($userId);

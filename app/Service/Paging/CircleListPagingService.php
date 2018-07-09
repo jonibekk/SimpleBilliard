@@ -38,14 +38,18 @@ class CircleListPagingService extends BasePagingService
         $conditions = $pagingRequest->getConditions(true);
 
         //Get user ID from given resource ID. If not exist, use current user's ID
-        $userId = $pagingRequest->getResourceId() ?? $pagingRequest->getCurrentUserId();
+        $userId = $pagingRequest->getResourceId();
         $teamId = $pagingRequest->getCurrentTeamId();
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
         $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
 
-        if (empty($userId) || empty($teamId)) {
-            GoalousLog::error("Missing parameter for circle list paging", $conditions);
-            throw new RuntimeException("Missing parameter for circle list paging");
+        if (empty($userId)) {
+            GoalousLog::error("Missing user ID for circle list paging", $conditions);
+            throw new InvalidArgumentException("Missing user ID");
+        }
+        if (empty($teamId)) {
+            GoalousLog::error("Missing team ID for circle list paging", $conditions);
+            throw new InvalidArgumentException("Missing team ID");
         }
 
         $conditions = [
@@ -104,13 +108,13 @@ class CircleListPagingService extends BasePagingService
         return ['latest_post_created', ">", $firstElement['latest_post_created']];
     }
 
-    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_MEMBER_INFO, $options)) {
             /** @var CircleMember $CircleMember */
             $CircleMember = ClassRegistry::init('CircleMember');
 
-            $userId = Hash::get($conditions, 'res_id') ?? Hash::get($conditions, 'current_user_id');
+            $userId = $request->getResourceId();
 
             if (empty($userId)) {
                 GoalousLog::error("Missing User ID for data extension");
@@ -136,7 +140,7 @@ class CircleListPagingService extends BasePagingService
         }
     }
 
-    protected function addDefaultValues(PagingRequest $pagingRequest)
+    protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
         $pagingRequest->addOrder('latest_post_created');
         return $pagingRequest;

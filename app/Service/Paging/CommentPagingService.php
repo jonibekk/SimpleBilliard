@@ -33,7 +33,7 @@ class CommentPagingService extends BasePagingService
         return $Comment->getCount($request->getConditions());
     }
 
-    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $conditions, array $flags = [])
     {
         if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_USER, $flags)) {
             /** @var UserDataExtender $UserDataExtender */

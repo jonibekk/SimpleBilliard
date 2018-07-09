@@ -67,7 +67,7 @@ abstract class BasePagingService implements PagingServiceInterface
         }
 
         if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $pagingRequest->getConditions(true), $extendFlags);
+            $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
         }
 
         $this->afterRead();
@@ -144,13 +144,13 @@ abstract class BasePagingService implements PagingServiceInterface
      * Extend result arrays with additional contents
      * Override to use
      *
-     * @param array $resultArray Content to be extended
-     * @param array $conditions  Conditions used for getting the result
-     * @param array $options     Extension options
+     * @param array         $resultArray Content to be extended
+     * @param PagingRequest $request     Conditions used for getting the result
+     * @param array         $options     Extension options
      *
      * @return array
      */
-    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         return $resultArray;
     }
@@ -162,7 +162,7 @@ abstract class BasePagingService implements PagingServiceInterface
      *
      * @return PagingRequest
      */
-    protected function addDefaultValues(PagingRequest $pagingRequest)
+    protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
         $pagingRequest->addOrder('id');
         return $pagingRequest;

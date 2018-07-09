@@ -26,8 +26,8 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $pagingRequest = new PagingRequest();
+        $pagingRequest->addResource('res_id', 1);
         $pagingRequest->addResource('current_team_id', 1);
-        $pagingRequest->addResource('current_user_id', 1);
         $pagingRequest->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 2);
@@ -43,15 +43,15 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $pagingRequest = new PagingRequest();
+        $pagingRequest->addResource('res_id', 1);
         $pagingRequest->addResource('current_team_id', 1);
-        $pagingRequest->addResource('current_user_id', 1);
         $pagingRequest->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
         $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
         $pagingRequest->addResource('current_team_id', 1);
-        $pagingRequest->addResource('current_user_id', 1);
+        $pagingRequest->addResource('res_id', 1);
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
@@ -65,7 +65,9 @@ class CircleListPagingServiceTest extends GoalousTestCase
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $cursor = new PagingRequest(['current_team_id' => 1, 'current_user_id' => 1]);
+        $cursor = new PagingRequest();
+        $cursor->addResource('current_team_id', 1);
+        $cursor->addResource('res_id', 1);
         $cursor->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($cursor, 1,
