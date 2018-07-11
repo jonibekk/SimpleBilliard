@@ -1,6 +1,6 @@
 <?php
 
-App::import('Service', 'POstService');
+App::import('Service', 'PostService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BaseApiController', 'Controller/Api');
@@ -60,7 +60,7 @@ class PostsController extends BaseApiController
      */
     public function post_like(int $postId): CakeResponse
     {
-        $res = $this->validatePostLike($postId);
+        $res = $this->validateLike($postId);
 
         if (!empty($res)) {
             return $res;
@@ -85,7 +85,7 @@ class PostsController extends BaseApiController
      */
     public function delete_like(int $postId): CakeResponse
     {
-        $res = $this->validateDeleteLike($postId);
+        $res = $this->validateLike($postId);
 
         if (!empty($res)) {
             return $res;
@@ -145,19 +145,25 @@ class PostsController extends BaseApiController
         return null;
     }
 
-    private function validatePostLike(int $postId)
+    /**
+     * Validation function for adding / removing like from a post
+     *
+     * @param int $postId
+     *
+     * @return CakeResponse|null
+     */
+    private function validateLike(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
         }
 
-        return null;
-    }
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
 
-    private function validateDeleteLike(int $postId)
-    {
-        if (empty($postId) || !is_int($postId)) {
-            return ErrorResponse::badRequest()->getResponse();
+        //Check if user belongs to a circle where the post is shared to
+        if (!$PostService->checkUserAccessToPost($this->getUserId(), $postId)) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have access to this post"))->getResponse();
         }
 
         return null;
