@@ -131,7 +131,7 @@ class PostsController extends BasePagingController
         $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
 
         if (!$hasAccess) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to view this post"))
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to this post"))
                                 ->getResponse();
         }
 
