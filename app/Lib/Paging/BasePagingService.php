@@ -38,9 +38,8 @@ abstract class BasePagingService implements PagingServiceInterface
             $extendFlags = [$extendFlags];
         }
 
-        $this->beforeRead();
+        $this->beforeRead($pagingRequest);
         $pagingRequest = $this->addDefaultValues($pagingRequest);
-        $finalResult['count'] = $this->countData($pagingRequest);
 
         $pointerValues = $pagingRequest->getPointers();
 
@@ -66,11 +65,13 @@ abstract class BasePagingService implements PagingServiceInterface
             $finalResult['paging']['prev'] = $pagingRequest->returnCursor();
         }
 
+        $finalResult['count'] = $this->countData($pagingRequest);
+
         if (!empty($extendFlags) && !empty($queryResult)) {
             $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
         }
 
-        $this->afterRead();
+        $this->afterRead($pagingRequest);
 
         $finalResult['data'] = $queryResult;
 
@@ -80,8 +81,12 @@ abstract class BasePagingService implements PagingServiceInterface
     /**
      * Method to be called before reading data from db.
      * Override to use
+     *
+     * @param PagingRequest $pagingRequest
+     *
+     * @return bool
      */
-    protected function beforeRead()
+    protected function beforeRead(PagingRequest $pagingRequest)
     {
         return true;
     }
@@ -115,8 +120,12 @@ abstract class BasePagingService implements PagingServiceInterface
     /**
      * Method to be called after reading data from db
      * Override to use
+     *
+     * @param PagingRequest $pagingRequest
+     *
+     * @return bool
      */
-    protected function afterRead()
+    protected function afterRead(PagingRequest $pagingRequest)
     {
         return true;
     }

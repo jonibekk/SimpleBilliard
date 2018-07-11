@@ -18,18 +18,16 @@ class CircleListPagingService extends BasePagingService
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-        $pagingRequest->addQueriesToCondition(['joined', 'public_only']);
         $options = $this->createSearchCondition($pagingRequest);
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
         $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
-        $options['conversion'] = true;
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
 
-        $result = $Circle->find('all', $options);
+        $result = $Circle->useType()->find('all', $options);
 
         return Hash::extract($result, '{n}.Circle');
     }
@@ -41,6 +39,7 @@ class CircleListPagingService extends BasePagingService
         //Get user ID from given resource ID. If not exist, use current user's ID
         $userId = $pagingRequest->getResourceId() ?: $pagingRequest->getCurrentUserId();
         $teamId = $pagingRequest->getCurrentTeamId();
+
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
         $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
 
@@ -61,10 +60,14 @@ class CircleListPagingService extends BasePagingService
             'conversion' => true
         ];
 
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
+        if ($publicOnlyFlag === true) {
+            $conditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
+        }
 
-        $db = $Circle->getDataSource();
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $db = $CircleMember->getDataSource();
 
         $subQuery = $db->buildStatement([
             'conditions' => [
@@ -76,15 +79,11 @@ class CircleListPagingService extends BasePagingService
             ],
             'table'      => 'circle_members',
             'alias'      => 'CircleMember'
-        ], $Circle);
+        ], $CircleMember);
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
 
         $subQueryExpression = $db->expression($subQuery);
         $conditions['conditions'][] = $subQueryExpression;
-
-        if ($publicOnlyFlag) {
-            $conditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
-        }
 
         return $conditions;
     }
@@ -101,12 +100,18 @@ class CircleListPagingService extends BasePagingService
 
     protected function getEndPointerValue($lastElement)
     {
-        return ['latest_post_created', "<", $lastElement['latest_post_created']];
+        return [
+            ['latest_post_created', "<=", $lastElement['latest_post_created']],
+            ['id', '!=', $lastElement['id']]
+        ];
     }
 
     protected function getStartPointerValue($firstElement)
     {
-        return ['latest_post_created', ">", $firstElement['latest_post_created']];
+        return [
+            ['latest_post_created', ">=", $firstElement['latest_post_created']],
+            ['id', '!=', $firstElement['id']]
+        ];
     }
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
@@ -127,6 +132,11 @@ class CircleListPagingService extends BasePagingService
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
 
         }
+    }
+
+    protected function beforeRead(PagingRequest $pagingRequest)
+    {
+        $pagingRequest->addQueriesToCondition(['joined', 'public_only']);
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest

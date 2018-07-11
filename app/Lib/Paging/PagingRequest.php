@@ -169,12 +169,24 @@ class PagingRequest
      */
     public function addPointerArray(array $pointer)
     {
-        if (count($pointer) != 3) {
-            return false;
+        if (empty($pointer)) {
+            return true;
         }
-        $this->addPointer($pointer[0], $pointer[1], $pointer[2]);
-
-        return true;
+        //If added as ['key', 'operator', 'value']
+        if (count($pointer) == 3 && !is_int(array_keys($pointer)[0])) {
+            $this->addPointer($pointer[0], $pointer[1], $pointer[2]);
+            return true;
+        }
+        //If added as [['key', 'operator', 'value'], ['key', 'operator', 'value'],...]
+        if (is_int(array_keys($pointer)[0])) {
+            foreach ($pointer as $element) {
+                if (count($element) == 3) {
+                    $this->addPointer($element[0], $element[1], $element[2]);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -315,9 +327,9 @@ class PagingRequest
      *
      * @param null $keys
      *
-     * @return array
+     * @return mixed
      */
-    public function getQuery($keys = null): array
+    public function getQuery($keys = null)
     {
         if (empty($keys)) {
             return [];
@@ -353,7 +365,7 @@ class PagingRequest
     /**
      * Add saved queries into condition, which will be included in cursor
      *
-     * @param null $keys
+     * @param mixed $keys
      */
     public function addQueriesToCondition($keys = null)
     {
@@ -361,12 +373,13 @@ class PagingRequest
             return;
         }
         if (is_string($keys) && key_exists($keys, $this->queries)) {
-            $this->conditions[$keys] = Hash::get($this->queries, $keys);
+            $this->conditions[$keys] = $this->getQuery($keys);
+            return;
         }
         if (is_array($keys)) {
             foreach ($keys as $key) {
                 if (key_exists($key, $this->queries)) {
-                    $this->conditions[$key] = Hash::get($this->queries, $key);
+                    $this->conditions[$key] = $this->getQuery($key);
                 }
             }
         }
