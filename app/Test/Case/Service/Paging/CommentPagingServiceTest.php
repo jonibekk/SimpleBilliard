@@ -69,4 +69,23 @@ class CommentPagingServiceTest extends GoalousTestCase
         $this->assertEquals(16, $result1['data'][0]['id']);
     }
 
+    public function test_getCommentWithUserExtension_success()
+    {
+        /** @var CommentPagingService $CommentPagingService */
+        $CommentPagingService = ClassRegistry::init("CommentPagingService");
+
+        $request = new PagingRequest();
+        $request->addResource('res_id', 1);
+        $request->addResource('current_user_id', 1);
+        $request->addResource('current_team_id', 1);
+
+        $result = $CommentPagingService->getDataWithPaging($request, 1, CommentPagingService::EXTEND_USER);
+
+        $this->assertNotEmpty($result);
+        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertCount(1, $result['data']);
+        $this->assertNotEmpty($result['data'][0]['user']);
+        $this->assertNotEmpty($result['data'][0]['user']['id']);
+    }
+
 }

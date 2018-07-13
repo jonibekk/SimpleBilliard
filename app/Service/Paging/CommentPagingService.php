@@ -54,7 +54,7 @@ class CommentPagingService extends BasePagingService
         if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_USER, $flags)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.Comment.user_id");
+            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
         }
     }
 
