@@ -79,14 +79,8 @@ class CirclePostPagingService extends BasePagingService
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
             foreach ($resultArray as &$result) {
-                $commentSearchCondition = [
-                    'post_id' => Hash::extract($result, 'Post.id')
-                ];
-                $order = [
-                    'id' => 'asc'
-                ];
-
-                $cursor = new PagingRequest($commentSearchCondition, [], $order);
+                $cursor = new PagingRequest();
+                $cursor->addResource('res_id', Hash::get($result, 'id'));
 
                 $comments = $CommentPagingService->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
                     CommentPagingService::EXTEND_ALL);
