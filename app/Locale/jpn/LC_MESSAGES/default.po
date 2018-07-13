@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-06-18 13:53+0900\n"
+"PO-Revision-Date: 2018-07-11 13:36+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.8\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -845,8 +845,10 @@ msgstr "このチームは現在、利用できません。"
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
 
+#, fuzzy
+#| msgid "Error, failed to invite."
 msgid "Error, data conflicted."
-msgstr ""
+msgstr "問題があるため、招待に失敗しました。"
 
 msgid ""
 "Server error occurred. We apologize for the inconvenience. Please try again."
@@ -857,17 +859,28 @@ msgstr ""
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
 
-msgid "Failed to logout"
-msgstr "ログアウトに失敗しました。"
+msgid "password and email did not match"
+msgstr ""
+
+#, fuzzy
+#| msgid "Validation failed."
+msgid "validation failed"
+msgstr "データの検証に失敗しました。"
 
 msgid "Missing token."
 msgstr ""
+
+msgid "The circle dosen't exist or you don't have permission."
+msgstr "サークルが存在しないか、権限がありません。"
 
 msgid "Evaluator setting saved."
 msgstr "評価者設定を保存しました。"
 
 msgid "%s %s inactive"
 msgstr ""
+
+msgid "You don't have permission to access this post"
+msgstr "この投稿にアクセスする権限がありません。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
@@ -1207,10 +1220,16 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
 "た。"
 
+#, fuzzy
+#| msgid ""
+#| "<span class=\"notify-card-head-target\">%1$s</span> created <span class="
+#| "\"notify-card-head-target\">%2$s</span>."
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設"
 "定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>を作成しました。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added <span class="
@@ -1424,9 +1443,6 @@ msgstr "あたらしいゴールをつくりました。"
 
 msgid "Created a new circle."
 msgstr "あたらしいサークルをつくりました。"
-
-msgid "The circle dosen't exist or you don't have permission."
-msgstr "サークルが存在しないか、権限がありません。"
 
 msgid "Shared %s"
 msgstr "%sに共有"
@@ -1869,8 +1885,10 @@ msgstr "有効な日付を YYYY/MM/DD フォーマットで入力してくださ
 msgid "Input in the term."
 msgstr "評価期間内で入力してください。"
 
+#, fuzzy
+#| msgid "%s is duplicated."
 msgid "Data is duplicated."
-msgstr ""
+msgstr "%sが重複しています。"
 
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
@@ -1900,8 +1918,10 @@ msgstr "%s画素(pixel)がアップロードできるファイルの上限です
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
 
+#, fuzzy
+#| msgid "No results found"
 msgid "Not found"
-msgstr ""
+msgstr "一致する結果はありませんでした"
 
 msgid "Credit card settings does not exist."
 msgstr "クレジットカード設定が見つかりません。"
@@ -4714,9 +4734,14 @@ msgstr "Goalousチーム"
 msgid "Click the below link to authenticate your email address."
 msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
+#, fuzzy
+#| msgid ""
+#| "Please let us know if you don't have any idea why you get this email."
 msgid ""
 "Please trash this email if you don't have any idea why you get this email."
 msgstr ""
+"このメールに心当たりのない方は、お問い合わせフォームからお問い合わせくださ"
+"い。"
 
 msgid "Thank you for getting contact with Goalous."
 msgstr ""
@@ -5191,14 +5216,20 @@ msgstr ""
 msgid "Thank you for contacting us."
 msgstr "お問い合わせありがとうございました"
 
+#, fuzzy
+#| msgid "Goalous"
 msgid "Goalous Blog"
-msgstr ""
+msgstr "Goalous(ゴーラス)"
 
+#, fuzzy
+#| msgid "There is no team."
 msgid "The story of the team"
-msgstr ""
+msgstr "チームが存在しません。"
 
+#, fuzzy
+#| msgid "Facebook"
 msgid "Facebook page"
-msgstr ""
+msgstr "Facebook"
 
 msgid "Like us!"
 msgstr "Like us！"
@@ -6244,3 +6275,11 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#, fuzzy
+#~| msgid "Error"
+#~ msgid "Fatal Error"
+#~ msgstr "エラー"
+
+#~ msgid "Failed to logout"
+#~ msgstr "ログアウトに失敗しました。"

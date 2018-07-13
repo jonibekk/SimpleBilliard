@@ -263,61 +263,6 @@ class Comment extends AppModel
     }
 
     /**
-     * Get comments based on cursor
-     *
-     * @param PagingRequest $pagingRequest Cursor for getting comments. Require:
-     *                                   'post_id'
-     * @param int          $limit
-     *
-     * @return array|null
-     */
-    public function getPostCommentsByCursor(PagingRequest $pagingRequest, int $limit = self::MAX_COMMENT_LIMIT)
-    {
-        $cursorConditions = $pagingRequest->getConditions();
-
-        if (empty($cursorConditions['post_id'])) {
-            return [];
-        }
-
-        $options = [
-            'conditions' => [
-                'Comment.post_id' => $cursorConditions['post_id'],
-            ],
-            'order'      => [
-                'Comment.id' => 'desc'
-            ],
-            'contain'    => [
-                'User'          => [
-                    'fields' => $this->User->profileFields
-                ],
-                'MyCommentLike' => [
-                    'conditions' => [
-                        'MyCommentLike.user_id' => $cursorConditions['user_id'],
-                        'MyCommentLike.team_id' => $cursorConditions['team_id'],
-                    ]
-                ],
-                'CommentFile'   => [
-                    'order'        => ['CommentFile.index_num asc'],
-                    'AttachedFile' => [
-                        'User' => [
-                            'fields' => $this->User->profileFields
-                        ]
-                    ]
-                ]
-            ],
-            'limit'      => $limit
-        ];
-
-        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption() ?? null;
-
-        if (!empty($pagingRequest->getOrders())) {
-            $options['order'] = $pagingRequest->getOrders();
-        }
-
-        return $this->find('all', $options);
-    }
-
-    /**
      * コメント一覧データを返す
      *
      * @param       $post_id
