@@ -6,7 +6,7 @@
  * Time: 17:20
  */
 
-class PagingCursor
+class PagingRequest
 {
     const DEFAULT_PAGE_LIMIT = 20;
     const MAX_PAGE_LIMIT = 100;
@@ -31,6 +31,13 @@ class PagingCursor
     private $pointerValues = [];
 
     /**
+     * Array for search query from URL
+     *
+     * @var array
+     */
+    private $queries = [];
+
+    /**
      * DB query parameters, follow DB query structure
      *
      * @var array
@@ -42,10 +49,10 @@ class PagingCursor
      *
      * @var array
      */
-    private $resourceId = [];
+    private $resources = [];
 
     /**
-     * PagingCursor constructor.
+     * PagingRequest constructor.
      *
      * @param array $conditions    Conditions for the search, e.g. SQL query
      * @param array $pointerValues Pointer to mark start / end point of search
@@ -104,7 +111,7 @@ class PagingCursor
      * @param string $cursor
      *
      * @throws RuntimeException When failed parsing cursor
-     * @return PagingCursor
+     * @return PagingRequest
      */
     public static function decodeCursorToObject(string $cursor)
     {
@@ -128,6 +135,9 @@ class PagingCursor
      */
     public static function decodeCursorToArray(string $cursor): array
     {
+        if (empty($cursor)) {
+            throw new InvalidArgumentException("Cursor can't be empty");
+        }
         $decodedString = base64_decode($cursor);
         if ($decodedString === false || empty($decodedString)) {
             throw new RuntimeException("Failed in parsing cursor from base64 encoding");
@@ -159,12 +169,24 @@ class PagingCursor
      */
     public function addPointerArray(array $pointer)
     {
-        if (count($pointer) != 3) {
-            return false;
+        if (empty($pointer)) {
+            return true;
         }
-        $this->addPointer($pointer[0], $pointer[1], $pointer[2]);
-
-        return true;
+        //If added as ['key', 'operator', 'value']
+        if (count($pointer) == 3 && !is_int(array_keys($pointer)[0])) {
+            $this->addPointer($pointer[0], $pointer[1], $pointer[2]);
+            return true;
+        }
+        //If added as [['key', 'operator', 'value'], ['key', 'operator', 'value'],...]
+        if (is_int(array_keys($pointer)[0])) {
+            foreach ($pointer as $element) {
+                if (count($element) == 3) {
+                    $this->addPointer($element[0], $element[1], $element[2]);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -261,7 +283,7 @@ class PagingCursor
      */
     public function getConditions(bool $includeResourceId = false)
     {
-        return ($includeResourceId) ? array_merge($this->conditions, $this->resourceId) : $this->conditions;
+        return ($includeResourceId) ? array_merge($this->conditions, $this->resources) : $this->conditions;
     }
 
     /**
@@ -272,7 +294,7 @@ class PagingCursor
      */
     public function addResource(string $key, int $id)
     {
-        $this->resourceId = [$key => $id];
+        $this->resources[$key] = $id;
     }
 
     /**
@@ -282,11 +304,12 @@ class PagingCursor
      */
     public function returnCursor()
     {
-        return base64_encode(json_encode([
-            'conditions' => $this->conditions,
-            'pointer'    => $this->pointerValues,
-            'order'      => $this->order
-        ]));
+        return ($this->isEmpty()) ? "" :
+            base64_encode(json_encode([
+                'conditions' => $this->conditions,
+                'pointer'    => $this->pointerValues,
+                'order'      => $this->order
+            ]));
     }
 
     /**
@@ -297,5 +320,99 @@ class PagingCursor
     public function isEmpty(): bool
     {
         return empty($this->order) && empty($this->conditions) && empty($this->pointerValues);
+    }
+
+    /**
+     * Get saved URL queries
+     *
+     * @param null $keys
+     *
+     * @return mixed
+     */
+    public function getQuery($keys = null)
+    {
+        if (empty($keys)) {
+            return [];
+        }
+        if (is_string($keys)) {
+            return Hash::get($this->queries, $keys);
+        }
+        if (is_array($keys)) {
+            $result = [];
+            foreach ($keys as $key) {
+                $result[$key] = Hash::get($this->queries, $key);
+            }
+            return $result;
+        }
+        return [];
+    }
+
+    /**
+     * Insert URL queries
+     *
+     * @param array $query
+     * @param bool  $overwriteFlag Overwrite elements with same key name
+     */
+    public function addQueries(array $query, bool $overwriteFlag = false)
+    {
+        if ($overwriteFlag) {
+            $this->queries = array_merge($this->queries, $query);
+        } else {
+            $this->queries += $query;
+        }
+    }
+
+    /**
+     * Add saved queries into condition, which will be included in cursor
+     *
+     * @param mixed $keys
+     */
+    public function addQueriesToCondition($keys = null)
+    {
+        if (empty($keys)) {
+            return;
+        }
+        if (is_string($keys) && key_exists($keys, $this->queries)) {
+            $this->conditions[$keys] = $this->getQuery($keys);
+            return;
+        }
+        if (is_array($keys)) {
+            foreach ($keys as $key) {
+                if (key_exists($key, $this->queries)) {
+                    $this->conditions[$key] = $this->getQuery($key);
+                }
+            }
+        }
+    }
+
+    /**
+     * Get resource ID in the URL
+     *
+     * @return int Return positive number on success, 0 if not exist
+     */
+    public function getResourceId(): int
+    {
+        //If not exist, return -1
+        return Hash::get($this->resources, 'res_id', 0);
+    }
+
+    /**
+     * Get logged in user's ID.
+     *
+     * @return int Return 0 if not exist
+     */
+    public function getCurrentUserId(): int
+    {
+        return Hash::get($this->resources, 'current_user_id', 0);
+    }
+
+    /**
+     * Get logged in user's current team ID
+     *
+     * @return int Return 0 if not exist
+     */
+    public function getCurrentTeamId(): int
+    {
+        return Hash::get($this->resources, 'current_team_id', 0);
     }
 }

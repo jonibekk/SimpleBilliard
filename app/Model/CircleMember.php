@@ -9,6 +9,9 @@ App::import('Service', 'CirclePinService');
  * @property Team   $Team
  * @property User   $User
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class CircleMember extends AppModel
 {
 
@@ -52,6 +55,16 @@ class CircleMember extends AppModel
         ],
         'Team',
         'User',
+    ];
+
+    public $modelConversionTable = [
+        'circle_id'             => DataType::INT,
+        'team_id'               => DataType::INT,
+        'user_id'               => DataType::INT,
+        'team_flg'              => DataType::BOOL,
+        'unread_count'          => DataType::INT,
+        'show_for_all_feed_flg' => DataType::BOOL,
+        'admin_flg'             => DataType::BOOL
     ];
 
     public function getMyCircleList($check_hide_status = null)
@@ -690,8 +703,33 @@ class CircleMember extends AppModel
                 'user_id'   => $userId,
                 'circle_id' => $circleId
             ],
+            'fields'     => [
+                'id'
+            ]
         ];
 
-        return (bool)$this->find('first', $options);
+        return (bool)$this->find('first', $options) ?? false;
+    }
+
+    /**
+     * Get circle member information of an user in a circle
+     *
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return array
+     */
+    public function getCircleMember(int $circleId, int $userId): array
+    {
+
+        $options = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId
+            ],
+            'conversion' => true
+        ];
+
+        return Hash::get($this->find('first', $options), 'CircleMember') ?? [];
     }
 }

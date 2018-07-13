@@ -115,7 +115,7 @@ class EvaluatorsController extends BasePagingController
             $teamId);
     }
 
-    protected function getPagingConditionFromRequest(CakeRequest $request): PagingCursor
+    protected function getPagingConditionFromRequest(CakeRequest $request): PagingRequest
     {
         // TODO: Implement getPagingConditionFromRequest() method.
     }

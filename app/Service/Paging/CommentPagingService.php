@@ -1,12 +1,12 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/28
  * Time: 13:56
  */
-
 class CommentPagingService extends BasePagingService
 {
 
@@ -14,26 +14,26 @@ class CommentPagingService extends BasePagingService
     const EXTEND_USER = "ext:comment:user";
 
     /**
-     * @param PagingCursor $pagingCursor
-     * @param int          $limit
+     * @param PagingRequest $pagingRequest
+     * @param int           $limit
      *
      * @return array
      */
-    protected function readData(PagingCursor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         $Comment = new Comment();
 
-        return $Comment->getPostCommentsByCursor($pagingCursor, $limit);
+        return $Comment->getPostCommentsByCursor($pagingRequest, $limit);
     }
 
-    protected function countData(array $conditions): int
+    protected function countData(PagingRequest $request): int
     {
         $Comment = new Comment();
 
-        return $Comment->getCount($conditions);
+        return $Comment->getCount($request->getConditions());
     }
 
-    protected function extendPagingResult(&$resultArray, $conditions, $flags = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $conditions, array $flags = [])
     {
         if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_USER, $flags)) {
             /** @var UserDataExtender $UserDataExtender */

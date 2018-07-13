@@ -10,13 +10,6 @@ App::uses('BaseApiController', 'Controller/Api');
 abstract class  BasePagingController extends BaseApiController
 {
     /**
-     * Get paging conditions from request
-     *
-     * @return PagingCursor
-     */
-    abstract protected function getPagingConditionFromRequest(): PagingCursor;
-
-    /**
      * Get the limit of paging. If limit not given or above maximum amount, use default page limit
      *
      * @return int
@@ -25,7 +18,13 @@ abstract class  BasePagingController extends BaseApiController
     {
         $limit = $this->request->query('limit');
 
-        return ($limit > PagingCursor::MAX_PAGE_LIMIT || empty($limit)) ? PagingCursor::DEFAULT_PAGE_LIMIT : $limit;
+        if (empty($limit)) { //If not given, use default
+            return PagingRequest::DEFAULT_PAGE_LIMIT;
+        }
+        if ($limit > PagingRequest::MAX_PAGE_LIMIT) { //If larger than max limit, return max
+            return PagingRequest::MAX_PAGE_LIMIT;
+        }
+        return $limit;
     }
 
     /**
@@ -37,9 +36,13 @@ abstract class  BasePagingController extends BaseApiController
     {
         $stringOption = $this->request->query('extoption');
 
-        $res = explode(',', $stringOption);
+        $options = explode(',', $stringOption);
 
-        return $res ?? [];
+        if (empty($options[0])) {
+            return [];
+        }
+
+        return $options;
     }
 
     /**
@@ -47,42 +50,80 @@ abstract class  BasePagingController extends BaseApiController
      *
      * @param bool $skipCursor Force to get parameters from request, instead of given cursor
      *
-     * @return PagingCursor
+     * @return PagingRequest
      */
     protected function getPagingParameters(bool $skipCursor = false)
     {
         if (empty ($this->request)) {
-            return new PagingCursor();
-        }
-        $pagingCursor = $this->getPagingConditionFromCursor();
-
-        //If skipping using cursor, or cursor is empty, replace it with parameters from request
-        if ($skipCursor || $pagingCursor->isEmpty()) {
-            $pagingCursor = $this->getPagingConditionFromRequest();
+            return new PagingRequest();
         }
 
-        return $pagingCursor;
+        if ($skipCursor) {
+            $pagingRequest = $this->generatePagingRequest();
+        } else {
+            $pagingRequest = $this->generatePagingRequest($this->getPagingConditionFromCursor());
+        }
+
+        return $pagingRequest;
+    }
+
+    /**
+     * Generate paging request
+     *
+     * @param PagingRequest If given, will insert to it instead
+     *
+     * @return PagingRequest
+     */
+    private function generatePagingRequest(PagingRequest $pagingRequest = null): PagingRequest
+    {
+        if (empty($pagingRequest)) {
+            $pagingRequest = new PagingRequest();
+        }
+
+        //Add resource ID
+        if (!empty($this->request->params['id'])) {
+            $pagingRequest->addResource('res_id', $this->request->params['id']);
+        }
+        $pagingRequest->addResource('current_user_id', $this->getUserId());
+        $pagingRequest->addResource('current_team_id', $this->getTeamId());
+
+        $queries = array_filter($this->request->query, function ($queryKey) {
+            if ($queryKey == "limit") {
+                return false;
+            }
+            if ($queryKey == "extoption") {
+                return false;
+            }
+            if ($queryKey == "cursor") {
+                return false;
+            }
+            return true;
+        }, ARRAY_FILTER_USE_KEY);
+
+        $pagingRequest->addQueries($queries);
+
+        return $pagingRequest;
     }
 
     /**
      * Process paging parameters from passed cursor
      *
-     * @return PagingCursor
+     * @return PagingRequest
      */
     private function getPagingConditionFromCursor()
     {
         $cursor = $this->request->query('cursor');
 
         if (empty($cursor)) {
-            return new PagingCursor();
+            return new PagingRequest();
         }
         try {
-            $pagingCursor = PagingCursor::decodeCursorToObject($cursor);
+            $pagingRequest = PagingRequest::decodeCursorToObject($cursor);
         } catch (RuntimeException $r) {
             throw $r;
-        } catch (Exception $e){
-            $pagingCursor = new PagingCursor();
+        } catch (Exception $e) {
+            $pagingRequest = new PagingRequest();
         }
-        return $pagingCursor;
+        return $pagingRequest;
     }
 }

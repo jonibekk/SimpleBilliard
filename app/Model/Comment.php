@@ -265,15 +265,15 @@ class Comment extends AppModel
     /**
      * Get comments based on cursor
      *
-     * @param PagingCursor $pagingCursor Cursor for getting comments. Require:
+     * @param PagingRequest $pagingRequest Cursor for getting comments. Require:
      *                                   'post_id'
      * @param int          $limit
      *
      * @return array|null
      */
-    public function getPostCommentsByCursor(PagingCursor $pagingCursor, int $limit = self::MAX_COMMENT_LIMIT)
+    public function getPostCommentsByCursor(PagingRequest $pagingRequest, int $limit = self::MAX_COMMENT_LIMIT)
     {
-        $cursorConditions = $pagingCursor->getConditions();
+        $cursorConditions = $pagingRequest->getConditions();
 
         if (empty($cursorConditions['post_id'])) {
             return [];
@@ -308,10 +308,10 @@ class Comment extends AppModel
             'limit'      => $limit
         ];
 
-        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption() ?? null;
+        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption() ?? null;
 
-        if (!empty($pagingCursor->getOrders())) {
-            $options['order'] = $pagingCursor->getOrders();
+        if (!empty($pagingRequest->getOrders())) {
+            $options['order'] = $pagingRequest->getOrders();
         }
 
         return $this->find('all', $options);

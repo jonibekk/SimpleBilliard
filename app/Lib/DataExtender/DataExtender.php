@@ -19,7 +19,7 @@ abstract class DataExtender
      */
     public final function extend(array $data, string $path, string $extKeyName = 'id'): array
     {
-        $keys = Hash::extract($data, $path);
+        $keys = $this->getKeys($data, $path);
 
         if (!empty($keys)) {
             $dataExtension = $this->fetchData($keys);
@@ -61,7 +61,7 @@ abstract class DataExtender
         foreach ($parentData as $key => &$parentElement) {
             foreach ($extData as $extension) {
                 //If parent data is a single model without int as index
-                if (!is_int($key)){
+                if (!is_int($key)) {
                     //Since extension data will have its own Model name as key, we use extract
                     //E.g. ['User'][...]
                     if (Hash::get($parentData, $parentKeyName) ==
@@ -97,5 +97,22 @@ abstract class DataExtender
         return array_unique(array_filter($array, function ($value) {
             return !empty($value);
         }));
+    }
+
+    private function getKeys(array $data, string $path): array
+    {
+        if (empty($data)) {
+            return [];
+        }
+
+        if (is_int(array_keys($data)[0])) {
+            return Hash::extract($data, $path);
+        } else {
+            //Since extract path is split with '.' , tokenize string by it and get the last element
+            $tokens = explode('.', $path);
+            $parentKey = end($tokens);
+
+            return [Hash::get($data, $parentKey)];
+        }
     }
 }

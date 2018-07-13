@@ -1,6 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -13,16 +13,16 @@ class CommentPaging extends BasePagingService
 {
 
     /**
-     * @param PagingCursor $pagingCursor
+     * @param PagingRequest $pagingRequest
      * @param int          $limit
      *
      * @return array
      */
-    protected function readData(PagingCursor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         $Comment = new Comment();
 
-        return $Comment->getPostCommentsByCursor($pagingCursor, $limit);
+        return $Comment->getPostCommentsByCursor($pagingRequest, $limit);
     }
 
     protected function countData(array $conditions): int
