@@ -19,16 +19,26 @@ class BinaryTree
         $this->root = $node;
 
         if (!empty($node)) {
-            $this->depth = $this->getMinimumDepth($node);
+            $this->depth = $this->calculateDepth($node);
         }
     }
 
+    /**
+     * Set the root node of this tree
+     *
+     * @param BinaryNode $node
+     */
     public function setRoot(BinaryNode $node)
     {
         $this->root = $node;
-        $this->depth = $this->getMinimumDepth($node);
+        $this->depth = $this->calculateDepth($node);
     }
 
+    /**
+     * Get the root of this tree.
+     *
+     * @return BinaryNode
+     */
     public function &getRoot(): BinaryNode
     {
         return $this->root;
@@ -38,13 +48,13 @@ class BinaryTree
      * Search the tree using depth-first algorithm.
      * Return the first node with matching value
      *
-     * @param                 $value
+     * @param                 $targetValue
      * @param BinaryNode      $node
      * @param callable        $comparator
      *
      * @return BinaryNode|null
      */
-    public function searchNode($value, BinaryNode $node = null, callable $comparator = null)
+    public function searchNode($targetValue, BinaryNode $node = null, callable $comparator = null)
     {
         if (empty($node)) {
             if (empty($this->root)) {
@@ -59,18 +69,18 @@ class BinaryTree
             };
         }
 
-        if ($comparator($node->getValue(), $value)) {
+        if ($comparator($node->getValue(), $targetValue)) {
             return $node;
         }
 
         if ($node->hasLeft()) {
-            $result = $this->searchNode($value, $node->getLeft(), $comparator);
+            $result = $this->searchNode($targetValue, $node->getLeft(), $comparator);
             if (!empty($result)) {
                 return $result;
             }
         }
         if ($node->hasRight()) {
-            $result = $this->searchNode($value, $node->getRight(), $comparator);
+            $result = $this->searchNode($targetValue, $node->getRight(), $comparator);
             if (!empty($result)) {
                 return $result;
             }
@@ -88,7 +98,6 @@ class BinaryTree
     {
         $node = new BinaryNode();
         $this->decodeArray($sourceArray, $node);
-
         $this->__construct($node);
     }
 
@@ -185,27 +194,20 @@ class BinaryTree
      *
      * @param BinaryNode $node
      *
-     * @return int|mixed
+     * @return int
      */
-    private function getMinimumDepth(BinaryNode $node)
+    private function calculateDepth(BinaryNode $node)
     {
-        if (empty($node)) {
+        if (empty($node) || $node->isLeaf()) {
             return 0;
         }
-
-        if ($node->isLeaf()) {
-            return 1;
-        }
-
         if (!$node->hasLeft()) {
-            return $this->getMinimumDepth($node->getRight()) + 1;
+            return $this->calculateDepth($node->getRight()) + 1;
         }
-
         if (!$node->hasRight()) {
-            return $this->getMinimumDepth($node->getLeft()) + 1;
+            return $this->calculateDepth($node->getLeft()) + 1;
         }
-
-        return min($this->getMinimumDepth($node->getLeft()), $this->getMinimumDepth($node->getRight())) + 1;
+        return max($this->calculateDepth($node->getLeft()), $this->calculateDepth($node->getRight())) + 1;
     }
 
     /**
@@ -241,7 +243,67 @@ class BinaryTree
             $node->setRight(new BinaryNode());
         }
         $this->completeTree($node->getRight(), $currentDepth + 1);
+    }
 
+    /**
+     * Check whether the tree is complete.
+     * Complete tree means tree is full & all deepest nodes have the same depth
+     *
+     * @return bool
+     */
+    public function isComplete(): bool
+    {
+        return $this->checkComplete($this->root);
+    }
+
+    private function checkComplete(BinaryNode $node = null, int $currentDepth = 0): bool
+    {
+        if (empty($node)) {
+            return false;
+        }
+
+        if ($node->hasLeft() xor $node->hasRight()) {
+            return false;
+        }
+
+        if ($node->isLeaf()) {
+            if ($currentDepth == $this->depth) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return $this->checkComplete($node->getLeft(), $currentDepth + 1) &&
+            $this->checkComplete($node->getRight(), $currentDepth + 1);
+    }
+
+    /**
+     * Check if a the tree is full.
+     * Full tree means each node either have no children or both children
+     *
+     * @return bool
+     */
+    public function isFull(): bool
+    {
+        return $this->checkFull($this->root);
+    }
+
+    private function checkFull(BinaryNode $node = null): bool
+    {
+        if (empty($node)) {
+            return false;
+        }
+
+        if ($node->isLeaf()) {
+            return true;
+        }
+
+        if ($node->hasLeft() xor $node->hasRight()) {
+            return false;
+        }
+
+        return $this->checkFull($node->getLeft()) && $this->checkFull($node->getRight());
     }
 
 }

@@ -37,27 +37,26 @@ class BinaryNode
         $this->value = $value;
 
         if (!empty($left)) {
-            if ($left instanceof self) {
-                $this->left = $left;
-            } else {
-                $this->left = new self($left);
-            }
+            $this->left = ($left instanceof self) ? $left : new self($left);
         }
         if (!empty($right)) {
-            if ($right instanceof self) {
-                $this->right = $right;
-            } else {
-                $this->right = new self($right);
-            }
+            $this->right = ($right instanceof self) ? $right : new self($right);
         }
     }
 
+    /**
+     * Get the value of this node
+     *
+     * @return mixed|null
+     */
     public function &getValue()
     {
         return $this->value;
     }
 
     /**
+     * Get the node of left child
+     *
      * @return BinaryNode | null
      */
     public function &getLeft()
@@ -66,6 +65,8 @@ class BinaryNode
     }
 
     /**
+     * Get the node of right child
+     *
      * @return BinaryNode | null
      */
     public function &getRight()
@@ -74,6 +75,8 @@ class BinaryNode
     }
 
     /**
+     * Set the left child of this node
+     *
      * @param BinaryNode $left
      */
     public function setLeft(BinaryNode $left)
@@ -82,6 +85,8 @@ class BinaryNode
     }
 
     /**
+     * Set the right child of this node
+     *
      * @param BinaryNode $right
      */
     public function setRight(BinaryNode $right)
@@ -90,6 +95,8 @@ class BinaryNode
     }
 
     /**
+     * Set the value of this node
+     *
      * @param mixed $value
      */
     public function setValue($value)
@@ -97,16 +104,32 @@ class BinaryNode
         $this->value = $value;
     }
 
+    /**
+     * Check whether this node has left child
+     *
+     * @return bool
+     */
     public function hasLeft()
     {
         return !empty($this->left);
     }
 
+    /**
+     * Check whether this node has right child
+     *
+     * @return bool
+     */
     public function hasRight()
     {
         return !empty($this->right);
     }
 
+    /**
+     * Check whether this node is a leaf
+     * Leaf node is a node without any children
+     *
+     * @return bool
+     */
     public function isLeaf(): bool
     {
         return !$this->hasLeft() && !$this->hasRight();

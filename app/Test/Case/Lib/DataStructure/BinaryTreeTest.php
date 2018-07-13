@@ -42,7 +42,7 @@ class BinaryTreeTest extends GoalousTestCase
         $targetArray = [8, 3, 1, null, null, 6, 4, 7, 10, null, null, null, 14, 13, null];
 
         $this->assertCount(15, $resultArray);
-        $this->assertEquals($targetArray,$resultArray);
+        $this->assertEquals($targetArray, $resultArray);
     }
 
     public function test_convertFromArray_success()
@@ -67,9 +67,48 @@ class BinaryTreeTest extends GoalousTestCase
 
     public function test_getDepth_success()
     {
-        $tree = $this->createDefaultTree();
+        $singleTree = new BinaryTree(new BinaryNode(1));
+        $this->assertEquals(0, $singleTree->getDepth());
 
-        $this->assertEquals(3, $tree->getDepth());
+        $defaultTree = $this->createDefaultTree();
+        $this->assertEquals(3, $defaultTree->getDepth());
+
+        $fullTree = $this->createFullTree();
+        $this->assertEquals(2, $fullTree->getDepth());
+
+        $completeTree = $this->createCompleteTree();
+        $this->assertEquals(2, $completeTree->getDepth());
+
+    }
+
+    public function test_isFull_success()
+    {
+        $singleTree = new BinaryTree(new BinaryNode(1));
+        $this->assertTrue($singleTree->isFull());
+
+        $defaultTree = $this->createDefaultTree();
+        $this->assertFalse($defaultTree->isFull());
+
+        $fullTree = $this->createFullTree();
+        $this->assertTrue($fullTree->isFull());
+
+        $completeTree = $this->createCompleteTree();
+        $this->assertTrue($completeTree->isFull());
+    }
+
+    public function test_isComplete_success()
+    {
+        $singleTree = new BinaryTree(new BinaryNode(1));
+        $this->assertTrue($singleTree->isComplete());
+
+        $defaultTree = $this->createDefaultTree();
+        $this->assertFalse($defaultTree->isComplete());
+
+        $fullTree = $this->createFullTree();
+        $this->assertFalse($fullTree->isComplete());
+
+        $completeTree = $this->createCompleteTree();
+        $this->assertTrue($completeTree->isComplete());
     }
 
     private function createDefaultTree(): BinaryTree
@@ -82,6 +121,23 @@ class BinaryTreeTest extends GoalousTestCase
         $node5 = new BinaryNode(8, $node3, $node4);
 
         return new BinaryTree($node5);
+    }
+
+    private function createFullTree(): BinaryTree
+    {
+        $node1 = new BinaryNode(1, 2, 3);
+        $node2 = new BinaryNode(4, $node1, 5);
+
+        return new BinaryTree($node2);
+    }
+
+    private function createCompleteTree(): BinaryTree
+    {
+        $node1 = new BinaryNode(1, 2, 3);
+        $node2 = new BinaryNode(5, 6, 7);
+        $node3 = new BinaryNode(4, $node1, $node2);
+
+        return new BinaryTree($node3);
     }
 
 }
