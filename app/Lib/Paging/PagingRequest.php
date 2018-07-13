@@ -173,7 +173,7 @@ class PagingRequest
             return true;
         }
         //If added as ['key', 'operator', 'value']
-        if (count($pointer) == 3 && !is_int(array_keys($pointer)[0])) {
+        if (count($pointer) == 3 && !is_array($pointer[0])) {
             $this->addPointer($pointer[0], $pointer[1], $pointer[2]);
             return true;
         }

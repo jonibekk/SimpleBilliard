@@ -6,7 +6,7 @@ App::uses('User', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostFile', 'Model');
 App::uses('PostResource', 'Model');
-App::uses('Circle', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
@@ -474,5 +474,48 @@ class PostService extends AppService
     public function getUserPostListCondition(int $userId)
     {
         return ['Post.user_id' => $userId];
+    }
+
+    /**
+     * Check whether the user can view the post
+     *
+     * @param int $userId
+     * @param int $postId
+     *
+     * @return bool
+     */
+    public function checkUserAccessToPost(int $userId, int $postId): bool
+    {
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init("PostShareCircle");
+
+        $postOption = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $postId,
+                'PostShareCircle.del_flg' => false
+            ],
+            'fields'     => [
+                'PostShareCircle.circle_id'
+            ],
+            'table'      => 'post_share_circles',
+            'alias'      => 'PostShareCircle',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'CircleMember.circle_id = PostShareCircle.circle_id',
+                        'CircleMember.user_id' => $userId,
+                        'CircleMember.del_flg' => false
+                    ],
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
+                    'fields'     => 'CircleMember.circle_id'
+                ]
+            ]
+        ];
+
+        $circleList = $PostShareCircle->find('count', $postOption);
+
+        return $circleList > 0;
     }
 }
