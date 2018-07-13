@@ -1,6 +1,7 @@
 <?php
-
 App::import('Service', 'PostService');
+App::import('Lib/Paging', 'PagingRequest');
+App::import('Service/Paging', 'CommentPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');

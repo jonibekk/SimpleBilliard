@@ -1,5 +1,9 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
+App::import('Lib/DataExtender', "UserDataExtender");
+App::import('Lib/Paging', 'PagingRequest');
+App::uses('Comment', 'Model');
+App::uses('User', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -67,6 +71,8 @@ class CommentPagingService extends BasePagingService
             'conditions' => [
                 'Comment.post_id' => $postId,
             ],
+            'table'      => 'comments',
+            'alias'      => 'Comment'
         ];
 
         return $options;
@@ -76,6 +82,16 @@ class CommentPagingService extends BasePagingService
     {
         $pagingRequest->addOrder("id", PagingRequest::PAGE_ORDER_ASC);
         return $pagingRequest;
+    }
+
+    protected function getEndPointerValue($lastElement)
+    {
+        return ['id', ">", $lastElement['id']];
+    }
+
+    protected function getStartPointerValue($firstElement)
+    {
+        return ['id', "<", $firstElement['id']];
     }
 
 }
