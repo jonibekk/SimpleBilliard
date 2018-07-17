@@ -17,7 +17,7 @@ class AddColumnForLatestPostTime extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'circles' => array(
-					'latest_post_created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'after' => 'circle_member_count'),
+					'latest_post_created' => array('type' => 'integer', 'null' => true, 'default' => 0, 'unsigned' => true, 'after' => 'circle_member_count'),
 				),
 			),
 		),

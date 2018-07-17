@@ -2,16 +2,14 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Lib/Paging', 'PagingRequest');
-App::import('Lib/Network/Response', 'ApiResponse');
-App::import('Lib/Network/Response', 'ErrorResponse');
 
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
- * Date: 2018/06/04
- * Time: 15:07
+ * Date: 2018/06/29
+ * Time: 11:47
  */
-class UsersController extends BasePagingController
+class MeController extends BasePagingController
 {
     /**
      * Get list of circles that an user is joined in
@@ -20,8 +18,9 @@ class UsersController extends BasePagingController
      *
      * @return CakeResponse
      */
-    public function get_circles(int $userId)
+    public function get_circles()
     {
+
         $res = $this->validateCircles();
 
         if (!empty($res)) {
@@ -37,16 +36,9 @@ class UsersController extends BasePagingController
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $circleData = $CircleListPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
-            $this->getExtensionOptions());
+            $this->getExtensionOptions() ?: $this->getDefaultCircleExtension());
 
         return ApiResponse::ok()->withBody($circleData)->getResponse();
-    }
-
-    protected function getPagingConditionFromRequest(): PagingRequest
-    {
-        $pagingRequest = new PagingRequest();
-        $pagingRequest->addOrder('latest_post_created');
-        return $pagingRequest;
     }
 
     /**
@@ -57,5 +49,14 @@ class UsersController extends BasePagingController
     private function validateCircles()
     {
         return null;
+    }
+
+    /**
+     * Default extension option for getting circle list
+     *
+     * @return array
+     */
+    private function getDefaultCircleExtension(){
+        return [CircleListPagingService::EXTEND_MEMBER_INFO];
     }
 }

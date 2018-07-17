@@ -1,5 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
+App::uses('PagingRequest', 'Lib/Paging');
 App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/DataExtender', 'CircleDataExtender');
 App::import('Lib/DataExtender', 'PostLikeDataExtender');
@@ -7,7 +8,7 @@ App::import('Lib/DataExtender', 'PostSavedDataExtender');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'CircleService');
 App::import('Service', 'PostService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
@@ -33,13 +34,13 @@ class CirclePostPagingService extends BasePagingService
 
     const DEFAULT_COMMENT_COUNT = 3;
 
-    protected function readData(PagingCursor $pagingCursor, int $limit): array
+    protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-        $options = $this->createSearchCondition($pagingCursor->getConditions(true));
+        $options = $this->createSearchCondition($pagingRequest);
 
         $options['limit'] = $limit;
-        $options['order'] = $pagingCursor->getOrders();
-        $options['conditions']['AND'][] = $pagingCursor->getPointersAsQueryOption();
+        $options['order'] = $pagingRequest->getOrders();
+        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
         $options['conversion'] = true;
 
         /** @var Post $Post */
@@ -51,9 +52,9 @@ class CirclePostPagingService extends BasePagingService
         return Hash::extract($result, '{n}.Post');
     }
 
-    protected function countData(array $conditions): int
+    protected function countData(PagingRequest $request): int
     {
-        $options = $this->createSearchCondition($conditions);
+        $options = $this->createSearchCondition($request);
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -61,7 +62,7 @@ class CirclePostPagingService extends BasePagingService
         return (int)$Post->find('count', $options);
     }
 
-    protected function extendPagingResult(&$resultArray, $conditions, $options = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
             /** @var UserDataExtender $UserDataExtender */
@@ -78,14 +79,8 @@ class CirclePostPagingService extends BasePagingService
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
             foreach ($resultArray as &$result) {
-                $commentSearchCondition = [
-                    'post_id' => Hash::extract($result, 'Post.id')
-                ];
-                $order = [
-                    'id' => 'asc'
-                ];
-
-                $cursor = new PagingCursor($commentSearchCondition, [], $order);
+                $cursor = new PagingRequest();
+                $cursor->addResource('res_id', Hash::get($result, 'id'));
 
                 $comments = $CommentPagingService->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
                     CommentPagingService::EXTEND_ALL);
@@ -94,14 +89,22 @@ class CirclePostPagingService extends BasePagingService
             }
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
-            $userId = $conditions['user_id'];
+            $userId = $request->getCurrentUserId();
+            if (empty($userId)){
+                GoalousLog::error("Missing resource ID for extending like in Post");
+                throw new InvalidArgumentException("Missing resource ID for extending like in Post");
+            }
             /** @var PostLikeDataExtender $PostLikeDataExtender */
             $PostLikeDataExtender = ClassRegistry::init('PostLikeDataExtender');
             $PostLikeDataExtender->setUserId($userId);
             $resultArray = $PostLikeDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
-            $userId = $conditions['user_id'];
+            $userId = $request->getCurrentUserId();
+            if (empty($userId)){
+                GoalousLog::error("Missing resource ID for extending saved in Post");
+                throw new InvalidArgumentException("Missing resource ID for extending saved in Post");
+            }
             /** @var PostSavedDataExtender $PostSavedDataExtender */
             $PostSavedDataExtender = ClassRegistry::init('PostSavedDataExtender');
             $PostSavedDataExtender->setUserId($userId);
@@ -115,22 +118,30 @@ class CirclePostPagingService extends BasePagingService
     /**
      * Create the SQL query for getting the circle posts
      *
-     * @param array $conditions
+     * @param PagingRequest $request
      *
      * @return array
      */
-    private function createSearchCondition(array $conditions): array
+    private function createSearchCondition(PagingRequest $request): array
     {
-        $circleId = Hash::get($conditions, 'circle_id');
+        $conditions = $request->getConditions(true);
+
+        $circleId = $request->getResourceId();
+        $teamId = $request->getCurrentTeamId();
 
         if (empty($circleId)) {
             GoalousLog::error("Missing circle ID for post paging", $conditions);
-            throw new RuntimeException("Missing circle ID");
+            throw new InvalidArgumentException("Missing circle ID");
+        }
+        if (empty($teamId)) {
+            GoalousLog::error("Missing team ID for post paging", $conditions);
+            throw new InvalidArgumentException("Missing team ID");
         }
 
         $options = [
             'conditions' => [
                 'Post.del_flg' => false,
+                'Post.team_id' => $teamId,
                 'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE]
             ],
             'join'       => [

@@ -1,9 +1,10 @@
 <?php
-
 App::import('Service', 'PostService');
+App::import('Lib/Paging', 'PagingRequest');
+App::import('Service/Paging', 'CommentPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::uses('BaseApiController', 'Controller/Api');
+App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 
@@ -13,7 +14,7 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/06/18
  * Time: 15:00
  */
-class PostsController extends BaseApiController
+class PostsController extends BasePagingController
 {
 
     /**
@@ -51,6 +52,28 @@ class PostsController extends BaseApiController
         }
 
         return ApiResponse::ok()->getResponse();
+    }
+
+    public function get_comments(int $postId)
+    {
+        $error = $this->validateGetComments($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentPagingService $CommentPagingService */
+        $CommentPagingService = ClassRegistry::init("CommentPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        $result = $CommentPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
+            $this->getExtensionOptions());
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
     }
 
     /**
@@ -164,6 +187,29 @@ class PostsController extends BaseApiController
         //Check if user belongs to a circle where the post is shared to
         if (!$PostService->checkUserAccessToPost($this->getUserId(), $postId)) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have access to this post"))->getResponse();
+
+        }
+
+        return null;
+    }
+
+    /*
+     * Validate get comments endpoint
+     *
+     * @param int $postId
+     *
+     * @return ErrorResponse|null
+     */
+    public function validateGetComments(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+
+        if (!$hasAccess) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
         }
 
         return null;

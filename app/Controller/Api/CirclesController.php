@@ -3,7 +3,7 @@ App::uses('BasePagingController', 'Controller/Api');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
 App::import('Service/Paging', 'CirclePostPagingService');
-App::uses('PagingCursor', 'Lib/Paging');
+App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 
@@ -27,18 +27,16 @@ class CirclesController extends BasePagingController
         $CirclePostPagingService = ClassRegistry::init('CirclePostPagingService');
 
         try {
-            $pagingCursor = $this->getPagingParameters();
-            $pagingCursor->addResource('circle_id', $circleId);
-            $pagingCursor->addCondition(['user_id' => $this->getUserId()]);
+            $pagingRequest = $this->getPagingParameters();
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
         try {
             $data = $CirclePostPagingService->getDataWithPaging(
-                $pagingCursor,
+                $pagingRequest,
                 $this->getPagingLimit(),
-                $this->getExtensionOptions() ?? CirclePostPagingService::EXTEND_ALL);
+                $this->getExtensionOptions() ?: $this->getDefaultPostExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
@@ -76,10 +74,17 @@ class CirclesController extends BasePagingController
         return null;
     }
 
-    protected function getPagingConditionFromRequest(): PagingCursor
+    /**
+     * Defaut extension options for getting circle post
+     *
+     * @return array
+     */
+    private function getDefaultPostExtension()
     {
-        $pagingCursor = new PagingCursor();
-        $pagingCursor->addOrder('id');
-        return $pagingCursor;
+        return [
+            CirclePostPagingService::EXTEND_CIRCLE,
+            CirclePostPagingService::EXTEND_LIKE,
+            CirclePostPagingService::EXTEND_SAVED
+        ];
     }
 }
