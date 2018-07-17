@@ -8,6 +8,7 @@
 
 /**
  * <b>UNSORTED</b> binary tree
+ * https://confluence.goalous.com/x/IAMQAQ
  *
  * Class BinaryTree
  */
