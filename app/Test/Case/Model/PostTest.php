@@ -763,7 +763,6 @@ class PostTest extends GoalousTestCase
         $this->assertFalse($res);
         $row = $this->Post->findById(1);
         $this->assertNotEquals($row['Post']['body'], $data['Post']['body']);
-
     }
 
     function testGetPostById()

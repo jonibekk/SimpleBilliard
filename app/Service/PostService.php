@@ -6,10 +6,11 @@ App::uses('User', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostFile', 'Model');
 App::uses('PostResource', 'Model');
-App::uses('Circle', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
+App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
 
@@ -216,7 +217,6 @@ class PostService extends AppService
             ]);
             throw new RuntimeException('Error on adding post: failed post save');
         }
-
         $postId = $post['Post']['id'];
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
@@ -387,11 +387,11 @@ class PostService extends AppService
      * @param int   $userId
      * @param int   $teamId
      *
-     * @return int Post ID of saved post
+     * @return PostEntity Entity of saved post
+     * @throws Exception
      */
-    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): int
+    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): PostEntity
     {
-
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
@@ -409,47 +409,113 @@ class PostService extends AppService
             throw new InvalidArgumentException('Error on adding post: Invalid argument');
         }
 
-        $Post->create();
+        try {
+            $this->TransactionManager->begin();
+            $Post->create();
 
-        $postBody['user_id'] = $userId;
-        $postBody['team_id'] = $teamId;
-        if ($postBody['type'] === Post::TYPE_CREATE_CIRCLE) {
-            $postBody['circle_id'] = $circleId;
-        } elseif (empty($postBody['type'])) {
-            $postBody['type'] = Post::TYPE_NORMAL;
+            $postBody['user_id'] = $userId;
+            $postBody['team_id'] = $teamId;
+
+            if ($postBody['type'] == Post::TYPE_CREATE_CIRCLE) {
+                $postBody['circle_id'] = $circleId;
+            } elseif (empty($postBody['type'])) {
+                $postBody['type'] = Post::TYPE_NORMAL;
+            }
+
+            /** @var PostEntity $savedPost */
+            $savedPost = $Post->useType()->useEntity()->save($postBody, false);
+
+            if (empty ($savedPost)) {
+                GoalousLog::error('Error on adding post: failed post save', [
+                    'users.id'  => $userId,
+                    'circle.id' => $circleId,
+                    'teams.id'  => $teamId,
+                    'postData'  => $postBody,
+                ]);
+                throw new RuntimeException('Error on adding post: failed post save');
+            }
+
+            $postId = $savedPost['id'];
+
+            // Save share circles
+            if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
+                GoalousLog::error($errorMessage = 'failed saving post share circles', [
+                    'posts.id'    => $postId,
+                    'circles.ids' => $postId,
+                    'teams.id'    => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            // Update unread post numbers if specified sharing circle
+            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
+                GoalousLog::error($errorMessage = 'failed increment unread count', [
+                    'circles.ids' => $postId,
+                    'teams.id'    => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            $this->TransactionManager->commit();
+
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
         }
-        $savedPost = $Post->save($postBody);
 
-        if (empty ($savedPost)) {
-            GoalousLog::error('Error on adding post: failed post save', [
-                'users.id'  => $userId,
-                'circle.id' => $circleId,
-                'teams.id'  => $teamId,
-                'postData'  => $postBody,
-            ]);
-            throw new RuntimeException('Error on adding post: failed post save');
-        }
+        return $savedPost;
+    }
 
-        $postId = $savedPost['Post']['id'];
+    /**
+     * Get query condition for posts made by an user
+     *
+     * @param int $userId User ID of the posts author
+     *
+     * @return array
+     */
+    public function getUserPostListCondition(int $userId)
+    {
+        return ['Post.user_id' => $userId];
+    }
 
-        // Save share circles
-        if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
-            GoalousLog::error($errorMessage = 'failed saving post share circles', [
-                'posts.id'    => $postId,
-                'circles.ids' => $postId,
-                'teams.id'    => $teamId,
-            ]);
-            throw new RuntimeException('Error on adding post: ' . $errorMessage);
-        }
-        // Update unread post numbers if specified sharing circle
-        if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
-            GoalousLog::error($errorMessage = 'failed increment unread count', [
-                'circles.ids' => $postId,
-                'teams.id'    => $teamId,
-            ]);
-            throw new RuntimeException('Error on adding post: ' . $errorMessage);
-        }
+    /**
+     * Check whether the user can view the post
+     *
+     * @param int $userId
+     * @param int $postId
+     *
+     * @return bool
+     */
+    public function checkUserAccessToPost(int $userId, int $postId): bool
+    {
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init("PostShareCircle");
 
-        return $postId;
+        $postOption = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $postId,
+                'PostShareCircle.del_flg' => false
+            ],
+            'fields'     => [
+                'PostShareCircle.circle_id'
+            ],
+            'table'      => 'post_share_circles',
+            'alias'      => 'PostShareCircle',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'CircleMember.circle_id = PostShareCircle.circle_id',
+                        'CircleMember.user_id' => $userId,
+                        'CircleMember.del_flg' => false
+                    ],
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
+                    'fields'     => 'CircleMember.circle_id'
+                ]
+            ]
+        ];
+
+        $circleList = $PostShareCircle->find('count', $postOption);
+
+        return $circleList > 0;
     }
 }

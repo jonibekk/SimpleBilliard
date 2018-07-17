@@ -1,7 +1,10 @@
 <?php
-App::import('Service', 'POstService');
+App::import('Service', 'PostService');
+App::import('Lib/Paging', 'PagingRequest');
+App::import('Service/Paging', 'CommentPagingService');
+App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::uses('BaseApiController', 'Controller/Api');
+App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 
@@ -11,7 +14,7 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/06/18
  * Time: 15:00
  */
-class PostsController extends BaseApiController
+class PostsController extends BasePagingController
 {
 
     /**
@@ -30,24 +33,47 @@ class PostsController extends BaseApiController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $post = $this->getRequestJsonBody();
+        $post['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $post['type'] = Hash::get($this->getRequestJsonBody(), 'type');
 
-        $circleId = $post['circle_id'];
-        unset($post['circle_id']);
+        $circleId = Hash::get($this->getRequestJsonBody(), 'circle_id');
 
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId());
+        } catch (InvalidArgumentException $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
         //If post saving failed, $res will be false
-        if (is_bool($res) && !$res) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to post."))
-                                                                                 ->getResponse();
+        if (empty($res)) {
+            return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->getResponse();
+        return ApiResponse::ok()->getResponse();
+    }
+
+    public function get_comments(int $postId)
+    {
+        $error = $this->validateGetComments($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentPagingService $CommentPagingService */
+        $CommentPagingService = ClassRegistry::init("CommentPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        $result = $CommentPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
+            $this->getExtensionOptions());
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
     }
 
     /**
@@ -73,10 +99,10 @@ class PostsController extends BaseApiController
         try {
             $Post->editPost($newBody, $postId);
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->getResponse();
+        return ApiResponse::ok()->getResponse();
     }
 
     /**
@@ -84,27 +110,61 @@ class PostsController extends BaseApiController
      */
     private function validatePost()
     {
-        $error = $this->allowMethod('POST');
+        $requestBody = $this->getRequestJsonBody();
 
-        if (!empty($error)) {
-            return $error;
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $circleId = Hash::get($requestBody, 'circle_id');
+
+        if (!empty($circleId) && !$CircleMember->isJoined($circleId, $this->getUserId())) {
+            return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
+                                ->getResponse();
         }
-
-        $body = $this->getRequestJsonBody();
 
         try {
+            PostRequestValidator::createDefaultPostValidator()->validate($requestBody);
 
-            PostRequestValidator::createDefaultPostValidator()->validate($body);
-
-            switch ($body['type']) {
+            switch ($requestBody['type']) {
                 case Post::TYPE_NORMAL:
-                    PostRequestValidator::createCirclePostValidator()->validate($body);
+                    PostRequestValidator::createCirclePostValidator()->validate($requestBody);
                     break;
             }
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
-                                                                       ->getResponse();
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
         }
+
+        return null;
+    }
+
+    /**
+     * Validate get comments endpoint
+     *
+     * @param int $postId
+     *
+     * @return BaseApiResponse|ErrorResponse|null
+     */
+    public function validateGetComments(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+
+        if (!$hasAccess) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
+        }
+
         return null;
     }
 
@@ -120,7 +180,7 @@ class PostsController extends BaseApiController
 
         //Check whether user is the owner of the post
         if (!$Post->isPostOwned($postId, $this->getUserId())) {
-            return (new ApiResponse(ApiResponse::RESPONSE_UNAUTHORIZED))->getResponse();
+            return ErrorResponse::forbidden()->getResponse();
         }
 
         $body = $this->getRequestJsonBody();
@@ -129,9 +189,17 @@ class PostsController extends BaseApiController
 
             PostRequestValidator::createPostEditValidator()->validate($body);
 
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
-                                                                       ->getResponse();
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
         }
 
         return null;

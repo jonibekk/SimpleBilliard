@@ -1,13 +1,13 @@
 <?php
-App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('PostShareCircle', 'Model');
+App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
-App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
+App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
 
 /**
@@ -32,6 +32,9 @@ App::import('Service', 'PostService');
  * @property PostSharedLog   $PostSharedLog
  * @property SavedPost       $SavedPost
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class Post extends AppModel
 {
     /**
@@ -213,6 +216,19 @@ class Post extends AppModel
         ],
         'PostFile',
         'SavedPost',
+    ];
+
+    public $modelConversionTable = [
+        'user_id'          => DataType::INT,
+        'team_id'          => DataType::INT,
+        'comment_count'    => DataType::INT,
+        'post_like_count'  => DataType::INT,
+        'post_read_count'  => DataType::INT,
+        'important_flg'    => DataType::BOOL,
+        'goal_id'          => DataType::INT,
+        'circle_id'        => DataType::INT,
+        'action_result_id' => DataType::INT,
+        'key_result_id'    => DataType::INT
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -758,7 +774,7 @@ class Post extends AppModel
      * @param array     $params
      *                 'user_id' : 指定すると投稿者で絞る
      *
-     * @return array|null
+     * @return string|null
      */
     public function getSubQueryFilterPostIdShareWithMe(DboSource $db, $start, $end, array $params = [])
     {
@@ -831,7 +847,7 @@ class Post extends AppModel
      * @param            $end
      * @param array      $post_types
      *
-     * @return array
+     * @return string
      */
     public function getSubQueryFilterRelatedGoalPost(DboSource $db, $start, $end, $post_types)
     {
@@ -1009,7 +1025,7 @@ class Post extends AppModel
      * @param array     $params
      *                 'user_id' : 指定すると投稿者IDで絞る
      *
-     * @return array|null
+     * @return string|null
      */
     public function getSubQueryFilterAccessibleCirclePostList(DboSource $db, $start, $end, array $params = [])
     {
@@ -1527,7 +1543,7 @@ class Post extends AppModel
         if ($endTimestamp) {
             $options['conditions']["$date_col <="] = $endTimestamp;
         }
-        $res = $this->find('count', $options);
+        $res = (int)$this->find('count', $options);
         return $res;
     }
 

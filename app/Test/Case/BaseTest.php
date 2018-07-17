@@ -12,6 +12,7 @@ class BaseTest extends PHPUnit_Framework_TestSuite
                 APP_TEST_CASES . DS . 'Console',
                 APP_TEST_CASES . DS . 'Model',
                 APP_TEST_CASES . DS . 'Service' . DS . 'Payment1',
+                APP_TEST_CASES . DS . 'Service' . DS . 'Paging',
             ],
             'directoryRecursive' => [
                 APP_TEST_CASES . DS . 'Lib',
