@@ -97,6 +97,16 @@ class PointerTree extends BinaryTree
     }
 
     /**
+     * Whether this tree has root node
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->root) || $this->root->isEmpty();
+    }
+
+    /**
      * Add a pointer to the tree
      *
      * @param array $pointer

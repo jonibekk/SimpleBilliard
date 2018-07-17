@@ -128,6 +128,9 @@ class BinaryTree
     public function generateArray(bool $fillTree = true): array
     {
         $completed = $this->getRoot();
+        if (empty($completed)){
+            throw new RuntimeException("Tree can't be empty");
+        }
         if ($fillTree) {
             $this->completeTree($completed);
         }

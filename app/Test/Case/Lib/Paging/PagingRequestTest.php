@@ -25,7 +25,7 @@ class PagingRequestTest extends GoalousTestCase
         $decodedArray = PagingRequest::decodeCursorToArray($encodedString);
 
         $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
-        $this->assertEquals($pointer, $decodedArray['pointer']);
+        $this->assertEquals($pointer, $decodedArray['pointer'][0]);
         $this->assertEquals($order, $decodedArray['order']);
     }
 
@@ -37,7 +37,7 @@ class PagingRequestTest extends GoalousTestCase
             'team_id' => 2
         ];
 
-        $pointer = ['count' => ['>', 100]];
+        $pointer = ['count', '>', 100];
         $order = ['count' => 'asc'];
 
         $encodedString = PagingRequest::createPageCursor($conditions, $pointer, $order);
@@ -45,8 +45,8 @@ class PagingRequestTest extends GoalousTestCase
         $decodedObject = PagingRequest::decodeCursorToObject($encodedString);
 
         $this->assertEquals($conditions['team_id'], $decodedObject->getConditions()['team_id']);
-        //TODO
-        $this->assertEquals($pointer, $decodedObject->getPointers());
+        $this->assertEquals("$pointer[0] $pointer[1] $pointer[2]",
+            $decodedObject->getPointersAsQueryOption()[0]);
         $this->assertEquals($order, $decodedObject->getOrders()[0]);
     }
 

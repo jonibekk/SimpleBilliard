@@ -35,7 +35,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $result = $CommentPagingService->getDataWithPaging($request, 1);
 
         $this->assertNotEmpty($result);
-        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['paging']);
         $this->assertCount(1, $result['data']);
         $this->assertEquals(15, $result['data'][0]['id']);
     }
@@ -54,7 +54,7 @@ class CommentPagingServiceTest extends GoalousTestCase
 
         $this->assertNotEmpty($result);
 
-        $cursor = $result['paging']['next'];
+        $cursor = $result['paging'];
 
         $request1 = PagingRequest::decodeCursorToObject($cursor);
         $request1->addResource('res_id', 1);
@@ -64,7 +64,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $result1 = $CommentPagingService->getDataWithPaging($request1, 1);
 
         $this->assertNotEmpty($result1);
-        $this->assertEmpty($result1['paging']['next']);
+        $this->assertEmpty($result1['paging']);
         $this->assertCount(1, $result1['data']);
         $this->assertEquals(16, $result1['data'][0]['id']);
     }
@@ -82,7 +82,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $result = $CommentPagingService->getDataWithPaging($request, 1, CommentPagingService::EXTEND_USER);
 
         $this->assertNotEmpty($result);
-        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['paging']);
         $this->assertCount(1, $result['data']);
         $this->assertNotEmpty($result['data'][0]['user']);
         $this->assertNotEmpty($result['data'][0]['user']['id']);

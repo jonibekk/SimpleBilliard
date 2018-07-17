@@ -121,15 +121,22 @@ class PagingRequest
         if (!empty($conditions)) {
             $array['conditions'] = $conditions;
         }
+
         if (!empty($pointerValues)) {
             if (is_array($pointerValues)) {
-                $array['pointer'] = $pointerValues;
+                $array['pointer'] = (new BinaryTree(new BinaryNode($pointerValues)))->generateArray();
             } elseif ($pointerValues instanceof PointerTree) {
-                $array['pointer'] = $pointerValues->generateArray();
+                if (!$pointerValues->isEmpty()) {
+                    $array['pointer'] = $pointerValues->generateArray();
+                }
             }
         }
         if (!empty($order)) {
             $array['order'] = $order;
+        }
+
+        if (empty($array)) {
+            return "";
         }
 
         return base64_encode(json_encode($array));
@@ -256,9 +263,9 @@ class PagingRequest
      */
     public function getPointer(string $key): array
     {
-        $node= $this->pointerTree->searchNode($key);
+        $node = $this->pointerTree->searchNode($key);
 
-        if (!empty($node) && !$node->isEmpty()){
+        if (!empty($node) && !$node->isEmpty()) {
             return $node->getValue();
         } else {
             return [];

@@ -147,7 +147,8 @@ class User extends AppModel
      * @var array
      */
     protected $modelConversionTable = [
-        'default_team_id' => DataType::INT
+        'default_team_id' => DataType::INT,
+        'timezone' => DataType::INT
     ];
 
     /**
@@ -449,6 +450,7 @@ class User extends AppModel
                         array_push($this->uids, $entity[$this->alias]['id']);
                     }
                 });
+
         //LocalName取得(まだ取得していないIDのみ)
         foreach ($this->uids as $k => $v) {
             if (array_key_exists($v, $this->local_names)) {
