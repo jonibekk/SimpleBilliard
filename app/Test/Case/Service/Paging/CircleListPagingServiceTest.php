@@ -49,7 +49,7 @@ class CircleListPagingServiceTest extends GoalousTestCase
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
-        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
+        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']);
         $pagingRequest->addResource('current_team_id', 1);
         $pagingRequest->addResource('res_id', 1);
 

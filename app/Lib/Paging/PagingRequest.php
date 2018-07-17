@@ -154,7 +154,10 @@ class PagingRequest
     {
         try {
             $values = self::decodeCursorToArray($cursor);
-            $self = new self($values['conditions'], $values['pointer'], $values['order']);
+            $self = new self(
+                $values['conditions'] ?? [],
+                $values['pointer'] ?? [],
+                $values['order'] ?? []);
         } catch (RuntimeException $e) {
             throw $e;
         }
@@ -179,11 +182,11 @@ class PagingRequest
         if ($decodedString === false || empty($decodedString)) {
             throw new RuntimeException("Failed in parsing cursor from base64 encoding");
         }
-        $jsonDecodedString = json_decode($decodedString, true);
-        if ($jsonDecodedString === false || empty($jsonDecodedString)) {
+        $pagingRequest = json_decode($decodedString, true);
+        if ($pagingRequest === false || empty($pagingRequest)) {
             throw new RuntimeException("Failed in parsing cursor from json");
         }
-        return $jsonDecodedString;
+        return $pagingRequest;
     }
 
     /**

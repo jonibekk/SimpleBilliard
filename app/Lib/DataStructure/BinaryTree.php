@@ -6,6 +6,11 @@
  * Time: 13:25
  */
 
+/**
+ * <b>UNSORTED</b> binary tree
+ *
+ * Class BinaryTree
+ */
 class BinaryTree
 {
     /** @var BinaryNode */
@@ -13,6 +18,14 @@ class BinaryTree
 
     /** @var int */
     private $depth;
+
+    public function __construct(BinaryNode $node = null)
+    {
+        $this->root = $node;
+        if (!empty($node)) {
+            $this->depth = $this->calculateDepth($node);
+        }
+    }
 
     /**
      * Search the tree using depth-first algorithm.
@@ -34,14 +47,16 @@ class BinaryTree
             $node = $this->root;
         }
 
+        //If comparator not given, use default one.
         if (empty($comparator)) {
-            $comparator = function ($arg1, $arg2) {
-                return $arg1 === $arg2;
+            $comparator = function ($currentValue, $targetValue) {
+                return $currentValue === $targetValue;
             };
         }
 
         if ($comparator($node->getValue(), $targetValue)) {
-            return $node;
+            $return = &$node;
+            return $return;
         }
 
         if ($node->hasLeft()) {
@@ -63,7 +78,8 @@ class BinaryTree
     }
 
     /**
-     * Create a BinaryTree from 1-Dimensional Array
+     * Create a BinaryTree from 1-Dimensional Array.
+     * Array count must be 2^(depth + 1) - 1
      *
      * @param array $sourceArray
      */
@@ -74,6 +90,12 @@ class BinaryTree
         $this->__construct($node);
     }
 
+    /**
+     * Decode an array to a tree structure
+     *
+     * @param array      $sourceArray
+     * @param BinaryNode $node
+     */
     private function decodeArray(array &$sourceArray, BinaryNode &$node)
     {
         if (count($sourceArray) % 2 == 0) {
@@ -107,14 +129,6 @@ class BinaryTree
                 $node->setRight(new BinaryNode());
                 $this->decodeArray($rightHalf, $node->getRight());
             }
-        }
-    }
-
-    public function __construct(BinaryNode $node = null)
-    {
-        $this->root = $node;
-        if (!empty($node)) {
-            $this->depth = $this->calculateDepth($node);
         }
     }
 
