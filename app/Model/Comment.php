@@ -179,7 +179,11 @@ class Comment extends AppModel
      * @var array
      */
     protected $modelConversionTable = [
-        'post_id' => DataType::INT
+        'post_id' => DataType::INT,
+        'user_id' => DataType::INT,
+        'team_id' => DataType::INT,
+        'comment_like_count' => DataType::INT,
+        'comment_read_count' => DataType::INT
     ];
 
     public function beforeValidate($options = [])
