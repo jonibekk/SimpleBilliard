@@ -11,15 +11,15 @@ interface PagingServiceInterface
     /**
      * Implement method using PagingServiceTrait
      *
-     * @param PagingCursor $pagingCursor
+     * @param PagingRequest $pagingRequest
      * @param int          $limit
      * @param array        $extendFlags
      *
      * @return array
      */
     public function getDataWithPaging(
-        $pagingCursor,
-        $limit = PagingCursor::DEFAULT_PAGE_LIMIT,
+        $pagingRequest,
+        $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     );
 

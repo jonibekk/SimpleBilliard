@@ -1,5 +1,5 @@
 <?php
-App::uses('BaseApiController', 'Controller/Api');
+App::uses('BasePagingController', 'Controller/Api');
 App::import('Service', 'ExperimentService');
 App::import('Service', "EvaluatorService");
 App::uses('TeamMember', 'Model');
@@ -15,10 +15,8 @@ App::uses('TeamMember', 'Model');
  * @property NotifyBizComponent    $NotifyBiz
  * @property NotificationComponent Notification
  */
-class EvaluatorsController extends BaseApiController
+class EvaluatorsController extends BasePagingController
 {
-    //If any of the endpoint requiring paging
-    use PagingControllerTrait;
 
     public $components = [
         'Notification',
@@ -117,7 +115,7 @@ class EvaluatorsController extends BaseApiController
             $teamId);
     }
 
-    protected function getPagingConditionFromRequest(CakeRequest $request): PagingCursor
+    protected function getPagingConditionFromRequest(CakeRequest $request): PagingRequest
     {
         // TODO: Implement getPagingConditionFromRequest() method.
     }

@@ -5,8 +5,8 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
-App::import('Model','User');
-App::import('Model','Circle');
+App::import('Model', 'User');
+App::import('Model', 'Circle');
 App::import('Model', 'HavingMentionTrait');
 
 /**
@@ -24,6 +24,9 @@ class Comment extends AppModel
 {
 
     use HavingMentionTrait;
+
+    const MAX_COMMENT_LIMIT = 3;
+
     public $bodyProperty = 'body';
 
     public $uses = [
@@ -525,7 +528,7 @@ class Comment extends AppModel
             $options['conditions']["Post.type"] = $params['post_type'];
             $options['contain'][] = 'Post';
         }
-        return $this->find('count', $options);
+        return (int)$this->find('count', $options);
     }
 
     /**

@@ -350,6 +350,32 @@ class CommentFixture extends CakeTestFixtureEx
             'created'            => 1400725683,
             'modified'           => 1400725683
         ),
+        array(
+            'id'                 => 15,
+            'post_id'            => 1,
+            'user_id'            => 1,
+            'team_id'            => 1,
+            'body'               => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'comment_like_count' => 3,
+            'comment_read_count' => 10,
+            'del_flg'            => 0,
+            'deleted'            => 0,
+            'created'            => 1400725683,
+            'modified'           => 1400725683
+        ),
+        array(
+            'id'                 => 16,
+            'post_id'            => 1,
+            'user_id'            => 1,
+            'team_id'            => 1,
+            'body'               => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'comment_like_count' => 5,
+            'comment_read_count' => 10,
+            'del_flg'            => 0,
+            'deleted'            => 0,
+            'created'            => 1400725683,
+            'modified'           => 1400725683
+        ),
     );
 
 }

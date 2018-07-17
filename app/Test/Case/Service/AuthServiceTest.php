@@ -32,6 +32,9 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertEquals(1, $jwt->getTeamId());
     }
 
+    /**
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
+     */
     public function test_authWrongPassword_failed()
     {
         $this->insertNewUser();
@@ -42,15 +45,13 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        try {
-            $jwt = $AuthService->authenticateUser($emailAddress, $password);
-        } catch (Exception $e) {
-            $this->assertNotEmpty($e);
-        }
-
-        $this->assertEmpty($jwt);
+        $AuthService->authenticateUser($emailAddress, $password);
     }
 
+
+    /**
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
+     */
     public function test_authWrongUsername_failed()
     {
         $this->insertNewUser();
@@ -61,15 +62,12 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        try {
-            $jwt = $AuthService->authenticateUser($emailAddress, $password);
-        } catch (Exception $e) {
-            $this->assertNotEmpty($e);
-        }
-
-        $this->assertEmpty($jwt);
+        $AuthService->authenticateUser($emailAddress, $password);
     }
 
+    /**
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
+     */
     public function test_authEmptyUsername_failed()
     {
         $this->insertNewUser();
@@ -80,15 +78,13 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        try {
-            $jwt = $AuthService->authenticateUser($emailAddress, $password);
-        } catch (Exception $e) {
-            $this->assertNotEmpty($e);
-        }
-
-        $this->assertEmpty($jwt);
+        $AuthService->authenticateUser($emailAddress, $password);
     }
 
+
+    /**
+     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
+     */
     public function test_authEmptyPassword_failed()
     {
         $this->insertNewUser();
@@ -99,13 +95,7 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        try {
-            $jwt = $AuthService->authenticateUser($emailAddress, $password);
-        } catch (Exception $e) {
-            $this->assertNotEmpty($e);
-        }
-
-        $this->assertEmpty($jwt);
+        $AuthService->authenticateUser($emailAddress, $password);
     }
 
     public function test_invalidate_success()

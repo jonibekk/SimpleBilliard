@@ -31,10 +31,20 @@
   "config": {
     "vendor-dir": "Vendor/"
   },
-  "repositories": {
-    "packagist": {
+  "autoload": {
+    "psr-4": {
+      "Goalous\\Exception\\": "app/Exception",
+      "Goalous\\Enum\\": "app/Enum"
+    }
+  },
+  "repositories": [
+   {
       "type": "composer",
       "url": "https://packagist.jp"
+    },
+    {
+      "type":"vcs",
+      "url": "https://github.com/isaocorp/cakephp-entity"
     }
-  }
+  ]
 }

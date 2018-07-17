@@ -2,6 +2,9 @@
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
+App::uses('User', 'Model');
+
+use Goalous\Exception as GlException;
 
 /**
  * Created by PhpStorm.
@@ -15,7 +18,7 @@ class AuthController extends BaseApiController
     {
         parent::beforeFilter();
     }
-    
+
     /**
      * Login endpoint for user. Ignore restriction and authentication
      *
@@ -29,26 +32,33 @@ class AuthController extends BaseApiController
         if (!empty($return)) {
             return $return;
         }
-        /** @var AuthService $AuthService */
-        $AuthService = ClassRegistry::init("AuthService");
 
         $requestData = $this->getRequestJsonBody();
 
+        // TODO: do the translation
+
         try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
-        } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
-                                                                                 ->getResponse();
+        } catch (GlException\Auth\AuthMismatchException $e) {
+            return ErrorResponse::badRequest()
+                                ->withError(new ErrorTypeGlobal(__('password and email did not match')))
+                                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency('user failed to login', [
+                'message' => $e->getMessage(),
+            ]);
+            return ErrorResponse::internalServerError()
+                                ->getResponse();
         }
 
-        //If no matching username / password is found
-        if (empty($jwt)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withMessage(__("Error. Try to login again."))
-                                                                       ->getResponse();
-        }
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray();
+        $data['token'] = $jwt->token();
 
-        //On successful login, return the JWT token to the user
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withBody(['jwt' => $jwt->token()])->getResponse();
+        return ApiResponse::ok()->withData($data)->getResponse();
     }
 
     /**
@@ -58,28 +68,27 @@ class AuthController extends BaseApiController
      */
     public function post_logout()
     {
-
-        $return = $this->validateLogout();
-
-        if (!empty($return)) {
-            return $return;
-        }
-
-        $Auth = new AuthService();
+        /** @var AuthService $AuthService */
+        $AuthService = new AuthService();
 
         try {
-            $res = $Auth->invalidateUser($this->getJwtAuth());
+            $res = $AuthService->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withException($e)
-                                                                                 ->getResponse();
+            GoalousLog::error('failed to logout', [
+                'user.id' => $this->getUserId(),
+                'team.id' => $this->getTeamId(),
+                'jwt_id' => $this->getJwtAuth()->getJwtId(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->getResponse();
         }
 
-        if (!$res){
-            return (new ApiResponse(ApiResponse::RESPONSE_INTERNAL_SERVER_ERROR))->withMessage(__("Failed to logout"))
-                                                                                 ->getResponse();
+        if (!$res) {
+            return ErrorResponse::internalServerError()
+                ->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
+        return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
     }
 
     /**
@@ -89,40 +98,24 @@ class AuthController extends BaseApiController
      */
     private function validateLogin()
     {
-        // TODO: Better create method of allowMethodPost, allowMethodGet, ...
-        $res = $this->allowMethod('POST');
-
-        if (!empty($res)) {
-            return $res;
-        }
-
+        $requestedBody = $this->getRequestJsonBody();
         $validator = AuthRequestValidator::createLoginValidator();
 
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
         try {
-            $validator->validate($this->getRequestJsonBody());
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)
-                                                                       ->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * Validate all parameters before passed to endpoint
-     *
-     * @return CakeResponse|null Return a response if validation failed
-     */
-    private function validateLogout()
-    {
-        $res = $this->allowMethod('POST');
-
-        if (!empty($res)) {
-            return $res;
-        }
-
-        if (!$this->hasAuth()) {
-            return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->withMessage(__('Logged out'))->getResponse();
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
         }
 
         return null;

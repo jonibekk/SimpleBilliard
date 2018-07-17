@@ -255,8 +255,8 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-		'circle_orders' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+		'circle_orders' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+		'del_flg' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
@@ -281,6 +281,7 @@ class AppSchema extends CakeSchema {
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を削除した日付時刻'),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '部署を追加した日付時刻'),
 		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を更新した日付時刻'),
+		'latest_post_created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
