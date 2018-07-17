@@ -29,7 +29,7 @@ class CommentPagingService extends BasePagingService
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
-        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
+        $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
@@ -84,14 +84,11 @@ class CommentPagingService extends BasePagingService
         return $pagingRequest;
     }
 
-    protected function getEndPointerValue($lastElement)
-    {
-        return ['id', ">", $lastElement['id']];
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): BinaryNode {
+        return new BinaryNode(['id', ">", $lastElement['id']]);
     }
-
-    protected function getStartPointerValue($firstElement)
-    {
-        return ['id', "<", $firstElement['id']];
-    }
-
 }

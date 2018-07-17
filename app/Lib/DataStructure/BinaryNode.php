@@ -135,4 +135,14 @@ class BinaryNode
         return !$this->hasLeft() && !$this->hasRight();
     }
 
+    /**
+     * Check whether this node has value
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->value);
+    }
+
 }

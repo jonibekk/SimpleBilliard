@@ -15,10 +15,22 @@ class PointerTreeTest extends GoalousTestCase
     {
         $defaultTree = $this->createDefaultTree();
         $condition = $defaultTree->toCondition();
-        var_dump($condition);
+
+        $this->assertInternalType('array', $condition);
+        $this->assertEquals('OR', key($condition));
+        $this->assertEquals("id < 2", $condition['OR'][0][0]);
+        $this->assertEquals('AND', key($condition['OR'][1]));
     }
 
-    private function createDefaultTree():PointerTree
+    public function test_getPointer_success()
+    {
+        $defaultTree = $this->createDefaultTree();
+        $actualPointer = $defaultTree->searchNode("time")->getValue();
+        $expectedPointer = ['time', '>=', 100];
+        $this->assertEquals($expectedPointer, $actualPointer);
+    }
+
+    private function createDefaultTree(): PointerTree
     {
         $node1 = new BinaryNode(['id', '<', 2]);
         $node2 = new BinaryNode('AND', ['time', '>=', 100], ['del_flg', '=', true]);

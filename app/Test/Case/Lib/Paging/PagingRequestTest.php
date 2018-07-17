@@ -45,6 +45,7 @@ class PagingRequestTest extends GoalousTestCase
         $decodedObject = PagingRequest::decodeCursorToObject($encodedString);
 
         $this->assertEquals($conditions['team_id'], $decodedObject->getConditions()['team_id']);
+        //TODO
         $this->assertEquals($pointer, $decodedObject->getPointers());
         $this->assertEquals($order, $decodedObject->getOrders()[0]);
     }

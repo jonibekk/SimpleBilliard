@@ -40,7 +40,7 @@ class CirclePostPagingService extends BasePagingService
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
-        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
+        $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
         $options['conversion'] = true;
 
         /** @var Post $Post */
@@ -90,7 +90,7 @@ class CirclePostPagingService extends BasePagingService
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
             $userId = $request->getCurrentUserId();
-            if (empty($userId)){
+            if (empty($userId)) {
                 GoalousLog::error("Missing resource ID for extending like in Post");
                 throw new InvalidArgumentException("Missing resource ID for extending like in Post");
             }
@@ -101,7 +101,7 @@ class CirclePostPagingService extends BasePagingService
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
             $userId = $request->getCurrentUserId();
-            if (empty($userId)){
+            if (empty($userId)) {
                 GoalousLog::error("Missing resource ID for extending saved in Post");
                 throw new InvalidArgumentException("Missing resource ID for extending saved in Post");
             }
@@ -161,14 +161,11 @@ class CirclePostPagingService extends BasePagingService
         return $options;
     }
 
-    protected function getEndPointerValue($lastElement)
-    {
-        return ['id', "<", $lastElement['id']];
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): BinaryNode {
+        return new BinaryNode(['id', "<", $lastElement['id']]);
     }
-
-    protected function getStartPointerValue($firstElement)
-    {
-        return ['id', ">", $firstElement['id']];
-    }
-
 }

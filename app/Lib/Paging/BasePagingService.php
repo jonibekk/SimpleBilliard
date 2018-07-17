@@ -1,5 +1,7 @@
 <?php
 App::import('Lib/Paging', 'PagingServiceInterface');
+App::import('Lib/DataStructure', 'BinaryNode');
+App::import('Lib/Paging', 'PointerTree');
 
 /**
  * Created by PhpStorm.
@@ -26,10 +28,7 @@ abstract class BasePagingService implements PagingServiceInterface
 
         $finalResult = [
             'data'   => [],
-            'paging' => [
-                'next' => '',
-                'prev' => ''
-            ],
+            'paging' => '',
             'count'  => 0
         ];
 
@@ -41,28 +40,16 @@ abstract class BasePagingService implements PagingServiceInterface
         $this->beforeRead($pagingRequest);
         $pagingRequest = $this->addDefaultValues($pagingRequest);
 
-        $pointerValues = $pagingRequest->getPointers();
-
         $queryResult = $this->readData($pagingRequest, $limit + 1);
 
         //If there is further result
         if (count($queryResult) > $limit) {
-            array_pop($queryResult);
+            $nextHead = array_pop($queryResult);
 
             //Set end pointer values
-            $pagingRequest->addPointerArray($this->getEndPointerValue($queryResult[--$limit]));
+            $pagingRequest->setPointer($this->createPointer($queryResult[--$limit], $nextHead, $pagingRequest));
 
-            $finalResult['paging']['next'] = $pagingRequest->returnCursor();
-        }
-
-        //If there is previous result
-        //Non-empty pointers means not the first page
-        if (count($queryResult) > 0 && !empty($pointerValues)) {
-
-            //Set start pointer value
-            $pagingRequest->setPointer($this->getStartPointerValue($queryResult[0]));
-
-            $finalResult['paging']['prev'] = $pagingRequest->returnCursor();
+            $finalResult['paging'] = $pagingRequest->returnCursor();
         }
 
         $finalResult['count'] = $this->countData($pagingRequest);
@@ -95,26 +82,18 @@ abstract class BasePagingService implements PagingServiceInterface
      * Get pointer value to define beginning point of next page
      * Default to using id
      *
-     * @param array $lastElement The array of result array's last element
+     * @param array         $lastElement     The array of result array's last element
+     * @param array         $headNextElement The first element of the next page
+     * @param PagingRequest $pagingRequest
      *
-     * @return array
+     * @return BinaryNode
      */
-    protected function getEndPointerValue($lastElement)
-    {
-        return ['id', ">", $lastElement['id']];
-    }
-
-    /**
-     * Get pointer value to define end point of previous page
-     * Default to using id
-     *
-     * @param array $firstElement The array of result array's last element
-     *
-     * @return array
-     */
-    protected function getStartPointerValue($firstElement)
-    {
-        return ['id', "<", $firstElement['id']];
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): BinaryNode {
+        return new BinaryNode(['id', ">", $lastElement['id']]);
     }
 
     /**
