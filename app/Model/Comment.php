@@ -9,6 +9,8 @@ App::import('Model', 'User');
 App::import('Model', 'Circle');
 App::import('Model', 'HavingMentionTrait');
 
+use Goalous\Enum\DataType\DataType as DataType;
+
 /**
  * Comment Model
  *
@@ -169,6 +171,15 @@ class Comment extends AppModel
             'fields'    => ['id']
         ],
         'CommentFile',
+    ];
+
+    /**
+     * Type conversion table for Comment model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [
+        'post_id' => DataType::INT
     ];
 
     public function beforeValidate($options = [])

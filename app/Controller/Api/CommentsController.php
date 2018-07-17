@@ -1,5 +1,5 @@
 <?php
-
+App::import('Service', 'CommentService');
 App::uses('CommentLike', 'Model');
 App::uses('BaseApiController', 'Controller/Api');
 
@@ -33,10 +33,10 @@ class CommentsController extends BaseApiController
         try {
             $CommentLike->addCommentLike($commentId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->getResponse();
+        return ApiResponse::ok()->getResponse();
     }
 
     /**
@@ -60,22 +60,30 @@ class CommentsController extends BaseApiController
         try {
             $CommentLike->removeCommentLike($commentId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->withException($e)->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return (new ApiResponse(ApiResponse::RESPONSE_SUCCESS))->getResponse();
+        return ApiResponse::ok()->getResponse();
 
     }
 
     /**
      * @param int $commentId
      *
-     * @return CakeResponse | null
+     * @return ErrorResponse | null
      */
     private function validateLike(int $commentId)
     {
-        if (!is_int($commentId)) {
-            return (new ApiResponse(ApiResponse::RESPONSE_BAD_REQUEST))->getResponse();
+        if (empty($commentId) && !is_int($commentId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        if (!$CommentService->checkUserHasAccessToPost($this->getUserId(), $commentId)) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
         }
 
         return null;
