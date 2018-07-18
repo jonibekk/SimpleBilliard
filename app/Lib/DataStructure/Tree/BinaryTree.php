@@ -1,4 +1,5 @@
 <?php
+App::import('Lib/DataStructure/Tree', 'Tree');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
