@@ -88,7 +88,7 @@ class CommentPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): BinaryNode {
-        return new BinaryNode(['id', ">", $lastElement['id']]);
+    ): PointerTree {
+        return new PointerTree(['id', ">", $lastElement['id']]);
     }
 }
