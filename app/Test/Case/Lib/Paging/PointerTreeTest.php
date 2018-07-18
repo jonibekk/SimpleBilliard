@@ -25,7 +25,7 @@ class PointerTreeTest extends GoalousTestCase
     public function test_getPointer_success()
     {
         $defaultTree = $this->createDefaultTree();
-        $actualPointer = $defaultTree->searchNode("time")->getValue();
+        $actualPointer = $defaultTree->searchTree("time")->getValue();
         $expectedPointer = ['time', '>=', 100];
         $this->assertEquals($expectedPointer, $actualPointer);
     }

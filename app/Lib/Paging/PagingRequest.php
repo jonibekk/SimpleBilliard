@@ -124,10 +124,10 @@ class PagingRequest
 
         if (!empty($pointerValues)) {
             if (is_array($pointerValues)) {
-                $array['pointer'] = (new BinaryTree(new BinaryNode($pointerValues)))->generateArray();
+                $array['pointer'] = (new BinaryTree(new BinaryNode($pointerValues)))->toArray();
             } elseif ($pointerValues instanceof PointerTree) {
                 if (!$pointerValues->isEmpty()) {
-                    $array['pointer'] = $pointerValues->generateArray();
+                    $array['pointer'] = $pointerValues->toArray();
                 }
             }
         }
@@ -246,15 +246,11 @@ class PagingRequest
     /**
      * Overwrite current pointer with new one
      *
-     * @param PointerTree|BinaryNode $pointer New pointer
+     * @param PointerTree $pointer New pointer
      */
-    public function setPointer($pointer)
+    public function setPointer(PointerTree $pointer)
     {
-        if ($pointer instanceof PointerTree) {
-            $this->pointerTree = $pointer;
-        } elseif ($pointer instanceof BinaryNode) {
-            $this->pointerTree->setRoot($pointer);
-        }
+        $this->pointerTree = $pointer;
     }
 
     /**
@@ -266,7 +262,7 @@ class PagingRequest
      */
     public function getPointer(string $key): array
     {
-        $node = $this->pointerTree->searchNode($key);
+        $node = $this->pointerTree->searchTree($key);
 
         if (!empty($node) && !$node->isEmpty()) {
             return $node->getValue();
@@ -456,15 +452,5 @@ class PagingRequest
     public function getCurrentTeamId(): int
     {
         return Hash::get($this->resources, 'current_team_id', 0);
-    }
-
-    /**
-     * Check whether pointer exists
-     *
-     * @return bool
-     */
-    public function hasPointer(): bool
-    {
-        return !$this->pointerTree->getRoot()->isEmpty() ?? false;
     }
 }

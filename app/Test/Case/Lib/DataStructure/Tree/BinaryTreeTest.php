@@ -1,7 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Lib/DataStructure', 'BinaryTree');
-App::import('Lib/DataStructure', 'BinaryNode');
+App::import('Lib/DataStructure/Tree', 'BinaryTree');
 
 /**
  * Created by PhpStorm.
@@ -14,7 +13,7 @@ class BinaryTreeTest extends GoalousTestCase
     public function test_getValue_success()
     {
         $tree = $this->createDefaultTree();
-        $node = $tree->searchNode(6);
+        $node = $tree->searchTree(6);
 
         $this->assertEquals(6, $node->getValue());
         $this->assertEquals(4, $node->getLeft()->getValue());
@@ -24,7 +23,7 @@ class BinaryTreeTest extends GoalousTestCase
         $this->assertEmpty($node->getRight()->getRight());
         $this->assertEmpty($node->getRight()->getLeft());
 
-        $node1 = $tree->searchNode(8);
+        $node1 = $tree->searchTree(8);
 
         $this->assertEquals(8, $node1->getValue());
         $this->assertEquals(3, $node1->getLeft()->getValue());
@@ -38,7 +37,7 @@ class BinaryTreeTest extends GoalousTestCase
     public function test_getFlattenArray_success()
     {
         $tree = $this->createDefaultTree();
-        $resultArray = $tree->generateArray();
+        $resultArray = $tree->toArray();
         $targetArray = [8, 3, 1, null, null, 6, 4, 7, 10, null, null, null, 14, 13, null];
 
         $this->assertCount(15, $resultArray);
@@ -49,12 +48,10 @@ class BinaryTreeTest extends GoalousTestCase
     {
         $sourceArray = [8, 3, 1, null, null, 6, 4, 7, 10, null, null, null, 14, 13, null];
 
-        $tree = new BinaryTree();
-        $tree->generateTree($sourceArray);
+        $node1 = new BinaryTree();
+        $node1->generateTree($sourceArray);
 
-        $this->assertEquals(3, $tree->getDepth());
-
-        $node1 = $tree->getRoot();
+        $this->assertEquals(3, $node1->getDepth());
 
         $this->assertEquals(8, $node1->getValue());
         $this->assertEquals(3, $node1->getLeft()->getValue());
@@ -67,7 +64,7 @@ class BinaryTreeTest extends GoalousTestCase
 
     public function test_getDepth_success()
     {
-        $singleTree = new BinaryTree(new BinaryNode(1));
+        $singleTree = new BinaryTree(1);
         $this->assertEquals(0, $singleTree->getDepth());
 
         $defaultTree = $this->createDefaultTree();
@@ -83,7 +80,7 @@ class BinaryTreeTest extends GoalousTestCase
 
     public function test_isFull_success()
     {
-        $singleTree = new BinaryTree(new BinaryNode(1));
+        $singleTree = new BinaryTree(1);
         $this->assertTrue($singleTree->isFull());
 
         $defaultTree = $this->createDefaultTree();
@@ -98,7 +95,7 @@ class BinaryTreeTest extends GoalousTestCase
 
     public function test_isComplete_success()
     {
-        $singleTree = new BinaryTree(new BinaryNode(1));
+        $singleTree = new BinaryTree(1);
         $this->assertTrue($singleTree->isComplete());
 
         $defaultTree = $this->createDefaultTree();
@@ -114,30 +111,30 @@ class BinaryTreeTest extends GoalousTestCase
     private function createDefaultTree(): BinaryTree
     {
         //Tree visualization https://i.stack.imgur.com/7VxZe.png
-        $node1 = new BinaryNode(6, 4, 7);
-        $node2 = new BinaryNode(14, 13);
-        $node3 = new BinaryNode(3, 1, $node1);
-        $node4 = new BinaryNode(10, null, $node2);
-        $node5 = new BinaryNode(8, $node3, $node4);
+        $node1 = new BinaryTree(6, 4, 7);
+        $node2 = new BinaryTree(14, 13);
+        $node3 = new BinaryTree(3, 1, $node1);
+        $node4 = new BinaryTree(10, null, $node2);
+        $node5 = new BinaryTree(8, $node3, $node4);
 
-        return new BinaryTree($node5);
+        return $node5;
     }
 
     private function createFullTree(): BinaryTree
     {
-        $node1 = new BinaryNode(1, 2, 3);
-        $node2 = new BinaryNode(4, $node1, 5);
+        $node1 = new BinaryTree(1, 2, 3);
+        $node2 = new BinaryTree(4, $node1, 5);
 
-        return new BinaryTree($node2);
+        return $node2;
     }
 
     private function createCompleteTree(): BinaryTree
     {
-        $node1 = new BinaryNode(1, 2, 3);
-        $node2 = new BinaryNode(5, 6, 7);
-        $node3 = new BinaryNode(4, $node1, $node2);
+        $node1 = new BinaryTree(1, 2, 3);
+        $node2 = new BinaryTree(5, 6, 7);
+        $node3 = new BinaryTree(4, $node1, $node2);
 
-        return new BinaryTree($node3);
+        return $node3;
     }
 
 }

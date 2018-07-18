@@ -2,30 +2,154 @@
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
- * Date: 2018/07/12
- * Time: 13:25
+ * Date: 2018/07/18
+ * Time: 15:53
  */
 
-/**
- * <b>UNSORTED</b> binary tree
- * https://confluence.goalous.com/x/IAMQAQ
- *
- * Class BinaryTree
- */
-class BinaryTree
+class BinaryTree implements Tree
 {
-    /** @var BinaryNode */
-    protected $root;
+    /**
+     * Value of this node
+     *
+     * @var mixed
+     */
+    protected $value;
 
-    /** @var int */
-    private $depth;
+    /**
+     * @var BinaryTree
+     */
+    protected $left;
 
-    public function __construct(BinaryNode $node = null)
+    /**
+     * @var BinaryTree
+     */
+    protected $right;
+
+    /**
+     * @var int
+     */
+    protected $depth;
+
+    /**
+     * BinaryNode constructor.
+     *
+     * @param mixed $value
+     * @param mixed $left
+     * @param mixed $right
+     */
+    public function __construct($value = null, $left = null, $right = null)
     {
-        $this->root = $node;
-        if (!empty($node)) {
-            $this->depth = $this->calculateDepth($node);
+        $this->value = $value;
+
+        if (!empty($left)) {
+            $this->left = ($left instanceof self) ? $left : new self($left);
         }
+        if (!empty($right)) {
+            $this->right = ($right instanceof self) ? $right : new self($right);
+        }
+
+        $this->depth = $this->calculateDepth($this);
+    }
+
+    /**
+     * Get the value of this node
+     *
+     * @return mixed|null
+     */
+    public function &getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Get the node of left child
+     *
+     * @return BinaryTree | null
+     */
+    public function &getLeft()
+    {
+        return $this->left;
+    }
+
+    /**
+     * Get the node of right child
+     *
+     * @return BinaryTree | null
+     */
+    public function &getRight()
+    {
+        return $this->right;
+    }
+
+    /**
+     * Set the left child of this node
+     *
+     * @param BinaryTree $left
+     */
+    public function setLeft(BinaryTree $left)
+    {
+        $this->left = $left;
+    }
+
+    /**
+     * Set the right child of this node
+     *
+     * @param BinaryTree $right
+     */
+    public function setRight(BinaryTree $right)
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * Set the value of this node
+     *
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * Check whether this node has left child
+     *
+     * @return bool
+     */
+    public function hasLeft()
+    {
+        return !empty($this->left);
+    }
+
+    /**
+     * Check whether this node has right child
+     *
+     * @return bool
+     */
+    public function hasRight()
+    {
+        return !empty($this->right);
+    }
+
+    /**
+     * Check whether this node is a leaf
+     * Leaf node is a node without any children
+     *
+     * @return bool
+     */
+    public function isLeaf(): bool
+    {
+        return !$this->hasLeft() && !$this->hasRight();
+    }
+
+    /**
+     * Check whether this node has value
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->value);
     }
 
     /**
@@ -33,13 +157,16 @@ class BinaryTree
      * Return the first node with matching value
      *
      * @param                 $targetValue
-     * @param BinaryNode      $node
+     * @param Tree            $node
      * @param callable        $comparator
      *
-     * @return BinaryNode|null
+     * @return BinaryTree|null
      */
-    public function &searchNode($targetValue, BinaryNode &$node = null, callable $comparator = null)
+    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): BinaryTree
     {
+        if (!($node instanceof BinaryTree)) {
+            throw new InvalidArgumentException("Invalid tree type");
+        }
         if (empty($node)) {
             if (empty($this->root)) {
                 $null = null;
@@ -62,14 +189,14 @@ class BinaryTree
 
         if ($node->hasLeft()) {
             $left = &$node->getLeft();
-            $result = &$this->searchNode($targetValue, $left, $comparator);
+            $result = &$this->searchTree($targetValue, $left, $comparator);
             if (!empty($result)) {
                 return $result;
             }
         }
         if ($node->hasRight()) {
             $right = &$node->getRight();
-            $result = &$this->searchNode($targetValue, $right, $comparator);
+            $result = &$this->searchTree($targetValue, $right, $comparator);
             if (!empty($result)) {
                 return $result;
             }
@@ -86,7 +213,7 @@ class BinaryTree
      */
     public function generateTree(array $sourceArray)
     {
-        $node = new BinaryNode();
+        $node = new BinaryTree();
         $this->decodeArray($sourceArray, $node);
         $this->__construct($node);
     }
@@ -95,16 +222,16 @@ class BinaryTree
      * Decode an array to a tree structure
      *
      * @param array      $sourceArray
-     * @param BinaryNode $node
+     * @param BinaryTree $node
      */
-    private function decodeArray(array &$sourceArray, BinaryNode &$node)
+    private function decodeArray(array &$sourceArray, BinaryTree &$node)
     {
         if (count($sourceArray) % 2 == 0) {
             throw new InvalidArgumentException("Invalid array");
         }
 
         if (empty($node)) {
-            $node = new BinaryNode();
+            $node = new BinaryTree();
         }
 
         $value = array_shift($sourceArray);
@@ -116,18 +243,18 @@ class BinaryTree
 
         if (!empty($leftHalf[0])) {
             if (count($leftHalf) == 1) {
-                $node->setLeft(new BinaryNode($leftHalf[0]));
+                $node->setLeft(new BinaryTree($leftHalf[0]));
             } else {
-                $node->setLeft(new BinaryNode());
+                $node->setLeft(new BinaryTree());
                 $this->decodeArray($leftHalf, $node->getLeft());
             }
         }
 
         if (!empty($rightHalf[0])) {
             if (count($rightHalf) == 1) {
-                $node->setRight(new BinaryNode($rightHalf[0]));
+                $node->setRight(new BinaryTree($rightHalf[0]));
             } else {
-                $node->setRight(new BinaryNode());
+                $node->setRight(new BinaryTree());
                 $this->decodeArray($rightHalf, $node->getRight());
             }
         }
@@ -140,37 +267,15 @@ class BinaryTree
      *
      * @return array
      */
-    public function generateArray(bool $fillTree = true): array
+    public function toArray(bool $fillTree = true): array
     {
-        $completed = $this->getRoot();
-        if (empty($completed)){
+        if ($this->isEmpty()) {
             throw new RuntimeException("Tree can't be empty");
         }
         if ($fillTree) {
-            $this->completeTree($completed);
+            $this->completeTree($this->value);
         }
-        return $this->flattenArray($completed);
-    }
-
-    /**
-     * Get the root of this tree.
-     *
-     * @return BinaryNode | null
-     */
-    public function &getRoot()
-    {
-        return $this->root;
-    }
-
-    /**
-     * Set the root node of this tree
-     *
-     * @param BinaryNode $node
-     */
-    public function setRoot(BinaryNode $node)
-    {
-        $this->root = $node;
-        $this->depth = $this->calculateDepth($node);
+        return $this->flattenArray($this->value);
     }
 
     /**
@@ -178,19 +283,22 @@ class BinaryTree
      */
     public function updateDepth()
     {
-        $this->depth = $this->calculateDepth($this->root);
+        $this->depth = $this->calculateDepth($this);
     }
 
     /**
      * Calculate the depth of this tree
      *
-     * @param BinaryNode $node
+     * @param BinaryTree $node
      *
      * @return int
      */
-    protected function calculateDepth(BinaryNode $node)
+    protected function calculateDepth(BinaryTree $node): int
     {
-        if (empty($node) || $node->isLeaf()) {
+        if (empty($node)) {
+            return 0;
+        }
+        if ($node->isLeaf()) {
             return 0;
         }
         if (!$node->hasLeft()) {
@@ -205,10 +313,10 @@ class BinaryTree
     /**
      * Make a binary tree complete
      *
-     * @param BinaryNode $node
+     * @param BinaryTree $node
      * @param int        $currentDepth
      */
-    public function completeTree(BinaryNode &$node, int $currentDepth = 0)
+    public function completeTree(BinaryTree &$node, int $currentDepth = 0)
     {
         if (empty($node)) {
             throw new RuntimeException("Tree can't be empty");
@@ -219,12 +327,12 @@ class BinaryTree
         }
 
         if (!$node->hasLeft()) {
-            $node->setLeft(new BinaryNode());
+            $node->setLeft(new BinaryTree());
         }
         $this->completeTree($node->getLeft(), $currentDepth + 1);
 
         if (!$node->hasRight()) {
-            $node->setRight(new BinaryNode());
+            $node->setRight(new BinaryTree());
         }
         $this->completeTree($node->getRight(), $currentDepth + 1);
     }
@@ -232,11 +340,11 @@ class BinaryTree
     /**
      * Flatten the tree to 1-dimensional array
      *
-     * @param BinaryNode $node
+     * @param BinaryTree $node
      *
      * @return array
      */
-    private function flattenArray(BinaryNode $node = null): array
+    private function flattenArray(BinaryTree $node = null): array
     {
         if (empty($node)) {
             return [];
@@ -274,7 +382,7 @@ class BinaryTree
      */
     public function makeComplete()
     {
-        $this->completeTree($this->root);
+        $this->completeTree($this);
     }
 
     /**
@@ -285,10 +393,10 @@ class BinaryTree
      */
     public function isComplete(): bool
     {
-        return $this->checkComplete($this->root);
+        return $this->checkComplete($this);
     }
 
-    private function checkComplete(BinaryNode $node = null, int $currentDepth = 0): bool
+    private function checkComplete(BinaryTree $node = null, int $currentDepth = 0): bool
     {
         if (empty($node)) {
             return false;
@@ -318,10 +426,10 @@ class BinaryTree
      */
     public function isFull(): bool
     {
-        return $this->checkFull($this->root);
+        return $this->checkFull($this);
     }
 
-    private function checkFull(BinaryNode $node = null): bool
+    private function checkFull(BinaryTree $node = null): bool
     {
         if (empty($node)) {
             return false;
@@ -337,5 +445,4 @@ class BinaryTree
 
         return $this->checkFull($node->getLeft()) && $this->checkFull($node->getRight());
     }
-
 }

@@ -86,14 +86,14 @@ abstract class BasePagingService implements PagingServiceInterface
      * @param array         $headNextElement The first element of the next page
      * @param PagingRequest $pagingRequest
      *
-     * @return BinaryNode
+     * @return PointerTree
      */
     protected function createPointer(
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): BinaryNode {
-        return new BinaryNode(['id', ">", $lastElement['id']]);
+    ): PointerTree {
+        return new PointerTree(['id', ">", $lastElement['id']]);
     }
 
     /**

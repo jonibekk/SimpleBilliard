@@ -102,18 +102,18 @@ class CircleListPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): BinaryNode {
+    ): PointerTree {
 
         $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
 
         if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
             $lastElement['latest_post_created'] == $prevLatestPost) {
-            $orCondition = new BinaryNode('OR', ['id', '<', $lastElement['id']]);
-            $condition = new BinaryNode('AND', $orCondition,
+            $orCondition = new PointerTree('OR', ['id', '<', $lastElement['id']]);
+            $condition = new PointerTree('AND', $orCondition,
                 ['latest_post_created', '<=', $lastElement['latest_post_created']]);
             return $condition;
         } else {
-            return new BinaryNode(['latest_post_created', '<', $lastElement['latest_post_created']]);
+            return new PointerTree(['latest_post_created', '<', $lastElement['latest_post_created']]);
         }
     }
 

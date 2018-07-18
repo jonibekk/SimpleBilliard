@@ -1,5 +1,5 @@
 <?php
-App::import('Lib/DataStructure', 'BinaryTree');
+App::import('Lib/DataStructure/Tree', 'BinaryTree');
 
 /**
  * Created by PhpStorm.
@@ -16,20 +16,20 @@ class PointerTree extends BinaryTree
      */
     public function toCondition()
     {
-        if (!empty($this->getRoot())) {
-            return $this->flattenTreeForCondition($this->getRoot());
+        if (!empty($this->getValue())) {
+            return $this->flattenTreeForCondition($this);
         } else {
             return [];
         }
     }
 
-    private function flattenTreeForCondition(BinaryNode $tree): array
+    private function flattenTreeForCondition(BinaryTree $tree): array
     {
         $result = [];
 
         //Only leaf contains pointer
         if ($tree->isLeaf()) {
-            $result[] = $this->convertPointerToString($tree->getValue());
+            $result[] = $this->valueToString();
             return $result;
         }
 
@@ -50,13 +50,16 @@ class PointerTree extends BinaryTree
      * Get the first pointer with the same key as inputted one
      *
      * @param                 $targetValue
-     * @param BinaryNode|null $node
+     * @param Tree|null       $node
      * @param callable|null   $comparator
      *
-     * @return BinaryNode|null
+     * @return Tree|null
      */
-    public function &searchNode($targetValue, BinaryNode &$node = null, callable $comparator = null)
+    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): Tree
     {
+        if (!($node instanceof PointerTree)) {
+            throw new InvalidArgumentException("Invalid tree type");
+        }
         if (empty($comparator)) {
             $comparator = function ($node, string $target) {
                 if (empty($target)) {
@@ -70,16 +73,17 @@ class PointerTree extends BinaryTree
             };
         }
 
-        $result = &parent::searchNode($targetValue, $node, $comparator);
+        $result = &parent::searchTree($targetValue, $node, $comparator);
         return $result;
     }
 
-    private function convertPointerToString(array $pointer): string
+    private function valueToString(): string
     {
-        if (count($pointer) != 3) {
+        $value = $this->value;
+        if (count($value) != 3) {
             throw new RuntimeException("Wrong array size");
         }
-        return "$pointer[0] $pointer[1] $pointer[2]";
+        return "$value[0] $value[1] $value[2]";
     }
 
     /**
@@ -116,16 +120,17 @@ class PointerTree extends BinaryTree
      */
     public function addPointer(array $pointer): bool
     {
-        if (empty($this->root)) {
-            $this->setRoot(new BinaryNode($pointer));
-            return true;
-        }
         if (count($pointer) != 3 && !is_string($pointer[0])) {
             throw new InvalidArgumentException("Invalid pointer array");
         }
 
-        $node = new BinaryNode();
-        $this->findDeepestAndNode($this->root, $node);
+        if ($this->isEmpty()) {
+            $this->setValue($pointer);
+            return true;
+        }
+
+        $node = new PointerTree();
+        $this->findDeepestAndNode($this, $node);
 
         if (empty($node)) {
             return false;
@@ -134,20 +139,20 @@ class PointerTree extends BinaryTree
         if ($node->isLeaf()) {
             $node->setValue($pointer);
         } elseif (!$node->hasLeft()) {
-            $node->setLeft(new BinaryNode($pointer));
+            $node->setLeft(new BinaryTree($pointer));
         } elseif (!$node->hasRight()) {
-            $node->setRight(new BinaryNode($pointer));
+            $node->setRight(new BinaryTree($pointer));
         } else {
             $rightPointer = $node->getRight();
-            $node->setRight(new BinaryNode('AND', $rightPointer, $pointer));
+            $node->setRight(new BinaryTree('AND', $rightPointer, $pointer));
         }
 
         return true;
     }
 
     private function &findDeepestAndNode(
-        BinaryNode &$node,
-        BinaryNode &$result,
+        BinaryTree &$node,
+        BinaryTree &$result,
         int $currentDepth = 0,
         int $latestDepth = 0
     ) {
