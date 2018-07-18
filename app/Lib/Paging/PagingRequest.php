@@ -91,7 +91,7 @@ class PagingRequest
                 if (count($order) == 3 && is_string($pointerValues[0])) {
                     $this->pointerTree->addPointer($pointerValues);
                 }
-                $this->pointerTree->generateTree($pointerValues);
+                $this->pointerTree->populateTree($pointerValues);
             }
         }
 

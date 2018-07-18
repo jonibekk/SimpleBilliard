@@ -4,6 +4,7 @@
  * User: StephenRaharja
  * Date: 2018/07/18
  * Time: 15:53
+ * https://confluence.goalous.com/x/IAMQAQ
  */
 
 class BinaryTree implements Tree
@@ -211,7 +212,7 @@ class BinaryTree implements Tree
      *
      * @param array $sourceArray
      */
-    public function generateTree(array $sourceArray)
+    public function populateTree(array $sourceArray)
     {
         $node = new BinaryTree();
         $this->decodeArray($sourceArray, $node);

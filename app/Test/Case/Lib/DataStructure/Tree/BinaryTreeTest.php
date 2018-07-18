@@ -49,7 +49,7 @@ class BinaryTreeTest extends GoalousTestCase
         $sourceArray = [8, 3, 1, null, null, 6, 4, 7, 10, null, null, null, 14, 13, null];
 
         $node1 = new BinaryTree();
-        $node1->generateTree($sourceArray);
+        $node1->populateTree($sourceArray);
 
         $this->assertEquals(3, $node1->getDepth());
 
