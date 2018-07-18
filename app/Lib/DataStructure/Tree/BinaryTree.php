@@ -162,17 +162,17 @@ class BinaryTree implements Tree
      *
      * @return BinaryTree|null
      */
-    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): BinaryTree
+    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null)
     {
         if (!($node instanceof BinaryTree)) {
             throw new InvalidArgumentException("Invalid tree type");
         }
         if (empty($node)) {
-            if (empty($this->root)) {
+            if (empty($this->value)) {
                 $null = null;
                 return $null;
             }
-            $node = $this->root;
+            $node = $this;
         }
 
         //If comparator not given, use default one.

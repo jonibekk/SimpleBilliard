@@ -53,9 +53,9 @@ class PointerTree extends BinaryTree
      * @param Tree|null       $node
      * @param callable|null   $comparator
      *
-     * @return Tree|null
+     * @return PointerTree|null
      */
-    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): Tree
+    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null)
     {
         if (!($node instanceof PointerTree)) {
             throw new InvalidArgumentException("Invalid tree type");
@@ -73,7 +73,9 @@ class PointerTree extends BinaryTree
             };
         }
 
+        /** @var PointerTree $result */
         $result = &parent::searchTree($targetValue, $node, $comparator);
+
         return $result;
     }
 
@@ -98,16 +100,6 @@ class PointerTree extends BinaryTree
         foreach ($pointers as $pointer) {
             $this->addPointer($pointer);
         }
-    }
-
-    /**
-     * Whether this tree has root node
-     *
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return empty($this->root) || $this->root->isEmpty();
     }
 
     /**
