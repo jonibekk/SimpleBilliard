@@ -386,6 +386,17 @@ class BinaryTree implements Tree
     }
 
     /**
+     * Check if a the tree is full.
+     * Full tree means each node either have no children or both children
+     *
+     * @return bool
+     */
+    public function isFull(): bool
+    {
+        return $this->checkComplete($this, false);
+    }
+
+    /**
      * Check whether the tree is complete.
      * Complete tree means tree is full & all deepest nodes have the same depth
      *
@@ -396,53 +407,26 @@ class BinaryTree implements Tree
         return $this->checkComplete($this);
     }
 
-    private function checkComplete(BinaryTree $node = null, int $currentDepth = 0): bool
+    private function checkComplete(BinaryTree $node = null, bool $checkDepth = true, int $currentDepth = 0): bool
     {
         if (empty($node)) {
             return false;
         }
 
-        if ($node->hasLeft() xor $node->hasRight()) {
-            return false;
-        }
-
         if ($node->isLeaf()) {
-            if ($currentDepth == $this->depth) {
+            if (!$checkDepth || $currentDepth == $this->depth) {
                 return true;
             } else {
                 return false;
             }
         }
 
-        return $this->checkComplete($node->getLeft(), $currentDepth + 1) &&
-            $this->checkComplete($node->getRight(), $currentDepth + 1);
-    }
-
-    /**
-     * Check if a the tree is full.
-     * Full tree means each node either have no children or both children
-     *
-     * @return bool
-     */
-    public function isFull(): bool
-    {
-        return $this->checkFull($this);
-    }
-
-    private function checkFull(BinaryTree $node = null): bool
-    {
-        if (empty($node)) {
-            return false;
-        }
-
-        if ($node->isLeaf()) {
-            return true;
-        }
-
         if ($node->hasLeft() xor $node->hasRight()) {
             return false;
         }
 
-        return $this->checkFull($node->getLeft()) && $this->checkFull($node->getRight());
+        return $this->checkComplete($node->getLeft(), $checkDepth, $currentDepth + 1) &&
+            $this->checkComplete($node->getRight(), $checkDepth, $currentDepth + 1);
     }
+
 }
