@@ -80,18 +80,15 @@ class PagingRequest
         $this->pointerTree = new PointerTree();
 
         if (!empty($pointerValues)) {
-            if ($pointerValues instanceof BinaryNode) {
-                $this->pointerTree = new PointerTree($pointerValues);
-            }
-            if ($pointerValues instanceof PointerTree) {
+            if ($pointerValues instanceof PointerTree || $pointerValues instanceof BinaryTree) {
                 $this->pointerTree = $pointerValues;
             }
             if (is_array($pointerValues)) {
-
                 if (count($order) == 3 && is_string($pointerValues[0])) {
                     $this->pointerTree->addPointer($pointerValues);
+                } else {
+                    $this->pointerTree->populateTree($pointerValues);
                 }
-                $this->pointerTree->populateTree($pointerValues);
             }
         }
 
@@ -124,7 +121,7 @@ class PagingRequest
 
         if (!empty($pointerValues)) {
             if (is_array($pointerValues)) {
-                $array['pointer'] = (new BinaryTree(new BinaryNode($pointerValues)))->toArray();
+                $array['pointer'] = (new BinaryTree($pointerValues))->toArray();
             } elseif ($pointerValues instanceof PointerTree) {
                 if (!$pointerValues->isEmpty()) {
                     $array['pointer'] = $pointerValues->toArray();
