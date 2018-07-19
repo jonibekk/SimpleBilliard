@@ -179,11 +179,11 @@ class PagingRequest
             throw new InvalidArgumentException("Cursor can't be empty");
         }
         $decodedString = base64_decode($cursor);
-        if ($decodedString === false || empty($decodedString)) {
+        if (empty($decodedString)) {
             throw new RuntimeException("Failed in parsing cursor from base64 encoding");
         }
         $pagingRequest = json_decode($decodedString, true);
-        if ($pagingRequest === false || empty($pagingRequest)) {
+        if (empty($pagingRequest)) {
             throw new RuntimeException("Failed in parsing cursor from json");
         }
         return $pagingRequest;

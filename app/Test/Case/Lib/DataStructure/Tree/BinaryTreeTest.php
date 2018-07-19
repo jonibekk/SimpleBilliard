@@ -34,6 +34,21 @@ class BinaryTreeTest extends GoalousTestCase
         $this->assertEquals(14, $node1->getRight()->getRight()->getValue());
     }
 
+    public function test_getDepth_success()
+    {
+        $singleTree = new BinaryTree(1);
+        $this->assertEquals(0, $singleTree->getDepth());
+
+        $defaultTree = $this->createDefaultTree();
+        $this->assertEquals(3, $defaultTree->getDepth());
+
+        $fullTree = $this->createFullTree();
+        $this->assertEquals(2, $fullTree->getDepth());
+
+        $completeTree = $this->createCompleteTree();
+        $this->assertEquals(2, $completeTree->getDepth());
+    }
+
     public function test_getFlattenArray_success()
     {
         $tree = $this->createDefaultTree();
@@ -60,22 +75,6 @@ class BinaryTreeTest extends GoalousTestCase
         $this->assertEquals(6, $node1->getLeft()->getRight()->getValue());
         $this->assertEmpty($node1->getRight()->getLeft());
         $this->assertEquals(14, $node1->getRight()->getRight()->getValue());
-    }
-
-    public function test_getDepth_success()
-    {
-        $singleTree = new BinaryTree(1);
-        $this->assertEquals(0, $singleTree->getDepth());
-
-        $defaultTree = $this->createDefaultTree();
-        $this->assertEquals(3, $defaultTree->getDepth());
-
-        $fullTree = $this->createFullTree();
-        $this->assertEquals(2, $fullTree->getDepth());
-
-        $completeTree = $this->createCompleteTree();
-        $this->assertEquals(2, $completeTree->getDepth());
-
     }
 
     public function test_isFull_success()

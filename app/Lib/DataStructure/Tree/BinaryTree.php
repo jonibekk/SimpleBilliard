@@ -1,5 +1,6 @@
 <?php
 App::import('Lib/DataStructure/Tree', 'Tree');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -7,7 +8,6 @@ App::import('Lib/DataStructure/Tree', 'Tree');
  * Time: 15:53
  * https://confluence.goalous.com/x/IAMQAQ
  */
-
 class BinaryTree implements Tree
 {
     /**
@@ -56,9 +56,9 @@ class BinaryTree implements Tree
     /**
      * Get the value of this node
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function &getValue()
+    public function getValue()
     {
         return $this->value;
     }
@@ -166,15 +166,14 @@ class BinaryTree implements Tree
      */
     public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null)
     {
-        if (!($node instanceof BinaryTree)) {
-            throw new InvalidArgumentException("Invalid tree type");
-        }
         if (empty($node)) {
             if (empty($this->value)) {
                 $null = null;
                 return $null;
             }
             $node = $this;
+        } elseif (!($node instanceof BinaryTree || is_subclass_of($node, BinaryTree::class))) {
+            throw new InvalidArgumentException("Invalid tree type");
         }
 
         //If comparator not given, use default one.
@@ -215,9 +214,8 @@ class BinaryTree implements Tree
      */
     public function populateTree(array $sourceArray)
     {
-        $node = new BinaryTree();
-        $this->decodeArray($sourceArray, $node);
-        $this->__construct($node);
+        $this->decodeArray($sourceArray, $this);
+        $this->updateDepth();
     }
 
     /**
@@ -226,19 +224,16 @@ class BinaryTree implements Tree
      * @param array      $sourceArray
      * @param BinaryTree $node
      */
-    private function decodeArray(array &$sourceArray, BinaryTree &$node)
+    private function decodeArray(array $sourceArray, BinaryTree &$node)
     {
         if (count($sourceArray) % 2 == 0) {
             throw new InvalidArgumentException("Invalid array");
         }
-
         if (empty($node)) {
             $node = new BinaryTree();
         }
 
-        $value = array_shift($sourceArray);
-
-        $node->setValue($value);
+        $node->value = array_shift($sourceArray);
 
         $leftHalf = array_slice($sourceArray, 0, count($sourceArray) / 2);
         $rightHalf = array_slice($sourceArray, count($sourceArray) / 2);
@@ -275,9 +270,9 @@ class BinaryTree implements Tree
             throw new RuntimeException("Tree can't be empty");
         }
         if ($fillTree) {
-            $this->completeTree($this->value);
+            $this->completeTree($this);
         }
-        return $this->flattenArray($this->value);
+        return $this->flattenArray($this);
     }
 
     /**
