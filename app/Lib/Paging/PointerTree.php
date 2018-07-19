@@ -16,10 +16,10 @@ class PointerTree extends BinaryTree
      */
     public function toCondition()
     {
-        if (!empty($this->getValue())) {
-            return $this->flattenTreeForCondition($this);
-        } else {
+        if (empty($this->getValue())) {
             return [];
+        } else {
+            return $this->flattenTreeForCondition($this);
         }
     }
 
@@ -29,7 +29,7 @@ class PointerTree extends BinaryTree
 
         //Only leaf contains pointer
         if ($tree->isLeaf()) {
-            $result[] = $this->valueToString();
+            $result[] = $this->valueToString($tree->value);
             return $result;
         }
 
@@ -57,9 +57,6 @@ class PointerTree extends BinaryTree
      */
     public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null)
     {
-        if (!($node instanceof PointerTree)) {
-            throw new InvalidArgumentException("Invalid tree type");
-        }
         if (empty($comparator)) {
             $comparator = function ($node, string $target) {
                 if (empty($target)) {
@@ -79,10 +76,13 @@ class PointerTree extends BinaryTree
         return $result;
     }
 
-    private function valueToString(): string
+    private function valueToString(array $value): string
     {
-        $value = $this->value;
+        if (empty($value)) {
+            return "";
+        }
         if (count($value) != 3) {
+            var_dump($value);
             throw new RuntimeException("Wrong array size");
         }
         return "$value[0] $value[1] $value[2]";
@@ -165,4 +165,6 @@ class PointerTree extends BinaryTree
             }
         }
     }
+
+
 }

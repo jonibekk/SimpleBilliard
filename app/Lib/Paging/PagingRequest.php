@@ -1,5 +1,5 @@
 <?php
-App::import('Lib/DataStructure', 'BinaryNode');
+App::import('Lib/DataStructure/Tree', 'BinaryTree');
 App::import('Lib/Paging', 'PointerTree');
 
 /**
@@ -264,10 +264,10 @@ class PagingRequest
     {
         $node = $this->pointerTree->searchTree($key);
 
-        if (!empty($node) && !$node->isEmpty()) {
-            return $node->getValue();
-        } else {
+        if (empty($node) || $node->isEmpty()) {
             return [];
+        } else {
+            return $node->getValue();
         }
     }
 
