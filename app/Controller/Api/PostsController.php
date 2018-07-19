@@ -93,12 +93,12 @@ class PostsController extends BasePagingController
         $PostLike = ClassRegistry::init('PostLike');
 
         try {
-            $PostLike->addPostLike($postId, $this->getUserId(), $this->getTeamId());
+            $result = $PostLike->addPostLike($postId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData( (empty($result)) ? [] : $result->toArray())->getResponse();
     }
 
     /**
@@ -118,12 +118,12 @@ class PostsController extends BasePagingController
         $PostLike = ClassRegistry::init('PostLike');
 
         try {
-            $PostLike->deletePostLike($postId, $this->getUserId(), $this->getTeamId());
+            $count = $PostLike->deletePostLike($postId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData(["like_count" => $count])->getResponse();
 
     }
 

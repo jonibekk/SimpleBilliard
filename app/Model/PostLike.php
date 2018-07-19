@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'PostLikeEntity');
 
 /**
  * PostLike Model
@@ -241,9 +242,9 @@ class PostLike extends AppModel
      * @param int $teamId The team ID where this happens
      *
      * @throws Exception
-     * @return bool True for successful addition
+     * @return PostLikeEntity | null Null for failed addition
      */
-    public function addPostLike(int $postId, int $userId, int $teamId): bool
+    public function addPostLike(int $postId, int $userId, int $teamId)
     {
         $condition = [
             'conditions' => [
@@ -262,15 +263,19 @@ class PostLike extends AppModel
                     'user_id' => $userId,
                     'team_id' => $teamId
                 ];
-                $this->save($newData);
+                /** @var PostLikeEntity $result */
+                $result = $this->useType()->useEntity()->save($newData, false);
             } catch (Exception $e) {
                 throw $e;
             }
-            $this->updateLikeCount($postId);
-            return true;
         }
+        $count = $this->updateLikeCount($postId) ?? 0;
+        if (empty($result)) {
+            $result = new PostLikeEntity();
+        }
+        $result['like_count'] = $count;
 
-        return false;
+        return $result;
     }
 
     /**
@@ -280,9 +285,9 @@ class PostLike extends AppModel
      * @param int $userId User ID who removed the like
      * @param int $teamId The team ID where this happens
      *
-     * @return bool True for successful removal
+     * @return int True for successful removal
      */
-    public function deletePostLike(int $postId, int $userId, int $teamId): bool
+    public function deletePostLike(int $postId, int $userId, int $teamId): int
     {
         $condition = [
             'conditions' => [
@@ -292,17 +297,13 @@ class PostLike extends AppModel
             ]
         ];
 
-        $existing = $this->find('first', $condition);
+        $existing = $this->useType()->useEntity()->find('first', $condition);
 
-        if (empty($existing)) {
-            return false;
+        if (!empty($existing)) {
+            $this->delete($existing['id']);
         }
 
-        $this->delete($existing['PostLike']['id']);
-        $this->updateLikeCount($postId);
-
-        return true;
-
+        return $this->updateLikeCount($postId) ?? 0;
     }
 
     /**
@@ -317,6 +318,9 @@ class PostLike extends AppModel
         $condition = [
             'conditions' => [
                 'post_id' => $postId
+            ],
+            'fields'     => [
+                'id'
             ]
         ];
 
