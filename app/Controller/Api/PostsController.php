@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'PostService');
+App::import('Service', 'PostLikeService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
 App::uses('CircleMember', 'Model');
@@ -89,16 +90,16 @@ class PostsController extends BasePagingController
             return $res;
         }
 
-        /** @var PostLike $PostLike */
-        $PostLike = ClassRegistry::init('PostLike');
+        /** @var PostLikeService $PostLikeService */
+        $PostLikeService = ClassRegistry::init('PostLikeService');
 
         try {
-            $result = $PostLike->addPostLike($postId, $this->getUserId(), $this->getTeamId());
+            $result = $PostLikeService->addPostLike($postId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->withData( (empty($result)) ? [] : $result->toArray())->getResponse();
+        return ApiResponse::ok()->withData((empty($result)) ? [] : $result->toArray())->getResponse();
     }
 
     /**
@@ -114,11 +115,11 @@ class PostsController extends BasePagingController
             return $res;
         }
 
-        /** @var PostLike $PostLike */
-        $PostLike = ClassRegistry::init('PostLike');
+        /** @var PostLikeService $PostLikeService */
+        $PostLikeService = ClassRegistry::init('PostLikeService');
 
         try {
-            $count = $PostLike->deletePostLike($postId, $this->getUserId(), $this->getTeamId());
+            $count = $PostLikeService->deletePostLike($postId, $this->getUserId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

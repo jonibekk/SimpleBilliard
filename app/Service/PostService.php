@@ -11,6 +11,7 @@ App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
 App::import('Model/Entity', 'PostEntity');
+App::import('Model/Entity', 'CircleEntity');
 
 use Goalous\Enum as Enum;
 
@@ -479,42 +480,66 @@ class PostService extends AppService
     /**
      * Check whether the user can view the post
      *
-     * @param int $userId
-     * @param int $postId
+     * @param int  $userId
+     * @param int  $postId
+     * @param bool $mustBelong Whether user must belong to the circle where post is shared to
      *
      * @return bool
      */
-    public function checkUserAccessToPost(int $userId, int $postId): bool
+    public function checkUserAccessToPost(int $userId, int $postId, bool $mustBelong = false): bool
     {
-        /** @var PostShareCircle $PostShareCircle */
-        $PostShareCircle = ClassRegistry::init("PostShareCircle");
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init("CircleMember");
 
-        $postOption = [
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $circleOption = [
             'conditions' => [
                 'PostShareCircle.post_id' => $postId,
-                'PostShareCircle.del_flg' => false
             ],
             'fields'     => [
-                'PostShareCircle.circle_id'
+                'Circle.id',
+                'Circle.public_flg',
+                'Circle.team_all_flg'
             ],
-            'table'      => 'post_share_circles',
-            'alias'      => 'PostShareCircle',
+            'table'      => 'circles',
+            'alias'      => 'Circle',
             'joins'      => [
                 [
                     'type'       => 'INNER',
                     'conditions' => [
-                        'CircleMember.circle_id = PostShareCircle.circle_id',
-                        'CircleMember.user_id' => $userId,
-                        'CircleMember.del_flg' => false
+                        'Circle.id = PostShareCircle.circle_id',
                     ],
-                    'table'      => 'circle_members',
-                    'alias'      => 'CircleMember',
-                    'fields'     => 'CircleMember.circle_id'
+                    'table'      => 'post_share_circles',
+                    'alias'      => 'PostShareCircle',
+                    'field'      => 'PostShareCircle.circle_id'
                 ]
             ]
         ];
 
-        $circleList = $PostShareCircle->find('count', $postOption);
+        /** @var CircleEntity $circles */
+        $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
+
+        foreach ($circles as $circle) {
+            //If circle is public or team_all, return true
+            if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
+                return true;
+            }
+        }
+
+        $circleMemberOption = [
+            'conditions' => [
+                'CircleMember.circle_id' => Hash::extract($circles->toArray(), '{n}.id'),
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.del_flg'   => false
+            ],
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember',
+            'fields'     => 'CircleMember.circle_id'
+        ];
+
+        $circleList = (int)$CircleMember->find('count', $circleMemberOption);
 
         return $circleList > 0;
     }

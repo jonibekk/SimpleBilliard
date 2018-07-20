@@ -9,6 +9,9 @@ App::import('Model/Entity', 'PostLikeEntity');
  * @property User $User
  * @property Team $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class PostLike extends AppModel
 {
     public $actsAs = [
@@ -39,6 +42,12 @@ class PostLike extends AppModel
         ],
         'User',
         'Team',
+    ];
+
+    public $modelConversionTable = [
+        'user_id' => DataType::INT,
+        'post_id' => DataType::INT,
+        'team_id' => DataType::INT
     ];
 
     public function changeLike($post_id)
@@ -235,78 +244,6 @@ class PostLike extends AppModel
     }
 
     /**
-     * Add a like to a post
-     *
-     * @param int $postId Target post's ID
-     * @param int $userId User ID who added the like
-     * @param int $teamId The team ID where this happens
-     *
-     * @throws Exception
-     * @return PostLikeEntity | null Null for failed addition
-     */
-    public function addPostLike(int $postId, int $userId, int $teamId)
-    {
-        $condition = [
-            'conditions' => [
-                'post_id' => $postId,
-                'user_id' => $userId,
-                'team_id' => $teamId
-            ]
-        ];
-
-        //Check whether like is already exist from the user
-        if (empty($this->find('first', $condition))) {
-            try {
-                $this->create();
-                $newData = [
-                    'post_id' => $postId,
-                    'user_id' => $userId,
-                    'team_id' => $teamId
-                ];
-                /** @var PostLikeEntity $result */
-                $result = $this->useType()->useEntity()->save($newData, false);
-            } catch (Exception $e) {
-                throw $e;
-            }
-        }
-        $count = $this->updateLikeCount($postId) ?? 0;
-        if (empty($result)) {
-            $result = new PostLikeEntity();
-        }
-        $result['like_count'] = $count;
-
-        return $result;
-    }
-
-    /**
-     * Delete a like from a post
-     *
-     * @param int $postId Target post's ID
-     * @param int $userId User ID who removed the like
-     * @param int $teamId The team ID where this happens
-     *
-     * @return int True for successful removal
-     */
-    public function deletePostLike(int $postId, int $userId, int $teamId): int
-    {
-        $condition = [
-            'conditions' => [
-                'post_id' => $postId,
-                'user_id' => $userId,
-                'team_id' => $teamId
-            ]
-        ];
-
-        $existing = $this->useType()->useEntity()->find('first', $condition);
-
-        if (!empty($existing)) {
-            $this->delete($existing['id']);
-        }
-
-        return $this->updateLikeCount($postId) ?? 0;
-    }
-
-    /**
      * Update the count like in a post
      *
      * @param int $postId
@@ -314,6 +251,25 @@ class PostLike extends AppModel
      * @return int
      */
     public function updateLikeCount(int $postId): int
+    {
+        $count = (int)$this->getLikeCount($postId);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $Post->updateAll(['Post.post_like_count' => $count], ['Post.id' => $postId]);
+
+        return $count;
+    }
+
+    /**
+     * Get the like count of a post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function getLikeCount(int $postId): int
     {
         $condition = [
             'conditions' => [
@@ -324,13 +280,6 @@ class PostLike extends AppModel
             ]
         ];
 
-        $count = (int)$this->find('count', $condition);
-
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-
-        $Post->updateAll(['Post.post_like_count' => $count], ['Post.id' => $postId]);
-
-        return $count;
+        return (int)$this->find('count', $condition);
     }
 }

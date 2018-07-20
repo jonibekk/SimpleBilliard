@@ -1,5 +1,7 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('PostLike', 'Model');
+App::import('Model/Entity', 'PostLikeEntity');
 
 /**
  * PostLike Test Case
@@ -229,41 +231,97 @@ class PostLikeTest extends GoalousTestCase
         $this->PostLike->current_team_id = 1;
     }
 
-    public function test_addLike_success()
+    public function test_convertEntityOnFind_success()
     {
         /** @var PostLike $PostLike */
         $PostLike = ClassRegistry::init('PostLike');
-        $postId = 2;
 
-        $initialCount = $PostLike->updateLikeCount($postId);
+        $result = $PostLike->useEntity()->find('first');
 
-        $PostLike->addPostLike($postId, 1, 1);
-        $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
-
-        $PostLike->addPostLike($postId, 2, 1);
-        $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
-
-        $PostLike->addPostLike($postId, 1, 1);
-        $this->assertEquals($initialCount, $PostLike->updateLikeCount($postId));
-
+        $this->assertTrue($result instanceof PostLikeEntity);
     }
 
-    public function test_deleteLike_success()
+    public function test_convertTypeOnFind_success()
     {
         /** @var PostLike $PostLike */
         $PostLike = ClassRegistry::init('PostLike');
-        $postId = 3;
 
-        $initialCount = $PostLike->updateLikeCount($postId);
+        $result = $PostLike->useType()->find('first')['PostLike'];
 
-        $PostLike->addPostLike($postId, 1, 1);
-        $PostLike->addPostLike($postId, 2, 1);
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['post_id']);
+        $this->assertInternalType('int', $result['user_id']);
+        $this->assertInternalType('int', $result['team_id']);
+        $this->assertInternalType('bool', $result['del_flg']);
+    }
 
-        $PostLike->deletePostLike($postId, 1, 1);
-        $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
+    public function test_convertTypeEntityOnFind_success()
+    {
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
 
-        $PostLike->deletePostLike($postId, 1, 1);
-        $this->assertEquals($initialCount, $PostLike->updateLikeCount($postId));
+        $result = $PostLike->useType()->useEntity()->find('first');
 
+        $this->assertTrue($result instanceof PostLikeEntity);
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['post_id']);
+        $this->assertInternalType('int', $result['user_id']);
+        $this->assertInternalType('int', $result['team_id']);
+        $this->assertInternalType('bool', $result['del_flg']);
+    }
+
+    public function test_convertEntityOnSave_success()
+    {
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+
+        $newData = [
+            'post_id' => 1,
+            'user_id' => 5,
+            'team_id' => 1
+        ];
+
+        $result = $PostLike->useEntity()->save($newData, false);
+
+        $this->assertTrue($result instanceof PostLikeEntity);
+    }
+
+    public function test_convertTypeOnSave_success()
+    {
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+
+        $newData = [
+            'post_id' => 1,
+            'user_id' => 5,
+            'team_id' => 1
+        ];
+
+        $result = $PostLike->useType()->save($newData, false)['PostLike'];
+
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['post_id']);
+        $this->assertInternalType('int', $result['user_id']);
+        $this->assertInternalType('int', $result['team_id']);
+    }
+
+    public function test_convertTypeEntityOnSave_success()
+    {
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+
+        $newData = [
+            'post_id' => 1,
+            'user_id' => 5,
+            'team_id' => 1
+        ];
+
+        $result = $PostLike->useType()->useEntity()->save($newData, false);
+
+        $this->assertTrue($result instanceof PostLikeEntity);
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['post_id']);
+        $this->assertInternalType('int', $result['user_id']);
+        $this->assertInternalType('int', $result['team_id']);
     }
 }
