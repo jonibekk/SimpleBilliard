@@ -521,7 +521,14 @@ class PostService extends AppService
         /** @var CircleEntity $circles */
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
+        if (empty($circles)) {
+            return false;
+        }
+
+        $circleArray = [];
+
         foreach ($circles as $circle) {
+            $circleArray[] = $circle['id'];
             //If circle is public or team_all, return true
             if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
                 return true;
@@ -530,7 +537,7 @@ class PostService extends AppService
 
         $circleMemberOption = [
             'conditions' => [
-                'CircleMember.circle_id' => Hash::extract($circles->toArray(), '{n}.id'),
+                'CircleMember.circle_id' => $circleArray,
                 'CircleMember.user_id'   => $userId,
                 'CircleMember.del_flg'   => false
             ],

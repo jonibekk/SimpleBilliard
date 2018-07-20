@@ -649,8 +649,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(1,  4);
-        $result1 = $PostService->checkUserAccessToPost(1,  4, true);
+        $result = $PostService->checkUserAccessToPost(4,  1);
+        $result1 = $PostService->checkUserAccessToPost(4,  1, true);
 
         $this->assertTrue($result);
         $this->assertFalse($result1);
