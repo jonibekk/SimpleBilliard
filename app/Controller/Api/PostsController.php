@@ -51,7 +51,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 
     public function get_comments(int $postId)
