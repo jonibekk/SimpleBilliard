@@ -1,5 +1,7 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('Circle', 'Model');
+App::import('Model/Entity', 'CircleEntity');
 
 /**
  * Circle Test Case
@@ -361,5 +363,99 @@ class CircleTest extends GoalousTestCase
         $circleId = $this->createCircle(['team_id' => 1]);
         $this->assertTrue($this->Circle->belongToTeam(1, $circleId));
         $this->assertFalse($this->Circle->belongToTeam(2, $circleId));
+    }
+
+    public function test_convertTypeOnFind_success()
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $result = $Circle->useType()->find('first')['Circle'];
+
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['team_id']);
+    }
+
+    public function test_convertEntityOnFind_success()
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $result = $Circle->useEntity()->find('first');
+
+        $this->assertTrue($result instanceof CircleEntity);
+
+    }
+
+    public function test_convertTypeEntityOnFind_success()
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $result = $Circle->useType()->useEntity()->find('first');
+
+        $this->assertTrue($result instanceof CircleEntity);
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['team_id']);
+    }
+
+    public function test_convertTypeOnSave_success()
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $newData = [
+            "name"         => "Circle Name",
+            "description"  => "Circle description",
+            "team_id"      => 1,
+            "public_flg"   => true,
+            "team_all_flg" => false
+        ];
+
+        $result = $Circle->useType()->save($newData, false)['Circle'];
+
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['team_id']);
+
+    }
+
+    public function test_convertEntityOnSave_success()
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $newData = [
+            "name"         => "Circle Name",
+            "description"  => "Circle description",
+            "team_id"      => 1,
+            "public_flg"   => true,
+            "team_all_flg" => false
+        ];
+
+        $result = $Circle->useType()->useEntity()->save($newData, false);
+
+        $this->assertTrue($result instanceof CircleEntity);
+
+    }
+
+    public function test_convertTypeEntityOnSave_success()
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $newData = [
+            "name"         => "Circle Name",
+            "description"  => "Circle description",
+            "team_id"      => 1,
+            "public_flg"   => true,
+            "team_all_flg" => false
+        ];
+
+        $result = $Circle->useType()->useEntity()->save($newData, false);
+
+        $this->assertTrue($result instanceof CircleEntity);
+        $this->assertInternalType('int', $result['id']);
+        $this->assertInternalType('int', $result['team_id']);
+
     }
 }
