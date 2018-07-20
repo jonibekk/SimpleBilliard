@@ -1,4 +1,5 @@
 <?php
+App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PostLikeService');
 App::uses('PostLike', 'Model');
 

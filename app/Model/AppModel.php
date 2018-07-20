@@ -750,9 +750,8 @@ class AppModel extends Model
      *
      * @return array | BaseEntity
      */
-    private function postProcess(array $data)
+    private function postProcess(array $data = [])
     {
-        if (empty($data)) return [];
         foreach ($this->postProcessFunctions as $callable) {
             if (!is_callable($callable)) {
                 throw new RuntimeException("Inserted element is not a callable");
