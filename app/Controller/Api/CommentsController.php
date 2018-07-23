@@ -1,6 +1,6 @@
 <?php
 App::import('Service', 'CommentService');
-App::uses('CommentLike', 'Model');
+App::import('Service', 'CommentLikeService');
 App::uses('BaseApiController', 'Controller/Api');
 
 /**
@@ -11,7 +11,6 @@ App::uses('BaseApiController', 'Controller/Api');
  */
 class CommentsController extends BaseApiController
 {
-
     /**
      * Endpoint for adding a like to a post
      *
@@ -21,22 +20,22 @@ class CommentsController extends BaseApiController
      */
     public function post_like(int $commentId)
     {
-        $error = $this->validateLike($commentId);
+        $error = $this->validatePostCommentLike($commentId);
 
         if (!empty($error)) {
             return $error;
         }
 
-        /** @var CommentLike $CommentLike */
-        $CommentLike = ClassRegistry::init('CommentLike');
+        /** @var CommentLikeService $CommentLikeService */
+        $CommentLikeService = ClassRegistry::init('CommentLikeService');
 
         try {
-            $CommentLike->addCommentLike($commentId, $this->getUserId(), $this->getTeamId());
+            $commentLike = $CommentLikeService->addCommentLike($commentId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData($commentLike->toArray())->getResponse();
     }
 
     /**
@@ -48,22 +47,22 @@ class CommentsController extends BaseApiController
      */
     public function delete_like(int $commentId)
     {
-        $error = $this->validateLike($commentId);
+        $error = $this->validateDeleteCommentLike($commentId);
 
         if (!empty($error)) {
             return $error;
         }
 
-        /** @var CommentLike $CommentLike */
-        $CommentLike = ClassRegistry::init('CommentLike');
+        /** @var CommentLikeService $CommentLikeService */
+        $CommentLikeService = ClassRegistry::init('CommentLikeService');
 
         try {
-            $CommentLike->removeCommentLike($commentId, $this->getUserId(), $this->getTeamId());
+            $newCount = $CommentLikeService->removeCommentLike($commentId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData(['like_count' => $newCount])->getResponse();
 
     }
 
@@ -72,7 +71,7 @@ class CommentsController extends BaseApiController
      *
      * @return ErrorResponse | null
      */
-    private function validateLike(int $commentId)
+    private function validatePostCommentLike(int $commentId)
     {
         if (empty($commentId) && !is_int($commentId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -84,6 +83,20 @@ class CommentsController extends BaseApiController
         if (!$CommentService->checkUserHasAccessToPost($this->getUserId(), $commentId)) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                                 ->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int $commentId
+     *
+     * @return ErrorResponse | null
+     */
+    private function validateDeleteCommentLike(int $commentId)
+    {
+        if (empty($commentId) && !is_int($commentId)) {
+            return ErrorResponse::badRequest()->getResponse();
         }
 
         return null;

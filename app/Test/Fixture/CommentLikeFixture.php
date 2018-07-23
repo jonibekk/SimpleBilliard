@@ -88,6 +88,13 @@ class CommentLikeFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = array();
+    public $records = [
+        [
+            'id'         => 1,
+            'comment_id' => 123,
+            'user_id'    => 1,
+            'team_id'    => 1,
+        ]
+    ];
 
 }

@@ -1,5 +1,7 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('CommentLike', 'Model');
+App::import('Model/Entity', 'CommentLikeEntity');
 
 /**
  * CommentLike Test Case
@@ -180,40 +182,96 @@ class CommentLikeTest extends GoalousTestCase
         $this->CommentLike->current_team_id = 1;
     }
 
-    public function test_addCommentLike_success()
+    public function test_convertEntityOnFind_success()
     {
         /** @var CommentLike $CommentLike */
-        $CommentLike = ClassRegistry::init("CommentLike");
-        $commentId = 1;
+        $CommentLike = ClassRegistry::init('CommentLike');
 
-        $initialCount = $CommentLike->updateCommentLikeCount(1);
+        $commentLike = $CommentLike->useEntity()->find('first');
 
-        $CommentLike->addCommentLike($commentId, 1, 1);
-        $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
-
-        $CommentLike->addCommentLike($commentId, 2, 1);
-        $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
-
-        $CommentLike->addCommentLike($commentId, 1, 1);
-        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
+        $this->assertTrue($commentLike instanceof CommentLikeEntity);
     }
 
-    public function test_removeCommentLike_success()
+    public function test_convertTypeOnFind_success()
     {
         /** @var CommentLike $CommentLike */
-        $CommentLike = ClassRegistry::init("CommentLike");
-        $commentId = 1;
+        $CommentLike = ClassRegistry::init('CommentLike');
 
-        $initialCount = $CommentLike->updateCommentLikeCount(1);
+        $commentLike = $CommentLike->useType()->find('first')['CommentLike'];
 
-        $CommentLike->addCommentLike($commentId, 1, 1);
-        $CommentLike->addCommentLike($commentId, 2, 1);
-
-        $CommentLike->removeCommentLike($commentId, 1, 1);
-        $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
-
-        $CommentLike->removeCommentLike($commentId, 1, 1);
-        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
-
+        $this->assertInternalType('int', $commentLike['id']);
+        $this->assertInternalType('int', $commentLike['comment_id']);
+        $this->assertInternalType('int', $commentLike['user_id']);
+        $this->assertInternalType('int', $commentLike['team_id']);
     }
+
+    public function test_convertTypeEntityOnFind_success()
+    {
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init('CommentLike');
+
+        $commentLike = $CommentLike->useType()->useEntity()->find('first');
+
+        $this->assertTrue($commentLike instanceof CommentLikeEntity);
+        $this->assertInternalType('int', $commentLike['id']);
+        $this->assertInternalType('int', $commentLike['comment_id']);
+        $this->assertInternalType('int', $commentLike['user_id']);
+        $this->assertInternalType('int', $commentLike['team_id']);
+    }
+
+    public function test_convertEntityOnSave_success()
+    {
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init('CommentLike');
+
+        $newData = [
+            'comment_id' => "1",
+            'user_id'    => "1",
+            'team_id'    => "1"
+        ];
+
+        $commentLike = $CommentLike->useEntity()->save($newData, false);
+
+        $this->assertTrue($commentLike instanceof CommentLikeEntity);
+    }
+
+    public function test_convertTypeOnSave_success()
+    {
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init('CommentLike');
+
+        $newData = [
+            'comment_id' => "1",
+            'user_id'    => "1",
+            'team_id'    => "1"
+        ];
+
+        $commentLike = $CommentLike->useType()->save($newData, false)['CommentLike'];
+
+        $this->assertInternalType('int', $commentLike['id']);
+        $this->assertInternalType('int', $commentLike['comment_id']);
+        $this->assertInternalType('int', $commentLike['user_id']);
+        $this->assertInternalType('int', $commentLike['team_id']);
+    }
+
+    public function test_convertTypeEntityOnSave_success()
+    {
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init('CommentLike');
+
+        $newData = [
+            'comment_id' => "1",
+            'user_id'    => "1",
+            'team_id'    => "1"
+        ];
+
+        $commentLike = $CommentLike->useType()->useEntity()->save($newData, false);
+
+        $this->assertTrue($commentLike instanceof CommentLikeEntity);
+        $this->assertInternalType('int', $commentLike['id']);
+        $this->assertInternalType('int', $commentLike['comment_id']);
+        $this->assertInternalType('int', $commentLike['user_id']);
+        $this->assertInternalType('int', $commentLike['team_id']);
+    }
+
 }

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'CommentLike');
 
 /**
  * CommentLike Model
@@ -8,6 +9,9 @@ App::uses('AppModel', 'Model');
  * @property User    $User
  * @property Team    $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class CommentLike extends AppModel
 {
     public $actsAs = [
@@ -38,6 +42,12 @@ class CommentLike extends AppModel
         ],
         'User',
         'Team',
+    ];
+
+    protected $modelConversionTable = [
+        'comment_id' => DataType::INT,
+        'user_id'    => DataType::INT,
+        'team_id'    => DataType::INT
     ];
 
     public function changeLike($comment_id)
@@ -168,72 +178,6 @@ class CommentLike extends AppModel
     }
 
     /**
-     * Add a like to a comment
-     *
-     * @param int $commentId
-     * @param int $userId
-     * @param int $teamId
-     *
-     * @throws Exception
-     * @return bool True on successful addition
-     */
-    public function addCommentLike(int $commentId, int $userId, int $teamId): bool
-    {
-        $newData = [
-            'comment_id' => $commentId,
-            'user_id'    => $userId,
-            'team_id'    => $teamId
-        ];
-
-        $condition['conditions'] = $newData;
-
-        if (empty($this->find('first', $condition))) {
-            try {
-                $this->create();
-                $this->save($newData, false);
-            } catch (Exception $e) {
-                throw $e;
-            }
-            $this->updateCommentLikeCount($commentId);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Remove like from a comment
-     *
-     * @param int $commentId
-     * @param int $userId
-     * @param int $teamId
-     *
-     * @return bool True on successful removal
-     */
-    public function removeCommentLike(int $commentId, int $userId, int $teamId): bool
-    {
-        $condition = [
-            'conditions' => [
-                'comment_id' => $commentId,
-                'user_id'    => $userId,
-                'team_id'    => $teamId
-            ]
-        ];
-
-        $existing = $this->find('first', $condition);
-
-        if (empty($existing)) {
-            return false;
-        }
-
-        $this->delete($existing['CommentLike']['id']);
-        $this->updateCommentLikeCount($commentId);
-
-        return true;
-
-    }
-
-    /**
      * Update the count like in a comment
      *
      * @param int $commentId
@@ -242,13 +186,7 @@ class CommentLike extends AppModel
      */
     public function updateCommentLikeCount(int $commentId): int
     {
-        $condition = [
-            'conditions' => [
-                'comment_id' => $commentId
-            ]
-        ];
-
-        $count = (int)$this->find('count', $condition);
+        $count = $this->getCommentLikeCount($commentId);
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
@@ -256,5 +194,26 @@ class CommentLike extends AppModel
         $Comment->updateAll(['Comment.comment_like_count' => $count], ['Comment.id' => $commentId]);
 
         return $count;
+    }
+
+    /**
+     * Get the comment like count of a comment
+     *
+     * @param int $commentId
+     *
+     * @return int
+     */
+    public function getCommentLikeCount(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId
+            ],
+            'fields'     => [
+                'CommentLike.id'
+            ]
+        ];
+
+        return (int)$this->find('count', $condition) ?? 0;
     }
 }

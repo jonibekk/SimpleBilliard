@@ -5,9 +5,10 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
-App::import('Model', 'User');
-App::import('Model', 'Circle');
+App::uses('User', 'Model');
+App::uses('Circle', 'Model');
 App::import('Model', 'HavingMentionTrait');
+App::import('Model/Entity', 'CommentEntity');
 
 use Goalous\Enum\DataType\DataType as DataType;
 
@@ -24,7 +25,6 @@ use Goalous\Enum\DataType\DataType as DataType;
  */
 class Comment extends AppModel
 {
-
     use HavingMentionTrait;
 
     const MAX_COMMENT_LIMIT = 3;
@@ -179,9 +179,9 @@ class Comment extends AppModel
      * @var array
      */
     protected $modelConversionTable = [
-        'post_id' => DataType::INT,
-        'user_id' => DataType::INT,
-        'team_id' => DataType::INT,
+        'post_id'            => DataType::INT,
+        'user_id'            => DataType::INT,
+        'team_id'            => DataType::INT,
         'comment_like_count' => DataType::INT,
         'comment_read_count' => DataType::INT
     ];

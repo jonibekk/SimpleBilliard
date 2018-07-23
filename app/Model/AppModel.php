@@ -710,7 +710,11 @@ class AppModel extends Model
      */
     public function save($data = null, $validate = true, $fieldList = array())
     {
+        $functions = $this->postProcessFunctions;
+
         $result = parent::save($data, $validate, $fieldList);
+
+        $this->postProcessFunctions = $functions;
 
         if (is_array($result)) {
             $result = $this->postProcess($result);
