@@ -252,7 +252,7 @@ class PostLike extends AppModel
      */
     public function updateLikeCount(int $postId): int
     {
-        $count = (int)$this->getLikeCount($postId);
+        $count = (int)$this->countPostLike($postId);
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -269,7 +269,7 @@ class PostLike extends AppModel
      *
      * @return int
      */
-    public function getLikeCount(int $postId): int
+    public function countPostLike(int $postId): int
     {
         $condition = [
             'conditions' => [

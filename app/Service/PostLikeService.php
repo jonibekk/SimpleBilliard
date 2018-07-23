@@ -8,7 +8,6 @@ App::uses('PostLike', 'Model');
  * Date: 2018/07/20
  * Time: 12:24
  */
-
 class PostLikeService extends AppService
 {
 
@@ -27,17 +26,21 @@ class PostLikeService extends AppService
         /** @var PostLike $PostLike */
         $PostLike = ClassRegistry::init('PostLike');
 
-        $this->TransactionManager->begin();
-        try {
-            $condition = [
-                'conditions' => [
-                    'post_id' => $postId,
-                    'user_id' => $userId,
-                    'team_id' => $teamId
-                ]
-            ];
-            //Check whether like is already exist from the user
-            if (empty($PostLike->find('first', $condition))) {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        //Check whether like is already exist from the user
+        if (empty($PostLike->find('first', $condition))) {
+            try {
+                $this->TransactionManager->begin();
                 $PostLike->create();
                 $newData = [
                     'post_id' => $postId,
@@ -46,23 +49,27 @@ class PostLikeService extends AppService
                 ];
                 /** @var PostLikeEntity $result */
                 $result = $PostLike->useType()->useEntity()->save($newData, false);
+
+                $count = $PostLike->updateLikeCount($postId) ?? 0;
+
+                $this->TransactionManager->commit();
+
+            } catch (Exception $e) {
+                $this->TransactionManager->rollback();
+                CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                CakeLog::emergency($e->getTraceAsString());
+                throw $e;
             }
-            $count = $PostLike->updateLikeCount($postId) ?? 0;
-
-            if (empty($result)) {
-                $result = new PostLikeEntity();
-            }
-
-            $result['like_count'] = $count;
-
-            $this->TransactionManager->commit();
-
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::emergency($e->getTraceAsString());
-            throw $e;
+        } else {
+            $count = $PostLike->countPostLike($postId);
         }
+
+        if (empty($result)) {
+            $result = new PostLikeEntity();
+        }
+
+        $result['like_count'] = $count;
+
         return $result;
     }
 
@@ -79,31 +86,34 @@ class PostLikeService extends AppService
     {
         /** @var PostLike $PostLike */
         $PostLike = ClassRegistry::init('PostLike');
-        try {
-            $condition = [
-                'conditions' => [
-                    'post_id' => $postId,
-                    'user_id' => $userId
-                ]
-            ];
 
-            $existing = $PostLike->useType()->useEntity()->find('first', $condition);
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+                'user_id' => $userId
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
 
-            if (!empty($existing)) {
+        $existing = $PostLike->find('first', $condition);
+
+        if (!empty($existing)) {
+            try {
                 $this->TransactionManager->begin();
-                $PostLike->delete($existing['id']);
+                $PostLike->delete($existing['PostLike']['id']);
                 $count = $PostLike->updateLikeCount($postId);
                 $this->TransactionManager->commit();
-            }
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            CakeLog::emergency($e->getTraceAsString());
-            throw $e;
-        }
 
+            } catch (Exception $e) {
+                $this->TransactionManager->rollback();
+                CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                CakeLog::emergency($e->getTraceAsString());
+                throw $e;
+            }
+        }
         return $count ?? 0;
     }
-
 
 }
