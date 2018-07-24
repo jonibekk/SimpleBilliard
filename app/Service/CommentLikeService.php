@@ -1,7 +1,7 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Model/Entity', 'CommentLikeEntity');
 App::uses('CommentLike', 'Model');
-App::uses('Model/Entity', 'CommentLikeEntity');
 
 /**
  * Created by PhpStorm.
@@ -26,36 +26,40 @@ class CommentLikeService extends AppService
         /** @var CommentLike $CommentLike */
         $CommentLike = ClassRegistry::init('CommentLike');
 
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
         $newData = [
             'comment_id' => $commentId,
             'user_id'    => $userId,
             'team_id'    => $teamId
         ];
 
-        try {
-            $this->TransactionManager->begin();
-            $condition['conditions'] = $newData;
+        $condition['conditions'] = $newData;
 
-            if (empty($CommentLike->find('first', $condition))) {
-
+        if (empty($CommentLike->find('first', $condition))) {
+            try {
+                $this->TransactionManager->begin();
                 $CommentLike->create();
-                $res = $CommentLike->useType()->useEntity()->save($newData, false);
+                $newCommentLike = $CommentLike->useType()->useEntity()->save($newData, false);
 
                 $newCount = $CommentLike->updateCommentLikeCount($commentId);
 
                 $this->TransactionManager->commit();
 
-                $res['like_count'] = $newCount;
-
-                return $res;
+            } catch (Exception $e) {
+                $this->TransactionManager->rollback();
+                throw $e;
             }
-
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            throw $e;
         }
 
-        return null;
+        if (empty($newCommentLike)) {
+            $newCommentLike = new CommentLikeEntity();
+        }
+
+        $newCommentLike['like_count'] = $newCount ?? $Comment->getCommentLikeCount($commentId) ?? 0;
+
+        return $newCommentLike;
     }
 
     /**
@@ -72,6 +76,9 @@ class CommentLikeService extends AppService
     {
         /** @var CommentLike $CommentLike */
         $CommentLike = ClassRegistry::init('CommentLike');
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
 
         $condition = [
             'conditions' => [
@@ -96,7 +103,7 @@ class CommentLikeService extends AppService
             throw $e;
         }
 
-        return $newCount ?? 0;
+        return $newCount ?? $Comment->getCommentLikeCount($commentId) ?? 0;
     }
 
 }

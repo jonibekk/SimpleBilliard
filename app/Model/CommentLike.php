@@ -186,7 +186,7 @@ class CommentLike extends AppModel
      */
     public function updateCommentLikeCount(int $commentId): int
     {
-        $count = $this->getCommentLikeCount($commentId);
+        $count = $this->countCommentLike($commentId);
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
@@ -197,13 +197,13 @@ class CommentLike extends AppModel
     }
 
     /**
-     * Get the comment like count of a comment
+     * Count the number of like of a comment
      *
      * @param int $commentId
      *
      * @return int
      */
-    public function getCommentLikeCount(int $commentId): int
+    public function countCommentLike(int $commentId): int
     {
         $condition = [
             'conditions' => [

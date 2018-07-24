@@ -659,4 +659,25 @@ class Comment extends AppModel
         }
         return $ranking;
     }
+
+    /**
+     * Get the like count of a comment
+     *
+     * @param int $commentId
+     *
+     * @return int
+     */
+    public function getCommentLikeCount(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $commentId
+            ],
+            'fields'     => [
+                'Comment.comment_like_count'
+            ]
+        ];
+
+        return $this->find('first', $condition)['Comment']['comment_like_count'];
+    }
 }
