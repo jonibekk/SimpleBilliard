@@ -522,7 +522,7 @@ class PostService extends AppService
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
         if (empty($circles)) {
-            throw new RuntimeException(__("This post doesn't exist."));
+            throw new NotFoundException(__("This post doesn't exist."));
         }
 
         $circleArray = [];

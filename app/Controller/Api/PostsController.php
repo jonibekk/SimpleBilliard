@@ -187,8 +187,8 @@ class PostsController extends BasePagingController
 
         try {
             $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
-        } catch (RuntimeException $runtimeException) {
-            return ErrorResponse::notFound()->withException($runtimeException)->getResponse();
+        } catch (NotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
