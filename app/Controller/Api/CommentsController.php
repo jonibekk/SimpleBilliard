@@ -30,7 +30,7 @@ class CommentsController extends BaseApiController
         $CommentLikeService = ClassRegistry::init('CommentLikeService');
 
         try {
-            $commentLike = $CommentLikeService->addCommentLike($commentId, $this->getUserId(), $this->getTeamId());
+            $commentLike = $CommentLikeService->add($commentId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
@@ -57,7 +57,7 @@ class CommentsController extends BaseApiController
         $CommentLikeService = ClassRegistry::init('CommentLikeService');
 
         try {
-            $newCount = $CommentLikeService->removeCommentLike($commentId, $this->getUserId(), $this->getTeamId());
+            $newCount = $CommentLikeService->delete($commentId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

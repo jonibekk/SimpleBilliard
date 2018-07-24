@@ -21,7 +21,7 @@ class CommentLikeService extends AppService
      * @throws Exception
      * @return CommentLikeEntity | null Entity on successful addition
      */
-    public function addCommentLike(int $commentId, int $userId, int $teamId)
+    public function add(int $commentId, int $userId, int $teamId)
     {
         /** @var CommentLike $CommentLike */
         $CommentLike = ClassRegistry::init('CommentLike');
@@ -72,7 +72,7 @@ class CommentLikeService extends AppService
      * @return int New like count like
      * @throws Exception
      */
-    public function removeCommentLike(int $commentId, int $userId, int $teamId): int
+    public function delete(int $commentId, int $userId, int $teamId): int
     {
         /** @var CommentLike $CommentLike */
         $CommentLike = ClassRegistry::init('CommentLike');
