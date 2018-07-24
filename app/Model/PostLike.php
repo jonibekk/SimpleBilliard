@@ -252,7 +252,7 @@ class PostLike extends AppModel
      */
     public function updateLikeCount(int $postId): int
     {
-        $count = (int)$this->countPostLike($postId);
+        $count = $this->countPostLike($postId);
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
