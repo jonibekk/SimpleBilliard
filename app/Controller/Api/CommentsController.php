@@ -73,7 +73,7 @@ class CommentsController extends BaseApiController
      */
     private function validatePostCommentLike(int $commentId)
     {
-        if (empty($commentId) && !is_int($commentId)) {
+        if (empty($commentId) || !is_int($commentId)) {
             return ErrorResponse::badRequest()->getResponse();
         }
 
@@ -99,7 +99,7 @@ class CommentsController extends BaseApiController
      */
     private function validateDeleteCommentLike(int $commentId)
     {
-        if (empty($commentId) && !is_int($commentId)) {
+        if (empty($commentId) || !is_int($commentId)) {
             return ErrorResponse::badRequest()->getResponse();
         }
 
