@@ -84,7 +84,7 @@ class PostsController extends BasePagingController
      */
     public function post_like(int $postId): CakeResponse
     {
-        $res = $this->validateLike($postId);
+        $res = $this->validatePostLike($postId);
 
         if (!empty($res)) {
             return $res;
@@ -109,7 +109,7 @@ class PostsController extends BasePagingController
      */
     public function delete_like(int $postId): CakeResponse
     {
-        $res = $this->validateLike($postId);
+        $res = $this->validateDeleteLike($postId);
 
         if (!empty($res)) {
             return $res;
@@ -176,7 +176,7 @@ class PostsController extends BasePagingController
      *
      * @return CakeResponse|null
      */
-    private function validateLike(int $postId)
+    private function validatePostLike(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -185,10 +185,34 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
+        try {
+            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        } catch (RuntimeException $runtimeException) {
+            return ErrorResponse::notFound()->withException($runtimeException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
         //Check if user belongs to a circle where the post is shared to
-        if (!$PostService->checkUserAccessToPost($this->getUserId(), $postId)) {
+        if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have access to this post"))->getResponse();
 
+        }
+
+        return null;
+    }
+
+    /**
+     * Validation method for the endpoint delete post like
+     *
+     * @param int $postId
+     *
+     * @return BaseApiResponse|ErrorResponse|null
+     */
+    private function validateDeleteLike(int $postId)
+    {
+        if (empty($postId) || !is_int($postId)) {
+            return ErrorResponse::badRequest()->getResponse();
         }
 
         return null;
@@ -203,6 +227,10 @@ class PostsController extends BasePagingController
      */
     public function validateGetComments(int $postId)
     {
+        if (empty($postId) || !is_int($postId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 

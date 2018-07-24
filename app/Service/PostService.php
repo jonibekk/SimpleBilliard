@@ -522,7 +522,7 @@ class PostService extends AppService
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
         if (empty($circles)) {
-            return false;
+            throw new RuntimeException(__("This post doesn't exist."));
         }
 
         $circleArray = [];
@@ -546,7 +546,7 @@ class PostService extends AppService
             'fields'     => 'CircleMember.circle_id'
         ];
 
-        $circleList = (int)$CircleMember->find('count', $circleMemberOption);
+        $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
 
         return $circleList > 0;
     }
