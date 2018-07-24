@@ -94,7 +94,7 @@ class PostsController extends BasePagingController
         $PostLikeService = ClassRegistry::init('PostLikeService');
 
         try {
-            $result = $PostLikeService->addPostLike($postId, $this->getUserId(), $this->getTeamId());
+            $result = $PostLikeService->add($postId, $this->getUserId(), $this->getTeamId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

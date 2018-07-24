@@ -21,7 +21,7 @@ class PostLikeService extends AppService
      * @throws Exception
      * @return PostLikeEntity | null Null for failed addition
      */
-    public function addPostLike(int $postId, int $userId, int $teamId)
+    public function add(int $postId, int $userId, int $teamId)
     {
         /** @var PostLike $PostLike */
         $PostLike = ClassRegistry::init('PostLike');
@@ -82,7 +82,7 @@ class PostLikeService extends AppService
      * @return int New like count
      * @throws Exception
      */
-    public function deletePostLike(int $postId, int $userId): int
+    public function delete(int $postId, int $userId): int
     {
         /** @var PostLike $PostLike */
         $PostLike = ClassRegistry::init('PostLike');

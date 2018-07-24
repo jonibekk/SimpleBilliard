@@ -37,13 +37,13 @@ class PostLikeServiceTest extends GoalousTestCase
         $initialCount = $PostLike->updateLikeCount($postId);
 
         try {
-            $PostLikeService->addPostLike($postId, 1, 1);
+            $PostLikeService->add($postId, 1, 1);
             $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
 
-            $PostLikeService->addPostLike($postId, 2, 1);
+            $PostLikeService->add($postId, 2, 1);
             $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
 
-            $PostLikeService->addPostLike($postId, 1, 1);
+            $PostLikeService->add($postId, 1, 1);
             $this->assertEquals($initialCount, $PostLike->updateLikeCount($postId));
         } catch (Exception $e) {
             $this->fail();
@@ -63,8 +63,8 @@ class PostLikeServiceTest extends GoalousTestCase
         $initialCount = $PostLike->updateLikeCount($postId);
 
         try {
-            $PostLikeService->addPostLike($postId, 1, 1);
-            $PostLikeService->addPostLike($postId, 2, 1);
+            $PostLikeService->add($postId, 1, 1);
+            $PostLikeService->add($postId, 2, 1);
 
             $PostLikeService->deletePostLike($postId, 1);
             $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
