@@ -36,11 +36,17 @@ class CommentService extends AppService
             ]
         ];
 
+        $comments = $Comment->useType()->find('first', $options);
+
+        if (empty($comments)) {
+            throw new InvalidArgumentException(__("This comment doesn't exist."));
+        }
+
         /** @var int $postId */
-        $postId = Hash::extract($Comment->useType()->find('first', $options), '{s}.post_id')[0];
+        $postId = Hash::extract($comments, '{s}.post_id')[0];
 
         if (empty($postId)) {
-            throw new RuntimeException("Post ID can't be empty");
+            throw new InvalidArgumentException(__("This post doesn't exist."));
         }
 
         return $PostService->checkUserAccessToPost($userId, $postId);

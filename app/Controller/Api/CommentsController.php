@@ -79,8 +79,12 @@ class CommentsController extends BaseApiController
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-
-        if (!$CommentService->checkUserHasAccessToPost($this->getUserId(), $commentId)) {
+        try {
+            $access = $CommentService->checkUserHasAccessToPost($this->getUserId(), $commentId);
+        } catch (InvalidArgumentException $invalidArgumentException) {
+            return ErrorResponse::badRequest()->withException($invalidArgumentException)->getResponse();
+        }
+        if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                                 ->getResponse();
         }
