@@ -263,7 +263,7 @@ class PostLike extends AppModel
     }
 
     /**
-     * Get the like count of a post
+     * Count like count of a post
      *
      * @param int $postId
      *

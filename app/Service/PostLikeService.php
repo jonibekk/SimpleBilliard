@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('PostLike', 'Model');
+App::uses('Post', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -50,7 +51,7 @@ class PostLikeService extends AppService
                 /** @var PostLikeEntity $result */
                 $result = $PostLike->useType()->useEntity()->save($newData, false);
 
-                $count = $PostLike->updateLikeCount($postId) ?? 0;
+                $count = $PostLike->updateLikeCount($postId);
 
                 $this->TransactionManager->commit();
 
@@ -92,7 +93,7 @@ class PostLikeService extends AppService
                 'user_id' => $userId
             ],
             'fields'     => [
-                'id'
+                'id',
             ]
         ];
 
@@ -111,7 +112,8 @@ class PostLikeService extends AppService
                 throw $e;
             }
         }
-        return $count ?? 0;
+
+        return $count ?? $PostLike->countPostLike($postId);
     }
 
 }
