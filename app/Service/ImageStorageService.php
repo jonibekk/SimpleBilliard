@@ -33,6 +33,8 @@ class ImageStorageService extends AppService
                 'modelName' => $modelName,
             ]);
             GoalousLog::emergency($e->getTraceAsString());
+
+            return array_fill_keys($photoStyles, '');
         }
 
         $upload = new UploadHelper(new View());
@@ -49,7 +51,8 @@ class ImageStorageService extends AppService
             }
             $imgUrls[$style] = $upload->uploadUrl($data,
                 "$modelName.photo",
-                ['style' => $style]);
+                ['style' => $style],
+                true);
         }
         return $imgUrls;
     }

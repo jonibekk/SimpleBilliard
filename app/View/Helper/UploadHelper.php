@@ -144,7 +144,7 @@ class UploadHelper extends AppHelper
         return false;
     }
 
-    public function uploadUrl($data, $field, $options = array())
+    public function uploadUrl($data, $field, $options = array(), $isDefImgFromCloud = false)
     {
         $options += array('style' => 'original', 'urlize' => true);
         list($model, $field) = explode('.', $field);
@@ -167,6 +167,7 @@ class UploadHelper extends AppHelper
             return $this->cache[$hash];
         }
 
+        $defaultImgKey = $isDefImgFromCloud ? 's3_default_url' : 'default_url';
         if ($id && !empty($filename)) {
             $settings = UploadBehavior::interpolate($model, $id, $field, $filename, $options['style'],
                 array('webroot' => ''));
@@ -174,12 +175,20 @@ class UploadHelper extends AppHelper
         } else {
             $settings = UploadBehavior::interpolate($model, null, $field, null, $options['style'],
                 array('webroot' => ''));
-            $url = isset($settings['default_url']) ? $settings['default_url'] : null;
+            $url = isset($settings[$defaultImgKey]) ? $settings[$defaultImgKey] : null;
         }
 
-        if (isset($settings['default_url']) && $url == $settings['default_url']) {
-            $url = DS . IMAGES_URL . $url;
-            $url = $options['urlize'] ? $this->Html->url($url) : $url;
+        if (isset($settings[$defaultImgKey]) && $url == $settings[$defaultImgKey]) {
+            if ($isDefImgFromCloud) {
+                if (PUBLIC_ENV) {
+                    $url = $this->substrS3Url($url);
+                } else {
+                    $url = DS . $url;
+                }
+            } else {
+                $url = DS . IMAGES_URL . $url;
+                $url = $options['urlize'] ? $this->Html->url($url) : $url;
+            }
         } else {
             //s3用の処理追加
             $url = $this->substrS3Url($url);
