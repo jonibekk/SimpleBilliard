@@ -119,7 +119,7 @@ class PostsController extends BasePagingController
         $PostLikeService = ClassRegistry::init('PostLikeService');
 
         try {
-            $count = $PostLikeService->deletePostLike($postId, $this->getUserId());
+            $count = $PostLikeService->delete($postId, $this->getUserId());
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

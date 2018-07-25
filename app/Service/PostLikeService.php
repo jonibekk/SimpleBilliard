@@ -56,8 +56,7 @@ class PostLikeService extends AppService
 
             } catch (Exception $e) {
                 $this->TransactionManager->rollback();
-                CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-                CakeLog::emergency($e->getTraceAsString());
+                GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
                 throw $e;
             }
         } else {
@@ -108,8 +107,7 @@ class PostLikeService extends AppService
 
             } catch (Exception $e) {
                 $this->TransactionManager->rollback();
-                CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-                CakeLog::emergency($e->getTraceAsString());
+                GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
                 throw $e;
             }
         }
