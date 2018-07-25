@@ -66,10 +66,10 @@ class PostLikeServiceTest extends GoalousTestCase
             $PostLikeService->add($postId, 1, 1);
             $PostLikeService->add($postId, 2, 1);
 
-            $PostLikeService->deletePostLike($postId, 1);
+            $PostLikeService->delete($postId, 1);
             $this->assertEquals(++$initialCount, $PostLike->updateLikeCount($postId));
 
-            $PostLikeService->deletePostLike($postId, 1);
+            $PostLikeService->delete($postId, 1);
             $this->assertEquals($initialCount, $PostLike->updateLikeCount($postId));
         } catch (Exception $e) {
             $this->fail();
