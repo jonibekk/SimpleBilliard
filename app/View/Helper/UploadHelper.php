@@ -144,6 +144,21 @@ class UploadHelper extends AppHelper
         return false;
     }
 
+    /**
+     * Get uploaded file URl
+     *
+     * @param       $data
+     * @param       $field
+     * @param array $options
+     * @param bool  $isDefImgFromCloud
+     * Until Angular renewal, default image path refer goalous repo assets.
+     * (e.g. <img src="/img/no-image-circle.jpg">)
+     * But from renewal, default images will be placed in s3, not assets.
+     * If old Goalous, set false to $isDefImgFromCloud,
+     * else if from renewal (API v2 later), set true to it.
+     *
+     * @return mixed|null|string
+     */
     public function uploadUrl($data, $field, $options = array(), $isDefImgFromCloud = false)
     {
         $options += array('style' => 'original', 'urlize' => true);
