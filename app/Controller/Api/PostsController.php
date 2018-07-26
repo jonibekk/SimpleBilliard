@@ -15,6 +15,9 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/06/18
  * Time: 15:00
  */
+
+use Goalous\Exception as GlException;
+
 class PostsController extends BasePagingController
 {
 
@@ -84,7 +87,7 @@ class PostsController extends BasePagingController
      */
     public function post_like(int $postId): CakeResponse
     {
-        $res = $this->validatePostLike($postId);
+        $res = $this->validateLike($postId);
 
         if (!empty($res)) {
             return $res;
@@ -109,7 +112,7 @@ class PostsController extends BasePagingController
      */
     public function delete_like(int $postId): CakeResponse
     {
-        $res = $this->validateDeleteLike($postId);
+        $res = $this->validateLike($postId);
 
         if (!empty($res)) {
             return $res;
@@ -176,7 +179,7 @@ class PostsController extends BasePagingController
      *
      * @return CakeResponse|null
      */
-    private function validatePostLike(int $postId)
+    private function validateLike(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -202,22 +205,6 @@ class PostsController extends BasePagingController
         return null;
     }
 
-    /**
-     * Validation method for the endpoint delete post like
-     *
-     * @param int $postId
-     *
-     * @return BaseApiResponse|ErrorResponse|null
-     */
-    private function validateDeleteLike(int $postId)
-    {
-        if (empty($postId) || !is_int($postId)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
-
-        return null;
-    }
-
     /*
      * Validate get comments endpoint
      *
@@ -234,7 +221,11 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        try {
+            $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        } catch (GlException\GoalousNotFoundException $exception){
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        }
 
         if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))

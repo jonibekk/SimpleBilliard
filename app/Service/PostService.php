@@ -15,6 +15,8 @@ App::import('Model/Entity', 'CircleEntity');
 
 use Goalous\Enum as Enum;
 
+
+use Goalous\Exception as GlException;
 /**
  * Class PostService
  */
@@ -522,7 +524,7 @@ class PostService extends AppService
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
         if (empty($circles)) {
-            throw new NotFoundException(__("This post doesn't exist."));
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
         $circleArray = [];

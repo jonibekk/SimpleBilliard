@@ -398,7 +398,6 @@ class UploadHelper extends AppHelper
 
     function gs_prepareS3URL($file, $bucket)
     {
-
         $awsKeyId = AWS_ACCESS_KEY; // this is the non-secret key ID.
         $awsSecretKey = AWS_SECRET_KEY; // this is the SECRET access key!
 
