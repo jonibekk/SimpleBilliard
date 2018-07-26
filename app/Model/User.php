@@ -314,12 +314,13 @@ class User extends AppModel
 
     public $profileFields = [
         'id',
-        'photo_file_name',
         'first_name',
         'last_name',
-        'middle_name',
+        'photo_file_name',
+        'cover_photo_file_name',
         'language',
-        'active_flg',
+        'auto_language_flg',
+        'romanize_flg',
     ];
 
     /**
