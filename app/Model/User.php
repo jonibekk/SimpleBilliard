@@ -99,6 +99,7 @@ class User extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-user.jpg',
+                's3_default_url' => 'sys/defaults/no-image-user.svg',
                 'quality'     => 100,
             ],
             'cover_photo' => [
@@ -109,6 +110,7 @@ class User extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',
+                's3_default_url' => 'sys/defaults/no-image-cover.svg',
                 'quality'     => 100,
             ],
         ]
@@ -312,13 +314,12 @@ class User extends AppModel
 
     public $profileFields = [
         'id',
+        'photo_file_name',
         'first_name',
         'last_name',
-        'photo_file_name',
-        'cover_photo_file_name',
+        'middle_name',
         'language',
-        'auto_language_flg',
-        'romanize_flg',
+        'active_flg',
     ];
 
     /**
@@ -330,15 +331,24 @@ class User extends AppModel
         'id',
         'photo_file_name',
         'cover_photo_file_name',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'language',
+        'active_flg',
+        'last_login',
         'admin_flg',
         'default_team_id',
         'timezone',
         'language',
-        'first_name',
-        'last_name',
-        'middle_name',
-        'auto_language_flg',
         'romanize_flg',
+        'update_email_flg',
+        'agreed_terms_of_service_id',
+        'gender_type',
+        'birth_day',
+        'hide_year_flg',
+        'phone_no',
+        'hometown'
     ];
 
     /**

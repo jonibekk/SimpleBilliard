@@ -10,7 +10,6 @@ class ImageStorageService extends AppService
 {
     /**
      * Get image urls(s3) each size
-     *
      * TODO: Stop using UploadHelper to get s3 url.
      * It is wrong that Helper is called from Service.
      * But currently, it is high risky to use new Class instead of UploadHelper Because it depend on UploadBehavior further more.
@@ -18,11 +17,12 @@ class ImageStorageService extends AppService
      *
      * @param array  $data
      * @param string $modelName
+     * @param string $photoKey
      * @param array  $photoStyles
      *
      * @return array
      */
-    public function getImgUrlEachSize(array $data, string $modelName, array $photoStyles = []) :array
+    public function getImgUrlEachSize(array $data, string $modelName, string $photoKey = 'photo', array $photoStyles = []) :array
     {
         try {
             App::uses($modelName, 'Model');
@@ -38,7 +38,7 @@ class ImageStorageService extends AppService
         }
 
         $upload = new UploadHelper(new View());
-        $defaultStyles = array_keys($Model->actsAs['Upload']['photo']['styles']);
+        $defaultStyles = array_keys($Model->actsAs['Upload'][$photoKey]['styles']);
         if (empty($photoStyles)) {
             $photoStyles = $defaultStyles;
             $photoStyles[] = 'original';

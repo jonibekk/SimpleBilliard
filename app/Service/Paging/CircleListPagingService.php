@@ -117,9 +117,9 @@ class CircleListPagingService extends BasePagingService
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
+        // Set image url each circle
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
-
         foreach ($resultArray as $i => $v) {
             $resultArray[$i]['img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Circle');
         }
