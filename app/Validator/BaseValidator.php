@@ -8,6 +8,7 @@
  */
 
 use Respect\Validation\Validator as validator;
+use \Respect\Validation\Exceptions\NestedValidationException;
 
 abstract class BaseValidator
 {
@@ -25,6 +26,7 @@ abstract class BaseValidator
      *
      * @return bool         Whether validation passed or not
      * @throws \Respect\Validation\Exceptions\NestedValidationException
+     * @throws Exception
      */
     public final function validate($input)
     {
@@ -39,7 +41,31 @@ abstract class BaseValidator
 
         $validatorArray = $this->generateValidationArray($this->rules, is_array($input));
 
-        return validator::allOf($validatorArray)->assert($input) ?? false;
+        try {
+            return validator::allOf($validatorArray)->assert($input) ?? false;
+        } catch (NestedValidationException $exception) {
+            // Applying validation message and translation message to end of validation
+            throw $this->applyValidationMessageAndTranslation($exception);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Apply validation message and translation to validation errors
+     *
+     * @param NestedValidationException $allOfException
+     * @return NestedValidationException
+     */
+    private function applyValidationMessageAndTranslation(NestedValidationException $allOfException): NestedValidationException
+    {
+        if ($allOfException instanceof NestedValidationException) {
+            $allOfException->findMessages([
+                // 'notEmpty' => __('validation.error.required'),
+                // 'email'    => __('validation.error.email_format'),
+            ]);
+        }
+        return $allOfException;
     }
 
     /**
