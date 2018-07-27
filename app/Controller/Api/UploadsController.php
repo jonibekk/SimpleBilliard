@@ -28,8 +28,6 @@ class UploadsController extends BaseApiController
 
         try {
             $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile);
-        } catch (UploadException\Redis\UploadRedisLimitException $limitException) {
-            return ErrorResponse::tooManyRequests()->withException($limitException)->getResponse();
         } catch (UploadException\Redis\UploadRedisSpaceException $spaceException) {
             return ErrorResponse::insufficientStorage()->withException($spaceException)->getResponse();
         } catch (UploadException\Redis\UploadRedisException $redisException) {

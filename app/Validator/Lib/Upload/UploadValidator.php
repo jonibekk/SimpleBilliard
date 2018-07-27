@@ -12,6 +12,7 @@ use Goalous\Exception\Upload as UploadException;
 
 class UploadValidator
 {
+    //100 MB
     const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
     private static $allowedTypes = [
@@ -248,7 +249,8 @@ class UploadValidator
         switch ($type) {
             case "image" :
                 if (!UploadImageValidator::validateResolution($uploadedFile)) {
-                    throw new UploadException\UploadResolutionException();
+                    //TODO translation
+                    throw new UploadException\UploadResolutionException("Image must be smaller than 25MP");
                 }
                 break;
             default:

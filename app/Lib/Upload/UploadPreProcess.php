@@ -6,6 +6,10 @@
  * Time: 13:29
  */
 
+/**
+ * TODO GL-7224
+ * Class UploadPreProcess
+ */
 class UploadPreProcess
 {
     /**
@@ -27,19 +31,22 @@ class UploadPreProcess
                 return $image;
                 break;
             default:
+                $image = $file;
                 break;
         }
 
-        return $file;
+        return $image;
     }
 
     private function rotateImage(UploadedFile $file): UploadedFile
     {
-
+        //TODO
+        return $file;
     }
 
     private function resizeImage(UploadedFile $file): UploadedFile
     {
-
+        //TODO
+        return $file;
     }
 }

@@ -10,7 +10,6 @@ class ErrorResponse extends BaseApiResponse
     const RESPONSE_FORBIDDEN = 403;
     const RESPONSE_NOT_FOUND = 404;
     const RESPONSE_RESOURCE_CONFLICT = 409;
-    const RESPONSE_TOO_MANY_REQUESTS = 429;
     const RESPONSE_INTERNAL_SERVER_ERROR = 500;
     const RESPONSE_INSUFFICIENT_STORAGE = 507;
 
@@ -82,16 +81,6 @@ class ErrorResponse extends BaseApiResponse
     public static function internalServerError(): self
     {
         return self::createResponse(self::RESPONSE_INTERNAL_SERVER_ERROR);
-    }
-
-    /**
-     * Create response 429
-     *
-     * @return self
-     */
-    public static function tooManyRequests(): self
-    {
-        return self::createResponse(self::RESPONSE_TOO_MANY_REQUESTS);
     }
 
     /**

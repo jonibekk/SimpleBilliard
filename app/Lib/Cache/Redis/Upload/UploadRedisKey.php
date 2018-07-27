@@ -30,7 +30,7 @@ class UploadRedisKey
 
     public function get(): string
     {
-        return sprintf('%s:user:%d:team:%d:%s',
+        return sprintf('%s:user:%d:team:%d:uuid:%s',
             self::CACHE_KEY,
             $this->userId,
             $this->teamId,
@@ -39,7 +39,7 @@ class UploadRedisKey
 
     public function getWithoutID(): string
     {
-        return sprintf('%s:user:%d:team:%d',
+        return sprintf('%s:user:%d:team:%d:uuid',
             self::CACHE_KEY,
             $this->userId,
             $this->teamId);

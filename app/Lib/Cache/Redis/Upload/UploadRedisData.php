@@ -21,16 +21,14 @@ class UploadRedisData
      */
     private $timeToLive;
 
-    public function __construct(UploadedFile $file)
+    public function __construct(UploadedFile $file = null)
     {
-        if (empty($file) || $file->isEmpty()) {
-            throw new InvalidArgumentException();
+        if (!empty($file)) {
+            $this->rawFile = $file->getFile();
         }
-
-        $this->rawFile = $file->getFile();
     }
 
-    public function withFile(string $file):self
+    public function withFile(string $file): self
     {
         $this->rawFile = $file;
         return $this;
@@ -54,9 +52,10 @@ class UploadRedisData
      *
      * @return $this
      */
-    public function withTimeToLive(int $timeToLive):self
+    public function withTimeToLive(int $timeToLive): self
     {
         $this->timeToLive = $timeToLive;
         return $this;
     }
+
 }

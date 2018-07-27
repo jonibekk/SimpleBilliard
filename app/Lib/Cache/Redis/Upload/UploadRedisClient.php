@@ -13,21 +13,31 @@ App::uses('InterfaceRedisClient', 'Lib/Cache/Redis');
 class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
 {
     /**
-     * @param UploadRedisKey $key
+     * @param UploadRedisKey | string $key
      *
      * @return UploadRedisData|null
      */
-    public function read(UploadRedisKey $key)
+    public function read($key)
     {
-        $readData = $this->getRedis()->get($key->get());
+        if ($key instanceof UploadRedisKey) {
+            $key = $key->get();
+        } elseif (is_string($key)) {
+            $key = $this->removePrefixFromKey($key);
+        }
+
+        $readData = $this->getRedis()->get($key);
+
         if (false === $readData) {
             return null;
         }
-        //TODO
+
         $data = msgpack_unpack($readData);
 
-        return (new UploadRedisData)
-            ->withUserAgent($data['user_agent'] ?? '');
+        if (!isset($data['file_data'])) {
+            return null;
+        }
+
+        return (new UploadRedisData)->withFile($data['file_data']);
     }
 
     /**
@@ -69,13 +79,18 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
     /**
      * Delete the specified keys
      *
-     * @param UploadRedisKey $key
+     * @param UploadRedisKey | string $key
      *
      * @return int deleted caches
      */
-    public function del(UploadRedisKey $key): int
+    public function del($key): int
     {
-        return $this->getRedis()->del(iterator_to_array($this->keysWithOutPrefix($key)));
+        if ($key instanceof UploadRedisKey) {
+            $key = iterator_to_array($this->keysWithOutPrefix($key))[0];
+        } elseif (is_string($key)) {
+            $key = $this->removePrefixFromKey($key);
+        }
+        return $this->getRedis()->del($key);
     }
 
     /**
@@ -101,8 +116,16 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
      */
     public function search(string $fragment): array
     {
+        $fragment = '*' . $fragment . '*';
         $keys = $this->getRedis()->keys($fragment);
         return $keys;
     }
 
+    /**
+     * Get time to live of the data with given key
+     */
+    public function getTtl(string $key): int
+    {
+        return $this->getRedis()->ttl($this->removePrefixFromKey($key));
+    }
 }
