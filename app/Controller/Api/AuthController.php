@@ -4,6 +4,7 @@ App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
+App::uses('LangUtil', 'Util');
 
 use Goalous\Exception as GlException;
 
@@ -77,6 +78,7 @@ class AuthController extends BaseApiController
         $data['token'] = $jwt->token();
         $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
         $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
+        $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
         return $data;
     }
 
