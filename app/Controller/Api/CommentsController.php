@@ -9,6 +9,8 @@ App::uses('BaseApiController', 'Controller/Api');
  * Date: 2018/06/20
  * Time: 14:21
  */
+use Goalous\Exception as GlException;
+
 class CommentsController extends BaseApiController
 {
     /**
@@ -20,7 +22,7 @@ class CommentsController extends BaseApiController
      */
     public function post_like(int $commentId)
     {
-        $error = $this->validatePostCommentLike($commentId);
+        $error = $this->validateLike($commentId);
 
         if (!empty($error)) {
             return $error;
@@ -47,7 +49,7 @@ class CommentsController extends BaseApiController
      */
     public function delete_like(int $commentId)
     {
-        $error = $this->validateDeleteCommentLike($commentId);
+        $error = $this->validateLike($commentId);
 
         if (!empty($error)) {
             return $error;
@@ -71,7 +73,7 @@ class CommentsController extends BaseApiController
      *
      * @return ErrorResponse | null
      */
-    private function validatePostCommentLike(int $commentId)
+    private function validateLike(int $commentId)
     {
         if (empty($commentId) || !is_int($commentId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -80,27 +82,13 @@ class CommentsController extends BaseApiController
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
         try {
-            $access = $CommentService->checkUserHasAccessToPost($this->getUserId(), $commentId);
-        } catch (NotFoundException $notFoundException) {
+            $access = $CommentService->checkUserAccessToComment($this->getUserId(), $commentId);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         }
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                                 ->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * @param int $commentId
-     *
-     * @return ErrorResponse | null
-     */
-    private function validateDeleteCommentLike(int $commentId)
-    {
-        if (empty($commentId) || !is_int($commentId)) {
-            return ErrorResponse::badRequest()->getResponse();
         }
 
         return null;

@@ -9,6 +9,9 @@ App::uses('Comment', 'Model');
  * Date: 2018/07/17
  * Time: 16:50
  */
+
+use Goalous\Exception as GlException;
+
 class CommentService extends AppService
 {
     /**
@@ -19,7 +22,7 @@ class CommentService extends AppService
      *
      * @return bool
      */
-    public function checkUserHasAccessToPost(int $userId, int $commentId): bool
+    public function checkUserAccessToComment(int $userId, int $commentId): bool
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
@@ -39,7 +42,7 @@ class CommentService extends AppService
         $comments = $Comment->useType()->find('first', $options);
 
         if (empty($comments)) {
-            throw new NotFoundException(__("This comment doesn't exist."));
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
         /** @var int $postId */

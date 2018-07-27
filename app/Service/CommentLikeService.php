@@ -57,7 +57,7 @@ class CommentLikeService extends AppService
             $newCommentLike = new CommentLikeEntity();
         }
 
-        $newCommentLike['like_count'] = $newCount ?? $Comment->getCommentLikeCount($commentId) ?? 0;
+        $newCommentLike['like_count'] = $newCount ?? $Comment->getCommentLikeCount($commentId);
 
         return $newCommentLike;
     }
@@ -90,20 +90,19 @@ class CommentLikeService extends AppService
 
         $existing = $CommentLike->find('first', $condition);
 
-        if (empty($existing)) {
-            return false;
-        }
-        try {
-            $this->TransactionManager->begin();
-            $CommentLike->delete($existing['CommentLike']['id']);
-            $newCount = $CommentLike->updateCommentLikeCount($commentId);
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            throw $e;
+        if (!empty($existing)) {
+            try {
+                $this->TransactionManager->begin();
+                $CommentLike->delete($existing['CommentLike']['id']);
+                $newCount = $CommentLike->updateCommentLikeCount($commentId);
+                $this->TransactionManager->commit();
+            } catch (Exception $e) {
+                $this->TransactionManager->rollback();
+                throw $e;
+            }
         }
 
-        return $newCount ?? $Comment->getCommentLikeCount($commentId) ?? 0;
+        return $newCount ?? $Comment->getCommentLikeCount($commentId);
     }
 
 }
