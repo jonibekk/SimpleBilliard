@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'PostLikeEntity');
 
 /**
  * PostLike Model
@@ -8,6 +9,9 @@ App::uses('AppModel', 'Model');
  * @property User $User
  * @property Team $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class PostLike extends AppModel
 {
     public $actsAs = [
@@ -38,6 +42,12 @@ class PostLike extends AppModel
         ],
         'User',
         'Team',
+    ];
+
+    public $modelConversionTable = [
+        'user_id' => DataType::INT,
+        'post_id' => DataType::INT,
+        'team_id' => DataType::INT
     ];
 
     public function changeLike($post_id)
@@ -231,5 +241,45 @@ class PostLike extends AppModel
             $ranking[$v['PostLike']['post_id']] = $v[0]['cnt'];
         }
         return $ranking;
+    }
+
+    /**
+     * Update the count like in a post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function updateLikeCount(int $postId): int
+    {
+        $count = $this->countPostLike($postId);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $Post->updateAll(['Post.post_like_count' => $count], ['Post.id' => $postId]);
+
+        return $count;
+    }
+
+    /**
+     * Count like count of a post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function countPostLike(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        return (int)$this->find('count', $condition);
     }
 }

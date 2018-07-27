@@ -198,8 +198,8 @@ class PostServiceTest extends GoalousTestCase
     {
         $postData = [
             'Post' => [
-                'body'    => 'test',
-                'share'   => 'public'
+                'body'  => 'test',
+                'share' => 'public'
             ],
         ];
         $post = $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
@@ -342,8 +342,8 @@ class PostServiceTest extends GoalousTestCase
         $conditions = [
             'conditions' => [
                 'CircleMember.circle_id' => $circleId,
-                'CircleMember.team_id' => $teamId,
-                'CircleMember.user_id' => $userIdToCheckUnreadCount,
+                'CircleMember.team_id'   => $teamId,
+                'CircleMember.user_id'   => $userIdToCheckUnreadCount,
             ]
         ];
 
@@ -376,7 +376,8 @@ class PostServiceTest extends GoalousTestCase
         $userId = 1;
         $teamId = 1;
 
-        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a',
+            Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
 
         $postData = [
             'Post' => [
@@ -392,7 +393,8 @@ class PostServiceTest extends GoalousTestCase
 
         $postId = $post['id'];
         $postResource = $this->PostResource->findByPostId($postId);
-        $this->assertEquals(Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['PostResource']['resource_type']);
+        $this->assertEquals(Enum\Model\Post\PostResourceType::VIDEO_STREAM,
+            $postResource['PostResource']['resource_type']);
     }
 
     function test_addNormal_with_resource_video_with_AttachFile()
@@ -406,10 +408,11 @@ class PostServiceTest extends GoalousTestCase
         $userId = 1;
         $teamId = 1;
 
-        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($video, $videoStreams) = $this->createVideoSet($userId, $teamId, 'a',
+            Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
 
         $postData = [
-            'Post' => [
+            'Post'    => [
                 'body'  => 'test',
                 'share' => 'public,circle_1,user_2',
             ],
@@ -423,7 +426,8 @@ class PostServiceTest extends GoalousTestCase
 
         $postId = $post['id'];
         $postResource = $this->PostResource->findByPostId($postId);
-        $this->assertEquals(Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['PostResource']['resource_type']);
+        $this->assertEquals(Enum\Model\Post\PostResourceType::VIDEO_STREAM,
+            $postResource['PostResource']['resource_type']);
     }
 
     /**
@@ -464,8 +468,8 @@ class PostServiceTest extends GoalousTestCase
              ->will($this->returnValue(false));
 
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'  => 'test',
                 'share' => 'public,user_2',
             ],
         ];
@@ -485,8 +489,8 @@ class PostServiceTest extends GoalousTestCase
              ->will($this->returnValue(false));
 
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'  => 'test',
                 'share' => 'public,circle_2',
             ],
         ];
@@ -506,8 +510,8 @@ class PostServiceTest extends GoalousTestCase
              ->will($this->returnValue(false));
 
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'  => 'test',
                 'share' => 'public,circle_2',
             ],
         ];
@@ -527,8 +531,8 @@ class PostServiceTest extends GoalousTestCase
              ->will($this->returnValue(false));
 
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'  => 'test',
                 'share' => 'public,circle_2',
             ],
         ];
@@ -548,8 +552,8 @@ class PostServiceTest extends GoalousTestCase
              ->will($this->returnValue(false));
 
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'  => 'test',
                 'share' => 'public,circle_2',
             ],
         ];
@@ -565,15 +569,15 @@ class PostServiceTest extends GoalousTestCase
              ->will($this->returnValue(false));
 
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'  => 'test',
                 'share' => 'public,circle_2',
             ],
         ];
 
         $countBefore = $this->Post->find('count');
         $post = $this->PostService->addNormalWithTransaction($postData, $userId = 1, $teamId = 1);
-        $countAfter  = $this->Post->find('count');
+        $countAfter = $this->Post->find('count');
         $this->assertFalse($post);
         $this->assertSame($countBefore, $countAfter);
     }
@@ -588,7 +592,6 @@ class PostServiceTest extends GoalousTestCase
             $videoStream = ['id' => $videoStreamId],
             $bodyText);
 
-
         $countBefore = $this->Post->find('count');
         $post = $this->PostService->addNormalFromPostDraft($postDraft);
         $countAfter = $this->Post->find('count');
@@ -601,7 +604,7 @@ class PostServiceTest extends GoalousTestCase
         // assert that draft post used is deleted
         $postDraftUsed = $this->PostDraft->find('first', [
             'conditions' => [
-                'PostDraft.id' => $postDraft['id'],
+                'PostDraft.id'      => $postDraft['id'],
                 'PostDraft.del_flg' => true,
             ],
         ]);
@@ -639,5 +642,49 @@ class PostServiceTest extends GoalousTestCase
 
         $this->assertFalse($post);
         $this->assertSame($countPostBefore, $countPostAfter);
+    }
+
+    public function test_userHasAccessToPublicPost_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $result = $PostService->checkUserAccessToPost(4,  1);
+        $result1 = $PostService->checkUserAccessToPost(4,  1, true);
+
+        $this->assertTrue($result);
+        $this->assertFalse($result1);
+    }
+
+    public function test_userHasAccessToSecretPost_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $result = $PostService->checkUserAccessToPost(2,  7, true);
+        $result1 = $PostService->checkUserAccessToPost(2,  7);
+
+        $this->assertTrue($result);
+        $this->assertTrue($result1);
+    }
+
+    public function test_userHasAccessToSecretPost_failed()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $result = $PostService->checkUserAccessToPost(4,  7);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_userHasAccessToJoinedPost_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $result = $PostService->checkUserAccessToPost(1, 1);
+
+        $this->assertTrue($result);
     }
 }

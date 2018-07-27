@@ -25,7 +25,7 @@ class CirclePostPagingService extends BasePagingService
     const EXTEND_ALL = "ext:circle_post:all";
     const EXTEND_USER = "ext:circle_post:user";
     const EXTEND_CIRCLE = "ext:circle_post:circle";
-    const EXTEND_COMMENT = "ext:circle_post:comment";
+    const EXTEND_COMMENTS = "ext:circle_post:comments";
     const EXTEND_POST_SHARE_CIRCLE = "ext:circle_post:share_circle";
     const EXTEND_POST_SHARE_USER = "ext:circle_post:share_user";
     const EXTEND_POST_FILE = "ext:circle_post:file";
@@ -74,7 +74,7 @@ class CirclePostPagingService extends BasePagingService
             $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
             $resultArray = $CircleDataExtender->extend($resultArray, "{n}.circle_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENT, $options)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENTS, $options)) {
             /** @var CommentPagingService $CommentPagingService */
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 

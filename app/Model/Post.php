@@ -1868,4 +1868,26 @@ class Post extends AppModel
 
         return $this->data;
     }
+
+    /**
+     * Get the like count of a post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function getLikeCount(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $postId
+            ],
+            'fields' => [
+                'post_like_count'
+            ]
+        ];
+
+        return $this->find('first', $condition)['Post']['post_like_count'];
+    }
+
 }

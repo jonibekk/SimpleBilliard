@@ -30,6 +30,20 @@ class PostRequestValidator extends BaseValidator
         return $rules;
     }
 
+    /**
+     * Validation rules for both adding and removing like from a post
+     *
+     * @return array
+     */
+    public function getPostLikeValidationRule(): array
+    {
+        $rules = [
+            "post_id" => [validator::intType()]
+        ];
+
+        return $rules;
+    }
+
     public static function createDefaultPostValidator(): self
     {
         $self = new self();
@@ -41,6 +55,13 @@ class PostRequestValidator extends BaseValidator
     {
         $self = new self();
         $self->addRule($self->getCirclePostValidationRule());
+        return $self;
+    }
+
+    public static function createPostLikeValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostLikeValidationRule());
         return $self;
     }
 
