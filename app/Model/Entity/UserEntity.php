@@ -1,4 +1,5 @@
 <?php
+App::uses('LangUtil', 'Util');
 App::import('Model/Entity', 'BaseEntity');
 
 use Goalous\Enum as Enum;
@@ -24,10 +25,9 @@ class UserEntity extends BaseEntity
      */
     public function getLanguageByIso639_1(): Enum\Language
     {
-        // TODO: // UtilLang jpn, eng -> convert -> jp, en
-        switch ($this['language']) {
-            case 'jpn': return Enum\Language::JA();
-            case 'eng': return Enum\Language::EN();
+        if (Enum\LanguageISO639_2::isValid($this['language'])) {
+            $language = LangUtil::convertISOFrom3to2($this['language']);
+            return new Enum\Language($language);
         }
         return Enum\Language::JA();
     }

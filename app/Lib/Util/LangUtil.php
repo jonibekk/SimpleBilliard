@@ -1,5 +1,7 @@
 <?php
 
+use Goalous\Enum as Enum;
+
 /**
  * Class LangUtil
  */
@@ -7,8 +9,8 @@ class LangUtil
 {
     static $defaultLang = 'en';
     static $ISOMap = [
-        'eng' => 'en',
-        'jpn' => 'ja',
+        Enum\LanguageISO639_2::ENG => Enum\Language::EN,
+        Enum\LanguageISO639_2::JPN => Enum\Language::JA,
     ];
 
     /**
