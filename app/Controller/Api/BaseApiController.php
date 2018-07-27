@@ -431,7 +431,7 @@ abstract class BaseApiController extends Controller
         $parsedLanguage = $locale['language'];
 
         return Enum\Language::isValid($parsedLanguage) ?
-            new Goalous\Enum\Language($parsedLanguage)
+            new Enum\Language($parsedLanguage)
             : Enum\Language::JA();
     }
 
