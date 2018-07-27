@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
+App::import('Service', 'ImageStorageService');
 App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
@@ -116,6 +117,13 @@ class CircleListPagingService extends BasePagingService
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
+        // Set image url each circle
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+        foreach ($resultArray as $i => $v) {
+            $resultArray[$i]['img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Circle');
+        }
+
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_MEMBER_INFO, $options)) {
 
             $userId = $request->getResourceId() ?: $request->getCurrentUserId();

@@ -84,7 +84,7 @@ class AppModel extends Model
      *
      * @var array
      */
-    private $postProcessFunctions = [];
+    protected $postProcessFunctions = [];
 
     /**
      * Default conversion table
@@ -710,7 +710,12 @@ class AppModel extends Model
      */
     public function save($data = null, $validate = true, $fieldList = array())
     {
+        //parent::save delete the postProcessFunctions array
+        $functions = $this->postProcessFunctions;
+
         $result = parent::save($data, $validate, $fieldList);
+
+        $this->postProcessFunctions = $functions;
 
         if (is_array($result)) {
             $result = $this->postProcess($result);
@@ -745,7 +750,7 @@ class AppModel extends Model
      *
      * @return array | BaseEntity
      */
-    private function postProcess(array $data)
+    private function postProcess(array $data = [])
     {
         foreach ($this->postProcessFunctions as $callable) {
             if (!is_callable($callable)) {
@@ -753,8 +758,10 @@ class AppModel extends Model
             }
             $data = $callable($data);
         }
+
         //Reset functions after each processing
         $this->postProcessFunctions = [];
+
         return $data;
     }
 
