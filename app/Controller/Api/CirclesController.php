@@ -93,17 +93,22 @@ class CirclesController extends BasePagingController
     /**
      * Get circle by Id
      *
-     * @param int $id
+     * @param int $circleId
      *
      * @return ApiResponse|BaseApiResponse
      */
-    function get_detail(int $id)
+    function get_detail(int $circleId)
     {
-        // TODO: validation, check permission
+        $error = $this->validateGetCirclePost($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
 
-        $circle = $CircleService->get($id);
+        $circle = $CircleService->get($circleId);
         return ApiResponse::ok()->withData($circle)->getResponse();
     }
 }
