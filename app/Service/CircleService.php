@@ -485,7 +485,7 @@ class CircleService extends AppService
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
 
         $circle = $Circle->useEntity()->useType()->findById($circleId)->toArray();
-        $circle['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
+        $circle['img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
         return $circle;
     }
 }
