@@ -144,13 +144,13 @@ class CirclePostPagingService extends BasePagingService
                 'Post.team_id' => $teamId,
                 'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE]
             ],
-            'join'       => [
+            'joins'       => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',
                     'conditions' => [
-                        'PostShareCircle = Post.id',
+                        'PostShareCircle.post_id = Post.id',
                         'PostShareCircle.del_flg'   => false,
                         'PostShareCircle.circle_id' => $circleId
                     ]
