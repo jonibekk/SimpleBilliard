@@ -49,7 +49,7 @@ class CommentService extends AppService
         $postId = Hash::extract($comments, '{s}.post_id')[0];
 
         if (empty($postId)) {
-            throw new NotFoundException(__("This post doesn't exist."));
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
         return $PostService->checkUserAccessToPost($userId, $postId);
