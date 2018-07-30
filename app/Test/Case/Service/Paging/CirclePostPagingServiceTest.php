@@ -34,7 +34,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $CirclePostPagingService = new CirclePostPagingService();
 
         $cursor = new PagingRequest();
-        $cursor->addResource('res_id', 1);
+        $cursor->addResource('res_id', 3);
         $cursor->addResource('current_team_id', 1);
 
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1);
@@ -50,10 +50,12 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $CircleFeedPaging = new CirclePostPagingService();
 
         $cursor = new PagingRequest();
-        $cursor->addResource('res_id', 1);
+        $cursor->addResource('res_id', 3);
         $cursor->addResource('current_team_id', 1);
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
+        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['count']);
 
         $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
         $pagingRequest->addResource('res_id', 1);
@@ -61,8 +63,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
 
         $secondResult = $CircleFeedPaging->getDataWithPaging($pagingRequest, 2);
 
-        $this->assertCount(2, $secondResult['data']);
-        $this->assertNotEmpty($secondResult['paging']['next']);
+        $this->assertCount(1, $secondResult['data']);
+        $this->assertEmpty($secondResult['paging']['next']);
         $this->assertNotEmpty($secondResult['count']);
     }
 
@@ -88,12 +90,12 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
         $cursor = new PagingRequest();
-        $cursor->addResource('res_id', 1);
+        $cursor->addResource('res_id', 3);
         $cursor->addResource('current_user_id', 1);
         $cursor->addResource('current_team_id', 1);
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 10, CirclePostPagingService::EXTEND_CIRCLE);
 
-        $this->assertCount(10, $result['data']);
+        $this->assertCount(2, $result['data']);
 
         //Loop since not all post has circle_id
         foreach ($result['data'] as $post){
