@@ -10,9 +10,9 @@ App::import('Lib/Upload', 'UploadedFile');
 class UploadRedisData
 {
     /**
-     * Binary encoded file
+     * Uploaded file
      *
-     * @var string
+     * @var UploadedFile
      */
     private $rawFile;
 
@@ -21,20 +21,18 @@ class UploadRedisData
      */
     private $timeToLive;
 
-    public function __construct(UploadedFile $file = null)
+    public function __construct(UploadedFile $file)
     {
-        if (!empty($file)) {
-            $this->rawFile = $file->getFile();
-        }
+        $this->rawFile = $file;
     }
 
-    public function withFile(string $file): self
+    public function withFile(UploadedFile $file): self
     {
         $this->rawFile = $file;
         return $this;
     }
 
-    public function getFile(): string
+    public function getFile(): UploadedFile
     {
         return $this->rawFile;
     }

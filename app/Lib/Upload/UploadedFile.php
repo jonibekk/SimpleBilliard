@@ -45,15 +45,26 @@ class UploadedFile
     private $uuid;
 
     /**
+     * File name
+     *
+     * @var
+     */
+    private $fileName;
+
+    /**
      * Metadata of the file
      *
      * @var string
      */
     private $metadata;
 
-    public function __construct(string $encodedFile, bool $skipDecoding = false)
+    public function __construct(string $encodedFile, string $fileName, bool $skipDecoding = false)
     {
+        if (empty($encodedFile) || empty($fileName)) {
+            throw new InvalidArgumentException();
+        }
         $this->decodeFile($encodedFile, $skipDecoding);
+        $this->fileName = $fileName;
     }
 
     public function getFileSize(): int
@@ -71,7 +82,7 @@ class UploadedFile
         return $this->fileExt;
     }
 
-    public function getFile(): string
+    public function getBinaryString(): string
     {
         return $this->file;
     }
@@ -89,6 +100,11 @@ class UploadedFile
     public function getMetadata(): string
     {
         return $this->metadata;
+    }
+
+    public function getFileName(): string
+    {
+        return $this->fileName;
     }
 
     private function decodeFile(string $encodedFile, bool $skipDecoding)
@@ -121,6 +137,6 @@ class UploadedFile
 
         $this->size = strlen($rawFile);
 
-        $this->uuid = uniqid();
+        $this->uuid = uniqid("", true);
     }
 }
