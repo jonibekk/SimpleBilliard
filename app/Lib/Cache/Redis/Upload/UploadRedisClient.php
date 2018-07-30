@@ -37,7 +37,7 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
             return null;
         }
 
-        return (new UploadRedisData)->withFile($data['file_data']);
+        return (new UploadRedisData)->withFile($this->decompress($data['file_data']));
     }
 
     /**
@@ -49,7 +49,7 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
     public function write(UploadRedisKey $key, UploadRedisData $data): bool
     {
         $cacheValue = msgpack_pack([
-            'file_data' => $data->getFile(),
+            'file_data' => $this->compress($data->getFile()),
         ]);
         return $this->getRedis()->set($key->get(), $cacheValue, $data->getTimeToLive());
     }
@@ -127,5 +127,29 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
     public function getTtl(string $key): int
     {
         return $this->getRedis()->ttl($this->removePrefixFromKey($key));
+    }
+
+    /**
+     * Compress uploaded file data prior to saving in Redis
+     *
+     * @param string $data
+     *
+     * @return string
+     */
+    private function compress(string $data): string
+    {
+        return gzcompress($data, 3);
+    }
+
+    /**
+     * Decompress saved uploaded file data
+     *
+     * @param string $data
+     *
+     * @return string
+     */
+    private function decompress(string $compressed): string
+    {
+        return gzuncompress($compressed);
     }
 }
