@@ -21,6 +21,7 @@ App::import('Lib/Auth', 'AccessAuthenticator');
 
 use Goalous\Enum\ApiVersion\ApiVersion as ApiVer;
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 abstract class BaseApiController extends Controller
 {
@@ -327,17 +328,23 @@ abstract class BaseApiController extends Controller
      */
     private function _setAppLanguage()
     {
-        /** @var .\Model\User $User */
-        $User = ClassRegistry::init('User');
+        // Set default language as Japanese first
+        Configure::write('Config.language', Enum\Language::JA);
+
+        // If user is authenticated, set from user language
         if (isset($this->_currentUserId)) {
-            $currentUser = $User->findById($this->_currentUserId)['User'];
+            /** @var User $User */
+            $User = ClassRegistry::init('User');
+            /** @var UserEntity $currentUser */
+            $currentUser = $User->useEntity()->findById($this->_currentUserId);
+            if (!empty($currentUser)) {
+                Configure::write('Config.language', $currentUser->getLanguageByIso639_1()->getValue());
+            }
         }
-        if (isset($this->_currentUserId) && isset($currentUser['language']) && !boolval($currentUser['auto_language_flg'])) {
-            Configure::write('Config.language', $currentUser['language']);
-            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($currentUser['language']) ?? false);
-        } else {
-            $lang = $this->LangComponent->getLanguage();
-            $this->set('is_not_use_local_name', (new User())->isNotUseLocalName($lang) ?? false);
+
+        // If Header:Accept-Language has set, set the language
+        if ($this->hasAcceptLanguage()) {
+            Configure::write('Config.language', $this->getLanguageFromHeader()->getValue());
         }
     }
 
@@ -398,6 +405,34 @@ abstract class BaseApiController extends Controller
 
         return ApiVer::isAvailable($requestedVersion) ?
             $requestedVersion : ApiVer::getLatestApiVersion();
+    }
+
+    private function hasAcceptLanguage(): bool
+    {
+        return !empty($this->request->header('Accept-Language'));
+    }
+
+    /**
+     * Solve the language to show from Header: Accept-Language
+     *
+     * @return Enum\Language
+     */
+    private function getLanguageFromHeader(): Enum\Language
+    {
+        $acceptLanguage = $this->request->header('Accept-Language');
+        if (empty($acceptLanguage)) {
+            return Enum\Language::JA();
+        }
+
+        $locale = Locale::parseLocale($acceptLanguage);
+        if (!isset($locale['language'])) {
+            return Enum\Language::JA();
+        }
+        $parsedLanguage = $locale['language'];
+
+        return Enum\Language::isValid($parsedLanguage) ?
+            new Enum\Language($parsedLanguage)
+            : Enum\Language::JA();
     }
 
     /**
