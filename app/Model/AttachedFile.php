@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'AttachedFileEntity');
 
 /**
  * AttachedFile Model
@@ -10,6 +11,9 @@ App::uses('AppModel', 'Model');
  * @property PostFile         $PostFile
  * @property ActionResultFile $ActionResultFile
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class AttachedFile extends AppModel
 {
     /**
@@ -154,6 +158,16 @@ class AttachedFile extends AppModel
         'MessageFile'      => [
             'dependent' => true,
         ],
+    ];
+
+    public $modelConversionTable = [
+        'user_id'          => DataType::INT,
+        'team_id'          => DataType::INT,
+        'file_type'        => DataType::INT,
+        'file_size'        => DataType::INT,
+        'model_type'       => DataType::INT,
+        'display_list_flg' => DataType::BOOL,
+        'removable_flg'    => DataType::BOOL
     ];
 
     public function getFileTypeOptions()
