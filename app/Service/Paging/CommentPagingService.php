@@ -16,6 +16,7 @@ class CommentPagingService extends BasePagingService
 
     const EXTEND_ALL = "ext:comment:all";
     const EXTEND_USER = "ext:comment:user";
+    const MAIN_MODEL = 'Comment';
 
     /**
      * @param PagingRequest $pagingRequest
