@@ -130,13 +130,13 @@ class UploadService extends AppService
     public static function link(int $userId, int $teamId, array &$mainData): bool
     {
         //TODO GL-7171
-//        $RedisClient = new UploadRedisClient();
-//
-//        foreach ($mainData as $key => &$value) {
-//            if (preg_match("/FILE [0-9a-fA-F]{13}/", $value)) {
-//
-//            }
-//        }
+        $RedisClient = new UploadRedisClient();
+
+        foreach ($mainData as $key => &$value) {
+            if (preg_match("/FILE [A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $value)) {
+                $uuid = sscanf($value, 'FILE %s');
+            }
+        }
     }
 
     /**
