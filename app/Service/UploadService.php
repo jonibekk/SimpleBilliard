@@ -29,11 +29,11 @@ class UploadService extends AppService
      *
      * @return string
      */
-    public function buffer(int $userId, int $teamId, string $encodedFile): string
+    public function buffer(int $userId, int $teamId, string $encodedFile, string $fileName): string
     {
         $RedisClient = new UploadRedisClient();
 
-        $UploadedFile = new UploadedFile($encodedFile);
+        $UploadedFile = new UploadedFile($encodedFile, $fileName);
 
         if (!UploadValidator::validate($UploadedFile)) {
             throw new GlException\Upload\UploadFailedException();
@@ -85,7 +85,7 @@ class UploadService extends AppService
             return null;
         }
 
-        return new UploadedFile($rawData->getFile(), true);
+        return $rawData->getFile();
     }
 
     /**

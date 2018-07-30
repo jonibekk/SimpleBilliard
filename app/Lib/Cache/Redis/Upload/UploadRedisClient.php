@@ -37,7 +37,9 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
             return null;
         }
 
-        return (new UploadRedisData)->withFile($this->decompress($data['file_data']));
+        $UploadedFile = new UploadedFile($this->decompress($data['file_data']), $data['file_name'], true);
+
+        return new UploadRedisData($UploadedFile);
     }
 
     /**
@@ -49,7 +51,8 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
     public function write(UploadRedisKey $key, UploadRedisData $data): bool
     {
         $cacheValue = msgpack_pack([
-            'file_data' => $this->compress($data->getFile()),
+            'file_name' => $data->getFile()->getFileName(),
+            'file_data' => $this->compress($data->getFile()->getBinaryString()),
         ]);
         return $this->getRedis()->set($key->get(), $cacheValue, $data->getTimeToLive());
     }
@@ -123,6 +126,10 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
 
     /**
      * Get time to live of the data with given key
+     *
+     * @param string $key
+     *
+     * @return int TTL of the entry
      */
     public function getTtl(string $key): int
     {
@@ -144,7 +151,7 @@ class UploadRedisClient extends BaseRedisClient implements InterfaceRedisClient
     /**
      * Decompress saved uploaded file data
      *
-     * @param string $data
+     * @param string $compressed
      *
      * @return string
      */

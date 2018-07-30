@@ -25,9 +25,10 @@ class UploadsController extends BaseApiController
         $UploadService = ClassRegistry::init('UploadService');
 
         $encodedFile = $this->getRequestJsonBody()['file_data'];
+        $fileName = $this->getRequestJsonBody()['file_name'];
 
         try {
-            $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile);
+            $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile, $fileName);
         } catch (UploadException\Redis\UploadRedisSpaceException $spaceException) {
             return ErrorResponse::insufficientStorage()->withException($spaceException)->getResponse();
         } catch (UploadException\Redis\UploadRedisException $redisException) {

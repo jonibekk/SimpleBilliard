@@ -13,7 +13,7 @@ class UploadImageValidator
 
     public static function validateResolution(UploadedFile $uploadedFile): bool
     {
-        list($xLength, $yLength) = getimagesizefromstring($uploadedFile->getFile());
+        list($xLength, $yLength) = getimagesizefromstring($uploadedFile->getBinaryString());
 
         if (empty ($xLength) || empty ($yLength)) {
             throw new RuntimeException("Resolution can't be empty");
