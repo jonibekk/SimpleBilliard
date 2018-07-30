@@ -6,6 +6,7 @@ App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
 App::uses('Post', 'Model');
+App::import('Service', 'ImageStorageService');
 
 /**
  * Class CircleService
@@ -476,4 +477,15 @@ class CircleService extends AppService
         });
     }
 
+    function get(int $circleId): array
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+
+        $circle = $Circle->useEntity()->useType()->findById($circleId)->toArray();
+        $circle['img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
+        return $circle;
+    }
 }

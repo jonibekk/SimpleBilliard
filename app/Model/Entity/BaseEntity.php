@@ -74,9 +74,7 @@ abstract class BaseEntity implements ArrayAccess, IteratorAggregate
     {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                if (!empty($value)) {
-                    $array[$key] = $value;
-                }
+                $array[$key] = $value;
             }
         } elseif (!empty($value)) {
             $array[$data] = $value;
