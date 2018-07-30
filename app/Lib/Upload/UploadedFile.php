@@ -121,6 +121,6 @@ class UploadedFile
 
         $this->size = strlen($rawFile);
 
-        $this->uuid = uniqid();
+        $this->uuid = uniqid("", true);
     }
 }

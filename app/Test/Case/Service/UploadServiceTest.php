@@ -13,7 +13,6 @@ App::import('Lib/Upload', 'UploadedFile');
 
 /**
  * Run 'redis-cli flushall' before re-running test!
- *
  * Class UploadServiceTest
  */
 class UploadServiceTest extends GoalousTestCase
@@ -42,11 +41,11 @@ class UploadServiceTest extends GoalousTestCase
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
 
-        $return = $UploadService->buffer(1, 1, $this->encodedFile);
+        $uuid = $UploadService->buffer(1, 1, $this->encodedFile);
 
-        $this->assertNotEmpty($return);
-        $this->assertInternalType('string', $return);
-        $this->assertTrue(strlen($return) == 13);
+        $this->assertNotEmpty($uuid);
+        $this->assertInternalType('string', $uuid);
+        $this->assertEquals(1, preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid));
     }
 
     public function test_readFromBuffer_success()

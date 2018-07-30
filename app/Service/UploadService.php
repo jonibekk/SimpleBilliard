@@ -72,8 +72,8 @@ class UploadService extends AppService
      */
     public function read(int $userId, int $teamId, string $uuid)
     {
-        if (strlen($uuid) != 13) {
-            throw new InvalidArgumentException();
+        if (preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid) == 0) {
+            throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 
         $RedisClient = new UploadRedisClient();
