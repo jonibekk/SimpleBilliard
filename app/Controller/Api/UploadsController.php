@@ -48,82 +48,12 @@ class UploadsController extends BaseApiController
         return ApiResponse::ok()->withData(['file_uuid' => $uuid])->getResponse();
     }
 
-    public function delete(string $uuid)
-    {
-        $error = $this->validateDelete($uuid);
-
-        if (!empty($error)) {
-            return $error;
-        }
-
-        /** @var UploadService $UploadService */
-        $UploadService = ClassRegistry::init('UploadService');
-
-        try {
-            $UploadService->delete($this->getUserId(), $this->getTeamId(), $uuid);
-        } catch (NotFoundException $notFoundException) {
-            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
-        } catch (Exception $exception) {
-            GoalousLog::error("Failed to delete buffered file. " . $exception->getMessage(), $exception->getTrace());
-            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
-        }
-
-        return ApiResponse::ok()->getResponse();
-    }
-
-    public function delete_all()
-    {
-        $error = $this->validateDeleteAll();
-
-        if (!empty($error)) {
-            return $error;
-        }
-
-        /** @var UploadService $UploadService */
-        $UploadService = ClassRegistry::init('UploadService');
-
-        try {
-            $UploadService->delete($this->getUserId(), $this->getTeamId());
-        } catch (Exception $exception) {
-            GoalousLog::error("Failed to delete buffered file. " . $exception->getMessage(), $exception->getTrace());
-            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
-        }
-
-        return ApiResponse::ok()->getResponse();
-    }
-
     /**
      * Validation method for post function
      *
      * @return CakeResponse|null
      */
     private function validatePost()
-    {
-        return null;
-    }
-
-    /**
-     * Validation method for delete function
-     *
-     * @param string $uuid
-     *
-     * @return CakeResponse|null
-     */
-    private function validateDelete(string $uuid = "")
-    {
-        if (empty($uuid) || !is_string($uuid)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * Validation method for delete function
-     *
-     * @return CakeResponse|null
-     */
-    private function validateDeleteAll()
     {
         return null;
     }

@@ -89,36 +89,6 @@ class UploadService extends AppService
     }
 
     /**
-     * Delete specific buffered file
-     *
-     * @param int    $userId
-     * @param int    $teamId
-     * @param string $uuid UUID of the file. if not given, will delete all buffered files of that user
-     *
-     * @return bool
-     */
-    public function delete(int $userId, int $teamId, string $uuid = ""): bool
-    {
-        $RedisClient = new UploadRedisClient();
-        $RedisKey = new UploadRedisKey($userId, $teamId, $uuid);
-
-        //If no uuid is given, delete all entries from given user in given team
-        if (empty($uuid)) {
-            $keys = $RedisClient->search($RedisKey->getWithoutID());
-            foreach ($keys as $key) {
-                $RedisClient->del($key);
-            }
-        } else {
-            $res = $RedisClient->del($RedisKey);
-            if (empty($res)) {
-                throw new GlException\GoalousNotFoundException("Specified buffered file not found");
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Replace file UUID with actual file name
      *
      * @param int   $userId
