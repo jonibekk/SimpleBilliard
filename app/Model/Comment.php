@@ -5,9 +5,12 @@ App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
-App::import('Model', 'User');
-App::import('Model', 'Circle');
+App::uses('User', 'Model');
+App::uses('Circle', 'Model');
 App::import('Model', 'HavingMentionTrait');
+App::import('Model/Entity', 'CommentEntity');
+
+use Goalous\Enum\DataType\DataType as DataType;
 
 /**
  * Comment Model
@@ -22,7 +25,6 @@ App::import('Model', 'HavingMentionTrait');
  */
 class Comment extends AppModel
 {
-
     use HavingMentionTrait;
 
     const MAX_COMMENT_LIMIT = 3;
@@ -169,6 +171,19 @@ class Comment extends AppModel
             'fields'    => ['id']
         ],
         'CommentFile',
+    ];
+
+    /**
+     * Type conversion table for Comment model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [
+        'post_id'            => DataType::INT,
+        'user_id'            => DataType::INT,
+        'team_id'            => DataType::INT,
+        'comment_like_count' => DataType::INT,
+        'comment_read_count' => DataType::INT
     ];
 
     public function beforeValidate($options = [])
@@ -643,5 +658,26 @@ class Comment extends AppModel
             $ranking[$v['Comment']['post_id']] = $v[0]['cnt'];
         }
         return $ranking;
+    }
+
+    /**
+     * Get the like count of a comment
+     *
+     * @param int $commentId
+     *
+     * @return int
+     */
+    public function getCommentLikeCount(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $commentId
+            ],
+            'fields'     => [
+                'Comment.comment_like_count'
+            ]
+        ];
+
+        return $this->find('first', $condition)['Comment']['comment_like_count'];
     }
 }
