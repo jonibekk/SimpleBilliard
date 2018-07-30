@@ -1,0 +1,96 @@
+<?php
+App::import('Service', 'CommentService');
+App::import('Service', 'CommentLikeService');
+App::uses('BaseApiController', 'Controller/Api');
+
+/**
+ * Created by PhpStorm.
+ * User: StephenRaharja
+ * Date: 2018/06/20
+ * Time: 14:21
+ */
+use Goalous\Exception as GlException;
+
+class CommentsController extends BaseApiController
+{
+    /**
+     * Endpoint for adding a like to a post
+     *
+     * @param int $commentId
+     *
+     * @return CakeResponse|null
+     */
+    public function post_like(int $commentId)
+    {
+        $error = $this->validateLike($commentId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentLikeService $CommentLikeService */
+        $CommentLikeService = ClassRegistry::init('CommentLikeService');
+
+        try {
+            $commentLike = $CommentLikeService->add($commentId, $this->getUserId(), $this->getTeamId());
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($commentLike->toArray())->getResponse();
+    }
+
+    /**
+     * Endpoint for removing a like from a post
+     *
+     * @param int $commentId
+     *
+     * @return CakeResponse|null
+     */
+    public function delete_like(int $commentId)
+    {
+        $error = $this->validateLike($commentId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentLikeService $CommentLikeService */
+        $CommentLikeService = ClassRegistry::init('CommentLikeService');
+
+        try {
+            $newCount = $CommentLikeService->delete($commentId, $this->getUserId(), $this->getTeamId());
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(['like_count' => $newCount])->getResponse();
+
+    }
+
+    /**
+     * @param int $commentId
+     *
+     * @return ErrorResponse | null
+     */
+    private function validateLike(int $commentId)
+    {
+        if (empty($commentId) || !is_int($commentId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+        try {
+            $access = $CommentService->checkUserAccessToComment($this->getUserId(), $commentId);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        }
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
+        }
+
+        return null;
+    }
+}
