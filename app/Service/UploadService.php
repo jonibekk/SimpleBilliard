@@ -26,6 +26,7 @@ class UploadService extends AppService
      * @param int    $userId
      * @param int    $teamId
      * @param string $encodedFile
+     * @param string $fileName
      *
      * @return string
      */
@@ -124,17 +125,25 @@ class UploadService extends AppService
      * @param int   $userId
      * @param int   $teamId
      * @param array $mainData
-     *
-     * @return bool
      */
-    public static function link(int $userId, int $teamId, array &$mainData): bool
+    public function link(int $userId, int $teamId, array &$mainData)
     {
-        //TODO GL-7171
-        $RedisClient = new UploadRedisClient();
-
         foreach ($mainData as $key => &$value) {
             if (preg_match("/FILE [A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $value)) {
+
                 $uuid = sscanf($value, 'FILE %s');
+
+                $file = $this->read($userId, $teamId, $uuid);
+
+                if (empty($file)) {
+                    throw new GlException\GoalousNotFoundException("Specified buffered file not found");
+                }
+
+                if ($this->save($userId, $teamId, $file)) {
+                    $value = $file->getFileName();
+                } else {
+                    throw new RuntimeException();
+                }
             }
         }
     }
@@ -142,13 +151,13 @@ class UploadService extends AppService
     /**
      * Write the file to server
      *
-     * @param int    $userId
-     * @param int    $teamId
-     * @param string $file
+     * @param int          $userId
+     * @param int          $teamId
+     * @param UploadedFile $file
      *
      * @return bool
      */
-    private function save(int $userId, int $teamId, string $file): bool
+    private function save(int $userId, int $teamId, UploadedFile $file): bool
     {
         //TODO GL-7171
     }
