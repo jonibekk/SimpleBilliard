@@ -29,12 +29,6 @@ class UploadsController extends BaseApiController
 
         try {
             $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile, $fileName);
-        } catch (UploadException\Redis\UploadRedisSpaceException $spaceException) {
-            return ErrorResponse::insufficientStorage()->withException($spaceException)->getResponse();
-        } catch (UploadException\Redis\UploadRedisException $redisException) {
-            GoalousLog::error("Failed to save file to Redis. " . $redisException->getMessage(),
-                $redisException->getTrace());
-            return ErrorResponse::internalServerError()->withException($redisException)->getResponse();
         } catch (UploadException\UploadFailedException $uploadFailedException) {
             return ErrorResponse::badRequest()->withException($uploadFailedException)->getResponse();
         } catch (InvalidArgumentException $argumentException) {

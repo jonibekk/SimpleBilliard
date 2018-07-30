@@ -8,11 +8,12 @@
 
 class UploadedFile
 {
-
     /**
      * Binary data of the file
+     *
+     * @var string
      */
-    private $file;
+    private $binaryFile;
 
     /**
      * Size of the file
@@ -82,14 +83,14 @@ class UploadedFile
         return $this->fileExt;
     }
 
-    public function getBinaryString(): string
+    public function getBinaryFile(): string
     {
-        return $this->file;
+        return $this->binaryFile;
     }
 
     public function isEmpty(): bool
     {
-        return empty($this->file);
+        return empty($this->binaryFile);
     }
 
     public function getUUID(): string
@@ -107,6 +108,11 @@ class UploadedFile
         return $this->fileName;
     }
 
+    public function getMIME(): string
+    {
+        return $this->type . "/" . $this->fileExt;
+    }
+
     private function decodeFile(string $encodedFile, bool $skipDecoding)
     {
         if (empty($encodedFile)) {
@@ -122,7 +128,7 @@ class UploadedFile
                 throw new RuntimeException("Failed to decode string to file");
             }
         }
-        $this->file = $rawFile;
+        $this->binaryFile = $rawFile;
 
         $fInfo = new finfo();
         $fileDesc = $fInfo->buffer($rawFile, FILEINFO_MIME_TYPE);

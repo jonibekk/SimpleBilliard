@@ -61,7 +61,7 @@ class UploadServiceTest extends GoalousTestCase
 
         $returnData = $UploadService->read(2, 1, $key);
 
-        $this->assertEquals($UploadedFile->getBinaryString(), $returnData->getBinaryString());
+        $this->assertEquals($UploadedFile->getBinaryFile(), $returnData->getBinaryString());
         $this->assertEquals($UploadedFile->getFileName(), $returnData->getFileName());
         $this->assertEquals($UploadedFile->getMetadata(), $returnData->getMetadata());
         $this->assertNotEquals($UploadedFile->getUUID(), $returnData->getUUID());

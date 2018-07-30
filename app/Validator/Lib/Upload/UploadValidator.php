@@ -241,7 +241,7 @@ class UploadValidator
         }
 
         if (!self::validateType($uploadedFile)) {
-            throw new UploadException\UploadSizeException();
+            throw new UploadException\UploadTypeException();
         }
 
         $type = $uploadedFile->getFileType();
