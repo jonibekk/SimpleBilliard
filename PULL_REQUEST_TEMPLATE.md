@@ -27,6 +27,7 @@ https://jira.goalous.com/browse/GL-****
 - [ ] No reduction in code coverage in Coveralls (Excluding when only deleting unnecessary code)
 - [ ] If a variable was renamed, ensure no error in all instances after refactoring 
 - [ ] If a method and/or its arguments were renamed, ensure no error in all instances after refactoring
+- [ ] If an endpoint was changed, update its documentations in Postman
 - [ ] DB migration files are combined to one if the PR include the file of that type 
 
 ## Checklist after merged 
