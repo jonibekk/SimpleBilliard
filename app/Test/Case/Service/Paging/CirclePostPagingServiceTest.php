@@ -167,11 +167,6 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $this->assertCount(1, $result['data']);
 
         $postData = $result['data'][0];
-        $this->assertNotEmpty($postData['photo1_img_url']);
-        $this->assertNotEmpty($postData['photo2_img_url']);
-        $this->assertNotEmpty($postData['photo3_img_url']);
-        $this->assertNotEmpty($postData['photo4_img_url']);
-        $this->assertNotEmpty($postData['photo5_img_url']);
         $this->assertArrayHasKey('attached_files', $postData);
     }
 }

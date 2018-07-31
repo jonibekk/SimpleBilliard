@@ -98,29 +98,19 @@ class CirclePostPagingService extends BasePagingService
             /** @var PostService $PostService */
             $PostService = ClassRegistry::init('PostService');
 
-            foreach ($resultArray as $i => $v) {
-                //For legacy posts
-                $resultArray[$i]['photo1_img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Post',
-                    'photo1');
-                $resultArray[$i]['photo2_img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Post',
-                    'photo2');
-                $resultArray[$i]['photo3_img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Post',
-                    'photo3');
-                $resultArray[$i]['photo4_img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Post',
-                    'photo4');
-                $resultArray[$i]['photo5_img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Post',
-                    'photo5');
+            foreach ($resultArray as $index => $entry) {
+                $attachedFile = $PostService->getAttachedFiles($entry['id']);
 
-                $attachedFile = $PostService->getAttachedFiles($v['id']);
                 if (empty($attachedFile)) {
-                    $resultArray[$i]['attached_files'] = [];
+                    $resultArray[$index]['attached_files'] = [];
+                    continue;
                 }
                 /** @var AttachedFileEntity $file */
                 foreach ($attachedFile as $file) {
                     if ($file['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                         $file['file_url'] = $ImageStorageService->getImgUrlEachSize($file->toArray(), 'AttachedFile',
                             'attached');
-                        $resultArray[$i]['attached_files'][] = $file->toArray();
+                        $resultArray[$index]['attached_files'][] = $file->toArray();
                     }
                 }
             }
