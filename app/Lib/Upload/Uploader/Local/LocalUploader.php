@@ -18,7 +18,7 @@ class LocalUploader extends BaseUploader
         try {
             $this->upload("buffer", $key, $this->package($file), "application/json");
         } catch (RuntimeException $exception) {
-            GoalousLog::emergency("Failed saving to buffer. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
+            GoalousLog::error("Failed saving to buffer. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
                 $exception->getTrace());
             throw new RuntimeException("Failed saving to local buffer");
         }

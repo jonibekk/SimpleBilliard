@@ -39,8 +39,8 @@ class S3Uploader extends BaseUploader
         try {
             $this->upload(S3_UPLOAD_BUCKET, $key, $this->package($file), "application/json");
         } catch (S3Exception $exception) {
-            GoalousLog::emergency("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
-                $exception);
+            GoalousLog::error("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
+                $exception->getTrace());
             throw new RuntimeException("Failed saving to S3");
         }
 
