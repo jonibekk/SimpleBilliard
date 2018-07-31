@@ -144,23 +144,28 @@ class ErrorResponseTest extends GoalousTestCase
 
         $response = $errorResponseBody->getResponse();
 
-        $this->assertSame(
-            json_encode([
-                'message' => __METHOD__,
-                'errors' => [
-                    [
-                        'type' => Enum\Network\Response\ErrorType::VALIDATION,
-                        'field' => 'email',
-                        'message' => 'email must be valid email',
-                    ],
-                    [
-                        'type' => Enum\Network\Response\ErrorType::VALIDATION,
-                        'field' => 'password',
-                        'message' => 'Key password must be present',
-                    ],
+        $expectedBody = [
+            'message' => __METHOD__,
+            'errors' => [
+                [
+                    'type' => Enum\Network\Response\ErrorType::VALIDATION,
+                    'field' => 'email',
+                    'message' => 'validation.error.email_format',
                 ],
-            ]),
-            $response->body()
-        );
+                [
+                    'type' => Enum\Network\Response\ErrorType::VALIDATION,
+                    'field' => 'password',
+                    'message' => 'Key password must be present',
+                ],
+            ],
+        ];
+        $acutualBody = json_decode($response->body(), true);
+
+        $this->assertEquals($expectedBody['message'], $acutualBody['message']);
+        $this->assertEquals(count($expectedBody['errors']), count($acutualBody['errors']));
+        for ($i = 0; $i < count($expectedBody['errors']); $i++) {
+            $this->assertEquals($expectedBody['errors'][$i]['type'], $acutualBody['errors'][$i]['type']);
+            $this->assertEquals($expectedBody['errors'][$i]['field'], $acutualBody['errors'][$i]['field']);
+        }
     }
 }
