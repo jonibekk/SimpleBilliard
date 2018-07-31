@@ -159,13 +159,13 @@ class ErrorResponseTest extends GoalousTestCase
                 ],
             ],
         ];
-        $acutualBody = json_decode($response->body(), true);
+        $actualBody = json_decode($response->body(), true);
 
-        $this->assertEquals($expectedBody['message'], $acutualBody['message']);
-        $this->assertEquals(count($expectedBody['errors']), count($acutualBody['errors']));
+        $this->assertEquals($expectedBody['message'], $actualBody['message']);
+        $this->assertEquals(count($expectedBody['errors']), count($actualBody['errors']));
         for ($i = 0; $i < count($expectedBody['errors']); $i++) {
-            $this->assertEquals($expectedBody['errors'][$i]['type'], $acutualBody['errors'][$i]['type']);
-            $this->assertEquals($expectedBody['errors'][$i]['field'], $acutualBody['errors'][$i]['field']);
+            $this->assertEquals($expectedBody['errors'][$i]['type'], $actualBody['errors'][$i]['type']);
+            $this->assertEquals($expectedBody['errors'][$i]['field'], $actualBody['errors'][$i]['field']);
         }
     }
 }

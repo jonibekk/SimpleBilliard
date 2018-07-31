@@ -54,18 +54,18 @@ abstract class BaseValidator
     /**
      * Apply validation message and translation to validation errors
      *
-     * @param NestedValidationException $allOfException
+     * @param NestedValidationException $nestedValidationException
      * @return NestedValidationException
      */
-    private function applyValidationMessageAndTranslation(NestedValidationException $allOfException): NestedValidationException
+    private function applyValidationMessageAndTranslation(NestedValidationException $nestedValidationException): NestedValidationException
     {
-        if ($allOfException instanceof NestedValidationException) {
-            $allOfException->findMessages([
+        if ($nestedValidationException instanceof NestedValidationException) {
+            $nestedValidationException->findMessages([
                 'notEmpty' => __('validation.error.required'),
                 'email'    => __('validation.error.email_format'),
             ]);
         }
-        return $allOfException;
+        return $nestedValidationException;
     }
 
     /**
