@@ -61,8 +61,8 @@ abstract class BaseValidator
     {
         if ($allOfException instanceof NestedValidationException) {
             $allOfException->findMessages([
-                // 'notEmpty' => __('validation.error.required'),
-                // 'email'    => __('validation.error.email_format'),
+                'notEmpty' => __('validation.error.required'),
+                'email'    => __('validation.error.email_format'),
             ]);
         }
         return $allOfException;
