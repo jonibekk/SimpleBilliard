@@ -16,6 +16,13 @@ class UploadedFile
     private $binaryFile;
 
     /**
+     * Base64 encoded file
+     *
+     * @var string
+     */
+    private $encodedFile;
+
+    /**
      * Size of the file
      *
      * @var int
@@ -65,6 +72,9 @@ class UploadedFile
             throw new InvalidArgumentException();
         }
         $this->decodeFile($encodedFile, $skipDecoding);
+        if (!$skipDecoding) {
+            $this->encodedFile = $encodedFile;
+        }
         $this->fileName = $fileName;
     }
 
@@ -86,6 +96,14 @@ class UploadedFile
     public function getBinaryFile(): string
     {
         return $this->binaryFile;
+    }
+
+    public function getEncodedFile(): string
+    {
+        if (empty($this->encodedFile)) {
+            return base64_encode($this->binaryFile);
+        }
+        return $this->encodedFile;
     }
 
     public function isEmpty(): bool

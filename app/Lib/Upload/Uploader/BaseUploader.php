@@ -74,12 +74,12 @@ abstract class BaseUploader implements Uploader
     }
 
     /**
-     * Upload a file to S3
+     * Upload a file to specified storage
      *
-     * @param string $bucket
-     * @param string $key
-     * @param string $body
-     * @param string $type
+     * @param string $bucket Storage destination
+     * @param string $key    Full path of the file. Include file name & extension
+     * @param string $body   File content
+     * @param string $type   File type
      *
      * @return mixed
      */
@@ -126,30 +126,6 @@ abstract class BaseUploader implements Uploader
     abstract public function save(string $modelName, int $modelId, UploadedFile $file): bool;
 
     /**
-     * Compress binary string
-     *
-     * @param string $fileData
-     *
-     * @return string
-     */
-    protected final function compress(string $fileData): string
-    {
-        return gzcompress($fileData, 3);
-    }
-
-    /**
-     * Decompress binary string
-     *
-     * @param string $compressedData
-     *
-     * @return string
-     */
-    protected final function uncompress(string $compressedData): string
-    {
-        return gzuncompress($compressedData);
-    }
-
-    /**
      * Package file into JSON format
      *
      * @param UploadedFile $file
@@ -158,12 +134,12 @@ abstract class BaseUploader implements Uploader
      */
     protected final function package(UploadedFile $file): string
     {
-        if (empty ($file->getFileName()) || empty ($file->getBinaryFile())) {
+        if (empty ($file->getFileName()) || empty ($file->getEncodedFile())) {
             throw new InvalidArgumentException();
         }
 
         $array['file_name'] = $file->getFileName();
-        $array['file_data'] = bin2hex($this->compress($file->getBinaryFile()));
+        $array['file_data'] = $file->getEncodedFile();
 
         $json = json_encode($array);
 
@@ -189,7 +165,7 @@ abstract class BaseUploader implements Uploader
         if (empty($array['file_data']) || empty ($array['file_name'])) {
             throw new RuntimeException();
         }
-        return new UploadedFile(hex2bin($this->uncompress($array['file_data'])), $array['file_name'], true);
+        return new UploadedFile($this->uncompress($array['file_data']), $array['file_name']);
     }
 
     /**
