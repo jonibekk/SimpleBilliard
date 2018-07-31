@@ -42,5 +42,6 @@ class UploadServiceTest extends GoalousTestCase
         $this->assertNotEmpty($uuid);
         $this->assertInternalType('string', $uuid);
         $this->assertEquals(1, preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid));
+
     }
 }

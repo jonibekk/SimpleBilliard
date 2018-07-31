@@ -23,13 +23,13 @@ abstract class BaseUploader implements Uploader
 
     public function __construct(int $teamId, int $userId, string $webroot)
     {
-        if (empty($teamId) || empty($userId) || empty($webroot)) {
+        if (empty($teamId) || empty($userId)) {
             throw new InvalidArgumentException();
         }
 
         $this->teamId = $teamId;
         $this->userId = $userId;
-        $this->webroot = $webroot;
+        $this->webroot = $webroot ?: preg_replace('/\/$/', '', WWW_ROOT);
     }
 
     /**
