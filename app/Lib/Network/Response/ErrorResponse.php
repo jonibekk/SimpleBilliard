@@ -11,7 +11,6 @@ class ErrorResponse extends BaseApiResponse
     const RESPONSE_NOT_FOUND = 404;
     const RESPONSE_RESOURCE_CONFLICT = 409;
     const RESPONSE_INTERNAL_SERVER_ERROR = 500;
-    const RESPONSE_INSUFFICIENT_STORAGE = 507;
 
     /**
      * @param int $httpStatusCode
@@ -81,16 +80,6 @@ class ErrorResponse extends BaseApiResponse
     public static function internalServerError(): self
     {
         return self::createResponse(self::RESPONSE_INTERNAL_SERVER_ERROR);
-    }
-
-    /**
-     * Create response 507
-     *
-     * @return self
-     */
-    public static function insufficientStorage(): self
-    {
-        return self::createResponse(self::RESPONSE_INSUFFICIENT_STORAGE);
     }
 
     /**

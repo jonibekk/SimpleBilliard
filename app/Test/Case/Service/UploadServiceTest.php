@@ -1,6 +1,5 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Lib/Cache/Redis/Upload', 'UploadRedisClient');
 App::import('Service', 'UploadService');
 App::import('Lib/Upload', 'UploadedFile');
 
@@ -9,11 +8,6 @@ App::import('Lib/Upload', 'UploadedFile');
  * User: StephenRaharja
  * Date: 2018/07/27
  * Time: 18:29
- */
-
-/**
- * Run 'redis-cli flushall' before re-running test!
- * Class UploadServiceTest
  */
 class UploadServiceTest extends GoalousTestCase
 {

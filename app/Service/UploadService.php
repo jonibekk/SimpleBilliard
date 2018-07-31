@@ -20,7 +20,7 @@ use Goalous\Exception as GlException;
 class UploadService extends AppService
 {
     /**
-     * Add a file into redis
+     * Add a file into buffer
      *
      * @param int    $userId
      * @param int    $teamId
