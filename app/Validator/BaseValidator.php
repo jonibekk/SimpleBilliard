@@ -54,6 +54,11 @@ abstract class BaseValidator
     /**
      * Apply validation message and translation to validation errors
      *
+     * @see http://respect.github.io/Validation/docs/
+     *      Search the title below in Document
+     *      "Custom messages"
+     *      "Getting messages as an array by name"
+     *
      * @param NestedValidationException $nestedValidationException
      * @return NestedValidationException
      */
