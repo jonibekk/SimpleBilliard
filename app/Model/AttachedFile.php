@@ -19,15 +19,15 @@ class AttachedFile extends AppModel
     /**
      * file type
      *
-     * @deprecated
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedFileType
      */
     const TYPE_FILE_IMG = 0;
     /**
-     * @deprecated
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedFileType
      */
     const TYPE_FILE_VIDEO = 1;
     /**
-     * @deprecated
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedFileType
      */
     const TYPE_FILE_DOC = 2;
 
