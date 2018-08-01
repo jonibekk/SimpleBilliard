@@ -65,12 +65,18 @@ abstract class BaseValidator
     private function applyValidationMessageAndTranslation(NestedValidationException $nestedValidationException): NestedValidationException
     {
         if ($nestedValidationException instanceof NestedValidationException) {
-            $nestedValidationException->findMessages([
-                'notEmpty' => __('validation.error.required'),
-                'email'    => __('validation.error.email_format'),
-            ]);
+            $nestedValidationException->findMessages($this->getValidationMessageFromConfig());
         }
         return $nestedValidationException;
+    }
+
+    /**
+     * Read the validation message from config file.
+     * @return array
+     */
+    private function getValidationMessageFromConfig(): array
+    {
+        return require sprintf('%s/%s/Config/validation_messages.php', ROOT, APP_DIR);
     }
 
     /**
