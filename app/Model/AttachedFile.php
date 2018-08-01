@@ -22,11 +22,11 @@ class AttachedFile extends AppModel
      * @deprecated
      */
     const TYPE_FILE_IMG = 0;
-    /*
+    /**
      * @deprecated
      */
     const TYPE_FILE_VIDEO = 1;
-    /*
+    /**
      * @deprecated
      */
     const TYPE_FILE_DOC = 2;
