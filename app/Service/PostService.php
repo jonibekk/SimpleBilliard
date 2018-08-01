@@ -556,9 +556,9 @@ class PostService extends AppService
      * Get list of attached files of a post
      *
      * @param int $postId
-     * @param int $type Filtered file type
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
      *
-     * @return array of AttachedFileEntity
+     * @return AttachedFileEntity[]
      */
     public function getAttachedFiles(int $postId, Goalous\Enum\Model\AttachedFile\AttachedFileType $type = null): array
     {
