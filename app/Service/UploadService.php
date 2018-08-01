@@ -3,7 +3,6 @@ App::import('Service', 'AppService');
 App::import('Lib/Upload', 'UploadedFile');
 App::import('Lib/Upload/Processor', 'UploadProcessor');
 App::import('Lib/Upload/Uploader', 'UploaderFactory');
-App::import('Lib/Upload/Uploader/Local', 'LocalUploader');
 App::import('Lib/Upload/Uploader/S3', 'S3Uploader');
 App::import('Validator/Lib/Upload', 'UploadValidator');
 App::import('Validator/Lib/Upload', 'UploadImageValidator');

@@ -35,10 +35,10 @@ class S3Uploader extends BaseUploader
      */
     public function buffer(UploadedFile $file): string
     {
-        $key = "/upload" . $this->createKey($file->getUUID());
+        $key = $this->createBufferKey($file->getUUID());
 
         try {
-            $this->upload(S3_UPLOAD_BUCKET, $key, $this->package($file), "application/json");
+            $this->upload(AWS_S3_BUCKET_TMP, $key, $this->package($file), "application/json");
         } catch (S3Exception $exception) {
             GoalousLog::error("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
                 $exception->getTrace());
@@ -50,6 +50,7 @@ class S3Uploader extends BaseUploader
 
     /**
      * Get buffered file from S3
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#getobject
      *
      * @param string $uuid
      *
@@ -57,20 +58,24 @@ class S3Uploader extends BaseUploader
      */
     public function getBuffer(string $uuid): UploadedFile
     {
-        $key = "/upload" . $this->createKey($uuid);
+        $key = $this->createBufferKey($uuid);
 
-        $response = $this->s3Instance->getObject([
-            'Bucket' => S3_UPLOAD_BUCKET,
-            'Key'    => $key,
-        ]);
-
-        if (empty($response)) {
-            throw new GlException\GoalousNotFoundException();
+        try {
+            $response = $this->s3Instance->getObject([
+                'Bucket' => AWS_S3_BUCKET_TMP,
+                'Key'    => $key,
+            ]);
+        } catch (S3Exception $exception) {
+            throw new RuntimeException();
         }
 
-        $json = Hash::get($response->toArray(), 'Body');
+        if (empty($response['Body'])) {
+            throw new GlException\GoalousNotFoundException();
+        }
+        /** @var GuzzleHttp\Psr7\Stream $data */
+        $data = $response['Body'];
 
-        $dataArray = json_decode($json);
+        $dataArray = json_decode($data->getContents(), true);
 
         if (empty($dataArray)) {
             throw new RuntimeException();
@@ -151,4 +156,22 @@ class S3Uploader extends BaseUploader
     {
         return true;
     }
+
+    /**
+     * Create key for buffering
+     *
+     * @param string $uuid
+     *
+     * @return string
+     */
+    protected function createBufferKey(string $uuid): string
+    {
+        $key = parent::createBufferKey($uuid);
+        //In local env, append current user's name
+        if (!empty(AWS_S3_BUCKET_USERNAME)) {
+            $key = '/' . AWS_S3_BUCKET_USERNAME . $key;
+        }
+        return "upload" . $key;
+    }
+
 }
