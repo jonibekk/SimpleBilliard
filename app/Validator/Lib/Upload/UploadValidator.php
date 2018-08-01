@@ -13,7 +13,7 @@ use Goalous\Exception\Upload as UploadException;
 class UploadValidator
 {
     //100 MB
-    const MAX_FILE_SIZE = 100 * 1024 * 1024;
+    const MAX_FILE_SIZE = 100;
 
     private static $allowedTypes = [
         'ai'      => 'application/postscript',
@@ -203,7 +203,7 @@ class UploadValidator
         }
 
         //If larger than 100 MB
-        if ($uploadedFile->getFileSize() > self::MAX_FILE_SIZE) {
+        if ($uploadedFile->getFileSize() > self::MAX_FILE_SIZE * 1024 * 1024) {
             return false;
         }
         return true;
@@ -235,7 +235,8 @@ class UploadValidator
     public static function validate(UploadedFile $uploadedFile): bool
     {
         if (!self::validateSize($uploadedFile)) {
-            throw new UploadException\UploadSizeException();
+            throw new UploadException\UploadSizeException(__("%sMB is the limit.",
+                self::MAX_FILE_SIZE));
         }
 
         if (!self::validateType($uploadedFile)) {
@@ -247,8 +248,8 @@ class UploadValidator
         switch ($type) {
             case "image" :
                 if (!UploadImageValidator::validateResolution($uploadedFile)) {
-                    //TODO translation
-                    throw new UploadException\UploadResolutionException("Image must be smaller than 25MP");
+                    throw new UploadException\UploadResolutionException(__("%s pixels is the limit.",
+                        number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
                 }
                 break;
             default:
