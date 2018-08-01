@@ -65,6 +65,7 @@ class UploadHelper extends AppHelper
 
     /**
      * It's for caching expires timestamp.
+     *
      * @var null|int
      */
     private $s3Expires = null;
@@ -427,6 +428,9 @@ class UploadHelper extends AppHelper
 
         $file = rawurlencode($file);
         $file = str_replace('%2F', '/', $file);
+        if (!empty(AWS_S3_BUCKET_USERNAME)) {
+            $file = AWS_S3_BUCKET_USERNAME . '/' . $file;
+        }
         $path = $bucket . '/' . $file;
 
         $expires = $this->getS3Expires();

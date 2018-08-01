@@ -13,6 +13,10 @@ App::uses('GlRedis', 'Model');
 /**
  * Class AttachedFileService
  */
+
+use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+
 class AttachedFileService extends AppService
 {
     // アップロード種別
@@ -190,12 +194,12 @@ class AttachedFileService extends AppService
     /**
      * Add a new attached file
      *
-     * @param int          $userId
-     * @param int          $teamId
-     * @param UploadedFile $file
-     * @param int          $modelType
-     * @param bool         $displayFileList
-     * @param bool         $removable
+     * @param int               $userId
+     * @param int               $teamId
+     * @param UploadedFile      $file
+     * @param AttachedModelType $modelType
+     * @param bool              $displayFileList
+     * @param bool              $removable
      *
      * @return AttachedFileEntity
      * @throws Exception
@@ -204,22 +208,22 @@ class AttachedFileService extends AppService
         int $userId,
         int $teamId,
         UploadedFile $file,
-        int $modelType,
-        bool $displayFileList,
-        bool $removable
+        AttachedModelType $modelType,
+        bool $displayFileList = true,
+        bool $removable = true
     ): AttachedFileEntity {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
 
         switch ($file->getFileType()) {
             case "image" :
-                $fileType = AttachedFile::TYPE_FILE_IMG;
+                $fileType = AttachedFileType::TYPE_FILE_IMG;
                 break;
             case "video" :
-                $fileType = AttachedFile::TYPE_FILE_VIDEO;
+                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
                 break;
             default:
-                $fileType = AttachedFile::TYPE_FILE_DOC;
+                $fileType = AttachedFileType::TYPE_FILE_DOC;
                 break;
         }
 
@@ -230,7 +234,7 @@ class AttachedFileService extends AppService
             'file_type'             => $fileType,
             'file_ext'              => $file->getFileExt(),
             'file_size'             => $file->getFileSize(),
-            'model_type'            => $modelType,
+            'model_type'            => $modelType->getValue(),
             'display_file_list_flg' => $displayFileList,
             'removable_flg'         => $removable
         ];

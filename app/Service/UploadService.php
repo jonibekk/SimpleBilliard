@@ -82,6 +82,11 @@ class UploadService extends AppService
         $uuids = [];
 
         foreach ($keys as $key) {
+
+            if (!array_key_exists($key, $mainData)) {
+                throw new InvalidArgumentException();
+            }
+
             //TODO add validation to POST data
             $uuid = sscanf($mainData[$key], 'FILE %s');
 
@@ -100,18 +105,45 @@ class UploadService extends AppService
     }
 
     /**
-     * Write the file to server
+     * Write file to main storage
      *
      * @param int          $userId
      * @param int          $teamId
+     * @param string       $modelName
+     * @param int          $modelId
      * @param UploadedFile $file
+     * @param string       $suffix
      *
      * @return bool
      */
-    public function save(int $userId, int $teamId, string $modelName, int $modelId, UploadedFile $file): bool
+    public function save(
+        int $userId,
+        int $teamId,
+        string $modelName,
+        int $modelId,
+        UploadedFile $file,
+        string $suffix = ""
+    ): bool {
+        $uploader = UploaderFactory::generate($userId, $teamId);
+
+        return $uploader->save($modelName, $modelId, $file, $suffix);
+    }
+
+    /**
+     * Remove a uploaded file
+     *
+     * @param int    $userId
+     * @param int    $teamId
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName
+     *
+     * @return bool
+     */
+    public function delete(int $userId, int $teamId, string $modelName, int $modelId, string $fileName = ""): bool
     {
         $uploader = UploaderFactory::generate($userId, $teamId);
 
-        return $uploader->save($modelName, $modelId, $file);
+        return $uploader->delete($modelName, $modelId, $fileName);
     }
 }

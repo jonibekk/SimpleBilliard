@@ -92,13 +92,13 @@ class S3Uploader extends BaseUploader
      * @param string       $modelName
      * @param int          $modelId
      * @param UploadedFile $file
+     * @param string       $suffix
      *
      * @return bool
      */
-    public function save(string $modelName, int $modelId, UploadedFile $file): bool
+    public function save(string $modelName, int $modelId, UploadedFile $file, string $suffix = ""): bool
     {
-        $key = $modelName . "/" . $modelId . "/" . $file->getFileName() . $file->getFileExt();
-
+        $key = $this->createUploadKey($modelName, $modelId, $file->getFileName(), $suffix, $file->getFileExt());
         try {
             $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
         } catch (S3Exception $exception) {
@@ -106,6 +106,7 @@ class S3Uploader extends BaseUploader
                 $exception->getTrace());
             throw new RuntimeException("Failed saving to S3");
         }
+        return true;
     }
 
     /**
@@ -140,9 +141,27 @@ class S3Uploader extends BaseUploader
         return !empty($response);
     }
 
-    public function delete(string $modelName, int $modelId, string $uuid): bool
+    /**
+     * Remove an uploaded file from permanent storage
+     *
+     * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#deleteobject
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName
+     *
+     * @return bool
+     */
+    public function delete(string $modelName, int $modelId, string $fileName = ""): bool
     {
-        // TODO GL-7171
+        $key = $this->createDeleteKey($modelName, $modelId, $fileName);
+
+        $this->s3Instance->deleteObject([
+            'Bucket' => S3_ASSETS_BUCKET,
+            'Key'    => $key
+        ]);
+
+        return true;
     }
 
     /**
@@ -174,4 +193,67 @@ class S3Uploader extends BaseUploader
         return "upload" . $key;
     }
 
+    /**
+     * Create upload key
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $filename
+     * @param string $suffix
+     * @param string $fileExt
+     *
+     * @return string
+     */
+    protected function createUploadKey(
+        string $modelName,
+        int $modelId,
+        string $filename,
+        string $suffix,
+        string $fileExt
+    ): string {
+        $key = parent::createUploadKey($modelName, $modelId, $filename, $suffix, $fileExt);
+        if (!empty(AWS_S3_BUCKET_USERNAME)) {
+            $key = '/' . AWS_S3_BUCKET_USERNAME . $key;
+        }
+        return $this->sanitize($key);
+    }
+
+    /**
+     * Create delete key.
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName
+     * @param string $fileExt
+     *
+     * @return string
+     */
+    protected function createDeleteKey(
+        string $modelName,
+        int $modelId,
+        string $fileName = "",
+        string $fileExt = ""
+    ): string {
+        $key = parent::createDeleteKey($modelName, $modelId, $fileName, $fileExt);
+        if (!empty(AWS_S3_BUCKET_USERNAME)) {
+            $key = '/' . AWS_S3_BUCKET_USERNAME . $key;
+        }
+        return $this->sanitize($key);
+    }
+
+    /**
+     * Remove heading '/' if exists
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    private function sanitize(string $key): string
+    {
+        //If start with '/', remove it
+        if (strpos($key, "/") === 0) {
+            $key = substr($key, 1);
+        }
+        return $key;
+    }
 }

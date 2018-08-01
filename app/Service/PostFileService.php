@@ -11,19 +11,18 @@ App::uses('PostFile', 'Model');
  */
 class PostFileService extends AppService
 {
-
     /**
      * Add a new post_files entry
      *
      * @param int $postId
      * @param int $attachedFileId
      * @param int $teamId
-     * @param int $index
+     * @param int $indexNum
      *
      * @return PostFileEntity
      * @throws Exception
      */
-    private function add(int $postId, int $attachedFileId, int $teamId, int $index): PostFileEntity
+    public function add(int $postId, int $attachedFileId, int $teamId, int $indexNum): PostFileEntity
     {
         /** @var PostFile $PostFile */
         $PostFile = ClassRegistry::init('PostFile');
@@ -32,7 +31,7 @@ class PostFileService extends AppService
             'post_id'          => $postId,
             'attached_file_id' => $attachedFileId,
             'team_id'          => $teamId,
-            'index_num'        => $index
+            'index_num'        => $indexNum
         ];
 
         return $PostFile->useType()->useEntity()->save($newData, false);

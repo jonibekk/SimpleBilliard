@@ -64,9 +64,9 @@ interface Uploader
      *
      * @param string $modelName
      * @param int    $modelId
-     * @param string $uuid
+     * @param string $fileName
      *
      * @return bool
      */
-    public function delete(string $modelName, int $modelId, string $uuid): bool;
+    public function delete(string $modelName, int $modelId, string $fileName = ""): bool;
 }

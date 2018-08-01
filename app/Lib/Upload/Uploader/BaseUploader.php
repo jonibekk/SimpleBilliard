@@ -18,7 +18,6 @@ abstract class BaseUploader implements Uploader
     /** @var int */
     protected $userId;
 
-
     public function __construct(int $userId, int $teamId)
     {
         if (empty($teamId) || empty($userId)) {
@@ -96,11 +95,11 @@ abstract class BaseUploader implements Uploader
      *
      * @param string $modelName
      * @param int    $modelId
-     * @param string $uuid
+     * @param string $fileName
      *
      * @return mixed
      */
-    abstract public function delete(string $modelName, int $modelId, string $uuid): bool;
+    abstract public function delete(string $modelName, int $modelId, string $fileName = ""): bool;
 
     /**
      * Get buffered file
@@ -117,10 +116,11 @@ abstract class BaseUploader implements Uploader
      * @param string       $modelName
      * @param int          $modelId
      * @param UploadedFile $file
+     * @param string       $suffix
      *
      * @return bool
      */
-    abstract public function save(string $modelName, int $modelId, UploadedFile $file): bool;
+    abstract public function save(string $modelName, int $modelId, UploadedFile $file, string $suffix = ""): bool;
 
     /**
      * Package file into JSON format
@@ -190,5 +190,56 @@ abstract class BaseUploader implements Uploader
             throw new InvalidArgumentException();
         }
         return "/$this->teamId/$this->userId/" . $uuid . ".json";
+    }
+
+    /**
+     * Create upload key
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName
+     * @param string $suffix
+     * @param string $fileExt
+     *
+     * @return string
+     */
+    protected function createUploadKey(
+        string $modelName,
+        int $modelId,
+        string $fileName,
+        string $suffix,
+        string $fileExt
+    ): string {
+        $key = '/' . Inflector::tableize($modelName) . "/" . $modelId . "/" . $this->createHash($fileName) . $suffix . "." . $fileExt;
+        return $key;
+    }
+
+    /**
+     * Create delete key. When file name is not given, will clear the folder instead
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName
+     * @param string $fileExt
+     *
+     * @return string
+     */
+    protected function createDeleteKey(
+        string $modelName,
+        int $modelId,
+        string $fileName = "",
+        string $fileExt = ""
+    ): string {
+
+        $key = '/' . Inflector::tableize($modelName) . "/" . $modelId;
+
+        if (!empty($fileName)) {
+            $key .= "/" . $fileName;
+            if (!empty($fileExt)) {
+                $key .= "." . $fileExt;
+            }
+        }
+
+        return $key;
     }
 }
