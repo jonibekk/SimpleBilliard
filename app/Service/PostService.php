@@ -554,4 +554,40 @@ class PostService extends AppService
         return $circleList > 0;
     }
 
+    /**
+     * Get list of attached files of a post
+     *
+     * @param int $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getAttachedFiles(int $postId, Goalous\Enum\Model\AttachedFile\AttachedFileType $type = null): array
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $conditions = [
+            'conditions' => [],
+            'table'      => 'attached_files',
+            'alias'      => 'AttachedFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'post_files',
+                    'alias'      => 'PostFile',
+                    'conditions' => [
+                        'PostFile.post_id' => $postId,
+                        'PostFile.attached_file_id = AttachedFile.id'
+                    ]
+                ]
+            ]
+        ];
+
+        if (!empty($type)) {
+            $conditions['conditions']['file_type'] = $type->getValue();
+        }
+
+        return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
 }

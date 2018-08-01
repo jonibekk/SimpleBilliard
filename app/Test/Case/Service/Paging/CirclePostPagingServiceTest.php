@@ -98,8 +98,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $this->assertCount(2, $result['data']);
 
         //Loop since not all post has circle_id
-        foreach ($result['data'] as $post){
-            if (!empty($post['circle_id'])){
+        foreach ($result['data'] as $post) {
+            if (!empty($post['circle_id'])) {
                 $this->assertNotEmpty($post['circle']);
             }
         }
@@ -152,5 +152,21 @@ class CirclePostPagingServiceTest extends GoalousTestCase
 
         $postData = $result['data'][0];
         $this->assertInternalType('bool', $postData['is_saved']);
+    }
+
+    public function test_getCirclePostWithPostFileExtension_success()
+    {
+        /** @var CirclePostPagingService $CirclePostPagingService */
+        $CirclePostPagingService = new CirclePostPagingService();
+        $cursor = new PagingRequest();
+        $cursor->addResource('res_id', 1);
+        $cursor->addResource('current_user_id', 1);
+        $cursor->addResource('current_team_id', 1);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostPagingService::EXTEND_POST_FILE);
+
+        $this->assertCount(1, $result['data']);
+
+        $postData = $result['data'][0];
+        $this->assertArrayHasKey('attached_files', $postData);
     }
 }
