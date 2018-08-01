@@ -222,9 +222,7 @@ class UploadValidator
             throw new InvalidArgumentException("File can't be empty");
         }
 
-        $mimeType = $uploadedFile->getFileType() . "/" . $uploadedFile->getFileExt();
-
-        return in_array($mimeType, self::$allowedTypes);
+        return in_array($uploadedFile->getMIME(), self::$allowedTypes);
     }
 
     /**
@@ -241,7 +239,7 @@ class UploadValidator
         }
 
         if (!self::validateType($uploadedFile)) {
-            throw new UploadException\UploadSizeException();
+            throw new UploadException\UploadTypeException();
         }
 
         $type = $uploadedFile->getFileType();

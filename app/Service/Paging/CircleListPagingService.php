@@ -16,6 +16,7 @@ class CircleListPagingService extends BasePagingService
 {
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
+    const MAIN_MODEL = 'Circle';
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {

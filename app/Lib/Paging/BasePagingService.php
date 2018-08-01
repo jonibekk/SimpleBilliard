@@ -101,7 +101,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function getEndPointerValue($lastElement)
     {
-        return ['id', ">", $lastElement['id']];
+        return [static::MAIN_MODEL.'.id', ">", $lastElement['id']];
     }
 
     /**
@@ -114,7 +114,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function getStartPointerValue($firstElement)
     {
-        return ['id', "<", $firstElement['id']];
+        return [static::MAIN_MODEL.'.id', "<", $firstElement['id']];
     }
 
     /**
@@ -173,7 +173,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder('id');
+        $pagingRequest->addOrder(static::MAIN_MODEL.'.id');
         return $pagingRequest;
     }
 

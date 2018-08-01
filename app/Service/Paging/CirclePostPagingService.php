@@ -33,6 +33,7 @@ class CirclePostPagingService extends BasePagingService
     const EXTEND_SAVED = "ext:circle_post:saved";
 
     const DEFAULT_COMMENT_COUNT = 3;
+    const MAIN_MODEL = 'Post';
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -144,13 +145,13 @@ class CirclePostPagingService extends BasePagingService
                 'Post.team_id' => $teamId,
                 'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE]
             ],
-            'join'       => [
+            'joins'       => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',
                     'conditions' => [
-                        'PostShareCircle = Post.id',
+                        'PostShareCircle.post_id = Post.id',
                         'PostShareCircle.del_flg'   => false,
                         'PostShareCircle.circle_id' => $circleId
                     ]
@@ -163,12 +164,12 @@ class CirclePostPagingService extends BasePagingService
 
     protected function getEndPointerValue($lastElement)
     {
-        return ['id', "<", $lastElement['id']];
+        return [static::MAIN_MODEL.'.id', "<", $lastElement['id']];
     }
 
     protected function getStartPointerValue($firstElement)
     {
-        return ['id', ">", $firstElement['id']];
+        return [static::MAIN_MODEL.'.id', ">", $firstElement['id']];
     }
 
 }

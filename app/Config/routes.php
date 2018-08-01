@@ -105,10 +105,6 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
     Router::connect('/api/:controller/:id',
         ['action' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
-    //For upload delete
-    Router::connect('/api/uploads/:uuid',
-        ['action' => 'delete', '[method]' => 'DELETE', 'controller' => 'uploads'],
-        ['uuid' => '[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}', 'pass' => ['uuid']]);
 
     /**
      * REST Endpoints with version in header 'X-API-Version'
@@ -127,8 +123,6 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
     Router::connect('/api/:controller/:id/:action',
         ['prefix' => 'put', '[method]' => 'PUT'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
-    Router::connect('/api/:controller/:action',
-        ['prefix' => 'delete', '[method]' => 'DELETE']);
     Router::connect('/api/:controller/:id/:action',
         ['prefix' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
