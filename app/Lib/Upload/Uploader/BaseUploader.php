@@ -18,10 +18,8 @@ abstract class BaseUploader implements Uploader
     /** @var int */
     protected $userId;
 
-    /** @var string */
-    protected $webroot;
 
-    public function __construct(int $teamId, int $userId, string $webroot)
+    public function __construct(int $userId, int $teamId)
     {
         if (empty($teamId) || empty($userId)) {
             throw new InvalidArgumentException();
@@ -29,7 +27,6 @@ abstract class BaseUploader implements Uploader
 
         $this->teamId = $teamId;
         $this->userId = $userId;
-        $this->webroot = $webroot ?: preg_replace('/\/$/', '', WWW_ROOT);
     }
 
     /**

@@ -12,6 +12,15 @@ use Goalous\Exception as GlException;
 
 class LocalUploader extends BaseUploader
 {
+    /** @var string */
+    protected $webroot;
+
+    public function __construct(int $userId, int $teamId, string $webroot = "")
+    {
+        parent::__construct($userId, $teamId);
+        $this->webroot = $webroot ?: preg_replace('/\/$/', '', WWW_ROOT);
+    }
+
     public function buffer(UploadedFile $file): string
     {
         $key = $this->createKey($file->getUUID());
