@@ -76,7 +76,10 @@ abstract class BaseValidator
      */
     private function getValidationMessageFromConfig(): array
     {
-        return require sprintf('%s/%s/Config/validation_messages.php', ROOT, APP_DIR);
+        // Need to load config after the language has decided.
+        // Loading on bootstrap_common.php is not decided language yet.
+        Configure::load("validation_messages.php");
+        return Configure::read("validation_messages");
     }
 
     /**
