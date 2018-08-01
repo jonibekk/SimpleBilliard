@@ -10,6 +10,7 @@ App::import('Lib/Upload/Uploader', 'BaseUploader');
  */
 
 use Aws\S3\Exception\S3Exception;
+use Goalous\Exception as GlException;
 
 class S3Uploader extends BaseUploader
 {
@@ -56,7 +57,28 @@ class S3Uploader extends BaseUploader
      */
     public function getBuffer(string $uuid): UploadedFile
     {
-        // TODO GL-7171
+        $key = "/upload" . $this->createKey($uuid);
+
+        $response = $this->s3Instance->getObject([
+            'Bucket' => S3_UPLOAD_BUCKET,
+            'Key'    => $key,
+        ]);
+
+        if (empty($response)) {
+            throw new GlException\GoalousNotFoundException();
+        }
+
+        $json = Hash::get($response->toArray(), 'Body');
+
+        $dataArray = json_decode($json);
+
+        if (empty($dataArray)) {
+            throw new RuntimeException();
+        }
+
+        $file = (new UploadedFile($dataArray['file_data'], $dataArray['file_name']))->withUUID($uuid);
+
+        return $file;
     }
 
     /**
@@ -70,7 +92,15 @@ class S3Uploader extends BaseUploader
      */
     public function save(string $modelName, int $modelId, UploadedFile $file): bool
     {
-        // TODO GL-7171
+        $key = $modelName . "/" . $modelId . "/" . $file->getFileName() . $file->getFileExt();
+
+        try {
+            $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
+        } catch (S3Exception $exception) {
+            GoalousLog::error("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
+                $exception->getTrace());
+            throw new RuntimeException("Failed saving to S3");
+        }
     }
 
     /**

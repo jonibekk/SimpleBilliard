@@ -59,7 +59,13 @@ class UploadService extends AppService
 
         $uploader = UploaderFactory::generate($teamId, $userId);
 
-        return $uploader->getBuffer($uuid);
+        $file = $uploader->getBuffer($uuid);
+
+        if (empty($file)) {
+            throw new GlException\GoalousNotFoundException("Specified buffered file not found");
+        }
+
+        return $file;
     }
 
     /**
@@ -80,7 +86,7 @@ class UploadService extends AppService
             //TODO add validation to POST data
             $uuid = sscanf($mainData[$key], 'FILE %s');
 
-            $uploader = UploaderFactory::generate($teamId, $userId);
+            $uploader = UploaderFactory::generate($userId, $teamId);
             $file = $uploader->getBuffer($uuid);
 
             if (empty($file)) {
@@ -95,20 +101,6 @@ class UploadService extends AppService
     }
 
     /**
-     * Array of attached files ID saved
-     *
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $fileUUIDs
-     *
-     * @return array
-     */
-    public function attach(int $userId, int $teamId, array $fileUUIDs):array
-    {
-
-    }
-
-    /**
      * Write the file to server
      *
      * @param int          $userId
@@ -117,8 +109,10 @@ class UploadService extends AppService
      *
      * @return bool
      */
-    private function save(int $userId, int $teamId, UploadedFile $file): bool
+    public function save(int $userId, int $teamId, string $modelName, int $modelId, UploadedFile $file): bool
     {
-        //TODO GL-7171
+        $uploader = UploaderFactory::generate($userId, $teamId);
+
+        return $uploader->save($modelName, $modelId, $file);
     }
 }

@@ -12,11 +12,12 @@ App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'CircleEntity');
+App::import('Model/Entity', 'AttachedFileEntity');
+App::import('Model/Entity', 'PostFileEntity');
 
 use Goalous\Enum as Enum;
-
-
 use Goalous\Exception as GlException;
+
 /**
  * Class PostService
  */
@@ -552,4 +553,5 @@ class PostService extends AppService
 
         return $circleList > 0;
     }
+
 }
