@@ -8,6 +8,7 @@
  */
 
 use Respect\Validation\Validator as validator;
+use \Respect\Validation\Exceptions\NestedValidationException;
 
 abstract class BaseValidator
 {
@@ -25,6 +26,7 @@ abstract class BaseValidator
      *
      * @return bool         Whether validation passed or not
      * @throws \Respect\Validation\Exceptions\NestedValidationException
+     * @throws Exception
      */
     public final function validate($input)
     {
@@ -39,7 +41,45 @@ abstract class BaseValidator
 
         $validatorArray = $this->generateValidationArray($this->rules, is_array($input));
 
-        return validator::allOf($validatorArray)->assert($input) ?? false;
+        try {
+            return validator::allOf($validatorArray)->assert($input) ?? false;
+        } catch (NestedValidationException $exception) {
+            // Applying validation message and translation message to end of validation
+            throw $this->applyValidationMessageAndTranslation($exception);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Apply validation message and translation to validation errors
+     *
+     * @see http://respect.github.io/Validation/docs/
+     *      Search the title below in Document
+     *      "Custom messages"
+     *      "Getting messages as an array by name"
+     *
+     * @param NestedValidationException $nestedValidationException
+     * @return NestedValidationException
+     */
+    private function applyValidationMessageAndTranslation(NestedValidationException $nestedValidationException): NestedValidationException
+    {
+        if ($nestedValidationException instanceof NestedValidationException) {
+            $nestedValidationException->findMessages($this->getValidationMessageFromConfig());
+        }
+        return $nestedValidationException;
+    }
+
+    /**
+     * Read the validation message from config file.
+     * @return array
+     */
+    private function getValidationMessageFromConfig(): array
+    {
+        // Need to load config after the language has decided.
+        // Loading on bootstrap_common.php is not decided language yet.
+        Configure::load("validation_messages.php");
+        return Configure::read("validation_messages");
     }
 
     /**
