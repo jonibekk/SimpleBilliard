@@ -558,9 +558,9 @@ class PostService extends AppService
      * @param int $postId
      * @param int $type Filtered file type
      *
-     * @return array
+     * @return array of AttachedFileEntity
      */
-    public function getAttachedFiles(int $postId, int $type = null): array
+    public function getAttachedFiles(int $postId, Goalous\Enum\Model\AttachedFile\AttachedFileType $type = null): array
     {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -583,7 +583,7 @@ class PostService extends AppService
         ];
 
         if (!empty($type)) {
-            $conditions['conditions']['file_type'] = $type;
+            $conditions['conditions']['file_type'] = $type->getValue();
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
