@@ -68,27 +68,44 @@ class UploadService extends AppService
      * @param int   $userId
      * @param int   $teamId
      * @param array $mainData
+     * @param array $keys JSON data keys that should be replaced with filename
+     *
+     * @return array of UUIDs
      */
-    public function link(int $userId, int $teamId, array &$mainData)
+    public function link(int $userId, int $teamId, array &$mainData, array $keys): array
     {
-        foreach ($mainData as $key => &$value) {
-            if (preg_match("/FILE [A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $value)) {
+        $uuids = [];
 
-                $uuid = sscanf($value, 'FILE %s');
+        foreach ($keys as $key) {
+            //TODO add validation to POST data
+            $uuid = sscanf($mainData[$key], 'FILE %s');
 
-                $file = $this->read($userId, $teamId, $uuid);
+            $uploader = UploaderFactory::generate($teamId, $userId);
+            $file = $uploader->getBuffer($uuid);
 
-                if (empty($file)) {
-                    throw new GlException\GoalousNotFoundException("Specified buffered file not found");
-                }
-
-                if ($this->save($userId, $teamId, $file)) {
-                    $value = $file->getFileName();
-                } else {
-                    throw new RuntimeException();
-                }
+            if (empty($file)) {
+                throw new GlException\GoalousNotFoundException("Specified buffered file not found");
             }
+
+            $mainData[$key] = $file->getFileName();
+            $uuids[] = $file->getUUID();
         }
+
+        return $uuids;
+    }
+
+    /**
+     * Array of attached files ID saved
+     *
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $fileUUIDs
+     *
+     * @return array
+     */
+    public function attach(int $userId, int $teamId, array $fileUUIDs):array
+    {
+
     }
 
     /**

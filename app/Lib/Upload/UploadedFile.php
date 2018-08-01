@@ -131,6 +131,11 @@ class UploadedFile
         return $this->type . "/" . $this->fileExt;
     }
 
+    public function withUUID(string $uuid):self {
+        $this->uuid = $uuid;
+        return $this;
+    }
+
     private function decodeFile(string $encodedFile, bool $skipDecoding)
     {
         if (empty($encodedFile)) {
