@@ -184,7 +184,7 @@ abstract class BaseUploader implements Uploader
      *
      * @return string
      */
-    protected function createKey(string $uuid): string
+    protected function createBufferKey(string $uuid): string
     {
         if (empty($uuid)) {
             throw new InvalidArgumentException();

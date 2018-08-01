@@ -1,30 +1,15 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Service', 'UploadService');
 App::import('Lib/Upload', 'UploadedFile');
-App::import('Lib/Upload/Uploader', 'UploaderFactory');
-App::import('Lib/Upload/Uploader/Local', 'LocalUploader');
-App::import('Lib/Upload/Uploader/S3', 'S3Uploader');
 
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
- * Date: 2018/07/27
- * Time: 18:29
+ * Date: 2018/08/01
+ * Time: 17:27
  */
-class UploadServiceTest extends GoalousTestCase
+class UploadedFileTest extends GoalousTestCase
 {
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'app.team_member',
-        'app.team',
-        'app.user',
-        'app.local_name'
-    ];
 
     /**
      * 6 kb image file
@@ -35,22 +20,37 @@ class UploadServiceTest extends GoalousTestCase
 
     private $fileName = "200px-Noto_Emoji_KitKat_263a.svg";
 
-    public function test_addFileToBuffer_success()
+    public function test_createUploadedFile_success()
     {
-        /** @var UploadService $UploadService */
-        $UploadService = ClassRegistry::init('UploadService');
+        $file = new UploadedFile($this->encodedFile, $this->fileName);
 
-        $uuid = $UploadService->buffer(1, 1, $this->encodedFile, $this->fileName);
-
-        $this->assertNotEmpty($uuid);
-        $this->assertInternalType('string', $uuid);
-        $this->assertEquals(1, preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid));
-
-        $uploader = UploaderFactory::generate(1, 1);
-        $file = $uploader->getBuffer($uuid);
-
-        $this->assertEquals($uuid, $file->getUUID());
-        $this->assertEquals($this->encodedFile, $file->getEncodedFile());
         $this->assertEquals($this->fileName, $file->getFileName());
+        $this->assertEquals($this->encodedFile, $file->getEncodedFile());
+        $this->assertEquals("image", $file->getFileType());
+        $this->assertEquals("png", $file->getFileExt());
+        $this->assertNotEmpty($file->getFileSize());
+        $this->assertNotEmpty($file->getMetadata());
+    }
+
+    public function test_createEmptyFileContent_failure()
+    {
+        try {
+            $file = new UploadedFile("", $this->fileName);
+            //If exception not thrown, fail the test
+            $this->fail();
+        } catch (InvalidArgumentException $e) {
+
+        }
+    }
+
+    public function test_createEmptyFileName_failure()
+    {
+        try {
+            $file = new UploadedFile($this->encodedFile, "");
+            //If exception not thrown, fail the test
+            $this->fail();
+        } catch (InvalidArgumentException $e) {
+
+        }
     }
 }
