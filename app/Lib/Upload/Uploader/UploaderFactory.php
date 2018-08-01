@@ -18,15 +18,15 @@ class UploaderFactory
      *
      * @return Uploader
      */
-    public static function generate(int $teamId, int $userId, string $webroot = ""): Uploader
+    public static function generate(int $userId, int $teamId, string $webroot = ""): Uploader
     {
         if (empty($teamId) || empty($userId)) {
             throw new InvalidArgumentException();
         }
         if (PUBLIC_ENV) {
-            return new S3Uploader($teamId, $userId, $webroot);
+            return new S3Uploader($userId, $teamId);
         } else {
-            return new LocalUploader($teamId, $userId, $webroot);
+            return new LocalUploader($userId, $teamId, $webroot);
         }
     }
 

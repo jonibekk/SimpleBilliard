@@ -15,9 +15,9 @@ class S3Uploader extends BaseUploader
 {
     private $s3Instance;
 
-    public function __construct(int $teamId, int $userId, string $webroot)
+    public function __construct(int $userId, int $teamId)
     {
-        parent::__construct($teamId, $userId, $webroot);
+        parent::__construct($userId, $teamId);
 
         if (empty($this->s3Instance)) {
             // Initiate s3 client instance
@@ -34,7 +34,7 @@ class S3Uploader extends BaseUploader
      */
     public function buffer(UploadedFile $file): string
     {
-        $key = $this->createKey($file->getUUID());
+        $key = "/upload" . $this->createKey($file->getUUID());
 
         try {
             $this->upload(S3_UPLOAD_BUCKET, $key, $this->package($file), "application/json");
