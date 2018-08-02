@@ -98,7 +98,7 @@ class S3Uploader extends BaseUploader
      */
     public function save(string $modelName, int $modelId, UploadedFile $file, string $suffix = ""): bool
     {
-        $key = $this->createUploadKey($modelName, $modelId, $file->getFileName(), $suffix, $file->getFileExt());
+        $key = $this->createUploadKey($modelName, $modelId, $file->getFileName(true), $suffix, $file->getFileExt());
         try {
             $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
         } catch (S3Exception $exception) {

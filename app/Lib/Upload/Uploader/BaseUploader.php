@@ -168,13 +168,13 @@ abstract class BaseUploader implements Uploader
     /**
      * Create MD5 Hash out of filename
      *
-     * @param string $fileName
+     * @param string $fileName Filename. Must not contain file extension (e.g. .jpg)
      *
      * @return string
      */
     protected final function createHash(string $fileName): string
     {
-        return md5($fileName ?? "") . Configure::read('Security.salt');
+        return md5(($fileName ?: "") . Configure::read('Security.salt'));
     }
 
     /**

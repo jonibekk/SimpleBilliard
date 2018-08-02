@@ -121,8 +121,13 @@ class UploadedFile
         return $this->metadata;
     }
 
-    public function getFileName(): string
+    public function getFileName(bool $omitExtension = false): string
     {
+        //Remove file extension
+        if ($omitExtension) {
+            $pointIndex = strrpos($this->fileName, '.');
+            return substr($this->fileName, 0, $pointIndex);
+        }
         return $this->fileName;
     }
 
@@ -131,7 +136,8 @@ class UploadedFile
         return $this->type . "/" . $this->fileExt;
     }
 
-    public function withUUID(string $uuid):self {
+    public function withUUID(string $uuid): self
+    {
         $this->uuid = $uuid;
         return $this;
     }

@@ -637,14 +637,17 @@ class PostService extends AppService
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
 
-                //For now, append same suffix for all images
-                $UploadService->save($userId, $teamId, 'Post', $postId, $uploadedFile, "_original");
-
                 /** @var AttachedFileEntity $attachedFile */
                 $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
                     AttachedModelType::TYPE_MODEL_POST());
                 /** @var PostFileEntity $postFile */
                 $postFile = $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
+
+                //For now, append required suffix for all images without resizing them
+                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_original");
+                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_x_small");
+                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_small");
+                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_large");
 
                 if (empty($postFile)) {
                     GoalousLog::error($errorMessage = 'Failed saving post files', [

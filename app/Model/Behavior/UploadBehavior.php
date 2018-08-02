@@ -954,7 +954,7 @@ class UploadBehavior extends ModelBehavior
 
     function saveRotatedFile($filePath, $outPath = null)
     {
-        if(!file_exists($filePath)){
+        if (!file_exists($filePath)) {
             return false;
         }
         // Temporarly increase memory limit for image manipulation
@@ -971,7 +971,7 @@ class UploadBehavior extends ModelBehavior
         $imgMimeType = $this->getImageMimeSubType($filePath);
 
         $createHandler = $this->getCreateHandler($imgMimeType);
-        if($createHandler === false){
+        if ($createHandler === false) {
             return false;
         }
         $outputHandler = $this->getOutputHandler($imgMimeType);
@@ -979,7 +979,11 @@ class UploadBehavior extends ModelBehavior
         $image = $this->_getImgSource($createHandler, $filePath);
 
         if (!$image) {
-            GoalousLog::error("saveRotatedFile", ["creating img object was failed.",Debugger::trace(),$this->_backupFailedImgFile(basename($filePath), $filePath)]);
+            GoalousLog::error("saveRotatedFile", [
+                "creating img object was failed.",
+                Debugger::trace(),
+                $this->_backupFailedImgFile(basename($filePath), $filePath)
+            ]);
             return false;
         }
 
@@ -987,14 +991,14 @@ class UploadBehavior extends ModelBehavior
         $image = imagerotate($image, $degrees, 0);
 
         // Flipping
-        if($flip && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
+        if ($flip && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
             $this->log(sprintf('flipping image object has failed.'));
             $this->log(Debugger::trace());
             $this->_backupFailedImgFile(basename($filePath), $filePath);
             return false;
         }
         // Save
-        if(empty($outPath)) {
+        if (empty($outPath)) {
             $outputHandler($image, $filePath);
         } else {
             $outputHandler($image, $outPath);
