@@ -6,7 +6,7 @@
  * Time: 15:09
  */
 
-class UploadedFile
+class UploadedFile extends SplFileInfo
 {
     /**
      * Binary data of the file

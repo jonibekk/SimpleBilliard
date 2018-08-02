@@ -505,7 +505,7 @@ class GoalousTestCase extends CakeTestCase
      */
     function createActiveUsers(int $teamId, int $count)
     {
-        for($n = 0; $n < $count; $n++) {
+        for ($n = 0; $n < $count; $n++) {
             $this->createActiveUser($teamId);
         }
     }
@@ -715,7 +715,7 @@ class GoalousTestCase extends CakeTestCase
         $savePaymentSetting = array_merge(
             [
                 'team_id'          => $teamId,
-                'type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+                'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 1,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
@@ -819,8 +819,11 @@ class GoalousTestCase extends CakeTestCase
      * @return array
      * @throws Exception
      */
-    function addInvoiceHistoryAndChargeHistories(int $teamId, array $invoiceHistory = [], array $chargeHistories = []) : array
-    {
+    function addInvoiceHistoryAndChargeHistories(
+        int $teamId,
+        array $invoiceHistory = [],
+        array $chargeHistories = []
+    ): array {
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
         $chargeHistoryIds = [];
@@ -850,8 +853,11 @@ class GoalousTestCase extends CakeTestCase
      * @return array
      * @throws Exception
      */
-    function addInvoiceHistoryAndChargeHistory(int $teamId, array $invoiceHistory = [], array $chargeHistory = []) : array
-    {
+    function addInvoiceHistoryAndChargeHistory(
+        int $teamId,
+        array $invoiceHistory = [],
+        array $chargeHistory = []
+    ): array {
 
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
@@ -1060,7 +1066,6 @@ class GoalousTestCase extends CakeTestCase
         return $PricePlanPurchaseTeam->getLastInsertID();
     }
 
-
     function createCcCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
     {
         $team = array_merge([
@@ -1080,15 +1085,19 @@ class GoalousTestCase extends CakeTestCase
         ];
     }
 
-    function createInvoiceCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
-    {
+    function createInvoiceCampaignTeam(
+        int $pricePlanGroupId,
+        string $pricePlanCode,
+        $team = [],
+        $paymentSetting = []
+    ): array {
         $team = am([
-            'country' => 'JP',
+            'country'  => 'JP',
             'timezone' => 9
         ], $team);
         $paymentSetting = am([
             'company_country' => 'JP',
-            'currency' => Enum\Model\PaymentSetting\Currency::JPY,
+            'currency'        => Enum\Model\PaymentSetting\Currency::JPY,
             'amount_per_user' => 0,
         ], $paymentSetting);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);
@@ -1113,5 +1122,32 @@ class GoalousTestCase extends CakeTestCase
             ]);
             $Experiment->save($experiment);
         }
+    }
+
+    /**
+     * Get base64 encoded test file
+     *
+     * @return string
+     */
+    protected function getTestFileData(): string
+    {
+        $path = DS ."vagrant" . DS . "app" . DS . "Test" . DS . "Images" . DS . $this->getTestFileName();
+
+        if (!file_exists($path)) {
+            throw new RuntimeException("Missing test file: " . $this->getTestFileName());
+        }
+        $rawFile = file_get_contents($path);
+
+        return base64_encode($rawFile);
+    }
+
+    /**
+     * Get test file name
+     *
+     * @return string
+     */
+    protected function getTestFileName(): string
+    {
+        return "test.png";
     }
 }

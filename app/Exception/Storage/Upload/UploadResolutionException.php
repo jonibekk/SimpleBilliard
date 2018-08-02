@@ -6,7 +6,7 @@
  * Time: 14:23
  */
 
-namespace Goalous\Exception\Upload;
+namespace Goalous\Exception\Storage\Upload;
 
 use Goalous\Exception\GoalousException;
 

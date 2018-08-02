@@ -10,6 +10,7 @@
 if (file_exists(APP . 'Config/extra_defines.php')) {
     require_once(APP . 'Config/extra_defines.php');
 }
+// https://confluence.goalous.com/display/GOAL/Build+Local+Environment#BuildLocalEnvironment-app/Config/extra_defines.php
 // $defines will be define(key,value);
 $defines = [
     'PUBLIC_ENV'                                    => false,
