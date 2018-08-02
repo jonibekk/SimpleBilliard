@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PostService');
+App::import('Service', 'UploadService');
 App::uses('PostFile', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -649,8 +650,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(4,  1);
-        $result1 = $PostService->checkUserAccessToPost(4,  1, true);
+        $result = $PostService->checkUserAccessToPost(4, 1);
+        $result1 = $PostService->checkUserAccessToPost(4, 1, true);
 
         $this->assertTrue($result);
         $this->assertFalse($result1);
@@ -661,8 +662,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(2,  7, true);
-        $result1 = $PostService->checkUserAccessToPost(2,  7);
+        $result = $PostService->checkUserAccessToPost(2, 7, true);
+        $result1 = $PostService->checkUserAccessToPost(2, 7);
 
         $this->assertTrue($result);
         $this->assertTrue($result1);
@@ -673,7 +674,7 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(4,  7);
+        $result = $PostService->checkUserAccessToPost(4, 7);
 
         $this->assertFalse($result);
     }
@@ -686,5 +687,25 @@ class PostServiceTest extends GoalousTestCase
         $result = $PostService->checkUserAccessToPost(1, 1);
 
         $this->assertTrue($result);
+    }
+
+    public function test_saveFileInPostAdd_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+
+        $uuid = $UploadService->buffer(1, 1, $this->testEncodedFileData, $this->testFileName);
+        $newPostData = [
+            'body' => sprintf('body text %s', time()),
+            'type' => 1
+        ];
+
+        $postEntity = $PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
+
+        $files = $PostService->getAttachedFiles($postEntity['id']);
+
+        $this->assertNotEmpty($files);
     }
 }
