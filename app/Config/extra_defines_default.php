@@ -101,7 +101,7 @@ $defines = [
     'AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR' => null,
     'JWT_TOKEN_SECRET_KEY_AUTH'                     => 'jwt_secret_key_auth',
     //For local S3 user name
-    'AWS_S3_BUCKET_USERNAME'                        => 'stephen',
+    'AWS_S3_BUCKET_USERNAME'                        => null,
     //For temporary files, such as upload buffering
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp'
 ];
