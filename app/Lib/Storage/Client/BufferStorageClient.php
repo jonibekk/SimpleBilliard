@@ -43,8 +43,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
             $this->upload(AWS_S3_BUCKET_TMP, $key, $this->package($file), "application/json");
         } catch (S3Exception $exception) {
             GoalousLog::warning($exception->getMessage(), $exception->getTrace());
-            GoalousLog::error("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName(),
-                $exception->getTrace());
+            GoalousLog::error("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName());
             throw new RuntimeException("Failed saving to S3");
         }
 
@@ -114,7 +113,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
         if (empty($uuid)) {
             throw new InvalidArgumentException();
         }
-        return $this->getLocalPrefix() . "/$this->teamId/$this->userId/" . $uuid . ".json";
+        return "/upload" . $this->getLocalPrefix() . "/$this->teamId/$this->userId/" . $uuid . ".json";
     }
 
 }
