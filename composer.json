@@ -26,7 +26,8 @@
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",
-    "apigen/apigen": "~4.0"
+    "apigen/apigen": "~4.0",
+    "mockery/mockery": "~1.1"
   },
   "config": {
     "vendor-dir": "Vendor/"
