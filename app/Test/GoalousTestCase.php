@@ -1131,7 +1131,7 @@ class GoalousTestCase extends CakeTestCase
      */
     protected function getTestFileData(): string
     {
-        $path = DS ."vagrant" . DS . "app" . DS . "Test" . DS . "Images" . DS . $this->getTestFileName();
+        $path = APP . "Test" . DS . "Images" . DS . $this->getTestFileName();
 
         if (!file_exists($path)) {
             throw new RuntimeException("Missing test file: " . $this->getTestFileName());
