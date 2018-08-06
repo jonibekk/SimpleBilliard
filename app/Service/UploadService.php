@@ -14,7 +14,6 @@ App::import('Validator/Lib/Storage', 'UploadImageValidator');
  * Time: 11:59
  */
 
-use Goalous\Exception as GlException;
 use Goalous\Exception\Storage\Upload as UploadException;
 
 class UploadService extends AppService
@@ -73,47 +72,8 @@ class UploadService extends AppService
     }
 
     /**
-     * Replace file UUID with actual file name
-     *
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $mainData
-     * @param array $keys JSON data keys that should be replaced with filename
-     *
-     * @return array of UUIDs
-     */
-    public function link(int $userId, int $teamId, array &$mainData, array $keys): array
-    {
-        $uuids = [];
-
-        foreach ($keys as $key) {
-
-            if (!array_key_exists($key, $mainData)) {
-                throw new InvalidArgumentException();
-            }
-
-            //TODO add validation to POST data
-            $uuid = sscanf($mainData[$key], 'FILE %s');
-
-            $uploader = UploaderFactory::generate($userId, $teamId);
-            $file = $uploader->getBuffer($uuid);
-
-            if (empty($file)) {
-                throw new GlException\GoalousNotFoundException("Specified buffered file not found");
-            }
-
-            $mainData[$key] = $file->getFileName();
-            $uuids[] = $file->getUUID();
-        }
-
-        return $uuids;
-    }
-
-    /**
      * Write file to main storage
      *
-     * @param int          $userId
-     * @param int          $teamId
      * @param string       $modelName
      * @param int          $modelId
      * @param UploadedFile $file
@@ -122,33 +82,58 @@ class UploadService extends AppService
      * @return bool
      */
     public function save(
-        int $userId,
-        int $teamId,
         string $modelName,
         int $modelId,
         UploadedFile $file,
         string $suffix = ""
     ): bool {
-        $uploader = UploaderFactory::generate($userId, $teamId);
 
-        return $uploader->save($modelName, $modelId, $file, $suffix);
+        $assetStorageClient = new AssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->save($file, $suffix);
     }
 
     /**
-     * Remove a uploaded file
+     * Delete a specific file
      *
-     * @param int    $userId
-     * @param int    $teamId
      * @param string $modelName
      * @param int    $modelId
-     * @param string $fileName
+     * @param string $fileName Can be input as:
+     *                         Pattern 1: d8d19701c_original.jpg -> No need for suffix & ext
+     *                         Pattern 2: test.png -> Need to input suffix & ext
+     * @param string $suffix   Optional. For specifying suffixes like `_original`
+     * @param string $fileExt  Optional. If suffix is specified, file extension will be needed
      *
      * @return bool
      */
-    public function delete(int $userId, int $teamId, string $modelName, int $modelId, string $fileName = ""): bool
-    {
-        $uploader = UploaderFactory::generate($userId, $teamId);
+    public function deleteAsset(
+        string $modelName,
+        int $modelId,
+        string $fileName,
+        string $suffix = "",
+        string $fileExt = ""
+    ): bool {
+        if (!empty($suffix) && empty($fileExt)) {
+            throw new InvalidArgumentException();
+        }
 
-        return $uploader->delete($modelName, $modelId, $fileName);
+        $assetStorageClient = new AssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->delete($fileName, $suffix, $fileExt);
+    }
+
+    /**
+     * Delete multiple objects based on same prefix
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     *
+     * @return bool
+     */
+    public function deleteAssets(string $modelName, int $modelId): bool
+    {
+        $assetStorageClient = new AssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->deleteByPrefix();
     }
 }

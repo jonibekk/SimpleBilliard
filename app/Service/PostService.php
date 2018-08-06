@@ -631,6 +631,8 @@ class PostService extends AppService
 
         $postFileIndex = 0;
 
+        $addedFiles = [];
+
         try {
             //Save attached files
             foreach ($fileIDs as $id) {
@@ -640,14 +642,15 @@ class PostService extends AppService
                 /** @var AttachedFileEntity $attachedFile */
                 $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
                     AttachedModelType::TYPE_MODEL_POST());
+                $addedFiles[] = $attachedFile['id'];
                 /** @var PostFileEntity $postFile */
                 $postFile = $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
 
                 //For now, append required suffix for all images without resizing them
-                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_original");
-                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_x_small");
-                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_small");
-                $UploadService->save($userId, $teamId, 'AttachedFile', $attachedFile['id'], $uploadedFile, "_large");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_original");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_x_small");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_small");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_large");
 
                 if (empty($postFile)) {
                     GoalousLog::error($errorMessage = 'Failed saving post files', [
@@ -659,8 +662,10 @@ class PostService extends AppService
                 }
             }
         } catch (Exception $e) {
-            //If any error happened, remove uploaded file
-            $UploadService->delete($userId, $teamId, 'Post', $postId);
+            foreach ($addedFiles as $id) {
+                //If any error happened, remove uploaded file
+                $UploadService->deleteAssets('AttachedFile', $id);
+            }
             throw $e;
         }
 
