@@ -2,9 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'UploadService');
 App::import('Lib/Upload', 'UploadedFile');
-App::import('Lib/Upload/Uploader', 'UploaderFactory');
-App::import('Lib/Upload/Uploader/Local', 'LocalUploader');
-App::import('Lib/Upload/Uploader/S3', 'S3Uploader');
+App::import('Lib/Storage/Client', 'BufferStorageClient');
+App::import('Lib/Storage/Client', 'AssetsStorageClient');
 
 /**
  * Created by PhpStorm.
@@ -31,17 +30,17 @@ class UploadServiceTest extends GoalousTestCase
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
 
-        $uuid = $UploadService->buffer(1, 1, $this->testEncodedFileData, $this->testFileName);
+        $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
 
         $this->assertNotEmpty($uuid);
         $this->assertInternalType('string', $uuid);
         $this->assertEquals(1, preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid));
 
-        $uploader = UploaderFactory::generate(1, 1);
-        $file = $uploader->getBuffer($uuid);
+        $uploader = new BufferStorageClient(1, 1);
+        $file = $uploader->get($uuid);
 
         $this->assertEquals($uuid, $file->getUUID());
-        $this->assertEquals($this->testEncodedFileData, $file->getEncodedFile());
-        $this->assertEquals($this->testFileName, $file->getFileName());
+        $this->assertEquals($this->getTestFileData(), $file->getEncodedFile());
+        $this->assertEquals($this->getTestFileName(), $file->getFileName());
     }
 }

@@ -6,7 +6,7 @@
  * Time: 12:30
  */
 
-namespace Goalous\Exception\Upload;
+namespace Goalous\Exception\Storage\Upload;
 
 class UploadSizeException extends UploadFailedException
 {

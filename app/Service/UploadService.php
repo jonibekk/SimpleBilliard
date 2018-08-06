@@ -1,11 +1,11 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Lib/Upload', 'UploadedFile');
-App::import('Lib/Upload/Processor', 'UploadProcessor');
-App::import('Lib/Upload/Uploader', 'UploaderFactory');
-App::import('Lib/Upload/Uploader/S3', 'S3Uploader');
-App::import('Validator/Lib/Upload', 'UploadValidator');
-App::import('Validator/Lib/Upload', 'UploadImageValidator');
+App::import('Lib/Storage/Processor', 'UploadProcessor');
+App::import('Lib/Storage/Client', 'BufferStorageClient');
+App::import('Lib/Storage/Client', 'AssetsStorageClient');
+App::import('Validator/Lib/Storage', 'UploadValidator');
+App::import('Validator/Lib/Storage', 'UploadImageValidator');
 
 /**
  * Created by PhpStorm.
@@ -15,6 +15,7 @@ App::import('Validator/Lib/Upload', 'UploadImageValidator');
  */
 
 use Goalous\Exception as GlException;
+use Goalous\Exception\Storage\Upload as UploadException;
 
 class UploadService extends AppService
 {
@@ -30,15 +31,25 @@ class UploadService extends AppService
      */
     public function buffer(int $userId, int $teamId, string $encodedFile, string $fileName): string
     {
-        $UploadedFile = new UploadedFile($encodedFile, $fileName);
+        $uploadedFile = new UploadedFile($encodedFile, $fileName);
 
-        if (!UploadValidator::validate($UploadedFile)) {
-            throw new GlException\Upload\UploadFailedException();
+        try {
+            if (!UploadValidator::validate($uploadedFile)) {
+                throw new UploadException\UploadFailedException();
+            }
+        } catch (UploadException\UploadTypeException $uploadTypeException) {
+            throw new InvalidArgumentException();
+        } catch (UploadException\UploadSizeException $uploadSizeException) {
+            throw new InvalidArgumentException(__("%sMB is the limit.",
+                UploadValidator::MAX_FILE_SIZE));
+        } catch (UploadException\UploadResolutionException $uploadResolutionException) {
+            throw new InvalidArgumentException(__("%s pixels is the limit.",
+                number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
         }
 
-        $uploader = UploaderFactory::generate($teamId, $userId);
+        $uploader = new BufferStorageClient($userId, $teamId);
 
-        return $uploader->buffer($UploadedFile);
+        return $uploader->save($uploadedFile);
     }
 
     /**
@@ -56,15 +67,9 @@ class UploadService extends AppService
             throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 
-        $uploader = UploaderFactory::generate($teamId, $userId);
+        $uploader = new BufferStorageClient($userId, $teamId);
 
-        $file = $uploader->getBuffer($uuid);
-
-        if (empty($file)) {
-            throw new GlException\GoalousNotFoundException("Specified buffered file not found");
-        }
-
-        return $file;
+        return $uploader->get($uuid);
     }
 
     /**
