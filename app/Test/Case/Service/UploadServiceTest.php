@@ -29,17 +29,25 @@ class UploadServiceTest extends GoalousTestCase
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
+        var_dump(ENV_NAME);
         $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
 
         $this->assertNotEmpty($uuid);
         $this->assertInternalType('string', $uuid);
         $this->assertEquals(1, preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid));
 
-        $uploader = new BufferStorageClient(1,1);
+        $uploader = new BufferStorageClient(1, 1);
         $file = $uploader->get($uuid);
 
         $this->assertEquals($uuid, $file->getUUID());
         $this->assertEquals($this->getTestFileData(), $file->getEncodedFile());
         $this->assertEquals($this->getTestFileName(), $file->getFileName());
     }
+
+    public function test_getFileFromBuffer_success()
+    {
+    }
+
+
+
 }
