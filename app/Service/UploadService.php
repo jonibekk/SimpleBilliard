@@ -20,6 +20,20 @@ use Goalous\Exception\Storage\Upload as UploadException;
 class UploadService extends AppService
 {
     /**
+     * @param $userId
+     * @param $teamId
+     * @return BufferStorageClient
+     */
+    private function getBufferStorageClient($userId, $teamId): BufferStorageClient
+    {
+        $registeredClient = ClassRegistry::getObject(BufferStorageClient::class);
+        if ($registeredClient instanceof BufferStorageClient) {
+            return $registeredClient;
+        }
+        return new BufferStorageClient($userId, $teamId);
+    }
+
+    /**
      * Add a file into buffer
      *
      * @param int    $userId
@@ -47,7 +61,7 @@ class UploadService extends AppService
                 number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
         }
 
-        $uploader = new BufferStorageClient($userId, $teamId);
+        $uploader = $this->getBufferStorageClient($userId, $teamId);
 
         return $uploader->save($uploadedFile);
     }
