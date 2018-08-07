@@ -34,6 +34,7 @@ App::import('Service', 'PostService');
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Exception as GlException;
 
 class Post extends AppModel
 {

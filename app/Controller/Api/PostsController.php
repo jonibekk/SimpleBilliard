@@ -105,6 +105,7 @@ class PostsController extends BasePagingController
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
+
         return ApiResponse::ok()->getResponse();
     }
 
@@ -267,6 +268,9 @@ class PostsController extends BasePagingController
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
+        if (!$Post->exists($postId)) {
+            return ErrorResponse::notFound()->withMessage(__("This post doesn't exist."))->getResponse();
+        }
         //Check whether user is the owner of the post
         if (!$Post->isPostOwned($postId, $this->getUserId())) {
             return ErrorResponse::forbidden()->getResponse();
