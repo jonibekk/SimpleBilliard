@@ -1903,6 +1903,9 @@ class Post extends AppModel
      */
     public function editPost(string $newBody, int $postId): bool
     {
+        if (!$this->exists($postId)){
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
         $newData = [
             'body'     => '"' . $newBody . '"',
             'modified' => REQUEST_TIMESTAMP
