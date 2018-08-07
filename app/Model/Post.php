@@ -1903,11 +1903,33 @@ class Post extends AppModel
     public function editPost(string $newBody, int $postId): bool
     {
         $newData = [
-            'body'     => '"'.$newBody.'"',
+            'body'     => '"' . $newBody . '"',
             'modified' => REQUEST_TIMESTAMP
         ];
 
         return $this->updateAll($newData, ['id' => $postId]);
 
     }
+
+    /**
+     * Get the like count of a post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function getLikeCount(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $postId
+            ],
+            'fields'     => [
+                'post_like_count'
+            ]
+        ];
+
+        return $this->find('first', $condition)['Post']['post_like_count'];
+    }
+
 }

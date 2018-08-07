@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'CommentLike');
 
 /**
  * CommentLike Model
@@ -8,6 +9,9 @@ App::uses('AppModel', 'Model');
  * @property User    $User
  * @property Team    $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class CommentLike extends AppModel
 {
     public $actsAs = [
@@ -38,6 +42,12 @@ class CommentLike extends AppModel
         ],
         'User',
         'Team',
+    ];
+
+    protected $modelConversionTable = [
+        'comment_id' => DataType::INT,
+        'user_id'    => DataType::INT,
+        'team_id'    => DataType::INT
     ];
 
     public function changeLike($comment_id)
@@ -165,5 +175,45 @@ class CommentLike extends AppModel
             $options['conditions']["CommentLike.created <="] = $params['end'];
         }
         return $this->find('list', $options);
+    }
+
+    /**
+     * Update the count like in a comment
+     *
+     * @param int $commentId
+     *
+     * @return int Updated like count
+     */
+    public function updateCommentLikeCount(int $commentId): int
+    {
+        $count = $this->countCommentLike($commentId);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $Comment->updateAll(['Comment.comment_like_count' => $count], ['Comment.id' => $commentId]);
+
+        return $count;
+    }
+
+    /**
+     * Count the number of like of a comment
+     *
+     * @param int $commentId
+     *
+     * @return int
+     */
+    public function countCommentLike(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId
+            ],
+            'fields'     => [
+                'CommentLike.id'
+            ]
+        ];
+
+        return (int)$this->find('count', $condition) ?? 0;
     }
 }

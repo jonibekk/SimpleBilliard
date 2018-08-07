@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'PostService');
+App::import('Service', 'PostLikeService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
 App::uses('CircleMember', 'Model');
@@ -14,6 +15,9 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
  * Date: 2018/06/18
  * Time: 15:00
  */
+
+use Goalous\Exception as GlException;
+
 class PostsController extends BasePagingController
 {
 
@@ -51,7 +55,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 
     public function get_comments(int $postId)
@@ -101,8 +105,52 @@ class PostsController extends BasePagingController
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
-
         return ApiResponse::ok()->getResponse();
+    }
+
+    public function post_like(int $postId): CakeResponse
+    {
+        $res = $this->validateLike($postId);
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        /** @var PostLikeService $PostLikeService */
+        $PostLikeService = ClassRegistry::init('PostLikeService');
+
+        try {
+            $result = $PostLikeService->add($postId, $this->getUserId(), $this->getTeamId());
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData((empty($result)) ? [] : $result->toArray())->getResponse();
+    }
+
+    /**
+     * @param int $postId
+     *
+     * @return CakeResponse
+     */
+    public function delete_like(int $postId): CakeResponse
+    {
+        $res = $this->validateLike($postId);
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        /** @var PostLikeService $PostLikeService */
+        $PostLikeService = ClassRegistry::init('PostLikeService');
+
+        try {
+            $count = $PostLikeService->delete($postId, $this->getUserId());
+
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+        return ApiResponse::ok()->withData(["like_count" => $count])->getResponse();
     }
 
     /**
@@ -147,18 +195,59 @@ class PostsController extends BasePagingController
     }
 
     /**
+     * Validation function for adding / removing like from a post
+     *
+     * @param int $postId
+     *
+     * @return CakeResponse|null
+     */
+    private function validateLike(int $postId)
+    {
+        if (empty($postId) || !is_int($postId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        //Check if user belongs to a circle where the post is shared to
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have access to this post"))->getResponse();
+
+        }
+
+        return null;
+    }
+
+    /*
      * Validate get comments endpoint
      *
      * @param int $postId
      *
-     * @return BaseApiResponse|ErrorResponse|null
+     * @return ErrorResponse|null
      */
     public function validateGetComments(int $postId)
     {
+        if (empty($postId) || !is_int($postId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        try {
+            $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        }
 
         if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))

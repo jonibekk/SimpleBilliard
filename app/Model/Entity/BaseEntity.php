@@ -56,7 +56,7 @@ abstract class BaseEntity implements ArrayAccess, IteratorAggregate
      */
     public function setProperty($data, $value = null)
     {
-        if (count($data) == 1 && key($data) == $this->modelName) {
+        if (count($data) == 1 && key($data) === $this->modelName) {
             $this->appendData($this->properties, $data[$this->modelName], $value);
         } else {
             $this->appendData($this->properties, $data, $value);
@@ -74,9 +74,7 @@ abstract class BaseEntity implements ArrayAccess, IteratorAggregate
     {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                if (!empty($value)) {
-                    $array[$key] = $value;
-                }
+                $array[$key] = $value;
             }
         } elseif (!empty($value)) {
             $array[$data] = $value;

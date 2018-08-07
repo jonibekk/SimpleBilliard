@@ -75,7 +75,7 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Defaut extension options for getting circle post
+     * Default extension options for getting circle post
      *
      * @return array
      */
@@ -84,7 +84,32 @@ class CirclesController extends BasePagingController
         return [
             CirclePostPagingService::EXTEND_CIRCLE,
             CirclePostPagingService::EXTEND_LIKE,
-            CirclePostPagingService::EXTEND_SAVED
+            CirclePostPagingService::EXTEND_SAVED,
+            CirclePostPagingService::EXTEND_USER,
+            CirclePostPagingService::EXTEND_COMMENTS,
+            CirclePostPagingService::EXTEND_POST_FILE
         ];
+    }
+
+    /**
+     * Get circle by Id
+     *
+     * @param int $circleId
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    function get_detail(int $circleId)
+    {
+        $error = $this->validateGetCirclePost($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init("CircleService");
+
+        $circle = $CircleService->get($circleId);
+        return ApiResponse::ok()->withData($circle)->getResponse();
     }
 }

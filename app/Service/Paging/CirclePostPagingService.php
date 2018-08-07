@@ -6,6 +6,7 @@ App::import('Lib/DataExtender', 'CircleDataExtender');
 App::import('Lib/DataExtender', 'PostLikeDataExtender');
 App::import('Lib/DataExtender', 'PostSavedDataExtender');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service', 'ImageStorageService');
 App::import('Service', 'CircleService');
 App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
@@ -25,7 +26,7 @@ class CirclePostPagingService extends BasePagingService
     const EXTEND_ALL = "ext:circle_post:all";
     const EXTEND_USER = "ext:circle_post:user";
     const EXTEND_CIRCLE = "ext:circle_post:circle";
-    const EXTEND_COMMENT = "ext:circle_post:comment";
+    const EXTEND_COMMENTS = "ext:circle_post:comments";
     const EXTEND_POST_SHARE_CIRCLE = "ext:circle_post:share_circle";
     const EXTEND_POST_SHARE_USER = "ext:circle_post:share_user";
     const EXTEND_POST_FILE = "ext:circle_post:file";
@@ -33,6 +34,7 @@ class CirclePostPagingService extends BasePagingService
     const EXTEND_SAVED = "ext:circle_post:saved";
 
     const DEFAULT_COMMENT_COUNT = 3;
+    const MAIN_MODEL = 'Post';
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -74,7 +76,7 @@ class CirclePostPagingService extends BasePagingService
             $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
             $resultArray = $CircleDataExtender->extend($resultArray, "{n}.circle_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENT, $options)) {
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENTS, $options)) {
             /** @var CommentPagingService $CommentPagingService */
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
@@ -88,9 +90,34 @@ class CirclePostPagingService extends BasePagingService
                 $result['comments'] = $comments;
             }
         }
+        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_FILE, $options)) {
+            // Set image url each post photo
+            /** @var ImageStorageService $ImageStorageService */
+            $ImageStorageService = ClassRegistry::init('ImageStorageService');
+
+            /** @var PostService $PostService */
+            $PostService = ClassRegistry::init('PostService');
+
+            foreach ($resultArray as $index => $entry) {
+                $attachedFile = $PostService->getAttachedFiles($entry['id']);
+
+                if (empty($attachedFile)) {
+                    $resultArray[$index]['attached_files'] = [];
+                    continue;
+                }
+                /** @var AttachedFileEntity $file */
+                foreach ($attachedFile as $file) {
+                    if ($file['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                        $file['file_url'] = $ImageStorageService->getImgUrlEachSize($file->toArray(), 'AttachedFile',
+                            'attached');
+                        $resultArray[$index]['attached_files'][] = $file->toArray();
+                    }
+                }
+            }
+        }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
             $userId = $request->getCurrentUserId();
-            if (empty($userId)){
+            if (empty($userId)) {
                 GoalousLog::error("Missing resource ID for extending like in Post");
                 throw new InvalidArgumentException("Missing resource ID for extending like in Post");
             }
@@ -101,7 +128,7 @@ class CirclePostPagingService extends BasePagingService
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
             $userId = $request->getCurrentUserId();
-            if (empty($userId)){
+            if (empty($userId)) {
                 GoalousLog::error("Missing resource ID for extending saved in Post");
                 throw new InvalidArgumentException("Missing resource ID for extending saved in Post");
             }
@@ -110,9 +137,7 @@ class CirclePostPagingService extends BasePagingService
             $PostSavedDataExtender->setUserId($userId);
             $resultArray = $PostSavedDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_FILE, $options)) {
-            //Postponed
-        }
+
     }
 
     /**
@@ -144,13 +169,13 @@ class CirclePostPagingService extends BasePagingService
                 'Post.team_id' => $teamId,
                 'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE]
             ],
-            'join'       => [
+            'joins'      => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',
                     'conditions' => [
-                        'PostShareCircle = Post.id',
+                        'PostShareCircle.post_id = Post.id',
                         'PostShareCircle.del_flg'   => false,
                         'PostShareCircle.circle_id' => $circleId
                     ]
@@ -163,12 +188,12 @@ class CirclePostPagingService extends BasePagingService
 
     protected function getEndPointerValue($lastElement)
     {
-        return ['id', "<", $lastElement['id']];
+        return [static::MAIN_MODEL . '.id', "<", $lastElement['id']];
     }
 
     protected function getStartPointerValue($firstElement)
     {
-        return ['id', ">", $firstElement['id']];
+        return [static::MAIN_MODEL . '.id', ">", $firstElement['id']];
     }
 
 }
