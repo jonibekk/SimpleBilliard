@@ -50,7 +50,7 @@ class ImageStorageService extends AppService
                 continue;
             }
             $imgUrls[$style] = $upload->uploadUrl($data,
-                "$modelName.photo",
+                "$modelName.$photoKey",
                 ['style' => $style],
                 true);
         }

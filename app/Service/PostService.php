@@ -14,9 +14,8 @@ App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'CircleEntity');
 
 use Goalous\Enum as Enum;
-
-
 use Goalous\Exception as GlException;
+
 /**
  * Class PostService
  */
@@ -551,5 +550,42 @@ class PostService extends AppService
         $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
 
         return $circleList > 0;
+    }
+
+    /**
+     * Get list of attached files of a post
+     *
+     * @param int $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getAttachedFiles(int $postId, Goalous\Enum\Model\AttachedFile\AttachedFileType $type = null): array
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $conditions = [
+            'conditions' => [],
+            'table'      => 'attached_files',
+            'alias'      => 'AttachedFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'post_files',
+                    'alias'      => 'PostFile',
+                    'conditions' => [
+                        'PostFile.post_id' => $postId,
+                        'PostFile.attached_file_id = AttachedFile.id'
+                    ]
+                ]
+            ]
+        ];
+
+        if (!empty($type)) {
+            $conditions['conditions']['file_type'] = $type->getValue();
+        }
+
+        return $AttachedFile->useType()->useEntity()->find('all', $conditions);
     }
 }
