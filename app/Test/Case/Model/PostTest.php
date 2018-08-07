@@ -1058,4 +1058,20 @@ class PostTest extends GoalousTestCase
         return str_replace($str, '`', '"');
     }
 
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_editPostMissing_failed()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $newBody = 'EDITED';
+
+        $Post->editPost($newBody, 183281390);
+
+        $this->fail();
+
+    }
+
 }
