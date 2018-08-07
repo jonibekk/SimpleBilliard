@@ -62,7 +62,7 @@ class PostRequestValidator extends BaseValidator
     public static function createPostEditValidator(): self
     {
         $self = new self();
-        $self->addRule($self->getPostEditValidationRule());
+        $self->addRule($self->getPostEditValidationRule(), true);
         return $self;
     }
 

@@ -1908,7 +1908,7 @@ class Post extends AppModel
             'modified' => REQUEST_TIMESTAMP
         ];
 
-        return $this->updateAll($newData, ['id' => $postId]);
+        return $this->updateAll($newData, ['Post.id' => $postId]);
 
     }
 
