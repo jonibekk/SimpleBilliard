@@ -137,7 +137,7 @@ abstract class BaseStorageClient implements StorageClient
         //If start with '/', remove it
         if (strpos($key, "/") === 0) {
             $key = substr($key, 1);
-            $this->sanitize($key);
+            return $this->sanitize($key);
         } else {
             return $key;
         }
