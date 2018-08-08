@@ -15,8 +15,18 @@ use Goalous\Exception as GlException;
 
 class BufferStorageClient extends BaseStorageClient implements StorageClient
 {
+    /**
+     * Current user ID
+     *
+     * @var int
+     */
     private $userId;
 
+    /**
+     * Current team ID
+     *
+     * @var int
+     */
     private $teamId;
 
     public function __construct(int $userId, int $teamId)
@@ -80,22 +90,17 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
                 'Key'    => $key,
             ]);
         } catch (S3Exception $exception) {
-            throw new RuntimeException();
+            throw new RuntimeException($exception->getMessage());
         }
 
         if (empty($response['Body'])) {
             throw new GlException\GoalousNotFoundException();
         }
+
         /** @var GuzzleHttp\Psr7\Stream $data */
         $data = $response['Body'];
 
-        $dataArray = json_decode($data->getContents(), true);
-
-        if (empty($dataArray)) {
-            throw new RuntimeException();
-        }
-
-        $file = (new UploadedFile($dataArray['file_data'], $dataArray['file_name']))->withUUID($uuid);
+        $file = $this->unpackage($data->getContents());
 
         return $file;
     }

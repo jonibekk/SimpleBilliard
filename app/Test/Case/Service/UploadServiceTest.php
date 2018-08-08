@@ -6,7 +6,7 @@ App::import('Lib/Upload', 'UploadedFile');
 App::import('Lib/Storage/Client', 'BufferStorageClient');
 App::import('Lib/Storage/Client', 'AssetsStorageClient');
 
-use Mockery as m;
+use Mockery as mock;
 
 /**
  * Created by PhpStorm.
@@ -28,23 +28,22 @@ class UploadServiceTest extends GoalousTestCase
         'app.local_name'
     ];
 
-    const BASE64 = "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";
-
-    public function test_aaa()
+    public function test_bufferFile_success()
     {
-        $uploadService = m::mock('BufferStorageClient');
-        $uploadService->shouldReceive('save')
-            ->once()
-            ->andReturn("mocked");
+        $returnValue = "1234567890abcd.12345678";
 
-        ClassRegistry::addObject(BufferStorageClient::class, $uploadService);
+        $bufferClient = mock::mock('BufferStorageClient');
+
+        $bufferClient->shouldReceive('save')
+                     ->once()
+                     ->andReturn($returnValue);
+
+        ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
-        $mocked = $UploadService->buffer(1, 1, self::BASE64, "goalous.png");
+        $mocked = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
 
-        var_dump($mocked); // = outputs "mocked"
-
-        $this->assertTrue(true);
+        $this->assertEquals($returnValue, $mocked);
     }
 }

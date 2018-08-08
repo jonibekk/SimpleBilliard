@@ -22,6 +22,7 @@ class UploadService extends AppService
     /**
      * @param $userId
      * @param $teamId
+     *
      * @return BufferStorageClient
      */
     private function getBufferStorageClient($userId, $teamId): BufferStorageClient
@@ -73,11 +74,11 @@ class UploadService extends AppService
      * @param int $teamId
      * @param     $uuid $key 13 char HEX UUID
      *
-     * @return UploadedFile |null
+     * @return UploadedFile
      */
-    public function getBuffer(int $userId, int $teamId, string $uuid)
+    public function getBuffer(int $userId, int $teamId, string $uuid): UploadedFile
     {
-        if (preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid) == 0) {
+        if (preg_match(UploadedFile::UUID_REGEXP, $uuid) == 0) {
             throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 

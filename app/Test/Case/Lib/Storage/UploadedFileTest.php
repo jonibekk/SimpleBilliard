@@ -21,6 +21,8 @@ class UploadedFileTest extends GoalousTestCase
         $this->assertEquals("png", $file->getFileExt());
         $this->assertNotEmpty($file->getFileSize());
         $this->assertNotEmpty($file->getMetadata());
+        $this->assertNotEmpty($file->getUUID());
+        $this->assertRegExp(UploadedFile::UUID_REGEXP, $file->getUUID());
     }
 
     /**

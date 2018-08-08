@@ -11,8 +11,8 @@ App::import('Lib/Storage', 'UploadedFile');
 
 /**
  * Storage Client for AWS S3
- * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html
  *
+ * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html
  * Class BaseStorageClient
  */
 abstract class BaseStorageClient implements StorageClient
@@ -29,6 +29,8 @@ abstract class BaseStorageClient implements StorageClient
 
     /**
      * Create key for uploading
+     *
+     * @param string $base Base string to make key out of
      *
      * @return string
      */
@@ -70,11 +72,13 @@ abstract class BaseStorageClient implements StorageClient
         if (empty($jsonEncoded)) {
             throw new InvalidArgumentException();
         }
-        $array = json_decode($jsonEncoded);
+
+        $array = json_decode($jsonEncoded, true);
+
         if (empty($array['file_data']) || empty ($array['file_name'])) {
             throw new RuntimeException();
         }
-        return new UploadedFile($this->uncompress($array['file_data']), $array['file_name']);
+        return new UploadedFile($array['file_data'], $array['file_name']);
     }
 
     /**
@@ -121,7 +125,8 @@ abstract class BaseStorageClient implements StorageClient
     }
 
     /**
-     * If exists, remove heading '/' from key
+     * If exists, remove heading '/' from key.
+     * Processed recursively to remove multiple occurrences
      *
      * @param $key
      *
@@ -131,7 +136,10 @@ abstract class BaseStorageClient implements StorageClient
     {
         //If start with '/', remove it
         if (strpos($key, "/") === 0) {
-            return substr($key, 1);
+            $key = substr($key, 1);
+            $this->sanitize($key);
+        } else {
+            return $key;
         }
     }
 }

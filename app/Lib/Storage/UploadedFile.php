@@ -9,6 +9,11 @@
 class UploadedFile extends SplFileInfo
 {
     /**
+     * Regexp for the UUID
+     */
+    const UUID_REGEXP = "/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/";
+
+    /**
      * Binary data of the file
      *
      * @var string
@@ -55,7 +60,7 @@ class UploadedFile extends SplFileInfo
     /**
      * File name
      *
-     * @var
+     * @var string
      */
     private $fileName;
 
@@ -131,12 +136,23 @@ class UploadedFile extends SplFileInfo
         return $this->type . "/" . $this->fileExt;
     }
 
-    public function withUUID(string $uuid):self {
+    public function withUUID(string $uuid): self
+    {
+        if (preg_match(self::UUID_REGEXP, $uuid) == 0) {
+            throw new InvalidArgumentException();
+        }
+
         $this->uuid = $uuid;
         return $this;
     }
 
-    private function decodeFile(string $encodedFile, bool $skipDecoding)
+    /**
+     * Decode a base64 encoded file into binary file
+     *
+     * @param string $encodedFile
+     * @param bool   $skipDecoding If the input file is already in binary form,
+     */
+    private function decodeFile(string $encodedFile, bool $skipDecoding = false)
     {
         if (empty($encodedFile)) {
             throw new InvalidArgumentException("File can't be empty");
