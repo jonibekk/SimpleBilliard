@@ -45,7 +45,7 @@ interface Tree
      *
      * @return mixed
      */
-    public function searchTree($targetValue, Tree &$tree, callable $comparator = null);
+    public function searchTree($targetValue, Tree &$tree, callable $comparator = null): Tree;
 
     /**
      * Convert this tree to array

@@ -7,7 +7,7 @@ App::import('Lib/DataStructure/Tree', 'BinaryTree');
  * Date: 2018/07/12
  * Time: 13:23
  */
-class PointerTree extends BinaryTree
+class PointerTree extends BinaryTree implements Tree
 {
     /**
      * Generate a SQL query condition array from this pointer tree
@@ -55,7 +55,7 @@ class PointerTree extends BinaryTree
      *
      * @return PointerTree|null
      */
-    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null)
+    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): Tree
     {
         if (empty($comparator)) {
             $comparator = function ($node, string $target) {

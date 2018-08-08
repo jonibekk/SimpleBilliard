@@ -68,7 +68,7 @@ class BinaryTree implements Tree
      *
      * @return BinaryTree | null
      */
-    public function &getLeft()
+    public function getLeft()
     {
         return $this->left;
     }
@@ -78,7 +78,7 @@ class BinaryTree implements Tree
      *
      * @return BinaryTree | null
      */
-    public function &getRight()
+    public function getRight()
     {
         return $this->right;
     }
@@ -164,7 +164,7 @@ class BinaryTree implements Tree
      *
      * @return BinaryTree|null
      */
-    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null)
+    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): Tree
     {
         if (empty($node)) {
             if (empty($this->value)) {
