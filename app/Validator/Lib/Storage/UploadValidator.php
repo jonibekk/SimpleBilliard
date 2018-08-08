@@ -240,7 +240,7 @@ class UploadValidator
         }
 
         if (!self::validateType($uploadedFile)) {
-            throw new UploadException\UploadTypeException();
+            throw new UploadException\UploadTypeException(__("This file type is not allowed."));
         }
 
         $type = $uploadedFile->getFileType();
