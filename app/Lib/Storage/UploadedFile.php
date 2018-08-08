@@ -6,7 +6,7 @@
  * Time: 15:09
  */
 
-class UploadedFile extends SplFileInfo
+class UploadedFile
 {
     /**
      * Regexp for the UUID
@@ -183,5 +183,44 @@ class UploadedFile extends SplFileInfo
         $this->size = strlen($rawFile);
 
         $this->uuid = uniqid("", true);
+    }
+
+    /**
+     * Package file into JSON formatted string
+     *
+     * @return string JSON encoded array
+     */
+    public function toJSON(): string
+    {
+        $array['file_name'] = $this->getFileName();
+        $array['file_data'] = $this->getEncodedFile();
+
+        $json = json_encode($array);
+
+        if (empty($json)) {
+            throw new RuntimeException();
+        }
+        return $json;
+    }
+
+    /**
+     * Create UploadedFile from JSON formatted string
+     *
+     * @param string $jsonEncoded
+     *
+     * @return UploadedFile
+     */
+    public static function generate(string $jsonEncoded): self
+    {
+        if (empty($jsonEncoded)) {
+            throw new InvalidArgumentException();
+        }
+
+        $array = json_decode($jsonEncoded, true);
+
+        if (empty($array['file_data']) || empty ($array['file_name'])) {
+            throw new RuntimeException();
+        }
+        return new UploadedFile($array['file_data'], $array['file_name']);
     }
 }

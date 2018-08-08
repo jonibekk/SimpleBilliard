@@ -37,51 +37,6 @@ abstract class BaseStorageClient implements StorageClient
     abstract protected function createFileKey(string $base): string;
 
     /**
-     * Package file into JSON format
-     *
-     * @param UploadedFile $file
-     *
-     * @return string JSON encoded array
-     */
-    protected final function package(UploadedFile $file): string
-    {
-        if (empty ($file->getFileName()) || empty ($file->getEncodedFile())) {
-            throw new InvalidArgumentException();
-        }
-
-        $array['file_name'] = $file->getFileName();
-        $array['file_data'] = $file->getEncodedFile();
-
-        $json = json_encode($array);
-
-        if (empty($json)) {
-            throw new RuntimeException();
-        }
-        return $json;
-    }
-
-    /**
-     * Unpackage JSON into UploadedFile
-     *
-     * @param string $jsonEncoded
-     *
-     * @return UploadedFile
-     */
-    protected final function unpackage(string $jsonEncoded): UploadedFile
-    {
-        if (empty($jsonEncoded)) {
-            throw new InvalidArgumentException();
-        }
-
-        $array = json_decode($jsonEncoded, true);
-
-        if (empty($array['file_data']) || empty ($array['file_name'])) {
-            throw new RuntimeException();
-        }
-        return new UploadedFile($array['file_data'], $array['file_name']);
-    }
-
-    /**
      * Upload a file to S3
      *
      * @param string $bucket

@@ -8,7 +8,7 @@ App::import('Validator/Lib/Upload', 'UploadValidator');
  * Time: 9:20
  */
 
-use Goalous\Exception\Upload as UploadException;
+use Goalous\Exception\Storage\Upload as UploadException;
 
 class UploadValidator
 {
@@ -235,7 +235,8 @@ class UploadValidator
     public static function validate(UploadedFile $uploadedFile): bool
     {
         if (!self::validateSize($uploadedFile)) {
-            throw new UploadException\UploadSizeException();
+            throw new UploadException\UploadSizeException(__("%sMB is the limit.",
+                UploadValidator::MAX_FILE_SIZE));
         }
 
         if (!self::validateType($uploadedFile)) {
@@ -247,7 +248,8 @@ class UploadValidator
         switch ($type) {
             case "image" :
                 if (!UploadImageValidator::validateResolution($uploadedFile)) {
-                    throw new UploadException\UploadResolutionException();
+                    throw new UploadException\UploadResolutionException(__("%s pixels is the limit.",
+                        number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
                 }
                 break;
             default:

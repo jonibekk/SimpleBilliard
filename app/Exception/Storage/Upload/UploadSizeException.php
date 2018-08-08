@@ -8,7 +8,7 @@
 
 namespace Goalous\Exception\Storage\Upload;
 
-class UploadSizeException extends UploadFailedException
+class UploadSizeException extends UploadValidationException
 {
 
 }

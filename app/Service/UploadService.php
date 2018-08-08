@@ -49,17 +49,9 @@ class UploadService extends AppService
         $uploadedFile = new UploadedFile($encodedFile, $fileName);
 
         try {
-            if (!UploadValidator::validate($uploadedFile)) {
-                throw new UploadException\UploadFailedException();
-            }
-        } catch (UploadException\UploadTypeException $uploadTypeException) {
-            throw new InvalidArgumentException();
-        } catch (UploadException\UploadSizeException $uploadSizeException) {
-            throw new InvalidArgumentException(__("%sMB is the limit.",
-                UploadValidator::MAX_FILE_SIZE));
-        } catch (UploadException\UploadResolutionException $uploadResolutionException) {
-            throw new InvalidArgumentException(__("%s pixels is the limit.",
-                number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
+            UploadValidator::validate($uploadedFile);
+        } catch (UploadException\UploadValidationException $uploadValidationException) {
+            throw new InvalidArgumentException($uploadValidationException->getMessage());
         }
 
         $uploader = $this->getBufferStorageClient($userId, $teamId);
