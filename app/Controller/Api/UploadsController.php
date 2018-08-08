@@ -1,8 +1,9 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
+App::uses('UploadRequestValidator', 'Validator/Request/Api/V2');
 App::import('Service', 'UploadService');
 
-use Goalous\Exception\Upload as UploadException;
+use Goalous\Exception\Storage\Upload as UploadException;
 
 /**
  * Created by PhpStorm.
@@ -49,6 +50,23 @@ class UploadsController extends BaseApiController
      */
     private function validatePost()
     {
+        $requestBody = $this->getRequestJsonBody();
+
+        try {
+            UploadRequestValidator::createPostValidator()->validate($requestBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
         return null;
     }
 }
