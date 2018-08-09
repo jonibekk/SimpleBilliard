@@ -54,7 +54,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $cursor->addResource('current_team_id', 1);
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
-        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['paging']);
         $this->assertNotEmpty($result['count']);
 
         $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']);

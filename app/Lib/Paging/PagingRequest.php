@@ -235,7 +235,7 @@ class PagingRequest
      *
      * @return bool True on successful addition
      */
-    public function addPointer(string $key, string $operator = '<', $value): bool
+    public function addPointer(string $key, string $operator, $value): bool
     {
         return $this->pointerTree->addPointer([$key, $operator, $value]);
     }
