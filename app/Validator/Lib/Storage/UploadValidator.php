@@ -249,7 +249,7 @@ class UploadValidator
             case "image" :
                 if (!UploadImageValidator::validateResolution($uploadedFile)) {
                     throw new UploadException\UploadResolutionException(__("%s pixels is the limit.",
-                        number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
+                        number_format(UploadImageValidator::MAX_PIXELS)));
                 }
                 break;
             default:
