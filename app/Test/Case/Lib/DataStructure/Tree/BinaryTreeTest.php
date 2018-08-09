@@ -107,6 +107,17 @@ class BinaryTreeTest extends GoalousTestCase
         $this->assertTrue($completeTree->isComplete());
     }
 
+    public function test_searchAndModify_success()
+    {
+        $tree = $this->createDefaultTree();
+        $newValue = 100;
+
+        $node = $tree->searchTree(6);
+        $node->setValue($newValue);
+
+        $this->assertEquals($newValue, $tree->getLeft()->getRight()->getValue());
+    }
+
     private function createDefaultTree(): BinaryTree
     {
         //Tree visualization https://i.stack.imgur.com/7VxZe.png

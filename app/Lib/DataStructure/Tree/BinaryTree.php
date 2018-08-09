@@ -162,9 +162,9 @@ class BinaryTree implements Tree
      * @param Tree            $node
      * @param callable        $comparator
      *
-     * @return BinaryTree|null
+     * @return Tree|null
      */
-    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): Tree
+    public function searchTree($targetValue, Tree &$node = null, callable $comparator = null)
     {
         if (empty($node)) {
             if (empty($this->value)) {
@@ -189,21 +189,21 @@ class BinaryTree implements Tree
         }
 
         if ($node->hasLeft()) {
-            $left = &$node->getLeft();
-            $result = &$this->searchTree($targetValue, $left, $comparator);
+            $left = $node->getLeft();
+            $result = $this->searchTree($targetValue, $left, $comparator);
             if (!empty($result)) {
                 return $result;
             }
         }
         if ($node->hasRight()) {
-            $right = &$node->getRight();
-            $result = &$this->searchTree($targetValue, $right, $comparator);
+            $right = $node->getRight();
+            $result = $this->searchTree($targetValue, $right, $comparator);
             if (!empty($result)) {
                 return $result;
             }
         }
-        $null = null;
-        return $null;
+
+        return null;
     }
 
     /**
@@ -224,7 +224,7 @@ class BinaryTree implements Tree
      * @param array      $sourceArray
      * @param BinaryTree $node
      */
-    private function decodeArray(array $sourceArray, BinaryTree &$node)
+    private function decodeArray(array $sourceArray, BinaryTree $node)
     {
         if (count($sourceArray) % 2 == 0) {
             throw new InvalidArgumentException("Invalid array");
@@ -313,7 +313,7 @@ class BinaryTree implements Tree
      * @param BinaryTree $node
      * @param int        $currentDepth
      */
-    public function completeTree(BinaryTree &$node, int $currentDepth = 0)
+    public function completeTree(BinaryTree $node, int $currentDepth = 0)
     {
         if (empty($node)) {
             throw new RuntimeException("Tree can't be empty");

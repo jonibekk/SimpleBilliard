@@ -55,7 +55,7 @@ class PointerTree extends BinaryTree implements Tree
      *
      * @return PointerTree|null
      */
-    public function &searchTree($targetValue, Tree &$node = null, callable $comparator = null): Tree
+    public function searchTree($targetValue, Tree &$node = null, callable $comparator = null)
     {
         if (empty($comparator)) {
             $comparator = function ($node, string $target) {
@@ -165,6 +165,5 @@ class PointerTree extends BinaryTree implements Tree
             }
         }
     }
-
 
 }

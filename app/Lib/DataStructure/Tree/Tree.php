@@ -43,9 +43,9 @@ interface Tree
      * @param Tree          $tree
      * @param callable|null $comparator Custom comparator to compare targeted & actual value
      *
-     * @return mixed
+     * @return Tree | null
      */
-    public function searchTree($targetValue, Tree &$tree, callable $comparator = null): Tree;
+    public function searchTree($targetValue, Tree &$tree, callable $comparator = null);
 
     /**
      * Convert this tree to array
