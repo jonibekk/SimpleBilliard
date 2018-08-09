@@ -63,14 +63,14 @@ class PagingRequest
     /**
      * PagingRequest constructor.
      *
-     * @param array $conditions    Conditions for the search, e.g. SQL query
-     * @param array $pointerValues Pointer to mark start / end point of search
-     *                             [$column_name] => [$math_operator, $value]
-     * @param array $order         Order of the query sorting
+     * @param array               $conditions    Conditions for the search, e.g. SQL query
+     * @param array | PointerTree $pointerValues Pointer to mark start / end point of search
+     *                                           [$column_name] => [$math_operator, $value]
+     * @param array               $order         Order of the query sorting
      */
     public function __construct(
         array $conditions = [],
-        array $pointerValues = [],
+        $pointerValues = [],
         array $order = []
     ) {
         if (!empty($conditions)) {
@@ -80,7 +80,7 @@ class PagingRequest
         $this->pointerTree = new PointerTree();
 
         if (!empty($pointerValues)) {
-            if ($pointerValues instanceof PointerTree || $pointerValues instanceof BinaryTree) {
+            if ($pointerValues instanceof PointerTree) {
                 $this->pointerTree = $pointerValues;
             }
             if (is_array($pointerValues)) {
@@ -100,10 +100,10 @@ class PagingRequest
     /**
      * Create next cursor for API requests
      *
-     * @param array $conditions    Conditions for the search, e.g. SQL query
-     * @param mixed $pointerValues Pointer to mark start / end point of search
-     *                             [$column_name] => [$math_operator, $value]
-     * @param array $order         Order of the query sorting
+     * @param array               $conditions    Conditions for the search, e.g. SQL query
+     * @param array | PointerTree $pointerValues Pointer to mark start / end point of search
+     *                                           [$column_name] => [$math_operator, $value]
+     * @param array               $order         Order of the query sorting
      *
      * @return string Encoded next paging cursor
      */
@@ -121,7 +121,7 @@ class PagingRequest
 
         if (!empty($pointerValues)) {
             if (is_array($pointerValues)) {
-                $array['pointer'] = (new BinaryTree($pointerValues))->toArray();
+                $array['pointer'] = (new PointerTree($pointerValues))->toArray();
             } elseif ($pointerValues instanceof PointerTree) {
                 if (!$pointerValues->isEmpty()) {
                     $array['pointer'] = $pointerValues->toArray();

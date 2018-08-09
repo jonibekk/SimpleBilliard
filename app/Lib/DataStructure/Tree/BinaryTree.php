@@ -184,8 +184,7 @@ class BinaryTree implements Tree
         }
 
         if ($comparator($node->getValue(), $targetValue)) {
-            $return = &$node;
-            return $return;
+            return $node;
         }
 
         if ($node->hasLeft()) {
