@@ -167,7 +167,7 @@ class CirclePostPagingService extends BasePagingService
             'conditions' => [
                 'Post.del_flg' => false,
                 'Post.team_id' => $teamId,
-                'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_CREATE_CIRCLE]
+                'Post.type'    => [Post::TYPE_NORMAL, ]
             ],
             'joins'      => [
                 [
