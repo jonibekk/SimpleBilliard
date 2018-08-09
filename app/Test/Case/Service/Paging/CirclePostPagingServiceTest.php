@@ -63,7 +63,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
 
         $secondResult = $CircleFeedPaging->getDataWithPaging($pagingRequest, 2);
 
-        $this->assertCount(2, $secondResult['data']);
+        $this->assertCount(1, $secondResult['data']);
         $this->assertNotEmpty($secondResult['paging']);
         $this->assertNotEmpty($secondResult['count']);
     }
