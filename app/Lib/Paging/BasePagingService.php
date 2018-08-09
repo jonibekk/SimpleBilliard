@@ -101,7 +101,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function getEndPointerValue($lastElement)
     {
-        return [static::MAIN_MODEL.'.id', ">", $lastElement['id']];
+        return [static::MAIN_MODEL . '.id', ">", $lastElement['id']];
     }
 
     /**
@@ -114,7 +114,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function getStartPointerValue($firstElement)
     {
-        return [static::MAIN_MODEL.'.id', "<", $firstElement['id']];
+        return [static::MAIN_MODEL . '.id', "<", $firstElement['id']];
     }
 
     /**
@@ -173,8 +173,27 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder(static::MAIN_MODEL.'.id');
+        $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
         return $pagingRequest;
+    }
+
+    /**
+     * Check whether ext options include target ext
+     *
+     * @param string $targetExt
+     * @param array  $options
+     *
+     * @return bool
+     */
+    protected function includeExt(array $options, string $targetExt): bool
+    {
+        if (in_array(static::EXTEND_ALL, $options)) {
+            return true;
+        }
+        if (in_array($targetExt, $options)) {
+            return true;
+        }
+        return false;
     }
 
 }
