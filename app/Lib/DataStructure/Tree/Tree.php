@@ -16,6 +16,13 @@ interface Tree
     public function getValue();
 
     /**
+     * Set the value of this node
+     *
+     * @param mixed $value
+     */
+    public function setValue($value);
+
+    /**
      * Get the depth of this tree
      *
      * @return int

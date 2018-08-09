@@ -23,13 +23,20 @@ class PointerTree extends BinaryTree implements Tree
         }
     }
 
+    /**
+     * Flatten pointer tree for SQL query condition
+     *
+     * @param BinaryTree $tree
+     *
+     * @return array
+     */
     private function flattenTreeForCondition(BinaryTree $tree): array
     {
         $result = [];
 
         //Only leaf contains pointer
         if ($tree->isLeaf()) {
-            $result[] = $this->valueToString($tree->value);
+            $result[] = $this->valueToString($tree->getValue());
             return $result;
         }
 
@@ -71,18 +78,24 @@ class PointerTree extends BinaryTree implements Tree
         }
 
         /** @var PointerTree $result */
-        $result = &parent::searchTree($targetValue, $node, $comparator);
+        $result = parent::searchTree($targetValue, $node, $comparator);
 
         return $result;
     }
 
+    /**
+     * Convert pointer to query string
+     *
+     * @param array $value
+     *
+     * @return string
+     */
     private function valueToString(array $value): string
     {
         if (empty($value)) {
             return "";
         }
         if (count($value) != 3) {
-            var_dump($value);
             throw new RuntimeException("Wrong array size");
         }
         return "$value[0] $value[1] $value[2]";
@@ -103,67 +116,64 @@ class PointerTree extends BinaryTree implements Tree
     }
 
     /**
-     * Add a pointer to the tree
+     * Add a pointer to the tree, chained as AND
      *
      * @param array $pointer
      *
-     * @return bool
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
-    public function addPointer(array $pointer): bool
+    public function addPointer(array $pointer)
     {
-        if (count($pointer) != 3 && !is_string($pointer[0])) {
+        if (count($pointer) != 3 || !is_string($pointer[0])) {
             throw new InvalidArgumentException("Invalid pointer array");
         }
 
-        if ($this->isEmpty()) {
-            $this->setValue($pointer);
-            return true;
+        if (!$this->traverseAdd($this, $pointer)) {
+            throw new RuntimeException("Failed to add new pointer");
         }
+    }
 
-        $node = new PointerTree();
-        $this->findDeepestAndNode($this, $node);
+    /**
+     * Traverse all 'AND' nodes, and append new value on the first empty spot.
+     *
+     * @param BinaryTree $tree
+     * @param array      $newPointer
+     *
+     * @return bool True on successful addition.
+     */
+    private function traverseAdd(BinaryTree $tree, array $newPointer): bool
+    {
+        $value = $tree->getValue();
 
-        if (empty($node)) {
+        if (empty($value)) {
+            $tree->setValue($newPointer);
+            return true;
+        } elseif ($value === 'AND') {
+            if ($tree->isLeaf()) {
+                $tree->setLeft(new PointerTree($newPointer));
+                return true;
+            }
+            if (!$tree->hasLeft()) {
+                $tree->setLeft(new PointerTree(($newPointer)));
+                return true;
+            } elseif ($this->traverseAdd($tree->getLeft(), $newPointer)) {
+                return true;
+            }
+            if (!$tree->hasRight()) {
+                $tree->setRight(new PointerTree(($newPointer)));
+                return true;
+            } elseif ($this->traverseAdd($tree->getRight(), $newPointer)) {
+                return true;
+            }
+            return false;
+        } elseif (is_array($value) && count($value) === 3) {
+            $tree->setValue('AND');
+            $tree->setLeft(new PointerTree($newPointer));
+            $tree->setRight(new PointerTree($value));
+            return true;
+        } else {
             return false;
         }
-
-        if ($node->isLeaf()) {
-            $node->setValue($pointer);
-        } elseif (!$node->hasLeft()) {
-            $node->setLeft(new BinaryTree($pointer));
-        } elseif (!$node->hasRight()) {
-            $node->setRight(new BinaryTree($pointer));
-        } else {
-            $rightPointer = $node->getRight();
-            $node->setRight(new BinaryTree('AND', $rightPointer, $pointer));
-        }
-
-        return true;
     }
-
-    private function &findDeepestAndNode(
-        BinaryTree &$node,
-        BinaryTree &$result,
-        int $currentDepth = 0,
-        int $latestDepth = 0
-    ) {
-        if ($node->getValue() === 'AND') {
-
-            if ($currentDepth > $latestDepth) {
-                $latestDepth = $currentDepth;
-                $result = $node;
-            }
-
-            if ($node->hasLeft()) {
-                $left = &$node->getLeft();
-                $this->findDeepestAndNode($left, $result, $currentDepth + 1, $latestDepth);
-            }
-            if ($node->hasRight()) {
-                $right = &$node->getRight();
-                $this->findDeepestAndNode($right, $result, $currentDepth + 1, $latestDepth);
-            }
-        }
-    }
-
 }

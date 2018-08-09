@@ -113,6 +113,7 @@ class BinaryTreeTest extends GoalousTestCase
         $newValue = 100;
 
         $node = $tree->searchTree(6);
+
         $node->setValue($newValue);
 
         $this->assertEquals($newValue, $tree->getLeft()->getRight()->getValue());
