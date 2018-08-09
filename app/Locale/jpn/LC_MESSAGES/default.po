@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-08-09 15:29+0900\n"
+"PO-Revision-Date: 2018-08-09 15:32+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -885,11 +885,6 @@ msgstr "評価者設定を保存しました。"
 
 msgid "%s %s inactive"
 msgstr ""
-
-#, fuzzy
-#| msgid "You don't have access right to this page."
-msgid "You don't have access to this post"
-msgstr "この画面にはアクセスできません。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
@@ -6289,6 +6284,11 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#, fuzzy
+#~| msgid "You don't have access right to this page."
+#~ msgid "You don't have access to this post"
+#~ msgstr "この画面にはアクセスできません。"
 
 #~ msgid "%s pixel is the limit."
 #~ msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
