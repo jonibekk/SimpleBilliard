@@ -93,7 +93,7 @@ abstract class BasePagingService implements PagingServiceInterface
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
     ): PointerTree {
-        return new PointerTree(['id', ">", $lastElement['id']]);
+        return new PointerTree([static::MAIN_MODEL.'.id', ">", $lastElement['id']]);
     }
 
     /**
@@ -152,7 +152,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder('id');
+        $pagingRequest->addOrder(static::MAIN_MODEL.'.id');
         return $pagingRequest;
     }
 

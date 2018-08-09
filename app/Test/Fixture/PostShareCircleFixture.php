@@ -141,8 +141,8 @@ class PostShareCircleFixture extends CakeTestFixtureEx
             'modified'  => 1
         ),
         array(
-            'id'        => '6',
-            'post_id'   => '',
+            'id'        => 6,
+            'post_id'   => 4,
             'circle_id' => '',
             'team_id'   => '',
             'del_flg'   => 1,

@@ -20,6 +20,7 @@ trait HavingMentionTrait
                 }
             }
         }
-        return $results;
+
+        return parent::afterFind($results, $primary);
     }
 }

@@ -22,7 +22,7 @@ class AuthRequestValidator extends BaseValidator
             'email' => [validator::email()],
             // Stay here simple string check.
             // Do the regex validation on the register validation.
-            'password' => [validator::stringType()]
+            'password' => [validator::stringType()::notEmpty()]
         ];
 
         return $rules;

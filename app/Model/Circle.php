@@ -50,6 +50,7 @@ class Circle extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-circle.jpg',
+                's3_default_url' => 'sys/defaults/no-image-circle.svg',
                 'quality'     => 100,
             ]
         ]

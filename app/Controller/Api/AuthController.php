@@ -1,8 +1,10 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
+App::import('Service', 'ImageStorageService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
+App::uses('LangUtil', 'Util');
 
 use Goalous\Exception as GlException;
 
@@ -53,12 +55,31 @@ class AuthController extends BaseApiController
                                 ->getResponse();
         }
 
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-        $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray();
-        $data['token'] = $jwt->token();
+        $data = $this->_getAuthUserInfo($jwt);
 
         return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    /**
+     * Get auth user info for Login API response
+     *
+     * @param JwtAuthentication $jwt
+     *
+     * @return array
+     */
+    private function _getAuthUserInfo(JwtAuthentication $jwt): array
+    {
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray();
+        $data['token'] = $jwt->token();
+        $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
+        $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
+        $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
+        return $data;
     }
 
     /**
@@ -77,15 +98,15 @@ class AuthController extends BaseApiController
             GoalousLog::error('failed to logout', [
                 'user.id' => $this->getUserId(),
                 'team.id' => $this->getTeamId(),
-                'jwt_id' => $this->getJwtAuth()->getJwtId(),
+                'jwt_id'  => $this->getJwtAuth()->getJwtId(),
             ]);
             return ErrorResponse::internalServerError()
-                ->getResponse();
+                                ->getResponse();
         }
 
         if (!$res) {
             return ErrorResponse::internalServerError()
-                ->getResponse();
+                                ->getResponse();
         }
 
         return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
