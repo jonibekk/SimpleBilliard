@@ -31,9 +31,10 @@ class UploadsController extends BaseApiController
         try {
             $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile, $fileName);
         } catch (UploadException\UploadFailedException $uploadFailedException) {
-            return ErrorResponse::badRequest()->withException($uploadFailedException)->getResponse();
+            GoalousLog::error("Failed to upload file. " . $uploadFailedException->getMessage(), $uploadFailedException->getTrace());
+            return ErrorResponse::internalServerError()->withException($uploadFailedException)->getResponse();
         } catch (InvalidArgumentException $argumentException) {
-            return ErrorResponse::badRequest()->withException($argumentException)->getResponse();
+            return ErrorResponse::badRequest()->withMessage($argumentException->getMessage())->getResponse();
         } catch (Exception $exception) {
             GoalousLog::error("Failed to upload file. " . $exception->getMessage(), $exception->getTrace());
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
