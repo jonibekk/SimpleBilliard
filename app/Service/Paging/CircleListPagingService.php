@@ -110,7 +110,7 @@ class CircleListPagingService extends BasePagingService
 
         if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
             $lastElement['latest_post_created'] == $prevLatestPost) {
-            $orCondition = new PointerTree('OR', ['id', '<', $lastElement['id']]);
+            $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
             $condition = new PointerTree('AND', $orCondition,
                 ['latest_post_created', '<=', $lastElement['latest_post_created']]);
             return $condition;

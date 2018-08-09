@@ -90,6 +90,6 @@ class CommentPagingService extends BasePagingService
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
     ): PointerTree {
-        return new PointerTree(['id', ">", $lastElement['id']]);
+        return new PointerTree([static::MAIN_MODEL . '.id', ">", $lastElement['id']]);
     }
 }
