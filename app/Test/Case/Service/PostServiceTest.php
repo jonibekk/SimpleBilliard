@@ -12,6 +12,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
+App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
 
@@ -649,8 +650,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(4,  1);
-        $result1 = $PostService->checkUserAccessToPost(4,  1, true);
+        $result = $PostService->checkUserAccessToPost(4, 1);
+        $result1 = $PostService->checkUserAccessToPost(4, 1, true);
 
         $this->assertTrue($result);
         $this->assertFalse($result1);
@@ -661,8 +662,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(2,  7, true);
-        $result1 = $PostService->checkUserAccessToPost(2,  7);
+        $result = $PostService->checkUserAccessToPost(2, 7, true);
+        $result1 = $PostService->checkUserAccessToPost(2, 7);
 
         $this->assertTrue($result);
         $this->assertTrue($result1);
@@ -673,7 +674,7 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(4,  7);
+        $result = $PostService->checkUserAccessToPost(4, 7);
 
         $this->assertFalse($result);
     }
@@ -686,5 +687,33 @@ class PostServiceTest extends GoalousTestCase
         $result = $PostService->checkUserAccessToPost(1, 1);
 
         $this->assertTrue($result);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_editPostMissing_failed()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $newBody = 'EDITED';
+
+        $PostService->editPost($newBody, 183281390);
+
+        $this->fail();
+    }
+
+    public function test_editPost_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $newBody = 'EDITED';
+
+        $res = $PostService->editPost($newBody, 1);
+
+        $this->assertTrue($res instanceof PostEntity);
+        $this->assertEquals($newBody, $res['body']);
     }
 }

@@ -1894,33 +1894,6 @@ class Post extends AppModel
     }
 
     /**
-     * Edit a post body
-     *
-     * @param string $newBody
-     * @param int    $postId
-     *
-     * @return PostEntity Updated post
-     */
-    public function editPost(string $newBody, int $postId): PostEntity
-    {
-        if (!$this->exists($postId)) {
-            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
-        }
-        $newData = [
-            'body'     => '"' . $newBody . '"',
-            'modified' => REQUEST_TIMESTAMP
-        ];
-
-        if (!$this->updateAll($newData, ['Post.id' => $postId])) {
-            throw new RuntimeException("Failed to update post");
-        }
-        /** @var PostEntity $result */
-        $result = $this->useType()->useEntity()->find('first', ['conditions' => ['id' => $postId]]);
-
-        return $result;
-    }
-
-    /**
      * Get the like count of a post
      *
      * @param int $postId

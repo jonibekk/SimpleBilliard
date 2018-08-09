@@ -95,14 +95,14 @@ class PostsController extends BasePagingController
             return $error;
         }
 
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
 
         $newBody = Hash::get($this->getRequestJsonBody(), 'body');
 
         try {
             /** @var PostEntity $newPost */
-            $newPost = $Post->editPost($newBody, $postId);
+            $newPost = $PostService->editPost($newBody, $postId);
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

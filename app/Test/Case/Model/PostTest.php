@@ -996,18 +996,6 @@ class PostTest extends GoalousTestCase
         $this->assertNotEmpty($res);
     }
 
-    public function test_editPost_success()
-    {
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-
-        $newBody = 'EDITED';
-
-        $res = $Post->editPost($newBody, 1);
-
-        $this->assertEquals($newBody, $res['body']);
-    }
-
     function _setDefault()
     {
         $uid = '1';
@@ -1055,21 +1043,4 @@ class PostTest extends GoalousTestCase
     {
         return str_replace($str, '`', '"');
     }
-
-    /**
-     * @expectedException \Goalous\Exception\GoalousNotFoundException
-     */
-    public function test_editPostMissing_failed()
-    {
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-
-        $newBody = 'EDITED';
-
-        $Post->editPost($newBody, 183281390);
-
-        $this->fail();
-
-    }
-
 }

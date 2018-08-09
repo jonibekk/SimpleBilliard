@@ -555,7 +555,7 @@ class PostService extends AppService
     /**
      * Get list of attached files of a post
      *
-     * @param int $postId
+     * @param int                                              $postId
      * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
      *
      * @return AttachedFileEntity[]
@@ -587,5 +587,44 @@ class PostService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    /**
+     * Edit a post body
+     *
+     * @param string $newBody
+     * @param int    $postId
+     *
+     * @return PostEntity Updated post
+     * @throws Exception
+     */
+    public function editPost(string $newBody, int $postId): PostEntity
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        if (!$Post->exists($postId)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+        try {
+            $this->TransactionManager->begin();
+
+            $newData = [
+                'body'     => '"' . $newBody . '"',
+                'modified' => REQUEST_TIMESTAMP
+            ];
+
+            if (!$Post->updateAll($newData, ['Post.id' => $postId])) {
+                throw new RuntimeException("Failed to update post");
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+        /** @var PostEntity $result */
+        $result = $Post->useType()->useEntity()->find('first', ['conditions' => ['id' => $postId]]);
+
+        return $result;
     }
 }
