@@ -617,6 +617,9 @@ class PostService extends AppService
             if (!$Post->updateAll($newData, ['Post.id' => $postId])) {
                 throw new RuntimeException("Failed to update post");
             }
+
+            //TODO GL-7259
+
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
