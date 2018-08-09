@@ -74,7 +74,7 @@ class UploadedFile
     public function __construct(string $encodedFile, string $fileName, bool $skipDecoding = false)
     {
         if (empty($encodedFile) || empty($fileName)) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException("File name & file data must exist");
         }
         $this->decodeFile($encodedFile, $skipDecoding);
         if (!$skipDecoding) {
@@ -139,7 +139,7 @@ class UploadedFile
     public function withUUID(string $uuid): self
     {
         if (preg_match(self::UUID_REGEXP, $uuid) == 0) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException("Invalid UUID format");
         }
 
         $this->uuid = $uuid;
@@ -198,7 +198,7 @@ class UploadedFile
         $json = json_encode($array);
 
         if (empty($json)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to encode file to JSON");
         }
         return $json;
     }
@@ -213,13 +213,13 @@ class UploadedFile
     public static function generate(string $jsonEncoded): self
     {
         if (empty($jsonEncoded)) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException("JSON string cannot be empty");
         }
 
         $array = json_decode($jsonEncoded, true);
 
         if (empty($array['file_data']) || empty ($array['file_name'])) {
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to decode JSON to file");
         }
         return new UploadedFile($array['file_data'], $array['file_name']);
     }
