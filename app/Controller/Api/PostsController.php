@@ -101,12 +101,13 @@ class PostsController extends BasePagingController
         $newBody = Hash::get($this->getRequestJsonBody(), 'body');
 
         try {
-            $Post->editPost($newBody, $postId);
+            /** @var PostEntity $newPost */
+            $newPost = $Post->editPost($newBody, $postId);
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData($newPost->toArray())->getResponse();
     }
 
     public function post_like(int $postId): CakeResponse

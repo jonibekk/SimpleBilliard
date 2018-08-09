@@ -1003,9 +1003,7 @@ class PostTest extends GoalousTestCase
 
         $newBody = 'EDITED';
 
-        $Post->editPost($newBody, 1);
-
-        $res = $Post->getById(1);
+        $res = $Post->editPost($newBody, 1);
 
         $this->assertEquals($newBody, $res['body']);
     }

@@ -1899,11 +1899,11 @@ class Post extends AppModel
      * @param string $newBody
      * @param int    $postId
      *
-     * @return bool True on successful edit
+     * @return PostEntity Updated post
      */
-    public function editPost(string $newBody, int $postId): bool
+    public function editPost(string $newBody, int $postId): PostEntity
     {
-        if (!$this->exists($postId)){
+        if (!$this->exists($postId)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
         $newData = [
@@ -1911,8 +1911,13 @@ class Post extends AppModel
             'modified' => REQUEST_TIMESTAMP
         ];
 
-        return $this->updateAll($newData, ['Post.id' => $postId]);
+        if (!$this->updateAll($newData, ['Post.id' => $postId])) {
+            throw new RuntimeException("Failed to update post");
+        }
+        /** @var PostEntity $result */
+        $result = $this->useType()->useEntity()->find('first', ['conditions' => ['id' => $postId]]);
 
+        return $result;
     }
 
     /**
