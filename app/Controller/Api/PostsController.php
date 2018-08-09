@@ -274,7 +274,8 @@ class PostsController extends BasePagingController
         }
         //Check whether user is the owner of the post
         if (!$Post->isPostOwned($postId, $this->getUserId())) {
-            return ErrorResponse::forbidden()->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
         }
 
         $body = $this->getRequestJsonBody();
