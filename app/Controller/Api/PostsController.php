@@ -24,7 +24,7 @@ class PostsController extends BasePagingController
     /**
      * Endpoint for saving both circle posts and action posts
      *
-     * @return CakeResponse|null
+     * @return CakeResponse
      */
     public function post()
     {
@@ -81,10 +81,35 @@ class PostsController extends BasePagingController
     }
 
     /**
+     * Endpoint for editing a post
+     *
      * @param int $postId
      *
      * @return CakeResponse
      */
+    public function put(int $postId): CakeResponse
+    {
+        $error = $this->validatePut($postId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $newBody = Hash::get($this->getRequestJsonBody(), 'body');
+
+        try {
+            /** @var PostEntity $newPost */
+            $newPost = $PostService->editPost($newBody, $postId);
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($newPost->toArray())->getResponse();
+    }
+
     public function post_like(int $postId): CakeResponse
     {
         $res = $this->validateLike($postId);
@@ -123,12 +148,11 @@ class PostsController extends BasePagingController
 
         try {
             $count = $PostLikeService->delete($postId, $this->getUserId());
+
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
-
         return ApiResponse::ok()->withData(["like_count" => $count])->getResponse();
-
     }
 
     /**
@@ -222,13 +246,54 @@ class PostsController extends BasePagingController
 
         try {
             $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
-        } catch (GlException\GoalousNotFoundException $exception){
+        } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         }
 
         if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                                 ->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $postId
+     *
+     * @return CakeResponse| null
+     */
+    private function validatePut(int $postId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        if (!$Post->exists($postId)) {
+            return ErrorResponse::notFound()->withMessage(__("This post doesn't exist."))->getResponse();
+        }
+        //Check whether user is the owner of the post
+        if (!$Post->isPostOwned($postId, $this->getUserId())) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
+        }
+
+        $body = $this->getRequestJsonBody();
+
+        try {
+
+            PostRequestValidator::createPostEditValidator()->validate($body);
+
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
         }
 
         return null;
