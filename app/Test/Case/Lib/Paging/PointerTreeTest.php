@@ -22,6 +22,14 @@ class PointerTreeTest extends GoalousTestCase
         $this->assertEquals('OR', key($condition['AND'][1]));
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
+    public function test_treeToConditionBadTree_failed(){
+        $tree = new PointerTree('AND');
+        $tree->toCondition();
+    }
+
     public function test_getPointer_success()
     {
         $defaultTree = $this->createDefaultTree();

@@ -36,6 +36,9 @@ class PointerTree extends BinaryTree implements Tree
 
         //Only leaf contains pointer
         if ($tree->isLeaf()) {
+            if (is_string($tree->getValue())) {
+                throw new RuntimeException("Invalid tree structure");
+            }
             $result[] = $this->valueToString($tree->getValue());
             return $result;
         }
