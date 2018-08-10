@@ -45,15 +45,6 @@ class CircleListPagingService extends BasePagingService
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
         $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
 
-        if (empty($userId)) {
-            GoalousLog::error("Missing user ID for circle list paging", $conditions);
-            throw new InvalidArgumentException("Missing user ID");
-        }
-        if (empty($teamId)) {
-            GoalousLog::error("Missing team ID for circle list paging", $conditions);
-            throw new InvalidArgumentException("Missing team ID");
-        }
-
         $conditions = [
             'conditions' => [
                 'Circle.team_id' => $teamId,
@@ -134,11 +125,6 @@ class CircleListPagingService extends BasePagingService
 
             /** @var CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
             $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
-
-            if (empty($userId)) {
-                GoalousLog::error("Missing User ID for data extension");
-                throw new InvalidArgumentException("Missing User ID for data extension");
-            }
 
             $CircleMemberInfoDataExtender->setUserId($userId);
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");

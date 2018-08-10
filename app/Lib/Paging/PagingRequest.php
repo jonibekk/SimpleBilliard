@@ -431,6 +431,17 @@ class PagingRequest
         return Hash::get($this->resources, 'res_id', 0);
     }
 
+
+    /**
+     * Set resource ID in the URL
+     *
+     * @param int $resourceId
+     */
+    public function setResourceId(int $resourceId)
+    {
+        $this->addResource('res_id', $resourceId);
+    }
+
     /**
      * Get logged in user's ID.
      *
@@ -442,6 +453,16 @@ class PagingRequest
     }
 
     /**
+     * Set logged in user's ID.
+     *
+     * @param int $userId
+     */
+    public function setCurrentUserId(int $userId)
+    {
+        $this->addResource('current_user_id', $userId);
+    }
+
+    /**
      * Get logged in user's current team ID
      *
      * @return int Return 0 if not exist
@@ -449,5 +470,15 @@ class PagingRequest
     public function getCurrentTeamId(): int
     {
         return Hash::get($this->resources, 'current_team_id', 0);
+    }
+
+    /**
+     * Set logged in user's current team ID
+     *
+     * @param int $teamId
+     */
+    public function setCurrentTeamId(int $teamId)
+    {
+        $this->addResource('current_team_id', $teamId);
     }
 }

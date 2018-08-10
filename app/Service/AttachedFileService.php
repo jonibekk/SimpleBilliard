@@ -121,7 +121,7 @@ class AttachedFileService extends AppService
             //ファイルの画素数チェック(画像の場合のみ)
             list($imgWidth, $imgHeight) = getimagesize($fileInfo['tmp_name']);
             if ($imgWidth * $imgHeight > AttachedFile::ATTACHABLE_MAX_PIXEL) {
-                $ret['msg'] = __("%s pixel is the limit.", number_format(AttachedFile::ATTACHABLE_MAX_PIXEL));
+                $ret['msg'] = __("%s pixels is the limit.", number_format(AttachedFile::ATTACHABLE_MAX_PIXEL));
                 return $ret;
             }
             //ファイルタイプのチェック(gif, jpeg, pngのみ許可)
