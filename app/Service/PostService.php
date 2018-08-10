@@ -555,7 +555,7 @@ class PostService extends AppService
     /**
      * Get list of attached files of a post
      *
-     * @param int $postId
+     * @param int                                              $postId
      * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
      *
      * @return AttachedFileEntity[]
@@ -587,5 +587,26 @@ class PostService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    /**
+     * Soft delete circle post and its related data
+     *
+     * @param int $postId
+     *
+     * @return bool
+     */
+    public function delete(int $postId): bool
+    {
+        //TODO post_drafts
+        //TODO post_files
+        //TODO post_likes
+        //TODO post_mentions
+        //TODO post_reads
+        //TODO post_resources
+        //TODO post_share_circles
+        //TODO post_share_users
+        //TODO post_shared_logs
+        //TODO posts
     }
 }
