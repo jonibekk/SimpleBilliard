@@ -3,8 +3,6 @@ App::uses('BaseApiController', 'Controller/Api');
 App::uses('UploadRequestValidator', 'Validator/Request/Api/V2');
 App::import('Service', 'UploadService');
 
-use Goalous\Exception\Storage\Upload as UploadException;
-
 /**
  * Created by PhpStorm.
  * User: StephenRaharja

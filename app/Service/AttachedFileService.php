@@ -239,6 +239,21 @@ class AttachedFileService extends AppService
             'removable_flg'         => $removable
         ];
 
-        return $AttachedFile->useType()->useEntity()->save($newData, false);
+        try {
+            $this->TransactionManager->begin();
+            $AttachedFile->create();
+            $result = $AttachedFile->useType()->useEntity()->save($newData, false);
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error($errorMessage = 'Failed saving attached files', [
+                'user.id'  => $userId,
+                'team.id'  => $teamId,
+                'filename' => $file->getFileName(),
+            ]);
+            throw new RuntimeException('Error on adding attached file: ' . $errorMessage);
+        }
+
+        return $result;
     }
 }

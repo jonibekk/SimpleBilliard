@@ -46,4 +46,24 @@ class UploadServiceTest extends GoalousTestCase
 
         $this->assertEquals($returnValue, $mocked);
     }
+
+    public function test_saveFile_success()
+    {
+        $returnValue = true;
+
+        $assetsClient = mock::mock('AssetsStorageClient');
+
+        $assetsClient->shouldReceive('save')
+                     ->once()
+                     ->andReturn($returnValue);
+
+        ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
+
+
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+        $result = $UploadService->save("Aaa", 1, new UploadedFile("as", "as"), "lala");
+
+        $this->assertTrue($result);
+    }
 }

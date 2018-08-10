@@ -76,6 +76,7 @@ class UploadedFile
         if (empty($encodedFile) || empty($fileName)) {
             throw new InvalidArgumentException("File name & file data must exist");
         }
+
         $this->decodeFile($encodedFile, $skipDecoding);
         if (!$skipDecoding) {
             $this->encodedFile = $encodedFile;
@@ -155,6 +156,8 @@ class UploadedFile
      *
      * @param string $encodedFile
      * @param bool   $skipDecoding If the input file is already in binary form,
+     *
+     * @throws Exception
      */
     private function decodeFile(string $encodedFile, bool $skipDecoding = false)
     {
@@ -171,6 +174,7 @@ class UploadedFile
                 throw new RuntimeException("Failed to decode string to file");
             }
         }
+        unset($encodedFile);
         $this->binaryFile = $rawFile;
 
         $fInfo = new finfo();
@@ -213,6 +217,7 @@ class UploadedFile
      * @param string $jsonEncoded
      *
      * @return UploadedFile
+     * @throws Exception
      */
     public static function generate(string $jsonEncoded): self
     {
@@ -221,6 +226,7 @@ class UploadedFile
         }
 
         $array = json_decode($jsonEncoded, true);
+        unset($jsonEncoded);
 
         if (empty($array['file_data']) || empty ($array['file_name'])) {
             throw new RuntimeException("Failed to decode JSON to file");

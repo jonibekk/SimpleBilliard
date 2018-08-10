@@ -642,29 +642,22 @@ class PostService extends AppService
                 /** @var AttachedFileEntity $attachedFile */
                 $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
                     AttachedModelType::TYPE_MODEL_POST());
-                $addedFiles[] = $attachedFile['id'];
-                /** @var PostFileEntity $postFile */
-                $postFile = $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
 
+                $addedFiles[] = $attachedFile['id'];
+
+                $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
+
+                //TODO GL-7224
                 //For now, append required suffix for all images without resizing them
                 $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_original");
                 $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_x_small");
                 $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_small");
                 $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_large");
-
-                if (empty($postFile)) {
-                    GoalousLog::error($errorMessage = 'Failed saving post files', [
-                        'posts.id'  => $postId,
-                        'filename'  => $uploadedFile->getFileName(),
-                        'file.uuid' => $uploadedFile->getUUID(),
-                    ]);
-                    throw new RuntimeException('Error on adding post: ' . $errorMessage);
-                }
             }
         } catch (Exception $e) {
+            //If any error happened, remove uploaded file
             foreach ($addedFiles as $id) {
-                //If any error happened, remove uploaded file
-                $UploadService->deleteAssets('AttachedFile', $id);
+                $UploadService->deleteAsset('AttachedFile', $id);
             }
             throw $e;
         }

@@ -957,9 +957,6 @@ class UploadBehavior extends ModelBehavior
         if (!file_exists($filePath)) {
             return false;
         }
-        // Temporarly increase memory limit for image manipulation
-        // Tested upto 17MB+ files
-        ini_set('memory_limit', '640M');
 
         $flip = false;
         $degrees = $this->getDegrees($filePath, $flip);
@@ -1005,9 +1002,6 @@ class UploadBehavior extends ModelBehavior
         }
         // Destroy
         imagedestroy($image);
-
-        // Set back the memory limit
-        ini_set('memory_limit', '256M');
 
         return true;
     }

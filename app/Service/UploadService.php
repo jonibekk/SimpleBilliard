@@ -19,18 +19,33 @@ use Goalous\Exception\Storage\Upload as UploadException;
 class UploadService extends AppService
 {
     /**
-     * @param $userId
-     * @param $teamId
+     * @param int $userId
+     * @param int $teamId
      *
      * @return BufferStorageClient
      */
-    private function getBufferStorageClient($userId, $teamId): BufferStorageClient
+    private function getBufferStorageClient(int $userId, int $teamId): BufferStorageClient
     {
         $registeredClient = ClassRegistry::getObject(BufferStorageClient::class);
         if ($registeredClient instanceof BufferStorageClient) {
             return $registeredClient;
         }
         return new BufferStorageClient($userId, $teamId);
+    }
+
+    /**
+     * @param string $modelName
+     * @param int    $modelId
+     *
+     * @return AssetsStorageClient
+     */
+    private function getAssetsStorageClient(string $modelName, int $modelId): AssetsStorageClient
+    {
+        $registeredClient = ClassRegistry::getObject(AssetsStorageClient::class);
+        if ($registeredClient instanceof AssetsStorageClient) {
+            return $registeredClient;
+        }
+        return new AssetsStorageClient($modelName, $modelId);
     }
 
     /**
@@ -73,7 +88,7 @@ class UploadService extends AppService
             throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 
-        $uploader = new BufferStorageClient($userId, $teamId);
+        $uploader = $this->getBufferStorageClient($userId, $teamId);
 
         return $uploader->get($uuid);
     }
@@ -88,45 +103,11 @@ class UploadService extends AppService
      *
      * @return bool
      */
-    public function save(
-        string $modelName,
-        int $modelId,
-        UploadedFile $file,
-        string $suffix = ""
-    ): bool {
-
-        $assetStorageClient = new AssetsStorageClient($modelName, $modelId);
+    public function save(string $modelName, int $modelId, UploadedFile $file, string $suffix = ""): bool
+    {
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
 
         return $assetStorageClient->save($file, $suffix);
-    }
-
-    /**
-     * Delete a specific file
-     *
-     * @param string $modelName
-     * @param int    $modelId
-     * @param string $fileName Can be input as:
-     *                         Pattern 1: d8d19701c_original.jpg -> No need for suffix & ext
-     *                         Pattern 2: test.png -> Need to input suffix & ext
-     * @param string $suffix   Optional. For specifying suffixes like `_original`
-     * @param string $fileExt  Optional. If suffix is specified, file extension will be needed
-     *
-     * @return bool
-     */
-    public function deleteAsset(
-        string $modelName,
-        int $modelId,
-        string $fileName,
-        string $suffix = "",
-        string $fileExt = ""
-    ): bool {
-        if (!empty($suffix) && empty($fileExt)) {
-            throw new InvalidArgumentException();
-        }
-
-        $assetStorageClient = new AssetsStorageClient($modelName, $modelId);
-
-        return $assetStorageClient->delete($fileName, $suffix, $fileExt);
     }
 
     /**
@@ -134,13 +115,14 @@ class UploadService extends AppService
      *
      * @param string $modelName
      * @param int    $modelId
+     * @param string $fileName Specific file name to delete
      *
      * @return bool
      */
-    public function deleteAssets(string $modelName, int $modelId): bool
+    public function deleteAsset(string $modelName, int $modelId, string $fileName = ""): bool
     {
-        $assetStorageClient = new AssetsStorageClient($modelName, $modelId);
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
 
-        return $assetStorageClient->deleteByPrefix();
+        return $assetStorageClient->delete($fileName);
     }
 }

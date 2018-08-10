@@ -34,6 +34,20 @@ class PostFileService extends AppService
             'index_num'        => $indexNum
         ];
 
-        return $PostFile->useType()->useEntity()->save($newData, false);
+        try {
+            $this->TransactionManager->begin();
+            $PostFile->create();
+            $result = $PostFile->useType()->useEntity()->save($newData, false);
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error($errorMessage = 'Failed saving post files', [
+                'posts.id'         => $postId,
+                'team.id'          => $teamId,
+                'attached_file.id' => $attachedFileId,
+            ]);
+            throw new RuntimeException('Error on adding post file: ' . $errorMessage);
+        }
+        return $result;
     }
 }

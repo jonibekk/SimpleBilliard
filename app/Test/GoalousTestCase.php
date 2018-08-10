@@ -87,7 +87,6 @@ class GoalousTestCase extends CakeTestCase
 
     protected $testFileName = "200px-Noto_Emoji_KitKat_263a.svg";
 
-
     /**
      * setUp method
      *

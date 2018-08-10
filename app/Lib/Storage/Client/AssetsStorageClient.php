@@ -51,9 +51,10 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         return $file->getUUID();
     }
 
-    public function deleteByPrefix(): bool
+    public function delete(string $fileName): bool
     {
-        $key = $this->createFileKey("");
+        $key = $this->createFileKey($fileName);
+        $key = $this->sanitize($key);
 
         try {
             $result = $this->s3Instance->listObjectsV2([
@@ -69,24 +70,6 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
 
         foreach ($keyList as $key) {
             $this->deleteByFullKey($key);
-        }
-
-        return true;
-    }
-
-    public function delete(string $fileName, string $suffix = "", string $ext = ""): bool
-    {
-        $key = $this->createFileKey($fileName, $suffix, $ext);
-        $key = $this->sanitize($key);
-
-        try {
-            $this->s3Instance->deleteObject([
-                'Bucket' => S3_ASSETS_BUCKET,
-                'Key'    => $key,
-            ]);
-        } catch (S3Exception $exception) {
-            GoalousLog::error("Failed deleting from S3.  Model: $this->modelName, ID: $this->modelId, File: " . $fileName);
-            throw new RuntimeException("Failed deleting from to S3");
         }
 
         return true;
@@ -144,22 +127,41 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
      */
     protected final function createFileKey(string $fileName, string $suffix = "", string $fileExt = ""): string
     {
-        $key = $this->getLocalPrefix() . "/" . Inflector::tableize($this->modelName) . "/" . $this->modelId . "/";
+        $fileName = $this->removeExtension($fileName);
+
+        if (!empty($fileName)) {
+            $hashedFileName = md5($fileName . Configure::read('Security.salt'));
+        } else {
+            $hashedFileName = $fileName;
+        }
+
+        $key = $this->getLocalPrefix() . "/" . Inflector::tableize($this->modelName) . "/" . $this->modelId . "/" . $hashedFileName;
 
         if (!empty($fileExt)) {
-
-            $hashedFileName = md5(($fileName ?? "") . Configure::read('Security.salt'));
-            $key .= $hashedFileName;
-
             if (!empty($suffix)) {
                 $key .= $suffix;
             }
             $key .= "." . $fileExt;
-        } else {
-            $key .= $fileName;
         }
 
         return $key;
+    }
+
+    /**
+     * Remove file extension from file name
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    protected function removeExtension(string $filename): string
+    {
+        $lastDot = strrpos($filename, '.');
+        if ($lastDot === false) {
+            return $filename;
+        } else {
+            return substr($filename, 0, $lastDot);
+        }
     }
 
 }
