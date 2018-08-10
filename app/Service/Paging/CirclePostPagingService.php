@@ -67,6 +67,7 @@ class CirclePostPagingService extends BasePagingService
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
 
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
             /** @var UserDataExtender $UserDataExtender */
@@ -83,11 +84,12 @@ class CirclePostPagingService extends BasePagingService
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
             foreach ($resultArray as &$result) {
-                $cursor = new PagingRequest();
-                $cursor->addResource('res_id', Hash::get($result, 'id'));
-                $cursor->addResource('current_user_id', $userId);
+                $commentPagingRequest = new PagingRequest();
+                $commentPagingRequest->setResourceId(Hash::get($result, 'id'));
+                $commentPagingRequest->setCurrentUserId($userId);
+                $commentPagingRequest->setCurrentTeamId($teamId);
 
-                $comments = $CommentPagingService->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
+                $comments = $CommentPagingService->getDataWithPaging($commentPagingRequest, self::DEFAULT_COMMENT_COUNT,
                     CommentPagingService::EXTEND_ALL);
 
                 $result['comments'] = $comments;
