@@ -13,6 +13,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
+App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
 use Mockery as mock;
@@ -723,5 +724,33 @@ class PostServiceTest extends GoalousTestCase
         $files = $PostService->getAttachedFiles($postEntity['id']);
 
         $this->assertNotEmpty($files);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_editPostMissing_failed()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $newBody = 'EDITED';
+
+        $PostService->editPost($newBody, 183281390);
+
+        $this->fail();
+    }
+
+    public function test_editPost_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $newBody = 'EDITED';
+
+        $res = $PostService->editPost($newBody, 1);
+
+        $this->assertTrue($res instanceof PostEntity);
+        $this->assertEquals($newBody, $res['body']);
     }
 }

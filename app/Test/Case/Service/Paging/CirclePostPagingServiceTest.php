@@ -26,6 +26,10 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         'app.experiment',
         'app.post_like',
         'app.saved_post',
+        'app.comment_like',
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
     ];
 
     public function test_getCirclePost_success()
@@ -36,6 +40,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $cursor = new PagingRequest();
         $cursor->addResource('res_id', 3);
         $cursor->addResource('current_team_id', 1);
+        $cursor->setCurrentUserId(1);
 
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1);
 
@@ -52,6 +57,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $cursor = new PagingRequest();
         $cursor->addResource('res_id', 3);
         $cursor->addResource('current_team_id', 1);
+        $cursor->setCurrentUserId(1);
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
         $this->assertNotEmpty($result['paging']['next']);
@@ -60,6 +66,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
         $pagingRequest->addResource('res_id', 1);
         $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->setCurrentUserId(1);
 
         $secondResult = $CircleFeedPaging->getDataWithPaging($pagingRequest, 2);
 

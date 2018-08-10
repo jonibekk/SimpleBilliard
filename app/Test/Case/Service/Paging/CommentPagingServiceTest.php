@@ -19,6 +19,10 @@ class CommentPagingServiceTest extends GoalousTestCase
         'app.local_name',
         'app.experiment',
         'app.post_like',
+        'app.comment_like',
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.saved_post',
     ];
 

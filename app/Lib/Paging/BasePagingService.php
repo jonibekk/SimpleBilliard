@@ -24,6 +24,9 @@ abstract class BasePagingService implements PagingServiceInterface
         $extendFlags = []
     ): array {
 
+        // Check whether exist current user id and team id
+        $this->validatePagingResource($pagingRequest);
+
         $finalResult = [
             'data'   => [],
             'paging' => [
@@ -79,6 +82,24 @@ abstract class BasePagingService implements PagingServiceInterface
     }
 
     /**
+     * Check whether exist current user id and team id in paging request
+     *
+     * @param PagingRequest $pagingRequest
+     *
+     */
+    protected final function validatePagingResource(PagingRequest $pagingRequest)
+    {
+        if (empty($pagingRequest->getCurrentUserId())) {
+            GoalousLog::error("Missing current user id");
+            throw new UnexpectedValueException("Missing current user id");
+        }
+        if (empty($pagingRequest->getCurrentTeamId())) {
+            GoalousLog::error("Missing current team id");
+            throw new UnexpectedValueException("Missing current team id");
+        }
+    }
+
+    /**
      * Method to be called before reading data from db.
      * Override to use
      *
@@ -101,7 +122,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function getEndPointerValue($lastElement)
     {
-        return [static::MAIN_MODEL.'.id', ">", $lastElement['id']];
+        return [static::MAIN_MODEL . '.id', ">", $lastElement['id']];
     }
 
     /**
@@ -114,7 +135,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function getStartPointerValue($firstElement)
     {
-        return [static::MAIN_MODEL.'.id', "<", $firstElement['id']];
+        return [static::MAIN_MODEL . '.id', "<", $firstElement['id']];
     }
 
     /**
@@ -173,8 +194,27 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder(static::MAIN_MODEL.'.id');
+        $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
         return $pagingRequest;
+    }
+
+    /**
+     * Check whether ext options include target ext
+     *
+     * @param string $targetExt
+     * @param array  $options
+     *
+     * @return bool
+     */
+    protected function includeExt(array $options, string $targetExt): bool
+    {
+        if (in_array(static::EXTEND_ALL, $options)) {
+            return true;
+        }
+        if (in_array($targetExt, $options)) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -66,6 +66,9 @@ class CirclePostPagingService extends BasePagingService
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
@@ -81,10 +84,12 @@ class CirclePostPagingService extends BasePagingService
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
             foreach ($resultArray as &$result) {
-                $cursor = new PagingRequest();
-                $cursor->addResource('res_id', Hash::get($result, 'id'));
+                $commentPagingRequest = new PagingRequest();
+                $commentPagingRequest->setResourceId(Hash::get($result, 'id'));
+                $commentPagingRequest->setCurrentUserId($userId);
+                $commentPagingRequest->setCurrentTeamId($teamId);
 
-                $comments = $CommentPagingService->getDataWithPaging($cursor, self::DEFAULT_COMMENT_COUNT,
+                $comments = $CommentPagingService->getDataWithPaging($commentPagingRequest, self::DEFAULT_COMMENT_COUNT,
                     CommentPagingService::EXTEND_ALL);
 
                 $result['comments'] = $comments;
@@ -116,22 +121,12 @@ class CirclePostPagingService extends BasePagingService
             }
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
-            $userId = $request->getCurrentUserId();
-            if (empty($userId)) {
-                GoalousLog::error("Missing resource ID for extending like in Post");
-                throw new InvalidArgumentException("Missing resource ID for extending like in Post");
-            }
             /** @var PostLikeDataExtender $PostLikeDataExtender */
             $PostLikeDataExtender = ClassRegistry::init('PostLikeDataExtender');
             $PostLikeDataExtender->setUserId($userId);
             $resultArray = $PostLikeDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
-            $userId = $request->getCurrentUserId();
-            if (empty($userId)) {
-                GoalousLog::error("Missing resource ID for extending saved in Post");
-                throw new InvalidArgumentException("Missing resource ID for extending saved in Post");
-            }
             /** @var PostSavedDataExtender $PostSavedDataExtender */
             $PostSavedDataExtender = ClassRegistry::init('PostSavedDataExtender');
             $PostSavedDataExtender->setUserId($userId);
@@ -157,10 +152,6 @@ class CirclePostPagingService extends BasePagingService
         if (empty($circleId)) {
             GoalousLog::error("Missing circle ID for post paging", $conditions);
             throw new InvalidArgumentException("Missing circle ID");
-        }
-        if (empty($teamId)) {
-            GoalousLog::error("Missing team ID for post paging", $conditions);
-            throw new InvalidArgumentException("Missing team ID");
         }
 
         $options = [

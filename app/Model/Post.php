@@ -34,6 +34,7 @@ App::import('Service', 'PostService');
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Exception as GlException;
 
 class Post extends AppModel
 {
@@ -911,6 +912,29 @@ class Post extends AppModel
                 'id'      => $post_id,
                 'team_id' => $this->current_team_id,
                 'user_id' => $this->my_uid,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check whether the post is owned by the user
+     *
+     * @param int $postId
+     * @param int $userId
+     *
+     * @return bool True if owned
+     */
+    public function isPostOwned(int $postId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $postId,
+                'user_id' => $userId,
             ]
         ];
         $res = $this->find('list', $options);
@@ -1882,7 +1906,7 @@ class Post extends AppModel
             'conditions' => [
                 'id' => $postId
             ],
-            'fields' => [
+            'fields'     => [
                 'post_like_count'
             ]
         ];
