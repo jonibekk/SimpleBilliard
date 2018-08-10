@@ -91,11 +91,11 @@ abstract class BasePagingService implements PagingServiceInterface
     {
         if (empty($pagingRequest->getCurrentUserId())) {
             GoalousLog::error("Missing current user id");
-            throw new InvalidArgumentException("Missing current user id");
+            throw new UnexpectedValueException("Missing current user id");
         }
         if (empty($pagingRequest->getCurrentTeamId())) {
             GoalousLog::error("Missing current team id");
-            throw new InvalidArgumentException("Missing current team id");
+            throw new UnexpectedValueException("Missing current team id");
         }
     }
 
