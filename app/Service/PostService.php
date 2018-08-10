@@ -574,7 +574,6 @@ class PostService extends AppService
 
     /**
      * Get list of attached files of a post
-     * <<<<<<< HEAD
      *
      * @param int                                              $postId
      * @param AttachedFileType                                 $type Filtered file type
