@@ -577,10 +577,6 @@ class PostService extends AppService
      *
      * @param int                                              $postId
      * @param AttachedFileType                                 $type Filtered file type
-     *                                                               =======
-     * @param int                                              $postId
-     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
-     *                                                               >>>>>>> d5657792b64ac54084084b6b2b215ff6d5022605
      *
      * @return AttachedFileEntity[]
      */
