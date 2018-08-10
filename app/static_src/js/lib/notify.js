@@ -155,7 +155,7 @@ function notifyNewFeed() {
 }
 
 function getCurrentUnreadNotifyCnt() {
-    var $bellNum = $("#bellNum");
+    var $bellNum = $(".bellNum").first();
     var $numArea = $bellNum.find("span");
     return parseInt($numArea.html());
 }

@@ -3,6 +3,11 @@
  */
 
 "use strict";
+
+var bypassActionKrConfirmModal = false;
+var isKrSelected = false;
+var previousGoalId;
+
 $(function () {
     // TODO: temporary fix for releasing
     //       should change js to less to manage action iamges size
@@ -16,8 +21,31 @@ $(function () {
 
     $(document).on("click", ".target-show", evTargetShow);
     $(document).on("click", ".click-this-remove", evRemoveThis);
+
+    $("#forceSubmitAction").off("click").on("click", function(e) {
+        e.preventDefault();
+        bypassActionKrConfirmModal = true;
+        $("#CommonActionDisplayForm").submit();
+    });
 });
 
+function doKrValueCheck(){
+    var $kr = $(".action-kr-progress-edit-item.is-active");
+    if ($kr.data('kr-value-unit') === 2) {
+        // Complete/Incomplete 
+        if (!$kr.find(".js-kr-progress-check-complete").bootstrapSwitch("state")) {
+            $('#actionConfirmationModal').modal('show');
+            return false;
+        }
+    } else {
+        // Other
+        if ($kr.find(".action-kr-progress-edit-textbox").attr("originalValue") == $kr.find(".action-kr-progress-edit-textbox").val()) {
+            $('#actionConfirmationModal').modal('show');
+            return false;
+       } 
+    }
+    return true;
+}
 
 // TODO:画像アップロード処理は依存が強すぎてgl_basic.jsに残したままなので、本ファイルに移行する
 var Page = {
@@ -48,7 +76,7 @@ var Page = {
         });
         // 進捗を更新するKR選択
         $(this.el).on("click", ".js-select-kr", function () {
-            self.selectKr(this)
+            self.selectKr(this);
         });
         // KR進捗の入力フォーカスした際に外側の行のクリックイベントが反応しないようにする
         $(this.conf.kr_progress).on("click", "input", function (e) {
@@ -79,6 +107,12 @@ var Page = {
         this.action_resize();
     },
     submit: function (form) {
+        if($("#CommonActionName").length && !$.trim($("#CommonActionName").val()).length) {
+            return;
+        } else if (!bypassActionKrConfirmModal && !doKrValueCheck()) {
+            return;
+        }
+
         var self = this;
 
         // 多重サブミット対策
@@ -98,8 +132,12 @@ var Page = {
 
         var form_data = $(form).serializeArray();
         var switch_el = $(self.el).find(".action-kr-progress-edit-item.is-active .js-kr-progress-check-complete");
-        if (switch_el.length > 0 && !switch_el.prop('checked')) {
-            form_data.push({name: "data[ActionResult][key_result_current_value]", value: 0});
+        if (switch_el.length) {
+            var progress = 0;
+            if(switch_el.bootstrapSwitch("state")) {
+                progress = 1;
+            }
+            form_data.push({name: "data[ActionResult][key_result_current_value]", value: progress});
         }
 
         $.ajax({
@@ -157,6 +195,15 @@ var Page = {
         });
     },
     selectGoal: function (el) {
+        var $kr_progress = $($(this.el).find(this.conf.kr_progress));
+        var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
+        $("#CommonActionSubmit").prop("disabled", false);
+        if(previousGoalId === $(el).val() && activeKr.length) {
+            return;
+        }
+
+        previousGoalId = $(el).val();
+
         $(el).closest(".has-success").removeClass("has-success");
         var goal_id = $(el).val();
 
@@ -168,7 +215,7 @@ var Page = {
             var $kr_progress = $($(self.el).find(self.conf.kr_progress));
             if (data.html) {
                 $kr_progress.empty().append(data.html);
-                $kr_progress.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
+                $kr_progress.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", false);
                 //key_result_idがcakeのurlパラメータに存在し、かつkrのlistに含まれる場合は対象KRを先頭に移動
                 var pre_selected_kr_id = cake.request_params.named.key_result_id;
                 var $pre_selected_kr = $kr_progress.find(".js-select-kr[data-kr-id='" + pre_selected_kr_id + "']");
@@ -182,16 +229,11 @@ var Page = {
         });
     },
     selectKr: function (el) {
-        var selected = $(el).data("selected");
-        if (selected) {
-            // this.deselectKrProgressInActionForm($(el));
-        } else {
-            // KRの選択
-            var $kr_progress = $($(this.el).find(this.conf.kr_progress));
-            var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
-            this.deselectKrProgressInActionForm($(activeKr));
-            this.selectKrProgressInActionForm($(el));
-        }
+        // KRの選択
+        var $kr_progress = $($(this.el).find(this.conf.kr_progress));
+        var activeKr = $kr_progress.find(".action-kr-progress-edit-item.is-active");
+        this.deselectKrProgressInActionForm($(activeKr));
+        this.selectKrProgressInActionForm($(el));
     },
     selectKrProgressInActionForm: function ($el) {
         var activeClass = "is-active";
@@ -204,8 +246,6 @@ var Page = {
         $(check_circle).addClass(activeClass);
         $(check_circle).append('<i class="fa fa-check action-kr-progress-edit-item-check-circle-inner"></i>');
         $el.find("input").prop("disabled", false);
-        $el.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", false);
-        $el.data("selected", 1);
     },
     deselectKrProgressInActionForm: function ($el) {
         var activeClass = "is-active";
@@ -216,8 +256,6 @@ var Page = {
         var check_circle = $el.find(".action-kr-progress-edit-item-check-circle");
         $(check_circle).removeClass(activeClass).empty();
         $el.find("input").prop("disabled", true);
-        $el.find(".js-kr-progress-check-complete").bootstrapSwitch("disabled", true);
-        $el.data("selected", 0);
     }
 };
 
