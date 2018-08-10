@@ -24,6 +24,9 @@ abstract class BasePagingService implements PagingServiceInterface
         $extendFlags = []
     ): array {
 
+        // Check whether exist current user id and team id
+        $this->validatePagingResource($pagingRequest);
+
         $finalResult = [
             'data'   => [],
             'paging' => [
@@ -76,6 +79,24 @@ abstract class BasePagingService implements PagingServiceInterface
         $finalResult['data'] = $queryResult;
 
         return $finalResult;
+    }
+
+    /**
+     * Check whether exist current user id and team id in paging request
+     *
+     * @param PagingRequest $pagingRequest
+     *
+     */
+    protected final function validatePagingResource(PagingRequest $pagingRequest)
+    {
+        if (empty($pagingRequest->getCurrentUserId())) {
+            GoalousLog::error("Missing current user id");
+            throw new InvalidArgumentException("Missing current user id");
+        }
+        if (empty($pagingRequest->getCurrentTeamId())) {
+            GoalousLog::error("Missing current team id");
+            throw new InvalidArgumentException("Missing current team id");
+        }
     }
 
     /**

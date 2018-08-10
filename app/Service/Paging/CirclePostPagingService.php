@@ -67,10 +67,6 @@ class CirclePostPagingService extends BasePagingService
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
         $userId = $request->getCurrentUserId();
-        if (empty($userId)) {
-            GoalousLog::error("Missing resource ID for extending in Post");
-            throw new InvalidArgumentException("Missing resource ID for extending in Post");
-        }
 
         if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
             /** @var UserDataExtender $UserDataExtender */
@@ -154,10 +150,6 @@ class CirclePostPagingService extends BasePagingService
         if (empty($circleId)) {
             GoalousLog::error("Missing circle ID for post paging", $conditions);
             throw new InvalidArgumentException("Missing circle ID");
-        }
-        if (empty($teamId)) {
-            GoalousLog::error("Missing team ID for post paging", $conditions);
-            throw new InvalidArgumentException("Missing team ID");
         }
 
         $options = [

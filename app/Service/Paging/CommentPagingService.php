@@ -61,10 +61,6 @@ class CommentPagingService extends BasePagingService
         }
         if ($this->includeExt($options, self::EXTEND_LIKE)) {
             $userId = $request->getCurrentUserId();
-            if (empty($userId)) {
-                GoalousLog::error("Missing resource ID for extending like in Comment");
-                throw new InvalidArgumentException("Missing resource ID for extending like in Comment");
-            }
             /** @var CommentLikeDataExtender $CommentLikeDataExtender */
             $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
             $CommentLikeDataExtender->setUserId($userId);
