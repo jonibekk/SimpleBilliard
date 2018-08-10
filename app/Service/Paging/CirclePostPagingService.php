@@ -42,7 +42,7 @@ class CirclePostPagingService extends BasePagingService
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
-        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
+        $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
         $options['conversion'] = true;
 
         /** @var Post $Post */
@@ -177,14 +177,11 @@ class CirclePostPagingService extends BasePagingService
         return $options;
     }
 
-    protected function getEndPointerValue($lastElement)
-    {
-        return [static::MAIN_MODEL . '.id', "<", $lastElement['id']];
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): PointerTree {
+        return new PointerTree([static::MAIN_MODEL . '.id', "<", $lastElement['id']]);
     }
-
-    protected function getStartPointerValue($firstElement)
-    {
-        return [static::MAIN_MODEL . '.id', ">", $firstElement['id']];
-    }
-
 }

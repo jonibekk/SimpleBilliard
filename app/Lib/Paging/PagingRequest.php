@@ -1,11 +1,13 @@
 <?php
+App::import('Lib/DataStructure/Tree', 'BinaryTree');
+App::import('Lib/Paging', 'PointerTree');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/09
  * Time: 17:20
  */
-
 class PagingRequest
 {
     const DEFAULT_PAGE_LIMIT = 20;
@@ -31,6 +33,13 @@ class PagingRequest
     private $pointerValues = [];
 
     /**
+     * Binary Tree for saving the pointers
+     *
+     * @var PointerTree
+     */
+    private $pointerTree = null;
+
+    /**
      * Array for search query from URL
      *
      * @var array
@@ -54,22 +63,35 @@ class PagingRequest
     /**
      * PagingRequest constructor.
      *
-     * @param array $conditions    Conditions for the search, e.g. SQL query
-     * @param array $pointerValues Pointer to mark start / end point of search
-     *                             [$column_name] => [$math_operator, $value]
-     * @param array $order         Order of the query sorting
+     * @param array               $conditions    Conditions for the search, e.g. SQL query
+     * @param array | PointerTree $pointerValues Pointer to mark start / end point of search
+     *                                           [$column_name] => [$math_operator, $value]
+     * @param array               $order         Order of the query sorting
      */
     public function __construct(
         array $conditions = [],
-        array $pointerValues = [],
+        $pointerValues = [],
         array $order = []
     ) {
         if (!empty($conditions)) {
             $this->conditions = $conditions;
         }
+
+        $this->pointerTree = new PointerTree();
+
         if (!empty($pointerValues)) {
-            $this->pointerValues = $pointerValues;
+            if ($pointerValues instanceof PointerTree) {
+                $this->pointerTree = $pointerValues;
+            }
+            if (is_array($pointerValues)) {
+                if (count($order) == 3 && is_string($pointerValues[0])) {
+                    $this->pointerTree->addPointer($pointerValues);
+                } else {
+                    $this->pointerTree->populateTree($pointerValues);
+                }
+            }
         }
+
         if (!empty($order)) {
             $this->order = $order;
         }
@@ -78,28 +100,40 @@ class PagingRequest
     /**
      * Create next cursor for API requests
      *
-     * @param array $conditions    Conditions for the search, e.g. SQL query
-     * @param array $pointerValues Pointer to mark start / end point of search
-     *                             [$column_name] => [$math_operator, $value]
-     * @param array $order         Order of the query sorting
+     * @param array               $conditions    Conditions for the search, e.g. SQL query
+     * @param array | PointerTree $pointerValues Pointer to mark start / end point of search
+     *                                           [$column_name] => [$math_operator, $value]
+     * @param array               $order         Order of the query sorting
      *
      * @return string Encoded next paging cursor
      */
     public static function createPageCursor(
         array $conditions = [],
-        array $pointerValues = [],
+        $pointerValues = null,
         array $order = []
     ): string {
+
         $array = array();
 
         if (!empty($conditions)) {
             $array['conditions'] = $conditions;
         }
+
         if (!empty($pointerValues)) {
-            $array['pointer'] = $pointerValues;
+            if (is_array($pointerValues)) {
+                $array['pointer'] = (new PointerTree($pointerValues))->toArray();
+            } elseif ($pointerValues instanceof PointerTree) {
+                if (!$pointerValues->isEmpty()) {
+                    $array['pointer'] = $pointerValues->toArray();
+                }
+            }
         }
         if (!empty($order)) {
             $array['order'] = $order;
+        }
+
+        if (empty($array)) {
+            return "";
         }
 
         return base64_encode(json_encode($array));
@@ -117,7 +151,10 @@ class PagingRequest
     {
         try {
             $values = self::decodeCursorToArray($cursor);
-            $self = new self($values['conditions'], $values['pointer'], $values['order']);
+            $self = new self(
+                $values['conditions'] ?? [],
+                $values['pointer'] ?? [],
+                $values['order'] ?? []);
         } catch (RuntimeException $e) {
             throw $e;
         }
@@ -139,14 +176,14 @@ class PagingRequest
             throw new InvalidArgumentException("Cursor can't be empty");
         }
         $decodedString = base64_decode($cursor);
-        if ($decodedString === false || empty($decodedString)) {
+        if (empty($decodedString)) {
             throw new RuntimeException("Failed in parsing cursor from base64 encoding");
         }
-        $jsonDecodedString = json_decode($decodedString, true);
-        if ($jsonDecodedString === false || empty($jsonDecodedString)) {
+        $pagingRequest = json_decode($decodedString, true);
+        if (empty($pagingRequest)) {
             throw new RuntimeException("Failed in parsing cursor from json");
         }
-        return $jsonDecodedString;
+        return $pagingRequest;
     }
 
     /**
@@ -195,20 +232,40 @@ class PagingRequest
      * @param string $key
      * @param string $operator
      * @param mixed  $value
+     *
+     * @return bool True on successful addition
      */
-    public function addPointer(string $key, string $operator = '<', $value)
+    public function addPointer(string $key, string $operator, $value): bool
     {
-        $this->pointerValues[$key] = [$operator, $value];
+        return $this->pointerTree->addPointer([$key, $operator, $value]);
     }
 
     /**
      * Overwrite current pointer with new one
      *
-     * @param array $pointer New pointer
+     * @param PointerTree $pointer New pointer
      */
-    public function setPointer(array $pointer)
+    public function setPointer(PointerTree $pointer)
     {
-        $this->pointerValues = $pointer;
+        $this->pointerTree = $pointer;
+    }
+
+    /**
+     * Get the first node containing pointer with given key
+     *
+     * @param string $key
+     *
+     * @return array
+     */
+    public function getPointer(string $key): array
+    {
+        $node = $this->pointerTree->searchTree($key);
+
+        if (empty($node) || $node->isEmpty()) {
+            return [];
+        } else {
+            return $node->getValue();
+        }
     }
 
     /**
@@ -248,30 +305,13 @@ class PagingRequest
     }
 
     /**
-     * Get all stored pointers
-     *
-     * @return array
-     */
-    public function getPointers()
-    {
-        return $this->pointerValues;
-    }
-
-    /**
      * Get all stored pointers in CakePHP SQL query condition format
      *
      * @return array
      */
     public function getPointersAsQueryOption()
     {
-        $result = array();
-
-        if (!empty ($this->pointerValues)) {
-            foreach ($this->pointerValues as $key => $row) {
-                $result[] = "$key  $row[0]  $row[1]";
-            }
-        }
-        return $result;
+        return $this->pointerTree->toCondition();
     }
 
     /**
@@ -304,12 +344,7 @@ class PagingRequest
      */
     public function returnCursor()
     {
-        return ($this->isEmpty()) ? "" :
-            base64_encode(json_encode([
-                'conditions' => $this->conditions,
-                'pointer'    => $this->pointerValues,
-                'order'      => $this->order
-            ]));
+        return self::createPageCursor($this->conditions, $this->pointerTree, $this->order);
     }
 
     /**
