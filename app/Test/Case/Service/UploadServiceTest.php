@@ -1,9 +1,12 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('UploadService', 'Service');
 App::import('Service', 'UploadService');
 App::import('Lib/Upload', 'UploadedFile');
 App::import('Lib/Storage/Client', 'BufferStorageClient');
 App::import('Lib/Storage/Client', 'AssetsStorageClient');
+
+use Mockery as mock;
 
 /**
  * Created by PhpStorm.
@@ -25,22 +28,22 @@ class UploadServiceTest extends GoalousTestCase
         'app.local_name'
     ];
 
-    public function test_addFileToBuffer_success()
+    public function test_bufferFile_success()
     {
+        $returnValue = "1234567890abcd.12345678";
+
+        $bufferClient = mock::mock('BufferStorageClient');
+
+        $bufferClient->shouldReceive('save')
+                     ->once()
+                     ->andReturn($returnValue);
+
+        ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
+
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
+        $mocked = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
 
-        $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
-
-        $this->assertNotEmpty($uuid);
-        $this->assertInternalType('string', $uuid);
-        $this->assertEquals(1, preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid));
-
-        $uploader = new BufferStorageClient(1, 1);
-        $file = $uploader->get($uuid);
-
-        $this->assertEquals($uuid, $file->getUUID());
-        $this->assertEquals($this->getTestFileData(), $file->getEncodedFile());
-        $this->assertEquals($this->getTestFileName(), $file->getFileName());
+        $this->assertEquals($returnValue, $mocked);
     }
 }

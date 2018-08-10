@@ -6,8 +6,13 @@
  * Time: 15:09
  */
 
-class UploadedFile extends SplFileInfo
+class UploadedFile
 {
+    /**
+     * Regexp for the UUID
+     */
+    const UUID_REGEXP = "/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/";
+
     /**
      * Binary data of the file
      *
@@ -55,7 +60,7 @@ class UploadedFile extends SplFileInfo
     /**
      * File name
      *
-     * @var
+     * @var string
      */
     private $fileName;
 
@@ -69,7 +74,7 @@ class UploadedFile extends SplFileInfo
     public function __construct(string $encodedFile, string $fileName, bool $skipDecoding = false)
     {
         if (empty($encodedFile) || empty($fileName)) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException("File name & file data must exist");
         }
         $this->decodeFile($encodedFile, $skipDecoding);
         if (!$skipDecoding) {
@@ -138,11 +143,20 @@ class UploadedFile extends SplFileInfo
 
     public function withUUID(string $uuid): self
     {
+        if (preg_match(self::UUID_REGEXP, $uuid) == 0) {
+            throw new InvalidArgumentException("Invalid UUID format");
+        }
         $this->uuid = $uuid;
         return $this;
     }
 
-    private function decodeFile(string $encodedFile, bool $skipDecoding)
+    /**
+     * Decode a base64 encoded file into binary file
+     *
+     * @param string $encodedFile
+     * @param bool   $skipDecoding If the input file is already in binary form,
+     */
+    private function decodeFile(string $encodedFile, bool $skipDecoding = false)
     {
         if (empty($encodedFile)) {
             throw new InvalidArgumentException("File can't be empty");
@@ -173,5 +187,44 @@ class UploadedFile extends SplFileInfo
         $this->size = strlen($rawFile);
 
         $this->uuid = uniqid("", true);
+    }
+
+    /**
+     * Package file into JSON formatted string
+     *
+     * @return string JSON encoded array
+     */
+    public function toJSON(): string
+    {
+        $array['file_name'] = $this->getFileName();
+        $array['file_data'] = $this->getEncodedFile();
+
+        $json = json_encode($array);
+
+        if (empty($json)) {
+            throw new RuntimeException("Failed to encode file to JSON");
+        }
+        return $json;
+    }
+
+    /**
+     * Create UploadedFile from JSON formatted string
+     *
+     * @param string $jsonEncoded
+     *
+     * @return UploadedFile
+     */
+    public static function generate(string $jsonEncoded): self
+    {
+        if (empty($jsonEncoded)) {
+            throw new InvalidArgumentException("JSON string cannot be empty");
+        }
+
+        $array = json_decode($jsonEncoded, true);
+
+        if (empty($array['file_data']) || empty ($array['file_name'])) {
+            throw new RuntimeException("Failed to decode JSON to file");
+        }
+        return new UploadedFile($array['file_data'], $array['file_name']);
     }
 }

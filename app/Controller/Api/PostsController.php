@@ -199,8 +199,7 @@ class PostsController extends BasePagingController
 
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have access to this post"))->getResponse();
-
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))->getResponse();
         }
 
         return null;

@@ -15,8 +15,18 @@ use Goalous\Exception as GlException;
 
 class BufferStorageClient extends BaseStorageClient implements StorageClient
 {
+    /**
+     * Current user ID
+     *
+     * @var int
+     */
     private $userId;
 
+    /**
+     * Current team ID
+     *
+     * @var int
+     */
     private $teamId;
 
     public function __construct(int $userId, int $teamId)
@@ -40,10 +50,10 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
         $key = $this->sanitize($key);
 
         try {
-            $this->upload(AWS_S3_BUCKET_TMP, $key, $this->package($file), "application/json");
+            $this->upload(AWS_S3_BUCKET_TMP, $key, $file->toJSON(), "application/json");
         } catch (S3Exception $exception) {
             GoalousLog::error("Failed saving to S3. Team: $this->teamId, User: $this->userId, File:" . $file->getFileName());
-            throw new RuntimeException("Failed saving to S3");
+            throw new GlException\Storage\Upload\UploadFailedException("Failed saving to S3");
         }
 
         return $file->getUUID();
@@ -80,24 +90,17 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
                 'Key'    => $key,
             ]);
         } catch (S3Exception $exception) {
-            throw new RuntimeException();
+            throw new RuntimeException($exception->getMessage());
         }
 
         if (empty($response['Body'])) {
             throw new GlException\GoalousNotFoundException();
         }
+
         /** @var GuzzleHttp\Psr7\Stream $data */
         $data = $response['Body'];
 
-        $dataArray = json_decode($data->getContents(), true);
-
-        if (empty($dataArray)) {
-            throw new RuntimeException();
-        }
-
-        $file = (new UploadedFile($dataArray['file_data'], $dataArray['file_name']))->withUUID($uuid);
-
-        return $file;
+        return UploadedFile::generate($data->getContents());
     }
 
     /**

@@ -19,6 +19,21 @@ use Goalous\Exception\Storage\Upload as UploadException;
 class UploadService extends AppService
 {
     /**
+     * @param $userId
+     * @param $teamId
+     *
+     * @return BufferStorageClient
+     */
+    private function getBufferStorageClient($userId, $teamId): BufferStorageClient
+    {
+        $registeredClient = ClassRegistry::getObject(BufferStorageClient::class);
+        if ($registeredClient instanceof BufferStorageClient) {
+            return $registeredClient;
+        }
+        return new BufferStorageClient($userId, $teamId);
+    }
+
+    /**
      * Add a file into buffer
      *
      * @param int    $userId
@@ -33,20 +48,12 @@ class UploadService extends AppService
         $uploadedFile = new UploadedFile($encodedFile, $fileName);
 
         try {
-            if (!UploadValidator::validate($uploadedFile)) {
-                throw new UploadException\UploadFailedException();
-            }
-        } catch (UploadException\UploadTypeException $uploadTypeException) {
-            throw new InvalidArgumentException();
-        } catch (UploadException\UploadSizeException $uploadSizeException) {
-            throw new InvalidArgumentException(__("%sMB is the limit.",
-                UploadValidator::MAX_FILE_SIZE));
-        } catch (UploadException\UploadResolutionException $uploadResolutionException) {
-            throw new InvalidArgumentException(__("%s pixels is the limit.",
-                number_format(UploadImageValidator::MAX_PIXELS / 1000000)));
+            UploadValidator::validate($uploadedFile);
+        } catch (UploadException\UploadValidationException $uploadValidationException) {
+            throw new InvalidArgumentException($uploadValidationException->getMessage());
         }
 
-        $uploader = new BufferStorageClient($userId, $teamId);
+        $uploader = $this->getBufferStorageClient($userId, $teamId);
 
         return $uploader->save($uploadedFile);
     }
@@ -58,11 +65,11 @@ class UploadService extends AppService
      * @param int $teamId
      * @param     $uuid $key 13 char HEX UUID
      *
-     * @return UploadedFile |null
+     * @return UploadedFile
      */
-    public function getBuffer(int $userId, int $teamId, string $uuid)
+    public function getBuffer(int $userId, int $teamId, string $uuid): UploadedFile
     {
-        if (preg_match("/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/", $uuid) == 0) {
+        if (preg_match(UploadedFile::UUID_REGEXP, $uuid) == 0) {
             throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 
