@@ -14,6 +14,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * @param int $httpStatusCode
+     *
      * @return self
      */
     private static function createResponse(int $httpStatusCode): self
@@ -23,6 +24,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Create response 400
+     *
      * @return self
      */
     public static function badRequest(): self
@@ -32,6 +34,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Create response 401
+     *
      * @return self
      */
     public static function unauthorized(): self
@@ -41,6 +44,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Create response 403
+     *
      * @return self
      */
     public static function forbidden(): self
@@ -50,6 +54,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Create response 404
+     *
      * @return self
      */
     public static function notFound(): self
@@ -59,6 +64,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Create response 409
+     *
      * @return self
      */
     public static function resourceConflict(): self
@@ -68,13 +74,13 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Create response 500
+     *
      * @return self
      */
     public static function internalServerError(): self
     {
         return self::createResponse(self::RESPONSE_INTERNAL_SERVER_ERROR);
     }
-
 
     /**
      * @var AbstractErrorType[]
@@ -100,6 +106,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * @param \Respect\Validation\Exceptions\AllOfException $exception
+     *
      * @return $this
      */
     public function addErrorsFromValidationException(\Respect\Validation\Exceptions\AllOfException $exception): self
@@ -156,11 +163,13 @@ class ErrorResponse extends BaseApiResponse
     public function withException(Throwable $throwable)
     {
         if (!in_array(ENV_NAME, [
-            'local', 'dev'
+            'local',
+            'dev'
         ])) {
             return $this;
         }
-        $message = sprintf('%s: %s on %s line %s code %s', get_class($throwable), $throwable->getMessage(), $throwable->getFile(), $throwable->getLine(), $throwable->getCode());
+        $message = sprintf('%s: %s on %s line %s code %s', get_class($throwable), $throwable->getMessage(),
+            $throwable->getFile(), $throwable->getLine(), $throwable->getCode());
         $trace = explode(PHP_EOL, $throwable->getTraceAsString());
         return $this
             ->withError(new ErrorTypeGlobal($message))
@@ -179,6 +188,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Returning error format response body by array
+     *
      * @return array
      */
     private function getBody(): array
@@ -186,7 +196,7 @@ class ErrorResponse extends BaseApiResponse
         $exceptionTrace = !empty($this->_responseBody['exception_trace']) ? ['trace' => $this->_responseBody['exception_trace']] : [];
         return array_merge([
             'message' => $this->getMainMessage(),
-            'errors' => array_map(function(AbstractErrorType $error) {
+            'errors'  => array_map(function (AbstractErrorType $error) {
                 return $error->toArray();
             }, $this->errors),
         ], $exceptionTrace);
@@ -194,6 +204,7 @@ class ErrorResponse extends BaseApiResponse
 
     /**
      * Solve main message of error response
+     *
      * @return string
      */
     private function getMainMessage(): string
