@@ -15,6 +15,7 @@ App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 
 use Goalous\Enum as Enum;
+use Mockery as mock;
 
 /**
  */
@@ -691,6 +692,21 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_saveFileInPostAdd_success()
     {
+        //Mock storage clients
+        $bufferClient = mock::mock('BufferStorageClient');
+        $bufferClient->shouldReceive('get')->withAnyArgs()
+                     ->atLeast()->once()
+                     ->andReturn(new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a"));
+        $bufferClient->shouldReceive('save')->withAnyArgs()
+                     ->atLeast()->once()
+                     ->andReturn("1234567890abcd.12345678");
+        ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
+
+        $assetsClient = mock::mock('AssetsStorageClient');
+        $assetsClient->shouldReceive('save')->withAnyArgs()
+                     ->atLeast()->once()->andReturn(true);
+        ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
+
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
         /** @var UploadService $UploadService */
