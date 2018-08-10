@@ -713,7 +713,7 @@ class PostServiceTest extends GoalousTestCase
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
 
-        $uuid = $UploadService->buffer(1, 1, $this->testEncodedFileData, $this->testFileName);
+        $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
         $newPostData = [
             'body' => sprintf('body text %s', time()),
             'type' => 1
