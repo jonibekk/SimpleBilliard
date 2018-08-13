@@ -20,7 +20,7 @@ class PagingRequest
      * DB query ordering
      *
      * @var array
-     *      ['$column_name'] => 'ASC/DESC'
+     *      ['$column_name => 'ASC'/'DESC']
      */
     private $order = [];
 
@@ -93,7 +93,13 @@ class PagingRequest
         }
 
         if (!empty($order)) {
-            $this->order = $order;
+            foreach ($order as $key => $value) {
+                if (is_numeric($key)) {
+                    $this->order[] = $value;
+                } else {
+                    $this->order[] = [$key => $value];
+                }
+            }
         }
     }
 
@@ -191,10 +197,17 @@ class PagingRequest
      *
      * @param string $key
      * @param string $order
+     *
+     * @return bool TRUE on successful addition
      */
-    public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC)
+    public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC): bool
     {
-        $this->order[$key] = $order;
+        //Each key can only be added once
+        if (!in_array($key, Hash::extract($this->order, '{n}.0'))) {
+            $this->order[] = [$key => $order];
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -294,13 +307,10 @@ class PagingRequest
     {
         $result = [];
 
-        if (empty($this->order)) {
-            return $result;
+        if (!empty($this->order)) {
+            $result = $this->order;
         }
 
-        foreach ($this->order as $key => $order) {
-            $result[] = [$key => $order];
-        }
         return $result;
     }
 
@@ -430,7 +440,6 @@ class PagingRequest
         //If not exist, return -1
         return Hash::get($this->resources, 'res_id', 0);
     }
-
 
     /**
      * Set resource ID in the URL

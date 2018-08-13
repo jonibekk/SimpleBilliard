@@ -18,7 +18,7 @@ class PagingRequestTest extends GoalousTestCase
         ];
 
         $pointer = ['count', '>', 100];
-        $order = ['count', 'asc'];
+        $order = ['count' => 'asc'];
 
         $encodedString = PagingRequest::createPageCursor($conditions, $pointer, $order);
 
