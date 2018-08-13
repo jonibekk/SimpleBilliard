@@ -131,8 +131,7 @@ class UploadedFile
     {
         //Remove file extension
         if ($omitExtension) {
-            $pointIndex = strrpos($this->fileName, '.');
-            return substr($this->fileName, 0, $pointIndex);
+            return pathinfo($this->fileName, PATHINFO_FILENAME);
         }
         return $this->fileName;
     }

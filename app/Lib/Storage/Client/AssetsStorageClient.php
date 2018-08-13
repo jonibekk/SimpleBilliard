@@ -119,7 +119,7 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
     }
 
     /**
-     * @param string $fileName File name without the extension.
+     * @param string $fileName File name
      * @param string $suffix
      * @param string $fileExt  If extension not given, assume filename is already hashed
      *
@@ -156,12 +156,7 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
      */
     protected function removeExtension(string $filename): string
     {
-        $lastDot = strrpos($filename, '.');
-        if ($lastDot === false) {
-            return $filename;
-        } else {
-            return substr($filename, 0, $lastDot);
-        }
+        return pathinfo($filename, PATHINFO_FILENAME);
     }
 
 }
