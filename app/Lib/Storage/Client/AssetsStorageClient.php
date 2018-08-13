@@ -159,4 +159,31 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         return pathinfo($filename, PATHINFO_FILENAME);
     }
 
+
+    /**
+     * Upload a file to S3
+     *
+     * @param string $bucket
+     * @param string $key
+     * @param string $body
+     * @param string $type
+     *
+     * @return mixed
+     */
+    protected function upload(string $bucket, string $key, string $body, string $type): bool
+    {
+        /**
+         * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#putobject
+         */
+        $response = $this->s3Instance->putObject([
+            'Bucket'               => $bucket,
+            'Key'                  => $key,
+            'Body'                 => $body,
+            'ContentType'          => $type,
+            'StorageClass'         => 'STANDARD',
+            'ServerSideEncryption' => 'AES256',
+            'ACL'                  => 'public-read',
+        ]);
+        return !empty($response);
+    }
 }
