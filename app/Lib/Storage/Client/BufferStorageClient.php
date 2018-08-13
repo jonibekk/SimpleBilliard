@@ -90,11 +90,15 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
                 'Key'    => $key,
             ]);
         } catch (S3Exception $exception) {
-            throw new RuntimeException($exception->getMessage());
+            if ($exception->getStatusCode() === 404) {
+                throw new GlException\GoalousNotFoundException("Cannot find buffered file");
+            } else {
+                throw new RuntimeException($exception->getMessage());
+            }
         }
 
         if (empty($response['Body'])) {
-            throw new GlException\GoalousNotFoundException();
+            throw new UnexpectedValueException("File body can't be empty");
         }
 
         /** @var GuzzleHttp\Psr7\Stream $data */
