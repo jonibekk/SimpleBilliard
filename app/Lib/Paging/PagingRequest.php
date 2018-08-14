@@ -20,7 +20,7 @@ class PagingRequest
      * DB query ordering
      *
      * @var array
-     *      ['$column_name => 'ASC'/'DESC']
+     *      [['id','DESC'], ['name' , 'ASC'], ...]
      */
     private $order = [];
 
@@ -95,9 +95,11 @@ class PagingRequest
         if (!empty($order)) {
             foreach ($order as $key => $value) {
                 if (is_numeric($key)) {
+                    //If $value is [[$key => $value]]
                     $this->order[] = $value;
                 } else {
-                    $this->order[] = [$key => $value];
+                    //If $value is [$key => $value]
+                    $this->order[] = [$key, $value];
                 }
             }
         }
@@ -203,8 +205,8 @@ class PagingRequest
     public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC): bool
     {
         //Each key can only be added once
-        if (!in_array($key, Hash::extract($this->order, '{n}.0'))) {
-            $this->order[] = [$key => $order];
+        if (!in_array($key,Hash::extract($this->order, '{n}.0'))) {
+            $this->order[] = [$key, $order];
             return true;
         }
         return false;
@@ -308,7 +310,9 @@ class PagingRequest
         $result = [];
 
         if (!empty($this->order)) {
-            $result = $this->order;
+            foreach ($this->order as $value){
+                $result[] = [$value[0] => $value[1]];
+            }
         }
 
         return $result;
