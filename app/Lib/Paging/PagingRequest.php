@@ -10,7 +10,7 @@ App::import('Lib/Paging', 'PointerTree');
  */
 class PagingRequest
 {
-    const DEFAULT_PAGE_LIMIT = 20;
+    const DEFAULT_PAGE_LIMIT = 7;
     const MAX_PAGE_LIMIT = 100;
 
     const PAGE_ORDER_ASC = 'asc';

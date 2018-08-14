@@ -421,8 +421,9 @@ class CircleMember extends AppModel
         return (bool)$this->save($options);
     }
 
-    function isBelong($circleId, $userId = null)
+    function isBelong($circleId, $userId = null, $teamId = null)
     {
+        $teamId = !empty($teamId) ? $teamId : $this->current_team_id;
         if (!$userId) {
             $userId = $this->my_uid;
         }
@@ -430,7 +431,7 @@ class CircleMember extends AppModel
             'conditions' => [
                 'user_id'   => $userId,
                 'circle_id' => $circleId,
-                'team_id'   => $this->current_team_id,
+                'team_id'   => $teamId,
             ]
         ];
         $res = $this->find('first', $options);
