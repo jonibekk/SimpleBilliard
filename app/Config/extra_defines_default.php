@@ -10,6 +10,9 @@
 if (file_exists(APP . 'Config/extra_defines.php')) {
     require_once(APP . 'Config/extra_defines.php');
 }
+if (!empty(getenv(CI_TEST))){
+    require_once(APP . 'Config/extra_defines_travis.php');
+}
 // https://confluence.goalous.com/x/Z4LT
 // $defines will be define(key,value);
 $defines = [
