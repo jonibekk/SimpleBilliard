@@ -18,7 +18,7 @@ class PagingRequestTest extends GoalousTestCase
         ];
 
         $pointer = ['count', '>', 100];
-        $order = ['count', 'asc'];
+        $order = ['count' => 'asc'];
 
         $encodedString = PagingRequest::createPageCursor($conditions, $pointer, $order);
 
@@ -73,5 +73,24 @@ class PagingRequestTest extends GoalousTestCase
         } catch (Exception $e) {
             $this->fail();
         }
+    }
+
+    public function test_addingOrder_success()
+    {
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->addOrder('id');
+        $this->assertEquals([['id' => 'desc']], $pagingRequest->getOrders());
+
+        $this->assertTrue($pagingRequest->addOrder('a'));
+        $this->assertCount(2, $pagingRequest->getOrders());
+        $this->assertEquals('a', key($pagingRequest->getOrders()[1]));
+        $this->assertEquals('id', key($pagingRequest->getOrders()[0]));
+
+        $this->assertFalse($pagingRequest->addOrder('a'));
+        $this->assertCount(2, $pagingRequest->getOrders());
+
+        $this->assertTrue($pagingRequest->addOrder('b'));
+        $this->assertCount(3, $pagingRequest->getOrders());
+        $this->assertEquals('b', key($pagingRequest->getOrders()[2]));
     }
 }
