@@ -1885,7 +1885,7 @@ class TeamMemberTest extends GoalousTestCase
         $convert_data = $this->TeamMember->convertMemberData($res);
         $this->assertEquals($group_name, $convert_data[0]['TeamMember']['group_name']);
         $this->assertFalse($convert_data[0]['User']['two_step_flg']);
-        $this->assertEquals('/img/no-image-user.jpg', $convert_data[0]['User']['img_url']);
+        $this->assertContains('/img/no-image-user.jpg', $convert_data[0]['User']['img_url']);
         $this->assertArrayHasKey('coach_name', $convert_data[0]['TeamMember']);
     }
 
