@@ -28,6 +28,7 @@ class MeController extends BasePagingController
         }
         try {
             $pagingRequest = $this->getPagingParameters();
+            $pagingRequest->addCondition(['public_only' => false]);
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
