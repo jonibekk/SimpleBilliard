@@ -66,7 +66,7 @@ class CirclesController extends BasePagingController
 
         //Check if circle belongs to current team & user has access to the circle
         if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) ||
-            ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId()))) {
+            ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId(), $this->getTeamId()))) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
                                 ->getResponse();
         }
