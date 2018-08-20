@@ -14,6 +14,13 @@ class UploadedFile
     const UUID_REGEXP = "/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/";
 
     /**
+     * Regexp for the base64 with header
+     * @see here for base64 format
+     * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+     */
+    const BASE64_REGEXP = "/^(data:?([^;]+\/[^,;]+)?(;base64)?,)?(.+)$/";
+
+    /**
      * Binary data of the file
      *
      * @var string
@@ -167,13 +174,20 @@ class UploadedFile
         if ($skipDecoding) {
             $rawFile = $encodedFile;
         } else {
-            $rawFile = base64_decode($encodedFile, true);
+            $match = [];
+            preg_match(self::BASE64_REGEXP, $encodedFile, $match);
+            if (empty($match)) {
+                GoalousLog::error("Failed matching base64 regex");
+                throw new RuntimeException("Failed to decode string to file");
+            }
+            unset($encodedFile);
+            $rawFile = base64_decode($match[4], true);
+            unset($match);
             if (empty($rawFile)) {
                 GoalousLog::error("Failed to decode string to file");
                 throw new RuntimeException("Failed to decode string to file");
             }
         }
-        unset($encodedFile);
         $this->binaryFile = $rawFile;
 
         $fInfo = new finfo();

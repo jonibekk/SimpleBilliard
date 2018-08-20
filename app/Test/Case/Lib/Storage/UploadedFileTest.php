@@ -55,6 +55,12 @@ class UploadedFileTest extends GoalousTestCase
         $this->fail();
     }
 
+    public function test_decodingWithHeaderSuccess()
+    {
+        $file = new UploadedFile($this->getTestFileDataBase64WithHeader(), $this->getTestFileName());
+        $this->assertInstanceOf(UploadedFile::class, $file);
+    }
+
     public function test_removeFileExtension_success()
     {
         $filename = "test.png";
