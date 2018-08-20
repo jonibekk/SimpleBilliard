@@ -1,6 +1,7 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 App::uses('UploadBehavior', 'Model/Behavior');
+App::uses('Security', 'Utility');
 
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.

@@ -6,10 +6,11 @@ class DATABASE_CONFIG
     public $default = array(
         'datasource' => 'Database/Mysql',
         'persistent' => false,
-        'host'       => 'localhost',
-        'login'      => 'root',
-        'password'   => '',
-        'database'   => 'myapp',
+        'host'       => 'db',
+        'login'      => 'goalous',
+        'password'   => 'password',
+        'database'   => 'goalous',
+        'port'       => '3306',
         'encoding'   => 'utf8mb4',
     );
 
@@ -19,21 +20,14 @@ class DATABASE_CONFIG
         'database'   => ':memory:',
         'prefix'     => '',
         'encoding'   => 'utf8mb4',
-
-        //        'datasource' => 'Database/Mysql',
-        //        'persistent' => false,
-        //        'host'       => 'localhost',
-        //        'login'      => 'root',
-        //        'password'   => '',
-        //        'database'   => 'myapp_test',
     );
 
     public $bench = array(
         'datasource' => 'Database/Mysql',
         'persistent' => false,
-        'host'       => 'localhost',
-        'login'      => 'root',
-        'password'   => '',
+        'host'       => 'db',
+        'login'      => 'goalous',
+        'password'   => 'password',
         'database'   => 'myapp_bench',
         'encoding'   => 'utf8mb4',
     );
@@ -82,10 +76,13 @@ class DATABASE_CONFIG
         if (isset($this->redis_test)) {
             $this->redis_test['prefix'] = ENV_NAME . ":" . $this->redis_test['prefix'];
         }
+
+        // TODO: Delete after everyone succeeded to build local with Docker
+        // This is necessary for just Vagrant env. this might become unnecessary for Docker env
         //localの場合は、socket接続がうまくいかないので。。
-        if(ENV_NAME == 'local'){
-            $this->default['unix_socket'] = '/var/run/mysqld/mysqld.sock';
-        }
+//        if(ENV_NAME == 'local'){
+//            $this->default['unix_socket'] = '/var/run/mysqld/mysqld.sock';
+//        }
 
         // Selenium経由の場合defaultを参照するのでIPで振り分ける
         // 仮想環境経由:192.168.50.1, ローカル環境経由:127.0.0.1

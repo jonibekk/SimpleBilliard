@@ -396,7 +396,7 @@ class GlEmailComponent extends Component
     {
         $set_web_env = "";
         $nohup = "nohup ";
-        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        $php = 'php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
         $cmd = " Operation.send_mail {$method_name}";
