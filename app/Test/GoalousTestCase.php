@@ -1141,6 +1141,11 @@ class GoalousTestCase extends CakeTestCase
         return base64_encode($rawFile);
     }
 
+    protected function getTestFileDataBase64WithHeader(): string
+    {
+        return 'data:image/png;base64,' . $this->getTestFileData();
+    }
+
     /**
      * Get test file name
      *

@@ -41,9 +41,10 @@ class PostsController extends BasePagingController
         $post['type'] = Hash::get($this->getRequestJsonBody(), 'type');
 
         $circleId = Hash::get($this->getRequestJsonBody(), 'circle_id');
+        $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids');
 
         try {
-            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId());
+            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIDs);
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {

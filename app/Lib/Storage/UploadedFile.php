@@ -14,6 +14,13 @@ class UploadedFile
     const UUID_REGEXP = "/[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}/";
 
     /**
+     * Regexp for the base64 with header
+     * @see here for base64 format
+     * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+     */
+    const BASE64_REGEXP = "/^(data:?([^;]+\/[^,;]+)?(;base64)?,)?(.+)$/";
+
+    /**
      * Binary data of the file
      *
      * @var string
@@ -76,6 +83,7 @@ class UploadedFile
         if (empty($encodedFile) || empty($fileName)) {
             throw new InvalidArgumentException("File name & file data must exist");
         }
+
         $this->decodeFile($encodedFile, $skipDecoding);
         if (!$skipDecoding) {
             $this->encodedFile = $encodedFile;
@@ -126,8 +134,12 @@ class UploadedFile
         return $this->metadata;
     }
 
-    public function getFileName(): string
+    public function getFileName(bool $omitExtension = false): string
     {
+        //Remove file extension
+        if ($omitExtension) {
+            return pathinfo($this->fileName, PATHINFO_FILENAME);
+        }
         return $this->fileName;
     }
 
@@ -141,7 +153,6 @@ class UploadedFile
         if (preg_match(self::UUID_REGEXP, $uuid) == 0) {
             throw new InvalidArgumentException("Invalid UUID format");
         }
-
         $this->uuid = $uuid;
         return $this;
     }
@@ -151,6 +162,8 @@ class UploadedFile
      *
      * @param string $encodedFile
      * @param bool   $skipDecoding If the input file is already in binary form,
+     *
+     * @throws Exception
      */
     private function decodeFile(string $encodedFile, bool $skipDecoding = false)
     {
@@ -161,7 +174,15 @@ class UploadedFile
         if ($skipDecoding) {
             $rawFile = $encodedFile;
         } else {
-            $rawFile = base64_decode($encodedFile, true);
+            $match = [];
+            preg_match(self::BASE64_REGEXP, $encodedFile, $match);
+            if (empty($match)) {
+                GoalousLog::error("Failed matching base64 regex");
+                throw new RuntimeException("Failed to decode string to file");
+            }
+            unset($encodedFile);
+            $rawFile = base64_decode($match[4], true);
+            unset($match);
             if (empty($rawFile)) {
                 GoalousLog::error("Failed to decode string to file");
                 throw new RuntimeException("Failed to decode string to file");
@@ -209,6 +230,7 @@ class UploadedFile
      * @param string $jsonEncoded
      *
      * @return UploadedFile
+     * @throws Exception
      */
     public static function generate(string $jsonEncoded): self
     {
@@ -217,6 +239,7 @@ class UploadedFile
         }
 
         $array = json_decode($jsonEncoded, true);
+        unset($jsonEncoded);
 
         if (empty($array['file_data']) || empty ($array['file_name'])) {
             throw new RuntimeException("Failed to decode JSON to file");

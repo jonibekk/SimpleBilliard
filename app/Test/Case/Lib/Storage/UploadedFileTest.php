@@ -54,4 +54,21 @@ class UploadedFileTest extends GoalousTestCase
         //If exception not thrown, fail the test
         $this->fail();
     }
+
+    public function test_decodingWithHeaderSuccess()
+    {
+        $file = new UploadedFile($this->getTestFileDataBase64WithHeader(), $this->getTestFileName());
+        $this->assertInstanceOf(UploadedFile::class, $file);
+    }
+
+    public function test_removeFileExtension_success()
+    {
+        $filename = "test.png";
+        $file = new UploadedFile($this->getTestFileData(), $filename);
+        $this->assertEquals($filename, $file->getFileName());
+        $this->assertEquals('test', $file->getFileName(true));
+
+        $file1 = new UploadedFile($this->getTestFileData(), 'test.test.png');
+        $this->assertEquals('test.test', $file1->getFileName(true));
+    }
 }
