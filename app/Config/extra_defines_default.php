@@ -10,7 +10,7 @@
 if (file_exists(APP . 'Config/extra_defines.php')) {
     require_once(APP . 'Config/extra_defines.php');
 }
-if (!empty(getenv(CI_TEST))){
+if (defined('CI_TEST') && !empty(getenv(CI_TEST))){
     require_once(APP . 'Config/extra_defines_travis.php');
 }
 // https://confluence.goalous.com/x/Z4LT
