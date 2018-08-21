@@ -63,21 +63,21 @@ class ImageRotateProcessor extends BaseImageProcessor
         $exif = $this->readExif($file);
         $orientation = !empty($exif['Orientation']) ? $exif['Orientation'] : 1;
         switch ($orientation) {
-            case 1: //通常
+            case 1: //Normal
                 return [0, false];
-            case 2: //左右反転
+            case 2: //Flipped left-right
                 return [0, true];
-            case 3: //180°回転
+            case 3: //Rotated 180°
                 return [180, false];
-            case 4: //上下反転
+            case 4: //Flipped up-down
                 return [180, true];
-            case 5: //反時計回りに90°回転 上下反転
+            case 5: //Rotated 90° counter-clockwise, flipped up-down
                 return [270, true];
-            case 6: //反時計回りに90°回転
+            case 6: //Rotated 90° counter-clockwise,
                 return [270, false];
-            case 7: //　時計回りに90°回転 上下反転
+            case 7: //Rotated 90° clockwise, flipped up-down
                 return [90, true];
-            case 8: //時計回りに90°回転
+            case 8: //Rotated 90° clockwise
                 return [90, false];
             default:
                 throw new UnexpectedValueException("Unknown orientation value");
