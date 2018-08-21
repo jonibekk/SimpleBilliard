@@ -3,7 +3,7 @@ App::uses('ExceptionRenderer', 'Error');
 App::uses('ErrorResponse', 'Lib/Network/Response');
 
 /**
- * Class AppExceptionRenderer
+ * Class ApiV2ExceptionRenderer
  */
 class ApiV2ExceptionRenderer extends ExceptionRenderer
 {
