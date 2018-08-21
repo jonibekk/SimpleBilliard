@@ -15,6 +15,7 @@ class UploadedFile
 
     /**
      * Regexp for the base64 with header
+     *
      * @see here for base64 format
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
      */
@@ -85,6 +86,7 @@ class UploadedFile
         }
 
         $this->decodeFile($encodedFile, $skipDecoding);
+
         if (!$skipDecoding) {
             $this->encodedFile = $encodedFile;
         }
@@ -126,6 +128,9 @@ class UploadedFile
 
     public function getUUID(): string
     {
+        if (empty($this->uuid)) {
+            $this->uuid = uniqid("", true);
+        }
         return $this->uuid;
     }
 
@@ -200,10 +205,21 @@ class UploadedFile
         $this->metadata = $fInfo->buffer($rawFile);
         $this->type = $type;
         $this->fileExt = $fileExt;
-
         $this->size = strlen($rawFile);
+    }
 
-        $this->uuid = uniqid("", true);
+    /**
+     * Overwrite binary
+     *
+     * @param string $binaryFile
+     *
+     * @throws Exception
+     */
+    public function setBinaryFile(string $binaryFile)
+    {
+        $this->binaryFile = $binaryFile;
+        unset($this->encodedFile);
+        $this->size = strlen($binaryFile);
     }
 
     /**

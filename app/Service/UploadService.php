@@ -1,7 +1,8 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Lib/Upload', 'UploadedFile');
-App::import('Lib/Storage/Processor', 'UploadProcessor');
+App::import('Lib/Storage/Processor/Image', 'ImageRotateProcessor');
+App::import('Lib/Storage/Processor/Image', 'ImageResizeProcessor');
 App::import('Lib/Storage/Client', 'BufferStorageClient');
 App::import('Lib/Storage/Client', 'AssetsStorageClient');
 App::import('Validator/Lib/Storage', 'UploadValidator');
@@ -108,6 +109,53 @@ class UploadService extends AppService
         $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
 
         return $assetStorageClient->save($file, $suffix);
+    }
+
+    /**
+     * Pre-process files before saving to S3
+     *
+     * @param string       $modelName      Model which the file belongs to
+     * @param int          $modelId        Model ID
+     * @param string       $uploadCategory File category as written in Model's actAs array
+     *                                     E.g. photo, attached, etc.
+     * @param UploadedFile $file           File to upload
+     *
+     * @return bool TRUE on successful upload
+     */
+    public function saveWithProcessing(
+        string $modelName,
+        int $modelId,
+        string $uploadCategory,
+        UploadedFile $file
+    ): bool {
+        /** @var AppModel $Model */
+        $Model = ClassRegistry::init($modelName);
+
+        $uploadConfig = $Model->actsAs['Upload'][$uploadCategory];
+
+        if (empty($uploadConfig)) {
+            throw new InvalidArgumentException("Upload style doesn't exist");
+        }
+
+        $this->save($modelName, $modelId, $file, "_original");
+
+        if ($file->getFileType() == 'image') {
+
+            $ImageRotateProcessor = new ImageRotateProcessor();
+            $ImageResizeProcessor = new ImageResizeProcessor();
+
+            $styles = Hash::get($uploadConfig, 'styles', []);
+            $quality = Hash::get($uploadConfig, 'quality');
+
+            foreach ($styles as $style => $geometry) {
+                $currentFile = $ImageRotateProcessor->process($file);
+                $currentFile = $ImageResizeProcessor->process($currentFile, $geometry, $quality);
+                $this->save($modelName, $modelId, $currentFile, "_" . $style);
+                unset($currentFile);
+            }
+        }
+
+        return true;
     }
 
     /**

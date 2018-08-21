@@ -5,6 +5,8 @@ App::import('Service', 'UploadService');
 App::import('Lib/Upload', 'UploadedFile');
 App::import('Lib/Storage/Client', 'BufferStorageClient');
 App::import('Lib/Storage/Client', 'AssetsStorageClient');
+App::import('Lib/Storage/Processor/Image', 'ImageRotateProcessor');
+App::import('Lib/Storage/Processor/Image', 'ImageResizeProcessor');
 
 use Mockery as mock;
 
@@ -59,11 +61,29 @@ class UploadServiceTest extends GoalousTestCase
 
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
-
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
         $result = $UploadService->save("Aaa", 1, new UploadedFile("as", "as"), "lala");
 
         $this->assertTrue($result);
+    }
+
+    public function test_processImage_success()
+    {
+        $sourceFile = new UploadedFile($this->getTestFileData(), $this->getTestFileName());
+        $ImageRotateProcessor = new ImageRotateProcessor();
+        $ImageResizeProcessor = new ImageResizeProcessor();
+
+        $file = $ImageResizeProcessor->process($sourceFile, "[1000x1000]");
+        $file = $ImageRotateProcessor->process($file);
+
+        list($xLength, $yLength) = getimagesizefromstring($file->getBinaryFile());
+        list($res, $flip) = $ImageRotateProcessor->getRotation($file);
+        $this->assertEquals($res, 0);
+        $this->assertFalse($flip);
+        $this->assertEquals(1000, $xLength);
+        $this->assertEquals(1000, $yLength);
+        $this->assertEquals($sourceFile->getFileName(), $file->getFileName());
+        $this->assertEquals($sourceFile->getMIME(), $file->getMIME());
     }
 }
