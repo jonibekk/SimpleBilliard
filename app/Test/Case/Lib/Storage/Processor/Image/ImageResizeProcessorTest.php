@@ -150,6 +150,6 @@ class ImageResizeProcessorTest extends GoalousTestCase
     {
         $ImageResizeProcessor = new ImageResizeProcessor();
         $sourceFile = $this->getFile();
-        $ImageResizeProcessor->process($sourceFile, "1000", -1);
+        $ImageResizeProcessor->process($sourceFile, "960w", -1);
     }
 }
