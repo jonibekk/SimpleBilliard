@@ -70,7 +70,8 @@ class UploadServiceTest extends GoalousTestCase
 
     public function test_processImage_success()
     {
-        $sourceFile = new UploadedFile($this->getTestFileData(), $this->getTestFileName());
+        $fileName = "Portrait_4.jpg";
+        $sourceFile = new UploadedFile($this->getTestFileData($fileName), $fileName);
         $ImageRotateProcessor = new ImageRotateProcessor();
         $ImageResizeProcessor = new ImageResizeProcessor();
 
