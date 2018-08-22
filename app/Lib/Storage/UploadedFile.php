@@ -217,9 +217,8 @@ class UploadedFile
      */
     public function setBinaryFile(string $binaryFile)
     {
-        $this->binaryFile = $binaryFile;
         unset($this->encodedFile);
-        $this->size = strlen($binaryFile);
+        $this->decodeFile($binaryFile, true);
     }
 
     /**
