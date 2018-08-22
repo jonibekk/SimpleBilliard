@@ -14,24 +14,38 @@ App::import('Validator/Lib/Storage', 'UploadImageValidator');
  * Time: 11:59
  */
 
-use Goalous\Exception as GlException;
 use Goalous\Exception\Storage\Upload as UploadException;
 
 class UploadService extends AppService
 {
     /**
-     * @param $userId
-     * @param $teamId
+     * @param int $userId
+     * @param int $teamId
      *
      * @return BufferStorageClient
      */
-    private function getBufferStorageClient($userId, $teamId): BufferStorageClient
+    private function getBufferStorageClient(int $userId, int $teamId): BufferStorageClient
     {
         $registeredClient = ClassRegistry::getObject(BufferStorageClient::class);
         if ($registeredClient instanceof BufferStorageClient) {
             return $registeredClient;
         }
         return new BufferStorageClient($userId, $teamId);
+    }
+
+    /**
+     * @param string $modelName
+     * @param int    $modelId
+     *
+     * @return AssetsStorageClient
+     */
+    private function getAssetsStorageClient(string $modelName, int $modelId): AssetsStorageClient
+    {
+        $registeredClient = ClassRegistry::getObject(AssetsStorageClient::class);
+        if ($registeredClient instanceof AssetsStorageClient) {
+            return $registeredClient;
+        }
+        return new AssetsStorageClient($modelName, $modelId);
     }
 
     /**
@@ -74,36 +88,41 @@ class UploadService extends AppService
             throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 
-        $uploader = new BufferStorageClient($userId, $teamId);
+        $uploader = $this->getBufferStorageClient($userId, $teamId);
 
         return $uploader->get($uuid);
     }
 
     /**
-     * Replace file UUID with actual file name
+     * Write file to main storage
      *
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $mainData
+     * @param string       $modelName
+     * @param int          $modelId
+     * @param UploadedFile $file
+     * @param string       $suffix
      *
      * @return bool
      */
-    public static function link(int $userId, int $teamId, array &$mainData): bool
+    public function save(string $modelName, int $modelId, UploadedFile $file, string $suffix = ""): bool
     {
-        //TODO GL-7171
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->save($file, $suffix);
     }
 
     /**
-     * Write the file to server
+     * Delete multiple objects based on same prefix
      *
-     * @param int    $userId
-     * @param int    $teamId
-     * @param string $file
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName Specific file name to delete
      *
      * @return bool
      */
-    private function save(int $userId, int $teamId, string $file): bool
+    public function deleteAsset(string $modelName, int $modelId, string $fileName = ""): bool
     {
-        //TODO GL-7171
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->delete($fileName);
     }
 }

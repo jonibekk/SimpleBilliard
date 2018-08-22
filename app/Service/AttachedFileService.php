@@ -13,6 +13,10 @@ App::uses('GlRedis', 'Model');
 /**
  * Class AttachedFileService
  */
+
+use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+
 class AttachedFileService extends AppService
 {
     // アップロード種別
@@ -187,4 +191,69 @@ class AttachedFileService extends AppService
         return $ret;
     }
 
+    /**
+     * Add a new attached file
+     *
+     * @param int               $userId
+     * @param int               $teamId
+     * @param UploadedFile      $file
+     * @param AttachedModelType $modelType
+     * @param bool              $displayFileList
+     * @param bool              $removable
+     *
+     * @return AttachedFileEntity
+     * @throws Exception
+     */
+    public function add(
+        int $userId,
+        int $teamId,
+        UploadedFile $file,
+        AttachedModelType $modelType,
+        bool $displayFileList = true,
+        bool $removable = true
+    ): AttachedFileEntity {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        switch ($file->getFileType()) {
+            case "image" :
+                $fileType = AttachedFileType::TYPE_FILE_IMG;
+                break;
+            case "video" :
+                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
+                break;
+            default:
+                $fileType = AttachedFileType::TYPE_FILE_DOC;
+                break;
+        }
+
+        $newData = [
+            'user_id'               => $userId,
+            'team_id'               => $teamId,
+            'attached_file_name'    => $file->getFileName(),
+            'file_type'             => $fileType,
+            'file_ext'              => $file->getFileExt(),
+            'file_size'             => $file->getFileSize(),
+            'model_type'            => $modelType->getValue(),
+            'display_file_list_flg' => $displayFileList,
+            'removable_flg'         => $removable
+        ];
+
+        try {
+            $this->TransactionManager->begin();
+            $AttachedFile->create();
+            $result = $AttachedFile->useType()->useEntity()->save($newData, false);
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error($errorMessage = 'Failed saving attached files', [
+                'user.id'  => $userId,
+                'team.id'  => $teamId,
+                'filename' => $file->getFileName(),
+            ]);
+            throw new RuntimeException('Error on adding attached file: ' . $errorMessage);
+        }
+
+        return $result;
+    }
 }

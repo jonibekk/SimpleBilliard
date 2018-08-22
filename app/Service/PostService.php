@@ -1,5 +1,9 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PostFileService');
+App::import('Service', 'AttachedFileService');
+App::import('Service', 'UploadService');
+App::import('Lib/Upload', 'UploadedFile');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
 App::uses('User', 'Model');
@@ -11,9 +15,14 @@ App::uses('Post', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostDraft', 'Model');
 App::import('Model/Entity', 'PostEntity');
+App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
+App::import('Model/Entity', 'AttachedFileEntity');
+App::import('Model/Entity', 'PostFileEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 use Goalous\Exception as GlException;
 
 /**
@@ -381,19 +390,25 @@ class PostService extends AppService
     /**
      * Method to save a circle post
      *
-     * @param array $postBody
+     * @param array    $postBody
      *                   ["body" => '',
      *                   "type" => ''
      *                   ]
-     * @param int   $circleId
-     * @param int   $userId
-     * @param int   $teamId
+     * @param int      $circleId
+     * @param int      $userId
+     * @param int      $teamId
+     * @param string[] $fileIDs
      *
      * @return PostEntity Entity of saved post
      * @throws Exception
      */
-    public function addCirclePost(array $postBody, int $circleId, int $userId, int $teamId): PostEntity
-    {
+    public function addCirclePost(
+        array $postBody,
+        int $circleId,
+        int $userId,
+        int $teamId,
+        array $fileIDs = []
+    ): PostEntity {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
@@ -443,7 +458,7 @@ class PostService extends AppService
             if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
                 GoalousLog::error($errorMessage = 'failed saving post share circles', [
                     'posts.id'    => $postId,
-                    'circles.ids' => $postId,
+                    'circles.ids' => $circleId,
                     'teams.id'    => $teamId,
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
@@ -456,6 +471,11 @@ class PostService extends AppService
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
+            //Save attached files
+            if (!empty($fileIDs)) {
+                $this->saveFiles($postId, $userId, $teamId, $fileIDs);
+            }
+
             $this->TransactionManager->commit();
 
         } catch (Exception $e) {
@@ -556,11 +576,11 @@ class PostService extends AppService
      * Get list of attached files of a post
      *
      * @param int                                              $postId
-     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     * @param AttachedFileType                                 $type Filtered file type
      *
      * @return AttachedFileEntity[]
      */
-    public function getAttachedFiles(int $postId, Goalous\Enum\Model\AttachedFile\AttachedFileType $type = null): array
+    public function getAttachedFiles(int $postId, AttachedFileType $type = null): array
     {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -587,6 +607,62 @@ class PostService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    /**
+     * Save all attached files
+     *
+     * @param int   $postId
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $fileIDs
+     *
+     * @return bool
+     * @throws Exception
+     */
+    private function saveFiles(int $postId, int $userId, int $teamId, array $fileIDs): bool
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init('PostFileService');
+
+        $postFileIndex = 0;
+
+        $addedFiles = [];
+
+        try {
+            //Save attached files
+            foreach ($fileIDs as $id) {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
+                    AttachedModelType::TYPE_MODEL_POST());
+
+                $addedFiles[] = $attachedFile['id'];
+
+                $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
+
+                //TODO GL-7224
+                //For now, append required suffix for all images without resizing them
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_original");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_x_small");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_small");
+                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_large");
+            }
+        } catch (Exception $e) {
+            //If any error happened, remove uploaded file
+            foreach ($addedFiles as $id) {
+                $UploadService->deleteAsset('AttachedFile', $id);
+            }
+            throw $e;
+        }
+
+        return true;
     }
 
     /**

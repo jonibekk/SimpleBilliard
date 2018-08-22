@@ -61,12 +61,24 @@ class AttachedFile extends AppModel
     }
 
     /**
-     * model type
+     * file type
+     *
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
      */
     const TYPE_MODEL_POST = 0;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
+     */
     const TYPE_MODEL_COMMENT = 1;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
+     */
     const TYPE_MODEL_ACTION_RESULT = 2;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
+     */
     const TYPE_MODEL_MESSAGE = 3;
+
     static public $TYPE_MODEL = [
         self::TYPE_MODEL_POST          => [
             'intermediateModel' => 'PostFile',

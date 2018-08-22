@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PostService');
+App::import('Service', 'UploadService');
 App::uses('PostFile', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -15,6 +16,7 @@ App::uses('TestPostDraftTrait', 'Test/Trait');
 App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
+use Mockery as mock;
 
 /**
  */
@@ -687,6 +689,41 @@ class PostServiceTest extends GoalousTestCase
         $result = $PostService->checkUserAccessToPost(1, 1);
 
         $this->assertTrue($result);
+    }
+
+    public function test_saveFileInPostAdd_success()
+    {
+        //Mock storage clients
+        $bufferClient = mock::mock('BufferStorageClient');
+        $bufferClient->shouldReceive('get')->withAnyArgs()
+                     ->atLeast()->once()
+                     ->andReturn(new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a"));
+        $bufferClient->shouldReceive('save')->withAnyArgs()
+                     ->atLeast()->once()
+                     ->andReturn("1234567890abcd.12345678");
+        ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
+
+        $assetsClient = mock::mock('AssetsStorageClient');
+        $assetsClient->shouldReceive('save')->withAnyArgs()
+                     ->atLeast()->once()->andReturn(true);
+        ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+
+        $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
+        $newPostData = [
+            'body' => sprintf('body text %s', time()),
+            'type' => 1
+        ];
+
+        $postEntity = $PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
+
+        $files = $PostService->getAttachedFiles($postEntity['id']);
+
+        $this->assertNotEmpty($files);
     }
 
     /**
