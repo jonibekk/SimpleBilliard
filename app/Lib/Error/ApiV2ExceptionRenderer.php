@@ -30,6 +30,15 @@ class ApiV2ExceptionRenderer extends ExceptionRenderer
                 ]);
                 $response = ErrorResponse::notFound()->withMessage(__('Not Found'))->getResponse();
                 break;
+            default:
+                GoalousLog::error('Uncaught exception', [
+                    'exception' => get_class($error),
+                    'message' => $error->getMessage(),
+                    'file' => $error->getFile(),
+                    'line' => $error->getLine(),
+                ]);
+                $response = ErrorResponse::internalServerError()->withMessage(__('Internal Server Error'))->getResponse();
+                break;
         }
 
         $this->controller->response->statusCode($response->statusCode());
