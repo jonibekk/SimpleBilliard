@@ -38,7 +38,7 @@ class ImageRotateProcessor extends BaseImageProcessor
         // Destroy
         imagedestroy($image);
 
-        return new UploadedFile($imageString, $file->getFileName());
+        return new UploadedFile($imageString, $file->getFileName(), true);
     }
 
     /**

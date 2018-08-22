@@ -174,6 +174,6 @@ class ImageResizeProcessor extends BaseImageProcessor
 
         $imageString = $this->resourceToString($img, $file->getFileExt(), $quality);
 
-        return new UploadedFile($imageString, $file->getFileName());
+        return new UploadedFile($imageString, $file->getFileName(), true);
     }
 }
