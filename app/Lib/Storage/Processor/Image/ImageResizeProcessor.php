@@ -174,9 +174,6 @@ class ImageResizeProcessor extends BaseImageProcessor
 
         $imageString = $this->resourceToString($img, $file->getFileExt(), $quality);
 
-        $resultFile = clone $file;
-        $resultFile->setBinaryFile($imageString);
-
-        return $resultFile;
+        return new UploadedFile($imageString, $file->getFileName());
     }
 }

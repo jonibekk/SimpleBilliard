@@ -176,8 +176,13 @@ class UploadedFile
             throw new InvalidArgumentException("File can't be empty");
         }
 
+        //If input file stream is already binary, skip decoding
         if ($skipDecoding) {
             $rawFile = $encodedFile;
+            //Remove base64 encoded string
+            if (!empty($this->encodedFile)) {
+                unset($this->encodedFile);
+            }
         } else {
             $match = [];
             preg_match(self::BASE64_REGEXP, $encodedFile, $match);
@@ -206,19 +211,6 @@ class UploadedFile
         $this->type = $type;
         $this->fileExt = $fileExt;
         $this->size = strlen($rawFile);
-    }
-
-    /**
-     * Overwrite binary
-     *
-     * @param string $binaryFile
-     *
-     * @throws Exception
-     */
-    public function setBinaryFile(string $binaryFile)
-    {
-        unset($this->encodedFile);
-        $this->decodeFile($binaryFile, true);
     }
 
     /**

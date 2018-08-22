@@ -38,10 +38,7 @@ class ImageRotateProcessor extends BaseImageProcessor
         // Destroy
         imagedestroy($image);
 
-        $resultFile = clone $file;
-        $resultFile->setBinaryFile($imageString);
-
-        return $resultFile;
+        return new UploadedFile($imageString, $file->getFileName());
     }
 
     /**
