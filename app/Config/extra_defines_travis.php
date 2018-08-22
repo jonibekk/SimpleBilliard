@@ -2,6 +2,9 @@
 
 $defines = [
     'AWS_S3_BUCKET_USERNAME' => 'travis',
+    'REDIS_SESSION_HOST'     => 'localhost',
+    'REDIS_CACHE_HOST'       => 'localhost',
+    'REDIS_HOST'             => 'localhost',
 ];
 
 foreach ($defines as $k => $v) {
