@@ -33,6 +33,10 @@ class ImageResizeProcessor extends BaseImageProcessor
             return $file;
         }
 
+        if ($quality < 0 || $quality > 100){
+            throw new InvalidArgumentException("Invalid quality value");
+        }
+
         //Create Image resource from binary string
         $sourceImage = imagecreatefromstring($file->getBinaryFile());
 
