@@ -16,7 +16,7 @@ class PostRequestValidator extends BaseValidator
     {
         $rules = [
             "body" => [validator::notEmpty()::max(10000)],
-            "type" => [validator::intType()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
+            "type" => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
         ];
         return $rules;
     }
@@ -32,7 +32,7 @@ class PostRequestValidator extends BaseValidator
     public function getCirclePostValidationRule(): array
     {
         $rules = [
-            "circle_id" => [validator::intType()]
+            "circle_id" => [validator::digit()]
         ];
 
         return $rules;
