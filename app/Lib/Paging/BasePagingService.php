@@ -22,7 +22,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     public final function getDataWithPaging(
         $pagingRequest,
-        $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
+        $limit = BasePagingController::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     ): array {
 

@@ -9,6 +9,9 @@ App::uses('BaseApiController', 'Controller/Api');
  */
 abstract class  BasePagingController extends BaseApiController
 {
+    const DEFAULT_PAGE_LIMIT = 7;
+    const MAX_PAGE_LIMIT = 100;
+
     /**
      * Get the limit of paging. If limit not given or above maximum amount, use default page limit
      *
@@ -21,10 +24,10 @@ abstract class  BasePagingController extends BaseApiController
         $limit = $this->request->query('limit');
 
         if (empty($limit)) { //If not given, use default
-            return (empty($defaultLimit)) ? PagingRequest::DEFAULT_PAGE_LIMIT : $defaultLimit;
+            return (empty($defaultLimit)) ? self::DEFAULT_PAGE_LIMIT : $defaultLimit;
         }
-        if ($limit > PagingRequest::MAX_PAGE_LIMIT) { //If larger than max limit, return max
-            return PagingRequest::MAX_PAGE_LIMIT;
+        if ($limit > self::MAX_PAGE_LIMIT) { //If larger than max limit, return max
+            return self::MAX_PAGE_LIMIT;
         }
         return $limit;
     }
