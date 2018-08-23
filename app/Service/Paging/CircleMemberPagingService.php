@@ -1,4 +1,5 @@
 <?php
+App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses("CircleMember", 'Model');
@@ -13,6 +14,8 @@ App::uses("User", 'Model');
 class CircleMemberPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'CircleMember';
+    const EXTEND_ALL = "ext:circle_member:all";
+    const EXTEND_USER = "ext:circle_member:user";
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -27,24 +30,7 @@ class CircleMemberPagingService extends BasePagingService
 
         $result = $CircleMember->useType()->find('all', $conditions);
 
-        $userIds = Hash::extract($result, '{n}.CircleMember.user_id');
-
-        if (empty($userIds)) {
-            return [];
-        }
-
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        $userCondition = [
-            'conditions' => [
-                'User.id' => $userIds
-            ]
-        ];
-
-        $result = $User->useType()->find('all', $userCondition);
-
-        return Hash::extract($result, '{n}.User');
+        return Hash::extract($result, '{n}.CircleMember');
     }
 
     protected function countData(PagingRequest $request): int
@@ -57,6 +43,15 @@ class CircleMemberPagingService extends BasePagingService
         return (int)$CircleMember->find('count', $conditions);
     }
 
+    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    {
+        if ($this->includeExt($options, self::EXTEND_USER)) {
+            /** @var UserDataExtender $UserDataExtender */
+            $UserDataExtender = ClassRegistry::init('UserDataExtender');
+            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
+        }
+    }
+
     private function createSearchCondition(PagingRequest $pagingRequest)
     {
         $teamId = $pagingRequest->getCurrentTeamId();
@@ -66,7 +61,8 @@ class CircleMemberPagingService extends BasePagingService
             'table'      => 'circle_members',
             'alias'      => 'CircleMember',
             'fields'     => [
-                'CircleMember.user_id'
+                'CircleMember.user_id',
+                'CircleMember.last_posted'
             ],
             'conditions' => [
                 'CircleMember.team_id'   => $teamId,
@@ -79,8 +75,8 @@ class CircleMemberPagingService extends BasePagingService
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder(static::MAIN_MODEL . 'last_posted');
-        $pagingRequest->addOrder(static::MAIN_MODEL . 'id');
+        $pagingRequest->addOrder(static::MAIN_MODEL . '.last_posted');
+        $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
         return $pagingRequest;
     }
 

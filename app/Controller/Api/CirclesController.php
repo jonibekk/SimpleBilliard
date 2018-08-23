@@ -46,8 +46,8 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
-    public function get_members(int $circleId){
-
+    public function get_members(int $circleId)
+    {
         $error = $this->validateGetCircle($circleId);
 
         if (!empty($error)) {
@@ -66,7 +66,8 @@ class CirclesController extends BasePagingController
         try {
             $data = $CircleMemberPagingService->getDataWithPaging(
                 $pagingRequest,
-                $this->getPagingLimit(10));
+                $this->getPagingLimit(10),
+                $this->getExtensionOptions() ?: $this->getDefaultMemberExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
@@ -96,7 +97,8 @@ class CirclesController extends BasePagingController
 
         //Check if circle belongs to current team & user has access to the circle
         if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) ||
-            ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId(), $this->getTeamId()))) {
+            ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId(),
+                    $this->getTeamId()))) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
                                 ->getResponse();
         }
@@ -118,6 +120,18 @@ class CirclesController extends BasePagingController
             CirclePostPagingService::EXTEND_USER,
             CirclePostPagingService::EXTEND_COMMENTS,
             CirclePostPagingService::EXTEND_POST_FILE
+        ];
+    }
+
+    /**
+     * Default extension options for getting circle members
+     *
+     * @return array
+     */
+    private function getDefaultMemberExtension()
+    {
+        return [
+            CircleMemberPagingService::EXTEND_USER
         ];
     }
 

@@ -64,7 +64,8 @@ class CircleMember extends AppModel
         'team_flg'              => DataType::BOOL,
         'unread_count'          => DataType::INT,
         'show_for_all_feed_flg' => DataType::BOOL,
-        'admin_flg'             => DataType::BOOL
+        'admin_flg'             => DataType::BOOL,
+        'last_posted'           => DataType::INT
     ];
 
     public function getMyCircleList($check_hide_status = null)
