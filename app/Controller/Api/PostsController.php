@@ -38,9 +38,9 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         $post['body'] = Hash::get($this->getRequestJsonBody(), 'body');
-        $post['type'] = Hash::get($this->getRequestJsonBody(), 'type');
+        $post['type'] = (int)Hash::get($this->getRequestJsonBody(), 'type');
 
-        $circleId = Hash::get($this->getRequestJsonBody(), 'circle_id');
+        $circleId = (int)Hash::get($this->getRequestJsonBody(), 'circle_id');
         $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids');
 
         try {
@@ -223,7 +223,8 @@ class PostsController extends BasePagingController
 
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
         }
 
         return null;
