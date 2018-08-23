@@ -23,9 +23,10 @@ class ImageRotateProcessor extends BaseImageProcessor
             GoalousLog::error("Failed creating image resource");
             throw new RuntimeException("Failed creating image resource");
         }
-
         // Rotation
-        $image = imagerotate($image, $rotation, 0);
+        if (!empty($rotation)) {
+            $image = imagerotate($image, $rotation, 0);
+        }
 
         // Flipping
         if ($isFlipped && !imageflip($image, IMG_FLIP_HORIZONTAL)) {
