@@ -25,16 +25,6 @@ class AddedLastPostedToCircleMembers extends CakeMigration {
 					'latest_post_created' => array('type' => 'integer', 'null' => true, 'default' => '0', 'unsigned' => true),
 				),
 			),
-			'create_table' => array(
-				'test' => array(
-					'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
-					'type' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
-					'indexes' => array(
-						'PRIMARY' => array('column' => array('id', 'type'), 'unique' => 1),
-					),
-					'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB'),
-				),
-			),
 		),
 		'down' => array(
 			'drop_field' => array(
@@ -44,9 +34,6 @@ class AddedLastPostedToCircleMembers extends CakeMigration {
 				'circles' => array(
 					'latest_post_created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 				),
-			),
-			'drop_table' => array(
-				'test'
 			),
 		),
 	);
