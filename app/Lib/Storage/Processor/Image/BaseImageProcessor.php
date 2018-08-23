@@ -9,9 +9,20 @@ App::import('Lib/Storage/Processor', 'BaseUploadProcessor');
  */
 abstract class BaseImageProcessor extends BaseUploadProcessor
 {
+    /**
+     * Convert imageGD resource back to binary string of image
+     * There is no function to do this in the library, so image resource is output to
+     * buffer as binary string, then capture it, and then clean the buffer.
+     *
+     * @param        $image ImageGD resource
+     * @param string $type  Image type (jpeg, png, etc.)
+     * @param int    $quality
+     *
+     * @return string
+     */
     protected function resourceToString($image, string $type = "", int $quality = 75): string
     {
-        if ($quality < 0 || $quality > 100){
+        if ($quality < 0 || $quality > 100) {
             throw new InvalidArgumentException("Invalid quality value");
         }
 
@@ -23,11 +34,13 @@ abstract class BaseImageProcessor extends BaseUploadProcessor
                 imagejpeg($image, null, $quality);
                 break;
             case 'png':
-                $quality = $quality / 10;
-                if ($quality > 9) {
-                    $quality = 9;
+                //Other image types use quality, but PNG use compression
+                //PNG compression ranges from 0 (no compression) to 9 (max compression)
+                $compression = (100 - $quality) / 10;
+                if ($compression > 9) {
+                    $compression = 9;
                 }
-                imagepng($image, null, $quality);
+                imagepng($image, null, $compression);
                 break;
             case 'gif':
                 imagegif($image, null, $quality);
