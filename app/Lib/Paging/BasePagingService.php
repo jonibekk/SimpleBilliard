@@ -180,7 +180,7 @@ abstract class BasePagingService implements PagingServiceInterface
      *
      * @return bool
      */
-    protected function includeExt(array $options, string $targetExt): bool
+    protected final function includeExt(array $options, string $targetExt): bool
     {
         if (in_array(static::EXTEND_ALL, $options)) {
             return true;

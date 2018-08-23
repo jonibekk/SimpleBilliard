@@ -3,6 +3,7 @@ App::uses('BasePagingController', 'Controller/Api');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
 App::import('Service/Paging', 'CirclePostPagingService');
+App::import('Service/Paging', 'CircleMemberPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
@@ -17,7 +18,7 @@ class CirclesController extends BasePagingController
 {
     public function get_posts(int $circleId)
     {
-        $error = $this->validateGetCirclePost($circleId);
+        $error = $this->validateGetCircle($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -45,6 +46,35 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
+    public function get_members(int $circleId){
+
+        $error = $this->validateGetCircle($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleMemberPagingService $CircleMemberPagingService */
+        $CircleMemberPagingService = ClassRegistry::init('CircleMemberPagingService');
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try {
+            $data = $CircleMemberPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(10));
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
     /**
      * Validation for endpoint get_posts
      *
@@ -52,7 +82,7 @@ class CirclesController extends BasePagingController
      *
      * @return CakeResponse|null
      */
-    private function validateGetCirclePost(int $circleId)
+    private function validateGetCircle(int $circleId)
     {
         if (!is_int($circleId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -100,7 +130,7 @@ class CirclesController extends BasePagingController
      */
     function get_detail(int $circleId)
     {
-        $error = $this->validateGetCirclePost($circleId);
+        $error = $this->validateGetCircle($circleId);
 
         if (!empty($error)) {
             return $error;
