@@ -15,9 +15,12 @@ class PostRequestValidator extends BaseValidator
     public function getDefaultValidationRule(): array
     {
         $rules = [
-            "body"     => [validator::notEmpty()::max(10000)],
+            "body"     => [validator::notEmpty()::length(null, 10000)],
             "type"     => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
-            "file_ids" => [validator::max(10)::each(validator::regex(UploadedFile::UUID_REGEXP)), "optional"]
+            "file_ids" => [
+                validator::arrayType()::length(1, 10),
+                "optional"
+            ]
         ];
         return $rules;
     }
@@ -25,7 +28,7 @@ class PostRequestValidator extends BaseValidator
     public function getPostEditValidationRule(): array
     {
         $rules = [
-            "body" => [validator::notEmpty()::max(10000)],
+            "body" => [validator::notEmpty()::length(null, 10000)],
         ];
         return $rules;
     }
