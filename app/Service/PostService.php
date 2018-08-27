@@ -453,6 +453,23 @@ class PostService extends AppService
             }
 
             $postId = $savedPost['id'];
+            $postCreated = $savedPost['created'];
+
+            //Update last_posted time
+            $updateCondition = [
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.circle_id' => $circleId
+            ];
+
+            if (!$CircleMember->updateAll(['last_posted' => $postCreated], $updateCondition)) {
+                GoalousLog::error($errorMessage = 'failed updating last_posted in circle_members', [
+                    'posts.id'    => $postId,
+                    'circles.ids' => $circleId,
+                    'teams.id'    => $teamId,
+                    'users.id'    => $userId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
 
             // Save share circles
             if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
@@ -575,8 +592,8 @@ class PostService extends AppService
     /**
      * Get list of attached files of a post
      *
-     * @param int                                              $postId
-     * @param AttachedFileType                                 $type Filtered file type
+     * @param int              $postId
+     * @param AttachedFileType $type Filtered file type
      *
      * @return AttachedFileEntity[]
      */

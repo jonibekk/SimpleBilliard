@@ -19,7 +19,7 @@ interface PagingServiceInterface
      */
     public function getDataWithPaging(
         $pagingRequest,
-        $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
+        $limit = BasePagingController::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     );
 

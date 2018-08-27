@@ -10,9 +10,6 @@ App::import('Lib/Paging', 'PointerTree');
  */
 class PagingRequest
 {
-    const DEFAULT_PAGE_LIMIT = 7;
-    const MAX_PAGE_LIMIT = 100;
-
     const PAGE_ORDER_ASC = 'asc';
     const PAGE_ORDER_DESC = 'desc';
 
@@ -205,7 +202,7 @@ class PagingRequest
     public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC): bool
     {
         //Each key can only be added once
-        if (!in_array($key,Hash::extract($this->order, '{n}.0'))) {
+        if (!in_array($key, Hash::extract($this->order, '{n}.0'))) {
             $this->order[] = [$key, $order];
             return true;
         }
@@ -310,7 +307,7 @@ class PagingRequest
         $result = [];
 
         if (!empty($this->order)) {
-            foreach ($this->order as $value){
+            foreach ($this->order as $value) {
                 $result[] = [$value[0] => $value[1]];
             }
         }

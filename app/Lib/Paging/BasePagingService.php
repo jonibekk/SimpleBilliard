@@ -22,7 +22,7 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     public final function getDataWithPaging(
         $pagingRequest,
-        $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
+        $limit = BasePagingController::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     ): array {
 
@@ -180,7 +180,7 @@ abstract class BasePagingService implements PagingServiceInterface
      *
      * @return bool
      */
-    protected function includeExt(array $options, string $targetExt): bool
+    protected final function includeExt(array $options, string $targetExt): bool
     {
         if (in_array(static::EXTEND_ALL, $options)) {
             return true;
