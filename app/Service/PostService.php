@@ -3,7 +3,7 @@ App::import('Service', 'AppService');
 App::import('Service', 'PostFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
-App::import('Lib/Upload', 'UploadedFile');
+App::import('Lib/Storage', 'UploadedFile');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
 App::uses('User', 'Model');
@@ -647,12 +647,7 @@ class PostService extends AppService
 
                 $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
 
-                //TODO GL-7224
-                //For now, append required suffix for all images without resizing them
-                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_original");
-                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_x_small");
-                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_small");
-                $UploadService->save('AttachedFile', $attachedFile['id'], $uploadedFile, "_large");
+                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
             }
         } catch (Exception $e) {
             //If any error happened, remove uploaded file

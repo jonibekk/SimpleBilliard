@@ -15,6 +15,7 @@ class UploadedFile
 
     /**
      * Regexp for the base64 with header
+     *
      * @see here for base64 format
      * https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
      */
@@ -85,6 +86,7 @@ class UploadedFile
         }
 
         $this->decodeFile($encodedFile, $skipDecoding);
+
         if (!$skipDecoding) {
             $this->encodedFile = $encodedFile;
         }
@@ -126,6 +128,9 @@ class UploadedFile
 
     public function getUUID(): string
     {
+        if (empty($this->uuid)) {
+            $this->uuid = uniqid("", true);
+        }
         return $this->uuid;
     }
 
@@ -171,8 +176,13 @@ class UploadedFile
             throw new InvalidArgumentException("File can't be empty");
         }
 
+        //If input file stream is already binary, skip decoding
         if ($skipDecoding) {
             $rawFile = $encodedFile;
+            //Remove base64 encoded string
+            if (!empty($this->encodedFile)) {
+                unset($this->encodedFile);
+            }
         } else {
             $match = [];
             preg_match(self::BASE64_REGEXP, $encodedFile, $match);
@@ -200,10 +210,7 @@ class UploadedFile
         $this->metadata = $fInfo->buffer($rawFile);
         $this->type = $type;
         $this->fileExt = $fileExt;
-
         $this->size = strlen($rawFile);
-
-        $this->uuid = uniqid("", true);
     }
 
     /**
