@@ -39,6 +39,10 @@ class PostServiceTest extends GoalousTestCase
         'app.video_stream',
         'app.post_resource',
         'app.post_draft',
+        'app.post_like',
+        'app.post_mention',
+        'app.post_read',
+        'app.post_shared_log'
     ];
 
     /**
@@ -649,8 +653,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(4,  1);
-        $result1 = $PostService->checkUserAccessToPost(4,  1, true);
+        $result = $PostService->checkUserAccessToPost(4, 1);
+        $result1 = $PostService->checkUserAccessToPost(4, 1, true);
 
         $this->assertTrue($result);
         $this->assertFalse($result1);
@@ -661,8 +665,8 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(2,  7, true);
-        $result1 = $PostService->checkUserAccessToPost(2,  7);
+        $result = $PostService->checkUserAccessToPost(2, 7, true);
+        $result1 = $PostService->checkUserAccessToPost(2, 7);
 
         $this->assertTrue($result);
         $this->assertTrue($result1);
@@ -673,7 +677,7 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $result = $PostService->checkUserAccessToPost(4,  7);
+        $result = $PostService->checkUserAccessToPost(4, 7);
 
         $this->assertFalse($result);
     }
@@ -686,5 +690,70 @@ class PostServiceTest extends GoalousTestCase
         $result = $PostService->checkUserAccessToPost(1, 1);
 
         $this->assertTrue($result);
+    }
+
+    public function test_softDeletePost_success()
+    {
+        $postId = 1;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $PostService->softDelete($postId);
+
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init('PostDraft');
+
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+
+        /** @var PostMention $PostMention */
+        $PostMention = ClassRegistry::init('PostMention');
+
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
+        /** @var PostShareUser $PostShareUser */
+        $PostShareUser = ClassRegistry::init('PostShareUser');
+
+        /** @var PostSharedLog $PostSharedLog */
+        $PostSharedLog = ClassRegistry::init('PostSharedLog');
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $conditions = [
+            'conditions' => [
+                'post_id' => $postId,
+                'del_flg' => false
+            ]
+        ];
+
+        $postCondition = [
+            'conditions' => [
+                'Post.id'      => $postId,
+                'Post.del_flg' => false
+            ]
+        ];
+
+        $this->assertEmpty($PostDraft->find('first', $conditions));
+        $this->assertEmpty($PostFile->find('first', $conditions));
+        $this->assertEmpty($PostLike->find('first', $conditions));
+        $this->assertEmpty($PostMention->find('first', $conditions));
+        $this->assertEmpty($PostRead->find('first', $conditions));
+        $this->assertEmpty($PostResource->find('first', $conditions));
+        $this->assertEmpty($PostShareCircle->find('first', $conditions));
+        $this->assertEmpty($PostShareUser->find('first', $conditions));
+        $this->assertEmpty($PostSharedLog->find('first', $conditions));
+        $this->assertEmpty($Post->find('first', $postCondition));
     }
 }

@@ -603,6 +603,7 @@ class PostService extends AppService
     public function softDelete(int $postId): bool
     {
         $condition = ["post_id" => $postId];
+        $postCondition = ["id" => $postId];
 
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
@@ -636,16 +637,19 @@ class PostService extends AppService
 
         try {
             $this->TransactionManager->begin();
-            $PostDraft->softDeleteAll($condition);
-            $PostFile->softDeleteAll($condition);
-            $PostLike->softDeleteAll($condition);
-            $PostMention->softDeleteAll($condition);
-            $PostRead->softDeleteAll($condition);
-            $PostResource->softDeleteAll($condition);
-            $PostShareCircle->softDeleteAll($condition);
-            $PostShareUser->softDeleteAll($condition);
-            $PostSharedLog->softDeleteAll($condition);
-            $Post->softDeleteAll($condition);
+            $res = $PostDraft->softDeleteAll($condition, false) &&
+                $PostFile->softDeleteAll($condition, false) &&
+                $PostLike->softDeleteAll($condition, false) &&
+                $PostMention->softDeleteAll($condition, false) &&
+                $PostRead->softDeleteAll($condition, false) &&
+                $PostResource->softDeleteAll($condition, false) &&
+                $PostShareCircle->softDeleteAll($condition, false) &&
+                $PostShareUser->softDeleteAll($condition, false) &&
+                $PostSharedLog->softDeleteAll($condition, false) &&
+            $res =  $Post->softDeleteAll($postCondition, false);
+            if (!$res) {
+                throw new RuntimeException();
+            }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
