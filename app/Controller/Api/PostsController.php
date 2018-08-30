@@ -145,7 +145,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
+        return ApiResponse::ok()->withData(["post_id" => $postId])->getResponse();
     }
 
     /**
