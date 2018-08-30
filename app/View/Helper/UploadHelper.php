@@ -1,6 +1,7 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 App::uses('UploadBehavior', 'Model/Behavior');
+App::uses('Security', 'Utility');
 
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.
@@ -65,6 +66,7 @@ class UploadHelper extends AppHelper
 
     /**
      * It's for caching expires timestamp.
+     *
      * @var null|int
      */
     private $s3Expires = null;
@@ -193,21 +195,8 @@ class UploadHelper extends AppHelper
             $url = isset($settings[$defaultImgKey]) ? $settings[$defaultImgKey] : null;
         }
 
-        if (isset($settings[$defaultImgKey]) && $url == $settings[$defaultImgKey]) {
-            if ($isDefImgFromCloud) {
-                if (PUBLIC_ENV) {
-                    $url = $this->substrS3Url($url);
-                } else {
-                    $url = DS . $url;
-                }
-            } else {
-                $url = DS . IMAGES_URL . $url;
-                $url = $options['urlize'] ? $this->Html->url($url) : $url;
-            }
-        } else {
-            //s3用の処理追加
-            $url = $this->substrS3Url($url);
-        }
+        $url = $this->substrS3Url($url);
+
         $this->cache[$hash] = $url;
         return $url;
     }
@@ -399,11 +388,10 @@ class UploadHelper extends AppHelper
 
     public function substrS3Url($url)
     {
-        if (PUBLIC_ENV) {
-            $trimed_url = str_replace(S3_TRIM_PATH, "", $url);
-            //$url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
-            $url = $this->gs_prepareS3URL($trimed_url, S3_ASSETS_BUCKET);
-        }
+        $trimed_url = str_replace(S3_TRIM_PATH, "", $url);
+        //$url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
+        $url = $this->gs_prepareS3URL($trimed_url, S3_ASSETS_BUCKET);
+
         return $url;
     }
 
@@ -426,16 +414,16 @@ class UploadHelper extends AppHelper
         $awsSecretKey = AWS_SECRET_KEY; // this is the SECRET access key!
 
         $file = rawurlencode($file);
-        $file = str_replace('%2F', '/', $file);
-        $path = $bucket . '/' . $file;
+        $file = $this->getLocalPrefix() . '/' . str_replace('%2F', '/', $file);
+
+        $path = $bucket . $file;
 
         $expires = $this->getS3Expires();
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
 
-        $protocol = env('HTTP_X_FORWARDED_PROTO');
+        $url = "https://$bucket.s3.amazonaws.com" . $file;
 
-        $url = $protocol . "://$bucket.s3.amazonaws.com/$file";
         $url .= '?AWSAccessKeyId=' . $awsKeyId
             . '&Expires=' . $expires
             . '&Signature=' . $signature;
@@ -478,4 +466,19 @@ class UploadHelper extends AppHelper
         return $this->s3Expires;
     }
 
+    /**
+     * Get special prefix when uploading from local
+     *
+     * @return string
+     */
+    private function getLocalPrefix(): string
+    {
+        if (ENV_NAME == "local") {
+            if (empty(AWS_S3_BUCKET_USERNAME)) {
+                throw new RuntimeException("Please define AWS_S3_BUCKET_USERNAME");
+            }
+            return "/" . AWS_S3_BUCKET_USERNAME;
+        }
+        return '';
+    }
 }

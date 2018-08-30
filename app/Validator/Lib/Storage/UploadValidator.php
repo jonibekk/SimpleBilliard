@@ -12,7 +12,7 @@ use Goalous\Exception\Storage\Upload as UploadException;
 
 class UploadValidator
 {
-    //100 MB
+    //100 MiB
     const MAX_FILE_SIZE = 100;
 
     private static $allowedTypes = [

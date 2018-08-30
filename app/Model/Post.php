@@ -34,6 +34,7 @@ App::import('Service', 'PostService');
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Exception as GlException;
 
 class Post extends AppModel
 {
@@ -920,6 +921,29 @@ class Post extends AppModel
         return false;
     }
 
+    /**
+     * Check whether the post is owned by the user
+     *
+     * @param int $postId
+     * @param int $userId
+     *
+     * @return bool True if owned
+     */
+    public function isPostOwned(int $postId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $postId,
+                'user_id' => $userId,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
+
     public function getSubQueryFilterKrPostList(
         DboSource $db,
         $key_result_id,
@@ -1571,7 +1595,7 @@ class Post extends AppModel
         $method_name = "red_post_comment";
         $set_web_env = "";
         $nohup = "nohup ";
-        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        $php = 'php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
         $cmd = " Operation.post {$method_name}";
@@ -1882,7 +1906,7 @@ class Post extends AppModel
             'conditions' => [
                 'id' => $postId
             ],
-            'fields' => [
+            'fields'     => [
                 'post_like_count'
             ]
         ];

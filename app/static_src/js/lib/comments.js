@@ -669,6 +669,9 @@ function evNotifyPost(options) {
     $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
+    // https://jira.goalous.com/browse/GL-7019
+    $(".force-open").removeClass("force-open");
+
     var opt = $.extend({
         recursive: false,
         loader_id: null

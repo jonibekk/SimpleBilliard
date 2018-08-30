@@ -1,16 +1,15 @@
 <?php
+App::import('Lib/DataStructure/Tree', 'BinaryTree');
+App::import('Lib/Paging', 'PointerTree');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/09
  * Time: 17:20
  */
-
 class PagingRequest
 {
-    const DEFAULT_PAGE_LIMIT = 20;
-    const MAX_PAGE_LIMIT = 100;
-
     const PAGE_ORDER_ASC = 'asc';
     const PAGE_ORDER_DESC = 'desc';
 
@@ -18,7 +17,7 @@ class PagingRequest
      * DB query ordering
      *
      * @var array
-     *      ['$column_name'] => 'ASC/DESC'
+     *      [['id','DESC'], ['name' , 'ASC'], ...]
      */
     private $order = [];
 
@@ -29,6 +28,13 @@ class PagingRequest
      *      [$column_name] => [$math_operator, $value]
      */
     private $pointerValues = [];
+
+    /**
+     * Binary Tree for saving the pointers
+     *
+     * @var PointerTree
+     */
+    private $pointerTree = null;
 
     /**
      * Array for search query from URL
@@ -54,52 +60,85 @@ class PagingRequest
     /**
      * PagingRequest constructor.
      *
-     * @param array $conditions    Conditions for the search, e.g. SQL query
-     * @param array $pointerValues Pointer to mark start / end point of search
-     *                             [$column_name] => [$math_operator, $value]
-     * @param array $order         Order of the query sorting
+     * @param array               $conditions    Conditions for the search, e.g. SQL query
+     * @param array | PointerTree $pointerValues Pointer to mark start / end point of search
+     *                                           [$column_name] => [$math_operator, $value]
+     * @param array               $order         Order of the query sorting
      */
     public function __construct(
         array $conditions = [],
-        array $pointerValues = [],
+        $pointerValues = [],
         array $order = []
     ) {
         if (!empty($conditions)) {
             $this->conditions = $conditions;
         }
+
+        $this->pointerTree = new PointerTree();
+
         if (!empty($pointerValues)) {
-            $this->pointerValues = $pointerValues;
+            if ($pointerValues instanceof PointerTree) {
+                $this->pointerTree = $pointerValues;
+            }
+            if (is_array($pointerValues)) {
+                if (count($order) == 3 && is_string($pointerValues[0])) {
+                    $this->pointerTree->addPointer($pointerValues);
+                } else {
+                    $this->pointerTree->populateTree($pointerValues);
+                }
+            }
         }
+
         if (!empty($order)) {
-            $this->order = $order;
+            foreach ($order as $key => $value) {
+                if (is_numeric($key)) {
+                    //If $value is [[$key => $value]]
+                    $this->order[] = $value;
+                } else {
+                    //If $value is [$key => $value]
+                    $this->order[] = [$key, $value];
+                }
+            }
         }
     }
 
     /**
      * Create next cursor for API requests
      *
-     * @param array $conditions    Conditions for the search, e.g. SQL query
-     * @param array $pointerValues Pointer to mark start / end point of search
-     *                             [$column_name] => [$math_operator, $value]
-     * @param array $order         Order of the query sorting
+     * @param array               $conditions    Conditions for the search, e.g. SQL query
+     * @param array | PointerTree $pointerValues Pointer to mark start / end point of search
+     *                                           [$column_name] => [$math_operator, $value]
+     * @param array               $order         Order of the query sorting
      *
      * @return string Encoded next paging cursor
      */
     public static function createPageCursor(
         array $conditions = [],
-        array $pointerValues = [],
+        $pointerValues = null,
         array $order = []
     ): string {
+
         $array = array();
 
         if (!empty($conditions)) {
             $array['conditions'] = $conditions;
         }
+
         if (!empty($pointerValues)) {
-            $array['pointer'] = $pointerValues;
+            if (is_array($pointerValues)) {
+                $array['pointer'] = (new PointerTree($pointerValues))->toArray();
+            } elseif ($pointerValues instanceof PointerTree) {
+                if (!$pointerValues->isEmpty()) {
+                    $array['pointer'] = $pointerValues->toArray();
+                }
+            }
         }
         if (!empty($order)) {
             $array['order'] = $order;
+        }
+
+        if (empty($array)) {
+            return "";
         }
 
         return base64_encode(json_encode($array));
@@ -117,7 +156,10 @@ class PagingRequest
     {
         try {
             $values = self::decodeCursorToArray($cursor);
-            $self = new self($values['conditions'], $values['pointer'], $values['order']);
+            $self = new self(
+                $values['conditions'] ?? [],
+                $values['pointer'] ?? [],
+                $values['order'] ?? []);
         } catch (RuntimeException $e) {
             throw $e;
         }
@@ -139,14 +181,14 @@ class PagingRequest
             throw new InvalidArgumentException("Cursor can't be empty");
         }
         $decodedString = base64_decode($cursor);
-        if ($decodedString === false || empty($decodedString)) {
+        if (empty($decodedString)) {
             throw new RuntimeException("Failed in parsing cursor from base64 encoding");
         }
-        $jsonDecodedString = json_decode($decodedString, true);
-        if ($jsonDecodedString === false || empty($jsonDecodedString)) {
+        $pagingRequest = json_decode($decodedString, true);
+        if (empty($pagingRequest)) {
             throw new RuntimeException("Failed in parsing cursor from json");
         }
-        return $jsonDecodedString;
+        return $pagingRequest;
     }
 
     /**
@@ -154,10 +196,17 @@ class PagingRequest
      *
      * @param string $key
      * @param string $order
+     *
+     * @return bool TRUE on successful addition
      */
-    public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC)
+    public function addOrder(string $key, string $order = self::PAGE_ORDER_DESC): bool
     {
-        $this->order[$key] = $order;
+        //Each key can only be added once
+        if (!in_array($key, Hash::extract($this->order, '{n}.0'))) {
+            $this->order[] = [$key, $order];
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -195,20 +244,40 @@ class PagingRequest
      * @param string $key
      * @param string $operator
      * @param mixed  $value
+     *
+     * @return bool True on successful addition
      */
-    public function addPointer(string $key, string $operator = '<', $value)
+    public function addPointer(string $key, string $operator, $value): bool
     {
-        $this->pointerValues[$key] = [$operator, $value];
+        return $this->pointerTree->addPointer([$key, $operator, $value]);
     }
 
     /**
      * Overwrite current pointer with new one
      *
-     * @param array $pointer New pointer
+     * @param PointerTree $pointer New pointer
      */
-    public function setPointer(array $pointer)
+    public function setPointer(PointerTree $pointer)
     {
-        $this->pointerValues = $pointer;
+        $this->pointerTree = $pointer;
+    }
+
+    /**
+     * Get the first node containing pointer with given key
+     *
+     * @param string $key
+     *
+     * @return array
+     */
+    public function getPointer(string $key): array
+    {
+        $node = $this->pointerTree->searchTree($key);
+
+        if (empty($node) || $node->isEmpty()) {
+            return [];
+        } else {
+            return $node->getValue();
+        }
     }
 
     /**
@@ -237,24 +306,13 @@ class PagingRequest
     {
         $result = [];
 
-        if (empty($this->order)) {
-            return $result;
+        if (!empty($this->order)) {
+            foreach ($this->order as $value) {
+                $result[] = [$value[0] => $value[1]];
+            }
         }
 
-        foreach ($this->order as $key => $order) {
-            $result[] = [$key => $order];
-        }
         return $result;
-    }
-
-    /**
-     * Get all stored pointers
-     *
-     * @return array
-     */
-    public function getPointers()
-    {
-        return $this->pointerValues;
     }
 
     /**
@@ -264,14 +322,7 @@ class PagingRequest
      */
     public function getPointersAsQueryOption()
     {
-        $result = array();
-
-        if (!empty ($this->pointerValues)) {
-            foreach ($this->pointerValues as $key => $row) {
-                $result[] = "$key  $row[0]  $row[1]";
-            }
-        }
-        return $result;
+        return $this->pointerTree->toCondition();
     }
 
     /**
@@ -304,12 +355,7 @@ class PagingRequest
      */
     public function returnCursor()
     {
-        return ($this->isEmpty()) ? "" :
-            base64_encode(json_encode([
-                'conditions' => $this->conditions,
-                'pointer'    => $this->pointerValues,
-                'order'      => $this->order
-            ]));
+        return self::createPageCursor($this->conditions, $this->pointerTree, $this->order);
     }
 
     /**
@@ -397,6 +443,16 @@ class PagingRequest
     }
 
     /**
+     * Set resource ID in the URL
+     *
+     * @param int $resourceId
+     */
+    public function setResourceId(int $resourceId)
+    {
+        $this->addResource('res_id', $resourceId);
+    }
+
+    /**
      * Get logged in user's ID.
      *
      * @return int Return 0 if not exist
@@ -407,6 +463,16 @@ class PagingRequest
     }
 
     /**
+     * Set logged in user's ID.
+     *
+     * @param int $userId
+     */
+    public function setCurrentUserId(int $userId)
+    {
+        $this->addResource('current_user_id', $userId);
+    }
+
+    /**
      * Get logged in user's current team ID
      *
      * @return int Return 0 if not exist
@@ -414,5 +480,15 @@ class PagingRequest
     public function getCurrentTeamId(): int
     {
         return Hash::get($this->resources, 'current_team_id', 0);
+    }
+
+    /**
+     * Set logged in user's current team ID
+     *
+     * @param int $teamId
+     */
+    public function setCurrentTeamId(int $teamId)
+    {
+        $this->addResource('current_team_id', $teamId);
     }
 }

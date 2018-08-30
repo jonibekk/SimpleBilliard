@@ -28,12 +28,14 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $pagingRequest = new PagingRequest();
         $pagingRequest->addResource('res_id', 1);
         $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->setCurrentUserId(1);
+
         $pagingRequest->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 2);
 
         $this->assertCount(2, $result['data']);
-        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['paging']);
         $this->assertNotEmpty($result['count']);
     }
 
@@ -45,18 +47,20 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $pagingRequest = new PagingRequest();
         $pagingRequest->addResource('res_id', 1);
         $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->setCurrentUserId(1);
         $pagingRequest->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
-        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']['next']);
+        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']);
         $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->setCurrentUserId(1);
         $pagingRequest->addResource('res_id', 1);
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
         $this->assertCount(1, $result['data']);
-        $this->assertNotEmpty($result['paging']['next']);
+        $this->assertNotEmpty($result['paging']);
         $this->assertNotEmpty($result['count']);
     }
 
@@ -68,6 +72,7 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $cursor = new PagingRequest();
         $cursor->addResource('current_team_id', 1);
         $cursor->addResource('res_id', 1);
+        $cursor->setCurrentUserId(1);
         $cursor->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($cursor, 1,

@@ -14,7 +14,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Poedit 2.0.9\n"
-
 msgid "Percentage"
 msgstr "パーセント"
 
@@ -2230,20 +2229,23 @@ msgstr "秘密サークルを指定しよう"
 msgid "You can't switch in the circle page."
 msgstr "サークルページでは切り替えられません"
 
+msgid "Goal"
+msgstr "ゴール"
+
+msgid "Circles"
+msgstr "サークル"
+
+msgid "There is no more data."
+msgstr "これ以上のデータがありません。"
+
+msgid "No results found"
+msgstr "一致する結果はありませんでした"
+
 msgid "Cancel"
 msgstr "キャンセル"
 
 msgid "Delete"
 msgstr "削除する"
-
-msgid "Name?"
-msgstr "名前を入力"
-
-msgid "Goal Name?"
-msgstr "ゴール名を入力"
-
-msgid "Circle Name?"
-msgstr "サークル名を入力"
 
 msgid "Leave circle."
 msgstr "サークルを脱退する"
@@ -2256,6 +2258,9 @@ msgstr "データをロード中です。少々お待ちください。"
 
 msgid "%d remaining"
 msgstr "残り %d人"
+
+msgid "View All"
+msgstr "すべて表示"
 
 msgid "Coach"
 msgstr "コーチ"
@@ -2889,9 +2894,6 @@ msgstr "トピック名を入力"
 msgid "Update"
 msgstr "更新"
 
-msgid "No results found"
-msgstr "一致する結果はありませんでした"
-
 msgid "Leave this topic"
 msgstr "トピックを抜ける"
 
@@ -3222,20 +3224,11 @@ msgstr "アイテムを保存しました"
 msgid "Item removed"
 msgstr "保存済みアイテムを削除しました"
 
-msgid "Circles"
-msgstr "サークル"
-
 msgid "Manage"
 msgstr "管理"
 
-msgid "View Circles"
-msgstr "サークルを見る"
-
-msgid "View All"
-msgstr "すべて表示"
-
-msgid "Go To Top"
-msgstr "トップへ戻る"
+msgid "Discover more circles"
+msgstr "サークルを見つける"
 
 msgid "Saved"
 msgstr "保存済み"
@@ -3286,9 +3279,6 @@ msgstr "協業のお問い合わせ"
 
 msgid "Action list"
 msgstr "アクションリスト"
-
-msgid "There is no more data."
-msgstr "これ以上のデータがありません。"
 
 msgid "More..."
 msgstr "もっと読む ▼"
@@ -3605,9 +3595,6 @@ msgstr "本当にこの投稿を削除しますか？"
 msgid "Circle"
 msgstr "サークル"
 
-msgid "Goal"
-msgstr "ゴール"
-
 msgid "Team Vision"
 msgstr "チームビジョン"
 
@@ -3619,6 +3606,15 @@ msgstr "アクションできるゴールがありません。"
 
 msgid "View options"
 msgstr "オプションを表示"
+
+msgid "Posting the Action"
+msgstr "アクションの投稿"
+
+msgid ""
+"You are about to post this action without progress. Do you wish to continue?"
+msgstr ""
+"あなたはこのアクションを進捗なしで投稿しようとしています。このまま続けます"
+"か？"
 
 msgid "Add Action"
 msgstr "アクションを追加"
@@ -3820,9 +3816,6 @@ msgstr "ログイン"
 msgid "Create New Team"
 msgstr "新しいチームをつくる"
 
-msgid "Home"
-msgstr "ホーム"
-
 msgid "Create a team"
 msgstr "チームを作成"
 
@@ -3853,9 +3846,6 @@ msgstr "ゴール認定"
 msgid "User Guide"
 msgstr "ユーザー利用ガイド"
 
-msgid "How to make a Goal (jp)"
-msgstr "ゴール作成方法"
-
 msgid "Tutorial"
 msgstr "チュートリアル"
 
@@ -3865,8 +3855,14 @@ msgstr "サポート"
 msgid "Logout"
 msgstr "ログアウト"
 
+msgid "Home"
+msgstr "ホーム"
+
 msgid "Team"
 msgstr "チーム"
+
+msgid "Search Members, Goals, Circles"
+msgstr "メンバー,ゴール,サークルを検索"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
@@ -6300,3 +6296,191 @@ msgstr "認定ステータス: %s"
 
 #~ msgid "Failed to logout"
 #~ msgstr "ログアウトに失敗しました。"
+
+#~ msgid "View Circles"
+#~ msgstr "サークルを見る"
+
+#~ msgid "Go To Top"
+#~ msgstr "トップへ戻る"
+
+#~ msgid "Name?"
+#~ msgstr "名前を入力"
+
+#~ msgid "Goal Name?"
+#~ msgstr "ゴール名を入力"
+
+#~ msgid "Circle Name?"
+#~ msgstr "サークル名を入力"
+
+#~ msgid "How to make a Goal (jp)"
+#~ msgstr "ゴール作成方法"
+
+#, fuzzy
+#~| msgid "Invalid score."
+#~ msgid "Invalid csv format"
+#~ msgstr "定義されていないスコアです。"
+
+#, fuzzy
+#~| msgid "This circle does not exist."
+#~ msgid "Circle does not exist"
+#~ msgstr "このサークルは存在しません。"
+
+#, fuzzy
+#~| msgid "You don't belong to any circle."
+#~ msgid "Do not belong to Circle"
+#~ msgstr "参加しているサークルはありません。"
+
+#~ msgid "You can mention to no one here."
+#~ msgstr "ここではメンションできません。"
+
+#~ msgid "Edit Circles"
+#~ msgstr "サークル編集"
+
+#~ msgid "Pinned"
+#~ msgstr "ピン済み"
+
+#~ msgid "Unpinned"
+#~ msgstr "ピンなし"
+
+#~ msgid "You can start evaluation with the current settings."
+#~ msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
+
+#~ msgid "Notice - These settings can't be canceled."
+#~ msgstr "この設定は取り消すことができませんので気を付けてください。"
+
+#~ msgid "In evaluation term"
+#~ msgstr "評価期間中です。"
+
+#~ msgid "Start current term evaluations"
+#~ msgstr "今期の評価を開始する"
+
+#~ msgid "Anyone"
+#~ msgstr "指定なし"
+
+#~ msgid "Which item you want to ask"
+#~ msgstr "お問い合わせ内容"
+
+#~ msgid "Your company name"
+#~ msgstr "会社名"
+
+#~ msgid "Sales person you appointed"
+#~ msgstr "ご希望の営業担当者"
+
+#~ msgid "Contact us about Goalous"
+#~ msgstr "Goalousに関するお問い合わせ"
+
+#~ msgid ""
+#~ "Goalous is managed by ISAO, a visionary company that brings joy to work "
+#~ "around the world."
+#~ msgstr ""
+#~ "Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会"
+#~ "社ISAOが運営しております。"
+
+#~ msgid "Feel free to contact us."
+#~ msgstr "なんでも、お気軽にご相談ください。"
+
+#~ msgid "Required"
+#~ msgstr "必須"
+
+#~ msgid "eg. Isao Suzuki"
+#~ msgstr "例）鈴木 いさお"
+
+#~ msgid "eg. example@goalous.com"
+#~ msgstr "例）example@goalous.com（半角英数字）"
+
+#~ msgid "eg. ISAO Corporation"
+#~ msgstr "例）株式会社ISAO"
+
+#~ msgid "Company name, Organization name or Something like that."
+#~ msgstr "会社名・団体名など"
+
+#~ msgid "What is your question about?"
+#~ msgstr "お問い合わせ項目"
+
+#~ msgid "eg. We want to use it. So, we need more explanation in detail."
+#~ msgstr "例）導入を希望しています。詳しく説明に来て欲しいです。"
+
+#~ msgid "Question (3,000 character limit)"
+#~ msgstr "お問い合わせ内容（最大3,000文字）"
+
+#~ msgid "You can request your sales person."
+#~ msgstr "ご希望の営業担当者がいれば、リクエストください。（複数選択可）"
+
+#~ msgid "Keita Yukawa"
+#~ msgstr "湯川啓太"
+
+#~ msgid "Cool like Japanese actor"
+#~ msgstr "唐沢寿明に似てます"
+
+#~ msgid "Kohei Kikuchi"
+#~ msgstr "菊池厚平"
+
+#~ msgid "Owner of Goalous"
+#~ msgstr "Goalousのオーナーです"
+
+#~ msgid "Makoto Yoshioka"
+#~ msgstr "吉岡真人"
+
+#~ msgid "Sales person full of joy"
+#~ msgstr "愛をこめた営業をします"
+
+#~ msgid "Yusuke Ishihara"
+#~ msgstr "石原裕介"
+
+#~ msgid "A DJ since my teens"
+#~ msgstr "DJやってます"
+
+#~ msgid "・"
+#~ msgstr ","
+
+#~ msgid "PrivacyPolicy"
+#~ msgstr "個人情報の取り扱い"
+
+#~ msgid " - Do you agree with them?"
+#~ msgstr "について同意の上、問い合わせする"
+
+#~ msgid "Need to agree to terms and policy."
+#~ msgstr "個人情報保護方針の同意が必要です。"
+
+#~ msgid "Go to confirm"
+#~ msgstr "確認画面へ"
+
+#~ msgid "Appointed"
+#~ msgstr "ご希望"
+
+#~ msgid "Please check our Blog and SNS, if you get interested."
+#~ msgstr ""
+#~ "お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧く"
+#~ "ださい。"
+
+#~ msgid "IsaB"
+#~ msgstr "IsaB"
+
+#~ msgid "Make your job joyful! ISAO blog"
+#~ msgstr "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
+
+#~ msgid "facebook page"
+#~ msgstr "facebookページ"
+
+#~ msgid "isao.jp"
+#~ msgstr "isao.jp"
+
+#~ msgid "@ISAOcorp"
+#~ msgstr "@ISAOcorp"
+
+#~ msgid "5 Feb 2016"
+#~ msgstr "2016年2月5日"
+
+#~ msgid "Goalous was featured in a magazine - Gekkan Jinji Management Feb. -"
+#~ msgstr "月刊人事マネジメント2016年2月号に掲載されました"
+
+#~ msgid "4 Feb 2016"
+#~ msgstr "2016年2月4日"
+
+#~ msgid ""
+#~ "Goalous was featured in a web publication - Hito to shigoto no kenkyujo "
+#~ "by Idem -"
+#~ msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
+
+#~ msgid "Reorder circles"
+#~ msgstr "サークルを並び替える"

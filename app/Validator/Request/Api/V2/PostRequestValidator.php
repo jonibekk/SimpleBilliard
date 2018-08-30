@@ -15,8 +15,20 @@ class PostRequestValidator extends BaseValidator
     public function getDefaultValidationRule(): array
     {
         $rules = [
-            "body" => [validator::notEmpty()::max(10000)],
-            "type" => [validator::intType()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
+            "body"     => [validator::notEmpty()::length(1, 10000)],
+            "type"     => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
+            "file_ids" => [
+                validator::arrayType()::length(1, 10),
+                "optional"
+            ]
+        ];
+        return $rules;
+    }
+
+    public function getPostEditValidationRule(): array
+    {
+        $rules = [
+            "body" => [validator::notEmpty()::length(1, 10000)],
         ];
         return $rules;
     }
@@ -24,7 +36,7 @@ class PostRequestValidator extends BaseValidator
     public function getCirclePostValidationRule(): array
     {
         $rules = [
-            "circle_id" => [validator::intType()]
+            "circle_id" => [validator::digit()]
         ];
 
         return $rules;
@@ -48,6 +60,13 @@ class PostRequestValidator extends BaseValidator
     {
         $self = new self();
         $self->addRule($self->getDefaultValidationRule());
+        return $self;
+    }
+
+    public static function createPostEditValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostEditValidationRule(), true);
         return $self;
     }
 

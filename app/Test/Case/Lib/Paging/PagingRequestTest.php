@@ -18,14 +18,14 @@ class PagingRequestTest extends GoalousTestCase
         ];
 
         $pointer = ['count', '>', 100];
-        $order = ['count', 'asc'];
+        $order = ['count' => 'asc'];
 
         $encodedString = PagingRequest::createPageCursor($conditions, $pointer, $order);
 
         $decodedArray = PagingRequest::decodeCursorToArray($encodedString);
 
         $this->assertEquals($conditions['team_id'], $decodedArray['conditions']['team_id']);
-        $this->assertEquals($pointer, $decodedArray['pointer']);
+        $this->assertEquals($pointer, $decodedArray['pointer'][0]);
         $this->assertEquals($order, $decodedArray['order']);
     }
 
@@ -37,7 +37,7 @@ class PagingRequestTest extends GoalousTestCase
             'team_id' => 2
         ];
 
-        $pointer = ['count' => ['>', 100]];
+        $pointer = ['count', '>', 100];
         $order = ['count' => 'asc'];
 
         $encodedString = PagingRequest::createPageCursor($conditions, $pointer, $order);
@@ -45,7 +45,8 @@ class PagingRequestTest extends GoalousTestCase
         $decodedObject = PagingRequest::decodeCursorToObject($encodedString);
 
         $this->assertEquals($conditions['team_id'], $decodedObject->getConditions()['team_id']);
-        $this->assertEquals($pointer, $decodedObject->getPointers());
+        $this->assertEquals("$pointer[0] $pointer[1] $pointer[2]",
+            $decodedObject->getPointersAsQueryOption()[0]);
         $this->assertEquals($order, $decodedObject->getOrders()[0]);
     }
 
@@ -72,5 +73,24 @@ class PagingRequestTest extends GoalousTestCase
         } catch (Exception $e) {
             $this->fail();
         }
+    }
+
+    public function test_addingOrder_success()
+    {
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->addOrder('id');
+        $this->assertEquals([['id' => 'desc']], $pagingRequest->getOrders());
+
+        $this->assertTrue($pagingRequest->addOrder('a'));
+        $this->assertCount(2, $pagingRequest->getOrders());
+        $this->assertEquals('a', key($pagingRequest->getOrders()[1]));
+        $this->assertEquals('id', key($pagingRequest->getOrders()[0]));
+
+        $this->assertFalse($pagingRequest->addOrder('a'));
+        $this->assertCount(2, $pagingRequest->getOrders());
+
+        $this->assertTrue($pagingRequest->addOrder('b'));
+        $this->assertCount(3, $pagingRequest->getOrders());
+        $this->assertEquals('b', key($pagingRequest->getOrders()[2]));
     }
 }

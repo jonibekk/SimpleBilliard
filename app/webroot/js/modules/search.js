@@ -2,6 +2,8 @@ define(function () {
     // ヘッダーの検索ボックス処理
     var headerSearch = {
         setup: function () {
+            var current;
+            var currentIndex = -1;
             var $NavSearchForm = $('#NavSearchForm');
             var $NavSearchInput = $('#NavSearchInput');
             var $NavSearchResults = $('#NavSearchResults');
@@ -14,20 +16,20 @@ define(function () {
 
             var config = {
                 user: {
-                    url: cake.url.a,
                     link_base: cake.url.user_page,
-                    placeholder: cake.word.search_placeholder_user
+                    label: cake.word.members
                 },
                 goal: {
-                    url: cake.url.select2_goals,
                     link_base: cake.url.goal_page,
-                    placeholder: cake.word.search_placeholder_goal
+                    label: cake.word.goals
                 },
                 circle: {
-                    url: cake.url.select2_circles,
                     link_base: cake.url.circle_page,
-                    placeholder: cake.word.search_placeholder_circle
-                }
+                    label: cake.word.circles
+                },
+                general: {
+                    url: cake.url.select_search,
+                },
             };
 
             $NavSearchForm
@@ -35,114 +37,216 @@ define(function () {
                 .on('submit', function (e) {
                     e.preventDefault();
                     return false;
-                })
-                // 検索種類切り替え（ユーザー、ゴール、サークル）
-                .find('.nav-search-category-item').on('click', function () {
-                    var $this = $(this);
-                    var category = $this.attr('data-category');
-                    $NavSearchInput.attr('placeholder', config[category].placeholder);
-                    $NavSearchForm.find('.nav-search-category-icon')
-                        .hide()
-                        .filter('[data-category=' + category + ']')
-                        .show();
                 });
 
             $NavSearchInput
-                .attr('placeholder', config.user.placeholder)
                 .on('keydown', function (e) {
-                    // down
-                    if (e.keyCode == 40) {
-                        e.preventDefault();
-                        $NavSearchResults.find('.nav-search-result-item:first').focus();
-                    }
-                })
-                .on('keyup', function (e) {
-                    // 検索文字列
-                    var inputText = $(this).val();
-
-                    // キー連打考慮してすこし遅らせて ajax リクエストする
-                    clearTimeout(keyupTimer);
-                    keyupTimer = setTimeout(function () {
-                        // 入力テキストが空
-                        if (inputText.length == 0) {
-                            $NavSearchResults.hide();
-                            return;
-                        }
-
-                        var category = $NavSearchForm.find('.nav-search-category-icon:visible').attr('data-category');
-                        var ajaxCallback = function (res) {
-                            cache[category][inputText] = res;
-
-                            var $container = $('<div>');
-                            $NavSearchResults.empty();
-                            if (res.results) {
-                                if (res.results.length == 0) {
-                                    var $notFoundText = $('<div>')
-                                        .text(cake.message.notice.search_result_zero)
-                                        .addClass('nav-search-result-notfound');
-                                    $container.append($notFoundText);
-                                }
-                                else {
-                                    for (var i = 0; i < res.results.length; i++) {
-                                        var $row = $('<a>')
-                                            .addClass('nav-search-result-item')
-                                            .attr('href', config[category].link_base + res.results[i].id.split('_').pop());
-
-                                        // image
-                                        var $img = $('<img>').attr('src', res.results[i].image);
-                                        $row.append($img);
-
-                                        // text
-                                        var $text = $('<span>').text(res.results[i].text);
-                                        $row.append($text);
-
-                                        $container.append($row);
-                                    }
-                                }
-                                $NavSearchResults.html($container).show();
-
-                                // ポップアップ下の画面をスクロールさせないようにする
-                                $("body").addClass('nav-search-results-open');
-
-                                // ポップアップクローズ用
-                                $(document).one('click', function () {
-                                    $NavSearchResults.hide();
-                                    $("body").removeClass('nav-search-results-open');
-                                });
-                            }
-                        };
-
-                        if (cache[category][inputText]) {
-                            ajaxCallback(cache[category][inputText]);
-                        }
-                        else {
-                            $.get(config[category].url, {
-                                term: inputText,
-                                page_limit: 10
-                            }, ajaxCallback);
-                        }
-                    }, 150);
-                });
-
-            // 矢印キーで選択可能にする
-            $NavSearchResults
-                .on('keydown', '.nav-search-result-item', function (e) {
-                    var $selectedItem = $NavSearchResults.find('.nav-search-result-item:focus');
-                    if ($selectedItem.size()) {
-                        switch (e.keyCode) {
+                    var $selectedItems = $('.search-list-item-link');
+                    if ($selectedItems.length) {
+                        var code = e.keyCode || e.which;
+                        switch (code) {
                             // up
                             case 38:
                                 e.preventDefault();
-                                $selectedItem.prev().focus();
+                                if(currentIndex > 0) {
+                                    currentIndex--;
+                                    if(currentIndex >= 0 && currentIndex < $selectedItems.length) {
+                                        if(currentIndex < $selectedItems.length - 1) {
+                                            $selectedItems[currentIndex + 1].style.backgroundColor = "#fff";
+                                        }
+                                        current = $selectedItems[currentIndex];
+                                        current.scrollIntoView();
+                                        current.style.backgroundColor = "#fff0f1";
+                                    } else {
+                                        currentIndex++;
+                                    }
+                                }
                                 break;
-
                             // down
                             case 40:
                                 e.preventDefault();
-                                $selectedItem.next().focus();
+                                if(currentIndex < $selectedItems.length) {
+                                    currentIndex++;
+                                    if(currentIndex >= 0 && currentIndex < $selectedItems.length) {
+                                        if(currentIndex >= 1) {
+                                            $selectedItems[currentIndex - 1].style.backgroundColor = "#fff";
+                                        }
+                                        current = $selectedItems[currentIndex];
+                                        current.style.backgroundColor = "#fff0f1";
+                                        current.scrollIntoView();
+                                    } else {
+                                        currentIndex--;
+                                    }
+                                }                                
+                                break;
+                            //Enter
+                            case 13:
+                                e.preventDefault();
+                                if(cake.is_mb_app == "1" || cake.is_mb_browser == "1"){
+                                    $("#NavSearchInput").blur();
+                                    $("#NavSearchInput").focusout();
+                                } 
+                                if(current){
+                                    window.location = current.href;
+                                }
                                 break;
                         }
                     }
+                })
+                .on('keyup', function (e) {
+                    var code = e.keyCode || e.which;
+                    if(code === 38 || code === 40 || code === 13){
+                        return;
+                    }   
+
+                    // 検索文字列
+                    var inputText = $(this).val();
+
+                    if(inputText.length){
+                        $("#NavSearchInputClear").show();
+                    } else {
+                        $("#NavSearchInputClear").hide();
+                    }
+
+                    // キー連打考慮してすこし遅らせて ajax リクエストする
+                    // clearTimeout(keyupTimer);
+                    // keyupTimer = setTimeout(function () {
+                    // 入力テキストが空
+                    if (inputText.length == 0) {
+                        $NavSearchResults.hide();
+                        return;
+                    }
+
+                    current = null;
+                    currentIndex = -1;
+
+                    var ajaxResults = $.get(config['general'].url, {
+                        term: inputText,
+                        page_limit: 10
+                    });
+
+                    $.when(ajaxResults).done(function(allResults){
+                       // a1, a2 and a3 are arguments resolved 
+                       // for the ajax1, ajax2 and ajax3 Ajax requests, respectively.
+
+                       // Each argument is an array with the following structure:
+                       // [ data, statusText, jqXHR ]
+                        var $notFoundText = $('<div id="notFoundElement">')
+                            .text(cake.message.notice.search_result_zero)
+                            .addClass('nav-search-result-notfound');
+                        $NavSearchResults.empty().append($notFoundText);
+
+                        userResult = [];
+                        goalResult = [];
+                        circleResult = [];
+                        if(allResults){
+                            userResult = allResults.results_users.results;
+                            goalResult = allResults.results_goals.results;
+                            circleResult = allResults.results_circles.results;
+                        }
+
+                        if (userResult && userResult.length) {
+                            $('#notFoundElement').remove();
+                            var $userLabel = $('<div>')
+                                .text(config['user'].label)
+                                .addClass('nav-search-result-label');
+                            $NavSearchResults.append($userLabel);
+                            for (var i = 0; i < userResult.length; i++) {
+                                var $row = $('<a>')
+                                    .addClass('search-list-item-link')
+                                    .attr('href', config['user'].link_base + userResult[i].id.split('_').pop());
+                                // image
+                                var $divImage = $('<div>')
+                                    .addClass('search-list-avatar-item');
+                                var $img = $('<img>').attr('src', userResult[i].image);
+                                $divImage.append($img);
+                                $row.append($divImage);
+                                // text
+                                var $divText = $('<div>')
+                                    .addClass('topic-search-list-item-main');
+                                var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(userResult[i].text);
+                                $divText.append($text);
+                                $row.append($divText);
+
+                                $row.appendTo($NavSearchResults);
+                            }
+                        }
+                        if (goalResult && goalResult.length) {
+                            $('#notFoundElement').remove();
+                            var $goalLabel = $('<div>')
+                                .text(config['goal'].label)
+                                .addClass('nav-search-result-label');
+                            $NavSearchResults.append($goalLabel);
+                            for (var i = 0; i < goalResult.length; i++) {
+                                var $row = $('<a>')
+                                    .addClass('search-list-item-link')
+                                    .attr('href', config['goal'].link_base + goalResult[i].id.split('_').pop());
+                                // image
+                                var $divImage = $('<div>')
+                                    .addClass('search-list-avatar-item');
+                                var $img = $('<img>').attr('src', goalResult[i].image);
+                                $divImage.append($img);
+                                $row.append($divImage);
+                                // text
+                                var $divText = $('<div>')
+                                    .addClass('topic-search-list-item-main');
+                                var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(goalResult[i].text);
+                                $divText.append($text);
+                                $row.append($divText);
+
+                                $row.appendTo($NavSearchResults);
+                            }
+                        }
+                       if (circleResult && circleResult.length) {
+                            $('#notFoundElement').remove();
+                            var $circleLabel = $('<div>')
+                                .text(config['circle'].label)
+                                .addClass('nav-search-result-label');
+                            $NavSearchResults.append($circleLabel);
+                            for (var i = 0; i < circleResult.length; i++) {
+                                var $row = $('<a>')
+                                    .addClass('search-list-item-link')
+                                    .attr('href', config['circle'].link_base + circleResult[i].id.split('_').pop());
+                                // image
+                                var $divImage = $('<div>')
+                                    .addClass('search-list-avatar-item');
+                                var $img = $('<img>').attr('src', circleResult[i].image);
+                                $divImage.append($img);
+                                $row.append($divImage);
+                                // text
+                                var $divText = $('<div>')
+                                    .addClass('topic-search-list-item-main');
+                                var $text = $('<div>').addClass('topic-search-list-item-main-header-title').text(circleResult[i].text);
+                                $divText.append($text);
+                                $row.append($divText);
+
+                                $row.appendTo($NavSearchResults);
+                            }
+                        }
+
+                        if(!$('#notFoundElement').length){
+                            var $endLabel = $('<div>')
+                                .text(cake.word.end_search)
+                                .addClass('nav-search-result-end-label');
+                            $NavSearchResults.append($endLabel);
+                        } else {
+                            var $noResultsLabel = $('<div>')
+                                .text(cake.word.no_results)
+                                .addClass('nav-search-result-end-label');
+                            $NavSearchResults.append($noResultsLabel);
+                        }
+
+                        // ポップアップクローズ用
+                        $NavSearchResults.one('click', function () {
+                            $NavSearchResults.hide();
+                        });
+                        $(".nav-search-result-label,.nav-search-result-end-label,.nav-search-result-notfound").off("click").on("click", function(e) {
+                            e.preventDefault();
+                            return false;
+                        });
+                        $NavSearchResults.show();
+                    });
+                    // }, 150);
                 });
         }
     };

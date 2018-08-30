@@ -1,7 +1,8 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Lib/Upload', 'UploadedFile');
-App::import('Lib/Storage/Processor', 'UploadProcessor');
+App::import('Lib/Storage/Processor/Image', 'ImageRotateProcessor');
+App::import('Lib/Storage/Processor/Image', 'ImageResizeProcessor');
 App::import('Lib/Storage/Client', 'BufferStorageClient');
 App::import('Lib/Storage/Client', 'AssetsStorageClient');
 App::import('Validator/Lib/Storage', 'UploadValidator');
@@ -14,24 +15,38 @@ App::import('Validator/Lib/Storage', 'UploadImageValidator');
  * Time: 11:59
  */
 
-use Goalous\Exception as GlException;
 use Goalous\Exception\Storage\Upload as UploadException;
 
 class UploadService extends AppService
 {
     /**
-     * @param $userId
-     * @param $teamId
+     * @param int $userId
+     * @param int $teamId
      *
      * @return BufferStorageClient
      */
-    private function getBufferStorageClient($userId, $teamId): BufferStorageClient
+    private function getBufferStorageClient(int $userId, int $teamId): BufferStorageClient
     {
         $registeredClient = ClassRegistry::getObject(BufferStorageClient::class);
         if ($registeredClient instanceof BufferStorageClient) {
             return $registeredClient;
         }
         return new BufferStorageClient($userId, $teamId);
+    }
+
+    /**
+     * @param string $modelName
+     * @param int    $modelId
+     *
+     * @return AssetsStorageClient
+     */
+    private function getAssetsStorageClient(string $modelName, int $modelId): AssetsStorageClient
+    {
+        $registeredClient = ClassRegistry::getObject(AssetsStorageClient::class);
+        if ($registeredClient instanceof AssetsStorageClient) {
+            return $registeredClient;
+        }
+        return new AssetsStorageClient($modelName, $modelId);
     }
 
     /**
@@ -74,36 +89,88 @@ class UploadService extends AppService
             throw new InvalidArgumentException(("Invalid FILE UUID"));
         }
 
-        $uploader = new BufferStorageClient($userId, $teamId);
+        $uploader = $this->getBufferStorageClient($userId, $teamId);
 
         return $uploader->get($uuid);
     }
 
     /**
-     * Replace file UUID with actual file name
+     * Write file to main storage
      *
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $mainData
+     * @param string       $modelName
+     * @param int          $modelId
+     * @param UploadedFile $file
+     * @param string       $suffix
      *
      * @return bool
      */
-    public static function link(int $userId, int $teamId, array &$mainData): bool
+    public function save(string $modelName, int $modelId, UploadedFile $file, string $suffix = ""): bool
     {
-        //TODO GL-7171
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->save($file, $suffix);
     }
 
     /**
-     * Write the file to server
+     * Pre-process files before saving to S3
      *
-     * @param int    $userId
-     * @param int    $teamId
-     * @param string $file
+     * @param string       $modelName      Model which the file belongs to
+     * @param int          $modelId        Model ID
+     * @param string       $uploadCategory File category as written in Model's actAs array
+     *                                     E.g. photo, attached, etc.
+     * @param UploadedFile $file           File to upload
+     *
+     * @return bool TRUE on successful upload
+     */
+    public function saveWithProcessing(
+        string $modelName,
+        int $modelId,
+        string $uploadCategory,
+        UploadedFile $file
+    ): bool {
+        /** @var AppModel $Model */
+        $Model = ClassRegistry::init($modelName);
+
+        $uploadConfig = $Model->actsAs['Upload'][$uploadCategory];
+
+        if (empty($uploadConfig)) {
+            throw new InvalidArgumentException("Upload style doesn't exist");
+        }
+
+        $this->save($modelName, $modelId, $file, "_original");
+
+        if ($file->getFileType() == 'image') {
+
+            $ImageRotateProcessor = new ImageRotateProcessor();
+            $ImageResizeProcessor = new ImageResizeProcessor();
+
+            $styles = Hash::get($uploadConfig, 'styles', []);
+            $quality = Hash::get($uploadConfig, 'quality');
+
+            foreach ($styles as $style => $geometry) {
+                $currentFile = $ImageRotateProcessor->process($file);
+                $currentFile = $ImageResizeProcessor->process($currentFile, $geometry, $quality);
+                $this->save($modelName, $modelId, $currentFile, "_" . $style);
+                unset($currentFile);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete multiple objects based on same prefix
+     *
+     * @param string $modelName
+     * @param int    $modelId
+     * @param string $fileName Specific file name to delete
      *
      * @return bool
      */
-    private function save(int $userId, int $teamId, string $file): bool
+    public function deleteAsset(string $modelName, int $modelId, string $fileName = ""): bool
     {
-        //TODO GL-7171
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->delete($fileName);
     }
 }

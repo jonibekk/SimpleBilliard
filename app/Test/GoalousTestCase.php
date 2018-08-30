@@ -1127,11 +1127,19 @@ class GoalousTestCase extends CakeTestCase
     /**
      * Get base64 encoded test file
      *
+     * @param string $fileName Filename
+     *
      * @return string
      */
-    protected function getTestFileData(): string
+    protected function getTestFileData(string $fileName = ""): string
     {
-        $path = APP . "Test" . DS . "Images" . DS . $this->getTestFileName();
+        $path = APP . "Test" . DS . "Images" . DS;
+
+        if (empty($fileName)) {
+            $path .= $this->getTestFileName();
+        } else {
+            $path .= $fileName;
+        }
 
         if (!file_exists($path)) {
             throw new RuntimeException("Missing test file: " . $this->getTestFileName());
@@ -1139,6 +1147,11 @@ class GoalousTestCase extends CakeTestCase
         $rawFile = file_get_contents($path);
 
         return base64_encode($rawFile);
+    }
+
+    protected function getTestFileDataBase64WithHeader(): string
+    {
+        return 'data:image/png;base64,' . $this->getTestFileData();
     }
 
     /**

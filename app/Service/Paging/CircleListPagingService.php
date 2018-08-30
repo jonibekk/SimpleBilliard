@@ -24,7 +24,7 @@ class CircleListPagingService extends BasePagingService
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
-        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
+        $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -44,15 +44,6 @@ class CircleListPagingService extends BasePagingService
 
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
         $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
-
-        if (empty($userId)) {
-            GoalousLog::error("Missing user ID for circle list paging", $conditions);
-            throw new InvalidArgumentException("Missing user ID");
-        }
-        if (empty($teamId)) {
-            GoalousLog::error("Missing team ID for circle list paging", $conditions);
-            throw new InvalidArgumentException("Missing team ID");
-        }
 
         $conditions = [
             'conditions' => [
@@ -100,20 +91,23 @@ class CircleListPagingService extends BasePagingService
         return (int)$Circle->find('count', $options);
     }
 
-    protected function getEndPointerValue($lastElement)
-    {
-        return [
-            ['latest_post_created', "<=", $lastElement['latest_post_created']],
-            ['id', '!=', $lastElement['id']]
-        ];
-    }
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): PointerTree {
 
-    protected function getStartPointerValue($firstElement)
-    {
-        return [
-            ['latest_post_created', ">=", $firstElement['latest_post_created']],
-            ['id', '!=', $firstElement['id']]
-        ];
+        $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
+
+        if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
+            $lastElement['latest_post_created'] == $prevLatestPost) {
+            $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
+            $condition = new PointerTree('AND', $orCondition,
+                ['latest_post_created', '<=', $lastElement['latest_post_created']]);
+            return $condition;
+        } else {
+            return new PointerTree(['latest_post_created', '<', $lastElement['latest_post_created']]);
+        }
     }
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
@@ -132,11 +126,6 @@ class CircleListPagingService extends BasePagingService
             /** @var CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
             $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
 
-            if (empty($userId)) {
-                GoalousLog::error("Missing User ID for data extension");
-                throw new InvalidArgumentException("Missing User ID for data extension");
-            }
-
             $CircleMemberInfoDataExtender->setUserId($userId);
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
 
@@ -151,6 +140,7 @@ class CircleListPagingService extends BasePagingService
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
         $pagingRequest->addOrder('latest_post_created');
+        $pagingRequest->addOrder('id');
         return $pagingRequest;
     }
 

@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/DataExtender', "UserDataExtender");
+App::import('Lib/DataExtender', "CommentLikeDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('Comment', 'Model');
 App::uses('User', 'Model');
@@ -16,6 +17,7 @@ class CommentPagingService extends BasePagingService
 
     const EXTEND_ALL = "ext:comment:all";
     const EXTEND_USER = "ext:comment:user";
+    const EXTEND_LIKE = "ext:comment:like";
     const MAIN_MODEL = 'Comment';
 
     /**
@@ -30,7 +32,7 @@ class CommentPagingService extends BasePagingService
 
         $options['limit'] = $limit;
         $options['order'] = $pagingRequest->getOrders();
-        $options['conditions']['AND'][] = $pagingRequest->getPointersAsQueryOption();
+        $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
@@ -50,12 +52,19 @@ class CommentPagingService extends BasePagingService
         return (int)$Comment->find('count', $options);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $conditions, array $flags = [])
+    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
-        if (in_array(self::EXTEND_ALL, $flags) || in_array(self::EXTEND_USER, $flags)) {
+        if ($this->includeExt($options, self::EXTEND_USER)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
             $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
+        }
+        if ($this->includeExt($options, self::EXTEND_LIKE)) {
+            $userId = $request->getCurrentUserId();
+            /** @var CommentLikeDataExtender $CommentLikeDataExtender */
+            $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
+            $CommentLikeDataExtender->setUserId($userId);
+            $resultArray = $CommentLikeDataExtender->extend($resultArray, "{n}.id", "comment_id");
         }
     }
 
@@ -85,14 +94,11 @@ class CommentPagingService extends BasePagingService
         return $pagingRequest;
     }
 
-    protected function getEndPointerValue($lastElement)
-    {
-        return ['id', ">", $lastElement['id']];
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): PointerTree {
+        return new PointerTree([static::MAIN_MODEL . '.id', ">", $lastElement['id']]);
     }
-
-    protected function getStartPointerValue($firstElement)
-    {
-        return ['id', "<", $firstElement['id']];
-    }
-
 }

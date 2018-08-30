@@ -1,5 +1,7 @@
 <?php
 App::import('Lib/Paging', 'PagingServiceInterface');
+App::import('Lib/DataStructure', 'BinaryNode');
+App::import('Lib/Paging', 'PointerTree');
 
 /**
  * Created by PhpStorm.
@@ -20,16 +22,16 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     public final function getDataWithPaging(
         $pagingRequest,
-        $limit = PagingRequest::DEFAULT_PAGE_LIMIT,
+        $limit = BasePagingController::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
     ): array {
 
+        // Check whether exist current user id and team id
+        $this->validatePagingResource($pagingRequest);
+
         $finalResult = [
             'data'   => [],
-            'paging' => [
-                'next' => '',
-                'prev' => ''
-            ],
+            'paging' => '',
             'count'  => 0
         ];
 
@@ -41,28 +43,16 @@ abstract class BasePagingService implements PagingServiceInterface
         $this->beforeRead($pagingRequest);
         $pagingRequest = $this->addDefaultValues($pagingRequest);
 
-        $pointerValues = $pagingRequest->getPointers();
-
         $queryResult = $this->readData($pagingRequest, $limit + 1);
 
         //If there is further result
         if (count($queryResult) > $limit) {
-            array_pop($queryResult);
+            $nextHead = array_pop($queryResult);
 
             //Set end pointer values
-            $pagingRequest->addPointerArray($this->getEndPointerValue($queryResult[--$limit]));
+            $pagingRequest->setPointer($this->createPointer($queryResult[--$limit], $nextHead, $pagingRequest));
 
-            $finalResult['paging']['next'] = $pagingRequest->returnCursor();
-        }
-
-        //If there is previous result
-        //Non-empty pointers means not the first page
-        if (count($queryResult) > 0 && !empty($pointerValues)) {
-
-            //Set start pointer value
-            $pagingRequest->setPointer($this->getStartPointerValue($queryResult[0]));
-
-            $finalResult['paging']['prev'] = $pagingRequest->returnCursor();
+            $finalResult['paging'] = $pagingRequest->returnCursor();
         }
 
         $finalResult['count'] = $this->countData($pagingRequest);
@@ -76,6 +66,23 @@ abstract class BasePagingService implements PagingServiceInterface
         $finalResult['data'] = $queryResult;
 
         return $finalResult;
+    }
+
+    /**
+     * Check whether exist current user id and team id in paging request
+     *
+     * @param PagingRequest $pagingRequest
+     */
+    protected final function validatePagingResource(PagingRequest $pagingRequest)
+    {
+        if (empty($pagingRequest->getCurrentUserId())) {
+            GoalousLog::error("Missing current user id");
+            throw new UnexpectedValueException("Missing current user id");
+        }
+        if (empty($pagingRequest->getCurrentTeamId())) {
+            GoalousLog::error("Missing current team id");
+            throw new UnexpectedValueException("Missing current team id");
+        }
     }
 
     /**
@@ -95,26 +102,14 @@ abstract class BasePagingService implements PagingServiceInterface
      * Get pointer value to define beginning point of next page
      * Default to using id
      *
-     * @param array $lastElement The array of result array's last element
-     *
-     * @return array
+     * @return PointerTree
      */
-    protected function getEndPointerValue($lastElement)
-    {
-        return [static::MAIN_MODEL.'.id', ">", $lastElement['id']];
-    }
-
-    /**
-     * Get pointer value to define end point of previous page
-     * Default to using id
-     *
-     * @param array $firstElement The array of result array's last element
-     *
-     * @return array
-     */
-    protected function getStartPointerValue($firstElement)
-    {
-        return [static::MAIN_MODEL.'.id', "<", $firstElement['id']];
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): PointerTree {
+        return new PointerTree([static::MAIN_MODEL . '.id', ">", $lastElement['id']]);
     }
 
     /**
@@ -173,8 +168,27 @@ abstract class BasePagingService implements PagingServiceInterface
      */
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder(static::MAIN_MODEL.'.id');
+        $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
         return $pagingRequest;
+    }
+
+    /**
+     * Check whether ext options include target ext
+     *
+     * @param string $targetExt
+     * @param array  $options
+     *
+     * @return bool
+     */
+    protected final function includeExt(array $options, string $targetExt): bool
+    {
+        if (in_array(static::EXTEND_ALL, $options)) {
+            return true;
+        }
+        if (in_array($targetExt, $options)) {
+            return true;
+        }
+        return false;
     }
 
 }

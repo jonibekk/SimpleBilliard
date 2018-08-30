@@ -9,20 +9,25 @@ App::uses('BaseApiController', 'Controller/Api');
  */
 abstract class  BasePagingController extends BaseApiController
 {
+    const DEFAULT_PAGE_LIMIT = 7;
+    const MAX_PAGE_LIMIT = 100;
+
     /**
      * Get the limit of paging. If limit not given or above maximum amount, use default page limit
      *
+     * @param int $defaultLimit Override the global default limit if needed
+     *
      * @return int
      */
-    protected function getPagingLimit()
+    protected function getPagingLimit(int $defaultLimit = 0)
     {
         $limit = $this->request->query('limit');
 
         if (empty($limit)) { //If not given, use default
-            return PagingRequest::DEFAULT_PAGE_LIMIT;
+            return (empty($defaultLimit)) ? self::DEFAULT_PAGE_LIMIT : $defaultLimit;
         }
-        if ($limit > PagingRequest::MAX_PAGE_LIMIT) { //If larger than max limit, return max
-            return PagingRequest::MAX_PAGE_LIMIT;
+        if ($limit > self::MAX_PAGE_LIMIT) { //If larger than max limit, return max
+            return self::MAX_PAGE_LIMIT;
         }
         return $limit;
     }
@@ -82,10 +87,10 @@ abstract class  BasePagingController extends BaseApiController
 
         //Add resource ID
         if (!empty($this->request->params['id'])) {
-            $pagingRequest->addResource('res_id', $this->request->params['id']);
+            $pagingRequest->setResourceId($this->request->params['id']);
         }
-        $pagingRequest->addResource('current_user_id', $this->getUserId());
-        $pagingRequest->addResource('current_team_id', $this->getTeamId());
+        $pagingRequest->setCurrentUserId($this->getUserId());
+        $pagingRequest->setCurrentTeamId($this->getTeamId());
 
         $queries = array_filter($this->request->query, function ($queryKey) {
             if ($queryKey == "limit") {

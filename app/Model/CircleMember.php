@@ -64,7 +64,8 @@ class CircleMember extends AppModel
         'team_flg'              => DataType::BOOL,
         'unread_count'          => DataType::INT,
         'show_for_all_feed_flg' => DataType::BOOL,
-        'admin_flg'             => DataType::BOOL
+        'admin_flg'             => DataType::BOOL,
+        'last_posted'           => DataType::INT
     ];
 
     public function getMyCircleList($check_hide_status = null)
@@ -421,8 +422,9 @@ class CircleMember extends AppModel
         return (bool)$this->save($options);
     }
 
-    function isBelong($circleId, $userId = null)
+    function isBelong($circleId, $userId = null, $teamId = null)
     {
+        $teamId = !empty($teamId) ? $teamId : $this->current_team_id;
         if (!$userId) {
             $userId = $this->my_uid;
         }
@@ -430,7 +432,7 @@ class CircleMember extends AppModel
             'conditions' => [
                 'user_id'   => $userId,
                 'circle_id' => $circleId,
-                'team_id'   => $this->current_team_id,
+                'team_id'   => $teamId,
             ]
         ];
         $res = $this->find('first', $options);
