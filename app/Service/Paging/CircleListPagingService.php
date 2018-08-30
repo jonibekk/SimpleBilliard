@@ -18,12 +18,53 @@ class CircleListPagingService extends BasePagingService
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
     const MAIN_MODEL = 'Circle';
 
+    /**
+     * Get all circles and not including with paging data
+     * @param $pagingRequest
+     * @param array $extendFlags
+     * @return array
+     */
+    public function getAllData(
+        $pagingRequest,
+        $extendFlags = []
+    ): array
+    {
+        // Check whether exist current user id and team id
+        $this->validatePagingResource($pagingRequest);
+
+        $finalResult = [
+            'data' => [],
+            'paging' => '',
+            'count' => 0
+        ];
+
+        //If only 1 flag is given, make it an array
+        if (!is_array($extendFlags)) {
+            $extendFlags = [$extendFlags];
+        }
+
+        $this->beforeRead($pagingRequest);
+        $pagingRequest = $this->addDefaultValues($pagingRequest);
+
+        $queryResult = $this->readData($pagingRequest, 0);
+        $finalResult['count'] = count($queryResult);
+
+        if (!empty($extendFlags) && !empty($queryResult)) {
+            $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
+        }
+
+        $this->afterRead($pagingRequest);
+
+        $finalResult['data'] = $queryResult;
+
+        return $finalResult;
+    }
+
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         $options = $this->createSearchCondition($pagingRequest);
 
-        $options['limit'] = $limit;
-        $options['order'] = $pagingRequest->getOrders();
+        $options['limit'] = $limit == 0 ? null : $limit;
         $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
         /** @var Circle $Circle */
@@ -42,20 +83,71 @@ class CircleListPagingService extends BasePagingService
         $userId = $pagingRequest->getResourceId() ?: $pagingRequest->getCurrentUserId();
         $teamId = $pagingRequest->getCurrentTeamId();
 
-        $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', true));
-        $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
-
-        $conditions = [
+        $searchConditions = [
             'conditions' => [
                 'Circle.team_id' => $teamId,
                 'Circle.del_flg' => false
             ],
             'conversion' => true
         ];
-
+        $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', false));
         if ($publicOnlyFlag === true) {
-            $conditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
+            $searchConditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
         }
+
+        /* filter pinned  */
+        // filtering pinned is more prioritize than filtering joined
+        // ※ pinned circles means already joined.
+        $pinnedFlag = boolval(Hash::get($conditions, 'pinned', false));
+        if ($pinnedFlag) {
+            return $this->addSearchConditionForPinned($searchConditions, $userId, $teamId);
+        }
+
+        /* filter joined  */
+        $joinedFlag = boolval(Hash::get($conditions, 'joined', true));
+        $searchConditions = $this->addSearchConditionForJoined($searchConditions, $userId, $teamId, $joinedFlag);
+        $searchConditions['order'] = $pagingRequest->getOrders();
+
+        return $searchConditions;
+    }
+
+    /**
+     * Add condition for pinned circles
+     * @param array $searchConditions
+     * @param int $userId
+     * @param int $teamId
+     * @return array
+     */
+    private function addSearchConditionForPinned(array $searchConditions, int $userId, int $teamId): array
+    {
+        /** @var CirclePin $CirclePin */
+        $CirclePin = ClassRegistry::init('CirclePin');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $pinOrderInformation = $CirclePin->getPinData($userId, $teamId);
+        // head of pinned circles is team default circle
+        $defaultCircle = $Circle->getTeamAllCircle($teamId);
+
+        $circleIds = [Hash::get($defaultCircle, 'Circle.id')];
+        if (!empty($pinOrderInformation)) {
+            $circleIds = array_merge($circleIds, explode(',', $pinOrderInformation));
+        }
+        $searchConditions['conditions']['Circle.id'] = $circleIds;
+        $searchConditions['order'] = "FIELD(Circle.id, " . implode($circleIds, ',') . ")";
+        return $searchConditions;
+    }
+
+    /**
+     * Add condition for joined circles
+     * @param array $searchConditions
+     * @param int $userId
+     * @param int $teamId
+     * @param bool $joinedFlag
+     * @return array
+     */
+    private function addSearchConditionForJoined(array $searchConditions, int $userId, int $teamId, bool $joinedFlag): array
+    {
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -67,18 +159,17 @@ class CircleListPagingService extends BasePagingService
                 'CircleMember.user_id' => $userId,
                 'CircleMember.del_flg' => false
             ],
-            'fields'     => [
+            'fields' => [
                 'CircleMember.circle_id'
             ],
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember'
+            'table' => 'circle_members',
+            'alias' => 'CircleMember'
         ], $CircleMember);
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
 
         $subQueryExpression = $db->expression($subQuery);
-        $conditions['conditions'][] = $subQueryExpression;
-
-        return $conditions;
+        $searchConditions['conditions'][] = $subQueryExpression;
+        return $searchConditions;
     }
 
     protected function countData(PagingRequest $request): int
@@ -95,7 +186,8 @@ class CircleListPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree {
+    ): PointerTree
+    {
 
         $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
 
@@ -134,7 +226,7 @@ class CircleListPagingService extends BasePagingService
 
     protected function beforeRead(PagingRequest $pagingRequest)
     {
-        $pagingRequest->addQueriesToCondition(['joined', 'public_only']);
+        $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned']);
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
