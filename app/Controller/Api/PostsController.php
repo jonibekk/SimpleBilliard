@@ -48,12 +48,8 @@ class PostsController extends BasePagingController
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()->withException($e)->getResponse();
-        }
-
-        //If post saving failed, $res will be false
-        if (empty($res)) {
-            return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
+                                ->getResponse();
         }
 
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
@@ -110,11 +106,20 @@ class PostsController extends BasePagingController
     {
         $error = $this->validateDelete($postId);
 
-        if (!empty($error)){
+        if (!empty($error)) {
             return $error;
         }
 
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
 
+        try {
+            $PostService->softDelete($postId);
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->getResponse();
     }
 
     /**
@@ -210,7 +215,8 @@ class PostsController extends BasePagingController
 
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
         }
 
         return null;

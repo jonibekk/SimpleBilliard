@@ -1,15 +1,19 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('AttachedFile', 'Model');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
-App::uses('User', 'Model');
 App::uses('PostShareCircle', 'Model');
+App::uses('PostDraft', 'Model');
+App::uses('PostRead', 'Model');
+App::uses('PostMention', 'Model');
+App::uses('PostLike', 'Model');
 App::uses('PostFile', 'Model');
 App::uses('PostResource', 'Model');
+App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::uses('AttachedFile', 'Model');
-App::uses('PostDraft', 'Model');
+App::uses('User', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'CircleEntity');
 
@@ -596,17 +600,61 @@ class PostService extends AppService
      *
      * @return bool
      */
-    public function delete(int $postId): bool
+    public function softDelete(int $postId): bool
     {
-        //TODO post_drafts
-        //TODO post_files
-        //TODO post_likes
-        //TODO post_mentions
-        //TODO post_reads
-        //TODO post_resources
-        //TODO post_share_circles
-        //TODO post_share_users
-        //TODO post_shared_logs
-        //TODO posts
+        $condition = ["post_id" => $postId];
+
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init('PostDraft');
+
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+
+        /** @var PostMention $PostMention */
+        $PostMention = ClassRegistry::init('PostMention');
+
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
+        /** @var PostShareUser $PostShareUser */
+        $PostShareUser = ClassRegistry::init('PostShareUser');
+
+        /** @var PostSharedLog $PostSharedLog */
+        $PostSharedLog = ClassRegistry::init('PostSharedLog');
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        try {
+            $this->TransactionManager->begin();
+            $PostDraft->softDeleteAll($condition);
+            $PostFile->softDeleteAll($condition);
+            $PostLike->softDeleteAll($condition);
+            $PostMention->softDeleteAll($condition);
+            $PostRead->softDeleteAll($condition);
+            $PostResource->softDeleteAll($condition);
+            $PostShareCircle->softDeleteAll($condition);
+            $PostShareUser->softDeleteAll($condition);
+            $PostSharedLog->softDeleteAll($condition);
+            $Post->softDeleteAll($condition);
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Error on deleting post: failed post soft delete', [
+                'post.id' => $postId,
+            ]);
+            throw new RuntimeException('Error on deleting post: failed post soft delete');
+        }
+
+        return true;
     }
 }
