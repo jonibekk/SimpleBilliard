@@ -640,7 +640,7 @@ class PostService extends AppService
     public function softDelete(int $postId): bool
     {
         $condition = ["post_id" => $postId];
-        $postCondition = ["id" => $postId];
+        $postCondition = ["Post.id" => $postId];
 
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
