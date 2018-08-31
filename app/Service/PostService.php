@@ -636,6 +636,7 @@ class PostService extends AppService
      * @param int $postId
      *
      * @return bool
+     * @throws Exception
      */
     public function softDelete(int $postId): bool
     {
@@ -666,9 +667,6 @@ class PostService extends AppService
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
 
-        /** @var PostSharedLog $PostSharedLog */
-        $PostSharedLog = ClassRegistry::init('PostSharedLog');
-
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -682,18 +680,15 @@ class PostService extends AppService
                 $PostResource->softDeleteAll($condition, false) &&
                 $PostShareCircle->softDeleteAll($condition, false) &&
                 $PostShareUser->softDeleteAll($condition, false) &&
-                $PostSharedLog->softDeleteAll($condition, false) &&
-                $res = $Post->softDeleteAll($postCondition, false);
+                $Post->softDeleteAll($postCondition, false);
             if (!$res) {
-                throw new RuntimeException();
+                throw new RuntimeException("Error on deleting post $postId: failed post soft delete");
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('Error on deleting post: failed post soft delete', [
-                'post.id' => $postId,
-            ]);
-            throw new RuntimeException('Error on deleting post: failed post soft delete');
+            GoalousLog::error("Error on deleting post $postId: failed post soft delete", $e->getTrace());
+            throw $e;
         }
 
         return true;

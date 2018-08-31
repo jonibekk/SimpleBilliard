@@ -728,9 +728,6 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
 
-        /** @var PostSharedLog $PostSharedLog */
-        $PostSharedLog = ClassRegistry::init('PostSharedLog');
-
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -756,7 +753,6 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEmpty($PostResource->find('first', $conditions));
         $this->assertEmpty($PostShareCircle->find('first', $conditions));
         $this->assertEmpty($PostShareUser->find('first', $conditions));
-        $this->assertEmpty($PostSharedLog->find('first', $conditions));
         $this->assertEmpty($Post->find('first', $postCondition));
     }
 
