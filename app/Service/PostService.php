@@ -640,49 +640,34 @@ class PostService extends AppService
      */
     public function softDelete(int $postId): bool
     {
-        $condition = ["post_id" => $postId];
-        $postCondition = ["Post.id" => $postId];
-
-        /** @var PostDraft $PostDraft */
-        $PostDraft = ClassRegistry::init('PostDraft');
-
-        /** @var PostFile $PostFile */
-        $PostFile = ClassRegistry::init('PostFile');
-
-        /** @var PostLike $PostLike */
-        $PostLike = ClassRegistry::init('PostLike');
-
-        /** @var PostMention $PostMention */
-        $PostMention = ClassRegistry::init('PostMention');
-
-        /** @var PostRead $PostRead */
-        $PostRead = ClassRegistry::init('PostRead');
-
-        /** @var PostResource $PostResource */
-        $PostResource = ClassRegistry::init('PostResource');
-
-        /** @var PostShareCircle $PostShareCircle */
-        $PostShareCircle = ClassRegistry::init('PostShareCircle');
-
-        /** @var PostShareUser $PostShareUser */
-        $PostShareUser = ClassRegistry::init('PostShareUser');
-
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
+        $modelsToDelete = [
+            'PostDraft',
+            'PostFile',
+            'PostLike',
+            'PostMention',
+            'PostRead',
+            'PostResource',
+            'PostShareCircle',
+            'PostShareUser' .
+            'Post'
+        ];
 
         try {
             $this->TransactionManager->begin();
-            $res = $PostDraft->softDeleteAll($condition, false) &&
-                $PostFile->softDeleteAll($condition, false) &&
-                $PostLike->softDeleteAll($condition, false) &&
-                $PostMention->softDeleteAll($condition, false) &&
-                $PostRead->softDeleteAll($condition, false) &&
-                $PostResource->softDeleteAll($condition, false) &&
-                $PostShareCircle->softDeleteAll($condition, false) &&
-                $PostShareUser->softDeleteAll($condition, false) &&
-                $Post->softDeleteAll($postCondition, false);
-            if (!$res) {
-                throw new RuntimeException("Error on deleting post $postId: failed post soft delete");
+            foreach ($modelsToDelete as $model) {
+                /** @var AppModel $Model */
+                $Model = ClassRegistry::init($model);
+
+                if ($model == "Post") {
+                    $condition = ["Post.id" => $postId];
+                } else {
+                    $condition = ["post_id" => $postId];
+                }
+
+                $res = $Model->softDeleteAll($condition, false);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
+                }
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
