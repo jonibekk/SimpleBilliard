@@ -641,28 +641,24 @@ class PostService extends AppService
     public function softDelete(int $postId): bool
     {
         $modelsToDelete = [
-            'PostDraft',
-            'PostFile',
-            'PostLike',
-            'PostMention',
-            'PostRead',
-            'PostResource',
-            'PostShareCircle',
-            'PostShareUser' .
-            'Post'
+            'PostDraft'       => 'post_id',
+            'PostFile'        => 'post_id',
+            'PostLike'        => 'post_id',
+            'PostMention'     => 'post_id',
+            'PostRead'        => 'post_id',
+            'PostResource'    => 'post_id',
+            'PostShareCircle' => 'post_id',
+            'PostShareUser'   => 'post_id',
+            'Post'            => 'Post.id'
         ];
 
         try {
             $this->TransactionManager->begin();
-            foreach ($modelsToDelete as $model) {
+            foreach ($modelsToDelete as $model => $column) {
                 /** @var AppModel $Model */
                 $Model = ClassRegistry::init($model);
 
-                if ($model == "Post") {
-                    $condition = ["Post.id" => $postId];
-                } else {
-                    $condition = ["post_id" => $postId];
-                }
+                $condition = [$column => $postId];
 
                 $res = $Model->softDeleteAll($condition, false);
                 if (!$res) {
