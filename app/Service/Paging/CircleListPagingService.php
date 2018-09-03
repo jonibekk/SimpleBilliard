@@ -2,6 +2,7 @@
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service', 'ImageStorageService');
+App::import('Service', 'CirclePinService');
 App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
@@ -120,19 +121,9 @@ class CircleListPagingService extends BasePagingService
      */
     private function addSearchConditionForPinned(array $searchConditions, int $userId, int $teamId): array
     {
-        /** @var CirclePin $CirclePin */
-        $CirclePin = ClassRegistry::init('CirclePin');
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
-
-        $pinOrderInformation = $CirclePin->getPinData($userId, $teamId);
-        // head of pinned circles is team default circle
-        $defaultCircle = $Circle->getTeamAllCircle($teamId);
-
-        $circleIds = [Hash::get($defaultCircle, 'Circle.id')];
-        if (!empty($pinOrderInformation)) {
-            $circleIds = array_merge($circleIds, explode(',', $pinOrderInformation));
-        }
+        /** @var CirclePinService $CirclePinService */
+        $CirclePinService = ClassRegistry::init('CirclePinService');
+        $circleIds = $CirclePinService->getPinnedCircleIds($userId, $teamId);
         $searchConditions['conditions']['Circle.id'] = $circleIds;
         $searchConditions['order'] = "FIELD(Circle.id, " . implode($circleIds, ',') . ")";
         return $searchConditions;
@@ -157,7 +148,7 @@ class CircleListPagingService extends BasePagingService
         $subQuery = $db->buildStatement([
             'conditions' => [
                 'CircleMember.user_id' => $userId,
-                'CircleMember.del_flg' => false
+                'CircleMember.del_flg' => false,
             ],
             'fields' => [
                 'CircleMember.circle_id'
@@ -166,9 +157,17 @@ class CircleListPagingService extends BasePagingService
             'alias' => 'CircleMember'
         ], $CircleMember);
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
-
         $subQueryExpression = $db->expression($subQuery);
         $searchConditions['conditions'][] = $subQueryExpression;
+
+        // Exclude pinned circles
+        if ($joinedFlag) {
+            /** @var CirclePinService $CirclePinService */
+            $CirclePinService = ClassRegistry::init('CirclePinService');
+            $circleIds = $CirclePinService->getPinnedCircleIds($userId, $teamId);
+            $searchConditions['conditions'][] = ['Circle.id NOT IN' => $circleIds];
+        }
+
         return $searchConditions;
     }
 
