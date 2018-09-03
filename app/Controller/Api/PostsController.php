@@ -8,6 +8,7 @@ App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
+App::uses('TeamMember', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -48,12 +49,8 @@ class PostsController extends BasePagingController
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()->withException($e)->getResponse();
-        }
-
-        //If post saving failed, $res will be false
-        if (empty($res)) {
-            return ErrorResponse::internalServerError()->withMessage(__("Failed to post."))->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
+                                ->getResponse();
         }
 
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
@@ -129,6 +126,28 @@ class PostsController extends BasePagingController
         }
 
         return ApiResponse::ok()->withData((empty($result)) ? [] : $result->toArray())->getResponse();
+    }
+
+    public function delete(int $postId)
+    {
+        $error = $this->validateDelete($postId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $PostService->softDelete($postId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(["post_id" => $postId])->getResponse();
     }
 
     /**
@@ -237,7 +256,7 @@ class PostsController extends BasePagingController
      *
      * @return ErrorResponse|null
      */
-    public function validateGetComments(int $postId)
+    private function validateGetComments(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -257,6 +276,36 @@ class PostsController extends BasePagingController
                                 ->getResponse();
         }
 
+        return null;
+    }
+
+    /**
+     * Validate deleting post endpoint
+     *
+     * @param int $postId
+     *
+     * @return ErrorResponse|null
+     */
+    private function validateDelete(int $postId)
+    {
+        if (empty($postId) || !is_int($postId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        if (!$Post->exists($postId)) {
+            return ErrorResponse::notFound()->withMessage(__("This post doesn't exist."))->getResponse();
+        }
+
+        if (!$Post->isPostOwned($postId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
+                $this->getTeamId())) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
+        }
         return null;
     }
 
