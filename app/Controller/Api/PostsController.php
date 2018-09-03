@@ -3,6 +3,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service/Paging', 'ReadersPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
@@ -76,6 +77,36 @@ class PostsController extends BasePagingController
         }
 
         $result = $CommentPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
+            $this->getExtensionOptions());
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Get list of the post readers
+     * @param int $postId
+     *
+     * @return CakeResponse
+     */
+    public function get_readers(int $postId)
+    {
+        GoalousLog::error('inside');
+        /* change name of validateGetComments for validateGetCommentsAndReaders*/
+        $error = $this->validateGetComments($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var ReadersPagingService $ReadersPagingService */
+        $ReadersPagingService = ClassRegistry::init("ReadersPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        $result = $ReadersPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
             $this->getExtensionOptions());
 
         return ApiResponse::ok()->withBody($result)->getResponse();
