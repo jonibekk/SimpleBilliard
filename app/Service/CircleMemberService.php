@@ -1,6 +1,8 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('Circle', 'Model');
+App::uses('CircleMember', 'Model');
+App::import('Model/Entity', 'CircleMemberEntity');
 
 /**
  * Created by PhpStorm.
@@ -8,6 +10,9 @@ App::uses('Circle', 'Model');
  * Date: 2018/06/04
  * Time: 15:36
  */
+
+use Goalous\Exception as GlException;
+
 class CircleMemberService extends AppService
 {
 
@@ -49,6 +54,65 @@ class CircleMemberService extends AppService
         }
 
         return Hash::extract($Circle->find('all', $conditions), "{n}.Circle");
+    }
+
+    /**
+     * Add new user to CircleMember
+     *
+     * @param int $userId
+     * @param int $circleId
+     * @param int $teamId
+     *
+     * @return CircleMemberEntity
+     * @throws Exception
+     */
+    public function add(int $userId, int $circleId, int $teamId): CircleMemberEntity
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init("Circle");
+
+        $condition = [
+            'Circle.id'  => $circleId
+        ];
+
+        $circle = $Circle->find('first', $condition);
+
+        if (empty($circle)) {
+            throw new GlException\GoalousNotFoundException(__("This circle does not exist."));
+        }
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $condition = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId,
+                'del_flg'   => false
+            ]
+        ];
+
+        if (!empty($CircleMember->find('first', $condition))) {
+            throw new GlException\GoalousConflictException(__("You already joined to this circle."));
+        }
+
+        $newData = [
+            'circle_id' => $circleId,
+            'user_id'   => $userId,
+            'team_id'   => $teamId,
+            'created'   => REQUEST_TIMESTAMP,
+            'modified'  => REQUEST_TIMESTAMP
+        ];
+
+        $CircleMember->create();
+        /** @var CircleMemberEntity $return */
+        $return = $CircleMember->useType()->useEntity()->save($newData, false);
+
+        if (empty($return)) {
+            throw new RuntimeException("Failed to add new circle member");
+        }
+
+        return $return;
     }
 
 }

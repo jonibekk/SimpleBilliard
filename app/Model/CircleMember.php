@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::import('Service', 'CirclePinService');
+App::import('Model/Entity', 'CircleMemberEntity');
 
 /**
  * CircleMember Model

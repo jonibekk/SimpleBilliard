@@ -8,6 +8,9 @@ App::import('Service', 'CircleMemberService');
  * Date: 2018/06/04
  * Time: 15:59
  */
+
+use Goalous\Exception as GlException;
+
 class CircleMemberServiceTest extends GoalousTestCase
 {
     /**
@@ -31,5 +34,54 @@ class CircleMemberServiceTest extends GoalousTestCase
         $result1 = $CircleMemberService->getUserCircles(1, 1);
 
         $this->assertNotEmpty($result1);
+    }
+
+    public function test_add_success()
+    {
+        $newCircleId = 2;
+        $newUserId = 2;
+        $newTeamId = 1;
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
+
+        $this->assertNotEmpty($result);
+        $this->assertNotEmpty($result['id']);
+        $this->assertEmpty($newCircleId, $result['circle_id']);
+        $this->assertEmpty($newUserId, $result['user_id']);
+        $this->assertEmpty($newTeamId, $result['team_id']);
+    }
+
+    /**
+     * @expectedException  GlException\GoalousConflictException
+     */
+    public function test_addAlreadyExist_failed()
+    {
+        $newCircleId = 2;
+        $newUserId = 2;
+        $newTeamId = 1;
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
+        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
+    }
+
+    /**
+     * @expectedException GlException\GoalousNotFoundException
+     */
+    public function test_addCircleNotExist_failed()
+    {
+        $newCircleId = 123123;
+        $newUserId = 2;
+        $newTeamId = 1;
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
     }
 }

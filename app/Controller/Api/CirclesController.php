@@ -2,6 +2,7 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Service', 'CircleMemberService');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::import('Service/Paging', 'CircleMemberPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
@@ -14,6 +15,9 @@ App::uses('Circle', 'Model');
  * Date: 2018/06/20
  * Time: 9:41
  */
+
+use Goalous\Exception as GlException;
+
 class CirclesController extends BasePagingController
 {
     public function get_posts(int $circleId)
@@ -76,6 +80,30 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
+    public function post_members(int $circleID)
+    {
+        $error = $this->validatePostMember($circleID);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        try {
+            $return = $CircleMemberService->add($this->getUserId(), $circleID, $this->getTeamId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (GlException\GoalousConflictException $exception) {
+            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($return->toArray())->getResponse();
+    }
+
     /**
      * Validation for endpoint get_posts
      *
@@ -101,6 +129,25 @@ class CirclesController extends BasePagingController
                     $this->getTeamId()))) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
                                 ->getResponse();
+        }
+
+        return null;
+    }
+
+    public function validatePostMember(int $circleId)
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init("Circle");
+
+        $condition = [
+            'Circle.id'  => $circleId,
+            'public_flg' => true
+        ];
+
+        $circle = $Circle->find('first', $condition);
+
+        if (empty($circle)) {
+            return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }
 
         return null;
