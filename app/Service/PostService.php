@@ -650,7 +650,7 @@ class PostService extends AppService
                 'del_flg' => false
             ]
         ];
-        if (!empty($Post->find('first', $postCondition))) {
+        if (empty($Post->find('first', $postCondition))) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
