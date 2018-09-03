@@ -640,6 +640,20 @@ class PostService extends AppService
      */
     public function softDelete(int $postId): bool
     {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        //Check if post exists & not deleted
+        $postCondition = [
+            'conditions' => [
+                'id'      => $postId,
+                'del_flg' => false
+            ]
+        ];
+        if (!empty($Post->find('first', $postCondition))) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
         $modelsToDelete = [
             'PostDraft'       => 'post_id',
             'PostFile'        => 'post_id',

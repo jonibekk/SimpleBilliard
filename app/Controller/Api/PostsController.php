@@ -141,6 +141,8 @@ class PostsController extends BasePagingController
 
         try {
             $PostService->softDelete($postId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

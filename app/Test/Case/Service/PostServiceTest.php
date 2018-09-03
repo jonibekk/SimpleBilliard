@@ -756,6 +756,33 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEmpty($Post->find('first', $postCondition));
     }
 
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_softDeletePostNotExist_failed()
+    {
+        $postId = 10909;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $PostService->softDelete($postId);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_softDeletePostDeleted_failed()
+    {
+        $postId = 1;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $PostService->softDelete($postId);
+        $PostService->softDelete($postId);
+    }
+
     public function test_saveFileInPostAdd_success()
     {
         //Mock storage clients
