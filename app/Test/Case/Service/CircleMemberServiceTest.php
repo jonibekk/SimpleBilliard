@@ -55,7 +55,7 @@ class CircleMemberServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException  GlException\GoalousConflictException
+     * @expectedException \Goalous\Exception\GoalousConflictException
      */
     public function test_addAlreadyExist_failed()
     {
@@ -71,7 +71,7 @@ class CircleMemberServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException GlException\GoalousNotFoundException
+     * @expectedException  \Goalous\Exception\GoalousNotFoundException
      */
     public function test_addCircleNotExist_failed()
     {
