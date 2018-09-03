@@ -49,9 +49,9 @@ class CircleMemberServiceTest extends GoalousTestCase
 
         $this->assertNotEmpty($result);
         $this->assertNotEmpty($result['id']);
-        $this->assertEmpty($newCircleId, $result['circle_id']);
-        $this->assertEmpty($newUserId, $result['user_id']);
-        $this->assertEmpty($newTeamId, $result['team_id']);
+        $this->assertEquals($newCircleId, $result['circle_id']);
+        $this->assertEquals($newUserId, $result['user_id']);
+        $this->assertEquals($newTeamId, $result['team_id']);
     }
 
     /**
