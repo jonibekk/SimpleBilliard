@@ -140,10 +140,11 @@ class CirclesController extends BasePagingController
         $Circle = ClassRegistry::init("Circle");
 
         $condition = [
-            'Circle.id'  => $circleId,
-            'public_flg' => true
+            'conditions' => [
+                'Circle.id' => $circleId,
+                'Circle.public_flg' => true
+            ]
         ];
-
         $circle = $Circle->find('first', $condition);
 
         if (empty($circle)) {

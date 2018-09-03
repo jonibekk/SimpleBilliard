@@ -72,7 +72,9 @@ class CircleMemberService extends AppService
         $Circle = ClassRegistry::init("Circle");
 
         $condition = [
-            'Circle.id'  => $circleId
+            'conditions' => [
+                'Circle.id' => $circleId
+            ]
         ];
 
         $circle = $Circle->find('first', $condition);
