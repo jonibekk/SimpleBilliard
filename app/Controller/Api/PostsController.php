@@ -62,7 +62,7 @@ class PostsController extends BasePagingController
 
     public function get_comments(int $postId)
     {
-        $error = $this->validateGetComments($postId);
+        $error = $this->validateGetCommentsAndReaders($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -90,9 +90,7 @@ class PostsController extends BasePagingController
      */
     public function get_readers(int $postId)
     {
-        GoalousLog::error('inside');
-        /* change name of validateGetComments for validateGetCommentsAndReaders*/
-        $error = $this->validateGetComments($postId);
+        $error = $this->validateGetCommentsAndReaders($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -106,10 +104,29 @@ class PostsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        $result = $ReadersPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
-            $this->getExtensionOptions());
+        try{
+            $result = $ReadersPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(10),
+                $this->getExtensionOptions() ?: $this->getDefaultMemberExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
 
         return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Default extension options for getting circle members
+     *
+     * @return array
+     */
+    private function getDefaultMemberExtension()
+    {
+        return [
+            ReadersPagingService::EXTEND_USER
+        ];
     }
 
     /**
@@ -268,7 +285,7 @@ class PostsController extends BasePagingController
      *
      * @return ErrorResponse|null
      */
-    public function validateGetComments(int $postId)
+    public function validateGetCommentsAndReaders(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();

@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Enum\DataType\DataType as DataType;
+
 /**
  * PostRead Model
  *
@@ -88,6 +90,13 @@ class PostRead extends AppModel
         }
         return $res;
     }
+
+    public $modelConversionTable = [
+        'post_id'       => DataType::INT,
+        'user_id'       => DataType::INT,
+        'team_id'       => DataType::INT,
+        'del_flag'      => DataType::BOOL
+    ];
 
     protected function pickUnreadPosts($post_list)
     {

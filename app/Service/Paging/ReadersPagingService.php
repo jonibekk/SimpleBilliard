@@ -1,7 +1,6 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/DataExtender', "UserDataExtender");
-App::import('Lib/DataExtender', "CommentLikeDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('PostRead', 'Model');
 App::uses('User', 'Model');
@@ -57,17 +56,22 @@ class ReadersPagingService extends BasePagingService
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
             $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
         }
-        if ($this->includeExt($options, self::EXTEND_LIKE)) {
-            $userId = $request->getCurrentUserId();
-            /** @var CommentLikeDataExtender $CommentLikeDataExtender */
-            $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
-            $CommentLikeDataExtender->setUserId($userId);
-            $resultArray = $CommentLikeDataExtender->extend($resultArray, "{n}.id", "comment_id");
-        }
     }
 
+    /**
+     * Create the SQL query for getting the readers of the post
+     *
+     * @param PagingRequest $request
+     *
+     * @return array
+     */
     private function createSearchCondition(PagingRequest $request): array
     {
+        $conditions = $request->getConditions(true);
+
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
         $postId = $request->getResourceId();
 
         if (empty($postId)) {
@@ -75,15 +79,18 @@ class ReadersPagingService extends BasePagingService
             throw new InvalidArgumentException("Missing post ID for getting comments");
         }
 
-        $options = [
-            'conditions' => [
-                'PostRead.post_id' => $postId,
-            ],
-            'table'      => 'post_reads',
-            'alias'      => 'PostRead'
-        ];
+        $conditions = [
+            'conditions'    => [
+                'post_id'   => $postId,
+        ],
+        'fields'=>[
+            'user_id',
+            'created'
+        ]];
 
-        return $options;
+        $PostRead->find('all', $conditions);
+
+        return $conditions;
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
