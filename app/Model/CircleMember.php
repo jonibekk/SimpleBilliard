@@ -319,9 +319,10 @@ class CircleMember extends AppModel
     }
 
     public function getMemberList(
-        $circle_id,
-        $with_admin = false,
-        $with_me = true
+        int $circle_id,
+        bool $with_admin = false,
+        bool $with_me = true,
+        array $usersToExclude = []
     ) {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
@@ -336,7 +337,11 @@ class CircleMember extends AppModel
             unset($options['conditions']['admin_flg']);
         }
         if (!$with_me) {
-            $options['conditions']['NOT']['user_id'] = $this->my_uid;
+            if (empty($usersToExclude)) {
+                $options['conditions']['NOT']['user_id'] = $this->my_uid;
+            } else {
+                $options['conditions']['NOT']['user_id'] = $usersToExclude;
+            }
         }
         $res = $this->find('list', $options);
 

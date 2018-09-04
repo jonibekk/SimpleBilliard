@@ -80,9 +80,9 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
-    public function post_members(int $circleID)
+    public function post_members(int $circleId)
     {
-        $error = $this->validatePostMember($circleID);
+        $error = $this->validatePostMember($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -90,9 +90,10 @@ class CirclesController extends BasePagingController
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
-
         try {
-            $return = $CircleMemberService->add($this->getUserId(), $circleID, $this->getTeamId());
+            $return = $CircleMemberService->add($this->getUserId(), $circleId, $this->getTeamId());
+            $CircleMemberService->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
+                $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (GlException\GoalousConflictException $exception) {
@@ -141,7 +142,7 @@ class CirclesController extends BasePagingController
 
         $condition = [
             'conditions' => [
-                'Circle.id' => $circleId,
+                'Circle.id'         => $circleId,
                 'Circle.public_flg' => true
             ]
         ];

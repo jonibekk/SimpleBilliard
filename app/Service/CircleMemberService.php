@@ -3,6 +3,7 @@ App::import('Service', 'AppService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Model/Entity', 'CircleMemberEntity');
+App::uses('NotifyBiz', 'Controller/Component');
 
 /**
  * Created by PhpStorm.
@@ -12,6 +13,7 @@ App::import('Model/Entity', 'CircleMemberEntity');
  */
 
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 class CircleMemberService extends AppService
 {
@@ -102,8 +104,9 @@ class CircleMemberService extends AppService
             'circle_id' => $circleId,
             'user_id'   => $userId,
             'team_id'   => $teamId,
-            'created'   => REQUEST_TIMESTAMP,
-            'modified'  => REQUEST_TIMESTAMP
+            'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN(),
+            'created'   => GoalousDateTime::now()->getTimestamp(),
+            'modified'  => GoalousDateTime::now()->getTimestamp()
         ];
 
         $CircleMember->create();
@@ -115,6 +118,27 @@ class CircleMemberService extends AppService
         }
 
         return $return;
+    }
+
+    /**
+     * Send notification to all members in a circle
+     *
+     * @param int $notificationType
+     * @param int $circleId
+     * @param int $userId
+     * @param int $teamId
+     */
+    public function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $memberList = $CircleMember->getMemberList($circleId, true, false, $userId);
+
+        /** @var NotifyBizComponent $notifyBiz */
+        $notifyBiz = ClassRegistry::init('NotifyBizComponent');
+        // Notify to circle member
+        $notifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
     }
 
 }
