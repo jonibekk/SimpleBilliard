@@ -616,18 +616,21 @@ class CircleMember extends AppModel
      * @param           $circle_id
      * @param bool|true $use_cache
      *
-     * @return array|null
+     * @return int
      */
-    function getActiveMemberCount($circle_id, $use_cache = true)
+    function getActiveMemberCount($circle_id, $use_cache = true): int
     {
         $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList($use_cache);
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
                 'user_id'   => $active_team_members_list,
+            ],
+            'fields'     => [
+                'id'
             ]
         ];
-        $res = $this->find('count', $options);
+        $res = (int)$this->find('count', $options);
         return $res;
     }
 

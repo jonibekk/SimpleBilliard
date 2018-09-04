@@ -97,7 +97,8 @@ class CircleMemberService extends AppService
         ];
 
         if (!empty($CircleMember->find('first', $condition))) {
-            throw new GlException\GoalousConflictException(__("You already joined to this circle."));
+            //Define message in caller
+            throw new GlException\GoalousConflictException();
         }
 
         $newData = [
@@ -118,6 +119,7 @@ class CircleMemberService extends AppService
             if (empty($return)) {
                 throw new RuntimeException("Failed to add new member $userId to circle $circleId");
             }
+            $Circle->updateMemberCount($circleId);
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();

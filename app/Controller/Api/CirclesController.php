@@ -80,7 +80,7 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
-    public function post_members(int $circleId)
+    public function post_join(int $circleId)
     {
         $error = $this->validatePostMember($circleId);
 
@@ -97,7 +97,8 @@ class CirclesController extends BasePagingController
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (GlException\GoalousConflictException $exception) {
-            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
+            return ErrorResponse::resourceConflict()->withException($exception)
+                                ->withMessage(__("You already joined to this circle."))->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
@@ -147,8 +148,8 @@ class CirclesController extends BasePagingController
             ]
         ];
         $circle = $Circle->find('first', $condition);
-//TODO check if circle is in current team
-        if (empty($circle)) {
+
+        if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) || empty($circle)) {
             return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }
 
