@@ -62,7 +62,7 @@ class PostsController extends BasePagingController
 
     public function get_comments(int $postId)
     {
-        $error = $this->validateGetCommentsAndReaders($postId);
+        $error = $this->validateAccessToPost($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -90,7 +90,7 @@ class PostsController extends BasePagingController
      */
     public function get_readers(int $postId)
     {
-        $error = $this->validateGetCommentsAndReaders($postId);
+        $error = $this->validateAccessToPost($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -285,7 +285,7 @@ class PostsController extends BasePagingController
      *
      * @return ErrorResponse|null
      */
-    public function validateGetCommentsAndReaders(int $postId)
+    public function validateAccessToPost(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
