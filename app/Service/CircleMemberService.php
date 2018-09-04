@@ -158,7 +158,8 @@ class CircleMemberService extends AppService
      * @param int $userId
      * @param int $circleId
      *
-     * @return bool
+     * @return bool TRUE on successful delete
+     * @throws Exception
      */
     public function delete(int $userId, int $circleId): bool
     {
@@ -180,12 +181,24 @@ class CircleMemberService extends AppService
             ]
         ];
 
-        $res = $CircleMember->deleteAll($condition);
+        if (empty($CircleMember->find('all', $condition))) {
 
-        if (!$res) {
             throw new GlException\GoalousNotFoundException(__("Not exist"));
         }
 
-        return true;
+        try {
+            $this->TransactionManager->begin();
+            $res = $CircleMember->remove($circleId, $userId);
+            if (!$res) {
+                throw new RuntimeException("Failed to unjoin use $userId from circle $circleId");
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to unjoin use $userId from circle $circleId", $exception->getTrace());
+            throw $exception;
+        }
+
+        return $res;
     }
 }

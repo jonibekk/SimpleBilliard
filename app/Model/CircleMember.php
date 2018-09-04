@@ -460,7 +460,7 @@ class CircleMember extends AppModel
      * - Delete circle member record
      * - Update counter cache per circle
      *
-     * @param  array $circleId
+     * @param  int $circleId
      * @param  int $userId
      *
      * @return bool
