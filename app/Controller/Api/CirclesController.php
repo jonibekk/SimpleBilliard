@@ -147,7 +147,7 @@ class CirclesController extends BasePagingController
             ]
         ];
         $circle = $Circle->find('first', $condition);
-
+//TODO check if circle is in current team
         if (empty($circle)) {
             return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }

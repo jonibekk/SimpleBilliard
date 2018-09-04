@@ -110,11 +110,19 @@ class CircleMemberService extends AppService
         ];
 
         $CircleMember->create();
-        /** @var CircleMemberEntity $return */
-        $return = $CircleMember->useType()->useEntity()->save($newData, false);
 
-        if (empty($return)) {
-            throw new RuntimeException("Failed to add new circle member");
+        try {
+            $this->TransactionManager->begin();
+            /** @var CircleMemberEntity $return */
+            $return = $CircleMember->useType()->useEntity()->save($newData, false);
+            if (empty($return)) {
+                throw new RuntimeException("Failed to add new member $userId to circle $circleId");
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to add new member $userId to circle $circleId", $exception->getTrace());
+            throw $exception;
         }
 
         return $return;
