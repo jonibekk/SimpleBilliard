@@ -319,9 +319,9 @@ class CircleMember extends AppModel
     }
 
     public function getMemberList(
-        int $circle_id,
-        bool $with_admin = false,
-        bool $with_me = true,
+        $circle_id,
+        $with_admin = false,
+        $with_me = true,
         array $usersToExclude = []
     ) {
         $primary_backup = $this->primaryKey;
