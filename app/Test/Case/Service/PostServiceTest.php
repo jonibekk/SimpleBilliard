@@ -42,6 +42,10 @@ class PostServiceTest extends GoalousTestCase
         'app.video_stream',
         'app.post_resource',
         'app.post_draft',
+        'app.post_like',
+        'app.post_mention',
+        'app.post_read',
+        'app.post_shared_log'
     ];
 
     /**
@@ -689,6 +693,94 @@ class PostServiceTest extends GoalousTestCase
         $result = $PostService->checkUserAccessToPost(1, 1);
 
         $this->assertTrue($result);
+    }
+
+    public function test_softDeletePost_success()
+    {
+        $postId = 1;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $PostService->softDelete($postId);
+
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init('PostDraft');
+
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+
+        /** @var PostLike $PostLike */
+        $PostLike = ClassRegistry::init('PostLike');
+
+        /** @var PostMention $PostMention */
+        $PostMention = ClassRegistry::init('PostMention');
+
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
+        /** @var PostShareUser $PostShareUser */
+        $PostShareUser = ClassRegistry::init('PostShareUser');
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $conditions = [
+            'conditions' => [
+                'post_id' => $postId,
+                'del_flg' => false
+            ]
+        ];
+
+        $postCondition = [
+            'conditions' => [
+                'Post.id'      => $postId,
+                'Post.del_flg' => false
+            ]
+        ];
+
+        $this->assertEmpty($PostDraft->find('first', $conditions));
+        $this->assertEmpty($PostFile->find('first', $conditions));
+        $this->assertEmpty($PostLike->find('first', $conditions));
+        $this->assertEmpty($PostMention->find('first', $conditions));
+        $this->assertEmpty($PostRead->find('first', $conditions));
+        $this->assertEmpty($PostResource->find('first', $conditions));
+        $this->assertEmpty($PostShareCircle->find('first', $conditions));
+        $this->assertEmpty($PostShareUser->find('first', $conditions));
+        $this->assertEmpty($Post->find('first', $postCondition));
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_softDeletePostNotExist_failed()
+    {
+        $postId = 10909;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $PostService->softDelete($postId);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_softDeletePostDeleted_failed()
+    {
+        $postId = 1;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $PostService->softDelete($postId);
+        $PostService->softDelete($postId);
     }
 
     public function test_saveFileInPostAdd_success()
