@@ -111,7 +111,7 @@ $defines = [
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp'
 ];
 
-//If not on docker, use local redis
+//If on docker, use redis container
 if (!empty(getenv('DOCKER_ENV'))) {
     $defines['REDIS_SESSION_HOST'] = 'redis';
     $defines['REDIS_CACHE_HOST'] = 'redis';
