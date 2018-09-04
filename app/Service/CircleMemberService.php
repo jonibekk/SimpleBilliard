@@ -152,4 +152,40 @@ class CircleMemberService extends AppService
         $notifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
     }
 
+    /**
+     * Remove a member from a circle
+     *
+     * @param int $userId
+     * @param int $circleId
+     *
+     * @return bool
+     */
+    public function delete(int $userId, int $circleId): bool
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if (!$Circle->exists($circleId)) {
+            throw new GlException\GoalousNotFoundException(__("This circle does not exist."));
+        }
+
+        $condition = [
+            'conditions' => [
+                'user_id'   => $userId,
+                'circle_id' => $circleId,
+                'del_flg'   => false
+            ]
+        ];
+
+        $res = $CircleMember->deleteAll($condition);
+
+        if (!$res) {
+            throw new GlException\GoalousNotFoundException(__("Not exist"));
+        }
+
+        return true;
+    }
 }

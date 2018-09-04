@@ -2,6 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('Circle', 'Model');
 App::import('Service', 'CircleMemberService');
+App::uses('CircleMember', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -96,5 +97,61 @@ class CircleMemberServiceTest extends GoalousTestCase
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
         $result = $CircleMemberService->add($newUserId, $newTeamId, $newCircleId);
+    }
+
+    public function test_delete_success()
+    {
+        $circleId = 1;
+        $userId = 1;
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $res = $CircleMemberService->delete($userId, $circleId);
+
+        $this->assertTrue($res);
+
+        $condition = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId
+            ]
+        ];
+
+        $res = $CircleMember->find('first', $condition);
+
+        $this->assertEmpty($res);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_deleteCircleNotExist_failed()
+    {
+        $circleId = 101293701;
+        $userId = 1;
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $CircleMemberService->delete($userId, $circleId);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_deleteAlreadyDeleted_failed()
+    {
+        $circleId = 1;
+        $userId = 1;
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $CircleMemberService->delete($userId, $circleId);
+        $CircleMemberService->delete($userId, $circleId);
     }
 }

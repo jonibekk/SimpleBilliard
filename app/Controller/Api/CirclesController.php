@@ -20,6 +20,28 @@ use Goalous\Exception as GlException;
 
 class CirclesController extends BasePagingController
 {
+    /**
+     * Get circle by Id
+     *
+     * @param int $circleId
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function get_detail(int $circleId)
+    {
+        $error = $this->validateGetCircle($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init("CircleService");
+
+        $circle = $CircleService->get($circleId);
+        return ApiResponse::ok()->withData($circle)->getResponse();
+    }
+
     public function get_posts(int $circleId)
     {
         $error = $this->validateGetCircle($circleId);
@@ -106,6 +128,28 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withData($return->toArray())->getResponse();
     }
 
+    public function delete_members(int $circleId)
+    {
+        $error = $this->validateDeleteMember($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        try {
+            /** @var CircleMemberService $CircleMemberService */
+            $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+            $CircleMemberService->delete($this->getUserId(), $circleId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(['circle_id' => $circleId, 'user_id' => $this->getUserId()])->getResponse();
+    }
+
     /**
      * Validation for endpoint get_posts
      *
@@ -131,6 +175,25 @@ class CirclesController extends BasePagingController
                     $this->getTeamId()))) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
                                 ->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate delete member endpoint
+     *
+     * @param int $circleId
+     *
+     * @return ErrorResponse | null
+     */
+    private function validateDeleteMember(int $circleId)
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        if (!$Circle->exists($circleId)) {
+            return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }
 
         return null;
@@ -185,25 +248,4 @@ class CirclesController extends BasePagingController
         ];
     }
 
-    /**
-     * Get circle by Id
-     *
-     * @param int $circleId
-     *
-     * @return ApiResponse|BaseApiResponse
-     */
-    function get_detail(int $circleId)
-    {
-        $error = $this->validateGetCircle($circleId);
-
-        if (!empty($error)) {
-            return $error;
-        }
-
-        /** @var CircleService $CircleService */
-        $CircleService = ClassRegistry::init("CircleService");
-
-        $circle = $CircleService->get($circleId);
-        return ApiResponse::ok()->withData($circle)->getResponse();
-    }
 }

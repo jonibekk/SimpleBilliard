@@ -383,14 +383,17 @@ class AppModel extends Model
             return false;
         }
 
-        return (bool)$this->find('count', array(
-            'conditions' => array(
+        return (bool)$this->find('count', [
+            'conditions' => [
                 $this->alias . '.' . $this->primaryKey => $id
-            ),
+            ],
+            'fields'     => [
+                'id'
+            ],
             'recursive'  => -1,
             //TODO callbacksはtrueに変更する。影響範囲がかなりデカイので慎重にテストした上で行う。
             'callbacks'  => false
-        ));
+        ]);
     }
 
     /**
