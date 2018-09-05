@@ -185,7 +185,7 @@ class PostsController extends BasePagingController
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        $circleId = Hash::get($requestBody, 'circle_id');
+        $circleId = (int)Hash::get($requestBody, 'circle_id');
 
         if (!empty($circleId) && !$CircleMember->isJoined($circleId, $this->getUserId())) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
