@@ -62,10 +62,10 @@ class CircleMember extends AppModel
         'circle_id'             => DataType::INT,
         'team_id'               => DataType::INT,
         'user_id'               => DataType::INT,
-        'team_flg'              => DataType::BOOL,
+        'admin_flg'             => DataType::BOOL,
         'unread_count'          => DataType::INT,
         'show_for_all_feed_flg' => DataType::BOOL,
-        'admin_flg'             => DataType::BOOL,
+        'get_notification_flg'  => DataType::BOOL,
         'last_posted'           => DataType::INT
     ];
 
