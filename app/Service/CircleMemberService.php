@@ -120,6 +120,7 @@ class CircleMemberService extends AppService
                 throw new RuntimeException("Failed to add new member $userId to circle $circleId");
             }
             $Circle->updateMemberCount($circleId);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();

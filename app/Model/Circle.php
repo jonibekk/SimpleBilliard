@@ -5,8 +5,8 @@ App::uses('UploadHelper', 'View/Helper');
 /**
  * Circle Model
  *
- * @property Team            $Team
- * @property CircleMember    $CircleMember
+ * @property Team $Team
+ * @property CircleMember $CircleMember
  * @property PostShareCircle $PostShareCircle
  */
 
@@ -41,17 +41,17 @@ class Circle extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles'         => [
-                    'small'        => '32x32',
-                    'medium'       => '48x48',
+                'styles' => [
+                    'small' => '32x32',
+                    'medium' => '48x48',
                     'medium_large' => '96x96',
-                    'large'        => '128x128',
-                    'x_large'      => '256x256',
+                    'large' => '128x128',
+                    'x_large' => '256x256',
                 ],
-                'path'           => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url'    => 'no-image-circle.jpg',
+                'path' => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url' => 'no-image-circle.jpg',
                 's3_default_url' => 'sys/defaults/no-image-circle.svg',
-                'quality'        => 100,
+                'quality' => 100,
             ]
         ]
     ];
@@ -69,14 +69,14 @@ class Circle extends AppModel
      * @var array
      */
     public $validate = [
-        'name'         => [
-            'isString'  => [
+        'name' => [
+            'isString' => [
                 'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notBlank'  => ['rule' => 'notBlank', 'required' => true],
+            'notBlank' => ['rule' => 'notBlank', 'required' => true],
         ],
-        'del_flg'      => [
+        'del_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -86,20 +86,20 @@ class Circle extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'public_flg'   => [
+        'public_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'photo'        => [
-            'image_max_size'  => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
-            'image_type'      => ['rule' => ['attachmentImageType',],],
+        'photo' => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
+            'image_type' => ['rule' => ['attachmentImageType',],],
             'canProcessImage' => ['rule' => 'canProcessImage',],
         ],
-        'description'  => [
+        'description' => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
-            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission'],
-            'notBlank'  => ['rule' => 'notBlank', 'required' => true],
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission'],
+            'notBlank' => ['rule' => 'notBlank', 'required' => true],
         ]
     ];
 
@@ -113,9 +113,9 @@ class Circle extends AppModel
     ];
 
     public $modelConversionTable = [
-        'team_id'             => DataType::INT,
-        'public_flg'          => DataType::BOOL,
-        'team_all_flg'        => DataType::BOOL,
+        'team_id' => DataType::INT,
+        'public_flg' => DataType::BOOL,
+        'team_all_flg' => DataType::BOOL,
         'circle_member_count' => DataType::INT,
         'latest_post_created' => DataType::INT
     ];
@@ -126,11 +126,11 @@ class Circle extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CircleMember'    => [
+        'CircleMember' => [
             'dependent' => true,
         ],
-        'CircleAdmin'     => [
-            'className'  => 'CircleMember',
+        'CircleAdmin' => [
+            'className' => 'CircleMember',
             'conditions' => ['CircleAdmin.admin_flg' => true],
         ],
         'PostShareCircle' => [
@@ -179,7 +179,7 @@ class Circle extends AppModel
      * $keyword にマッチする公開サークル一覧を返す
      *
      * @param       $keyword
-     * @param int   $limit
+     * @param int $limit
      * @param array $params
      *  'public_flg' 指定した場合は公開状態で絞り込む: default null
      *
@@ -197,11 +197,11 @@ class Circle extends AppModel
         $my_circle_list = $this->CircleMember->getMyCircleList();
         $options = [
             'conditions' => [
-                'id'        => $my_circle_list,
+                'id' => $my_circle_list,
                 'name LIKE' => '%' . $keyword . '%',
             ],
-            'limit'      => $limit,
-            'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
+            'limit' => $limit,
+            'fields' => ['name', 'id', 'photo_file_name', 'team_all_flg'],
         ];
         if ($params['public_flg'] !== null) {
             $options['conditions']['public_flg'] = $params['public_flg'];
@@ -242,26 +242,26 @@ class Circle extends AppModel
 
         $options = [
             'conditions' => [
-                'Circle.team_id'    => $this->current_team_id,
+                'Circle.team_id' => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
-            'order'      => [$order],
-            'contain'    => [
+            'order' => [$order],
+            'contain' => [
                 'CircleMember' => [
                     'conditions' => [
                         'CircleMember.user_id' => $active_user_ids,
                     ],
-                    'fields'     => [
+                    'fields' => [
                         'CircleMember.id',
                         'CircleMember.user_id'
                     ],
                 ],
-                'CircleAdmin'  => [
+                'CircleAdmin' => [
                     'conditions' => [
-                        'CircleAdmin.user_id'   => $this->my_uid,
+                        'CircleAdmin.user_id' => $this->my_uid,
                         'CircleAdmin.admin_flg' => true
                     ],
-                    'fields'     => [
+                    'fields' => [
                         'CircleAdmin.id'
                     ],
                 ]
@@ -334,10 +334,10 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'Circle.team_id'    => $this->current_team_id,
+                'Circle.team_id' => $this->current_team_id,
                 'Circle.public_flg' => true,
             ],
-            'fields'     => [
+            'fields' => [
                 'Circle.id',
                 'Circle.name',
                 'Circle.photo_file_name',
@@ -357,10 +357,10 @@ class Circle extends AppModel
 
         $options = [
             'conditions' => [
-                'Circle.id'      => $circle_ids,
+                'Circle.id' => $circle_ids,
                 'Circle.team_id' => $this->current_team_id,
             ],
-            'fields'     => [
+            'fields' => [
                 'Circle.name',
                 'Circle.photo_file_name',
                 'Circle.circle_member_count',
@@ -369,15 +369,15 @@ class Circle extends AppModel
                 'Circle.public_flg',
                 'Circle.team_all_flg',
             ],
-            'contain'    => [
+            'contain' => [
                 'CircleMember' => [
                     'conditions' => [
                         'CircleMember.user_id' => $active_user_ids,
                     ],
-                    'fields'     => [
+                    'fields' => [
                         'CircleMember.id'
                     ],
-                    'User'       => [
+                    'User' => [
                         'fields' => $this->CircleMember->User->profileFields
                     ]
                 ]
@@ -391,13 +391,13 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'Circle.id'      => $ids,
+                'Circle.id' => $ids,
                 'Circle.team_id' => $this->current_team_id ?? $teamId,
             ],
-            'fields'     => [
+            'fields' => [
                 'Circle.name'
             ],
-            'order'      => 'rand()',
+            'order' => 'rand()',
         ];
         if ($this->getDataSource()->config['datasource'] == 'Database/Sqlite') {
             $options['order'] = 'random()';
@@ -432,7 +432,7 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'id'         => $circle_id,
+                'id' => $circle_id,
                 'public_flg' => false
             ]
         ];
@@ -450,7 +450,7 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'id'           => $circle_id,
+                'id' => $circle_id,
                 'team_all_flg' => true
             ]
         ];
@@ -478,7 +478,7 @@ class Circle extends AppModel
             function () use ($model, $teamId) {
                 $options = [
                     'conditions' => [
-                        'team_id'      => $teamId,
+                        'team_id' => $teamId,
                         'team_all_flg' => true,
                     ]
                 ];
@@ -506,7 +506,7 @@ class Circle extends AppModel
      * サークル名が $keyword にマッチするサークル一覧を返す
      *
      * @param string $keyword
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -518,14 +518,14 @@ class Circle extends AppModel
         $keyword = trim($keyword);
         $options = [
             'conditions' => [
-                'OR'               => [
-                    'Circle.id'         => $circle_list,
+                'OR' => [
+                    'Circle.id' => $circle_list,
                     'Circle.public_flg' => 1,
                 ],
                 'Circle.name LIKE' => '%' . $keyword . '%',
-                'Circle.team_id'   => $this->current_team_id,
+                'Circle.team_id' => $this->current_team_id,
             ],
-            'limit'      => $limit,
+            'limit' => $limit,
         ];
         return $this->find('all', $options);
     }
@@ -534,7 +534,7 @@ class Circle extends AppModel
      * 自分が閲覧可能なサークル（公開サークル + 自分が所属している秘密サークル）の select2 用データを返す
      *
      * @param string $keyword
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -566,7 +566,7 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'id'      => $circleId,
+                'id' => $circleId,
                 'team_id' => $teamId
             ],
         ];
@@ -586,22 +586,41 @@ class Circle extends AppModel
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        $memberCount = $CircleMember->getActiveMemberCount($circleId);
+        $memberCount = $CircleMember->getMemberCount($circleId, true);
 
         $newData = [
             'circle_member_count' => $memberCount,
-            'modified'            => GoalousDateTime::now()->getTimestamp()
+            'modified' => GoalousDateTime::now()->getTimestamp()
         ];
 
         $condition = [
-            'conditions' => [
-                'circle_id' => $circleId,
-                'del_flg'   => false
-            ]
+            'Circle.id' => $circleId,
+            'del_flg' => false
         ];
 
         $this->updateAll($newData, $condition);
 
         return $memberCount;
+    }
+
+    /**
+     * Get the team ID of this circle
+     *
+     * @param int $circleId
+     *
+     * @return int Team ID of the circle
+     */
+    public function getTeamId(int $circleId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $circleId
+            ],
+            'fields' => [
+                'team_id'
+            ]
+        ];
+
+        return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
     }
 }

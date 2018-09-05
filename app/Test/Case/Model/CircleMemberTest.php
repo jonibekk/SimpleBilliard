@@ -131,7 +131,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -150,7 +150,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -173,7 +173,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -192,7 +192,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -310,9 +310,9 @@ class CircleMemberTest extends GoalousTestCase
         $this->_setDefault(1, 1);
         $data = [
             'Circle' => [
-                'name'       => 'test',
+                'name' => 'test',
                 'public_flg' => true,
-                'team_id'    => 1,
+                'team_id' => 1,
             ]
         ];
         $this->CircleMember->Circle->save($data);
@@ -389,7 +389,7 @@ class CircleMemberTest extends GoalousTestCase
     {
         $this->_setDefault(1, 1);
         $circle = $this->CircleMember->Circle->save([
-            'name'        => 'test',
+            'name' => 'test',
             'description' => 'test'
         ]);
         $this->assertTrue($this->CircleMember->join($circle['Circle']['id'], 1));
@@ -399,7 +399,7 @@ class CircleMemberTest extends GoalousTestCase
     {
         $this->_setDefault(1, 1);
         $circle = $this->CircleMember->Circle->save([
-            'name'        => 'test',
+            'name' => 'test',
             'description' => 'test'
         ]);
         $this->CircleMember->join($circle['Circle']['id'], 1);
@@ -410,7 +410,7 @@ class CircleMemberTest extends GoalousTestCase
     {
         $this->_setDefault(1, 1);
         $circle = $this->CircleMember->Circle->save([
-            'name'        => 'test',
+            'name' => 'test',
             'description' => 'test'
         ]);
         $this->CircleMember->join($circle['Circle']['id'], 1);
@@ -432,7 +432,7 @@ class CircleMemberTest extends GoalousTestCase
         $res = $this->CircleMember->editCircleSetting(1, 1, [
             'CircleMember' => [
                 'show_for_all_feed_flg' => 1,
-                'get_notification_flg'  => 1,
+                'get_notification_flg' => 1,
             ]
         ]);
         $this->assertTrue($res);
@@ -443,7 +443,7 @@ class CircleMemberTest extends GoalousTestCase
         $res = $this->CircleMember->editCircleSetting(1, 1, [
             'CircleMember' => [
                 'show_for_all_feed_flg' => 1,
-                'get_notification_flg'  => 0,
+                'get_notification_flg' => 0,
             ]
         ]);
         $this->assertTrue($res);
@@ -476,8 +476,8 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertNotEmpty($rows);
         $user_id = current($rows);
         $this->CircleMember->updateAll(['get_notification_flg' => 0], [
-            'CircleMember.user_id'   => $user_id,
-            'CircleMember.team_id'   => 1,
+            'CircleMember.user_id' => $user_id,
+            'CircleMember.team_id' => 1,
             'CircleMember.circle_id' => 1,
         ]);
         $rows = $this->CircleMember->getNotificationEnableUserList(1);
@@ -498,27 +498,27 @@ class CircleMemberTest extends GoalousTestCase
         // In case that user join only team-all-circle
         $this->CircleMember->Circle->saveAll([
             [
-                'id'           => 1,
-                'name'         => 'circle1',
-                'description'  => 'test',
-                'public_flg'   => true,
-                'team_id'      => 1,
+                'id' => 1,
+                'name' => 'circle1',
+                'description' => 'test',
+                'public_flg' => true,
+                'team_id' => 1,
                 'team_all_flg' => true
             ],
             [
-                'id'          => 2,
-                'name'        => 'circle2',
+                'id' => 2,
+                'name' => 'circle2',
                 'description' => 'test',
-                'public_flg'  => true,
-                'team_id'     => 1
+                'public_flg' => true,
+                'team_id' => 1
             ],
         ]);
         $this->CircleMember->save([
             'CircleMember' => [
-                'id'        => 1,
-                'user_id'   => 1,
+                'id' => 1,
+                'user_id' => 1,
                 'circle_id' => 1,
-                'team_id'   => 1,
+                'team_id' => 1,
             ]
         ]);
         $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
@@ -527,10 +527,10 @@ class CircleMemberTest extends GoalousTestCase
         // In case that user join or create more one circle
         $this->CircleMember->save([
             'CircleMember' => [
-                'id'        => 2,
-                'user_id'   => 1,
+                'id' => 2,
+                'user_id' => 1,
                 'circle_id' => 2,
-                'team_id'   => 1,
+                'team_id' => 1,
             ]
         ]);
         $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
@@ -566,4 +566,11 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertEmpty($res);
     }
 
+    public function test_getMemberCount_success()
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $this->assertEquals(3, $CircleMember->getMemberCount(1));
+    }
 }
