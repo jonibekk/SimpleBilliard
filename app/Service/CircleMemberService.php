@@ -157,13 +157,13 @@ class CircleMemberService extends AppService
      * Remove a member from a circle
      *
      * @param int $userId
-     * @param int $circleId
      * @param int $teamId
+     * @param int $circleId
      *
      * @return bool TRUE on successful delete
      * @throws Exception
      */
-    public function delete(int $userId, int $circleId, int $teamId): bool
+    public function delete(int $userId, int $teamId, int $circleId): bool
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -207,13 +207,13 @@ class CircleMemberService extends AppService
             /** @var CirclePinService $CirclePinService */
             $CirclePinService = ClassRegistry::init('CirclePinService');
 
-            $CirclePinService->deleteCircleId($userId,$teamId, $circleId);
+            $CirclePinService->deleteCircleId($userId, $teamId, $circleId);
 
             //If circle is secret, perform additional deletion
-            if (!$circle['public_flg']){
-                //TODO remove saved post
-                //TODO remove post_share_circles
-                //TODO remove post_shared_users
+            if (!$circle['public_flg']) {
+                /** @var SavedPostService $SavedPostService */
+                $SavedPostService = ClassRegistry::init('SavedPostService');
+                $SavedPostService->deleteAllInCircle($userId, $teamId, $circleId);
             }
             //TODO update member count in circle
             $this->TransactionManager->commit();

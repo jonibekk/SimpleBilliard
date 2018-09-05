@@ -223,8 +223,4 @@ SQL;
         $res = $this->query($sql);
         return $res !== false;
     }
-
-    public function deleteAllSavedPost(int $userId, int $teamId, int $circleId):bool {
-
-    }
 }
