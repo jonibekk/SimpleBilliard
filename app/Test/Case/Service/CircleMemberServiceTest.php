@@ -45,7 +45,7 @@ class CircleMemberServiceTest extends GoalousTestCase
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
+        $result = $CircleMemberService->add($newUserId, $newTeamId, $newCircleId);
 
         $this->assertNotEmpty($result);
         $this->assertNotEmpty($result['id']);
@@ -66,8 +66,8 @@ class CircleMemberServiceTest extends GoalousTestCase
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
-        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
+        $result = $CircleMemberService->add($newUserId, $newTeamId, $newCircleId);
+        $result = $CircleMemberService->add($newUserId, $newTeamId, $newCircleId);
     }
 
     /**
@@ -82,6 +82,6 @@ class CircleMemberServiceTest extends GoalousTestCase
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->add($newUserId, $newCircleId, $newTeamId);
+        $result = $CircleMemberService->add($newUserId, $newTeamId, $newCircleId);
     }
 }
