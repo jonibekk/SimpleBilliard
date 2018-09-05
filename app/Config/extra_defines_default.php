@@ -10,9 +10,6 @@
 if (file_exists(APP . 'Config/extra_defines.php')) {
     require_once(APP . 'Config/extra_defines.php');
 }
-if (!empty(getenv('CI_TEST'))) {
-    require_once(APP . 'Config/extra_defines_travis.php');
-}
 
 // https://confluence.goalous.com/x/Z4LT
 // $defines will be define(key,value);
@@ -116,6 +113,10 @@ if (!empty(getenv('DOCKER_ENV'))) {
     $defines['REDIS_SESSION_HOST'] = 'redis';
     $defines['REDIS_CACHE_HOST'] = 'redis';
     $defines['REDIS_HOST'] = 'redis';
+}
+//If on Travis, set S3 Username
+if (!empty(getenv('CI_TEST'))) {
+    $defines['AWS_S3_BUCKET_USERNAME'] = 'travis';
 }
 
 foreach ($defines as $k => $v) {
