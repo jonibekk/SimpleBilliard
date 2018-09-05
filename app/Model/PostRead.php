@@ -95,7 +95,7 @@ class PostRead extends AppModel
         'post_id'       => DataType::INT,
         'user_id'       => DataType::INT,
         'team_id'       => DataType::INT,
-        'del_flag'      => DataType::BOOL
+        'del_flg'      => DataType::BOOL
     ];
 
     protected function pickUnreadPosts($post_list)

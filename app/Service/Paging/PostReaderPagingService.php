@@ -10,11 +10,11 @@ App::uses('User', 'Model');
  * Date: 2018/09/03
  * Time: 13:56
  */
-class ReadersPagingService extends BasePagingService
+class PostReaderPagingService extends BasePagingService
 {
 
-    const EXTEND_ALL = "ext:post_reads:all";
-    const EXTEND_USER = "ext:post_reads:user";
+    const EXTEND_ALL = "ext:post_read:all";
+    const EXTEND_USER = "ext:post_read:user";
     const MAIN_MODEL = 'PostRead';
 
     /**

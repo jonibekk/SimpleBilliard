@@ -3,7 +3,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
-App::import('Service/Paging', 'ReadersPagingService');
+App::import('Service/Paging', 'PostReaderPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
@@ -95,8 +95,8 @@ class PostsController extends BasePagingController
             return $error;
         }
 
-        /** @var ReadersPagingService $ReadersPagingService */
-        $ReadersPagingService = ClassRegistry::init("ReadersPagingService");
+        /** @var PostReaderPagingService $PostReaderPagingService */
+        $PostReaderPagingService = ClassRegistry::init("PostReaderPagingService");
 
         try {
             $pagingRequest = $this->getPagingParameters();
@@ -105,10 +105,10 @@ class PostsController extends BasePagingController
         }
 
         try{
-            $result = $ReadersPagingService->getDataWithPaging(
+            $result = $PostReaderPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(10),
-                $this->getExtensionOptions() ?: $this->getDefaultMemberExtension());
+                $this->getExtensionOptions() ?: $this->getDefaultUserExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
@@ -118,14 +118,14 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * Default extension options for getting circle members
+     * Default extension options for getting user that reads the post
      *
      * @return array
      */
-    private function getDefaultMemberExtension()
+    private function getDefaultUserExtension()
     {
         return [
-            ReadersPagingService::EXTEND_USER
+            PostReaderPagingService::EXTEND_USER
         ];
     }
 
