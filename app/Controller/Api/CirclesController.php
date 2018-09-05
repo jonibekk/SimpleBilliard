@@ -25,7 +25,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return ApiResponse|BaseApiResponse
+     * @return BaseApiResponse
      */
     public function get_detail(int $circleId)
     {
@@ -128,9 +128,9 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withData($return->toArray())->getResponse();
     }
 
-    public function delete_members(int $circleId)
+    public function post_leave(int $circleId)
     {
-        $error = $this->validateDeleteMember($circleId);
+        $error = $this->validatePostLeave($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -140,7 +140,9 @@ class CirclesController extends BasePagingController
             /** @var CircleMemberService $CircleMemberService */
             $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-            $CircleMemberService->delete($this->getUserId(), $circleId);
+            $CircleMemberService->delete($this->getUserId(), $circleId, $this->getTeamId());
+
+            //TODO send notification
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $exception) {
@@ -187,7 +189,7 @@ class CirclesController extends BasePagingController
      *
      * @return ErrorResponse | null
      */
-    private function validateDeleteMember(int $circleId)
+    private function validatePostLeave(int $circleId)
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');

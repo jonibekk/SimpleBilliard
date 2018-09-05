@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Model/Entity', 'CircleMemberEntity');
@@ -21,8 +22,8 @@ class CircleMemberService extends AppService
     /**
      * Fetch list of circles that the user belongs to in a given team
      *
-     * @param int  $userId
-     * @param int  $teamId
+     * @param int $userId
+     * @param int $teamId
      * @param bool $publicOnlyFlag Whether the circle is public or not
      *
      * @return array Array of circle models
@@ -37,11 +38,11 @@ class CircleMemberService extends AppService
                 'Circle.team_id' => $teamId,
                 'Circle.del_flg' => false
             ],
-            'joins'      => [
+            'joins' => [
                 [
-                    'type'       => 'INNER',
-                    'table'      => 'circle_members',
-                    'alias'      => 'CircleMember',
+                    'type' => 'INNER',
+                    'table' => 'circle_members',
+                    'alias' => 'CircleMember',
                     'conditions' => [
                         'Circle.id = CircleMember.circle_id',
                         'CircleMember.user_id' => $userId,
@@ -157,11 +158,12 @@ class CircleMemberService extends AppService
      *
      * @param int $userId
      * @param int $circleId
+     * @param int $teamId
      *
      * @return bool TRUE on successful delete
      * @throws Exception
      */
-    public function delete(int $userId, int $circleId): bool
+    public function delete(int $userId, int $circleId, int $teamId): bool
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -169,33 +171,55 @@ class CircleMemberService extends AppService
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        if (!$Circle->exists($circleId)) {
+        $circleCondition = [
+            'conditions' => [
+                'id' => $circleId,
+                'del_flg' => false
+            ]
+        ];
+
+        $circle = $Circle->useType()->useEntity()->find('first', $circleCondition);
+
+        if (empty($circle)) {
             throw new GlException\GoalousNotFoundException(__("This circle does not exist."));
         }
 
         $condition = [
             'conditions' => [
-                'user_id'   => $userId,
-                'circle_id' => $circleId,
-                'del_flg'   => false
+                'user_id' => $userId,
+                'circle_id' => $circleId
             ]
         ];
 
-        if (empty($CircleMember->find('all', $condition))) {
+        $circleMember = $CircleMember->find('first', $condition);
 
+        if (empty($circleMember)) {
             throw new GlException\GoalousNotFoundException(__("Not exist"));
         }
 
         try {
             $this->TransactionManager->begin();
-            $res = $CircleMember->remove($circleId, $userId);
+            $res = $CircleMember->deleteAll($condition);
             if (!$res) {
-                throw new RuntimeException("Failed to unjoin use $userId from circle $circleId");
+                throw new RuntimeException("Failed to unjoin user $userId from circle $circleId");
             }
+
+            /** @var CirclePinService $CirclePinService */
+            $CirclePinService = ClassRegistry::init('CirclePinService');
+
+            $CirclePinService->deleteCircleId($userId,$teamId, $circleId);
+
+            //If circle is secret, perform additional deletion
+            if (!$circle['public_flg']){
+                //TODO remove saved post
+                //TODO remove post_share_circles
+                //TODO remove post_shared_users
+            }
+            //TODO update member count in circle
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
-            GoalousLog::error("Failed to unjoin use $userId from circle $circleId", $exception->getTrace());
+            GoalousLog::error($exception->getMessage(), $exception->getTrace());
             throw $exception;
         }
 
