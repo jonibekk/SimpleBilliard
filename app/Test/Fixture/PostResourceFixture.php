@@ -54,6 +54,13 @@ class PostResourceFixture extends CakeTestFixtureEx
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'deleted'         => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '削除した日付時刻'
+        ),
         'indexes'         => array(
             'PRIMARY'       => array('column' => 'id', 'unique' => 1),
             'post_id'       => array('column' => 'post_id', 'unique' => 0),

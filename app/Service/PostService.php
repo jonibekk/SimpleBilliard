@@ -1,19 +1,23 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('AttachedFile', 'Model');
 App::import('Service', 'PostFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Lib/Storage', 'UploadedFile');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
-App::uses('User', 'Model');
 App::uses('PostShareCircle', 'Model');
+App::uses('PostDraft', 'Model');
+App::uses('PostRead', 'Model');
+App::uses('PostMention', 'Model');
+App::uses('PostLike', 'Model');
 App::uses('PostFile', 'Model');
 App::uses('PostResource', 'Model');
+App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::uses('AttachedFile', 'Model');
-App::uses('PostDraft', 'Model');
+App::uses('User', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
@@ -592,8 +596,8 @@ class PostService extends AppService
     /**
      * Get list of attached files of a post
      *
-     * @param int              $postId
-     * @param AttachedFileType $type Filtered file type
+     * @param int                                              $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
      *
      * @return AttachedFileEntity[]
      */
@@ -624,6 +628,65 @@ class PostService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    /**
+     * Soft delete circle post and its related data
+     *
+     * @param int $postId
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function softDelete(int $postId): bool
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        //Check if post exists & not deleted
+        $postCondition = [
+            'conditions' => [
+                'id'      => $postId,
+                'del_flg' => false
+            ]
+        ];
+        if (empty($Post->find('first', $postCondition))) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
+        $modelsToDelete = [
+            'PostDraft'       => 'post_id',
+            'PostFile'        => 'post_id',
+            'PostLike'        => 'post_id',
+            'PostMention'     => 'post_id',
+            'PostRead'        => 'post_id',
+            'PostResource'    => 'post_id',
+            'PostShareCircle' => 'post_id',
+            'PostShareUser'   => 'post_id',
+            'Post'            => 'Post.id'
+        ];
+
+        try {
+            $this->TransactionManager->begin();
+            foreach ($modelsToDelete as $model => $column) {
+                /** @var AppModel $Model */
+                $Model = ClassRegistry::init($model);
+
+                $condition = [$column => $postId];
+
+                $res = $Model->softDeleteAll($condition, false);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
+                }
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Error on deleting post $postId: failed post soft delete", $e->getTrace());
+            throw $e;
+        }
+
+        return true;
     }
 
     /**
