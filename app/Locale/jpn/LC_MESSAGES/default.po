@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-09-03 18:22+0900\n"
+"PO-Revision-Date: 2018-09-06 15:16+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -874,8 +874,17 @@ msgstr "データの検証に失敗しました。"
 msgid "Missing token."
 msgstr ""
 
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
+
+msgid "This team member already joined this circle."
+msgstr "このチームメンバーは既にこのサークルに参加しています。"
+
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
+
+msgid "You can not invite."
+msgstr "あなたは招待できません。"
 
 msgid "You don't have permission to access this post"
 msgstr "この投稿にアクセスする権限がありません。"
@@ -1925,9 +1934,6 @@ msgstr "%sMBがアップロードできるファイルの上限です。"
 #| msgid "%s pixel is the limit."
 msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
-
-msgid "You already joined to this circle."
-msgstr "あなたはすでにこのサークルに参加しています。"
 
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
