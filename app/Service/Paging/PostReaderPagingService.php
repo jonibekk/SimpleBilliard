@@ -96,7 +96,7 @@ class PostReaderPagingService extends BasePagingService
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder("id", PagingRequest::PAGE_ORDER_ASC);
+        $pagingRequest->addOrder("id", PagingRequest::PAGE_ORDER_DESC);
         return $pagingRequest;
     }
 
