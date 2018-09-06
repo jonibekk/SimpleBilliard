@@ -215,7 +215,7 @@ class CircleMemberService extends AppService
                 $SavedPostService = ClassRegistry::init('SavedPostService');
                 $SavedPostService->deleteAllInCircle($userId, $teamId, $circleId);
             }
-            //TODO update member count in circle
+            $Circle->updateMemberCount($circleId);
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();

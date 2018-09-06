@@ -103,6 +103,7 @@ class CircleMemberServiceTest extends GoalousTestCase
     {
         $circleId = 1;
         $userId = 1;
+        $teamId = 1;
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -110,7 +111,7 @@ class CircleMemberServiceTest extends GoalousTestCase
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $res = $CircleMemberService->delete($userId, $circleId);
+        $res = $CircleMemberService->delete($userId, $teamId, $circleId);
 
         $this->assertTrue($res);
 
@@ -133,11 +134,12 @@ class CircleMemberServiceTest extends GoalousTestCase
     {
         $circleId = 101293701;
         $userId = 1;
+        $teamId = 1;
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $CircleMemberService->delete($userId, $circleId);
+        $CircleMemberService->delete($userId, $teamId, $circleId);
     }
 
     /**
@@ -147,11 +149,12 @@ class CircleMemberServiceTest extends GoalousTestCase
     {
         $circleId = 1;
         $userId = 1;
+        $teamId = 1;
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $CircleMemberService->delete($userId, $circleId);
-        $CircleMemberService->delete($userId, $circleId);
+        $CircleMemberService->delete($userId, $teamId, $circleId);
+        $CircleMemberService->delete($userId, $teamId, $circleId);
     }
 }
