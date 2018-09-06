@@ -456,6 +456,30 @@ class CircleTest extends GoalousTestCase
         $this->assertTrue($result instanceof CircleEntity);
         $this->assertInternalType('int', $result['id']);
         $this->assertInternalType('int', $result['team_id']);
+    }
 
+    public function test_updateMemberCount_success(){
+
+        $circleId = 1;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $condition = [
+            'conditions' => [
+                'id' => $circleId
+            ]
+        ];
+
+        $startingCircle = $Circle->useType()->useEntity()->find('first', $condition);
+
+        $Circle->updateAll(['circle_member_count' => 0], ['id' => $circleId]);
+
+        $Circle->updateMemberCount($circleId);
+
+        $updatedCircle = $Circle->useType()->useEntity()->find('first', $condition);
+
+        $this->assertNotEqual($startingCircle['modified'], $updatedCircle['modified']);
+        $this->assertNotEqual($startingCircle['circle_member_count'], $updatedCircle['circle_member_count']);
     }
 }

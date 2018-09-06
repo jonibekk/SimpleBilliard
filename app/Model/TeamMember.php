@@ -4,18 +4,23 @@ App::uses('UploadHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('TransactionManager', 'Model');
 App::import('Service', 'UserService');
+App::import('Model/Entity', 'TeamMemberEntity');
 
 use Goalous\Enum as Enum;
 
 /**
  * TeamMember Model
  *
- * @property User        $User
- * @property Team        $Team
- * @property MemberType  $MemberType
- * @property User        $CoachUser
+ * @property User $User
+ * @property Team $Team
+ * @property MemberType $MemberType
+ * @property User $CoachUser
  * @property JobCategory $JobCategory
  */
+
+use Goalous\Enum\Model\TeamMember as TeamMemberEnum;
+use Goalous\Enum\DataType\DataType as DataType;
+
 class TeamMember extends AppModel
 {
     const ADMIN_USER_FLAG = 1;
@@ -36,16 +41,16 @@ class TeamMember extends AppModel
      * @var array
      */
     public $validate = [
-        'member_no'             => ['maxLength' => ['rule' => ['maxLength', 64]]],
-        'comment'               => [
-            'isString'  => [
-                'rule'       => ['isString',],
+        'member_no' => ['maxLength' => ['rule' => ['maxLength', 64]]],
+        'comment' => [
+            'isString' => [
+                'rule' => ['isString',],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
-        'status'                => [
-            'inEnumList'      => [
+        'status' => [
+            'inEnumList' => [
                 'rule' => [
                     'inEnumList',
                     "Goalous\Enum\Model\TeamMember\Status"
@@ -56,9 +61,9 @@ class TeamMember extends AppModel
             ]
         ],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
-        'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
-        'admin_flg'             => ['boolean' => ['rule' => ['boolean'],],],
-        'del_flg'               => ['boolean' => ['rule' => ['boolean'],],],
+        'invitation_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'admin_flg' => ['boolean' => ['rule' => ['boolean'],],],
+        'del_flg' => ['boolean' => ['rule' => ['boolean'],],],
     ];
 
     public $validateBackup = [];
@@ -90,6 +95,21 @@ class TeamMember extends AppModel
     private $active_member_list = [];
     private $local_lang_list = [];
 
+    public $modelConversionTable = [
+        'user_id' => DataType::INT,
+        'team_id' => DataType::INT,
+        'coach_user_id' => DataType::INT,
+        'member_type_id' => DataType::INT,
+        'job_category_id' => DataType::INT,
+        'active_flg' => DataType::BOOL,
+        'invitation_flg' => DataType::BOOL,
+        'evaluation_enable_flg' => DataType::BOOL,
+        'admin_flg' => DataType::BOOL,
+        'evaluable_count' => DataType::INT,
+        'last_login' => DataType::INT,
+        'status' => DataType::INT,
+    ];
+
     /**
      * 現在有効なチーム一覧を取得
      *
@@ -113,10 +133,10 @@ class TeamMember extends AppModel
                 $options = [
                     'conditions' => [
                         'TeamMember.user_id' => $uid,
-                        'TeamMember.status'  => self::USER_STATUS_ACTIVE
+                        'TeamMember.status' => self::USER_STATUS_ACTIVE
                     ],
-                    'fields'     => ['TeamMember.team_id', 'Team.name'],
-                    'contain'    => ['Team']
+                    'fields' => ['TeamMember.team_id', 'Team.name'],
+                    'contain' => ['Team']
                 ];
                 $res = array_filter($model->findWithoutTeamId('list', $options));
                 return $res;
@@ -135,10 +155,10 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'status'  => self::USER_STATUS_ACTIVE,
+                'status' => self::USER_STATUS_ACTIVE,
                 'team_id' => $this->current_team_id
             ],
-            'fields'     => ['user_id', 'user_id']
+            'fields' => ['user_id', 'user_id']
         ];
         $this->active_member_list = $this->find('list', $options);
         $this->active_member_list = $this->User->filterActiveUserList($this->active_member_list);
@@ -196,7 +216,7 @@ class TeamMember extends AppModel
                 'TeamMember.user_id' => $uid,
                 'TeamMember.team_id' => $team_id,
             ],
-            'contain'    => ['Team']
+            'contain' => ['Team']
         ];
         $res = $this->find('first', $options);
         $this->myStatusWithTeam = $res;
@@ -267,15 +287,15 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.team_id' => $teamId,
                 'TeamMember.user_id' => $uid,
-                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
+                'TeamMember.status' => self::USER_STATUS_ACTIVE,
             ],
-            'fields'     => ['TeamMember.id', 'TeamMember.user_id', 'TeamMember.team_id'],
-            'contain'    => [
+            'fields' => ['TeamMember.id', 'TeamMember.user_id', 'TeamMember.team_id'],
+            'contain' => [
                 'User' => [
                     'conditions' => [
                         'User.active_flg' => true,
                     ],
-                    'fields'     => ['User.id']
+                    'fields' => ['User.id']
                 ],
                 'Team' => [
                     'fields' => ['Team.id']
@@ -325,7 +345,7 @@ class TeamMember extends AppModel
 
         $options = [
             'conditions' => [
-                'user_id'   => $uid,
+                'user_id' => $uid,
                 'admin_flg' => true
             ]
         ];
@@ -344,7 +364,7 @@ class TeamMember extends AppModel
         $data = [
             'user_id' => $uid,
             'team_id' => $team_id,
-            'status'  => self::USER_STATUS_ACTIVE,
+            'status' => self::USER_STATUS_ACTIVE,
         ];
         return $this->save($data);
     }
@@ -354,13 +374,14 @@ class TeamMember extends AppModel
         $required_active = true,
         $required_evaluate = false,
         $teamId = null
-    ) {
+    )
+    {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
                 'team_id' => $teamId
             ],
-            'fields'     => ['user_id'],
+            'fields' => ['user_id'],
         ];
         if ($required_active) {
             $options['conditions']['status'] = self::USER_STATUS_ACTIVE;
@@ -387,7 +408,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'team_id' => $teamId,
-                'status'  => [
+                'status' => [
                     self::USER_STATUS_INVITED,
                     self::USER_STATUS_ACTIVE,
                 ],
@@ -415,18 +436,18 @@ class TeamMember extends AppModel
         }
 
         $options = [
-            'fields'     => [
+            'fields' => [
                 'team_id',
                 'COUNT(team_id) as cnt'
             ],
             'conditions' => [
                 'team_id' => $teamIds,
-                'status'  => [
+                'status' => [
                     self::USER_STATUS_INVITED,
                     self::USER_STATUS_ACTIVE,
                 ],
             ],
-            'group'      => ['team_id']
+            'group' => ['team_id']
         ];
         $res = $this->find('all', $options);
         if (empty($res)) {
@@ -584,17 +605,17 @@ class TeamMember extends AppModel
     public function defineTeamMemberOption($team_id)
     {
         $options = [
-            'fields'     => ['id', 'status', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'fields' => ['id', 'status', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
-            'order'      => ['TeamMember.created' => 'DESC'],
-            'contain'    => [
-                'User'      => [
-                    'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+            'order' => ['TeamMember.created' => 'DESC'],
+            'contain' => [
+                'User' => [
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                     'MemberGroup' => [
                         'fields' => ['group_id'],
-                        'Group'  => [
+                        'Group' => [
                             'fields' => ['name']
                         ]
                     ]
@@ -602,7 +623,7 @@ class TeamMember extends AppModel
                 'CoachUser' => [
                     'fields' => $this->User->profileFields
                 ],
-                'Email'     => [
+                'Email' => [
                     'fields' => ['Email.id', 'Email.user_id', 'Email.email_verified']
                 ]
             ]
@@ -650,8 +671,8 @@ class TeamMember extends AppModel
             //ユーザのリンク
             $url = Router::url([
                 'controller' => 'users',
-                'action'     => 'view_goals',
-                'user_id'    => $tm_obj['User']['id'],
+                'action' => 'view_goals',
+                'user_id' => $tm_obj['User']['id'],
             ]);
             $res[$key]['User']['user_page_url'] = $url;
         }
@@ -772,7 +793,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'member_no' => $member_numbers
             ],
-            'fields'     => [
+            'fields' => [
                 'member_no',
                 'user_id',
             ]
@@ -799,10 +820,10 @@ class TeamMember extends AppModel
     function updateFinalEvaluationFromCsv($csv, $term_id)
     {
         $res = [
-            'error'         => false,
+            'error' => false,
             'success_count' => 0,
             'error_line_no' => 0,
-            'error_msg'     => null,
+            'error_msg' => null,
         ];
         $validate = $this->validateUpdateFinalEvaluationCsvData($csv, $term_id);
         if ($validate['error']) {
@@ -847,10 +868,10 @@ class TeamMember extends AppModel
     function updateMembersFromCsv($csv)
     {
         $res = [
-            'error'         => false,
+            'error' => false,
             'success_count' => 0,
             'error_line_no' => 0,
-            'error_msg'     => null,
+            'error_msg' => null,
         ];
         $validate = $this->validateUpdateMemberCsvData($csv);
         if ($validate['error']) {
@@ -874,13 +895,13 @@ class TeamMember extends AppModel
             //set TeamMember id
             $options = [
                 'conditions' => ['email' => $v['Email']['email']],
-                'fields'     => ['email'],
-                'contain'    => [
+                'fields' => ['email'],
+                'contain' => [
                     'User' => [
-                        'fields'     => ['id'],
+                        'fields' => ['id'],
                         'TeamMember' => [
                             'conditions' => ['team_id' => $this->current_team_id],
-                            'fields'     => ['id']
+                            'fields' => ['id']
                         ]
                     ]
                 ]
@@ -914,10 +935,10 @@ class TeamMember extends AppModel
                 foreach ($row_v['Group'] as $k => $v) {
                     $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
                     $member_groups[] = [
-                        'group_id'  => $group['Group']['id'],
+                        'group_id' => $group['Group']['id'],
                         'index_num' => $k,
-                        'team_id'   => $this->current_team_id,
-                        'user_id'   => $row_v['User']['id'],
+                        'team_id' => $this->current_team_id,
+                        'user_id' => $row_v['User']['id'],
                     ];
                 }
                 unset($this->csv_datas[$row_k]['Group']);
@@ -956,8 +977,8 @@ class TeamMember extends AppModel
             foreach ($row_v['Evaluator'] as $r_k => $r_v) {
                 if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
                     $save_evaluator_data[] = [
-                        'index_num'         => $r_k,
-                        'team_id'           => $this->current_team_id,
+                        'index_num' => $r_k,
+                        'team_id' => $this->current_team_id,
                         'evaluatee_user_id' => $row_v['User']['id'],
                         'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
                     ];
@@ -978,9 +999,9 @@ class TeamMember extends AppModel
         $this->_setCsvValidateRule(false);
 
         $res = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 0,
-            'error_msg'     => null,
+            'error_msg' => null,
         ];
 
         $before_csv_data = $this->getAllMembersCsvData();
@@ -1143,9 +1164,9 @@ class TeamMember extends AppModel
         $this->_setCsvValidateRuleFinalEval();
 
         $res = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 0,
-            'error_msg'     => null,
+            'error_msg' => null,
         ];
 
         $before_csv_data = $this->getAllEvaluationsCsvData($term_id);
@@ -1217,7 +1238,7 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'team_id'   => $team_id,
+                'team_id' => $team_id,
                 'member_no' => $member_no
             ],
         ];
@@ -1243,7 +1264,7 @@ class TeamMember extends AppModel
                 'team_id' => $team_id,
                 'user_id' => $user_id,
             ],
-            'contain'    => [
+            'contain' => [
                 'User',
             ]
         ];
@@ -1302,7 +1323,7 @@ class TeamMember extends AppModel
             }
             $options = [
                 'conditions' => ['team_id' => $team_id, 'user_id' => $v['TeamMember']['coach_user_id']],
-                'fields'     => ['member_no']
+                'fields' => ['member_no']
             ];
             $coach_member = $this->find('first', $options);
             $this->csv_datas[$k]['coach_member_no'] = Hash::get($coach_member,
@@ -1316,17 +1337,17 @@ class TeamMember extends AppModel
         foreach ($this->all_users as $k => $v) {
             $options = [
                 'conditions' => ['team_id' => $team_id, 'evaluatee_user_id' => $v['User']['id']],
-                'fields'     => ['evaluator_user_id'],
-                'contain'    => [
+                'fields' => ['evaluator_user_id'],
+                'contain' => [
                     'EvaluatorUser' => [
-                        'fields'     => ['id'],
+                        'fields' => ['id'],
                         'TeamMember' => [
                             'conditions' => ['team_id' => $team_id],
-                            'fields'     => ['member_no']
+                            'fields' => ['member_no']
                         ],
                     ]
                 ],
-                'order'      => 'index_num ASC'
+                'order' => 'index_num ASC'
             ];
             $evaluators = $this->Team->Evaluator->find('all', $options);
             foreach ($evaluators as $r_k => $r_v) {
@@ -1349,16 +1370,16 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.team_id' => $team_id,
             ],
-            'fields'     => ['member_no', 'coach_user_id', 'status', 'admin_flg', 'evaluation_enable_flg'],
-            'order'      => ['TeamMember.member_no ASC'],
-            'contain'    => [
-                'User'       => [
+            'fields' => ['member_no', 'coach_user_id', 'status', 'admin_flg', 'evaluation_enable_flg'],
+            'order' => ['TeamMember.member_no ASC'],
+            'contain' => [
+                'User' => [
                     'fields' => $this->User->profileFields,
                 ],
                 'MemberType' => [
                     'fields' => ['name']
                 ],
-                'CoachUser'  => [
+                'CoachUser' => [
                     'fields' => $this->User->profileFields,
                 ]
             ]
@@ -1366,18 +1387,18 @@ class TeamMember extends AppModel
         switch ($type) {
             case 'before_update':
                 $options['contain']['User'] = [
-                    'fields'       => ['first_name', 'last_name'],
-                    'MemberGroup'  => [
+                    'fields' => ['first_name', 'last_name'],
+                    'MemberGroup' => [
                         'conditions' => ['MemberGroup.team_id' => $team_id],
-                        'fields'     => ['group_id'],
-                        'Group'      => [
+                        'fields' => ['group_id'],
+                        'Group' => [
                             'fields' => ['name']
                         ]
                     ],
                     'PrimaryEmail' => [
                         'fields' => ['email'],
                     ],
-                    'Email'        => [
+                    'Email' => [
                         'fields' => ['email_verified']
                     ]
                 ];
@@ -1570,22 +1591,22 @@ class TeamMember extends AppModel
     function _getCsvHeading()
     {
         return [
-            'email'                 => __("Email(*, Not changed)"),
-            'first_name'            => __("First Name(*, Not changed)"),
-            'last_name'             => __("Last Name(*, Not changed)"),
-            'member_no'             => __("Member ID(*)"),
-            'status'                => __("Member active status(*)"),
-            'admin_flg'             => __("Administrator(*)"),
+            'email' => __("Email(*, Not changed)"),
+            'first_name' => __("First Name(*, Not changed)"),
+            'last_name' => __("Last Name(*, Not changed)"),
+            'member_no' => __("Member ID(*)"),
+            'status' => __("Member active status(*)"),
+            'admin_flg' => __("Administrator(*)"),
             'evaluation_enable_flg' => __("Evaluated(*)"),
-            'member_type'           => __("Member Type"),
-            'group.1'               => __("Group 1"),
-            'group.2'               => __("Group 2"),
-            'group.3'               => __("Group 3"),
-            'group.4'               => __("Group 4"),
-            'group.5'               => __("Group 5"),
-            'group.6'               => __("Group 6"),
-            'group.7'               => __("Group 7"),
-            'coach_member_no'       => __("Coach ID"),
+            'member_type' => __("Member Type"),
+            'group.1' => __("Group 1"),
+            'group.2' => __("Group 2"),
+            'group.3' => __("Group 3"),
+            'group.4' => __("Group 4"),
+            'group.5' => __("Group 5"),
+            'group.6' => __("Group 6"),
+            'group.7' => __("Group 7"),
+            'coach_member_no' => __("Coach ID"),
             'evaluator_member_no.1' => __("Evaluator 1"),
             'evaluator_member_no.2' => __("Evaluator 2"),
             'evaluator_member_no.3' => __("Evaluator 3"),
@@ -1601,15 +1622,15 @@ class TeamMember extends AppModel
     {
 
         $record = [
-            'member_no'          => __("Member ID(*)"),
-            'member_type'        => __("Member Type"),
-            'user_name'          => __("Member name"),
-            'coach_user_name'    => __("Coach name"),
-            'goal_count'         => __("Number of goals"),
-            'kr_count'           => __("Number of key results"),
-            'action_count'       => __("Number of actions"),
-            'goal_progress'      => __("Progress(%)"),
-            'total.self.score'   => __('Score by him/herself'),
+            'member_no' => __("Member ID(*)"),
+            'member_type' => __("Member Type"),
+            'user_name' => __("Member name"),
+            'coach_user_name' => __("Coach name"),
+            'goal_count' => __("Number of goals"),
+            'kr_count' => __("Number of key results"),
+            'action_count' => __("Number of actions"),
+            'goal_progress' => __("Progress(%)"),
+            'total.self.score' => __('Score by him/herself'),
             'total.self.comment' => __('Comment by him/herself'),
         ];
         //evaluator
@@ -1629,129 +1650,129 @@ class TeamMember extends AppModel
     function _setCsvValidateRule($new = true)
     {
         $common_validate = [
-            'email'                 => [
+            'email' => [
                 'notBlank' => [
-                    'rule'    => 'notBlank',
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Email Address"))
                 ],
-                'email'    => [
-                    'rule'    => ['email'],
+                'email' => [
+                    'rule' => ['email'],
                     'message' => __("%s is not correct.", __("Email Address"))
                 ],
             ],
-            'member_no'             => [
-                'notBlank'        => [
-                    'rule'    => 'notBlank',
+            'member_no' => [
+                'notBlank' => [
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Member ID"))
                 ],
-                'maxLength'       => [
-                    'rule'    => ['maxLength', 64],
+                'maxLength' => [
+                    'rule' => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Member ID"))
                 ],
                 'isNotExistArray' => [
-                    'rule'       => ['isNotExistArray', 'evaluator_member_no'],
-                    'message'    => __("%s doesn't allow you to specify the ID of you.", __("Evaluator ID")),
+                    'rule' => ['isNotExistArray', 'evaluator_member_no'],
+                    'message' => __("%s doesn't allow you to specify the ID of you.", __("Evaluator ID")),
                     'allowEmpty' => true,
                 ],
             ],
-            'first_name'            => [
-                'maxLength'    => [
-                    'rule'    => ['maxLength', 64],
+            'first_name' => [
+                'maxLength' => [
+                    'rule' => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("First Name"))
                 ],
-                'notBlank'     => [
-                    'rule'    => 'notBlank',
+                'notBlank' => [
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("First Name"))
                 ],
                 'userNameChar' => ['rule' => ['userNameChar']],
             ],
-            'last_name'             => [
-                'maxLength'    => [
-                    'rule'    => ['maxLength', 64],
+            'last_name' => [
+                'maxLength' => [
+                    'rule' => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Last Name"))
                 ],
-                'notBlank'     => [
-                    'rule'    => 'notBlank',
+                'notBlank' => [
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Last Name"))
                 ],
                 'userNameChar' => ['rule' => ['userNameChar']],
             ],
-            'admin_flg'             => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
+            'admin_flg' => [
+                'notBlank' => [
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Administrators"))
                 ],
                 'isOnOrOff' => [
-                    'rule'    => 'isOnOrOff',
+                    'rule' => 'isOnOrOff',
                     'message' => __("%s must be either 'ON' or 'OFF'.", __('Administrators'))
                 ],
             ],
             'evaluation_enable_flg' => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
+                'notBlank' => [
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Evaluator"))
                 ],
                 'isOnOrOff' => [
-                    'rule'    => 'isOnOrOff',
+                    'rule' => 'isOnOrOff',
                     'message' => __("%s must be either 'ON' or 'OFF'.", __('Evaluator'))
                 ],
             ],
-            'member_type'           => [
+            'member_type' => [
                 'maxLength' => [
-                    'rule'    => ['maxLength', 64],
+                    'rule' => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Member Type"))
                 ],
             ],
-            'group'                 => [
-                'isAlignLeft'     => [
-                    'rule'       => 'isAlignLeft',
-                    'message'    => __("Please %s fill with align left.", __("Group name")),
+            'group' => [
+                'isAlignLeft' => [
+                    'rule' => 'isAlignLeft',
+                    'message' => __("Please %s fill with align left.", __("Group name")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
-                    'rule'       => 'isNotDuplicated',
-                    'message'    => __("%s is duplicated.", __("Group name")),
+                    'rule' => 'isNotDuplicated',
+                    'message' => __("%s is duplicated.", __("Group name")),
                     'allowEmpty' => true,
                 ],
-                'maxLengthArray'  => [
-                    'rule'       => ['maxLengthArray', 64],
-                    'message'    => __("%s should be entered in less than 64 characters.", __("Group name")),
+                'maxLengthArray' => [
+                    'rule' => ['maxLengthArray', 64],
+                    'message' => __("%s should be entered in less than 64 characters.", __("Group name")),
                     'allowEmpty' => true,
                 ],
             ],
-            'coach_member_no'       => [
+            'coach_member_no' => [
                 'isNotEqual' => [
-                    'rule'       => ['isNotEqual', 'member_no'],
-                    'message'    => __("%s doesn't allow you to specify the ID of you.", __("Coach ID")),
+                    'rule' => ['isNotEqual', 'member_no'],
+                    'message' => __("%s doesn't allow you to specify the ID of you.", __("Coach ID")),
                     'allowEmpty' => true,
                 ],
             ],
-            'evaluator_member_no'   => [
-                'isAlignLeft'     => [
-                    'rule'       => 'isAlignLeft',
-                    'message'    => __("Please %s fill with align left.", __("Evaluator")),
+            'evaluator_member_no' => [
+                'isAlignLeft' => [
+                    'rule' => 'isAlignLeft',
+                    'message' => __("Please %s fill with align left.", __("Evaluator")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
-                    'rule'       => 'isNotDuplicated',
-                    'message'    => __("%s is duplicated.", __("Evaluator")),
+                    'rule' => 'isNotDuplicated',
+                    'message' => __("%s is duplicated.", __("Evaluator")),
                     'allowEmpty' => true,
                 ],
-                'maxLengthArray'  => [
-                    'rule'       => ['maxLengthArray', 64],
-                    'message'    => __("%s should be entered in less than 64 characters.", __("Evaluator")),
+                'maxLengthArray' => [
+                    'rule' => ['maxLengthArray', 64],
+                    'message' => __("%s should be entered in less than 64 characters.", __("Evaluator")),
                     'allowEmpty' => true,
                 ],
             ],
         ];
         $validateOfUpdate = [
             'status' => [
-                'notBlank'  => [
-                    'rule'    => 'notBlank',
+                'notBlank' => [
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Active status"))
                 ],
                 'isOnOrOff' => [
-                    'rule'    => 'isOnOrOff',
+                    'rule' => 'isOnOrOff',
                     'message' => __("%s must be either 'ON' or 'OFF'.", __('Active status'))
                 ],
             ],
@@ -1767,7 +1788,7 @@ class TeamMember extends AppModel
         $validate_rules = [
             'total.final.score' => [
                 'notBlank' => [
-                    'rule'    => 'notBlank',
+                    'rule' => 'notBlank',
                     'message' => __("%s is required.", __("Score by final evaluator"))
                 ],
             ],
@@ -1797,7 +1818,7 @@ class TeamMember extends AppModel
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
         $options = [
-            'fields'     => ['coach_user_id', 'coach_user_id'],
+            'fields' => ['coach_user_id', 'coach_user_id'],
             'conditions' => [
                 'user_id' => $user_id,
             ],
@@ -1822,11 +1843,11 @@ class TeamMember extends AppModel
         // 取得カラム: user_id
         // 条件: coach_user_id = パラメータ1 team_id = パラメータ2
         $options = [
-            'fields'     => ['user_id'],
+            'fields' => ['user_id'],
             'conditions' => [
                 'TeamMember.coach_user_id' => $user_id,
-                'status'                   => self::USER_STATUS_ACTIVE,
-                'evaluation_enable_flg'    => 1,
+                'status' => self::USER_STATUS_ACTIVE,
+                'evaluation_enable_flg' => 1,
             ],
         ];
         return $this->find('list', $options);
@@ -1836,7 +1857,7 @@ class TeamMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id'   => $this->current_team_id,
+                'team_id' => $this->current_team_id,
                 'admin_flg' => true
             ]
         ];
@@ -1866,7 +1887,7 @@ class TeamMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'team_id'   => $team_id,
+                'team_id' => $team_id,
                 'admin_flg' => 1
             ]
         ];
@@ -1878,7 +1899,7 @@ class TeamMember extends AppModel
      *
      * @param      $user_id
      * @param null $limit
-     * @param int  $page
+     * @param int $page
      *
      * @return array|null
      */
@@ -1887,9 +1908,9 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'coach_user_id' => $user_id,
-                'team_id'       => $this->current_team_id,
+                'team_id' => $this->current_team_id,
             ],
-            'fields'     => [
+            'fields' => [
                 'user_id'
             ],
         ];
@@ -1908,7 +1929,7 @@ class TeamMember extends AppModel
     function getEvaluationEnableFlg($user_id)
     {
         $options = [
-            'fields'     => ['status', 'evaluation_enable_flg'],
+            'fields' => ['status', 'evaluation_enable_flg'],
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
             ],
@@ -1934,7 +1955,7 @@ class TeamMember extends AppModel
                 'TeamMember.user_id' => $user_id,
                 'TeamMember.team_id' => $team_id,
             ],
-            'fields'     => ['coach_user_id'],
+            'fields' => ['coach_user_id'],
         ];
         $res = $this->find('first', $options);
         return Hash::get($res, 'TeamMember.coach_user_id') ? $res['TeamMember']['coach_user_id'] : null;
@@ -1952,7 +1973,7 @@ class TeamMember extends AppModel
         return $this->find('count', [
             'conditions' => [
                 'TeamMember.team_id' => $team_id,
-                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
+                'TeamMember.status' => self::USER_STATUS_ACTIVE,
             ],
         ]);
     }
@@ -1964,7 +1985,7 @@ class TeamMember extends AppModel
                 'TeamMember.team_id' => $team_id,
                 'TeamMember.user_id' => $user_id,
             ],
-            'fields'     => ['id']
+            'fields' => ['id']
         ]);
         if ($team_member_id = Hash::get($team_member, 'TeamMember.id')) {
             return $team_member_id;
@@ -1978,14 +1999,14 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
             ],
-            'fields'     => [
+            'fields' => [
                 'TeamMember.team_id',
                 'TeamMember.user_id',
                 'Team.name',
                 'TeamMember.status',
                 'TeamMember.admin_flg',
             ],
-            'contain'    => ['Team']
+            'contain' => ['Team']
         ];
         $teams = $this->findWithoutTeamId('all', $options);
         foreach ($teams as $k => $v) {
@@ -2014,19 +2035,20 @@ class TeamMember extends AppModel
     function isActiveAdmin(
         int $userId,
         int $teamId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
-                'TeamMember.user_id'   => $userId,
+                'TeamMember.user_id' => $userId,
                 'TeamMember.admin_flg' => true,
-                'TeamMember.status'    => self::USER_STATUS_ACTIVE
+                'TeamMember.status' => self::USER_STATUS_ACTIVE
             ],
-            'fields'     => ['TeamMember.id'],
-            'joins'      => [
+            'fields' => ['TeamMember.id'],
+            'joins' => [
                 [
-                    'type'       => 'INNER',
-                    'table'      => 'users',
-                    'alias'      => 'User',
+                    'type' => 'INNER',
+                    'table' => 'users',
+                    'alias' => 'User',
                     'conditions' => [
                         'User.id = TeamMember.user_id',
                         'User.active_flg' => true
@@ -2050,16 +2072,16 @@ class TeamMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'TeamMember.team_id'   => $teamId,
+                'TeamMember.team_id' => $teamId,
                 'TeamMember.admin_flg' => true,
-                'TeamMember.status'    => self::USER_STATUS_ACTIVE
+                'TeamMember.status' => self::USER_STATUS_ACTIVE
             ],
-            'fields'     => ['TeamMember.user_id'],
-            'joins'      => [
+            'fields' => ['TeamMember.user_id'],
+            'joins' => [
                 [
-                    'type'       => 'INNER',
-                    'table'      => 'users',
-                    'alias'      => 'User',
+                    'type' => 'INNER',
+                    'table' => 'users',
+                    'alias' => 'User',
                     'conditions' => [
                         'User.id = TeamMember.user_id',
                         'User.active_flg' => true
@@ -2125,7 +2147,8 @@ class TeamMember extends AppModel
     function getTeamMemberListByStatus(
         $status,
         $teamId = null
-    ) {
+    )
+    {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2133,7 +2156,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => $status,
+                'TeamMember.status' => $status,
             ],
         ];
         $res = $this->find('list', $options);
@@ -2152,10 +2175,11 @@ class TeamMember extends AppModel
     function isTeamMember(
         int $teamId,
         int $teamMemberId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
-                'id'      => $teamMemberId,
+                'id' => $teamMemberId,
                 'team_id' => $teamId
             ]
         ];
@@ -2172,10 +2196,11 @@ class TeamMember extends AppModel
     public
     function isInactive(
         int $teamMemberId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
-                'id'     => $teamMemberId,
+                'id' => $teamMemberId,
                 'status' => self::USER_STATUS_INACTIVE
             ]
         ];
@@ -2192,12 +2217,13 @@ class TeamMember extends AppModel
     public
     function getUserById(
         int $teamMemberId
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
             ],
-            'contain'    => [
+            'contain' => [
                 'User' => [
                     'fields' => $this->User->profileFields
                 ]
@@ -2221,10 +2247,11 @@ class TeamMember extends AppModel
     public
     function findBelongsByUser(
         int $userId
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
-                'TeamMember.user_id'   => $userId,
+                'TeamMember.user_id' => $userId,
                 'TeamMember.status !=' => Enum\Model\TeamMember\Status::INACTIVE
             ],
         ];
@@ -2235,4 +2262,27 @@ class TeamMember extends AppModel
         return Hash::extract($res, '{n}.TeamMember');
     }
 
+    /**
+     * Get list of team members
+     *
+     * @param int $teamId
+     * @param TeamMemberEnum\Status|null $status Status of member. If not given, will take all
+     *
+     * @return TeamMemberEntity[]
+     */
+    public function getMemberList(int $teamId, TeamMemberEnum\Status $status = null)
+    {
+        $condition = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'del_flg' => false
+            ]
+        ];
+
+        if (!empty($status)) {
+            $condition['conditions']['status'] = $status->getValue();
+        }
+
+        return $this->useType()->useEntity()->find('all', $condition);
+    }
 }

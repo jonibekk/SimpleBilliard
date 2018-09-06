@@ -62,13 +62,13 @@ class CircleMemberService extends AppService
      * Add new user to CircleMember
      *
      * @param int $userId
-     * @param int $circleId
      * @param int $teamId
+     * @param int $circleId
      *
      * @return CircleMemberEntity
      * @throws Exception
      */
-    public function add(int $userId, int $circleId, int $teamId): CircleMemberEntity
+    public function add(int $userId, int $teamId, int $circleId): CircleMemberEntity
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
@@ -120,6 +120,7 @@ class CircleMemberService extends AppService
                 throw new RuntimeException("Failed to add new member $userId to circle $circleId");
             }
             $Circle->updateMemberCount($circleId);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();

@@ -91,7 +91,7 @@ class CirclesController extends BasePagingController
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
         try {
-            $return = $CircleMemberService->add($this->getUserId(), $circleId, $this->getTeamId());
+            $return = $CircleMemberService->add($this->getUserId(), $this->getTeamId(), $circleId);
             $CircleMemberService->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
                 $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {

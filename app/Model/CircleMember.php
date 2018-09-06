@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('Circle', 'Model');
+
 App::import('Service', 'CirclePinService');
 App::import('Model/Entity', 'CircleMemberEntity');
 
@@ -7,8 +10,8 @@ App::import('Model/Entity', 'CircleMemberEntity');
  * CircleMember Model
  *
  * @property Circle $Circle
- * @property Team   $Team
- * @property User   $User
+ * @property Team $Team
+ * @property User $User
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
@@ -22,24 +25,24 @@ class CircleMember extends AppModel
      * @var array
      */
     public $validate = [
-        'user_id'               => [
-            'numeric'  => [
+        'user_id' => [
+            'numeric' => [
                 'rule' => ['numeric'],
             ],
             'notBlank' => ['rule' => 'notBlank'],
         ],
-        'del_flg'               => [
+        'del_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'admin_flg'             => [
+        'admin_flg' => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
         'show_for_all_feed_flg' => [
-            'rule'    => ['boolean'],
+            'rule' => ['boolean'],
             'message' => 'Invalid Status'
         ]
     ];
@@ -59,14 +62,14 @@ class CircleMember extends AppModel
     ];
 
     public $modelConversionTable = [
-        'circle_id'             => DataType::INT,
-        'team_id'               => DataType::INT,
-        'user_id'               => DataType::INT,
-        'admin_flg'             => DataType::BOOL,
-        'unread_count'          => DataType::INT,
+        'circle_id' => DataType::INT,
+        'team_id' => DataType::INT,
+        'user_id' => DataType::INT,
+        'admin_flg' => DataType::BOOL,
+        'unread_count' => DataType::INT,
         'show_for_all_feed_flg' => DataType::BOOL,
-        'get_notification_flg'  => DataType::BOOL,
-        'last_posted'           => DataType::INT
+        'get_notification_flg' => DataType::BOOL,
+        'last_posted' => DataType::INT
     ];
 
     public function getMyCircleList($check_hide_status = null)
@@ -74,11 +77,11 @@ class CircleMember extends AppModel
         if (!is_null($check_hide_status)) {
             $options = [
                 'conditions' => [
-                    'user_id'               => $this->my_uid,
-                    'team_id'               => $this->current_team_id,
+                    'user_id' => $this->my_uid,
+                    'team_id' => $this->current_team_id,
                     'show_for_all_feed_flg' => $check_hide_status
                 ],
-                'fields'     => ['circle_id'],
+                'fields' => ['circle_id'],
             ];
         } else {
             $options = [
@@ -86,7 +89,7 @@ class CircleMember extends AppModel
                     'user_id' => $this->my_uid,
                     'team_id' => $this->current_team_id,
                 ],
-                'fields'     => ['circle_id'],
+                'fields' => ['circle_id'],
             ];
         }
         $cache_key_name = $this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true);
@@ -105,8 +108,8 @@ class CircleMember extends AppModel
     /**
      * Get list of circle that a given user joined to in a team
      *
-     * @param int  $userId
-     * @param int  $teamId
+     * @param int $userId
+     * @param int $teamId
      * @param bool $checkHideStatus Whether circle's hidden status is checked or not
      *
      * @return array List of circle IDs
@@ -118,7 +121,7 @@ class CircleMember extends AppModel
                 'user_id' => $userId,
                 'team_id' => $teamId
             ],
-            'fields'     => ['circle_id'],
+            'fields' => ['circle_id'],
         ];
 
         if ($checkHideStatus) {
@@ -137,7 +140,8 @@ class CircleMember extends AppModel
      */
     public function getMyCircle(
         $params = []
-    ) {
+    )
+    {
         ClassRegistry::init('Circle');
         $is_default = false;
         if (empty($params)) {
@@ -149,8 +153,8 @@ class CircleMember extends AppModel
         }
         $params = array_merge([
             'circle_created_start' => null,
-            'circle_created_end'   => null,
-            'order'                => [
+            'circle_created_end' => null,
+            'order' => [
                 'Circle.team_all_flg desc',
                 'Circle.modified desc'
             ],
@@ -162,14 +166,14 @@ class CircleMember extends AppModel
                 'CircleMember.user_id' => $this->my_uid,
                 'CircleMember.team_id' => $this->current_team_id,
             ],
-            'fields'     => [
+            'fields' => [
                 'CircleMember.id',
                 'CircleMember.circle_id',
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order'      => $params['order'],
-            'contain'    => [
+            'order' => $params['order'],
+            'contain' => [
                 'Circle' => [
                     'fields' => [
                         'Circle.id',
@@ -202,7 +206,8 @@ class CircleMember extends AppModel
     public function getAdminMemberList(
         $circle_id,
         $with_me = false
-    ) {
+    )
+    {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -210,7 +215,7 @@ class CircleMember extends AppModel
                 'circle_id' => $circle_id,
                 'admin_flg' => true,
             ],
-            'fields'     => ['user_id']
+            'fields' => ['user_id']
         ];
         if (!$with_me) {
             $options['conditions']['NOT']['user_id'] = $this->my_uid;
@@ -223,7 +228,8 @@ class CircleMember extends AppModel
     public function getCircleInitMemberSelect2(
         $circle_id,
         $with_admin = false
-    ) {
+    )
+    {
         $users = $this->getMembers($circle_id, $with_admin);
         $user_res = $this->User->makeSelect2UserList($users);
         return ['results' => $user_res];
@@ -234,18 +240,19 @@ class CircleMember extends AppModel
         $with_admin = false,
         $order = 'CircleMember.modified',
         $order_direction = "desc"
-    ) {
+    )
+    {
         $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
 
         $options = [
             'conditions' => [
                 'CircleMember.circle_id' => $circle_id,
-                'CircleMember.team_id'   => $this->current_team_id,
+                'CircleMember.team_id' => $this->current_team_id,
                 'CircleMember.admin_flg' => false,
-                'CircleMember.user_id'   => $active_user_ids
+                'CircleMember.user_id' => $active_user_ids
             ],
-            'order'      => [$order => $order_direction],
-            'contain'    => [
+            'order' => [$order => $order_direction],
+            'contain' => [
                 'User' => [
                     'fields' => $this->User->profileFields
                 ]
@@ -273,7 +280,8 @@ class CircleMember extends AppModel
         $keyword,
         $limit = 10,
         $with_group = false
-    ) {
+    )
+    {
         $member_list = $this->getMemberList($circle_id, true);
 
         $keyword = trim($keyword);
@@ -281,23 +289,23 @@ class CircleMember extends AppModel
         $options = [
             'conditions' => [
                 'TeamMember.team_id' => $this->current_team_id,
-                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE,
-                'NOT'                => [
+                'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE,
+                'NOT' => [
                     'TeamMember.user_id' => $member_list
                 ],
-                'OR'                 => $keyword_conditions,
+                'OR' => $keyword_conditions,
             ],
-            'limit'      => $limit,
-            'contain'    => [
+            'limit' => $limit,
+            'contain' => [
                 'User' => [
                     'fields' => $this->User->profileFields
                 ]
             ],
-            'joins'      => [
+            'joins' => [
                 [
-                    'type'       => 'LEFT',
-                    'table'      => 'local_names',
-                    'alias'      => 'SearchLocalName',
+                    'type' => 'LEFT',
+                    'table' => 'local_names',
+                    'alias' => 'SearchLocalName',
                     'conditions' => [
                         'SearchLocalName.user_id = User.id',
                     ],
@@ -323,7 +331,8 @@ class CircleMember extends AppModel
         $with_admin = false,
         $with_me = true,
         array $usersToExclude = []
-    ) {
+    )
+    {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -331,7 +340,7 @@ class CircleMember extends AppModel
                 'circle_id' => $circle_id,
                 'admin_flg' => false,
             ],
-            'fields'     => ['user_id']
+            'fields' => ['user_id']
         ];
         if ($with_admin) {
             unset($options['conditions']['admin_flg']);
@@ -358,7 +367,7 @@ class CircleMember extends AppModel
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
-                'user_id'   => $user_id,
+                'user_id' => $user_id,
                 'admin_flg' => true,
             ]
         ];
@@ -372,7 +381,7 @@ class CircleMember extends AppModel
         }
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
-            'CircleMember.team_id'   => $team_id ?? $this->current_team_id,
+            'CircleMember.team_id' => $team_id ?? $this->current_team_id,
         ];
         if ($without_me) {
             $conditions['NOT']['CircleMember.user_id'] = $this->my_uid;
@@ -385,8 +394,8 @@ class CircleMember extends AppModel
     {
         $conditions = [
             'CircleMember.circle_id' => $circle_id,
-            'CircleMember.user_id'   => $this->my_uid,
-            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id' => $this->my_uid,
+            'CircleMember.team_id' => $this->current_team_id,
         ];
         $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
@@ -396,8 +405,8 @@ class CircleMember extends AppModel
     /**
      * join Circle
      *
-     * @param int     $circleId
-     * @param int     $userId
+     * @param int $circleId
+     * @param int $userId
      * @param boolean $showForAllFeedFlg
      * @param boolean $getNotificationFlg
      *
@@ -409,19 +418,20 @@ class CircleMember extends AppModel
         bool $showForAllFeedFlg = true,
         bool $getNotificationFlg = true,
         bool $isAdmin = false
-    ): bool {
+    ): bool
+    {
         if (!empty($this->isBelong($circleId, $userId))) {
             return false;
         }
 
         $options = [
             'CircleMember' => [
-                'circle_id'             => $circleId,
-                'team_id'               => $this->current_team_id,
-                'user_id'               => $userId,
-                'admin_flg'             => $isAdmin,
+                'circle_id' => $circleId,
+                'team_id' => $this->current_team_id,
+                'user_id' => $userId,
+                'admin_flg' => $isAdmin,
                 'show_for_all_feed_flg' => $showForAllFeedFlg,
-                'get_notification_flg'  => $getNotificationFlg,
+                'get_notification_flg' => $getNotificationFlg,
             ]
         ];
         $this->create();
@@ -436,9 +446,9 @@ class CircleMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'user_id'   => $userId,
+                'user_id' => $userId,
                 'circle_id' => $circleId,
-                'team_id'   => $teamId,
+                'team_id' => $teamId,
             ]
         ];
         $res = $this->find('first', $options);
@@ -451,7 +461,7 @@ class CircleMember extends AppModel
      * - Update counter cache per circle
      *
      * @param  array $circleId
-     * @param  int   $userId
+     * @param  int $userId
      *
      * @return bool
      */
@@ -459,8 +469,8 @@ class CircleMember extends AppModel
     {
         $conditions = [
             'CircleMember.circle_id' => $circleId,
-            'CircleMember.user_id'   => $userId,
-            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id' => $userId,
+            'CircleMember.team_id' => $this->current_team_id,
         ];
 
         if (!$this->deleteAll($conditions)) {
@@ -482,8 +492,8 @@ class CircleMember extends AppModel
         }
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
-            'CircleMember.team_id'   => $team_id ?? $this->current_team_id,
-            'CircleMember.user_id'   => $this->my_uid,
+            'CircleMember.team_id' => $team_id ?? $this->current_team_id,
+            'CircleMember.user_id' => $this->my_uid,
         ];
 
         $res = $this->updateAll(['modified' => "'" . time() . "'"], $conditions);
@@ -504,8 +514,8 @@ class CircleMember extends AppModel
         return $this->deleteAll(
             [
                 'CircleMember.circle_id' => $circle_id,
-                'CircleMember.user_id'   => $user_id,
-                'CircleMember.team_id'   => $this->current_team_id,
+                'CircleMember.user_id' => $user_id,
+                'CircleMember.team_id' => $this->current_team_id,
             ]
         );
     }
@@ -514,7 +524,7 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'CircleMember.user_id'   => $userid,
+                'CircleMember.user_id' => $userid,
                 'CircleMember.circle_id' => $circle_id
             ]
         ];
@@ -526,8 +536,8 @@ class CircleMember extends AppModel
     {
         $conditions = [
             'CircleMember.circle_id' => $circle_id,
-            'CircleMember.team_id'   => $this->current_team_id,
-            'CircleMember.user_id'   => $this->my_uid
+            'CircleMember.team_id' => $this->current_team_id,
+            'CircleMember.user_id' => $this->my_uid
         ];
 
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
@@ -548,8 +558,8 @@ class CircleMember extends AppModel
     {
         $conditions = [
             'CircleMember.circle_id' => $circle_id,
-            'CircleMember.team_id'   => $this->current_team_id,
-            'CircleMember.user_id'   => $user_id,
+            'CircleMember.team_id' => $this->current_team_id,
+            'CircleMember.user_id' => $user_id,
         ];
 
         return $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
@@ -580,9 +590,9 @@ class CircleMember extends AppModel
 
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         $conditions = [
-            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.team_id' => $this->current_team_id,
             'CircleMember.circle_id' => $circle_id,
-            'CircleMember.user_id'   => $user_id,
+            'CircleMember.user_id' => $user_id,
         ];
         return $this->updateAll($update_data, $conditions);
     }
@@ -598,14 +608,14 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'CircleMember.circle_id'            => $circle_id,
+                'CircleMember.circle_id' => $circle_id,
                 'CircleMember.get_notification_flg' => 1,
             ],
-            'fields'     => [
+            'fields' => [
                 'CircleMember.user_id',
                 'CircleMember.user_id',
             ],
-            'group'      => ['CircleMember.user_id']
+            'group' => ['CircleMember.user_id']
         ];
         return $this->find('list', $options);
     }
@@ -624,9 +634,9 @@ class CircleMember extends AppModel
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
-                'user_id'   => $active_team_members_list,
+                'user_id' => $active_team_members_list,
             ],
-            'fields'     => [
+            'fields' => [
                 'id'
             ]
         ];
@@ -645,15 +655,15 @@ class CircleMember extends AppModel
     {
         $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList();
         $options = [
-            'fields'     => [
+            'fields' => [
                 'CircleMember.circle_id',
                 'COUNT(*) as cnt',
             ],
             'conditions' => [
                 'circle_id' => $circle_ids,
-                'user_id'   => $active_team_members_list,
+                'user_id' => $active_team_members_list,
             ],
-            'group'      => 'CircleMember.circle_id',
+            'group' => 'CircleMember.circle_id',
         ];
         $rows = $this->find('all', $options);
 
@@ -675,13 +685,13 @@ class CircleMember extends AppModel
             'conditions' => [
                 'user_id' => $user_id
             ],
-            'fields'     => ['CircleMember.id'],
-            'contain'    => [
+            'fields' => ['CircleMember.id'],
+            'contain' => [
                 'Circle' => [
                     'conditions' => [
                         'Circle.team_all_flg' => false
                     ],
-                    'fields'     => ['Circle.id']
+                    'fields' => ['Circle.id']
                 ]
             ]
         ];
@@ -711,10 +721,10 @@ class CircleMember extends AppModel
     {
         $options = [
             'conditions' => [
-                'user_id'   => $userId,
+                'user_id' => $userId,
                 'circle_id' => $circleId
             ],
-            'fields'     => [
+            'fields' => [
                 'id'
             ]
         ];
@@ -736,11 +746,44 @@ class CircleMember extends AppModel
         $options = [
             'conditions' => [
                 'circle_id' => $circleId,
-                'user_id'   => $userId
+                'user_id' => $userId
             ],
-            'conversion' => true
         ];
 
         return Hash::get($this->find('first', $options), 'CircleMember') ?? [];
+    }
+
+    /**
+     * Count number of members in a circle
+     *
+     * @param int $circleId
+     * @param bool $activeOnly
+     *
+     * @return int
+     */
+    public function getMemberCount(int $circleId, bool $activeOnly = true): int
+    {
+        $conditions = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'del_flg' => false
+            ],
+        ];
+
+        if ($activeOnly) {
+            /** @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+
+            /** @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
+
+            $userList = $TeamMember->getMemberList($Circle->getTeamId($circleId), Goalous\Enum\Model\TeamMember\Status::ACTIVE());
+
+            $conditions['conditions']['user_id'] = Hash::extract($userList, '{n}.{*}.user_id');
+        }
+
+        $count =  (int)$this->find('count', $conditions);
+
+        return $count;
     }
 }
