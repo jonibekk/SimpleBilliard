@@ -18,7 +18,6 @@ use Goalous\Enum\DataType\DataType as DataType;
 
 class CircleMember extends AppModel
 {
-
     /**
      * Validation rules
      *
