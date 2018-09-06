@@ -37,7 +37,7 @@ class PostSavedDataExtenderTest extends GoalousTestCase
         $PostSavedDataExtender->setUserId(1);
         $extended = $PostSavedDataExtender->extend($posts, 'id', 'post_id');
 
-        $this->assertNotEmpty(Hash::extract($extended, 'is_saved'));
+        $this->assertTrue(Hash::get($extended, 'is_saved'));
     }
 
 }
