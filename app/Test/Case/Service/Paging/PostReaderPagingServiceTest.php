@@ -55,7 +55,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
 
         $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1);
 
-        $this->assertCount(1, $result['data']);
+        $this->assertCount(0, $result['data']);
         $this->assertEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
     }
@@ -74,7 +74,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
             [PostReaderPagingService::EXTEND_USER]);
 
         $data = $result['data'][0]['user'];
-
+        $this->assertCount(1, $result['data']);
         $this->assertEqual('firstname', $data['first_name']);
     }
 }
