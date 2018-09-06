@@ -85,7 +85,8 @@ class PostReaderPagingService extends BasePagingService
         ],
         'fields'=>[
             'user_id',
-            'created'
+            'created',
+            'id'
         ]];
 
         $PostRead->find('all', $conditions);
