@@ -104,7 +104,7 @@ class PostsController extends BasePagingController
         try{
             $result = $PostReaderPagingService->getDataWithPaging(
                 $pagingRequest,
-                $this->getPagingLimit(10),
+                $this->getPagingLimit(),
                 $this->getExtensionOptions() ?: $this->getDefaultReaderExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
