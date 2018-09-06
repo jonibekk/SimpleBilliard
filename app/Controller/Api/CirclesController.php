@@ -82,7 +82,7 @@ class CirclesController extends BasePagingController
 
     public function post_join(int $circleId)
     {
-        $error = $this->validatePostMember($circleId);
+        $error = $this->validatePostJoin($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -136,7 +136,14 @@ class CirclesController extends BasePagingController
         return null;
     }
 
-    public function validatePostMember(int $circleId)
+    /**
+     * Validate post_join endpoint
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse|ErrorResponse|null
+     */
+    public function validatePostJoin(int $circleId)
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
@@ -144,7 +151,8 @@ class CirclesController extends BasePagingController
         $condition = [
             'conditions' => [
                 'Circle.id'         => $circleId,
-                'Circle.public_flg' => true
+                'Circle.public_flg' => true,
+                'del_flg' => false
             ]
         ];
         $circle = $Circle->find('first', $condition);
