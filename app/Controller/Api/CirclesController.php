@@ -121,7 +121,7 @@ class CirclesController extends BasePagingController
             return $error;
         }
 
-        $newMemberId = Hash::get($this->getRequestJsonBody(), 'new_member_id');
+        $newMemberId = Hash::get($this->getRequestJsonBody(), 'user_id');
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');

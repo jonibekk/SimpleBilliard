@@ -20,7 +20,7 @@ class CircleRequestValidator extends BaseValidator
     public function getPostMemberValidationRule(): array
     {
         $rules = [
-            'new_member_id' => [validator::notEmpty()::numeric()]
+            'user_id' => [validator::notEmpty()::numeric()]
         ];
         return $rules;
     }
