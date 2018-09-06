@@ -41,7 +41,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
 
         $pagingRequest = new PagingRequest();
         $pagingRequest->addResource('res_id', 1);
-        $pagingRequest->setCurrentUserId(1);
+        $pagingRequest->setCurrentUserId(2);
         $pagingRequest->setCurrentTeamId(1);
 
         $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1);
@@ -74,6 +74,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
             [PostReaderPagingService::EXTEND_USER]);
 
         $data = $result['data'][0]['user'];
+
         $this->assertCount(1, $result['data']);
         $this->assertEqual('firstname', $data['first_name']);
     }
