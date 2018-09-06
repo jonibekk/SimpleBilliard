@@ -24,9 +24,9 @@ class PostReaderPagingServiceTest extends GoalousTestCase
         $PostReaderPagingService = ClassRegistry::init('PostReaderPagingService');
 
         $cursor = new PagingRequest();
-        $cursor->addResource('res_id', 1);
+        $cursor->setResourceId(1);
         $cursor->setCurrentUserId(1);
-        $cursor->addResource('current_team_id', 1);
+        $cursor->setCurrentTeamId(1);
 
         $result = $PostReaderPagingService->getDataWithPaging($cursor, 1);
         $this->assertCount(1, $result['data']);
@@ -40,7 +40,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
         $PostReaderPagingService = ClassRegistry::init('PostReaderPagingService');
 
         $pagingRequest = new PagingRequest();
-        $pagingRequest->addResource('res_id', 1);
+        $pagingRequest->setResourceId(1);
         $pagingRequest->setCurrentUserId(2);
         $pagingRequest->setCurrentTeamId(1);
 
@@ -50,12 +50,12 @@ class PostReaderPagingServiceTest extends GoalousTestCase
 
         $pagingRequest = PagingRequest::decodeCursorToObject($cursor);
         $pagingRequest->setCurrentUserId(1);
-        $pagingRequest->addResource('res_id', 1);
+        $pagingRequest->setResourceId(1);
         $pagingRequest->setCurrentTeamId(1);
 
         $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1);
 
-        $this->assertCount(0, $result['data']);
+        $this->assertCount(1, $result['data']);
         $this->assertEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
     }
@@ -66,7 +66,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
         $PostReaderPagingService = ClassRegistry::init('PostReaderPagingService');
 
         $pagingRequest = new PagingRequest();
-        $pagingRequest->addResource('res_id', 1);
+        $pagingRequest->setResourceId(1);
         $pagingRequest->setCurrentUserId(1);
         $pagingRequest->setCurrentTeamId(1);
 
