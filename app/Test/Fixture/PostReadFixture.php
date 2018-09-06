@@ -92,7 +92,7 @@ class PostReadFixture extends CakeTestFixtureEx
         array(
             'id'        => 1,
             'post_id'   => 1,
-            'user_id'   => 1,
+            'user_id'   => 2,
             'team_id'   => 1,
             'del_flg'   => 0,
             'created'   => 1,
@@ -100,8 +100,8 @@ class PostReadFixture extends CakeTestFixtureEx
         ),
         array(
             'id'        => 2,
-            'post_id'   => 1,
-            'user_id'   => 2,
+            'post_id'   => 101,
+            'user_id'   => 4,
             'team_id'   => 1,
             'del_flg'   => 0,
             'created'   => 2,
