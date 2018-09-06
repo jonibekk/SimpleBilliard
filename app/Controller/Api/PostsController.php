@@ -105,7 +105,7 @@ class PostsController extends BasePagingController
             $result = $PostReaderPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(10),
-                $this->getExtensionOptions() ?: $this->getDefaultUserExtension());
+                $this->getExtensionOptions() ?: $this->getDefaultReaderExtension());
         } catch (Exception $e) {
             GoalousLog::error($e->getMessage(), $e->getTrace());
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
@@ -115,11 +115,11 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * Default extension options for getting user that reads the post
+     * Default extension options for getting user that readers of the post
      *
      * @return array
      */
-    private function getDefaultUserExtension()
+    private function getDefaultReaderExtension()
     {
         return [
             PostReaderPagingService::EXTEND_USER
@@ -298,13 +298,13 @@ class PostsController extends BasePagingController
     }
 
     /*
-     * Validate get comments endpoint
+     * Validate get comments  and readers endpoint
      *
      * @param int $postId
      *
      * @return ErrorResponse|null
      */
-    public function validateAccessToPost(int $postId)
+    private function validateAccessToPost(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
