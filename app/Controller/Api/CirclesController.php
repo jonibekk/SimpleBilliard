@@ -107,6 +107,42 @@ class CirclesController extends BasePagingController
     }
 
     /**
+     * Invite a member into a circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_members(int $circleId)
+    {
+        $error = $this->validatePostMember($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        $newMemberId = Hash::get($this->getRequestJsonBody(), 'new_member_id');
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        try {
+            $return = $CircleMemberService->add($newMemberId, $this->getTeamId(), $circleId);
+            $CircleMemberService->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
+                $this->getTeamId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (GlException\GoalousConflictException $exception) {
+            return ErrorResponse::resourceConflict()->withException($exception)
+                                ->withMessage(__("This team member already joined this circle."))->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($return->toArray())->getResponse();
+    }
+
+    /**
      * Validation for endpoint get_posts
      *
      * @param int $circleId
@@ -152,13 +188,70 @@ class CirclesController extends BasePagingController
             'conditions' => [
                 'Circle.id'         => $circleId,
                 'Circle.public_flg' => true,
-                'del_flg' => false
+                'del_flg'           => false
             ]
         ];
         $circle = $Circle->find('first', $condition);
 
         if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) || empty($circle)) {
             return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate post_members endpoint.
+     * Only admin is allowed to invite a member to secret circle
+     *
+     * @param int $circleId
+     *
+     * @return ErrorResponse | null
+     */
+    private function validatePostMember(int $circleId)
+    {
+        try {
+            CircleRequestValidator::createPostMemberValidator()->validate($this->getRequestJsonBody());
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $condition = [
+            'conditions' => [
+                'id'      => $circleId,
+                'del_flg' => false
+            ]
+        ];
+
+        $circle = $Circle->useType()->useEntity()->find('first', $condition);
+
+        if (empty($circle)) {
+            return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
+        }
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if (!$CircleMember->isBelong($circleId, $this->getUserId(), $this->getTeamId())) {
+            return ErrorResponse::forbidden()->withMessage(__("You can not invite."))->getResponse();
+        }
+
+        if (!$circle['public_flg']) {
+            if (!$CircleMember->isAdmin($this->getUserId(), $circleId)) {
+                return ErrorResponse::forbidden()->withMessage(__("You can not invite."))->getResponse();
+            }
         }
 
         return null;

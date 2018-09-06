@@ -355,16 +355,27 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function isAdmin($user_id, $circle_id): bool
+    /**
+     * Check whether the user is an admin in the given circle
+     *
+     * @param int $user_id
+     * @param int $circle_id
+     *
+     * @return bool
+     */
+    public function isAdmin(int $user_id, int $circle_id): bool
     {
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
                 'user_id'   => $user_id,
                 'admin_flg' => true,
+            ],
+            'fields'     => [
+                'id'
             ]
         ];
-        return (bool)$this->find('first', $options);
+        return !empty($this->find('first', $options));
     }
 
     function incrementUnreadCount($circle_list, $without_me = true, $team_id = null)
