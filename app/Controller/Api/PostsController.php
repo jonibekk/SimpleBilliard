@@ -83,7 +83,7 @@ class PostsController extends BasePagingController
      * Get list of the post readers
      * @param int $postId
      *
-     * @return CakeResponse
+     * @return BaseApiResponse
      */
     public function get_readers(int $postId)
     {
