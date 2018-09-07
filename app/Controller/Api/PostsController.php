@@ -3,6 +3,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service/Paging', 'PostReaderPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
@@ -58,7 +59,7 @@ class PostsController extends BasePagingController
 
     public function get_comments(int $postId)
     {
-        $error = $this->validateGetComments($postId);
+        $error = $this->validateAccessToPost($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -76,6 +77,53 @@ class PostsController extends BasePagingController
             $this->getExtensionOptions());
 
         return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Get list of the post readers
+     * @param int $postId
+     *
+     * @return BaseApiResponse
+     */
+    public function get_readers(int $postId)
+    {
+        $error = $this->validateAccessToPost($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostReaderPagingService $PostReaderPagingService */
+        $PostReaderPagingService = ClassRegistry::init("PostReaderPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try{
+            $result = $PostReaderPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?: $this->getDefaultReaderExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Default extension options for getting user that readers of the post
+     *
+     * @return array
+     */
+    private function getDefaultReaderExtension()
+    {
+        return [
+            PostReaderPagingService::EXTEND_USER
+        ];
     }
 
     /**
@@ -250,13 +298,13 @@ class PostsController extends BasePagingController
     }
 
     /*
-     * Validate get comments endpoint
+     * Validate get comments  and readers endpoint
      *
      * @param int $postId
      *
      * @return ErrorResponse|null
      */
-    private function validateGetComments(int $postId)
+    private function validateAccessToPost(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();

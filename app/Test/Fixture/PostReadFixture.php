@@ -88,6 +88,25 @@ class PostReadFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = array();
+    public $records = array(
+        array(
+            'id'        => 1,
+            'post_id'   => 1,
+            'user_id'   => 2,
+            'team_id'   => 1,
+            'del_flg'   => 0,
+            'created'   => 1,
+            'modified'  => 1
+        ),
+        array(
+            'id'        => 2,
+            'post_id'   => 1,
+            'user_id'   => 13,
+            'team_id'   => 1,
+            'del_flg'   => 0,
+            'created'   => 2,
+            'modified'  => 2
+        ),
+    );
 
 }
