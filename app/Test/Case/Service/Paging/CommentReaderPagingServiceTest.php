@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Service/Paging', 'CommentReaderPagingService');
+App::import('Service/Paging', 'PostReaderPagingService');
 App::import('Lib/Paging', 'PagingRequest');
 
 /**
@@ -12,39 +12,39 @@ App::import('Lib/Paging', 'PagingRequest');
 class PostReaderPagingServiceTest extends GoalousTestCase
 {
     public $fixtures = [
-        'app.comment',
+        'app.post',
         'app.user',
         'app.team',
-        'app.comment_read'
+        'app.post_read'
     ];
 
-    public function test_getCommentReader_success()
+    public function test_getPostReader_success()
     {
-        /** @var CommentReaderPagingService $CommentReaderPagingService */
-        $CommentReaderPagingService = ClassRegistry::init('CommentReaderPagingService');
+        /** @var PostReaderPagingService $PostReaderPagingService */
+        $PostReaderPagingService = ClassRegistry::init('PostReaderPagingService');
 
         $cursor = new PagingRequest();
         $cursor->setResourceId(1);
         $cursor->setCurrentUserId(1);
         $cursor->setCurrentTeamId(1);
 
-        $result = $CommentReaderPagingService->getDataWithPaging($cursor, 1);
+        $result = $PostReaderPagingService->getDataWithPaging($cursor, 1);
         $this->assertCount(1, $result['data']);
         $this->assertNotEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
     }
 
-    public function test_getCommentReaderWithCursor_success()
+    public function test_getPostReaderWithCursor_success()
     {
-        /** @var CommentReaderPagingService $CommentReaderPagingService  */
-        $CommentReaderPagingService = ClassRegistry::init('CommentReaderPagingService');
+        /** @var PostReaderPagingService $PostReaderPagingService  */
+        $PostReaderPagingService = ClassRegistry::init('PostReaderPagingService');
 
         $pagingRequest = new PagingRequest();
         $pagingRequest->setResourceId(1);
         $pagingRequest->setCurrentUserId(2);
         $pagingRequest->setCurrentTeamId(1);
 
-        $result = $CommentReaderPagingService->getDataWithPaging($pagingRequest, 1);
+        $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1);
         $this->assertNotEmpty($result);
         $cursor = $result['cursor'];
 
@@ -53,24 +53,24 @@ class PostReaderPagingServiceTest extends GoalousTestCase
         $pagingRequest->setResourceId(1);
         $pagingRequest->setCurrentTeamId(1);
 
-        $result = $CommentReaderPagingService->getDataWithPaging($pagingRequest, 1);
+        $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1);
 
         $this->assertCount(1, $result['data']);
         $this->assertEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
     }
 
-    public function test_getCommentReadertWithUserInfoExtension_success()
+    public function test_getPostReadertWithUserInfoExtension_success()
     {
         /** @var PostReaderPagingService $PostReaderPagingService  */
-        $CommentReaderPagingService = ClassRegistry::init('CommentReaderPagingService');
+        $PostReaderPagingService = ClassRegistry::init('PostReaderPagingService');
 
         $pagingRequest = new PagingRequest();
         $pagingRequest->setResourceId(1);
         $pagingRequest->setCurrentUserId(1);
         $pagingRequest->setCurrentTeamId(1);
 
-        $result = $CommentReaderPagingService->getDataWithPaging($pagingRequest, 1,
+        $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1,
             [PostReaderPagingService::EXTEND_USER]);
 
         $data = $result['data'][0]['user'];
