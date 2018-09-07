@@ -61,7 +61,7 @@ class CommentReaderPagingServiceTest extends GoalousTestCase
 
     public function test_getCommentReadertWithUserInfoExtension_success()
     {
-        /** @var PostReaderPagingService $PostReaderPagingService  */
+        /** @var CommentReaderPagingService $CommentReaderPagingService  */
         $CommentReaderPagingService = ClassRegistry::init('CommentReaderPagingService');
 
         $pagingRequest = new PagingRequest();
@@ -70,7 +70,7 @@ class CommentReaderPagingServiceTest extends GoalousTestCase
         $pagingRequest->setCurrentTeamId(1);
 
         $result = $CommentReaderPagingService->getDataWithPaging($pagingRequest, 1,
-            [PostReaderPagingService::EXTEND_USER]);
+            [CommentReaderPagingService::EXTEND_USER]);
 
         $data = $result['data'][0]['user'];
 
