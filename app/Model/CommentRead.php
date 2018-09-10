@@ -175,7 +175,6 @@ class CommentRead extends AppModel
     public $modelConversionTable = [
         'comment_id'    => DataType::INT,
         'user_id'       => DataType::INT,
-        'team_id'       => DataType::INT,
-        'del_flg'       => DataType::BOOL
+        'team_id'       => DataType::INT
     ];
 }
