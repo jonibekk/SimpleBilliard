@@ -1,7 +1,10 @@
 <?php
 App::import('Service', 'CommentService');
 App::import('Service', 'CommentLikeService');
+App::import('Lib/Paging', 'PagingRequest');
+App::uses('BasePagingController', 'Controller/Api');
 App::uses('BaseApiController', 'Controller/Api');
+App::import('Service/Paging', 'CommentReaderPagingService');
 
 /**
  * Created by PhpStorm.
@@ -11,7 +14,7 @@ App::uses('BaseApiController', 'Controller/Api');
  */
 use Goalous\Exception as GlException;
 
-class CommentsController extends BaseApiController
+class CommentsController extends BasePagingController
 {
     /**
      * Endpoint for adding a like to a post
@@ -22,7 +25,7 @@ class CommentsController extends BaseApiController
      */
     public function post_like(int $commentId)
     {
-        $error = $this->validateLike($commentId);
+        $error = $this->validateAccessToComment($commentId);
 
         if (!empty($error)) {
             return $error;
@@ -41,6 +44,41 @@ class CommentsController extends BaseApiController
     }
 
     /**
+     * Get list of the comment readers
+     * @param int $commentId
+     *
+     * @return BaseApiResponse
+     */
+    public function get_readers(int $commentId)
+    {
+        $error = $this->validateAccessToComment($commentId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentReaderPagingService $CommentReaderPagingService */
+        $CommentReaderPagingService = ClassRegistry::init("CommentReaderPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try{
+            $result = $CommentReaderPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?: $this->getDefaultReaderExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
      * Endpoint for removing a like from a post
      *
      * @param int $commentId
@@ -49,7 +87,7 @@ class CommentsController extends BaseApiController
      */
     public function delete_like(int $commentId)
     {
-        $error = $this->validateLike($commentId);
+        $error = $this->validateAccessToComment($commentId);
 
         if (!empty($error)) {
             return $error;
@@ -73,7 +111,7 @@ class CommentsController extends BaseApiController
      *
      * @return ErrorResponse | null
      */
-    private function validateLike(int $commentId)
+    private function validateAccessToComment(int $commentId)
     {
         if (empty($commentId) || !is_int($commentId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -87,10 +125,22 @@ class CommentsController extends BaseApiController
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         }
         if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this comment"))
                                 ->getResponse();
         }
 
         return null;
+    }
+
+    /**
+     * Default extension options for getting user that readers of the comment
+     *
+     * @return array
+     */
+    private function getDefaultReaderExtension()
+    {
+        return [
+            CommentReaderPagingService::EXTEND_USER
+        ];
     }
 }
