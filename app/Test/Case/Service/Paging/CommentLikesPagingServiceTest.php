@@ -30,7 +30,7 @@ class CommentLikesPagingServiceTest extends GoalousTestCase
         $result = $CommentLikesPagingService->getDataWithPaging($cursor, 1);
         $this->assertCount(1, $result['data']);
         $this->assertNotEmpty($result['cursor']);
-        $this->assertNotEmpty($result['count']);
+        $this->assertEqual(2, $result['count']);
     }
 
     public function test_getCommentLikesWithCursor_success()
@@ -56,7 +56,7 @@ class CommentLikesPagingServiceTest extends GoalousTestCase
 
         $this->assertCount(1, $result['data']);
         $this->assertEmpty($result['cursor']);
-        $this->assertNotEmpty($result['count']);
+        $this->assertEqual(2, $result['count']);
     }
 
     public function test_getCommentLikesWithUserInfoExtension_success()
