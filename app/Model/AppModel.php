@@ -890,13 +890,13 @@ class AppModel extends Model
     /**
      * Get an entity based on its primary id
      *
-     * @param int   $id
-     * @param array $fields         Specify which fields to query
-     * @param bool  $excludeDeleted Check del_flg
+     * @param int      $id             Primary id of the model
+     * @param string[] $columns        Specify which columns to query from database
+     * @param bool     $excludeDeleted Check del_flg
      *
      * @return BaseEntity
      */
-    public final function getEntity(int $id, array $fields = [], bool $excludeDeleted = true): BaseEntity
+    public final function getEntity(int $id, array $columns = [], bool $excludeDeleted = true): BaseEntity
     {
         $conditions = [
             'conditions' => [
@@ -906,8 +906,8 @@ class AppModel extends Model
         if ($excludeDeleted) {
             $conditions['conditions']['del_flg'] = false;
         }
-        if (!empty($fields)) {
-            $conditions['fields'] = $fields;
+        if (!empty($columns)) {
+            $conditions['fields'] = $columns;
         }
 
         /** @var BaseEntity $return */
