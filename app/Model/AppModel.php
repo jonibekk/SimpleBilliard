@@ -370,11 +370,10 @@ class AppModel extends Model
      * (SoftDeletableのコールバックが実行されない為)
      *
      * @param null $id
-     * @param bool $checkDeleted
      *
      * @return bool
      */
-    public function exists($id = null, bool $checkDeleted = false)
+    public function exists($id = null)
     {
         if ($id === null) {
             $id = $this->getID();
@@ -386,8 +385,7 @@ class AppModel extends Model
 
         return (bool)$this->find('count', array(
             'conditions' => array(
-                $this->alias . '.' . $this->primaryKey => $id,
-                $this->alias . '.del_flg'              => ($checkDeleted) ? false : null,
+                $this->alias . '.' . $this->primaryKey => $id
             ),
             'recursive'  => -1,
             //TODO callbacksはtrueに変更する。影響範囲がかなりデカイので慎重にテストした上で行う。
