@@ -370,10 +370,11 @@ class AppModel extends Model
      * (SoftDeletableのコールバックが実行されない為)
      *
      * @param null $id
+     * @param bool $checkDeleted
      *
      * @return bool
      */
-    public function exists($id = null)
+    public function exists($id = null, bool $checkDeleted = false)
     {
         if ($id === null) {
             $id = $this->getID();
@@ -385,7 +386,8 @@ class AppModel extends Model
 
         return (bool)$this->find('count', array(
             'conditions' => array(
-                $this->alias . '.' . $this->primaryKey => $id
+                $this->alias . '.' . $this->primaryKey => $id,
+                $this->alias . '.del_flg'              => ($checkDeleted) ? false : null,
             ),
             'recursive'  => -1,
             //TODO callbacksはtrueに変更する。影響範囲がかなりデカイので慎重にテストした上で行う。
@@ -879,6 +881,35 @@ class AppModel extends Model
         }
 
         $this->entityWrapperClass = $object;
+    }
+
+    /**
+     * Get an entity based on its primary id
+     *
+     * @param int   $id
+     * @param array $fields         Specify which fields to query
+     * @param bool  $excludeDeleted Check del_flg
+     *
+     * @return BaseEntity
+     */
+    public final function getEntity(int $id, array $fields = [], bool $excludeDeleted = true): BaseEntity
+    {
+        $conditions = [
+            'conditions' => [
+                'id' => $id
+            ]
+        ];
+        if ($excludeDeleted) {
+            $conditions['conditions']['del_flg'] = false;
+        }
+        if (!empty($fields)) {
+            $conditions['fields'] = $fields;
+        }
+
+        /** @var BaseEntity $return */
+        $return = $this->useType()->useEntity()->find('first', $conditions);
+
+        return $return;
     }
 
 }
