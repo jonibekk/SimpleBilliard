@@ -111,7 +111,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return CakeResponse|null
+     * @return ErrorResponse | null
      */
     private function validateGetCircle(int $circleId)
     {
@@ -141,7 +141,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return BaseApiResponse|ErrorResponse|null
+     * @return ErrorResponse | null
      */
     public function validatePostJoin(int $circleId)
     {
@@ -152,7 +152,7 @@ class CirclesController extends BasePagingController
             'conditions' => [
                 'Circle.id'         => $circleId,
                 'Circle.public_flg' => true,
-                'del_flg' => false
+                'del_flg'           => false
             ]
         ];
         $circle = $Circle->find('first', $condition);
@@ -198,7 +198,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return ApiResponse|BaseApiResponse
+     * @return BaseApiResponse
      */
     function get_detail(int $circleId)
     {
