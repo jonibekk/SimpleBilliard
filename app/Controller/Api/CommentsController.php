@@ -5,6 +5,7 @@ App::import('Lib/Paging', 'PagingRequest');
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service/Paging', 'CommentReaderPagingService');
+App::import('Service/Paging', 'CommentLikesPagingService');
 
 /**
  * Created by PhpStorm.
@@ -107,6 +108,41 @@ class CommentsController extends BasePagingController
     }
 
     /**
+     * Get list of the user who likes the comment
+     * @param int $commentId
+     *
+     * @return BaseApiResponse
+     */
+    public function get_likes(int $commentId)
+    {
+        $error = $this-> validateAccessToComment($commentId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentLikesPagingService $CommentLikesPagingService */
+        $CommentLikesPagingService = ClassRegistry::init("CommentLikesPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try{
+            $result = $CommentLikesPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?: $this->getDefaultLikesUserExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
      * @param int $commentId
      *
      * @return ErrorResponse | null
@@ -141,6 +177,18 @@ class CommentsController extends BasePagingController
     {
         return [
             CommentReaderPagingService::EXTEND_USER
+        ];
+    }
+
+    /**
+     * Default extension options for getting user that likes the comment
+     *
+     * @return array
+     */
+    private function getDefaultLikesUserExtension()
+    {
+        return [
+            CommentLikesPagingService::EXTEND_USER
         ];
     }
 }

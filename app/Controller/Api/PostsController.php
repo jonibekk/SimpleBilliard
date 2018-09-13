@@ -3,6 +3,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service/Paging', 'PostLikesPagingService');
 App::import('Service/Paging', 'PostReaderPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
@@ -127,6 +128,18 @@ class PostsController extends BasePagingController
     }
 
     /**
+     * Default extension options for getting user that likes the post
+     *
+     * @return array
+     */
+    private function getDefaultLikesUserExtension()
+    {
+        return [
+            PostLikesPagingService::EXTEND_USER
+        ];
+    }
+
+    /**
      * Endpoint for editing a post
      *
      * @param int $postId
@@ -221,6 +234,41 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
         return ApiResponse::ok()->withData(["like_count" => $count])->getResponse();
+    }
+
+    /**
+     * Get list of the user who likes the post
+     * @param int $postId
+     *
+     * @return BaseApiResponse
+     */
+    public function get_likes(int $postId)
+    {
+        $error = $this->validateAccessToPost($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostLikesPagingService $PostLikesPagingService */
+        $PostLikesPagingService = ClassRegistry::init("PostLikesPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try{
+            $result = $PostLikesPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?: $this->getDefaultLikesUserExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
     }
 
     /**
