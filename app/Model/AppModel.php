@@ -374,7 +374,7 @@ class AppModel extends Model
      *
      * @return bool
      */
-    public function exists($id = null, bool $checkDeleted = null)
+    public function exists($id = null, bool $checkDeleted = false)
     {
         if ($id === null) {
             $id = $this->getID();
