@@ -45,7 +45,7 @@ abstract class BaseApiResponse extends CakeResponse
             return $this;
         }
         if (is_array($data)) {
-            $data = array_map('strval', $data);
+            $data = $this->convertElementsToString($data);
             if (is_int(array_keys($data)[0])) {
                 $this->_responseBody = array_merge($this->_responseBody,
                     $data);
@@ -121,6 +121,24 @@ abstract class BaseApiResponse extends CakeResponse
         $this->disableCache();
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function convertElementsToString(array $data): array
+    {
+        $keys = array_keys($data);
+
+        foreach ($keys as $key) {
+            if (is_array($data["key"])) {
+                $data[$key] = $this->convertElementsToString($data[$key]);
+            } elseif (strpos($key, "id") !== false && !is_string($data[$key])) {
+                $data[$key] = strval($data[$key]);
+            }
+        }
     }
 
 }
