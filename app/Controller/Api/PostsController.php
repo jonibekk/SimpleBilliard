@@ -75,10 +75,26 @@ class PostsController extends BasePagingController
         }
 
         $result = $CommentPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
-            $this->getExtensionOptions());
+            $this->getExtensionOptions() ?: $this->getDefaultCommentsExtension());
 
         return ApiResponse::ok()->withBody($result)->getResponse();
     }
+
+
+    /**
+     * Default extension options for getting comments
+     *
+     * @return array
+     */
+    private function getDefaultCommentsExtension()
+    {
+        return [
+            CommentPagingService::EXTEND_USER,
+            CommentPagingService::EXTEND_LIKE,
+            CommentPagingService::EXTEND_READ,
+        ];
+    }
+
 
     /**
      * Get list of the post readers

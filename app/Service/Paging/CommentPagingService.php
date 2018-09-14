@@ -2,6 +2,7 @@
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/DataExtender', "UserDataExtender");
 App::import('Lib/DataExtender', "CommentLikeDataExtender");
+App::import('Lib/DataExtender', "CommentReadDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('Comment', 'Model');
 App::uses('User', 'Model');
@@ -18,6 +19,7 @@ class CommentPagingService extends BasePagingService
     const EXTEND_ALL = "ext:comment:all";
     const EXTEND_USER = "ext:comment:user";
     const EXTEND_LIKE = "ext:comment:like";
+    const EXTEND_READ = "ext:comment:read";
     const MAIN_MODEL = 'Comment';
 
     /**
@@ -65,6 +67,12 @@ class CommentPagingService extends BasePagingService
             $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
             $CommentLikeDataExtender->setUserId($userId);
             $resultArray = $CommentLikeDataExtender->extend($resultArray, "{n}.id", "comment_id");
+        }
+        if ($this->includeExt($options, self::EXTEND_READ)) {
+            /** @var CommentReadDataExtender $CommentReadDataExtender */
+            $CommentReadDataExtender = ClassRegistry::init('CommentReadDataExtender');
+            $CommentReadDataExtender->setUserId($userId);
+            $resultArray = $CommentReadDataExtender->extend($resultArray, "{n}.id", "comment_id");
         }
     }
 
