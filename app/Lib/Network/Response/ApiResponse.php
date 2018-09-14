@@ -45,6 +45,9 @@ class ApiResponse extends BaseApiResponse
             return $this;
         }
         if (!$appendFlag) {
+            if (is_array($data)) {
+                $data = $this->convertElementsToString($data);
+            }
             $this->_responseBody['data'] = $data;
             return $this;
         }

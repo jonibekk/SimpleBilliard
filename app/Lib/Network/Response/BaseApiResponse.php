@@ -41,6 +41,9 @@ abstract class BaseApiResponse extends CakeResponse
             return $this;
         }
         if (!$appendFlag) {
+            if (is_array($data)) {
+                $data = $this->convertElementsToString($data);
+            }
             $this->_responseBody = $data;
             return $this;
         }
@@ -133,12 +136,15 @@ abstract class BaseApiResponse extends CakeResponse
         $keys = array_keys($data);
 
         foreach ($keys as $key) {
-            if (is_array($data["key"])) {
+            if (is_array($data[$key])) {
                 $data[$key] = $this->convertElementsToString($data[$key]);
             } elseif (strpos($key, "id") !== false && !is_string($data[$key])) {
+                //Convert data with key containing 'id' to string
                 $data[$key] = strval($data[$key]);
             }
         }
+
+        return $data;
     }
 
 }
