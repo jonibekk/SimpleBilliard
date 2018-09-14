@@ -45,6 +45,7 @@ abstract class BaseApiResponse extends CakeResponse
             return $this;
         }
         if (is_array($data)) {
+            $data = array_map('strval', $data);
             if (is_int(array_keys($data)[0])) {
                 $this->_responseBody = array_merge($this->_responseBody,
                     $data);
