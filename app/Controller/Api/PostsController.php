@@ -82,11 +82,12 @@ class PostsController extends BasePagingController
 
     /**
      * Get list of the post readers
+     *
      * @param int $postId
      *
      * @return BaseApiResponse
      */
-    public function get_readers(int $postId)
+    public function get_reads(int $postId)
     {
         $error = $this->validateAccessToPost($postId);
         if (!empty($error)) {
@@ -102,7 +103,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        try{
+        try {
             $result = $PostReaderPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(),
@@ -169,7 +170,7 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withData($newPost->toArray())->getResponse();
     }
 
-    public function post_like(int $postId): CakeResponse
+    public function post_likes(int $postId): CakeResponse
     {
         $res = $this->validateLike($postId);
 
@@ -182,6 +183,8 @@ class PostsController extends BasePagingController
 
         try {
             $result = $PostLikeService->add($postId, $this->getUserId(), $this->getTeamId());
+        } catch (GlException\GoalousConflictException $exception) {
+            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
@@ -216,7 +219,7 @@ class PostsController extends BasePagingController
      *
      * @return CakeResponse
      */
-    public function delete_like(int $postId): CakeResponse
+    public function delete_likes(int $postId): CakeResponse
     {
         $res = $this->validateLike($postId);
 
@@ -229,7 +232,8 @@ class PostsController extends BasePagingController
 
         try {
             $count = $PostLikeService->delete($postId, $this->getUserId());
-
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
@@ -238,6 +242,7 @@ class PostsController extends BasePagingController
 
     /**
      * Get list of the user who likes the post
+     *
      * @param int $postId
      *
      * @return BaseApiResponse
@@ -258,7 +263,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        try{
+        try {
             $result = $PostLikesPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(),

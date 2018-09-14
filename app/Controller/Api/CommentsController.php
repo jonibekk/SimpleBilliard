@@ -13,6 +13,7 @@ App::import('Service/Paging', 'CommentLikesPagingService');
  * Date: 2018/06/20
  * Time: 14:21
  */
+
 use Goalous\Exception as GlException;
 
 class CommentsController extends BasePagingController
@@ -24,7 +25,7 @@ class CommentsController extends BasePagingController
      *
      * @return CakeResponse|null
      */
-    public function post_like(int $commentId)
+    public function post_likes(int $commentId)
     {
         $error = $this->validateAccessToComment($commentId);
 
@@ -37,6 +38,8 @@ class CommentsController extends BasePagingController
 
         try {
             $commentLike = $CommentLikeService->add($commentId, $this->getUserId(), $this->getTeamId());
+        } catch (GlException\GoalousConflictException $exception) {
+            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
@@ -46,11 +49,12 @@ class CommentsController extends BasePagingController
 
     /**
      * Get list of the comment readers
+     *
      * @param int $commentId
      *
      * @return BaseApiResponse
      */
-    public function get_readers(int $commentId)
+    public function get_reads(int $commentId)
     {
         $error = $this->validateAccessToComment($commentId);
         if (!empty($error)) {
@@ -66,7 +70,7 @@ class CommentsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        try{
+        try {
             $result = $CommentReaderPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(),
@@ -86,7 +90,7 @@ class CommentsController extends BasePagingController
      *
      * @return CakeResponse|null
      */
-    public function delete_like(int $commentId)
+    public function delete_likes(int $commentId)
     {
         $error = $this->validateAccessToComment($commentId);
 
@@ -99,23 +103,25 @@ class CommentsController extends BasePagingController
 
         try {
             $newCount = $CommentLikeService->delete($commentId, $this->getUserId(), $this->getTeamId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
         return ApiResponse::ok()->withData(['like_count' => $newCount])->getResponse();
-
     }
 
     /**
      * Get list of the user who likes the comment
+     *
      * @param int $commentId
      *
      * @return BaseApiResponse
      */
     public function get_likes(int $commentId)
     {
-        $error = $this-> validateAccessToComment($commentId);
+        $error = $this->validateAccessToComment($commentId);
         if (!empty($error)) {
             return $error;
         }
@@ -129,7 +135,7 @@ class CommentsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        try{
+        try {
             $result = $CommentLikesPagingService->getDataWithPaging(
                 $pagingRequest,
                 $this->getPagingLimit(),
