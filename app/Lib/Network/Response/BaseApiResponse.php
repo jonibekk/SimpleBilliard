@@ -138,7 +138,7 @@ abstract class BaseApiResponse extends CakeResponse
         foreach ($keys as $key) {
             if (is_array($data[$key])) {
                 $data[$key] = $this->convertElementsToString($data[$key]);
-            } elseif (strpos($key, "id") !== false && !is_string($data[$key])) {
+            } elseif (preg_match('/^.*id$/', $key) === 1 && !is_string($data[$key])) {
                 //Convert data with key containing 'id' to string
                 $data[$key] = strval($data[$key]);
             }
