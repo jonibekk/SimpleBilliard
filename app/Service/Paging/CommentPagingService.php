@@ -98,7 +98,7 @@ class CommentPagingService extends BasePagingService
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder("id", PagingRequest::PAGE_ORDER_ASC);
+        $pagingRequest->addOrder("id", PagingRequest::PAGE_ORDER_DESC);
         return $pagingRequest;
     }
 
@@ -107,6 +107,6 @@ class CommentPagingService extends BasePagingService
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
     ): PointerTree {
-        return new PointerTree([static::MAIN_MODEL . '.id', ">", $lastElement['id']]);
+        return new PointerTree([static::MAIN_MODEL . '.id', "<", $lastElement['id']]);
     }
 }
