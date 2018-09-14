@@ -43,9 +43,6 @@ class CommentLikeServiceTest extends GoalousTestCase
 
         $CommentLikeService->add($commentId, 2, 1);
         $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
-
-        $CommentLikeService->add($commentId, 1, 1);
-        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
     }
 
     /**
@@ -79,9 +76,6 @@ class CommentLikeServiceTest extends GoalousTestCase
 
         $CommentLikeService->delete($commentId, 1, 1);
         $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
-
-        $CommentLikeService->delete($commentId, 1, 1);
-        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
     }
 
     /**
