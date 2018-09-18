@@ -19,40 +19,102 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
     Router::fullbaseUrl('https://' . env('HTTP_HOST'));
 }
 
-/**
- * @deprecated This /api/v1/* is old API routing, do not touch about routing.
- */
-Router::connect('/api/v1/:controller', ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller/:id', ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller', ['action' => 'post', '[method]' => 'POST'], ['apiVersion' => 'v1']);
-Router::connect('/api/v1/:controller/:id', ['action' => 'put', '[method]' => 'PUT'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller/:id', ['action' => 'delete', '[method]' => 'DELETE'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller/:action', ['prefix' => 'get', '[method]' => 'GET'], ['apiVersion' => 'v1']);
-Router::connect('/api/v1/:controller/:id/:action', ['prefix' => 'get', '[method]' => 'GET'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller/:action', ['prefix' => 'post', '[method]' => 'POST'], ['apiVersion' => 'v1']);
-Router::connect('/api/v1/:controller/:id/:action', ['prefix' => 'post', '[method]' => 'POST'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller/:id/:action', ['prefix' => 'put', '[method]' => 'PUT'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/v1/:controller/:id/:action', ['prefix' => 'delete', '[method]' => 'DELETE'], ['apiVersion' => 'v1', 'id' => '[0-9]+', 'pass' => ['id']]);
-
-/**
- * REST Endpoints with version in header 'X-API-Version'
- * No action
- */
-Router::connect('/api/:controller', ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET']);
-Router::connect('/api/:controller/:id', ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'], ['id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/:controller', ['action' => 'post', '[method]' => 'POST']);
-Router::connect('/api/:controller/:id', ['action' => 'put', '[method]' => 'PUT'], ['id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/:controller/:id', ['action' => 'delete', '[method]' => 'DELETE'], ['id' => '[0-9]+', 'pass' => ['id']]);
-/**
- * REST Endpoints with version in header 'X-API-Version'
- * With action
- */
-Router::connect('/api/:controller/:action', ['prefix' => 'get', '[method]' => 'GET']);
-Router::connect('/api/:controller/:id/:action', ['prefix' => 'get', '[method]' => 'GET'], ['id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/:controller/:action', ['prefix' => 'post', '[method]' => 'POST']);
-Router::connect('/api/:controller/:id/:action', ['prefix' => 'post', '[method]' => 'POST'], ['id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/:controller/:id/:action', ['prefix' => 'put', '[method]' => 'PUT'], ['id' => '[0-9]+', 'pass' => ['id']]);
-Router::connect('/api/:controller/:id/:action', ['prefix' => 'delete', '[method]' => 'DELETE'], ['id' => '[0-9]+', 'pass' => ['id']]);
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQUEST_URI'], $matches)) {
+    /**
+     * @deprecated This /api/v1/* is old API routing, do not touch about routing.
+     */
+    $apiVersions = 'v1';
+    /**
+     * REST
+     * actionなし
+     */
+    Router::connect('/api/:apiVersion/:controller',
+        ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller',
+        ['action' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'put', '[method]' => 'PUT'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id',
+        ['action' => 'delete', '[method]' => 'DELETE'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    /**
+     * REST
+     * actionあり
+     */
+    Router::connect('/api/:apiVersion/:controller/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'put', '[method]' => 'PUT'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+    Router::connect('/api/:apiVersion/:controller/:id/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE'],
+        ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
+    );
+} else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
+    /**
+     * REST Endpoints with version in header 'X-API-Version'
+     * No action
+     */
+    Router::connect('/api/:controller',
+        ['action' => 'list', 'prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/:controller/:id',
+        ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller',
+        ['action' => 'post', '[method]' => 'POST']);
+    Router::connect('/api/:controller/:id',
+        ['action' => 'put', '[method]' => 'PUT'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:id',
+        ['action' => 'delete', '[method]' => 'DELETE'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    /**
+     * REST Endpoints with version in header 'X-API-Version'
+     * With action
+     */
+    Router::connect('/api/:controller/:action',
+        ['prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'get', '[method]' => 'GET'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:action',
+        ['prefix' => 'post', '[method]' => 'POST']);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'post', '[method]' => 'POST'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'put', '[method]' => 'PUT'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:id/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE'],
+        ['id' => '[0-9]+', 'pass' => ['id']]);
+}
 
 /**
  * エイリアス

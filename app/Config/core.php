@@ -347,8 +347,10 @@ if (REDIS_CACHE_HOST) {
 
 $core_cache_prefix = $prefix . 'cake_core:';
 //重複するコントローラを共存させる
-if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
-    $core_cache_prefix = $prefix . 'cake_core_api_' . $matches[1] . ':';
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQUEST_URI'], $matches)) {
+    $core_cache_prefix = $prefix . 'cake_core_api_v1:';
+} else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
+    $core_cache_prefix = $prefix . 'cake_core_api:';
 }
 Cache::config('_cake_core_', array(
     'engine'   => 'Apc',
