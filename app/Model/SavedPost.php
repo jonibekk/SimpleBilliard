@@ -229,10 +229,11 @@ SQL;
     }
 
     /**
+     * Get User information who save that post
      * @param int $postId
      * @param int $userId
      *
-     * @return array|null
+     * @return SavedPostEntity
      */
     public function getUserSavedPost(int $postId, int $user_id){
         

@@ -300,7 +300,7 @@ class PostsController extends BasePagingController
 	 *
 	 * @return BaseApiResponse
 	 */
-    public function post_save(int $postId): CakeResponse
+    public function post_saves(int $postId): CakeResponse
     {
         $res = $this->validateSave($postId);
 
@@ -319,7 +319,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->withData((empty($result)) ? [] : $result->toArray())->getResponse();
+        return ApiResponse::ok()->withData($result->toArray())->getResponse();
     }
 
     /**
@@ -327,7 +327,7 @@ class PostsController extends BasePagingController
      *
      * @return CakeResponse
      */
-    public function delete_save(int $postId): CakeResponse
+    public function delete_saves(int $postId): CakeResponse
     {
         $res = $this->validateSave($postId);
 
@@ -344,7 +344,7 @@ class PostsController extends BasePagingController
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
-        return ApiResponse::ok()->withData(__('Removed from Saved Items.'))->getResponse();
+        return ApiResponse::ok()->withData(["post_id" => $postId])->getResponse();
     }
 
     /**
@@ -430,10 +430,6 @@ class PostsController extends BasePagingController
 	 */
 	private function validateSave(int $postId)
 	{
-		if (empty($postId) || !is_int($postId)) {
-			return ErrorResponse::badRequest()->getResponse();
-		}
-
 		/** @var PostService $PostService */
 		$PostService = ClassRegistry::init('PostService');
 
