@@ -1,26 +1,21 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/DataExtender', "UserDataExtender");
-App::import('Lib/DataExtender', "CommentLikeDataExtender");
-App::import('Lib/DataExtender', "CommentReadDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
-App::uses('Comment', 'Model');
+App::uses('PostRead', 'Model');
 App::uses('User', 'Model');
 
 /**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/05/28
+ * User: MartiFloriach
+ * Date: 2018/09/03
  * Time: 13:56
  */
-class CommentPagingService extends BasePagingService
+class PostReaderPagingService extends BasePagingService
 {
 
-    const EXTEND_ALL = "ext:comment:all";
-    const EXTEND_USER = "ext:comment:user";
-    const EXTEND_LIKE = "ext:comment:like";
-    const EXTEND_READ = "ext:comment:read";
-    const MAIN_MODEL = 'Comment';
+    const EXTEND_ALL = "ext:post_read:all";
+    const EXTEND_USER = "ext:post_read:user";
+    const MAIN_MODEL = 'PostRead';
 
     /**
      * @param PagingRequest $pagingRequest
@@ -36,22 +31,22 @@ class CommentPagingService extends BasePagingService
         $options['order'] = $pagingRequest->getOrders();
         $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
-        /** @var Comment $Comment */
-        $Comment = ClassRegistry::init('Comment');
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
 
-        $result = $Comment->useType()->find('all', $options);
+        $result = $PostRead->useType()->find('all', $options);
 
-        return Hash::extract($result, "{n}.Comment");
+        return Hash::extract($result, "{n}.PostRead");
     }
 
     protected function countData(PagingRequest $request): int
     {
         $options = $this->createSearchCondition($request);
 
-        /** @var Comment $Comment */
-        $Comment = ClassRegistry::init('Comment');
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
 
-        return (int)$Comment->find('count', $options);
+        return (int)$PostRead->find('count', $options);
     }
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
@@ -61,23 +56,22 @@ class CommentPagingService extends BasePagingService
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
             $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
         }
-        if ($this->includeExt($options, self::EXTEND_LIKE)) {
-            $userId = $request->getCurrentUserId();
-            /** @var CommentLikeDataExtender $CommentLikeDataExtender */
-            $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
-            $CommentLikeDataExtender->setUserId($userId);
-            $resultArray = $CommentLikeDataExtender->extend($resultArray, "{n}.id", "comment_id");
-        }
-        if ($this->includeExt($options, self::EXTEND_READ)) {
-            /** @var CommentReadDataExtender $CommentReadDataExtender */
-            $CommentReadDataExtender = ClassRegistry::init('CommentReadDataExtender');
-            $CommentReadDataExtender->setUserId($userId);
-            $resultArray = $CommentReadDataExtender->extend($resultArray, "{n}.id", "comment_id");
-        }
     }
 
+    /**
+     * Create the SQL query for getting the readers of the post
+     *
+     * @param PagingRequest $request
+     *
+     * @return array
+     */
     private function createSearchCondition(PagingRequest $request): array
     {
+        $conditions = $request->getConditions(true);
+
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
         $postId = $request->getResourceId();
 
         if (empty($postId)) {
@@ -85,15 +79,19 @@ class CommentPagingService extends BasePagingService
             throw new InvalidArgumentException("Missing post ID for getting comments");
         }
 
-        $options = [
-            'conditions' => [
-                'Comment.post_id' => $postId,
-            ],
-            'table'      => 'comments',
-            'alias'      => 'Comment'
-        ];
+        $conditions = [
+            'conditions'    => [
+                'post_id'   => $postId,
+        ],
+        'fields'=>[
+            'user_id',
+            'created',
+            'id'
+        ]];
 
-        return $options;
+        $PostRead->find('all', $conditions);
+
+        return $conditions;
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest

@@ -9,6 +9,9 @@ App::uses('CommentLike', 'Model');
  * Date: 2018/07/23
  * Time: 10:34
  */
+
+use Goalous\Exception as GlException;
+
 class CommentLikeService extends AppService
 {
     /**
@@ -43,7 +46,7 @@ class CommentLikeService extends AppService
                 $CommentLike->create();
                 $newCommentLike = $CommentLike->useType()->useEntity()->save($newData, false);
 
-                $newCount = $CommentLike->updateCommentLikeCount($commentId);
+                $newCommentLike['like_count'] = $CommentLike->updateCommentLikeCount($commentId);
 
                 $this->TransactionManager->commit();
 
@@ -51,13 +54,9 @@ class CommentLikeService extends AppService
                 $this->TransactionManager->rollback();
                 throw $e;
             }
+        } else {
+            throw new GlException\GoalousConflictException(__("You already liked it."));
         }
-
-        if (empty($newCommentLike)) {
-            $newCommentLike = new CommentLikeEntity();
-        }
-
-        $newCommentLike['like_count'] = $newCount ?? $Comment->getCommentLikeCount($commentId);
 
         return $newCommentLike;
     }
@@ -76,9 +75,6 @@ class CommentLikeService extends AppService
     {
         /** @var CommentLike $CommentLike */
         $CommentLike = ClassRegistry::init('CommentLike');
-
-        /** @var Comment $Comment */
-        $Comment = ClassRegistry::init('Comment');
 
         $condition = [
             'conditions' => [
@@ -100,9 +96,11 @@ class CommentLikeService extends AppService
                 $this->TransactionManager->rollback();
                 throw $e;
             }
+        } else {
+            throw new GlException\GoalousNotFoundException(__("You did not like it."));
         }
 
-        return $newCount ?? $Comment->getCommentLikeCount($commentId);
+        return $newCount;
     }
 
 }

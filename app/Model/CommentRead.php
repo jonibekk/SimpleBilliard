@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
 
+use Goalous\Enum\DataType\DataType as DataType;
+
 /**
  * CommentRead Model
  *
@@ -169,4 +171,10 @@ class CommentRead extends AppModel
         $res = $this->find('count', $options);
         return $res;
     }
+
+    public $modelConversionTable = [
+        'comment_id'    => DataType::INT,
+        'user_id'       => DataType::INT,
+        'team_id'       => DataType::INT
+    ];
 }
