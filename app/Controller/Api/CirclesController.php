@@ -80,7 +80,7 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
-    public function post_join(int $circleId)
+    public function post_joins(int $circleId)
     {
         $error = $this->validatePostJoin($circleId);
 
@@ -137,13 +137,13 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Validate post_join endpoint
+     * Validate post_joins endpoint
      *
      * @param int $circleId
      *
      * @return ErrorResponse | null
      */
-    public function validatePostJoin(int $circleId)
+    public function validatePostJoins(int $circleId)
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
