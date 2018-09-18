@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
+App::import('Service', 'SavedPostService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service/Paging', 'PostLikesPagingService');
@@ -271,6 +272,60 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withBody($result)->getResponse();
     }
 
+
+	/**
+	 * Post save method
+	 * @param int $postId
+	 *
+	 * @return BaseApiResponse
+	 */
+    public function post_save(int $postId): CakeResponse
+    {
+        $res = $this->validateSave($postId);
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        /** @var SavedPostService $SavedPostService */
+        $SavedPostService = ClassRegistry::init('SavedPostService');
+
+        try {
+            $result = $SavedPostService->add($postId, $this->getUserId(), $this->getTeamId());
+        } catch (GlException\GoalousConflictException $ConflictException) {
+            return ErrorResponse::resourceConflict()->withException($ConflictException)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData((empty($result)) ? [] : $result->toArray())->getResponse();
+    }
+
+    /**
+     * @param int $postId
+     *
+     * @return CakeResponse
+     */
+    public function delete_save(int $postId): CakeResponse
+    {
+        $res = $this->validateSave($postId);
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        /** @var SavedPostService $SavedPostService */
+        $SavedPostService = ClassRegistry::init('SavedPostService');
+
+        try {
+            $count = $SavedPostService->delete($postId, $this->getUserId());
+
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+        return ApiResponse::ok()->withData(__('Removed from Saved Items.'))->getResponse();
+    }
+
     /**
      * @return CakeResponse|null
      */
@@ -344,6 +399,40 @@ class PostsController extends BasePagingController
 
         return null;
     }
+
+	/**
+	 * Validation function for adding / removing save from a post
+	 *
+	 * @param int $postId
+	 *
+	 * @return CakeResponse|null
+	 */
+	private function validateSave(int $postId)
+	{
+		if (empty($postId) || !is_int($postId)) {
+			return ErrorResponse::badRequest()->getResponse();
+		}
+
+		/** @var PostService $PostService */
+		$PostService = ClassRegistry::init('PostService');
+
+		try {
+			$access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+		} catch (GlException\GoalousNotFoundException $notFoundException) {
+			return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+		} catch (Exception $exception) {
+			return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+		}
+
+		//Check if user belongs to a circle where the post is shared to
+		if (!$access) {
+			return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+								->getResponse();
+		}
+
+		return null;
+	}
+
 
     /*
      * Validate get comments  and readers endpoint

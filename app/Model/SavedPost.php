@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'SavedPostEntity');
 
 /**
  * SavedPost Model
@@ -8,6 +9,9 @@ App::uses('AppModel', 'Model');
  * @property User $User
  * @property Team $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class SavedPost extends AppModel
 {
     const DIRECTION_OLD = "old";
@@ -223,4 +227,33 @@ SQL;
         $res = $this->query($sql);
         return $res !== false;
     }
+
+    /**
+     * @param int $postId
+     * @param int $userId
+     *
+     * @return array|null
+     */
+    public function getUserSavedPost(int $postId, int $user_id){
+        
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init('SavedPost');
+
+        $options = [
+            'fields'     => 'post_id',
+            'conditions' => [
+                'post_id' => $postId,
+                'user_id' => $user_id,
+            ],
+        ];
+        $res = $SavedPost->useType()->useEntity()->find('all', $options);
+
+        return $res;
+    }
+
+    public $modelConversionTable = [
+        'user_id' => DataType::INT,
+        'post_id' => DataType::INT,
+        'team_id' => DataType::INT
+    ];
 }

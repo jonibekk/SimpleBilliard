@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-08-09 15:32+0900\n"
+"PO-Revision-Date: 2018-09-18 13:07+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: Poedit 2.1.1\n"
+
 msgid "Percentage"
 msgstr "パーセント"
 
@@ -876,7 +877,9 @@ msgstr ""
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
-msgid "You don't have permission to access this post"
+#, fuzzy
+#| msgid "You don't have permission to access this post"
+msgid "You don't have permission to access this comment"
 msgstr "この投稿にアクセスする権限がありません。"
 
 msgid "Evaluator setting saved."
@@ -884,6 +887,9 @@ msgstr "評価者設定を保存しました。"
 
 msgid "%s %s inactive"
 msgstr ""
+
+msgid "You don't have permission to access this post"
+msgstr "この投稿にアクセスする権限がありません。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
@@ -996,6 +1002,11 @@ msgstr "ゴール達成しました！"
 
 msgid "Api Endpoint not found."
 msgstr "APIが見つかりません。"
+
+#, fuzzy
+#| msgid "No results found"
+msgid "Not Found"
+msgstr "一致する結果はありませんでした"
 
 msgid "You can not decrease current value."
 msgstr "現在値は減らせません。"
@@ -3229,6 +3240,9 @@ msgstr "管理"
 
 msgid "Discover more circles"
 msgstr "サークルを見つける"
+
+msgid "Go To Top"
+msgstr "トップへ戻る"
 
 msgid "Saved"
 msgstr "保存済み"
@@ -6281,6 +6295,15 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
+#~ msgid "This item is already saved."
+#~ msgstr "このアイテムはすでに保存されています"
+
+#~ msgid "This item doesn't exist."
+#~ msgstr "このアイテムはすでに保存されていません"
+
+#~ msgid "Removed from Saved Items."
+#~ msgstr "保存済みアイテムから削除されました"
+
 #, fuzzy
 #~| msgid "You don't have access right to this page."
 #~ msgid "You don't have access to this post"
@@ -6299,9 +6322,6 @@ msgstr "認定ステータス: %s"
 
 #~ msgid "View Circles"
 #~ msgstr "サークルを見る"
-
-#~ msgid "Go To Top"
-#~ msgstr "トップへ戻る"
 
 #~ msgid "Name?"
 #~ msgstr "名前を入力"
