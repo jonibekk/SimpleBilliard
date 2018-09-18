@@ -27,7 +27,7 @@ class UserDataExtender extends DataExtender
             'fields'     => $User->profileFields
         ];
 
-        $fetchedData = $User->find('all', $conditions);
+        $fetchedData = $User->useType()->find('all', $conditions);
 
         if (count($fetchedData) != count($uniqueKeys)) {
             GoalousLog::error("Missing data for data extension. User ID: " . implode(',',

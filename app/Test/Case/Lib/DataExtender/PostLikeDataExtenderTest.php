@@ -37,6 +37,6 @@ class PostLikeDataExtenderTest extends GoalousTestCase
         $PostLikeDataExtender->setUserId(1);
         $extended = $PostLikeDataExtender->extend($posts, 'id', 'post_id');
 
-        $this->assertNotEmpty(Hash::extract($extended, 'is_liked'));
+        $this->assertTrue(Hash::get($extended, 'is_liked'));
     }
 }

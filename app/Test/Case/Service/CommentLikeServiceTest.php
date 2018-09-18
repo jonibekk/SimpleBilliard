@@ -43,9 +43,20 @@ class CommentLikeServiceTest extends GoalousTestCase
 
         $CommentLikeService->add($commentId, 2, 1);
         $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousConflictException
+     */
+    public function test_addLikeMany_failure()
+    {
+        /** @var CommentLikeService $CommentLikeService */
+        $CommentLikeService = ClassRegistry::init("CommentLikeService");
+
+        $commentId = 1;
 
         $CommentLikeService->add($commentId, 1, 1);
-        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
+        $CommentLikeService->add($commentId, 1, 1);
     }
 
     public function test_removeCommentLike_success()
@@ -65,9 +76,16 @@ class CommentLikeServiceTest extends GoalousTestCase
 
         $CommentLikeService->delete($commentId, 1, 1);
         $this->assertEquals(++$initialCount, $CommentLike->updateCommentLikeCount($commentId));
+    }
 
-        $CommentLikeService->delete($commentId, 1, 1);
-        $this->assertEquals($initialCount, $CommentLike->updateCommentLikeCount($commentId));
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_deleteLikeNotExist_failure()
+    {
+        /** @var CommentLikeService $CommentLikeService */
+        $CommentLikeService = ClassRegistry::init("CommentLikeService");
 
+        $CommentLikeService->delete(9090909, 1, 1);
     }
 }

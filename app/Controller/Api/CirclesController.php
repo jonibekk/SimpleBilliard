@@ -175,6 +175,7 @@ class CirclesController extends BasePagingController
             CirclePostPagingService::EXTEND_CIRCLE,
             CirclePostPagingService::EXTEND_LIKE,
             CirclePostPagingService::EXTEND_SAVED,
+            CirclePostPagingService::EXTEND_READ,
             CirclePostPagingService::EXTEND_USER,
             CirclePostPagingService::EXTEND_COMMENTS,
             CirclePostPagingService::EXTEND_POST_FILE
