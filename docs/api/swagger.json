@@ -1499,9 +1499,9 @@
             "type" : "array",
             "items" : {
               "type" : "string",
-              "enum" : [ "ext:comment:all", "ext:comment:user" ]
+              "enum" : [ "ext:comment:all", "ext:comment:user", "ext:comment:like", "ext:comment:read" ]
             },
-            "default" : [ "ext:comment:user" ]
+            "default" : [ ]
           }
         } ],
         "responses" : {
@@ -1546,7 +1546,33 @@
                     "del_flg" : false,
                     "deleted" : null,
                     "created" : "0",
-                    "modified" : null
+                    "modified" : "null,",
+                    "is_read" : "true,",
+                    "is_liked" : "true,",
+                    "user" : {
+                      "id" : 615,
+                      "first_name" : "Jiro",
+                      "last_name" : "Gorasu",
+                      "photo_file_name" : null,
+                      "cover_photo_file_name" : null,
+                      "language" : "jpn",
+                      "auto_language_flg" : false,
+                      "romanize_flg" : false,
+                      "display_first_name" : "Jiro",
+                      "display_last_name" : "Gorasu",
+                      "display_username" : "Jiro Gorasu",
+                      "local_username" : null,
+                      "roman_username" : "Jiro Gorasu",
+                      "last_first" : true,
+                      "profile_img_url" : {
+                        "small" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "x_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "original" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D"
+                      }
+                    }
                   } ],
                   "cursor" : "eyJjb25kaXRpb25zIjpbXSwicG9pbnRlciI6WyJpZCIsIjwiLCIyIl0sIm9yZGVyIjp7ImlkIjoiYXNjIn19",
                   "count" : 2
