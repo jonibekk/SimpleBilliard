@@ -19,20 +19,10 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
     Router::fullbaseUrl('https://' . env('HTTP_HOST'));
 }
 
-/**
- * Api
- * # 説明
- * 一部の非APIのリバースルーティングで不具合がありREQUEST_URIをチェックする対応をしている
- * (POSTにおいて何故かAPIのルーティングルールが適用されてしまう。)
- * FIXME この対応ではAPIでアクセスしてきた際に内部的にページのurlをリバースルーティングで生成する際に問題あり！
- * # versionを追加する場合
- * 1. app/Controller/Api以下にバージョン番号のディレクトリを作成し、コントローラを配置
- * 2. 以下2つのRouterのapiVersionに新しいバージョン番号を追加
- * # REST以外のもの
- * アクションメソッドとして適宜追加していく。(Routingの設定を増やさない)
- * ただし、Methodを限定する事。
- */
-if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQUEST_URI'], $matches)) {
+    /**
+     * @deprecated This /api/v1/* is old API routing, do not touch about routing.
+     */
     $apiVersions = 'v1';
     /**
      * REST
@@ -105,7 +95,6 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVE
     Router::connect('/api/:controller/:id',
         ['action' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
-
     /**
      * REST Endpoints with version in header 'X-API-Version'
      * With action
