@@ -9,6 +9,9 @@ App::uses('Post', 'Model');
  * Date: 2018/07/20
  * Time: 12:24
  */
+
+use Goalous\Exception as GlException;
+
 class PostLikeService extends AppService
 {
 
@@ -51,7 +54,7 @@ class PostLikeService extends AppService
                 /** @var PostLikeEntity $result */
                 $result = $PostLike->useType()->useEntity()->save($newData, false);
 
-                $count = $PostLike->updateLikeCount($postId);
+                $result['like_count'] = $PostLike->updateLikeCount($postId);
 
                 $this->TransactionManager->commit();
 
@@ -61,14 +64,8 @@ class PostLikeService extends AppService
                 throw $e;
             }
         } else {
-            $count = $PostLike->countPostLike($postId);
+            throw new GlException\GoalousConflictException(__("You already liked it."));
         }
-
-        if (empty($result)) {
-            $result = new PostLikeEntity();
-        }
-
-        $result['like_count'] = $count;
 
         return $result;
     }
@@ -111,9 +108,12 @@ class PostLikeService extends AppService
                 GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
                 throw $e;
             }
+        } else {
+            //If like not exist, throw error
+            throw new GlException\GoalousNotFoundException(__("You did not like it."));
         }
 
-        return $count ?? $PostLike->countPostLike($postId);
+        return $count;
     }
 
 }

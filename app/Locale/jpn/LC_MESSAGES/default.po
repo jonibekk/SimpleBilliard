@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.0.9\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -1933,6 +1933,12 @@ msgstr "%s画素(pixel)がアップロードできるファイルの上限です
 
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
+
+msgid "You already liked it."
+msgstr "あなたはすでにいいね！しています。"
+
+msgid "You did not like it."
+msgstr "あなたはいいね！していません。"
 
 #, fuzzy
 #| msgid "No results found"
