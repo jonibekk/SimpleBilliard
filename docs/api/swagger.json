@@ -232,12 +232,12 @@
         }
       }
     },
-    "/api/circles/{circle.id}/join" : {
+    "/api/circles/{circle.id}/joins" : {
       "post" : {
         "tags" : [ "Circles" ],
-        "summary" : "/api/circles/{circle.id}/join",
-        "description" : "Invite a user to given circle",
-        "operationId" : "/api/circles/{circle.id}/join",
+        "summary" : "/api/circles/{circle.id}/joins",
+        "description" : "Join a circle as current user",
+        "operationId" : "/api/circles/{circle.id}/joins",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
         } ],
@@ -277,6 +277,9 @@
                 }
               }
             }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
