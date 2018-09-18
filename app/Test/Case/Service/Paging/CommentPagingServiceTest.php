@@ -41,7 +41,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $this->assertNotEmpty($result);
         $this->assertNotEmpty($result['cursor']);
         $this->assertCount(1, $result['data']);
-        $this->assertEquals(15, $result['data'][0]['id']);
+        $this->assertEquals(16, $result['data'][0]['id']);
     }
 
     public function test_getCommentsByCursor_success()
@@ -70,7 +70,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $this->assertNotEmpty($result1);
         $this->assertEmpty($result1['cursor']);
         $this->assertCount(1, $result1['data']);
-        $this->assertEquals(16, $result1['data'][0]['id']);
+        $this->assertEquals(15, $result1['data'][0]['id']);
     }
 
     public function test_getCommentWithUserExtension_success()
