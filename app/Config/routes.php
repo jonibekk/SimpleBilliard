@@ -48,6 +48,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['action' => 'delete', '[method]' => 'DELETE'],
         ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
     );
+
     /**
      * REST
      * actionあり
@@ -76,7 +77,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['prefix' => 'delete', '[method]' => 'DELETE'],
         ['apiVersion' => $apiVersions, 'id' => '[0-9]+', 'pass' => ['id']]
     );
-} else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
+} elseif (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
     /**
      * REST Endpoints with version in header 'X-API-Version'
      * No action
