@@ -6305,7 +6305,7 @@ msgid "This item is already saved."
 msgstr "このアイテムはすでに保存されています"
 
 msgid "This item doesn't exist."
-msgstr "このアイテムはすでに保存されていません"
+msgstr "このアイテムは保存されていません"
 
 #, fuzzy
 #~| msgid "You don't have access right to this page."
