@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
+
 /**
  * Circle Model
  *
@@ -8,6 +9,9 @@ App::uses('UploadHelper', 'View/Helper');
  * @property CircleMember    $CircleMember
  * @property PostShareCircle $PostShareCircle
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class Circle extends AppModel
 {
     /**
@@ -46,6 +50,7 @@ class Circle extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-circle.jpg',
+                's3_default_url' => 'sys/defaults/no-image-circle.svg',
                 'quality'     => 100,
             ]
         ]
@@ -107,6 +112,14 @@ class Circle extends AppModel
         'Team'
     ];
 
+    public $modelConversionTable = [
+        'team_id'             => DataType::INT,
+        'public_flg'          => DataType::BOOL,
+        'team_all_flg'        => DataType::BOOL,
+        'circle_member_count' => DataType::INT,
+        'latest_post_created' => DataType::INT
+    ];
+
     /**
      * hasMany associations
      *
@@ -128,7 +141,7 @@ class Circle extends AppModel
     /**
      * Create new circle
      *
-     * @param array   $data
+     * @param array $data
      *
      * @return bool
      */
@@ -426,6 +439,13 @@ class Circle extends AppModel
         return $this->find('first', $options);
     }
 
+    /**
+     * Check whether this circle is the team's default one
+     *
+     * @param int $circle_id
+     *
+     * @return bool
+     */
     function isTeamAllCircle($circle_id)
     {
         $options = [
@@ -444,6 +464,7 @@ class Circle extends AppModel
     /**
      * returning teams circles exists
      * pass $teamId if this method is called from external API, or batch shell
+     *
      * @param int $teamId
      *
      * @return array|null
@@ -469,6 +490,7 @@ class Circle extends AppModel
 
     /**
      * Return team's all circles.id
+     *
      * @param int|null $teamId
      *
      * @return string|null circle.id by string
@@ -551,5 +573,4 @@ class Circle extends AppModel
 
         return (bool)$this->find('first', $options);
     }
-
 }

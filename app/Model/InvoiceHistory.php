@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * InvoiceHistory Model
@@ -157,7 +157,7 @@ class InvoiceHistory extends AppModel
         $options = [
             'conditions' => [
                 'team_id' => $teamId,
-                'order_status' => Enum\Invoice\CreditStatus::OK,
+                'order_status' => Enum\Model\Invoice\CreditStatus::OK,
                 'created <' => $timestamp
             ],
         ];

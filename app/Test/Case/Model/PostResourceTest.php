@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('PostDraft', 'Model');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * PostResourceTest Test Case

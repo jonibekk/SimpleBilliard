@@ -5,7 +5,7 @@ App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Invoice reorder for past failed order
@@ -68,7 +68,7 @@ class ReorderInvoiceShell extends AppShell
                 ])));
         }
         $this->logInfo(sprintf('reorderTargetCode: %s', $reorderTargetCode));
-        if ((int)$invoiceHistory['order_status'] !== Enum\Invoice\CreditStatus::NG) {
+        if ((int)$invoiceHistory['order_status'] !== Enum\Model\Invoice\CreditStatus::NG) {
             $this->logError(sprintf("Invoice status which you specified was not failed. %s", AppUtil::jsonOneLine([
                 'reorderTargetCode' => $reorderTargetCode,
             ])));

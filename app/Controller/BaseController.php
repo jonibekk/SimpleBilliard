@@ -5,7 +5,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Application level Controller
@@ -41,7 +41,7 @@ class BaseController extends Controller
             'csrfExpires' => '+24 hour'
         ],
         'Auth'     => [
-            'flash'        => [
+            'flash' => [
                 'element' => 'alert',
                 'key'     => 'auth',
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
@@ -390,10 +390,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY) {
-            return true;
-        }
-        return false;
+        return boolval($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY);
     }
 
     /**
@@ -410,10 +407,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->isCannotUseService()) {
-            return true;
-        }
-        return false;
+        return boolval($TeamService->isCannotUseService());
     }
 
     /**

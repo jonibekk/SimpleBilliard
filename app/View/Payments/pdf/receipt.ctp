@@ -17,7 +17,7 @@
             ?>
         </figure>
         <?php if ($history['PaymentSetting']['is_card']): ?>
-            <?php if ($history['ChargeHistory']['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS): ?>
+            <?php if ($history['ChargeHistory']['result_type'] == Goalous\Enum\Model\ChargeHistory\ResultType::SUCCESS): ?>
             <h2 class="receipt-status"><?= __("PAID") ?></h2>
             <?php else: ?>
             <h2 class="receipt-status receipt-status-failure"><?= __("FAILURE") ?></h2>
@@ -52,17 +52,17 @@
         <?php
             $type = '';
             switch ($history['ChargeHistory']['charge_type']) {
-                case Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
+                case Goalous\Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE:
                     $type = __("Monthly");
                     break;
-                case  Goalous\Model\Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
-                case Goalous\Model\Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
+                case  Goalous\Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
+                case Goalous\Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
                     $type = __('Add member(s)');
                     break;
-                case Goalous\Model\Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
+                case Goalous\Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
                     $type = __('Upgrade');
                     break;
-                case Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE:
+                case Goalous\Enum\Model\ChargeHistory\ChargeType::RECHARGE:
                     $type = __('Recharge');
                     break;
             }
@@ -72,7 +72,7 @@
             <?php
                 $label = "";
                 $val = "";
-                $isRecharge = $history['ChargeHistory']['charge_type'] == Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE;
+                $isRecharge = $history['ChargeHistory']['charge_type'] == Goalous\Enum\Model\ChargeHistory\ChargeType::RECHARGE;
                 if ($isMonthly) {
                     $label = __('TIME PERIOD');
                     $val = h($history['ChargeHistory']['term']);

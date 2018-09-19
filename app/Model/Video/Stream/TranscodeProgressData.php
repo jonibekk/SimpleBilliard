@@ -1,10 +1,10 @@
 <?php
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 interface TranscodeProgressData
 {
-    public function getProgressState(): Enum\Video\VideoTranscodeProgress;
+    public function getProgressState(): Enum\Model\Video\VideoTranscodeProgress;
     public function isError(): bool;
     public function getError(): string;
     public function getWarning(): string;

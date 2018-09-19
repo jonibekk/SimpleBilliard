@@ -26,6 +26,7 @@ https://jira.goalous.com/browse/GL-****
 - [ ] If model was edited, update its test case
 - [ ] If a variable was renamed, ensure no error in all instances after refactoring 
 - [ ] If a method and/or its arguments were renamed, ensure no error in all instances after refactoring
+- [ ] If an endpoint was changed, update its documentations in Postman
 - [ ] DB migration files are combined to one if the PR include the file of that type 
 
 ## Checklist after merged 

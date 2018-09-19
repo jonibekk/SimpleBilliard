@@ -171,20 +171,22 @@ class ApiSavedPostService extends ApiService
 
                 if ($hasVideo) {
                     $imgUrl = '/img/no-image-video.jpg';
-                } else if (!empty($attachedImg)) {
-                    $imgUrl = $Upload->uploadUrl($attachedImg,
-                        "AttachedFile.attached",
-                        ['style' => 'x_small']);
-                // OGP image with post
-                } elseif (!empty(Hash::get($item, 'site_photo_file_name'))) {
-                    $postForGetImg = [
-                        'id'                   => $item['post_id'],
-                        'site_photo_file_name' => $item['site_photo_file_name']
-                    ];
-                    $imgUrl = $Upload->uploadUrl($postForGetImg,
-                        "Post.site_photo",
-                        ['style' => 'small']);
-                    // Post creator's profile image
+                } else {
+                    if (!empty($attachedImg)) {
+                        $imgUrl = $Upload->uploadUrl($attachedImg,
+                            "AttachedFile.attached",
+                            ['style' => 'x_small']);
+                        // OGP image with post
+                    } elseif (!empty(Hash::get($item, 'site_photo_file_name'))) {
+                        $postForGetImg = [
+                            'id'                   => $item['post_id'],
+                            'site_photo_file_name' => $item['site_photo_file_name']
+                        ];
+                        $imgUrl = $Upload->uploadUrl($postForGetImg,
+                            "Post.site_photo",
+                            ['style' => 'small']);
+                        // Post creator's profile image
+                    }
                 }
             }
             if (empty($imgUrl)) {
@@ -218,11 +220,13 @@ class ApiSavedPostService extends ApiService
         // exclude that extra record for paging
         array_pop($data['data']);
         $cursor = end($data['data'])['id'];
-        $queryParams = am($conditions, [
-            'cursor' => $cursor,
-            'limit'  => $limit
-        ]);
-
+        $queryParams = am(
+            $conditions,
+            [
+                'cursor' => $cursor,
+                'limit'  => $limit
+            ]
+        );
 
         $data['paging']['next'] = "/api/v1/saved_items?" . http_build_query($queryParams);
         return $data;

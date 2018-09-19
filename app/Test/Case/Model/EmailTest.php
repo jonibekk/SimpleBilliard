@@ -1,6 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Email', 'Model');
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Email Test Case
@@ -173,7 +173,7 @@ class EmailTest extends GoalousTestCase
         $this->assertEmpty($res);
 
         $this->TeamMember->updateAll(
-            ['status' => Enum\TeamMember\Status::INACTIVE],
+            ['status' => Enum\Model\TeamMember\Status::INACTIVE],
             ['user_id' => $userId, 'team_id' => $teamId]
         );
 
@@ -181,7 +181,7 @@ class EmailTest extends GoalousTestCase
         $this->assertNotEmpty($res);
 
         $this->TeamMember->updateAll(
-            ['status' => Enum\TeamMember\Status::INVITED],
+            ['status' => Enum\Model\TeamMember\Status::INVITED],
             ['user_id' => $userId, 'team_id' => $teamId]
         );
 

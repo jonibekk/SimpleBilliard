@@ -5,7 +5,7 @@ App::uses('View', 'View');
 App::uses('TransactionManager', 'Model');
 App::import('Service', 'UserService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * TeamMember Model
@@ -48,7 +48,7 @@ class TeamMember extends AppModel
             'inEnumList'      => [
                 'rule' => [
                     'inEnumList',
-                    "TeamMember\Status"
+                    "Goalous\Enum\Model\TeamMember\Status"
                 ],
             ],
             'isVerifiedEmail' => [
@@ -2225,7 +2225,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
-                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+                'TeamMember.status !=' => Enum\Model\TeamMember\Status::INACTIVE
             ],
         ];
         $res = $this->find('all', $options);

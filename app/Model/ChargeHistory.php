@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * ChargeHistory Model
@@ -9,24 +9,24 @@ use Goalous\Model\Enum as Enum;
 class ChargeHistory extends AppModel
 {
     /**
-     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
+     * @deprecated use \Goalous\Enum\Model\PaymentSetting\Type
      */
     const PAYMENT_TYPE_INVOICE = 0;
     /**
-     * @deprecated use \Goalous\Model\Enum\PaymentSetting\Type
+     * @deprecated use \Goalous\Enum\Model\PaymentSetting\Type
      */
     const PAYMENT_TYPE_CREDIT_CARD = 1;
 
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     * @deprecated use \Goalous\Enum\Model\ChargeHistory\ChargeType
      */
     const CHARGE_TYPE_MONTHLY = 0;
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     * @deprecated use \Goalous\Enum\Model\ChargeHistory\ChargeType
      */
     const CHARGE_TYPE_ADD_USER = 1;
     /**
-     * @deprecated use \Goalous\Model\Enum\ChargeHistory\ChargeType
+     * @deprecated use \Goalous\Enum\Model\ChargeHistory\ChargeType
      */
     const CHARGE_TYPE_ACTIVATE_USER = 2;
 
@@ -43,22 +43,11 @@ class ChargeHistory extends AppModel
                 'rule' => 'notBlank',
             ],
         ],
-        'payment_type'     => [
-            'inEnumList' => [
-                'rule' => [
-                    'inEnumList',
-                    "PaymentSetting\Type"
-                ],
-            ],
-            'notBlank'   => [
-                'rule' => 'notBlank',
-            ],
-        ],
         'charge_type'      => [
             'inEnumList' => [
                 'rule' => [
                     'inEnumList',
-                    "ChargeHistory\ChargeType"
+                    "Goalous\Enum\Model\ChargeHistory\ChargeType"
                 ],
             ],
             'notBlank'   => [
@@ -123,7 +112,7 @@ class ChargeHistory extends AppModel
             'inEnumList' => [
                 'rule' => [
                     'inEnumList',
-                    "ChargeHistory\ResultType"
+                    "Goalous\Enum\Model\ChargeHistory\ResultType"
                 ],
             ],
             'notBlank'   => [
@@ -206,7 +195,7 @@ class ChargeHistory extends AppModel
                 'team_id'            => $teamId,
                 'charge_datetime >=' => $dateStart,
                 'charge_datetime <=' => $dateEnd,
-                'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'charge_type'        => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'del_flg'            => false
             ],
         ];
@@ -229,9 +218,9 @@ class ChargeHistory extends AppModel
                 'ChargeHistory.team_id'            => $teamId,
                 'ChargeHistory.payment_type'       => self::PAYMENT_TYPE_INVOICE,
                 'ChargeHistory.charge_type'        => [
-                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
-                    Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
-                    Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+                    Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+                    Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+                    Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
                 ],
                 'ChargeHistory.charge_datetime <=' => $timestamp,
                 'InvoiceHistoriesChargeHistory.id' => null,
@@ -293,7 +282,7 @@ class ChargeHistory extends AppModel
                     'alias'      => 'InvoiceHistory',
                     'conditions' => [
                         'InvoiceHistoriesChargeHistory.invoice_history_id = InvoiceHistory.id',
-                        'InvoiceHistory.order_status' => Enum\Invoice\CreditStatus::NG,
+                        'InvoiceHistory.order_status' => Enum\Model\Invoice\CreditStatus::NG,
                         'InvoiceHistory.del_flg'      => false,
                     ]
                 ],
@@ -381,7 +370,7 @@ class ChargeHistory extends AppModel
             'charge_users'                => $usersCount,
             'currency'                    => $currencyType,
             'charge_datetime'             => $time,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => $usersCount,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId,
@@ -472,7 +461,7 @@ class ChargeHistory extends AppModel
             'conditions' => [
                 'charge_datetime >=' => $startTimestamp,
                 'charge_datetime <=' => $endTimestamp,
-                'result_type !='     => Enum\ChargeHistory\ResultType::ERROR,
+                'result_type !='     => Enum\Model\ChargeHistory\ResultType::ERROR,
                 // TODO: Remove this condition and add checking for inconsistency of campaign team's charge in DetectInconsistentChargeShell.
                 'campaign_team_id'   => null
             ],

@@ -7,7 +7,7 @@ App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::import('Service', 'ExperimentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class EvaluationService extends AppService
 {
@@ -108,7 +108,7 @@ class EvaluationService extends AppService
                     break;
                 case self::STAGE_EVALUATOR_EVAL:
                     if ($myEval['evaluate_type'] == Evaluation::TYPE_EVALUATOR
-                        && $myEval['status'] != Enum\Evaluation\Status::DONE) {
+                        && $myEval['status'] != Enum\Model\Evaluation\Status::DONE) {
                         $status_text['body'] = __("Please evaluate.");
                     } else {
                         $status_text['body'] = __("Waiting for the evaluation by %s.", __("Evaluator"));
@@ -154,7 +154,7 @@ class EvaluationService extends AppService
         }
 
         $selfEval = $Evaluation->getUnique($evaluateeId, $evaluateeId, $termId, Evaluation::TYPE_ONESELF);
-        if ((int)$selfEval['status'] !== Enum\Evaluation\Status::DONE) {
+        if ((int)$selfEval['status'] !== Enum\Model\Evaluation\Status::DONE) {
             $this->cachedEvalStages[$key] = self::STAGE_SELF_EVAL;
             return self::STAGE_SELF_EVAL;
         }
@@ -297,7 +297,7 @@ class EvaluationService extends AppService
 
         // Get all evaluations
         if ($EvaluationSetting->isShowAllEvaluationBeforeFreeze()
-            || (int)$term['evaluate_status'] !== Enum\Term\EvaluateStatus::IN_PROGRESS) {
+            || (int)$term['evaluate_status'] !== Enum\Model\Term\EvaluateStatus::IN_PROGRESS) {
             $evaluations = $Evaluation->getEvaluations($termId, $evaluateeId);
             return $evaluations;
         }
@@ -336,7 +336,7 @@ class EvaluationService extends AppService
             return false;
         }
         // check frozen
-        if ((int)$term['evaluate_status'] !== Enum\Term\EvaluateStatus::IN_PROGRESS) {
+        if ((int)$term['evaluate_status'] !== Enum\Model\Term\EvaluateStatus::IN_PROGRESS) {
             return false;
         }
         $evaluation = $Evaluation->getUnique($evaluateeId, $userId, $evaluateTermId);
@@ -353,7 +353,7 @@ class EvaluationService extends AppService
                 return $Evaluation->countCompletedByEvaluators($evaluateTermId, $evaluateeId) == 0;
             } else {
                 $selfEvaluation = $Evaluation->getUnique($evaluateeId, $evaluateeId, $evaluateTermId);
-                if ((int)Hash::get($selfEvaluation, 'status') === Enum\Evaluation\Status::DONE) {
+                if ((int)Hash::get($selfEvaluation, 'status') === Enum\Model\Evaluation\Status::DONE) {
                     return true;
                 }
                 return false;
@@ -415,7 +415,7 @@ class EvaluationService extends AppService
         if (intval($term['team_id']) !== $teamId) {
             throw new RuntimeException(sprintf('term(%d) is not belongs to team(%d)', $termId, $teamId));
         }
-        if (intval($term['evaluate_status']) !== Enum\Term\EvaluateStatus::NOT_STARTED) {
+        if (intval($term['evaluate_status']) !== Enum\Model\Term\EvaluateStatus::NOT_STARTED) {
             throw new RuntimeException(sprintf('term(%d) evaluation is already started', $termId));
         }
 

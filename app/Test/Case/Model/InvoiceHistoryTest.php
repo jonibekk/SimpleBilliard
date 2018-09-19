@@ -1,7 +1,7 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('InvoiceHistory', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 /**
  * InvoiceHistory Test Case
  *
@@ -45,7 +45,7 @@ class InvoiceHistoryTest extends GoalousTestCase
         $this->InvoiceHistory->create();
         $history = $this->InvoiceHistory->save([
             'team_id' => $teamId,
-            'order_status' => Enum\Invoice\CreditStatus::NG,
+            'order_status' => Enum\Model\Invoice\CreditStatus::NG,
         ], false);
         $ts = Hash::get($history , 'InvoiceHistory.created');
         $res = $this->InvoiceHistory->checkCreditOkInPast($teamId, $ts + 1);
@@ -56,7 +56,7 @@ class InvoiceHistoryTest extends GoalousTestCase
         $this->InvoiceHistory->create();
         $history = $this->InvoiceHistory->save([
             'team_id' => $teamId,
-            'order_status' => Enum\Invoice\CreditStatus::OK,
+            'order_status' => Enum\Model\Invoice\CreditStatus::OK,
         ], false);
         $ts = Hash::get($history , 'InvoiceHistory.created');
         $res = $this->InvoiceHistory->checkCreditOkInPast($teamId, $ts + 1);
@@ -66,7 +66,7 @@ class InvoiceHistoryTest extends GoalousTestCase
         $this->InvoiceHistory->create();
         $history = $this->InvoiceHistory->save([
             'team_id' => $teamId,
-            'order_status' => Enum\Invoice\CreditStatus::NG,
+            'order_status' => Enum\Model\Invoice\CreditStatus::NG,
         ], false);
         $ts = Hash::get($history , 'InvoiceHistory.created');
         $res = $this->InvoiceHistory->checkCreditOkInPast($teamId, $ts + 1);

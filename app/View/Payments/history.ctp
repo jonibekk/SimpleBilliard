@@ -28,20 +28,20 @@
                     $icon = '';
                     $text = '';
                     switch ($v['charge_type']) {
-                        case Goalous\Model\Enum\ChargeHistory\ChargeType::MONTHLY_FEE:
+                        case Goalous\Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE:
                             $icon = 'fa fa-calendar';
                             $text = __("Monthly");
                             break;
-                        case  Goalous\Model\Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
-                        case Goalous\Model\Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
+                        case  Goalous\Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE:
+                        case Goalous\Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE:
                             $icon = 'fa fa-user';
                             $text = __("Added Member");
                             break;
-                        case Goalous\Model\Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
+                        case Goalous\Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF:
                             $icon = 'fa fa-arrow-up';
                             $text = __('Upgrade');
                             break;
-                        case Goalous\Model\Enum\ChargeHistory\ChargeType::RECHARGE:
+                        case Goalous\Enum\Model\ChargeHistory\ChargeType::RECHARGE:
                             $icon = 'fa fa-repeat';
                             $text = __('Recharge');
                             break;
@@ -54,9 +54,9 @@
                             class="hidden-xxs"><?= $text ?></span>
                     </td>
                     <td>
-                        <?php if ((int)$v['payment_type'] === Goalous\Model\Enum\PaymentSetting\Type::CREDIT_CARD): ?>
+                        <?php if ((int)$v['payment_type'] === Goalous\Enum\Model\PaymentSetting\Type::CREDIT_CARD): ?>
                             <?php
-                            $resultIconClass = $v['result_type'] == Goalous\Model\Enum\ChargeHistory\ResultType::SUCCESS
+                            $resultIconClass = $v['result_type'] == Goalous\Enum\Model\ChargeHistory\ResultType::SUCCESS
                                 ? "fa fa-check success visible" : "fa fa-close error visible";
                             ?>
                             <span class="<?= $resultIconClass ?>"></span>

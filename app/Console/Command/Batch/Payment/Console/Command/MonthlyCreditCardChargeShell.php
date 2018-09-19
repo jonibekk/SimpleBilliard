@@ -7,7 +7,7 @@ App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * The shell for charging monthly if payment type is credit card
@@ -105,7 +105,7 @@ class MonthlyCreditCardChargeShell extends AppShell
                 // Charge
                 $chargeRes = $PaymentService->applyCreditCardCharge(
                     $teamId,
-                    Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                    Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                     $chargeMemberCount
                 );
                 if ($chargeRes['error']) {

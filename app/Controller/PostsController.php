@@ -8,7 +8,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Posts Controller
@@ -124,7 +124,7 @@ class PostsController extends AppController
 
         $countVideoStreamIds =
             isset($this->request->data['video_stream_id']) && is_array($this->request->data['video_stream_id'])
-            ? count($this->request->data['video_stream_id']) : 0;
+                ? count($this->request->data['video_stream_id']) : 0;
         if (1 < $countVideoStreamIds) {
             $this->Notification->outError(__('You can only post one video file.'));
             return false;
@@ -139,17 +139,17 @@ class PostsController extends AppController
 
             $user = $this->User->getById($this->Auth->user('id'));
             $teamId = $this->current_team_id;
-            $transcodeStatus = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
+            $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
             $logDataArray = [
                 'video_streams.id' => $videoStream['id'],
                 'transcode_status' => sprintf('%s:%s', $transcodeStatus->getValue(), $transcodeStatus->getKey()),
             ];
             switch ($transcodeStatus->getValue()) {
-                case Enum\Video\VideoTranscodeStatus::UPLOADING:
-                case Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
-                case Enum\Video\VideoTranscodeStatus::QUEUED:
-                case Enum\Video\VideoTranscodeStatus::TRANSCODING:
-                case Enum\Video\VideoTranscodeStatus::ERROR:
+                case Enum\Model\Video\VideoTranscodeStatus::UPLOADING:
+                case Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE:
+                case Enum\Model\Video\VideoTranscodeStatus::QUEUED:
+                case Enum\Model\Video\VideoTranscodeStatus::TRANSCODING:
+                case Enum\Model\Video\VideoTranscodeStatus::ERROR:
                     // create draft post
                     GoalousLog::info("video post creating draft post", $logDataArray);
                     /** @var PostDraftService $PostDraftService */
@@ -170,9 +170,10 @@ class PostsController extends AppController
                         return false;
                     }
                     return true;
-                case Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
+                case Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE:
                     GoalousLog::info("video post creating draft post", $logDataArray);
-                    $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId, [$videoStream]);
+                    $successSavedPost = $PostService->addNormalWithTransaction($this->request->data, $userId, $teamId,
+                        [$videoStream]);
                     // 保存に失敗
                     if (false === $successSavedPost) {
                         // バリデーションエラーのケース
@@ -455,6 +456,7 @@ class PostsController extends AppController
         }
         $posts = $this->Post->get($pageNum, POST_FEED_PAGE_ITEMS_NUMBER, $postRange['start'], $postRange['end'],
             $this->request->params);
+
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -983,7 +985,7 @@ class PostsController extends AppController
                     $this->Auth->user('id'),
                     TeamStatus::getCurrentTeam()->getTeamId(),
                     [$circleId]
-                    )
+                )
                 );
             }
         } catch (RuntimeException $e) {
