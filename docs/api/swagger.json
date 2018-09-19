@@ -290,16 +290,49 @@
         }
       }
     },
-    "/api/circles/{circle.id}/leave" : {
+    "/api/circles/{circle.id}/leaves" : {
       "post" : {
         "tags" : [ "Circles" ],
-        "summary" : "Not implemented yet",
+        "summary" : "Leave a circle",
+        "description" : "Leave a given circle as current user",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
         } ],
         "responses" : {
           "200" : {
-            "description" : "[Success] Current user left circle"
+            "description" : "[Success] Current user left circle",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "user_id" : {
+                          "type" : "number"
+                        },
+                        "circle_id" : {
+                          "type" : "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "data" : {
+                    "user_id" : 1,
+                    "circle_id" : 1
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         }
       }
@@ -2849,15 +2882,19 @@
     "schemas" : {
       "Object.String.FileID" : {
         "type" : "string",
-        "pattern" : "[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}",
+        "pattern" : "^[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}$",
         "example" : "5b7ba798848b89.57809264"
+      },
+      "Object.String.ID" : {
+        "type" : "string",
+        "pattern" : "^[1-9]+[0-9]*$",
+        "example" : "900"
       },
       "Model" : {
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "del_flg" : {
             "type" : "boolean",
@@ -2883,8 +2920,7 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "first_name" : {
             "type" : "string"
@@ -2961,7 +2997,7 @@
           }
         },
         "example" : {
-          "id" : 1,
+          "id" : "1",
           "first_name" : "Admin",
           "last_name\"" : "Test",
           "photo_file_name" : null,
@@ -2984,8 +3020,7 @@
           "type" : "object",
           "properties" : {
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "name" : {
               "type" : "string"
@@ -3038,14 +3073,13 @@
               }
             },
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             }
           }
         } ],
         "example" : {
-          "id" : 505,
-          "team_id" : 66,
+          "id" : "505",
+          "team_id" : "66",
           "name" : "Secret 2",
           "description" : "AA",
           "photo_file_name" : null,
@@ -3065,7 +3099,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
-          "circle_id" : 505
+          "circle_id" : "505"
         }
       },
       "Model.CircleMember" : {
@@ -3098,16 +3132,13 @@
               "default" : 0
             },
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "user_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             }
           }
         } ],
@@ -3118,12 +3149,12 @@
           "get_notification_flg" : true,
           "last_posted" : 0,
           "del_flg" : false,
-          "circle_id" : 1,
-          "user_id" : 614,
-          "team_id" : 66,
+          "circle_id" : "1",
+          "user_id" : "614",
+          "team_id" : "66",
           "created" : 1535966985,
           "modified" : 1535966985,
-          "id" : 13726
+          "id" : "13726"
         }
       },
       "Model.Circle.Paging" : {
@@ -3134,14 +3165,13 @@
           "type" : "object",
           "properties" : {
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             }
           }
         } ],
         "example" : {
-          "id" : 505,
-          "team_id" : 66,
+          "id" : "505",
+          "team_id" : "66",
           "name" : "Secret 2",
           "description" : "AA",
           "photo_file_name" : null,
@@ -3161,7 +3191,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
-          "circle_id" : 505
+          "circle_id" : "505"
         }
       },
       "Model.Circle.Paging.Me" : {
@@ -3183,8 +3213,8 @@
           }
         } ],
         "example" : {
-          "id" : 505,
-          "team_id" : 66,
+          "id" : "505",
+          "team_id" : "66",
           "name" : "Secret 2",
           "description" : "AA",
           "photo_file_name" : null,
@@ -3204,7 +3234,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
-          "circle_id" : 505,
+          "circle_id" : "505",
           "unread_count" : 0,
           "admin_flg" : false
         }
@@ -3216,16 +3246,13 @@
           "type" : "object",
           "properties" : {
             "post_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "user_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "body" : {
               "type" : "string",
@@ -3275,12 +3302,10 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "user_id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "created" : {
             "type" : "integer",
@@ -3288,8 +3313,8 @@
           }
         },
         "example" : {
-          "id" : 1,
-          "user_id" : 1,
+          "id" : "1",
+          "user_id" : "1",
           "created" : 1536016933
         }
       },
@@ -3297,12 +3322,10 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "user_id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "created" : {
             "type" : "integer",
@@ -3310,8 +3333,8 @@
           }
         },
         "example" : {
-          "id" : 1,
-          "user_id" : 1,
+          "id" : "1",
+          "user_id" : "1",
           "created" : 1536016933
         }
       },
@@ -3322,12 +3345,10 @@
           "type" : "object",
           "properties" : {
             "user_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "body" : {
               "type" : "string",
@@ -3359,20 +3380,16 @@
               "default" : false
             },
             "goal_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "action_result_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "key_result_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "photo1_file_name" : {
               "type" : "string",
@@ -3403,9 +3420,9 @@
           }
         } ],
         "example" : {
-          "id" : 71877,
-          "user_id" : 404,
-          "team_id" : 1,
+          "id" : "71877",
+          "user_id" : "404",
+          "team_id" : "1",
           "body" : "テックトーーク#4 開催しました！\r\nhttps://isao.goalous.com/post_permanent/7119\r\n\r\n山名さんブロックチェーンについての分かりやすい説明ありがとうございました！\r\n\r\n次回のテックトーークのテーマは「Git」となります。\r\nGitHub,GitLabなど関連するトピックであればなんでもありなので、何かネタがあって話せるよという人はぜひ連絡を下さい！\r\n(小宮さんはLT確定です￣ー￣)ﾆﾔﾘ)\r\n\r\nそれではまた来月お楽しみに！",
           "type" : 1,
           "comment_count" : 0,
@@ -3433,12 +3450,10 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "user_id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "created" : {
             "type" : "integer",
@@ -3446,8 +3461,8 @@
           }
         },
         "example" : {
-          "id" : 1,
-          "user_id" : 1,
+          "id" : "1",
+          "user_id" : "1",
           "created" : 1536016933
         }
       },
@@ -3455,12 +3470,10 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "user_id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "created" : {
             "type" : "integer",
@@ -3468,8 +3481,8 @@
           }
         },
         "example" : {
-          "id" : 1,
-          "user_id" : 1,
+          "id" : "1",
+          "user_id" : "1",
           "created" : 1536016933
         }
       },
@@ -3529,8 +3542,8 @@
         },
         "example" : {
           "data" : [ {
-            "id" : 90,
-            "team_id" : 1,
+            "id" : "90",
+            "team_id" : "1",
             "name" : "All Team",
             "description" : null,
             "photo_file_name" : null,
@@ -3542,10 +3555,10 @@
             "created" : 1524474553,
             "modified" : 1527555809,
             "latest_post_created" : 1531275897,
-            "circle_id" : 1
+            "circle_id" : "1"
           }, {
-            "id" : 80,
-            "team_id" : 2,
+            "id" : "80",
+            "team_id" : "2",
             "name" : "Circle 2",
             "description" : null,
             "photo_file_name" : null,
@@ -3557,7 +3570,7 @@
             "created" : 1524474553,
             "modified" : 1527555809,
             "latest_post_created" : 1531275897,
-            "circle_id" : 1
+            "circle_id" : "1"
           } ],
           "cursor" : "eyJjb25kaXRpb25zIjp7InB1YmxpY19vbmx5IjoiMCJ9LCJwb2ludGVyIjpbWyJsYXRlc3RfcG9zdF9jcmVhdGVkIiwiPCIsMTUzMTI3NTg5N11dLCJvcmRlciI6eyJsYXRlc3RfcG9zdF9jcmVhdGVkIjoiZGVzYyIsImlkIjoiZGVzYyJ9fQ==",
           "count" : 4
@@ -3629,8 +3642,7 @@
               "type" : "object",
               "properties" : {
                 "user_id" : {
-                  "type" : "integer",
-                  "format" : "int32"
+                  "$ref" : "#/components/schemas/Object.String.ID"
                 },
                 "last_posted" : {
                   "type" : "integer",
