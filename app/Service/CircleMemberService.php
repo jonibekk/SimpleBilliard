@@ -22,8 +22,8 @@ class CircleMemberService extends AppService
     /**
      * Fetch list of circles that the user belongs to in a given team
      *
-     * @param int $userId
-     * @param int $teamId
+     * @param int  $userId
+     * @param int  $teamId
      * @param bool $publicOnlyFlag Whether the circle is public or not
      *
      * @return array Array of circle models
@@ -38,11 +38,11 @@ class CircleMemberService extends AppService
                 'Circle.team_id' => $teamId,
                 'Circle.del_flg' => false
             ],
-            'joins' => [
+            'joins'      => [
                 [
-                    'type' => 'INNER',
-                    'table' => 'circle_members',
-                    'alias' => 'CircleMember',
+                    'type'       => 'INNER',
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
                     'conditions' => [
                         'Circle.id = CircleMember.circle_id',
                         'CircleMember.user_id' => $userId,
@@ -173,7 +173,7 @@ class CircleMemberService extends AppService
 
         $circleCondition = [
             'conditions' => [
-                'id' => $circleId,
+                'id'      => $circleId,
                 'del_flg' => false
             ]
         ];
@@ -186,8 +186,9 @@ class CircleMemberService extends AppService
 
         $condition = [
             'conditions' => [
-                'user_id' => $userId,
-                'circle_id' => $circleId
+                'user_id'   => $userId,
+                'circle_id' => $circleId,
+                'del_flg'   => false
             ]
         ];
 
