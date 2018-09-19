@@ -41,17 +41,17 @@ class Circle extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles'      => [
+                'styles'         => [
                     'small'        => '32x32',
                     'medium'       => '48x48',
                     'medium_large' => '96x96',
                     'large'        => '128x128',
                     'x_large'      => '256x256',
                 ],
-                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-circle.jpg',
+                'path'           => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url'    => 'no-image-circle.jpg',
                 's3_default_url' => 'sys/defaults/no-image-circle.svg',
-                'quality'     => 100,
+                'quality'        => 100,
             ]
         ]
     ];
@@ -572,5 +572,55 @@ class Circle extends AppModel
         ];
 
         return (bool)$this->find('first', $options);
+    }
+
+    /**
+     * Update the member count of a circle
+     *
+     * @param int $circleId
+     *
+     * @return int New member count
+     */
+    public function updateMemberCount(int $circleId): int
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $memberCount = $CircleMember->getMemberCount($circleId, true);
+
+        $newData = [
+            'circle_member_count' => $memberCount,
+            'modified'            => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $condition = [
+            'Circle.id' => $circleId,
+            'del_flg'   => false
+        ];
+
+        $this->updateAll($newData, $condition);
+
+        return $memberCount;
+    }
+
+    /**
+     * Get the team ID of this circle
+     *
+     * @param int $circleId
+     *
+     * @return int Team ID of the circle
+     */
+    public function getTeamId(int $circleId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $circleId
+            ],
+            'fields'     => [
+                'team_id'
+            ]
+        ];
+
+        return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
     }
 }

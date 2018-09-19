@@ -2,6 +2,7 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Service', 'CircleMemberService');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::import('Service/Paging', 'CircleMemberPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
@@ -14,6 +15,9 @@ App::uses('Circle', 'Model');
  * Date: 2018/06/20
  * Time: 9:41
  */
+
+use Goalous\Exception as GlException;
+
 class CirclesController extends BasePagingController
 {
     public function get_posts(int $circleId)
@@ -76,12 +80,38 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
+    public function post_joins(int $circleId)
+    {
+        $error = $this->validatePostJoin($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+        try {
+            $return = $CircleMemberService->add($this->getUserId(), $this->getTeamId(), $circleId);
+            $CircleMemberService->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
+                $this->getTeamId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (GlException\GoalousConflictException $exception) {
+            return ErrorResponse::resourceConflict()->withException($exception)
+                                ->withMessage(__("You already joined to this circle."))->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($return->toArray())->getResponse();
+    }
+
     /**
      * Validation for endpoint get_posts
      *
      * @param int $circleId
      *
-     * @return CakeResponse|null
+     * @return ErrorResponse | null
      */
     private function validateGetCircle(int $circleId)
     {
@@ -101,6 +131,34 @@ class CirclesController extends BasePagingController
                     $this->getTeamId()))) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
                                 ->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate post_joins endpoint
+     *
+     * @param int $circleId
+     *
+     * @return ErrorResponse | null
+     */
+    public function validatePostJoins(int $circleId)
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init("Circle");
+
+        $condition = [
+            'conditions' => [
+                'Circle.id'         => $circleId,
+                'Circle.public_flg' => true,
+                'del_flg'           => false
+            ]
+        ];
+        $circle = $Circle->find('first', $condition);
+
+        if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) || empty($circle)) {
+            return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }
 
         return null;
@@ -141,7 +199,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return ApiResponse|BaseApiResponse
+     * @return BaseApiResponse
      */
     function get_detail(int $circleId)
     {

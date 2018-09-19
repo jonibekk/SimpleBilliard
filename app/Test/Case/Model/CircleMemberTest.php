@@ -566,4 +566,11 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertEmpty($res);
     }
 
+    public function test_getMemberCount_success()
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $this->assertEquals(3, $CircleMember->getMemberCount(1));
+    }
 }

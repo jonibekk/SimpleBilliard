@@ -1931,6 +1931,9 @@ msgstr "%sMBがアップロードできるファイルの上限です。"
 msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
+
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
 

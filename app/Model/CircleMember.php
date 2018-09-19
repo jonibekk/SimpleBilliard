@@ -1,6 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('Circle', 'Model');
+
 App::import('Service', 'CirclePinService');
+App::import('Model/Entity', 'CircleMemberEntity');
 
 /**
  * CircleMember Model
@@ -14,7 +18,6 @@ use Goalous\Enum\DataType\DataType as DataType;
 
 class CircleMember extends AppModel
 {
-
     /**
      * Validation rules
      *
@@ -61,10 +64,10 @@ class CircleMember extends AppModel
         'circle_id'             => DataType::INT,
         'team_id'               => DataType::INT,
         'user_id'               => DataType::INT,
-        'team_flg'              => DataType::BOOL,
+        'admin_flg'             => DataType::BOOL,
         'unread_count'          => DataType::INT,
         'show_for_all_feed_flg' => DataType::BOOL,
-        'admin_flg'             => DataType::BOOL,
+        'get_notification_flg'  => DataType::BOOL,
         'last_posted'           => DataType::INT
     ];
 
@@ -320,7 +323,8 @@ class CircleMember extends AppModel
     public function getMemberList(
         $circle_id,
         $with_admin = false,
-        $with_me = true
+        $with_me = true,
+        array $usersToExclude = []
     ) {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
@@ -335,7 +339,11 @@ class CircleMember extends AppModel
             unset($options['conditions']['admin_flg']);
         }
         if (!$with_me) {
-            $options['conditions']['NOT']['user_id'] = $this->my_uid;
+            if (empty($usersToExclude)) {
+                $options['conditions']['NOT']['user_id'] = $this->my_uid;
+            } else {
+                $options['conditions']['NOT']['user_id'] = $usersToExclude;
+            }
         }
         $res = $this->find('list', $options);
 
@@ -610,18 +618,21 @@ class CircleMember extends AppModel
      * @param           $circle_id
      * @param bool|true $use_cache
      *
-     * @return array|null
+     * @return int
      */
-    function getActiveMemberCount($circle_id, $use_cache = true)
+    function getActiveMemberCount($circle_id, $use_cache = true): int
     {
         $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList($use_cache);
         $options = [
             'conditions' => [
                 'circle_id' => $circle_id,
                 'user_id'   => $active_team_members_list,
+            ],
+            'fields'     => [
+                'id'
             ]
         ];
-        $res = $this->find('count', $options);
+        $res = (int)$this->find('count', $options);
         return $res;
     }
 
@@ -729,9 +740,43 @@ class CircleMember extends AppModel
                 'circle_id' => $circleId,
                 'user_id'   => $userId
             ],
-            'conversion' => true
         ];
 
         return Hash::get($this->find('first', $options), 'CircleMember') ?? [];
+    }
+
+    /**
+     * Count number of members in a circle
+     *
+     * @param int  $circleId
+     * @param bool $activeOnly
+     *
+     * @return int
+     */
+    public function getMemberCount(int $circleId, bool $activeOnly = true): int
+    {
+        $conditions = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'del_flg'   => false
+            ],
+        ];
+
+        if ($activeOnly) {
+            /** @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+
+            /** @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
+
+            $userList = $TeamMember->getMemberList($Circle->getTeamId($circleId),
+                Goalous\Enum\Model\TeamMember\Status::ACTIVE());
+
+            $conditions['conditions']['user_id'] = Hash::extract($userList, '{n}.{*}.user_id');
+        }
+
+        $count = (int)$this->find('count', $conditions);
+
+        return $count;
     }
 }
