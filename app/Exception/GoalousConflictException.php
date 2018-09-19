@@ -8,6 +8,8 @@
 
 namespace Goalous\Exception;
 
+use Goalous\Exception\GoalousException;
+
 class GoalousConflictException extends GoalousException
 {
 
