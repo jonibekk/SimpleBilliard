@@ -3,6 +3,7 @@ App::import('Service', 'AppService');
 App::import('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
+App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'CircleMemberEntity');
 App::uses('NotifyBiz', 'Controller/Component');
 
@@ -185,14 +186,12 @@ class CircleMemberService extends AppService
         }
 
         $condition = [
-            'conditions' => [
-                'user_id'   => $userId,
-                'circle_id' => $circleId,
-                'del_flg'   => false
-            ]
+            'CircleMember.user_id'   => $userId,
+            'CircleMember.circle_id' => $circleId,
+            'CircleMember.del_flg'   => false
         ];
 
-        $circleMember = $CircleMember->find('first', $condition);
+        $circleMember = $CircleMember->find('first', ['conditions' => $condition]);
 
         if (empty($circleMember)) {
             throw new GlException\GoalousNotFoundException(__("Not exist"));
