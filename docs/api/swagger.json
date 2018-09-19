@@ -8,9 +8,9 @@
   "servers" : [ {
     "url" : "http://127.0.0.1"
   }, {
-    "url" : "http://oreo.goalous.com"
+    "url" : "https://oreo.goalous.com"
   }, {
-    "url" : "http://stg.goalous.com",
+    "url" : "https://stg.goalous.com",
     "variables" : { }
   } ],
   "security" : [ {
