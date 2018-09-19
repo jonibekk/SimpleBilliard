@@ -82,7 +82,7 @@ class CirclesController extends BasePagingController
 
     public function post_joins(int $circleId)
     {
-        $error = $this->validatePostJoin($circleId);
+        $error = $this->validatePostJoins($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -106,9 +106,9 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withData($return->toArray())->getResponse();
     }
 
-    public function post_leave(int $circleId)
+    public function post_leaves(int $circleId)
     {
-        $error = $this->validatePostLeave($circleId);
+        $error = $this->validatePostLeaves($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -165,7 +165,7 @@ class CirclesController extends BasePagingController
      *
      * @return ErrorResponse | null
      */
-    private function validatePostLeave(int $circleId)
+    private function validatePostLeaves(int $circleId)
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -198,7 +198,8 @@ class CirclesController extends BasePagingController
         ];
         $circle = $Circle->find('first', $condition);
 
-        if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) || empty($circle)) {
+        if (!$Circle->isBelongCurrentTeam($circleId,
+                $this->getTeamId()) || empty($circle) || $Circle->isSecret($circleId)) {
             return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }
 
