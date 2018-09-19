@@ -452,12 +452,12 @@ class CircleMember extends AppModel
      * - Delete circle member record
      * - Update counter cache per circle
      *
-     * @param  int $circleId
-     * @param  int   $userId
+     * @param  int | array $circleId
+     * @param  int         $userId
      *
      * @return bool
      */
-    function remove(int $circleId, int $userId): bool
+    public function remove($circleId, int $userId): bool
     {
         $conditions = [
             'CircleMember.circle_id' => $circleId,
