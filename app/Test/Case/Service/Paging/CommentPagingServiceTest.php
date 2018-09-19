@@ -39,9 +39,9 @@ class CommentPagingServiceTest extends GoalousTestCase
         $result = $CommentPagingService->getDataWithPaging($request, 1);
 
         $this->assertNotEmpty($result);
-        $this->assertNotEmpty($result['paging']);
+        $this->assertNotEmpty($result['cursor']);
         $this->assertCount(1, $result['data']);
-        $this->assertEquals(15, $result['data'][0]['id']);
+        $this->assertEquals(16, $result['data'][0]['id']);
     }
 
     public function test_getCommentsByCursor_success()
@@ -58,7 +58,7 @@ class CommentPagingServiceTest extends GoalousTestCase
 
         $this->assertNotEmpty($result);
 
-        $cursor = $result['paging'];
+        $cursor = $result['cursor'];
 
         $request1 = PagingRequest::decodeCursorToObject($cursor);
         $request1->addResource('res_id', 1);
@@ -68,9 +68,9 @@ class CommentPagingServiceTest extends GoalousTestCase
         $result1 = $CommentPagingService->getDataWithPaging($request1, 1);
 
         $this->assertNotEmpty($result1);
-        $this->assertEmpty($result1['paging']);
+        $this->assertEmpty($result1['cursor']);
         $this->assertCount(1, $result1['data']);
-        $this->assertEquals(16, $result1['data'][0]['id']);
+        $this->assertEquals(15, $result1['data'][0]['id']);
     }
 
     public function test_getCommentWithUserExtension_success()
@@ -86,7 +86,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $result = $CommentPagingService->getDataWithPaging($request, 1, CommentPagingService::EXTEND_USER);
 
         $this->assertNotEmpty($result);
-        $this->assertNotEmpty($result['paging']);
+        $this->assertNotEmpty($result['cursor']);
         $this->assertCount(1, $result['data']);
         $this->assertNotEmpty($result['data'][0]['user']);
         $this->assertNotEmpty($result['data'][0]['user']['id']);

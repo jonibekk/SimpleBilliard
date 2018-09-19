@@ -94,6 +94,12 @@ class CommentLikeFixture extends CakeTestFixtureEx
             'comment_id' => 123,
             'user_id'    => 1,
             'team_id'    => 1,
+        ],
+        [
+            'id'         => 2,
+            'comment_id' => 123,
+            'user_id'    => 2,
+            'team_id'    => 1
         ]
     ];
 

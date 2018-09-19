@@ -20,28 +20,6 @@ use Goalous\Exception as GlException;
 
 class CirclesController extends BasePagingController
 {
-    /**
-     * Get circle by Id
-     *
-     * @param int $circleId
-     *
-     * @return BaseApiResponse
-     */
-    public function get_detail(int $circleId)
-    {
-        $error = $this->validateGetCircle($circleId);
-
-        if (!empty($error)) {
-            return $error;
-        }
-
-        /** @var CircleService $CircleService */
-        $CircleService = ClassRegistry::init("CircleService");
-
-        $circle = $CircleService->get($circleId);
-        return ApiResponse::ok()->withData($circle)->getResponse();
-    }
-
     public function get_posts(int $circleId)
     {
         $error = $this->validateGetCircle($circleId);
@@ -102,9 +80,9 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
-    public function post_join(int $circleId)
+    public function post_joins(int $circleId)
     {
-        $error = $this->validatePostMember($circleId);
+        $error = $this->validatePostJoin($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -155,7 +133,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return CakeResponse|null
+     * @return ErrorResponse | null
      */
     private function validateGetCircle(int $circleId)
     {
@@ -199,7 +177,14 @@ class CirclesController extends BasePagingController
         return null;
     }
 
-    public function validatePostMember(int $circleId)
+    /**
+     * Validate post_joins endpoint
+     *
+     * @param int $circleId
+     *
+     * @return ErrorResponse | null
+     */
+    public function validatePostJoins(int $circleId)
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
@@ -207,7 +192,8 @@ class CirclesController extends BasePagingController
         $condition = [
             'conditions' => [
                 'Circle.id'         => $circleId,
-                'Circle.public_flg' => true
+                'Circle.public_flg' => true,
+                'del_flg'           => false
             ]
         ];
         $circle = $Circle->find('first', $condition);
@@ -230,6 +216,7 @@ class CirclesController extends BasePagingController
             CirclePostPagingService::EXTEND_CIRCLE,
             CirclePostPagingService::EXTEND_LIKE,
             CirclePostPagingService::EXTEND_SAVED,
+            CirclePostPagingService::EXTEND_READ,
             CirclePostPagingService::EXTEND_USER,
             CirclePostPagingService::EXTEND_COMMENTS,
             CirclePostPagingService::EXTEND_POST_FILE
@@ -248,4 +235,25 @@ class CirclesController extends BasePagingController
         ];
     }
 
+    /**
+     * Get circle by Id
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    function get_detail(int $circleId)
+    {
+        $error = $this->validateGetCircle($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init("CircleService");
+
+        $circle = $CircleService->get($circleId);
+        return ApiResponse::ok()->withData($circle)->getResponse();
+    }
 }

@@ -10,9 +10,7 @@
 if (file_exists(APP . 'Config/extra_defines.php')) {
     require_once(APP . 'Config/extra_defines.php');
 }
-if (!empty(getenv('CI_TEST'))){
-    require_once(APP . 'Config/extra_defines_travis.php');
-}
+
 // https://confluence.goalous.com/x/Z4LT
 // $defines will be define(key,value);
 $defines = [
@@ -27,9 +25,9 @@ $defines = [
     'AWS_SECRET_KEY'                                => 'qGbY0i6uK7c+6/RbnqlIEOHFdOBE0vcHz2xyFggT',
     'S3_LOGS_BUCKET'                                => null,
     'S3_ASSETS_BUCKET'                              => 'goalous-local-assets',
-    'REDIS_SESSION_HOST'                            => 'redis',
-    'REDIS_CACHE_HOST'                              => 'redis',
-    'REDIS_HOST'                                    => 'redis',
+    'REDIS_SESSION_HOST'                            => 'localhost',
+    'REDIS_CACHE_HOST'                              => 'localhost',
+    'REDIS_HOST'                                    => 'localhost',
     'SES_FROM_ADDRESS'                              => 'support@goalous.com',
     'SES_FROM_ADDRESS_CONTACT'                      => 'contact@goalous.com',
     'SES_FROM_ADDRESS_NEWS'                         => 'news@goalous.com',
@@ -109,6 +107,17 @@ $defines = [
     //For temporary files, such as upload buffering
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp'
 ];
+
+//If on docker, use redis container
+if (!empty(getenv('DOCKER_ENV'))) {
+    $defines['REDIS_SESSION_HOST'] = 'redis';
+    $defines['REDIS_CACHE_HOST'] = 'redis';
+    $defines['REDIS_HOST'] = 'redis';
+}
+//If on Travis, set S3 Username
+if (!empty(getenv('CI_TEST'))) {
+    $defines['AWS_S3_BUCKET_USERNAME'] = 'travis';
+}
 
 foreach ($defines as $k => $v) {
     if (!defined($k)) {

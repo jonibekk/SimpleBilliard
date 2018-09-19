@@ -31,7 +31,7 @@ abstract class BasePagingService implements PagingServiceInterface
 
         $finalResult = [
             'data'   => [],
-            'paging' => '',
+            'cursor' => '',
             'count'  => 0
         ];
 
@@ -52,7 +52,7 @@ abstract class BasePagingService implements PagingServiceInterface
             //Set end pointer values
             $pagingRequest->setPointer($this->createPointer($queryResult[--$limit], $nextHead, $pagingRequest));
 
-            $finalResult['paging'] = $pagingRequest->returnCursor();
+            $finalResult['cursor'] = $pagingRequest->returnCursor();
         }
 
         $finalResult['count'] = $this->countData($pagingRequest);
