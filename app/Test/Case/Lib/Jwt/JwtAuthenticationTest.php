@@ -24,6 +24,7 @@ class JwtAuthenticationTest extends GoalousTestCase
     public function setUp()
     {
         parent::setUp();
+        GoalousDateTime::setTestNow();
     }
 
     /**
@@ -34,7 +35,6 @@ class JwtAuthenticationTest extends GoalousTestCase
     public function tearDown()
     {
         parent::tearDown();
-        GoalousDateTime::setTestNow();
     }
 
     /**

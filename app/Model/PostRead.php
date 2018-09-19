@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'PostReadEntity');
+
 
 use Goalous\Enum\DataType\DataType as DataType;
 
@@ -164,6 +166,39 @@ class PostRead extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    /**
+     * Update the count reader of the post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function updateReadersCount(int $postId): int
+    {
+        $count = $this->countPostReaders($postId);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
+
+        return $count;
+    }
+
+    public function countPostReaders(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        return (int)$this->find('count', $condition);
     }
 
 }
