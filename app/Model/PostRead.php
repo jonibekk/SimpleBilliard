@@ -183,7 +183,7 @@ class PostRead extends AppModel
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
-        $Post->updateAll(['Post.post_read_count' => $count+1], ['Post.id' => $postId]);
+        $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
 
         return $count;
     }
