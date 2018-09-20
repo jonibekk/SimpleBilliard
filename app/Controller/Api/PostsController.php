@@ -12,7 +12,6 @@ App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
-App::uses('PostReadValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
 
 /**
@@ -150,14 +149,11 @@ class PostsController extends BasePagingController
         }
 
         $postsIDs = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
-        foreach($postsIDs as $postId)
-        {
-            $error = $this->validateAccessToPost($postId);
-
-            if (!empty($error)) {
-                return $error;
-            }
-        }   
+        
+        $error = $this->validateMultiplePost($postsIDs);
+        if (!empty($error)) {
+            return $error;
+        }  
 
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
@@ -430,6 +426,28 @@ class PostsController extends BasePagingController
     }
 
     /**
+     * * Validation wheter user can access to multiple posts
+     *
+     * @param array $postsIds
+     * @return CakeResponse|null
+     */
+    private function validateMultiplePost(array $postsIds)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $PostService->checkUserAccessToMultiplePost($this->getUserId(), $postsIds);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
      * Validation function for adding / removing like from a post
      *
      * @param int $postId
@@ -602,7 +620,7 @@ class PostsController extends BasePagingController
         $requestBody = $this->getRequestJsonBody();
 
         try {
-            PostReadValidator::createDefaultPostValidator()->validate($requestBody);
+            PostRequestValidator::createPostReadValidator()->validate($requestBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                                 ->addErrorsFromValidationException($e)

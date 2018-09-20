@@ -209,4 +209,46 @@ class PostRead extends AppModel
         return (int)$this->find('count', $condition);
     }
 
+    /**
+     * Update the count reader for multiple posts
+     *
+     * @param array $postId
+     *
+     * @return int
+     */
+    public function updateReadersCountMultiplePost(array $postsIds)
+    {
+        $posts_counts = $this->countPostReadersMultiplePost($postsIds);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        foreach ($posts_counts as $postId => $count) {
+            $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
+        }
+    }
+
+    /**
+     * Get actual posts readers from multiple posts
+     *
+     * @param array $postId
+     *
+     * @return int
+     */
+    public function countPostReadersMultiplePost(array $postsIds)
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postsIds
+            ],
+            'fields'     => [
+                'post_id'
+            ]
+        ];
+
+        $array = $this->useType()->find('all', $condition);
+
+        return array_count_values(Hash::extract($array, "{n}.PostRead.post_id"));
+    }
+
 }

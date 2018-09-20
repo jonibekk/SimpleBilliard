@@ -79,18 +79,51 @@ class PostReadService extends AppService
      */
     public function multipleAdd(array $postIDs, int $userId, int $teamId)
     {
-        $saved_posts = array();
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
 
-        foreach($postIDs as $postId)
-        {
-            try{
-                $this->add((int)$postId, $userId, $teamId);
-                array_push($saved_posts, $postId);
-            } catch (GlException\GoalousConflictException $e) {
-                continue;
+        $query = [
+            'conditions' => [
+                'PostRead.post_id'   => $postIDs,
+                'PostRead.user_id'   => $userId,
+            ],
+            'table'      => 'post_read',
+            'alias'      => 'PostRead',
+            'fields'     => 'PostRead.post_id'
+        ];
+        $PostAlreadyReadArray = $PostRead->find('all', $query);
+
+        $PostAlreadyReadArray = Hash::extract($PostAlreadyReadArray, "{n}.PostRead.post_id");
+        $newReads = array_diff($postIDs, $PostAlreadyReadArray);
+
+        if(!empty($newReads)){
+            try {
+                $this->TransactionManager->begin();
+                $PostRead->create();
+                $newData = array();
+                foreach($newReads as $new){
+                    $data = [
+                        'post_id' => $new,
+                        'user_id' => $userId,
+                        'team_id' => $teamId
+                    ];
+                    array_push($newData, $data);
+                }  
+
+                /** @var PostReadEntity $result */
+                $PostRead->useType()->useEntity()->saveAll($newData, ['validate' => false]);
+
+                $PostRead->updateReadersCountMultiplePost($newReads);
+
+                $this->TransactionManager->commit();
+
+            } catch (Exception $e) {
+                $this->TransactionManager->rollback();
+                GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
+                throw $e;
             }
-        }
+        } 
 
-        return $saved_posts;
+        return $newReads;
     }
 }

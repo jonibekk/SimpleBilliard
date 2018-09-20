@@ -42,6 +42,14 @@ class PostRequestValidator extends BaseValidator
         return $rules;
     }
 
+    public function getPostReadValidationRule(): array
+    {
+        $rules = [
+            "posts_ids" => [validator::arrayType()::length(null, 10)]
+        ];
+        return $rules;
+    }
+
     /**
      * Validation rules for both adding and removing like from a post
      *
@@ -81,6 +89,13 @@ class PostRequestValidator extends BaseValidator
     {
         $self = new self();
         $self->addRule($self->getPostLikeValidationRule());
+        return $self;
+    }
+
+    public static function createPostReadValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostReadValidationRule(), true);
         return $self;
     }
 
