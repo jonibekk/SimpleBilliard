@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Model', 'Post');
 App::import('Model/Entity', 'PostReadEntity');
 
 
@@ -182,11 +183,18 @@ class PostRead extends AppModel
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
-        $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
+        $Post->updateAll(['Post.post_read_count' => $count+1], ['Post.id' => $postId]);
 
         return $count;
     }
 
+    /**
+     * Get actual posts readers
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
     public function countPostReaders(int $postId): int
     {
         $condition = [

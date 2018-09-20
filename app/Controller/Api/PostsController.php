@@ -12,6 +12,7 @@ App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
+App::uses('PostReadValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
 
 /**
@@ -143,11 +144,16 @@ class PostsController extends BasePagingController
      */
     public function post_reads()
     {
-        $postsIDs = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
+        $error = $this->validatePostRead();
+        if (!empty($error)) {
+            return $error;
+        }
 
+        $postsIDs = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
         foreach($postsIDs as $postId)
         {
             $error = $this->validateAccessToPost($postId);
+
             if (!empty($error)) {
                 return $error;
             }
@@ -487,7 +493,7 @@ class PostsController extends BasePagingController
 
 
     /*
-     * Validate get comments  and readers endpoint
+     * Validate get comments and readers endpoint
      *
      * @param int $postId
      *
@@ -571,6 +577,32 @@ class PostsController extends BasePagingController
 
             PostRequestValidator::createPostEditValidator()->validate($body);
 
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * @return CakeResponse|null
+     */
+    private function validatePostRead()
+    {
+        $requestBody = $this->getRequestJsonBody();
+
+        try {
+            PostReadValidator::createDefaultPostValidator()->validate($requestBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                                 ->addErrorsFromValidationException($e)

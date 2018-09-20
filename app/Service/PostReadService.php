@@ -51,7 +51,7 @@ class PostReadService extends AppService
                 /** @var PostReadEntity $result */
                 $result = $PostRead->useType()->useEntity()->save($newData, false);
 
-                $result['read_count'] = $PostRead->updateReadersCount($postId);
+                $PostRead->updateReadersCount($postId);
 
                 $this->TransactionManager->commit();
 
@@ -80,13 +80,13 @@ class PostReadService extends AppService
     public function multipleAdd(array $postIDs, int $userId, int $teamId)
     {
         $saved_posts = array();
-        
+
         foreach($postIDs as $postId)
         {
             try{
                 $this->add((int)$postId, $userId, $teamId);
                 array_push($saved_posts, $postId);
-            } catch (Exception $e) {
+            } catch (GlException\GoalousConflictException $e) {
                 continue;
             }
         }

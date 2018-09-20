@@ -2,6 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PostReadService');
 App::uses('PostRead', 'Model');
+App::uses('Post', 'Model');
 
 /**
  * User: Marti Floriach
@@ -27,14 +28,19 @@ class PostReadServiceTest extends GoalousTestCase
     {
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
+
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
 
-        $postIds = ["1","2"];
+        $postsIds = ["1","2"];
 
-        $res = $PostReadService->multipleAdd($postIds, 1, 1);
+        $res = $PostReadService->multipleAdd($postsIds, 1, 1);
+        $this->assertEquals($postsIds, $res);
 
-        $this->assertEquals(["1","2"], $res);
+        $res = $PostRead->countPostReaders((int)$postsIds[0]);
+
+        /** Already two readers in the fixtures*/
+        $this->assertEqual(3, $res);
     }
 
     public function test_addJustOneNewReadPost_success()
@@ -44,12 +50,16 @@ class PostReadServiceTest extends GoalousTestCase
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
 
-        $postIds = ["1"];
-        $res = $PostReadService->multipleAdd($postIds, 1, 1);
+        $postsIds = ["2"];
+        $res = $PostReadService->multipleAdd($postsIds, 1, 1);
 
-        $postIds = ["1", "2"];
-        $res = $PostReadService->multipleAdd($postIds, 1, 1);
+        $postsIds = ["1", "2"];
 
-        $this->assertEquals(["2"], $res);
+        $res = $PostReadService->multipleAdd($postsIds, 1, 1);
+        $this->assertEquals(["1"], $res);
+		$res = $PostRead->countPostReaders((int)$postsIds[0]);
+
+		/** Already two readers in the fixtures*/
+		$this->assertEqual(3, $res);
     }
 }
