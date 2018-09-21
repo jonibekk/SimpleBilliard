@@ -830,7 +830,7 @@ class PostService extends AppService
 
         if(count($circlePostArray) != count($postsIds))
         {
-            throw new GlException\GoalousConlictException(__("The circle doesn't exist or you don't have permission."));
+            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
         }
 
         /** @var CircleMember $CircleMember */
@@ -868,8 +868,8 @@ class PostService extends AppService
         $circleUserArray = Hash::extract($circleUserArray, '{n}.Circle.id');
         $circlePostArray = Hash::extract($circlePostArray, '{n}.Circle.id');
 
-        if (!array_intersect($circlePostArray, $circleUserArray) == count($circlePostArray)){
-            throw new GlException\GoalousConlictException(__("The circle doesn't exist or you don't have permission."));
+        if (count(array_intersect($circlePostArray, $circleUserArray)) != count($circlePostArray)){
+            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
         }
     }
 }

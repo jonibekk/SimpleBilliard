@@ -20,7 +20,7 @@ class PostReadService extends AppService
      * @param int $teamId The team ID where this happens
      *
      * @throws Exception
-     * @return PostReadEntity | null Null for failed addition
+     * @return PostReadEntity
      */
     public function add(int $postId, int $userId, int $teamId)
     {
@@ -70,31 +70,29 @@ class PostReadService extends AppService
     /**
      * Add multiple 
      *
-     * @param int $postIDs Target post's ID
+     * @param int $postIds Target post's ID
      * @param int $userId User ID who who reads the post
      * @param int $teamId The team ID where this happens
      *
      * @throws Exception
-     * @return PostReadEntity | null Null for failed addition
+     * @return array | null
      */
-    public function multipleAdd(array $postIDs, int $userId, int $teamId)
+    public function multipleAdd(array $postIds, int $userId, int $teamId)
     {
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
 
         $query = [
             'conditions' => [
-                'PostRead.post_id'   => $postIDs,
+                'PostRead.post_id'   => $postIds,
                 'PostRead.user_id'   => $userId,
             ],
-            'table'      => 'post_read',
-            'alias'      => 'PostRead',
             'fields'     => 'PostRead.post_id'
         ];
         $PostAlreadyReadArray = $PostRead->find('all', $query);
 
         $PostAlreadyReadArray = Hash::extract($PostAlreadyReadArray, "{n}.PostRead.post_id");
-        $newReads = array_diff($postIDs, $PostAlreadyReadArray);
+        $newReads = array_diff($postIds, $PostAlreadyReadArray);
 
         if(!empty($newReads)){
             try {
@@ -111,7 +109,7 @@ class PostReadService extends AppService
                 }  
 
                 /** @var PostReadEntity $result */
-                $PostRead->useType()->useEntity()->saveAll($newData, ['validate' => false]);
+                $PostRead->useType()->useEntity()->bulkInsert($newData);
 
                 $PostRead->updateReadersCountMultiplePost($newReads);
 

@@ -143,17 +143,12 @@ class PostsController extends BasePagingController
      */
     public function post_reads()
     {
-        $error = $this->validatePostRead();
+        $postsIDs = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
+
+        $error = $this->validatePostRead($postsIDs);
         if (!empty($error)) {
             return $error;
         }
-
-        $postsIDs = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
-        
-        $error = $this->validateMultiplePost($postsIDs);
-        if (!empty($error)) {
-            return $error;
-        }  
 
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
@@ -426,28 +421,6 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * * Validation wheter user can access to multiple posts
-     *
-     * @param array $postsIds
-     * @return CakeResponse|null
-     */
-    private function validateMultiplePost(array $postsIds)
-    {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        try {
-            $PostService->checkUserAccessToMultiplePost($this->getUserId(), $postsIds);
-        } catch (GlException\GoalousNotFoundException $notFoundException) {
-            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
-        } catch (Exception $exception) {
-            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
      * Validation function for adding / removing like from a post
      *
      * @param int $postId
@@ -615,7 +588,7 @@ class PostsController extends BasePagingController
      * 
      * @return CakeResponse|null
      */
-    private function validatePostRead()
+    private function validatePostRead(array $postsIds)
     {
         $requestBody = $this->getRequestJsonBody();
 
@@ -632,6 +605,17 @@ class PostsController extends BasePagingController
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $PostService->checkUserAccessToMultiplePost($this->getUserId(), $postsIds);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
         return null;

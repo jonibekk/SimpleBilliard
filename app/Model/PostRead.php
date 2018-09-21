@@ -211,10 +211,12 @@ class PostRead extends AppModel
 
     /**
      * Update the count reader for multiple posts
+     * 
+     * @param array $postsIds
      *
-     * @param array $postId
+     * @var array $posts_counts
+     *      [[$post_id] => [count]]
      *
-     * @return int
      */
     public function updateReadersCountMultiplePost(array $postsIds)
     {
@@ -231,9 +233,10 @@ class PostRead extends AppModel
     /**
      * Get actual posts readers from multiple posts
      *
-     * @param array $postId
+     * @param array $postsIds
      *
-     * @return int
+     * @return array $posts_counts
+     *      [[$post_id] => [count]]
      */
     public function countPostReadersMultiplePost(array $postsIds)
     {

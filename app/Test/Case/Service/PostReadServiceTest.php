@@ -24,7 +24,7 @@ class PostReadServiceTest extends GoalousTestCase
         'app.post_share_circle'
     );
 
-    public function test_addReadPost_success()
+    public function test_multipleadd_success()
     {
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
@@ -43,7 +43,7 @@ class PostReadServiceTest extends GoalousTestCase
         $this->assertEqual(3, $res);
     }
 
-    public function test_addJustOneNewReadPost_success()
+    public function test_multipleadd_JustOneNewReadPost_success()
     {
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
@@ -62,4 +62,5 @@ class PostReadServiceTest extends GoalousTestCase
 		/** Already two readers in the fixtures*/
 		$this->assertEqual(3, $res);
     }
+  
 }

@@ -17,6 +17,8 @@ App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum as Enum;
 use Mockery as mock;
+use Goalous\Exception as GlException;
+
 
 /**
  */
@@ -830,7 +832,6 @@ class PostServiceTest extends GoalousTestCase
 
         $PostService->editPost($newBody, 183281390);
 
-        $this->fail();
     }
 
     public function test_editPost_success()
@@ -844,5 +845,32 @@ class PostServiceTest extends GoalousTestCase
 
         $this->assertTrue($res instanceof PostEntity);
         $this->assertEquals($newBody, $res['body']);
+    }
+
+    public function test_checkUserAccessToMultiplePost_failure()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $postsIds = [1,3];
+        $userId = 1;
+
+        try{
+            $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
+        } catch (GlException\GoalousConflictException $e){
+            $this->assertEqual("The circle doesn't exist or you don't have permission.", $e->getMessage());
+        }
+
+    }
+
+    public function test_checkUserAccessToMultiplePost_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $postsIds = [1,101];
+        $userId = 1;
+
+        $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
     }
 }
