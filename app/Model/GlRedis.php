@@ -1545,8 +1545,6 @@ class GlRedis extends AppModel
         $jwt = AccessAuthenticator::publish($userId, $teamId);
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         $this->Db->set($key, $jwt->token());
-        $this->log("key:".$key);
-        $this->log("token:".$jwt->token());
         return $this->Db->setTimeout($key, $expire);
     }
 
@@ -1562,7 +1560,6 @@ class GlRedis extends AppModel
     function getMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
     {
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
-        $this->log(compact('key'));
         return $this->Db->get($key) ?? "";
     }
 

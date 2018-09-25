@@ -193,11 +193,8 @@ if (REDIS_SESSION_HOST) {
             'key'    => 'session:'
         ],
         'ini' => [
-//            'session.cookie_path' => '/',
             'session.cookie_domain' => 'goalous.com',
-//            'session.cookie_domain' => ".".$_SERVER['SERVER_NAME'],
-            'session.cookie_secure' => false,
-//            'cookie_domain' => '.goalous.com',
+            'session.cookie_secure' => false
         ]
     ];
     $session_ini = [];
