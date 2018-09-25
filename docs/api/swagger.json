@@ -148,11 +148,13 @@
     "/api/circles/{circle.id}/members" : {
       "get" : {
         "tags" : [ "Circles" ],
-        "summary" : "/api/circles/{circle.id}/members",
+        "summary" : "Get circle members",
         "description" : "Get members of a joined / public circle.",
         "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
         }, {
           "$ref" : "#/components/parameters/Paging.Limit"
         }, {
@@ -195,15 +197,41 @@
       },
       "post" : {
         "tags" : [ "Circles" ],
-        "summary" : "Not implemented yet",
-        "description" : "Invite a member to a circle. Can only be done by Circle Admin",
-        "operationId" : "X/api/circles/{circle.id}/members",
+        "summary" : "Invite member to a circle",
+        "description" : "Invite a member to a circle. Can only be done by Circle Admin in secret circle",
+        "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
         } ],
         "responses" : {
           "200" : {
-            "description" : ""
+            "description" : "[Success] Invited a member",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.CircleMember"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.Member.Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -2814,6 +2842,20 @@
           "application/json" : {
             "schema" : {
               "$ref" : "#/components/schemas/Response.Error"
+            }
+          }
+        }
+      },
+      "Error.Circle.Member.Forbidden" : {
+        "description" : "[Failed] Can not invite",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Response.Error"
+            },
+            "example" : {
+              "message" : "You can not invite.",
+              "error" : [ ]
             }
           }
         }
