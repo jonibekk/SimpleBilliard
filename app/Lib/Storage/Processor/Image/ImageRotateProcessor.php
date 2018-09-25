@@ -82,9 +82,16 @@ class ImageRotateProcessor extends BaseImageProcessor
         }
     }
 
+    /**
+     * Read exif data of an image
+     *
+     * @param UploadedFile $file
+     *
+     * @return array
+     */
     private function readExif(UploadedFile $file): array
     {
         $exif = @exif_read_data("data://" . $file->getMIME() . ";base64," . $file->getEncodedFile());
-        return $exif;
+        return $exif ?: [];
     }
 }
