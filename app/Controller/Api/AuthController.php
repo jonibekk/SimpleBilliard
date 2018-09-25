@@ -55,7 +55,7 @@ class AuthController extends BaseApiController
                                 ->getResponse();
         }
 
-        $data = $this->_getAuthUserInfo($jwt);
+        $data = $this->_getAuthUserInfo($jwt->token(), $jwt->getUserId());
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
@@ -63,19 +63,19 @@ class AuthController extends BaseApiController
     /**
      * Get auth user info for Login API response
      *
-     * @param JwtAuthentication $jwt
-     *
+     * @param string $token
+     * @param int $userId
      * @return array
      */
-    private function _getAuthUserInfo(JwtAuthentication $jwt): array
+    private function _getAuthUserInfo(string $token, int $userId): array
     {
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
-        $data = $User->getUserForLoginResponse($jwt->getUserId())->toArray();
-        $data['token'] = $jwt->token();
+        $data = $User->getUserForLoginResponse($userId)->toArray();
+        $data['token'] = $token;
         $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
         $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
         $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
@@ -141,5 +141,35 @@ class AuthController extends BaseApiController
 
         return null;
     }
+
+    /**
+     * Get jwt from session id to enable to access new Goalous from old Goalous
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
+    public function get_recover_token()
+    {
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        $user = $this->Session->read('Auth.User');
+        $teamId = $this->Session->read('current_team_id');
+        if (empty($user) || empty($teamId)) {
+            return ErrorResponse::badRequest()
+                ->withMessage(__("Session doesn't exist"))
+                ->getResponse();
+        }
+        $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $this->Session->id());
+        if (empty($token)) {
+            return ErrorResponse::badRequest()
+                ->withMessage(__('validation failed'))
+                ->getResponse();
+        }
+        $data = $this->_getAuthUserInfo($token, $user['id']);
+
+        return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+
 
 }

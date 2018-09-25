@@ -173,6 +173,11 @@ class BaseController extends Controller
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
+            $sesId = $this->Session->id();
+            if (empty($this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId))) {
+                $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+            }
+
             // TODO: Delete these lines after we fixed processing to update `default_team_id` when activate user
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
