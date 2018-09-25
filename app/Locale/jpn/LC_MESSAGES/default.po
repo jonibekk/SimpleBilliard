@@ -874,13 +874,20 @@ msgstr "データの検証に失敗しました。"
 msgid "Missing token."
 msgstr ""
 
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
+
+msgid "This team member already joined this circle."
+msgstr "このチームメンバーは既にこのサークルに参加しています。"
+
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
-#, fuzzy
-#| msgid "You don't have permission to access this post"
+msgid "You can not invite."
+msgstr "あなたは招待できません。"
+
 msgid "You don't have permission to access this comment"
-msgstr "この投稿にアクセスする権限がありません。"
+msgstr "このコメントにアクセスする権限がありません。"
 
 msgid "Evaluator setting saved."
 msgstr "評価者設定を保存しました。"
