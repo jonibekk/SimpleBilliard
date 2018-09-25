@@ -143,12 +143,13 @@ class PostsController extends BasePagingController
      */
     public function post_reads()
     {
-        $postsIds = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
 
         $error = $this->validatePostRead();
         if (!empty($error)) {
             return $error;
         }
+
+        $postsIds = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
 
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
