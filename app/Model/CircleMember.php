@@ -375,7 +375,7 @@ class CircleMember extends AppModel
                 'id'
             ]
         ];
-        return !empty($this->find('first', $options));
+        return (bool)$this->find('count', $options);
     }
 
     function incrementUnreadCount($circle_list, $without_me = true, $team_id = null)
