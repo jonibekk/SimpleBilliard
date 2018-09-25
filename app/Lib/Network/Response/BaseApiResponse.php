@@ -41,10 +41,14 @@ abstract class BaseApiResponse extends CakeResponse
             return $this;
         }
         if (!$appendFlag) {
+            if (is_array($data)) {
+                $data = $this->convertElementsToString($data);
+            }
             $this->_responseBody = $data;
             return $this;
         }
         if (is_array($data)) {
+            $data = $this->convertElementsToString($data);
             if (is_int(array_keys($data)[0])) {
                 $this->_responseBody = array_merge($this->_responseBody,
                     $data);
@@ -120,6 +124,27 @@ abstract class BaseApiResponse extends CakeResponse
         $this->disableCache();
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function convertElementsToString(array $data): array
+    {
+        $keys = array_keys($data);
+
+        foreach ($keys as $key) {
+            if (is_array($data[$key])) {
+                $data[$key] = $this->convertElementsToString($data[$key]);
+            } elseif (preg_match('/^.*id$/', $key) === 1 && !is_string($data[$key])) {
+                //Convert data with key containing 'id' to string
+                $data[$key] = strval($data[$key]);
+            }
+        }
+
+        return $data;
     }
 
 }

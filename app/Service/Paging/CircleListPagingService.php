@@ -159,6 +159,9 @@ class CircleListPagingService extends BasePagingService
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
         $subQueryExpression = $db->expression($subQuery);
         $searchConditions['conditions'][] = $subQueryExpression;
+        if (!$joinedFlag) {
+            $searchConditions['conditions']['Circle.public_flg'] = true;
+        }
 
         // Exclude pinned circles
         if ($joinedFlag) {

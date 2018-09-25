@@ -45,7 +45,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1);
 
         $this->assertCount(1, $result['data']);
-        $this->assertNotEmpty($result['paging']);
+        $this->assertNotEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
     }
 
@@ -60,10 +60,10 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $cursor->setCurrentUserId(1);
 
         $result = $CircleFeedPaging->getDataWithPaging($cursor, 1);
-        $this->assertNotEmpty($result['paging']);
+        $this->assertNotEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
 
-        $pagingRequest = PagingRequest::decodeCursorToObject($result['paging']);
+        $pagingRequest = PagingRequest::decodeCursorToObject($result['cursor']);
         $pagingRequest->addResource('res_id', 1);
         $pagingRequest->addResource('current_team_id', 1);
         $pagingRequest->setCurrentUserId(1);
@@ -71,7 +71,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $secondResult = $CircleFeedPaging->getDataWithPaging($pagingRequest, 2);
 
         $this->assertCount(1, $secondResult['data']);
-        $this->assertEmpty($secondResult['paging']);
+        $this->assertEmpty($secondResult['cursor']);
         $this->assertNotEmpty($secondResult['count']);
     }
 

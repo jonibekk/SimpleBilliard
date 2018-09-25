@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-09-06 15:16+0900\n"
+"PO-Revision-Date: 2018-09-18 13:07+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -886,14 +886,17 @@ msgstr "サークルが存在しないか、権限がありません。"
 msgid "You can not invite."
 msgstr "あなたは招待できません。"
 
-msgid "You don't have permission to access this post"
-msgstr "この投稿にアクセスする権限がありません。"
+msgid "You don't have permission to access this comment"
+msgstr "このコメントにアクセスする権限がありません。"
 
 msgid "Evaluator setting saved."
 msgstr "評価者設定を保存しました。"
 
 msgid "%s %s inactive"
 msgstr ""
+
+msgid "You don't have permission to access this post"
+msgstr "この投稿にアクセスする権限がありません。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
@@ -1935,8 +1938,17 @@ msgstr "%sMBがアップロードできるファイルの上限です。"
 msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
+
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
+
+msgid "You already liked it."
+msgstr "あなたはすでにいいね！しています。"
+
+msgid "You did not like it."
+msgstr "あなたはいいね！していません。"
 
 #, fuzzy
 #| msgid "No results found"
@@ -6298,6 +6310,12 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+msgid "This item is already saved."
+msgstr "このアイテムはすでに保存されています"
+
+msgid "This item doesn't exist."
+msgstr "このアイテムは保存されていません"
 
 #, fuzzy
 #~| msgid "You don't have access right to this page."

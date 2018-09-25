@@ -370,10 +370,11 @@ class AppModel extends Model
      * (SoftDeletableのコールバックが実行されない為)
      *
      * @param null $id
+     * @param bool $checkDeleted
      *
      * @return bool
      */
-    public function exists($id = null)
+    public function exists($id = null, bool $checkDeleted = false)
     {
         if ($id === null) {
             $id = $this->getID();
@@ -383,14 +384,19 @@ class AppModel extends Model
             return false;
         }
 
-        return (bool)$this->find('count', array(
-            'conditions' => array(
+        $conditions = [
+            'conditions' => [
                 $this->alias . '.' . $this->primaryKey => $id
-            ),
+            ],
             'recursive'  => -1,
-            //TODO callbacksはtrueに変更する。影響範囲がかなりデカイので慎重にテストした上で行う。
             'callbacks'  => false
-        ));
+        ];
+
+        if (!empty($checkDeleted)) {
+            $conditions['conditions']['del_flg'] = false;
+        }
+
+        return (bool)$this->find('count', $conditions);
     }
 
     /**
@@ -879,6 +885,35 @@ class AppModel extends Model
         }
 
         $this->entityWrapperClass = $object;
+    }
+
+    /**
+     * Get an entity based on its primary id
+     *
+     * @param int      $id             Primary id of the model
+     * @param string[] $columns        Specify which columns to query from database
+     * @param bool     $excludeDeleted Check del_flg
+     *
+     * @return BaseEntity
+     */
+    public final function getEntity(int $id, array $columns = [], bool $excludeDeleted = true): BaseEntity
+    {
+        $conditions = [
+            'conditions' => [
+                'id' => $id
+            ]
+        ];
+        if ($excludeDeleted) {
+            $conditions['conditions']['del_flg'] = false;
+        }
+        if (!empty($columns)) {
+            $conditions['fields'] = $columns;
+        }
+
+        /** @var BaseEntity $return */
+        $return = $this->useType()->useEntity()->find('first', $conditions);
+
+        return $return;
     }
 
 }

@@ -80,7 +80,7 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
-    public function post_join(int $circleId)
+    public function post_joins(int $circleId)
     {
         $error = $this->validatePostJoin($circleId);
 
@@ -147,7 +147,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return CakeResponse|null
+     * @return ErrorResponse | null
      */
     private function validateGetCircle(int $circleId)
     {
@@ -173,13 +173,13 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Validate post_join endpoint
+     * Validate post_joins endpoint
      *
      * @param int $circleId
      *
-     * @return BaseApiResponse|ErrorResponse|null
+     * @return ErrorResponse | null
      */
-    public function validatePostJoin(int $circleId)
+    public function validatePostJoins(int $circleId)
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
@@ -268,6 +268,7 @@ class CirclesController extends BasePagingController
             CirclePostPagingService::EXTEND_CIRCLE,
             CirclePostPagingService::EXTEND_LIKE,
             CirclePostPagingService::EXTEND_SAVED,
+            CirclePostPagingService::EXTEND_READ,
             CirclePostPagingService::EXTEND_USER,
             CirclePostPagingService::EXTEND_COMMENTS,
             CirclePostPagingService::EXTEND_POST_FILE
@@ -291,7 +292,7 @@ class CirclesController extends BasePagingController
      *
      * @param int $circleId
      *
-     * @return ApiResponse|BaseApiResponse
+     * @return BaseApiResponse
      */
     function get_detail(int $circleId)
     {

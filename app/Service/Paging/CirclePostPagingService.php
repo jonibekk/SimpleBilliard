@@ -5,6 +5,7 @@ App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/DataExtender', 'CircleDataExtender');
 App::import('Lib/DataExtender', 'PostLikeDataExtender');
 App::import('Lib/DataExtender', 'PostSavedDataExtender');
+App::import('Lib/DataExtender', 'PostReadDataExtender');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'ImageStorageService');
 App::import('Service', 'CircleService');
@@ -32,6 +33,7 @@ class CirclePostPagingService extends BasePagingService
     const EXTEND_POST_FILE = "ext:circle_post:file";
     const EXTEND_LIKE = "ext:circle_post:like";
     const EXTEND_SAVED = "ext:circle_post:saved";
+    const EXTEND_READ = "ext:circle_post:read";
 
     const DEFAULT_COMMENT_COUNT = 3;
     const MAIN_MODEL = 'Post';
@@ -69,17 +71,17 @@ class CirclePostPagingService extends BasePagingService
         $userId = $request->getCurrentUserId();
         $teamId = $request->getCurrentTeamId();
 
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_USER, $options)) {
+        if ($this->includeExt($options, self::EXTEND_USER)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
             $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_CIRCLE, $options)) {
+        if ($this->includeExt($options, self::EXTEND_CIRCLE)) {
             /** @var CircleDataExtender $CircleDataExtender */
             $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
             $resultArray = $CircleDataExtender->extend($resultArray, "{n}.circle_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_COMMENTS, $options)) {
+        if ($this->includeExt($options, self::EXTEND_COMMENTS)) {
             /** @var CommentPagingService $CommentPagingService */
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
@@ -95,7 +97,7 @@ class CirclePostPagingService extends BasePagingService
                 $result['comments'] = $comments;
             }
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_POST_FILE, $options)) {
+        if ($this->includeExt($options, self::EXTEND_POST_FILE)) {
             // Set image url each post photo
             /** @var ImageStorageService $ImageStorageService */
             $ImageStorageService = ClassRegistry::init('ImageStorageService');
@@ -120,17 +122,23 @@ class CirclePostPagingService extends BasePagingService
                 }
             }
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_LIKE, $options)) {
+        if ($this->includeExt($options, self::EXTEND_LIKE)) {
             /** @var PostLikeDataExtender $PostLikeDataExtender */
             $PostLikeDataExtender = ClassRegistry::init('PostLikeDataExtender');
             $PostLikeDataExtender->setUserId($userId);
             $resultArray = $PostLikeDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_SAVED, $options)) {
+        if ($this->includeExt($options, self::EXTEND_SAVED)) {
             /** @var PostSavedDataExtender $PostSavedDataExtender */
             $PostSavedDataExtender = ClassRegistry::init('PostSavedDataExtender');
             $PostSavedDataExtender->setUserId($userId);
             $resultArray = $PostSavedDataExtender->extend($resultArray, "{n}.id", "post_id");
+        }
+        if ($this->includeExt($options, self::EXTEND_READ)) {
+            /** @var PostSavedDataExtender $PostSavedDataExtender */
+            $PostReadDataExtender = ClassRegistry::init('PostReadDataExtender');
+            $PostReadDataExtender->setUserId($userId);
+            $resultArray = $PostReadDataExtender->extend($resultArray, "{n}.id", "post_id");
         }
 
     }

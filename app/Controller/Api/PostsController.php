@@ -1,8 +1,11 @@
 <?php
 App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
+App::import('Service', 'SavedPostService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service/Paging', 'PostLikesPagingService');
+App::import('Service/Paging', 'PostReaderPagingService');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('BasePagingController', 'Controller/Api');
@@ -58,7 +61,7 @@ class PostsController extends BasePagingController
 
     public function get_comments(int $postId)
     {
-        $error = $this->validateGetComments($postId);
+        $error = $this->validateAccessToPost($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -73,9 +76,85 @@ class PostsController extends BasePagingController
         }
 
         $result = $CommentPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
-            $this->getExtensionOptions());
+            $this->getExtensionOptions() ?: $this->getDefaultCommentsExtension());
 
         return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+
+    /**
+     * Default extension options for getting comments
+     *
+     * @return array
+     */
+    private function getDefaultCommentsExtension()
+    {
+        return [
+            CommentPagingService::EXTEND_USER,
+            CommentPagingService::EXTEND_LIKE,
+            CommentPagingService::EXTEND_READ,
+        ];
+    }
+
+
+    /**
+     * Get list of the post readers
+     *
+     * @param int $postId
+     *
+     * @return BaseApiResponse
+     */
+    public function get_reads(int $postId)
+    {
+        $error = $this->validateAccessToPost($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostReaderPagingService $PostReaderPagingService */
+        $PostReaderPagingService = ClassRegistry::init("PostReaderPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try {
+            $result = $PostReaderPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?: $this->getDefaultReaderExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Default extension options for getting user that readers of the post
+     *
+     * @return array
+     */
+    private function getDefaultReaderExtension()
+    {
+        return [
+            PostReaderPagingService::EXTEND_USER
+        ];
+    }
+
+    /**
+     * Default extension options for getting user that likes the post
+     *
+     * @return array
+     */
+    private function getDefaultLikesUserExtension()
+    {
+        return [
+            PostLikesPagingService::EXTEND_USER
+        ];
     }
 
     /**
@@ -108,7 +187,7 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withData($newPost->toArray())->getResponse();
     }
 
-    public function post_like(int $postId): CakeResponse
+    public function post_likes(int $postId): CakeResponse
     {
         $res = $this->validateLike($postId);
 
@@ -121,6 +200,8 @@ class PostsController extends BasePagingController
 
         try {
             $result = $PostLikeService->add($postId, $this->getUserId(), $this->getTeamId());
+        } catch (GlException\GoalousConflictException $exception) {
+            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
@@ -155,7 +236,7 @@ class PostsController extends BasePagingController
      *
      * @return CakeResponse
      */
-    public function delete_like(int $postId): CakeResponse
+    public function delete_likes(int $postId): CakeResponse
     {
         $res = $this->validateLike($postId);
 
@@ -168,11 +249,102 @@ class PostsController extends BasePagingController
 
         try {
             $count = $PostLikeService->delete($postId, $this->getUserId());
-
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
         return ApiResponse::ok()->withData(["like_count" => $count])->getResponse();
+    }
+
+    /**
+     * Get list of the user who likes the post
+     *
+     * @param int $postId
+     *
+     * @return BaseApiResponse
+     */
+    public function get_likes(int $postId)
+    {
+        $error = $this->validateAccessToPost($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostLikesPagingService $PostLikesPagingService */
+        $PostLikesPagingService = ClassRegistry::init("PostLikesPagingService");
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try {
+            $result = $PostLikesPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                $this->getExtensionOptions() ?: $this->getDefaultLikesUserExtension());
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+
+	/**
+	 * Post save method
+	 * @param int $postId
+	 *
+	 * @return BaseApiResponse
+	 */
+    public function post_saves(int $postId): CakeResponse
+    {
+        $res = $this->validateSave($postId);
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        /** @var SavedPostService $SavedPostService */
+        $SavedPostService = ClassRegistry::init('SavedPostService');
+
+        try {
+            $result = $SavedPostService->add($postId, $this->getUserId(), $this->getTeamId());
+        } catch (GlException\GoalousConflictException $ConflictException) {
+            return ErrorResponse::resourceConflict()->withException($ConflictException)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($result->toArray())->getResponse();
+    }
+
+    /**
+     * @param int $postId
+     *
+     * @return CakeResponse
+     */
+    public function delete_saves(int $postId): CakeResponse
+    {
+        $res = $this->validateSave($postId);
+
+        if (!empty($res)) {
+            return $res;
+        }
+
+        /** @var SavedPostService $SavedPostService */
+        $SavedPostService = ClassRegistry::init('SavedPostService');
+
+        try {
+            $count = $SavedPostService->delete($postId, $this->getUserId());
+
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+        return ApiResponse::ok()->withData(["post_id" => $postId])->getResponse();
     }
 
     /**
@@ -185,7 +357,7 @@ class PostsController extends BasePagingController
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        $circleId = Hash::get($requestBody, 'circle_id');
+        $circleId = (int)Hash::get($requestBody, 'circle_id');
 
         if (!empty($circleId) && !$CircleMember->isJoined($circleId, $this->getUserId())) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
@@ -249,14 +421,44 @@ class PostsController extends BasePagingController
         return null;
     }
 
+	/**
+	 * Validation function for adding / removing save from a post
+	 *
+	 * @param int $postId
+	 *
+	 * @return CakeResponse|null
+	 */
+	private function validateSave(int $postId)
+	{
+		/** @var PostService $PostService */
+		$PostService = ClassRegistry::init('PostService');
+
+		try {
+			$access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+		} catch (GlException\GoalousNotFoundException $notFoundException) {
+			return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+		} catch (Exception $exception) {
+			return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+		}
+
+		//Check if user belongs to a circle where the post is shared to
+		if (!$access) {
+			return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+								->getResponse();
+		}
+
+		return null;
+	}
+
+
     /*
-     * Validate get comments endpoint
+     * Validate get comments  and readers endpoint
      *
      * @param int $postId
      *
      * @return ErrorResponse|null
      */
-    private function validateGetComments(int $postId)
+    private function validateAccessToPost(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
