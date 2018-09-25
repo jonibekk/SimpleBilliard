@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Model', 'Post');
+App::import('Model/Entity', 'PostReadEntity');
+
 
 use Goalous\Enum\DataType\DataType as DataType;
 
@@ -164,6 +167,91 @@ class PostRead extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    /**
+     * Update the count reader of the post
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function updateReadersCount(int $postId): int
+    {
+        $count = $this->countPostReaders($postId);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
+
+        return $count;
+    }
+
+    /**
+     * Get actual posts readers
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function countPostReaders(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        return (int)$this->find('count', $condition);
+    }
+
+    /**
+     * Update the count reader for multiple posts
+     * 
+     * @param array $postsIds
+     *
+     * @var array $posts_counts
+     *      [[$post_id] => [count]]
+     *
+     */
+    public function updateReadersCountMultiplePost(array $postsIds)
+    {
+        $posts_counts = $this->countPostReadersMultiplePost($postsIds);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        foreach ($posts_counts as $postId => $count) {
+            $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
+        }
+    }
+
+    /**
+     * Get actual posts readers from multiple posts
+     *
+     * @param array $postsIds
+     *
+     * @return array $posts_counts
+     *      [[$post_id] => [count]]
+     */
+    public function countPostReadersMultiplePost(array $postsIds): array
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postsIds
+            ],
+            'fields'     => [
+                'post_id'
+            ]
+        ];
+
+        $array = $this->useType()->find('all', $condition);
+
+        return array_count_values(Hash::extract($array, "{n}.PostRead.post_id"));
     }
 
 }

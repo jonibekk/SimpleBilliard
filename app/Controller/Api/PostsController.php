@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
+App::import('Service', 'PostReadService');
 App::import('Service', 'SavedPostService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
@@ -131,6 +132,38 @@ class PostsController extends BasePagingController
         }
 
         return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Add readers of the post
+     *
+     * @param int $postId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_reads()
+    {
+
+        $error = $this->validatePostRead();
+        if (!empty($error)) {
+            return $error;
+        }
+
+        $postsIds = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
+
+        /** @var PostReadService $PostReadService */
+        $PostReadService = ClassRegistry::init('PostReadService');
+
+        try {
+            $res = $PostReadService->multipleAdd($postsIds, $this->getUserId(), $this->getTeamId());
+        } catch (InvalidArgumentException $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
+                                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(["posts_ids" => $res])->getResponse();
     }
 
     /**
@@ -452,7 +485,7 @@ class PostsController extends BasePagingController
 
 
     /*
-     * Validate get comments  and readers endpoint
+     * Validate get comments and readers endpoint
      *
      * @param int $postId
      *
@@ -547,6 +580,45 @@ class PostsController extends BasePagingController
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * @return CakeResponse|null
+     */
+    private function validatePostRead()
+    {
+        $requestBody = $this->getRequestJsonBody();
+
+        $postsIds = Hash::get($requestBody, 'posts_ids', []);
+
+        try {
+            PostRequestValidator::createPostReadValidator()->validate($requestBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                                ->addErrorsFromValidationException($e)
+                                ->withMessage(__('validation failed'))
+                                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $PostService->checkUserAccessToMultiplePost($this->getUserId(), $postsIds);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
         return null;

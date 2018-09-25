@@ -6291,6 +6291,9 @@ msgstr "認証アプリを使用できない場合は"
 msgid "Here"
 msgstr "こちら"
 
+msgid "You already read this post."
+msgstr "あなたはすでにこの投稿を読みました。"
+
 msgid "Enter a Recovery Code"
 msgstr "リカバリーコードを入力する"
 
