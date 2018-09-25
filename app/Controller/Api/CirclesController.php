@@ -115,7 +115,7 @@ class CirclesController extends BasePagingController
      */
     public function post_members(int $circleId)
     {
-        $error = $this->validatePostMember($circleId);
+        $error = $this->validatePostMembers($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -208,7 +208,7 @@ class CirclesController extends BasePagingController
      *
      * @return ErrorResponse | null
      */
-    private function validatePostMember(int $circleId)
+    private function validatePostMembers(int $circleId)
     {
         try {
             CircleRequestValidator::createPostMemberValidator()->validate($this->getRequestJsonBody());
@@ -232,6 +232,10 @@ class CirclesController extends BasePagingController
             'conditions' => [
                 'id'      => $circleId,
                 'del_flg' => false
+            ],
+            'fields'     => [
+                'id',
+                'public_flg'
             ]
         ];
 
