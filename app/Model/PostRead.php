@@ -238,7 +238,7 @@ class PostRead extends AppModel
      * @return array $posts_counts
      *      [[$post_id] => [count]]
      */
-    public function countPostReadersMultiplePost(array $postsIds)
+    public function countPostReadersMultiplePost(array $postsIds): array
     {
         $condition = [
             'conditions' => [

@@ -22,7 +22,7 @@ class PostReadService extends AppService
      * @throws Exception
      * @return PostReadEntity
      */
-    public function add(int $postId, int $userId, int $teamId)
+    public function add(int $postId, int $userId, int $teamId): PostReadEntity
     {
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');

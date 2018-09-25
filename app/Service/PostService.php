@@ -786,10 +786,9 @@ class PostService extends AppService
      * Check whether the user can view the several posts
      *
      * @param int  $userId
-     * @param int  $postId
-     * @param bool $mustBelong Whether user must belong to the circle where post is shared to
+     * @param int  $postsIds
      *
-     * @return bool
+     * @throws Exception
      */
     public function checkUserAccessToMultiplePost(int $userId, array $postsIds)
     {

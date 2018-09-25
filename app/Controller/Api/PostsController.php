@@ -143,9 +143,9 @@ class PostsController extends BasePagingController
      */
     public function post_reads()
     {
-        $postsIDs = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
+        $postsIds = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
 
-        $error = $this->validatePostRead($postsIDs);
+        $error = $this->validatePostRead();
         if (!empty($error)) {
             return $error;
         }
@@ -154,7 +154,7 @@ class PostsController extends BasePagingController
         $PostReadService = ClassRegistry::init('PostReadService');
 
         try {
-            $res = $PostReadService->multipleAdd($postsIDs, $this->getUserId(), $this->getTeamId());
+            $res = $PostReadService->multipleAdd($postsIds, $this->getUserId(), $this->getTeamId());
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
@@ -588,9 +588,11 @@ class PostsController extends BasePagingController
      * 
      * @return CakeResponse|null
      */
-    private function validatePostRead(array $postsIds)
+    private function validatePostRead()
     {
         $requestBody = $this->getRequestJsonBody();
+
+        $postsIds = Hash::get($requestBody, 'posts_ids', []);
 
         try {
             PostRequestValidator::createPostReadValidator()->validate($requestBody);
