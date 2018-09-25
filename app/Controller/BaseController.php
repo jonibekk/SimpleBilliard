@@ -174,7 +174,9 @@ class BaseController extends Controller
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
             $sesId = $this->Session->id();
-            if (empty($this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId))) {
+            // GL-7364：Enable to keep login status between old Goalous and new Goalous
+            $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+            if (empty($mapSesAndJwt)) {
                 $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
             }
 

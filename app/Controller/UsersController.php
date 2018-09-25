@@ -41,6 +41,13 @@ class UsersController extends AppController
             'add_subscribe_email', 'ajax_validate_email');
 
         $this->_checkAdmin(['invite']);
+
+        // GL-7364
+        // TODO: remove these processing. but there is a problem that SecurityComponent.blackhole error occurs after update core.php `session.cookie_domain` to enable to share cookie across sub domains.
+        if ($this->request->params['action'] == 'login') {
+            $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
+        }
     }
 
     /**
