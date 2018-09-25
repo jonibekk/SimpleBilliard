@@ -340,10 +340,10 @@
                       "type" : "object",
                       "properties" : {
                         "user_id" : {
-                          "type" : "number"
+                          "$ref" : "#/components/schemas/Object.String.ID"
                         },
                         "circle_id" : {
-                          "type" : "number"
+                          "$ref" : "#/components/schemas/Object.String.ID"
                         }
                       }
                     }
@@ -351,8 +351,8 @@
                 },
                 "example" : {
                   "data" : {
-                    "user_id" : 1,
-                    "circle_id" : 1
+                    "user_id" : "1",
+                    "circle_id" : "1"
                   }
                 }
               }
