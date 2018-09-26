@@ -54,7 +54,8 @@ class ImageRotateProcessor extends BaseImageProcessor
     public function getRotation(UploadedFile $file): array
     {
         //Only jpeg & tiff support EXIF image data
-        $imageType = $file->getFileExt();
+        $mimeData = $file->getMIME();
+        list($type, $imageType) = explode("/", $mimeData, 2);
         if ($imageType != 'jpeg' && $imageType != 'tiff') {
             return [0, false];
         }
