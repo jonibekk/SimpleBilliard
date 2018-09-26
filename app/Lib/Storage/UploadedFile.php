@@ -79,13 +79,20 @@ class UploadedFile
      */
     private $metadata;
 
+    /**
+     * MIME data of file
+     *
+     * @var string
+     */
+    private $mimeData;
+
     public function __construct(string $encodedFile, string $fileName, bool $skipDecoding = false)
     {
         if (empty($encodedFile) || empty($fileName)) {
             throw new InvalidArgumentException("File name & file data must exist");
         }
 
-        $this->decodeFile($encodedFile, $skipDecoding);
+        $this->decodeFile($encodedFile, $skipDecoding, $fileName);
 
         if (!$skipDecoding) {
             $this->encodedFile = $encodedFile;
@@ -150,7 +157,7 @@ class UploadedFile
 
     public function getMIME(): string
     {
-        return $this->type . "/" . $this->fileExt;
+        return $this->mimeData;
     }
 
     public function withUUID(string $uuid): self
@@ -167,10 +174,11 @@ class UploadedFile
      *
      * @param string $encodedFile
      * @param bool   $skipDecoding If the input file is already in binary form,
+     * @param string $fileName     File name of uploaded file
      *
      * @throws Exception
      */
-    private function decodeFile(string $encodedFile, bool $skipDecoding = false)
+    private function decodeFile(string $encodedFile, bool $skipDecoding = false, string $fileName = "")
     {
         if (empty($encodedFile)) {
             throw new InvalidArgumentException("File can't be empty");
@@ -207,8 +215,16 @@ class UploadedFile
             GoalousLog::error("Failed to get file extension");
             throw new RuntimeException("Failed to get file extension");
         }
+        $this->mimeData = $fileDesc;
         $this->metadata = $fInfo->buffer($rawFile);
         $this->type = $type;
+
+        if (!empty($fileName)) {
+            $parsedFileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            if (!empty($parsedFileExt)) {
+                $fileExt = $parsedFileExt;
+            }
+        }
         $this->fileExt = $fileExt;
         $this->size = strlen($rawFile);
     }
