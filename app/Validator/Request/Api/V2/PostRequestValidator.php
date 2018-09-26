@@ -64,6 +64,24 @@ class PostRequestValidator extends BaseValidator
         return $rules;
     }
 
+    /**
+     * Validation rules for the file IDs in file upload
+     * Workaround for a bug in the library
+     *
+     * @return array
+     */
+    public function getFileUploadValidationRule(): array
+    {
+        $rules = [
+            "file_ids" => [
+                validator::arrayVal()::each(validator::regex(UploadedFile::UUID_REGEXP)),
+                "optional"
+            ]
+        ];
+
+        return $rules;
+    }
+
     public static function createDefaultPostValidator(): self
     {
         $self = new self();
@@ -96,6 +114,13 @@ class PostRequestValidator extends BaseValidator
     {
         $self = new self();
         $self->addRule($self->getPostReadValidationRule(), true);
+        return $self;
+    }
+
+    public static function createFileUploadValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getFileUploadValidationRule(), true);
         return $self;
     }
 

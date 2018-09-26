@@ -692,10 +692,10 @@ class PostService extends AppService
     /**
      * Save all attached files
      *
-     * @param int   $postId
-     * @param int   $userId
-     * @param int   $teamId
-     * @param array $fileIDs
+     * @param int      $postId
+     * @param int      $userId
+     * @param int      $teamId
+     * @param string[] $fileIDs
      *
      * @return bool
      * @throws Exception
@@ -716,6 +716,11 @@ class PostService extends AppService
         try {
             //Save attached files
             foreach ($fileIDs as $id) {
+
+                if (!is_string($id)) {
+                    throw new InvalidArgumentException("Buffered file ID must be string.");
+                }
+
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
 
@@ -785,8 +790,8 @@ class PostService extends AppService
     /**
      * Check whether the user can view the several posts
      *
-     * @param int  $userId
-     * @param int  $postsIds
+     * @param int $userId
+     * @param int $postsIds
      *
      * @throws Exception
      */
@@ -827,8 +832,7 @@ class PostService extends AppService
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
-        if(count($circlePostArray) != count($postsIds))
-        {
+        if (count($circlePostArray) != count($postsIds)) {
             throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
         }
 
@@ -842,11 +846,11 @@ class PostService extends AppService
                 'CircleMember.user_id' => $userId,
                 'CircleMember.del_flg' => false,
             ],
-            'fields' => [
+            'fields'     => [
                 'CircleMember.circle_id'
             ],
-            'table' => 'circle_members',
-            'alias' => 'CircleMember'
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember'
         ], $CircleMember);
         $subQueryExpression = $db->expression($subQuery);
 
@@ -854,7 +858,7 @@ class PostService extends AppService
             'conditions' => [
                 'OR' => [
                     $subQueryExpression,
-                    'Circle.public_flg'   => true,
+                    'Circle.public_flg' => true,
                 ]
             ],
             'table'      => 'circles',
@@ -867,7 +871,7 @@ class PostService extends AppService
         $circleUserArray = Hash::extract($circleUserArray, '{n}.Circle.id');
         $circlePostArray = Hash::extract($circlePostArray, '{n}.Circle.id');
 
-        if (count(array_intersect($circlePostArray, $circleUserArray)) != count($circlePostArray)){
+        if (count(array_intersect($circlePostArray, $circleUserArray)) != count($circlePostArray)) {
             throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
         }
     }

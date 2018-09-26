@@ -82,7 +82,6 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withBody($result)->getResponse();
     }
 
-
     /**
      * Default extension options for getting comments
      *
@@ -96,7 +95,6 @@ class PostsController extends BasePagingController
             CommentPagingService::EXTEND_READ,
         ];
     }
-
 
     /**
      * Get list of the post readers
@@ -326,13 +324,13 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withBody($result)->getResponse();
     }
 
-
-	/**
-	 * Post save method
-	 * @param int $postId
-	 *
-	 * @return BaseApiResponse
-	 */
+    /**
+     * Post save method
+     *
+     * @param int $postId
+     *
+     * @return BaseApiResponse
+     */
     public function post_saves(int $postId): CakeResponse
     {
         $res = $this->validateSave($postId);
@@ -399,7 +397,7 @@ class PostsController extends BasePagingController
 
         try {
             PostRequestValidator::createDefaultPostValidator()->validate($requestBody);
-
+            PostRequestValidator::createFileUploadValidator()->validate($requestBody);
             switch ($requestBody['type']) {
                 case Post::TYPE_NORMAL:
                     PostRequestValidator::createCirclePostValidator()->validate($requestBody);
@@ -454,35 +452,34 @@ class PostsController extends BasePagingController
         return null;
     }
 
-	/**
-	 * Validation function for adding / removing save from a post
-	 *
-	 * @param int $postId
-	 *
-	 * @return CakeResponse|null
-	 */
-	private function validateSave(int $postId)
-	{
-		/** @var PostService $PostService */
-		$PostService = ClassRegistry::init('PostService');
+    /**
+     * Validation function for adding / removing save from a post
+     *
+     * @param int $postId
+     *
+     * @return CakeResponse|null
+     */
+    private function validateSave(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
 
-		try {
-			$access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
-		} catch (GlException\GoalousNotFoundException $notFoundException) {
-			return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
-		} catch (Exception $exception) {
-			return ErrorResponse::internalServerError()->withException($exception)->getResponse();
-		}
+        try {
+            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
 
-		//Check if user belongs to a circle where the post is shared to
-		if (!$access) {
-			return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-								->getResponse();
-		}
+        //Check if user belongs to a circle where the post is shared to
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                                ->getResponse();
+        }
 
-		return null;
-	}
-
+        return null;
+    }
 
     /*
      * Validate get comments and readers endpoint
@@ -586,7 +583,6 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * 
      * @return CakeResponse|null
      */
     private function validatePostRead()
