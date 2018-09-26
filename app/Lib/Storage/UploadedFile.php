@@ -220,7 +220,10 @@ class UploadedFile
         $this->type = $type;
 
         if (!empty($fileName)) {
-            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            $parsedFileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            if (!empty($parsedFileExt)) {
+                $fileExt = $parsedFileExt;
+            }
         }
         $this->fileExt = $fileExt;
         $this->size = strlen($rawFile);
