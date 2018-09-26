@@ -55,8 +55,12 @@ class ImageRotateProcessor extends BaseImageProcessor
     {
         //Only jpeg & tiff support EXIF image data
         $mimeData = $file->getMIME();
-        list($type, $imageType) = explode("/", $mimeData, 2);
-        if ($imageType != 'jpeg' && $imageType != 'tiff') {
+        if (!empty($mimeData)) {
+            list($type, $imageType) = explode("/", $mimeData, 2);
+            if ($imageType != 'jpeg' && $imageType != 'tiff') {
+                return [0, false];
+            }
+        } else {
             return [0, false];
         }
         $exif = $this->readExif($file);
