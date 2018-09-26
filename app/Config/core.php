@@ -191,6 +191,10 @@ if (REDIS_SESSION_HOST) {
         'handler'        => [
             'engine' => 'RedisSession',
             'key'    => 'session:'
+        ],
+        'ini' => [
+            'session.cookie_domain' => 'goalous.com',
+            'session.cookie_secure' => false
         ]
     ];
     $session_ini = [];
@@ -216,6 +220,7 @@ if (REDIS_SESSION_HOST) {
  * A random string used in security hashing methods.
  */
 Configure::write('Security.salt', SECURITY_SALT);
+Configure::write('Security.level', 'low');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
