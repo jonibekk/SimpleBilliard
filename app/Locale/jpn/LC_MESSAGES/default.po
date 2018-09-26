@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-18 15:12+0900\n"
+"PO-Revision-Date: 2018-09-18 13:07+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.9\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -44,6 +44,12 @@ msgstr ""
 
 msgid "5 (Very high)"
 msgstr "5 (とても高い)"
+
+msgid "validation.error.required"
+msgstr ""
+
+msgid "validation.error.email_format"
+msgstr ""
 
 msgid "All Team"
 msgstr "チーム全体"
@@ -845,8 +851,10 @@ msgstr "このチームは現在、利用できません。"
 msgid "Ooops, Not Found."
 msgstr "お探しのページが見つかりませんでした。"
 
+#, fuzzy
+#| msgid "Error, failed to invite."
 msgid "Error, data conflicted."
-msgstr ""
+msgstr "問題があるため、招待に失敗しました。"
 
 msgid ""
 "Server error occurred. We apologize for the inconvenience. Please try again."
@@ -856,6 +864,39 @@ msgstr ""
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
+
+msgid "password and email did not match"
+msgstr ""
+
+msgid "validation failed"
+msgstr "データの検証に失敗しました。"
+
+msgid "Missing token."
+msgstr ""
+
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
+
+msgid "This team member already joined this circle."
+msgstr "このチームメンバーは既にこのサークルに参加しています。"
+
+msgid "The circle dosen't exist or you don't have permission."
+msgstr "サークルが存在しないか、権限がありません。"
+
+msgid "You can not invite."
+msgstr "あなたは招待できません。"
+
+msgid "You don't have permission to access this comment"
+msgstr "このコメントにアクセスする権限がありません。"
+
+msgid "Evaluator setting saved."
+msgstr "評価者設定を保存しました。"
+
+msgid "%s %s inactive"
+msgstr ""
+
+msgid "You don't have permission to access this post"
+msgstr "この投稿にアクセスする権限がありません。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
@@ -871,12 +912,6 @@ msgstr "評価者設定を保存できませんでした。"
 
 msgid "Evaluator has duplicates."
 msgstr "評価者が重複しています。"
-
-msgid "%s %s inactive"
-msgstr ""
-
-msgid "Evaluator setting saved."
-msgstr "評価者設定を保存しました。"
 
 msgid "Failed uploading video"
 msgstr "動画のアップロードに失敗しました"
@@ -957,6 +992,9 @@ msgstr "注意"
 msgid "Sent file(s)."
 msgstr "ファイルを送信しました。"
 
+msgid "%1$s and %2$s circle(s)"
+msgstr "%1$s他%2$sサークル"
+
 msgid "Device Information not exists"
 msgstr "デバイス情報が見つかりません。"
 
@@ -971,6 +1009,11 @@ msgstr "ゴール達成しました！"
 
 msgid "Api Endpoint not found."
 msgstr "APIが見つかりません。"
+
+#, fuzzy
+#| msgid "No results found"
+msgid "Not Found"
+msgstr "一致する結果はありませんでした"
 
 msgid "You can not decrease current value."
 msgstr "現在値は減らせません。"
@@ -1198,10 +1241,16 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
 "た。"
 
+#, fuzzy
+#| msgid ""
+#| "<span class=\"notify-card-head-target\">%1$s</span> created <span class="
+#| "\"notify-card-head-target\">%2$s</span>."
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設"
 "定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>を作成しました。"
 
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added <span class="
@@ -1416,9 +1465,6 @@ msgstr "あたらしいゴールをつくりました。"
 msgid "Created a new circle."
 msgstr "あたらしいサークルをつくりました。"
 
-msgid "The circle dosen't exist or you don't have permission."
-msgstr "サークルが存在しないか、権限がありません。"
-
 msgid "Shared %s"
 msgstr "%sに共有"
 
@@ -1442,9 +1488,6 @@ msgstr "%1$sと他%2$s人、%3$s他%4$sサークルに共有"
 
 msgid "%1$s and %2$s others"
 msgstr "%1$sと他%2$s人"
-
-msgid "%1$s and %2$s circle(s)"
-msgstr "%1$s他%2$sサークル"
 
 msgid "%1$s and %2$s"
 msgstr "%1$sと%2$s"
@@ -1863,8 +1906,10 @@ msgstr "有効な日付を YYYY/MM/DD フォーマットで入力してくださ
 msgid "Input in the term."
 msgstr "評価期間内で入力してください。"
 
+#, fuzzy
+#| msgid "%s is duplicated."
 msgid "Data is duplicated."
-msgstr ""
+msgstr "%sが重複しています。"
 
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
@@ -1888,14 +1933,27 @@ msgstr "不正な電話番号です。"
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
-msgid "%s pixel is the limit."
+#, fuzzy
+#| msgid "%s pixel is the limit."
+msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
 
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
 
+msgid "You already liked it."
+msgstr "あなたはすでにいいね！しています。"
+
+msgid "You did not like it."
+msgstr "あなたはいいね！していません。"
+
+#, fuzzy
+#| msgid "No results found"
 msgid "Not found"
-msgstr ""
+msgstr "一致する結果はありませんでした"
 
 msgid "Credit card settings does not exist."
 msgstr "クレジットカード設定が見つかりません。"
@@ -2019,6 +2077,9 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 
 msgid "View %s comments"
 msgstr "%s件のコメントを見る"
+
+msgid "This file type is not allowed."
+msgstr "このファイルは許可されていません。"
 
 msgid "Manage Circles"
 msgstr "サークル管理"
@@ -2195,20 +2256,23 @@ msgstr "秘密サークルを指定しよう"
 msgid "You can't switch in the circle page."
 msgstr "サークルページでは切り替えられません"
 
+msgid "Goal"
+msgstr "ゴール"
+
+msgid "Circles"
+msgstr "サークル"
+
+msgid "There is no more data."
+msgstr "これ以上のデータがありません。"
+
+msgid "No results found"
+msgstr "一致する結果はありませんでした"
+
 msgid "Cancel"
 msgstr "キャンセル"
 
 msgid "Delete"
 msgstr "削除する"
-
-msgid "Name?"
-msgstr "名前を入力"
-
-msgid "Goal Name?"
-msgstr "ゴール名を入力"
-
-msgid "Circle Name?"
-msgstr "サークル名を入力"
 
 msgid "Leave circle."
 msgstr "サークルを脱退する"
@@ -2221,6 +2285,9 @@ msgstr "データをロード中です。少々お待ちください。"
 
 msgid "%d remaining"
 msgstr "残り %d人"
+
+msgid "View All"
+msgstr "すべて表示"
 
 msgid "Coach"
 msgstr "コーチ"
@@ -2854,9 +2921,6 @@ msgstr "トピック名を入力"
 msgid "Update"
 msgstr "更新"
 
-msgid "No results found"
-msgstr "一致する結果はありませんでした"
-
 msgid "Leave this topic"
 msgstr "トピックを抜ける"
 
@@ -3187,17 +3251,14 @@ msgstr "アイテムを保存しました"
 msgid "Item removed"
 msgstr "保存済みアイテムを削除しました"
 
-msgid "Circles"
-msgstr "サークル"
-
 msgid "Manage"
 msgstr "管理"
 
-msgid "View Circles"
-msgstr "サークルを見る"
+msgid "Discover more circles"
+msgstr "サークルを見つける"
 
-msgid "View All"
-msgstr "すべて表示"
+msgid "Go To Top"
+msgstr "トップへ戻る"
 
 msgid "Saved"
 msgstr "保存済み"
@@ -3248,9 +3309,6 @@ msgstr "協業のお問い合わせ"
 
 msgid "Action list"
 msgstr "アクションリスト"
-
-msgid "There is no more data."
-msgstr "これ以上のデータがありません。"
 
 msgid "More..."
 msgstr "もっと読む ▼"
@@ -3567,9 +3625,6 @@ msgstr "本当にこの投稿を削除しますか？"
 msgid "Circle"
 msgstr "サークル"
 
-msgid "Goal"
-msgstr "ゴール"
-
 msgid "Team Vision"
 msgstr "チームビジョン"
 
@@ -3581,6 +3636,15 @@ msgstr "アクションできるゴールがありません。"
 
 msgid "View options"
 msgstr "オプションを表示"
+
+msgid "Posting the Action"
+msgstr "アクションの投稿"
+
+msgid ""
+"You are about to post this action without progress. Do you wish to continue?"
+msgstr ""
+"あなたはこのアクションを進捗なしで投稿しようとしています。このまま続けます"
+"か？"
 
 msgid "Add Action"
 msgstr "アクションを追加"
@@ -3782,9 +3846,6 @@ msgstr "ログイン"
 msgid "Create New Team"
 msgstr "新しいチームをつくる"
 
-msgid "Home"
-msgstr "ホーム"
-
 msgid "Create a team"
 msgstr "チームを作成"
 
@@ -3815,9 +3876,6 @@ msgstr "ゴール認定"
 msgid "User Guide"
 msgstr "ユーザー利用ガイド"
 
-msgid "How to make a Goal (jp)"
-msgstr "ゴール作成方法"
-
 msgid "Tutorial"
 msgstr "チュートリアル"
 
@@ -3827,8 +3885,14 @@ msgstr "サポート"
 msgid "Logout"
 msgstr "ログアウト"
 
+msgid "Home"
+msgstr "ホーム"
+
 msgid "Team"
 msgstr "チーム"
+
+msgid "Search Members, Goals, Circles"
+msgstr "メンバー,ゴール,サークルを検索"
 
 msgid "What is different from other enterprise SNS?"
 msgstr "他の社内向けSNSと何が違いますか？"
@@ -4705,9 +4769,14 @@ msgstr "Goalousチーム"
 msgid "Click the below link to authenticate your email address."
 msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
+#, fuzzy
+#| msgid ""
+#| "Please let us know if you don't have any idea why you get this email."
 msgid ""
 "Please trash this email if you don't have any idea why you get this email."
 msgstr ""
+"このメールに心当たりのない方は、お問い合わせフォームからお問い合わせくださ"
+"い。"
 
 msgid "Thank you for getting contact with Goalous."
 msgstr ""
@@ -5182,14 +5251,20 @@ msgstr ""
 msgid "Thank you for contacting us."
 msgstr "お問い合わせありがとうございました"
 
+#, fuzzy
+#| msgid "Goalous"
 msgid "Goalous Blog"
-msgstr ""
+msgstr "Goalous(ゴーラス)"
 
+#, fuzzy
+#| msgid "There is no team."
 msgid "The story of the team"
-msgstr ""
+msgstr "チームが存在しません。"
 
+#, fuzzy
+#| msgid "Facebook"
 msgid "Facebook page"
-msgstr ""
+msgstr "Facebook"
 
 msgid "Like us!"
 msgstr "Like us！"
@@ -5930,6 +6005,9 @@ msgstr "Jane Doe"
 msgid "PAID"
 msgstr "支払済"
 
+msgid "FAILURE"
+msgstr "支払い失敗"
+
 msgid "Billing ID"
 msgstr "請求ID"
 
@@ -6213,6 +6291,9 @@ msgstr "認証アプリを使用できない場合は"
 msgid "Here"
 msgstr "こちら"
 
+msgid "You already read this post."
+msgstr "あなたはすでにこの投稿を読みました。"
+
 msgid "Enter a Recovery Code"
 msgstr "リカバリーコードを入力する"
 
@@ -6232,6 +6313,43 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+msgid "This item is already saved."
+msgstr "このアイテムはすでに保存されています"
+
+msgid "This item doesn't exist."
+msgstr "このアイテムは保存されていません"
+
+#, fuzzy
+#~| msgid "You don't have access right to this page."
+#~ msgid "You don't have access to this post"
+#~ msgstr "この画面にはアクセスできません。"
+
+#~ msgid "%s pixel is the limit."
+#~ msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
+#, fuzzy
+#~| msgid "Error"
+#~ msgid "Fatal Error"
+#~ msgstr "エラー"
+
+#~ msgid "Failed to logout"
+#~ msgstr "ログアウトに失敗しました。"
+
+#~ msgid "View Circles"
+#~ msgstr "サークルを見る"
+
+#~ msgid "Name?"
+#~ msgstr "名前を入力"
+
+#~ msgid "Goal Name?"
+#~ msgstr "ゴール名を入力"
+
+#~ msgid "Circle Name?"
+#~ msgstr "サークル名を入力"
+
+#~ msgid "How to make a Goal (jp)"
+#~ msgstr "ゴール作成方法"
 
 #, fuzzy
 #~| msgid "Invalid score."
@@ -6399,3 +6517,6 @@ msgstr "認定ステータス: %s"
 #~ "Goalous was featured in a web publication - Hito to shigoto no kenkyujo "
 #~ "by Idem -"
 #~ msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
+
+#~ msgid "Reorder circles"
+#~ msgstr "サークルを並び替える"

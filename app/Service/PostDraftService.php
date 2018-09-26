@@ -4,7 +4,7 @@ App::uses('PostDraft', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('Post', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostDraftService
@@ -66,8 +66,8 @@ class PostDraftService extends AppService
             // has transcode failed video
             $hasTranscodeFailed = false;
             foreach ($postDraft['post_resources'] as $resource) {
-                $transcodeStatus = new Goalous\Model\Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
-                if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
+                $transcodeStatus = new Goalous\Enum\Model\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+                if ($transcodeStatus->equals(Enum\Model\Video\VideoTranscodeStatus::ERROR())) {
                     $hasTranscodeFailed = true;
                     break;
                 }
@@ -139,7 +139,7 @@ class PostDraftService extends AppService
                     // need to determine what type of resource is passed from arguments
                     // (maybe should wrap by class, not simple array)
                     // same as in Post::addNormal()
-                    'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
+                    'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM()->getValue(),
                     'resource_id' => $resource['id'],
                 ]);
                 $postResource = $PostResource->save();
@@ -192,8 +192,8 @@ class PostDraftService extends AppService
         foreach ($resources[$postDraftId] as $resource) {
             // TODO: currently we have only type of video resource
             // should be wrapped by kind of resource class
-            $transcodeStatus = new Enum\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
-            if ($transcodeStatus->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+            $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+            if ($transcodeStatus->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
                 continue;
             }
             return false;

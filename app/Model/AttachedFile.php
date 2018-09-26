@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'AttachedFileEntity');
 
 /**
  * AttachedFile Model
@@ -10,13 +11,24 @@ App::uses('AppModel', 'Model');
  * @property PostFile         $PostFile
  * @property ActionResultFile $ActionResultFile
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class AttachedFile extends AppModel
 {
     /**
      * file type
+     *
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedFileType
      */
     const TYPE_FILE_IMG = 0;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedFileType
+     */
     const TYPE_FILE_VIDEO = 1;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedFileType
+     */
     const TYPE_FILE_DOC = 2;
 
     /**
@@ -49,12 +61,24 @@ class AttachedFile extends AppModel
     }
 
     /**
-     * model type
+     * file type
+     *
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
      */
     const TYPE_MODEL_POST = 0;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
+     */
     const TYPE_MODEL_COMMENT = 1;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
+     */
     const TYPE_MODEL_ACTION_RESULT = 2;
+    /**
+     * @deprecated use Goalous\Enum\Model\AttachedFile\AttachedModelType
+     */
     const TYPE_MODEL_MESSAGE = 3;
+
     static public $TYPE_MODEL = [
         self::TYPE_MODEL_POST          => [
             'intermediateModel' => 'PostFile',
@@ -154,6 +178,16 @@ class AttachedFile extends AppModel
         'MessageFile'      => [
             'dependent' => true,
         ],
+    ];
+
+    public $modelConversionTable = [
+        'user_id'          => DataType::INT,
+        'team_id'          => DataType::INT,
+        'file_type'        => DataType::INT,
+        'file_size'        => DataType::INT,
+        'model_type'       => DataType::INT,
+        'display_list_flg' => DataType::BOOL,
+        'removable_flg'    => DataType::BOOL
     ];
 
     public function getFileTypeOptions()

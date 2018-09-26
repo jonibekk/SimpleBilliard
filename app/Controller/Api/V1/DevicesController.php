@@ -2,7 +2,7 @@
 App::uses('ApiController', 'Controller/Api');
 App::import("Service", "PushService");
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class DevicesController extends  ApiController
 {
@@ -100,7 +100,7 @@ class DevicesController extends  ApiController
         }
         $token = $requestJsonData['token'];
         $version = $requestJsonData['version'];
-        $deviceType = new Enum\Devices\DeviceType($requestJsonData['os']);
+        $deviceType = new Enum\Model\Devices\DeviceType($requestJsonData['os']);
         $deleteInstallationId = isset($requestJsonData['delete_installationId']) ? $requestJsonData['delete_installationId'] : "";
         $deleteToken = isset($requestJsonData['delete_token']) ? $requestJsonData['delete_token'] : "";
 

@@ -79,9 +79,11 @@
                     <i class="fa fa-pencil mr_5px"></i><span><?= __('Edit Profile') ?></span>
                 </a>
             <?php else: ?>
-                <a href="/topics/create?user_id=<?= $user['User']['id'] ?>" class="btn-pink-radius">
-                    <i class="fa fa-paper-plane-o mr_5px"></i><span><?= __('Message') ?></span>
-                </a>
+                <?php if ($user['User']['active_flg'] && $user['TeamMember']['status'] != Goalous\Enum\Model\TeamMember\Status::INACTIVE ): ?>
+                    <a href="/topics/create?user_id=<?= $user['User']['id'] ?>" class="btn-pink-radius">
+                        <i class="fa fa-paper-plane-o mr_5px"></i><span><?= __('Message') ?></span>
+                    </a>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
         <div class="profile-user-avatar-wrap <?php if ($isMypage): ?>dropdown<?php endif;?>">

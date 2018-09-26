@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 
 /**
  * TopicSearchKeyword Model
-
  */
 class TopicSearchKeyword extends AppModel
 {
@@ -47,15 +46,24 @@ class TopicSearchKeyword extends AppModel
      */
     function add(int $topicId, string $keywords): bool
     {
-        $data = [
-            'team_id'  => $this->current_team_id,
-            'topic_id' => $topicId,
-            'keywords' => $keywords
-        ];
+        $data['keywords'] = '\'' . $keywords . '\'';
 
-        // Because always contain new line code head of $keywords
+        $entry = $this->find('first', ['conditions' => ['topic_id' => $topicId]]);
+
         $this->Behaviors->disable('Trim');
-        $res = $this->save($data);
+
+        if (!empty($entry) && $entry['TopicSearchKeyword']['id'] > 0) {
+
+            $data['modified'] = REQUEST_TIMESTAMP;
+            $res = $this->updateAll($data, ['topic_id' => $topicId]);
+
+        } else {
+            $data['team_id'] = $this->current_team_id;
+            $data['topic_id'] = $topicId;
+
+            $res = $this->save($data);
+        }
+        // Because always contain new line code head of $keywords
         $this->Behaviors->enable('Trim');
 
         return (bool)$res;
@@ -68,6 +76,7 @@ class TopicSearchKeyword extends AppModel
      *  - For Reducing query cost
      *
      * @param  int $userId
+     *
      * @return bool
      */
     function updateByUserId($userId): bool

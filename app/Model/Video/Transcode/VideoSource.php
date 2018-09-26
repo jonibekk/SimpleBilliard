@@ -1,6 +1,6 @@
 <?php
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * <source>タグ内に利用する値の出力
@@ -11,7 +11,7 @@ use Goalous\Model\Enum as Enum;
 class VideoSource
 {
     /**
-     * @var Enum\Video\VideoSourceType
+     * @var Enum\Model\Video\VideoSourceType
      */
     private $sourceType;
 
@@ -28,10 +28,10 @@ class VideoSource
     /**
      * VideoSource constructor.
      *
-     * @param Enum\Video\VideoSourceType $type
+     * @param Enum\Model\Video\VideoSourceType $type
      * @param string                     $filePath
      */
-    public function __construct(Enum\Video\VideoSourceType $type, string $filePath)
+    public function __construct(Enum\Model\Video\VideoSourceType $type, string $filePath)
     {
         $this->sourceType = $type;
         $this->filePath = $filePath;
@@ -46,9 +46,9 @@ class VideoSource
     }
 
     /**
-     * @return Enum\Video\VideoSourceType
+     * @return Enum\Model\Video\VideoSourceType
      */
-    public function getType(): Enum\Video\VideoSourceType
+    public function getType(): Enum\Model\Video\VideoSourceType
     {
         return $this->sourceType;
     }

@@ -141,8 +141,8 @@ class PostShareCircleFixture extends CakeTestFixtureEx
             'modified'  => 1
         ),
         array(
-            'id'        => '6',
-            'post_id'   => '',
+            'id'        => 6,
+            'post_id'   => 4,
             'circle_id' => '',
             'team_id'   => '',
             'del_flg'   => 1,
@@ -229,6 +229,26 @@ class PostShareCircleFixture extends CakeTestFixtureEx
             'deleted'   => 10,
             'created'   => 10,
             'modified'  => 10
+        ),
+        array(
+            'id'        => 15,
+            'post_id'   => 24,
+            'circle_id' => 3,
+            'team_id'   => 1,
+            'del_flg'   => 0,
+            'deleted'   => null,
+            'created'   => 1388603001,
+            'modified'  => 1388603001
+        ),
+        array(
+            'id'        => 16,
+            'post_id'   => 101,
+            'circle_id' => 1,
+            'team_id'   => 1,
+            'del_flg'   => 0,
+            'deleted'   => null,
+            'created'   => 16,
+            'modified'  => 16
         ),
     );
 

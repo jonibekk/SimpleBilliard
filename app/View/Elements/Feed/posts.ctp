@@ -285,9 +285,6 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
 
                 <?php if ($post['Post']['site_info']): ?>
-                    <div id="PostOgpClose_<?= $post['Post']['id'] ?>" class="font_lightgray post-ogp-close">
-                        <i class="fa fa-times fa-2x js-ogp-close"></i>
-                    </div>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <?= $this->element('Feed/site_info_block', [
                         'site_info' => $site_info,

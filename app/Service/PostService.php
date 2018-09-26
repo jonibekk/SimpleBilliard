@@ -1,17 +1,33 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('AttachedFile', 'Model');
+App::import('Service', 'PostFileService');
+App::import('Service', 'AttachedFileService');
+App::import('Service', 'UploadService');
+App::import('Lib/Storage', 'UploadedFile');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
-App::uses('User', 'Model');
 App::uses('PostShareCircle', 'Model');
+App::uses('PostDraft', 'Model');
+App::uses('PostRead', 'Model');
+App::uses('PostMention', 'Model');
+App::uses('PostLike', 'Model');
 App::uses('PostFile', 'Model');
 App::uses('PostResource', 'Model');
-App::uses('Circle', 'Model');
+App::uses('PostSharedLog', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::uses('AttachedFile', 'Model');
-App::uses('PostDraft', 'Model');
+App::uses('User', 'Model');
+App::import('Model/Entity', 'PostEntity');
+App::import('Model/Entity', 'PostFileEntity');
+App::import('Model/Entity', 'CircleEntity');
+App::import('Model/Entity', 'AttachedFileEntity');
+App::import('Model/Entity', 'PostFileEntity');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
+use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+use Goalous\Exception as GlException;
 
 /**
  * Class PostService
@@ -58,7 +74,7 @@ class PostService extends AppService
             // changing post_resources.post_id = null to posts.id
             if (false === $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id'])) {
                 GoalousLog::error($errorMessage = 'failed updating post_resources.post_id', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -69,7 +85,7 @@ class PostService extends AppService
             $postDraft['post_id'] = $post['id'];
             if (false === $PostDraft->save($postDraft)) {
                 GoalousLog::error($errorMessage = 'failed saving post_draft', [
-                    'posts.id' => $post['id'],
+                    'posts.id'       => $post['id'],
                     'post_drafts.id' => $postDraft['id'],
                 ]);
                 throw new RuntimeException('Error on adding post from draft: ' . $errorMessage);
@@ -113,7 +129,7 @@ class PostService extends AppService
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error('failed adding post data', [
-                'message' => $e->getMessage(),
+                'message'  => $e->getMessage(),
                 'users.id' => $userId,
                 'teams.id' => $teamId,
             ]);
@@ -134,7 +150,6 @@ class PostService extends AppService
      *
      * @return array Always return inserted post data array if succeed
      *      otherwise throwing exception
-     *
      * @throws \InvalidArgumentException
      *      If passed data is invalid or not enough, throws InvalidArgumentException
      * @throws \RuntimeException
@@ -217,7 +232,6 @@ class PostService extends AppService
             ]);
             throw new RuntimeException('Error on adding post: failed post save');
         }
-
         $postId = $post['Post']['id'];
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
@@ -238,7 +252,7 @@ class PostService extends AppService
                 // need to determine what type of resource is passed from arguments
                 // (maybe should wrap by class, not simple array)
                 // same as in PostDraftService::createPostDraftWithResources()
-                'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM()->getValue(),
+                'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM()->getValue(),
                 'resource_id'   => $postResource['id'],
             ], [
                 'atomic' => false
@@ -375,5 +389,490 @@ class PostService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * Method to save a circle post
+     *
+     * @param array    $postBody
+     *                   ["body" => '',
+     *                   "type" => ''
+     *                   ]
+     * @param int      $circleId
+     * @param int      $userId
+     * @param int      $teamId
+     * @param string[] $fileIDs
+     *
+     * @return PostEntity Entity of saved post
+     * @throws Exception
+     */
+    public function addCirclePost(
+        array $postBody,
+        int $circleId,
+        int $userId,
+        int $teamId,
+        array $fileIDs = []
+    ): PostEntity {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if (empty($postBody['body'])) {
+            GoalousLog::error('Error on adding post: Invalid argument', [
+                'users.id'  => $userId,
+                'circle.id' => $circleId,
+                'teams.id'  => $teamId,
+                'postData'  => $postBody,
+            ]);
+            throw new InvalidArgumentException('Error on adding post: Invalid argument');
+        }
+
+        try {
+            $this->TransactionManager->begin();
+            $Post->create();
+
+            $postBody['user_id'] = $userId;
+            $postBody['team_id'] = $teamId;
+
+            if ($postBody['type'] == Post::TYPE_CREATE_CIRCLE) {
+                $postBody['circle_id'] = $circleId;
+            } elseif (empty($postBody['type'])) {
+                $postBody['type'] = Post::TYPE_NORMAL;
+            }
+
+            /** @var PostEntity $savedPost */
+            $savedPost = $Post->useType()->useEntity()->save($postBody, false);
+
+            if (empty ($savedPost)) {
+                GoalousLog::error('Error on adding post: failed post save', [
+                    'users.id'  => $userId,
+                    'circle.id' => $circleId,
+                    'teams.id'  => $teamId,
+                    'postData'  => $postBody,
+                ]);
+                throw new RuntimeException('Error on adding post: failed post save');
+            }
+
+            $postId = $savedPost['id'];
+            $postCreated = $savedPost['created'];
+
+            //Update last_posted time
+            $updateCondition = [
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.circle_id' => $circleId
+            ];
+
+            if (!$CircleMember->updateAll(['last_posted' => $postCreated], $updateCondition)) {
+                GoalousLog::error($errorMessage = 'failed updating last_posted in circle_members', [
+                    'posts.id'    => $postId,
+                    'circles.ids' => $circleId,
+                    'teams.id'    => $teamId,
+                    'users.id'    => $userId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+
+            // Save share circles
+            if (false === $PostShareCircle->add($postId, [$circleId], $teamId)) {
+                GoalousLog::error($errorMessage = 'failed saving post share circles', [
+                    'posts.id'    => $postId,
+                    'circles.ids' => $circleId,
+                    'teams.id'    => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            // Update unread post numbers if specified sharing circle
+            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
+                GoalousLog::error($errorMessage = 'failed increment unread count', [
+                    'circles.ids' => $postId,
+                    'teams.id'    => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            //Save attached files
+            if (!empty($fileIDs)) {
+                $this->saveFiles($postId, $userId, $teamId, $fileIDs);
+            }
+
+            $this->TransactionManager->commit();
+
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+
+        return $savedPost;
+    }
+
+    /**
+     * Get query condition for posts made by an user
+     *
+     * @param int $userId User ID of the posts author
+     *
+     * @return array
+     */
+    public function getUserPostListCondition(int $userId)
+    {
+        return ['Post.user_id' => $userId];
+    }
+
+    /**
+     * Check whether the user can view the post
+     *
+     * @param int  $userId
+     * @param int  $postId
+     * @param bool $mustBelong Whether user must belong to the circle where post is shared to
+     *
+     * @return bool
+     */
+    public function checkUserAccessToPost(int $userId, int $postId, bool $mustBelong = false): bool
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init("CircleMember");
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $circleOption = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $postId,
+            ],
+            'fields'     => [
+                'Circle.id',
+                'Circle.public_flg',
+                'Circle.team_all_flg'
+            ],
+            'table'      => 'circles',
+            'alias'      => 'Circle',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Circle.id = PostShareCircle.circle_id',
+                    ],
+                    'table'      => 'post_share_circles',
+                    'alias'      => 'PostShareCircle',
+                    'field'      => 'PostShareCircle.circle_id'
+                ]
+            ]
+        ];
+
+        /** @var CircleEntity $circles */
+        $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
+
+        if (empty($circles)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
+        $circleArray = [];
+
+        foreach ($circles as $circle) {
+            $circleArray[] = $circle['id'];
+            //If circle is public or team_all, return true
+            if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
+                return true;
+            }
+        }
+
+        $circleMemberOption = [
+            'conditions' => [
+                'CircleMember.circle_id' => $circleArray,
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.del_flg'   => false
+            ],
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember',
+            'fields'     => 'CircleMember.circle_id'
+        ];
+
+        $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
+
+        return $circleList > 0;
+    }
+
+    /**
+     * Get list of attached files of a post
+     *
+     * @param int                                              $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getAttachedFiles(int $postId, AttachedFileType $type = null): array
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $conditions = [
+            'conditions' => [],
+            'table'      => 'attached_files',
+            'alias'      => 'AttachedFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'post_files',
+                    'alias'      => 'PostFile',
+                    'conditions' => [
+                        'PostFile.post_id' => $postId,
+                        'PostFile.attached_file_id = AttachedFile.id'
+                    ]
+                ]
+            ]
+        ];
+
+        if (!empty($type)) {
+            $conditions['conditions']['file_type'] = $type->getValue();
+        }
+
+        return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    /**
+     * Soft delete circle post and its related data
+     *
+     * @param int $postId
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function softDelete(int $postId): bool
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        //Check if post exists & not deleted
+        $postCondition = [
+            'conditions' => [
+                'id'      => $postId,
+                'del_flg' => false
+            ]
+        ];
+        if (empty($Post->find('first', $postCondition))) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
+        $modelsToDelete = [
+            'PostDraft'       => 'post_id',
+            'PostFile'        => 'post_id',
+            'PostLike'        => 'post_id',
+            'PostMention'     => 'post_id',
+            'PostRead'        => 'post_id',
+            'PostResource'    => 'post_id',
+            'PostShareCircle' => 'post_id',
+            'PostShareUser'   => 'post_id',
+            'Post'            => 'Post.id'
+        ];
+
+        try {
+            $this->TransactionManager->begin();
+            foreach ($modelsToDelete as $model => $column) {
+                /** @var AppModel $Model */
+                $Model = ClassRegistry::init($model);
+
+                $condition = [$column => $postId];
+
+                $res = $Model->softDeleteAll($condition, false);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
+                }
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Error on deleting post $postId: failed post soft delete", $e->getTrace());
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Save all attached files
+     *
+     * @param int      $postId
+     * @param int      $userId
+     * @param int      $teamId
+     * @param string[] $fileIDs
+     *
+     * @return bool
+     * @throws Exception
+     */
+    private function saveFiles(int $postId, int $userId, int $teamId, array $fileIDs): bool
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init('PostFileService');
+
+        $postFileIndex = 0;
+
+        $addedFiles = [];
+
+        try {
+            //Save attached files
+            foreach ($fileIDs as $id) {
+
+                if (!is_string($id)) {
+                    throw new InvalidArgumentException("Buffered file ID must be string.");
+                }
+
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
+                    AttachedModelType::TYPE_MODEL_POST());
+
+                $addedFiles[] = $attachedFile['id'];
+
+                $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
+
+                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+            }
+        } catch (Exception $e) {
+            //If any error happened, remove uploaded file
+            foreach ($addedFiles as $id) {
+                $UploadService->deleteAsset('AttachedFile', $id);
+            }
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Edit a post body
+     *
+     * @param string $newBody
+     * @param int    $postId
+     *
+     * @return PostEntity Updated post
+     * @throws Exception
+     */
+    public function editPost(string $newBody, int $postId): PostEntity
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        if (!$Post->exists($postId)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+        try {
+            $this->TransactionManager->begin();
+
+            $newData = [
+                'body'     => '"' . $newBody . '"',
+                'modified' => REQUEST_TIMESTAMP
+            ];
+
+            if (!$Post->updateAll($newData, ['Post.id' => $postId])) {
+                throw new RuntimeException("Failed to update post");
+            }
+
+            //TODO GL-7259
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+        /** @var PostEntity $result */
+        $result = $Post->useType()->useEntity()->find('first', ['conditions' => ['id' => $postId]]);
+
+        return $result;
+    }
+
+    /**
+     * Check whether the user can view the several posts
+     *
+     * @param int $userId
+     * @param int $postsIds
+     *
+     * @throws Exception
+     */
+    public function checkUserAccessToMultiplePost(int $userId, array $postsIds)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init("CircleMember");
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $circleOption = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $postsIds,
+            ],
+            'fields'     => [
+                'Circle.id',
+            ],
+            'table'      => 'circles',
+            'alias'      => 'Circle',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Circle.id = PostShareCircle.circle_id',
+                    ],
+                    'table'      => 'post_share_circles',
+                    'alias'      => 'PostShareCircle',
+                    'field'      => 'PostShareCircle.circle_id'
+                ]
+            ]
+        ];
+
+        /** @var CircleEntity $circles */
+        $circlePostArray = $Circle->useType()->useEntity()->find('all', $circleOption);
+
+        if (empty($circlePostArray)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
+        if (count($circlePostArray) != count($postsIds)) {
+            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
+        }
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $db = $CircleMember->getDataSource();
+
+        $subQuery = $db->buildStatement([
+            'conditions' => [
+                'CircleMember.user_id' => $userId,
+                'CircleMember.del_flg' => false,
+            ],
+            'fields'     => [
+                'CircleMember.circle_id'
+            ],
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember'
+        ], $CircleMember);
+        $subQueryExpression = $db->expression($subQuery);
+
+        $query = [
+            'conditions' => [
+                'OR' => [
+                    $subQueryExpression,
+                    'Circle.public_flg' => true,
+                ]
+            ],
+            'table'      => 'circles',
+            'alias'      => 'Circle',
+            'fields'     => 'Circle.id'
+        ];
+
+        $circleUserArray = $Circle->find('all', $query);
+
+        $circleUserArray = Hash::extract($circleUserArray, '{n}.Circle.id');
+        $circlePostArray = Hash::extract($circlePostArray, '{n}.Circle.id');
+
+        if (count(array_intersect($circlePostArray, $circleUserArray)) != count($circlePostArray)) {
+            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
+        }
     }
 }

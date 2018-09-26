@@ -1476,6 +1476,7 @@ class NotifyBizComponent extends Component
      */
     private function _setFeedMentionedOption($notify_type, $post_id, $comment_id, $to_user_ids)
     {
+        if (empty($to_user_ids)) return;
         $post = $this->Post->findById($post_id);
         if (empty($post)) {
             return;
@@ -1483,6 +1484,9 @@ class NotifyBizComponent extends Component
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
             $notify_type);
+        foreach($to_user_ids as $toUserId) {
+            $this->notify_settings[$toUserId]['app'] = true;
+        }
         if (!is_null($comment_id)) {
             $comment = $this->Post->Comment->read(null, $comment_id);
         }
@@ -1519,7 +1523,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['force_notify'] = true;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
-    
+
     private function _saveNotifications()
     {
         //通知onのユーザを取得
@@ -1756,7 +1760,7 @@ class NotifyBizComponent extends Component
     ) {
         $set_web_env = "";
         $nohup = "nohup ";
-        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        $php = 'php ';
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
         $cmd = " Operation.notify";

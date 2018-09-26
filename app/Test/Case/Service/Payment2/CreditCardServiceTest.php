@@ -179,6 +179,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertTrue($res["isApiRequestSucceed"]);
         $this->assertFalse($res["success"]);
         $this->assertTrue($res["error"]);
+        $this->assertNotEmpty($res["paymentId"]);
     }
 
     function test_update()

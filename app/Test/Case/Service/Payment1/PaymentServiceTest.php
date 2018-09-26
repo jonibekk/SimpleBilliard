@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 // TODO.Payment: there are these things
 // ・Create test_validateCreate_validateError_** method related lack of company info and contact person
@@ -72,7 +72,7 @@ class PaymentServiceTest extends GoalousTestCase
     private function createTestPaymentData(array $data): array
     {
         $default = [
-            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'type'                           => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
             'amount_per_user'                => PaymentService::AMOUNT_PER_USER_JPY,
             'company_name'                   => 'ISAO',
             'company_country'                => 'JP',
@@ -87,7 +87,7 @@ class PaymentServiceTest extends GoalousTestCase
             'contact_person_tel'             => '123456789',
             'contact_person_email'           => 'test@example.com',
             'payment_base_day'               => 15,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY
+            'currency'                       => Enum\Model\PaymentSetting\Currency::JPY
         ];
         return am($default, $data);
     }
@@ -583,7 +583,7 @@ class PaymentServiceTest extends GoalousTestCase
         $userId = 2;
         try {
             $res = null;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0,
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 0,
                 $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -592,7 +592,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         try {
             $res = null;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
                 $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -609,7 +609,7 @@ class PaymentServiceTest extends GoalousTestCase
             $this->PaymentSetting->create();
             $this->PaymentSetting->save($savePaymentSetting, false);
 
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
                 $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -619,7 +619,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = null;
             list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
                 $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -629,7 +629,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = null;
             list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [], ['customer_code' => '']);
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 1,
                 $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -648,7 +648,7 @@ class PaymentServiceTest extends GoalousTestCase
                 ['customer_code' => $customer["customer_id"]]);
             $this->PaymentService->applyCreditCardCharge(
                 $teamId,
-                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 1,
                 $userId);
         } catch (Exception $e) {
@@ -661,7 +661,8 @@ class PaymentServiceTest extends GoalousTestCase
             ]
         ]);
         // assert failed history is saved
-        $this->assertEquals(Enum\ChargeHistory\ResultType::FAIL, $hist['ChargeHistory']['result_type']);
+        $this->assertEquals(Enum\Model\ChargeHistory\ResultType::FAIL, $hist['ChargeHistory']['result_type']);
+        $this->assertNotEmpty($hist['ChargeHistory']['stripe_payment_code']);
         $this->CreditCardService->deleteCustomer($customer["customer_id"]);
     }
 
@@ -674,7 +675,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -690,14 +691,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
 
@@ -711,7 +712,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 100;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -727,14 +728,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 2,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax('JP', $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -746,7 +747,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 99;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -763,14 +764,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 3,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => 199,
         ];
         $res = array_intersect_key($res, $expected);
@@ -791,7 +792,7 @@ class PaymentServiceTest extends GoalousTestCase
             $chargeUserCnt = 1;
             $this->PaymentService->applyCreditCardCharge(
                 $teamId,
-                Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt,
                 $userId,
                 1500000000
@@ -810,14 +811,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
             'charge_datetime'  => 1500000000,
         ];
@@ -834,7 +835,7 @@ class PaymentServiceTest extends GoalousTestCase
         $companyCountry = 'US';
         list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], [
             'amount_per_user' => PaymentService::AMOUNT_PER_USER_USD,
-            'currency'        => Enum\PaymentSetting\Currency::USD,
+            'currency'        => Enum\Model\PaymentSetting\Currency::USD,
             'company_country' => $companyCountry
         ]);
         $userId = $this->createActiveUser($teamId);
@@ -843,7 +844,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -859,14 +860,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::USD,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -878,7 +879,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 9;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -894,14 +895,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 2,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::USD,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -917,7 +918,7 @@ class PaymentServiceTest extends GoalousTestCase
         $companyCountry = 'JP';
         list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => 9.0], [
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
             'company_country'  => $companyCountry,
             'payment_base_day' => 31
         ]);
@@ -931,7 +932,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -946,7 +947,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -962,7 +963,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 3;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -978,7 +979,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 100;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -994,7 +995,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->id = $paymentSettingId;
         $this->PaymentSetting->save([
             'amount_per_user' => PaymentService::AMOUNT_PER_USER_USD,
-            'currency'        => Enum\PaymentSetting\Currency::USD,
+            'currency'        => Enum\Model\PaymentSetting\Currency::USD,
             'company_country' => 'US',
         ], false);
         $this->Team->resetCurrentTeam();
@@ -1005,7 +1006,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1022,7 +1023,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1049,7 +1050,7 @@ class PaymentServiceTest extends GoalousTestCase
         $userId = $this->createActiveUser($teamId);
         $res = "";
         try {
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $usersCount, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1066,7 +1067,7 @@ class PaymentServiceTest extends GoalousTestCase
         $userId = $this->createActiveUser($teamId);
         $res = "";
         try {
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $usersCount, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1077,21 +1078,21 @@ class PaymentServiceTest extends GoalousTestCase
         $paymentSetting = $this->PaymentService->get($teamId);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
-            Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
+            Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), $paymentSetting);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
         $expected = [
             'id'                          => 2,
             'team_id'                     => $teamId,
             'user_id'                     => $userId,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'             => 0,
             'total_amount'                => $chargeInfo['sub_total_charge'],
             'tax'                         => $chargeInfo['tax'],
             'charge_users'                => $usersCount,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => $usersCount,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId
@@ -1115,7 +1116,7 @@ class PaymentServiceTest extends GoalousTestCase
                 'timezone' => -12
             ],
             [
-                'type'             => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'company_country'  => $companyCountry,
                 'payment_base_day' => 31
             ]
@@ -1126,7 +1127,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1144,14 +1145,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1163,7 +1164,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1181,14 +1182,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 2,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $maxChargeUserCnt + $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1200,7 +1201,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 3;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1219,13 +1220,13 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 3,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $maxChargeUserCnt + $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1239,7 +1240,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1261,7 +1262,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1282,7 +1283,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1303,7 +1304,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1333,9 +1334,9 @@ class PaymentServiceTest extends GoalousTestCase
                 'timezone' => -3.5
             ],
             [
-                'type'             => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'company_country'  => $companyCountry,
-                'currency'         => Enum\PaymentSetting\Currency::USD,
+                'currency'         => Enum\Model\PaymentSetting\Currency::USD,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
                 'payment_base_day' => 12
             ]
@@ -1347,7 +1348,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1365,14 +1366,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => 0,
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::USD,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1385,7 +1386,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1000;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1404,14 +1405,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 2,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => 0,
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::USD,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt + 1,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1431,7 +1432,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1447,14 +1448,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1464,7 +1465,7 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1480,14 +1481,14 @@ class PaymentServiceTest extends GoalousTestCase
             'id'               => 1,
             'team_id'          => $teamId,
             'user_id'          => $userId,
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'amount_per_user'  => $amountPerUser,
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($companyCountry, $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt + 1,
         ];
         $res = array_intersect_key($res, $expected);
@@ -1502,7 +1503,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = 1;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15',
             'pre_register_amount_per_user' => 1000
@@ -1521,12 +1522,12 @@ class PaymentServiceTest extends GoalousTestCase
         $paySetting = $this->PaymentSetting->getUnique($teamId);
         $this->assertNotEmpty($paySetting);
         $this->assertEquals(array_intersect_key($paySetting, $paymentData), $paymentData);
-        $this->assertEquals($paySetting['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+        $this->assertEquals($paySetting['type'], Enum\Model\PaymentSetting\Type::CREDIT_CARD);
 
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($paySetting['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
-        $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paySetting['currency'], Enum\Model\PaymentSetting\Currency::JPY);
         $this->assertEquals($paySetting['amount_per_user'], '1000');
 
         // Check saved CreditCard data
@@ -1559,13 +1560,13 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => $paySetting['type'],
-            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'      => enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $paySetting['amount_per_user'],
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($paySetting['company_country'], $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
@@ -1579,7 +1580,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Check if team status updated
         $team = $this->Team->getById($teamId);
-        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_status'], Enum\Model\Team\ServiceUseStatus::PAID);
         $this->assertEquals($team['service_use_state_start_date'],
             GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
@@ -1594,7 +1595,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = 1;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15'
         ], false);
@@ -1614,12 +1615,12 @@ class PaymentServiceTest extends GoalousTestCase
         $paySetting = $this->PaymentSetting->getUnique($teamId);
         $this->assertNotEmpty($paySetting);
         $this->assertEquals(array_intersect_key($paySetting, $paymentData), $paymentData);
-        $this->assertEquals($paySetting['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+        $this->assertEquals($paySetting['type'], Enum\Model\PaymentSetting\Type::CREDIT_CARD);
 
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($paySetting['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
-        $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::USD);
+        $this->assertEquals($paySetting['currency'], Enum\Model\PaymentSetting\Currency::USD);
         $this->assertEquals($paySetting['amount_per_user'], PaymentService::AMOUNT_PER_USER_USD);
 
         // Check saved CreditCard data
@@ -1652,13 +1653,13 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => $paySetting['type'],
-            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'      => enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $paySetting['amount_per_user'],
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($paySetting['company_country'], $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::USD,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
@@ -1672,7 +1673,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Check if team status updated
         $team = $this->Team->getById($teamId);
-        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_status'], Enum\Model\Team\ServiceUseStatus::PAID);
         $this->assertEquals($team['service_use_state_start_date'],
             GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
@@ -1696,7 +1697,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = 1;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15'
         ], false);
@@ -1728,7 +1729,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = 1;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15',
         ], false);
@@ -1748,12 +1749,12 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($paySetting);
         $this->assertEquals(array_intersect_key($paymentData, $paySetting),
             array_intersect_key($paySetting, $paymentData));
-        $this->assertEquals($paySetting['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+        $this->assertEquals($paySetting['type'], Enum\Model\PaymentSetting\Type::CREDIT_CARD);
 
         $timezone = $this->Team->getTimezone();
         $this->assertEquals($paySetting['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
-        $this->assertEquals($paySetting['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paySetting['currency'], Enum\Model\PaymentSetting\Currency::JPY);
         $this->assertEquals($paySetting['amount_per_user'], '0');
 
         // Check saved CreditCard data
@@ -1785,13 +1786,13 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => $paySetting['type'],
-            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'      => enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $paySetting['amount_per_user'],
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
@@ -1805,7 +1806,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         // Check if team status updated
         $team = $this->Team->getById($teamId);
-        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_status'], Enum\Model\Team\ServiceUseStatus::PAID);
         $this->assertEquals($team['service_use_state_start_date'],
             GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
@@ -1823,7 +1824,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = $teamId;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15'
         ], false);
@@ -1845,7 +1846,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check team status
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
-        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_status'], Enum\Model\Team\ServiceUseStatus::PAID);
         $this->assertEquals($team['service_use_state_start_date'],
             GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
@@ -1856,7 +1857,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($paymentData, array_intersect_key($paymentSettings, $paymentData));
         $this->assertEquals($paymentSettings['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
-        $this->assertEquals($paymentSettings['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paymentSettings['currency'], Enum\Model\PaymentSetting\Currency::JPY);
         $this->assertEquals($paymentSettings['amount_per_user'], PaymentService::AMOUNT_PER_USER_JPY);
 
         // Check if PaymentSettingChangeLog was created
@@ -1873,7 +1874,7 @@ class PaymentServiceTest extends GoalousTestCase
         $data = array_intersect_key($invoice, $invoiceData);
         $this->assertEquals(array_intersect_key($invoiceData, $data), $data);
         $this->assertEquals($paymentSettings['id'], $invoice['payment_setting_id']);
-        $this->assertEquals(Enum\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
+        $this->assertEquals(Enum\Model\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
@@ -1897,13 +1898,13 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => $paymentSettings['type'],
-            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'      => enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $paymentSettings['amount_per_user'],
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($paymentSettings['company_country'], $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
@@ -1916,7 +1917,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = $teamId;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15'
         ], false);
@@ -1940,7 +1941,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check team status
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
-        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_status'], Enum\Model\Team\ServiceUseStatus::PAID);
         $this->assertEquals($team['service_use_state_start_date'],
             GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
@@ -1952,7 +1953,7 @@ class PaymentServiceTest extends GoalousTestCase
             array_intersect_key($paymentSettings, $paymentData));
         $this->assertEquals($paymentSettings['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
-        $this->assertEquals($paymentSettings['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paymentSettings['currency'], Enum\Model\PaymentSetting\Currency::JPY);
         $this->assertEquals($paymentSettings['amount_per_user'], 0);
 
         // Check if PaymentSettingChangeLog was created
@@ -1969,7 +1970,7 @@ class PaymentServiceTest extends GoalousTestCase
         $data = array_intersect_key($invoice, $invoiceData);
         $this->assertEquals(array_intersect_key($invoiceData, $data), $data);
         $this->assertEquals($paymentSettings['id'], $invoice['payment_setting_id']);
-        $this->assertEquals(Enum\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
+        $this->assertEquals(Enum\Model\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
@@ -1992,13 +1993,13 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => $paymentSettings['type'],
-            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'      => enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $paymentSettings['amount_per_user'],
             'total_amount'     => $chargeInfo['sub_total_charge'],
             'tax'              => $chargeInfo['tax'],
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
@@ -2015,7 +2016,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->Team->clear();
         $this->Team->id = $teamId;
         $this->Team->save([
-            'service_use_status'           => Enum\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017/8/1',
             'service_use_state_end_date'   => '2017/8/15',
             'pre_register_amount_per_user' => 1200
@@ -2038,7 +2039,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Check team status
         $team = $this->Team->getById($teamId);
         $timezone = $this->Team->getTimezone();
-        $this->assertEquals($team['service_use_status'], Enum\Team\ServiceUseStatus::PAID);
+        $this->assertEquals($team['service_use_status'], Enum\Model\Team\ServiceUseStatus::PAID);
         $this->assertEquals($team['service_use_state_start_date'],
             GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d'));
         $this->assertNull($team['service_use_state_end_date']);
@@ -2049,7 +2050,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($paymentData, array_intersect_key($paymentSettings, $paymentData));
         $this->assertEquals($paymentSettings['payment_base_day'],
             date('d', strtotime(AppUtil::todayDateYmdLocal($timezone))));
-        $this->assertEquals($paymentSettings['currency'], Enum\PaymentSetting\Currency::JPY);
+        $this->assertEquals($paymentSettings['currency'], Enum\Model\PaymentSetting\Currency::JPY);
         $this->assertEquals($paymentSettings['amount_per_user'], 1200);
 
         // Check if PaymentSettingChangeLog was created
@@ -2066,7 +2067,7 @@ class PaymentServiceTest extends GoalousTestCase
         $data = array_intersect_key($invoice, $invoiceData);
         $this->assertEquals(array_intersect_key($invoiceData, $data), $data);
         $this->assertEquals($paymentSettings['id'], $invoice['payment_setting_id']);
-        $this->assertEquals(Enum\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
+        $this->assertEquals(Enum\Model\Invoice\CreditStatus::WAITING, $invoice['credit_status']);
 
         // Check invoice history was created
         $InvoiceHistory = ClassRegistry::init('InvoiceHistory');
@@ -2090,13 +2091,13 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'          => $teamId,
             'user_id'          => $userId,
             'payment_type'     => $paymentSettings['type'],
-            'charge_type'      => enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'      => enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => $paymentSettings['amount_per_user'],
             'total_amount'     => $totalAmount,
             'tax'              => $this->PaymentService->calcTax($paymentSettings['company_country'], $totalAmount),
             'charge_users'     => $chargeUserCnt,
-            'currency'         => Enum\PaymentSetting\Currency::JPY,
-            'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users' => $chargeUserCnt,
         ];
         $this->assertEquals(array_intersect_key($history, $expected), $expected);
@@ -2295,7 +2296,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'        => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-01-28 23:59:59'),
         ], false);
         $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
@@ -2323,7 +2324,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'        => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-02-28 00:00:00'),
         ], false);
         $time = strtotime('2017-01-28 00:00:00');
@@ -2360,7 +2361,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'        => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-01-28 00:00:00'),
         ], false);
 
@@ -2375,7 +2376,7 @@ class PaymentServiceTest extends GoalousTestCase
             'team_id'            => $teamId,
             'payment_setting_id' => $paymentSettingId,
             'payment_type'       => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
-            'charge_type'        => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_type'        => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_datetime'    => strtotime('2017-02-28 12:00:00'),
         ], false);
 
@@ -2659,8 +2660,7 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $updateData = [
-            'team_id'                        => $teamId + 1, // no existing team
-            'type'                           => Enum\PaymentSetting\Type::INVOICE,
+            'type'                           => Enum\Model\PaymentSetting\Type::INVOICE,
             'company_name'                   => 'ISAO2',
             'company_post_code'              => '111111',
             'company_country'                => 'US',
@@ -2675,6 +2675,9 @@ class PaymentServiceTest extends GoalousTestCase
             'contact_person_last_name_kana'  => 'スターク',
         ];
 
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $paymentSettingsUpdateBefore = $this->PaymentSettingChangeLog->findByPaymentSettingId($paySetting['id']);
+
         // Update payment data
         $userId = $this->createActiveUser($teamId);
         $res = $this->PaymentService->updatePayerInfo($teamId, $userId, $updateData);
@@ -2685,7 +2688,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Compare updated with saved data
         $this->assertNotEmpty($data);
         $this->assertEquals($data['team_id'], $teamId);
-        $this->assertEquals($data['type'], Enum\PaymentSetting\Type::CREDIT_CARD);
+        $this->assertEquals($data['type'], Enum\Model\PaymentSetting\Type::CREDIT_CARD);
         $this->assertEquals($data['company_post_code'], '111111');
         $this->assertEquals($data['company_country'], 'JP');
         $this->assertEquals($data['company_region'], 'NY');
@@ -2698,6 +2701,9 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($data['contact_person_last_name'], 'Stark');
         $this->assertEquals($data['contact_person_last_name_kana'], null);
 
+        $paySetting = $this->PaymentSetting->getUnique($teamId);
+        $paymentSettingsUpdateAfter = $this->PaymentSettingChangeLog->findByPaymentSettingId($paySetting['id']);
+        $this->assertTrue(count($paymentSettingsUpdateBefore) < count($paymentSettingsUpdateAfter));
     }
 
     public function test_updatePayerInfo_invoice()
@@ -2717,7 +2723,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $updateData = [
             'team_id'                        => $teamId + 1, // no existing team
-            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
+            'type'                           => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
             'company_name'                   => 'ISAO2',
             'company_post_code'              => '111111',
             'company_country'                => 'US',
@@ -2742,7 +2748,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Compare updated with saved data
         $this->assertNotEmpty($data);
         $this->assertEquals($data['team_id'], $teamId);
-        $this->assertEquals($data['type'], Enum\PaymentSetting\Type::INVOICE);
+        $this->assertEquals($data['type'], Enum\Model\PaymentSetting\Type::INVOICE);
         $this->assertEquals($data['company_post_code'], '111111');
         $this->assertEquals($data['company_country'], 'JP');
         $this->assertEquals($data['company_region'], 'NY');
@@ -2796,7 +2802,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 1];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // time is difference as base date
@@ -2823,7 +2829,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         $time = strtotime('2016-12-31') - (9 * HOUR);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
         // expected scope is from 2016-11-30 - 2016-12-30
@@ -2857,7 +2863,7 @@ class PaymentServiceTest extends GoalousTestCase
                 'system_order_code' => "test",
             ],
             [
-                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
                 'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
                 'amount_per_user'  => 1980,
                 'total_amount'     => 3960,
@@ -2879,7 +2885,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         $time = strtotime('2016-12-31') - (9 * HOUR);
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
@@ -2917,7 +2923,7 @@ class PaymentServiceTest extends GoalousTestCase
     function _addInvoiceChargeHistory($teamId, $data)
     {
         $data = am([
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
             'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
             'amount_per_user'  => 1980,
             'total_amount'     => 3960,
@@ -2932,18 +2938,21 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_getChargeMaxUserCnt_noChargeHistory()
     {
         $teamId = 1;
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
         $this->assertEquals($res, 0);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
             3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             3);
+        $this->assertEquals($res, 3);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::RECHARGE(), 3);
         $this->assertEquals($res, 3);
 
     }
@@ -2958,17 +2967,17 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $this->ChargeHistory->save($data, false);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
         $this->assertEquals($res, 0);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
             3);
         $this->assertEquals($res, 13);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             3);
         $this->assertEquals($res, 13);
 
@@ -2979,13 +2988,16 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $this->ChargeHistory->save($data, false);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
             3);
         $this->assertEquals($res, 8);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             20);
         $this->assertEquals($res, 25);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::RECHARGE(), 3);
+        $this->assertEquals($res, 3);
 
     }
 
@@ -2994,18 +3006,18 @@ class PaymentServiceTest extends GoalousTestCase
         list($teamId) = $this->createCcPaidTeam();
 
         $res = $this->PaymentService->getPaymentType($teamId);
-        $this->assertEquals(Enum\PaymentSetting\Type::CREDIT_CARD, $res);
+        $this->assertEquals(Enum\Model\PaymentSetting\Type::CREDIT_CARD, $res);
     }
 
     public function test_getPaymentType_invoice()
     {
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         $res = $this->PaymentService->getPaymentType(1);
-        $this->assertEquals(Enum\PaymentSetting\Type::INVOICE, $res);
+        $this->assertEquals(Enum\Model\PaymentSetting\Type::INVOICE, $res);
     }
 
     public function test_getPaymentType_noPayment()
@@ -3051,7 +3063,7 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_formatCharge()
     {
         // JPY
-        $currency = Enum\PaymentSetting\Currency::JPY;
+        $currency = Enum\Model\PaymentSetting\Currency::JPY;
         $res = $this->PaymentService->formatCharge(0.00, $currency);
         $this->assertEquals($res, '¥0');
         $res = $this->PaymentService->formatCharge(100, $currency);
@@ -3062,7 +3074,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, '¥1,234,567,890');
 
         // USD
-        $currency = Enum\PaymentSetting\Currency::USD;
+        $currency = Enum\Model\PaymentSetting\Currency::USD;
         $res = $this->PaymentService->formatCharge(100.12, $currency);
         $this->assertEquals($res, '$100.12');
         $res = $this->PaymentService->formatCharge(0.1, $currency);
@@ -3086,49 +3098,49 @@ class PaymentServiceTest extends GoalousTestCase
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
         GoalousDateTime::setTestNow('2017-01-31 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
         GoalousDateTime::setTestNow('2017-01-31 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥137');
 
         GoalousDateTime::setTestNow('2017-01-31 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         GoalousDateTime::setTestNow('2017-01-31 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥6,415');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-02-28 23:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥75');
 
         GoalousDateTime::setTestNow('2017-03-01 00:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-04-01 03:29:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
         GoalousDateTime::setTestNow('2017-04-01 03:30:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-09-01 11:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
         GoalousDateTime::setTestNow('2017-09-01 12:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
     }
@@ -3147,67 +3159,67 @@ class PaymentServiceTest extends GoalousTestCase
             'payment_base_day' => 31,
             'company_country'  => 'US',
             'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
-            'currency'         => Enum\PaymentSetting\Currency::USD
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD
         ]);
         $this->PaymentSetting->create();
         $this->PaymentSetting->save($data, false);
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
         $formattedAmountPerUser = $this->PaymentService->formatCharge(PaymentService::AMOUNT_PER_USER_USD,
-            Enum\PaymentSetting\Currency::USD);
+            Enum\Model\PaymentSetting\Currency::USD);
 
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$1.22');
 
         GoalousDateTime::setTestNow('2017-01-30 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         GoalousDateTime::setTestNow('2017-01-30 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$57.00');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-02-27 23:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.67');
 
         GoalousDateTime::setTestNow('2017-02-28 00:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-03-31 03:29:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
         GoalousDateTime::setTestNow('2017-03-31 03:30:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         GoalousDateTime::setTestNow('2017-04-01 03:30:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$18.36');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-08-31 11:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
         GoalousDateTime::setTestNow('2017-08-31 12:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         GoalousDateTime::setTestNow('2017-09-10 12:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 12, Enum\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 12, Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$152.00');
 
     }
@@ -3524,7 +3536,7 @@ class PaymentServiceTest extends GoalousTestCase
         // Setup team and paid plan
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         list ($teamId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // No history expect true
@@ -3538,7 +3550,7 @@ class PaymentServiceTest extends GoalousTestCase
                 'system_order_code' => "test",
             ],
             [
-                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
                 'charge_type'      => ChargeHistory::CHARGE_TYPE_ACTIVATE_USER,
                 'amount_per_user'  => 1980,
                 'total_amount'     => 3960,
@@ -3575,7 +3587,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         // Prepare data for testing
         $teamId = 9999999;
-        $currencyType = Enum\PaymentSetting\Currency::JPY();
+        $currencyType = Enum\Model\PaymentSetting\Currency::JPY();
 
         // upgradePlanCode is empty
         $upgradePlanCode = '';
@@ -3646,7 +3658,7 @@ class PaymentServiceTest extends GoalousTestCase
         $companyCountry = 'JP';
         $paymentSetting = ['payment_base_day' => 1, 'company_country' => $companyCountry];
         list($teamId, $paymentSettingId) = $this->createCcPaidTeam([], $paymentSetting);
-        $currencyType = Enum\PaymentSetting\Currency::JPY();
+        $currencyType = Enum\Model\PaymentSetting\Currency::JPY();
 
         // Case: Upgraded plan date is as same as payment base day
         $upgradePlanCode = '1-2';
@@ -3795,7 +3807,7 @@ class PaymentServiceTest extends GoalousTestCase
         $companyCountry = 'US';
         $paymentSetting = ['payment_base_day' => 1, 'company_country' => $companyCountry];
         list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => 0], $paymentSetting);
-        $currencyType = Enum\PaymentSetting\Currency::USD();
+        $currencyType = Enum\Model\PaymentSetting\Currency::USD();
         $this->PaymentService->clearCachePaymentSettings();
 
         // Case: Upgraded plan date is as same as payment base day
@@ -3953,7 +3965,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $opeUserId = 1;
         $companyCountry = 'JP';
-        $currencyType = Enum\PaymentSetting\Currency::JPY();
+        $currencyType = Enum\Model\PaymentSetting\Currency::JPY();
         $upgradePlanCode = '1-2';
         $currentPlanCode = '1-1';
         $team = ['timezone' => 9];
@@ -3979,12 +3991,12 @@ class PaymentServiceTest extends GoalousTestCase
         $baseExpected = [
             'team_id'                     => $teamId,
             'user_id'                     => $opeUserId,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
             'amount_per_user'             => 0,
             'charge_users'                => 0,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId,
         ];
@@ -4049,7 +4061,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $opeUserId = 1;
         $companyCountry = 'TH';
-        $currencyType = Enum\PaymentSetting\Currency::USD();
+        $currencyType = Enum\Model\PaymentSetting\Currency::USD();
         $upgradePlanCode = '2-5';
         $currentPlanCode = '2-1';
         $team = ['timezone' => -12];
@@ -4076,12 +4088,12 @@ class PaymentServiceTest extends GoalousTestCase
         $baseExpected = [
             'team_id'                     => $teamId,
             'user_id'                     => $opeUserId,
-            'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
             'amount_per_user'             => 0,
             'charge_users'                => 0,
-            'currency'                    => Enum\PaymentSetting\Currency::USD,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::USD,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId,
         ];
@@ -4148,7 +4160,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $opeUserId = 1;
         $companyCountry = 'JP';
-        $currencyType = Enum\PaymentSetting\Currency::JPY;
+        $currencyType = Enum\Model\PaymentSetting\Currency::JPY;
         $upgradePlanCode = '1-2';
         $currentPlanCode = '1-1';
         $paymentSetting = [
@@ -4171,12 +4183,12 @@ class PaymentServiceTest extends GoalousTestCase
         $baseExpected = [
             'team_id'                     => $teamId,
             'user_id'                     => $opeUserId,
-            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
             'amount_per_user'             => 0,
             'charge_users'                => 0,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'campaign_team_id'            => $campaignTeamId,
             'price_plan_purchase_team_id' => $pricePlanPurchaseId,
         ];
@@ -4195,7 +4207,7 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // empty target charge histories
@@ -4206,8 +4218,8 @@ class PaymentServiceTest extends GoalousTestCase
 
         $chargeTs = GoalousDateTime::now()->getTimestamp();
         $saveHistory = [
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => 1980,
             'total_amount'     => 3960,
             'tax'              => 310,
@@ -4229,7 +4241,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->InvoiceHistory->clear();
         $this->InvoiceHistory->id = $invoiceHistoryId;
         $this->InvoiceHistory->save([
-            'order_status' => Enum\Invoice\CreditStatus::OK
+            'order_status' => Enum\Model\Invoice\CreditStatus::OK
         ]);
 
         $orderCode = "AK23553506";
@@ -4246,15 +4258,15 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // target invoice history exist, but order_status is WAITING(not NG).
 
         $chargeTs = GoalousDateTime::now()->getTimestamp();
         $saveHistory = [
-            'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'  => 1980,
             'total_amount'     => 3960,
             'tax'              => 310,
@@ -4266,7 +4278,7 @@ class PaymentServiceTest extends GoalousTestCase
             [
                 'order_datetime'    => $chargeTs,
                 'system_order_code' => "test1",
-                'order_status'      => Enum\Invoice\CreditStatus::NG
+                'order_status'      => Enum\Model\Invoice\CreditStatus::NG
             ],
             $saveHistory
         );
@@ -4291,7 +4303,7 @@ class PaymentServiceTest extends GoalousTestCase
         $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
         $this->assertEquals($newChargeHistory['team_id'], $teamId);
         $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
-        $this->assertEquals($newChargeHistory['charge_type'], Enum\ChargeHistory\ChargeType::RECHARGE);
+        $this->assertEquals($newChargeHistory['charge_type'], Enum\Model\ChargeHistory\ChargeType::RECHARGE);
         $this->assertEquals($newChargeHistory['amount_per_user'], 1980);
         $this->assertEquals($newChargeHistory['total_amount'], 3960);
         $this->assertEquals($newChargeHistory['tax'], 310);
@@ -4311,16 +4323,15 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $team = ['timezone' => 9];
         $paymentSetting = ['payment_base_day' => 31];
-        $invoice = ['credit_status' => Enum\Invoice\CreditStatus::OK];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice);
 
         // target invoice history exist, but order_status is WAITING(not NG).
 
-
         $saveHistories = [
             [
-                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-                'charge_type'      => Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
                 'amount_per_user'  => 1980,
                 'total_amount'     => 200,
                 'tax'              => 16,
@@ -4329,8 +4340,8 @@ class PaymentServiceTest extends GoalousTestCase
                 'charge_datetime'  => strtotime('2018-02-27')
             ],
             [
-                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'amount_per_user'  => 1980,
                 'total_amount'     => 3960,
                 'tax'              => 310,
@@ -4344,7 +4355,7 @@ class PaymentServiceTest extends GoalousTestCase
             [
                 'order_datetime'    => $chargeTs,
                 'system_order_code' => "test1",
-                'order_status'      => Enum\Invoice\CreditStatus::NG
+                'order_status'      => Enum\Model\Invoice\CreditStatus::NG
             ],
             $saveHistories
         );
@@ -4369,7 +4380,7 @@ class PaymentServiceTest extends GoalousTestCase
         $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
         $this->assertEquals($newChargeHistory['team_id'], $teamId);
         $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
-        $this->assertEquals($newChargeHistory['charge_type'], Enum\ChargeHistory\ChargeType::RECHARGE);
+        $this->assertEquals($newChargeHistory['charge_type'], Enum\Model\ChargeHistory\ChargeType::RECHARGE);
         $this->assertEquals($newChargeHistory['amount_per_user'], 1980);
         $subTotal = 0;
         $tax = 0;
@@ -4403,8 +4414,8 @@ class PaymentServiceTest extends GoalousTestCase
         // target invoice history exist, but order_status is WAITING(not NG).
         $saveHistories = [
             [
-                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-                'charge_type'      => Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF,
                 'amount_per_user'  => 0,
                 'total_amount'     => 200,
                 'tax'              => 16,
@@ -4413,8 +4424,8 @@ class PaymentServiceTest extends GoalousTestCase
                 'charge_datetime'  => strtotime('2018-02-27')
             ],
             [
-                'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
-                'charge_type'      => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'amount_per_user'  => 0,
                 'total_amount'     => 3960,
                 'tax'              => 310,
@@ -4428,7 +4439,7 @@ class PaymentServiceTest extends GoalousTestCase
             [
                 'order_datetime'    => $chargeTs,
                 'system_order_code' => "test1",
-                'order_status'      => Enum\Invoice\CreditStatus::NG
+                'order_status'      => Enum\Model\Invoice\CreditStatus::NG
             ],
             $saveHistories
         );
@@ -4453,7 +4464,7 @@ class PaymentServiceTest extends GoalousTestCase
         $newChargeHistory = $this->ChargeHistory->getById($newChargeHistoryId);
         $this->assertEquals($newChargeHistory['team_id'], $teamId);
         $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
-        $this->assertEquals($newChargeHistory['charge_type'], Enum\ChargeHistory\ChargeType::RECHARGE);
+        $this->assertEquals($newChargeHistory['charge_type'], Enum\Model\ChargeHistory\ChargeType::RECHARGE);
         $this->assertEquals($newChargeHistory['amount_per_user'], 0);
         $subTotal = 0;
         $tax = 0;
@@ -4473,6 +4484,31 @@ class PaymentServiceTest extends GoalousTestCase
             'invoice_history_id' => $newInvoiceHistoryId,
         ]);
         $this->assertNotEmpty($matchingHistories);
+    }
+
+    function test_reorderCreditCardCharge()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paySetting);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type'    => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'total_amount'    => 2000,
+            'tax'             => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type'     => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_users'    => 20
+        ]);
+        $this->PaymentService->reorderCreditCardCharge($this->ChargeHistory->getById($historyId));
+        $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $reorderedChargeHistory = $this->ChargeHistory->getById($lastInsertedChargeHistoryId);
+
+        $this->assertEquals(2000, $reorderedChargeHistory['total_amount']);
+        $this->assertEquals(20, $reorderedChargeHistory['tax']);
+        $this->assertEquals(Enum\Model\ChargeHistory\ChargeType::RECHARGE, $reorderedChargeHistory['charge_type']);
+        $this->assertEquals($historyId, $reorderedChargeHistory['reorder_charge_history_id']);
     }
 
     /**

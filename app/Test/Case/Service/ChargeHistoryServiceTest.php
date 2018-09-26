@@ -1,17 +1,21 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'ChargeHistoryService');
 App::import('DateTime', 'GoalousDateTime');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class ChargeHistoryService
  *
+ * @property PaymentService       $PaymentService
  * @property ChargeHistoryService $ChargeHistoryService
  */
 class ChargeHistoryServiceTest extends GoalousTestCase
 {
+    use AtobaraiResponseTraits;
+
     /**
      * Fixtures
      *
@@ -27,6 +31,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         'app.team_member',
         'app.price_plan_purchase_team',
         'app.campaign_team',
+        'app.invoice_history',
+        'app.invoice_histories_charge_history',
     ];
 
     /**
@@ -39,6 +45,7 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         parent::setUp();
         $this->ChargeHistoryService = ClassRegistry::init('ChargeHistoryService');
         $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $this->PaymentService = ClassRegistry::init('PaymentService');
         $this->ChargeHistory = ClassRegistry::init('ChargeHistory');
         $this->CreditCard = ClassRegistry::init('CreditCard');
     }
@@ -48,8 +55,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->PaymentSetting->save([
             'id'                             => 1,
             'team_id'                        => 1,
-            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY,
+            'type'                           => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'currency'                       => Enum\Model\PaymentSetting\Currency::JPY,
             'amount_per_user'                => 1980,
             'company_name'                   => 'TestCompany Ltd.',
             'company_country'                => '',
@@ -73,8 +80,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->PaymentSetting->save([
             'id'                             => 2,
             'team_id'                        => 2,
-            'type'                           => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY,
+            'type'                           => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'currency'                       => Enum\Model\PaymentSetting\Currency::JPY,
             'amount_per_user'                => 1980,
             'company_name'                   => 'TestCompany Team2 Ltd.',
             'company_country'                => '',
@@ -98,8 +105,8 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->PaymentSetting->save([
             'id'                             => 3,
             'team_id'                        => 3,
-            'type'                           => Enum\PaymentSetting\Type::INVOICE,
-            'currency'                       => Enum\PaymentSetting\Currency::JPY,
+            'type'                           => Enum\Model\PaymentSetting\Type::INVOICE,
+            'currency'                       => Enum\Model\PaymentSetting\Currency::JPY,
             'amount_per_user'                => 1980,
             'company_name'                   => 'TestCompany Team3 Ltd.',
             'company_country'                => '',
@@ -125,15 +132,15 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             'id'                  => 1,
             'team_id'             => 1,
             'user_id'             => 1,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'        => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'     => 1980,
             'total_amount'        => 1980,
             'tax'                 => 0,
             'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'currency'            => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'     => 1500000000,
-            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'         => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'    => 1,
             'stripe_payment_code' => '',
             'del_flg'             => 0,
@@ -146,15 +153,15 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             'id'                  => 2,
             'team_id'             => 2,
             'user_id'             => 2,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'        => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'     => 1980,
             'total_amount'        => 1980,
             'tax'                 => 0,
             'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'currency'            => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'     => 1500000001,
-            'result_type'         => Enum\ChargeHistory\ResultType::SUCCESS,
+            'result_type'         => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'    => 1,
             'stripe_payment_code' => '',
             'del_flg'             => 1,
@@ -166,15 +173,15 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             'id'                  => 3,
             'team_id'             => 2,
             'user_id'             => 2,
-            'payment_type'        => Enum\PaymentSetting\Type::CREDIT_CARD,
-            'charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'payment_type'        => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'amount_per_user'     => 1980,
             'total_amount'        => 1980,
             'tax'                 => 0,
             'charge_users'        => 1,
-            'currency'            => Enum\PaymentSetting\Currency::JPY,
+            'currency'            => Enum\Model\PaymentSetting\Currency::JPY,
             'charge_datetime'     => 1500000001,
-            'result_type'         => Enum\ChargeHistory\ResultType::FAIL,
+            'result_type'         => Enum\Model\ChargeHistory\ResultType::FAIL,
             'max_charge_users'    => 1,
             'stripe_payment_code' => '',
             'del_flg'             => 0,
@@ -221,11 +228,11 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 1980,
-            'payment_type'    => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'payment_type'    => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
             'total_amount'    => 2000,
             'tax'             => 20,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type'     => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_type'     => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_users'    => 20
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
@@ -248,11 +255,11 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 29700,
-            'payment_type'    => ChargeHistory::PAYMENT_TYPE_CREDIT_CARD,
+            'payment_type'    => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
             'total_amount'    => 30000,
             'tax'             => 300,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type'     => ChargeHistory::CHARGE_TYPE_ADD_USER,
+            'charge_type'     => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'charge_users'    => 10
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
@@ -274,11 +281,11 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 1980,
-            'payment_type'    => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'payment_type'    => Enum\Model\PaymentSetting\Type::INVOICE,
             'total_amount'    => 2000,
             'tax'             => 20,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type'     => ChargeHistory::CHARGE_TYPE_MONTHLY,
+            'charge_type'     => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
             'charge_users'    => 20
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
@@ -300,11 +307,11 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->setDefaultTeamIdAndUid(1, $teamId);
         $historyId = $this->addChargeHistory($teamId, [
             'amount_per_user' => 1980,
-            'payment_type'    => ChargeHistory::PAYMENT_TYPE_INVOICE,
+            'payment_type'    => Enum\Model\PaymentSetting\Type::INVOICE,
             'total_amount'    => 2000,
             'tax'             => 20,
             'charge_datetime' => strtotime('2017-08-01'),
-            'charge_type'     => ChargeHistory::CHARGE_TYPE_ADD_USER,
+            'charge_type'     => Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE,
             'charge_users'    => 20
         ]);
         $res = $this->ChargeHistoryService->getReceipt($historyId);
@@ -325,12 +332,12 @@ class ChargeHistoryServiceTest extends GoalousTestCase
             'tax'          => 80
         ];
         $baseCorrectData = [
-            'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
-            'charge_type'                 => Enum\ChargeHistory\ChargeType::RECHARGE,
+            'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
+            'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::RECHARGE,
             'amount_per_user'             => 1980,
             'charge_users'                => 0,
-            'currency'                    => Enum\PaymentSetting\Currency::JPY,
-            'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+            'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
+            'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             'max_charge_users'            => 0,
             'campaign_team_id'            => null,
             'price_plan_purchase_team_id' => null,
@@ -369,9 +376,9 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->assertEquals($res['tax'], 960);
         $this->assertEquals($res['charge_datetime'], GoalousDateTime::now()->getTimestamp());
 
-
         // campaign team
-        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1, $pricePlanCode = '1-1');
+        list ($teamId, $campaignTeamId, $pricePlanPurchaseId) = $this->createInvoiceCampaignTeam($pricePlanGroupId = 1,
+            $pricePlanCode = '1-1');
         $baseCorrectData['amount_per_user'] = 0;
         $baseCorrectData['campaign_team_id'] = $campaignTeamId;
         $baseCorrectData['price_plan_purchase_team_id'] = $pricePlanPurchaseId;
@@ -384,5 +391,63 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $this->assertEquals($res['total_amount'], 12000);
         $this->assertEquals($res['tax'], 960);
         $this->assertEquals($res['charge_datetime'], GoalousDateTime::now()->getTimestamp());
+    }
+
+    public function test_processForReceiptRechargeInvoice()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createInvoicePaidTeam($team, $paySetting);
+        list($chargeHistoryId, $invoiceHistoryId) = $this->addInvoiceHistoryAndChargeHistory($teamId,
+            [
+                'order_datetime'    => GoalousDateTime::now()->getTimestamp(),
+                'system_order_code' => "test1",
+                'order_status'      => Enum\Model\Invoice\CreditStatus::NG
+            ],
+            [
+                'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
+                'charge_type'      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'amount_per_user'  => 1980,
+                'total_amount'     => 3960,
+                'tax'              => 310,
+                'charge_users'     => 2,
+                'max_charge_users' => 2,
+                'charge_datetime'  => strtotime('2018-02-28')
+            ]
+        );
+
+        // mocking credit invoice as succeed
+        $returningOrderId = 'AK12345678';
+        $handler = \GuzzleHttp\HandlerStack::create(new \GuzzleHttp\Handler\MockHandler([
+            $this->createXmlAtobaraiOrderSucceedResponse('', @$returningOrderId, Enum\AtobaraiCom\Credit::OK()),
+        ]));
+        $this->registerGuzzleHttpClient(new \GuzzleHttp\Client(['handler' => $handler]));
+
+        $this->PaymentService->reorderInvoice($teamId, $invoiceHistoryId);
+        $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $arrayForReceipt = $this->ChargeHistoryService->getReceipt($lastInsertedChargeHistoryId);
+        $this->assertEquals($chargeHistoryId, $arrayForReceipt["ChargeHistory"]["recharge_history_ids"][0]);
+    }
+
+    public function test_processForReceiptRechargeCreditCard()
+    {
+        $team = ['name' => 'Test Team', 'timezone' => 9];
+        $paySetting = ['currency' => PaymentSetting::CURRENCY_TYPE_JPY];
+
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paySetting);
+        $historyId = $this->addChargeHistory($teamId, [
+            'amount_per_user' => 1980,
+            'payment_type'    => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'total_amount'    => 2000,
+            'tax'             => 20,
+            'charge_datetime' => strtotime('2017-08-01'),
+            'charge_type'     => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+            'charge_users'    => 20
+        ]);
+        $this->PaymentService->reorderCreditCardCharge($this->ChargeHistory->getById($historyId));
+        $lastInsertedChargeHistoryId = $this->ChargeHistory->getLastInsertID();
+        $arrayForReceipt = $this->ChargeHistoryService->getReceipt($lastInsertedChargeHistoryId);
+        $this->assertEquals($historyId, $arrayForReceipt["ChargeHistory"]["recharge_history_ids"][0]);
     }
 }

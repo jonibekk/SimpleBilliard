@@ -153,37 +153,42 @@ class PostFixture extends CakeTestFixtureEx
             'comment' => 'サイト情報',
             'charset' => 'utf8mb4'
         ),
-        'site_photo_file_name' => array('type'    => 'string',
-                                        'null'    => true,
-                                        'default' => null,
-                                        'collate' => 'utf8mb4_general_ci',
-                                        'comment' => 'サイト画像',
-                                        'charset' => 'utf8mb4'
+        'site_photo_file_name' => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'サイト画像',
+            'charset' => 'utf8mb4'
         ),
-        'del_flg'              => array('type'    => 'boolean',
-                                        'null'    => false,
-                                        'default' => '0',
-                                        'key'     => 'index',
-                                        'comment' => '削除フラグ'
+        'del_flg'              => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => '削除フラグ'
         ),
-        'deleted'              => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'comment'  => '投稿を削除した日付時刻'
+        'deleted'              => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '投稿を削除した日付時刻'
         ),
-        'created'              => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'comment'  => '投稿を追加した日付時刻'
+        'created'              => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '投稿を追加した日付時刻'
         ),
-        'modified'             => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'key'      => 'index',
-                                        'comment'  => '投稿を更新した日付時刻'
+        'modified'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '投稿を更新した日付時刻'
         ),
         'indexes'              => array(
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
@@ -221,6 +226,7 @@ class PostFixture extends CakeTestFixtureEx
             'deleted'         => null,
             'created'         => 1,
             'modified'        => 1,
+            'circle_id'       => 1
         ),
         array(
             'id'              => 2,
@@ -598,6 +604,22 @@ class PostFixture extends CakeTestFixtureEx
             'created'       => 10,
             'modified'      => 10,
 
+        ),
+        array(
+            'id'              => 24,
+            'user_id'         => 103,
+            'team_id'         => 1,
+            'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'type'            => 1,
+            'comment_count'   => 1,
+            'post_like_count' => 1,
+            'post_read_count' => 1,
+            'important_flg'   => 0,
+            'goal_id'         => null,
+            'del_flg'         => 0,
+            'deleted'         => null,
+            'created'         => 1388603001,
+            'modified'        => 1388603001,
         ),
     );
 

@@ -13,6 +13,9 @@ App::uses('Sanitize', 'Utility');
  * @method findByEmail($email)
  * @method findByName($name)
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class AppModel extends Model
 {
 
@@ -68,6 +71,40 @@ class AppModel extends Model
     public $support_lang_codes = [
         'jpn',
     ];
+
+    /**
+     * Entity class to encapsulate a query result
+     *
+     * @var BaseEntity
+     */
+    private $entityWrapperClass;
+
+    /**
+     * List of functions that will be executed on resulting array
+     *
+     * @var array
+     */
+    protected $postProcessFunctions = [];
+
+    /**
+     * Default conversion table
+     *
+     * @var array
+     */
+    private $defaultConversionTable = [
+        'id'       => DataType::INT,
+        'created'  => DataType::INT,
+        'modified' => DataType::INT,
+        'deleted'  => DataType::INT,
+        'del_flg'  => DataType::BOOL
+    ];
+
+    /**
+     * Conversion table for model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [];
 
     public $model_key_map = [
         'key_result_id'    => 'KeyResult',
@@ -333,10 +370,11 @@ class AppModel extends Model
      * (SoftDeletableのコールバックが実行されない為)
      *
      * @param null $id
+     * @param bool $checkDeleted
      *
      * @return bool
      */
-    public function exists($id = null)
+    public function exists($id = null, bool $checkDeleted = false)
     {
         if ($id === null) {
             $id = $this->getID();
@@ -346,14 +384,19 @@ class AppModel extends Model
             return false;
         }
 
-        return (bool)$this->find('count', array(
-            'conditions' => array(
+        $conditions = [
+            'conditions' => [
                 $this->alias . '.' . $this->primaryKey => $id
-            ),
+            ],
             'recursive'  => -1,
-            //TODO callbacksはtrueに変更する。影響範囲がかなりデカイので慎重にテストした上で行う。
             'callbacks'  => false
-        ));
+        ];
+
+        if (!empty($checkDeleted)) {
+            $conditions['conditions']['del_flg'] = false;
+        }
+
+        return (bool)$this->find('count', $conditions);
     }
 
     /**
@@ -659,6 +702,218 @@ class AppModel extends Model
         ], $condition);
 
         return !empty($ret);
+    }
+
+    /**
+     * Override save() function. Do post-processing
+     *
+     * @param null  $data
+     * @param bool  $validate
+     * @param array $fieldList
+     *
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function save($data = null, $validate = true, $fieldList = array())
+    {
+        //parent::save delete the postProcessFunctions array
+        $functions = $this->postProcessFunctions;
+
+        $result = parent::save($data, $validate, $fieldList);
+
+        $this->postProcessFunctions = $functions;
+
+        if (is_array($result)) {
+            $result = $this->postProcess($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Override afterFind(). Will process find() result
+     *
+     * @param mixed $results
+     * @param bool  $primary
+     *
+     * @return array|mixed
+     */
+    public function afterFind($results, $primary = false)
+    {
+        $result = parent::afterFind($results, $primary);
+
+        if (is_array($result) && $primary) {
+            $result = $this->postProcess($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Execute all registered function on result array after find() or save()
+     *
+     * @param array $data
+     *
+     * @return array | BaseEntity
+     */
+    private function postProcess(array $data = [])
+    {
+        foreach ($this->postProcessFunctions as $callable) {
+            if (!is_callable($callable)) {
+                throw new RuntimeException("Inserted element is not a callable");
+            }
+            $data = $callable($data);
+        }
+
+        //Reset functions after each processing
+        $this->postProcessFunctions = [];
+
+        return $data;
+    }
+
+    /**
+     * Add entity conversion process to post process
+     *
+     * @return AppModel
+     */
+    public function useEntity(): self
+    {
+        $this->postProcessFunctions['entity'] = function (array $data) {
+            return $this->convertEntity($data);
+        };
+
+        return $this;
+    }
+
+    /**
+     * Add type conversion process to post process
+     *
+     * @return AppModel
+     */
+    public function useType(): self
+    {
+        $this->postProcessFunctions['type'] = function (array $data): array {
+            return $this->convertType($data);
+        };
+
+        return $this;
+    }
+
+    /**
+     * Convert data from string to configured ones
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function convertType(array $data): array
+    {
+        $conversionTable = array_merge($this->defaultConversionTable, $this->modelConversionTable);
+
+        $this->traverseArray($data, $conversionTable);
+
+        return $data;
+    }
+
+    /**
+     * Recursively traverse an array and convert their data types from string to configured one
+     *
+     * @param array | BaseEntity $data
+     * @param array              $conversionTable
+     */
+    private function traverseArray(&$data, array $conversionTable)
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($value) && key_exists($key, $conversionTable)) {
+                switch ($conversionTable[$key]) {
+                    case (DataType::INT):
+                        $data[$key] = intval($value);
+                        break;
+                    case (DataType::BOOL):
+                        $data[$key] = boolval($value);
+                        break;
+                }
+            }
+            if (is_numeric($key) || is_array($value)) {
+                $this->traverseArray($data[$key], $conversionTable);
+            }
+        }
+    }
+
+    /**
+     * Convert an array to its respective Entity wrapper class
+     *
+     * @param array  $data
+     * @param string $className Entity wrapper class name
+     *
+     * @return array | BaseEntity
+     */
+    protected function convertEntity(array $data, string $className = null)
+    {
+        if (empty($this->entityWrapperClass)) {
+            $this->initializeEntityClass($className);
+        }
+        if (empty($data)) {
+            return null;
+        }
+        if (!is_int(array_keys($data)[0])) {
+            return new $this->entityWrapperClass($data);
+        }
+        $result = [];
+        foreach ($data as $key => $value) {
+            $result[] = new $this->entityWrapperClass($value);
+        }
+        return $result;
+    }
+
+    /**
+     * Initialize the wrapper class name. By default will use the Model's name + 'Entity'
+     * e.g. User -> UserEntity
+     *
+     * @param string|null $className
+     */
+    protected function initializeEntityClass(string $className = null)
+    {
+        if (empty($className)) {
+            $className = get_class($this) . 'Entity';
+        }
+
+        $object = new $className;
+
+        if (!($object instanceof BaseEntity)) {
+            throw new RuntimeException("Entity class does not exist :" . $className);
+        }
+
+        $this->entityWrapperClass = $object;
+    }
+
+    /**
+     * Get an entity based on its primary id
+     *
+     * @param int      $id             Primary id of the model
+     * @param string[] $columns        Specify which columns to query from database
+     * @param bool     $excludeDeleted Check del_flg
+     *
+     * @return BaseEntity
+     */
+    public final function getEntity(int $id, array $columns = [], bool $excludeDeleted = true): BaseEntity
+    {
+        $conditions = [
+            'conditions' => [
+                'id' => $id
+            ]
+        ];
+        if ($excludeDeleted) {
+            $conditions['conditions']['del_flg'] = false;
+        }
+        if (!empty($columns)) {
+            $conditions['fields'] = $columns;
+        }
+
+        /** @var BaseEntity $return */
+        $return = $this->useType()->useEntity()->find('first', $conditions);
+
+        return $return;
     }
 
 }

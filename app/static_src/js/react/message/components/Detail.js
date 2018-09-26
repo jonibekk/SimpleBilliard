@@ -21,11 +21,6 @@ export default class Detail extends Base {
     this.props.setUaInfo();
     this.props.initLayout();
     this.props.fetchInitialData(this.props.params.topic_id);
-
-    if (isMobileApp()) {
-      let header = document.getElementById("header");
-      header.classList.add("mod-shadow");
-    }
   }
 
   componentDidMount() {
@@ -66,10 +61,6 @@ export default class Detail extends Base {
 
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
-    if (isMobileApp()) {
-      let header = document.getElementById("header");
-      header.classList.remove("mod-shadow");
-    }
 
     this.props.resetStates();
     // Unsubscribe

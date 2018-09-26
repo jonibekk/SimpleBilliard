@@ -114,37 +114,42 @@ class CommentFixture extends CakeTestFixtureEx
             'comment' => 'サイト情報',
             'charset' => 'utf8mb4'
         ),
-        'site_photo_file_name' => array('type'    => 'string',
-                                        'null'    => true,
-                                        'default' => null,
-                                        'collate' => 'utf8mb4_general_ci',
-                                        'comment' => 'サイト画像',
-                                        'charset' => 'utf8mb4'
+        'site_photo_file_name' => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'サイト画像',
+            'charset' => 'utf8mb4'
         ),
-        'del_flg'              => array('type'    => 'boolean',
-                                        'null'    => false,
-                                        'default' => '0',
-                                        'key'     => 'index',
-                                        'comment' => '削除フラグ'
+        'del_flg'              => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => '削除フラグ'
         ),
-        'deleted'              => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'comment'  => '投稿を削除した日付時刻'
+        'deleted'              => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '投稿を削除した日付時刻'
         ),
-        'created'              => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'key'      => 'index',
-                                        'comment'  => '投稿を追加した日付時刻'
+        'created'              => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '投稿を追加した日付時刻'
         ),
-        'modified'             => array('type'     => 'integer',
-                                        'null'     => true,
-                                        'default'  => null,
-                                        'unsigned' => true,
-                                        'comment'  => '投稿を更新した日付時刻'
+        'modified'             => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '投稿を更新した日付時刻'
         ),
         'indexes'              => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
@@ -342,6 +347,32 @@ class CommentFixture extends CakeTestFixtureEx
             'comment_read_count' => 10,
             'del_flg'            => 1,
             'deleted'            => 1400725683,
+            'created'            => 1400725683,
+            'modified'           => 1400725683
+        ),
+        array(
+            'id'                 => 15,
+            'post_id'            => 1,
+            'user_id'            => 1,
+            'team_id'            => 1,
+            'body'               => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'comment_like_count' => 3,
+            'comment_read_count' => 10,
+            'del_flg'            => 0,
+            'deleted'            => 0,
+            'created'            => 1400725683,
+            'modified'           => 1400725683
+        ),
+        array(
+            'id'                 => 16,
+            'post_id'            => 1,
+            'user_id'            => 1,
+            'team_id'            => 1,
+            'body'               => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'comment_like_count' => 5,
+            'comment_read_count' => 10,
+            'del_flg'            => 0,
+            'deleted'            => 0,
             'created'            => 1400725683,
             'modified'           => 1400725683
         ),

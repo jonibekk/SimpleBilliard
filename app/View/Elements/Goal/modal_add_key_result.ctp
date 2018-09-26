@@ -271,7 +271,7 @@
         <div class="modal-footer">
             <?=
             $this->Form->submit(__("Add Key Result"),
-                ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                ['class' => 'btn btn-primary', 'div' => false]) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
