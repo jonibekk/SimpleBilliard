@@ -21,7 +21,7 @@
       "get" : {
         "tags" : [ "Circles" ],
         "summary" : "Not implemented yet",
-        "description" : "# Overview\n- Return the list of public circles of authenticated team",
+        "description" : "# Overview\n- Return the list of circles of authenticated team",
         "operationId" : "X/api/circles",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
