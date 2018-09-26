@@ -210,12 +210,12 @@ class UploadedFile
 
         $fInfo = new finfo();
         $fileDesc = $fInfo->buffer($rawFile, FILEINFO_MIME_TYPE);
-        $this->mimeData = $fileDesc;
         list($type, $fileExt) = explode("/", $fileDesc, 2);
         if (empty($type) || empty($fileExt)) {
             GoalousLog::error("Failed to get file extension");
             throw new RuntimeException("Failed to get file extension");
         }
+        $this->mimeData = $fileDesc;
         $this->metadata = $fInfo->buffer($rawFile);
         $this->type = $type;
 
