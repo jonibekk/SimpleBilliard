@@ -61,6 +61,7 @@ class CircleMemberPagingService extends BasePagingService
             'table'      => 'circle_members',
             'alias'      => 'CircleMember',
             'fields'     => [
+                'CircleMember.id',
                 'CircleMember.user_id',
                 'CircleMember.last_posted'
             ],
