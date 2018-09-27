@@ -54,4 +54,45 @@ class CommentService extends AppService
 
         return $PostService->checkUserAccessToPost($userId, $postId);
     }
+
+    /**
+     * Check whether the user can view the several comments
+     *
+     * @param int  $userId
+     * @param int  $commentsIds
+     *
+     * @throws Exception
+     */
+    public function checkUserAccessToMultipleComment(int $userId, array $commentsIds)
+    {
+         /** @var Comment $Comment */
+         $Comment = ClassRegistry::init('Comment');
+
+         /** @var PostService $PostService */
+         $PostService = ClassRegistry::init('PostService');
+ 
+         $options = [
+             'conditions' => [
+                 'id' => $commentsIds
+             ],
+             'fields'     => [
+                 'post_id'
+             ]
+         ];
+
+         $comments = $Comment->useType()->find('first', $options);
+
+        if (empty($comments)) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        /** @var int $postId */
+        $postsIds = Hash::extract($comments, '{s}.post_id');
+
+        if (empty($postsIds)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
+        return $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
+    }
 }
