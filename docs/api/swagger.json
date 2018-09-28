@@ -2526,6 +2526,44 @@
           "AllowDynamicFormParameters" : false,
           "IsMultiContentStreaming" : false
         }
+      },
+      "post" : {
+        "tags" : [ "Comments" ],
+        "summary" : "Add like to comment",
+        "description" : "Add a like to a comment",
+        "operationId" : "/api/comments/reads",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Comment.Id"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Like added / like already existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Response.LikeCount"
+                }
+              }
+            }
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Comment.NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Error.CommentLike.Conflict"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
       }
     },
     "/api/uploads" : {
