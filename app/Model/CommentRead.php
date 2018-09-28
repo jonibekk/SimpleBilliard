@@ -191,12 +191,12 @@ class CommentRead extends AppModel
      */
     public function updateReadersCountMultipleComments(array $commentsIds)
     {
-        $comments_counts = $this->countCommentReadersMultipleComments($commentsIds);
+        $commentsCounts = $this->countCommentReadersMultipleComments($commentsIds);
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
 
-        foreach ($comments_counts as $commentId => $count) {
+        foreach ($commentsCounts as $commentId => $count) {
             $Comment->updateAll(['Comment.comment_read_count' => $count], ['Comment.id' => $commentId]);
         }
     }
@@ -213,16 +213,20 @@ class CommentRead extends AppModel
     {
         $condition = [
             'conditions' => [
-                'comment_id' => $commentsIds
+                'comment_id' => $commentsIds,
             ],
             'fields'     => [
+                'comment_id',
+                'COUNT(comment_id) AS sum'
+            ],
+            'group'     => [
                 'comment_id'
             ]
         ];
 
         $array = $this->find('all', $condition);
 
-        return array_count_values(Hash::extract($array, "{n}.comment_id"));
+        return Hash::combine($array, '{n}.CommentRead.comment_id', '{n}.0.sum');
     }
 
     /**

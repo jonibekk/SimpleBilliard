@@ -15,8 +15,8 @@ class CommentReadService extends AppService
     /**
      * Add user read a comment
      *
-     * @param int $commentId Target post's ID
-     * @param int $userId User ID who who reads the post
+     * @param int $commentId Target comment's ID
+     * @param int $userId User ID who who reads the comment
      * @param int $teamId The team ID where this happens
      *
      * @throws Exception
@@ -29,7 +29,7 @@ class CommentReadService extends AppService
 
         $condition = [
             'conditions' => [
-                'post_id' => $commentId,
+                'comment_id' => $commentId,
                 'user_id' => $userId,
                 'team_id' => $teamId
             ],
@@ -38,13 +38,13 @@ class CommentReadService extends AppService
             ]
         ];
 
-        //Check whether user read that post already
+        //Check whether user read that comment already
         if (empty($CommentRead->find('first', $condition))) {
             try {
                 $this->TransactionManager->begin();
                 $CommentRead->create();
                 $newData = [
-                    'post_id' => $commentId,
+                    'comment_id' => $commentId,
                     'user_id' => $userId,
                     'team_id' => $teamId
                 ];
@@ -61,7 +61,7 @@ class CommentReadService extends AppService
                 throw $e;
             }
         } else {
-            throw new GlException\GoalousConflictException(__("You already read this post."));
+            throw new GlException\GoalousConflictException(__("You already read this comment."));
         }
 
         return $result;
@@ -70,8 +70,8 @@ class CommentReadService extends AppService
     /**
      * Add multiple readers of the comment
      *
-     * @param int $commentsIds Target post's ID
-     * @param int $userId User ID who who reads the post
+     * @param int $commentsIds Target comment's ID
+     * @param int $userId User ID who who reads the comment
      * @param int $teamId The team ID where this happens
      *
      * @throws Exception
@@ -89,10 +89,10 @@ class CommentReadService extends AppService
             ],
             'fields'     => 'CommentRead.comment_id'
         ];
-        $CommentAlreadyReadArray = $CommentRead->find('all', $query);
+        $CommentAlreadyReads = $CommentRead->find('all', $query);
 
-        $CommentAlreadyReadArray = Hash::extract($CommentAlreadyReadArray, "{n}.CommentRead.comment_id");
-        $newReads = array_diff($commentsIds, $CommentAlreadyReadArray);
+        $CommentAlreadyReads = Hash::extract($CommentAlreadyReads, "{n}.CommentRead.comment_id");
+        $newReads = array_diff($commentsIds, $CommentAlreadyReads);
 
         if(!empty($newReads)){
             try {

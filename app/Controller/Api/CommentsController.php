@@ -100,7 +100,7 @@ class CommentsController extends BasePagingController
             return $error;
         }
 
-        $commentsIds = Hash::get($this->getRequestJsonBody(), 'comments_ids', []);
+        $commentsIds = Hash::get($this->getRequestJsonBody(), 'comment_ids', []);
 
         /** @var CommentReadService $CommentReadService */
         $CommentReadService = ClassRegistry::init('CommentReadService');
@@ -114,7 +114,7 @@ class CommentsController extends BasePagingController
                                 ->getResponse();
         }
 
-        return ApiResponse::ok()->withData(["comments_ids" => $res])->getResponse();
+        return ApiResponse::ok()->withData(["comment_ids" => $res])->getResponse();
     }
 
     /**
@@ -240,7 +240,7 @@ class CommentsController extends BasePagingController
     {
         $requestBody = $this->getRequestJsonBody();
 
-        $commentsIds = Hash::get($requestBody, 'comments_ids', []);
+        $commentsIds = Hash::get($requestBody, 'comment_ids', []);
 
         try {
             CommentRequestValidator::createCommentReadValidator()->validate($requestBody);

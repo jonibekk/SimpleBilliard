@@ -17,7 +17,7 @@ class CommentRequestValidator extends BaseValidator
     public function getCommentReadValidationRule(): array
     {
         $rules = [
-            "comments_ids" => [validator::arrayType()::length(null, 10000)]
+            "comment_ids" => [validator::arrayType()::length(null, 1000)]
         ];
         return $rules;
     }

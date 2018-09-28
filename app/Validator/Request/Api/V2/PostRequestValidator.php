@@ -45,7 +45,7 @@ class PostRequestValidator extends BaseValidator
     public function getPostReadValidationRule(): array
     {
         $rules = [
-            "posts_ids" => [validator::arrayType()::length(null, 10000)]
+            "posts_ids" => [validator::arrayType()::length(null, 1000)]
         ];
         return $rules;
     }
