@@ -2526,24 +2526,24 @@
           "AllowDynamicFormParameters" : false,
           "IsMultiContentStreaming" : false
         }
-      },
+      }
+    },
+    "/api/comments/reads" : {
       "post" : {
         "tags" : [ "Comments" ],
-        "summary" : "Add like to comment",
-        "description" : "Add a like to a comment",
+        "summary" : "Add read to comment",
+        "description" : "Add a read to a comment",
         "operationId" : "/api/comments/reads",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
-        }, {
-          "$ref" : "#/components/parameters/Comment.Id"
         } ],
         "responses" : {
           "200" : {
-            "description" : "[Success] Like added / like already existed",
+            "description" : "[Success] Read added / read already existed",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Response.LikeCount"
+                  "$ref" : "#/components/schemas/Response.ReadCount"
                 }
               }
             }
@@ -2552,7 +2552,7 @@
             "$ref" : "#/components/responses/Error.Comment.NotFound"
           },
           "409" : {
-            "$ref" : "#/components/responses/Error.CommentLike.Conflict"
+            "$ref" : "#/components/responses/Error.CommentRead.Conflict"
           },
           "500" : {
             "$ref" : "#/components/responses/Error.Global.InternalServer"
@@ -2870,6 +2870,16 @@
                 "message" : "Goalous\\Exception\\GoalousNotFoundException: このコメントは存在しません。 on /vagrant/app/Service/CommentService.php line 45 code 404"
               } ],
               "trace" : [ "#0 /vagrant/app/Controller/Api/CommentsController.php(85): CommentService->checkUserAccessToComment(1, 111)", "#1 /vagrant/app/Controller/Api/CommentsController.php(25): CommentsController->validateLike(111)", "#2 [internal function]: CommentsController->post_like(111)", "#3 /vagrant/Vendor/cakephp/cakephp/lib/Cake/Controller/Controller.php(491): ReflectionMethod->invokeArgs(Object(CommentsController), Array)", "#4 /vagrant/app/Controller/Api/BaseApiController.php(359): Controller->invokeAction(Object(CakeRequest))", "#5 /vagrant/Vendor/cakephp/cakephp/lib/Cake/Routing/Dispatcher.php(193): BaseApiController->invokeAction(Object(CakeRequest))", "#6 /vagrant/Vendor/cakephp/cakephp/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(CommentsController), Object(CakeRequest))", "#7 /vagrant/app/webroot/index.php(98): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))", "#8 {main}" ]
+            }
+          }
+        }
+      },
+      "Error.CommentRead.Conflict" : {
+        "description" : "[Failed] Read already exists",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Response.Error"
             }
           }
         }
